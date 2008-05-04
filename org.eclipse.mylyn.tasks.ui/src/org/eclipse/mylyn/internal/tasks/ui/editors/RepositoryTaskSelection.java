@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 
 /**
  * A selection of an element in a view.

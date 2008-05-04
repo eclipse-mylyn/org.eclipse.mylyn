@@ -420,7 +420,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 //					}
 //				}
 				if (repositoryUrl != null) {
-					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
+					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
 					if (repository != null) {
 						int index = 0;
 						for (String repositoryLabel : repositoryCombo.getItems()) {

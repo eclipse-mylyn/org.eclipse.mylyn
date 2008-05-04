@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler2;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -65,7 +65,7 @@ public class SubmitTaskJob extends SubmitJob {
 			monitor.beginTask("Submitting task", 2 * (1 + getSubmitJobListeners().length) * 100);
 
 			// post task data
-			AbstractTaskDataHandler2 taskDataHandler = connector.getTaskDataHandler2();
+			AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler2();
 			monitor.subTask("Sending data");
 			response = taskDataHandler.postTaskData(taskRepository, taskData, changedAttributes, Policy.subMonitorFor(
 					monitor, 100));

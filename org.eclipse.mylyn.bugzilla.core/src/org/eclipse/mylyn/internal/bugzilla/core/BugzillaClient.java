@@ -58,12 +58,13 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryOperation;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment;
-import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
@@ -446,7 +447,7 @@ public class BugzillaClient {
 		Set<String> data = new HashSet<String>();
 		data.add(idString);
 		
-		TaskDataCollector collector = new TaskDataCollector() {
+		LegacyTaskDataCollector collector = new LegacyTaskDataCollector() {
 			@Override
 			public void accept(RepositoryTaskData taskData) {
 				getRepositoryConfiguration().configureTaskData(taskData);
@@ -500,7 +501,7 @@ public class BugzillaClient {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
 								postMethod.getResponseBodyAsStream(), characterEncoding);
-						int count = queryFactory.performQuery(repositoryUrl.toString(), collector,
+						int count = queryFactory.performQuery(repositoryUrl.toString(), (LegacyTaskDataCollector)collector,
 								TaskDataCollector.MAX_HITS);
 						return count > 0;
 					}
@@ -1223,12 +1224,12 @@ public class BugzillaClient {
 							MultiBugReportFactory factory = new MultiBugReportFactory(
 									method.getResponseBodyAsStream(), characterEncoding);
 							
-							TaskDataCollector collector2 = new TaskDataCollector() {
+							LegacyTaskDataCollector collector2 = new LegacyTaskDataCollector() {
 
 								@Override
 								public void accept(RepositoryTaskData taskData) {
 									getRepositoryConfiguration().configureTaskData(taskData);
-									collector.accept(taskData);
+									((LegacyTaskDataCollector)collector).accept(taskData);
 									monitor.worked(1);
 								}};							
 							

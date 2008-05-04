@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 
 /**
  * @author Mik Kersten

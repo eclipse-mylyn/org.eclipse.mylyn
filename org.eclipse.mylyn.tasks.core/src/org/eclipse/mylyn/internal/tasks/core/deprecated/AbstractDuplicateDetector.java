@@ -6,44 +6,47 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Extend to provide task duplicate detection facilities to the task editor (e.g. Java stack trace matching).
  * 
  * @author Gail Murphy
- * @author Robert Elves
  * @since 3.0
  */
 public abstract class AbstractDuplicateDetector {
 
 	protected String name;
 
-	protected String connectorKind;
+	protected String kind;
 
-	public abstract AbstractRepositoryQuery getDuplicatesQuery(TaskRepository repository, TaskData taskData);
+	public abstract AbstractRepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData);
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public void setConnectorKind(String kind) {
-		this.connectorKind = kind;
+	public void setKind(String kind) {
+		this.kind = kind;
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	public String getConnectorKind() {
-		return this.connectorKind;
+	public String getKind() {
+		return this.kind;
 	}
 
+	/**
+	 * TODO: Move to a core utility class
+	 */
 	public static String getStackTraceFromDescription(String description) {
 		String stackTrace = null;
 

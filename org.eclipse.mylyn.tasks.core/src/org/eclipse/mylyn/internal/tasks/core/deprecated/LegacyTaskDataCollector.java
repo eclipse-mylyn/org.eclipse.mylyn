@@ -6,23 +6,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core.deprecated;
+
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
- * @since 3.0
+ * @author Steffen Pingel
  */
-public interface ITaskRepositoryPerson {
+@Deprecated
+public abstract class LegacyTaskDataCollector extends TaskDataCollector {
 
-	public abstract String getConnectorKind();
+	@Deprecated
+	public abstract void accept(RepositoryTaskData taskData);
 
-	public abstract String getName();
-
-	public abstract String getPersonId();
-
-	public abstract String getRepositoryUrl();
-
-	public abstract TaskRepository getTaskRepository();
-
-	public abstract void setName(String name);
+	@Override
+	public void accept(TaskData taskData) {
+		throw new UnsupportedOperationException();
+	}
 
 }

@@ -22,12 +22,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -126,7 +126,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	}
 
 	protected void submit(AbstractTask task, RepositoryTaskData taskData) throws CoreException {
-		connector.getTaskDataHandler().postTaskData(repository, taskData, new NullProgressMonitor());
+		connector.getLegacyTaskDataHandler().postTaskData(repository, taskData, new NullProgressMonitor());
 		task.setSubmitting(true);
 	}
 

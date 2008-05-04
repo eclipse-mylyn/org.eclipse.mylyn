@@ -19,9 +19,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -36,7 +36,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 	BugzillaRepositoryConnector connector;
 
 	private RepositoryTaskData init(String taskId) throws CoreException {
-		AbstractTaskDataHandler handler = connector.getTaskDataHandler();
+		AbstractTaskDataHandler handler = connector.getLegacyTaskDataHandler();
 		RepositoryTaskData taskData = handler.getTaskData(repository, taskId, new NullProgressMonitor());
 		return taskData;
 	}
@@ -149,7 +149,7 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		assertEquals("tests@mylyn.eclipse.org", report2.getAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString())
 				.getValue());
 
-		AbstractTaskDataHandler handler = connector.getTaskDataHandler();
+		AbstractTaskDataHandler handler = connector.getLegacyTaskDataHandler();
 		handler.cloneTaskData(report1, report2);
 		testAttributesFromCloneBug(report2, false);
 

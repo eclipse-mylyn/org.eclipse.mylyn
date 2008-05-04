@@ -23,6 +23,11 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.DefaultTaskSchema;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
@@ -35,13 +40,8 @@ import org.eclipse.mylyn.internal.trac.core.TracTaskDataHandler;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.DefaultTaskSchema;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -80,7 +80,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
 
-		taskDataHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
+		taskDataHandler = (TracTaskDataHandler) connector.getLegacyTaskDataHandler();
 	}
 
 	protected void init(String url, Version version) {
@@ -238,7 +238,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	public void testNonNumericTaskId() {
 		try {
-			connector.getTaskDataHandler().getTaskData(repository, "abc", new NullProgressMonitor());
+			connector.getLegacyTaskDataHandler().getTaskData(repository, "abc", new NullProgressMonitor());
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}

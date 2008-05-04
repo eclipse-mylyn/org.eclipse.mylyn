@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -57,12 +57,12 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private List<BugzillaCustomField> customFields;
 
-	private TaskDataCollector collector;
+	private LegacyTaskDataCollector collector;
 	
 	
 	//private int retrieved = 1;
 
-	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, TaskDataCollector collector, Map<String, RepositoryTaskData> taskDataMap, List<BugzillaCustomField> customFields) {
+	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, LegacyTaskDataCollector collector, Map<String, RepositoryTaskData> taskDataMap, List<BugzillaCustomField> customFields) {
 		this.attributeFactory = factory;
 		this.taskDataMap = taskDataMap;
 		this.customFields = customFields;

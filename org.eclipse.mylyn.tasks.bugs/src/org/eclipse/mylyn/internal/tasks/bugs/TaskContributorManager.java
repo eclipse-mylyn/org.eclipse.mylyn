@@ -20,8 +20,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.bugs.AbstractTaskContributor;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
  * @author Steffen Pingel

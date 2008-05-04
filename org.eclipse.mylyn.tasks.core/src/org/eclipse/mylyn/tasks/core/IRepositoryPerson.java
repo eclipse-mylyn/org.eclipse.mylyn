@@ -9,17 +9,21 @@
 package org.eclipse.mylyn.tasks.core;
 
 /**
- * @author Rob Elves
+ * @author Steffen Pingel
  * @since 3.0
  */
-public interface ITaskActivationListener {
+public interface IRepositoryPerson {
 
-	public abstract void preTaskActivated(AbstractTask task);
+	public abstract String getConnectorKind();
 
-	public abstract void preTaskDeactivated(AbstractTask task);
+	public abstract String getName();
 
-	public abstract void taskActivated(AbstractTask task);
+	public abstract String getPersonId();
 
-	public abstract void taskDeactivated(AbstractTask task);
+	public abstract String getRepositoryUrl();
+
+	public abstract TaskRepository getTaskRepository();
+
+	public abstract void setName(String name);
 
 }

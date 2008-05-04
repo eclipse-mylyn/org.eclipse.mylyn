@@ -18,11 +18,11 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
  * Manager for persisting RepositoryTaskData offline
@@ -120,7 +120,7 @@ public class TaskDataStorageManager {
 
 	/**
 	 * @return Get the next available temporary taskId. This taskId is given to new unsubmitted repository tasks.
-	 *         Incremented each time this method is called.
+	 * 	Incremented each time this method is called.
 	 */
 	public synchronized String getNewRepositoryTaskId() {
 		// TODO: generate based on values of unsubmitted offline report ids
@@ -257,9 +257,9 @@ public class TaskDataStorageManager {
 			return;
 		}
 		taskData.refresh();
-		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(taskData.getConnectorKind());
-		if (connector != null && connector.getTaskDataHandler() != null) {
-			AbstractAttributeFactory factory = connector.getTaskDataHandler().getAttributeFactory(taskData);
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) taskRepositoryManager.getRepositoryConnector(taskData.getConnectorKind());
+		if (connector != null && connector.getLegacyTaskDataHandler() != null) {
+			AbstractAttributeFactory factory = connector.getLegacyTaskDataHandler().getAttributeFactory(taskData);
 			if (factory != null) {
 				taskData.setAttributeFactory(factory);
 			}

@@ -30,6 +30,7 @@ Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylyn.internal.tasks.ui;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.actions;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.commands;x-internal:=true,
+ org.eclipse.mylyn.internal.tasks.ui.deprecated;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.dialogs;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.editors;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.notifications;x-internal:=true,

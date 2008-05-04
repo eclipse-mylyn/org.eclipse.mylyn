@@ -13,15 +13,15 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -61,10 +61,10 @@ public class TaskEditorTest extends TestCase {
 				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
 						.getNewRepositoryTaskId());
 		model.setNew(true);
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		assertNotNull(connector);
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		assertNotNull(taskDataHandler);
 		taskDataHandler.initializeTaskData(repository, model, null);
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
@@ -92,10 +92,10 @@ public class TaskEditorTest extends TestCase {
 				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
 						.getNewRepositoryTaskId());
 		model.setNew(true);
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		assertNotNull(connector);
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		assertNotNull(taskDataHandler);
 		assertFalse(taskDataHandler.initializeTaskData(repository, null, null));
 		assertFalse(taskDataHandler.initializeTaskData(repository, model, null));

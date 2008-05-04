@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import org.eclipse.mylyn.tasks.core.ITaskAttachment;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 
 /**
  * A class representing a local attachment.

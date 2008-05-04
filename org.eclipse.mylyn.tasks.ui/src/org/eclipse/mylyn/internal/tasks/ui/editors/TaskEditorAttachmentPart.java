@@ -32,7 +32,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -137,8 +137,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentsViewer.setSorter(new ViewerSorter() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				ITaskAttachment2 attachment1 = (ITaskAttachment2) e1;
-				ITaskAttachment2 attachment2 = (ITaskAttachment2) e2;
+				ITaskAttachment attachment1 = (ITaskAttachment) e1;
+				ITaskAttachment attachment2 = (ITaskAttachment) e2;
 				Date created1 = attachment1.getCreationDate();
 				Date created2 = attachment2.getCreationDate();
 				if (created1 != null && created2 != null) {
@@ -153,7 +153,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			}
 		});
 
-		List<ITaskAttachment2> attachmentList = new ArrayList<ITaskAttachment2>(attachments.length);
+		List<ITaskAttachment> attachmentList = new ArrayList<ITaskAttachment>(attachments.length);
 		for (TaskAttribute attribute : attachments) {
 			TaskAttachment taskAttachment = new TaskAttachment(getModel().getTaskRepository(), getModel().getTask(),
 					attribute);
@@ -167,7 +167,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			public void open(OpenEvent event) {
 				if (!event.getSelection().isEmpty()) {
 					StructuredSelection selection = (StructuredSelection) event.getSelection();
-					ITaskAttachment2 attachment = (ITaskAttachment2) selection.getFirstElement();
+					ITaskAttachment attachment = (ITaskAttachment) selection.getFirstElement();
 					TasksUiUtil.openUrl(attachment.getUrl());
 				}
 			}

@@ -18,9 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
@@ -71,13 +73,11 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		return repositoryConnectors.get(connectorKind);
 	}
 
-	public AbstractRepositoryConnector getRepositoryConnector(AbstractTask task) {
-		return getRepositoryConnector(task.getConnectorKind());
-	}
-
 	public void addRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
 		if (!repositoryConnectors.values().contains(repositoryConnector)) {
-			repositoryConnector.init(taskList);
+			if (repositoryConnector instanceof AbstractLegacyRepositoryConnector) {
+				((AbstractLegacyRepositoryConnector) repositoryConnector).init(taskList);
+			}
 			repositoryConnectors.put(repositoryConnector.getConnectorKind(), repositoryConnector);
 		}
 	}
@@ -134,6 +134,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 
 	/* Public for testing. */
 	public static String stripSlashes(String url) {
+		Assert.isNotNull(url);
 		StringBuilder sb = new StringBuilder(url.trim());
 		while (sb.length() > 0 && sb.charAt(sb.length() - 1) == '/') {
 			sb.deleteCharAt(sb.length() - 1);
@@ -142,6 +143,8 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 	}
 
 	public TaskRepository getRepository(String kind, String urlString) {
+		Assert.isNotNull(kind);
+		Assert.isNotNull(urlString);
 		urlString = stripSlashes(urlString);
 		if (repositoryMap.containsKey(kind)) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
@@ -157,6 +160,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 	 * @return first repository that matches the given url
 	 */
 	public TaskRepository getRepository(String urlString) {
+		Assert.isNotNull(urlString);
 		urlString = stripSlashes(urlString);
 		for (String kind : repositoryMap.keySet()) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
@@ -172,6 +176,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 	 * @return the first connector to accept the URL
 	 */
 	public AbstractRepositoryConnector getConnectorForRepositoryTaskUrl(String url) {
+		Assert.isNotNull(url);
 		for (AbstractRepositoryConnector connector : getRepositoryConnectors()) {
 			if (connector.getRepositoryUrlFromTaskUrl(url) != null) {
 				for (TaskRepository repository : getRepositories(connector.getConnectorKind())) {
@@ -185,6 +190,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 	}
 
 	public Set<TaskRepository> getRepositories(String kind) {
+		Assert.isNotNull(kind);
 		if (repositoryMap.containsKey(kind)) {
 			return repositoryMap.get(kind);
 		} else {
@@ -373,13 +379,6 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		}
 
 		return false;
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public TaskRepository getRepository(AbstractTask task) {
-		return getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 	}
 
 	/**

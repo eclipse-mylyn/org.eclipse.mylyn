@@ -23,6 +23,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryOperation;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylyn.internal.trac.core.TracTask.Kind;
@@ -30,15 +37,9 @@ import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
-import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -47,7 +48,7 @@ import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 /**
  * @author Steffen Pingel
  */
-public class TracRepositoryConnector extends AbstractRepositoryConnector {
+public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 
 	private final static String CLIENT_LABEL = "Trac (supports 0.9 or 0.10 through Web and XML-RPC)";
 
@@ -138,7 +139,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractTaskDataHandler getTaskDataHandler() {
+	public AbstractTaskDataHandler getLegacyTaskDataHandler() {
 		return taskDataHandler;
 	}
 
@@ -161,7 +162,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				for (TracTicket ticket : tickets) {
 					RepositoryTaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket,
 							monitor);
-					resultCollector.accept(taskData);
+					((LegacyTaskDataCollector) resultCollector).accept(taskData);
 				}
 			} catch (Throwable e) {
 				return TracCorePlugin.toStatus(e, repository);
@@ -421,7 +422,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		return getTaskDataHandler().getTaskData(repository, taskId, monitor);
+		return getLegacyTaskDataHandler().getTaskData(repository, taskId, monitor);
 	}
 
 	@Override

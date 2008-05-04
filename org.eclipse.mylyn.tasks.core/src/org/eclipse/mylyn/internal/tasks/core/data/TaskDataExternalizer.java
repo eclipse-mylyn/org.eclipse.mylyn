@@ -23,7 +23,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler2;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -59,7 +59,7 @@ public class TaskDataExternalizer {
 			throw new IOException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\"");
 		}
 
-		AbstractTaskDataHandler2 taskDataHandler = connector.getTaskDataHandler2();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler2();
 		if (taskDataHandler != null) {
 			if (taskDataState.getLastReadData() != null) {
 				taskDataHandler.migrateTaskData(taskRepository, taskDataState.getLastReadData());

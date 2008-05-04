@@ -5,13 +5,14 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
@@ -24,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  * @deprecated
  */
 @Deprecated
-public class QueryHitCollector extends TaskDataCollector {
+public class QueryHitCollector extends LegacyTaskDataCollector {
 
 	/**
 	 * @deprecated Use {@link TaskDataCollector#MAX_HITS} instead

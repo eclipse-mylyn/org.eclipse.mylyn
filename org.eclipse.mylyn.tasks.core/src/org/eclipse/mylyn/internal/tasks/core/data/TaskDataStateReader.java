@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.core.data;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler2;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
@@ -594,7 +594,7 @@ public class TaskDataStateReader extends DefaultHandler {
 		}
 
 		final TaskAttributeMapper attributeMapper;
-		AbstractTaskDataHandler2 taskDataHandler = connector.getTaskDataHandler2();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler2();
 		if (taskDataHandler != null) {
 			attributeMapper = taskDataHandler.getAttributeMapper(taskRepository);
 		} else {

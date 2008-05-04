@@ -537,7 +537,8 @@ public class TaskListElementImporter {
 	public void writeQueries(List<AbstractRepositoryQuery> queries, File outFile) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 		for (AbstractRepositoryQuery query : queries) {
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getRepositoryUrl());
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
+					query.getRepositoryUrl());
 			if (repository != null) {
 				repositories.add(repository);
 			}
@@ -596,7 +597,7 @@ public class TaskListElementImporter {
 
 	/**
 	 * @param Query
-	 *            document to read.
+	 * 		document to read.
 	 */
 	public List<AbstractRepositoryQuery> readQueryDocument(Document doc) {
 		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
@@ -649,7 +650,8 @@ public class TaskListElementImporter {
 	public void writeTask(AbstractTask task, OutputStream stream) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 		if (!task.isLocal()) {
-			repositories.add(TasksUi.getRepositoryManager().getRepository(task.getRepositoryUrl()));
+			repositories.add(TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+					task.getRepositoryUrl()));
 		}
 
 		Document doc = createTaskListDocument();

@@ -8,13 +8,13 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Steffen Pingel
  */
-public class TaskRepositoryPerson implements ITaskRepositoryPerson {
+public class RepositoryPerson implements IRepositoryPerson {
 
 	private String name;
 
@@ -22,7 +22,7 @@ public class TaskRepositoryPerson implements ITaskRepositoryPerson {
 
 	private final TaskRepository taskRepository;
 
-	public TaskRepositoryPerson(TaskRepository taskRepository, String personId) {
+	public RepositoryPerson(TaskRepository taskRepository, String personId) {
 		this.taskRepository = taskRepository;
 		this.personId = personId;
 	}

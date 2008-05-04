@@ -8,31 +8,131 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Date;
 
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
- * Encapsualtes resources that can be attached to a task.
- * 
  * @author Steffen Pingel
- * @since 2.0
- * @deprecated use {@link TaskAttachmentMapper} instead
+ * @since 3.0
  */
-@Deprecated
 public interface ITaskAttachment {
 
-	public InputStream createInputStream() throws IOException;
+	/**
+	 * @since 3.0
+	 */
+	public abstract IRepositoryPerson getAuthor();
 
-	public String getContentType();
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getComment();
 
-	public String getDescription();
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getConnectorKind();
 
-	public String getFilename();
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getContentType();
 
-	public long getLength();
+	/**
+	 * @since 3.0
+	 */
+	public abstract Date getCreationDate();
 
-	public boolean isPatch();
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getDescription();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getFileName();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract long getLength();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getRepositoryUrl();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract AbstractTask getTask();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract TaskAttribute getTaskAttribute();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract TaskRepository getTaskRepository();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getUrl();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract boolean isDeprecated();
+
+	public abstract boolean isPatch();
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void setAuthor(IRepositoryPerson author);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void setContentType(String contentType);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void setCreationDate(Date creationDate);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void setDeprecated(boolean deprecated);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void setDescription(String description);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void setFileName(String fileName);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void setLength(long length);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void setPatch(boolean patch);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void setUrl(String url);
 
 }

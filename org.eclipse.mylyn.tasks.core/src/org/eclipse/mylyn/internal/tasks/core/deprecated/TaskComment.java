@@ -6,9 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
 import java.io.Serializable;
+
 
 /**
  * A comment posted by a user on a task.

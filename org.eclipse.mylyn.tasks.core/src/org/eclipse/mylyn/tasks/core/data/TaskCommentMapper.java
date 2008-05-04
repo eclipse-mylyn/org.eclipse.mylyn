@@ -11,7 +11,7 @@ package org.eclipse.mylyn.tasks.core.data;
 import java.util.Date;
 
 import org.eclipse.mylyn.tasks.core.ITaskComment;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 
 /**
  * A comment posted by a user on a task.
@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
  */
 public class TaskCommentMapper {
 
-	private ITaskRepositoryPerson author;
+	private IRepositoryPerson author;
 
 	private final String commentId;
 
@@ -38,7 +38,7 @@ public class TaskCommentMapper {
 		this.commentId = commentId;
 	}
 
-	public ITaskRepositoryPerson getAuthor() {
+	public IRepositoryPerson getAuthor() {
 		return author;
 	}
 
@@ -62,7 +62,7 @@ public class TaskCommentMapper {
 		return url;
 	}
 
-	public void setAuthor(ITaskRepositoryPerson author) {
+	public void setAuthor(IRepositoryPerson author) {
 		this.author = author;
 	}
 
@@ -94,7 +94,7 @@ public class TaskCommentMapper {
 		}
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
 		if (child != null) {
-			ITaskRepositoryPerson person = mapper.getRepositoryPerson(child);
+			IRepositoryPerson person = mapper.getRepositoryPerson(child);
 			if (person.getName() == null) {
 				child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR_NAME);
 				if (child != null) {

@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
-import org.eclipse.mylyn.tasks.core.TaskSelection;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 
 /**
  * @author Mik Kersten

@@ -15,7 +15,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -29,8 +29,8 @@ public class OpenTaskAttachmentInBrowserHandler extends AbstractHandler {
 		if (selection instanceof IStructuredSelection) {
 			List<?> items = ((IStructuredSelection) selection).toList();
 			for (Object item : items) {
-				if (item instanceof ITaskAttachment2) {
-					TasksUiUtil.openUrl(((ITaskAttachment2) item).getUrl());
+				if (item instanceof ITaskAttachment) {
+					TasksUiUtil.openUrl(((ITaskAttachment) item).getUrl());
 				}
 			}
 		}

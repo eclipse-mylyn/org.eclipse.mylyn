@@ -34,7 +34,7 @@ public class TaskDetailLabelProvider extends LabelProvider implements ILabelProv
 		}
 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				(AbstractTask) element);
+				((AbstractTask) element).getConnectorKind());
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(connector.getConnectorKind());
 		if (overlay != null) {
 			return CommonImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false, false);
@@ -49,9 +49,9 @@ public class TaskDetailLabelProvider extends LabelProvider implements ILabelProv
 			return super.getText(element);
 		}
 
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-				((AbstractTask) element).getRepositoryUrl());
+		AbstractTask task = (AbstractTask) element;
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
 		return repository.getRepositoryLabel();
 	}
-
 }

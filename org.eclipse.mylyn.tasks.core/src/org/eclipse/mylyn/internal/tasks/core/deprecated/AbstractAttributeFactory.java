@@ -6,10 +6,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
 import java.io.Serializable;
 import java.util.Date;
+
 
 /**
  * Extend to provide mapping between repository task attribute IDs and native repository IDs.

@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskAttachmentEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -39,7 +39,7 @@ public class OpenTaskAttachmentInDefaultEditorHandler extends AbstractHandler {
 		if (selection instanceof IStructuredSelection) {
 			List<?> items = ((IStructuredSelection) selection).toList();
 			for (Object item : items) {
-				if (item instanceof ITaskAttachment2) {
+				if (item instanceof ITaskAttachment) {
 					if (page == null) {
 						IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 						page = window.getActivePage();
@@ -47,14 +47,14 @@ public class OpenTaskAttachmentInDefaultEditorHandler extends AbstractHandler {
 							throw new ExecutionException("No active workbench page");
 						}
 					}
-					openAttachment(page, (ITaskAttachment2) item);
+					openAttachment(page, (ITaskAttachment) item);
 				}
 			}
 		}
 		return null;
 	}
 
-	private void openAttachment(IWorkbenchPage page, ITaskAttachment2 attachment) throws ExecutionException {
+	private void openAttachment(IWorkbenchPage page, ITaskAttachment attachment) throws ExecutionException {
 		TaskAttachmentEditorInput input = new TaskAttachmentEditorInput(attachment);
 		IEditorDescriptor description = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(input.getName());
 		if (description == null) {

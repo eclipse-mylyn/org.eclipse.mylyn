@@ -22,6 +22,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -32,9 +33,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -75,7 +74,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	public abstract IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit);
 
 	/**
-	 * @since 2.2
+	 * @since 3.0
 	 */
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection);
 
@@ -110,14 +109,6 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 		can be null
 	 */
 	public String getTaskKindLabel(AbstractTask task) {
-		return LABEL_TASK_DEFAULT;
-	}
-
-	/**
-	 * @deprecated use {@link #getTaskKindLabel(AbstractTask)} instead
-	 */
-	@Deprecated
-	public String getTaskKindLabel(RepositoryTaskData taskData) {
 		return LABEL_TASK_DEFAULT;
 	}
 

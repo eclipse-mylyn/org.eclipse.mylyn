@@ -62,6 +62,13 @@ import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
@@ -69,19 +76,13 @@ import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQue
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
-import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
@@ -625,7 +626,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * @since 3.0
 	 */
 	public TaskRepository getLocalTaskRepository() {
-		TaskRepository localRepository = repositoryManager.getRepository(LocalRepositoryConnector.REPOSITORY_URL);
+		TaskRepository localRepository = repositoryManager.getRepository(LocalRepositoryConnector.CONNECTOR_KIND,
+				LocalRepositoryConnector.REPOSITORY_URL);
 		if (localRepository == null) {
 			localRepository = new TaskRepository(LocalRepositoryConnector.CONNECTOR_KIND,
 					LocalRepositoryConnector.REPOSITORY_URL);
@@ -1121,6 +1123,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	/**
 	 * TODO 3.0: move, uses and exposes internal class.
 	 */
+	@SuppressWarnings("restriction")
 	@Deprecated
 	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector, AbstractTask task) {
 
@@ -1150,8 +1153,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 				notification.setDescription(description.toString());
 
-				if (connector != null) {
-					AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
+				if (connector instanceof AbstractLegacyRepositoryConnector) {
+					AbstractTaskDataHandler offlineHandler = ((LocalRepositoryConnector) connector).getLegacyTaskDataHandler();
 					if (offlineHandler != null && newTaskData.getLastModified() != null) {
 						Date modified = newTaskData.getAttributeFactory().getDateForAttributeType(
 								RepositoryTaskAttribute.DATE_MODIFIED, newTaskData.getLastModified());

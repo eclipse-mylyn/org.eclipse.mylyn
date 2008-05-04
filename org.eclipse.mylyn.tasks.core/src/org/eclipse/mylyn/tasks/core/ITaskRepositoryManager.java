@@ -18,32 +18,20 @@ import java.util.Set;
  */
 public interface ITaskRepositoryManager {
 
-	public abstract AbstractRepositoryConnector getRepositoryConnector(String connectorKind);
-
-	public abstract AbstractRepositoryConnector getRepositoryConnector(AbstractTask task);
+	public abstract void addListener(ITaskRepositoryListener listener);
 
 	public abstract void addRepository(TaskRepository repository, String repositoryFilePath);
 
-	public abstract void addListener(ITaskRepositoryListener listener);
-
-	public abstract void removeListener(ITaskRepositoryListener listener);
-
-	public abstract TaskRepository getRepository(String kind, String urlString);
-
-	/**
-	 * @return first repository that matches the given url
-	 */
-	public abstract TaskRepository getRepository(String urlString);
+	public abstract List<TaskRepository> getAllRepositories();
 
 	public abstract Set<TaskRepository> getRepositories(String kind);
 
-	/**
-	 * @since 3.0
-	 */
-	public abstract TaskRepository getRepository(AbstractTask task);
+	public abstract TaskRepository getRepository(String kind, String urlString);
 
-	public abstract List<TaskRepository> getAllRepositories();
+	public abstract AbstractRepositoryConnector getRepositoryConnector(String connectorKind);
 
 	public abstract Collection<AbstractRepositoryConnector> getRepositoryConnectors();
+
+	public abstract void removeListener(ITaskRepositoryListener listener);
 
 }

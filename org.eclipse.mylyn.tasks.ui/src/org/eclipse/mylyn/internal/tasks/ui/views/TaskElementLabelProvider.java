@@ -129,8 +129,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					compositeDescriptor.icon = CommonImages.CALENDAR;
 				} else if (element instanceof Person) {
 					compositeDescriptor.icon = CommonImages.PERSON;
-					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-							((Person) element).getRepositoryUrl());
+					Person person = (Person) element;
+					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(person.getConnectorKind(),
+							person.getRepositoryUrl());
 
 //					for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
 					if (repository != null
@@ -263,28 +264,23 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			AbstractTask task = getCorrespondingTask((AbstractTaskContainer) object);
 			if (task != null) {
 				if (TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonThemes.COLOR_COMPLETED_TODAY);
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED_TODAY);
 				} else if (task.isCompleted()) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonThemes.COLOR_COMPLETED);
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED);
 				} else if (task.isActive()) {
 					return CommonColors.CONTEXT_ACTIVE;
 				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(task)) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonThemes.COLOR_OVERDUE);
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE);
 				} else if (TasksUiPlugin.getTaskActivityManager().isDueToday(task)) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonThemes.COLOR_SCHEDULED_TODAY);
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_TODAY);
 				} else if (!task.internalIsFloatingScheduledDate() && task.isPastReminder()) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonThemes.COLOR_SCHEDULED_PAST);
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_PAST);
 				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task)) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonThemes.COLOR_SCHEDULED_TODAY);
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_TODAY);
 				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task)) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonThemes.COLOR_SCHEDULED_THIS_WEEK);
+					return themeManager.getCurrentTheme()
+							.getColorRegistry()
+							.get(CommonThemes.COLOR_SCHEDULED_THIS_WEEK);
 				}
 			}
 		} else if (object instanceof AbstractTaskContainer) {
@@ -293,8 +289,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					return CommonColors.CONTEXT_ACTIVE;
 				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(child)) {
 //				} else if ((child.isPastReminder() && !child.isCompleted()) || showHasChildrenPastDue(child)) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(
-							CommonThemes.COLOR_OVERDUE);
+					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE);
 				}
 			}
 		}

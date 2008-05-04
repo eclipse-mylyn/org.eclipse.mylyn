@@ -13,7 +13,7 @@ import java.util.Date;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public class TaskComment implements ITaskComment {
 
-	private ITaskRepositoryPerson author;
+	private IRepositoryPerson author;
 
 	private Date creationDate;
 
@@ -49,7 +49,7 @@ public class TaskComment implements ITaskComment {
 		this.taskAttribute = taskAttribute;
 	}
 
-	public ITaskRepositoryPerson getAuthor() {
+	public IRepositoryPerson getAuthor() {
 		return author;
 	}
 
@@ -89,7 +89,7 @@ public class TaskComment implements ITaskComment {
 		return url;
 	}
 
-	public void setAuthor(ITaskRepositoryPerson author) {
+	public void setAuthor(IRepositoryPerson author) {
 		this.author = author;
 	}
 

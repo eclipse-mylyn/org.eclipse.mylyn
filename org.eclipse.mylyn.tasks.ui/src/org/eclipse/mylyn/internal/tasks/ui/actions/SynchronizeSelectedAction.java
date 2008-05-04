@@ -67,8 +67,8 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				} else if (obj instanceof TaskCategory) {
 					TaskCategory cat = (TaskCategory) obj;
 					for (AbstractTask task : cat.getChildren()) {
-						AbstractRepositoryConnector client = TasksUi.getRepositoryManager()
-								.getRepositoryConnector(task.getConnectorKind());
+						AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
+								task.getConnectorKind());
 						addTaskToSync(client, task);
 					}
 				} else if (obj instanceof AbstractTask) {
@@ -91,8 +91,8 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 					}
 
 					for (AbstractRepositoryQuery query : queriesToSync) {
-						TaskRepository repos = TasksUi.getRepositoryManager().getRepository(
-								query.getConnectorKind(), query.getRepositoryUrl());
+						TaskRepository repos = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
+								query.getRepositoryUrl());
 						Set<AbstractRepositoryQuery> queries = repositoriesToSync.get(repos);
 						if (queries == null) {
 							queries = new HashSet<AbstractRepositoryQuery>();
@@ -104,8 +104,8 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 				for (Map.Entry<TaskRepository, Set<AbstractRepositoryQuery>> entry : repositoriesToSync.entrySet()) {
 					TaskRepository repository = entry.getKey();
-					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-							.getRepositoryConnector(repository.getConnectorKind());
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+							repository.getConnectorKind());
 					Set<AbstractRepositoryQuery> queries = entry.getValue();
 					TasksUiInternal.synchronizeQueries(connector, repository, queries, null, true);
 				}

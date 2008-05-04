@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 
 /**
  * A node for the tree in the <code>RepositoryTaskOutlinePage</code>.

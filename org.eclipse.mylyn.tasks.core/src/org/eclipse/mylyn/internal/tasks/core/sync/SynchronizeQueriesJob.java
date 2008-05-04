@@ -26,10 +26,13 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -64,7 +67,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private class TaskCollector extends TaskDataCollector {
+	private class TaskCollector extends LegacyTaskDataCollector {
 
 		private final Set<AbstractTask> removedQueryResults;
 
@@ -85,14 +88,16 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			if (task == null) {
 				task = connector.createTask(taskData.getRepositoryUrl(), taskData.getTaskId(), "");
 				task.setStale(true);
-				changed = connector.updateTaskFromTaskData(repository, task, taskData);
+				changed = ((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task,
+						taskData);
 			} else {
-				changed = connector.updateTaskFromTaskData(repository, task, taskData);
+				changed = ((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task,
+						taskData);
 				removedQueryResults.remove(task);
 			}
 			taskList.addTask(task, repositoryQuery);
 			if (!taskData.isPartial()) {
-				synchronizationManager.saveIncoming(task, taskData, isUser());
+				((TaskDataManager) synchronizationManager).saveIncoming(task, taskData, isUser());
 			} else if (changed && !task.isStale()
 					&& task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
 				// TODO move to synchronizationManager

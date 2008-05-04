@@ -55,7 +55,8 @@ public class TaskRepositoryUtil {
 	 */
 	private static boolean isAddAutomatically(String repositoryUrl) {
 		for (AbstractRepositoryConnector connector : TasksUi.getRepositoryManager().getRepositoryConnectors()) {
-			for (RepositoryTemplate template : connector.getTemplates()) {
+			for (RepositoryTemplate template : TasksUiPlugin.getRepositoryTemplateManager().getTemplates(
+					connector.getConnectorKind())) {
 				if (template.repositoryUrl != null && template.repositoryUrl.equalsIgnoreCase(repositoryUrl)
 						&& template.addAutomatically) {
 					return true;

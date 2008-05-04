@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui.deprecated;
 
 import java.util.Set;
 
@@ -16,15 +16,16 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskFactory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * Used for creating tasks from repository task data.
@@ -37,7 +38,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 @Deprecated
 public class TaskFactory implements ITaskFactory {
 
-	private final AbstractRepositoryConnector connector;
+	private final AbstractLegacyRepositoryConnector connector;
 
 	private final TaskDataManager synchManager;
 
@@ -55,11 +56,12 @@ public class TaskFactory implements ITaskFactory {
 		this.repository = repository;
 		this.updateTasklist = updateTasklist;
 		this.forced = forced;
-		connector = TasksUi.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
+		connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
 		synchManager = TasksUiPlugin.getTaskDataManager();
 		taskList = TasksUi.getTaskListManager().getTaskList();
 		//dataManager = TasksUiPlugin.getTaskDataManager();
-		dataHandler = connector.getTaskDataHandler();
+		dataHandler = connector.getLegacyTaskDataHandler();
 	}
 
 	@Deprecated
@@ -68,10 +70,10 @@ public class TaskFactory implements ITaskFactory {
 	}
 
 	/**
-	 * @param updateTasklist -
-	 *            synchronize task with the provided taskData
-	 * @param forced -
-	 *            user requested synchronization
+	 * @param updateTasklist
+	 * 		- synchronize task with the provided taskData
+	 * @param forced
+	 * 		- user requested synchronization
 	 * @throws CoreException
 	 */
 	public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
@@ -116,7 +118,7 @@ public class TaskFactory implements ITaskFactory {
 	/**
 	 * Creates a new task from the given task data. Does NOT add resulting task to the tasklist
 	 */
-	private AbstractTask createTaskFromTaskData(AbstractRepositoryConnector connector, TaskRepository repository,
+	private AbstractTask createTaskFromTaskData(AbstractLegacyRepositoryConnector connector, TaskRepository repository,
 			RepositoryTaskData taskData, boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
 		AbstractTask repositoryTask = null;
 		if (monitor == null) {
@@ -132,8 +134,8 @@ public class TaskFactory implements ITaskFactory {
 				taskDataManager.setNewTaskData(taskData);
 
 				if (retrieveSubTasks) {
-					monitor.beginTask("Creating task", connector.getTaskDataHandler().getSubTaskIds(taskData).size());
-					for (String subId : connector.getTaskDataHandler().getSubTaskIds(taskData)) {
+					monitor.beginTask("Creating task", connector.getLegacyTaskDataHandler().getSubTaskIds(taskData).size());
+					for (String subId : connector.getLegacyTaskDataHandler().getSubTaskIds(taskData)) {
 						if (subId == null || subId.trim().equals("")) {
 							continue;
 						}
@@ -154,12 +156,13 @@ public class TaskFactory implements ITaskFactory {
 	/**
 	 * Create new repository task, adding result to tasklist
 	 */
-	private AbstractTask createTaskFromExistingId(AbstractRepositoryConnector connector, TaskRepository repository,
-			String id, boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
+	private AbstractTask createTaskFromExistingId(AbstractLegacyRepositoryConnector connector,
+			TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor)
+			throws CoreException {
 		AbstractTask repositoryTask = taskList.getTask(repository.getRepositoryUrl(), id);
-		if (repositoryTask == null && connector.getTaskDataHandler() != null) {
+		if (repositoryTask == null && connector.getLegacyTaskDataHandler() != null) {
 			RepositoryTaskData taskData = null;
-			taskData = connector.getTaskDataHandler().getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
+			taskData = connector.getLegacyTaskDataHandler().getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
 			if (taskData != null) {
 				repositoryTask = createTaskFromTaskData(connector, repository, taskData, retrieveSubTasks,
 						new SubProgressMonitor(monitor, 1));

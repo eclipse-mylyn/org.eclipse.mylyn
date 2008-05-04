@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryListenerAdapter;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -58,7 +58,7 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private DisconnectRepositoryAction offlineAction;
 
-	private final ITaskRepositoryListener REPOSITORY_LISTENER = new TaskRepositoryListenerAdapter() {
+	private final ITaskRepositoryListener REPOSITORY_LISTENER = new TaskRepositoryAdapter() {
 
 		@Override
 		public void repositoriesRead() {
@@ -267,7 +267,7 @@ public class TaskRepositoriesView extends ViewPart {
 		return viewer;
 	}
 
-	public class TaskRepositoryListener extends TaskRepositoryListenerAdapter {
+	public class TaskRepositoryListener extends TaskRepositoryAdapter {
 
 		@Override
 		public void repositorySettingsChanged(TaskRepository repository) {

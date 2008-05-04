@@ -8,26 +8,30 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-
 /**
- * Used for creating tasks from repository task data.
- * 
- * NOTE: likely to change for 3.0.
- * 
  * @author Rob Elves
- * @since 2.0
+ * @since 3.0
  */
-@Deprecated
-public interface ITaskFactory {
+public class TaskRepositoryAdapter implements ITaskRepositoryListener {
 
-	/**
-	 * @param synchData
-	 * 		- synchronize task with the provided taskData
-	 * @param forced
-	 * 		- user requested synchronization
-	 */
-	public abstract AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException;
+	public void repositoriesRead() {
+		// ignore
+	}
+
+	public void repositoryAdded(TaskRepository repository) {
+		// ignore
+	}
+
+	public void repositoryRemoved(TaskRepository repository) {
+		// ignore
+	}
+
+	public void repositorySettingsChanged(TaskRepository repository) {
+		// ignore
+	}
+
+	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
+		// ignore
+	}
 
 }

@@ -37,7 +37,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
@@ -119,7 +119,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	private final String S_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$
 
-	private ITaskAttachment2 taskAttachment;
+	private ITaskAttachment taskAttachment;
 
 	public InputAttachmentSourcePage(NewAttachmentWizard wizard) {
 		super("InputAttachmentPage");
@@ -701,11 +701,11 @@ public class InputAttachmentSourcePage extends WizardPage {
 		}
 	}
 
-	public ITaskAttachment2 getTaskAttachment() {
+	public ITaskAttachment getTaskAttachment() {
 		return taskAttachment;
 	}
 
-	public void setTaskAttachment(ITaskAttachment2 taskAttachment) {
+	public void setTaskAttachment(ITaskAttachment taskAttachment) {
 		this.taskAttachment = taskAttachment;
 	}
 

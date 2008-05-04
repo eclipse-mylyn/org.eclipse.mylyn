@@ -22,16 +22,18 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
 /**
@@ -44,8 +46,6 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	private final AbstractRepositoryConnector connector;
 
 	private final ITaskDataManager taskDataManager;
-
-	private final AbstractTaskDataHandler taskDataHandler;
 
 	private final ITaskList taskList;
 
@@ -61,7 +61,6 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		this.connector = connector;
 		this.taskRepository = taskRepository;
 		this.tasks = tasks;
-		this.taskDataHandler = connector.getTaskDataHandler();
 	}
 
 	@Override
@@ -69,7 +68,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		try {
 			monitor.beginTask("Processing", tasks.size() * 100);
 
-			if (taskDataHandler != null && taskDataHandler.canGetMultiTaskData()) {
+			if (canGetMultiTaskData()) {
 				try {
 					synchronizeTasks(new SubProgressMonitor(monitor, tasks.size() * 100), taskRepository, tasks);
 				} catch (CoreException e) {
@@ -98,6 +97,18 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		return Status.OK_STATUS;
 	}
 
+	@SuppressWarnings("deprecation")
+	private boolean canGetMultiTaskData() {
+		if (connector instanceof AbstractLegacyRepositoryConnector) {
+			AbstractTaskDataHandler taskDataHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
+			return taskDataHandler != null && taskDataHandler.canGetMultiTaskData();
+		} else {
+			org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler2();
+			return taskDataHandler != null && taskDataHandler.canGetMultiTaskData();
+		}
+	}
+
+	@SuppressWarnings("deprecation")
 	private void synchronizeTask(IProgressMonitor monitor, AbstractTask task) {
 		monitor.subTask("Receiving task " + task.getSummary());
 		task.setSynchronizationStatus(null);
@@ -107,15 +118,19 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
-			TaskData taskData = connector.getTaskData2(taskRepository, taskId, monitor);
-			if (taskData != null) {
-				updateFromTaskData(taskRepository, task, taskData);
-			} else {
-				RepositoryTaskData downloadedTaskData = connector.getTaskData(taskRepository, taskId, monitor);
+			if (connector instanceof AbstractLegacyRepositoryConnector) {
+				RepositoryTaskData downloadedTaskData = ((AbstractLegacyRepositoryConnector) connector).getTaskData(
+						taskRepository, taskId, monitor);
 				if (downloadedTaskData != null) {
 					updateFromTaskData(taskRepository, task, downloadedTaskData);
+				}
+			} else {
+				TaskData taskData = connector.getTaskData2(taskRepository, taskId, monitor);
+				if (taskData != null) {
+					updateFromTaskData(taskRepository, task, taskData);
 				} else {
-					// FIXME log/set error
+					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Connector failed to return task data for task \"" + task + "\""));
 				}
 			}
 		} catch (final CoreException e) {
@@ -123,6 +138,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void synchronizeTasks(IProgressMonitor monitor, final TaskRepository repository, Set<AbstractTask> tasks)
 			throws CoreException {
 		monitor.subTask("Receiving " + tasks.size() + " tasks from " + repository.getRepositoryLabel());
@@ -132,7 +148,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			idToTask.put(task.getTaskId(), task);
 		}
 
-		TaskDataCollector collector = new TaskDataCollector() {
+		LegacyTaskDataCollector collector = new LegacyTaskDataCollector() {
 			@Override
 			public void accept(RepositoryTaskData taskData) {
 				AbstractTask task = idToTask.remove(taskData.getTaskId());
@@ -153,16 +169,25 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		if (!isUser()) {
 			monitor = Policy.backgroundMonitorFor(monitor);
 		}
-		taskDataHandler.getMultiTaskData(repository, Collections.unmodifiableSet(idToTask.keySet()), collector, monitor);
+		if (connector instanceof AbstractLegacyRepositoryConnector) {
+			((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler().getMultiTaskData(repository,
+					Collections.unmodifiableSet(idToTask.keySet()), collector, monitor);
+		} else {
+			connector.getTaskDataHandler2().getMultiTaskData(repository,
+					Collections.unmodifiableSet(idToTask.keySet()), collector, monitor);
+		}
+
 	}
 
+	@SuppressWarnings("deprecation")
 	private void updateFromTaskData(TaskRepository repository, AbstractTask task, RepositoryTaskData taskData) {
 		// HACK: part of hack below
 		//Date oldDueDate = repositoryTask.getDueDate();
 
-		boolean changed = connector.updateTaskFromTaskData(repository, task, taskData);
+		boolean changed = ((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task,
+				taskData);
 		if (!taskData.isPartial()) {
-			taskDataManager.saveIncoming(task, taskData, isUser());
+			((TaskDataManager) taskDataManager).saveIncoming(task, taskData, isUser());
 		} else if (changed && !task.isStale() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
 			// TODO move to synchronizationManager
 			// set incoming marker for web tasks 

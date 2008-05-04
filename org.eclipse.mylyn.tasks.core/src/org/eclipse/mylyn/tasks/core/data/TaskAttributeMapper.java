@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -125,8 +125,8 @@ public class TaskAttributeMapper {
 		return attribute.getOptions();
 	}
 
-	public ITaskRepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
-		ITaskRepositoryPerson person = taskRepository.createPerson(taskAttribute.getValue());
+	public IRepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
+		IRepositoryPerson person = taskRepository.createPerson(taskAttribute.getValue());
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.PERSON_NAME);
 		if (child != null) {
 			person.setName(getValue(child));
@@ -217,7 +217,7 @@ public class TaskAttributeMapper {
 		}
 	}
 
-	public void setRepositoryPerson(TaskAttribute taskAttribute, ITaskRepositoryPerson person) {
+	public void setRepositoryPerson(TaskAttribute taskAttribute, IRepositoryPerson person) {
 		setValue(taskAttribute, person.getPersonId());
 		if (person.getName() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.PERSON_NAME);
@@ -237,7 +237,7 @@ public class TaskAttributeMapper {
 		attribute.setValues(Arrays.asList(values));
 	}
 
-	public void updateTaskAttachment(ITaskAttachment2 taskAttachment, TaskAttribute taskAttribute) {
+	public void updateTaskAttachment(ITaskAttachment taskAttachment, TaskAttribute taskAttribute) {
 		TaskAttachmentMapper.createFrom(taskAttribute).applyTo(taskAttachment);
 	}
 

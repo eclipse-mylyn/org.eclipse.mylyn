@@ -6,26 +6,29 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
-
-import java.util.Set;
+package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
- * Abstraction used for collecting tasks, e.g. when performing queries on the repository.
+ * Used for creating tasks from repository task data.
+ * 
+ * NOTE: likely to change for 3.0.
  * 
  * @author Rob Elves
  * @since 2.0
- * @deprecated use {@link TaskDataCollector} instead
  */
 @Deprecated
-public interface ITaskCollector {
+public interface ITaskFactory {
 
-	public void accept(AbstractTask task);
+	/**
+	 * @param synchData
+	 * 		- synchronize task with the provided taskData
+	 * @param forced
+	 * 		- user requested synchronization
+	 */
+	public abstract AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException;
 
-	public void accept(RepositoryTaskData taskData) throws CoreException;
-
-	public Set<AbstractTask> getTasks();
 }

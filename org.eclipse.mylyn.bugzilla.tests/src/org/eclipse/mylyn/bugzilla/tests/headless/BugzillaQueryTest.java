@@ -20,15 +20,15 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.QueryHitCollector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.ui.deprecated.TaskFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.QueryHitCollector;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TaskFactory;
 
 // import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -42,7 +42,7 @@ public class BugzillaQueryTest extends TestCase {
 
 	private TaskRepository repository;
 
-	private AbstractRepositoryConnector connectorOriginal;
+	private AbstractLegacyRepositoryConnector connectorOriginal;
 
 	private BugzillaRepositoryConnector connector;
 
@@ -52,7 +52,7 @@ public class BugzillaQueryTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		connectorOriginal = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		connectorOriginal = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				BugzillaCorePlugin.REPOSITORY_KIND);
 
 		BugzillaLanguageSettings language = BugzillaCorePlugin.getDefault().getLanguageSetting(
@@ -61,7 +61,7 @@ public class BugzillaQueryTest extends TestCase {
 		connector = new BugzillaRepositoryConnector();
 		connector.init(new TaskList());
 		connector.addLanguageSetting(language);
-		handler = connector.getTaskDataHandler();
+		handler = connector.getLegacyTaskDataHandler();
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);

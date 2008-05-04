@@ -15,11 +15,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -49,8 +49,8 @@ public class CopyAttachmentToClipboardJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(attachment.getRepositoryKind(),
 				attachment.getRepositoryUrl());
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				attachment.getRepositoryKind());
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
+				.getRepositoryConnector(attachment.getRepositoryKind());
 		AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 		if (handler == null) {
 			return new RepositoryStatus(IStatus.INFO, TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL,

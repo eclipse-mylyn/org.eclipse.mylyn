@@ -15,10 +15,10 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskFromSelectionAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
-import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.TaskComment;
 
 /**
  * @author Frank Becker

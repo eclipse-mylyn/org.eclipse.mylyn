@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public interface ITaskComment {
 
-	public abstract ITaskRepositoryPerson getAuthor();
+	public abstract IRepositoryPerson getAuthor();
 
 	public abstract String getConnectorKind();
 
@@ -38,7 +38,7 @@ public interface ITaskComment {
 
 	public abstract String getUrl();
 
-	public abstract void setAuthor(ITaskRepositoryPerson author);
+	public abstract void setAuthor(IRepositoryPerson author);
 
 	public abstract void setCreationDate(Date creationDate);
 

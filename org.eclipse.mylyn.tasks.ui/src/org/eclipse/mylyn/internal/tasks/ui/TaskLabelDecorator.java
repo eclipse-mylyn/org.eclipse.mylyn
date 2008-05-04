@@ -37,7 +37,8 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			String repositoryUrl = query.getRepositoryUrl();
-			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
+			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
+					repositoryUrl);
 			if (repositoryUrl != null && taskRepository != null) {
 				if (taskRepository.getRepositoryUrl().equals(taskRepository.getRepositoryLabel())) {
 					try {

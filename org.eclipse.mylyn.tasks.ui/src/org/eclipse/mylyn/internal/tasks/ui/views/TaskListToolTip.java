@@ -270,7 +270,8 @@ public class TaskListToolTip extends ToolTip {
 		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			if (task.getSynchronizationState().isIncoming()) {
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(task);
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+						task.getConnectorKind());
 				if (connector != null) {
 					AbstractNotification notification = TasksUiPlugin.getDefault().getIncommingNotification(connector,
 							task);

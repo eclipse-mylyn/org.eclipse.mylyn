@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -194,7 +194,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
 		formHyperlink.setBackground(null);
 		formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		ITaskRepositoryPerson author = taskComment.getAuthor();
+		IRepositoryPerson author = taskComment.getAuthor();
 		if (author != null
 				&& author.getPersonId().equalsIgnoreCase(getTaskEditorPage().getTaskRepository().getUserName())) {
 			formHyperlink.setImage(CommonImages.getImage(CommonImages.PERSON_ME_NARROW));

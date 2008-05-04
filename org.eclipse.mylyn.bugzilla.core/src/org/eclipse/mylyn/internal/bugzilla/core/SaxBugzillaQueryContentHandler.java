@@ -10,10 +10,10 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.util.Locale;
 
+import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -38,13 +38,13 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	
 	private StringBuffer characters;
 
-	private TaskDataCollector collector;
+	private LegacyTaskDataCollector collector;
 
 	private String repositoryUrl;
 
 	private int resultCount;
 
-	public SaxBugzillaQueryContentHandler(String repositoryUrl, TaskDataCollector collector) {
+	public SaxBugzillaQueryContentHandler(String repositoryUrl, LegacyTaskDataCollector collector) {
 		this.repositoryUrl = repositoryUrl;
 		this.collector = collector;
 	}

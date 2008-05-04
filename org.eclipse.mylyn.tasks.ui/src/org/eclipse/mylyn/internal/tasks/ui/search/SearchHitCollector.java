@@ -15,6 +15,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -22,7 +25,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -38,7 +40,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  * @since 2.0
  */
-public class SearchHitCollector extends TaskDataCollector implements ISearchQuery {
+public class SearchHitCollector extends LegacyTaskDataCollector implements ISearchQuery {
 
 	private static final String LABEL_MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
@@ -103,7 +105,7 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 		if (task == null) {
 			task = connector.createTask(taskData.getRepositoryUrl(), taskData.getTaskId(), "");
-			connector.updateTaskFromTaskData(repository, task, taskData);
+			((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task, taskData);
 		}
 		taskResults.add(task);
 		this.searchResult.addMatch(new Match(task, 0, 0));

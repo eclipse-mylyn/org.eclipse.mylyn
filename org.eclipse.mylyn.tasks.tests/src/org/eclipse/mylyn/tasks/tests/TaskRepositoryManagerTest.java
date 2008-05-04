@@ -19,8 +19,8 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
@@ -118,7 +118,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testConnectorAddition() {
-		AbstractRepositoryConnector connector = new MockRepositoryConnector();
+		AbstractLegacyRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
 		assertNotNull(manager.getRepositoryConnector(connector.getConnectorKind()));
 	}
@@ -201,7 +201,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		// Note: if a connector doesn't exist the associated repositories are not loaded (orphaned) 
 		// causing this test to fail.
-		AbstractRepositoryConnector connector = new MockRepositoryConnector();
+		AbstractLegacyRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
 
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,

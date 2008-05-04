@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 
 public interface IRepositoryTaskSelection extends ISelection {
 

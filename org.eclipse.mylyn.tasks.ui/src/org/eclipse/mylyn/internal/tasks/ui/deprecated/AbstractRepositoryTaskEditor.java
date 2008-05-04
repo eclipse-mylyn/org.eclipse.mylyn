@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.deprecated;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -75,6 +75,14 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryOperation;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
@@ -105,26 +113,23 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
-import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
-import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
@@ -544,7 +549,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		repositoryTask = editorInput.getRepositoryTask();
 		repository = editorInput.getRepository();
 		taskData = editorInput.getTaskData();
-		connector = TasksUi.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
+		connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
 		commentSortIsUp = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				PREF_SORT_ORDER_PREFIX + repository.getConnectorKind());
 		setSite(site);
@@ -852,7 +858,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		String openedDateString = "";
 		String modifiedDateString = "";
-		final AbstractTaskDataHandler taskDataManager = connector.getTaskDataHandler();
+		final AbstractTaskDataHandler taskDataManager = connector.getLegacyTaskDataHandler();
 		if (taskDataManager != null) {
 			Date created = taskData.getAttributeFactory().getDateForAttributeType(
 					RepositoryTaskAttribute.DATE_CREATION, taskData.getCreated());
@@ -1476,7 +1482,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			attachmentsTableViewer.setColumnProperties(attachmentsColumns);
 			ColumnViewerToolTipSupport.enableFor(attachmentsTableViewer, ToolTip.NO_RECREATE);
 
-			final AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
+			final AbstractTaskDataHandler offlineHandler = connector.getLegacyTaskDataHandler();
 			if (offlineHandler != null) {
 				attachmentsTableViewer.setSorter(new ViewerSorter() {
 					@Override
@@ -3218,7 +3224,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private Button attachContextButton;
 
-	private AbstractRepositoryConnector connector;
+	private AbstractLegacyRepositoryConnector connector;
 
 	private Cursor waitCursor;
 
@@ -3585,7 +3591,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				AbstractTask modifiedTask = null;
 				try {
 					monitor.beginTask("Submitting task", 3);
-					String taskId = connector.getTaskDataHandler().postTaskData(repository, taskData,
+					String taskId = connector.getLegacyTaskDataHandler().postTaskData(repository, taskData,
 							new SubProgressMonitor(monitor, 1));
 					final boolean isNew = taskData.isNew();
 					if (isNew) {

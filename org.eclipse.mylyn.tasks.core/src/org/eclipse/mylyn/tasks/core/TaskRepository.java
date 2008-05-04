@@ -30,7 +30,7 @@ import org.eclipse.mylyn.commons.net.WebClientUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryPerson;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using Date objects led to the following
@@ -783,8 +783,8 @@ public final class TaskRepository extends PlatformObject {
 	/**
 	 * @since 3.0
 	 */
-	public ITaskRepositoryPerson createPerson(String personId) {
-		return new TaskRepositoryPerson(this, personId);
+	public IRepositoryPerson createPerson(String personId) {
+		return new RepositoryPerson(this, personId);
 	}
 
 }

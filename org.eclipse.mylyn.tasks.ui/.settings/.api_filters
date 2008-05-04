@@ -6,6 +6,9 @@
         <filter id="643846161" messageargs="org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskAttributeListener"/>
         <filter id="643842064" messageargs="org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode"/>
     </resource>
+    <resource path="src/org/eclipse/mylyn/internal/tasks/ui/dialogs/AbstractWorkingSetDialogCOPY.java">
+        <filter id="574619656" messageargs="org.eclipse.ui.dialogs.IWorkingSetSelectionDialog"/>
+    </resource>
     <resource path="src/org/eclipse/mylyn/tasks/ui/editors/AbstractNewRepositoryTaskEditor.java">
         <filter id="627060751" messageargs="org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker"/>
     </resource>

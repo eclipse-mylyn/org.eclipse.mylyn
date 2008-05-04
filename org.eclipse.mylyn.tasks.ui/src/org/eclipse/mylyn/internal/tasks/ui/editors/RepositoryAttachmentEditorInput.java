@@ -16,9 +16,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IPersistableElement;
@@ -81,8 +81,8 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 		private static final String CTYPE_HTML = "html";
 
 		public InputStream getContents() throws CoreException {
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					repository.getConnectorKind());
+			AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
+					.getRepositoryConnector(repository.getConnectorKind());
 			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 			return handler.getAttachmentAsStream(repository, attachment, new NullProgressMonitor());
 		}

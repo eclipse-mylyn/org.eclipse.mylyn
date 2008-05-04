@@ -26,7 +26,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Frank Becker
  * @since 3.0
  */
-public abstract class AbstractTaskDataHandler2 {
+public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * Download task data for each id provided

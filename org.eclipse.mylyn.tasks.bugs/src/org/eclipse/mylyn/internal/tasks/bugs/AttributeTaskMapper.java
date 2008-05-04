@@ -12,10 +12,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.DefaultTaskSchema;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.DefaultTaskSchema;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -40,9 +41,9 @@ public class AttributeTaskMapper {
 		if (repositoryUrl != null) {
 			String repositoryKind = attributes.get(IRepositoryConstants.REPOSITORY_KIND);
 			if (repositoryKind != null) {
-				taskRepository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
+				taskRepository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 			} else {
-				taskRepository = TasksUi.getRepositoryManager().getRepository(repositoryUrl, repositoryKind);
+				taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
 			}
 		}
 		return taskRepository;

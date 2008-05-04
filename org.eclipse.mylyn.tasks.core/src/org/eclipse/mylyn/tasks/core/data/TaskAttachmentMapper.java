@@ -10,8 +10,8 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Date;
 
-import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 
 /**
  * @since 3.0
@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
  */
 public class TaskAttachmentMapper {
 
-	private ITaskRepositoryPerson author;
+	private IRepositoryPerson author;
 
 	private String comment;
 
@@ -49,7 +49,7 @@ public class TaskAttachmentMapper {
 		return attachmentId;
 	}
 
-	public ITaskRepositoryPerson getAuthor() {
+	public IRepositoryPerson getAuthor() {
 		return author;
 	}
 
@@ -89,7 +89,7 @@ public class TaskAttachmentMapper {
 		return patch;
 	}
 
-	public void setAuthor(ITaskRepositoryPerson author) {
+	public void setAuthor(IRepositoryPerson author) {
 		this.author = author;
 	}
 
@@ -223,7 +223,7 @@ public class TaskAttachmentMapper {
 		}
 	}
 
-	public void applyTo(ITaskAttachment2 taskAttachment) {
+	public void applyTo(ITaskAttachment taskAttachment) {
 		if (getAuthor() != null) {
 			taskAttachment.setAuthor(getAuthor());
 		}

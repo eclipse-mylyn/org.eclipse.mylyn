@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Date;
 
-import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
 
 /**
  * @since 3.0

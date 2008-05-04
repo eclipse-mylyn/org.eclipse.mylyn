@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui;
 
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.compare.structuremergeviewer.IStructureCreator;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 
 /**
  * This implementation of the <code>IStructureCreator</code> interface makes the contents of a <code>BugReport</code>

@@ -265,8 +265,9 @@ public class UiLegendDialog extends PopupDialog {
 		Label labelCompleted = toolkit.createLabel(activityClient, "Completed");
 		labelCompleted.setFont(CommonFonts.STRIKETHROUGH);
 // labelCompleted.setForeground(TaskListColorsAndFonts.COLOR_TASK_COMPLETED);
-		labelCompleted.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_COMPLETED));
+		labelCompleted.setForeground(themeManager.getCurrentTheme()
+				.getColorRegistry()
+				.get(CommonThemes.COLOR_COMPLETED));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
@@ -282,8 +283,7 @@ public class UiLegendDialog extends PopupDialog {
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_OVERDUE));
 		Label textLabel = toolkit.createLabel(activityClient, "Past Due date");
-		textLabel.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
-				CommonThemes.COLOR_OVERDUE));
+		textLabel.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE));
 
 		imageLabel = toolkit.createLabel(activityClient, "");
 		imageLabel.setImage(CommonImages.getImage(CommonImages.BLANK));

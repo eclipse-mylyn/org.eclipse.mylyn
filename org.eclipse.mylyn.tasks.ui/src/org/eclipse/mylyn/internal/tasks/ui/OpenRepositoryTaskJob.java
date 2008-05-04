@@ -14,11 +14,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -71,10 +71,11 @@ public class OpenRepositoryTaskJob extends Job {
 			return Status.OK_STATUS;
 		}
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(repositoryKind);
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
+				.getRepositoryConnector(repositoryKind);
 		try {
 
-			AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
+			AbstractTaskDataHandler offlineHandler = connector.getLegacyTaskDataHandler();
 			if (offlineHandler != null) {
 				// the following code was copied from SynchronizeTaskJob
 				RepositoryTaskData downloadedTaskData = null;
@@ -98,7 +99,7 @@ public class OpenRepositoryTaskJob extends Job {
 		return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null);
 	}
 
-	private void openEditor(final TaskRepository repository, final AbstractRepositoryConnector connector,
+	private void openEditor(final TaskRepository repository, final AbstractLegacyRepositoryConnector connector,
 			final TaskRepository taskRepository, final RepositoryTaskData taskData) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {

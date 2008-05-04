@@ -39,8 +39,10 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -54,9 +56,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -123,15 +123,19 @@ public class TasksUiUtil {
 		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
 		if (task == null) {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
-			RepositoryTaskData taskData = connector.getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
-			if (taskData != null) {
-				task = createTaskFromTaskData(connector, taskList, repository, taskData, true, new SubProgressMonitor(
-						monitor, 1));
-				if (task != null) {
-					task.setSynchronizationState(SynchronizationState.INCOMING);
-					taskList.addTask(task);
+			if (connector instanceof AbstractLegacyRepositoryConnector) {
+				RepositoryTaskData taskData = ((AbstractLegacyRepositoryConnector) connector).getTaskData(repository,
+						id, new SubProgressMonitor(monitor, 1));
+				if (taskData != null) {
+					task = createTaskFromTaskData((AbstractLegacyRepositoryConnector) connector, taskList, repository,
+							taskData, true, new SubProgressMonitor(monitor, 1));
+					if (task != null) {
+						task.setSynchronizationState(SynchronizationState.INCOMING);
+						taskList.addTask(task);
+					}
 				}
 			}
+			// FIXME 3.0 support new task data
 		}
 		return task;
 	}
@@ -139,8 +143,8 @@ public class TasksUiUtil {
 	/**
 	 * Create new repository task, adding result to tasklist
 	 */
-	private static AbstractTask createTaskFromExistingId(AbstractRepositoryConnector connector, ITaskList taskList,
-			TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor)
+	private static AbstractTask createTaskFromExistingId(AbstractLegacyRepositoryConnector connector,
+			ITaskList taskList, TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor)
 			throws CoreException {
 		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
 		if (task == null) {
@@ -160,7 +164,7 @@ public class TasksUiUtil {
 	/**
 	 * Creates a new task from the given task data. Does NOT add resulting task to the task list.
 	 */
-	private static AbstractTask createTaskFromTaskData(AbstractRepositoryConnector connector, ITaskList taskList,
+	private static AbstractTask createTaskFromTaskData(AbstractLegacyRepositoryConnector connector, ITaskList taskList,
 			TaskRepository repository, RepositoryTaskData taskData, boolean retrieveSubTasks, IProgressMonitor monitor)
 			throws CoreException {
 		AbstractTask task = null;
@@ -177,8 +181,8 @@ public class TasksUiUtil {
 				taskDataManager.setNewTaskData(taskData);
 
 				if (retrieveSubTasks) {
-					monitor.beginTask("Creating task", connector.getTaskDataHandler().getSubTaskIds(taskData).size());
-					for (String subId : connector.getTaskDataHandler().getSubTaskIds(taskData)) {
+					monitor.beginTask("Creating task", connector.getLegacyTaskDataHandler().getSubTaskIds(taskData).size());
+					for (String subId : connector.getLegacyTaskDataHandler().getSubTaskIds(taskData)) {
 						if (subId == null || subId.trim().equals("")) {
 							continue;
 						}
@@ -387,14 +391,6 @@ public class TasksUiUtil {
 		return null;
 	}
 
-	/**
-	 * @deprecated Use {@link TasksUiInternal#openEditor(TaskCategory)} instead
-	 */
-	@Deprecated
-	public static void openEditor(TaskCategory category) {
-		TasksUiInternal.openEditor(category);
-	}
-
 	public static int openEditRepositoryWizard(TaskRepository repository) {
 		try {
 			EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
@@ -419,7 +415,7 @@ public class TasksUiUtil {
 	}
 
 	/**
-	 * @since 2.3
+	 * @since 3.0
 	 */
 	public static boolean openNewLocalTaskEditor(Shell shell, TaskSelection taskSelection) {
 		return openNewTaskEditor(shell, new NewLocalTaskWizard(taskSelection), taskSelection);
@@ -441,7 +437,7 @@ public class TasksUiUtil {
 	}
 
 	/**
-	 * @since 2.3
+	 * @since 3.0
 	 */
 	public static boolean openNewTaskEditor(Shell shell, TaskSelection taskSelection, TaskRepository taskRepository) {
 		final IWizard wizard;
@@ -561,7 +557,8 @@ public class TasksUiUtil {
 			if (connector != null) {
 				String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(url);
 				String id = connector.getTaskIdFromTaskUrl(url);
-				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
+				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connector.getConnectorKind(),
+						repositoryUrl);
 				opened = openTask(repository, id);
 			}
 			if (!opened) {

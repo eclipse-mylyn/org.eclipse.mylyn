@@ -12,17 +12,17 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @author Steffen Pingel
  */
-public class TaskAttachment implements ITaskAttachment2 {
+public class TaskAttachment implements ITaskAttachment {
 
-	private ITaskRepositoryPerson author;
+	private IRepositoryPerson author;
 
 	private String comment;
 
@@ -57,7 +57,7 @@ public class TaskAttachment implements ITaskAttachment2 {
 		this.taskAttribute = taskAttribute;
 	}
 
-	public ITaskRepositoryPerson getAuthor() {
+	public IRepositoryPerson getAuthor() {
 		return author;
 	}
 
@@ -117,7 +117,7 @@ public class TaskAttachment implements ITaskAttachment2 {
 		return patch;
 	}
 
-	public void setAuthor(ITaskRepositoryPerson author) {
+	public void setAuthor(IRepositoryPerson author) {
 		this.author = author;
 	}
 

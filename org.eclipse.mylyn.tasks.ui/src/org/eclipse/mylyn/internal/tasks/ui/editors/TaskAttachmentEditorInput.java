@@ -21,7 +21,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment2;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -45,16 +45,16 @@ public class TaskAttachmentEditorInput extends PlatformObject implements IStorag
 
 	private static final String CTYPE_HTML = "html";
 
-	private final ITaskAttachment2 attachment;
+	private final ITaskAttachment attachment;
 
 	private final String name;
 
-	public TaskAttachmentEditorInput(ITaskAttachment2 attachment) {
+	public TaskAttachmentEditorInput(ITaskAttachment attachment) {
 		this.attachment = attachment;
 		this.name = getName(attachment);
 	}
 
-	private String getName(ITaskAttachment2 attachment) {
+	private String getName(ITaskAttachment attachment) {
 		String name = attachment.getFileName();
 		// if no filename is set, make one up with the proper extension so
 		// we can support opening in that filetype's default editor

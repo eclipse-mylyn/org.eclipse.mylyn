@@ -16,13 +16,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryListenerAdapter;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryAdapter;
 
 /**
  * @author Steffen Pingel
  * @author Robert Elves (adaption for Bugzilla)
  */
-public class BugzillaClientManager extends TaskRepositoryListenerAdapter {
+public class BugzillaClientManager extends TaskRepositoryAdapter {
 
 	private Map<String, BugzillaClient> clientByUrl = new HashMap<String, BugzillaClient>();
 

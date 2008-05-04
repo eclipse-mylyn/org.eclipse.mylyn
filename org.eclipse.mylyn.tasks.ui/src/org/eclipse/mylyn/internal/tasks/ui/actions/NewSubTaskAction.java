@@ -25,20 +25,20 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -84,16 +84,16 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			return;
 		}
 
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				selectedTask.getConnectorKind());
-		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
+				.getRepositoryConnector(selectedTask.getConnectorKind());
+		final AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		if (taskDataHandler == null) {
 			return;
 		}
 
 		String repositoryUrl = selectedTask.getRepositoryUrl();
-		final RepositoryTaskData selectedTaskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(repositoryUrl,
-				selectedTask.getTaskId());
+		final RepositoryTaskData selectedTaskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
+				repositoryUrl, selectedTask.getTaskId());
 		if (selectedTaskData == null) {
 			TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.WARNING,
 					TasksUiPlugin.ID_PLUGIN, "Could not retrieve task data for task: " + selectedTask.getUrl()));
@@ -105,7 +105,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			return;
 		}
 
-		final TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(repositoryUrl);
+		final TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
 		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(
 				taskRepository.getRepositoryUrl(), taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
 		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, selectedTask.getConnectorKind(),
@@ -163,9 +163,9 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			} else if (selectedObject instanceof AbstractTask) {
 				selectedTask = (AbstractTask) selectedObject;
 
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						selectedTask.getConnectorKind());
-				final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+				AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
+						.getRepositoryConnector(selectedTask.getConnectorKind());
+				final AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 				if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(selectedTask, null)) {
 					selectedTask = null;
 				}
