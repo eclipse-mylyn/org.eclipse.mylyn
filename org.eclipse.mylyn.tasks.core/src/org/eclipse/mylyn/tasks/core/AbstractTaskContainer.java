@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  * @author Mik Kersten
  * @since 2.0
  */
+//API 3.0 move to internal package
 public abstract class AbstractTaskContainer extends PlatformObject implements Comparable<AbstractTaskContainer> {
 
 	private String handleIdentifier = "";

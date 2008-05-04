@@ -15,6 +15,7 @@ package org.eclipse.mylyn.tasks.core;
  * @author Mik Kersten
  * @since 2.0
  */
+//API 3.0 move to internal package
 public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 
 	public AbstractTaskCategory(String handleAndDescription) {
@@ -26,7 +27,7 @@ public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 	 * that are managed
 	 * 
 	 * @deprecated
-	 * @API-3.0: Use AbstractTaskContainer.isUserManaged
+	 * API-3.0: Use AbstractTaskContainer.isUserManaged
 	 */
 	@Deprecated
 	public abstract boolean isUserDefined();

@@ -21,8 +21,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * the Task List.
  * 
  * @author Mik Kersten
- * @since 1.0
+ * @since 2.0
  */
+// API 3.0 rename to AbstractRepositoryQueryWizard?
 public abstract class AbstractEditQueryWizard extends Wizard {
 
 	private static final String TITLE = "Edit Repository Query";

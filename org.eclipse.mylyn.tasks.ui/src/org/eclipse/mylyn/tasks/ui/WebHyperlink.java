@@ -16,7 +16,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
  * @author Steffen Pingel
  * @since 2.0
  */
-//move to util package?
+//API 3.0 move to util package?
 public class WebHyperlink implements IHyperlink {
 
 	private final IRegion region;

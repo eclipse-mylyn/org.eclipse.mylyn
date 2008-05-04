@@ -81,7 +81,7 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  * @author Steffen Pingel
  * @author Shawn Minto
  */
-// move to util package?
+// API 3.0 move to util package?
 public class TasksUiUtil {
 
 	/**
@@ -181,7 +181,9 @@ public class TasksUiUtil {
 				taskDataManager.setNewTaskData(taskData);
 
 				if (retrieveSubTasks) {
-					monitor.beginTask("Creating task", connector.getLegacyTaskDataHandler().getSubTaskIds(taskData).size());
+					monitor.beginTask("Creating task", connector.getLegacyTaskDataHandler()
+							.getSubTaskIds(taskData)
+							.size());
 					for (String subId : connector.getLegacyTaskDataHandler().getSubTaskIds(taskData)) {
 						if (subId == null || subId.trim().equals("")) {
 							continue;
