@@ -32,7 +32,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 	public void enable() {
 		if (!isEnabled) {
 			isEnabled = true;
-			TasksUi.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+			TasksUi.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 			if (TasksUiPlugin.getTaskListManager().getTaskList().isInitialized()) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
@@ -46,7 +46,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 	public void disable() {
 		ContextCore.getContextManager().removeListener(this);
-		TasksUi.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUi.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		isEnabled = false;
 	}
 

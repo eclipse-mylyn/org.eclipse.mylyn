@@ -188,12 +188,12 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				// XXX fix this hack (jira ids don't work here)
 				if (!taskId.contains(RepositoryTaskHandleUtil.HANDLE_DELIM)) {
 //					String handle = AbstractTask.getHandle(repositoryUrl, taskId);
-					task = TasksUi.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
+					task = TasksUi.getTaskList().getTask(repositoryUrl, taskId);
 				}
 			}
 			if (task == null && taskFullUrl != null) {
 				// search by fullUrl
-				for (AbstractTask currTask : TasksUi.getTaskListManager().getTaskList().getAllTasks()) {
+				for (AbstractTask currTask : TasksUi.getTaskList().getAllTasks()) {
 					if (currTask != null) {
 						String currUrl = currTask.getUrl();
 						if (taskFullUrl.equals(currUrl)) {
