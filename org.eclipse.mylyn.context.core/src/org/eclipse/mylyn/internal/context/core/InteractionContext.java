@@ -209,6 +209,9 @@ public class InteractionContext implements IInteractionContext {
 		interactionHistory.clear();
 		landmarkMap.clear();
 		activeNode = null;
+		numUserEvents = 0;
+		lastEdgeEvent = null;
+		lastEdgeNode = null;
 	}
 
 	public int getUserEventCount() {

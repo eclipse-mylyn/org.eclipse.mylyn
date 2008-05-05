@@ -17,6 +17,18 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class InteractionContextTest extends AbstractContextTest {
 
+	public void testReset() {
+		InteractionEvent event = mockSelection("aaaaa");
+		InteractionContext context = new InteractionContext("test", new InteractionContextScaling());
+		context.parseEvent(event);
+		assertEquals(1, context.getUserEventCount());
+		assertEquals(1, context.getInteractionHistory().size());
+
+		context.reset();
+		assertEquals(0, context.getUserEventCount());
+		assertEquals(0, context.getInteractionHistory().size());
+	}
+
 	public void testParseEventWithNullHandle() {
 		InteractionEvent event = mockSelection(null);
 		InteractionContext context = new InteractionContext("test", new InteractionContextScaling());
