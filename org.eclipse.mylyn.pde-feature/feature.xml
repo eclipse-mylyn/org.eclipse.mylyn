@@ -71,8 +71,6 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.pde.ui"/>
-      <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.search"/>
@@ -80,31 +78,17 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
       <import plugin="org.eclipse.mylyn.java.ui"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.jdt.junit"/>
-      <import plugin="org.eclipse.mylyn.tasks.core"/>
-      <import plugin="org.eclipse.mylyn.context.ui"/>
-      <import plugin="org.eclipse.mylyn.ide.ui"/>
-      <import plugin="org.eclipse.mylyn.monitor.ui"/>
-      <import plugin="org.eclipse.mylyn.monitor.core"/>
-      <import plugin="org.eclipse.mylyn.resources.ui"/>
-      <import plugin="org.eclipse.mylyn.context.core"/>
       <import plugin="org.eclipse.jdt.debug.ui"/>
-      <import plugin="org.eclipse.ant.ui"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.team.core"/>
-      <import plugin="org.eclipse.team.cvs.ui"/>
-      <import plugin="org.eclipse.team.cvs.core"/>
-      <import plugin="org.eclipse.team.ui"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.ui.navigator"/>
-      <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.eclipse.mylyn.tasks.ui"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.ui.navigator.resources"/>
-      <import plugin="org.eclipse.mylyn"/>
-      <import plugin="org.eclipse.mylyn.team.ui"/>
-      <import plugin="org.eclipse.mylyn.bugzilla.core"/>
       <import feature="org.eclipse.mylyn.ide_feature" version="3.0.0.qualifier" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.views.log"/>
+      <import plugin="org.eclipse.pde.ui" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.context.core" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.context.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.ide.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.java.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.core" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.monitor.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.resources.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.monitor.core" version="3.0.0" match="compatible"/>
    </requires>
 
    <plugin
