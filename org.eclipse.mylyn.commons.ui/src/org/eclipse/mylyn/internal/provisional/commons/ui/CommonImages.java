@@ -194,6 +194,9 @@ public class CommonImages {
 
 	/**
 	 * Lazily initializes image map.
+	 * 
+	 * @param imageDescriptor
+	 * @return Image
 	 */
 	public static Image getImage(ImageDescriptor imageDescriptor) {
 		ImageRegistry imageRegistry = getImageRegistry();
@@ -231,6 +234,9 @@ public class CommonImages {
 	 * 
 	 * @param icon
 	 *            cannot be null
+	 * @param overlayKind
+	 * @param wide
+	 * @return Image
 	 */
 	public static Image getCompositeTaskImage(ImageDescriptor icon, ImageDescriptor overlayKind, boolean wide) {
 		if (icon == null) {

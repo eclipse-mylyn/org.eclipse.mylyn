@@ -49,6 +49,10 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 
 	/**
 	 * XXX: using reflection to gain access
+	 * 
+	 * @param parent
+	 * @param treeStyle
+	 * @param filter
 	 */
 	public AbstractFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);

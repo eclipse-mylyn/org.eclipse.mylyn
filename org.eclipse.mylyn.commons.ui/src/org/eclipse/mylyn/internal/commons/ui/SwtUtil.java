@@ -31,6 +31,10 @@ public class SwtUtil {
 
 	/**
 	 * API-3.0: get rid of reflection on 3.4 branch
+	 * 
+	 * @param shell
+	 * @param value
+	 * @return boolean
 	 */
 	public static boolean setAlpha(Shell shell, int value) {
 		Method method = null;
@@ -48,6 +52,9 @@ public class SwtUtil {
 
 	/**
 	 * API-3.0: get rid of reflection on 3.4 branch
+	 * 
+	 * @param shell
+	 * @return int
 	 */
 	public static int getAlpha(Shell shell) {
 		Method method = null;
@@ -74,6 +81,11 @@ public class SwtUtil {
 
 	/**
 	 * API-3.0: get rid of reflection on 3.4 branch
+	 * 
+	 * @param shell
+	 * @param fadeIn
+	 * @param increment
+	 * @param speed
 	 */
 	public static void fade(Shell shell, boolean fadeIn, int increment, int speed) {
 		try {

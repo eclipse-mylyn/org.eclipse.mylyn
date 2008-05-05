@@ -20,6 +20,8 @@ public interface IImageCreator {
 
 	/**
 	 * Creates a {@link Image} object it represents; the caller is responsible for disposing the returned {@link Image}
+	 * 
+	 * @return Image
 	 */
 	public Image createImage();
 

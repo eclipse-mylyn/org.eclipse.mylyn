@@ -177,6 +177,8 @@ public class DatePicker extends Composite {
 
 	/**
 	 * must check for null return value
+	 * 
+	 * @return Calendar
 	 */
 	public Calendar getDate() {
 		return date;

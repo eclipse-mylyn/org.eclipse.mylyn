@@ -36,7 +36,7 @@ public class AdaptiveRefreshPolicy {
 
 	/**
 	 * @param refreshJob
-	 * @param filteredTree
+	 * @param filterText
 	 *            can be null
 	 */
 	public AdaptiveRefreshPolicy(Job refreshJob, Text filterText) {
