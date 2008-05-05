@@ -562,6 +562,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			};
 			ResourcesPlugin.getWorkspace().addSaveParticipant(this, saveParticipant);
 
+			ActivityExternalizationParticipant ACTIVITY_EXTERNALIZTAION_PARTICIPANT = new ActivityExternalizationParticipant();
+			externalizationManager.addParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
+			taskActivityManager.addActivityListener(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
+
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list initialization failed", e));
@@ -699,7 +703,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		externalizationManager.saveNow(monitor);
 		//getBackupManager().backupNow(true);
 		// TODO: save repositories, activity
-		ContextCore.getContextManager().saveActivityContext();
 		//TasksUiPlugin.getBackupManager().backupNow(true);
 		loadDataDirectory(newPath);
 		getPreferenceStore().setValue(ContextPreferenceContstants.PREF_DATA_DIR, newPath);
@@ -744,6 +747,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 //							new File(newPath + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE));
 
 					ContextCore.getContextManager().loadActivityMetaContext();
+
 					getTaskListManager().readExistingOrCreateNewList();
 					taskActivityMonitor.reloadActivityTime();
 				} finally {

@@ -191,8 +191,8 @@ public class ScheduledPresentationTest extends TestCase {
 				IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
 				IInteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, startDate.getTime(), endDate.getTime());
 
-		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event1);
-		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event2);
+		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event1, false);
+		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event2, false);
 
 		ScheduledTaskContainer container = TasksUiPlugin.getTaskActivityManager().getActivityPast();
 		assertEquals(2, container.getChildren().size());

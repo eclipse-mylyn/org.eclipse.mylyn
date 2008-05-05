@@ -151,7 +151,6 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 			}
 			newMetaContext.parseEvent(event);
 		}
-		ContextCore.getContextManager().saveActivityContext();
 	}
 
 }

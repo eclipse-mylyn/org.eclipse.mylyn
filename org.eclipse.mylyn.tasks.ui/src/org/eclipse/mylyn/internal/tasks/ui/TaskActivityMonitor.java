@@ -58,7 +58,7 @@ public class TaskActivityMonitor {
 					.getActivityMetaContext()
 					.getInteractionHistory();
 			InteractionEvent event = events.get(events.size() - 1);
-			parseInteractionEvent(event);
+			parseInteractionEvent(event, false);
 
 		}
 
@@ -79,8 +79,6 @@ public class TaskActivityMonitor {
 
 	private final TaskActivityManager taskActivityManager;
 
-	private int timeTicks;
-
 	private final TaskList taskList;
 
 	public TaskActivityMonitor(TaskActivityManager taskActivityManager, IInteractionContextManager contextManager) {
@@ -93,8 +91,8 @@ public class TaskActivityMonitor {
 		contextManager.addActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
-	/** public for testing * */
-	public boolean parseInteractionEvent(InteractionEvent event) {
+	/** public for testing */
+	public boolean parseInteractionEvent(InteractionEvent event, boolean isReloading) {
 		try {
 			if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
 				if ((event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED))) {
@@ -106,25 +104,22 @@ public class TaskActivityMonitor {
 					}
 				}
 			} else if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
-				timeTicks++;
-				if (timeTicks > 3) {
-					// Save in case of system failure.
-					// TODO: request asynchronous save via ExternalizationManager
-					ContextCore.getContextManager().saveActivityContext();
-					timeTicks = 0;
-				}
+				boolean changed = false;
 				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) {
 					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
 					if (activatedTask != null) {
 						taskActivityManager.addElapsedTime(activatedTask, event.getDate(), event.getEndDate());
-						return true;
+						changed = true;
 					}
 				} else if (event.getDelta().equals("removed")) {
 					ITask task = taskList.getTask(event.getStructureHandle());
 					if (task != null) {
 						taskActivityManager.removeElapsedTime(task, event.getDate(), event.getEndDate());
-						return true;
+						changed = true;
 					}
+				}
+				if (!isReloading && changed == true) {
+					TasksUiPlugin.getExternalizationManager().requestSave();
 				}
 			}
 		} catch (Throwable t) {
@@ -145,8 +140,12 @@ public class TaskActivityMonitor {
 	public void reloadActivityTime(Date date) {
 		taskActivityManager.clear(date);
 		List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
-		for (InteractionEvent event : events) {
-			parseInteractionEvent(event);
+		try {
+			for (InteractionEvent event : events) {
+				parseInteractionEvent(event, true);
+			}
+		} finally {
+
 		}
 	}
 

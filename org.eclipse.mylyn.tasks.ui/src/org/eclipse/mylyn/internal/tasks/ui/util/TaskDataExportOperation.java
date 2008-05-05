@@ -142,8 +142,6 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 			}
 
 			if (exportTaskList) {
-//				TasksUiPlugin.getTaskListManager().saveTaskList();
-
 				String sourceTaskListPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
 						+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
 				File sourceTaskListFile = new File(sourceTaskListPath);
@@ -174,8 +172,6 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 									+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 
 					if (sourceActivationHistoryFile.exists()) {
-
-						ContextCore.getContextManager().saveActivityContext();
 
 						File destActivationHistoryFile = new File(destinationDirectory + File.separator
 								+ IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME

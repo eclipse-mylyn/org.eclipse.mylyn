@@ -35,9 +35,23 @@ public interface ITasksCoreConstants {
 
 	public static final String CONTEXTS_DIRECTORY = "contexts";
 
+	public static final TaskListSchedulingRule ACTIVITY_SCHEDULING_RULE = new TaskListSchedulingRule();
+
 	public static final TaskListSchedulingRule TASKLIST_SCHEDULING_RULE = new TaskListSchedulingRule();
 
 	public static final ISchedulingRule ROOT_SCHEDULING_RULE = new RootSchedulingRule();
+
+	static class ActivityContextSchedulingRule extends RootSchedulingRule {
+		@Override
+		public boolean contains(ISchedulingRule rule) {
+			return rule instanceof ActivityContextSchedulingRule;
+		}
+
+		@Override
+		public boolean isConflicting(ISchedulingRule rule) {
+			return rule instanceof ActivityContextSchedulingRule;
+		}
+	}
 
 	static class TaskListSchedulingRule extends RootSchedulingRule {
 
