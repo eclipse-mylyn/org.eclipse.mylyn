@@ -23,11 +23,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ui.ResourcesUi;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.team.ui.AbstractTaskReference;
 import org.eclipse.team.core.TeamException;
@@ -52,9 +53,9 @@ public class ContextChangeSet extends ActiveChangeSet /*CVSActiveChangeSet*/impl
 
 	private boolean suppressInterestContribution = false;
 
-	private final AbstractTask task;
+	private final ITask task;
 
-	public ContextChangeSet(AbstractTask task, ActiveChangeSetManager manager) {
+	public ContextChangeSet(ITask task, ActiveChangeSetManager manager) {
 		super(manager, task.getSummary());
 		this.task = task;
 		initTitle();
@@ -251,7 +252,7 @@ public class ContextChangeSet extends ActiveChangeSet /*CVSActiveChangeSet*/impl
 		}
 	}
 
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 

@@ -13,8 +13,8 @@ import java.util.List;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Mik Kersten
@@ -23,12 +23,12 @@ public class ContextMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String LABEL = "Context";
 
-	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
+	public MenuManager getSubMenuManager(final List<ITaskElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
 
-		subMenuManager.setVisible(selectedElements.size() == 1 && selectedElements.get(0) instanceof AbstractTask);
+		subMenuManager.setVisible(selectedElements.size() == 1 && selectedElements.get(0) instanceof ITask);
 
-		AbstractTask task = (AbstractTask) selectedElements.get(0);
+		ITask task = (ITask) selectedElements.get(0);
 		StructuredSelection selection = new StructuredSelection(task);
 		if (!task.isLocal()) {
 			ContextAttachAction attachAction = new ContextAttachAction();

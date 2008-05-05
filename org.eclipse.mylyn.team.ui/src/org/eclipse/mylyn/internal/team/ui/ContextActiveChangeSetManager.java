@@ -24,8 +24,9 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
@@ -90,7 +91,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	@Override
-	protected void updateChangeSetLabel(AbstractTask task) {
+	protected void updateChangeSetLabel(ITask task) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (ChangeSet set : sets) {
@@ -155,7 +156,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		activeChangeSets.clear();
 	}
 
-	public IResource[] getResources(AbstractTask task) {
+	public IResource[] getResources(ITask task) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (ChangeSet set : sets) {
@@ -172,7 +173,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	public void contextActivated(IInteractionContext context) {
 		try {
-			AbstractTask task = getTask(context);
+			ITask task = getTask(context);
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
 				for (ActiveChangeSetManager collector : changeSetManagers) {
 					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
@@ -248,7 +249,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return new ArrayList<ContextChangeSet>(activeChangeSets.values());
 	}
 
-	private AbstractTask getTask(IInteractionContext context) {
+	private ITask getTask(IInteractionContext context) {
 		return TasksUi.getTaskActivityManager().getActiveTask();
 	}
 

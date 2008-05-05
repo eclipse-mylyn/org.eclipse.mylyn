@@ -14,7 +14,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -52,7 +52,10 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 	protected abstract void initContextChangeSets();
 
-	protected abstract void updateChangeSetLabel(AbstractTask task);
+	/**
+	 * @since 3.0
+	 */
+	protected abstract void updateChangeSetLabel(ITask task);
 
 	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
 
@@ -62,8 +65,8 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
-					AbstractTask task = (AbstractTask) taskContainerDelta.getContainer();
+				if (taskContainerDelta.getContainer() instanceof ITask) {
+					ITask task = (ITask) taskContainerDelta.getContainer();
 					switch (taskContainerDelta.getKind()) {
 					case CHANGED:
 						updateChangeSetLabel(task);

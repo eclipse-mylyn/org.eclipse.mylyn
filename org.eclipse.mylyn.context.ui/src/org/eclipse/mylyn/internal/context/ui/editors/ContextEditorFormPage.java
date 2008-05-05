@@ -36,7 +36,7 @@ import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
@@ -85,7 +85,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private Scale doiScale;
 
-	private AbstractTask task;
+	private ITask task;
 
 	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener2() {
 

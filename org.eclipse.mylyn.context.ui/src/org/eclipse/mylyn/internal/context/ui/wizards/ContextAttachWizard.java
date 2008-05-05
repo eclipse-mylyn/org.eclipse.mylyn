@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.context.ui.wizards;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.context.ui.ContextUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -25,13 +25,13 @@ public class ContextAttachWizard extends Wizard {
 
 	private final TaskRepository repository;
 
-	private final AbstractTask task;
+	private final ITask task;
 
 	private ContextAttachWizardPage wizardPage;
 
-	public ContextAttachWizard(AbstractTask task) {
-		this.repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				task.getRepositoryUrl());
+	public ContextAttachWizard(ITask task) {
+		this.repository = TasksUi.getRepositoryManager()
+				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		this.task = task;
 		setWindowTitle(TITLE);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_CONTEXT);

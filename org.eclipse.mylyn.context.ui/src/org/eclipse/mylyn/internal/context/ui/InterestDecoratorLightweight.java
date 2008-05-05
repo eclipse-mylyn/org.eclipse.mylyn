@@ -21,7 +21,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Mik Kersten
@@ -48,7 +48,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 		}
 		try {
 			// NOTE: awkward coupling and special rule to deal with tasks, see bug 212639
-			if (!(element instanceof AbstractTask)) {
+			if (!(element instanceof ITask)) {
 				IInteractionElement node = null;
 				if (element instanceof InteractionContextRelation) {
 					decoration.setForegroundColor(ColorMap.RELATIONSHIP);

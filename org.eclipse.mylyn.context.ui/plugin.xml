@@ -63,7 +63,7 @@
 	 <objectContribution
            adaptable="false"
            id="org.eclipse.mylyn.context.ui.tasks.contribution"
-           objectClass="org.eclipse.mylyn.tasks.core.AbstractTask">
+           objectClass="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
 		<action
               class="org.eclipse.mylyn.internal.context.ui.actions.ContextClearAction"
               enablesFor="1"
@@ -88,7 +88,7 @@
      <objectContribution
            adaptable="false"
            id="org.eclipse.mylyn.ui.tasks.repository.hits..action.contribution"
-           objectClass="org.eclipse.mylyn.tasks.core.AbstractTask">
+           objectClass="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
         <action
               class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
               enablesFor="1"

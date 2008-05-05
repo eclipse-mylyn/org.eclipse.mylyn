@@ -33,7 +33,7 @@ import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -98,7 +98,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				}
 				String mementoString = null;
 				// API-3.0: remove coupling to AbstractTask, change where memento is stored
-				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 						context.getHandleIdentifier());
 				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (task != null) {
@@ -196,7 +196,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 		return null;
 	}
 
-	private String readEditorMemento(AbstractTask task) {
+	private String readEditorMemento(ITask task) {
 		return preferenceStore.getString(PREFS_PREFIX + task.getHandleIdentifier());
 	}
 
@@ -226,7 +226,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				((WorkbenchPage) window.getActivePage()).getEditorManager().saveState(memento);
 			}
 
-			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 			if (task != null) {
 				// TODO: avoid storing with preferences due to bloat?
 				StringWriter writer = new StringWriter();
@@ -245,7 +245,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 		}
 	}
 
-	public void writeEditorMemento(AbstractTask task, String memento) {
+	public void writeEditorMemento(ITask task, String memento) {
 		preferenceStore.setValue(PREFS_PREFIX + task.getHandleIdentifier(), memento);
 	}
 
@@ -254,7 +254,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 			return;
 		}
 		closeAllButActiveTaskEditor(context.getHandleIdentifier());
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 
 		if (task != null) {
@@ -334,7 +334,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 							try {
 								IEditorInput input = reference.getEditorInput();
 								if (input instanceof TaskEditorInput) {
-									AbstractTask task = ((TaskEditorInput) input).getTask();
+									ITask task = ((TaskEditorInput) input).getTask();
 									if (task != null && task.getHandleIdentifier().equals(taskHandle)) {
 										// do not close
 									} else {

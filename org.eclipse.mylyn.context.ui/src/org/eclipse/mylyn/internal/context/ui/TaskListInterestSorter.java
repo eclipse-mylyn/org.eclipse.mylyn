@@ -10,14 +10,15 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Mik Kersten
@@ -37,9 +38,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 //			return 1;
 //		}
 
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof UnmatchedTaskContainer) {
+		if (o1 instanceof ITaskElement && o2 instanceof UnmatchedTaskContainer) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UnmatchedTaskContainer) {
+		} else if (o2 instanceof ITaskElement && o1 instanceof UnmatchedTaskContainer) {
 			return 1;
 		}
 
@@ -52,42 +53,42 @@ public class TaskListInterestSorter extends ViewerSorter {
 				return -1;
 			}
 			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
-		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof ScheduledTaskContainer) {
+		} else if (o1 instanceof ITaskElement && o2 instanceof ScheduledTaskContainer) {
 			return -1;
-		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof AbstractTaskContainer) {
+		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ITaskElement) {
 			return 1;
 		}
 
-		if (o1 instanceof UncategorizedTaskContainer && o2 instanceof AbstractTaskContainer) {
+		if (o1 instanceof UncategorizedTaskContainer && o2 instanceof ITaskElement) {
 			return -1;
-		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof UncategorizedTaskContainer) {
+		} else if (o1 instanceof ITaskElement && o2 instanceof UncategorizedTaskContainer) {
 			return 1;
 		}
 
-		if (!(o1 instanceof AbstractTask) && o2 instanceof AbstractTask) {
+		if (!(o1 instanceof ITask) && o2 instanceof ITask) {
 			return 1;
 		}
 
-		if (!(o1 instanceof AbstractTask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
-			if (!(o2 instanceof AbstractTask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
-				return ((AbstractTaskContainer) o1).getSummary().compareToIgnoreCase(
-						((AbstractTaskContainer) o2).getSummary());
+		if (!(o1 instanceof ITask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
+			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
+				return ((ITaskElement) o1).getSummary().compareToIgnoreCase(
+						((ITaskElement) o2).getSummary());
 			} else {
 				return -1;
 			}
-		} else if (o1 instanceof AbstractTaskContainer) {
-			if (!(o2 instanceof AbstractTask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
+		} else if (o1 instanceof ITaskElement) {
+			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 				return -1;
-			} else if (o2 instanceof AbstractTaskContainer) {
-				AbstractTaskContainer element1 = (AbstractTaskContainer) o1;
-				AbstractTaskContainer element2 = (AbstractTaskContainer) o2;
+			} else if (o2 instanceof ITaskElement) {
+				ITaskElement element1 = (ITaskElement) o1;
+				ITaskElement element2 = (ITaskElement) o2;
 
 				AbstractTask task1 = null;
 				AbstractTask task2 = null;
-				if (element1 instanceof AbstractTask) {
+				if (element1 instanceof ITask) {
 					task1 = (AbstractTask) element1;
 				}
-				if (element2 instanceof AbstractTask) {
+				if (element2 instanceof ITask) {
 					task2 = (AbstractTask) element2;
 				}
 
@@ -120,7 +121,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 		return 0;
 	}
 
-	private int compareDueDates(AbstractTask task1, AbstractTask task2) {
+	private int compareDueDates(ITask task1, ITask task2) {
 		if (TasksUiPlugin.getTaskActivityManager().isOverdue(task1)
 				&& !TasksUiPlugin.getTaskActivityManager().isOverdue(task2)) {
 			return -1;
@@ -167,7 +168,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 //		}
 //	}
 
-	private int compareCompleted(AbstractTask task1, AbstractTask task2) {
+	private int compareCompleted(ITask task1, ITask task2) {
 		if (task1.isCompleted() && !task2.isCompleted()) {
 			return 1;
 		} else if (!task1.isCompleted() && task2.isCompleted()) {
@@ -211,7 +212,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 	// }
 	// }
 
-	private int comparePrioritiesAndKeys(AbstractTaskContainer element1, AbstractTaskContainer element2) {
+	private int comparePrioritiesAndKeys(ITaskElement element1, ITaskElement element2) {
 		int priority = comparePriorities(element1, element2);
 		if (priority != 0) {
 			return priority;
@@ -224,12 +225,12 @@ public class TaskListInterestSorter extends ViewerSorter {
 		return 0;
 	}
 
-	private int compareKeys(AbstractTaskContainer element1, AbstractTaskContainer element2) {
+	private int compareKeys(ITaskElement element1, ITaskElement element2) {
 		return taskKeyComparator.compare(TaskListTableSorter.getSortableFromElement(element1),
 				TaskListTableSorter.getSortableFromElement(element2));
 	}
 
-	private int comparePriorities(AbstractTaskContainer element1, AbstractTaskContainer element2) {
+	private int comparePriorities(ITaskElement element1, ITaskElement element2) {
 		return element1.getPriority().compareTo(element2.getPriority());
 	}
 

@@ -50,7 +50,7 @@ import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -229,7 +229,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		@SuppressWarnings( { "deprecation", "restriction" })
 		@Override
-		public void taskActivated(AbstractTask task) {
+		public void taskActivated(ITask task) {
 			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
@@ -634,7 +634,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	 * @param task
 	 * 		can be null to indicate no task
 	 */
-	public String getPerspectiveIdFor(AbstractTask task) {
+	public String getPerspectiveIdFor(ITask task) {
 		if (task != null) {
 			return getPreferenceStore().getString(
 					ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
@@ -647,7 +647,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	 * @param task
 	 * 		can be null to indicate no task
 	 */
-	public void setPerspectiveIdFor(AbstractTask task, String perspectiveId) {
+	public void setPerspectiveIdFor(ITask task, String perspectiveId) {
 		if (task != null) {
 			getPreferenceStore().setValue(
 					ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(), perspectiveId);

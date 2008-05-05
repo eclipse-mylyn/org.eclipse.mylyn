@@ -13,11 +13,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -49,7 +50,7 @@ public class ContextCopyAction extends TaskContextAction {
 		run(getSelectedTask(selection));
 	}
 
-	public void run(AbstractTask sourceTask) {
+	public void run(ITask sourceTask) {
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					ITasksUiConstants.TITLE_DIALOG, "No source task selected.");
@@ -70,7 +71,7 @@ public class ContextCopyAction extends TaskContextAction {
 		Object result = dialog.getFirstResult();
 
 		AbstractTask targetTask = null;
-		if (result instanceof AbstractTask) {
+		if (result instanceof ITask) {
 			targetTask = (AbstractTask) result;
 		}
 

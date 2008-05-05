@@ -23,7 +23,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
@@ -57,13 +57,13 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 	private final TaskRepository repository;
 
-	private final AbstractTask task;
+	private final ITask task;
 
 	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	private RepositoryAttachment selectedContextAttachment;
 
-	protected ContextRetrieveWizardPage(TaskRepository repository, AbstractTask task) {
+	protected ContextRetrieveWizardPage(TaskRepository repository, ITask task) {
 		super(WIZARD_TITLE);
 		this.repository = repository;
 		this.task = task;

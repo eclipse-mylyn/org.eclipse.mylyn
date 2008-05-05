@@ -17,13 +17,14 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.context.ui.ContextUiUtil;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextRetrieveWizard;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -79,7 +80,7 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 						.getActiveWorkbenchWindow()
 						.getActivePage()
 						.getActiveEditor();
-				AbstractTask currentTask = null;
+				ITask currentTask = null;
 				if (activeEditor instanceof TaskEditor) {
 					currentTask = ((TaskEditor) activeEditor).getTaskEditorInput().getTask();
 				}
@@ -95,7 +96,7 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 		}
 	}
 
-	public void run(AbstractTask task) {
+	public void run(ITask task) {
 		ContextRetrieveWizard wizard = new ContextRetrieveWizard(task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (shell != null && !shell.isDisposed()) {

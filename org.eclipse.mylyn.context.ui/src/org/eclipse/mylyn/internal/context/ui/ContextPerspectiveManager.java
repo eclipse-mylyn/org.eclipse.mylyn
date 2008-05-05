@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener4;
@@ -48,7 +48,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		managedPerspectiveIds.remove(id);
 	}
 
-	public void taskActivated(AbstractTask task) {
+	public void taskActivated(ITask task) {
 		try {
 			IWorkbenchWindow launchingWindow = MonitorUiPlugin.getDefault().getLaunchingWorkbenchWindow();
 			if (launchingWindow != null) {
@@ -63,7 +63,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		}
 	}
 
-	public void taskDeactivated(AbstractTask task) {
+	public void taskDeactivated(ITask task) {
 		try {
 			if (PlatformUI.isWorkbenchRunning()
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -155,11 +155,11 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		// ignore
 	}
 
-	public void preTaskActivated(AbstractTask task) {
+	public void preTaskActivated(ITask task) {
 		// ignore	
 	}
 
-	public void preTaskDeactivated(AbstractTask task) {
+	public void preTaskDeactivated(ITask task) {
 		// ignore		
 	}
 
@@ -167,7 +167,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		// ignore
 	}
 
-	public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
+	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 		// ignore
 	}
 

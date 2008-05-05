@@ -14,13 +14,14 @@ import java.util.Collection;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * Goal is to have this reuse as much of the super as possible.
@@ -37,9 +38,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				ScheduledTaskContainer dateRangeTaskContainer = (ScheduledTaskContainer) child;
 				return isDateRangeInteresting(dateRangeTaskContainer);
 			}
-			if (child instanceof AbstractTask) {
+			if (child instanceof ITask) {
 				AbstractTask task = null;
-				if (child instanceof AbstractTask) {
+				if (child instanceof ITask) {
 					task = (AbstractTask) child;
 				}
 				if (task != null) {
@@ -49,14 +50,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 						return false;
 					}
 				}
-			} else if (child instanceof AbstractTaskContainer) {
-				Collection<AbstractTask> children = ((AbstractTaskContainer) child).getChildren();
+			} else if (child instanceof ITaskElement) {
+				Collection<ITask> children = ((ITaskElement) child).getChildren();
 				// Always display empty containers
 				if (children.size() == 0) {
 					return false;
 				}
 
-				for (AbstractTask task : children) {
+				for (ITask task : children) {
 					if (shouldAlwaysShow(child, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH)) {
 						return true;
 					}
@@ -86,7 +87,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return shouldAlwaysShow(parent, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
 	}
 
-	public boolean shouldAlwaysShow(Object parent, AbstractTask task, int depth) {
+	public boolean shouldAlwaysShow(Object parent, ITask task, int depth) {
 
 		return task.isActive()
 				|| TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)
@@ -98,13 +99,13 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 						|| isInterestingForThisWeek(parent, task) || hasInterestingSubTasks(parent, task, depth));
 	}
 
-	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, int depth) {
+	private boolean hasInterestingSubTasks(Object parent, ITask task, int depth) {
 		if (depth > 0) {
 			if (!TasksUiPlugin.getDefault().groupSubtasks(task)) {
 				return false;
 			}
 			if (task.getChildren() != null && task.getChildren().size() > 0) {
-				for (AbstractTask subTask : task.getChildren()) {
+				for (ITask subTask : task.getChildren()) {
 					if (shouldAlwaysShow(parent, subTask, depth - 1)) {
 						return true;
 					}
@@ -114,7 +115,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
-	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, AbstractTask task) {
+	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
 		if (parent instanceof ScheduledTaskContainer) {
 			if (((ScheduledTaskContainer) parent).isCaptureFloating()) {
 				return true;
@@ -138,7 +139,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
-	public static boolean isInterestingForThisWeek(Object parent, AbstractTask task) {
+	public static boolean isInterestingForThisWeek(Object parent, ITask task) {
 		if (parent instanceof ScheduledTaskContainer) {
 			return shouldShowInFocusedWorkweekDateContainer(parent, task);
 		} else {
@@ -148,7 +149,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		}
 	}
 
-	public static boolean hasChanges(Object parent, AbstractTask task) {
+	public static boolean hasChanges(Object parent, ITask task) {
 		if (parent instanceof ScheduledTaskContainer) {
 			if (!shouldShowInFocusedWorkweekDateContainer(parent, task)) {
 				return false;
@@ -157,13 +158,13 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return hasChangesHelper(parent, task);
 	}
 
-	private static boolean hasChangesHelper(Object parent, AbstractTask task) {
+	private static boolean hasChangesHelper(Object parent, ITask task) {
 		if (task.getSynchronizationState().isOutgoing()) {
 			return true;
 		} else if (task.getSynchronizationState().isIncoming() && !(parent instanceof ScheduledTaskContainer)) {
 			return true;
 		}
-		for (AbstractTask child : task.getChildren()) {
+		for (ITask child : task.getChildren()) {
 			if (hasChangesHelper(parent, child)) {
 				return true;
 			}

@@ -22,6 +22,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
@@ -32,7 +33,7 @@ import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -106,7 +107,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 	 * This is used in order to keep LinkedTaskInfo lightweight with minimal dependencies.
 	 */
 	private static AbstractTaskReference reconcile(AbstractTaskReference info) {
-		AbstractTask task;
+		ITask task;
 		if (info instanceof LinkedTaskInfo) {
 			task = ((LinkedTaskInfo) info).getTask();
 		} else {
@@ -278,7 +279,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 
 			if (info != null) {
 				info = reconcile(info);
-				final AbstractTask task;
+				final ITask task;
 				if (info instanceof LinkedTaskInfo) {
 					task = ((LinkedTaskInfo) info).getTask();
 				} else {

@@ -10,7 +10,7 @@
  **************************************************************************/
 package org.eclipse.mylyn.team.ui;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Eike Stepper
@@ -35,7 +35,10 @@ public abstract class AbstractCommitTemplateVariable {
 		return recognizedKeyword;
 	}
 
-	public abstract String getValue(AbstractTask task);
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getValue(ITask task);
 
 	public void setRecognizedKeyword(String recognizedKeyword) {
 		if (recognizedKeyword == null) {
