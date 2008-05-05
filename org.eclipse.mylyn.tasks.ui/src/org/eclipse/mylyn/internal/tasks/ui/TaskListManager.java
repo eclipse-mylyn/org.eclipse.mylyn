@@ -260,7 +260,7 @@ public class TaskListManager {
 	 */
 	@Deprecated
 	public void deactivateAllTasks() {
-		TasksUi.getTaskActivityManager().deactivateAllTasks();
+		TasksUi.getTaskActivityManager().deactivateActiveTask();
 	}
 
 	/**

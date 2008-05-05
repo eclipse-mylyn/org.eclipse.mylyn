@@ -52,7 +52,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 					}
 				}
 			} else {
-				TasksUi.getTaskActivityManager().deactivateAllTasks();
+				TasksUi.getTaskActivityManager().deactivateActiveTask();
 			}
 		} else {
 			TaskActivationHistory taskHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();

@@ -15,6 +15,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 
 /**
  * @author Rob Elves
+ * @since 3.0
  */
 public interface ITaskActivityManager {
 
