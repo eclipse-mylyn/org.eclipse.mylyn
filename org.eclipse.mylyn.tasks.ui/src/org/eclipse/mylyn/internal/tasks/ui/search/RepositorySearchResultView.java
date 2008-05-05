@@ -25,6 +25,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
@@ -35,8 +37,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchResultTreeContentProvider.GroupBy;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListToolTip;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -184,8 +185,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		new FilteringAction("Filter Completed Tasks", new ViewerFilter() {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (element instanceof AbstractTask) {
-					return !((AbstractTask) element).isCompleted();
+				if (element instanceof ITask) {
+					return !((ITask) element).isCompleted();
 				} else if (element instanceof TaskGroup) {
 					TaskGroup taskGroup = (TaskGroup) element;
 					return taskGroup.getHandleIdentifier().equals("group-incompleteIncomplete");
@@ -402,8 +403,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		StructuredSelection selection = (StructuredSelection) this.getViewer().getSelection();
 		for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 			Object selectedObject = iterator.next();
-			if (selectedObject instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask) selectedObject;
+			if (selectedObject instanceof ITask) {
+				ITask task = (ITask) selectedObject;
 				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 						task.getRepositoryUrl());
 				final AddExistingTaskJob job = new AddExistingTaskJob(repository, task.getTaskId(), category);

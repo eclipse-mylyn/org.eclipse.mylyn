@@ -74,7 +74,11 @@ import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
@@ -114,15 +118,12 @@ import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -418,11 +419,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
-			AbstractTask taskToRefresh = null;
+			ITask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (repositoryTask != null && repositoryTask.equals(taskContainerDelta.getContainer())) {
 					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
-						taskToRefresh = (AbstractTask) taskContainerDelta.getContainer();
+						taskToRefresh = (ITask) taskContainerDelta.getContainer();
 						break;
 					}
 				}
@@ -706,8 +707,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		if (taskData != null && !taskData.isNew()) {
 			if (repositoryTask != null) {
-				clearOutgoingAction = new ClearOutgoingAction(
-						Collections.singletonList((AbstractTaskContainer) repositoryTask));
+				clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((ITaskElement) repositoryTask));
 
 				if (clearOutgoingAction.isEnabled()) {
 					toolBarManager.add(clearOutgoingAction);
@@ -1258,8 +1258,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (duplicateDetector != null) {
 			AbstractRepositoryQuery duplicatesQuery = duplicateDetector.getDuplicatesQuery(repository, taskData);
 			if (duplicatesQuery != null) {
-				SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(),
-						repository, duplicatesQuery);
+				SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(), repository,
+						duplicatesQuery);
 				NewSearchUI.runQueryInBackground(collector);
 				return true;
 			}
@@ -1698,8 +1698,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				SWT.PUSH);
 		attachScreenshotButton.setImage(CommonImages.getImage(CommonImages.IMAGE_CAPTURE));
 
-		final AbstractTask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(),
-				taskData.getTaskId());
+		final ITask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 		if (task == null) {
 			attachFileButton.setEnabled(false);
 			attachScreenshotButton.setEnabled(false);
@@ -1741,8 +1740,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 
 				public void widgetSelected(SelectionEvent e) {
-					AbstractTask task = TasksUi.getTaskList().getTask(
-							repository.getRepositoryUrl(), taskData.getTaskId());
+					ITask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 					if (task == null) {
 						// Should not happen
 						return;
@@ -2800,8 +2798,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		AbstractTask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(),
-				taskData.getTaskId());
+		ITask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 		if (attachContextEnabled && task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
@@ -3447,7 +3444,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return false;
 	}
 
-	protected void addAttachContextButton(Composite buttonComposite, AbstractTask task) {
+	protected void addAttachContextButton(Composite buttonComposite, ITask task) {
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
 		attachContextButton.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 	}
@@ -3605,8 +3602,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
-						modifiedTask = TasksUi.getTaskList().getTask(
-								repository.getRepositoryUrl(), taskData.getTaskId());
+						modifiedTask = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(),
+								taskData.getTaskId());
 					}
 
 					// Synchronization accounting...

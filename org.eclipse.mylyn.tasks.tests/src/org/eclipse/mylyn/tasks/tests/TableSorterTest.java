@@ -16,7 +16,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.swt.widgets.Control;
 
@@ -30,7 +30,7 @@ public class TableSorterTest extends TestCase {
 		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective(),
 				TaskListTableSorter.SortByIndex.SUMMARY);
 
-		AbstractTask task = new LocalTask("1", "");
+		ITask task = new LocalTask("1", "");
 		TaskCategory category = new TaskCategory("cat");
 
 		assertEquals(-1, sorter.compare(null, task, category));
@@ -105,10 +105,10 @@ public class TableSorterTest extends TestCase {
 
 	public void testLocalTaskSort() {
 		final TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
-		AbstractTask task1 = new LocalTask("1", "task1");
-		AbstractTask task2 = new LocalTask("2", "task2");
-		AbstractTask task3 = new LocalTask("3", "task3");
-		AbstractTask[] tasks = { task1, task2, task3 };
+		ITask task1 = new LocalTask("1", "task1");
+		ITask task2 = new LocalTask("2", "task2");
+		ITask task3 = new LocalTask("3", "task3");
+		ITask[] tasks = { task1, task2, task3 };
 		sorter.sort(new EmptyViewer(), tasks);
 	}
 

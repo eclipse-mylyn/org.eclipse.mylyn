@@ -10,7 +10,7 @@
  */
 package org.eclipse.mylyn.internal.bugzilla.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 
 /**
  * @author Mik Kersten

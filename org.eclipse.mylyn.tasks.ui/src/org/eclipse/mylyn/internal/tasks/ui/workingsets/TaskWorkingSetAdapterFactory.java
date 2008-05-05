@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.workingsets;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 
@@ -32,10 +32,10 @@ public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 	}
 
 	public Object getAdapter(final Object adaptableObject, @SuppressWarnings("unchecked") Class adapterType) {
-		if (adapterType == IPersistableElement.class && adaptableObject instanceof AbstractTaskContainer) {
+		if (adapterType == IPersistableElement.class && adaptableObject instanceof ITaskElement) {
 			return new IPersistableElement() {
 				public void saveState(IMemento memento) {
-					AbstractTaskContainer container = (AbstractTaskContainer) adaptableObject;
+					ITaskElement container = (ITaskElement) adaptableObject;
 					memento.putString(TaskWorkingSetElementFactory.HANDLE_TASK, container.getHandleIdentifier());
 				}
 

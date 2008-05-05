@@ -15,7 +15,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
@@ -43,13 +43,13 @@ public abstract class AbstractTaskListViewHandler extends AbstractHandler {
 		ITreeSelection selection = (ITreeSelection) taskListView.getViewer().getSelection();
 		for (Iterator<?> it = selection.iterator(); it.hasNext();) {
 			Object item = it.next();
-			if (item instanceof AbstractTaskContainer) {
-				execute(event, taskListView, (AbstractTaskContainer) item);
+			if (item instanceof ITaskElement) {
+				execute(event, taskListView, (ITaskElement) item);
 			}
 		}
 	}
 
-	protected void execute(ExecutionEvent event, TaskListView taskListView, AbstractTaskContainer item) {
+	protected void execute(ExecutionEvent event, TaskListView taskListView, ITaskElement item) {
 	}
 
 }

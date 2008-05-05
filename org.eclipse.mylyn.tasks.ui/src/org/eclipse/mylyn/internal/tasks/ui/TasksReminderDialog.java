@@ -19,7 +19,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -150,14 +151,14 @@ public class TasksReminderDialog extends Dialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == DISMISS_ALL_ID) {
-			for (AbstractTask t : tasks) {
+			for (ITask t : tasks) {
 				t.setReminded(true);
 			}
 			okPressed();
 		} else if (buttonId == DISMISS_ID) {
 			Object sel = ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
-			if (sel != null && sel instanceof AbstractTask) {
-				AbstractTask t = (AbstractTask) sel;
+			if (sel != null && sel instanceof ITask) {
+				ITask t = (ITask) sel;
 				t.setReminded(true);
 				tasks.remove(t);
 				if (tasks.isEmpty()) {
@@ -168,8 +169,8 @@ public class TasksReminderDialog extends Dialog {
 			}
 		} else if (buttonId == SNOOZE_ID) {
 			Object sel = ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
-			if (sel != null && sel instanceof AbstractTask) {
-				AbstractTask t = (AbstractTask) sel;
+			if (sel != null && sel instanceof ITask) {
+				ITask t = (ITask) sel;
 				t.setReminded(false);
 				t.setScheduledForDate(new Date(new Date().getTime() + DAY));
 				tasks.remove(t);
@@ -202,8 +203,8 @@ public class TasksReminderDialog extends Dialog {
 		}
 
 		public String getColumnText(Object element, int columnIndex) {
-			if (element instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask) element;
+			if (element instanceof ITask) {
+				ITask task = (ITask) element;
 				switch (columnIndex) {
 				case 0:
 					return task.getSummary();
@@ -235,8 +236,8 @@ public class TasksReminderDialog extends Dialog {
 
 		@Override
 		public int compare(Viewer viewer, Object obj1, Object obj2) {
-			AbstractTask t1 = (AbstractTask) obj1;
-			AbstractTask t2 = (AbstractTask) obj2;
+			ITask t1 = (ITask) obj1;
+			ITask t2 = (ITask) obj2;
 
 			switch (criteria) {
 			case DESCRIPTION:
@@ -250,15 +251,15 @@ public class TasksReminderDialog extends Dialog {
 			}
 		}
 
-		private int compareDescription(AbstractTask task1, AbstractTask task2) {
+		private int compareDescription(ITask task1, ITask task2) {
 			return task1.getSummary().compareToIgnoreCase(task2.getSummary());
 		}
 
-		private int comparePriority(AbstractTask task1, AbstractTask task2) {
+		private int comparePriority(ITask task1, ITask task2) {
 			return task1.getPriority().compareTo(task2.getPriority());
 		}
 
-		private int compareDate(AbstractTask task1, AbstractTask task2) {
+		private int compareDate(ITask task1, ITask task2) {
 			return task2.getScheduledForDate().compareTo(task1.getScheduledForDate());
 		}
 	}

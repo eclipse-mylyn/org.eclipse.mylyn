@@ -12,9 +12,10 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditor;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.RepositoryTaskEditorInput;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
@@ -48,7 +49,7 @@ public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 	}
 
 	@Override
-	public IEditorInput createEditorInput(AbstractTask task) {
+	public IEditorInput createEditorInput(ITask task) {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
 			final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
@@ -65,7 +66,7 @@ public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 	}
 
 	@Override
-	public boolean canCreateEditorFor(AbstractTask task) {
+	public boolean canCreateEditorFor(ITask task) {
 		return task instanceof BugzillaTask;
 	}
 

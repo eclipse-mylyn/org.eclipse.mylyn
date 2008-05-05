@@ -11,7 +11,7 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
@@ -40,25 +40,25 @@ public class TaskActivityListenerTest extends TestCase {
 		}
 
 		@Override
-		public void preTaskActivated(AbstractTask task) {
+		public void preTaskActivated(ITask task) {
 			assertFalse(hasActivated);
 			hasPreActivated = true;
 		}
 
 		@Override
-		public void preTaskDeactivated(AbstractTask task) {
+		public void preTaskDeactivated(ITask task) {
 			assertFalse(hasDeactivated);
 			hasPreDeactivated = true;
 		}
 
 		@Override
-		public void taskActivated(AbstractTask task) {
+		public void taskActivated(ITask task) {
 			assertTrue(hasPreActivated);
 			hasActivated = true;
 		}
 
 		@Override
-		public void taskDeactivated(AbstractTask task) {
+		public void taskDeactivated(ITask task) {
 			assertTrue(hasPreDeactivated);
 			hasDeactivated = true;
 		}

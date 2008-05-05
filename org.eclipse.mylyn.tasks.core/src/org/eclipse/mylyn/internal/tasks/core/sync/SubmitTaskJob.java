@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -40,7 +40,7 @@ public class SubmitTaskJob extends SubmitJob {
 
 	private IStatus errorStatus;
 
-	private AbstractTask task;
+	private ITask task;
 
 	private final Set<TaskAttribute> changedAttributes;
 
@@ -49,7 +49,7 @@ public class SubmitTaskJob extends SubmitJob {
 	private RepositoryResponse response;
 
 	public SubmitTaskJob(ITaskDataManager taskDataManager, AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, AbstractTask task, TaskData taskData, Set<TaskAttribute> changedAttributes) {
+			TaskRepository taskRepository, ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes) {
 		super("Submitting Task");
 		this.taskDataManager = taskDataManager;
 		this.connector = connector;
@@ -97,7 +97,7 @@ public class SubmitTaskJob extends SubmitJob {
 		return Status.OK_STATUS;
 	}
 
-	private AbstractTask createTask(IProgressMonitor monitor, TaskData updatedTaskData) throws CoreException {
+	private ITask createTask(IProgressMonitor monitor, TaskData updatedTaskData) throws CoreException {
 		if (taskData.isNew()) {
 			task = connector.createTask(taskRepository.getRepositoryUrl(), updatedTaskData.getTaskId(), "");
 		}
@@ -110,7 +110,7 @@ public class SubmitTaskJob extends SubmitJob {
 	}
 
 	@Override
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 

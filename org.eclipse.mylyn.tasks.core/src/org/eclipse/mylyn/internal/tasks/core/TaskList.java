@@ -27,10 +27,8 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
@@ -115,17 +113,17 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	/**
 	 * Add orphaned task to the task list
 	 */
-	public void addTask(AbstractTask task) {
+	public void addTask(ITask task) {
 		addTask(task, null);
 	}
 
-	public boolean addTask(AbstractTask task, AbstractTaskContainer container) {
+	public boolean addTask(ITask task, AbstractTaskContainer container) {
 		Assert.isNotNull(task);
 		Assert.isLegal(!(container instanceof UnmatchedTaskContainer));
 
 		try {
 			lock();
-			task = getOrCreateTask(task);
+			task = getOrCreateTask((AbstractTask) task);
 			if (container == null) {
 				container = getUnmatchedContainer(task.getRepositoryUrl());
 			} else {
@@ -138,7 +136,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			}
 
 			// ensure that we don't create cycles
-			if (task.contains(container.getHandleIdentifier())) {
+			if (((AbstractTask) task).contains(container.getHandleIdentifier())) {
 				return false;
 			}
 
@@ -155,10 +153,10 @@ public class TaskList implements ISchedulingRule, ITaskList {
 				}
 			}
 
-			removeOrphan(task, delta);
+			removeOrphan((AbstractTask) task, delta);
 
-			task.addParentContainer(container);
-			container.internalAddChild(task);
+			((AbstractTask) task).addParentContainer(container);
+			container.internalAddChild((AbstractTask) task);
 			delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
 			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
 		} finally {
@@ -180,9 +178,9 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		try {
 			lock();
 			categories.remove(category.getHandleIdentifier());
-			for (AbstractTask task : category.getChildren()) {
+			for (ITask task : category.getChildren()) {
 				task.removeParentContainer(category);
-				addOrphan(task, delta);
+				addOrphan((AbstractTask) task, delta);
 			}
 			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.REMOVED));
 		} finally {
@@ -194,9 +192,9 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		try {
 			lock();
 			queries.remove(query.getHandleIdentifier());
-			for (AbstractTask task : query.getChildren()) {
-				task.removeParentContainer(query);
-				addOrphan(task, delta);
+			for (ITask task : query.getChildren()) {
+				((AbstractTask) task).removeParentContainer(query);
+				addOrphan((AbstractTask) task, delta);
 			}
 			delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.REMOVED));
 		} finally {
@@ -208,7 +206,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	 * Task is removed from all containers. Currently subtasks are not deleted but rather are rather potentially
 	 * orphaned.
 	 */
-	public void deleteTask(AbstractTask task) {
+	public void deleteTask(ITask task) {
 		try {
 			lock();
 
@@ -218,9 +216,9 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			}
 
 			// remove this task as a parent for all subtasks
-			for (AbstractTask child : task.getChildren()) {
-				removeFromContainerInternal(task, child, delta);
-				addOrphan(child, delta);
+			for (ITask child : task.getChildren()) {
+				removeFromContainerInternal((AbstractTaskContainer) task, child, delta);
+				addOrphan((AbstractTask) child, delta);
 			}
 
 			tasks.remove(task.getHandleIdentifier());
@@ -380,10 +378,10 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	/**
 	 * Returns all tasks for the given repository url.
 	 */
-	public Set<AbstractTask> getTasks(String repositoryUrl) {
-		Set<AbstractTask> repositoryTasks = new HashSet<AbstractTask>();
+	public Set<ITask> getTasks(String repositoryUrl) {
+		Set<ITask> repositoryTasks = new HashSet<ITask>();
 		if (repositoryUrl != null) {
-			for (AbstractTask task : tasks.values()) {
+			for (ITask task : tasks.values()) {
 				if (task.getRepositoryUrl().equals(repositoryUrl)) {
 					repositoryTasks.add(task);
 				}
@@ -413,12 +411,12 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	 * Task added if does not exist already. Ensures the element exists in the task list
 	 * 
 	 * @throws IllegalAgumentException
-	 *             if null argument passed or element does not exist in task list
+	 * 		if null argument passed or element does not exist in task list
 	 * @return element as passed in or instance from task list with same handle if exists
 	 */
-	private AbstractTaskContainer getValidElement(AbstractTaskContainer taskListElement) {
+	private AbstractTaskContainer getValidElement(ITaskElement taskListElement) {
 		AbstractTaskContainer result = null;
-		if (taskListElement instanceof AbstractTask) {
+		if (taskListElement instanceof ITask) {
 			result = tasks.get(taskListElement.getHandleIdentifier());
 		} else if (taskListElement instanceof UncategorizedTaskContainer) {
 			result = defaultCategory;
@@ -439,7 +437,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	}
 
 	public boolean isConflicting(ISchedulingRule rule) {
-		return rule instanceof TaskList || rule instanceof AbstractTaskContainer;
+		return rule instanceof TaskList || rule instanceof ITaskElement;
 	}
 
 	public void notifyContainersUpdated(Set<? extends AbstractTaskContainer> containers) {
@@ -463,7 +461,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	public void notifyTaskChanged(AbstractTask task, boolean content) {
+	public void notifyTaskChanged(ITask task, boolean content) {
 		HashSet<TaskContainerDelta> taskChangeDeltas = new HashSet<TaskContainerDelta>();
 		TaskContainerDelta.Kind kind;
 		if (content) {
@@ -527,21 +525,21 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		changeListeners.remove(listener);
 	}
 
-	public void removeFromContainer(AbstractTaskContainer container, AbstractTask task) {
+	public void removeFromContainer(AbstractTaskContainer container, ITask task) {
 		Assert.isNotNull(container);
 		Assert.isNotNull(task);
 
 		removeFromContainer(container, Collections.singleton(task));
 	}
 
-	public void removeFromContainer(AbstractTaskContainer container, Set<AbstractTask> tasks) {
+	public void removeFromContainer(AbstractTaskContainer container, Set<ITask> tasks) {
 		Assert.isNotNull(container);
 		Assert.isNotNull(tasks);
 		try {
 			lock();
-			for (AbstractTask task : tasks) {
+			for (ITask task : tasks) {
 				removeFromContainerInternal(container, task, delta);
-				addOrphan(task, delta);
+				addOrphan((AbstractTask) task, delta);
 			}
 		} finally {
 			unlock();
@@ -551,12 +549,11 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	/**
 	 * Note: does not add <code>task</code> to the unmatched container.
 	 */
-	private void removeFromContainerInternal(AbstractTaskContainer container, AbstractTask task,
-			Set<TaskContainerDelta> delta) {
+	private void removeFromContainerInternal(AbstractTaskContainer container, ITask task, Set<TaskContainerDelta> delta) {
 		assert container.getChildren().contains(task);
 
 		container.internalRemoveChild(task);
-		task.removeParentContainer(container);
+		((AbstractTask) task).removeParentContainer(container);
 
 		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
 		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
@@ -579,7 +576,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	 */
 	@Deprecated
 	public void renameContainer(AbstractTaskContainer container, String newDescription) {
-		Assert.isLegal(!(container instanceof AbstractTask));
+		Assert.isLegal(!(container instanceof ITask));
 		Assert.isLegal(!(container instanceof UnmatchedTaskContainer));
 
 		try {

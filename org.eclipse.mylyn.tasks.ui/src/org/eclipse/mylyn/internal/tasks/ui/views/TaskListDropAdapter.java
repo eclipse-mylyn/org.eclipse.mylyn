@@ -32,6 +32,9 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -49,10 +52,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -106,7 +107,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				if (isUrl(data) && createTaskFromUrl(data)) {
 					tasksToMove.add(newTask);
 				} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)
-						&& data instanceof AbstractTask[]) {
+						&& data instanceof ITask[]) {
 					AbstractTask[] tasks = (AbstractTask[]) data;
 					for (AbstractTask task : tasks) {
 						if (task != null) {
@@ -117,7 +118,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					tasksToMove.add(newTask);
 				} else if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
 					// transfer the context if the target is a Task
-					if (getCurrentTarget() instanceof AbstractTask) {
+					if (getCurrentTarget() instanceof ITask) {
 						AbstractTask targetTask = (AbstractTask) getCurrentTarget();
 						final String[] names = (String[]) data;
 						boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(),
@@ -208,11 +209,11 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 								TasksUi.getTaskList().addTask(task,
 										(AbstractTaskCategory) currentTarget);
 							}
-						} else if (currentTarget instanceof AbstractTask) {
-							AbstractTask targetTask = (AbstractTask) currentTarget;
+						} else if (currentTarget instanceof ITask) {
+							ITask targetTask = (ITask) currentTarget;
 							AbstractTaskCategory targetCategory = null;
 							// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
-							AbstractTaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
+							ITaskElement container = TaskCategory.getParentTaskCategory(targetTask);
 							if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
 								targetCategory = (AbstractTaskCategory) container;
 							} else if (container instanceof UnmatchedTaskContainer) {
@@ -262,7 +263,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	}
 
 	private boolean areAllLocalTasks(List<AbstractTask> tasksToMove) {
-		for (AbstractTask task : tasksToMove) {
+		for (ITask task : tasksToMove) {
 			if (!(task instanceof LocalTask)) {
 				return false;
 			}
@@ -381,7 +382,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					|| getCurrentTarget() instanceof UnmatchedTaskContainer
 					|| getCurrentTarget() instanceof ScheduledTaskContainer) {
 				return true;
-			} else if (getCurrentTarget() instanceof AbstractTaskContainer
+			} else if (getCurrentTarget() instanceof ITaskElement
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
 				return true;
 			} else if (getCurrentTarget() instanceof LocalTask

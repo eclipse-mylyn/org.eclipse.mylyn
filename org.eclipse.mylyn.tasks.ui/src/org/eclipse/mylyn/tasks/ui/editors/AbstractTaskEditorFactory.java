@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
@@ -24,11 +24,17 @@ public abstract class AbstractTaskEditorFactory {
 
 	public abstract IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput);
 
-	public abstract IEditorInput createEditorInput(AbstractTask task);
+	/**
+	 * @since 3.0
+	 */
+	public abstract IEditorInput createEditorInput(ITask task);
 
 	public abstract String getTitle();
 
-	public abstract boolean canCreateEditorFor(AbstractTask task);
+	/**
+	 * @since 3.0
+	 */
+	public abstract boolean canCreateEditorFor(ITask task);
 
 	public abstract boolean canCreateEditorFor(IEditorInput input);
 

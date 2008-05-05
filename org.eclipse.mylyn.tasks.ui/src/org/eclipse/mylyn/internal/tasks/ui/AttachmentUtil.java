@@ -24,17 +24,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.FileAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
@@ -58,7 +58,7 @@ public class AttachmentUtil {
 	 */
 	@Deprecated
 	public static boolean attachContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
-			AbstractTask task, String longComment, IProgressMonitor monitor) throws CoreException {
+			ITask task, String longComment, IProgressMonitor monitor) throws CoreException {
 		ContextCore.getContextManager().saveContext(task.getHandleIdentifier());
 		final File sourceContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
 
@@ -86,7 +86,7 @@ public class AttachmentUtil {
 	}
 
 	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository,
-			AbstractTask task, String comment, IProgressMonitor monitor) throws CoreException {
+			ITask task, String comment, IProgressMonitor monitor) throws CoreException {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		ContextCore.getContextManager().saveContext(task.getHandleIdentifier());
 		File file = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
@@ -106,7 +106,7 @@ public class AttachmentUtil {
 	 * 
 	 * @return an empty set if no contexts
 	 */
-	public static Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractTask task) {
+	public static Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, ITask task) {
 		TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
 		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
 		if (taskDataManager != null) {
@@ -124,7 +124,7 @@ public class AttachmentUtil {
 		return contextAttachments;
 	}
 
-	public static boolean hasContext(TaskRepository repository, AbstractTask task) {
+	public static boolean hasContext(TaskRepository repository, ITask task) {
 		if (repository == null || task == null) {
 			return false;
 		} else {
@@ -151,7 +151,7 @@ public class AttachmentUtil {
 	 */
 	@Deprecated
 	public static boolean retrieveContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
-			AbstractTask task, RepositoryAttachment attachment, String destinationPath, IProgressMonitor monitor)
+			ITask task, RepositoryAttachment attachment, String destinationPath, IProgressMonitor monitor)
 			throws CoreException {
 
 		File destinationContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
@@ -183,7 +183,7 @@ public class AttachmentUtil {
 	}
 
 	public static boolean getContext(AbstractRepositoryConnector connector, TaskRepository repository,
-			AbstractTask task, TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
+			ITask task, TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		File file = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
 		try {

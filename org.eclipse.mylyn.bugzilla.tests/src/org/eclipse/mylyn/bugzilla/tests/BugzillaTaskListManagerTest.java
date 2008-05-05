@@ -19,13 +19,14 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -78,10 +79,10 @@ public class BugzillaTaskListManagerTest extends TestCase {
 
 		TaskList taskList = manager.getTaskList();
 		assertEquals(1, taskList.getAllTasks().size());
-		Set<AbstractTask> tasksReturned = taskList.getTasks(repositoryUrl);
+		Set<ITask> tasksReturned = taskList.getTasks(repositoryUrl);
 		assertNotNull(tasksReturned);
 		assertEquals(1, tasksReturned.size());
-		for (AbstractTask task : tasksReturned) {
+		for (ITask task : tasksReturned) {
 			assertTrue(task.isReminded());
 		}
 	}
@@ -101,7 +102,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 				.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
 				.getChildren()
 				.size());
-		AbstractTask readTask = manager.getTaskList()
+		ITask readTask = manager.getTaskList()
 				.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
 				.getChildren()
 				.iterator()
@@ -170,7 +171,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		manager.setTaskListFile(originalFile);
 
 		Collection<AbstractTask> allTasks = manager.getTaskList().getAllTasks();
-		Collection<AbstractTask> allRootTasks = manager.getTaskList().getDefaultCategory().getChildren();
+		Collection<ITask> allRootTasks = manager.getTaskList().getDefaultCategory().getChildren();
 		Set<AbstractTaskCategory> allCategories = manager.getTaskList().getCategories();
 		Set<AbstractTaskContainer> allRoots = manager.getTaskList().getRootElements();
 		assertEquals(0, allRootTasks.size());

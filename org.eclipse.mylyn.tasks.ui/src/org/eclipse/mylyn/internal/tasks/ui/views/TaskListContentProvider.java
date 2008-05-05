@@ -17,12 +17,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress
@@ -58,8 +60,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	 */
 	public Object getParent(Object child) {
 		// return first parent found, first search within categories then queries
-		if (child instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) child;
+		if (child instanceof ITask) {
+			ITask task = (ITask) child;
 			AbstractTaskCategory parent = TaskCategory.getParentTaskCategory(task);
 			if (parent != null) {
 				return parent;
@@ -118,7 +120,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return filterText == null || filterText.length() == 0;
 	}
 
-	private boolean selectContainer(AbstractTaskContainer container) {
+	private boolean selectContainer(ITaskElement container) {
 //		if (container instanceof ScheduledTaskContainer) {
 //			ScheduledTaskContainer scheduleContainer = (ScheduledTaskContainer) container;
 //			if (TasksUiPlugin.getTaskActivityManager().isWeekDay(scheduleContainer)
@@ -135,24 +137,24 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return true;
 	}
 
-	private List<AbstractTaskContainer> getFilteredChildrenFor(Object parent) {
+	private List<ITaskElement> getFilteredChildrenFor(Object parent) {
 		if (containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText())) {
-			List<AbstractTaskContainer> children = new ArrayList<AbstractTaskContainer>();
-			if (parent instanceof AbstractTask) {
-				Collection<AbstractTask> subTasks = ((AbstractTask) parent).getChildren();
-				for (AbstractTask t : subTasks) {
-					if (!filter(parent, t)) {
-						children.add(t);
+			List<ITaskElement> children = new ArrayList<ITaskElement>();
+			if (parent instanceof ITask) {
+				Collection<ITask> subTasks = ((AbstractTask) parent).getChildren();
+				for (ITask task : subTasks) {
+					if (!filter(parent, task)) {
+						children.add(task);
 					}
 				}
 				return children;
-			} else if (parent instanceof AbstractTaskContainer) {
-				return getFilteredRootChildren((AbstractTaskContainer) parent);
+			} else if (parent instanceof ITaskElement) {
+				return getFilteredRootChildren((ITaskElement) parent);
 			}
 		} else {
-			List<AbstractTaskContainer> children = new ArrayList<AbstractTaskContainer>();
-			if (parent instanceof AbstractTaskContainer) {
-				children.addAll(((AbstractTaskContainer) parent).getChildren());
+			List<ITaskElement> children = new ArrayList<ITaskElement>();
+			if (parent instanceof ITaskElement) {
+				children.addAll(((ITaskElement) parent).getChildren());
 				return children;
 			}
 		}
@@ -162,26 +164,26 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	/**
 	 * @return all children who aren't already revealed as a sub task
 	 */
-	private List<AbstractTaskContainer> getFilteredRootChildren(AbstractTaskContainer parent) {
-		List<AbstractTaskContainer> result = new ArrayList<AbstractTaskContainer>();
+	private List<ITaskElement> getFilteredRootChildren(ITaskElement parent) {
+		List<ITaskElement> result = new ArrayList<ITaskElement>();
 		if (TasksUiPlugin.getDefault().groupSubtasks(parent)) {
-			Collection<AbstractTask> parentTasks = parent.getChildren();
-			Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
-			Set<AbstractTask> children = new HashSet<AbstractTask>();
+			Collection<ITask> parentTasks = parent.getChildren();
+			Set<ITaskElement> parents = new HashSet<ITaskElement>();
+			Set<ITask> children = new HashSet<ITask>();
 			// get all children
-			for (AbstractTask element : parentTasks) {
-				for (AbstractTask abstractTask : element.getChildren()) {
+			for (ITask element : parentTasks) {
+				for (ITask abstractTask : element.getChildren()) {
 					children.add(abstractTask);
 				}
 			}
-			for (AbstractTask task : parentTasks) {
+			for (ITask task : parentTasks) {
 				if (!filter(parent, task) && !children.contains(task)) {
 					parents.add(task);
 				}
 			}
 			result.addAll(parents);
 		} else {
-			for (AbstractTaskContainer element : parent.getChildren()) {
+			for (ITaskElement element : parent.getChildren()) {
 				if (!filter(parent, element)) {
 					result.add(element);
 				}

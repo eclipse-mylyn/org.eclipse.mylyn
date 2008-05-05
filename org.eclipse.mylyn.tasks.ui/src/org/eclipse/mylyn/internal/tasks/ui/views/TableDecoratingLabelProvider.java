@@ -14,10 +14,11 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -30,14 +31,14 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (!(element instanceof AbstractTaskContainer)) {
+		if (!(element instanceof ITaskElement)) {
 			return null;
 		}
 		if (columnIndex == 0) {
-			if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
+			if (element instanceof ITaskElement && !(element instanceof ITask)) {
 				return super.getImage(element);
 			} else {
-				AbstractTask task = TaskElementLabelProvider.getCorrespondingTask((AbstractTaskContainer) element);
+				AbstractTask task = TaskElementLabelProvider.getCorrespondingTask((ITaskElement) element);
 				if (task != null) {
 					if (task.isActive()) {
 						return CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE);
@@ -53,7 +54,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 				}
 			}
 		} else if (columnIndex == 1) {
-			if (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery) {
+			if (element instanceof ITaskElement || element instanceof AbstractRepositoryQuery) {
 				return null;
 			}
 			return super.getImage(element);

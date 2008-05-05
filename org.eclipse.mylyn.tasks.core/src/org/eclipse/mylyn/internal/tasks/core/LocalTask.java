@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Rob Elves

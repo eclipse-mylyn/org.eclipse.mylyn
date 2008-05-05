@@ -20,9 +20,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
@@ -64,7 +65,7 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 		if (selection instanceof StructuredSelection) {
 			List<?> selectedObjects = ((StructuredSelection) selection).toList();
 			for (Object selectedObject : selectedObjects) {
-				if (selectedObject instanceof AbstractTask) {
+				if (selectedObject instanceof ITask) {
 					selectedQueries.add((AbstractTask) selectedObject);
 				}
 			}
@@ -123,7 +124,7 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 		return;
 	}
 
-	private String encodeName(AbstractTask task) {
+	private String encodeName(ITask task) {
 		String fileName = task.getSummary();
 		if (fileName.length() > 50) {
 			fileName = fileName.substring(0, 50);

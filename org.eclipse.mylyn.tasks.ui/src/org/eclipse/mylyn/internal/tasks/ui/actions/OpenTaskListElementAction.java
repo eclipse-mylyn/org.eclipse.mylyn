@@ -14,9 +14,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
@@ -47,10 +48,10 @@ public class OpenTaskListElementAction extends Action {
 		ISelection selection = viewer.getSelection();
 		List<?> list = ((IStructuredSelection) selection).toList();
 		for (Object element : list) {
-			if (element instanceof AbstractTask && event != null && (event.keyCode & SWT.MOD1) != 0) {
+			if (element instanceof ITask && event != null && (event.keyCode & SWT.MOD1) != 0) {
 				TasksUiUtil.openTaskInBackground((AbstractTask) element, true);
-			} else if (element instanceof AbstractTask) {
-				TasksUiInternal.refreshAndOpenTaskListElement((AbstractTaskContainer) element);
+			} else if (element instanceof ITask) {
+				TasksUiInternal.refreshAndOpenTaskListElement((ITaskElement) element);
 			} else {
 				if (viewer.getExpandedState(element)) {
 					viewer.collapseToLevel(element, 1);

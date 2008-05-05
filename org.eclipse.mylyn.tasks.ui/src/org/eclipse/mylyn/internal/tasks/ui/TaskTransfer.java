@@ -14,7 +14,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
@@ -50,11 +50,11 @@ public class TaskTransfer extends ByteArrayTransfer {
 
 	@Override
 	protected void javaToNative(Object data, TransferData transferData) {
-		if (!(data instanceof AbstractTask[])) {
+		if (!(data instanceof ITask[])) {
 			return;
 		}
 
-		AbstractTask[] tasks = (AbstractTask[]) data;
+		ITask[] tasks = (ITask[]) data;
 		int resourceCount = tasks.length;
 
 		try {
@@ -65,7 +65,7 @@ public class TaskTransfer extends ByteArrayTransfer {
 			dataOut.writeInt(resourceCount);
 
 			// write each resource
-			for (AbstractTask task : tasks) {
+			for (ITask task : tasks) {
 				writeTask(dataOut, task);
 			}
 
@@ -88,7 +88,7 @@ public class TaskTransfer extends ByteArrayTransfer {
 		DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
 		try {
 			int count = in.readInt();
-			AbstractTask[] results = new AbstractTask[count];
+			ITask[] results = new ITask[count];
 			for (int i = 0; i < count; i++) {
 				results[i] = readTask(in);
 			}
@@ -98,12 +98,12 @@ public class TaskTransfer extends ByteArrayTransfer {
 		}
 	}
 
-	private AbstractTask readTask(DataInputStream dataIn) throws IOException {
+	private ITask readTask(DataInputStream dataIn) throws IOException {
 		String handle = dataIn.readUTF();
 		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 	}
 
-	private void writeTask(DataOutputStream dataOut, AbstractTask task) throws IOException {
+	private void writeTask(DataOutputStream dataOut, ITask task) throws IOException {
 		dataOut.writeUTF(task.getHandleIdentifier());
 	}
 

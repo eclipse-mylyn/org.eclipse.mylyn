@@ -7,7 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Mik Kersten
@@ -16,8 +16,8 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (element instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) element;
+		if (element instanceof ITask) {
+			ITask task = (ITask) element;
 			return !task.isCompleted();
 		}
 		return true;

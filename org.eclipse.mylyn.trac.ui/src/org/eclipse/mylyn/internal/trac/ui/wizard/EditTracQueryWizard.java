@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.trac.ui.wizard;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractEditQueryWizard;
 

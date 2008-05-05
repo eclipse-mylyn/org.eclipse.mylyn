@@ -11,8 +11,8 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Steffen Pingel
@@ -29,7 +29,7 @@ public class DefaultTaskSchema {
 		this.taskData = taskData;
 	}
 
-	public boolean applyTo(AbstractTask task) {
+	public boolean applyTo(ITask task) {
 		boolean changed = false;
 		if (hasTaskPropertyChanged(task.getCompletionDate(), getCompletionDate())) {
 			task.setCompletionDate(getCompletionDate());

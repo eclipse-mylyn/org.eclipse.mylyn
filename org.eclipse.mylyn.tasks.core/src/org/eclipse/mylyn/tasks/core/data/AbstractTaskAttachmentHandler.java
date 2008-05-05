@@ -12,7 +12,7 @@ import java.io.InputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -23,14 +23,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public abstract class AbstractTaskAttachmentHandler {
 
-	public abstract boolean canGetContent(TaskRepository repository, AbstractTask task);
+	public abstract boolean canGetContent(TaskRepository repository, ITask task);
 
-	public abstract boolean canPostContent(TaskRepository repository, AbstractTask task);
+	public abstract boolean canPostContent(TaskRepository repository, ITask task);
 
-	public abstract InputStream getContent(TaskRepository repository, AbstractTask task,
+	public abstract InputStream getContent(TaskRepository repository, ITask task,
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException;
 
-	public abstract void postContent(TaskRepository repository, AbstractTask task, AbstractTaskAttachmentSource source,
+	public abstract void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source,
 			String comment, TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException;
 
 }

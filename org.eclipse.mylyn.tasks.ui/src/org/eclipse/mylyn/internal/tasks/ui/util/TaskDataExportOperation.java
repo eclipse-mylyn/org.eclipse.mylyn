@@ -30,10 +30,11 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -200,7 +201,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 			if (exportTaskContexts) {
 				// Prevent many repeated error messages
 				boolean errorDisplayed = false;
-				for (AbstractTask task : tasks) {
+				for (ITask task : tasks) {
 
 					if (!ContextCore.getContextManager().hasContext(task.getHandleIdentifier())) {
 						continue; // Tasks without a context have no file to

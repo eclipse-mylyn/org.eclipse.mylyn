@@ -28,7 +28,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Rob Elves
@@ -101,9 +101,9 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 
 	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) {
 		TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
-		for (AbstractTask task : getTaskList().getAllTasks()) {
+		for (ITask task : getTaskList().getAllTasks()) {
 			if (task != null) {
-				AbstractTask repositoryTask = task;
+				ITask repositoryTask = task;
 				if (repositoryTask.getRepositoryUrl().equals(oldRepositoryUrl)) {
 					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
 							repositoryTask.getTaskId());

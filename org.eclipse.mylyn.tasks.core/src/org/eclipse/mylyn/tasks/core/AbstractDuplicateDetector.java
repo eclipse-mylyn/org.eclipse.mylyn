@@ -11,6 +11,7 @@ package org.eclipse.mylyn.tasks.core;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**

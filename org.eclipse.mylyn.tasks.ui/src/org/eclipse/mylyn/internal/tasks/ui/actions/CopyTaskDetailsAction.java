@@ -10,12 +10,13 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -60,7 +61,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	// API 3.0: move to TasksUiUtil / into core
 	public static String getTextForTask(Object object) {
 		String text = "";
-		if (object instanceof AbstractTask) {
+		if (object instanceof ITask) {
 			AbstractTask task = (AbstractTask) object;
 			if (task.getTaskKey() != null) {
 				text += task.getTaskKey() + ": ";
@@ -86,8 +87,8 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) object;
 			text += query.getSummary();
 			text += "\n" + query.getUrl();
-		} else if (object instanceof AbstractTaskContainer) {
-			AbstractTaskContainer element = (AbstractTaskContainer) object;
+		} else if (object instanceof ITaskElement) {
+			ITaskElement element = (ITaskElement) object;
 			text = element.getSummary();
 		} else if (object instanceof RepositoryTaskSelection) {
 			RepositoryTaskSelection selection = (RepositoryTaskSelection) object;

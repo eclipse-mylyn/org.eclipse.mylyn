@@ -11,13 +11,13 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -73,49 +73,49 @@ public class TaskListTableSorter extends ViewerSorter {
 				return -1;
 			}
 			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
-		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof ScheduledTaskContainer) {
+		} else if (o1 instanceof ITaskElement && o2 instanceof ScheduledTaskContainer) {
 			return -1;
-		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof AbstractTaskContainer) {
+		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ITaskElement) {
 			return 1;
 		}
 
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof UncategorizedTaskContainer) {
+		if (o1 instanceof ITaskElement && o2 instanceof UncategorizedTaskContainer) {
 			return 1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UncategorizedTaskContainer) {
+		} else if (o2 instanceof ITaskElement && o1 instanceof UncategorizedTaskContainer) {
 			return -1;
 		}
 
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof UnmatchedTaskContainer) {
+		if (o1 instanceof ITaskElement && o2 instanceof UnmatchedTaskContainer) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof UnmatchedTaskContainer) {
+		} else if (o2 instanceof ITaskElement && o1 instanceof UnmatchedTaskContainer) {
 			return 1;
 		}
 
-		if (!(o1 instanceof AbstractTask) && o2 instanceof AbstractTask) {
+		if (!(o1 instanceof ITask) && o2 instanceof ITask) {
 			return 1;
 		}
 
-		if (o1 instanceof AbstractTask && !(o2 instanceof AbstractTaskContainer)) {
+		if (o1 instanceof ITask && !(o2 instanceof ITaskElement)) {
 			return -1;
 		}
 
 		// if (o1 instanceof AbstractTaskContainer || o1 instanceof
 		// AbstractRepositoryQuery) {
-		if (!(o1 instanceof AbstractTask)) {
-			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
+		if (!(o1 instanceof ITask)) {
+			if (o2 instanceof ITaskElement || o2 instanceof AbstractRepositoryQuery) {
 
 				return this.sortDirection
-						* ((AbstractTaskContainer) o1).getSummary().compareToIgnoreCase(
-								((AbstractTaskContainer) o2).getSummary());
+						* ((ITaskElement) o1).getSummary().compareToIgnoreCase(
+								((ITaskElement) o2).getSummary());
 			} else {
 				return -1;
 			}
-		} else if (o1 instanceof AbstractTaskContainer) {
-			if (!(o2 instanceof AbstractTask)) {
+		} else if (o1 instanceof ITaskElement) {
+			if (!(o2 instanceof ITask)) {
 				return -1;
-			} else if (o2 instanceof AbstractTaskContainer) {
-				AbstractTaskContainer element1 = (AbstractTaskContainer) o1;
-				AbstractTaskContainer element2 = (AbstractTaskContainer) o2;
+			} else if (o2 instanceof ITaskElement) {
+				ITaskElement element1 = (ITaskElement) o1;
+				ITaskElement element2 = (ITaskElement) o2;
 
 				return compareElements(element1, element2);
 			}
@@ -125,7 +125,7 @@ public class TaskListTableSorter extends ViewerSorter {
 		return 0;
 	}
 
-	private int compareElements(AbstractTaskContainer element1, AbstractTaskContainer element2) {
+	private int compareElements(ITaskElement element1, ITaskElement element2) {
 		if (SortByIndex.PRIORITY.equals(sortByIndex)) {
 			int result = this.sortDirection * element1.getPriority().compareTo(element2.getPriority());
 			if (result != 0) {
@@ -134,13 +134,13 @@ public class TaskListTableSorter extends ViewerSorter {
 			return sortBySummary(element1, element2);
 
 		} else if (SortByIndex.DATE_CREATED.equals(sortByIndex)) {
-			AbstractTask t1 = null;
-			AbstractTask t2 = null;
-			if (element1 instanceof AbstractTask) {
-				t1 = (AbstractTask) element1;
+			ITask t1 = null;
+			ITask t2 = null;
+			if (element1 instanceof ITask) {
+				t1 = (ITask) element1;
 			}
-			if (element2 instanceof AbstractTask) {
-				t2 = (AbstractTask) element2;
+			if (element2 instanceof ITask) {
+				t2 = (ITask) element2;
 			}
 			if (t1 != null && t2 != null) {
 				if (t1.getCreationDate() != null) {
@@ -160,7 +160,7 @@ public class TaskListTableSorter extends ViewerSorter {
 	 * @param element2
 	 * @return sort order
 	 */
-	private int sortBySummary(AbstractTaskContainer element1, AbstractTaskContainer element2) {
+	private int sortBySummary(ITaskElement element1, ITaskElement element2) {
 		return this.sortDirection
 				* taskKeyComparator.compare(getSortableFromElement(element1), getSortableFromElement(element2));
 	}
@@ -173,11 +173,11 @@ public class TaskListTableSorter extends ViewerSorter {
 	 * @deprecated Use getSortableFromElement()
 	 */
 	@Deprecated
-	public static String getSortableSummaryFromElement(AbstractTaskContainer element) {
+	public static String getSortableSummaryFromElement(ITaskElement element) {
 		String summary = element.getSummary();
 
-		if (element instanceof AbstractTask) {
-			AbstractTask task1 = (AbstractTask) element;
+		if (element instanceof ITask) {
+			ITask task1 = (ITask) element;
 			if (task1.getTaskKey() != null) {
 				summary = task1.getTaskKey() + ": " + summary;
 			}
@@ -191,11 +191,11 @@ public class TaskListTableSorter extends ViewerSorter {
 	 * @param element
 	 * @return String array[component, taskId, summary]
 	 */
-	public static String[] getSortableFromElement(AbstractTaskContainer element) {
+	public static String[] getSortableFromElement(ITaskElement element) {
 		final String a[] = new String[] { "", null, element.getSummary() };
 
-		if (element instanceof AbstractTask) {
-			AbstractTask task1 = (AbstractTask) element;
+		if (element instanceof ITask) {
+			ITask task1 = (ITask) element;
 			if (task1.getTaskKey() != null) {
 				a[1] = task1.getTaskKey();
 			}

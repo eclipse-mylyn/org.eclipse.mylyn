@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.tasks.tests.connector;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 
 /**
  * @author Mik Kersten

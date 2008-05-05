@@ -10,8 +10,9 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -40,7 +41,7 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 		}
 
 		Object result = dlg.getFirstResult();
-		if (result instanceof AbstractTask) {
+		if (result instanceof ITask) {
 			AbstractTask task = (AbstractTask) result;
 			if (dlg.getOpenInBrowser()) {
 				if (task.hasValidUrl()) {

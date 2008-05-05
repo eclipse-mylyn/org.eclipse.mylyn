@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetElementAdapter;
 
@@ -25,7 +25,7 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 
 	public IAdaptable[] adaptElements(IWorkingSet workingSet, IAdaptable[] elements) {
 		for (IAdaptable adaptable : elements) {
-			if (!(adaptable instanceof AbstractTaskContainer)) {
+			if (!(adaptable instanceof ITaskElement)) {
 				return selectContainers(elements);
 			}
 		}
@@ -35,7 +35,7 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 	private IAdaptable[] selectContainers(IAdaptable[] elements) {
 		List<IAdaptable> containers = new ArrayList<IAdaptable>(elements.length);
 		for (IAdaptable adaptable : elements) {
-			if (adaptable instanceof AbstractTaskContainer) {
+			if (adaptable instanceof ITaskElement) {
 				containers.add(adaptable);
 			} else if (adaptable instanceof IProject) {
 				containers.add(adaptable);

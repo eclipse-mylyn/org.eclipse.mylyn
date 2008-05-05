@@ -9,9 +9,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.PlatformUI;
@@ -35,8 +36,8 @@ public class AttachScreenshotAction extends AttachAction {
 			editor.showBusy(true);
 		}
 		Object selection = super.getStructuredSelection().getFirstElement();
-		if (selection instanceof AbstractTask) {
-			if (taskDirty((AbstractTask) selection)) {
+		if (selection instanceof ITask) {
+			if (taskDirty((ITask) selection)) {
 				openInformationDialog(LABEL, "Submit changes or synchronize task before adding attachments.");
 				return;
 			}

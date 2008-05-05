@@ -18,10 +18,11 @@ import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -49,7 +50,7 @@ public class ScheduleDatePicker extends Composite {
 
 	private final String initialText = DatePicker.LABEL_CHOOSE;
 
-	private final List<AbstractTaskContainer> tasks;
+	private final List<ITaskElement> tasks;
 
 	private final ScheduleTaskMenuContributor contributor;
 
@@ -59,7 +60,7 @@ public class ScheduleDatePicker extends Composite {
 
 	private ScheduledTaskContainer scheduledContainer;
 
-	public ScheduleDatePicker(Composite parent, AbstractTask task, int style) {
+	public ScheduleDatePicker(Composite parent, ITask task, int style) {
 		super(parent, style);
 		if (task != null) {
 			if (task.getScheduledForDate() != null) {
@@ -75,7 +76,7 @@ public class ScheduleDatePicker extends Composite {
 		contributor = new ScheduleTaskMenuContributor() {
 
 			@Override
-			protected Date getScheduledForDate(AbstractTask singleTaskSelection) {
+			protected Date getScheduledForDate(ITask singleTaskSelection) {
 				return ScheduleDatePicker.this.scheduledDate;
 			}
 
@@ -99,7 +100,7 @@ public class ScheduleDatePicker extends Composite {
 				notifyPickerListeners();
 			}
 		};
-		tasks = new ArrayList<AbstractTaskContainer>();
+		tasks = new ArrayList<ITaskElement>();
 		tasks.add(task);
 	}
 

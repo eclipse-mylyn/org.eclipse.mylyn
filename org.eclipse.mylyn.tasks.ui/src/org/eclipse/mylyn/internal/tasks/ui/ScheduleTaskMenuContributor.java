@@ -21,10 +21,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DateSelectionDialog;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -43,21 +44,21 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	private AbstractTask singleTaskSelection;
 
-	private final List<AbstractTaskContainer> taskListElementsToSchedule = new ArrayList<AbstractTaskContainer>();
+	private final List<ITaskElement> taskListElementsToSchedule = new ArrayList<ITaskElement>();
 
-	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
+	public MenuManager getSubMenuManager(final List<ITaskElement> selectedElements) {
 
 		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
 
 		if (selectedElements.size() == 1) {
-			AbstractTaskContainer selectedElement = selectedElements.get(0);
-			if (selectedElement instanceof AbstractTask) {
+			ITaskElement selectedElement = selectedElements.get(0);
+			if (selectedElement instanceof ITask) {
 				singleTaskSelection = (AbstractTask) selectedElement;
 			}
 		}
 
-		for (AbstractTaskContainer selectedElement : selectedElements) {
-			if (selectedElement instanceof AbstractTask) {
+		for (ITaskElement selectedElement : selectedElements) {
+			if (selectedElement instanceof ITask) {
 				taskListElementsToSchedule.add(selectedElement);
 			}
 		}
@@ -196,7 +197,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 	private boolean canSchedule() {
 		if (taskListElementsToSchedule.size() == 0) {
 			return true;
-		} else if (singleTaskSelection instanceof AbstractTask) {
+		} else if (singleTaskSelection instanceof ITask) {
 			return ((!(singleTaskSelection).isCompleted()) || taskListElementsToSchedule.size() > 0);
 		} else {
 			return taskListElementsToSchedule.size() > 0;
@@ -215,7 +216,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 //	}
 
 	protected void setScheduledDate(ScheduledTaskContainer dateContainer) {
-		for (AbstractTaskContainer element : taskListElementsToSchedule) {
+		for (ITaskElement element : taskListElementsToSchedule) {
 			AbstractTask task = getTaskForElement(element, true);
 			if (dateContainer != null && dateContainer.getStart() != null) {
 				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, dateContainer.getStart().getTime(),
@@ -226,7 +227,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		}
 	}
 
-	protected Date getScheduledForDate(final AbstractTask singleTaskSelection) {
+	protected Date getScheduledForDate(final ITask singleTaskSelection) {
 		if (singleTaskSelection != null) {
 			return singleTaskSelection.getScheduledForDate();
 		}
@@ -237,14 +238,14 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		return task.internalIsFloatingScheduledDate();
 	}
 
-	private boolean isPastReminder(AbstractTask task) {
+	private boolean isPastReminder(ITask task) {
 		Date date = getScheduledForDate(task);
 		return TasksUiPlugin.getTaskActivityManager().isPastReminder(date, task.isCompleted());
 	}
 
-	private AbstractTask getTaskForElement(AbstractTaskContainer element, boolean force) {
+	private AbstractTask getTaskForElement(ITaskElement element, boolean force) {
 		AbstractTask task = null;
-		if (element instanceof AbstractTask) {
+		if (element instanceof ITask) {
 			task = (AbstractTask) element;
 		}
 		return task;

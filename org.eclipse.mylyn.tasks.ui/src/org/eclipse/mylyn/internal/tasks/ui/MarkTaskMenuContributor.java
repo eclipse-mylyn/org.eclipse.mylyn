@@ -18,8 +18,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Rob Elves
@@ -28,12 +28,12 @@ public class MarkTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String LABEL = "Mark as";
 
-	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
+	public MenuManager getSubMenuManager(final List<ITaskElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
-		AbstractTask singleTask = null;
+		ITask singleTask = null;
 		if (selectedElements.size() == 1) {
-			if (selectedElements.get(0) instanceof AbstractTask) {
-				singleTask = (AbstractTask) selectedElements.get(0);
+			if (selectedElements.get(0) instanceof ITask) {
+				singleTask = (ITask) selectedElements.get(0);
 			}
 		}
 

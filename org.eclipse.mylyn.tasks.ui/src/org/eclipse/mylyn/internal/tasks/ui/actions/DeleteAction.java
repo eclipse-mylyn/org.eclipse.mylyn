@@ -15,12 +15,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.ISharedImages;
@@ -58,8 +59,8 @@ public class DeleteAction extends Action {
 			i++;
 			if (i < 20) {
 				// TODO this action should be based on the action enablement and check if the container is user managed or not
-				if (object instanceof AbstractTaskContainer) {
-					elements += "    " + ((AbstractTaskContainer) object).getSummary() + "\n";
+				if (object instanceof ITaskElement) {
+					elements += "    " + ((ITaskElement) object).getSummary() + "\n";
 				}
 			} else {
 				elements += "...";
@@ -71,8 +72,8 @@ public class DeleteAction extends Action {
 
 		if (toDelete.size() == 1) {
 			Object object = toDelete.get(0);
-			if (object instanceof AbstractTask) {
-				if (((AbstractTask) object).isLocal()) {
+			if (object instanceof ITask) {
+				if (((ITask) object).isLocal()) {
 					message = "Permanently delete the task listed below?";
 				} else {
 					message = "Delete the planning information and context for the repository task?  The server"
@@ -100,7 +101,7 @@ public class DeleteAction extends Action {
 		}
 
 		for (Object selectedObject : toDelete) {
-			if (selectedObject instanceof AbstractTask) {
+			if (selectedObject instanceof ITask) {
 				AbstractTask task = null;
 				task = (AbstractTask) selectedObject;
 				TasksUi.getTaskActivityManager().deactivateTask(task);
@@ -124,7 +125,7 @@ public class DeleteAction extends Action {
 				// if (!deleteConfirmed)
 				// return;
 				TaskCategory cat = (TaskCategory) selectedObject;
-				for (AbstractTask task : cat.getChildren()) {
+				for (ITask task : cat.getChildren()) {
 					ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 					TasksUiUtil.closeEditorInActivePage(task, false);
 				}

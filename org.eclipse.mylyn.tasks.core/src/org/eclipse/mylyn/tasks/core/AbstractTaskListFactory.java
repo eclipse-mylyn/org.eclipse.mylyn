@@ -11,6 +11,8 @@ package org.eclipse.mylyn.tasks.core;
 import java.util.Collections;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.w3c.dom.Element;
 
 /**
@@ -45,8 +47,9 @@ public abstract class AbstractTaskListFactory {
 	 * 
 	 * @see #getTaskElementName()
 	 * @see #setAdditionalAttributes(AbstractTask, Element)
+	 * @since 3.0
 	 */
-	public abstract boolean canCreate(AbstractTask task);
+	public abstract boolean canCreate(ITask task);
 
 	/**
 	 * Returns true if factory can create an XML element to store given {@link AbstractRepositoryQuery}.
@@ -61,6 +64,7 @@ public abstract class AbstractTaskListFactory {
 	 * 
 	 * @see #getQueryElementName(AbstractRepositoryQuery)
 	 * @see #setAdditionalAttributes(AbstractRepositoryQuery, Element)
+	 * @since 3.0
 	 */
 	public boolean canCreate(AbstractRepositoryQuery query) {
 		return false;
@@ -84,6 +88,7 @@ public abstract class AbstractTaskListFactory {
 	 * @return instance of the {@link AbstractRepositoryQuery}
 	 * 
 	 * @see #getQueryElementNames()
+	 * @since 3.0
 	 */
 	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		return null;
@@ -107,6 +112,7 @@ public abstract class AbstractTaskListFactory {
 	 * @return instance of the {@link AbstractRepositoryQuery}
 	 * 
 	 * @see #getTaskElementName()
+	 * @since 3.0
 	 */
 	public abstract AbstractTask createTask(String repositoryUrl, String taskId, String label, Element element);
 
@@ -121,6 +127,7 @@ public abstract class AbstractTaskListFactory {
 	 * 	AbstractRepositoryQuery} instance.
 	 * 
 	 * @see #canCreate(AbstractRepositoryQuery)
+	 * @since 3.0
 	 */
 	public String getQueryElementName(AbstractRepositoryQuery query) {
 		return "";
@@ -158,6 +165,7 @@ public abstract class AbstractTaskListFactory {
 	 * 		a query instance being stored
 	 * @param node
 	 * 		an XML element used to store given query instance
+	 * @since 3.0
 	 */
 	public void setAdditionalAttributes(AbstractRepositoryQuery query, Element node) {
 		// ignore
@@ -170,8 +178,9 @@ public abstract class AbstractTaskListFactory {
 	 * 		a task instance being stored
 	 * @param node
 	 * 		an XML element used to store given task instance
+	 * @since 3.0
 	 */
-	public void setAdditionalAttributes(AbstractTask task, Element element) {
+	public void setAdditionalAttributes(ITask task, Element element) {
 		// ignore
 	}
 }

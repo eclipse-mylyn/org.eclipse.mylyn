@@ -66,7 +66,7 @@ public interface ITaskAttachment {
 	/**
 	 * @since 3.0
 	 */
-	public abstract AbstractTask getTask();
+	public abstract ITask getTask();
 
 	/**
 	 * @since 3.0

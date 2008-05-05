@@ -26,6 +26,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -35,7 +36,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -56,7 +57,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		public static final String LABEL_SEPARATOR = " -------------------------------------------- ";
 
-		private final Set<AbstractTask> addedTasks = new HashSet<AbstractTask>();
+		private final Set<ITask> addedTasks = new HashSet<ITask>();
 
 		private boolean addSeparator;
 
@@ -71,7 +72,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			this.prefix = extractPrefix(viewer, offset).toLowerCase();
 		}
 
-		private void addProposal(AbstractTask task, String replacement, boolean includeTaskPrefix) {
+		private void addProposal(ITask task, String replacement, boolean includeTaskPrefix) {
 			if (addSeparator) {
 				if (!addedTasks.isEmpty()) {
 					resultList.add(createSeparator());
@@ -97,7 +98,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			}
 		}
 
-		public void addTask(AbstractTask task) {
+		public void addTask(ITask task) {
 			if (addedTasks.contains(task)) {
 				return;
 			}
@@ -112,7 +113,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			}
 		}
 
-		private String getReplacement(AbstractTask task, String text, boolean includeTaskPrefix) {
+		private String getReplacement(ITask task, String text, boolean includeTaskPrefix) {
 			// add an absolute reference to the task if the viewer does not have a repository
 			if (taskRepository == null || text == null
 					|| !taskRepository.getRepositoryUrl().equals(task.getRepositoryUrl())) {
@@ -126,7 +127,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			}
 		}
 
-		private boolean containsPrefix(AbstractTask task) {
+		private boolean containsPrefix(ITask task) {
 			String searchTest = getTaskPrefix(task) + " " + labelProvider.getText(task);
 			String[] tokens = searchTest.split("\\s");
 			for (String token : tokens) {
@@ -170,14 +171,14 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 		public void filterTasks(List<AbstractTask> tasks) {
 			for (Iterator<AbstractTask> it = tasks.iterator(); it.hasNext();) {
-				AbstractTask task = it.next();
+				ITask task = it.next();
 				if (!select(task)) {
 					it.remove();
 				}
 			}
 		}
 
-		private boolean select(AbstractTask task) {
+		private boolean select(ITask task) {
 			return !(task instanceof LocalTask) //
 					&& (taskRepository == null || task.getRepositoryUrl().equals(taskRepository.getRepositoryUrl()));
 		}
@@ -235,7 +236,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 					try {
 						if (editorReferences[i].getEditorInput() instanceof TaskEditorInput) {
 							TaskEditorInput input = (TaskEditorInput) editorReferences[i].getEditorInput();
-							AbstractTask task = input.getTask();
+							ITask task = input.getTask();
 							if (task != null && !(task instanceof LocalTask)) {
 								proposalComputer.addTask(task);
 								count++;
@@ -297,7 +298,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		return null;
 	}
 
-	private String getTaskPrefix(AbstractTask task) {
+	private String getTaskPrefix(ITask task) {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(task.getConnectorKind());
 		String prefix = connector.getTaskIdPrefix();
 		// FIXME work around for Trac "#" prefix

@@ -9,10 +9,10 @@
 package org.eclipse.mylyn.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -34,6 +34,9 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 
 	protected AbstractRepositoryQueryPage page;
 
+	/**
+	 * @since 3.0
+	 */
 	public AbstractEditQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		this.repository = repository;
 		this.query = query;

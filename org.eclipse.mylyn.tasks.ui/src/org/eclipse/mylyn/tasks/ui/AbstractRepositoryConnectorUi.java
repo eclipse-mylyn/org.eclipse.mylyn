@@ -22,19 +22,20 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -71,6 +72,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @param repository
 	 * @param queryToEdit
 	 * 		can be null
+	 * @since 3.0
 	 */
 	public abstract IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit);
 
@@ -91,8 +93,10 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for
 	 * showing the additional pages handled by the default task editor. As of Mylyn 2.0M2 these are the Planning and
 	 * Context pages.
+	 * 
+	 * @since 3.0
 	 */
-	public String getTaskEditorId(AbstractTask repositoryTask) {
+	public String getTaskEditorId(ITask repositoryTask) {
 		return TaskEditor.ID_EDITOR;
 	}
 
@@ -108,8 +112,9 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @param repositoryTask
 	 * 		can be null
+	 * @since 3.0
 	 */
-	public String getTaskKindLabel(AbstractTask task) {
+	public String getTaskKindLabel(ITask task) {
 		return LABEL_TASK_DEFAULT;
 	}
 
@@ -118,11 +123,13 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 
 	 * For connectors that have a decorator that they want to reuse, the connector can maintain a reference to the label
 	 * provider and get the descriptor from the images it returns.
+	 * 
+	 * @since 3.0
 	 */
-	public ImageDescriptor getTaskListElementIcon(AbstractTaskContainer element) {
+	public ImageDescriptor getTaskListElementIcon(ITaskElement element) {
 		if (element instanceof AbstractRepositoryQuery) {
 			return TasksUiImages.QUERY;
-		} else if (element instanceof AbstractTask) {
+		} else if (element instanceof ITask) {
 			return TasksUiImages.TASK;
 		} else {
 			return null;
@@ -131,19 +138,26 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * Task kind overlay, recommended to override with connector-specific overlay.
+	 * 
+	 * @since 3.0
 	 */
-	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
+	public ImageDescriptor getTaskKindOverlay(ITask task) {
 		return null;
 	}
 
 	/**
 	 * Connector-specific priority icons. Not recommended to override since priority icons are used elsewhere in the
 	 * Task List UI (e.g. filter selection in view menu).
+	 * 
+	 * @since 3.0
 	 */
-	public ImageDescriptor getTaskPriorityOverlay(AbstractTask task) {
+	public ImageDescriptor getTaskPriorityOverlay(ITask task) {
 		return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
 		try {
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
@@ -205,7 +219,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return a url of a page for the history of the task; null, if no history url is available
 	 * @since 3.0
 	 */
-	public String getTaskHistoryUrl(TaskRepository taskRepository, AbstractTask task) {
+	public String getTaskHistoryUrl(TaskRepository taskRepository, ITask task) {
 		return null;
 	}
 
@@ -216,8 +230,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return a reference to <code>comment</code>; null, if no reference is available
 	 * @since 3.0
 	 */
-	public String getReply(TaskRepository taskRepository, AbstractTask task, ITaskComment taskComment,
-			boolean includeTask) {
+	public String getReply(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
 		return null;
 	}
 
@@ -266,7 +279,10 @@ public abstract class AbstractRepositoryConnectorUi {
 		return customNotificationHandling;
 	}
 
-	public boolean supportsDueDates(AbstractTask task) {
+	/**
+	 * @since 3.0
+	 */
+	public boolean supportsDueDates(ITask task) {
 		return false;
 	}
 

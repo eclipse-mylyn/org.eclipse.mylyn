@@ -10,8 +10,9 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -40,7 +41,7 @@ public class ActivateTaskDialogAction extends ActionDelegate implements IWorkben
 		}
 
 		Object result = dlg.getFirstResult();
-		if (result instanceof AbstractTask) {
+		if (result instanceof ITask) {
 			AbstractTask task = (AbstractTask) result;
 			TasksUi.getTaskActivityManager().activateTask(task);
 //			manager.getTaskActivationHistory().addTask(task);

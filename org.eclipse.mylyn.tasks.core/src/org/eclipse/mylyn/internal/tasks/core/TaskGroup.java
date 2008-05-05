@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
  * NOTE: this class is likely to change or become API for 3.0

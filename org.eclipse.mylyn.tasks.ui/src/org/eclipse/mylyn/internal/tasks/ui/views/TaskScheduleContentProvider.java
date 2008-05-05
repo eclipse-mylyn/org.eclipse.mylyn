@@ -12,12 +12,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * Used by Scheduled task list presentation
@@ -66,18 +67,18 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 
 	@Override
 	public Object[] getChildren(Object parent) {
-		Set<AbstractTask> result = new HashSet<AbstractTask>();
-		if (parent instanceof AbstractTask) {
+		Set<ITask> result = new HashSet<ITask>();
+		if (parent instanceof ITask) {
 			// flat presentation (no subtasks revealed in Scheduled mode)
 		} else if (parent instanceof ScheduledTaskContainer) {
-			for (AbstractTask child : ((ScheduledTaskContainer) parent).getChildren()) {
+			for (ITask child : ((ScheduledTaskContainer) parent).getChildren()) {
 				if (!filter(parent, child)) {
 					result.add(child);
 				}
 			}
 
-		} else if (parent instanceof AbstractTaskContainer) {
-			for (AbstractTask child : ((AbstractTaskContainer) parent).getChildren()) {
+		} else if (parent instanceof ITaskElement) {
+			for (ITask child : ((ITaskElement) parent).getChildren()) {
 				result.add(child);
 			}
 		}

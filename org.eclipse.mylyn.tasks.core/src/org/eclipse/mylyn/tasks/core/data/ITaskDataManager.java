@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.tasks.core.data;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Steffen Pingel
@@ -17,18 +17,18 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
  */
 public interface ITaskDataManager {
 
-	public ITaskDataWorkingCopy createWorkingCopy(AbstractTask task, String kind, TaskData taskData);
+	public ITaskDataWorkingCopy createWorkingCopy(ITask task, String kind, TaskData taskData);
 
-	public abstract ITaskDataWorkingCopy getWorkingCopy(AbstractTask task, String kind) throws CoreException;
+	public abstract ITaskDataWorkingCopy getWorkingCopy(ITask task, String kind) throws CoreException;
 
-	public abstract void discardEdits(AbstractTask task, String kind) throws CoreException;
+	public abstract void discardEdits(ITask task, String kind) throws CoreException;
 
-	public abstract TaskData getTaskData(AbstractTask task, String kind) throws CoreException;
+	public abstract TaskData getTaskData(ITask task, String kind) throws CoreException;
 
-	public abstract boolean hasTaskData(AbstractTask task, String connectorKind);
+	public abstract boolean hasTaskData(ITask task, String connectorKind);
 
-	public abstract void putUpdatedTaskData(AbstractTask task, TaskData taskData, boolean user) throws CoreException;
+	public abstract void putUpdatedTaskData(ITask task, TaskData taskData, boolean user) throws CoreException;
 
-	public abstract void putSubmittedTaskData(AbstractTask task, TaskData taskData) throws CoreException;
+	public abstract void putSubmittedTaskData(ITask task, TaskData taskData) throws CoreException;
 
 }

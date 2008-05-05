@@ -21,6 +21,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
@@ -40,7 +41,7 @@ import org.eclipse.mylyn.internal.trac.core.TracTaskDataHandler;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
@@ -102,7 +103,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.offlineHandlerTicketId + "", null);
 
-		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
+		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
 		SynchronizationContext event = new SynchronizationContext();
 		event.performQueries = true;
@@ -142,7 +143,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		int lastModified = Integer.parseInt(taskData.getLastModified());
 
-		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
+		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
 		SynchronizationContext event = new SynchronizationContext();
 		event.performQueries = true;
@@ -151,7 +152,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		// an empty set should not cause contact to the repository
 		repository.setSynchronizationTimeStamp(null);
-		event.tasks = new HashSet<AbstractTask>();
+		event.tasks = new HashSet<ITask>();
 		connector.preSynchronization(event, null);
 		assertTrue(event.performQueries);
 		assertNull(repository.getSynchronizationTimeStamp());
@@ -203,7 +204,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	private void markStaleTasksNoTimeStamp() throws Exception {
 		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.offlineHandlerTicketId + "", null);
-		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
+		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
 		SynchronizationContext event = new SynchronizationContext();
 		event.performQueries = true;

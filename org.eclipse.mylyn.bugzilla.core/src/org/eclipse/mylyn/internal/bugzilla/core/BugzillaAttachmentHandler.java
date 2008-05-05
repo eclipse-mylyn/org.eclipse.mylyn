@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -46,7 +46,7 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 	}
 
 	@Override
-	public void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
+	public void uploadAttachment(TaskRepository repository, ITask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException {
 		try {
 			String bugId = task.getTaskId();
@@ -59,12 +59,12 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 	}
 
 	@Override
-	public boolean canDownloadAttachment(TaskRepository repository, AbstractTask task) {
+	public boolean canDownloadAttachment(TaskRepository repository, ITask task) {
 		return true;
 	}
 
 	@Override
-	public boolean canUploadAttachment(TaskRepository repository, AbstractTask task) {
+	public boolean canUploadAttachment(TaskRepository repository, ITask task) {
 		return true;
 	}
 

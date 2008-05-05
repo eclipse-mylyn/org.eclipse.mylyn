@@ -12,14 +12,14 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -52,10 +52,10 @@ public class OrphanedTasksTest extends TestCase {
 	 * y New local tasks should automatically be created in the Local orphaned folder
 	 */
 	public void testAddLocalTask() {
-		Set<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
+		Set<ITask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
 				LocalRepositoryConnector.REPOSITORY_URL);
 		assertTrue(tasks.isEmpty());
-		AbstractTask localTask = TasksUiInternal.createNewLocalTask("Task 1");
+		ITask localTask = TasksUiInternal.createNewLocalTask("Task 1");
 		assertNotNull(localTask);
 		assertEquals(1, localTask.getParentContainers().size());
 	}
@@ -236,7 +236,7 @@ public class OrphanedTasksTest extends TestCase {
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);
-		Set<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
+		Set<ITask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
 				MockRepositoryConnector.REPOSITORY_URL);
 		assertFalse(tasks.isEmpty());
 

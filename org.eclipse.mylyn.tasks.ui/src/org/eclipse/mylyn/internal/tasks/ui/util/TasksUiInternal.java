@@ -29,12 +29,16 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
@@ -47,13 +51,11 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -158,8 +160,8 @@ public class TasksUiInternal {
 		});
 	}
 
-	public static void refreshAndOpenTaskListElement(AbstractTaskContainer element) {
-		if (element instanceof AbstractTask || element instanceof ScheduledTaskDelegate) {
+	public static void refreshAndOpenTaskListElement(ITaskElement element) {
+		if (element instanceof ITask || element instanceof ScheduledTaskDelegate) {
 			final AbstractTask task;
 			if (element instanceof ScheduledTaskDelegate) {
 				task = ((ScheduledTaskDelegate) element).getCorrespondingTask();
@@ -324,7 +326,7 @@ public class TasksUiInternal {
 	 * @param listener
 	 * 		can be null
 	 */
-	public static Job synchronizeTask(AbstractRepositoryConnector connector, AbstractTask task, boolean force,
+	public static Job synchronizeTask(AbstractRepositoryConnector connector, ITask task, boolean force,
 			IJobChangeListener listener) {
 		return synchronizeTasks(connector, Collections.singleton(task), force, listener);
 	}
@@ -333,10 +335,10 @@ public class TasksUiInternal {
 	 * @param listener
 	 * 		can be null
 	 */
-	public static Job synchronizeTasks(AbstractRepositoryConnector connector, Set<AbstractTask> tasks, boolean force,
+	public static Job synchronizeTasks(AbstractRepositoryConnector connector, Set<ITask> tasks, boolean force,
 			IJobChangeListener listener) {
 		ITaskList taskList = TasksUi.getTaskList();
-		for (AbstractTask task : tasks) {
+		for (ITask task : tasks) {
 			task.setSynchronizing(true);
 			taskList.notifyTaskChanged(task, false);
 		}
@@ -349,7 +351,7 @@ public class TasksUiInternal {
 			job.addJobChangeListener(listener);
 		}
 		if (force && tasks.size() == 1) {
-			final AbstractTask task = tasks.iterator().next();
+			final ITask task = tasks.iterator().next();
 			job.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
@@ -373,8 +375,7 @@ public class TasksUiInternal {
 	}
 
 	public static NewAttachmentWizardDialog openNewAttachmentWizard(Shell shell, TaskRepository taskRepository,
-			AbstractTask task, TaskAttribute taskAttribute, TaskAttachmentWizard.Mode mode,
-			AbstractTaskAttachmentSource source) {
+			ITask task, TaskAttribute taskAttribute, TaskAttachmentWizard.Mode mode, AbstractTaskAttachmentSource source) {
 		TaskAttachmentWizard attachmentWizard = new TaskAttachmentWizard(taskRepository, task, taskAttribute);
 		attachmentWizard.setSource(source);
 		attachmentWizard.setMode(mode);
@@ -448,8 +449,8 @@ public class TasksUiInternal {
 		}
 		if (selectedObject instanceof TaskCategory) {
 			taskList.addTask(newTask, (TaskCategory) selectedObject);
-		} else if (selectedObject instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) selectedObject;
+		} else if (selectedObject instanceof ITask) {
+			ITask task = (ITask) selectedObject;
 
 			AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
 
@@ -478,7 +479,7 @@ public class TasksUiInternal {
 		for (IWorkingSet workingSet : containers) {
 			IAdaptable[] elements = workingSet.getElements();
 			for (IAdaptable adaptable : elements) {
-				if (adaptable instanceof AbstractTaskContainer) {
+				if (adaptable instanceof ITaskElement) {
 					allTaskContainersInWorkingSets.add(((AbstractTaskContainer) adaptable));
 				}
 			}

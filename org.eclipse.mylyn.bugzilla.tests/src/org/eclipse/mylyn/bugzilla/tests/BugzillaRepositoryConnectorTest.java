@@ -26,7 +26,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryOperation;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
@@ -36,8 +38,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
@@ -379,7 +380,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		BugzillaTask task = generateLocalTaskAndDownload(taskNumber);
 		assertNotNull(task);
 		assertEquals(2, task.getChildren().size());
-		AbstractTask child = task.getChildren().iterator().next();
+		ITask child = task.getChildren().iterator().next();
 		assertEquals(SynchronizationState.INCOMING, child.getSynchronizationState());
 	}
 
@@ -397,13 +398,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiInternal.synchronizeQuery(connector, bugQuery, null, false);
 
 		assertEquals(1, bugQuery.getChildren().size());
-		AbstractTask hit = (AbstractTask) bugQuery.getChildren().toArray()[0];
+		ITask hit = (ITask) bugQuery.getChildren().toArray()[0];
 		assertTrue(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(hit.getRepositoryUrl(), hit.getTaskId()) != null);
 		TasksUiPlugin.getTaskDataStorageManager().remove(hit.getRepositoryUrl(), hit.getTaskId());
 
 		TasksUiInternal.synchronizeQuery(connector, bugQuery, null, true);
 		assertEquals(1, bugQuery.getChildren().size());
-		hit = (AbstractTask) bugQuery.getChildren().toArray()[0];
+		hit = (ITask) bugQuery.getChildren().toArray()[0];
 		assertTrue(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(hit.getRepositoryUrl(), hit.getTaskId()) != null);
 
 	}
@@ -455,7 +456,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		collector.run(new NullProgressMonitor());
 		assertEquals(2, result.getElements().length);
 
-		for (AbstractTask hit : collector.getTasks()) {
+		for (ITask hit : collector.getTasks()) {
 			assertTrue(hit.getSummary().contains("search-match-test"));
 		}
 
@@ -587,8 +588,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		assertEquals(2, taskList.getQueries().size());
 		assertEquals(1, taskList.getAllTasks().size());
-		for (AbstractTask hit : query1.getChildren()) {
-			for (AbstractTask hit2 : query2.getChildren()) {
+		for (ITask hit : query1.getChildren()) {
+			for (ITask hit2 : query2.getChildren()) {
 				assertTrue(hit.getClass().equals(hit2.getClass()));
 			}
 		}
@@ -709,7 +710,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(SynchronizationState.SYNCHRONIZED, task5.getSynchronizationState());
 		assertEquals("5", taskData5.getTaskId());
 
-		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
+		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task4);
 		tasks.add(task5);
 
@@ -767,7 +768,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		TasksUiInternal.synchronizeTasks(connector, tasks, true, null);
 
-		for (AbstractTask task : tasks) {
+		for (ITask task : tasks) {
 			if (task.getTaskId() == "4") {
 				assertEquals(priority4, task4.getPriority());
 			}

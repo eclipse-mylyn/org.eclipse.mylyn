@@ -8,9 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Holds orphaned or uncategorized tasks for a given repository
@@ -66,7 +65,7 @@ public class UnmatchedTaskContainer extends AbstractTaskCategory {
 
 	@Override
 	public boolean contains(String handle) {
-		for (AbstractTask child : getChildrenInternal()) {
+		for (ITask child : getChildrenInternal()) {
 			if (child.getHandleIdentifier().equals(handle)) {
 				return true;
 			}

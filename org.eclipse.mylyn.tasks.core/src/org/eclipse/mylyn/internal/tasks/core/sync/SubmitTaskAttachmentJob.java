@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
@@ -40,14 +40,14 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 
 	private final AbstractTaskAttachmentSource source;
 
-	private final AbstractTask task;
+	private final ITask task;
 
 	private final TaskRepository taskRepository;
 
 	private final ITaskDataManager taskDataManager;
 
 	public SubmitTaskAttachmentJob(ITaskDataManager taskDataManager, AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, AbstractTask task, AbstractTaskAttachmentSource source, String comment,
+			TaskRepository taskRepository, ITask task, AbstractTaskAttachmentSource source, String comment,
 			TaskAttribute attachmentAttribute) {
 		super("Submitting Attachment");
 		this.taskDataManager = taskDataManager;
@@ -65,7 +65,7 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 	}
 
 	@Override
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 

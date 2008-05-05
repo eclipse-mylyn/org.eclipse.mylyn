@@ -21,17 +21,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -74,7 +75,7 @@ public class TaskDataManager implements ITaskDataManager {
 
 	/** public for testing purposes */
 	@Deprecated
-	public boolean checkHasIncoming(AbstractTask repositoryTask, RepositoryTaskData newData) {
+	public boolean checkHasIncoming(ITask repositoryTask, RepositoryTaskData newData) {
 		if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
 			return true;
 		}
@@ -101,7 +102,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return true;
 	}
 
-	public ITaskDataWorkingCopy createWorkingCopy(final AbstractTask task, final String kind, final TaskData taskData) {
+	public ITaskDataWorkingCopy createWorkingCopy(final ITask task, final String kind, final TaskData taskData) {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		final TaskDataState state = new TaskDataState(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
@@ -114,7 +115,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return state;
 	}
 
-	public ITaskDataWorkingCopy getWorkingCopy(final AbstractTask task, final String kind) throws CoreException {
+	public ITaskDataWorkingCopy getWorkingCopy(final ITask task, final String kind) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		final TaskDataState[] result = new TaskDataState[1];
@@ -148,8 +149,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return result[0];
 	}
 
-	public void saveWorkingCopy(final AbstractTask task, final String kind, final TaskDataState state)
-			throws CoreException {
+	public void saveWorkingCopy(final ITask task, final String kind, final TaskDataState state) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		taskList.run(new ITaskListRunnable() {
@@ -163,7 +163,7 @@ public class TaskDataManager implements ITaskDataManager {
 		taskList.notifyTaskChanged(task, true);
 	}
 
-	public void putUpdatedTaskData(final AbstractTask task, final TaskData taskData, boolean user) throws CoreException {
+	public void putUpdatedTaskData(final ITask task, final TaskData taskData, boolean user) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskData);
 		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
@@ -213,7 +213,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return file;
 	}
 
-	private File getMigratedFile(AbstractTask task, String kind) throws CoreException {
+	private File getMigratedFile(ITask task, String kind) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		File file = getFile(task, kind);
@@ -228,7 +228,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return file;
 	}
 
-	public void discardEdits(final AbstractTask task, final String kind) throws CoreException {
+	public void discardEdits(final ITask task, final String kind) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		taskList.run(new ITaskListRunnable() {
@@ -254,7 +254,7 @@ public class TaskDataManager implements ITaskDataManager {
 		taskList.notifyTaskChanged(repositoryTask, true);
 	}
 
-	private File findFile(AbstractTask task, String kind) {
+	private File findFile(ITask task, String kind) {
 		File file = getFile(task, kind);
 		if (file.exists()) {
 			return file;
@@ -266,7 +266,7 @@ public class TaskDataManager implements ITaskDataManager {
 		return dataPath;
 	}
 
-	private File getFile(AbstractTask task, String kind) {
+	private File getFile(ITask task, String kind) {
 		try {
 			String pathName = task.getConnectorKind() + "-"
 					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
@@ -278,7 +278,7 @@ public class TaskDataManager implements ITaskDataManager {
 		}
 	}
 
-	private File getFile10(AbstractTask task, String kind) {
+	private File getFile10(ITask task, String kind) {
 		try {
 			String pathName = URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
 			String fileName = task.getTaskId() + EXTENSION;
@@ -290,7 +290,7 @@ public class TaskDataManager implements ITaskDataManager {
 
 	}
 
-	public TaskData getTaskData(AbstractTask task, String kind) throws CoreException {
+	public TaskData getTaskData(ITask task, String kind) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		TaskDataState state = taskDataStore.getTaskDataState(findFile(task, kind));
@@ -300,13 +300,13 @@ public class TaskDataManager implements ITaskDataManager {
 		return state.getRepositoryData();
 	}
 
-	public boolean hasTaskData(AbstractTask task, String kind) {
+	public boolean hasTaskData(ITask task, String kind) {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		return getFile(task, kind).exists();
 	}
 
-	public void putSubmittedTaskData(final AbstractTask task, final TaskData taskData) throws CoreException {
+	public void putSubmittedTaskData(final ITask task, final TaskData taskData) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskData);
 		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
@@ -337,7 +337,7 @@ public class TaskDataManager implements ITaskDataManager {
 	 * @return true if call results in change of sync state
 	 */
 	@Deprecated
-	public synchronized boolean saveIncoming(final AbstractTask repositoryTask, final RepositoryTaskData newTaskData,
+	public synchronized boolean saveIncoming(final ITask repositoryTask, final RepositoryTaskData newTaskData,
 			boolean forceSync) {
 		Assert.isNotNull(newTaskData);
 		final SynchronizationState startState = repositoryTask.getSynchronizationState();
@@ -395,7 +395,7 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	@Deprecated
-	public void saveOffline(AbstractTask task, RepositoryTaskData taskData) {
+	public void saveOffline(ITask task, RepositoryTaskData taskData) {
 		taskDataStorageManager.setNewTaskData(taskData);
 	}
 
@@ -423,7 +423,7 @@ public class TaskDataManager implements ITaskDataManager {
 	 * @param read
 	 * 		true to mark as read, false to mark as unread
 	 */
-	public void setTaskRead(final AbstractTask task, final boolean read) {
+	public void setTaskRead(final ITask task, final boolean read) {
 		Assert.isNotNull(task);
 		// legacy support
 		if (!getFile(task, task.getConnectorKind()).exists()) {
@@ -464,7 +464,7 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	@Deprecated
-	private void setTaskReadDeprecated(AbstractTask repositoryTask, boolean read) {
+	private void setTaskReadDeprecated(ITask repositoryTask, boolean read) {
 		RepositoryTaskData taskData = taskDataStorageManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
 				repositoryTask.getTaskId());
 
@@ -511,7 +511,7 @@ public class TaskDataManager implements ITaskDataManager {
 		}
 	}
 
-	void putEdits(AbstractTask task, String kind, TaskData editsData) throws CoreException {
+	void putEdits(ITask task, String kind, TaskData editsData) throws CoreException {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		Assert.isNotNull(editsData);

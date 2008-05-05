@@ -14,12 +14,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewActionDelegate;
@@ -55,8 +55,8 @@ public class GoToUnreadTaskAction extends Action implements IViewActionDelegate,
 		TreeVisitor visitor = new TreeVisitor() {
 			@Override
 			public boolean visit(Object object) {
-				if (object instanceof AbstractTask) {
-					AbstractTask task = (AbstractTask) object;
+				if (object instanceof ITask) {
+					ITask task = (ITask) object;
 					if (task.getSynchronizationState() == SynchronizationState.INCOMING) {
 						return true;
 					}

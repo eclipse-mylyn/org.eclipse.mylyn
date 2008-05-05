@@ -16,6 +16,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
@@ -27,9 +29,7 @@ import org.eclipse.mylyn.internal.trac.ui.wizard.EditTracQueryWizard;
 import org.eclipse.mylyn.internal.trac.ui.wizard.NewTracQueryWizard;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracCustomQueryPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -48,7 +48,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public String getTaskKindLabel(AbstractTask repositoryTask) {
+	public String getTaskKindLabel(ITask repositoryTask) {
 		return "Ticket";
 	}
 
@@ -92,7 +92,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
+	public ImageDescriptor getTaskKindOverlay(ITask task) {
 		Kind kind = Kind.fromString(task.getTaskKind());
 		if (kind == Kind.DEFECT) {
 			return TracImages.OVERLAY_DEFECT;

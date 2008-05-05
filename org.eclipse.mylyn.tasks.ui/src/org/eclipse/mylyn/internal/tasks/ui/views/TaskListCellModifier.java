@@ -14,13 +14,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -48,8 +50,8 @@ class TaskListCellModifier implements ICellModifier {
 	public Object getValue(Object element, String property) {
 		try {
 			int columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
-			if (element instanceof AbstractTaskContainer) {
-				final AbstractTaskContainer taskListElement = (AbstractTaskContainer) element;
+			if (element instanceof ITaskElement) {
+				final ITaskElement taskListElement = (ITaskElement) element;
 				switch (columnIndex) {
 				case 0:
 					return taskListElement.getSummary();
@@ -72,8 +74,8 @@ class TaskListCellModifier implements ICellModifier {
 				return;
 			}
 			columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
-			if (((TreeItem) element).getData() instanceof AbstractTask) {
-				final AbstractTaskContainer taskListElement = (AbstractTaskContainer) ((TreeItem) element).getData();
+			if (((TreeItem) element).getData() instanceof ITask) {
+				final ITaskElement taskListElement = (ITaskElement) ((TreeItem) element).getData();
 				AbstractTask task = (AbstractTask) taskListElement;
 				switch (columnIndex) {
 				case 0:
@@ -109,10 +111,10 @@ class TaskListCellModifier implements ICellModifier {
 	}
 
 	public void toggleTaskActivation(TreeItem element) {
-		AbstractTaskContainer taskListElement = (AbstractTaskContainer) element.getData();
+		ITaskElement taskListElement = (ITaskElement) element.getData();
 
 		AbstractTask task = null;
-		if (taskListElement instanceof AbstractTask) {
+		if (taskListElement instanceof ITask) {
 			task = (AbstractTask) taskListElement;
 		}
 

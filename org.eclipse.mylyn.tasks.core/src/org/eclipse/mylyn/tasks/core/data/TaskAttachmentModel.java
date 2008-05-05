@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -25,13 +25,13 @@ public class TaskAttachmentModel {
 
 	private AbstractTaskAttachmentSource source;
 
-	private final AbstractTask task;
+	private final ITask task;
 
 	private final TaskRepository taskRepository;
 
 	private String contentType;
 
-	public TaskAttachmentModel(TaskRepository taskRepository, AbstractTask task, TaskAttribute attribute) {
+	public TaskAttachmentModel(TaskRepository taskRepository, ITask task, TaskAttribute attribute) {
 		this.taskRepository = taskRepository;
 		this.task = task;
 		this.attribute = attribute;
@@ -53,7 +53,7 @@ public class TaskAttachmentModel {
 		return source;
 	}
 
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 

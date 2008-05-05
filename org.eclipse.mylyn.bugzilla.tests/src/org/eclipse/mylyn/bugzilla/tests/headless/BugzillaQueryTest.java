@@ -26,7 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.QueryHitCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.TaskFactory;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -151,7 +151,7 @@ public class BugzillaQueryTest extends TestCase {
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryUrlString, "summary");
 		connector.performQuery(repository, query, collector, null, new NullProgressMonitor());
 		assertEquals(2, collector.getTasks().size());
-		for (AbstractTask hit : collector.getTasks()) {
+		for (ITask hit : collector.getTasks()) {
 			assertTrue(hit.getSummary().contains("search-match-test"));
 		}
 	}

@@ -10,9 +10,10 @@ package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Sorts search results by summary.
@@ -62,7 +63,7 @@ public class SearchResultSorterDescription extends ViewerSorter {
 	@Override
 	public int category(Object element) {
 		try {
-			AbstractTask hit = (AbstractTask) element;
+			ITask hit = (ITask) element;
 			return Integer.parseInt(hit.getTaskId());
 		} catch (Exception ignored) {
 			// ignore if

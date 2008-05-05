@@ -13,9 +13,10 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 
 /**
@@ -54,7 +55,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public boolean canCreate(AbstractTask task) {
+	public boolean canCreate(ITask task) {
 		return task instanceof BugzillaTask;
 	}
 
@@ -80,7 +81,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public void setAdditionalAttributes(AbstractTask task, Element element) {
+	public void setAdditionalAttributes(ITask task, Element element) {
 		element.setAttribute(KEY_SEVERITY, ((BugzillaTask) task).getSeverity());
 		element.setAttribute(KEY_PRODUCT, ((BugzillaTask) task).getProduct());
 	}

@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.PlatformUI;
@@ -30,9 +31,9 @@ public class MarkTaskIncompleteAction extends AbstractChangeCompletionAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.incomplete";
 
-	private final List<AbstractTaskContainer> selectedElements;
+	private final List<ITaskElement> selectedElements;
 
-	public MarkTaskIncompleteAction(List<AbstractTaskContainer> selectedElements) {
+	public MarkTaskIncompleteAction(List<ITaskElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);
@@ -46,7 +47,7 @@ public class MarkTaskIncompleteAction extends AbstractChangeCompletionAction {
 	public void run() {
 		List<AbstractTask> toComplete = new ArrayList<AbstractTask>();
 		for (Object selectedObject : selectedElements) {
-			if (selectedObject instanceof AbstractTask) {
+			if (selectedObject instanceof ITask) {
 				AbstractTask task = (AbstractTask) selectedObject;
 				if (task.isLocal()) {
 					toComplete.add(task);

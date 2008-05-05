@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
@@ -47,9 +48,8 @@ import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEdit
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -216,7 +216,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			return;
 		}
 
-		final AbstractTask task = editor.getTaskEditorInput().getTask();
+		final ITask task = editor.getTaskEditorInput().getTask();
 		if (task == null) {
 			return;
 		} else {
@@ -260,12 +260,12 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
 						menuPath)) {
 					if (TaskListView.ID_SEPARATOR_TASKS.equals(menuPath)) {
-						List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
+						List<ITaskElement> selectedElements = new ArrayList<ITaskElement>();
 						selectedElements.add(task);
 						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 						if (subMenuManager != null) {
 							subMenuManager.setVisible(selectedElements.size() > 0
-									&& selectedElements.get(0) instanceof AbstractTask);
+									&& selectedElements.get(0) instanceof ITask);
 							manager.add(subMenuManager);
 						}
 					}

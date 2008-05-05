@@ -21,15 +21,16 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -79,7 +80,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 			Object element = it.next();
 			if (element instanceof AbstractRepositoryQuery) {
 				queries.add((AbstractRepositoryQuery) element);
-			} else if (element instanceof AbstractTask) {
+			} else if (element instanceof ITask) {
 				tasks.add((AbstractTask) element);
 			}
 		}
@@ -122,8 +123,8 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 		if (TaskTransfer.getInstance().isSupportedType(event.dataType)) {
 			List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 			for (Iterator<?> it = selection.iterator(); it.hasNext();) {
-				AbstractTaskContainer element = (AbstractTaskContainer) it.next();
-				if (element instanceof AbstractTask) {
+				ITaskElement element = (ITaskElement) it.next();
+				if (element instanceof ITask) {
 					tasks.add((AbstractTask) element);
 				}
 			}

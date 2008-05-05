@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractFilteredTree;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
@@ -39,8 +40,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
@@ -163,7 +164,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			@Override
 			public void containersChanged(Set<TaskContainerDelta> containers) {
 				for (TaskContainerDelta taskContainerDelta : containers) {
-					if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+					if (taskContainerDelta.getContainer() instanceof ITask) {
 						updateTaskProgressBar();
 						break;
 					}
@@ -222,13 +223,13 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			return;
 		}
 
-		Set<AbstractTask> tasksThisWeek = TasksUiPlugin.getTaskActivityManager().getScheduledForThisWeek();
+		Set<ITask> tasksThisWeek = TasksUiPlugin.getTaskActivityManager().getScheduledForThisWeek();
 
 		totalTasks = tasksThisWeek.size();
 		completeTime = 0;
 		completeTasks = 0;
 		incompleteTime = 0;
-		for (AbstractTask task : tasksThisWeek) {
+		for (ITask task : tasksThisWeek) {
 			if (task.isCompleted()) {
 				completeTasks++;
 				if (task.getEstimatedTimeHours() > 0) {
@@ -327,7 +328,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			@Override
 			public void containersChanged(Set<TaskContainerDelta> containers) {
 				for (TaskContainerDelta taskContainerDelta : containers) {
-					if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+					if (taskContainerDelta.getContainer() instanceof ITask) {
 						final AbstractTask changedTask = (AbstractTask) (taskContainerDelta.getContainer());
 						if (Platform.isRunning() && PlatformUI.getWorkbench() != null && Display.getCurrent() == null) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -356,7 +357,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		taskListToolTip = new TaskListToolTip(activeTaskLink);
 
-		AbstractTask activeTask = TasksUi.getTaskActivityManager().getActiveTask();
+		ITask activeTask = TasksUi.getTaskActivityManager().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
@@ -400,7 +401,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if (e.button == 1) {
-					AbstractTask activeTask = (TasksUi.getTaskActivityManager().getActiveTask());
+					ITask activeTask = (TasksUi.getTaskActivityManager().getActiveTask());
 					if (activeTask == null) {
 						ActivateTaskDialogAction activateAction = new ActivateTaskDialogAction();
 						activateAction.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
@@ -457,7 +458,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		filterComposite.layout();
 	}
 
-	public void indicateActiveTask(AbstractTask task) {
+	public void indicateActiveTask(ITask task) {
 		if (Display.getCurrent() != null) {
 
 			if (filterComposite.isDisposed()) {
@@ -494,7 +495,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		}
 	}
 
-	private void fillContextMenu(IMenuManager manager, final AbstractTask activeTask) {
+	private void fillContextMenu(IMenuManager manager, final ITask activeTask) {
 		if (activeTask != null) {
 			IStructuredSelection selection = new StructuredSelection(activeTask);
 			copyTaskDetailsAction.selectionChanged(selection);
@@ -529,7 +530,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
 						menuPath)) {
 					if (TaskListView.ID_SEPARATOR_TASKS.equals(menuPath)) {
-						List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
+						List<ITaskElement> selectedElements = new ArrayList<ITaskElement>();
 						selectedElements.add(activeTask);
 						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 						if (subMenuManager != null) {

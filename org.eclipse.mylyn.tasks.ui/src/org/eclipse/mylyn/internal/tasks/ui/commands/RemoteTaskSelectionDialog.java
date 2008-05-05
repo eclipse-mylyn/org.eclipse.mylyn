@@ -33,6 +33,9 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -41,9 +44,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -127,10 +129,10 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 				}
 
 				// Only shows exact task matches
-				if (!(element instanceof AbstractTask)) {
+				if (!(element instanceof ITask)) {
 					return false;
 				}
-				AbstractTask task = (AbstractTask) element;
+				ITask task = (ITask) element;
 				String taskId = task.getTaskKey();
 				for (String id : selectedIds) {
 					if (id.equals(taskId)) {
@@ -227,8 +229,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 			@Override
 			public String getText(Object element) {
-				if (element instanceof AbstractTaskContainer) {
-					return ((AbstractTaskContainer) element).getSummary();
+				if (element instanceof ITaskElement) {
+					return ((ITaskElement) element).getSummary();
 				}
 				return super.getText(element);
 			}

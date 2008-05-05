@@ -20,13 +20,14 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
@@ -77,7 +78,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 
 		@Override
 		public void run() {
-			AbstractTask active = TasksUi.getTaskActivityManager().getActiveTask();
+			ITask active = TasksUi.getTaskActivityManager().getActiveTask();
 			if (active != null) {
 				TasksUi.getTaskActivityManager().deactivateTask(active);
 			}
@@ -144,17 +145,17 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>(taskHistory.getPreviousTasks());
 		Set<IWorkingSet> sets = TaskListView.getActiveWorkingSets();
 		if (scopedToWorkingSet && !sets.isEmpty()) {
-			Set<AbstractTask> allWorkingSetTasks = new HashSet<AbstractTask>();
+			Set<ITask> allWorkingSetTasks = new HashSet<ITask>();
 			for (IWorkingSet workingSet : sets) {
 				IAdaptable[] elements = workingSet.getElements();
 				for (IAdaptable adaptable : elements) {
-					if (adaptable instanceof AbstractTaskContainer) {
-						allWorkingSetTasks.addAll(((AbstractTaskContainer) adaptable).getChildren());
+					if (adaptable instanceof ITaskElement) {
+						allWorkingSetTasks.addAll(((ITaskElement) adaptable).getChildren());
 					}
 				}
 			}
 			List<AbstractTask> allScopedTasks = new ArrayList<AbstractTask>(tasks);
-			for (AbstractTask task : tasks) {
+			for (ITask task : tasks) {
 				if (!allWorkingSetTasks.contains(task)) {
 					allScopedTasks.remove(task);
 				}
@@ -180,7 +181,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 		Separator separator = new Separator();
 		items.add(separator);
 
-		AbstractTask active = TasksUi.getTaskActivityManager().getActiveTask();
+		ITask active = TasksUi.getTaskActivityManager().getActiveTask();
 		if (active != null) {
 			IContributionItem pauseContributionItem = new CommandContributionItem(PlatformUI.getWorkbench(),
 					"org.eclipse.mylyn.ui.context.capture.pause", // id 

@@ -23,19 +23,21 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -144,14 +146,14 @@ final class DelegatingTaskExternalizer {
 		this.factories = externalizers;
 	}
 
-	public Element createCategoryElement(AbstractTaskContainer category, Document doc, Element parent) {
+	public Element createCategoryElement(ITaskElement category, Document doc, Element parent) {
 		if (category instanceof UncategorizedTaskContainer) {
 			return parent;
 		} else {
 			Element node = doc.createElement(getCategoryTagName());
 			node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, category.getSummary());
 			parent.appendChild(node);
-			for (AbstractTask task : category.getChildren()) {
+			for (ITask task : category.getChildren()) {
 				createTaskReference(KEY_TASK_REFERENCE, task, doc, node);
 			}
 			return node;
@@ -183,7 +185,7 @@ final class DelegatingTaskExternalizer {
 		node.setAttribute(KEY_REPOSITORY_URL, task.getRepositoryUrl());
 
 		//**** TODO API 3.0 to be removed
-		AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
+		ITaskElement container = TaskCategory.getParentTaskCategory(task);
 		if (container != null) {
 			if (container.getHandleIdentifier().equals(UncategorizedTaskContainer.HANDLE)) {
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
@@ -227,7 +229,7 @@ final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_STALE, VAL_FALSE);
 		}
 
-		AbstractTask abstractTask = task;
+		ITask abstractTask = task;
 		if (abstractTask.getLastReadTimeStamp() != null) {
 			node.setAttribute(KEY_LAST_MOD_DATE, abstractTask.getLastReadTimeStamp());
 		}
@@ -248,7 +250,7 @@ final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_OWNER, abstractTask.getOwner());
 		}
 
-		for (AbstractTask t : task.getChildren()) {
+		for (ITask t : task.getChildren()) {
 			createTaskReference(KEY_SUBTASK, t, doc, node);
 		}
 
@@ -261,7 +263,7 @@ final class DelegatingTaskExternalizer {
 	 * 
 	 * @return
 	 */
-	public Element createTaskReference(String nodeName, AbstractTask task, Document doc, Element parent) {
+	public Element createTaskReference(String nodeName, ITask task, Document doc, Element parent) {
 		Element node = doc.createElement(nodeName);
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 		parent.appendChild(node);
@@ -318,7 +320,7 @@ final class DelegatingTaskExternalizer {
 		readTaskReferences(category, list, taskList);
 	}
 
-	public final AbstractTask readTask(Node node, AbstractTaskCategory legacyCategory, AbstractTask parent)
+	public final AbstractTask readTask(Node node, AbstractTaskCategory legacyCategory, ITask parent)
 			throws CoreException {
 		AbstractTask task = null;
 		String taskId = null;
@@ -357,7 +359,7 @@ final class DelegatingTaskExternalizer {
 		return task;
 	}
 
-	private void readTaskInfo(AbstractTask task, Element element, AbstractTask parent,
+	private void readTaskInfo(AbstractTask task, Element element, ITask parent,
 			AbstractTaskCategory legacyCategory) {
 		if (task == null) {
 			return;
@@ -532,7 +534,7 @@ final class DelegatingTaskExternalizer {
 		if (query.getLastSynchronizedTimeStamp() != null) {
 			node.setAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH, query.getLastSynchronizedTimeStamp());
 		}
-		for (AbstractTask hit : query.getChildren()) {
+		for (ITask hit : query.getChildren()) {
 			try {
 				createTaskReference(KEY_QUERY_HIT, hit, doc, node);
 			} catch (Exception e) {

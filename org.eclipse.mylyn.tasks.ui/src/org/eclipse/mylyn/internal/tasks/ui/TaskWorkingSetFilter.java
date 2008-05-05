@@ -12,8 +12,8 @@ import java.util.Arrays;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.ui.IWorkingSet;
 
 /**
@@ -29,7 +29,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (parent instanceof AbstractTask) {
+		if (parent instanceof ITask) {
 			return true;
 		}
 
@@ -37,19 +37,19 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 			return true;
 		}
 
-		if (parent == null && element instanceof AbstractTaskContainer) {
-			return isContainedInWorkingSet((AbstractTaskContainer) element);
+		if (parent == null && element instanceof ITaskElement) {
+			return isContainedInWorkingSet((ITaskElement) element);
 		}
-		if (parent instanceof AbstractTaskContainer && !(parent instanceof ScheduledTaskContainer)) {
-			return isContainedInWorkingSet((AbstractTaskContainer) parent);
+		if (parent instanceof ITaskElement && !(parent instanceof ScheduledTaskContainer)) {
+			return isContainedInWorkingSet((ITaskElement) parent);
 		}
 		if (element instanceof LocalTask) {
-			for (AbstractTaskContainer container : ((LocalTask) element).getParentContainers()) {
+			for (ITaskElement container : ((LocalTask) element).getParentContainers()) {
 				return isContainedInWorkingSet(container);
 			}
 		}
-		if (parent instanceof ScheduledTaskContainer && element instanceof AbstractTask) {
-			for (AbstractTaskContainer query : ((AbstractTask) element).getParentContainers()) {
+		if (parent instanceof ScheduledTaskContainer && element instanceof ITask) {
+			for (ITaskElement query : ((ITask) element).getParentContainers()) {
 				if (isContainedInWorkingSet(query)) {
 					return true;
 				}
@@ -59,7 +59,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		return true;
 	}
 
-	private boolean isContainedInWorkingSet(AbstractTaskContainer container) {
+	private boolean isContainedInWorkingSet(ITaskElement container) {
 		if (elements == null) {
 			return true;
 		}
@@ -67,9 +67,9 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		boolean seenTaskWorkingSets = false;
 		String handleIdentifier = container.getHandleIdentifier();
 		for (IAdaptable adaptable : elements) {
-			if (adaptable instanceof AbstractTaskContainer) {
+			if (adaptable instanceof ITaskElement) {
 				seenTaskWorkingSets = true;
-				if (handleIdentifier.equals(((AbstractTaskContainer) adaptable).getHandleIdentifier())) {
+				if (handleIdentifier.equals(((ITaskElement) adaptable).getHandleIdentifier())) {
 					return true;
 				}
 			}

@@ -27,12 +27,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
@@ -56,7 +56,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public String getTaskHistoryUrl(TaskRepository taskRepository, AbstractTask task) {
+	public String getTaskHistoryUrl(TaskRepository taskRepository, ITask task) {
 		return taskRepository.getRepositoryUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + task.getTaskId();
 	}
 	
@@ -86,7 +86,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	private static final int TASK_NUM_GROUP = 3;
 
 	@Override
-	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
+	public ImageDescriptor getTaskKindOverlay(ITask task) {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
 			String severity = bugzillaTask.getSeverity();
@@ -162,7 +162,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public String getTaskKindLabel(AbstractTask repositoryTask) {
+	public String getTaskKindLabel(ITask repositoryTask) {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}
 
@@ -202,7 +202,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@SuppressWarnings("restriction")
 	@Override
-	public boolean supportsDueDates(AbstractTask task) {
+	public boolean supportsDueDates(ITask task) {
 		if (task instanceof BugzillaTask) {
 			// XXX This is only used in the planning editor, and if its input was set correctly as a RepositoryTaskEditorInput
 			// we wouldn't have to get the task data this way from here

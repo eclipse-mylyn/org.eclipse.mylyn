@@ -53,6 +53,8 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
@@ -60,6 +62,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
@@ -77,15 +81,12 @@ import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationRem
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
@@ -251,12 +252,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
 
 		@Override
-		public void taskActivated(final AbstractTask task) {
+		public void taskActivated(final ITask task) {
 			ContextCore.getContextManager().activateContext(task.getHandleIdentifier());
 		}
 
 		@Override
-		public void taskDeactivated(final AbstractTask task) {
+		public void taskDeactivated(final ITask task) {
 			ContextCore.getContextManager().deactivateContext(task.getHandleIdentifier());
 		}
 
@@ -287,7 +288,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						repository.getConnectorKind());
 				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
-					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
+					for (ITask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
 							repository.getRepositoryUrl())) {
 						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
@@ -303,7 +304,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskListManager().getTaskList().getQueries()) {
 				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getConnectorKind());
 				if (!connectorUi.isCustomNotificationHandling()) {
-					for (AbstractTask hit : query.getChildren()) {
+					for (ITask hit : query.getChildren()) {
 						if (hit.isNotified() == false) {
 							notifications.add(new TaskListNotificationQueryIncoming(hit));
 							hit.setNotified(true);
@@ -815,12 +816,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return INSTANCE;
 	}
 
-	public boolean groupSubtasks(AbstractTaskContainer container) {
+	public boolean groupSubtasks(ITaskElement container) {
 		boolean groupSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.GROUP_SUBTASKS);
 
-		if (container instanceof AbstractTask) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractTask) container).getConnectorKind());
+		if (container instanceof ITask) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((ITask) container).getConnectorKind());
 			if (connectorUi != null) {
 				if (connectorUi.forceSubtaskHierarchy()) {
 					groupSubtasks = true;
@@ -1124,7 +1125,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	@SuppressWarnings("restriction")
 	@Deprecated
-	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector, AbstractTask task) {
+	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector, ITask task) {
 
 		TaskListNotification notification = new TaskListNotification(task);
 		RepositoryTaskData newTaskData = getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),

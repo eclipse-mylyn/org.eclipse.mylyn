@@ -36,7 +36,7 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
@@ -142,7 +142,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 		 * Stores which task a tooltip is being displayed for. It is used to avoid having the same tooltip being set
 		 * multiple times while you move the mouse over a task hyperlink (bug#209409)
 		 */
-		private AbstractTask currentTaskHyperlink;
+		private ITask currentTaskHyperlink;
 
 		private TaskTextViewerHyperlinkPresenter(Color color, ISourceViewer sourceViewer) {
 			super(color);
@@ -174,7 +174,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 				ITaskList taskList = TasksUi.getTaskList();
 				String repositoryUrl = hyperlink.getRepository().getRepositoryUrl();
 
-				AbstractTask task = taskList.getTask(repositoryUrl, hyperlink.getTaskId());
+				ITask task = taskList.getTask(repositoryUrl, hyperlink.getTaskId());
 				if (task == null) {
 					task = taskList.getTaskByKey(repositoryUrl, hyperlink.getTaskId());
 				}

@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -36,12 +36,12 @@ public class SynchronizeAllTasksJob extends SynchronizationJob {
 
 	private final ITaskList taskList;
 
-	private final Set<AbstractTask> tasks;
+	private final Set<ITask> tasks;
 
 	private final ITaskRepositoryManager repositoryManager;
 
 	public SynchronizeAllTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager,
-			ITaskRepositoryManager repositoryManager, AbstractRepositoryConnector connector, Set<AbstractTask> tasks) {
+			ITaskRepositoryManager repositoryManager, AbstractRepositoryConnector connector, Set<ITask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
 		this.synchronizationManager = synchronizationManager;
@@ -55,13 +55,13 @@ public class SynchronizeAllTasksJob extends SynchronizationJob {
 		try {
 			monitor.beginTask("Processing", tasks.size() * 100);
 
-			Map<TaskRepository, Set<AbstractTask>> tasksByRepository = new HashMap<TaskRepository, Set<AbstractTask>>();
-			for (AbstractTask task : tasks) {
+			Map<TaskRepository, Set<ITask>> tasksByRepository = new HashMap<TaskRepository, Set<ITask>>();
+			for (ITask task : tasks) {
 				TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 						task.getRepositoryUrl());
-				Set<AbstractTask> tasks = tasksByRepository.get(repository);
+				Set<ITask> tasks = tasksByRepository.get(repository);
 				if (tasks == null) {
-					tasks = new HashSet<AbstractTask>();
+					tasks = new HashSet<ITask>();
 					tasksByRepository.put(repository, tasks);
 				}
 				tasks.add(task);
@@ -69,7 +69,7 @@ public class SynchronizeAllTasksJob extends SynchronizationJob {
 
 			for (TaskRepository taskRepository : tasksByRepository.keySet()) {
 				setName("Synchronizing Tasks (" + taskRepository.getRepositoryLabel() + ")");
-				Set<AbstractTask> repositoryTasks = tasksByRepository.get(taskRepository);
+				Set<ITask> repositoryTasks = tasksByRepository.get(taskRepository);
 				SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, synchronizationManager, connector,
 						taskRepository, repositoryTasks);
 				job.setUser(isUser());

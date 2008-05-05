@@ -11,7 +11,7 @@ package org.eclipse.mylyn.tasks.core;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
@@ -28,7 +28,7 @@ public class TaskMapper {
 		this.taskData = taskData;
 	}
 
-	public boolean applyTo(AbstractTask task) {
+	public boolean applyTo(ITask task) {
 		boolean changed = false;
 		if (hasTaskPropertyChanged(task.getCompletionDate(), getCompletionDate())) {
 			task.setCompletionDate(getCompletionDate());

@@ -45,16 +45,22 @@ public final class TaskContainerDelta {
 		ROOT
 	}
 
-	private final AbstractTaskContainer container;
+	private final ITaskElement container;
 
 	private final Kind kind;
 
-	public TaskContainerDelta(AbstractTaskContainer container, Kind kind) {
+	/**
+	 * @since 3.0
+	 */
+	public TaskContainerDelta(ITaskElement container, Kind kind) {
 		this.container = container;
 		this.kind = kind;
 	}
 
-	public AbstractTaskContainer getContainer() {
+	/**
+	 * @since 3.0
+	 */
+	public ITaskElement getContainer() {
 		return container;
 	}
 

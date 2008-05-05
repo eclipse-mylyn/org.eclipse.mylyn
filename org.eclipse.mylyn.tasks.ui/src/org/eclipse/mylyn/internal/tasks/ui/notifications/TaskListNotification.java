@@ -13,9 +13,10 @@ import java.util.Date;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
@@ -25,7 +26,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListNotification extends AbstractNotification {
 
-	protected final AbstractTask task;
+	protected final ITask task;
 
 	protected Date date;
 
@@ -34,7 +35,7 @@ public class TaskListNotification extends AbstractNotification {
 	private final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(
 			new TaskElementLabelProvider(true), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
-	public TaskListNotification(AbstractTask task) {
+	public TaskListNotification(ITask task) {
 		this.task = task;
 	}
 
@@ -67,7 +68,7 @@ public class TaskListNotification extends AbstractNotification {
 		return labelProvider.getImage(task);
 	}
 
-	protected AbstractTask getTask() {
+	protected ITask getTask() {
 		return task;
 	}
 

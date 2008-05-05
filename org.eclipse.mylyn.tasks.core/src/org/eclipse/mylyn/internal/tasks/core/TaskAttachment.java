@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -40,7 +40,7 @@ public class TaskAttachment implements ITaskAttachment {
 
 	private boolean patch;
 
-	private final AbstractTask task;
+	private final ITask task;
 
 	private final TaskAttribute taskAttribute;
 
@@ -48,7 +48,7 @@ public class TaskAttachment implements ITaskAttachment {
 
 	private String url;
 
-	public TaskAttachment(TaskRepository taskRepository, AbstractTask task, TaskAttribute taskAttribute) {
+	public TaskAttachment(TaskRepository taskRepository, ITask task, TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskAttribute);
@@ -93,7 +93,7 @@ public class TaskAttachment implements ITaskAttachment {
 		return taskRepository.getRepositoryUrl();
 	}
 
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 

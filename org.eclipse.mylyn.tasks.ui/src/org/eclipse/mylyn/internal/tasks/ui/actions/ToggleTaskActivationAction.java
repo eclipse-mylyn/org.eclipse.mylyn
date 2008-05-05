@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -26,7 +26,7 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 
 	private static final String LABEL_DEACTIVATE = "Deactivate Task";
 
-	private final AbstractTask task;
+	private final ITask task;
 
 	private final IToolBarManager toolBarManager;
 
@@ -36,7 +36,7 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 	 * @param toolBarManager
 	 * 		cannot be null
 	 */
-	public ToggleTaskActivationAction(AbstractTask task, IToolBarManager toolBarManager) {
+	public ToggleTaskActivationAction(ITask task, IToolBarManager toolBarManager) {
 		this.task = task;
 		this.toolBarManager = toolBarManager;
 		setId(ID);
@@ -71,21 +71,21 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 //		toolBarManager.add(this);
 	}
 
-	public void taskActivated(AbstractTask task) {
+	public void taskActivated(ITask task) {
 		update();
 		toolBarManager.update(true);
 	}
 
-	public void taskDeactivated(AbstractTask task) {
+	public void taskDeactivated(ITask task) {
 		update();
 		toolBarManager.update(true);
 	}
 
-	public void preTaskActivated(AbstractTask task) {
+	public void preTaskActivated(ITask task) {
 		// ignore
 	}
 
-	public void preTaskDeactivated(AbstractTask task) {
+	public void preTaskDeactivated(ITask task) {
 		// ignore		
 	}
 
@@ -93,7 +93,7 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 		// ignore
 	}
 
-	public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
+	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 		// ignore
 	}
 

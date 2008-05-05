@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -62,8 +62,8 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 	public void run() {
 		try {
 			for (Object selectedObject : getStructuredSelection().toList()) {
-				if (selectedObject instanceof AbstractTask) {
-					AbstractTask task = (AbstractTask) selectedObject;
+				if (selectedObject instanceof ITask) {
+					ITask task = (ITask) selectedObject;
 
 					String description = "Cloned from: " + CopyTaskDetailsAction.getTextForTask(task);
 

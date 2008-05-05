@@ -28,9 +28,11 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -39,13 +41,12 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -118,7 +119,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private ScheduleDatePicker scheduleDatePicker;
 
-	private AbstractTask task;
+	private ITask task;
 
 	private Composite editorComposite;
 
@@ -153,7 +154,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+				if (taskContainerDelta.getContainer() instanceof ITask) {
 					final AbstractTask updateTask = (AbstractTask) taskContainerDelta.getContainer();
 					if (updateTask != null && task != null
 							&& updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
@@ -399,7 +400,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		TaskRepository repository = null;
 		if (task != null && !(task instanceof LocalTask)) {
-			AbstractTask repositoryTask = task;
+			ITask repositoryTask = task;
 			repository = TasksUi.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
 					repositoryTask.getRepositoryUrl());
 		}
@@ -788,7 +789,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		timingListener = new TaskActivityAdapter() {
 
 			@Override
-			public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
+			public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 				if (task.equals(TaskPlanningEditor.this.task)) {
 					String elapsedTimeString = NO_TIME_ELAPSED;
 					try {
@@ -868,7 +869,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		TaskRepository repository = null;
 		if (task != null && !(task instanceof LocalTask)) {
-			AbstractTask repositoryTask = task;
+			ITask repositoryTask = task;
 			repository = TasksUi.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
 					repositoryTask.getRepositoryUrl());
 		}
@@ -900,7 +901,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.paintBordersFor(container);
 	}
 
-	private String getTaskDateString(AbstractTask task) {
+	private String getTaskDateString(ITask task) {
 
 		if (task == null) {
 			return "";

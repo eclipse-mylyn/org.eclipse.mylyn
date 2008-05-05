@@ -11,21 +11,22 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Mik Kersten
  */
 public class AbstractChangeCompletionAction extends Action {
 
-	protected boolean shouldEnable(List<AbstractTaskContainer> selectedElements) {
+	protected boolean shouldEnable(List<ITaskElement> selectedElements) {
 		boolean allLocalTasks = true;
-		for (AbstractTaskContainer abstractTaskContainer : selectedElements) {
-			if (!(abstractTaskContainer instanceof AbstractTask)) {
+		for (ITaskElement abstractTaskContainer : selectedElements) {
+			if (!(abstractTaskContainer instanceof ITask)) {
 				allLocalTasks = false;
 				break;
-			} else if (!((AbstractTask) abstractTaskContainer).isLocal()) {
+			} else if (!((ITask) abstractTaskContainer).isLocal()) {
 				allLocalTasks = false;
 				break;
 			}
@@ -36,7 +37,7 @@ public class AbstractChangeCompletionAction extends Action {
 	protected String generateMessage(List<AbstractTask> toComplete, String status) {
 		String message = "Mark selected local tasks " + status + "?\n\n";
 		int i = 0;
-		for (AbstractTask task : toComplete) {
+		for (ITask task : toComplete) {
 			i++;
 			if (i < 20) {
 				message += "    ";

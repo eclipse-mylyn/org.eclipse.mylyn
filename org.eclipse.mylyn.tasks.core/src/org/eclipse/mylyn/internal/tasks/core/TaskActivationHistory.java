@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Ken Sueda (original prototype)
@@ -72,11 +72,11 @@ public class TaskActivationHistory {
 		currentIndex = history.size() - 1;
 	}
 
-	public boolean containsTask(AbstractTask task) {
+	public boolean containsTask(ITask task) {
 		return history.contains(task);
 	}
 
-	public boolean removeTask(AbstractTask task) {
+	public boolean removeTask(ITask task) {
 		return history.remove(task);
 	}
 
@@ -115,13 +115,13 @@ public class TaskActivationHistory {
 			return getPreviousTasks();
 		}
 
-		Set<AbstractTask> allWorkingSetTasks = new HashSet<AbstractTask>();
-		for (AbstractTaskContainer container : containers) {
+		Set<ITask> allWorkingSetTasks = new HashSet<ITask>();
+		for (ITaskElement container : containers) {
 			allWorkingSetTasks.addAll(container.getChildren());
 		}
 
 		List<AbstractTask> allScopedTasks = getPreviousTasks();
-		for (AbstractTask task : getPreviousTasks()) {
+		for (ITask task : getPreviousTasks()) {
 			if (!allWorkingSetTasks.contains(task)) {
 				allScopedTasks.remove(task);
 			}
@@ -139,7 +139,7 @@ public class TaskActivationHistory {
 		currentIndex = -1;
 	}
 
-	public int indexOf(AbstractTask task) {
+	public int indexOf(ITask task) {
 		return history.indexOf(task);
 
 	}

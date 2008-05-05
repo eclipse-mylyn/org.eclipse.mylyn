@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
@@ -89,7 +89,7 @@ public abstract class AbstractTaskDataHandler {
 	 * 		the parent task data, may be null
 	 * @since 2.2
 	 */
-	public boolean canInitializeSubTaskData(AbstractTask task, RepositoryTaskData parentTaskData) {
+	public boolean canInitializeSubTaskData(ITask task, RepositoryTaskData parentTaskData) {
 		return false;
 	}
 

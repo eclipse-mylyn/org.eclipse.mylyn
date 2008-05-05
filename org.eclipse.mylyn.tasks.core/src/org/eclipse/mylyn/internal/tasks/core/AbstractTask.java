@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,8 +16,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Encapsulates tasks that reside on a repository or local computer and participate in synchronization with the source
@@ -28,7 +27,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
  * @since 2.0
  */
 //API 3.0 move to internal package
-public abstract class AbstractTask extends AbstractTaskContainer {
+public abstract class AbstractTask extends AbstractTaskContainer implements ITask {
 
 	public static final String DEFAULT_TASK_KIND = "task";
 
@@ -370,7 +369,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof AbstractTask) {
-			return this.getHandleIdentifier().equals(((AbstractTask) obj).getHandleIdentifier());
+			return this.getHandleIdentifier().equals(((ITask) obj).getHandleIdentifier());
 		} else {
 			return false;
 		}
@@ -446,6 +445,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	/**
 	 * @API 3.0: Rename to internalremoveParentContainer
+	 * @since 3.0
 	 */
 	public void removeParentContainer(AbstractTaskContainer container) {
 		containers.remove(container);

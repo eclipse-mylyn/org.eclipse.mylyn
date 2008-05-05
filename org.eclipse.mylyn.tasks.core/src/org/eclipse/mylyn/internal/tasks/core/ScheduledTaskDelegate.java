@@ -13,8 +13,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Rob Elves
@@ -76,7 +75,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	}
 
 	@Override
-	public Collection<AbstractTask> getChildren() {
+	public Collection<ITask> getChildren() {
 		return task.getChildren();
 	}
 
@@ -98,6 +97,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	/**
 	 * @deprecated Use {@link #getEstimatedTimeHours()} instead
 	 */
+	@Deprecated
 	@Override
 	public int getEstimateTimeHours() {
 		return getEstimatedTimeHours();
@@ -229,7 +229,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 
 	@Override
 	public int compareTo(AbstractTaskContainer taskListElement) {
-		return task.toString().compareTo(((AbstractTask) taskListElement).toString());
+		return task.toString().compareTo(((ITask) taskListElement).toString());
 	}
 
 	@Override
@@ -304,7 +304,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	}
 
 	@Override
-	public Collection<AbstractTask> getChildrenInternal() {
+	public Collection<ITask> getChildrenInternal() {
 		return task.getChildrenInternal();
 	}
 

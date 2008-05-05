@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
@@ -37,8 +39,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
@@ -197,7 +198,7 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 
 			if (repository.getSynchronizationTimeStamp() == null
 					|| repository.getSynchronizationTimeStamp().length() == 0) {
-				for (AbstractTask task : event.tasks) {
+				for (ITask task : event.tasks) {
 					task.setStale(true);
 				}
 				return;
@@ -232,7 +233,7 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 					}
 				}
 
-				for (AbstractTask task : event.tasks) {
+				for (ITask task : event.tasks) {
 					Integer id = getTicketId(task.getTaskId());
 					if (ids.contains(id)) {
 						task.setStale(true);
@@ -257,7 +258,7 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public boolean updateTaskFromTaskData(TaskRepository taskRepository, AbstractTask task, RepositoryTaskData taskData) {
+	public boolean updateTaskFromTaskData(TaskRepository taskRepository, ITask task, RepositoryTaskData taskData) {
 		TracTask tracTask = (TracTask) task;
 		ITracClient client = getClientManager().getTracClient(taskRepository);
 
@@ -307,11 +308,11 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 		return Version.XML_RPC.name().equals(repository.getVersion());
 	}
 
-	public static boolean hasRichEditor(TaskRepository repository, AbstractTask task) {
+	public static boolean hasRichEditor(TaskRepository repository, ITask task) {
 		return hasRichEditor(repository);
 	}
 
-	public static boolean hasAttachmentSupport(TaskRepository repository, AbstractTask task) {
+	public static boolean hasAttachmentSupport(TaskRepository repository, ITask task) {
 		return Version.XML_RPC.name().equals(repository.getVersion());
 	}
 

@@ -11,9 +11,10 @@ package org.eclipse.mylyn.tasks.tests.connector;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 
 /**
@@ -25,7 +26,7 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 	private static final String QUERY_ELEMENT_NAME = "MockQuery";
 
 	@Override
-	public boolean canCreate(AbstractTask task) {
+	public boolean canCreate(ITask task) {
 		return task instanceof MockTask;
 	}
 

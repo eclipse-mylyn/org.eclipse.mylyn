@@ -22,16 +22,16 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -51,10 +51,10 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final TaskRepository taskRepository;
 
-	private final Set<AbstractTask> tasks;
+	private final Set<ITask> tasks;
 
 	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager,
-			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<AbstractTask> tasks) {
+			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<ITask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
 		this.taskDataManager = synchronizationManager;
@@ -72,18 +72,18 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 				try {
 					synchronizeTasks(new SubProgressMonitor(monitor, tasks.size() * 100), taskRepository, tasks);
 				} catch (CoreException e) {
-					for (AbstractTask task : tasks) {
+					for (ITask task : tasks) {
 						updateStatus(taskRepository, task, e.getStatus());
 					}
 				}
 			} else {
-				for (AbstractTask task : tasks) {
+				for (ITask task : tasks) {
 					Policy.checkCanceled(monitor);
 					synchronizeTask(new SubProgressMonitor(monitor, 100), task);
 				}
 			}
 		} catch (OperationCanceledException e) {
-			for (AbstractTask task : tasks) {
+			for (ITask task : tasks) {
 				task.setSynchronizing(false);
 				taskList.notifyTaskChanged(task, false);
 			}
@@ -109,7 +109,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void synchronizeTask(IProgressMonitor monitor, AbstractTask task) {
+	private void synchronizeTask(IProgressMonitor monitor, ITask task) {
 		monitor.subTask("Receiving task " + task.getSummary());
 		task.setSynchronizationStatus(null);
 		taskList.notifyTaskChanged(task, false);
@@ -139,19 +139,19 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void synchronizeTasks(IProgressMonitor monitor, final TaskRepository repository, Set<AbstractTask> tasks)
+	private void synchronizeTasks(IProgressMonitor monitor, final TaskRepository repository, Set<ITask> tasks)
 			throws CoreException {
 		monitor.subTask("Receiving " + tasks.size() + " tasks from " + repository.getRepositoryLabel());
 
-		final Map<String, AbstractTask> idToTask = new HashMap<String, AbstractTask>();
-		for (AbstractTask task : tasks) {
+		final Map<String, ITask> idToTask = new HashMap<String, ITask>();
+		for (ITask task : tasks) {
 			idToTask.put(task.getTaskId(), task);
 		}
 
 		LegacyTaskDataCollector collector = new LegacyTaskDataCollector() {
 			@Override
 			public void accept(RepositoryTaskData taskData) {
-				AbstractTask task = idToTask.remove(taskData.getTaskId());
+				ITask task = idToTask.remove(taskData.getTaskId());
 				if (task != null) {
 					updateFromTaskData(repository, task, taskData);
 				}
@@ -159,7 +159,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 			@Override
 			public void accept(TaskData taskData) {
-				AbstractTask task = idToTask.remove(taskData.getTaskId());
+				ITask task = idToTask.remove(taskData.getTaskId());
 				if (task != null) {
 					updateFromTaskData(repository, task, taskData);
 				}
@@ -180,7 +180,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void updateFromTaskData(TaskRepository repository, AbstractTask task, RepositoryTaskData taskData) {
+	private void updateFromTaskData(TaskRepository repository, ITask task, RepositoryTaskData taskData) {
 		// HACK: part of hack below
 		//Date oldDueDate = repositoryTask.getDueDate();
 
@@ -214,7 +214,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		}
 	}
 
-	private void updateFromTaskData(TaskRepository taskRepository, AbstractTask task, TaskData taskData) {
+	private void updateFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		try {
 			taskDataManager.putUpdatedTaskData(task, taskData, isUser());
 		} catch (CoreException e) {
@@ -222,7 +222,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		}
 	}
 
-	private void updateStatus(TaskRepository repository, AbstractTask task, IStatus status) {
+	private void updateStatus(TaskRepository repository, ITask task, IStatus status) {
 		task.setSynchronizationStatus(status);
 		if (!isUser()) {
 			task.setSynchronizing(false);

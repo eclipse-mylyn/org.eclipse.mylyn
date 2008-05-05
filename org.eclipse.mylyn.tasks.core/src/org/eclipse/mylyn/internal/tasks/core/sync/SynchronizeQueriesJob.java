@@ -24,17 +24,18 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
@@ -69,7 +70,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private class TaskCollector extends LegacyTaskDataCollector {
 
-		private final Set<AbstractTask> removedQueryResults;
+		private final Set<ITask> removedQueryResults;
 
 		private final AbstractRepositoryQuery repositoryQuery;
 
@@ -77,7 +78,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 		public TaskCollector(AbstractRepositoryQuery repositoryQuery) {
 			this.repositoryQuery = repositoryQuery;
-			this.removedQueryResults = new HashSet<AbstractTask>(repositoryQuery.getChildren());
+			this.removedQueryResults = new HashSet<ITask>(repositoryQuery.getChildren());
 		}
 
 		@Override
@@ -111,7 +112,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			resultCount++;
 		}
 
-		public Set<AbstractTask> getRemovedChildren() {
+		public Set<ITask> getRemovedChildren() {
 			return removedQueryResults;
 		}
 
@@ -133,7 +134,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private final TaskList taskList;
 
-	private final HashSet<AbstractTask> tasksToBeSynchronized = new HashSet<AbstractTask>();
+	private final HashSet<ITask> tasksToBeSynchronized = new HashSet<ITask>();
 
 	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager synchronizationManager,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<AbstractRepositoryQuery> queries) {
@@ -150,9 +151,9 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		try {
 			monitor.beginTask("Processing", 20 + queries.size() * 20 + 40 + 10);
 
-			Set<AbstractTask> allTasks;
+			Set<ITask> allTasks;
 			if (!isFullSynchronization()) {
-				allTasks = new HashSet<AbstractTask>();
+				allTasks = new HashSet<ITask>();
 				for (AbstractRepositoryQuery query : queries) {
 					allTasks.addAll(query.getChildren());
 				}
@@ -178,7 +179,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 						// for background synchronizations all changed tasks are synchronized including the ones that are not part of a query
 						if (!isUser()) {
-							for (AbstractTask task : allTasks) {
+							for (ITask task : allTasks) {
 								if (task.isStale()) {
 									tasksToBeSynchronized.add(task);
 									task.setSynchronizing(true);

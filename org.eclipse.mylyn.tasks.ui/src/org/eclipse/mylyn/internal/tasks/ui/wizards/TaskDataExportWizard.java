@@ -23,10 +23,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -152,7 +153,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 				}
 
 				if (exportPage.exportTaskContexts()) {
-					for (AbstractTask task : taskContextsToExport) {
+					for (ITask task : taskContextsToExport) {
 						File contextFile = ContextCore.getContextManager().getFileForContext(
 								task.getHandleIdentifier());
 						File destTaskFile = new File(destDir + File.separator + contextFile.getName());

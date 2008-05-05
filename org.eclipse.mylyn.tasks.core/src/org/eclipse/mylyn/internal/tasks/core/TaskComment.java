@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -30,7 +30,7 @@ public class TaskComment implements ITaskComment {
 
 	private int number;
 
-	private final AbstractTask task;
+	private final ITask task;
 
 	private final TaskAttribute taskAttribute;
 
@@ -40,7 +40,7 @@ public class TaskComment implements ITaskComment {
 
 	private String url;
 
-	public TaskComment(TaskRepository taskRepository, AbstractTask task, TaskAttribute taskAttribute) {
+	public TaskComment(TaskRepository taskRepository, ITask task, TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskAttribute);
@@ -69,7 +69,7 @@ public class TaskComment implements ITaskComment {
 		return taskRepository.getRepositoryUrl();
 	}
 
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 

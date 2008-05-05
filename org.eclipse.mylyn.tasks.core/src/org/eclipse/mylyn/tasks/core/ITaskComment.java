@@ -28,7 +28,7 @@ public interface ITaskComment {
 
 	public abstract String getRepositoryUrl();
 
-	public abstract AbstractTask getTask();
+	public abstract ITask getTask();
 
 	public abstract TaskAttribute getTaskAttribute();
 

@@ -19,11 +19,12 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Monitors task activity and maintains task activation history
@@ -119,7 +120,7 @@ public class TaskActivityMonitor {
 						return true;
 					}
 				} else if (event.getDelta().equals("removed")) {
-					AbstractTask task = taskList.getTask(event.getStructureHandle());
+					ITask task = taskList.getTask(event.getStructureHandle());
 					if (task != null) {
 						taskActivityManager.removeElapsedTime(task, event.getDate(), event.getEndDate());
 						return true;
@@ -152,7 +153,7 @@ public class TaskActivityMonitor {
 	/**
 	 * Returns the task corresponding to the interaction event history item at the specified position
 	 */
-	protected AbstractTask getHistoryTaskAt(int pos) {
+	protected ITask getHistoryTaskAt(int pos) {
 		InteractionEvent event = ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().get(
 				pos);
 		if (event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {

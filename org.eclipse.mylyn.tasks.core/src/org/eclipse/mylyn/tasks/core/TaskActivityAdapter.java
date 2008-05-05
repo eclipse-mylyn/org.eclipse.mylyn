@@ -17,19 +17,19 @@ public class TaskActivityAdapter implements ITaskActivityListener {
 	public void activityReset() {
 	}
 
-	public void elapsedTimeUpdated(AbstractTask task, long newElapsedTime) {
+	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 	}
 
-	public void preTaskActivated(AbstractTask task) {
+	public void preTaskActivated(ITask task) {
 	}
 
-	public void preTaskDeactivated(AbstractTask task) {
+	public void preTaskDeactivated(ITask task) {
 	}
 
-	public void taskActivated(AbstractTask task) {
+	public void taskActivated(ITask task) {
 	}
 
-	public void taskDeactivated(AbstractTask task) {
+	public void taskDeactivated(ITask task) {
 	}
 
 }

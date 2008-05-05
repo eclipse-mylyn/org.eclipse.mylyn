@@ -9,11 +9,12 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.ISharedImages;
@@ -43,8 +44,8 @@ public class AttachAction extends AbstractTaskEditorAction {
 			editor.showBusy(true);
 		}
 		Object selection = this.getStructuredSelection().getFirstElement();
-		if (selection instanceof AbstractTask) {
-			if (taskDirty((AbstractTask) selection)) {
+		if (selection instanceof ITask) {
+			if (taskDirty((ITask) selection)) {
 				openInformationDialog(LABEL, "Submit changes or synchronize task before adding attachments.");
 				return;
 			}
@@ -74,8 +75,8 @@ public class AttachAction extends AbstractTaskEditorAction {
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		if (selection.getFirstElement() instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) selection.getFirstElement();
+		if (selection.getFirstElement() instanceof ITask) {
+			ITask task = (ITask) selection.getFirstElement();
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
 			if (repository != null) {

@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
@@ -113,13 +113,13 @@ public class TaskAttachmentEditorInput extends PlatformObject implements IStorag
 
 		private final TaskRepository taskRepository;
 
-		private final AbstractTask task;
+		private final ITask task;
 
 		private final TaskAttribute attachmentAttribute;
 
 		private final String name;
 
-		public TaskAttachmentStorage(TaskRepository taskRepository, AbstractTask task,
+		public TaskAttachmentStorage(TaskRepository taskRepository, ITask task,
 				TaskAttribute attachmentAttribute, String name) {
 			this.taskRepository = taskRepository;
 			this.task = task;

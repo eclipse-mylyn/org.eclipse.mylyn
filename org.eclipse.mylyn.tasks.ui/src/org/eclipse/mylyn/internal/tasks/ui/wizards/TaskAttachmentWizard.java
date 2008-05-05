@@ -36,7 +36,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
@@ -230,7 +230,7 @@ public class TaskAttachmentWizard extends Wizard {
 
 	private PreviewAttachmentPage2 previewPage;
 
-	public TaskAttachmentWizard(TaskRepository taskRepository, AbstractTask task, TaskAttribute taskAttachment) {
+	public TaskAttachmentWizard(TaskRepository taskRepository, ITask task, TaskAttribute taskAttachment) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(taskAttachment);
 		this.model = new TaskAttachmentModel(taskRepository, task, taskAttachment);

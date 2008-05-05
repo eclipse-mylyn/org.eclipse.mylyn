@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
+
 
 /**
  * A container that stores tasks from any repository. A task can only have a single AbstractTaskCategory parent (only be

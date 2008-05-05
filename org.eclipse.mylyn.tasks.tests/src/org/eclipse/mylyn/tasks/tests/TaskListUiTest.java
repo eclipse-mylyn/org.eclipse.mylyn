@@ -19,7 +19,9 @@ import junit.framework.TestCase;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.internal.tasks.ui.MoveToCategoryMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
@@ -29,10 +31,9 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.web.tasks.WebTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.TreeItem;
@@ -170,7 +171,7 @@ public class TaskListUiTest extends TestCase {
 		view.getViewer().refresh();
 		// Arrays.asList(view.getViewer().getVisibleExpandedElements());
 		assertFalse(webTask.isCompleted());
-		ArrayList<AbstractTaskContainer> tasks = new ArrayList<AbstractTaskContainer>();
+		ArrayList<ITaskElement> tasks = new ArrayList<ITaskElement>();
 		tasks.add(webTask);
 		new MarkTaskCompleteAction(tasks).run();
 		assertTrue(webTask.isCompleted());
@@ -231,7 +232,7 @@ public class TaskListUiTest extends TestCase {
 	public void testGetSubMenuManagerContainsAllCategoriesPlusNewCategory() {
 		// setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
-		List<AbstractTaskContainer> selectedElements = new Vector<AbstractTaskContainer>();
+		List<ITaskElement> selectedElements = new Vector<ITaskElement>();
 		selectedElements.add(cat1task1);
 		int numCategories = manager.getTaskList().getCategories().size();
 		int numSeparators = 1;
@@ -262,15 +263,15 @@ public class TaskListUiTest extends TestCase {
 		//setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
 		MenuManager menuManager = null;
-		List<AbstractTaskContainer> selectedElements = new Vector<AbstractTaskContainer>();
+		List<ITaskElement> selectedElements = new Vector<ITaskElement>();
 		selectedElements.add(cat1task1);
 
-		List<AbstractTaskContainer> emptySelection = new Vector<AbstractTaskContainer>();
+		List<ITaskElement> emptySelection = new Vector<ITaskElement>();
 
-		List<AbstractTaskContainer> categorySelection = new Vector<AbstractTaskContainer>();
+		List<ITaskElement> categorySelection = new Vector<ITaskElement>();
 		categorySelection.add(cat1);
 
-		List<AbstractTaskContainer> querySelection = new Vector<AbstractTaskContainer>();
+		List<ITaskElement> querySelection = new Vector<ITaskElement>();
 		querySelection.add(new MockRepositoryQuery("query", null));
 
 		//execute system under test & assert
@@ -333,8 +334,8 @@ public class TaskListUiTest extends TestCase {
 			if (item.getData() instanceof TaskCategory) {
 				TreeItem[] sub = item.getItems();
 				for (TreeItem element : sub) {
-					assertTrue(element.getData() instanceof AbstractTask);
-					AbstractTask task = (AbstractTask) element.getData();
+					assertTrue(element.getData() instanceof ITask);
+					ITask task = (ITask) element.getData();
 					if (checkComplete) {
 						assertTrue(task.isCompleted());
 					} else {
@@ -356,8 +357,8 @@ public class TaskListUiTest extends TestCase {
 			if (item.getData() instanceof TaskCategory) {
 				TreeItem[] sub = item.getItems();
 				for (TreeItem element : sub) {
-					assertTrue(element.getData() instanceof AbstractTask);
-					AbstractTask task = (AbstractTask) element.getData();
+					assertTrue(element.getData() instanceof ITask);
+					ITask task = (ITask) element.getData();
 					assertTrue(task.getPriority().equals("P2") || task.getPriority().equals("P1"));
 					if (task.getPriority().equals("P2")) {
 						p2Count++;

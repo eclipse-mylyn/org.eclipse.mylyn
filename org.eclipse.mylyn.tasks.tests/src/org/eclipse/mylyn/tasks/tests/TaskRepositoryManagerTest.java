@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -83,7 +83,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		assertNotNull(TasksUiPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier()));
 		TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
-		AbstractTask task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier());
+		ITask task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier());
 		assertNotNull(task2);
 		assertEquals(1, task2.getParentContainers().size());
 

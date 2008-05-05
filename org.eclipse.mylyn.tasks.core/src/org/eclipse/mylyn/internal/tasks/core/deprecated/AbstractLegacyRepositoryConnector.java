@@ -17,16 +17,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 
@@ -82,7 +83,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 * @deprecated use {@link TasksUiUtil#createTask(TaskRepository, String, IProgressMonitor)} instead
 	 */
 	@Deprecated
-	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id, IProgressMonitor monitor)
+	public ITask createTaskFromExistingId(TaskRepository repository, String id, IProgressMonitor monitor)
 			throws CoreException {
 		return createTaskFromExistingId(repository, id, true, monitor);
 	}
@@ -175,8 +176,8 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 
 	/**
 	 * Updates the properties of <code>repositoryTask</code>. Invoked when on task synchronization if {@link
-	 * #getLegacyTaskDataHandler()} returns <code>null</code> or {@link AbstractTaskDataHandler#getTaskData(TaskRepository,
-	 * String)} returns <code>null</code>.
+	 * #getLegacyTaskDataHandler()} returns <code>null</code> or {@link
+	 * AbstractTaskDataHandler#getTaskData(TaskRepository, String)} returns <code>null</code>.
 	 * 
 	 * <p>
 	 * Connectors that provide {@link RepositoryTaskData} objects for all tasks do not need to implement this method.
@@ -190,8 +191,8 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 * @see {@link #getLegacyTaskDataHandler()}
 	 */
 	@Deprecated
-	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask,
-			IProgressMonitor monitor) throws CoreException {
+	public void updateTaskFromRepository(TaskRepository repository, ITask repositoryTask, IProgressMonitor monitor)
+			throws CoreException {
 	}
 
 	/**
@@ -201,8 +202,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 * @since 3.0
 	 */
 	@Deprecated
-	public abstract boolean updateTaskFromTaskData(TaskRepository repository, AbstractTask task,
-			RepositoryTaskData taskData);
+	public abstract boolean updateTaskFromTaskData(TaskRepository repository, ITask task, RepositoryTaskData taskData);
 
 	/**
 	 * Updates <code>existingTask</code> with latest information from <code>queryHit</code>.
@@ -212,7 +212,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 * @deprecated use {@link #updateTaskFromTaskData(TaskRepository, AbstractTask, RepositoryTaskData)} instead
 	 */
 	@Deprecated
-	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask, AbstractTask queryHit) {
+	public boolean updateTaskFromQueryHit(TaskRepository repository, ITask existingTask, AbstractTask queryHit) {
 		boolean changed = false;
 		if (existingTask.isCompleted() != queryHit.isCompleted()) {
 			existingTask.setCompleted(queryHit.isCompleted());
@@ -337,10 +337,10 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 */
 	// API 3.0 move to utility class
 	@Deprecated
-	public String getSynchronizationTimestamp(TaskRepository repository, Set<AbstractTask> changedTasks) {
+	public String getSynchronizationTimestamp(TaskRepository repository, Set<ITask> changedTasks) {
 		Date mostRecent = new Date(0);
 		String mostRecentTimeStamp = repository.getSynchronizationTimeStamp();
-		for (AbstractTask task : changedTasks) {
+		for (ITask task : changedTasks) {
 			Date taskModifiedDate;
 			RepositoryTaskData taskData = getTaskData(task);
 			if (taskData != null && getLegacyTaskDataHandler() != null && taskData.getLastModified() != null) {
@@ -359,7 +359,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	}
 
 	@Deprecated
-	private RepositoryTaskData getTaskData(AbstractTask task) {
+	private RepositoryTaskData getTaskData(ITask task) {
 		if (getTaskDataManager() != null) {
 			return ((TaskDataManager) getTaskDataManager()).getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		}

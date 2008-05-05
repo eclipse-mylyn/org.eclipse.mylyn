@@ -16,7 +16,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -48,7 +48,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void commit(boolean onSave) {
-		AbstractTask task = getTaskEditorPage().getTask();
+		ITask task = getTaskEditorPage().getTask();
 		Assert.isNotNull(task);
 
 		Calendar selectedDate = null;

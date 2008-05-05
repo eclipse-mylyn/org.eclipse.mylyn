@@ -10,9 +10,10 @@ package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Mik Kersten
@@ -49,7 +50,7 @@ public class TaskTest extends TestCase {
 	}
 
 	public void testPriorityNeverNull() {
-		AbstractTask task = new LocalTask("handle", "label");
+		ITask task = new LocalTask("handle", "label");
 		assertNotNull(task.getPriority());
 
 		PriorityLevel def = PriorityLevel.getDefault();

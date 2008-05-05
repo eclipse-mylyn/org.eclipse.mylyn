@@ -15,8 +15,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandle
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
@@ -104,8 +103,7 @@ public class LocalRepositoryConnector extends AbstractLegacyRepositoryConnector 
 	}
 
 	@Override
-	public boolean updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
-			RepositoryTaskData taskData) {
+	public boolean updateTaskFromTaskData(TaskRepository repository, ITask repositoryTask, RepositoryTaskData taskData) {
 		return false;
 	}
 

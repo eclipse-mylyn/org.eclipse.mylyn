@@ -20,11 +20,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListFactory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Mik Kersten
@@ -63,8 +64,8 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
-		Collection<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
-		AbstractTask readTask = readList.iterator().next();
+		Collection<ITask> readList = manager.getTaskList().getDefaultCategory().getChildren();
+		ITask readTask = readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 		assertTrue(readTask.getDueDate().compareTo(dueDate) == 0);
 	}
@@ -108,8 +109,8 @@ public class TaskListStandaloneTest extends TestCase {
 		// assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
 
-		Collection<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
-		AbstractTask readTask = readList.iterator().next();
+		Collection<ITask> readList = manager.getTaskList().getDefaultCategory().getChildren();
+		ITask readTask = readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 
 		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());

@@ -15,11 +15,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * Discard outgoing changes on selected task TODO: Enable multi task discard?
@@ -32,23 +33,23 @@ public class ClearOutgoingAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.discard";
 
-	private final List<AbstractTaskContainer> selectedElements;
+	private final List<ITaskElement> selectedElements;
 
-	public ClearOutgoingAction(List<AbstractTaskContainer> selectedElements) {
+	public ClearOutgoingAction(List<ITaskElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);
 		setImageDescriptor(CommonImages.CLEAR);
 		setId(ID);
-		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
-			AbstractTask task = (AbstractTask) selectedElements.get(0);
+		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof ITask)) {
+			ITask task = (ITask) selectedElements.get(0);
 			setEnabled(hasOutgoingChanges(task));
 		} else {
 			setEnabled(false);
 		}
 	}
 
-	private boolean hasOutgoingChanges(AbstractTask task) {
+	private boolean hasOutgoingChanges(ITask task) {
 		return task.getSynchronizationState().equals(SynchronizationState.OUTGOING)
 				|| task.getSynchronizationState().equals(SynchronizationState.CONFLICT);
 	}
@@ -57,7 +58,7 @@ public class ClearOutgoingAction extends Action {
 	public void run() {
 		ArrayList<AbstractTask> toClear = new ArrayList<AbstractTask>();
 		for (Object selectedObject : selectedElements) {
-			if (selectedObject instanceof AbstractTask && hasOutgoingChanges((AbstractTask) selectedObject)) {
+			if (selectedObject instanceof ITask && hasOutgoingChanges((ITask) selectedObject)) {
 				toClear.add(((AbstractTask) selectedObject));
 			}
 		}

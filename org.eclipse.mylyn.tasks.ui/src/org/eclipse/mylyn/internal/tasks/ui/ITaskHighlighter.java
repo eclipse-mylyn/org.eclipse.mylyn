@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -16,5 +16,5 @@ import org.eclipse.swt.graphics.Color;
  */
 public interface ITaskHighlighter {
 
-	public Color getHighlightColor(AbstractTask task);
+	public Color getHighlightColor(ITask task);
 }

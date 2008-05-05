@@ -40,7 +40,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -421,7 +421,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public boolean canInitializeSubTaskData(AbstractTask task, RepositoryTaskData parentTaskData) {
+	public boolean canInitializeSubTaskData(ITask task, RepositoryTaskData parentTaskData) {
 		if (parentTaskData != null) {
 			return parentTaskData.getAttribute(ATTRIBUTE_BLOCKED_BY) != null;
 		} else if (task instanceof TracTask) {

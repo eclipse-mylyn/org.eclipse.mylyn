@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent.EventKind;
 
@@ -34,7 +34,7 @@ public class TaskDataModel {
 
 	private List<TaskDataModelListener> listeners;
 
-	private final AbstractTask task;
+	private final ITask task;
 
 	private final TaskRepository taskRepository;
 
@@ -42,7 +42,7 @@ public class TaskDataModel {
 
 	private final ITaskDataWorkingCopy workingCopy;
 
-	public TaskDataModel(TaskRepository taskRepository, AbstractTask task, ITaskDataWorkingCopy taskDataState) {
+	public TaskDataModel(TaskRepository taskRepository, ITask task, ITaskDataWorkingCopy taskDataState) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskDataState);
@@ -94,7 +94,7 @@ public class TaskDataModel {
 		return new HashSet<TaskAttribute>(workingCopy.getEditsData().getRoot().getAttributes().values());
 	}
 
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 

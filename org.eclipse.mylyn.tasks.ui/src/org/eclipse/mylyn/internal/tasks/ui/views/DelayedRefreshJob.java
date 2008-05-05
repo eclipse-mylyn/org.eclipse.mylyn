@@ -22,7 +22,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.progress.WorkbenchJob;
@@ -122,8 +122,8 @@ abstract class DelayedRefreshJob extends WorkbenchJob {
 		} else if (items.length > 0) {
 			try {
 				for (Object item : items) {
-					if (item instanceof AbstractTask) {
-						AbstractTask task = (AbstractTask) item;
+					if (item instanceof ITask) {
+						ITask task = (ITask) item;
 						treeViewer.refresh(task, true);
 					} else {
 						treeViewer.refresh(item, true);

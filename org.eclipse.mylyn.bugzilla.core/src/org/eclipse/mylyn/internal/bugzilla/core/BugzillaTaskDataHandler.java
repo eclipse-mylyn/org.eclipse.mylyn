@@ -22,7 +22,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -281,7 +281,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public boolean canInitializeSubTaskData(AbstractTask task, RepositoryTaskData parentTaskData) {
+	public boolean canInitializeSubTaskData(ITask task, RepositoryTaskData parentTaskData) {
 		return true;
 	}
 

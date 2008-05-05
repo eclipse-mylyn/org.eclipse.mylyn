@@ -142,7 +142,7 @@
          <enablement>
             <or>
                <objectClass
-                     name="org.eclipse.mylyn.tasks.core.AbstractTaskContainer">
+                     name="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
                </objectClass>
                <objectClass
                      name="org.eclipse.mylyn.tasks.core.TaskRepository">
@@ -340,16 +340,16 @@
                tooltip="Synchronize with Repository">
             <enablement>
                <or>
-					<objectClass name="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"/>
-               		<objectClass name="org.eclipse.mylyn.tasks.core.AbstractTask"/>
-                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"/>
+					<objectClass name="org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery"/>
+               		<objectClass name="org.eclipse.mylyn.internal.tasks.core.AbstractTask"/>
+                 <objectClass name="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer"/>
                </or>
             </enablement>
          </action>
          
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryCloneAction"
-               enablesFor="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"
+               enablesFor="org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery"
                icon="icons/etool16/query-new.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.clone.query"
                label="Clone Query..."
@@ -367,7 +367,7 @@
      <enablement>
 <!--        <and> -->
            <objectClass
-                 name="org.eclipse.mylyn.tasks.core.AbstractTask">
+                 name="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
            </objectClass>
 <!--
            <not>
@@ -383,7 +383,7 @@
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryExportAction"
                definitionId="org.eclipse.ui.query.export"
-               enablesFor="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"
+               enablesFor="org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery"
                icon="icons/etool16/export.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.export.query"
                label="Export Query..."
@@ -405,7 +405,7 @@
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.TaskExportAction"
                definitionId="org.eclipse.ui.task.export"
-               enablesFor="org.eclipse.mylyn.tasks.core.AbstractTask"
+               enablesFor="org.eclipse.mylyn.internal.tasks.core.AbstractTask"
                icon="icons/etool16/export.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.export.task"
                label="Export Task..."
@@ -465,7 +465,7 @@
           tooltip="New Subtask">
      <enablement>
            <objectClass
-                 name="org.eclipse.mylyn.tasks.core.AbstractTask">
+                 name="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
            </objectClass>
      </enablement>
   </action>
@@ -1044,7 +1044,7 @@
     <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"
+            adaptableType="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer"
             class="org.eclipse.mylyn.internal.tasks.ui.search.SearchScoreComputerAdapterFactory">
          <adapter
                type="org.eclipse.search.ui.ISearchPageScoreComputer">
@@ -1082,7 +1082,7 @@
 
  <extension point="org.eclipse.core.runtime.adapters">
     <factory
-          adaptableType="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"
+          adaptableType="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer"
           class="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetAdapterFactory">
        <adapter type="org.eclipse.ui.IPersistableElement"/>
     </factory>
@@ -1313,7 +1313,7 @@
 			activeByDefault="true">
 			<filterExpression>
 				<instanceof
-					value="org.eclipse.mylyn.tasks.core.AbstractTaskContainer" />
+					value="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer" />
 			</filterExpression>
 		</commonFilter>
    </extension>
@@ -1337,7 +1337,7 @@
                <iterate>
                   <or>
                      <instanceof
-                           value="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery">
+                           value="org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery">
                      </instanceof>
                      <instanceof
                            value="org.eclipse.mylyn.internal.tasks.core.TaskCategory">

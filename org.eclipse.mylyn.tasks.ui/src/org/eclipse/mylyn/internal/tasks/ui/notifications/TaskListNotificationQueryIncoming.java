@@ -11,14 +11,14 @@ package org.eclipse.mylyn.internal.tasks.ui.notifications;
 import java.util.Date;
 
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Rob Elves
  */
 public class TaskListNotificationQueryIncoming extends TaskListNotification {
 
-	public TaskListNotificationQueryIncoming(AbstractTask task) {
+	public TaskListNotificationQueryIncoming(ITask task) {
 		super(task);
 	}
 

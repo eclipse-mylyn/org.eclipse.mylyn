@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Sorts results of Bugzilla search by bug priority.
@@ -30,8 +30,8 @@ public class SearchResultSorterPriority extends ViewerSorter {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
-			AbstractTask hit1 = (AbstractTask) e1;
-			AbstractTask hit2 = (AbstractTask) e2;
+			ITask hit1 = (ITask) e1;
+			ITask hit2 = (ITask) e2;
 			return hit1.getPriority().compareTo(hit2.getPriority());
 		} catch (Exception ignored) {
 			// do nothing
@@ -51,7 +51,7 @@ public class SearchResultSorterPriority extends ViewerSorter {
 	@Override
 	public int category(Object element) {
 		try {
-			AbstractTask hit = (AbstractTask) element;
+			ITask hit = (ITask) element;
 			return Integer.parseInt(hit.getTaskId());
 		} catch (Exception ignored) {
 			// ignore if there is a problem

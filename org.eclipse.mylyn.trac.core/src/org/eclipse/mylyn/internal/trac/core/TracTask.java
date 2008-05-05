@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.internal.trac.core;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Steffen Pingel

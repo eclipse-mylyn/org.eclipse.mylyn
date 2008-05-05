@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -36,15 +36,15 @@ public abstract class AbstractAttachmentHandler {
 
 	protected static final int BUFFER_SIZE = 1024;
 
-	public abstract void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
+	public abstract void uploadAttachment(TaskRepository repository, ITask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException;
 
 	public abstract InputStream getAttachmentAsStream(TaskRepository repository, RepositoryAttachment attachment,
 			IProgressMonitor monitor) throws CoreException;
 
-	public abstract boolean canUploadAttachment(TaskRepository repository, AbstractTask task);
+	public abstract boolean canUploadAttachment(TaskRepository repository, ITask task);
 
-	public abstract boolean canDownloadAttachment(TaskRepository repository, AbstractTask task);
+	public abstract boolean canDownloadAttachment(TaskRepository repository, ITask task);
 
 	public abstract boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment);
 

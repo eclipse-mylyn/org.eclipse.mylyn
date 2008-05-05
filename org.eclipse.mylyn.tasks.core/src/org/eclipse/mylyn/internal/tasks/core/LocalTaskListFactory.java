@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 
 /**
@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 public class LocalTaskListFactory extends AbstractTaskListFactory {
 
 	@Override
-	public boolean canCreate(AbstractTask task) {
+	public boolean canCreate(ITask task) {
 		return task instanceof LocalTask;
 	}
 

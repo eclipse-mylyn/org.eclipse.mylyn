@@ -15,8 +15,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Rob Elves
@@ -75,19 +74,19 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	public long getTotalElapsed() {
 		long elapsed = 0;
-		for (AbstractTask task : getChildren()) {
+		for (ITask task : getChildren()) {
 			elapsed += activityManager.getElapsedTime(task, getStart(), getEnd());
 		}
 		return elapsed;
 	}
 
-	public long getElapsed(AbstractTask task) {
+	public long getElapsed(ITask task) {
 		return activityManager.getElapsedTime(task, getStart(), getEnd());
 	}
 
 	public long getTotalEstimated() {
 		long totalEstimated = 0;
-		for (AbstractTask task : dateRangeDelegates) {
+		for (ITask task : dateRangeDelegates) {
 			totalEstimated += task.getEstimatedTimeHours();
 		}
 		return totalEstimated;
@@ -176,12 +175,12 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	@Override
-	public Collection<AbstractTask> getChildren() {
-		Set<AbstractTask> children = new HashSet<AbstractTask>();
+	public Collection<ITask> getChildren() {
+		Set<ITask> children = new HashSet<ITask>();
 		Calendar beginning = TaskActivityUtil.getCalendar();
 		beginning.setTimeInMillis(0);
 		if (isCaptureFloating() && !isFuture()) {
-			for (AbstractTask task : activityManager.getScheduledTasks(beginning, getEnd())) {
+			for (ITask task : activityManager.getScheduledTasks(beginning, getEnd())) {
 				if (task.internalIsFloatingScheduledDate()) {
 					children.add(task);
 				}
@@ -190,24 +189,24 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 			// add all due/overdue
 			Calendar end = TaskActivityUtil.getCalendar();
 			end.set(5000, 12, 1);
-			for (AbstractTask task : activityManager.getDueTasks(beginning, getEnd())) {
+			for (ITask task : activityManager.getDueTasks(beginning, getEnd())) {
 				if (activityManager.isOwnedByUser(task)) {
 					children.add(task);
 				}
 			}
 
 			// add all scheduled/overscheduled
-			for (AbstractTask task : activityManager.getScheduledTasks(beginning, getEnd())) {
+			for (ITask task : activityManager.getScheduledTasks(beginning, getEnd())) {
 				if (!task.internalIsFloatingScheduledDate() && !task.isCompleted()) {
 					children.add(task);
 				}
 			}
 
 			// if not scheduled or due in future, and is active, place in today bin
-			AbstractTask activeTask = activityManager.getActiveTask();
+			ITask activeTask = activityManager.getActiveTask();
 			if (activeTask != null && !children.contains(activeTask)) {
-				Set<AbstractTask> futureScheduled = activityManager.getScheduledTasks(getStart(), end);
-				for (AbstractTask task : activityManager.getDueTasks(getStart(), end)) {
+				Set<ITask> futureScheduled = activityManager.getScheduledTasks(getStart(), end);
+				for (ITask task : activityManager.getDueTasks(getStart(), end)) {
 					if (activityManager.isOwnedByUser(task)) {
 						futureScheduled.add(task);
 					}
@@ -218,7 +217,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 			}
 		} else if (isFuture()) {
 			children.addAll(activityManager.getScheduledTasks(getStart(), getEnd()));
-			for (AbstractTask task : activityManager.getDueTasks(getStart(), getEnd())) {
+			for (ITask task : activityManager.getDueTasks(getStart(), getEnd())) {
 				if (activityManager.isOwnedByUser(task)) {
 					children.add(task);
 				}
@@ -230,7 +229,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	@Override
-	public Collection<AbstractTask> getChildrenInternal() {
+	public Collection<ITask> getChildrenInternal() {
 		return getChildren();
 	}
 

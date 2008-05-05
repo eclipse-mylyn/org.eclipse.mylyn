@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -32,8 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalize
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -230,7 +231,7 @@ public class TaskListManager {
 	 * @deprecated
 	 */
 	@Deprecated
-	public AbstractTask getActiveTask() {
+	public ITask getActiveTask() {
 		return TasksUi.getTaskActivityManager().getActiveTask();
 	}
 
@@ -280,7 +281,7 @@ public class TaskListManager {
 	 * @deprecated
 	 */
 	@Deprecated
-	public void deactivateTask(AbstractTask task) {
+	public void deactivateTask(ITask task) {
 		TasksUi.getTaskActivityManager().deactivateTask(task);
 	}
 

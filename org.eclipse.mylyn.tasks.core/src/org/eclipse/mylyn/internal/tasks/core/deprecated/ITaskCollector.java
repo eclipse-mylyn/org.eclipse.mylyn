@@ -11,7 +11,8 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
@@ -24,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 @Deprecated
 public interface ITaskCollector {
 
-	public void accept(AbstractTask task);
+	public void accept(ITask task);
 
 	public void accept(RepositoryTaskData taskData) throws CoreException;
 

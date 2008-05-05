@@ -12,8 +12,9 @@ package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IEditorInput;
@@ -33,14 +34,14 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private static final int MAX_LABEL_LENGTH = 60;
 
-	private final AbstractTask task;
+	private final ITask task;
 
 	private final TaskRepository taskRepository;
 
 	private Object data;
 
 	/**
-	 * @since 2.0
+	 * @since 3.0
 	 */
 	@Deprecated
 	public TaskEditorInput(AbstractTask task, boolean newTask) {
@@ -50,7 +51,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	/**
 	 * @since 3.0
 	 */
-	public TaskEditorInput(TaskRepository taskRepository, AbstractTask task) {
+	public TaskEditorInput(TaskRepository taskRepository, ITask task) {
 		Assert.isNotNull(taskRepository);
 		Assert.isNotNull(task);
 		this.taskRepository = taskRepository;
@@ -145,8 +146,10 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	/**
 	 * Returns the task if the task is in the task list; returns <code>null</code> otherwise.
+	 * 
+	 * @since 3.0
 	 */
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 

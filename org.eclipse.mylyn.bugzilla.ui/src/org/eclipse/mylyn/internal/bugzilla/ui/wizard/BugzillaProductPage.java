@@ -46,13 +46,14 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
@@ -350,7 +351,7 @@ public class BugzillaProductPage extends WizardPage {
 			} else {
 				if (element instanceof IAdaptable) {
 					IAdaptable adaptable = (IAdaptable) element;
-					AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
+					ITask task = (ITask) adaptable.getAdapter(AbstractTask.class);
 					if (task instanceof BugzillaTask) {
 						BugzillaTask bugzillaTask = (BugzillaTask) task;
 						if (bugzillaTask.getProduct() != null) {

@@ -36,6 +36,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -55,13 +57,12 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -143,7 +144,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		public void done(SubmitJobEvent event) {
 			final SubmitJob job = event.getJob();
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				private void openNewTask(AbstractTask newTask) {
+
+				private void openNewTask(ITask newTask) {
 					AbstractTaskContainer parent = null;
 					if (actionPart != null) {
 						parent = actionPart.getCategory();
@@ -188,11 +190,11 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	private class TaskListChangeListener extends TaskListChangeAdapter {
 		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
-			AbstractTask taskToRefresh = null;
+			ITask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (task.equals(taskContainerDelta.getContainer())) {
 					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
-						taskToRefresh = (AbstractTask) taskContainerDelta.getContainer();
+						taskToRefresh = (ITask) taskContainerDelta.getContainer();
 						break;
 					}
 				}
@@ -279,7 +281,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private SynchronizeEditorAction synchronizeEditorAction;
 
-	private AbstractTask task;
+	private ITask task;
 
 	private TaskData taskData;
 
@@ -580,7 +582,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		toolBarManager.add(synchronizeEditorAction);
 
 		if (taskRepository != null && !taskData.isNew()) {
-			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((AbstractTaskContainer) task));
+			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((ITaskElement) task));
 			if (clearOutgoingAction.isEnabled()) {
 				toolBarManager.add(clearOutgoingAction);
 			}
@@ -667,7 +669,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		return lastSelection;
 	}
 
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 

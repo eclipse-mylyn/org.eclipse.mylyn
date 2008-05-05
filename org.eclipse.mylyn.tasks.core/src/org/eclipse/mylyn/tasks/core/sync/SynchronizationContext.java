@@ -10,7 +10,7 @@ package org.eclipse.mylyn.tasks.core.sync;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -23,9 +23,9 @@ public class SynchronizationContext {
 
 	public boolean performQueries;
 
-	public Set<AbstractTask> tasks;
+	public Set<ITask> tasks;
 
-	public Set<AbstractTask> changedTasks;
+	public Set<ITask> changedTasks;
 
 	public TaskRepository taskRepository;
 

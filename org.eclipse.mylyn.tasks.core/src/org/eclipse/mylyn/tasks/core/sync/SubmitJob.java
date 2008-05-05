@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Steffen Pingel
@@ -85,6 +85,6 @@ public abstract class SubmitJob extends TaskJob {
 		}
 	}
 
-	public abstract AbstractTask getTask();
+	public abstract ITask getTask();
 
 }

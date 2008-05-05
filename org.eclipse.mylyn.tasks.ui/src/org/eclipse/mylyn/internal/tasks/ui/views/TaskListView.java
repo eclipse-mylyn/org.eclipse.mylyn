@@ -53,9 +53,14 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
@@ -94,15 +99,12 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
@@ -328,8 +330,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
 		public void handleEvent(Event event) {
-			if (event.item.getData() instanceof AbstractTaskContainer
-					&& !(event.item.getData() instanceof AbstractTask)) {
+			if (event.item.getData() instanceof ITaskElement && !(event.item.getData() instanceof ITask)) {
 				Scrollable scrollable = (Scrollable) event.widget;
 				GC gc = event.gc;
 
@@ -402,7 +403,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		@Override
-		public void taskActivated(final AbstractTask task) {
+		public void taskActivated(final ITask task) {
 			if (task != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -416,7 +417,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		@Override
-		public void taskDeactivated(final AbstractTask task) {
+		public void taskDeactivated(final ITask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					refreshJob.refreshTask(task);
@@ -598,7 +599,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void updateDescription() {
-		AbstractTask task = TasksUi.getTaskActivityManager().getActiveTask();
+		ITask task = TasksUi.getTaskActivityManager().getActiveTask();
 		if (getSite() == null || getSite().getPage() == null) {
 			return;
 		}
@@ -781,7 +782,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				Object selectedNode = ((Tree) e.widget).getItem(new Point(e.x + 70, e.y));
 				if (selectedNode instanceof TreeItem) {
 					Object selectedObject = ((TreeItem) selectedNode).getData();
-					if (selectedObject instanceof AbstractTask) {
+					if (selectedObject instanceof ITask) {
 						if (e.x > activationImageOffset && e.x < activationImageOffset + 13) {
 							taskListCellModifier.toggleTaskActivation((TreeItem) selectedNode);
 						}
@@ -851,9 +852,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-				if (selectedObject instanceof AbstractTaskContainer) {
-					updateActionEnablement(renameAction, (AbstractTaskContainer) selectedObject);
-					updateActionEnablement(deleteAction, (AbstractTaskContainer) selectedObject);
+				if (selectedObject instanceof ITaskElement) {
+					updateActionEnablement(renameAction, (ITaskElement) selectedObject);
+					updateActionEnablement(deleteAction, (ITaskElement) selectedObject);
 				}
 			}
 		});
@@ -1035,7 +1036,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				AbstractTask task = TasksUi.getTaskActivityManager().getActiveTask();
+				ITask task = TasksUi.getTaskActivityManager().getActiveTask();
 				if (task != null) {
 					getViewer().expandToLevel(task, 0);
 				}
@@ -1105,24 +1106,24 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	 */
 	private void fillContextMenu(final IMenuManager manager) {
 		updateDrillDownActions();
-		final AbstractTaskContainer element;
+		final ITaskElement element;
 
 		final Object firstSelectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-		if (firstSelectedObject instanceof AbstractTaskContainer) {
-			element = (AbstractTaskContainer) firstSelectedObject;
+		if (firstSelectedObject instanceof ITaskElement) {
+			element = (ITaskElement) firstSelectedObject;
 		} else {
 			element = null;
 		}
-		final List<AbstractTaskContainer> selectedElements = getSelectedTaskContainers();
+		final List<ITaskElement> selectedElements = getSelectedTaskContainers();
 		AbstractTask task = null;
-		if (element instanceof AbstractTask) {
+		if (element instanceof ITask) {
 			task = (AbstractTask) element;
 		}
 
 		manager.add(new Separator(ID_SEPARATOR_NEW));
 		manager.add(new Separator());
 
-		if (element instanceof AbstractTask) {
+		if (element instanceof ITask) {
 			addAction(openAction, manager, element);
 		}
 		addAction(openWithBrowser, manager, element);
@@ -1168,11 +1169,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 		// This should also test for null, or else nothing to delete!
 		addAction(deleteAction, manager, element);
-		if (!(element instanceof AbstractTask)) {
+		if (!(element instanceof ITask)) {
 			addAction(renameAction, manager, element);
 		}
 
-		if (element != null && !(element instanceof AbstractTask)) {
+		if (element != null && !(element instanceof ITask)) {
 			manager.add(goIntoAction);
 		}
 		if (drilledIntoCategory != null) {
@@ -1181,7 +1182,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator(ID_SEPARATOR_OPERATIONS));
 
-		if (element instanceof AbstractTask) {
+		if (element instanceof ITask) {
 			for (String menuPath : dynamicMenuMap.keySet()) {
 				if (ID_SEPARATOR_CONTEXT.equals(menuPath)) {
 					for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
@@ -1214,24 +1215,24 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator(ID_SEPARATOR_PROPERTIES));
 	}
 
-	public List<AbstractTaskContainer> getSelectedTaskContainers() {
-		List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
+	public List<ITaskElement> getSelectedTaskContainers() {
+		List<ITaskElement> selectedElements = new ArrayList<ITaskElement>();
 		for (Iterator<?> i = ((IStructuredSelection) getViewer().getSelection()).iterator(); i.hasNext();) {
 			Object object = i.next();
-			if (object instanceof AbstractTaskContainer) {
-				selectedElements.add((AbstractTaskContainer) object);
+			if (object instanceof ITaskElement) {
+				selectedElements.add((ITaskElement) object);
 			}
 		}
 		return selectedElements;
 	}
 
-	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, AbstractTaskContainer element) {
-		if ((element instanceof AbstractTask) || element instanceof AbstractRepositoryQuery) {
+	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskElement element) {
+		if ((element instanceof ITask) || element instanceof AbstractRepositoryQuery) {
 			manager.add(menuToAdd);
 		}
 	}
 
-	private void addAction(Action action, IMenuManager manager, AbstractTaskContainer element) {
+	private void addAction(Action action, IMenuManager manager, ITaskElement element) {
 		manager.add(action);
 		if (element != null) {
 			updateActionEnablement(action, element);
@@ -1239,10 +1240,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	// FIXME move the enablement to the action classes
-	private void updateActionEnablement(Action action, AbstractTaskContainer element) {
-		if (element instanceof AbstractTask) {
+	private void updateActionEnablement(Action action, ITaskElement element) {
+		if (element instanceof ITask) {
 			if (action instanceof OpenWithBrowserAction) {
-				if (((AbstractTask) element).hasValidUrl()) {
+				if (((ITask) element).hasValidUrl()) {
 					action.setEnabled(true);
 				} else {
 					action.setEnabled(false);
@@ -1441,7 +1442,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			Object element = structuredSelection.getFirstElement();
-			if (element instanceof AbstractTaskContainer) {
+			if (element instanceof ITaskElement) {
 				drilledIntoCategory = (AbstractTaskContainer) element;
 				drillDownAdapter.goInto();
 				IActionBars bars = getViewSite().getActionBars();
@@ -1470,7 +1471,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			Object element = structuredSelection.getFirstElement();
-			if (element instanceof AbstractTask) {
+			if (element instanceof ITask) {
 				return (AbstractTask) structuredSelection.getFirstElement();
 			}
 		}
@@ -1484,7 +1485,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				return null;
 			}
 			Object element = structuredSelection.getFirstElement();
-			if (element instanceof AbstractTask) {
+			if (element instanceof ITask) {
 				return (AbstractTask) structuredSelection.getFirstElement();
 			}
 		}
@@ -1512,7 +1513,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		return filteredTree;
 	}
 
-	public void selectedAndFocusTask(AbstractTask task) {
+	public void selectedAndFocusTask(ITask task) {
 		if (task == null || getViewer().getControl().isDisposed()) {
 			return;
 		}
@@ -1525,10 +1526,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private void saveSelection() {
 		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
 		if (!selection.isEmpty()) {
-			if (selection.getFirstElement() instanceof AbstractTaskContainer) {
+			if (selection.getFirstElement() instanceof ITaskElement) {
 				// make sure the new selection is inserted at the end of the
 				// list
-				String handle = ((AbstractTaskContainer) selection.getFirstElement()).getHandleIdentifier();
+				String handle = ((ITaskElement) selection.getFirstElement()).getHandleIdentifier();
 				lastSelectionByTaskHandle.remove(handle);
 				lastSelectionByTaskHandle.put(handle, selection);
 
@@ -1541,7 +1542,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
-	private IStructuredSelection restoreSelection(AbstractTaskContainer task) {
+	private IStructuredSelection restoreSelection(ITaskElement task) {
 		IStructuredSelection selection = lastSelectionByTaskHandle.get(task.getHandleIdentifier());
 		if (selection != null) {
 			return selection;
@@ -1643,8 +1644,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private void jumpToEditorTask(IEditorPart editor) {
 		IEditorInput input = editor.getEditorInput();
 		if (input instanceof TaskEditorInput) {
-			AbstractTask task = ((TaskEditorInput) input).getTask();
-			AbstractTask selected = getSelectedTask();
+			ITask task = ((TaskEditorInput) input).getTask();
+			ITask selected = getSelectedTask();
 			if (selected == null || !selected.equals(task)) {
 				selectedAndFocusTask(task);
 			}

@@ -50,7 +50,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.util.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -92,7 +92,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private IHyperlinkListener messageHyperLinkListener;
 
-	private AbstractTask task;
+	private ITask task;
 
 	private TaskEditorInput taskEditorInput;
 
@@ -572,7 +572,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
-	private void updateHeaderLabel(AbstractTask task) {
+	private void updateHeaderLabel(ITask task) {
 		if (task instanceof LocalTask) {
 			getHeaderForm().getForm().setText("Task: " + task.getSummary());
 		} else {

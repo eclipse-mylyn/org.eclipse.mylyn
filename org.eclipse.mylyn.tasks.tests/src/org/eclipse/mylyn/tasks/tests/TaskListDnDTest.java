@@ -17,7 +17,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListDropAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Rob Elves
@@ -65,7 +65,7 @@ public class TaskListDnDTest extends TestCase {
 		String urlData = url + "\n" + title;
 
 		dropAdapter.performDrop(urlData);
-		Collection<AbstractTask> tasks = manager.getTaskList().getDefaultCategory().getChildren();
+		Collection<ITask> tasks = manager.getTaskList().getDefaultCategory().getChildren();
 		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
 		assertEquals(url, tasks.iterator().next().getUrl());

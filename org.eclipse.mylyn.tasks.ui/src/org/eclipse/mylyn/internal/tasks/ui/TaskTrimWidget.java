@@ -30,9 +30,9 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
@@ -68,7 +68,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Composite composite = null;
 
-	private AbstractTask activeTask = null;
+	private ITask activeTask = null;
 
 	private MenuManager menuManager = null;
 
@@ -85,13 +85,13 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
 
 		@Override
-		public void taskActivated(AbstractTask task) {
+		public void taskActivated(ITask task) {
 			activeTask = task;
 			indicateActiveTask();
 		}
 
 		@Override
-		public void taskDeactivated(AbstractTask task) {
+		public void taskDeactivated(ITask task) {
 			activeTask = null;
 			indicateNoActiveTask();
 		}
@@ -283,7 +283,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
 				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
 						menuPath)) {
-					List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
+					List<ITaskElement> selectedElements = new ArrayList<ITaskElement>();
 					selectedElements.add(activeTask);
 					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 					if (subMenuManager != null) {

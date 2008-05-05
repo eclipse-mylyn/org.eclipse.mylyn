@@ -11,9 +11,15 @@ package org.eclipse.mylyn.tasks.core;
 import java.util.Collection;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+
 /**
  * @author Steffen Pingel
  * @author Robert Elves
+ * @author Mik Kersten
  * @since 3.0
  */
 public interface ITaskList {
@@ -25,7 +31,7 @@ public interface ITaskList {
 	/**
 	 * Add orphaned task to the task list
 	 */
-	public abstract void addTask(AbstractTask task) throws IllegalArgumentException;
+	public abstract void addTask(ITask task) throws IllegalArgumentException;
 
 	/**
 	 * Precondition: {@code container} already exists in tasklist (be it a parent task, category, or query) If the
@@ -33,11 +39,11 @@ public interface ITaskList {
 	 * container.
 	 * 
 	 * @param task
-	 *            to be added
+	 * 		to be added
 	 * @param container
-	 *            task container, query or parent task must not be null
+	 * 		task container, query or parent task must not be null
 	 */
-	public abstract boolean addTask(AbstractTask task, AbstractTaskContainer parentContainer);
+	public abstract boolean addTask(ITask task, AbstractTaskContainer parentContainer);
 
 	public abstract void deleteCategory(AbstractTaskCategory category);
 
@@ -50,7 +56,7 @@ public interface ITaskList {
 	 * 
 	 * Currently subtasks are not deleted but rather are rather potentially orphaned
 	 */
-	public abstract void deleteTask(AbstractTask task);
+	public abstract void deleteTask(ITask task);
 
 	public abstract Collection<AbstractTask> getAllTasks();
 
@@ -74,15 +80,15 @@ public interface ITaskList {
 	/**
 	 * @param task
 	 * @param content
-	 *            true if the content for the task (e.g. repository task data) has changed
+	 * 		true if the content for the task (e.g. repository task data) has changed
 	 */
-	public abstract void notifyTaskChanged(AbstractTask task, boolean content);
+	public abstract void notifyTaskChanged(ITask task, boolean content);
 
 	public abstract void removeChangeListener(ITaskListChangeListener listener);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void removeFromContainer(AbstractTaskContainer container, AbstractTask task);
+	public abstract void removeFromContainer(AbstractTaskContainer container, ITask task);
 
 }

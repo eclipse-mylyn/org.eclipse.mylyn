@@ -9,8 +9,9 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -27,7 +28,7 @@ public class ShowInTaskListAction extends BaseSelectionListenerAction {
 		IStructuredSelection struSel = getStructuredSelection();
 		if (!struSel.isEmpty()) {
 			Object element = struSel.getFirstElement();
-			if (element instanceof AbstractTask) {
+			if (element instanceof ITask) {
 				TaskListView.openInActivePerspective();
 				TaskListView.getFromActivePerspective().selectedAndFocusTask((AbstractTask) element);
 			}

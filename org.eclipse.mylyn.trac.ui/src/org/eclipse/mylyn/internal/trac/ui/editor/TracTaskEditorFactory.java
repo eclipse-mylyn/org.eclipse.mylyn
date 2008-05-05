@@ -14,7 +14,7 @@ import org.eclipse.mylyn.internal.tasks.ui.deprecated.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
@@ -32,7 +32,7 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 	private static final String TITLE = "Browser";
 
 	@Override
-	public boolean canCreateEditorFor(AbstractTask task) {
+	public boolean canCreateEditorFor(ITask task) {
 		return (task instanceof TracTask);
 	}
 
@@ -60,8 +60,8 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 				return new TracTaskEditor(parentEditor);
 			}
 		} else if (editorInput instanceof TaskEditorInput) {
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-					TracCorePlugin.REPOSITORY_KIND, ((TaskEditorInput) editorInput).getTask().getRepositoryUrl());
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
+					((TaskEditorInput) editorInput).getTask().getRepositoryUrl());
 			if (TracRepositoryConnector.hasRichEditor(repository)) {
 				// the editor is actually initialized with a RepositoryTaskEditorInput, see bug 193430
 				return new TracTaskEditor(parentEditor);
@@ -73,7 +73,7 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 	}
 
 	@Override
-	public IEditorInput createEditorInput(AbstractTask task) {
+	public IEditorInput createEditorInput(ITask task) {
 		TracTask tracTask = (TracTask) task;
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
 				tracTask.getRepositoryUrl());

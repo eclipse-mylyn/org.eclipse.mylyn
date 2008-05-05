@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 
 /**
  * Used for creating tasks from repository task data.

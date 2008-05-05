@@ -5,10 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * A container that stores tasks from a specific repository.
@@ -40,10 +41,10 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	@Override
 	public String getPriority() {
 		if (super.isEmpty()) {
-			return PriorityLevel.P1.toString();
+			return AbstractTask.PriorityLevel.P1.toString();
 		}
 		String highestPriority = PriorityLevel.P5.toString();
-		for (AbstractTask hit : getChildren()) {
+		for (ITask hit : getChildren()) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {
 				highestPriority = hit.getPriority();
 			}

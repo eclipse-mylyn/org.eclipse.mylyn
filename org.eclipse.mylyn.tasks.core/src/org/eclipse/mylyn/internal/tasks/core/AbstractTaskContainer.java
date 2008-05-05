@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -15,8 +15,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * Top-level Task List element that can contain other Task List elements.
@@ -25,11 +26,11 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
  * @since 2.0
  */
 //API 3.0 move to internal package
-public abstract class AbstractTaskContainer extends PlatformObject implements Comparable<AbstractTaskContainer> {
+public abstract class AbstractTaskContainer extends PlatformObject implements ITaskElement {
 
 	private String handleIdentifier = "";
 
-	private final Collection<AbstractTask> children = new CopyOnWriteArrayList<AbstractTask>();
+	private final Collection<ITask> children = new CopyOnWriteArrayList<ITask>();
 
 	/**
 	 * Optional URL corresponding to the web resource associated with this container.
@@ -55,7 +56,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * @return
 	 * @since 3.0
 	 */
-	public boolean internalRemoveChild(AbstractTask task) {
+	public boolean internalRemoveChild(ITask task) {
 		return children.remove(task);
 	}
 
@@ -66,7 +67,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * 
 	 * @since 3.0
 	 */
-	public Collection<AbstractTask> getChildren() {
+	public Collection<ITask> getChildren() {
 		return Collections.unmodifiableCollection(children);
 	}
 
@@ -77,7 +78,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * 
 	 * @since 3.0
 	 */
-	public Collection<AbstractTask> getChildrenInternal() {
+	public Collection<ITask> getChildrenInternal() {
 		return Collections.unmodifiableCollection(children);
 	}
 
@@ -88,19 +89,18 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 */
 	public boolean contains(String handle) {
 		Assert.isNotNull(handle);
-		return containsHelper(getChildrenInternal(), handle, new HashSet<AbstractTaskContainer>());
+		return containsHelper(getChildrenInternal(), handle, new HashSet<ITaskElement>());
 	}
 
-	private boolean containsHelper(Collection<AbstractTask> children, String handle,
-			Set<AbstractTaskContainer> visitedContainers) {
-		for (AbstractTask child : children) {
+	private boolean containsHelper(Collection<ITask> children, String handle, Set<ITaskElement> visitedContainers) {
+		for (ITask child : children) {
 			if (visitedContainers.contains(child)) {
 				continue;
 			}
 			visitedContainers.add(child);
 
 			if (handle.equals(child.getHandleIdentifier())
-					|| containsHelper(child.getChildrenInternal(), handle, visitedContainers)) {
+					|| containsHelper(((AbstractTask) child).getChildrenInternal(), handle, visitedContainers)) {
 				return true;
 			}
 		}
@@ -145,7 +145,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 			return false;
 		}
 		if (object instanceof AbstractTaskContainer) {
-			AbstractTaskContainer compare = (AbstractTaskContainer) object;
+			ITaskElement compare = (ITaskElement) object;
 			return this.getHandleIdentifier().equals(compare.getHandleIdentifier());
 		} else {
 			return false;
@@ -158,12 +158,12 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	}
 
 	public String getPriority() {
-		String highestPriority = PriorityLevel.P5.toString();
-		Collection<AbstractTask> tasks = getChildren();
+		String highestPriority = AbstractTask.PriorityLevel.P5.toString();
+		Collection<ITask> tasks = getChildren();
 		if (tasks.isEmpty()) {
 			return PriorityLevel.P1.toString();
 		}
-		for (AbstractTask task : tasks) {
+		for (ITask task : tasks) {
 			if (highestPriority.compareTo(task.getPriority()) > 0) {
 				highestPriority = task.getPriority();
 			}

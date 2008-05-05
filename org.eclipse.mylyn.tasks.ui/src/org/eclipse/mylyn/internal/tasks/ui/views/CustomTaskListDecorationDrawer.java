@@ -10,15 +10,16 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -74,7 +75,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 	public void handleEvent(Event event) {
 		Object data = event.item.getData();
 		Image activationImage = null;
-		if (data instanceof AbstractTask) {
+		if (data instanceof ITask) {
 			AbstractTask task = (AbstractTask) data;
 			if (task.isActive()) {
 				activationImage = taskActive;
@@ -84,15 +85,15 @@ class CustomTaskListDecorationDrawer implements Listener {
 				activationImage = taskInactive;
 			}
 		}
-		if (data instanceof AbstractTaskContainer) {
+		if (data instanceof ITaskElement) {
 			switch (event.type) {
 			case SWT.EraseItem: {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
 				if (!this.taskListView.synchronizationOverlaid) {
-					if (data instanceof AbstractTaskContainer) {
-						drawSyncronizationImage((AbstractTaskContainer) data, event);
+					if (data instanceof ITaskElement) {
+						drawSyncronizationImage((ITaskElement) data, event);
 					}
 				}
 
@@ -119,8 +120,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
-				if (data instanceof AbstractTaskContainer) {
-					drawSyncronizationImage((AbstractTaskContainer) data, event);
+				if (data instanceof ITaskElement) {
+					drawSyncronizationImage((ITaskElement) data, event);
 				}
 				if (tweakClipping) {
 					event.gc.setClipping(clipping);
@@ -131,7 +132,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private void drawSyncronizationImage(AbstractTaskContainer element, Event event) {
+	private void drawSyncronizationImage(ITaskElement element, Event event) {
 		Image image = null;
 		int offsetX = 6;
 		int offsetY = (event.height / 2) - 5;
@@ -140,7 +141,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 			offsetY += 2;
 		}
 		if (element != null) {
-			if (element instanceof AbstractTask) {
+			if (element instanceof ITask) {
 				image = CommonImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element,
 						taskListView.synchronizationOverlaid));
 			} else {
@@ -183,7 +184,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private boolean hideDecorationOnContainer(AbstractTaskContainer element, TreeItem treeItem) {
+	private boolean hideDecorationOnContainer(ITaskElement element, TreeItem treeItem) {
 		if (element instanceof UnmatchedTaskContainer) {
 			if (!taskListView.isFocusedMode()) {
 				return false;

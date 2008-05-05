@@ -13,6 +13,8 @@ import java.util.Date;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -80,6 +82,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Utility method for construction of connector specific task object.
 	 * 
 	 * @return instance of AbstractTask
+	 * @since 3.0
 	 */
 	public abstract AbstractTask createTask(String repositoryUrl, String id, String summary);
 
@@ -208,14 +211,14 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
-	public boolean hasChanged(AbstractTask task, TaskData taskData) {
+	public boolean hasChanged(ITask task, TaskData taskData) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @since 3.0
 	 */
-	public void updateTaskFromTaskData(TaskRepository repository, AbstractTask task, TaskData taskData) {
+	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
 		throw new UnsupportedOperationException();
 	}
 

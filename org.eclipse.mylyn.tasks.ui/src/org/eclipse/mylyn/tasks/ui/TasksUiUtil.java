@@ -38,8 +38,12 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
@@ -52,12 +56,10 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -94,7 +96,10 @@ public class TasksUiUtil {
 
 	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
-	public static void closeEditorInActivePage(AbstractTask task, boolean save) {
+	/**
+	 * @since 3.0
+	 */
+	public static void closeEditorInActivePage(ITask task, boolean save) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
 			return;
@@ -240,8 +245,8 @@ public class TasksUiUtil {
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			return TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(), query.getRepositoryUrl());
-		} else if (element instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) element;
+		} else if (element instanceof ITask) {
+			ITask task = (ITask) element;
 			return TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		} else if (element instanceof IResource) {
 			IResource resource = (IResource) element;
@@ -252,9 +257,9 @@ public class TasksUiUtil {
 			if (resource != null) {
 				return TasksUiPlugin.getDefault().getRepositoryForResource(resource);
 			} else {
-				AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
+				ITask task = (ITask) adaptable.getAdapter(AbstractTask.class);
 				if (task != null) {
-					AbstractTask rtask = task;
+					ITask rtask = task;
 					return TasksUi.getRepositoryManager().getRepository(rtask.getConnectorKind(),
 							rtask.getRepositoryUrl());
 				}
@@ -266,10 +271,10 @@ public class TasksUiUtil {
 		return null;
 	}
 
-	private static String getTaskEditorId(final AbstractTask task) {
+	private static String getTaskEditorId(final ITask task) {
 		String taskEditorId = TaskEditor.ID_EDITOR;
 		if (task != null) {
-			AbstractTask repositoryTask = task;
+			ITask repositoryTask = task;
 			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getConnectorUi(repositoryTask.getConnectorKind());
 			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
 			if (customTaskEditorId != null) {
@@ -281,6 +286,7 @@ public class TasksUiUtil {
 
 	/**
 	 * @deprecated use {@link #openTaskAndRefresh(AbstractTask)} instead
+	 * @since 3.0
 	 */
 	@Deprecated
 	public static void openEditor(final AbstractTask task, boolean newTask) {
@@ -291,6 +297,7 @@ public class TasksUiUtil {
 	 * Set asyncExec false for testing purposes.
 	 * 
 	 * @deprecated use {@link #openTaskAndRefresh(AbstractTask)} instead
+	 * @since 3.0
 	 */
 	@Deprecated
 	public static void openEditor(final AbstractTask task, boolean asyncExec, final boolean newTask) {
@@ -372,6 +379,7 @@ public class TasksUiUtil {
 
 	/**
 	 * @deprecated use {@link #openTask(AbstractTask)} instead
+	 * @since 3.0
 	 */
 	@Deprecated
 	public static void openEditor(AbstractTask task, String pageId) {
@@ -480,7 +488,7 @@ public class TasksUiUtil {
 	/**
 	 * @since 3.0
 	 */
-	public static boolean openTaskInBackground(AbstractTask task, boolean bringToTop) {
+	public static boolean openTaskInBackground(ITask task, boolean bringToTop) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IEditorPart activeEditor = null;
@@ -510,7 +518,7 @@ public class TasksUiUtil {
 	/**
 	 * @since 3.0
 	 */
-	public static boolean openTask(AbstractTask task) {
+	public static boolean openTask(ITask task) {
 		Assert.isNotNull(task);
 
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -661,7 +669,7 @@ public class TasksUiUtil {
 	/**
 	 * @since 3.0
 	 */
-	public static boolean openTaskAndRefresh(final AbstractTask task) {
+	public static boolean openTaskAndRefresh(final ITask task) {
 		if (openTask(task)) {
 			Job updateTaskData = new Job("Refresh Task") {
 				@Override
@@ -747,16 +755,17 @@ public class TasksUiUtil {
 
 	/**
 	 * @deprecated Use {@link TasksUiInternal#refreshAndOpenTaskListElement(AbstractTaskContainer)} instead
+	 * @since 3.0
 	 */
 	@Deprecated
-	public static void refreshAndOpenTaskListElement(AbstractTaskContainer element) {
+	public static void refreshAndOpenTaskListElement(ITaskElement element) {
 		TasksUiInternal.refreshAndOpenTaskListElement(element);
 	}
 
 	/**
 	 * If task is already open and has incoming, must force refresh in place
 	 */
-	private static boolean refreshIfOpen(AbstractTask task, IEditorInput editorInput) {
+	private static boolean refreshIfOpen(ITask task, IEditorInput editorInput) {
 		if (task != null) {
 			if (task.getSynchronizationState() == SynchronizationState.INCOMING
 					|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {

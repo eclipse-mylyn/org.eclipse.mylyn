@@ -20,10 +20,11 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -160,7 +161,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				}
 			}
 
-			for (AbstractTask task : tasks) {
+			for (ITask task : tasks) {
 				addAddresses(task, addressSet);
 			}
 		}
@@ -168,7 +169,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		return addressSet;
 	}
 
-	private void addAddresses(AbstractTask task, Set<String> addressSet) {
+	private void addAddresses(ITask task, Set<String> addressSet) {
 		// TODO: Creator, and CC should be stored on AbstractTask
 
 		addAddress(task.getOwner(), addressSet);

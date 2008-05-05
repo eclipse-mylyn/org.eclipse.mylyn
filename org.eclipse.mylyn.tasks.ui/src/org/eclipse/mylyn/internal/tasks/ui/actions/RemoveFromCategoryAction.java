@@ -12,10 +12,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -41,7 +42,7 @@ public class RemoveFromCategoryAction extends Action {
 	public void run() {
 		ISelection selection = view.getViewer().getSelection();
 		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-			if (selectedObject instanceof AbstractTask) {
+			if (selectedObject instanceof ITask) {
 				AbstractTask task = (AbstractTask) selectedObject;
 				AbstractTaskCategory category = TaskCategory.getParentTaskCategory(task);
 				if (category != null) {

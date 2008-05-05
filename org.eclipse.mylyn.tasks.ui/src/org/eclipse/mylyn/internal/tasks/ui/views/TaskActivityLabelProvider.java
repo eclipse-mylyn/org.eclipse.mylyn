@@ -24,11 +24,11 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -78,7 +78,7 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof ScheduledTaskDelegate) {
 			ScheduledTaskDelegate activityDelegate = (ScheduledTaskDelegate) element;
-			AbstractTask task = activityDelegate.getCorrespondingTask();
+			ITask task = activityDelegate.getCorrespondingTask();
 			switch (columnIndex) {
 			case 2:
 				if (task != null) {
@@ -138,8 +138,8 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 			case 4:
 				long estimated = 0;
 				for (Object o : contentProvider.getChildren(taskCategory)) {
-					if (o instanceof AbstractTask) {
-						estimated += ((AbstractTask) o).getEstimatedTimeHours();
+					if (o instanceof ITask) {
+						estimated += ((ITask) o).getEstimatedTimeHours();
 					}
 				}
 				return estimated + UNITS_HOURS;
@@ -150,7 +150,7 @@ public class TaskActivityLabelProvider extends TaskElementLabelProvider implemen
 
 	@Override
 	public Color getBackground(Object element) {
-		if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
+		if (element instanceof ITaskElement && !(element instanceof ITask)) {
 			return categoryBackgroundColor;
 		} else {
 			return super.getBackground(element);

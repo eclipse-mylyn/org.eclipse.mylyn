@@ -27,6 +27,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
@@ -35,11 +38,9 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.QueryHitCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 
@@ -121,7 +122,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public boolean updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
+	public boolean updateTaskFromTaskData(TaskRepository repository, ITask repositoryTask,
 			RepositoryTaskData taskData) {
 		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
 		if (taskData != null) {
@@ -257,7 +258,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask, AbstractTask newTask) {
+	public boolean updateTaskFromQueryHit(TaskRepository repository, ITask existingTask, AbstractTask newTask) {
 //		// these properties are not provided by Bugzilla queries
 //		newTask.setCompleted(existingTask.isCompleted());
 //		//	newTask.setCompletionDate(existingTask.getCompletionDate());
@@ -298,7 +299,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
 
 			if (repository.getSynchronizationTimeStamp() == null) {
-				for (AbstractTask task : event.tasks) {
+				for (ITask task : event.tasks) {
 					task.setStale(true);
 				}
 				return;
@@ -328,12 +329,12 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 //			System.err.println(">>>> markStale "+tasks.size());
 //			queryForChanged(repository, changedTasks, urlQueryString);
 			
-			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
-			Iterator<AbstractTask> itr = event.tasks.iterator();
+			Set<ITask> changedTasks = new HashSet<ITask>();
+			Iterator<ITask> itr = event.tasks.iterator();
 			int queryCounter = 0;
-			Set<AbstractTask> checking = new HashSet<AbstractTask>();
+			Set<ITask> checking = new HashSet<ITask>();
 			while (itr.hasNext()) {
-				AbstractTask task = itr.next();
+				ITask task = itr.next();
 				checking.add(task);
 				queryCounter++;
 				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
@@ -351,7 +352,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 				}
 			}
 			
-			for (AbstractTask task : event.tasks) {
+			for (ITask task : event.tasks) {
 				if (changedTasks.contains(task)) {
 					task.setStale(true);
 				}
@@ -368,7 +369,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 		}
 	}
 	
-	private void queryForChanged(final TaskRepository repository, Set<AbstractTask> changedTasks, String urlQueryString)
+	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString)
 			throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
 

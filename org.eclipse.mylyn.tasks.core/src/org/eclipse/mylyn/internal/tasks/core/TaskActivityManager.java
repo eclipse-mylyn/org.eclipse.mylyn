@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 
 /**
@@ -60,9 +60,9 @@ public class TaskActivityManager {
 
 	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
 
-	private final SortedMap<Calendar, Set<AbstractTask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
+	private final SortedMap<Calendar, Set<ITask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<ITask>>());
 
-	private final SortedMap<Calendar, Set<AbstractTask>> dueTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
+	private final SortedMap<Calendar, Set<ITask>> dueTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<ITask>>());
 
 	// Map of Calendar (hour) to Tasks active during that hour
 	private final SortedMap<Calendar, Set<AbstractTask>> activeTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<AbstractTask>>());
@@ -90,7 +90,7 @@ public class TaskActivityManager {
 
 	private final TaskList taskList;
 
-	private AbstractTask activeTask;
+	private ITask activeTask;
 
 	private final TaskRepositoryManager repositoryManager;
 
@@ -186,7 +186,7 @@ public class TaskActivityManager {
 		}
 	}
 
-	public void removeElapsedTime(AbstractTask task, Date startDate, Date endDate) {
+	public void removeElapsedTime(ITask task, Date startDate, Date endDate) {
 		Assert.isNotNull(task);
 		Assert.isNotNull(startDate);
 		Assert.isNotNull(endDate);
@@ -271,54 +271,54 @@ public class TaskActivityManager {
 		return newCal;
 	}
 
-	public void addScheduledTask(AbstractTask task) {
+	public void addScheduledTask(ITask task) {
 		Calendar time = TaskActivityUtil.getCalendar();
 		time.setTime(task.getScheduledForDate());
 		snapToStartOfHour(time);
-		Set<AbstractTask> tasks = scheduledTasks.get(time);
+		Set<ITask> tasks = scheduledTasks.get(time);
 		if (tasks == null) {
-			tasks = new CopyOnWriteArraySet<AbstractTask>();
+			tasks = new CopyOnWriteArraySet<ITask>();
 			scheduledTasks.put(time, tasks);
 		}
 		tasks.add(task);
 	}
 
-	public void removeScheduledTask(AbstractTask task) {
+	public void removeScheduledTask(ITask task) {
 		synchronized (scheduledTasks) {
-			for (Set<AbstractTask> setOfTasks : scheduledTasks.values()) {
+			for (Set<ITask> setOfTasks : scheduledTasks.values()) {
 				setOfTasks.remove(task);
 			}
 		}
 	}
 
-	public void addDueTask(AbstractTask task) {
+	public void addDueTask(ITask task) {
 		Calendar time = TaskActivityUtil.getCalendar();
 		time.setTime(task.getDueDate());
 		snapToStartOfHour(time);
 		synchronized (dueTasks) {
-			Set<AbstractTask> tasks = dueTasks.get(time);
+			Set<ITask> tasks = dueTasks.get(time);
 			if (tasks == null) {
-				tasks = new CopyOnWriteArraySet<AbstractTask>();
+				tasks = new CopyOnWriteArraySet<ITask>();
 				dueTasks.put(time, tasks);
 			}
 			tasks.add(task);
 		}
 	}
 
-	public void removeDueTask(AbstractTask task) {
+	public void removeDueTask(ITask task) {
 		synchronized (dueTasks) {
-			for (Set<AbstractTask> setOfTasks : dueTasks.values()) {
+			for (Set<ITask> setOfTasks : dueTasks.values()) {
 				setOfTasks.remove(task);
 			}
 		}
 	}
 
-	public void activateTask(AbstractTask task) {
+	public void activateTask(ITask task) {
 		activateTask(task, true);
 	}
 
 	@Deprecated
-	public void activateTask(AbstractTask task, boolean addToHistory) {
+	public void activateTask(ITask task, boolean addToHistory) {
 		deactivateAllTasks();
 
 		// notify that a task is about to be activated
@@ -353,7 +353,7 @@ public class TaskActivityManager {
 		}
 	}
 
-	public void deactivateTask(AbstractTask task) {
+	public void deactivateTask(ITask task) {
 		if (task == null) {
 			return;
 		}
@@ -405,22 +405,22 @@ public class TaskActivityManager {
 		return resultingTasks;
 	}
 
-	public Set<AbstractTask> getScheduledTasks(Calendar start, Calendar end) {
-		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
+	public Set<ITask> getScheduledTasks(Calendar start, Calendar end) {
+		Set<ITask> resultingTasks = new HashSet<ITask>();
 		synchronized (scheduledTasks) {
-			SortedMap<Calendar, Set<AbstractTask>> result = scheduledTasks.subMap(start, end);
-			for (Set<AbstractTask> set : result.values()) {
+			SortedMap<Calendar, Set<ITask>> result = scheduledTasks.subMap(start, end);
+			for (Set<ITask> set : result.values()) {
 				resultingTasks.addAll(set);
 			}
 		}
 		return resultingTasks;
 	}
 
-	public Set<AbstractTask> getDueTasks(Calendar start, Calendar end) {
-		Set<AbstractTask> resultingTasks = new HashSet<AbstractTask>();
-		SortedMap<Calendar, Set<AbstractTask>> result = dueTasks.subMap(start, end);
+	public Set<ITask> getDueTasks(Calendar start, Calendar end) {
+		Set<ITask> resultingTasks = new HashSet<ITask>();
+		SortedMap<Calendar, Set<ITask>> result = dueTasks.subMap(start, end);
 		synchronized (dueTasks) {
-			for (Set<AbstractTask> set : result.values()) {
+			for (Set<ITask> set : result.values()) {
 				resultingTasks.addAll(set);
 			}
 		}
@@ -428,7 +428,7 @@ public class TaskActivityManager {
 	}
 
 	/** total elapsed time based on activation history */
-	public long getElapsedTime(AbstractTask task) {
+	public long getElapsedTime(ITask task) {
 		SortedMap<Calendar, Long> activityMap = taskElapsedTimeMap.get(task);
 		return getElapsedTime(activityMap);
 	}
@@ -449,7 +449,7 @@ public class TaskActivityManager {
 	}
 
 	/** total elapsed time based on activation history */
-	public long getElapsedTime(AbstractTask task, Calendar start, Calendar end) {
+	public long getElapsedTime(ITask task, Calendar start, Calendar end) {
 		long result = 0;
 
 		Calendar startRange = snapToStartOfHour(getNewInstance(start));
@@ -494,7 +494,7 @@ public class TaskActivityManager {
 		TaskActivityUtil.snapStartOfDay(cal);
 	}
 
-	public AbstractTask getActiveTask() {
+	public ITask getActiveTask() {
 		return activeTask;
 	}
 
@@ -509,11 +509,11 @@ public class TaskActivityManager {
 		}
 	}
 
-	public void setScheduledFor(AbstractTask task, Date reminderDate) {
+	public void setScheduledFor(ITask task, Date reminderDate) {
 		setScheduledFor(task, reminderDate, false);
 	}
 
-	public void setScheduledFor(AbstractTask task, Date reminderDate, boolean floating) {
+	public void setScheduledFor(ITask task, Date reminderDate, boolean floating) {
 		// API-3.0: remove check
 		if (task == null) {
 			return;
@@ -534,7 +534,7 @@ public class TaskActivityManager {
 		taskList.notifyTaskChanged(task, false);
 	}
 
-	public void setDueDate(AbstractTask task, Date dueDate) {
+	public void setDueDate(ITask task, Date dueDate) {
 		task.setDueDate(dueDate);
 		if (dueDate == null) {
 			removeDueTask(task);
@@ -548,7 +548,7 @@ public class TaskActivityManager {
 	/**
 	 * @return if a repository task, will only return true if the user is a
 	 */
-	public boolean isCompletedToday(AbstractTask task) {
+	public boolean isCompletedToday(ITask task) {
 		if (task != null) {
 			boolean isOwnedByUser = repositoryManager.isOwnedByUser(task);
 			if (!isOwnedByUser) {
@@ -566,7 +566,7 @@ public class TaskActivityManager {
 		return false;
 	}
 
-	public boolean isPastReminder(AbstractTask task) {
+	public boolean isPastReminder(ITask task) {
 		if (task == null || task.isCompleted() || task.getScheduledForDate() == null) {
 			return false;
 		} else {
@@ -587,7 +587,7 @@ public class TaskActivityManager {
 		}
 	}
 
-	public boolean isDueToday(AbstractTask task) {
+	public boolean isDueToday(ITask task) {
 		if (repositoryManager.isOwnedByUser(task) && !task.isCompleted() && task.getDueDate() != null) {
 			Calendar cal = TaskActivityUtil.getCalendar();
 			cal.setTimeInMillis(task.getDueDate().getTime());
@@ -598,16 +598,16 @@ public class TaskActivityManager {
 		return false;
 	}
 
-	public boolean isOverdue(AbstractTask task) {
+	public boolean isOverdue(ITask task) {
 		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
 				&& repositoryManager.isOwnedByUser(task);
 	}
 
-	public boolean isOwnedByUser(AbstractTask task) {
+	public boolean isOwnedByUser(ITask task) {
 		return repositoryManager.isOwnedByUser(task);
 	}
 
-	public boolean isActiveThisWeek(AbstractTask task) {
+	public boolean isActiveThisWeek(ITask task) {
 		Calendar calStart = TaskActivityUtil.getCalendar();
 		TaskActivityUtil.snapStartOfWorkWeek(calStart);
 		Calendar calEnd = TaskActivityUtil.getCalendar();
@@ -615,7 +615,7 @@ public class TaskActivityManager {
 		return getElapsedTime(task, calStart, calEnd) > 0;
 	}
 
-	public boolean isScheduledForToday(AbstractTask task) {
+	public boolean isScheduledForToday(ITask task) {
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
 			if (reminder != null && !task.internalIsFloatingScheduledDate()) {
@@ -638,7 +638,7 @@ public class TaskActivityManager {
 		return false;
 	}
 
-	public boolean isScheduledAfterThisWeek(AbstractTask task) {
+	public boolean isScheduledAfterThisWeek(ITask task) {
 		if (task.getScheduledForDate() != null) {
 			return isScheduledAfterThisWeek(task.getScheduledForDate());
 		}
@@ -655,7 +655,7 @@ public class TaskActivityManager {
 		return false;
 	}
 
-	public boolean isScheduledForFuture(AbstractTask task) {
+	public boolean isScheduledForFuture(ITask task) {
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
 			return isScheduledForFuture(reminder);
@@ -672,7 +672,7 @@ public class TaskActivityManager {
 		return false;
 	}
 
-	public boolean isScheduledForThisWeek(AbstractTask task) {
+	public boolean isScheduledForThisWeek(ITask task) {
 		boolean result = false;
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
@@ -690,7 +690,7 @@ public class TaskActivityManager {
 		return false;
 	}
 
-	public boolean isScheduledForNextWeek(AbstractTask task) {
+	public boolean isScheduledForNextWeek(ITask task) {
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
 			if (reminder != null) {
@@ -886,7 +886,7 @@ public class TaskActivityManager {
 		setScheduledFor(newTask, TaskActivityUtil.getCalendar().getTime());
 	}
 
-	public boolean isDueThisWeek(AbstractTask task) {
+	public boolean isDueThisWeek(ITask task) {
 		Date due = task.getDueDate();
 		if (due != null && repositoryManager.isOwnedByUser(task)) {
 			Calendar cal = TaskActivityUtil.getCalendar();
@@ -906,7 +906,7 @@ public class TaskActivityManager {
 		return false;
 	}
 
-	public Set<AbstractTask> getScheduledForThisWeek() {
+	public Set<ITask> getScheduledForThisWeek() {
 		Calendar startWeek = TaskActivityUtil.getStartOfCurrentWeek();
 		Calendar endWeek = TaskActivityUtil.getEndOfCurrentWeek();
 		return getScheduledTasks(startWeek, endWeek);

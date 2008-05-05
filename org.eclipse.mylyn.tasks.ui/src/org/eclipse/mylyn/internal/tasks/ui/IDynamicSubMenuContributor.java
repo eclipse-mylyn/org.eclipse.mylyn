@@ -10,13 +10,13 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Mik Kersten
  */
 public interface IDynamicSubMenuContributor {
 
-	public abstract MenuManager getSubMenuManager(List<AbstractTaskContainer> selectedElements);
+	public abstract MenuManager getSubMenuManager(List<ITaskElement> selectedElements);
 
 }

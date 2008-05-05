@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -26,8 +27,7 @@ import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeQueriesJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeRepositoriesJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeTasksJob;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
@@ -56,7 +56,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		this.repositoryManager = repositoryManager;
 	}
 
-	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector, Set<AbstractTask> tasks) {
+	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector, Set<ITask> tasks) {
 		SynchronizeAllTasksJob job = new SynchronizeAllTasksJob(taskList, taskDataManager, repositoryManager,
 				connector, tasks);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
@@ -65,7 +65,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 	}
 
 	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, Set<AbstractTask> tasks) {
+			TaskRepository taskRepository, Set<ITask> tasks) {
 		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, connector, taskRepository, tasks);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.LONG);
@@ -89,7 +89,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 	}
 
 	public SubmitJob createSubmitTaskJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
-			final AbstractTask task, TaskData taskData, Set<TaskAttribute> changedAttributes) {
+			final ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes) {
 		SubmitJob job = new SubmitTaskJob(taskDataManager, connector, taskRepository, task, taskData, changedAttributes);
 		job.setPriority(Job.INTERACTIVE);
 		try {
@@ -140,8 +140,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 	}
 
 	public SubmitJob createSubmitTaskAttachmentJob(AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, final AbstractTask task, AbstractTaskAttachmentSource source,
-			String comment, TaskAttribute attachmentAttribute) {
+			TaskRepository taskRepository, final ITask task, AbstractTaskAttachmentSource source, String comment,
+			TaskAttribute attachmentAttribute) {
 		SubmitJob job = new SubmitTaskAttachmentJob(taskDataManager, connector, taskRepository, task, source, comment,
 				attachmentAttribute);
 		job.setPriority(Job.INTERACTIVE);

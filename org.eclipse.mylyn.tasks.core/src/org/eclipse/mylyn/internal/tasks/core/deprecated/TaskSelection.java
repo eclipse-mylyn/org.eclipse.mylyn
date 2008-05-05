@@ -15,7 +15,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager.ObjectCloner;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Steffen Pingel
@@ -42,7 +42,7 @@ public class TaskSelection {
 		}
 	}
 
-	public TaskSelection(AbstractTask task) {
+	public TaskSelection(ITask task) {
 		RepositoryTaskData taskData = new RepositoryTaskData(IdentityAttributeFactory.getInstance(),
 				task.getConnectorKind(), task.getRepositoryUrl(), task.getTaskId(), task.getTaskKind());
 		taskData.setSummary(task.getSummary());

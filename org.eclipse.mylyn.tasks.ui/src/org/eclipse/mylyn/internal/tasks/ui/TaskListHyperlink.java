@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackListener;
@@ -46,7 +46,7 @@ public class TaskListHyperlink extends ImageHyperlink {
 
 	private boolean strikeThrough;
 
-	private AbstractTask task;
+	private ITask task;
 
 	public TaskListHyperlink(Composite parent, int style) {
 		super(parent, style);
@@ -60,7 +60,7 @@ public class TaskListHyperlink extends ImageHyperlink {
 		super.dispose();
 	}
 
-	public AbstractTask getTask() {
+	public ITask getTask() {
 		return task;
 	}
 
@@ -86,7 +86,7 @@ public class TaskListHyperlink extends ImageHyperlink {
 		this.strikeThrough = strikethrough;
 	}
 
-	public void setTask(AbstractTask task) {
+	public void setTask(ITask task) {
 		this.task = task;
 		if (task != null) {
 			if ((getStyle() & SWT.SHORT) != 0) {

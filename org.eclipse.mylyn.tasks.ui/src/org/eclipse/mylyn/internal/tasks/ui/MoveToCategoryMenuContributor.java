@@ -16,11 +16,12 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -31,13 +32,13 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 
 	private static final String LABEL = "Move to";
 
-	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
+	public MenuManager getSubMenuManager(final List<ITaskElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
 
 		// Compute selected tasks
 		List<AbstractTask> selectedTasks = new ArrayList<AbstractTask>(selectedElements.size());
-		for (AbstractTaskContainer element : selectedElements) {
-			if (element instanceof AbstractTask) {
+		for (ITaskElement element : selectedElements) {
+			if (element instanceof ITask) {
 				selectedTasks.add((AbstractTask) element);
 			}
 		}
@@ -106,9 +107,9 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	 * @param selectedElements
 	 * @param category
 	 */
-	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
-		for (AbstractTaskContainer element : selectedElements) {
-			if (element instanceof AbstractTask) {
+	private void moveToCategory(final List<ITaskElement> selectedElements, AbstractTaskCategory category) {
+		for (ITaskElement element : selectedElements) {
+			if (element instanceof ITask) {
 				TasksUi.getTaskList().addTask((AbstractTask) element, category);
 			}
 		}

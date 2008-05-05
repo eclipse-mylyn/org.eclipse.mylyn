@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -367,12 +367,12 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		}
 	}
 
-	public boolean isOwnedByUser(AbstractTask task) {
+	public boolean isOwnedByUser(ITask task) {
 		if (task.isLocal()) {
 			return true;
 		}
 
-		AbstractTask repositoryTask = task;
+		ITask repositoryTask = task;
 		TaskRepository repository = getRepository(repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
 		if (repository != null && repositoryTask.getOwner() != null) {
 			return repositoryTask.getOwner().equals(repository.getUserName());

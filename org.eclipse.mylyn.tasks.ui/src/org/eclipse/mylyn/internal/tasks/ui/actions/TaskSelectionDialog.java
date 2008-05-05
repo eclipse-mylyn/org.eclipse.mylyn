@@ -40,6 +40,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
@@ -50,8 +52,8 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.WorkingSetLabelComparator;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
@@ -230,7 +232,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		@Override
 		public synchronized boolean remove(Object object) {
-			taskActivationHistory.removeTask((AbstractTask) object);
+			taskActivationHistory.removeTask((ITask) object);
 			return history.remove(object);
 		}
 
@@ -256,7 +258,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	 */
 	private class TasksFilter extends ItemsFilter {
 
-		private Set<AbstractTask> allTasksFromWorkingSets;
+		private Set<ITask> allTasksFromWorkingSets;
 
 		/**
 		 * Stores the task containers from selected working set; empty, which can come from no working set selection or
@@ -300,7 +302,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		@Override
 		public boolean isConsistentItem(Object item) {
-			return item instanceof AbstractTask;
+			return item instanceof ITask;
 		}
 
 		@Override
@@ -326,10 +328,10 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		@Override
 		public boolean matchItem(Object item) {
-			if (!(item instanceof AbstractTask)) {
+			if (!(item instanceof ITask)) {
 				return false;
 			}
-			if (!showCompletedTasks && ((AbstractTask) item).isCompleted()) {
+			if (!showCompletedTasks && ((ITask) item).isCompleted()) {
 				return false;
 			}
 			if (!elements.isEmpty()) {
@@ -344,8 +346,8 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		}
 
 		private void populateTasksFromWorkingSets() {
-			allTasksFromWorkingSets = new HashSet<AbstractTask>(1000);
-			for (AbstractTaskContainer container : elements) {
+			allTasksFromWorkingSets = new HashSet<ITask>(1000);
+			for (ITaskElement container : elements) {
 				allTasksFromWorkingSets.addAll(container.getChildren());
 			}
 		}
@@ -556,7 +558,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		SubProgressMonitor subMonitor = new SubProgressMonitor(progressMonitor, 90);
 		subMonitor.beginTask("Scanning tasks", allTasks.size());
-		for (AbstractTask task : allTasks) {
+		for (ITask task : allTasks) {
 			contentProvider.add(task, itemsFilter);
 			subMonitor.worked(1);
 		}
@@ -712,7 +714,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	@Override
 	protected IStatus validateItem(Object item) {
-		if (item instanceof AbstractTask) {
+		if (item instanceof ITask) {
 			return Status.OK_STATUS;
 		}
 		return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Selected item is not a task");

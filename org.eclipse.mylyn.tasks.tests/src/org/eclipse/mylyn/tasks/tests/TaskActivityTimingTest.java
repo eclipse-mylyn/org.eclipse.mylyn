@@ -22,13 +22,14 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.context.core.LegacyActivityAdaptor;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -286,8 +287,8 @@ public class TaskActivityTimingTest extends TestCase {
 		metaContext.reset();
 		assertEquals(0, metaContext.getInteractionHistory().size());
 
-		AbstractTask task1 = new LocalTask("local 1", "Task 1");
-		AbstractTask task2 = new LocalTask("local 2", "Task 2");
+		ITask task1 = new LocalTask("local 1", "Task 1");
+		ITask task2 = new LocalTask("local 2", "Task 2");
 
 		Calendar startTime1 = Calendar.getInstance();
 		TaskActivityUtil.snapStartOfHour(startTime1);

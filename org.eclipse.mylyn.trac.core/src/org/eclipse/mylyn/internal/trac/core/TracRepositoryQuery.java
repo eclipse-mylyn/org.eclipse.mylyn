@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.internal.trac.core;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 
 /**
  * @author Steffen Pingel
