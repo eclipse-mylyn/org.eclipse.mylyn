@@ -64,6 +64,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	public abstract String getConnectorKind();
 
+	// API 3.0 return IRepositorySettingsPage
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
 	/**
@@ -173,6 +174,7 @@ public abstract class AbstractRepositoryConnectorUi {
 		return new CommonAddExistingTaskWizard(repository);
 	}
 
+	// API 3.0: return ITaskSearchPage / IWizardPage
 	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
 		return null;
 	}
