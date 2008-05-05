@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -22,10 +22,7 @@ public class TasksUi {
 
 	public static final String ID_PLANNING_PAGE = "org.eclipse.mylyn.tasks.ui.pageFactory.Planning";
 
-	/**
-	 * TODO: in progress, will return interface once extraction complete
-	 */
-	public static TaskActivityManager getTaskActivityManager() {
+	public static ITaskActivityManager getTaskActivityManager() {
 		return TasksUiPlugin.getTaskActivityManager();
 	}
 

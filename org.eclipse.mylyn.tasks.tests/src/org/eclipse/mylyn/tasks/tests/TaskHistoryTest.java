@@ -21,7 +21,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAc
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Wes Coelho
@@ -64,14 +63,14 @@ public class TaskHistoryTest extends TestCase {
 		task5 = TasksUiInternal.createNewLocalTask("task 5");
 		manager.getTaskList().addTask(task5);
 
-		history = TasksUi.getTaskActivityManager().getTaskActivationHistory();
+		history = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
 
 		previousTaskAction = new ActivateTaskHistoryDropDownAction();
 	}
 
 	private void resetHistory() {
 		manager.deactivateAllTasks();
-		TasksUi.getTaskActivityManager().clear();
+		TasksUiPlugin.getTaskActivityManager().clear();
 		ContextCore.getContextManager().resetActivityHistory();
 	}
 

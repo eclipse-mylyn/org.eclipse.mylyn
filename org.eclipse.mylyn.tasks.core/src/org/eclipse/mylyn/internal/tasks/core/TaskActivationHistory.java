@@ -28,44 +28,6 @@ public class TaskActivationHistory {
 
 	private int currentIndex = -1;
 
-//	/**
-//	 * Load in a number of saved history tasks from previous session. Should be called from constructor but
-//	 * ContextManager doesn't seem to be able to provide activity history at that point
-//	 * 
-//	 * @author Wesley Coelho
-//	 */
-//	public void loadPersistentHistory() {
-//		int tasksAdded = 0;
-//		history.clear();
-//		for (int i = ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().size() - 1; i >= 0; i--) {
-//			AbstractTask prevTask = getHistoryTaskAt(i);
-//
-//			if (prevTask != null && !history.contains(prevTask)) {
-//				// !isDuplicate(prevTask, i + 1)) {
-//				history.add(0, prevTask);
-//				currentIndex++;
-//				tasksAdded++;
-//				if (tasksAdded == NUM_SAVED_HISTORY_ITEMS_TO_LOAD) {
-//					break;
-//				}
-//			}
-//		}
-//		persistentHistoryLoaded = true;
-//	}
-//
-//	/**
-//	 * Returns the task corresponding to the interaction event history item at the specified position
-//	 */
-//	protected AbstractTask getHistoryTaskAt(int pos) {
-//		InteractionEvent event = ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().get(
-//				pos);
-//		if (event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
-//			return TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
-//		} else {
-//			return null;
-//		}
-//	}
-
 	public void addTask(AbstractTask task) {
 		history.remove(task);
 		history.add(task);

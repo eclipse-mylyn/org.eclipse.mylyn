@@ -27,7 +27,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
@@ -48,7 +47,7 @@ public class TaskActivationHistoryTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		history = TasksUi.getTaskActivityManager().getTaskActivationHistory();
+		history = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
 	}
 
 	@Override

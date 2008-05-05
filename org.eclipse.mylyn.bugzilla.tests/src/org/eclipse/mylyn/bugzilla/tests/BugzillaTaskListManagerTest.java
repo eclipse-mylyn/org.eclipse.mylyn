@@ -15,6 +15,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
@@ -24,10 +26,12 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.tests.TasksTestsPlugin;
 
 /**
  * @author Mik Kersten
@@ -155,53 +159,6 @@ public class BugzillaTaskListManagerTest extends TestCase {
 				.iterator()
 				.next();
 		assertTrue(readQuery.isCustomQuery());
-	}
-
-	public void testLegacyTaskListReading() throws IOException {
-		File originalFile = manager.getTaskListFile();
-		File legacyListFile = new File("temptasklist.xml");
-		legacyListFile.deleteOnExit();
-		BugzillaTestUtil.copy(BugzillaTestUtil.getLocalFile("testdata/legacy/tasklist_0_4_8.xml"), legacyListFile);
-
-		assertEquals(362451, legacyListFile.length());
-		assertTrue(legacyListFile.exists());
-
-		manager.setTaskListFile(legacyListFile);
-		manager.readExistingOrCreateNewList();
-		manager.setTaskListFile(originalFile);
-
-		Collection<AbstractTask> allTasks = manager.getTaskList().getAllTasks();
-		Collection<ITask> allRootTasks = manager.getTaskList().getDefaultCategory().getChildren();
-		Set<AbstractTaskCategory> allCategories = manager.getTaskList().getCategories();
-		Set<AbstractTaskContainer> allRoots = manager.getTaskList().getRootElements();
-		assertEquals(0, allRootTasks.size());
-
-		manager.saveTaskList();
-		// manager.getTaskList().clear();
-		manager.resetTaskList();
-		// TaskList list = new TaskList();
-		// manager.setTaskList(list);
-		manager.readExistingOrCreateNewList();
-
-		assertEquals(allRootTasks.size(), manager.getTaskList().getDefaultCategory().getChildren().size());
-		assertEquals(allCategories, manager.getTaskList().getCategories());
-		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
-		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());
-
-		// rewrite and test again
-		manager.saveTaskList();
-		// manager.getTaskList().clear();
-		manager.resetTaskList();
-		// list = new TaskList();
-		// manager.setTaskList(list);
-		manager.readExistingOrCreateNewList();
-
-		assertEquals(allRootTasks.size(), manager.getTaskList().getDefaultCategory().getChildren().size());
-		assertEquals(allCategories, manager.getTaskList().getCategories());
-		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
-		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());
-
-		manager.deactivateTask(manager.getActiveTask());
 	}
 
 	public void testDeleteQuery() {

@@ -54,7 +54,6 @@ import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.WorkingSetLabelComparator;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -424,7 +423,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	public TaskSelectionDialog(Shell parent) {
 		super(parent);
-		this.taskActivationHistory = TasksUi.getTaskActivityManager().getTaskActivationHistory();
+		this.taskActivationHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
 		this.history = new ArrayList<AbstractTask>(taskActivationHistory.getPreviousTasks());
 		this.itemsComparator = new TaskHistoryItemsComparator(this.history);
 		this.needsCreateTask = true;

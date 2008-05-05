@@ -17,7 +17,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -42,7 +41,7 @@ public class ActivateTaskHistoryDropDownAction extends Action implements IWorkbe
 	private final TaskHistoryDropDown taskHistoryDropDown;
 
 	public ActivateTaskHistoryDropDownAction() {
-		this.taskHistory = TasksUi.getTaskActivityManager().getTaskActivationHistory();
+		this.taskHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
 		this.taskHistoryDropDown = new TaskHistoryDropDown(null, taskHistory);
 		setText(LABEL);
 		setToolTipText(LABEL);

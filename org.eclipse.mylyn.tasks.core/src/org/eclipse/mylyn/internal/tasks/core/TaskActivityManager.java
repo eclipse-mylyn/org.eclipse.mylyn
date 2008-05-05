@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
 
 /**
  * Manages task elapsed time, scheduling, due dates, and the date ranges
@@ -34,7 +35,7 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
  * @since 2.1
  * @author Rob Elves
  */
-public class TaskActivityManager {
+public class TaskActivityManager implements ITaskActivityManager {
 
 	private static final int NUM_WEEKS_PREVIOUS_START = -1;
 
@@ -59,6 +60,10 @@ public class TaskActivityManager {
 	private final TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
 
 	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
+
+	private final Set<ITask> allScheduledTasks = new HashSet<ITask>();
+
+	private final Set<ITask> allDueTasks = new HashSet<ITask>();
 
 	private final SortedMap<Calendar, Set<ITask>> scheduledTasks = Collections.synchronizedSortedMap(new TreeMap<Calendar, Set<ITask>>());
 
@@ -98,7 +103,7 @@ public class TaskActivityManager {
 
 	private Date startTime = new Date();
 
-	public static TaskActivityManager INSTANCE;
+	public static ITaskActivityManager INSTANCE;
 
 	public TaskActivityManager(TaskRepositoryManager repositoryManager, TaskList taskList) {
 		this.taskList = taskList;
@@ -173,6 +178,7 @@ public class TaskActivityManager {
 	public void clear(Date date) {
 		dueTasks.clear();
 		scheduledTasks.clear();
+		allScheduledTasks.clear();
 		activeTasks.clear();
 		taskActivationHistory.clear();
 		taskElapsedTimeMap.clear();
@@ -281,6 +287,7 @@ public class TaskActivityManager {
 			scheduledTasks.put(time, tasks);
 		}
 		tasks.add(task);
+		allScheduledTasks.add(task);
 	}
 
 	public void removeScheduledTask(ITask task) {
@@ -288,6 +295,7 @@ public class TaskActivityManager {
 			for (Set<ITask> setOfTasks : scheduledTasks.values()) {
 				setOfTasks.remove(task);
 			}
+			allScheduledTasks.remove(task);
 		}
 	}
 
@@ -302,7 +310,9 @@ public class TaskActivityManager {
 				dueTasks.put(time, tasks);
 			}
 			tasks.add(task);
+			allDueTasks.add(task);
 		}
+
 	}
 
 	public void removeDueTask(ITask task) {
@@ -310,6 +320,7 @@ public class TaskActivityManager {
 			for (Set<ITask> setOfTasks : dueTasks.values()) {
 				setOfTasks.remove(task);
 			}
+			allDueTasks.remove(task);
 		}
 	}
 
@@ -317,8 +328,7 @@ public class TaskActivityManager {
 		activateTask(task, true);
 	}
 
-	@Deprecated
-	public void activateTask(ITask task, boolean addToHistory) {
+	private void activateTask(ITask task, boolean addToHistory) {
 		deactivateAllTasks();
 
 		// notify that a task is about to be activated
@@ -333,9 +343,6 @@ public class TaskActivityManager {
 
 		activeTask = task;
 		activeTask.setActive(true);
-//		if (addToHistory) {
-//			taskActivationHistory.addTask(task);
-//		}
 
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 			try {
@@ -950,5 +957,13 @@ public class TaskActivityManager {
 
 	public TaskActivationHistory getTaskActivationHistory() {
 		return taskActivationHistory;
+	}
+
+	public Set<ITask> getAllScheduledTasks() {
+		return new HashSet<ITask>(allScheduledTasks);
+	}
+
+	public Set<ITask> getAllDueTasks() {
+		return new HashSet<ITask>(allDueTasks);
 	}
 }

@@ -740,8 +740,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					loadTemplateRepositories();
 
 					getTaskListManager().resetTaskList();
-					getTaskListManager().setTaskListFile(
-							new File(newPath + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE));
+//					getTaskListManager().setTaskListFile(
+//							new File(newPath + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE));
 
 					ContextCore.getContextManager().loadActivityMetaContext();
 					getTaskListManager().readExistingOrCreateNewList();

@@ -16,6 +16,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 
 /**
+ * @author Mik Kersten
  * @since 3.0
  */
 public interface ITask extends ITaskElement {

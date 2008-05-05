@@ -131,7 +131,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 	}
 
 	public TaskHistoryDropDown(String id) {
-		this(id, TasksUi.getTaskActivityManager().getTaskActivationHistory());
+		this(id, TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory());
 	}
 
 	public TaskHistoryDropDown(String id, TaskActivationHistory taskHistory) {

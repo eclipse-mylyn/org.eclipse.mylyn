@@ -61,8 +61,7 @@ public class TaskListExternalizationParticipant implements IExternalizationParti
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
 		Assert.isNotNull(context);
 
-		final File taskListFile = new File(context.getRootPath() + File.separator
-				+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
+		final File taskListFile = getTaskListFile(context.getRootPath());
 
 		if (!taskListFile.exists()) {
 			try {
@@ -174,6 +173,10 @@ public class TaskListExternalizationParticipant implements IExternalizationParti
 
 	public String getDescription() {
 		return "Task List";
+	}
+
+	public static File getTaskListFile(String rootPath) {
+		return new File(rootPath + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
 	}
 
 }

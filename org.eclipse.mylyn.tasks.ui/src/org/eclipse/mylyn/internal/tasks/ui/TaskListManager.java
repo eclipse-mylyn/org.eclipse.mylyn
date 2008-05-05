@@ -62,8 +62,6 @@ public class TaskListManager {
 
 	private final TaskListExternalizer taskListWriter;
 
-	private File taskListFile;
-
 //	private TaskListSaveManager taskListSaveManager;
 
 	private final TaskList taskList = new TaskList();
@@ -77,7 +75,6 @@ public class TaskListManager {
 	private final TaskListElementImporter importer;
 
 	public TaskListManager(TaskListExternalizer taskListWriter, File file) {
-		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
 		timer = new Timer();
 		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
@@ -100,7 +97,6 @@ public class TaskListManager {
 						repository.getRepositoryUrl()));
 			}
 		}
-
 	}
 
 	public TaskListElementImporter getTaskListWriter() {
@@ -125,14 +121,6 @@ public class TaskListManager {
 		return taskList;
 	}
 
-	public void setTaskListFile(File file) {
-		this.taskListFile = file;
-	}
-
-	public File getTaskListFile() {
-		return taskListFile;
-	}
-
 	private class RolloverCheck extends TimerTask {
 
 		@Override
@@ -143,7 +131,7 @@ public class TaskListManager {
 				Calendar now = TaskActivityUtil.getCalendar();
 				ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 				if (!thisWeek.includes(now)) {
-					TasksUi.getTaskActivityManager().setStartTime(now.getTime());
+					TasksUiPlugin.getTaskActivityManager().setStartTime(now.getTime());
 				}
 			}
 		}
