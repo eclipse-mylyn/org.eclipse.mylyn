@@ -22,11 +22,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Tests changes to the main data directory location.
@@ -78,13 +79,13 @@ public class ChangeDataDirTest extends TestCase {
 		manager.getTaskList().addTask(task,
 				manager.getTaskList().getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
 
-		AbstractTask readTaskBeforeMove = manager.getTaskList().getTask(handle);
+		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskBeforeMove);
 		assertTrue(manager.getTaskList().getAllTasks().size() > 0);
 		copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir, new NullProgressMonitor());
 		assertTrue(manager.getTaskList().getAllTasks().size() > 0);
-		AbstractTask readTaskAfterMove = manager.getTaskList().getTask(handle);
+		ITask readTaskAfterMove = manager.getTaskList().getTask(handle);
 
 		assertNotNull(readTaskAfterMove);
 		assertEquals(readTaskBeforeMove.getCreationDate(), readTaskAfterMove.getCreationDate());
