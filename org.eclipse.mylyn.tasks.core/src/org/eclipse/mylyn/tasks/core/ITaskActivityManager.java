@@ -27,7 +27,11 @@ public interface ITaskActivityManager {
 	 */
 	public abstract void activateTask(ITask task);
 
-	public abstract void deactivateAllTasks();
+	/**
+	 * deactivate the currently active task (if any). There are no negative side effects if this method is called when
+	 * no task is active
+	 */
+	public abstract void deactivateActiveTask();
 
 	/**
 	 * deactivate the given task

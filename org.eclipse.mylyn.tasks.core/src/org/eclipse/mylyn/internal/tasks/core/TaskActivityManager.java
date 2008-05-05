@@ -329,7 +329,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 	}
 
 	private void activateTask(ITask task, boolean addToHistory) {
-		deactivateAllTasks();
+		deactivateActiveTask();
 
 		// notify that a task is about to be activated
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
@@ -354,7 +354,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		}
 	}
 
-	public void deactivateAllTasks() {
+	public void deactivateActiveTask() {
 		if (activeTask != null) {
 			deactivateTask(activeTask);
 		}
