@@ -76,7 +76,7 @@ public class ContextCopyAction extends TaskContextAction {
 		}
 
 		if (targetTask != null) {
-			TasksUi.getTaskActivityManager().deactivateAllTasks();
+			TasksUi.getTaskActivityManager().deactivateActiveTask();
 			IInteractionContext source = ContextCore.getContextManager().loadContext(sourceTask.getHandleIdentifier());
 
 			if (targetTask.equals(sourceTask)) {
