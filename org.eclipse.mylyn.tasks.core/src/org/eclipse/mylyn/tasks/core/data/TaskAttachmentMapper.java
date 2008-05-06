@@ -10,8 +10,8 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Date;
 
-import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 
 /**
  * @since 3.0

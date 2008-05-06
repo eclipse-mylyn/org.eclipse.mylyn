@@ -13,13 +13,56 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 
 /**
  * @author Mik Kersten
  * @since 3.0
  */
 public interface ITask extends ITaskElement {
+
+	/**
+	 * @since 3.0
+	 */
+	public enum SynchronizationState {
+		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT, INCOMING_NEW, OUTGOING_NEW;
+
+		/**
+		 * @since 3.0
+		 */
+		public boolean isIncoming() {
+			switch (this) {
+			case INCOMING:
+			case INCOMING_NEW:
+			case CONFLICT:
+				return true;
+			default:
+				return false;
+			}
+		}
+
+		/**
+		 * @since 3.0
+		 */
+		public boolean isOutgoing() {
+			switch (this) {
+			case OUTGOING:
+			case OUTGOING_NEW:
+			case CONFLICT:
+				return true;
+			default:
+				return false;
+			}
+		}
+
+		public boolean isSynchronized() {
+			switch (this) {
+			case SYNCHRONIZED:
+				return true;
+			default:
+				return false;
+			}
+		}
+	}
 
 	/**
 	 * Final to preserve the handle identifier format required by the framework.
@@ -37,11 +80,6 @@ public interface ITask extends ITaskElement {
 	public abstract String getLastReadTimeStamp();
 
 	public abstract void setLastReadTimeStamp(String lastReadTimeStamp);
-
-	/**
-	 * @since 3.0
-	 */
-	public abstract void setSynchronizationState(SynchronizationState syncState);
 
 	/**
 	 * @since 3.0
@@ -141,11 +179,6 @@ public interface ITask extends ITaskElement {
 	 */
 	public abstract void setModificationDate(Date modificationDate);
 
-	/**
-	 * @since 3.0
-	 */
-	public abstract void setMarkReadPending(boolean markReadPending);
-
 	@Deprecated
 	public abstract boolean isActive();
 
@@ -159,9 +192,6 @@ public interface ITask extends ITaskElement {
 
 	@Deprecated
 	public abstract boolean internalIsFloatingScheduledDate();
-
-	@Deprecated
-	public abstract boolean isMarkReadPending();
 
 	@Deprecated
 	public abstract void setCompleted(boolean completed);

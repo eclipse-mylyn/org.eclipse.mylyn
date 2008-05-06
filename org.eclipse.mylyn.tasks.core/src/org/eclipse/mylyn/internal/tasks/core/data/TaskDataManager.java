@@ -26,13 +26,13 @@ import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -115,7 +115,8 @@ public class TaskDataManager implements ITaskDataManager {
 		return state;
 	}
 
-	public ITaskDataWorkingCopy getWorkingCopy(final ITask task, final String kind) throws CoreException {
+	public ITaskDataWorkingCopy getWorkingCopy(final ITask itask, final String kind) throws CoreException {
+		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		final TaskDataState[] result = new TaskDataState[1];
@@ -149,7 +150,8 @@ public class TaskDataManager implements ITaskDataManager {
 		return result[0];
 	}
 
-	public void saveWorkingCopy(final ITask task, final String kind, final TaskDataState state) throws CoreException {
+	public void saveWorkingCopy(final ITask itask, final String kind, final TaskDataState state) throws CoreException {
+		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		taskList.run(new ITaskListRunnable() {
@@ -163,7 +165,8 @@ public class TaskDataManager implements ITaskDataManager {
 		taskList.notifyTaskChanged(task, true);
 	}
 
-	public void putUpdatedTaskData(final ITask task, final TaskData taskData, boolean user) throws CoreException {
+	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, boolean user) throws CoreException {
+		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskData);
 		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
@@ -228,7 +231,8 @@ public class TaskDataManager implements ITaskDataManager {
 		return file;
 	}
 
-	public void discardEdits(final ITask task, final String kind) throws CoreException {
+	public void discardEdits(final ITask itask, final String kind) throws CoreException {
+		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		taskList.run(new ITaskListRunnable() {
@@ -323,7 +327,8 @@ public class TaskDataManager implements ITaskDataManager {
 		return getFile(task, kind).exists();
 	}
 
-	public void putSubmittedTaskData(final ITask task, final TaskData taskData) throws CoreException {
+	public void putSubmittedTaskData(final ITask itask, final TaskData taskData) throws CoreException {
+		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskData);
 		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
@@ -354,20 +359,20 @@ public class TaskDataManager implements ITaskDataManager {
 	 * @return true if call results in change of sync state
 	 */
 	@Deprecated
-	public synchronized boolean saveIncoming(final ITask repositoryTask, final RepositoryTaskData newTaskData,
-			boolean forceSync) {
+	public synchronized boolean saveIncoming(final ITask itask, final RepositoryTaskData newTaskData, boolean forceSync) {
+		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(newTaskData);
-		final SynchronizationState startState = repositoryTask.getSynchronizationState();
-		SynchronizationState status = repositoryTask.getSynchronizationState();
+		final SynchronizationState startState = task.getSynchronizationState();
+		SynchronizationState status = task.getSynchronizationState();
 
-		RepositoryTaskData previousTaskData = taskDataStorageManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
-				repositoryTask.getTaskId());
+		RepositoryTaskData previousTaskData = taskDataStorageManager.getNewTaskData(task.getRepositoryUrl(),
+				task.getTaskId());
 
-		if (repositoryTask.isSubmitting()) {
+		if (task.isSubmitting()) {
 			status = SynchronizationState.SYNCHRONIZED;
-			repositoryTask.setSubmitting(false);
+			task.setSubmitting(false);
 			TaskDataStorageManager dataManager = taskDataStorageManager;
-			dataManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
+			dataManager.discardEdits(task.getRepositoryUrl(), task.getTaskId());
 
 			taskDataStorageManager.setNewTaskData(newTaskData);
 			/**
@@ -381,7 +386,7 @@ public class TaskDataManager implements ITaskDataManager {
 
 			switch (status) {
 			case OUTGOING:
-				if (checkHasIncoming(repositoryTask, newTaskData)) {
+				if (checkHasIncoming(task, newTaskData)) {
 					status = SynchronizationState.CONFLICT;
 				}
 				taskDataStorageManager.setNewTaskData(newTaskData);
@@ -396,10 +401,10 @@ public class TaskDataManager implements ITaskDataManager {
 				taskDataStorageManager.setNewTaskData(newTaskData);
 				break;
 			case SYNCHRONIZED:
-				boolean hasIncoming = checkHasIncoming(repositoryTask, newTaskData);
+				boolean hasIncoming = checkHasIncoming(task, newTaskData);
 				if (hasIncoming) {
 					status = SynchronizationState.INCOMING;
-					repositoryTask.setNotified(false);
+					task.setNotified(false);
 				}
 				if (hasIncoming || previousTaskData == null || forceSync) {
 					taskDataStorageManager.setNewTaskData(newTaskData);
@@ -407,8 +412,8 @@ public class TaskDataManager implements ITaskDataManager {
 				break;
 			}
 		}
-		repositoryTask.setSynchronizationState(status);
-		return startState != repositoryTask.getSynchronizationState();
+		task.setSynchronizationState(status);
+		return startState != task.getSynchronizationState();
 	}
 
 	@Deprecated
@@ -440,7 +445,8 @@ public class TaskDataManager implements ITaskDataManager {
 	 * @param read
 	 * 		true to mark as read, false to mark as unread
 	 */
-	public void setTaskRead(final ITask task, final boolean read) {
+	public void setTaskRead(final ITask itask, final boolean read) {
+		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		// legacy support
 		if (!getFile(task, task.getConnectorKind()).exists()) {
@@ -481,26 +487,25 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	@Deprecated
-	private void setTaskReadDeprecated(ITask repositoryTask, boolean read) {
-		RepositoryTaskData taskData = taskDataStorageManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
-				repositoryTask.getTaskId());
-
-		if (read && repositoryTask.getSynchronizationState().equals(SynchronizationState.INCOMING)) {
+	private void setTaskReadDeprecated(ITask itask, boolean read) {
+		final AbstractTask task = (AbstractTask) itask;
+		RepositoryTaskData taskData = taskDataStorageManager.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		if (read && task.getSynchronizationState().equals(SynchronizationState.INCOMING)) {
 			if (taskData != null && taskData.getLastModified() != null) {
-				repositoryTask.setLastReadTimeStamp(taskData.getLastModified());
+				task.setLastReadTimeStamp(taskData.getLastModified());
 				taskDataStorageManager.setOldTaskData(taskData);
 			}
-			repositoryTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-			taskList.notifyTaskChanged(repositoryTask, false);
-		} else if (read && repositoryTask.getSynchronizationState().equals(SynchronizationState.CONFLICT)) {
+			task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+			taskList.notifyTaskChanged(task, false);
+		} else if (read && task.getSynchronizationState().equals(SynchronizationState.CONFLICT)) {
 			if (taskData != null && taskData.getLastModified() != null) {
-				repositoryTask.setLastReadTimeStamp(taskData.getLastModified());
+				task.setLastReadTimeStamp(taskData.getLastModified());
 			}
-			repositoryTask.setSynchronizationState(SynchronizationState.OUTGOING);
-			taskList.notifyTaskChanged(repositoryTask, false);
-		} else if (read && repositoryTask.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
+			task.setSynchronizationState(SynchronizationState.OUTGOING);
+			taskList.notifyTaskChanged(task, false);
+		} else if (read && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
 			if (taskData != null && taskData.getLastModified() != null) {
-				repositoryTask.setLastReadTimeStamp(taskData.getLastModified());
+				task.setLastReadTimeStamp(taskData.getLastModified());
 				// By setting old every time (and not setting upon submission)
 				// we see our changes
 				// If condition is enabled and we save old in OUTGOING handler
@@ -517,14 +522,14 @@ public class TaskDataManager implements ITaskDataManager {
 //				repositoryTask.setLastReadTimeStamp(LocalTask.SYNC_DATE_NOW);
 //			}
 
-		} else if (!read && repositoryTask.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
-			repositoryTask.setSynchronizationState(SynchronizationState.INCOMING);
-			taskList.notifyTaskChanged(repositoryTask, false);
+		} else if (!read && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
+			task.setSynchronizationState(SynchronizationState.INCOMING);
+			taskList.notifyTaskChanged(task, false);
 		}
 
 		// for connectors that don't support task data set read date to now (bug#204741)
-		if (read && taskData == null && repositoryTask.isLocal()) {
-			repositoryTask.setLastReadTimeStamp((new Date()).toString());
+		if (read && taskData == null && task.isLocal()) {
+			task.setLastReadTimeStamp((new Date()).toString());
 		}
 	}
 

@@ -69,52 +69,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private boolean stale = false;
 
-	/**
-	 * @since 3.0
-	 */
-	public enum SynchronizationState {
-		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT, INCOMING_NEW, OUTGOING_NEW;
-
-		/**
-		 * @since 3.0
-		 */
-		public boolean isIncoming() {
-			switch (this) {
-			case INCOMING:
-			case INCOMING_NEW:
-			case CONFLICT:
-				return true;
-			default:
-				return false;
-			}
-		}
-
-		/**
-		 * @since 3.0
-		 */
-		public boolean isOutgoing() {
-			switch (this) {
-			case OUTGOING:
-			case OUTGOING_NEW:
-			case CONFLICT:
-				return true;
-			default:
-				return false;
-			}
-		}
-
-		public boolean isSynchronized() {
-			switch (this) {
-			case SYNCHRONIZED:
-				return true;
-			default:
-				return false;
-			}
-		}
-	}
-
-	// ************ Planning ****************
-
 	private Date completionDate = null;
 
 	private Date creationDate = null;

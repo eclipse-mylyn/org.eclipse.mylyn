@@ -10,9 +10,9 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.Collection;
 
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 
 /**
  * Custom filters are used so that the "Find:" filter can 'see through' any filters that may have been applied.

@@ -29,8 +29,8 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebClientUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using Date objects led to the following

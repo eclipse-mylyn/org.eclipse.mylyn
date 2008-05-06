@@ -23,8 +23,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.SynchronizationState;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.FileAttachment;
@@ -35,6 +35,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
@@ -67,7 +68,7 @@ public class AttachmentUtil {
 		if (sourceContextFile != null && sourceContextFile.exists()) {
 			try {
 				task.setSubmitting(true);
-				task.setSynchronizationState(SynchronizationState.OUTGOING);
+				((AbstractTask) task).setSynchronizationState(SynchronizationState.OUTGOING);
 				FileAttachment attachment = new FileAttachment(sourceContextFile);
 				attachment.setDescription(CONTEXT_DESCRIPTION);
 				attachment.setFilename(CONTEXT_FILENAME);
@@ -76,7 +77,7 @@ public class AttachmentUtil {
 				// TODO: Calling method should be responsible for returning
 				// state of task. Wizard will have different behaviour than
 				// editor.
-				task.setSynchronizationState(previousState);
+				((AbstractTask) task).setSynchronizationState(previousState);
 				throw e;
 			} catch (OperationCanceledException e) {
 				return true;
@@ -85,8 +86,8 @@ public class AttachmentUtil {
 		return true;
 	}
 
-	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository,
-			ITask task, String comment, IProgressMonitor monitor) throws CoreException {
+	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
+			String comment, IProgressMonitor monitor) throws CoreException {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		ContextCore.getContextManager().saveContext(task.getHandleIdentifier());
 		File file = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
@@ -182,8 +183,8 @@ public class AttachmentUtil {
 		return true;
 	}
 
-	public static boolean getContext(AbstractRepositoryConnector connector, TaskRepository repository,
-			ITask task, TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
+	public static boolean getContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
+			TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		File file = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
 		try {
