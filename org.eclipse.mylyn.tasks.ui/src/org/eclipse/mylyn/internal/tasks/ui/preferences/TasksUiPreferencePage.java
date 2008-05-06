@@ -103,7 +103,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 //	private Spinner hourDayStart;
 
-	private Spinner hourDayEnd;
+//	private Spinner hourDayEnd;
 
 	private int taskDataDirectoryAction = -1;
 
@@ -188,7 +188,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.WEEK_START_DAY, getWeekStartValue());
 		//getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
+//		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
 		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED,
 				timeoutEnabledButton.getSelection());
 		MonitorUiPlugin.getDefault().getPreferenceStore().setValue(ActivityContextManager.ACTIVITY_TIMEOUT,
@@ -248,7 +248,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		weekStartCombo.select(getPreferenceStore().getInt(TasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 		//hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
-		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+//		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		//backupNow.setEnabled(true);
 		int minutes = MonitorUiPlugin.getDefault().getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
@@ -292,7 +292,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		synchScheduleTime.setText("" + minutes);
 		weekStartCombo.select(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 		//	hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
-		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+//		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		int activityTimeoutMinutes = MonitorUiPlugin.getDefault().getPreferenceStore().getDefaultInt(
 				ActivityContextManager.ACTIVITY_TIMEOUT)
 				/ MS_MINUTES;
@@ -514,26 +514,26 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 //
 //		});
 //
-		Label spacer = new Label(group, SWT.NONE);
-		GridDataFactory.fillDefaults().hint(40, SWT.DEFAULT).applyTo(spacer);
-
-		Label hourDayEndLabel = new Label(group, SWT.NONE);
-		hourDayEndLabel.setText(END_HOUR_LABEL);
-
-		hourDayEnd = new Spinner(group, SWT.BORDER);
-		hourDayEnd.setDigits(0);
-		hourDayEnd.setIncrement(1);
-		hourDayEnd.setMaximum(23);
-		hourDayEnd.setMinimum(0);
-		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		hourDayEnd.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateRefreshGroupEnablements();
-			}
-
-		});
+//		Label spacer = new Label(group, SWT.NONE);
+//		GridDataFactory.fillDefaults().hint(40, SWT.DEFAULT).applyTo(spacer);
+//
+//		Label hourDayEndLabel = new Label(group, SWT.NONE);
+//		hourDayEndLabel.setText(END_HOUR_LABEL);
+//
+//		hourDayEnd = new Spinner(group, SWT.BORDER);
+//		hourDayEnd.setDigits(0);
+//		hourDayEnd.setIncrement(1);
+//		hourDayEnd.setMaximum(23);
+//		hourDayEnd.setMinimum(0);
+//		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+//		hourDayEnd.addSelectionListener(new SelectionAdapter() {
+//
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				updateRefreshGroupEnablements();
+//			}
+//
+//		});
 
 	}
 
