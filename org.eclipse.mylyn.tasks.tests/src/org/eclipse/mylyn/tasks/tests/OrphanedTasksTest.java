@@ -13,6 +13,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -57,7 +58,7 @@ public class OrphanedTasksTest extends TestCase {
 		assertTrue(tasks.isEmpty());
 		ITask localTask = TasksUiInternal.createNewLocalTask("Task 1");
 		assertNotNull(localTask);
-		assertEquals(1, localTask.getParentContainers().size());
+		assertEquals(1, ((AbstractTask) localTask).getParentContainers().size());
 	}
 
 	/**

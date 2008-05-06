@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.Arrays;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -49,7 +50,7 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 			}
 		}
 		if (parent instanceof ScheduledTaskContainer && element instanceof ITask) {
-			for (ITaskElement query : ((ITask) element).getParentContainers()) {
+			for (ITaskElement query : ((AbstractTask) element).getParentContainers()) {
 				if (isContainedInWorkingSet(query)) {
 					return true;
 				}

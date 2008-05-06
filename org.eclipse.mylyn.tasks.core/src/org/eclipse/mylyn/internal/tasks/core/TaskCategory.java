@@ -35,7 +35,7 @@ public final class TaskCategory extends AbstractTaskCategory {
 	public static AbstractTaskCategory getParentTaskCategory(ITask task) {
 		AbstractTaskCategory category = null;
 		if (task != null) {
-			for (ITaskElement container : task.getParentContainers()) {
+			for (ITaskElement container : ((AbstractTask) task).getParentContainers()) {
 				if (container instanceof AbstractTaskCategory) {
 					category = (AbstractTaskCategory) container;
 				}

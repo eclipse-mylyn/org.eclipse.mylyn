@@ -67,7 +67,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 				return parent;
 			}
 
-			Set<AbstractTaskContainer> parents = task.getParentContainers();
+			Set<AbstractTaskContainer> parents = ((AbstractTask) task).getParentContainers();
 			Iterator<AbstractTaskContainer> it = parents.iterator();
 			if (it.hasNext()) {
 				return parents.iterator().next();

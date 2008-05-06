@@ -9,10 +9,8 @@
 package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 
 /**
  * @author Mik Kersten
@@ -93,8 +91,6 @@ public interface ITask extends ITaskElement {
 	public abstract String getNotes();
 
 	public abstract String getOwner();
-
-	public abstract Set<AbstractTaskContainer> getParentContainers();
 
 	public abstract String getPriority();
 

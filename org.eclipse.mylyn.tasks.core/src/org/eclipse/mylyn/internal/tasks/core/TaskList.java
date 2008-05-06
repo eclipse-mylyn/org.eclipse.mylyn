@@ -117,13 +117,14 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		addTask(task, null);
 	}
 
-	public boolean addTask(ITask task, AbstractTaskContainer container) {
+	public boolean addTask(ITask itask, AbstractTaskContainer container) {
+		AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isLegal(!(container instanceof UnmatchedTaskContainer));
 
 		try {
 			lock();
-			task = getOrCreateTask((AbstractTask) task);
+			task = getOrCreateTask(task);
 			if (container == null) {
 				container = getUnmatchedContainer(task.getRepositoryUrl());
 			} else {
@@ -136,7 +137,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			}
 
 			// ensure that we don't create cycles
-			if (((AbstractTask) task).contains(container.getHandleIdentifier())) {
+			if ((task).contains(container.getHandleIdentifier())) {
 				return false;
 			}
 
@@ -153,10 +154,10 @@ public class TaskList implements ISchedulingRule, ITaskList {
 				}
 			}
 
-			removeOrphan((AbstractTask) task, delta);
+			removeOrphan(task, delta);
 
-			((AbstractTask) task).addParentContainer(container);
-			container.internalAddChild((AbstractTask) task);
+			(task).addParentContainer(container);
+			container.internalAddChild(task);
 			delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
 			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
 		} finally {
@@ -206,7 +207,9 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	 * Task is removed from all containers. Currently subtasks are not deleted but rather are rather potentially
 	 * orphaned.
 	 */
-	public void deleteTask(ITask task) {
+	public void deleteTask(ITask itask) {
+		Assert.isNotNull(itask);
+		AbstractTask task = (AbstractTask) itask;
 		try {
 			lock();
 
@@ -217,7 +220,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 			// remove this task as a parent for all subtasks
 			for (ITask child : task.getChildren()) {
-				removeFromContainerInternal((AbstractTaskContainer) task, child, delta);
+				removeFromContainerInternal(task, child, delta);
 				addOrphan((AbstractTask) child, delta);
 			}
 

@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
@@ -85,7 +86,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
 		ITask task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier());
 		assertNotNull(task2);
-		assertEquals(1, task2.getParentContainers().size());
+		assertEquals(1, ((AbstractTask) task2).getParentContainers().size());
 
 	}
 
