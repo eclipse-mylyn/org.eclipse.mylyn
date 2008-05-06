@@ -33,6 +33,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.AbstractRelationProvider;
@@ -58,6 +60,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	// TODO: move constants
 	private static final int MAX_PROPAGATION = 17; // TODO: parametrize this
+
+	private static final ILock metaContextLock = Job.getJobManager().newLock();
 
 	private static final String PREFERENCE_ATTENTION_MIGRATED = "mylyn.attention.migrated";
 
@@ -473,8 +477,13 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	public InteractionContext getActivityMetaContext() {
-		if (activityMetaContext == null) {
-			loadActivityMetaContext();
+		try {
+			metaContextLock.acquire();
+			if (activityMetaContext == null) {
+				loadActivityMetaContext();
+			}
+		} finally {
+			metaContextLock.release();
 		}
 		return activityMetaContext;
 	}
@@ -727,16 +736,24 @@ public class InteractionContextManager implements IInteractionContextManager {
 				}
 			}
 
-			File contextActivityFile = getFileForContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
-			activityMetaContext = externalizer.readContextFromXML(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME,
-					contextActivityFile, ContextCore.getCommonContextScaling());
-			if (activityMetaContext == null) {
-				resetActivityHistory();
-			} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(PREFERENCE_ATTENTION_MIGRATED)) {
-				activityMetaContext = migrateLegacyActivity(activityMetaContext);
-				saveActivityContext();
-				ContextCorePlugin.getDefault().getPluginPreferences().setValue(PREFERENCE_ATTENTION_MIGRATED, true);
-				ContextCorePlugin.getDefault().savePluginPreferences();
+			try {
+				metaContextLock.acquire();
+
+				File contextActivityFile = getFileForContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+				activityMetaContext = externalizer.readContextFromXML(
+						IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME, contextActivityFile,
+						ContextCore.getCommonContextScaling());
+				if (activityMetaContext == null) {
+					resetActivityHistory();
+				} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(
+						PREFERENCE_ATTENTION_MIGRATED)) {
+					activityMetaContext = migrateLegacyActivity(activityMetaContext);
+					saveActivityContext();
+					ContextCorePlugin.getDefault().getPluginPreferences().setValue(PREFERENCE_ATTENTION_MIGRATED, true);
+					ContextCorePlugin.getDefault().savePluginPreferences();
+				}
+			} finally {
+				metaContextLock.release();
 			}
 
 			for (IInteractionContextListener listener : activityMetaContextListeners) {
@@ -1123,9 +1140,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	public void resetActivityHistory() {
-		activityMetaContext = new InteractionContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME,
-				ContextCore.getCommonContextScaling());
-		saveActivityContext();
+		try {
+			metaContextLock.acquire();
+			activityMetaContext = new InteractionContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME,
+					ContextCore.getCommonContextScaling());
+			saveActivityContext();
+		} finally {
+			metaContextLock.release();
+		}
 	}
 
 	public void resetLandmarkRelationshipsOfKind(String reltationKind) {
@@ -1147,6 +1169,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 		boolean wasPaused = contextCapturePaused;
 		try {
+			metaContextLock.acquire();
 			if (!wasPaused) {
 				setContextCapturePaused(true);
 			}
@@ -1158,6 +1181,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not save activity history",
 					t));
 		} finally {
+			metaContextLock.release();
 			if (!wasPaused) {
 				setContextCapturePaused(false);
 			}
@@ -1165,7 +1189,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	public void saveContext(InteractionContext context) {
-		boolean wasPaused = contextCapturePaused;
+		boolean wasPaused = getContextCaputurePaused();
 		try {
 			if (!wasPaused) {
 				setContextCapturePaused(true);
@@ -1183,6 +1207,12 @@ public class InteractionContextManager implements IInteractionContextManager {
 			if (!wasPaused) {
 				setContextCapturePaused(false);
 			}
+		}
+	}
+
+	private boolean getContextCaputurePaused() {
+		synchronized (InteractionContextManager.this) {
+			return contextCapturePaused;
 		}
 	}
 
@@ -1209,7 +1239,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 	 * NOTE: If pausing ensure to restore to original state.
 	 */
 	public void setContextCapturePaused(boolean paused) {
-		this.contextCapturePaused = paused;
+		synchronized (InteractionContextManager.this) {
+			this.contextCapturePaused = paused;
+		}
 	}
 
 	public void updateHandle(IInteractionElement element, String newHandle) {
