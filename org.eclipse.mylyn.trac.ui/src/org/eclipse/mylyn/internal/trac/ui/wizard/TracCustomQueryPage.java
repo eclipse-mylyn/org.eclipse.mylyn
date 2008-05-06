@@ -114,11 +114,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	// private UserSearchField ccField;
 
 	public TracCustomQueryPage(TaskRepository repository, AbstractRepositoryQuery query) {
-		super(TITLE);
-
-		this.repository = repository;
+		super(TITLE, repository);
 		this.query = (TracRepositoryQuery) query;
-
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 	}
@@ -127,7 +124,6 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		this(repository, null);
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 		Composite control = new Composite(parent, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_BOTH);
@@ -309,7 +305,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		updateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (repository != null) {
+				if (getTaskRepository() != null) {
 					updateAttributesFromRepository(true);
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
@@ -325,8 +321,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 
-		if (scontainer != null) {
-			scontainer.setPerformActionEnabled(true);
+		if (getSearchContainer() != null) {
+			getSearchContainer().setPerformActionEnabled(true);
 		}
 
 		if (visible && firstTime) {
@@ -364,14 +360,14 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	private boolean hasAttributes() {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		ITracClient client = connector.getClientManager().getTracClient(repository);
+		ITracClient client = connector.getClientManager().getTracClient(getTaskRepository());
 		return client.hasAttributes();
 	}
 
 	private void updateAttributesFromRepository(final boolean force) {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
-		final ITracClient client = connector.getClientManager().getTracClient(repository);
+		final ITracClient client = connector.getClientManager().getTracClient(getTaskRepository());
 
 		if (!client.hasAttributes() || force) {
 			try {
@@ -387,15 +383,15 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 				if (getContainer() != null) {
 					getContainer().run(true, true, runnable);
-				} else if (scontainer != null) {
-					scontainer.getRunnableContext().run(true, true, runnable);
+				} else if (getSearchContainer() != null) {
+					getSearchContainer().getRunnableContext().run(true, true, runnable);
 				} else {
 					IProgressService service = PlatformUI.getWorkbench().getProgressService();
 					service.busyCursorWhile(runnable);
 				}
 			} catch (InvocationTargetException e) {
 				TasksUiInternal.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(),
-						repository));
+						getTaskRepository()));
 				return;
 			} catch (InterruptedException e) {
 				return;
@@ -410,14 +406,6 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		componentField.setValues(client.getComponents());
 		versionField.setValues(client.getVersions());
 		milestoneField.setValues(client.getMilestones());
-	}
-
-	public TaskRepository getRepository() {
-		return repository;
-	}
-
-	public void setRepository(TaskRepository repository) {
-		this.repository = repository;
 	}
 
 	@Override
@@ -451,7 +439,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public TracRepositoryQuery getQuery() {
-		return new TracRepositoryQuery(repository.getRepositoryUrl(), getQueryUrl(repository.getRepositoryUrl()), getTitleText());
+		return new TracRepositoryQuery(getTaskRepository().getRepositoryUrl(),
+				getQueryUrl(getTaskRepository().getRepositoryUrl()), getTitleText());
 	}
 
 	private String getTitleText() {
@@ -470,12 +459,12 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	// }
 
 	@Override
-	public boolean performAction() {
+	public boolean performSearch() {
 		if (inSearchContainer()) {
 			saveState();
 		}
 
-		return super.performAction();
+		return super.performSearch();
 	}
 
 	@Override
@@ -490,7 +479,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private boolean restoreWidgetValues() {
 		IDialogSettings settings = getDialogSettings();
-		String repoId = "." + repository.getRepositoryUrl();
+		String repoId = "." + getTaskRepository().getRepositoryUrl();
 
 		String searchUrl = settings.get(SEARCH_URL_ID + repoId);
 		if (searchUrl == null) {
@@ -503,7 +492,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public void saveState() {
-		String repoId = "." + repository.getRepositoryUrl();
+		String repoId = "." + getTaskRepository().getRepositoryUrl();
 		IDialogSettings settings = getDialogSettings();
 		settings.put(SEARCH_URL_ID + repoId, getTracSearch().toUrl());
 	}
@@ -766,6 +755,11 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		}
 
+	}
+
+	@Override
+	public String getQueryTitle() {
+		return (titleText != null) ? titleText.getText() : null;
 	}
 
 }

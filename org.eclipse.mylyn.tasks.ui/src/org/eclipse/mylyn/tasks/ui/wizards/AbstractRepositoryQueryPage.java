@@ -10,121 +10,80 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 
 import java.util.Set;
 
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.search.ui.ISearchPage;
-import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.search.ui.NewSearchUI;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * Extend to provide repository-specific query page to the Workbench search dialog.
  * 
  * @author Rob Elves
+ * @author Steffen Pingel
  * @since 3.0
  */
-public abstract class AbstractRepositoryQueryPage extends WizardPage implements ISearchPage {
-
-	private static final String TITLE_QUERY_TITLE = "&Query Title:";
+public abstract class AbstractRepositoryQueryPage extends WizardPage implements ITaskSearchPage {
 
 	private static final String TITLE = "Enter query parameters";
 
 	private static final String DESCRIPTION = "If attributes are blank or stale press the Update button.";
 
-	private final String titleString;
+	private ITaskSearchPageContainer searchContainer;
 
-	protected Text title;
+	private final TaskRepository taskRepository;
 
-	protected ISearchPageContainer scontainer = null;
-
-	protected TaskRepository repository;
-
-	public AbstractRepositoryQueryPage(String wizardTitle) {
-		this(wizardTitle, null);
+	public AbstractRepositoryQueryPage(String wizardTitle, TaskRepository taskRepository) {
+		super(wizardTitle);
+		Assert.isNotNull(taskRepository);
+		this.taskRepository = taskRepository;
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		setPageComplete(false);
 	}
 
+	/**
+	 * @deprecated use {@link #setQueryTitle(String)} instead
+	 */
+	@Deprecated
 	public AbstractRepositoryQueryPage(String wizardTitle, String queryTitle) {
-		super(wizardTitle);
-		titleString = queryTitle == null ? "" : queryTitle;
+		this(wizardTitle, (TaskRepository) null);
 	}
 
-	public void createControl(Composite parent) {
-		if (scontainer == null) {
-			createTitleGroup(parent);
-			title.setFocus();
-		}
-	}
-
-	private void createTitleGroup(Composite parent) {
-		Composite group = new Composite(parent, SWT.NONE);
-
-		GridLayout layout = new GridLayout(2, false);
-		group.setLayout(layout);
-
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 1;
-		group.setLayoutData(gd);
-
-		Label label = new Label(group, SWT.NONE);
-		label.setText(TITLE_QUERY_TITLE);
-
-		title = new Text(group, SWT.BORDER);
-		title.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
-		title.setText(titleString);
-
-		title.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				setPageComplete(isPageComplete());
-			}
-		});
-	}
+	public abstract String getQueryTitle();
 
 	@Override
 	public boolean isPageComplete() {
-		Set<AbstractRepositoryQuery> queries = TasksUi.getTaskList().getQueries();
-		Set<AbstractTaskCategory> categories = TasksUi.getTaskList().getCategories();
-
-		if (title == null || title.getText().equals("")) {
+		String queryTitle = getQueryTitle();
+		if (queryTitle == null || queryTitle.equals("")) {
 			setErrorMessage("Please specify a title for the query.");
 			return false;
 		} else {
+			Set<AbstractRepositoryQuery> queries = TasksUi.getTaskList().getQueries();
+			Set<AbstractTaskCategory> categories = TasksUi.getTaskList().getCategories();
 			if (getWizard() instanceof AbstractEditQueryWizard) {
 				String oldSummary = ((AbstractEditQueryWizard) getWizard()).getQuerySummary();
-				if (oldSummary != null && title.getText().equals(oldSummary)) {
+				if (oldSummary != null && queryTitle.equals(oldSummary)) {
 					setErrorMessage(null);
 					return true;
 				}
 			}
 			for (AbstractTaskCategory category : categories) {
-				if (title.getText().equals(category.getSummary())) {
+				if (queryTitle.equals(category.getSummary())) {
 					setErrorMessage("A category with this name already exists, please choose another name.");
 					return false;
 				}
 			}
 			for (AbstractRepositoryQuery query : queries) {
-				if (title.getText().equals(query.getSummary())) {
+				if (queryTitle.equals(query.getSummary())) {
 					setErrorMessage("A query with this name already exists, please choose another name.");
 					return false;
 				}
@@ -134,38 +93,26 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		return true;
 	}
 
-	public String getQueryTitle() {
-		return title != null ? title.getText() : "";
-	}
-
 	public abstract AbstractRepositoryQuery getQuery();
 
 	public void saveState() {
 		// empty
 	}
 
-	public void setContainer(ISearchPageContainer container) {
-		scontainer = container;
+	public void setContainer(ITaskSearchPageContainer container) {
+		searchContainer = container;
 	}
 
 	public boolean inSearchContainer() {
-		return scontainer != null;
+		return searchContainer != null;
 	}
 
-	public boolean performAction() {
-		if (repository == null) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
-					TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
-			return false;
-		}
-
+	public boolean performSearch() {
 		NewSearchUI.activateSearchResultView();
-
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
+				taskRepository.getConnectorKind());
 		if (connector != null) {
-			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(),
-					repository, getQuery());
+			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(), taskRepository, getQuery());
 			NewSearchUI.runQueryInBackground(collector);
 		}
 		return true;
@@ -187,6 +134,14 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 			}
 		}
 		setPageComplete(isPageComplete());
+	}
+
+	public ITaskSearchPageContainer getSearchContainer() {
+		return searchContainer;
+	}
+
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
 	}
 
 }

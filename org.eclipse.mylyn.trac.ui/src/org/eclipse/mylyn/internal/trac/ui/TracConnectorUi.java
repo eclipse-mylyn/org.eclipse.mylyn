@@ -15,7 +15,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
@@ -33,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.NewWebTaskWizard;
 
@@ -58,7 +58,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
+	public ITaskSearchPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
 		return new TracCustomQueryPage(repository);
 	}
 

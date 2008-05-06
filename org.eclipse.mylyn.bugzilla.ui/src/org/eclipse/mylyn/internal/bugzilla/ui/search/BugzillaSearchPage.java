@@ -253,6 +253,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 	};
 
+	private Text queryTitle;
+
 	private final class ModifyListenerImplementation implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			if (isControlCreated()) {
@@ -264,8 +266,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	@Override
 	public void setPageComplete(boolean complete) {
 		super.setPageComplete(complete);
-		if (scontainer != null) {
-			scontainer.setPerformActionEnabled(complete);
+		if (getSearchContainer() != null) {
+			getSearchContainer().setPerformActionEnabled(complete);
 		}
 	}
 
@@ -282,16 +284,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 	}
 
-	public BugzillaSearchPage() {
-		super(TITLE_BUGZILLA_QUERY);
-		// setTitle(TITLE);
-		// setDescription(DESCRIPTION);
-		// setPageComplete(false);
-	}
-
 	public BugzillaSearchPage(TaskRepository repository) {
-		super(TITLE_BUGZILLA_QUERY);
-		this.repository = repository;
+		super(TITLE_BUGZILLA_QUERY, repository);
 		// setTitle(TITLE);
 		// setDescription(DESCRIPTION);
 		// setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
@@ -310,9 +304,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	public BugzillaSearchPage(TaskRepository repository, BugzillaRepositoryQuery origQuery) {
-		super(TITLE_BUGZILLA_QUERY, origQuery.getSummary());
+		super(TITLE_BUGZILLA_QUERY, repository);
 		originalQuery = origQuery;
-		this.repository = repository;
 		setDescription("Select the Bugzilla query parameters.  Use the Update Attributes button to retrieve "
 				+ "updated values from the repository.");
 		// setTitle(TITLE);
@@ -400,14 +393,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			final Label queryTitleLabel = new Label(composite, SWT.NONE);
 			queryTitleLabel.setText("&Query Title:");
 
-			Text queryTitle = new Text(composite, SWT.BORDER);
+			queryTitle = new Text(composite, SWT.BORDER);
 			queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 			if (originalQuery != null) {
 				queryTitle.setText(originalQuery.getSummary());
 			}
 			queryTitle.addModifyListener(new ModifyListenerImplementation());
-			title = queryTitle;
-			title.setFocus();
+			queryTitle.setFocus();
 		}
 
 		// Info text
@@ -844,7 +836,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		updateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (repository != null) {
+				if (getTaskRepository() != null) {
 //					try {
 						
 						updateConfiguration(true);
@@ -948,7 +940,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	// TODO: avoid overriding?
-	public boolean performAction() {
+	public boolean performSearch() {
 		if (restoreQueryOptions) {
 			saveState();
 		}
@@ -962,17 +954,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		String summaryText = summaryPattern.getText();
 		BugzillaUiPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MOST_RECENT_QUERY, summaryText);
 
-		return super.performAction();
+		return super.performSearch();
 	}
 
 	@Override
 	public void setVisible(boolean visible) {
 		if (visible && summaryPattern != null) {
 			if (firstTime) {
-				if (repository == null) {
-					repository = TasksUiPlugin.getRepositoryManager().getDefaultRepository(
-							BugzillaCorePlugin.REPOSITORY_KIND);
-				}
 				// Set<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getRepositories(BugzillaCorePlugin.REPOSITORY_KIND);
 				// String[] repositoryUrls = new String[repositories.size()];
 				// int i = 0;
@@ -1036,11 +1024,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 
 				// TODO: update status, resolution, severity etc if possible...
-				if (repository != null) {
+				if (getTaskRepository() != null) {
 					updateAttributesFromConfiguration(null);
 					if (product.getItemCount() == 0) {
 						try {
-							repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, true, new NullProgressMonitor());
+							repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(), true, new NullProgressMonitor());
 							updateAttributesFromConfiguration(null);
 						} catch (final CoreException e1) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -1068,9 +1056,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			 * attributes so the component/version/milestone lists have the
 			 * proper values, then we can restore all the widget selections.
 			 */
-			if (repository != null) {
+			if (getTaskRepository() != null) {
 				IDialogSettings settings = getDialogSettings();
-				String repoId = "." + repository.getRepositoryUrl();
+				String repoId = "." + getTaskRepository().getRepositoryUrl();
 				if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null
 						&& product != null) {
 					product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
@@ -1224,71 +1212,71 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		sb.append(patternOperationValues[summaryOperation.getSelectionIndex()]);
 
 		sb.append("&short_desc=");
-		sb.append(URLEncoder.encode(summaryPattern.getText(), repository.getCharacterEncoding()));
+		sb.append(URLEncoder.encode(summaryPattern.getText(), getTaskRepository().getCharacterEncoding()));
 
 		int[] selected = product.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&product=");
-			sb.append(URLEncoder.encode(product.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(product.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = component.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&component=");
-			sb.append(URLEncoder.encode(component.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(component.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = version.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&version=");
-			sb.append(URLEncoder.encode(version.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(version.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = target.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&target_milestone=");
-			sb.append(URLEncoder.encode(target.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(target.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		sb.append("&long_desc_type=");
 		sb.append(patternOperationValues[commentOperation.getSelectionIndex()]);
 		sb.append("&long_desc=");
-		sb.append(URLEncoder.encode(commentPattern.getText(), repository.getCharacterEncoding()));
+		sb.append(URLEncoder.encode(commentPattern.getText(), getTaskRepository().getCharacterEncoding()));
 
 		selected = status.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&bug_status=");
-			sb.append(URLEncoder.encode(status.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(status.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = resolution.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&resolution=");
-			sb.append(URLEncoder.encode(resolution.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(resolution.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = severity.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&bug_severity=");
-			sb.append(URLEncoder.encode(severity.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(severity.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = priority.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&priority=");
-			sb.append(URLEncoder.encode(priority.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(priority.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = hardware.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&ref_platform=");
-			sb.append(URLEncoder.encode(hardware.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(hardware.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = os.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
 			sb.append("&op_sys=");
-			sb.append(URLEncoder.encode(os.getItem(selected[i]), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(os.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
 		}
 
 		if (emailPattern.getText() != null && !emailPattern.getText().trim().equals("")) {
@@ -1310,7 +1298,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				sb.append("&emailtype1=");
 				sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
 				sb.append("&email1=");
-				sb.append(URLEncoder.encode(emailPattern.getText(), repository.getCharacterEncoding()));
+				sb.append(URLEncoder.encode(emailPattern.getText(), getTaskRepository().getCharacterEncoding()));
 			}
 		}
 
@@ -1333,7 +1321,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				sb.append("&emailtype2=");
 				sb.append(emailOperationValues[emailOperation2.getSelectionIndex()]);
 				sb.append("&email2=");
-				sb.append(URLEncoder.encode(emailPattern2.getText(), repository.getCharacterEncoding()));
+				sb.append(URLEncoder.encode(emailPattern2.getText(), getTaskRepository().getCharacterEncoding()));
 			}
 		}
 
@@ -1341,7 +1329,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			try {
 				Integer.parseInt(daysText.getText());
 				sb.append("&changedin=");
-				sb.append(URLEncoder.encode(daysText.getText(), repository.getCharacterEncoding()));
+				sb.append(URLEncoder.encode(daysText.getText(), getTaskRepository().getCharacterEncoding()));
 			} catch (NumberFormatException ignored) {
 				// this means that the days is not a number, so don't worry
 			}
@@ -1351,7 +1339,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			sb.append("&keywords_type=");
 			sb.append(keywordOperationValues[keywordsOperation.getSelectionIndex()]);
 			sb.append("&keywords=");
-			sb.append(URLEncoder.encode(keywords.getText().replace(',', ' '), repository.getCharacterEncoding()));
+			sb.append(URLEncoder.encode(keywords.getText().replace(',', ' '), getTaskRepository().getCharacterEncoding()));
 		}
 
 		return sb;
@@ -1406,16 +1394,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 	}
 	
-	
-
-	public TaskRepository getRepository() {
-		return repository;
-	}
-
-	public void setRepository(TaskRepository repository) {
-		this.repository = repository;
-	}
-
 	public boolean canFlipToNextPage() {
 		// if (getErrorMessage() != null)
 		// return false;
@@ -1442,7 +1420,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		for (String option : options) {
 			String key = option.substring(0, option.indexOf("="));
 			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1),
-					repository.getCharacterEncoding());
+					getTaskRepository().getCharacterEncoding());
 			if (key == null)
 				continue;
 
@@ -1665,7 +1643,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public BugzillaRepositoryQuery getQuery() {
 		if (originalQuery == null) {
 			try {
-				originalQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), getQueryURL(repository,
+				originalQuery = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), getQueryURL(getTaskRepository(),
 						getQueryParameters()), getQueryTitle());
 			} catch (UnsupportedEncodingException e) {
 				return null;
@@ -1673,7 +1651,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		} else {
 			try {
-				originalQuery.setUrl(getQueryURL(repository, getQueryParameters()));
+				originalQuery.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
 				// originalQuery.setMaxHits(Integer.parseInt(getMaxHits()));
 				originalQuery.setHandleIdentifier(getQueryTitle());
 			} catch (UnsupportedEncodingException e) {
@@ -1694,7 +1672,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private void restoreWidgetValues() {
 		try {
 			IDialogSettings settings = getDialogSettings();
-			String repoId = "." + repository.getRepositoryUrl();
+			String repoId = "." + getTaskRepository().getRepositoryUrl();
 			if (!restoreQueryOptions || settings.getArray(STORE_PRODUCT_ID + repoId) == null || product == null) {
 				return;
 			}
@@ -1738,7 +1716,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	public void saveState() {
-		String repoId = "." + repository.getRepositoryUrl();
+		String repoId = "." + getTaskRepository().getRepositoryUrl();
 		IDialogSettings settings = getDialogSettings();
 		settings.put(STORE_PRODUCT_ID + repoId, product.getSelection());
 		settings.put(STORE_COMPONENT_ID + repoId, component.getSelection());
@@ -1825,7 +1803,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit?
 	private IContentProposalProvider createContentProposalProvider() {
-		return new PersonProposalProvider(repository.getRepositoryUrl(), repository.getConnectorKind());
+		return new PersonProposalProvider(getTaskRepository().getRepositoryUrl(), getTaskRepository().getConnectorKind());
 	}
 
 	// API 3.0 get this from the AttributeEditorToolkit?
@@ -1839,7 +1817,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void updateConfiguration(final boolean force) {
-		if (repository != null) {
+		if (getTaskRepository() != null) {
 			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					if (monitor == null) {
@@ -1847,7 +1825,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					}
 					try {
 						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
-						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, force, monitor);
+						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(), force, monitor);
 					} catch (final Exception e) {
 						throw new InvocationTargetException(e);
 					} finally {
@@ -1860,8 +1838,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				// TODO: make cancelable (bug 143011)
 				if (getContainer() != null) {
 					getContainer().run(true, true, updateRunnable);
-				} else if (scontainer != null) {
-					scontainer.getRunnableContext().run(true, true, updateRunnable);
+				} else if (getSearchContainer() != null) {
+					getSearchContainer().getRunnableContext().run(true, true, updateRunnable);
 				} else {
 					IProgressService service = PlatformUI.getWorkbench().getProgressService();
 					service.busyCursorWhile(updateRunnable);
@@ -1917,5 +1895,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 			updateAttributesFromConfiguration(null);
 		}
+	}
+
+	@Override
+	public String getQueryTitle() {
+		return (queryTitle != null) ? queryTitle.getText() : null;
 	}
 }

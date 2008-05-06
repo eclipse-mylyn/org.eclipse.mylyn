@@ -16,7 +16,7 @@ import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
@@ -29,6 +29,8 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPageContainer;
 import org.eclipse.search.internal.ui.SearchPlugin;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
@@ -94,6 +96,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private ISearchPageContainer pageContainer;
 
+	private ITaskSearchPageContainer taskSearchPageContainer;
+
 	public boolean performAction() {
 		saveDialogSettings();
 		String key = keyText.getText();
@@ -106,13 +110,22 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			}
 			return openSuccessful;
 		} else {
-			ISearchPage page = (ISearchPage) queryPages[currentPageIndex].getData(PAGE_KEY);
-			return page.performAction();
+			ITaskSearchPage page = (ITaskSearchPage) queryPages[currentPageIndex].getData(PAGE_KEY);
+			return page.performSearch();
 		}
 	}
 
 	public void setContainer(ISearchPageContainer container) {
 		this.pageContainer = container;
+		this.taskSearchPageContainer = new ITaskSearchPageContainer() {
+			public IRunnableContext getRunnableContext() {
+				return pageContainer.getRunnableContext();
+			}
+
+			public void setPerformActionEnabled(boolean enabled) {
+				pageContainer.setPerformActionEnabled(enabled);
+			}
+		};
 	}
 
 	public void createControl(Composite parent) {
@@ -217,7 +230,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		}
 	}
 
-	private Control createPage(TaskRepository repository, ISearchPage searchPage) {
+	private Control createPage(TaskRepository repository, ITaskSearchPage searchPage) {
 		// Page wrapper
 		final Composite pageWrapper = new Composite(fParentComposite, SWT.NONE);
 		pageWrapper.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -226,7 +239,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		layout.marginHeight = 0;
 		pageWrapper.setLayout(layout);
 
-		searchPage.setContainer(pageContainer);
+		searchPage.setContainer(taskSearchPageContainer);
 		try {
 			searchPage.createControl(pageWrapper);
 		} catch (Exception e) {
@@ -234,7 +247,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			searchPage.dispose();
 
 			searchPage = new DeadSearchPage(repository);
-			searchPage.setContainer(pageContainer);
+			searchPage.setContainer(taskSearchPageContainer);
 			searchPage.createControl(fParentComposite);
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Error occurred while constructing search page for " + repository.getRepositoryUrl() + " ["
@@ -261,7 +274,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		// TODO: if repository == null display invalid page?
 		if (currentPageIndex != -1 && queryPages[currentPageIndex] != null) {
 			queryPages[currentPageIndex].setVisible(false);
-			ISearchPage page = (ISearchPage) queryPages[currentPageIndex].getData(PAGE_KEY);
+			ITaskSearchPage page = (ITaskSearchPage) queryPages[currentPageIndex].getData(PAGE_KEY);
 			page.setVisible(false);
 			GridData data = (GridData) queryPages[currentPageIndex].getLayoutData();
 			data.exclude = true;
@@ -275,10 +288,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			if (repository != null) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null) {
-					boolean hasSearchPage = connectorUi.hasSearchPage();
-					WizardPage searchPage = connectorUi.getSearchPage(repository, null);
-					if (hasSearchPage && searchPage != null && searchPage instanceof ISearchPage) {
-						queryPages[pageIndex] = createPage(repository, (ISearchPage) searchPage);
+					ITaskSearchPage searchPage = getSearchPage(connectorUi);
+					if (searchPage != null) {
+						queryPages[pageIndex] = createPage(repository, searchPage);
 					} else {
 						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 								repository.getConnectorKind());
@@ -310,7 +322,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			data.exclude = false;
 			queryPages[pageIndex].setLayoutData(data);
 			queryPages[pageIndex].setVisible(true);
-			ISearchPage page = (ISearchPage) queryPages[pageIndex].getData(PAGE_KEY);
+			ITaskSearchPage page = (ITaskSearchPage) queryPages[pageIndex].getData(PAGE_KEY);
 			page.setVisible(true);
 		}
 
@@ -318,6 +330,13 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		fParentComposite.getParent().layout(true, true);
 		updatePageEnablement();
 
+	}
+
+	private ITaskSearchPage getSearchPage(AbstractRepositoryConnectorUi connectorUi) {
+		if (connectorUi.hasSearchPage()) {
+			return connectorUi.getSearchPage(repository, null);
+		}
+		return null;
 	}
 
 	@Override
@@ -489,7 +508,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		if (queryPages != null) {
 			for (Control control : queryPages) {
 				if (control != null) {
-					ISearchPage page = (ISearchPage) control.getData(PAGE_KEY);
+					ITaskSearchPage page = (ITaskSearchPage) control.getData(PAGE_KEY);
 					page.dispose();
 				}
 			}
@@ -499,14 +518,10 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private class DeadSearchPage extends AbstractRepositoryQueryPage {
 
-		private final TaskRepository taskRepository;
-
 		public DeadSearchPage(TaskRepository rep) {
-			super("Search page error");
-			this.taskRepository = rep;
+			super("Search page error", rep);
 		}
 
-		@Override
 		public void createControl(Composite parent) {
 			Hyperlink hyperlink = new Hyperlink(parent, SWT.NONE);
 			hyperlink.setText("ERROR: Unable to present query page, ensure repository configuration is valid and retry");
@@ -515,7 +530,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
 					TaskSearchPage.this.getControl().getShell().close();
-					TasksUiUtil.openEditRepositoryWizard(getRepository());
+					TasksUiUtil.openEditRepositoryWizard(getTaskRepository());
 					// TODO: Re-construct this page with new
 					// repository data
 				}
@@ -536,31 +551,27 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			return false;
 		}
 
-		public TaskRepository getRepository() {
-			return taskRepository;
-		}
-
 		@Override
 		public void setVisible(boolean visible) {
 			super.setVisible(visible);
-
 			if (visible) {
-				scontainer.setPerformActionEnabled(false);
+				getSearchContainer().setPerformActionEnabled(false);
 			}
+		}
+
+		@Override
+		public String getQueryTitle() {
+			return null;
 		}
 
 	}
 
 	private class NoSearchPage extends AbstractRepositoryQueryPage {
 
-		private final TaskRepository taskRepository;
-
 		public NoSearchPage(TaskRepository rep) {
-			super("No search page");
-			this.taskRepository = rep;
+			super("No search page", rep);
 		}
 
-		@Override
 		public void createControl(Composite parent) {
 			Composite composite = new Composite(parent, SWT.NONE);
 			composite.setLayout(new GridLayout());
@@ -577,17 +588,17 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			return false;
 		}
 
-		public TaskRepository getRepository() {
-			return taskRepository;
-		}
-
 		@Override
 		public void setVisible(boolean visible) {
 			super.setVisible(visible);
-
 			if (visible) {
-				scontainer.setPerformActionEnabled(false);
+				getSearchContainer().setPerformActionEnabled(false);
 			}
+		}
+
+		@Override
+		public String getQueryTitle() {
+			return null;
 		}
 
 	}

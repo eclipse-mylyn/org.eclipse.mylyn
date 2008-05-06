@@ -40,24 +40,23 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
 	private BugzillaRepositoryQuery query;
 
+	private Text queryTitle;
+
 	public BugzillaCustomQueryWizardPage(TaskRepository repository, BugzillaRepositoryQuery query) {
-		super(TITLE, query.getSummary());
+		super(TITLE, repository);
 		this.query = query;
-		this.repository = repository;
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
 	public BugzillaCustomQueryWizardPage(TaskRepository repository) {
-		super(TITLE);
-		this.repository = repository;
+		super(TITLE, repository);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
@@ -72,11 +71,10 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		final Label queryTitleLabel = new Label(composite, SWT.NONE);
 		queryTitleLabel.setText(LABEL_CUSTOM_TITLE);
 
-		Text queryTitle = new Text(composite, SWT.BORDER);
+		queryTitle = new Text(composite, SWT.BORDER);
 		queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		queryTitle.addModifyListener(modifyListener);
-		title = queryTitle;
-		title.setFocus();
+		queryTitle.setFocus();
 		
 		final Label queryUrlLabel = new Label(composite, SWT.NONE);
 		queryUrlLabel.setText(LABEL_CUSTOM_QUERY);
@@ -93,6 +91,11 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		}
 	}
 
+	@Override
+	public String getQueryTitle() {
+		return queryTitle.getText();
+	}
+	
 	@Override
 	public boolean canFlipToNextPage() {
 		return false;
@@ -112,7 +115,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	@Override
 	public BugzillaRepositoryQuery getQuery() {
 		if (query == null) {
-			query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryText.getText(), this.getQueryTitle());
+			query = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), queryText.getText(), this.getQueryTitle());
 			query.setCustomQuery(true);
 		} else {
 			query.setHandleIdentifier(this.getQueryTitle());

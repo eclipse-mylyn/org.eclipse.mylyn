@@ -20,7 +20,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -39,6 +38,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
@@ -188,8 +188,10 @@ public abstract class AbstractRepositoryConnectorUi {
 		return new CommonAddExistingTaskWizard(repository);
 	}
 
-	// API 3.0: return ITaskSearchPage / IWizardPage
-	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
+	/**
+	 * @since 3.0
+	 */
+	public ITaskSearchPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
 		return null;
 	}
 
