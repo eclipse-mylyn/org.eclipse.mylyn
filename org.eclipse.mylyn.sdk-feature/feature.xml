@@ -7,7 +7,8 @@
       plugin="org.eclipse.mylyn">
 
    <description url="http://eclipse.org/mylyn">
-      Provides the Task Mylyn SDK.
+      Provides sources for the Mylyn Task List, Focused UI and Integration
+features.
    </description>
 
    <copyright>
@@ -63,29 +64,166 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
       <update label="Mylyn for Eclipse 3.4" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
    </url>
 
+   <plugin
+         id="org.eclipse.mylyn.help.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
-<plugin id="org.eclipse.mylyn.help.ui.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.context.core.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.tasks.ui.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.monitor.ui.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.tasks.core.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.monitor.core.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.compatibility.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.commons.core.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.commons.ui.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.commons.net.source" version="0.0.0"/>
+   <plugin
+         id="org.eclipse.mylyn.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
-<plugin id="org.eclipse.mylyn.context.ui.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.resources.ui.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.web.ui.source" version="0.0.0"/>
+   <plugin
+         id="org.eclipse.mylyn.context.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
-<plugin id="org.eclipse.mylyn.ide.ui.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.team.cvs.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.ide.ant.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.bugzilla.ide.source" version="0.0.0"/>
-<plugin id="org.eclipse.mylyn.tasks.bugs.source" version="0.0.0"/>
+   <plugin
+         id="org.eclipse.mylyn.tasks.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
+   <plugin
+         id="org.eclipse.mylyn.monitor.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
+   <plugin
+         id="org.eclipse.mylyn.tasks.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.monitor.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.compatibility.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.commons.net.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.context.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.resources.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.web.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.ide.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.team.cvs.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.ide.ant.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.bugzilla.ide.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.tasks.bugs.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.java.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.java.tasks.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.pde.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.team.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.bugzilla.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.bugzilla.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.trac.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.mylyn.trac.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
