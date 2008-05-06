@@ -102,7 +102,7 @@ public class SearchHitCollector extends LegacyTaskDataCollector implements ISear
 
 	@Override
 	public void accept(RepositoryTaskData taskData) {
-		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), taskData.getTaskId());
+		AbstractTask task = (AbstractTask) taskList.getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 		if (task == null) {
 			task = ((AbstractLegacyRepositoryConnector) connector).createTask(taskData.getRepositoryUrl(),
 					taskData.getTaskId(), "");

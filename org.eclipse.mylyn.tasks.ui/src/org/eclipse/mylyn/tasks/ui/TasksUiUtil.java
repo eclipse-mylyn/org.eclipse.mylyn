@@ -121,16 +121,15 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	// API 3.0 consider moving this somewhere else and renaming to addToTaskList
-	public static AbstractTask createTask(TaskRepository repository, String id, IProgressMonitor monitor)
-			throws CoreException {
+	public static ITask createTask(TaskRepository repository, String id, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		ITaskList taskList = TasksUi.getTaskList();
-		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
+		AbstractTask task = (AbstractTask) taskList.getTask(repository.getRepositoryUrl(), id);
 		if (task == null) {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
 			if (connector instanceof AbstractLegacyRepositoryConnector) {
-				RepositoryTaskData taskData = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskData(repository,
-						id, new SubProgressMonitor(monitor, 1));
+				RepositoryTaskData taskData = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskData(
+						repository, id, new SubProgressMonitor(monitor, 1));
 				if (taskData != null) {
 					task = createTaskFromTaskData((AbstractLegacyRepositoryConnector) connector, taskList, repository,
 							taskData, true, new SubProgressMonitor(monitor, 1));
@@ -151,9 +150,10 @@ public class TasksUiUtil {
 	private static AbstractTask createTaskFromExistingId(AbstractLegacyRepositoryConnector connector,
 			ITaskList taskList, TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor)
 			throws CoreException {
-		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
+		AbstractTask task = (AbstractTask) taskList.getTask(repository.getRepositoryUrl(), id);
 		if (task == null) {
-			RepositoryTaskData taskData = connector.getLegacyTaskData(repository, id, new SubProgressMonitor(monitor, 1));
+			RepositoryTaskData taskData = connector.getLegacyTaskData(repository, id,
+					new SubProgressMonitor(monitor, 1));
 			if (taskData != null) {
 				task = createTaskFromTaskData(connector, taskList, repository, taskData, retrieveSubTasks,
 						new SubProgressMonitor(monitor, 1));
@@ -289,7 +289,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	@Deprecated
-	public static void openEditor(final AbstractTask task, boolean newTask) {
+	public static void openEditor(final ITask task, boolean newTask) {
 		openEditor(task, true, newTask);
 	}
 
@@ -300,7 +300,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	@Deprecated
-	public static void openEditor(final AbstractTask task, boolean asyncExec, final boolean newTask) {
+	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
 		final boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.EDITOR_TASKS_RICH);
 
@@ -335,7 +335,7 @@ public class TasksUiUtil {
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {
 								if (task != null) {
-									AbstractTask repositoryTask = task;
+									AbstractTask repositoryTask = (AbstractTask) task;
 									if (!wasOpen) {
 										TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
 									}
@@ -382,7 +382,7 @@ public class TasksUiUtil {
 	 * @since 3.0
 	 */
 	@Deprecated
-	public static void openEditor(AbstractTask task, String pageId) {
+	public static void openEditor(ITask task, String pageId) {
 		final IEditorInput editorInput = new TaskEditorInput(task, false);
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IEditorPart part = openEditor(editorInput, getTaskEditorId(task), window.getActivePage());
@@ -585,13 +585,13 @@ public class TasksUiUtil {
 	public static boolean openTask(String repositoryUrl, String taskId, String fullUrl) {
 		AbstractTask task = null;
 		if (repositoryUrl != null && taskId != null) {
-			task = TasksUi.getTaskList().getTask(repositoryUrl, taskId);
+			task = (AbstractTask) TasksUi.getTaskList().getTask(repositoryUrl, taskId);
 		}
 		if (task == null && fullUrl != null) {
 			task = TasksUiUtil.getTaskByUrl(fullUrl);
 		}
 		if (task == null && repositoryUrl != null && taskId != null) {
-			task = TasksUi.getTaskList().getTaskByKey(repositoryUrl, taskId);
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getTaskByKey(repositoryUrl, taskId);
 		}
 
 		if (task != null) {
@@ -646,9 +646,9 @@ public class TasksUiUtil {
 		Assert.isNotNull(repository);
 		Assert.isNotNull(taskId);
 
-		AbstractTask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
+		AbstractTask task = (AbstractTask) TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
 		if (task == null) {
-			task = TasksUi.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
 		}
 		if (task != null) {
 			return TasksUiUtil.openTaskAndRefresh(task);

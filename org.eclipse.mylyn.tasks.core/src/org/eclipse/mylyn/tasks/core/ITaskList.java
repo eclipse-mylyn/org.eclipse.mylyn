@@ -67,15 +67,7 @@ public interface ITaskList {
 	/**
 	 * @since 2.0
 	 */
-	public abstract AbstractTask getTask(String repositoryUrl, String taskId);
-
-	/**
-	 * Searches for a task whose key matches.
-	 * 
-	 * @return first task with a key, null if no matching task is found
-	 * @since 2.0
-	 */
-	public abstract AbstractTask getTaskByKey(String repositoryUrl, String taskKey);
+	public abstract ITask getTask(String repositoryUrl, String taskId);
 
 	/**
 	 * @param task

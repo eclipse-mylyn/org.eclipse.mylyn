@@ -141,14 +141,14 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	protected void createTaskFromExistingKey() throws CoreException {
 		String id = data.tickets.get(0).getId() + "";
-		AbstractTask task = TasksUiUtil.createTask(repository, id, null);
+		AbstractTask task = (AbstractTask) TasksUiUtil.createTask(repository, id, null);
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
 		assertEquals(repository.getRepositoryUrl() + ITracClient.TICKET_URL + id, task.getUrl());
 
 		try {
-			task = TasksUiUtil.createTask(repository, "does not exist", null);
+			task = (AbstractTask) TasksUiUtil.createTask(repository, "does not exist", null);
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}

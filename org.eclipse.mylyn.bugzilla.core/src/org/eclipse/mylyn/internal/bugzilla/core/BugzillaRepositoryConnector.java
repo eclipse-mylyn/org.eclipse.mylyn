@@ -375,7 +375,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 
 			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) {
 				// do not construct actual task objects here as query shouldn't result in new tasks
-				return taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
+				return (AbstractTask) taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 			}
 		});
 

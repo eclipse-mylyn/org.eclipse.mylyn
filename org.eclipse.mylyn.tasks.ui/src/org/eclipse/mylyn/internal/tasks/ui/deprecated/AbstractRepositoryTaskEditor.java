@@ -3602,7 +3602,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
-						modifiedTask = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(),
+						modifiedTask = (AbstractTask) TasksUi.getTaskList().getTask(repository.getRepositoryUrl(),
 								taskData.getTaskId());
 					}
 
@@ -3826,7 +3826,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected AbstractTask updateSubmittedTask(String postResult, IProgressMonitor monitor) throws CoreException {
-		final AbstractTask newTask = TasksUiUtil.createTask(repository, postResult, monitor);
+		final AbstractTask newTask = (AbstractTask) TasksUiUtil.createTask(repository, postResult, monitor);
 
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

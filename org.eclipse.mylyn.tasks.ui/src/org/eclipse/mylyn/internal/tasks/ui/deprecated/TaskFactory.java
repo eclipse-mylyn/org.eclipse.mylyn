@@ -78,7 +78,7 @@ public class TaskFactory implements ITaskFactory {
 	 * @throws CoreException
 	 */
 	public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
-		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
+		AbstractTask repositoryTask = (AbstractTask) taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 		if (repositoryTask == null) {
 			repositoryTask = createTaskFromTaskData(connector, repository, taskData, updateTasklist, monitor);
 			repositoryTask.setSynchronizationState(SynchronizationState.INCOMING);
@@ -162,7 +162,7 @@ public class TaskFactory implements ITaskFactory {
 	private AbstractTask createTaskFromExistingId(AbstractLegacyRepositoryConnector connector,
 			TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor)
 			throws CoreException {
-		AbstractTask repositoryTask = taskList.getTask(repository.getRepositoryUrl(), id);
+		AbstractTask repositoryTask = (AbstractTask) taskList.getTask(repository.getRepositoryUrl(), id);
 		if (repositoryTask == null && connector.getLegacyTaskDataHandler() != null) {
 			RepositoryTaskData taskData = null;
 			taskData = connector.getLegacyTaskDataHandler().getTaskData(repository, id,

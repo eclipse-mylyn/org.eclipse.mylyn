@@ -97,7 +97,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	@Deprecated
 	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id, boolean retrieveSubTasks,
 			IProgressMonitor monitor) throws CoreException {
-		AbstractTask repositoryTask = taskList.getTask(repository.getRepositoryUrl(), id);
+		AbstractTask repositoryTask = (AbstractTask) taskList.getTask(repository.getRepositoryUrl(), id);
 		if (repositoryTask == null && getLegacyTaskDataHandler() != null) {
 			RepositoryTaskData taskData = null;
 			taskData = getLegacyTaskDataHandler().getTaskData(repository, id, new SubProgressMonitor(monitor, 1));

@@ -36,11 +36,11 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
@@ -171,7 +171,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 			if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
 				TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
 
-				ITaskList taskList = TasksUi.getTaskList();
+				TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 				String repositoryUrl = hyperlink.getRepository().getRepositoryUrl();
 
 				ITask task = taskList.getTask(repositoryUrl, hyperlink.getTaskId());

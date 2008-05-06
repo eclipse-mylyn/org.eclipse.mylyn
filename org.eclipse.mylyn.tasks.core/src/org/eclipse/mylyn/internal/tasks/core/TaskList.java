@@ -348,7 +348,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	public AbstractTask getTask(String repositoryUrl, String taskId) {
+	public ITask getTask(String repositoryUrl, String taskId) {
 		if (!RepositoryTaskHandleUtil.isValidTaskId(taskId)) {
 			return null;
 		}

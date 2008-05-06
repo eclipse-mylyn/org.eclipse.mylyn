@@ -106,8 +106,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				List<AbstractTask> tasksToMove = new ArrayList<AbstractTask>();
 				if (isUrl(data) && createTaskFromUrl(data)) {
 					tasksToMove.add(newTask);
-				} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)
-						&& data instanceof ITask[]) {
+				} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer) && data instanceof ITask[]) {
 					AbstractTask[] tasks = (AbstractTask[]) data;
 					for (AbstractTask task : tasks) {
 						if (task != null) {
@@ -199,15 +198,13 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				} else {
 					for (AbstractTask task : tasksToMove) {
 						if (currentTarget instanceof UncategorizedTaskContainer) {
-							TasksUi.getTaskList().addTask(task,
-									(UncategorizedTaskContainer) currentTarget);
+							TasksUi.getTaskList().addTask(task, (UncategorizedTaskContainer) currentTarget);
 						} else if (currentTarget instanceof TaskCategory) {
 							TasksUi.getTaskList().addTask(task, (TaskCategory) currentTarget);
 						} else if (currentTarget instanceof UnmatchedTaskContainer) {
 							if (((UnmatchedTaskContainer) currentTarget).getRepositoryUrl().equals(
 									task.getRepositoryUrl())) {
-								TasksUi.getTaskList().addTask(task,
-										(AbstractTaskCategory) currentTarget);
+								TasksUi.getTaskList().addTask(task, (AbstractTaskCategory) currentTarget);
 							}
 						} else if (currentTarget instanceof ITask) {
 							ITask targetTask = (ITask) currentTarget;
@@ -318,7 +315,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					connector.getConnectorKind())) {
 				if (repository.getRepositoryUrl().equals(repositoryUrl)) {
 					try {
-						newTask = TasksUiUtil.createTask(repository, id, new NullProgressMonitor());
+						newTask = (AbstractTask) TasksUiUtil.createTask(repository, id, new NullProgressMonitor());
 						TasksUiInternal.refreshAndOpenTaskListElement(newTask);
 						return true;
 					} catch (CoreException e) {

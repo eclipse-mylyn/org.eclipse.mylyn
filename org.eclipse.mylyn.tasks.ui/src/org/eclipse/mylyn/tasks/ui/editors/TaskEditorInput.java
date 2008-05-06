@@ -44,7 +44,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 * @since 3.0
 	 */
 	@Deprecated
-	public TaskEditorInput(AbstractTask task, boolean newTask) {
+	public TaskEditorInput(ITask task, boolean newTask) {
 		this(TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl()), task);
 	}
 

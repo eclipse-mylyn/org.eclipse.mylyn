@@ -85,7 +85,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		@Deprecated
 		public void accept(RepositoryTaskData taskData) {
 			boolean changed;
-			AbstractTask task = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
+			AbstractTask task = (AbstractTask) taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 			if (task == null) {
 				task = ((AbstractLegacyRepositoryConnector) connector).createTask(taskData.getRepositoryUrl(),
 						taskData.getTaskId(), "");

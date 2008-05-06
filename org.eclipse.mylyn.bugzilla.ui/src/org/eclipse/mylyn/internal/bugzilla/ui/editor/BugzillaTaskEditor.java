@@ -351,7 +351,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
 				final String bugUrl = repository.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + bugId;
-				final AbstractTask task = TasksUi.getTaskList().getTask(
+				final AbstractTask task = (AbstractTask) TasksUi.getTaskList().getTask(
 						repository.getRepositoryUrl(), bugId);
 				createTaskListHyperlink(hyperlinksComposite, bugId, bugUrl, task);
 			}

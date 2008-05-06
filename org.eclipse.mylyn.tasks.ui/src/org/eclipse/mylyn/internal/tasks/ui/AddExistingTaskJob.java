@@ -67,7 +67,7 @@ public class AddExistingTaskJob extends Job {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			final AbstractTask newTask = TasksUiUtil.createTask(repository, taskId, monitor);
+			final AbstractTask newTask = (AbstractTask) TasksUiUtil.createTask(repository, taskId, monitor);
 			if (newTask != null) {
 				Calendar newSchedule = TaskActivityUtil.getCalendar();
 				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
