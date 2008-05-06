@@ -291,11 +291,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					for (ITask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
 							repository.getRepositoryUrl())) {
 						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING)
-								&& repositoryTask.isNotified() == false) {
+								&& ((AbstractTask) repositoryTask).isNotified() == false) {
 							TaskListNotification notification = INSTANCE.getIncommingNotification(connector,
 									repositoryTask);
 							notifications.add(notification);
-							repositoryTask.setNotified(true);
+							((AbstractTask) repositoryTask).setNotified(true);
 						}
 					}
 				}
@@ -305,9 +305,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getConnectorKind());
 				if (!connectorUi.isCustomNotificationHandling()) {
 					for (ITask hit : query.getChildren()) {
-						if (hit.isNotified() == false) {
+						if (((AbstractTask) hit).isNotified() == false) {
 							notifications.add(new TaskListNotificationQueryIncoming(hit));
-							hit.setNotified(true);
+							((AbstractTask) hit).setNotified(true);
 						}
 					}
 				}

@@ -85,7 +85,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			}
 		} catch (OperationCanceledException e) {
 			for (ITask task : tasks) {
-				task.setSynchronizing(false);
+				((AbstractTask) task).setSynchronizing(false);
 				taskList.notifyTaskChanged(task, false);
 			}
 			return Status.CANCEL_STATUS;
@@ -112,7 +112,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	@SuppressWarnings("deprecation")
 	private void synchronizeTask(IProgressMonitor monitor, ITask task) {
 		monitor.subTask("Receiving task " + task.getSummary());
-		task.setSynchronizationStatus(null);
+		((AbstractTask) task).setSynchronizationStatus(null);
 		taskList.notifyTaskChanged(task, false);
 		try {
 			String taskId = task.getTaskId();
@@ -206,7 +206,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 //		}
 
 		task.setStale(false);
-		task.setSynchronizing(false);
+		((AbstractTask) task).setSynchronizing(false);
 		if (task.getSynchronizationState() == SynchronizationState.INCOMING
 				|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
 			taskList.notifyTaskChanged(task, true);
@@ -224,9 +224,9 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	private void updateStatus(TaskRepository repository, ITask task, IStatus status) {
-		task.setSynchronizationStatus(status);
+		((AbstractTask) task).setSynchronizationStatus(status);
 		if (!isUser()) {
-			task.setSynchronizing(false);
+			((AbstractTask) task).setSynchronizing(false);
 		}
 		taskList.notifyTaskChanged(task, false);
 	}

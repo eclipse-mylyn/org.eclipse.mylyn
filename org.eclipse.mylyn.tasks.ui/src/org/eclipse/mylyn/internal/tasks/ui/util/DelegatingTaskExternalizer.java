@@ -234,25 +234,24 @@ final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_MARK_READ_PENDING, VAL_FALSE);
 		}
 
-		ITask abstractTask = task;
-		if (abstractTask.getLastReadTimeStamp() != null) {
-			node.setAttribute(KEY_LAST_MOD_DATE, abstractTask.getLastReadTimeStamp());
+		if (task.getLastReadTimeStamp() != null) {
+			node.setAttribute(KEY_LAST_MOD_DATE, task.getLastReadTimeStamp());
 		}
 
-		if (abstractTask.isNotified()) {
+		if (task.isNotified()) {
 			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
 		}
 
-		if (abstractTask.getSynchronizationState() != null) {
-			node.setAttribute(KEY_SYNC_STATE, abstractTask.getSynchronizationState().toString());
+		if (task.getSynchronizationState() != null) {
+			node.setAttribute(KEY_SYNC_STATE, task.getSynchronizationState().toString());
 		} else {
 			node.setAttribute(KEY_SYNC_STATE, SynchronizationState.SYNCHRONIZED.toString());
 		}
 
-		if (abstractTask.getOwner() != null) {
-			node.setAttribute(KEY_OWNER, abstractTask.getOwner());
+		if (task.getOwner() != null) {
+			node.setAttribute(KEY_OWNER, task.getOwner());
 		}
 
 		for (ITask t : task.getChildren()) {
@@ -378,8 +377,8 @@ final class DelegatingTaskExternalizer {
 		return task;
 	}
 
-	private void readTaskInfo(AbstractTask task, Element element, ITask parent,
-			AbstractTaskCategory legacyCategory) throws TaskExternalizationException {
+	private void readTaskInfo(AbstractTask task, Element element, ITask parent, AbstractTaskCategory legacyCategory)
+			throws TaskExternalizationException {
 		if (task == null) {
 			return;
 		}
@@ -479,37 +478,36 @@ final class DelegatingTaskExternalizer {
 			task.setMarkReadPending(false);
 		}
 
-		AbstractTask abstractTask = task;
-		abstractTask.setSynchronizing(false);
+		task.setSynchronizing(false);
 
 		if (element.hasAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL)) {
-			abstractTask.setRepositoryUrl(element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL));
+			task.setRepositoryUrl(element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL));
 		}
 
 		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
-			abstractTask.setLastReadTimeStamp(element.getAttribute(KEY_LAST_MOD_DATE));
+			task.setLastReadTimeStamp(element.getAttribute(KEY_LAST_MOD_DATE));
 		}
 
 		if (element.hasAttribute(KEY_OWNER)) {
-			abstractTask.setOwner(element.getAttribute(KEY_OWNER));
+			task.setOwner(element.getAttribute(KEY_OWNER));
 		}
 
 		if (VAL_TRUE.equals(element.getAttribute(KEY_NOTIFIED_INCOMING))) {
-			abstractTask.setNotified(true);
+			task.setNotified(true);
 		} else {
-			abstractTask.setNotified(false);
+			task.setNotified(false);
 		}
 
 		if (element.hasAttribute(KEY_SYNC_STATE)) {
 			String syncState = element.getAttribute(KEY_SYNC_STATE);
 			if (syncState.compareTo(SynchronizationState.SYNCHRONIZED.toString()) == 0) {
-				abstractTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 			} else if (syncState.compareTo(SynchronizationState.INCOMING.toString()) == 0) {
-				abstractTask.setSynchronizationState(SynchronizationState.INCOMING);
+				task.setSynchronizationState(SynchronizationState.INCOMING);
 			} else if (syncState.compareTo(SynchronizationState.OUTGOING.toString()) == 0) {
-				abstractTask.setSynchronizationState(SynchronizationState.OUTGOING);
+				task.setSynchronizationState(SynchronizationState.OUTGOING);
 			} else if (syncState.compareTo(SynchronizationState.CONFLICT.toString()) == 0) {
-				abstractTask.setSynchronizationState(SynchronizationState.CONFLICT);
+				task.setSynchronizationState(SynchronizationState.CONFLICT);
 			}
 		}
 

@@ -259,14 +259,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 			if (task.getScheduledForDate() == null
 					|| (task.getScheduledForDate() != null && !scheduleDatePicker.getScheduledDate().equals(
 							task.getScheduledForDate()))
-					|| task.internalIsFloatingScheduledDate() != scheduleDatePicker.isFloatingDate()) {
+					|| ((AbstractTask) task).internalIsFloatingScheduledDate() != scheduleDatePicker.isFloatingDate()) {
 				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate(),
 						scheduleDatePicker.isFloatingDate());
-				task.setReminded(false);
+				((AbstractTask) task).setReminded(false);
 			}
 		} else {
 			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
-			task.setReminded(false);
+			((AbstractTask) task).setReminded(false);
 		}
 		if (dueDatePicker != null && dueDatePicker.getDate() != null) {
 			TasksUiPlugin.getTaskActivityManager().setDueDate(task, dueDatePicker.getDate().getTime());
@@ -672,7 +672,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				scheduleDatePicker.setScheduledDate(null, false);
-				task.setReminded(false);
+				((AbstractTask) task).setReminded(false);
 				TaskPlanningEditor.this.markDirty(true);
 			}
 		});

@@ -179,7 +179,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			lock();
 			categories.remove(category.getHandleIdentifier());
 			for (ITask task : category.getChildren()) {
-				task.removeParentContainer(category);
+				((AbstractTask) task).removeParentContainer(category);
 				addOrphan((AbstractTask) task, delta);
 			}
 			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.REMOVED));

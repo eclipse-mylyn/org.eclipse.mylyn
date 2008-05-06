@@ -17,6 +17,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -77,7 +78,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		assertNotNull(tasksReturned);
 		assertEquals(1, tasksReturned.size());
 		for (ITask task : tasksReturned) {
-			assertTrue(task.isReminded());
+			assertTrue(((AbstractTask) task).isReminded());
 		}
 	}
 

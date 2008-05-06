@@ -152,14 +152,14 @@ public class TasksReminderDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == DISMISS_ALL_ID) {
 			for (ITask t : tasks) {
-				t.setReminded(true);
+				((AbstractTask) t).setReminded(true);
 			}
 			okPressed();
 		} else if (buttonId == DISMISS_ID) {
 			Object sel = ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
 			if (sel != null && sel instanceof ITask) {
 				ITask t = (ITask) sel;
-				t.setReminded(true);
+				((AbstractTask) t).setReminded(true);
 				tasks.remove(t);
 				if (tasks.isEmpty()) {
 					okPressed();
@@ -171,8 +171,8 @@ public class TasksReminderDialog extends Dialog {
 			Object sel = ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
 			if (sel != null && sel instanceof ITask) {
 				ITask t = (ITask) sel;
-				t.setReminded(false);
-				t.setScheduledForDate(new Date(new Date().getTime() + DAY));
+				((AbstractTask) t).setReminded(false);
+				((AbstractTask) t).setScheduledForDate(new Date(new Date().getTime() + DAY));
 				tasks.remove(t);
 				if (tasks.isEmpty()) {
 					okPressed();

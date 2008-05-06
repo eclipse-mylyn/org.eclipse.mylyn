@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -95,7 +96,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		try {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
-					task.setSubmitting(true);
+					((AbstractTask) task).setSubmitting(true);
 				}
 			});
 		} catch (CoreException e) {
@@ -148,7 +149,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		try {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
-					task.setSubmitting(true);
+					((AbstractTask) task).setSubmitting(true);
 				}
 			});
 		} catch (CoreException e) {

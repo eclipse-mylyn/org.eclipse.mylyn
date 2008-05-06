@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Rob Elves
@@ -228,7 +229,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	}
 
 	@Override
-	public int compareTo(AbstractTaskContainer taskListElement) {
+	public int compareTo(ITaskElement taskListElement) {
 		return task.toString().compareTo(((ITask) taskListElement).toString());
 	}
 

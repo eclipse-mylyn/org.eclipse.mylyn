@@ -229,25 +229,24 @@ final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_STALE, VAL_FALSE);
 		}
 
-		ITask abstractTask = task;
-		if (abstractTask.getLastReadTimeStamp() != null) {
-			node.setAttribute(KEY_LAST_MOD_DATE, abstractTask.getLastReadTimeStamp());
+		if (task.getLastReadTimeStamp() != null) {
+			node.setAttribute(KEY_LAST_MOD_DATE, task.getLastReadTimeStamp());
 		}
 
-		if (abstractTask.isNotified()) {
+		if (task.isNotified()) {
 			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
 		}
 
-		if (abstractTask.getSynchronizationState() != null) {
-			node.setAttribute(KEY_SYNC_STATE, abstractTask.getSynchronizationState().toString());
+		if (task.getSynchronizationState() != null) {
+			node.setAttribute(KEY_SYNC_STATE, task.getSynchronizationState().toString());
 		} else {
 			node.setAttribute(KEY_SYNC_STATE, SynchronizationState.SYNCHRONIZED.toString());
 		}
 
-		if (abstractTask.getOwner() != null) {
-			node.setAttribute(KEY_OWNER, abstractTask.getOwner());
+		if (task.getOwner() != null) {
+			node.setAttribute(KEY_OWNER, task.getOwner());
 		}
 
 		for (ITask t : task.getChildren()) {
@@ -359,8 +358,7 @@ final class DelegatingTaskExternalizer {
 		return task;
 	}
 
-	private void readTaskInfo(AbstractTask task, Element element, ITask parent,
-			AbstractTaskCategory legacyCategory) {
+	private void readTaskInfo(AbstractTask task, Element element, ITask parent, AbstractTaskCategory legacyCategory) {
 		if (task == null) {
 			return;
 		}

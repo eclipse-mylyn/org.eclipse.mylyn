@@ -67,7 +67,7 @@ public class AttachmentUtil {
 
 		if (sourceContextFile != null && sourceContextFile.exists()) {
 			try {
-				task.setSubmitting(true);
+				((AbstractTask) task).setSubmitting(true);
 				((AbstractTask) task).setSynchronizationState(SynchronizationState.OUTGOING);
 				FileAttachment attachment = new FileAttachment(sourceContextFile);
 				attachment.setDescription(CONTEXT_DESCRIPTION);

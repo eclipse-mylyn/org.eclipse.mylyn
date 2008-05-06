@@ -891,9 +891,9 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(query1.getChildren().contains(hit3twin));
 		for (ITask hit : query1.getChildren()) {
 			if (hit.equals(hit1twin)) {
-				assertTrue(hit.isNotified());
+				assertTrue(((AbstractTask) hit).isNotified());
 			} else {
-				assertFalse(hit.isNotified());
+				assertFalse(((AbstractTask) hit).isNotified());
 			}
 		}
 	}

@@ -339,7 +339,7 @@ public class TasksUiInternal {
 			IJobChangeListener listener) {
 		ITaskList taskList = TasksUi.getTaskList();
 		for (ITask task : tasks) {
-			task.setSynchronizing(true);
+			((AbstractTask) task).setSynchronizing(true);
 			taskList.notifyTaskChanged(task, false);
 		}
 		// TODO notify task list?

@@ -128,7 +128,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected void submit(ITask task, RepositoryTaskData taskData) throws CoreException {
 		connector.getLegacyTaskDataHandler().postTaskData(repository, taskData, new NullProgressMonitor());
-		task.setSubmitting(true);
+		((AbstractTask) task).setSubmitting(true);
 	}
 
 	// protected BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData

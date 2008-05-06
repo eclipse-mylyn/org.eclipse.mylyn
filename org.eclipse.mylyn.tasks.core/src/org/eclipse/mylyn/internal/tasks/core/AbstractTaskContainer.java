@@ -174,7 +174,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 	/**
 	 * The handle for most containers is their summary. Override to specify a different natural ordering.
 	 */
-	public int compareTo(AbstractTaskContainer taskListElement) {
+	public int compareTo(ITaskElement taskListElement) {
 		return getHandleIdentifier().compareTo(taskListElement.getHandleIdentifier());
 	}
 

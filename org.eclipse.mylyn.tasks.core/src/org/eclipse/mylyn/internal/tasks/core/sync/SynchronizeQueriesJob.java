@@ -182,7 +182,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 							for (ITask task : allTasks) {
 								if (task.isStale()) {
 									tasksToBeSynchronized.add(task);
-									task.setSynchronizing(true);
+									((AbstractTask) task).setSynchronizing(true);
 								}
 							}
 						}

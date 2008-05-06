@@ -69,7 +69,7 @@ public class ScheduleDatePicker extends Composite {
 				scheduledContainer = TasksUiPlugin.getTaskActivityManager().getActivityContainer(cal, isFloating);
 				this.scheduledDate = task.getScheduledForDate();
 			}
-			this.isFloating = task.internalIsFloatingScheduledDate();
+			this.isFloating = ((AbstractTask) task).internalIsFloatingScheduledDate();
 		}
 
 		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);

@@ -11,13 +11,12 @@ package org.eclipse.mylyn.tasks.core;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 
 /**
  * @author Mik Kersten
  * @since 3.0
  */
-public interface ITaskElement extends Comparable<AbstractTaskContainer>, IAdaptable {
+public interface ITaskElement extends Comparable<ITaskElement>, IAdaptable {
 
 	/**
 	 * Removes any cyclic dependencies in children.

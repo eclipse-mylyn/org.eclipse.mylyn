@@ -527,11 +527,11 @@ public class TaskActivityManager implements ITaskActivityManager {
 		}
 
 		if (reminderDate != null && !reminderDate.equals(task.getScheduledForDate())) {
-			task.setReminded(false);
+			((AbstractTask) task).setReminded(false);
 		}
 
-		task.setScheduledForDate(reminderDate);
-		task.internalSetFloatingScheduledDate(floating);
+		((AbstractTask) task).setScheduledForDate(reminderDate);
+		((AbstractTask) task).internalSetFloatingScheduledDate(floating);
 		if (reminderDate == null) {
 			removeScheduledTask(task);
 		} else {
@@ -625,7 +625,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 	public boolean isScheduledForToday(ITask task) {
 		if (task != null) {
 			Date reminder = task.getScheduledForDate();
-			if (reminder != null && !task.internalIsFloatingScheduledDate()) {
+			if (reminder != null && !((AbstractTask) task).internalIsFloatingScheduledDate()) {
 				Calendar time = TaskActivityUtil.getCalendar();
 				time.setTime(reminder);
 				return TaskActivityUtil.isToday(time);

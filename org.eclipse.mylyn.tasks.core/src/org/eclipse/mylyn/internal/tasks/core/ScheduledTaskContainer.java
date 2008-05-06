@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Rob Elves
@@ -165,7 +166,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	 * The handle for most containers is their summary. Override to specify a different natural ordering.
 	 */
 	@Override
-	public int compareTo(AbstractTaskContainer taskListElement) {
+	public int compareTo(ITaskElement taskListElement) {
 		return startDate.compareTo(((ScheduledTaskContainer) taskListElement).startDate);
 	}
 
@@ -181,7 +182,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		beginning.setTimeInMillis(0);
 		if (isCaptureFloating() && !isFuture()) {
 			for (ITask task : activityManager.getScheduledTasks(beginning, getEnd())) {
-				if (task.internalIsFloatingScheduledDate()) {
+				if (((AbstractTask) task).internalIsFloatingScheduledDate()) {
 					children.add(task);
 				}
 			}
@@ -197,7 +198,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 			// add all scheduled/overscheduled
 			for (ITask task : activityManager.getScheduledTasks(beginning, getEnd())) {
-				if (!task.internalIsFloatingScheduledDate() && !task.isCompleted()) {
+				if (!((AbstractTask) task).internalIsFloatingScheduledDate() && !task.isCompleted()) {
 					children.add(task);
 				}
 			}
