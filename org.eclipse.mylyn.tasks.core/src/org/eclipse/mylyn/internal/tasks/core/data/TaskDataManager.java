@@ -268,14 +268,31 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private File getFile(ITask task, String kind) {
 		try {
-			String pathName = task.getConnectorKind() + "-"
-					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
-			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
-			File path = new File(dataPath + File.separator + FOLDER_DATA, pathName);
+//			String pathName = task.getConnectorKind() + "-"
+//					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
+//			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
+			String repositoryPath = task.getConnectorKind() + "-" + encode(task.getRepositoryUrl());
+			String taskPath = encode(task.getTaskId());
+			String fileName = kind + "-data" + EXTENSION;
+			File path = new File(dataPath + File.separator + FOLDER_DATA + File.separator + repositoryPath
+					+ File.separator + taskPath);
 			return new File(path, fileName);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private String encode(String text) throws UnsupportedEncodingException {
+		StringBuffer sb = new StringBuffer(text.length());
+		char[] chars = text.toCharArray();
+		for (char c : chars) {
+			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {
+				sb.append(c);
+			} else {
+				sb.append("%" + Integer.toHexString(c).toUpperCase());
+			}
+		}
+		return sb.toString();
 	}
 
 	private File getFile10(ITask task, String kind) {
