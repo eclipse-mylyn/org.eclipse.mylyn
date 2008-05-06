@@ -204,7 +204,7 @@ public class TracTask extends AbstractTask {
 				if (priority.equals(tracPriority.getName())) {
 					float relativeValue = (float) (tracPriority.getValue() - minValue) / range;
 					int value = (int) (relativeValue * TASK_PRIORITY_LEVELS) + 1;
-					return AbstractTask.PriorityLevel.fromLevel(value);
+					return PriorityLevel.fromLevel(value);
 				}
 			}
 		}

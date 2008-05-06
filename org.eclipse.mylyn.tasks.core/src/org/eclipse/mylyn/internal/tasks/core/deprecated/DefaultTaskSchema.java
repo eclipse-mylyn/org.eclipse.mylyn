@@ -11,8 +11,8 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
  * @author Steffen Pingel

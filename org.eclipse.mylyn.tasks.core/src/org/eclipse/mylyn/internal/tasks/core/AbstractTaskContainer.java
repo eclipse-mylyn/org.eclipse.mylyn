@@ -15,9 +15,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
  * Top-level Task List element that can contain other Task List elements.
@@ -158,7 +158,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 	}
 
 	public String getPriority() {
-		String highestPriority = AbstractTask.PriorityLevel.P5.toString();
+		String highestPriority = PriorityLevel.P5.toString();
 		Collection<ITask> tasks = getChildren();
 		if (tasks.isEmpty()) {
 			return PriorityLevel.P1.toString();

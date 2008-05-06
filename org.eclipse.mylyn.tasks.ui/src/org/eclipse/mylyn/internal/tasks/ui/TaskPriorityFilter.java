@@ -7,9 +7,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
  * @author Mik Kersten

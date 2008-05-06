@@ -84,7 +84,7 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 					Policy.subMonitorFor(monitor, 100));
 			fireTaskSubmitted(monitor);
 			monitor.subTask("Updating task");
-			TaskData taskData = connector.getTaskData2(taskRepository, task.getTaskId(), Policy.subMonitorFor(monitor,
+			TaskData taskData = connector.getTaskData(taskRepository, task.getTaskId(), Policy.subMonitorFor(monitor,
 					100));
 			taskDataManager.putUpdatedTaskData(task, taskData, true);
 			fireTaskSynchronized(monitor);

@@ -24,13 +24,13 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
@@ -370,13 +370,15 @@ public class TasksUiExtensionReader {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object connectorCore = element.createExecutableExtension(ATTR_CLASS);
 			if (connectorCore instanceof AbstractRepositoryConnector && type != null) {
-				AbstractLegacyRepositoryConnector repositoryConnector = (AbstractLegacyRepositoryConnector) connectorCore;
+				AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) connectorCore;
 				TasksUiPlugin.getRepositoryManager().addRepositoryConnector(repositoryConnector);
 
-				String userManagedString = element.getAttribute(ATTR_USER_MANAGED);
-				if (userManagedString != null) {
-					boolean userManaged = Boolean.parseBoolean(userManagedString);
-					repositoryConnector.setUserManaged(userManaged);
+				if (repositoryConnector instanceof AbstractLegacyRepositoryConnector) {
+					String userManagedString = element.getAttribute(ATTR_USER_MANAGED);
+					if (userManagedString != null) {
+						boolean userManaged = Boolean.parseBoolean(userManagedString);
+						((AbstractLegacyRepositoryConnector) repositoryConnector).setUserManaged(userManaged);
+					}
 				}
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core "

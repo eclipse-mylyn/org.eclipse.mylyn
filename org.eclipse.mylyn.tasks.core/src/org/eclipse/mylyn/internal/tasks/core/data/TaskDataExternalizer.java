@@ -59,7 +59,7 @@ public class TaskDataExternalizer {
 			throw new IOException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\"");
 		}
 
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler2();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		if (taskDataHandler != null) {
 			if (taskDataState.getLastReadData() != null) {
 				taskDataHandler.migrateTaskData(taskRepository, taskDataState.getLastReadData());

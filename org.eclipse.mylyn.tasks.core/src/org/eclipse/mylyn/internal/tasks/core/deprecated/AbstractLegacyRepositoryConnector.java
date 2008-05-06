@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 
@@ -55,7 +56,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	@Deprecated
 	protected ITaskList taskList;
 
-	private final boolean userManaged = true;
+	private boolean userManaged = true;
 
 	/**
 	 * @since 3.0
@@ -159,7 +160,6 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 * 
 	 * @return instance of AbstractTask
 	 */
-	@Override
 	@Deprecated
 	public abstract AbstractTask createTask(String repositoryUrl, String id, String summary);
 
@@ -367,11 +367,48 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	}
 
 	@Deprecated
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+	public RepositoryTaskData getLegacyTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		if (getLegacyTaskDataHandler() != null) {
 			return getLegacyTaskDataHandler().getTaskData(repository, taskId, monitor);
 		}
+		throw new UnsupportedOperationException();
+	}
+
+	public void setUserManaged(boolean userManaged) {
+		this.userManaged = userManaged;
+	}
+
+	/**
+	 * If false, user is unable to manipulate (i.e. rename/delete), no preferences are available.
+	 */
+	@Override
+	public boolean isUserManaged() {
+		return userManaged;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	@Override
+	public boolean hasChanged(ITask task, TaskData taskData) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	@Override
+	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	@Override
+	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
 		throw new UnsupportedOperationException();
 	}
 

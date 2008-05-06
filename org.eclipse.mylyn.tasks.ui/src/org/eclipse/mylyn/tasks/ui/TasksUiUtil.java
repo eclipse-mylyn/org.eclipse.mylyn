@@ -129,7 +129,7 @@ public class TasksUiUtil {
 		if (task == null) {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
 			if (connector instanceof AbstractLegacyRepositoryConnector) {
-				RepositoryTaskData taskData = ((AbstractLegacyRepositoryConnector) connector).getTaskData(repository,
+				RepositoryTaskData taskData = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskData(repository,
 						id, new SubProgressMonitor(monitor, 1));
 				if (taskData != null) {
 					task = createTaskFromTaskData((AbstractLegacyRepositoryConnector) connector, taskList, repository,
@@ -153,7 +153,7 @@ public class TasksUiUtil {
 			throws CoreException {
 		AbstractTask task = taskList.getTask(repository.getRepositoryUrl(), id);
 		if (task == null) {
-			RepositoryTaskData taskData = connector.getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
+			RepositoryTaskData taskData = connector.getLegacyTaskData(repository, id, new SubProgressMonitor(monitor, 1));
 			if (taskData != null) {
 				task = createTaskFromTaskData(connector, taskList, repository, taskData, retrieveSubTasks,
 						new SubProgressMonitor(monitor, 1));

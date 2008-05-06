@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -35,41 +34,12 @@ public abstract class AbstractRepositoryConnector {
 
 	private static final long REPOSITORY_CONFIGURATION_UPDATE_INTERVAL = 24 * 60 * 60 * 1000;
 
-	private boolean userManaged = true;
-
 	private ITaskDataManager taskDataManager;
 
-	/**
-	 * Set upon construction
-	 * 
-	 * @since 3.0
-	 */
-	public void init(ITaskDataManager taskDataManager) {
-		this.taskDataManager = taskDataManager;
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public AbstractTaskDataHandler getTaskDataHandler2() {
-		return null;
-	}
-
-	public abstract String getRepositoryUrlFromTaskUrl(String taskFullUrl);
-
-	public abstract String getTaskIdFromTaskUrl(String taskFullUrl);
-
-	// API 3.0 change type of taskId to AbstractTask
-	public abstract String getTaskUrl(String repositoryUrl, String taskId);
-
-	public String[] getTaskIdsFromComment(TaskRepository repository, String comment) {
-		return null;
-	}
+	public abstract boolean canCreateNewTask(TaskRepository repository);
 
 	// API 3.0 rename to canCreateTaskFromId?
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
-
-	public abstract boolean canCreateNewTask(TaskRepository repository);
 
 	/**
 	 * @since 3.0
@@ -79,25 +49,17 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Utility method for construction of connector specific task object.
-	 * 
-	 * @return instance of AbstractTask
-	 * @since 3.0
+	 * @return the unique kind of the repository, e.g. "bugzilla"
 	 */
-	public abstract AbstractTask createTask(String repositoryUrl, String id, String summary);
-
-	/**
-	 * Implementors must execute query synchronously.
-	 * 
-	 * @since 3.0
-	 */
-	public abstract IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor);
+	public abstract String getConnectorKind();
 
 	/**
 	 * The connector's summary i.e. "JIRA (supports 3.3.1 and later)"
 	 */
+	// API 3.0: move to AbstractRepositoryConnectorUi?
 	public abstract String getLabel();
+
+	public abstract String getRepositoryUrlFromTaskUrl(String taskFullUrl);
 
 	/**
 	 * Returns a short label for the connector, e.g. Bugzilla.
@@ -124,9 +86,33 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * @return the unique kind of the repository, e.g. "bugzilla"
+	 * @since 3.0
 	 */
-	public abstract String getConnectorKind();
+	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
+		return null;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
+			throws CoreException;
+
+	/**
+	 * @since 3.0
+	 */
+	public AbstractTaskDataHandler getTaskDataHandler() {
+		return null;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	protected ITaskDataManager getTaskDataManager() {
+		return taskDataManager;
+	}
+
+	public abstract String getTaskIdFromTaskUrl(String taskFullUrl);
 
 	/**
 	 * Used for referring to the task in the UI.
@@ -138,13 +124,33 @@ public abstract class AbstractRepositoryConnector {
 		return "task";
 	}
 
+	public String[] getTaskIdsFromComment(TaskRepository repository, String comment) {
+		return null;
+	}
+
 	/**
-	 * Reset and update the repository attributes from the server (e.g. products, components)
+	 * @since 3.0
+	 */
+	public TaskMapper getTaskScheme(TaskData taskData) {
+		return new TaskMapper(taskData);
+	}
+
+	// API 3.0 change type of taskId to AbstractTask
+	public abstract String getTaskUrl(String repositoryUrl, String taskId);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract boolean hasChanged(ITask task, TaskData taskData);
+
+	/**
+	 * Set upon construction
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor)
-			throws CoreException;
+	public void init(ITaskDataManager taskDataManager) {
+		this.taskDataManager = taskDataManager;
+	}
 
 	/**
 	 * Default implementation returns true every 24hrs
@@ -167,35 +173,17 @@ public abstract class AbstractRepositoryConnector {
 		return isStale;
 	}
 
-	// API 3.0 remove and let connectors override isUserManaged? Can this property change in the life cycle of the connector?
-	public void setUserManaged(boolean userManaged) {
-		this.userManaged = userManaged;
-	}
-
-	/**
-	 * If false, user is unable to manipulate (i.e. rename/delete), no preferences are available.
-	 */
 	public boolean isUserManaged() {
-		return userManaged;
+		return true;
 	}
 
 	/**
+	 * Implementors must execute query synchronously.
+	 * 
 	 * @since 3.0
 	 */
-	protected ITaskDataManager getTaskDataManager() {
-		return taskDataManager;
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public void preSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
-		try {
-			monitor.beginTask("", 1);
-		} finally {
-			monitor.done();
-		}
-	}
+	public abstract IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
+			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor);
 
 	/**
 	 * @since 3.0
@@ -211,37 +199,25 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
-	public boolean hasChanged(ITask task, TaskData taskData) {
-		throw new UnsupportedOperationException();
+	public void preSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+		try {
+			monitor.beginTask("", 1);
+		} finally {
+			monitor.done();
+		}
 	}
+
+	/**
+	 * Reset and update the repository attributes from the server (e.g. products, components)
+	 * 
+	 * @since 3.0
+	 */
+	public abstract void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor)
+			throws CoreException;
 
 	/**
 	 * @since 3.0
 	 */
-	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public TaskData getTaskData2(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
-			throws CoreException {
-		return null;
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
-		return null;
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public TaskMapper getTaskScheme(TaskData taskData) {
-		return new TaskMapper(taskData);
-	}
+	public abstract void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData);
 
 }

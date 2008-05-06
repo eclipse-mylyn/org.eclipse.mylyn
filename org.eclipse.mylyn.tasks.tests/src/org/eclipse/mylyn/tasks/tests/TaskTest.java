@@ -12,8 +12,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
  * @author Mik Kersten
@@ -55,8 +55,8 @@ public class TaskTest extends TestCase {
 
 		PriorityLevel def = PriorityLevel.getDefault();
 		assertNotNull(def);
-		assertEquals(def, AbstractTask.PriorityLevel.fromDescription("garbage"));
-		assertEquals(def, AbstractTask.PriorityLevel.fromString("garbage"));
+		assertEquals(def, PriorityLevel.fromDescription("garbage"));
+		assertEquals(def, PriorityLevel.fromString("garbage"));
 	}
 
 	public void testPriorityLevelFromLevel() {

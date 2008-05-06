@@ -14,7 +14,7 @@ import java.net.URL;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 

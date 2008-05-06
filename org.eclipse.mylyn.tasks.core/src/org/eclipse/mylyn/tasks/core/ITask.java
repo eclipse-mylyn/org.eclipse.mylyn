@@ -62,6 +62,112 @@ public interface ITask extends ITaskElement {
 		}
 	}
 
+	public enum PriorityLevel {
+		P1, P2, P3, P4, P5;
+
+		@Override
+		public String toString() {
+			switch (this) {
+			case P1:
+				return "P1";
+			case P2:
+				return "P2";
+			case P3:
+				return "P3";
+			case P4:
+				return "P4";
+			case P5:
+				return "P5";
+			default:
+				return "P3";
+			}
+		}
+
+		public String getDescription() {
+			switch (this) {
+			case P1:
+				return "Very High";
+			case P2:
+				return "High";
+			case P3:
+				return "Normal";
+			case P4:
+				return "Low";
+			case P5:
+				return "Very Low";
+			default:
+				return "";
+			}
+		}
+
+		/**
+		 * @since 2.3
+		 */
+		public static PriorityLevel fromLevel(int level) {
+			if (level <= 1) {
+				return P1;
+			}
+			if (level == 2) {
+				return P2;
+			}
+			if (level == 3) {
+				return P3;
+			}
+			if (level == 4) {
+				return P4;
+			}
+			if (level >= 5) {
+				return P5;
+			}
+			return getDefault();
+		}
+
+		public static PriorityLevel fromString(String string) {
+			if (string.equals("P1")) {
+				return P1;
+			}
+			if (string.equals("P2")) {
+				return P2;
+			}
+			if (string.equals("P3")) {
+				return P3;
+			}
+			if (string.equals("P4")) {
+				return P4;
+			}
+			if (string.equals("P5")) {
+				return P5;
+			}
+			return getDefault();
+		}
+
+		public static PriorityLevel fromDescription(String string) {
+			if (string == null) {
+				return null;
+			}
+			if (string.equals("Very High")) {
+				return P1;
+			}
+			if (string.equals("High")) {
+				return P2;
+			}
+			if (string.equals("Normal")) {
+				return P3;
+			}
+			if (string.equals("Low")) {
+				return P4;
+			}
+			if (string.equals("Very Low")) {
+				return P5;
+			}
+			return getDefault();
+		}
+
+		public static PriorityLevel getDefault() {
+			return P3;
+		}
+	}
+
 	public abstract Date getCompletionDate();
 
 	public abstract String getConnectorKind();
@@ -141,6 +247,9 @@ public interface ITask extends ITaskElement {
 	@Deprecated
 	public abstract void setActive(boolean b);
 
+	/**
+	 * @deprecated use {@link #setCompletionDate(Date)} instead
+	 */
 	@Deprecated
 	public abstract void setCompleted(boolean completed);
 

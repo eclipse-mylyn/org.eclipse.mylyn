@@ -16,6 +16,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -65,7 +67,7 @@ public class SubmitTaskJob extends SubmitJob {
 			monitor.beginTask("Submitting task", 2 * (1 + getSubmitJobListeners().length) * 100);
 
 			// post task data
-			AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler2();
+			AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 			monitor.subTask("Sending data");
 			response = taskDataHandler.postTaskData(taskRepository, taskData, changedAttributes, Policy.subMonitorFor(
 					monitor, 100));
@@ -79,7 +81,7 @@ public class SubmitTaskJob extends SubmitJob {
 			// update task in task list
 			String taskId = response.getTaskId();
 			monitor.subTask("Receiving data");
-			TaskData updatedTaskData = connector.getTaskData2(taskRepository, taskId,
+			TaskData updatedTaskData = connector.getTaskData(taskRepository, taskId,
 					Policy.subMonitorFor(monitor, 100));
 			task = createTask(monitor, updatedTaskData);
 			taskDataManager.putSubmittedTaskData(task, updatedTaskData);
@@ -99,7 +101,13 @@ public class SubmitTaskJob extends SubmitJob {
 
 	private ITask createTask(IProgressMonitor monitor, TaskData updatedTaskData) throws CoreException {
 		if (taskData.isNew()) {
-			task = connector.createTask(taskRepository.getRepositoryUrl(), updatedTaskData.getTaskId(), "");
+			if (connector instanceof AbstractLegacyRepositoryConnector) {
+				task = ((AbstractLegacyRepositoryConnector) connector).createTask(taskRepository.getRepositoryUrl(),
+						updatedTaskData.getTaskId(), "");
+			} else {
+				task = new TaskTask(connector.getConnectorKind(), taskRepository.getRepositoryUrl(),
+						updatedTaskData.getTaskId());
+			}
 		}
 		return task;
 	}

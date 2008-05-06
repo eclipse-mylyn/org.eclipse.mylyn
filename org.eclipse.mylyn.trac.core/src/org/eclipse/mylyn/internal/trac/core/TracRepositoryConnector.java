@@ -421,7 +421,7 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+	public RepositoryTaskData getLegacyTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		return getLegacyTaskDataHandler().getTaskData(repository, taskId, monitor);
 	}

@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 

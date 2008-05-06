@@ -10,10 +10,10 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.util.Locale;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -32,7 +32,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	private String description = "";
 
 	/** The priority of the bug */
-	private String priority = AbstractTask.PriorityLevel.getDefault().toString();
+	private String priority = PriorityLevel.getDefault().toString();
 
 	private String owner = "";
 	

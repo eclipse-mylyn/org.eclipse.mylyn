@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylyn.tasks.ui">
+<schema targetNamespace="org.eclipse.mylyn.tasks.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="org.eclipse.mylyn.tasks.ui" id="repositories" name="Repositories"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter description of this extension point.]
       </documentation>
@@ -12,6 +12,9 @@
 
    <element name="extension">
       <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
          <documentation>
             (no description available)
          </documentation>
@@ -41,9 +44,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -51,9 +54,9 @@
 
    <element name="taskListFactory">
       <annotation>
-         <appInfo>
+         <appinfo>
             <meta.element labelAttribute="name"/>
-         </appInfo>
+         </appinfo>
          <documentation>
             (no description available)
          </documentation>
@@ -64,9 +67,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.core.AbstractTaskListFactory:"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="id" type="string">
@@ -81,9 +84,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -101,9 +104,9 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="name" type="string">
@@ -132,6 +135,9 @@
                <documentation>
                   
                </documentation>
+               <appinfo>
+                  <meta.attribute deprecated="true"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -149,9 +155,9 @@
                <documentation>
                   (no description available)
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="id" type="string">
@@ -166,9 +172,9 @@
                <documentation>
                   (no description available)
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="resource"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="name" type="string">
@@ -183,9 +189,9 @@
                <documentation>
                   (no description available)
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="resource"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="customNotifications" type="boolean">
@@ -199,36 +205,36 @@
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter the first release in which this extension point appears.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="apiInfo"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="implementation"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>

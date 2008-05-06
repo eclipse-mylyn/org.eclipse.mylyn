@@ -594,7 +594,7 @@ public class TaskDataStateReader extends DefaultHandler {
 		}
 
 		final TaskAttributeMapper attributeMapper;
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler2();
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		if (taskDataHandler != null) {
 			attributeMapper = taskDataHandler.getAttributeMapper(taskRepository);
 		} else {

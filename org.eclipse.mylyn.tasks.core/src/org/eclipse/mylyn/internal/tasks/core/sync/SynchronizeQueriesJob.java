@@ -87,7 +87,8 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			boolean changed;
 			AbstractTask task = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 			if (task == null) {
-				task = connector.createTask(taskData.getRepositoryUrl(), taskData.getTaskId(), "");
+				task = ((AbstractLegacyRepositoryConnector) connector).createTask(taskData.getRepositoryUrl(),
+						taskData.getTaskId(), "");
 				task.setStale(true);
 				changed = ((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task,
 						taskData);

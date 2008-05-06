@@ -8,8 +8,8 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
  * A container that stores tasks from a specific repository.
@@ -41,7 +41,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	@Override
 	public String getPriority() {
 		if (super.isEmpty()) {
-			return AbstractTask.PriorityLevel.P1.toString();
+			return PriorityLevel.P1.toString();
 		}
 		String highestPriority = PriorityLevel.P5.toString();
 		for (ITask hit : getChildren()) {

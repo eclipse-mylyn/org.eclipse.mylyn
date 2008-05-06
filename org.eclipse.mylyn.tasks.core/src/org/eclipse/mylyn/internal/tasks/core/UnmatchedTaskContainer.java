@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
  * Holds orphaned or uncategorized tasks for a given repository

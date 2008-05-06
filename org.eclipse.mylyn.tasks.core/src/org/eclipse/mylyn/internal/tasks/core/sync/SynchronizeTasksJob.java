@@ -104,7 +104,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			AbstractTaskDataHandler taskDataHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
 			return taskDataHandler != null && taskDataHandler.canGetMultiTaskData();
 		} else {
-			org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler2();
+			org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 			return taskDataHandler != null && taskDataHandler.canGetMultiTaskData();
 		}
 	}
@@ -120,13 +120,13 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
 			if (connector instanceof AbstractLegacyRepositoryConnector) {
-				RepositoryTaskData downloadedTaskData = ((AbstractLegacyRepositoryConnector) connector).getTaskData(
+				RepositoryTaskData downloadedTaskData = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskData(
 						taskRepository, taskId, monitor);
 				if (downloadedTaskData != null) {
 					updateFromTaskData(taskRepository, task, downloadedTaskData);
 				}
 			} else {
-				TaskData taskData = connector.getTaskData2(taskRepository, taskId, monitor);
+				TaskData taskData = connector.getTaskData(taskRepository, taskId, monitor);
 				if (taskData != null) {
 					updateFromTaskData(taskRepository, task, taskData);
 				} else {
@@ -174,7 +174,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler().getMultiTaskData(repository,
 					Collections.unmodifiableSet(idToTask.keySet()), collector, monitor);
 		} else {
-			connector.getTaskDataHandler2().getMultiTaskData(repository,
+			connector.getTaskDataHandler().getMultiTaskData(repository,
 					Collections.unmodifiableSet(idToTask.keySet()), collector, monitor);
 		}
 
