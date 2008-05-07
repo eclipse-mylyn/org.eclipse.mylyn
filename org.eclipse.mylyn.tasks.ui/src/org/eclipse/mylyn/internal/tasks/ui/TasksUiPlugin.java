@@ -289,8 +289,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						repository.getConnectorKind());
 				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
-					for (ITask repositoryTask : TasksUiPlugin.getTaskList().getTasks(
-							repository.getRepositoryUrl())) {
+					for (ITask repositoryTask : TasksUiPlugin.getTaskList().getTasks(repository.getRepositoryUrl())) {
 						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING)
 								&& ((AbstractTask) repositoryTask).isNotified() == false) {
 							TaskListNotification notification = INSTANCE.getIncommingNotification(connector,
@@ -1159,7 +1158,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				notification.setDescription(description.toString());
 
 				if (connector instanceof AbstractLegacyRepositoryConnector) {
-					AbstractTaskDataHandler offlineHandler = ((LocalRepositoryConnector) connector).getLegacyTaskDataHandler();
+					AbstractTaskDataHandler offlineHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
 					if (offlineHandler != null && newTaskData.getLastModified() != null) {
 						Date modified = newTaskData.getAttributeFactory().getDateForAttributeType(
 								RepositoryTaskAttribute.DATE_MODIFIED, newTaskData.getLastModified());
