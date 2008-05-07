@@ -24,11 +24,6 @@ public final class TaskCategory extends AbstractTaskCategory {
 		super(handleAndDescription);
 	}
 
-	@Override
-	public boolean isUserDefined() {
-		return true;
-	}
-
 	/**
 	 * null if no parent category
 	 */
@@ -43,4 +38,5 @@ public final class TaskCategory extends AbstractTaskCategory {
 		}
 		return category;
 	}
+
 }

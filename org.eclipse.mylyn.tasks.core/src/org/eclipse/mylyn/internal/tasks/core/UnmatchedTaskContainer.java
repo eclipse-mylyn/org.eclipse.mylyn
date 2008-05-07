@@ -73,9 +73,4 @@ public class UnmatchedTaskContainer extends AbstractTaskCategory {
 		return false;
 	}
 
-	@Override
-	@Deprecated
-	public boolean isUserDefined() {
-		return isUserManaged();
-	}
 }
