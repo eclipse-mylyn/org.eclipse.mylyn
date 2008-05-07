@@ -63,13 +63,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&priority=P1&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 //		//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&component=Tasks&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 //		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, queryString, "test" );
-//		//TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+//		//TasksUiPlugin.getTaskList().addQuery(query);
 //		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 ////		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository, false, false));
 ////		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
 ////		System.err.println(">>> Collector: "+collector.getTasks().size());
 ////		for (AbstractTask task : collector.getTasks()) {
-////			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);	
+////			TasksUiPlugin.getTaskList().addTask(task);	
 ////		}
 //		
 //		TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
@@ -154,7 +154,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getTaskId());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		TasksUiPlugin.getTaskList().addTask(task);
 
 		String newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test " + (new Date()).toString();
 		taskData.setNewComment(newCommentText);
@@ -228,7 +228,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getTaskId());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		TasksUiPlugin.getTaskList().addTask(task);
 		if (taskData.getAssignedTo().equals("rob.elves@eclipse.org")) {
 			assertEquals("rob.elves@eclipse.org", taskData.getAssignedTo());
 			reassingToUser31(task, taskData);
@@ -299,8 +299,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getTaskId());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task,
-				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		TasksUiPlugin.getTaskList().addTask(task,
+				TasksUiPlugin.getTaskList().getDefaultCategory());
 
 		if (taskData.getAssignedTo().equals(defaultAssignee)) {
 			assertEquals(defaultAssignee, taskData.getAssignedTo());
@@ -470,7 +470,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		String taskNumber = "3";
 		TasksUiPlugin.getTaskDataStorageManager().clear();
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks().size());
+		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
 		BugzillaTask task = this.generateLocalTaskAndDownload(taskNumber);
 		assertEquals("search-match-test 2", task.getSummary());
 		assertEquals("TestProduct", task.getProduct());
@@ -487,7 +487,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		String taskNumber = "23";
 		TasksUiPlugin.getTaskDataStorageManager().clear();
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks().size());
+		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
 		BugzillaTask task = this.generateLocalTaskAndDownload(taskNumber);
 		assertNotNull(task.getChildren());
 		assertEquals(2, task.getChildren().size());
@@ -525,7 +525,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getTaskId());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		TasksUiPlugin.getTaskList().addTask(task);
 		int numComments = taskData.getComments().size();
 
 		// Modify it
@@ -972,7 +972,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 // manager.addRepository(repository,
 // TasksUiPlugin.getDefault().getRepositoriesFilePath());
 //
-// taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+// taskList = TasksUiPlugin.getTaskList();
 //
 // AbstractRepositoryConnector abstractRepositoryConnector =
 // manager.getRepositoryConnector(DEFAULT_KIND);

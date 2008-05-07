@@ -79,12 +79,12 @@ public class TaskRepositoryManagerTest extends TestCase {
 		MockTask task = new MockTask("1");
 		task.setLastReadTimeStamp("now");
 		MockRepositoryQuery query = new MockRepositoryQuery("Test");
-		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task, query);
+		TasksUiPlugin.getTaskList().addQuery(query);
+		TasksUiPlugin.getTaskList().addTask(task, query);
 
-		assertNotNull(TasksUiPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier()));
-		TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
-		ITask task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask(task.getHandleIdentifier());
+		assertNotNull(TasksUiPlugin.getTaskList().getTask(task.getHandleIdentifier()));
+		TasksUiPlugin.getTaskList().deleteQuery(query);
+		ITask task2 = TasksUiPlugin.getTaskList().getTask(task.getHandleIdentifier());
 		assertNotNull(task2);
 		assertEquals(1, ((AbstractTask) task2).getParentContainers().size());
 

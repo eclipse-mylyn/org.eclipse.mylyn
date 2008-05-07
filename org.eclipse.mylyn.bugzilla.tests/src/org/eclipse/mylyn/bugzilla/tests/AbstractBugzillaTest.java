@@ -106,7 +106,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		assertNotNull(manager);
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		taskList = TasksUiPlugin.getTaskList();
 
 		AbstractRepositoryConnector abstractRepositoryClient = manager.getRepositoryConnector(DEFAULT_KIND);
 
@@ -120,8 +120,8 @@ public abstract class AbstractBugzillaTest extends TestCase {
 				new NullProgressMonitor());
 		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 		assertNotNull(task);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task,
-				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		TasksUiPlugin.getTaskList().addTask(task,
+				TasksUiPlugin.getTaskList().getDefaultCategory());
 
 		return task;
 	}

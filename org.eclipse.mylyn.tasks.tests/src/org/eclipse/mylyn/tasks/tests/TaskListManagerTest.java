@@ -554,7 +554,7 @@ public class TaskListManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		MockTask task = new MockTask(repositoryUrl, "1");
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskList();
 		taskList.addTask(task, manager.getTaskList().getDefaultCategory());
 		MockRepositoryQuery query = new MockRepositoryQuery("query");
 		taskList.addQuery(query);

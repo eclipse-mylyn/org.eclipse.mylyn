@@ -59,7 +59,7 @@ public class ScheduledPresentationTest extends TestCase {
 		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime(startOfWeekDate.getTime());
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task1);
 		Calendar endOfWeek = TaskActivityUtil.getCalendar();
 		TaskActivityUtil.snapEndOfWeek(endOfWeek);
 		assertEquals(Calendar.SATURDAY, endOfWeek.get(Calendar.DAY_OF_WEEK));
@@ -67,7 +67,7 @@ public class ScheduledPresentationTest extends TestCase {
 		assertTrue(TaskListInterestFilter.isInterestingForThisWeek(null, task1));
 
 		AbstractTask task2 = new LocalTask("task 2", "Task 2");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
+		TasksUiPlugin.getTaskList().addTask(task2);
 		Calendar nextWeek = TaskActivityUtil.getCalendar();
 		TaskActivityUtil.snapEndOfWeek(nextWeek);
 		nextWeek.add(Calendar.DAY_OF_YEAR, 1);
@@ -121,7 +121,7 @@ public class ScheduledPresentationTest extends TestCase {
 		assertTrue(futureWeeks.includes(futureWeekTaskStart));
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task1);
 
 		assertEquals(0, TasksUiPlugin.getTaskActivityManager()
 				.getScheduledTasks(thisWeek.getStart(), thisWeek.getEnd())
@@ -178,8 +178,8 @@ public class ScheduledPresentationTest extends TestCase {
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		AbstractTask task2 = new LocalTask("task 2", "Task 2");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
+		TasksUiPlugin.getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task2);
 
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 				IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),

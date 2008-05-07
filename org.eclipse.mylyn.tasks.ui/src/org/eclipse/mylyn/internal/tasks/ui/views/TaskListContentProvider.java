@@ -50,7 +50,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 
 	public Object[] getElements(Object parent) {
 		if (parent.equals(this.taskListView.getViewSite())) {
-			return applyFilter(TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()).toArray();
+			return applyFilter(TasksUiPlugin.getTaskList().getRootElements()).toArray();
 		}
 		return getChildren(parent);
 	}

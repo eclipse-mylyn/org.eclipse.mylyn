@@ -75,7 +75,7 @@ public class RepositorySearchQueryTest extends TestCase {
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getRepositoryUrl() + ITracClient.QUERY_URL + search.toUrl();
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getRepositoryUrl(), queryUrl, "description");
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskList(),
 				repository, query);
 
 		collector.run(new NullProgressMonitor());

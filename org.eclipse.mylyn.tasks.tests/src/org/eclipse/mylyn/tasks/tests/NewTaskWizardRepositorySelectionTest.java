@@ -42,7 +42,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		TaskListView view = TaskListView.openInActivePerspective();
 		MockTask mockTask = new MockTask("mock.task");
 		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(mockTask);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask);
+		TasksUiPlugin.getTaskList().addTask(mockTask);
 
 		view.setFocusedMode(true);
 		view.getViewer().refresh();
@@ -62,7 +62,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 
 		TasksUiPlugin.getRepositoryManager().removeRepository(mockRepository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(mockTask);
+		TasksUiPlugin.getTaskList().deleteTask(mockTask);
 		wizard.dispose();
 		dialog.close();
 	}

@@ -50,20 +50,20 @@ public class TaskListNotificationManagerTest extends TestCase {
 		task1.setScheduledForDate(new Date(now.getTime() - 2000));
 		task2.setScheduledForDate(new Date(now.getTime() - 2000));
 
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task0);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
+		TasksUiPlugin.getTaskList().addTask(task0);
+		TasksUiPlugin.getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task2);
 
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 
-		task0 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-0");
+		task0 = TasksUiPlugin.getTaskList().getTask("local-0");
 		assertNotNull(task0);
 		assertTrue(task0.isReminded());
-		task1 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-1");
+		task1 = TasksUiPlugin.getTaskList().getTask("local-1");
 		assertNotNull(task1);
 		assertTrue(task1.isReminded());
-		task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-2");
+		task2 = TasksUiPlugin.getTaskList().getTask("local-2");
 		assertNotNull(task2);
 		assertTrue(task2.isReminded());
 
@@ -77,13 +77,13 @@ public class TaskListNotificationManagerTest extends TestCase {
 		AbstractTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label");
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 		assertFalse(task.isNotified());
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		TasksUiPlugin.getTaskList().addTask(task);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		TaskListNotification notification = new TaskListNotification(task);
 		notification.setDescription("Unread task");
 		assertTrue(notificationManager.getNotifications().contains(notification));
-		task = TasksUiPlugin.getTaskListManager().getTaskList().getTask("https://bugs.eclipse.org/bugs-142891");
+		task = TasksUiPlugin.getTaskList().getTask("https://bugs.eclipse.org/bugs-142891");
 		assertNotNull(task);
 		assertTrue(task.isNotified());
 	}
@@ -93,8 +93,8 @@ public class TaskListNotificationManagerTest extends TestCase {
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
 				"summary");
-		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(hit, query);
+		TasksUiPlugin.getTaskList().addQuery(query);
+		TasksUiPlugin.getTaskList().addTask(hit, query);
 
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		assertFalse(hit.isNotified());
@@ -113,8 +113,8 @@ public class TaskListNotificationManagerTest extends TestCase {
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
 				"summary");
-		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(hit, query);
+		TasksUiPlugin.getTaskList().addQuery(query);
+		TasksUiPlugin.getTaskList().addTask(hit, query);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		for (AbstractNotification notification : notificationManager.getNotifications()) {
@@ -125,10 +125,10 @@ public class TaskListNotificationManagerTest extends TestCase {
 
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getTaskList().getQueries().size());
+		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
 		assertTrue(TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList());
-		assertEquals(1, TasksUiPlugin.getTaskListManager().getTaskList().getQueries().size());
-		BugzillaTask hitLoaded = (BugzillaTask) TasksUiPlugin.getTaskListManager().getTaskList().getTask(hitHandle);
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
+		BugzillaTask hitLoaded = (BugzillaTask) TasksUiPlugin.getTaskList().getTask(hitHandle);
 		assertNotNull(hitLoaded);
 		assertTrue(hitLoaded.isNotified());
 	}

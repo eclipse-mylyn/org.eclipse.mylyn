@@ -263,7 +263,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		if (taskRepository != null) {
 			proposalComputer.addSeparator();
 
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUiPlugin.getTaskList();
 			tasks = new ArrayList<AbstractTask>(taskList.getAllTasks());
 			proposalComputer.filterTasks(tasks);
 			Collections.sort(tasks, new Comparator<AbstractTask>() {

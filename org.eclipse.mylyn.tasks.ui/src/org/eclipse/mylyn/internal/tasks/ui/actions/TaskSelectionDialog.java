@@ -550,7 +550,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		if (allTasks == null) {
 			allTasks = new HashSet<AbstractTask>();
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUiPlugin.getTaskList();
 			allTasks.addAll(taskList.getAllTasks());
 		}
 		progressMonitor.worked(10);

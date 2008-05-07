@@ -315,7 +315,7 @@ public class TaskListManager {
 //		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 //			taskList.addTask(newTask, view.getDrilledIntoCategory());
 //		} else {
-//			taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+//			taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
 //		}
 //	} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 //		taskList.addTask(newTask, view.getDrilledIntoCategory());
@@ -324,7 +324,7 @@ public class TaskListManager {
 //			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
 //					"The new task has been added to the root of the list, since tasks can not be added to a query.");
 //		}
-//		taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+//		taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
 //	}
 //	return newTask;
 //}

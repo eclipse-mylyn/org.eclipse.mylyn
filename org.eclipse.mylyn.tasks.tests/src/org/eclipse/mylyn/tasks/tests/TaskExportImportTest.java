@@ -67,7 +67,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 	public void testTaskContextExport() throws IOException {
 
 		LocalTask task = TasksUiInternal.createNewLocalTask("Test local task");
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskList();
 		taskList.addTask(task, taskList.getDefaultCategory());
 		assertTrue(taskList.getAllTasks().size() > 0);
 

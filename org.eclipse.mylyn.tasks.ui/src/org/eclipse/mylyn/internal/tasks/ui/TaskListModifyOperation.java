@@ -70,6 +70,6 @@ public abstract class TaskListModifyOperation implements IRunnableWithProgress {
 	}
 
 	protected TaskList getTaskList() {
-		return TasksUiPlugin.getTaskListManager().getTaskList();
+		return TasksUiPlugin.getTaskList();
 	}
 }

@@ -382,7 +382,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
-			if (!(category instanceof UnmatchedTaskContainer)) {//.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
+			if (!(category instanceof UnmatchedTaskContainer)) {//.equals(TasksUiPlugin.getTaskList().getArchiveContainer())) {
 				Action action = new Action() {
 					@Override
 					public void run() {

@@ -8,11 +8,9 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 
@@ -57,8 +55,6 @@ public interface ITaskList {
 	 * Currently subtasks are not deleted but rather are rather potentially orphaned
 	 */
 	public abstract void deleteTask(ITask task);
-
-	public abstract Collection<AbstractTask> getAllTasks();
 
 	public abstract Set<AbstractTaskCategory> getCategories();
 

@@ -35,7 +35,7 @@ public class TasksUi {
 	}
 
 	public static ITaskList getTaskList() {
-		return TasksUiPlugin.getTaskListManager().getTaskList();
+		return TasksUiPlugin.getTaskList();
 	}
 
 }

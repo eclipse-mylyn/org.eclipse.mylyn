@@ -28,7 +28,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -106,7 +105,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		boolean overwrite = exportPage.overwrite();
 		boolean zip = exportPage.zip();
 
-		Collection<AbstractTask> taskContextsToExport = TasksUi.getTaskList().getAllTasks();
+		Collection<AbstractTask> taskContextsToExport = TasksUiPlugin.getTaskList().getAllTasks();
 
 		// Get file paths to check for existence
 		String destDir = exportPage.getDestinationDirectory();
@@ -154,8 +153,8 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 				if (exportPage.exportTaskContexts()) {
 					for (ITask task : taskContextsToExport) {
-						File contextFile = ContextCore.getContextManager().getFileForContext(
-								task.getHandleIdentifier());
+						File contextFile = ContextCore.getContextManager()
+								.getFileForContext(task.getHandleIdentifier());
 						File destTaskFile = new File(destDir + File.separator + contextFile.getName());
 						if (destTaskFile.exists()) {
 							if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace",

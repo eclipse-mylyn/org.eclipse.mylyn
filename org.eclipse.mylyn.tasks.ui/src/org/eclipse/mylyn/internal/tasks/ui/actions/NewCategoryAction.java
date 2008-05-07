@@ -77,7 +77,7 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 			}
 
 			this.cat = new TaskCategory(name);
-			TasksUiPlugin.getTaskListManager().getTaskList().addCategory(cat);
+			TasksUiPlugin.getTaskList().addCategory(cat);
 //			this.view.getViewer().refresh();
 		}
 	}

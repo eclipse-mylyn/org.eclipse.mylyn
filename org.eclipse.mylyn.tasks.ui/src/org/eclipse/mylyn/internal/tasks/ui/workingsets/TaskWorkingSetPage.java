@@ -393,7 +393,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			containers.add(repository);
 		}
 
-//		for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
+//		for (AbstractTaskContainer element : TasksUiPlugin.getTaskList().getRootElements()) {
 //			if (!(element instanceof TaskArchive)) {
 //				containers.add(element);
 //			}

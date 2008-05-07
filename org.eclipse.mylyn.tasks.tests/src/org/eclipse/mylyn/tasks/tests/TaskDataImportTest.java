@@ -69,7 +69,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 	 */
 	// XXX: Put Back
 //	public void testImportRepositoriesZip() {
-//		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+//		TaskList taskList = TasksUiPlugin.getTaskList();
 //		InteractionContext historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 //		assertNotNull(taskList);
 //		assertNotNull(historyContext);
@@ -91,7 +91,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 //	}
 	// XXX: Put Back
 //	public void testImportOverwritesAllTasks() {
-//		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+//		TaskList taskList = TasksUiPlugin.getTaskList();
 //		InteractionContext historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 //		assertNotNull(taskList);
 //		assertNotNull(historyContext);

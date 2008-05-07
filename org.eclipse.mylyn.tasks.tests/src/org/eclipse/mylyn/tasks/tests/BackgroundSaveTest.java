@@ -33,11 +33,11 @@ public class BackgroundSaveTest extends TestCase {
 			File file = TaskListExternalizationParticipant.getTaskListFile(TasksUiPlugin.getDefault()
 					.getDataDirectory());
 			long previouslyModified = file.lastModified();
-			TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+			TasksUiPlugin.getTaskList().addTask(task);
 			TasksUiPlugin.getExternalizationManager().requestSave();
 			Thread.sleep(5000);
 			assertTrue(file.lastModified() > previouslyModified);
-			TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
+			TasksUiPlugin.getTaskList().deleteTask(task);
 		}
 	}
 }

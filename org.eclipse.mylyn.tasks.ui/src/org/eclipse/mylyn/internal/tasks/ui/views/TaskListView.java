@@ -1383,7 +1383,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 //		}
 //		getViewer().refresh();
 //		refresh(null);
-//		selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+//		selectedAndFocusTask(TasksUiPlugin.getTaskList().getActiveTask());
 	}
 
 	public TaskListToolTip getToolTip() {

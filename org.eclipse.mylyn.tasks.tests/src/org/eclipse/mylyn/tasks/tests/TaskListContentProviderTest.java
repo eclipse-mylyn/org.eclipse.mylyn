@@ -40,7 +40,7 @@ public class TaskListContentProviderTest extends TestCase {
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.GROUP_SUBTASKS, true);
 		view.clearFilters(true);
 		view.addFilter(view.getCompleteFilter());
-		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		taskList = TasksUiPlugin.getTaskList();
 	}
 
 	@Override

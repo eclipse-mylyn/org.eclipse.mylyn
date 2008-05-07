@@ -42,8 +42,8 @@ public class EditTracQueryWizard extends AbstractEditQueryWizard {
 //	public boolean performFinish() {
 //		AbstractRepositoryQuery q = queryPage.getQuery();
 //		if (q != null) {
-//			TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
-//			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(q);
+//			TasksUiPlugin.getTaskList().deleteQuery(query);
+//			TasksUiPlugin.getTaskList().addQuery(q);
 //
 //			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 //					repository.getKind());

@@ -110,7 +110,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		for (AbstractTask loadedTask : taskContexts.keySet()) {
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUiPlugin.getTaskList();
 			if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
 				boolean confirmed = MessageDialog.openConfirm(shell, ITasksUiConstants.TITLE_DIALOG, "Task '"
 						+ loadedTask.getSummary()

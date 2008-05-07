@@ -262,7 +262,7 @@ public class TasksUiInternal {
 			Set<AbstractRepositoryQuery> queries, IJobChangeListener listener, boolean force) {
 		Assert.isTrue(queries.size() > 0);
 
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskList();
 		for (AbstractRepositoryQuery query : queries) {
 			query.setSynchronizing(true);
 		}
@@ -436,7 +436,7 @@ public class TasksUiInternal {
 		if (summary == null) {
 			summary = LocalRepositoryConnector.DEFAULT_SUMMARY;
 		}
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskList();
 		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
 		newTask.setPriority(PriorityLevel.P3.toString());
 		TasksUi.getTaskList().addTask(newTask);
@@ -459,7 +459,7 @@ public class TasksUiInternal {
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 				taskList.addTask(newTask, view.getDrilledIntoCategory());
 			} else {
-				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+				taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
 			}
 		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 			taskList.addTask(newTask, view.getDrilledIntoCategory());
@@ -468,7 +468,7 @@ public class TasksUiInternal {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
 						"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
-			taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+			taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
 		}
 		return newTask;
 	}

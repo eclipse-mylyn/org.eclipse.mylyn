@@ -144,8 +144,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				tasks.add(currentTask);
 			}
 
-			TaskRepository repository = TasksUi.getRepositoryManager()
-					.getRepository(connectorKind, repositoryUrl);
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connectorKind, repositoryUrl);
 
 			if (repository != null) {
 				AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
@@ -154,7 +153,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				}
 			}
 
-			Collection<AbstractTask> allTasks = TasksUi.getTaskList().getAllTasks();
+			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskList().getAllTasks();
 			for (AbstractTask task : allTasks) {
 				if (repositoryUrl.equals(task.getRepositoryUrl())) {
 					tasks.add(task);

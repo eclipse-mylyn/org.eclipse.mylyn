@@ -231,7 +231,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 									container.isCaptureFloating());
 						} else if (currentTarget == null) {
 							TasksUi.getTaskList().addTask(newTask,
-									TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+									TasksUiPlugin.getTaskList().getDefaultCategory());
 						}
 					}
 				}

@@ -123,7 +123,7 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().insertQueries(queries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
+		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
 		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
 		for (AbstractRepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);
@@ -161,7 +161,7 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().insertQueries(queries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
+		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
 		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
 		for (AbstractRepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);
@@ -206,7 +206,7 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().insertQueries(queries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
+		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
 		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
 		for (AbstractRepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);
@@ -243,7 +243,7 @@ public class QueryExportImportTest extends TestCase {
 		List<AbstractRepositoryQuery> badQueries = TasksUiPlugin.getTaskListManager().insertQueries(queries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
+		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
 		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
 		for (AbstractRepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);
@@ -309,7 +309,7 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().insertQueries(resultQueries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
+		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
 		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
 		for (AbstractRepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);

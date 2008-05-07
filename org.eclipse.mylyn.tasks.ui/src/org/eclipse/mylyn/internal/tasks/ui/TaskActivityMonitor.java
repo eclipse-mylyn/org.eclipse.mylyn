@@ -84,7 +84,7 @@ public class TaskActivityMonitor {
 	public TaskActivityMonitor(TaskActivityManager taskActivityManager, IInteractionContextManager contextManager) {
 		this.taskActivityManager = taskActivityManager;
 		this.contextManager = contextManager;
-		this.taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		this.taskList = TasksUiPlugin.getTaskList();
 	}
 
 	public void start() {
@@ -156,7 +156,7 @@ public class TaskActivityMonitor {
 		InteractionEvent event = ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().get(
 				pos);
 		if (event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
-			return TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
+			return TasksUiPlugin.getTaskList().getTask(event.getStructureHandle());
 		} else {
 			return null;
 		}

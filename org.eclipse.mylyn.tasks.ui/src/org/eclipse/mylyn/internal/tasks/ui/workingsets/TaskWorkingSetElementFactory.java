@@ -37,7 +37,7 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 		String taskHandle = memento.getString(HANDLE_TASK);
 		if (taskHandle != null) {
 			// TOOD: this does not support projects and categories/queries have the same name
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUiPlugin.getTaskList();
 			for (AbstractTaskContainer element : taskList.getRootElements()) {
 				if (element.getHandleIdentifier().equals(taskHandle)) {
 					return element;

@@ -99,7 +99,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		for (IAdaptable adaptable : workingSet.getElements()) {
 			if (adaptable instanceof ITaskElement) {
 				String handle = ((ITaskElement) adaptable).getHandleIdentifier();
-				for (ITaskElement element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
+				for (ITaskElement element : TasksUiPlugin.getTaskList().getRootElements()) {
 					if (element != null && element.getHandleIdentifier().equals(handle)) {
 						list.add(adaptable);
 					}
@@ -164,7 +164,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	// TODO: consider putting back, but evaluate policy and note bug 197257
 //	public void taskActivated(AbstractTask task) {
 //		Set<AbstractTaskContainer> taskContainers = new HashSet<AbstractTaskContainer>(
-//				TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
+//				TasksUiPlugin.getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
 //		taskContainers.addAll(task.getParentContainers());
 //
 //		Set<AbstractTaskContainer> allActiveWorkingSetContainers = new HashSet<AbstractTaskContainer>();

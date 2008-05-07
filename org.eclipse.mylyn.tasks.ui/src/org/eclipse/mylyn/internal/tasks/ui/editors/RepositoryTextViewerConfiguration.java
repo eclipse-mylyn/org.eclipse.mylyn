@@ -171,7 +171,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 			if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
 				TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
 
-				TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+				TaskList taskList = TasksUiPlugin.getTaskList();
 				String repositoryUrl = hyperlink.getRepository().getRepositoryUrl();
 
 				ITask task = taskList.getTask(repositoryUrl, hyperlink.getTaskId());

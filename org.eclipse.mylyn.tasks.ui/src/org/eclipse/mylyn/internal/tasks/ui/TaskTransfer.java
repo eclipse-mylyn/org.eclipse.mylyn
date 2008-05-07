@@ -100,7 +100,7 @@ public class TaskTransfer extends ByteArrayTransfer {
 
 	private ITask readTask(DataInputStream dataIn) throws IOException {
 		String handle = dataIn.readUTF();
-		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+		return TasksUiPlugin.getTaskList().getTask(handle);
 	}
 
 	private void writeTask(DataOutputStream dataOut, ITask task) throws IOException {

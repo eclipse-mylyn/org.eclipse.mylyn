@@ -75,7 +75,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 
 		if (selectedTask instanceof LocalTask) {
 			// XXX code copied from NewLocalTaskWizard.performFinish() and TaskListManager.createNewLocalTask()
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUiPlugin.getTaskList();
 			LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(),
 					LocalRepositoryConnector.DEFAULT_SUMMARY);
 			newTask.setPriority(PriorityLevel.P3.toString());

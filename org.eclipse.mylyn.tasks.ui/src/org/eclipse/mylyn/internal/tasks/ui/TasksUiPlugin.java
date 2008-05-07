@@ -61,6 +61,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
@@ -266,7 +267,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
 		public Set<AbstractNotification> getNotifications() {
-			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
+			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskList().getAllTasks();
 			Set<AbstractNotification> reminders = new HashSet<AbstractNotification>();
 			for (AbstractTask task : allTasks) {
 				if (task.isPastReminder() && !task.isReminded()) {
@@ -288,7 +289,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						repository.getConnectorKind());
 				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
-					for (ITask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
+					for (ITask repositoryTask : TasksUiPlugin.getTaskList().getTasks(
 							repository.getRepositoryUrl())) {
 						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING)
 								&& ((AbstractTask) repositoryTask).isNotified() == false) {
@@ -301,7 +302,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 			}
 			// New query hits
-			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskListManager().getTaskList().getQueries()) {
+			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskList().getQueries()) {
 				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getConnectorKind());
 				if (!connectorUi.isCustomNotificationHandling()) {
 					for (ITask hit : query.getChildren()) {
@@ -1354,5 +1355,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public static TaskActivityMonitor getTaskActivityMonitor() {
 		return INSTANCE.taskActivityMonitor;
+	}
+
+	public static TaskList getTaskList() {
+		return getTaskListManager().getTaskList();
 	}
 }

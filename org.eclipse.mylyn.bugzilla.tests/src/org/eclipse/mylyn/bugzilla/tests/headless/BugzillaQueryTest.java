@@ -70,7 +70,7 @@ public class BugzillaQueryTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 
-		connectorOriginal.init(TasksUiPlugin.getTaskListManager().getTaskList());
+		connectorOriginal.init(TasksUiPlugin.getTaskList());
 
 	}
 

@@ -368,9 +368,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
-				if (c1.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+				if (c1.equals(TasksUiPlugin.getTaskList().getDefaultCategory())) {
 					return -1;
-				} else if (c2.equals(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+				} else if (c2.equals(TasksUiPlugin.getTaskList().getDefaultCategory())) {
 					return 1;
 				} else {
 					return c1.getSummary().compareToIgnoreCase(c2.getSummary());

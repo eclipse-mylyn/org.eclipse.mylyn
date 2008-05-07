@@ -74,7 +74,7 @@ public class TracTaskEditorTest extends TestCase {
 		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, "1", new NullProgressMonitor());
 		AbstractTask task = connector.createTask(repository.getRepositoryUrl(), taskData.getTaskId(), "");
 		connector.updateTaskFromTaskData(repository, task, taskData);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiUtil.openTask(task);
 
 		TaskListView taskListView = TaskListView.getFromActivePerspective();

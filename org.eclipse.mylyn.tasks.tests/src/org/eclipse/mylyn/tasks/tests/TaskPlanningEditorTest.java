@@ -47,7 +47,7 @@ public class TaskPlanningEditorTest extends TestCase {
 	public void testDirtyOnEdit() {
 		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiUtil.openTask(task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);
@@ -69,7 +69,7 @@ public class TaskPlanningEditorTest extends TestCase {
 	public void testNotDirtyOnRename() {
 		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiUtil.openTask(task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);
@@ -91,7 +91,7 @@ public class TaskPlanningEditorTest extends TestCase {
 	public void testRenameInDirtyState() {
 		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiUtil.openTask(task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);

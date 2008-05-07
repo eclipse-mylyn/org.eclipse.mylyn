@@ -61,17 +61,17 @@ public class TaskWorkingSetTest extends TestCase {
 
 	public void testDeleteQuery() {
 		MockRepositoryQuery query = new MockRepositoryQuery("description");
-		ITaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUiPlugin.getTaskList();
 		taskList.addQuery(query);
 		workingSet = createWorkingSet(query);
 		assertTrue(Arrays.asList(workingSet.getElements()).contains(query));
-		TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
+		TasksUiPlugin.getTaskList().deleteQuery(query);
 		assertFalse(Arrays.asList(workingSet.getElements()).contains(query));
 	}
 
 	public void testRenameQuery() {
 		MockRepositoryQuery query = new MockRepositoryQuery("description");
-		ITaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		ITaskList taskList = TasksUiPlugin.getTaskList();
 		taskList.addQuery(query);
 		workingSet = createWorkingSet(query);
 		assertTrue(workingSet.getElements().length == 1);
@@ -93,24 +93,24 @@ public class TaskWorkingSetTest extends TestCase {
 	// XXX see bug 212962
 //	public void testRenameQuery() {
 //		MockRepositoryQuery query = new MockRepositoryQuery("description");
-//		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+//		TaskList taskList = TasksUiPlugin.getTaskList();
 //		taskList.addQuery(query);
 //		workingSet = createWorkingSet(query);
 //		
-//		TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
+//		TasksUiPlugin.getTaskList().deleteQuery(query);
 //		query = new MockRepositoryQuery("newDescription");
-//		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+//		TasksUiPlugin.getTaskList().addQuery(query);
 //		assertTrue(Arrays.asList(workingSet.getElements()).contains(query));
 //	}
 //
 //	public void testEditQuery() {
 //		MockRepositoryQuery query = new MockRepositoryQuery("description");
-//		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+//		TaskList taskList = TasksUiPlugin.getTaskList();
 //		taskList.addQuery(query);
 //		workingSet = createWorkingSet(query);
 //
-//		TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
-//		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+//		TasksUiPlugin.getTaskList().deleteQuery(query);
+//		TasksUiPlugin.getTaskList().addQuery(query);
 //		assertTrue(Arrays.asList(workingSet.getElements()).contains(query));
 //	}
 

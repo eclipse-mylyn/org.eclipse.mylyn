@@ -451,7 +451,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	//
 	// Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 	// SearchHitCollector collector = new
-	// SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+	// SearchHitCollector(TasksUiPlugin.getTaskList(),
 	// repository, getQuery(), proxySettings);
 	// NewSearchUI.runQueryInBackground(collector);
 	//

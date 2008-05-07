@@ -125,7 +125,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 		queriesToSyncMap.clear();
 		tasksToSyncMap.clear();
 
-//		TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(null);
+//		TasksUiPlugin.getTaskList().notifyContainerUpdated(null);
 
 //		if (TaskListView.getFromActivePerspective() != null) {
 //			TaskListView.getFromActivePerspective().getViewer().refresh();

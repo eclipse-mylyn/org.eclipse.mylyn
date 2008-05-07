@@ -330,7 +330,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	public void testDoubleBookKeeping() {
 		AbstractTask task1 = new LocalTask("testDoubleBookKeeping", "testDoubleBookKeeping");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task1);
 		{
 			Calendar startActiveTime = Calendar.getInstance();
 			Calendar endActiveTime = Calendar.getInstance();
@@ -425,7 +425,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 	public void testAfterReloading() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task1);
 
 		Calendar startTime = Calendar.getInstance();
 		Calendar endTime = Calendar.getInstance();
@@ -553,7 +553,7 @@ public class TaskActivityTimingTest extends TestCase {
 		endTime2.add(Calendar.SECOND, 20);
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task1);
 		InteractionContext metaContext = ContextCore.getContextManager().getActivityMetaContext();
 		metaContext.reset();
 		assertEquals(0, metaContext.getInteractionHistory().size());
@@ -656,7 +656,7 @@ public class TaskActivityTimingTest extends TestCase {
 		endTime3.add(Calendar.MINUTE, 5);
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task1);
 
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 				IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
@@ -685,7 +685,7 @@ public class TaskActivityTimingTest extends TestCase {
 	public void testTaskListManagerInactivity() {
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task1);
 
 		ScheduledTaskContainer activityThisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
@@ -751,7 +751,7 @@ public class TaskActivityTimingTest extends TestCase {
 		endTime3.add(Calendar.MINUTE, 5);
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task1);
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		InteractionContext metaContext = ContextCore.getContextManager().getActivityMetaContext();
 		metaContext.reset();
@@ -814,7 +814,7 @@ public class TaskActivityTimingTest extends TestCase {
 	 */
 	public void testLegacyTimingMigration() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		TasksUiPlugin.getTaskList().addTask(task1);
 		ScheduledTaskContainer thisWeekActivity = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
 		assertEquals(0, thisWeekActivity.getChildren().size());
@@ -882,7 +882,7 @@ public class TaskActivityTimingTest extends TestCase {
 //	public void testInterleavedActivation() {
 //
 //		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-//		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+//		TasksUiPlugin.getTaskList().addTask(task1);
 //
 //		ScheduledTaskContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 //		assertNotNull(activityThisWeek);
@@ -938,7 +938,7 @@ public class TaskActivityTimingTest extends TestCase {
 //	public void testInterleavedActivation2() {
 //
 //		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-//		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+//		TasksUiPlugin.getTaskList().addTask(task1);
 //
 //		ScheduledTaskContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 //		assertNotNull(activityThisWeek);
@@ -990,7 +990,7 @@ public class TaskActivityTimingTest extends TestCase {
 //	 */
 //	public void testTaskListManagerActivity2() {
 //		AbstractTask task1 = new LocalTask("task 1", "Task 1");
-//		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+//		TasksUiPlugin.getTaskList().addTask(task1);
 //		ScheduledTaskContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 //		assertNotNull(thisWeekActivity);
 //		assertEquals(0, thisWeekActivity.getChildren().size());
@@ -1055,8 +1055,8 @@ public class TaskActivityTimingTest extends TestCase {
 //
 //		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 //		AbstractTask task2 = new LocalTask("task 2", "Task 2");
-//		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
-//		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
+//		TasksUiPlugin.getTaskList().addTask(task1);
+//		TasksUiPlugin.getTaskList().addTask(task2);
 //
 //		// test this week
 //		ScheduledTaskContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();

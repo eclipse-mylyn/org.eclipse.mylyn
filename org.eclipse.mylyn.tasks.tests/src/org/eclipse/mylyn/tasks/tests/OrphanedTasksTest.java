@@ -36,7 +36,7 @@ public class OrphanedTasksTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		taskList = TasksUiPlugin.getTaskList();
 		assertTrue(taskList.getDefaultCategory().isEmpty());
 
 		TaskRepository taskRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
@@ -53,7 +53,7 @@ public class OrphanedTasksTest extends TestCase {
 	 * y New local tasks should automatically be created in the Local orphaned folder
 	 */
 	public void testAddLocalTask() {
-		Set<ITask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
+		Set<ITask> tasks = TasksUiPlugin.getTaskList().getTasks(
 				LocalRepositoryConnector.REPOSITORY_URL);
 		assertTrue(tasks.isEmpty());
 		ITask localTask = TasksUiInternal.createNewLocalTask("Task 1");
@@ -235,27 +235,27 @@ public class OrphanedTasksTest extends TestCase {
 	public void testAddRepositoryTask() {
 		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
-		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);
-		Set<ITask> tasks = TasksUiPlugin.getTaskListManager().getTaskList().getTasks(
+		TasksUiPlugin.getTaskList().addQuery(mockQuery);
+		TasksUiPlugin.getTaskList().addTask(mockTask, mockQuery);
+		Set<ITask> tasks = TasksUiPlugin.getTaskList().getTasks(
 				MockRepositoryConnector.REPOSITORY_URL);
 		assertFalse(tasks.isEmpty());
 
 		AbstractRepositoryQuery query = (AbstractRepositoryQuery) mockTask.getParentContainers().iterator().next();
 		assertEquals(mockQuery, query);
 		assertFalse(query.isEmpty());
-		assertTrue(TasksUiPlugin.getTaskListManager().getTaskList().getUnmatchedContainer(
+		assertTrue(TasksUiPlugin.getTaskList().getUnmatchedContainer(
 				MockRepositoryConnector.REPOSITORY_URL).isEmpty());
 	}
 
 	public void testMoveRepositoryTask() {
-		TaskList tasklist = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList tasklist = TasksUiPlugin.getTaskList();
 		assertTrue(tasklist.getAllTasks().isEmpty());
 
 		MockTask mockTask = new MockTask("1");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
-		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);
+		TasksUiPlugin.getTaskList().addQuery(mockQuery);
+		TasksUiPlugin.getTaskList().addTask(mockTask, mockQuery);
 
 		TaskCategory category = new TaskCategory("taskCategoryHandle");
 		taskList.addCategory(category);
@@ -290,9 +290,9 @@ public class OrphanedTasksTest extends TestCase {
 		MockTask mockTask = new MockTask("1");
 		MockTask mockTask2 = new MockTask("2");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
-		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask2, mockTask);
+		TasksUiPlugin.getTaskList().addQuery(mockQuery);
+		TasksUiPlugin.getTaskList().addTask(mockTask, mockQuery);
+		TasksUiPlugin.getTaskList().addTask(mockTask2, mockTask);
 
 		assertFalse(taskList.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
 				mockTask.getHandleIdentifier()));
@@ -323,11 +323,11 @@ public class OrphanedTasksTest extends TestCase {
 		MockTask mockTask2 = new MockTask("2");
 		MockTask mockTask3 = new MockTask("3");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
-		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(mockQuery);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask, mockQuery);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask2, mockTask);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask3, mockQuery);
-		TasksUiPlugin.getTaskListManager().getTaskList().addTask(mockTask2, mockTask3);
+		TasksUiPlugin.getTaskList().addQuery(mockQuery);
+		TasksUiPlugin.getTaskList().addTask(mockTask, mockQuery);
+		TasksUiPlugin.getTaskList().addTask(mockTask2, mockTask);
+		TasksUiPlugin.getTaskList().addTask(mockTask3, mockQuery);
+		TasksUiPlugin.getTaskList().addTask(mockTask2, mockTask3);
 		assertFalse(taskList.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL).contains(
 				mockTask.getHandleIdentifier()));
 		assertFalse(taskList.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL).contains(

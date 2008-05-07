@@ -50,7 +50,7 @@ public abstract class AbstractTaskAction extends Action {
 	protected abstract void performActionOnTask(ITask repositoryTask);
 
 	protected boolean containsArchiveContainer(List<AbstractTaskContainer> selectedElements) {
-		return false;//selectedElements.contains(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+		return false;//selectedElements.contains(TasksUiPlugin.getTaskList().getArchiveContainer());
 	}
 
 }

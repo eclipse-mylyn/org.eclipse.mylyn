@@ -499,7 +499,7 @@
 //									break;
 //								default:
 //									if (taskContainerDelta.getContainer().equals(
-//											TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
+//											TasksUiPlugin.getTaskList().getDefaultCategory())) {
 //										refresh(null);
 //									} else {
 //										refresh(taskContainerDelta.getContainer());
@@ -606,13 +606,13 @@
 //		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
 //		createRefreshJob();
 //		TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
-//		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
+//		TasksUiPlugin.getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
 //	}
 //
 //	@Override
 //	public void dispose() {
 //		super.dispose();
-//		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_REFERESH_LISTENER);
+//		TasksUiPlugin.getTaskList().removeChangeListener(TASK_REFERESH_LISTENER);
 //		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 //
 //		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(this);
@@ -635,7 +635,7 @@
 //	}
 //
 //	private void updateDescription() {
-//		List<AbstractTask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
+//		List<AbstractTask> activeTasks = TasksUiPlugin.getTaskList().getActiveTasks();
 //		if (activeTasks.size() > 0) {
 //			updateDescription(activeTasks.get(0));
 //		} else {
@@ -731,7 +731,7 @@
 //			applyPresentation(taskListMemento.getString(MEMENTO_PRESENTATION));
 //		}
 //
-//		filterWorkingSet = new TaskWorkingSetFilter(TasksUiPlugin.getTaskListManager().getTaskList());
+//		filterWorkingSet = new TaskWorkingSetFilter(TasksUiPlugin.getTaskList());
 //		filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
 //		addFilter(filterWorkingSet);
 //		addFilter(filterPriority);
@@ -1046,7 +1046,7 @@
 //		final IWorkbench workbench = PlatformUI.getWorkbench();
 //		workbench.getDisplay().asyncExec(new Runnable() {
 //			public void run() {
-//				List<AbstractTask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
+//				List<AbstractTask> activeTasks = TasksUiPlugin.getTaskList().getActiveTasks();
 //				for (AbstractTask t : activeTasks) {
 //					getViewer().expandToLevel(t, 0);
 //				}
@@ -1316,7 +1316,7 @@
 //	 * @return <code>true</code> if the taskId was found in the node or any of its children
 //	 */
 //	protected boolean lookForId(String taskId) {
-//		return (TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskId) == null);
+//		return (TasksUiPlugin.getTaskList().getTask(taskId) == null);
 //	}
 //
 //	private void hookOpenAction() {
@@ -1369,7 +1369,7 @@
 //			getViewer().expandAll();
 //		}
 //		refresh(null);
-//		selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+//		selectedAndFocusTask(TasksUiPlugin.getTaskList().getActiveTask());
 //	}
 //
 //	public TreeViewer getViewer() {
@@ -1668,10 +1668,10 @@
 //			// TODO: move logic into deltas
 //			refresh(task);
 //			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
-//					TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
+//					TasksUiPlugin.getTaskList().getQueriesForHandle(task.getHandleIdentifier()));
 //			containers.addAll(task.getParentContainers());
-//			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
-//			containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+//			containers.add(TasksUiPlugin.getTaskList().getArchiveContainer());
+//			containers.add(TasksUiPlugin.getTaskList().getDefaultCategory());
 //			for (AbstractTaskContainer container : containers) {
 //				refresh(container);
 //			}

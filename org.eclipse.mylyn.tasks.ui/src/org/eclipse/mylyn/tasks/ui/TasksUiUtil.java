@@ -591,7 +591,7 @@ public class TasksUiUtil {
 			task = TasksUiUtil.getTaskByUrl(fullUrl);
 		}
 		if (task == null && repositoryUrl != null && taskId != null) {
-			task = TasksUiPlugin.getTaskListManager().getTaskList().getTaskByKey(repositoryUrl, taskId);
+			task = TasksUiPlugin.getTaskList().getTaskByKey(repositoryUrl, taskId);
 		}
 
 		if (task != null) {
@@ -629,7 +629,7 @@ public class TasksUiUtil {
 	 * @since 2.0
 	 */
 	private static AbstractTask getTaskByUrl(String taskUrl) {
-		Collection<AbstractTask> tasks = TasksUi.getTaskList().getAllTasks();
+		Collection<AbstractTask> tasks = TasksUiPlugin.getTaskList().getAllTasks();
 		for (AbstractTask task : tasks) {
 			String currUrl = task.getUrl();
 			if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) {
@@ -648,7 +648,7 @@ public class TasksUiUtil {
 
 		AbstractTask task = (AbstractTask) TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
 		if (task == null) {
-			task = TasksUiPlugin.getTaskListManager().getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
+			task = TasksUiPlugin.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
 		}
 		if (task != null) {
 			return TasksUiUtil.openTaskAndRefresh(task);

@@ -31,7 +31,7 @@ public class TaskEditorInputFactory implements IElementFactory {
 
 	public IAdaptable createElement(IMemento memento) {
 		String handle = memento.getString(TAG_TASK_HANDLE);
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+		AbstractTask task = TasksUiPlugin.getTaskList().getTask(handle);
 		if (task != null) {
 			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
