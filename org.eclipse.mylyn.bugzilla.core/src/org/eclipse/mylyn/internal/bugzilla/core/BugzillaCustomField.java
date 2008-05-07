@@ -24,9 +24,9 @@ public class BugzillaCustomField implements Serializable {
 
 	public static final String CUSTOM_FIELD_PREFIX = "cf_";
 
-	private String name;
+	private final String name;
 
-	private String description;
+	private final String description;
 
 	private List<String> options = new ArrayList<String>();
 

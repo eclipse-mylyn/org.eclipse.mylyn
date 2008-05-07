@@ -66,8 +66,9 @@ public class BugzillaCustomQueryDialog extends Dialog {
 		l.setText("Bugzilla Query Category Name");
 
 		nameText = new Text(custom, SWT.BORDER | SWT.SINGLE);
-		if (name != null)
+		if (name != null) {
 			nameText.setText(name);
+		}
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 300;
 		nameText.setLayoutData(gd);
@@ -76,8 +77,9 @@ public class BugzillaCustomQueryDialog extends Dialog {
 		l.setText("Max Hits Returned (-1 means all)");
 
 		maxHitsText = new Text(custom, SWT.BORDER | SWT.SINGLE);
-		if (maxHits != null)
+		if (maxHits != null) {
 			maxHitsText.setText(maxHits);
+		}
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 300;
 		maxHitsText.setLayoutData(gd);
@@ -86,8 +88,9 @@ public class BugzillaCustomQueryDialog extends Dialog {
 		l.setText("Query URL");
 
 		queryText = new Text(custom, SWT.BORDER | SWT.SINGLE);
-		if (startingUrl != null)
+		if (startingUrl != null) {
 			queryText.setText(startingUrl);
+		}
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 300;
 		queryText.setLayoutData(gd);

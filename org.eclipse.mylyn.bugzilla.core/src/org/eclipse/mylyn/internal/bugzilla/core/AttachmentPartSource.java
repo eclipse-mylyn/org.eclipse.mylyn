@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
  */
 public class AttachmentPartSource implements PartSource {
 
-	private ITaskAttachment attachment;
+	private final ITaskAttachment attachment;
 
 	public AttachmentPartSource(ITaskAttachment attachment) {
 		this.attachment = attachment;

@@ -19,18 +19,18 @@ import java.util.List;
 public class StackTrace {
 
 	/** The length of the stack trace in the original string */
-	private int length;
+	private final int length;
 
 	/** The offset of the stack trace in the orignal string */
-	private int offset;
+	private final int offset;
 
 	/** The string of the stack trace */
-	private String stackTrace;
+	private final String stackTrace;
 
 	/**
 	 * This is the comment that the stack trace appeared in. String if desciption else Comment
 	 */
-	private Object comment;
+	private final Object comment;
 
 	/**
 	 * Constructor
@@ -180,8 +180,9 @@ public class StackTrace {
 			stackTraces.add(getStackTrace(stackTrace, charStackStart, charPos[0] - charStackStart, comment));
 		}
 
-		if (stackTraces.size() == 0)
+		if (stackTraces.size() == 0) {
 			return null;
+		}
 
 		// get the string values of the stack traces and return it
 		return getTracesFromList(stackTraces);
@@ -233,8 +234,9 @@ public class StackTrace {
 		if (l1.trim().matches(regexAtString)) {
 			charPos[0] += l1.length() + 2;
 			res = l1;
-		} else
+		} else {
 			return null;
+		}
 
 		// now determine where the end is if it wasn't on 1 line
 		if (!res.trim().matches(regexEndString)) {
@@ -302,8 +304,9 @@ public class StackTrace {
 	private static StackTrace[] getTracesFromList(List<StackTrace> l) {
 
 		// make sure that there is something to convert, else return null
-		if (l == null || l.size() == 0)
+		if (l == null || l.size() == 0) {
 			return null;
+		}
 
 		// convert the list of strings to an array of strings
 		int i = 0;

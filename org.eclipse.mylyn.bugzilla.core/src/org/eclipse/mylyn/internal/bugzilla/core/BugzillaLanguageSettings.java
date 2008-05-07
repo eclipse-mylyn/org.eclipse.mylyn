@@ -38,7 +38,7 @@ public class BugzillaLanguageSettings {
 
 	public static final String COMMAND_CHANGES_SUBMITTED = "changes_submitted";
 
-	private Map<String, List<String>> languageAttributes = new LinkedHashMap<String, List<String>>();
+	private final Map<String, List<String>> languageAttributes = new LinkedHashMap<String, List<String>>();
 
 	public BugzillaLanguageSettings(String languageName) {
 		super();
@@ -59,18 +59,23 @@ public class BugzillaLanguageSettings {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		BugzillaLanguageSettings other = (BugzillaLanguageSettings) obj;
 		if (languageName == null) {
-			if (other.languageName != null)
+			if (other.languageName != null) {
 				return false;
-		} else if (!languageName.equals(other.languageName))
+			}
+		} else if (!languageName.equals(other.languageName)) {
 			return false;
+		}
 		return true;
 	}
 

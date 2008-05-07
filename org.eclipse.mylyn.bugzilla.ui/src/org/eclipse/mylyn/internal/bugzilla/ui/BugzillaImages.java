@@ -51,7 +51,7 @@ public class BugzillaImages {
 	public static final ImageDescriptor OVERLAY_ENHANCEMENT = create(T_VIEW, "overlay-enhancement.gif");
 
 	public static final ImageDescriptor OVERLAY_MINOR = create(T_VIEW, "overlay-minor.gif");
-	
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
@@ -61,12 +61,14 @@ public class BugzillaImages {
 	}
 
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
-		if (baseURL == null)
+		if (baseURL == null) {
 			throw new MalformedURLException();
+		}
 
 		StringBuffer buffer = new StringBuffer(prefix);
-		if (prefix != "")
+		if (prefix != "") {
 			buffer.append('/');
+		}
 		buffer.append(name);
 		return new URL(baseURL, buffer.toString());
 	}

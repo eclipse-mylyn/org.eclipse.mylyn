@@ -107,7 +107,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			setEncoding(template.characterEncoding);
 		}
 		getContainer().updateButtons();
-		
+
 	}
 	@Override
 	protected void createAdditionalControls(Composite parent) {
@@ -187,10 +187,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 		Label defaultPlatformLabel = new Label(parent, SWT.NONE);
 		defaultPlatformLabel.setText("Autodetect platform and os");
-		if (null == repository)
+		if (null == repository) {
 			defaultPlatformLabel.setToolTipText(TOOLTIP_AUTODETECTION_DISABLED);
-		else
+		} else {
 			defaultPlatformLabel.setToolTipText(TOOLTIP_AUTODETECTION_ENABLED);
+		}
 
 		Composite platformOSContainer = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(3, false);
@@ -209,7 +210,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 						getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
 
 							public void run(IProgressMonitor monitor) throws InvocationTargetException,
-									InterruptedException {
+							InterruptedException {
 								try {
 									monitor.beginTask("Retrieving repository configuration", IProgressMonitor.UNKNOWN);
 									repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
@@ -248,10 +249,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 		});
 		autodetectPlatformOS.setEnabled(null != repository);
-		if (null == repository)
+		if (null == repository) {
 			autodetectPlatformOS.setToolTipText(TOOLTIP_AUTODETECTION_DISABLED);
-		else
+		} else {
 			autodetectPlatformOS.setToolTipText(TOOLTIP_AUTODETECTION_ENABLED);
+		}
 		autodetectPlatformOS.setSelection(null == platform && null == os);
 
 		defaultPlatformCombo = new Combo(platformOSContainer, SWT.READ_ONLY);
@@ -438,10 +440,10 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 //		final String httpAuthPass;
 //
 //		final Proxy proxy;
-		
+
 		final TaskRepository repository;
 
-		private String[] versions = new String[1];;
+		private final String[] versions = new String[1];;
 
 		public BugzillaValidator(TaskRepository repository, String version) {
 //			serverUrl = getServerUrl();
@@ -468,15 +470,15 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		private void displayError(final String serverUrl, Throwable e) {
 			IStatus status;
 			if (e instanceof MalformedURLException) {
-				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, "Server URL is invalid.");
 			} else if (e instanceof CoreException) {
 				status = ((CoreException) e).getStatus();
 			} else if (e instanceof IOException) {
-				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_IO,
+				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_IO,
 						serverUrl, e.getMessage());
 			} else {
-				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, serverUrl, e.getMessage());
 			}
 			TasksUiInternal.displayStatus("Validation failed", status);
@@ -506,7 +508,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 //					client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword, httpAuthUser,
 //							httpAuthPass, proxy, newEncoding);
 //					client.logout();
-//				} else 
+//				} else
 				if (versions != null) {
 					client = BugzillaClientFactory.createClient(repository);
 					client.validate(monitor);

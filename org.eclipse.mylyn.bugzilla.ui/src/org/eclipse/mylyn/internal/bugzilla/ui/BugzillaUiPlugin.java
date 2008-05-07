@@ -87,7 +87,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		}
 
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+		.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		TasksUi.getRepositoryManager().addListener(bugzillaConnector.getClientManager());
 
@@ -116,7 +116,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+		.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		TasksUi.getRepositoryManager().removeListener(bugzillaConnector.getClientManager());
 
@@ -145,27 +145,30 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public static String[] getQueryOptions(String prefId, String[] selectedProducts, RepositoryConfiguration repositoryConfiguration) {
 		List<String> options = new ArrayList<String>();
 		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION) || prefId.equals(IBugzillaConstants.VALUES_TARGET))
-		&& selectedProducts != null) {
-				for (String product : selectedProducts) {
-					if (prefId.equals(IBugzillaConstants.VALUES_COMPONENT)) {
-						for (String option : repositoryConfiguration.getComponents(product)) {
-							if (!options.contains(option))
-							options.add(option);						
-						}
-					}	
-					if (prefId.equals(IBugzillaConstants.VALUES_VERSION)) {
-						for (String option : repositoryConfiguration.getVersions(product)) {
-							if (!options.contains(option))
-							options.add(option);						
-						}
-					}
-					if (prefId.equals(IBugzillaConstants.VALUES_TARGET)) {
-						for (String option : repositoryConfiguration.getTargetMilestones(product)) {
-							if (!options.contains(option))
-							options.add(option);						
+				&& selectedProducts != null) {
+			for (String product : selectedProducts) {
+				if (prefId.equals(IBugzillaConstants.VALUES_COMPONENT)) {
+					for (String option : repositoryConfiguration.getComponents(product)) {
+						if (!options.contains(option)) {
+							options.add(option);
 						}
 					}
 				}
+				if (prefId.equals(IBugzillaConstants.VALUES_VERSION)) {
+					for (String option : repositoryConfiguration.getVersions(product)) {
+						if (!options.contains(option)) {
+							options.add(option);
+						}
+					}
+				}
+				if (prefId.equals(IBugzillaConstants.VALUES_TARGET)) {
+					for (String option : repositoryConfiguration.getTargetMilestones(product)) {
+						if (!options.contains(option)) {
+							options.add(option);
+						}
+					}
+				}
+			}
 		} else {
 			if (prefId.equals(IBugzillaConstants.VALUES_COMPONENT)) {
 				options = repositoryConfiguration.getComponents();
@@ -199,8 +202,9 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			return origText;
 		} else {
 			String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
-			for (int i = 0; i < textArray.length; i++)
+			for (int i = 0; i < textArray.length; i++) {
 				textArray[i] = null;
+			}
 			int j = 0;
 			while (true) {
 				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
@@ -215,10 +219,11 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 			String newText = "";
 
-			for (int i = 0; i < textArray.length; i++) {
-				if (textArray[i] == null)
+			for (String element : textArray) {
+				if (element == null) {
 					break;
-				newText += textArray[i] + "\n";
+				}
+				newText += element + "\n";
 			}
 			return newText;
 		}

@@ -80,7 +80,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		try {
 			BugzillaClient client = createClient(page.getServerUrl(), page.getUserName(),
 					page.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(),
-					 page.getCharacterEncoding());
+					page.getCharacterEncoding());
 			client.validate(null);
 		} catch (CoreException e) {
 			return;
@@ -184,7 +184,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		try {
 			client = createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
-					page.getHttpAuthUserId(), page.getHttpAuthPassword(), 
+					page.getHttpAuthUserId(), page.getHttpAuthPassword(),
 					page.getCharacterEncoding());
 			client.validate(null);
 		} catch (CoreException e) {

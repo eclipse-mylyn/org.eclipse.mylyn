@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import javax.security.auth.login.LoginException;
+import javax.swing.text.html.HTML.Tag;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
@@ -34,9 +35,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 
 public class BugzillaTaskHistoryParser {
 
-	private InputStream inStream;
+	private final InputStream inStream;
 
-	private String characterEncoding;
+	private final String characterEncoding;
 
 	public BugzillaTaskHistoryParser(InputStream inStream, String characterEncoding) {
 		this.inStream = inStream;
@@ -49,7 +50,7 @@ public class BugzillaTaskHistoryParser {
 	 * @return A BugActivity object containing the activity history
 	 */
 	public TaskHistory retrieveHistory(BugzillaLanguageSettings bugzillaLanguageSettings) throws IOException,
-			ParseException, LoginException {
+	ParseException, LoginException {
 		TaskHistory activity = new TaskHistory();
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(new BufferedReader(new InputStreamReader(inStream,
 				characterEncoding)), null);
@@ -60,7 +61,7 @@ public class BugzillaTaskHistoryParser {
 
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 			// make sure that bugzilla doesn't want us to login
-			if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
+			if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TITLE
 					&& !((HtmlTag) (token.getValue())).isEndTag()) {
 				isTitle = true;
 				continue;
@@ -72,7 +73,7 @@ public class BugzillaTaskHistoryParser {
 					title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
 					continue;
 				} else if (token.getType() == Token.TAG
-						&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
+						&& ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
 						&& ((HtmlTag) token.getValue()).isEndTag()) {
 					// check if we may have a problem with login by looking
 					// at
@@ -95,15 +96,16 @@ public class BugzillaTaskHistoryParser {
 			if (token.getType() == Token.TAG) {
 				HtmlTag tag = (HtmlTag) token.getValue();
 				// Skip till find <br> - "there can be only one"
-				if (tag.getTagType() == HtmlTag.Type.BR && !tag.isEndTag()) {
+				if (tag.getTagType() == Tag.BR && !tag.isEndTag()) {
 					// skip tags until start of real data
 					while (true) {
 						token = tokenizer.nextToken();
 						if (token.getType() == Token.TAG) {
 							tag = (HtmlTag) token.getValue();
-							if ((tag.isEndTag() && tag.getTagType() == HtmlTag.Type.TR)
-									|| tag.getTagType() == HtmlTag.Type.P)
+							if ((tag.isEndTag() && tag.getTagType() == Tag.TR)
+									|| tag.getTagType() == Tag.P) {
 								break;
+							}
 						}
 					}
 					parseActivity(tokenizer, activity);
@@ -113,8 +115,9 @@ public class BugzillaTaskHistoryParser {
 
 		// if we don't have any keywords and suspect that there was a login
 		// problem, assume we had a login problem
-		if (activity.size() == 0 && possibleBadLogin)
+		if (activity.size() == 0 && possibleBadLogin) {
 			throw new LoginException("Bugzilla login information incorrect");
+		}
 		return activity;
 	}
 
@@ -135,8 +138,9 @@ public class BugzillaTaskHistoryParser {
 				tag = (HtmlTag) token.getValue();
 
 				// End of events
-				if (tag.getTagType() == HtmlTag.Type.TABLE && tag.isEndTag())
+				if (tag.getTagType() == Tag.TABLE && tag.isEndTag()) {
 					break;
+				}
 
 				// Get event entry
 				this.parseEvent(tokenizer, activity);
@@ -162,7 +166,7 @@ public class BugzillaTaskHistoryParser {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				if (token.getType() == Token.TAG) {
 					tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == HtmlTag.Type.TD && tag.hasAttribute("rowspan")) {
+					if (tag.getTagType() == Tag.TD && tag.hasAttribute("rowspan")) {
 						numChanges = tag.getIntAttribute("rowspan");
 						break;
 					}
@@ -205,7 +209,7 @@ public class BugzillaTaskHistoryParser {
 			for (token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				if (token.getType() == Token.TAG) {
 					tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == HtmlTag.Type.TD && tag.isEndTag()) {
+					if (tag.getTagType() == Tag.TD && tag.isEndTag()) {
 						String data = StringEscapeUtils.unescapeHtml(sb.toString());
 						if (data.startsWith("\n") && (data.contains("Attachment") == false)) {
 							data = ""; // empty field

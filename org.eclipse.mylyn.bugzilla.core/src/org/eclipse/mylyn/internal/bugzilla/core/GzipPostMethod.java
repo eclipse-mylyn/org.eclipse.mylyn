@@ -57,12 +57,12 @@ public class GzipPostMethod extends PostMethod {
 	private boolean isZippedReply() {
 		// content-encoding:gzip can be set by a dedicated perl script or mod_gzip
 		boolean zipped = (null != this.getResponseHeader("Content-encoding") && this.getResponseHeader(
-				"Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP))
-				||
-				// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
-				(null != this.getResponseHeader("Content-Type") && this.getResponseHeader("Content-Type")
-						.getValue()
-						.equals("application/x-gzip"));
+		"Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP))
+		||
+		// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
+		(null != this.getResponseHeader("Content-Type") && this.getResponseHeader("Content-Type")
+				.getValue()
+				.equals("application/x-gzip"));
 		return zipped;
 	}
 
@@ -96,5 +96,5 @@ public class GzipPostMethod extends PostMethod {
 		}
 		return input;
 	}
-	
+
 }

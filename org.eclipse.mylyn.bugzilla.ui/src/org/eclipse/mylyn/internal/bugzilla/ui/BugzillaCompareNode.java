@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.bugzilla.ui;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
@@ -197,8 +196,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		}
 
 		BugzillaCompareNode comments = new BugzillaCompareNode("Comments", null, defaultImage);
-		for (Iterator<TaskComment> iter = bug.getComments().iterator(); iter.hasNext();) {
-			TaskComment taskComment = iter.next();
+		for (TaskComment taskComment : bug.getComments()) {
 			String bodyString = "Comment from " + taskComment.getAuthorName() + ":\n\n" + taskComment.getText();
 			comments.addChild(new BugzillaCompareNode(
 					taskComment.getAttributeValue(BugzillaReportElement.BUG_WHEN.getKeyString()), bodyString,
@@ -209,8 +207,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		topNode.addChild(new BugzillaCompareNode("New Comment", bug.getNewComment(), defaultImage));
 
 		BugzillaCompareNode ccList = new BugzillaCompareNode("CC List", null, defaultImage);
-		for (Iterator<String> iter = bug.getCc().iterator(); iter.hasNext();) {
-			String cc = iter.next();
+		for (String cc : bug.getCc()) {
 			ccList.addChild(new BugzillaCompareNode("CC", cc, defaultImage));
 		}
 		topNode.addChild(ccList);
@@ -227,7 +224,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 //		Date creationDate = bug.getCreated();
 //		if (creationDate == null) {
 //			// XXX: this could be backwards
-//			creationDate = Calendar.getInstance().getTime(); 
+//			creationDate = Calendar.getInstance().getTime();
 //		}
 //		BugzillaCompareNode child = new BugzillaCompareNode("Creation Date", creationDate.toString(), defaultImage);
 //		topNode.addChild(child);
@@ -250,7 +247,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 //			// Since the bug report may not be saved offline, get the
 //			// attribute's new
 //			// value, which is what is in the submit viewer.
-//			
+//
 //			attributes.addChild(new BugzillaCompareNode(attribute.getName(), attribute.getValue(), attributeImage));
 //		}
 //		topNode.addChild(attributes);
@@ -258,9 +255,9 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 //		topNode.addChild(new BugzillaCompareNode("Description", bug.getDescription(), defaultImage));
 //
 //		BugzillaCompareNode comments = new BugzillaCompareNode("Comments", null, defaultImage);
-//		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {			
+//		for (Iterator<Comment> iter = bug.getComments().iterator(); iter.hasNext();) {
 //			Comment comment = iter.next();
-//			String bodyString = "Comment from " + comment.getAuthorName() + ":\n\n" + comment.getText();			
+//			String bodyString = "Comment from " + comment.getAuthorName() + ":\n\n" + comment.getText();
 //			comments.addChild(new BugzillaCompareNode(comment.getAttributeValue(BugzillaReportElement.CREATION_TS), bodyString, defaultImage));
 //		}
 //		topNode.addChild(comments);

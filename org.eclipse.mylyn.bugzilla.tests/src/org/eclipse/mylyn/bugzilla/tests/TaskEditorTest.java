@@ -59,7 +59,7 @@ public class TaskEditorTest extends TestCase {
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-						.getNewRepositoryTaskId());
+				.getNewRepositoryTaskId());
 		model.setNew(true);
 		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
@@ -83,14 +83,14 @@ public class TaskEditorTest extends TestCase {
 		// editor.doSave(new NullProgressMonitor());
 	}
 
- public void testinitializeTaskData() throws Exception {
+	public void testinitializeTaskData() throws Exception {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-						.getNewRepositoryTaskId());
+				.getNewRepositoryTaskId());
 		model.setNew(true);
 		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
@@ -102,6 +102,6 @@ public class TaskEditorTest extends TestCase {
 		model.setAttributeValue(RepositoryTaskAttribute.PRODUCT, "TestProduct");
 		assertEquals("TestProduct", model.getProduct());
 		assertTrue(taskDataHandler.initializeTaskData(repository, model, null));
-	
+
 	}
 }

@@ -8,6 +8,7 @@
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +28,7 @@ import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
@@ -236,7 +238,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		String dependson = taskData.getAttributeValue(BugzillaReportElement.DEPENDSON.getKeyString());
 		String blocked = taskData.getAttributeValue(BugzillaReportElement.BLOCKED.getKeyString());
 		boolean addHyperlinks = (dependson != null && dependson.length() > 0)
-				|| (blocked != null && blocked.length() > 0);
+		|| (blocked != null && blocked.length() > 0);
 
 		if (addHyperlinks) {
 			getManagedForm().getToolkit().createLabel(composite, "");
@@ -296,7 +298,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		} catch (IOException e) {
 			MessageDialog.openInformation(null, "Attribute Display Error",
 					"Could not retrieve keyword list, ensure proper configuration in "
-							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + "\n\nError reported: " + e.getMessage());
+					+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + "\n\nError reported: " + e.getMessage());
 		}
 
 		addVoting(composite);
@@ -306,13 +308,15 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			addRoles(composite);
 		}
 
-		if (taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
+		if (taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null) {
 			addBugzillaTimeTracker(getManagedForm().getToolkit(), composite);
+		}
 	}
 
 	private boolean hasCustomAttributeChanges() {
-		if (taskData == null)
+		if (taskData == null) {
 			return false;
+		}
 		String customAttributeKeys[] = { BugzillaReportElement.BUG_FILE_LOC.getKeyString(),
 				BugzillaReportElement.DEPENDSON.getKeyString(), BugzillaReportElement.BLOCKED.getKeyString(),
 				BugzillaReportElement.KEYWORDS.getKeyString(), BugzillaReportElement.VOTES.getKeyString(),
@@ -553,7 +557,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 					Calendar cal = deadlinePicker.getDate();
 					if (cal != null) {
 						Date d = cal.getTime();
-						SimpleDateFormat f = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
+						SimpleDateFormat f = (SimpleDateFormat) DateFormat.getDateInstance();
 						f.applyPattern("yyyy-MM-dd");
 
 						taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), f.format(d));
@@ -589,8 +593,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	protected void addKeywordsList(Composite attributesComposite) throws IOException {
 		// newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
 		final RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.KEYWORDS);
-		if (attribute == null)
+		if (attribute == null) {
 			return;
+		}
 		Label label = createLabel(attributesComposite, attribute);
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 
@@ -634,7 +639,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 				int responseCode = keywordsDialog.open();
 
 				String newKeywords = keywordsDialog.getSelectedKeywordsString();
-				if (responseCode == Dialog.OK && keywords != null) {
+				if (responseCode == Window.OK && keywords != null) {
 					keywordsText.setText(newKeywords);
 					attribute.setValue(newKeywords);
 					attributeChanged(attribute);
@@ -760,6 +765,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 	}
 
+	@Override
 	protected boolean attributeChanged(RepositoryTaskAttribute attribute) {
 		if (attribute == null) {
 			return false;

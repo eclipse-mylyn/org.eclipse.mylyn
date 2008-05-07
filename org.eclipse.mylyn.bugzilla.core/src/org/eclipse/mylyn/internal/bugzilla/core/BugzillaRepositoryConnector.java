@@ -68,7 +68,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 
 	private BugzillaClientManager clientManager;
 
-	private Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
+	private final Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
 
 	@Override
 	public void init(ITaskList taskList) {
@@ -132,7 +132,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 				bugzillaTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_OWNER));
 				return false;
 			}
-			
+
 ////			// subtasks
 //			repositoryTask.dropSubTasks();
 //			Set<String> subTaskIds = taskDataHandler.getSubTaskIds(taskData);
@@ -180,8 +180,8 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 			// states are
 			if (taskData.getStatus() != null) {
 				isComplete = taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
-						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
-						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
+				|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
+				|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
 			}
 			bugzillaTask.setCompleted(isComplete);
 
@@ -263,7 +263,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 //		newTask.setCompleted(existingTask.isCompleted());
 //		//	newTask.setCompletionDate(existingTask.getCompletionDate());
 //
-//		// Owner attribute not previously 
+//		// Owner attribute not previously
 //		if (hasTaskPropertyChanged(existingTask.getOwner(), newTask.getOwner())) {
 //			existingTask.setOwner(newTask.getOwner());
 //		}
@@ -288,12 +288,12 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 
 	@Override
 	public void preSynchronization(SynchronizationContext event, IProgressMonitor monitor)
-			throws CoreException {
-		TaskRepository repository = event.taskRepository;	
+	throws CoreException {
+		TaskRepository repository = event.taskRepository;
 		if (event.tasks.isEmpty()) {
 			return;
 		}
-		
+
 		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
@@ -311,7 +311,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 			}
 
 			String urlQueryBase = repository.getRepositoryUrl() + CHANGED_BUGS_CGI_QUERY
-					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
+			+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 
 			String urlQueryString = urlQueryBase + BUG_ID;
 
@@ -328,7 +328,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 //			}
 //			System.err.println(">>>> markStale "+tasks.size());
 //			queryForChanged(repository, changedTasks, urlQueryString);
-			
+
 			Set<ITask> changedTasks = new HashSet<ITask>();
 			Iterator<ITask> itr = event.tasks.iterator();
 			int queryCounter = 0;
@@ -341,17 +341,17 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 				urlQueryString += newurlQueryString;
 				if (queryCounter >= 1000) {
 					queryForChanged(repository, changedTasks, urlQueryString);
-					
+
 					queryCounter = 0;
 					urlQueryString = urlQueryBase + BUG_ID;
 					newurlQueryString = "";
 				}
-				
+
 				if (!itr.hasNext() && queryCounter != 0) {
 					queryForChanged(repository, changedTasks, urlQueryString);
 				}
 			}
-			
+
 			for (ITask task : event.tasks) {
 				if (changedTasks.contains(task)) {
 					task.setStale(true);
@@ -368,9 +368,9 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 			monitor.done();
 		}
 	}
-	
+
 	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString)
-			throws UnsupportedEncodingException, CoreException {
+	throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
 
 			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) {
@@ -381,7 +381,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), urlQueryString, "");
 		performQuery(repository, query, collector, null, new NullProgressMonitor());
-		
+
 		changedTasks.addAll(collector.getTasks());
 	}
 
@@ -411,10 +411,10 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 
 			return Status.OK_STATUS;
 		} catch (UnrecognizedReponseException e) {
-			return new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.INFO,
 					"Unrecognized response from server", e);
 		} catch (IOException e) {
-			return new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.ERROR,
 					"Check repository configuration: " + e.getMessage(), e);
 		} catch (CoreException e) {
 			return e.getStatus();
@@ -476,6 +476,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 		}
 	}
 
+	@Override
 	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		if (super.isRepositoryConfigurationStale(repository, monitor)) {
 			boolean result = true;
@@ -531,10 +532,11 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 
 	@Override
 	public RepositoryTaskData getLegacyTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
-			throws CoreException {
+	throws CoreException {
 		return getLegacyTaskDataHandler().getTaskData(repository, taskId, monitor);
 	}
 
+	@Override
 	public void postSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);

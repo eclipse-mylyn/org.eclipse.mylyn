@@ -13,6 +13,7 @@ import java.io.InputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
@@ -27,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 
-	private BugzillaRepositoryConnector connector;
+	private final BugzillaRepositoryConnector connector;
 
 	public BugzillaAttachmentHandler(BugzillaRepositoryConnector connector) {
 		this.connector = connector;
@@ -40,7 +41,7 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 			return client.getAttachmentData(attachment.getId(), monitor);
 		} catch (IOException e) {
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		}
 	}
@@ -53,7 +54,7 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 			client.postAttachment(bugId, comment, attachment, monitor);
 		} catch (IOException e) {
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		}
 	}

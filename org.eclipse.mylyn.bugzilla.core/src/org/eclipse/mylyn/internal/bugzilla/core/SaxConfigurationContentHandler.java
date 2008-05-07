@@ -127,28 +127,28 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private int state = EXPECTING_ROOT;
 
 	private String currentProduct = "";
-	
+
 	private String currentName = "";
 
 	private StringBuffer characters = new StringBuffer();
 
 	private String about;
 
-	private RepositoryConfiguration configuration = new RepositoryConfiguration();
+	private final RepositoryConfiguration configuration = new RepositoryConfiguration();
 
-	private Map<String, List<String>> components = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> components = new HashMap<String, List<String>>();
 
-	private Map<String, List<String>> versions = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> versions = new HashMap<String, List<String>>();
 
-	private Map<String, List<String>> milestones = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> milestones = new HashMap<String, List<String>>();
 
-	private Map<String, String> componentNames = new HashMap<String, String>();
+	private final Map<String, String> componentNames = new HashMap<String, String>();
 
-	private Map<String, String> versionNames = new HashMap<String, String>();
+	private final Map<String, String> versionNames = new HashMap<String, String>();
 
-	private Map<String, String> milestoneNames = new HashMap<String, String>();
+	private final Map<String, String> milestoneNames = new HashMap<String, String>();
 
-	private Map<String, List<String>> customOption = new HashMap<String, List<String>>();
+	private final Map<String, List<String>> customOption = new HashMap<String, List<String>>();
 
 	private String currentCustomOptionName = "";
 
@@ -230,8 +230,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state & ~IN_LI_LI;
 		} else if (localName.equals(ELEMENT_LI) && ((state & IN_LI_LI) != IN_LI_LI)) {
 			state = state & ~IN_LI;
-			if (characters.length() == 0)
+			if (characters.length() == 0) {
 				return;
+			}
 			if (state == (IN_STATUS)) {
 				configuration.addStatus(characters.toString());
 			} else if (state == (IN_STATUS_OPEN)) {
@@ -335,8 +336,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			if (currentName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 				BugzillaCustomField newField = new BugzillaCustomField(characters.toString(), currentName);
 				List<String> customOptionList = customOption.get(currentName);
-				if (customOptionList != null && !customOptionList.isEmpty())
+				if (customOptionList != null && !customOptionList.isEmpty()) {
 					newField.setOptions(customOptionList);
+				}
 				configuration.addCustomField(newField);
 			}
 		} else if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {

@@ -69,9 +69,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 ////		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
 ////		System.err.println(">>> Collector: "+collector.getTasks().size());
 ////		for (AbstractTask task : collector.getTasks()) {
-////			TasksUiPlugin.getTaskList().addTask(task);	
+////			TasksUiPlugin.getTaskList().addTask(task);
 ////		}
-//		
+//
 //		TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
 //		//System.err.println(">>> initial size: "+query.getChildren().size());
 //		for (AbstractTask task : query.getChildren()) {
@@ -80,11 +80,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //			task.setLastReadTimeStamp("1970-01-01");
 //			assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
 //		}
-//		
+//
 //		for (AbstractTask task : query.getChildren()) {
 //			assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
 //		}
-//		
+//
 //		repository.setSynchronizationTimeStamp("1970-01-01");//getSynchronizationTimeStamp();
 //		//connector.markStaleTasks(repository, query.getChildren(), new NullProgressMonitor());
 //		TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
@@ -92,7 +92,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //			assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
 //		}
 //	}
-	
+
 	BugzillaTask fruitTask;
 	RepositoryTaskData fruitTaskData;
 	private void setFruitValueTo(String newValue) throws CoreException {
@@ -197,8 +197,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		fail("Should have failed due to invalid userid and password.");
 	}
 
-//  testReassign Bugs 
-//	Version	BugNr	assigned				reporter     
+//  testReassign Bugs
+//	Version	BugNr	assigned				reporter
 //	2.22	92		user@mylar.eclipse.org	tests@mylar.eclipse.org
 //	3.0		 5		tests@mylar.eclipse.org	tests2@mylar.eclipse.org
 //	3.1		 1		rob.elves@eclipse.org	tests@mylar.eclipse.org
@@ -260,7 +260,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	private void reassignToDefault31(BugzillaTask task, RepositoryTaskData taskData) throws CoreException {
 		// Modify it (reassignbycomponent)
 		String newCommentText = "BugzillaRepositoryClientTest.testReassign31(): reassignbycomponent "
-				+ (new Date()).toString();
+			+ (new Date()).toString();
 		taskData.setNewComment(newCommentText);
 		Set<RepositoryTaskAttribute> changed = new HashSet<RepositoryTaskAttribute>();
 		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
@@ -332,14 +332,14 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	private void reassignToDefaultOld(BugzillaTask task, RepositoryTaskData taskData) throws CoreException {
 		// Modify it (reassignbycomponent)
 		String newCommentText = "BugzillaRepositoryClientTest.testReassignOld(): reassignbycomponent "
-				+ (new Date()).toString();
+			+ (new Date()).toString();
 		taskData.setNewComment(newCommentText);
 		Set<RepositoryTaskAttribute> changed = new HashSet<RepositoryTaskAttribute>();
 		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
-		for (Iterator<RepositoryOperation> it = taskData.getOperations().iterator(); it.hasNext();) {
-			RepositoryOperation o = it.next();
-			if (o.isChecked())
+		for (RepositoryOperation o : taskData.getOperations()) {
+			if (o.isChecked()) {
 				o.setChecked(false);
+			}
 			if (o.getKnobName().compareTo("reassignbycomponent") == 0) {
 				o.setChecked(true);
 				taskData.setSelectedOperation(o);
@@ -357,10 +357,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		taskData.setNewComment(newCommentText);
 		Set<RepositoryTaskAttribute> changed = new HashSet<RepositoryTaskAttribute>();
 		changed.add(taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
-		for (Iterator<RepositoryOperation> it = taskData.getOperations().iterator(); it.hasNext();) {
-			RepositoryOperation o = it.next();
-			if (o.isChecked())
+		for (RepositoryOperation o : taskData.getOperations()) {
+			if (o.isChecked()) {
 				o.setChecked(false);
+			}
 			if (o.getKnobName().compareTo("reassign") == 0) {
 				o.setInputValue("tests2@mylyn.eclipse.org");
 				o.setChecked(true);
@@ -391,7 +391,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery(
 				IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				"http://mylyn.eclipse.org/bugs222/buglist.cgi?short_desc_type=allwordssubstr&short_desc=&product=Read+Only+Test+Cases&long_desc_type=allwordssubstr&long_desc=&bug_status=NEW&order=Importance",
-				"testFocedQuerySynchronization");
+		"testFocedQuerySynchronization");
 
 		taskList.addQuery(bugQuery);
 
@@ -444,7 +444,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// repository,
 		// "http://mylyn.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=",
 		// null, collector, "-1");
-		//		
+		//
 		String queryUrl = "http://mylyn.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryUrl, "search");
 
@@ -815,7 +815,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			priority = "P1";
 			recentTaskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
 		}
-		
+
 		// disabled due to TasksUi.synchronizeChanged(connector, repository) being removed
 		// REMOVE ALL TASK DATA
 //		TasksUiPlugin.getTaskDataManager().clear();
@@ -881,20 +881,23 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		estimatedTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString()));
 		remainingTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString()));
 		actualTime = Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString()));
-		if (enableDeadline)
+		if (enableDeadline) {
 			deadline = bugtaskdata.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString());
+		}
 
 		estimatedTime += 2;
 		remainingTime += 1.5;
 		addTime = 0.75f;
-		if (enableDeadline)
+		if (enableDeadline) {
 			deadline = generateNewDay();
+		}
 
 		bugtaskdata.setAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString(), "" + estimatedTime);
 		bugtaskdata.setAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString(), "" + remainingTime);
 		bugtaskdata.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), "" + addTime);
-		if (enableDeadline)
+		if (enableDeadline) {
 			bugtaskdata.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), deadline);
+		}
 
 //		for (AbstractTask task : tasks) {
 //			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
@@ -907,7 +910,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		synchAndAssertState(tasks, SynchronizationState.SYNCHRONIZED);
 
 		bugtaskdata = TasksUiPlugin.getTaskDataStorageManager()
-				.getNewTaskData(bugtask.getRepositoryUrl(), bugtask.getTaskId());
+		.getNewTaskData(bugtask.getRepositoryUrl(), bugtask.getTaskId());
 
 		assertEquals(estimatedTime,
 				Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME.getKeyString())));
@@ -915,8 +918,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())));
 		assertEquals(actualTime + addTime,
 				Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())));
-		if (enableDeadline)
+		if (enableDeadline) {
 			assertEquals(deadline, bugtaskdata.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
+		}
 
 	}
 
@@ -980,13 +984,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 // assertEquals(abstractRepositoryConnector.getRepositoryType(), DEFAULT_KIND);
 //
 // connector = (BugzillaRepositoryConnector) abstractRepositoryConnector;
-//		
+//
 // long start = System.currentTimeMillis();
 // BugzillaTask task = null;
 // for(int x = 1; x < 5; x++) {
 // if(task != null)
 // taskList.deleteTask(task);
-//			
+//
 // task = this.generateLocalTaskAndDownload("154100");
 // assertNotNull(task);
 // }

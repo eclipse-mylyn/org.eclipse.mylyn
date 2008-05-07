@@ -73,7 +73,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  * @author Steffen Pingel
  */
 public class BugzillaClient {
-	
+
 	protected static final String USER_AGENT = "BugzillaConnector";
 
 	private static final int MAX_RETRIEVED_PER_QUERY = 100;
@@ -133,7 +133,7 @@ public class BugzillaClient {
 	private static final String CONTENT_TYPE_TEXT_XML = "text/xml";
 
 	private static final String[] VALID_CONFIG_CONTENT_TYPES = { CONTENT_TYPE_APP_RDF_XML, CONTENT_TYPE_APP_XML,
-			CONTENT_TYPE_TEXT_XML };
+		CONTENT_TYPE_TEXT_XML };
 
 	private static final String ATTR_CHARSET = "charset";
 
@@ -151,19 +151,19 @@ public class BugzillaClient {
 
 	private boolean authenticated;
 
-	private Map<String, String> configParameters;
+	private final Map<String, String> configParameters;
 
-	private HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+	private final HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
 
 	private boolean lastModifiedSupported = true;
 
-	private BugzillaLanguageSettings bugzillaLanguageSettings;
+	private final BugzillaLanguageSettings bugzillaLanguageSettings;
 
 	private RepositoryConfiguration repositoryConfiguration;
 
 	private HostConfiguration hostConfiguration;
 
-	private AbstractWebLocation location;
+	private final AbstractWebLocation location;
 
 	public BugzillaClient(AbstractWebLocation location, String characterEncoding, Map<String, String> configParameters,
 			BugzillaLanguageSettings languageSettings) throws MalformedURLException {
@@ -223,7 +223,7 @@ public class BugzillaClient {
 	}
 
 	private GzipGetMethod connectInternal(String requestURL, boolean gzip, IProgressMonitor monitor)
-			throws IOException, CoreException {
+	throws IOException, CoreException {
 		monitor = Policy.monitorFor(monitor);
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
@@ -283,7 +283,7 @@ public class BugzillaClient {
 				getMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-						"Proxy authentication required"));
+				"Proxy authentication required"));
 			} else {
 				getMethod.getResponseBodyNoop();
 				getMethod.releaseConnection();
@@ -296,7 +296,7 @@ public class BugzillaClient {
 
 		throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 				RepositoryStatus.ERROR_INTERNAL, "All connection attempts to " + repositoryUrl.toString()
-						+ " failed. Please verify connection and authentication information."));
+				+ " failed. Please verify connection and authentication information."));
 	}
 
 	public void logout(IProgressMonitor monitor) throws IOException, CoreException {
@@ -350,7 +350,7 @@ public class BugzillaClient {
 			authenticated = false;
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-					"Authentication credentials missing."));
+			"Authentication credentials missing."));
 		}
 
 		GzipPostMethod postMethod = null;
@@ -384,7 +384,7 @@ public class BugzillaClient {
 				postMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-						"HTTP authentication failed."));
+				"HTTP authentication failed."));
 
 			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
 				authenticated = false;
@@ -392,7 +392,7 @@ public class BugzillaClient {
 				postMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-						"Proxy authentication required"));
+				"Proxy authentication required"));
 
 			} else if (code != HttpURLConnection.HTTP_OK) {
 				authenticated = false;
@@ -446,7 +446,7 @@ public class BugzillaClient {
 		final String idString = String.valueOf(id);
 		Set<String> data = new HashSet<String>();
 		data.add(idString);
-		
+
 		LegacyTaskDataCollector collector = new LegacyTaskDataCollector() {
 			@Override
 			public void accept(RepositoryTaskData taskData) {
@@ -605,7 +605,7 @@ public class BugzillaClient {
 	}
 
 	public RepositoryConfiguration getRepositoryConfiguration(IProgressMonitor monitor) throws IOException,
-			CoreException {
+	CoreException {
 		GzipGetMethod method = null;
 		try {
 			method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF, monitor);
@@ -648,7 +648,7 @@ public class BugzillaClient {
 	}
 
 	public InputStream getAttachmentData(String attachmentId, IProgressMonitor monitor) throws IOException,
-			CoreException {
+	CoreException {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
 		GzipGetMethod method = getConnectGzip(url, monitor);
 		try {
@@ -660,7 +660,7 @@ public class BugzillaClient {
 	}
 
 	public void postAttachment(String bugReportID, String comment, ITaskAttachment attachment, IProgressMonitor monitor)
-			throws HttpException, IOException, CoreException {
+	throws HttpException, IOException, CoreException {
 		monitor = Policy.monitorFor(monitor);
 		if (bugReportID == null || comment == null || attachment == null) {
 			throw new IllegalArgumentException("Must not pass in a null parameter");
@@ -718,7 +718,7 @@ public class BugzillaClient {
 				postMethod.getResponseBodyNoop();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Http error: "
-								+ HttpStatus.getStatusText(status)));
+						+ HttpStatus.getStatusText(status)));
 				// throw new IOException("Communication error occurred during
 				// upload. \n\n"
 				// + HttpStatus.getStatusText(status));
@@ -736,7 +736,7 @@ public class BugzillaClient {
 	 * @throws CoreException
 	 */
 	private GzipPostMethod postFormData(String formUrl, NameValuePair[] formData, IProgressMonitor monitor)
-			throws IOException, CoreException {
+	throws IOException, CoreException {
 
 		GzipPostMethod postMethod = null;
 		monitor = Policy.monitorFor(monitor);
@@ -850,9 +850,10 @@ public class BugzillaClient {
 								}
 								int stopIndex = title.toLowerCase(Locale.ENGLISH).indexOf(
 										postfix.toLowerCase(Locale.ENGLISH), startIndex);
-								if (stopIndex == -1)
+								if (stopIndex == -1) {
 									stopIndex = title.toLowerCase(Locale.ENGLISH).indexOf(
 											postfix2.toLowerCase(Locale.ENGLISH), startIndex);
+								}
 								if (stopIndex > -1) {
 									result = (title.substring(startIndex, stopIndex)).trim();
 								}
@@ -896,8 +897,9 @@ public class BugzillaClient {
 			if (a != null && a.getId() != null && a.getId().compareTo("") != 0) {
 				String value = null;
 				value = a.getValue();
-				if (value == null)
+				if (value == null) {
 					continue;
+				}
 				if (a.getId().equals(BugzillaReportElement.NEWCC.getKeyString())) {
 					RepositoryTaskAttribute b = new RepositoryTaskAttribute(BugzillaReportElement.CC.getKeyString(),
 							BugzillaReportElement.CC.toString(), false);
@@ -946,9 +948,8 @@ public class BugzillaClient {
 		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
 		fields.put(KEY_FORM_NAME, new NameValuePair(KEY_FORM_NAME, VAL_PROCESS_BUG));
 		// go through all of the attributes and add them to the bug post
-		for (Iterator<RepositoryTaskAttribute> it = model.getAttributes().iterator(); it.hasNext();) {
+		for (RepositoryTaskAttribute a : model.getAttributes()) {
 
-			RepositoryTaskAttribute a = it.next();
 			if (a == null) {
 				continue;
 			} else if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKeyString())
@@ -976,9 +977,9 @@ public class BugzillaClient {
 
 		// add the operation to the bug post
 		RepositoryOperation o = model.getSelectedOperation();
-		if (o == null)
+		if (o == null) {
 			fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, VAL_NONE));
-		else {
+		} else {
 			fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, o.getKnobName()));
 			if (o.hasOptions()) {
 				String sel = o.getOptionValue(o.getOptionSelection());
@@ -1108,7 +1109,7 @@ public class BugzillaClient {
 							// BugzillaException(IBugzillaConstants.LOGGED_OUT);
 							throw new CoreException(new BugzillaStatus(Status.INFO, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.REPOSITORY_LOGGED_OUT,
-									"You have been logged out. Please retry operation."));
+							"You have been logged out. Please retry operation."));
 						}
 						found = false;
 						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
@@ -1162,7 +1163,7 @@ public class BugzillaClient {
 						authenticated = false;
 						throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 								RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from "
-										+ repositoryUrl.toString() + "."));
+								+ repositoryUrl.toString() + "."));
 					}
 				} finally {
 					in.close();
@@ -1178,7 +1179,7 @@ public class BugzillaClient {
 	}
 
 	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds, final TaskDataCollector collector, final IProgressMonitor monitor)
-			throws IOException, CoreException {
+	throws IOException, CoreException {
 		GzipPostMethod method = null;
 		HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
 		// make a copy to modify set
@@ -1195,8 +1196,9 @@ public class BugzillaClient {
 
 				NameValuePair[] formData = new NameValuePair[idsToRetrieve.size() + 2];
 
-				if (idsToRetrieve.size() == 0)
+				if (idsToRetrieve.size() == 0) {
 					return taskDataMap;
+				}
 
 				itr = idsToRetrieve.iterator();
 				int x = 0;
@@ -1223,7 +1225,7 @@ public class BugzillaClient {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 							MultiBugReportFactory factory = new MultiBugReportFactory(
 									method.getResponseBodyAsStream(), characterEncoding);
-							
+
 							LegacyTaskDataCollector collector2 = new LegacyTaskDataCollector() {
 
 								@Override
@@ -1231,12 +1233,12 @@ public class BugzillaClient {
 									getRepositoryConfiguration().configureTaskData(taskData);
 									((LegacyTaskDataCollector)collector).accept(taskData);
 									monitor.worked(1);
-								}};							
-							
-							factory.populateReport(taskDataMap, collector2, customFields);
-							taskIds.removeAll(idsToRetrieve);
-							parseable = true;
-							break;
+								}};
+
+								factory.populateReport(taskDataMap, collector2, customFields);
+								taskIds.removeAll(idsToRetrieve);
+								parseable = true;
+								break;
 						}
 					}
 				}
@@ -1335,7 +1337,7 @@ public class BugzillaClient {
 				headMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-						"Proxy authentication required"));
+				"Proxy authentication required"));
 			} else {
 				headMethod.getResponseBody();
 				headMethod.releaseConnection();
@@ -1348,7 +1350,7 @@ public class BugzillaClient {
 
 		throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 				RepositoryStatus.ERROR_INTERNAL, "All connection attempts to " + repositoryUrl.toString()
-						+ " failed. Please verify connection and authentication information."));
+				+ " failed. Please verify connection and authentication information."));
 	}
 
 	public void setRepositoryConfiguration(RepositoryConfiguration repositoryConfiguration) {

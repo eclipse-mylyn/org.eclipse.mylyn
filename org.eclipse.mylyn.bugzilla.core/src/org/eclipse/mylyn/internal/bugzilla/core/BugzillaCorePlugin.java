@@ -57,7 +57,7 @@ public class BugzillaCorePlugin extends Plugin {
 	private static final String OPTION_ALL = "All";
 
 	// A Map from Java's  Platform to Buzilla's
-	private Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
+	private final Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
 
 	/** Product configuration for the current server */
 	private static Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
@@ -121,7 +121,7 @@ public class BugzillaCorePlugin extends Plugin {
 	 * Retrieves the latest repository configuration from the server
 	 */
 	public static RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh, IProgressMonitor monitor)
-			throws CoreException {
+	throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
 			if (!cacheFileRead) {
@@ -138,7 +138,7 @@ public class BugzillaCorePlugin extends Plugin {
 			}
 			return repositoryConfigurations.get(repository.getRepositoryUrl());
 		} catch (IOException e) {
-			throw new CoreException(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 1,
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 1,
 					"Error updating attributes.\n\n" + e.getMessage(), e));
 		}
 	}
@@ -167,8 +167,9 @@ public class BugzillaCorePlugin extends Plugin {
 	/** public for testing */
 	public static void readRepositoryConfigurationFile() {
 		// IPath configFile = getProductConfigurationCachePath();
-		if (repositoryConfigurationFile == null || !repositoryConfigurationFile.exists())
+		if (repositoryConfigurationFile == null || !repositoryConfigurationFile.exists()) {
 			return;
+		}
 		ObjectInputStream in = null;
 		try {
 			in = new ObjectInputStream(new FileInputStream(repositoryConfigurationFile));
@@ -189,12 +190,12 @@ public class BugzillaCorePlugin extends Plugin {
 					if (repositoryConfigurationFile.delete()) {
 						// successfully deleted
 					} else {
-						log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+						log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
 					}
 				}
 
 			} catch (Exception ex) {
-				log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+				log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
 			}
 		} finally {
 			if (in != null) {
@@ -256,7 +257,7 @@ public class BugzillaCorePlugin extends Plugin {
 		if (e.getMessage() == null) {
 			message = e.getClass().toString();
 		}
-		log(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, message, e));
+		log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, message, e));
 	}
 
 	/**
@@ -318,14 +319,15 @@ public class BugzillaCorePlugin extends Plugin {
 			if (opSysAttribute != null) {
 				while (bugzillaOS != null && opSysAttribute.getOptionParameter(bugzillaOS) == null) {
 					int dotindex = bugzillaOS.lastIndexOf('.');
-					if (dotindex > 0)
+					if (dotindex > 0) {
 						bugzillaOS = bugzillaOS.substring(0, dotindex);
-					else {
+					} else {
 						int spaceindex = bugzillaOS.lastIndexOf(' ');
-						if (spaceindex > 0)
+						if (spaceindex > 0) {
 							bugzillaOS = bugzillaOS.substring(0, spaceindex);
-						else
+						} else {
 							bugzillaOS = null;
+						}
 					}
 				}
 			} else {

@@ -35,7 +35,7 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 
 	public void populateReport(Map<String, RepositoryTaskData> bugMap, LegacyTaskDataCollector collector, List<BugzillaCustomField> customFields) throws IOException, CoreException {
 
-		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory, collector, 
+		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory, collector,
 				bugMap, customFields);
 		collectResults(contentHandler, false);
 

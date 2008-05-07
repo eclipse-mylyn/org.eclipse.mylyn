@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
  * @author Robert Elves (adaption for Bugzilla)
  */
 public class BugzillaClientFactory {
-	
+
 	private static TaskRepositoryLocationFactory taskRepositoryLocationFactory = new TaskRepositoryLocationFactory();
 
 	public static BugzillaClient createClient(TaskRepository taskRepository) throws MalformedURLException {

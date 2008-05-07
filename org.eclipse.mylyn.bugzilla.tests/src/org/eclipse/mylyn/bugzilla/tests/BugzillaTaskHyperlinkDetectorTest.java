@@ -33,23 +33,23 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 	private static final String DUPLICATE = "duplicate of " + DUPLICATE_NUMBER;
 
-	private String TASK_FORMAT_1 = "task#1";
+	private final String TASK_FORMAT_1 = "task#1";
 
-	private String TASK_FORMAT_2 = "task# 1";
+	private final String TASK_FORMAT_2 = "task# 1";
 
-	private String TASK_FORMAT_3 = "task1";
+	private final String TASK_FORMAT_3 = "task1";
 
-	private String TASK_FORMAT_4 = "task #1";
+	private final String TASK_FORMAT_4 = "task #1";
 
-	private String BUG_FORMAT_1 = "bug# 1";
+	private final String BUG_FORMAT_1 = "bug# 1";
 
-	private String BUG_FORMAT_2 = "bug # 1";
+	private final String BUG_FORMAT_2 = "bug # 1";
 
-	private String BUG_FORMAT_3 = "bug1";
+	private final String BUG_FORMAT_3 = "bug1";
 
-	private String BUG_FORMAT_4 = "bug #1";
+	private final String BUG_FORMAT_4 = "bug #1";
 
-	private String BUG_FORMAT_1_2 = "bug# 2";
+	private final String BUG_FORMAT_1_2 = "bug# 2";
 
 	//private BugzillaTaskHyperlinkDetector detector = new BugzillaTaskHyperlinkDetector();
 	private TaskHyperlinkDetector detector;
@@ -91,7 +91,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 		detector.dispose();
 		repositoryManager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		
+
 		shell.dispose();
 	}
 

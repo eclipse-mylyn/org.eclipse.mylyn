@@ -54,7 +54,7 @@ public interface IBugzillaConstants {
 	public static final String URL_POST_LOGIN = "/index.cgi";
 
 	public static final String URL_POST_ATTACHMENT_UPLOAD = "/attachment.cgi";
-	
+
 	public static final String URL_BUGLIST = "/buglist.cgi";
 
 	public static final String URL_GET_ATTACHMENT_DOWNLOAD = "/attachment.cgi?id=";
@@ -118,14 +118,18 @@ public interface IBugzillaConstants {
 
 		/** returns null if version string unknown* */
 		static public BugzillaServerVersion fromString(String version) {
-			if (version.equals(SERVER_30.toString()))
+			if (version.equals(SERVER_30.toString())) {
 				return SERVER_30;
-			if (version.equals(SERVER_222.toString()))
+			}
+			if (version.equals(SERVER_222.toString())) {
 				return SERVER_222;
-			if (version.equals(SERVER_220.toString()))
+			}
+			if (version.equals(SERVER_220.toString())) {
 				return SERVER_220;
-			if (version.equals(SERVER_218.toString()))
+			}
+			if (version.equals(SERVER_218.toString())) {
 				return SERVER_218;
+			}
 			return null;
 		}
 	}
@@ -170,7 +174,7 @@ public interface IBugzillaConstants {
 	// Default values for keys
 
 	static final String[] DEFAULT_STATUS_VALUES = { "Unconfirmed", "New", "Assigned", "Reopened", "Resolved",
-			"Verified", "Closed" };
+		"Verified", "Closed" };
 
 	static final String[] DEFAULT_PRESELECTED_STATUS_VALUES = { "New", "Assigned", "Reopened" };
 
@@ -179,15 +183,15 @@ public interface IBugzillaConstants {
 	// "Worksforme", "Moved" };
 
 	static final String[] DEFAULT_SEVERITY_VALUES = { "blocker", "critical", "major", "normal", "minor", "trivial",
-			"enhancement" };
+	"enhancement" };
 
 	static final String[] DEFAULT_PRIORITY_VALUES = { "P1", "P2", "P3", "P4", "P5" };
 
 	static final String[] DEFAULT_HARDWARE_VALUES = { "All", "Macintosh", "PC", "Power PC", "Sun", "Other" };
 
 	static final String[] DEFAULT_OS_VALUES = { "All", "AIX Motif", "Windows 95", "Windows 98", "Windows CE",
-			"Windows ME", "Windows 2000", "Windows NT", "Windows XP", "Windows All", "MacOS X", "Linux", "Linux-GTK",
-			"Linux-Motif", "HP-UX", "Neutrino", "QNX-Photon", "Solaris", "Unix All", "other" };
+		"Windows ME", "Windows 2000", "Windows NT", "Windows XP", "Windows All", "MacOS X", "Linux", "Linux-GTK",
+		"Linux-Motif", "HP-UX", "Neutrino", "QNX-Photon", "Solaris", "Unix All", "other" };
 
 	static final String[] DEFAULT_PRODUCT_VALUES = {};
 

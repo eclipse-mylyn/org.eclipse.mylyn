@@ -31,7 +31,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
  * @author Rob Elves
  */
 public class RepositoryConfiguration implements Serializable {
-	
+
 	private static final String OPERATION_INPUT_ASSIGNED_TO = "assigned_to";
 
 	private static final String OPERATION_INPUT_DUP_ID = "dup_id";
@@ -60,34 +60,34 @@ public class RepositoryConfiguration implements Serializable {
 
 	private String repositoryUrl = "<unknown>";
 
-	private Map<String, ProductEntry> products = new HashMap<String, ProductEntry>();
+	private final Map<String, ProductEntry> products = new HashMap<String, ProductEntry>();
 
-	private List<String> platforms = new ArrayList<String>();
+	private final List<String> platforms = new ArrayList<String>();
 
-	private List<String> operatingSystems = new ArrayList<String>();
+	private final List<String> operatingSystems = new ArrayList<String>();
 
-	private List<String> priorities = new ArrayList<String>();
+	private final List<String> priorities = new ArrayList<String>();
 
-	private List<String> severities = new ArrayList<String>();
+	private final List<String> severities = new ArrayList<String>();
 
-	private List<String> bugStatus = new ArrayList<String>();
+	private final List<String> bugStatus = new ArrayList<String>();
 
-	private List<String> openStatusValues = new ArrayList<String>();
+	private final List<String> openStatusValues = new ArrayList<String>();
 
-	private List<String> resolutionValues = new ArrayList<String>();
+	private final List<String> resolutionValues = new ArrayList<String>();
 
-	private List<String> keywords = new ArrayList<String>();
+	private final List<String> keywords = new ArrayList<String>();
 
 	// master lists
 
-	private List<String> versions = new ArrayList<String>();
+	private final List<String> versions = new ArrayList<String>();
 
-	private List<String> components = new ArrayList<String>();
+	private final List<String> components = new ArrayList<String>();
 
-	private List<String> milestones = new ArrayList<String>();
+	private final List<String> milestones = new ArrayList<String>();
 
-	private List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
-	
+	private final List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
+
 	private String version = VERSION_UNKNOWN;
 
 	public RepositoryConfiguration() {
@@ -138,8 +138,9 @@ public class RepositoryConfiguration implements Serializable {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getComponents();
-		} else
+		} else {
 			return Collections.emptyList();
+		}
 	}
 
 	/**
@@ -150,8 +151,9 @@ public class RepositoryConfiguration implements Serializable {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getVersions();
-		} else
+		} else {
 			return Collections.emptyList();
+		}
 	}
 
 	/**
@@ -190,8 +192,9 @@ public class RepositoryConfiguration implements Serializable {
 	 * Adds a component to the given product.
 	 */
 	public void addComponent(String product, String component) {
-		if (!components.contains(component))
+		if (!components.contains(component)) {
 			components.add(component);
+		}
 		ProductEntry entry = products.get(product);
 		if (entry == null) {
 			entry = new ProductEntry(product);
@@ -228,8 +231,9 @@ public class RepositoryConfiguration implements Serializable {
 	// }
 
 	public void addVersion(String product, String version) {
-		if (!versions.contains(version))
+		if (!versions.contains(version)) {
 			versions.add(version);
+		}
 		ProductEntry entry = products.get(product);
 		if (entry == null) {
 			entry = new ProductEntry(product);
@@ -282,8 +286,9 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public void addTargetMilestone(String product, String target) {
-		if (!milestones.contains(target))
+		if (!milestones.contains(target)) {
 			milestones.add(target);
+		}
 		ProductEntry entry = products.get(product);
 		if (entry == null) {
 			entry = new ProductEntry(product);
@@ -298,8 +303,9 @@ public class RepositoryConfiguration implements Serializable {
 		ProductEntry entry = products.get(product);
 		if (entry != null) {
 			return entry.getTargetMilestones();
-		} else
+		} else {
 			return Collections.emptyList();
+		}
 	}
 
 	/**
@@ -424,14 +430,14 @@ public class RepositoryConfiguration implements Serializable {
 		return customFields;
 	}
 
-	
+
 	public void configureTaskData(RepositoryTaskData taskData) {
 		updateAttributeOptions(taskData);
 		addValidOperations(taskData);
 	}
 
 	public void updateAttributeOptions(RepositoryTaskData existingReport)
-			{
+	{
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
 			if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
@@ -479,7 +485,7 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	private void addValidOperations(RepositoryTaskData bugReport)
-			 {
+	{
 		BUGZILLA_REPORT_STATUS status;
 		try {
 			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
@@ -544,11 +550,12 @@ public class RepositoryConfiguration implements Serializable {
 		case resolve:
 			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_RESOLVE);
 			newOperation.setUpOptions(OPERATION_OPTION_RESOLUTION);
-				for (String resolution : getResolutions()) {
-					// DUPLICATE and MOVED have special meanings so do not show as resolution
-					if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0)
-						newOperation.addOption(resolution, resolution);
+			for (String resolution : getResolutions()) {
+				// DUPLICATE and MOVED have special meanings so do not show as resolution
+				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) {
+					newOperation.addOption(resolution, resolution);
 				}
+			}
 			break;
 		case duplicate:
 			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_DUPLICATE);

@@ -43,43 +43,46 @@ public class NewBugWizardTest extends TestCase {
 		BugzillaCorePlugin.getDefault().setPlatformOptions(newReport);
 
 		String os = Platform.getOS();
-		if (os.equals("win32"))
+		if (os.equals("win32")) {
 			assertEquals("Windows", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
-		else if (os.equals("solaris"))
+		} else if (os.equals("solaris")) {
 			assertEquals("Solaris", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
-		else if (os.equals("qnx"))
+		} else if (os.equals("qnx")) {
 			assertEquals("QNX-Photon", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
-		else if (os.equals("macosx"))
+		} else if (os.equals("macosx")) {
 			assertEquals("Mac OS", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
-		else if (os.equals("linux"))
+		} else if (os.equals("linux")) {
 			assertEquals("Linux", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
-		else if (os.equals("hpux"))
+		} else if (os.equals("hpux")) {
 			assertEquals("HP-UX", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
-		else if (os.equals("aix"))
+		} else if (os.equals("aix")) {
 			assertEquals("AIX", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
+		}
 
 		String platform = Platform.getOSArch();
 		if (platform.equals("x86")) {
-			if (os.equals("macosx"))
+			if (os.equals("macosx")) {
 				assertEquals("Macintosh", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString())
 						.getValue());
-			else
+			} else {
 				assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
-		} else if (platform.equals("x86_64"))
+			}
+		} else if (platform.equals("x86_64")) {
 			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
-		else if (platform.equals("ia64"))
+		} else if (platform.equals("ia64")) {
 			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
-		else if (platform.equals("ia64_32"))
+		} else if (platform.equals("ia64_32")) {
 			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
-		else if (platform.equals("sparc"))
+		} else if (platform.equals("sparc")) {
 			assertEquals("Sun", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
-		else if (platform.equals("ppc")) {
-			if (os.equals("macosx"))
+		} else if (platform.equals("ppc")) {
+			if (os.equals("macosx")) {
 				assertEquals("Macintosh", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString())
 						.getValue());
-			else
+			} else {
 				assertEquals("Power", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString())
 						.getValue());
+			}
 		}
 	}
 

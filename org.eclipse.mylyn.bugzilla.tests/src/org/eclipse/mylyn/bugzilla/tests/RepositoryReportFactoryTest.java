@@ -90,7 +90,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	// setRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 	// IBugzillaConstants.TEST_BUGZILLA_222_URL);
 	// RepositoryTaskData report = init(bugid);
-	//		
+	//
 	// assertNotNull(report);
 	// assertEquals("search-match-test 1",
 	// report.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString())

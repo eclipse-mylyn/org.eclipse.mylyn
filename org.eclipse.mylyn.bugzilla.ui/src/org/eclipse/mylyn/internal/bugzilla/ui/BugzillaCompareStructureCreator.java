@@ -47,8 +47,9 @@ public class BugzillaCompareStructureCreator implements IStructureCreator {
 	public String getContents(Object node, boolean ignoreWhitespace) {
 		if (node instanceof BugzillaCompareNode) {
 			String s = ((BugzillaCompareNode) node).getValue();
-			if (ignoreWhitespace)
+			if (ignoreWhitespace) {
 				s = s.trim();
+			}
 			return s;
 		}
 		return null;

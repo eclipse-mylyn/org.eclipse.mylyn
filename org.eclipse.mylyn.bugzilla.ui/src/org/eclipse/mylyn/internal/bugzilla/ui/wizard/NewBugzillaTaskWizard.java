@@ -28,6 +28,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * @author Mik Kersten
@@ -61,7 +62,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 		taskData = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND,
 				repository.getRepositoryUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		taskData.setNew(true);
-		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
+		super.setDefaultPageImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylyn.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
 		super.setWindowTitle(TITLE);
 		setNeedsProgressMonitor(true);

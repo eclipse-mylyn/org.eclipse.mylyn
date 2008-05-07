@@ -111,11 +111,11 @@ public class BugzillaQueryTest extends TestCase {
 //		// You can use the getAttributeValue to pull up the information on any
 //		// part of the bug
 //		assertEquals("P1", taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKeyString()));
-//		
+//
 //		taskData = taskDataMap.get("2");
 //		assertEquals("nhapke@cs.ubc.ca", taskData.getAssignedTo());
 //		assertEquals("search-match-test 1", taskData.getDescription());
-//		
+//
 //		taskData = taskDataMap.get("4");
 //		assertEquals("relves@cs.ubc.ca", taskData.getReporter());
 //		assertEquals("Test", taskData.getDescription());
@@ -130,7 +130,7 @@ public class BugzillaQueryTest extends TestCase {
 	// taskData.setSummary("New Summary");
 	// // post this modification back to the repository
 	// handler.postTaskData(repository, taskData);
-	//			
+	//
 	// // You can use the getAttributeValue to pull up the information on any
 	// // part of the bug
 	// // assertEquals("P1",
@@ -141,7 +141,7 @@ public class BugzillaQueryTest extends TestCase {
 	@SuppressWarnings("deprecation")
 	public void testQueryViaConnector() throws Exception {
 		String queryUrlString = repository.getRepositoryUrl()
-				+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+		+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 
 		// holds onto actual hit objects
 		ITaskList taskList = new TaskList();

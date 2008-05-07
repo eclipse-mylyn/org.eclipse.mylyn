@@ -75,7 +75,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		queryTitle.addModifyListener(modifyListener);
 		queryTitle.setFocus();
-		
+
 		final Label queryUrlLabel = new Label(composite, SWT.NONE);
 		queryUrlLabel.setText(LABEL_CUSTOM_QUERY);
 
@@ -95,7 +95,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	public String getQueryTitle() {
 		return queryTitle.getText();
 	}
-	
+
 	@Override
 	public boolean canFlipToNextPage() {
 		return false;

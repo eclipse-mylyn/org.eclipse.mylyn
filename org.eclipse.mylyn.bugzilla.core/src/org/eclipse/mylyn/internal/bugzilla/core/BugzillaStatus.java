@@ -10,13 +10,14 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Rob Elves
  */
 public class BugzillaStatus extends Status {
 
-	private String errorMessage;
+	private final String errorMessage;
 
 	private String repositoryUrl = "";
 
@@ -57,12 +58,12 @@ public class BugzillaStatus extends Status {
 
 		switch (getCode()) {
 		case RepositoryStatus.ERROR_REPOSITORY_LOGIN:
-			return BugzillaMessages.bind(BugzillaMessages.repositoryLoginFailure, this.getRepositoryUrl(),
+			return NLS.bind(BugzillaMessages.repositoryLoginFailure, this.getRepositoryUrl(),
 					this.errorMessage);
 		case RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND:
-			return BugzillaMessages.bind(BugzillaMessages.repositoryNotFound, this.errorMessage);
+			return NLS.bind(BugzillaMessages.repositoryNotFound, this.errorMessage);
 		case RepositoryStatus.ERROR_REPOSITORY:
-			return BugzillaMessages.bind(BugzillaMessages.errorRepository, this.getRepositoryUrl(), this.errorMessage);
+			return NLS.bind(BugzillaMessages.errorRepository, this.getRepositoryUrl(), this.errorMessage);
 		case RepositoryStatus.ERROR_IO:
 			String string1 = "Unknown IO error occurred";
 			String string2 = "No message provided";
@@ -71,13 +72,13 @@ public class BugzillaStatus extends Status {
 				string2 = getException().getMessage();
 			}
 			Object[] strings = { getRepositoryUrl(), string1, string2 };
-			return BugzillaMessages.bind(BugzillaMessages.errorIo, strings);
+			return NLS.bind(BugzillaMessages.errorIo, strings);
 		case RepositoryStatus.ERROR_INTERNAL:
-			return BugzillaMessages.bind(BugzillaMessages.errorInternal, this.errorMessage);
+			return NLS.bind(BugzillaMessages.errorInternal, this.errorMessage);
 		case RepositoryStatus.OPERATION_CANCELLED:
-			return BugzillaMessages.bind(BugzillaMessages.operationCancelled, this.errorMessage);
+			return NLS.bind(BugzillaMessages.operationCancelled, this.errorMessage);
 		case RepositoryStatus.REPOSITORY_COLLISION:
-			return BugzillaMessages.bind(BugzillaMessages.repositoryCollision, this.errorMessage);
+			return NLS.bind(BugzillaMessages.repositoryCollision, this.errorMessage);
 		case RepositoryStatus.REPOSITORY_COMMENT_REQUIRED:
 			if (errorMessage == null) {
 				return BugzillaMessages.repositoryCommentRequired;

@@ -75,8 +75,9 @@ public class BugzillaTestPlugin extends AbstractUIPlugin {
 	 */
 	public ResourceBundle getResourceBundle() {
 		try {
-			if (resourceBundle == null)
+			if (resourceBundle == null) {
 				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.bugzilla.tests.TestsPluginResources");
+			}
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}

@@ -54,7 +54,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		repository.setCharacterEncoding("ISO-8859-1");
 		task = (BugzillaTask) TasksUiUtil.createTask(repository, "57", new NullProgressMonitor());
 		assertNotNull(task);
-		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);		
+		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		// iso-8859-1 'incorrect' interpretation
 		assertFalse(task.getSummary().equals("\u00E6"));//"\u05D0"));
 	}

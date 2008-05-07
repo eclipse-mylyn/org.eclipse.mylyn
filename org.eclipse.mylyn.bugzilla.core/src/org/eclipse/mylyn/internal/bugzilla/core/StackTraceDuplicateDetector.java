@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Meghan Allen
  */
 public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
-	
+
 	private static final int DESCRIPTION_MAX_CHARS = 6000;
 
 	//private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.";
@@ -42,7 +42,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 
 		try {
 			queryUrl = repository.getRepositoryUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-					+ URLEncoder.encode(searchString, repository.getCharacterEncoding());
+			+ URLEncoder.encode(searchString, repository.getCharacterEncoding());
 		} catch (UnsupportedEncodingException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID, "Error during duplicate detection", e));
 			return null;

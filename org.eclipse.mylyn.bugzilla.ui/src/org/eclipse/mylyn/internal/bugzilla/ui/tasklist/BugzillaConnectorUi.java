@@ -59,7 +59,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	public String getTaskHistoryUrl(TaskRepository taskRepository, ITask task) {
 		return taskRepository.getRepositoryUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + task.getTaskId();
 	}
-	
+
 	@Override
 	public List<AbstractTaskContainer> getLegendItems() {
 		List<AbstractTaskContainer> legendItems = new ArrayList<AbstractTaskContainer>();
@@ -121,8 +121,9 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		while (m.find()) {
 			if (lineOffset >= m.start() && lineOffset <= m.end()) {
 				IHyperlink link = extractHyperlink(repository, regionOffset, m);
-				if (link != null)
+				if (link != null) {
 					hyperlinksFound.add(link);
+				}
 			}
 		}
 
@@ -144,8 +145,9 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 		int end = m.end();
 
-		if (end == -1)
+		if (end == -1) {
 			end = m.group().length();
+		}
 
 		try {
 
@@ -180,7 +182,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
 		return new NewBugzillaTaskWizard(taskRepository, selection);
 	}
-	
+
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		if (query instanceof BugzillaRepositoryQuery) {
@@ -208,8 +210,9 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			// we wouldn't have to get the task data this way from here
 			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 					task.getTaskId());
-			if (taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
+			if (taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null) {
 				return true;
+			}
 		}
 		return super.supportsDueDates(task);
 	}

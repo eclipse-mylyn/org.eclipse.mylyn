@@ -33,9 +33,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
-	private AbstractAttributeFactory attributeFactory = new BugzillaAttributeFactory();
+	private final AbstractAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
-	private BugzillaRepositoryConnector connector;
+	private final BugzillaRepositoryConnector connector;
 
 	public BugzillaTaskDataHandler(BugzillaRepositoryConnector connector) {
 		this.connector = connector;
@@ -43,7 +43,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
-			throws CoreException {
+	throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
@@ -76,7 +76,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
-			throws CoreException {
+	throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
@@ -111,10 +111,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
-			throws CoreException {
+	throws CoreException {
 
-		if (data == null)
+		if (data == null) {
 			return false;
+		}
 		String product = data.getProduct();
 		if (product.equals("")) {
 			// Bugzilla needs a product to create task data
@@ -252,8 +253,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			String[] ids = attribute.getValue().split(",");
 			for (String id : ids) {
 				id = id.trim();
-				if (id.length() == 0)
+				if (id.length() == 0) {
 					continue;
+				}
 				result.add(id);
 			}
 		}

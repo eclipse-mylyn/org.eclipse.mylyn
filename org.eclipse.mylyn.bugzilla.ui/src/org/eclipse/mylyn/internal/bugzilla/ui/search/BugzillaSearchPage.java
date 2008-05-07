@@ -119,10 +119,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String[] keywordOperationValues = { "allwords", "anywords", "nowords" };
 
 	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1",
-			"emaillongdesc1" };
+	"emaillongdesc1" };
 
 	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2",
-			"emaillongdesc2" };
+	"emaillongdesc2" };
 
 	private BugzillaRepositoryQuery originalQuery = null;
 
@@ -244,7 +244,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private RepositoryConfiguration repositoryConfiguration;
 
-	private SelectionAdapter updateActionSelectionAdapter = new SelectionAdapter() {
+	private final SelectionAdapter updateActionSelectionAdapter = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			if (isControlCreated()) {
@@ -466,7 +466,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			adapter.setLabelProvider(propsalLabelProvider);
 		}
 		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-		
+
 		Composite emailComposite = new Composite(composite, SWT.NONE);
 		emailComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		GridLayout emailLayout = new GridLayout();
@@ -838,9 +838,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			public void widgetSelected(SelectionEvent e) {
 				if (getTaskRepository() != null) {
 //					try {
-						
-						updateConfiguration(true);
-						
+
+					updateConfiguration(true);
+
 //					} catch (final CoreException e1) {
 //						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 //							public void run() {
@@ -929,12 +929,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	// }
 
 	private void handleWidgetSelected(Combo widget, Combo operation, ArrayList<BugzillaSearchData> history) {
-		if (widget.getSelectionIndex() < 0)
+		if (widget.getSelectionIndex() < 0) {
 			return;
+		}
 		int index = history.size() - 1 - widget.getSelectionIndex();
 		BugzillaSearchData patternData = history.get(index);
-		if (patternData == null || !widget.getText().equals(patternData.pattern))
+		if (patternData == null || !widget.getText().equals(patternData.pattern)) {
 			return;
+		}
 		widget.setText(patternData.pattern);
 		operation.setText(operation.getItem(patternData.operation));
 	}
@@ -1036,7 +1038,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 									MessageDialog.openError(Display.getDefault().getActiveShell(),
 											"Bugzilla Search Page",
 											"Unable to get configuration. Ensure proper repository configuration in "
-													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
 								}
 							});
 						}
@@ -1083,13 +1085,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private boolean canQuery() {
 		if (isControlCreated()) {
 			return product.getSelectionCount() > 0 || component.getSelectionCount() > 0
-					|| version.getSelectionCount() > 0 || target.getSelectionCount() > 0
-					|| status.getSelectionCount() > 0 || resolution.getSelectionCount() > 0
-					|| severity.getSelectionCount() > 0 || priority.getSelectionCount() > 0
-					|| hardware.getSelectionCount() > 0 || os.getSelectionCount() > 0
-					|| summaryPattern.getText().length() > 0 || commentPattern.getText().length() > 0
-					|| emailPattern.getText().length() > 0 || emailPattern2.getText().length() > 0
-					|| keywords.getText().length() > 0;
+			|| version.getSelectionCount() > 0 || target.getSelectionCount() > 0
+			|| status.getSelectionCount() > 0 || resolution.getSelectionCount() > 0
+			|| severity.getSelectionCount() > 0 || priority.getSelectionCount() > 0
+			|| hardware.getSelectionCount() > 0 || os.getSelectionCount() > 0
+			|| summaryPattern.getText().length() > 0 || commentPattern.getText().length() > 0
+			|| emailPattern.getText().length() > 0 || emailPattern2.getText().length() > 0
+			|| keywords.getText().length() > 0;
 		} else {
 			return false;
 		}
@@ -1153,8 +1155,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private String[] getPreviousPatterns(ArrayList<BugzillaSearchData> patternHistory) {
 		int size = patternHistory.size();
 		String[] patterns = new String[size];
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			patterns[i] = (patternHistory.get(size - 1 - i)).pattern;
+		}
 		return patterns;
 	}
 
@@ -1215,27 +1218,27 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		sb.append(URLEncoder.encode(summaryPattern.getText(), getTaskRepository().getCharacterEncoding()));
 
 		int[] selected = product.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&product=");
-			sb.append(URLEncoder.encode(product.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(product.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = component.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&component=");
-			sb.append(URLEncoder.encode(component.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(component.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = version.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&version=");
-			sb.append(URLEncoder.encode(version.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(version.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = target.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&target_milestone=");
-			sb.append(URLEncoder.encode(target.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(target.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		sb.append("&long_desc_type=");
@@ -1244,39 +1247,39 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		sb.append(URLEncoder.encode(commentPattern.getText(), getTaskRepository().getCharacterEncoding()));
 
 		selected = status.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&bug_status=");
-			sb.append(URLEncoder.encode(status.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(status.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = resolution.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&resolution=");
-			sb.append(URLEncoder.encode(resolution.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(resolution.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = severity.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&bug_severity=");
-			sb.append(URLEncoder.encode(severity.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(severity.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = priority.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&priority=");
-			sb.append(URLEncoder.encode(priority.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(priority.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = hardware.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&ref_platform=");
-			sb.append(URLEncoder.encode(hardware.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(hardware.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		selected = os.getSelectionIndices();
-		for (int i = 0; i < selected.length; i++) {
+		for (int element : selected) {
 			sb.append("&op_sys=");
-			sb.append(URLEncoder.encode(os.getItem(selected[i]), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(os.getItem(element), getTaskRepository().getCharacterEncoding()));
 		}
 
 		if (emailPattern.getText() != null && !emailPattern.getText().trim().equals("")) {
@@ -1348,8 +1351,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public IDialogSettings getDialogSettings() {
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
 		fDialogSettings = settings.getSection(PAGE_NAME);
-		if (fDialogSettings == null)
+		if (fDialogSettings == null) {
 			fDialogSettings = settings.addNewSection(PAGE_NAME);
+		}
 		return fDialogSettings;
 	}
 
@@ -1379,12 +1383,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 			version.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_VERSION, selectedProducts,
 
-			repositoryConfiguration));
-			
+					repositoryConfiguration));
+
 			target.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_TARGET, selectedProducts,
 
 					repositoryConfiguration));
-			
+
 			status.setItems(convertStringListToArray(repositoryConfiguration.getStatusValues()));
 			resolution.setItems(convertStringListToArray(repositoryConfiguration.getResolutions()));
 			severity.setItems(convertStringListToArray(repositoryConfiguration.getSeverities()));
@@ -1393,7 +1397,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			os.setItems(convertStringListToArray(repositoryConfiguration.getOSs()));
 		}
 	}
-	
+
 	public boolean canFlipToNextPage() {
 		// if (getErrorMessage() != null)
 		// return false;
@@ -1421,20 +1425,23 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			String key = option.substring(0, option.indexOf("="));
 			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1),
 					getTaskRepository().getCharacterEncoding());
-			if (key == null)
+			if (key == null) {
 				continue;
+			}
 
 			if (key.equals("short_desc")) {
 				summaryPattern.setText(value);
 			} else if (key.equals("short_desc_type")) {
-				if (value.equals("allwordssubstr"))
+				if (value.equals("allwordssubstr")) {
 					value = "all words";
-				else if (value.equals("anywordssubstr"))
+				} else if (value.equals("anywordssubstr")) {
 					value = "any word";
+				}
 				int index = 0;
 				for (String item : summaryOperation.getItems()) {
-					if (item.compareTo(value) == 0)
+					if (item.compareTo(value) == 0) {
 						break;
+					}
 					index++;
 				}
 				if (index < summaryOperation.getItemCount()) {
@@ -1477,14 +1484,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				sel = new String[selList.size()];
 				version.setSelection(selList.toArray(sel));
 			} else if (key.equals("long_desc_type")) {
-				if (value.equals("allwordssubstr"))
+				if (value.equals("allwordssubstr")) {
 					value = "all words";
-				else if (value.equals("anywordssubstr"))
+				} else if (value.equals("anywordssubstr")) {
 					value = "any word";
+				}
 				int index = 0;
 				for (String item : commentOperation.getItems()) {
-					if (item.compareTo(value) == 0)
+					if (item.compareTo(value) == 0) {
 						break;
+					}
 					index++;
 				}
 				if (index < commentOperation.getItemCount()) {
@@ -1539,38 +1548,43 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				// assumed to be
 				// in same
 				// position
-				if (value.equals("1"))
+				if (value.equals("1")) {
 					emailButtons[0].setSelection(true);
-				else
+				} else {
 					emailButtons[0].setSelection(false);
+				}
 			} else if (key.equals("emailreporter1")) { // HACK: email
 				// buttons assumed
 				// to be in same
 				// position
-				if (value.equals("1"))
+				if (value.equals("1")) {
 					emailButtons[1].setSelection(true);
-				else
+				} else {
 					emailButtons[1].setSelection(false);
+				}
 			} else if (key.equals("emailcc1")) { // HACK: email buttons
 				// assumed to be in same
 				// position
-				if (value.equals("1"))
+				if (value.equals("1")) {
 					emailButtons[2].setSelection(true);
-				else
+				} else {
 					emailButtons[2].setSelection(false);
+				}
 			} else if (key.equals("emaillongdesc1")) { // HACK: email
 				// buttons assumed
 				// to be in same
 				// position
-				if (value.equals("1"))
+				if (value.equals("1")) {
 					emailButtons[3].setSelection(true);
-				else
+				} else {
 					emailButtons[3].setSelection(false);
+				}
 			} else if (key.equals("emailtype1")) {
 				int index = 0;
 				for (String item : emailOperation.getItems()) {
-					if (item.compareTo(value) == 0)
+					if (item.compareTo(value) == 0) {
 						break;
+					}
 					index++;
 				}
 				if (index < emailOperation.getItemCount()) {
@@ -1583,38 +1597,43 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				// assumed to be
 				// in same
 				// position
-				if (value.equals("1"))
+				if (value.equals("1")) {
 					emailButtons2[0].setSelection(true);
-				else
+				} else {
 					emailButtons2[0].setSelection(false);
+				}
 			} else if (key.equals("emailreporter2")) { // HACK: email
 				// buttons assumed
 				// to be in same
 				// position
-				if (value.equals("1"))
+				if (value.equals("1")) {
 					emailButtons2[1].setSelection(true);
-				else
+				} else {
 					emailButtons2[1].setSelection(false);
+				}
 			} else if (key.equals("emailcc2")) { // HACK: email buttons
 				// assumed to be in same
 				// position
-				if (value.equals("1"))
+				if (value.equals("1")) {
 					emailButtons2[2].setSelection(true);
-				else
+				} else {
 					emailButtons2[2].setSelection(false);
+				}
 			} else if (key.equals("emaillongdesc2")) { // HACK: email
 				// buttons assumed
 				// to be in same
 				// position
-				if (value.equals("1"))
+				if (value.equals("1")) {
 					emailButtons2[3].setSelection(true);
-				else
+				} else {
 					emailButtons2[3].setSelection(false);
+				}
 			} else if (key.equals("emailtype2")) {
 				int index = 0;
 				for (String item : emailOperation2.getItems()) {
-					if (item.compareTo(value) == 0)
+					if (item.compareTo(value) == 0) {
 						break;
+					}
 					index++;
 				}
 				if (index < emailOperation2.getItemCount()) {
@@ -1844,7 +1863,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					IProgressService service = PlatformUI.getWorkbench().getProgressService();
 					service.busyCursorWhile(updateRunnable);
 				}
-			
+
 
 			} catch (InvocationTargetException ex) {
 				Shell shell = null;
@@ -1880,7 +1899,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						StatusHandler.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, cause.getMessage(),
 								cause));
 					}
-				} 
+				}
 				if(ex.getCause() instanceof OperationCanceledException) {
 					return;
 				}

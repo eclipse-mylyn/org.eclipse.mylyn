@@ -98,10 +98,10 @@ public class BugzillaTaskListManagerTest extends TestCase {
 				.getChildren()
 				.size());
 		ITask readTask = manager.getTaskList()
-				.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
-				.getChildren()
-				.iterator()
-				.next();
+		.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
+		.getChildren()
+		.iterator()
+		.next();
 
 		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());
 		assertEquals(repositoryTask.getSummary(), readTask.getSummary());
@@ -146,9 +146,9 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getQueries().size());
 		BugzillaRepositoryQuery readQuery = (BugzillaRepositoryQuery) manager.getTaskList()
-				.getQueries()
-				.iterator()
-				.next();
+		.getQueries()
+		.iterator()
+		.next();
 		assertTrue(readQuery.isCustomQuery());
 	}
 

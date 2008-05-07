@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -69,6 +70,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 
 /**
@@ -85,7 +87,7 @@ public class BugzillaProductPage extends WizardPage {
 	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
 
 	private static final String DESCRIPTION = "Pick a product to open the new bug editor.\n"
-			+ "Press the Update button if the product is not in the list.";
+		+ "Press the Update button if the product is not in the list.";
 
 	private static final String LABEL_UPDATE = "Update Products from Repository";
 
@@ -95,7 +97,7 @@ public class BugzillaProductPage extends WizardPage {
 	/**
 	 * Reference to the bug wizard which created this page so we can create the second page
 	 */
-	private NewBugzillaTaskWizard bugWizard;
+	private final NewBugzillaTaskWizard bugWizard;
 
 	/** The instance of the workbench */
 	protected IWorkbench workbench;
@@ -127,8 +129,8 @@ public class BugzillaProductPage extends WizardPage {
 		this.workbench = workbench;
 		this.bugWizard = bugWiz;
 		this.repository = repository;
-		setImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.bugzilla.ui",
-				"icons/wizban/bug-wizard.gif"));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.bugzilla.ui",
+		"icons/wizban/bug-wizard.gif"));
 
 	}
 
@@ -231,11 +233,11 @@ public class BugzillaProductPage extends WizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-							.getRepositoryConnector(repository.getConnectorKind());
+					.getRepositoryConnector(repository.getConnectorKind());
 
 					getContainer().run(true, false, new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) throws InvocationTargetException,
-								InterruptedException {
+						InterruptedException {
 							monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
 							try {
 								connector.updateRepositoryConfiguration(repository, monitor);
@@ -263,7 +265,7 @@ public class BugzillaProductPage extends WizardPage {
 									public void run() {
 										MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Search Page",
 												"Unable to get configuration. Ensure proper repository configuration in "
-														+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+												+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
 									}
 								});
 							}
@@ -302,7 +304,7 @@ public class BugzillaProductPage extends WizardPage {
 				public void run() {
 					MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE,
 							"Unable to get products. Ensure proper repository configuration in "
-									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
 				}
 			});
 		}
@@ -382,8 +384,9 @@ public class BugzillaProductPage extends WizardPage {
 	 */
 	protected void applyToStatusLine(IStatus status) {
 		String message = status.getMessage();
-		if (message.length() == 0)
+		if (message.length() == 0) {
 			message = null;
+		}
 		switch (status.getSeverity()) {
 		case IStatus.OK:
 			setErrorMessage(null);
@@ -391,16 +394,16 @@ public class BugzillaProductPage extends WizardPage {
 			break;
 		case IStatus.WARNING:
 			setErrorMessage(null);
-			setMessage(message, WizardPage.WARNING);
+			setMessage(message, IMessageProvider.WARNING);
 			break;
 		case IStatus.INFO:
 			setErrorMessage(null);
-			setMessage(message, WizardPage.INFORMATION);
+			setMessage(message, IMessageProvider.INFORMATION);
 			break;
 		default:
 			setErrorMessage(null);
-			setMessage(message, WizardPage.ERROR);
-			break;
+		setMessage(message, IMessageProvider.ERROR);
+		break;
 		}
 	}
 
@@ -414,13 +417,13 @@ public class BugzillaProductPage extends WizardPage {
 		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		if (connector == null) {
-			throw new CoreException(new Status(Status.ERROR, BugzillaUiPlugin.PLUGIN_ID,
-					"Error AbstractRepositoryConnector could not been retrieved.\n\n"));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID,
+			"Error AbstractRepositoryConnector could not been retrieved.\n\n"));
 		}
 		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		if (taskDataHandler == null) {
-			throw new CoreException(new Status(Status.ERROR, BugzillaUiPlugin.PLUGIN_ID,
-					"Error AbstractTaskDataHandler could not been retrieved.\n\n"));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID,
+			"Error AbstractTaskDataHandler could not been retrieved.\n\n"));
 		}
 		taskDataHandler.initializeTaskData(repository, model, null);
 

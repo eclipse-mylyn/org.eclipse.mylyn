@@ -23,7 +23,7 @@ public class AttachmentEvent extends TaskRevision {
 
 	private final int attachmentId;
 
-	private List<AttachmentFlag> flags;
+	private final List<AttachmentFlag> flags;
 
 	public AttachmentEvent(int id, List<AttachmentFlag> flags) {
 		this.what = TaskRevision.ATTACHMENT;
@@ -56,8 +56,7 @@ public class AttachmentEvent extends TaskRevision {
 		AttachmentFlagState flagState = AttachmentFlagState.UNKNOWN;
 
 		String[] flagToken = attachmentFlags.split(", ");
-		for (int i = 0; i < flagToken.length; i++) {
-			String token = flagToken[i];
+		for (String token : flagToken) {
 			if (token.indexOf("(") != -1) {
 				int end = token.indexOf("(");
 				String substr = token.substring(0, end);
@@ -143,7 +142,7 @@ public class AttachmentEvent extends TaskRevision {
 	@Override
 	public String toString() {
 		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.attachmentId + " | "
-				+ this.getFlagsString();
+		+ this.getFlagsString();
 	}
 
 	public List<AttachmentFlag> getFlags() {

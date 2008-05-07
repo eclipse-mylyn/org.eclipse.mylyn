@@ -38,9 +38,9 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 
 	private Composite composite;
 
-	private BugzillaCustomQueryWizardPage customPage;
+	private final BugzillaCustomQueryWizardPage customPage;
 
-	private BugzillaSearchPage searchPage;
+	private final BugzillaSearchPage searchPage;
 
 	public BugzillaQueryTypeWizardPage(TaskRepository repository) {
 		super(TITLE);

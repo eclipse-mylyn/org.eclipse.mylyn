@@ -32,7 +32,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class BugzillaTaskTest extends TestCase {
 
-	private BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
+	private final BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
 	@Override
 	protected void setUp() throws Exception {

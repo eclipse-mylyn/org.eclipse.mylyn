@@ -39,7 +39,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class BugzillaConfigurationTest extends TestCase {
 
 	BugzillaClientManager bugzillaClientManager = new BugzillaClientManager();
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -63,7 +63,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		taskRepository.setCharacterEncoding(encoding);
 		return bugzillaClientManager.getClient(taskRepository, null);
 	}
-	
+
 	public void test222RDFProductConfig() throws Exception {
 
 		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_222_URL, "", "",
@@ -194,13 +194,13 @@ public class BugzillaConfigurationTest extends TestCase {
 //		incoming.append("xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 //		incoming.append("xmlns:bz=\"http://www.bugzilla.org/rdf#\">");
 //		incoming.append("<li>");
-//        incoming.append("<bz:product 
+//        incoming.append("<bz:product
 //        incoming.append("</bz:product>");
 //        incoming.append("</li>");
 //        incoming.append("</RDF>");
-//        
+//
 //        StringBuffer result = XmlCleaner.clean(new StringReader(incoming.toString()));
-//        System.err.println(result);      
+//        System.err.println(result);
 //	}
 
 	/**
@@ -245,7 +245,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertNotNull(config);
 
 		assertTrue(config.getProducts().contains(
-				"Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+		"Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
 		// Add your additional checking for valid data here if necessary
 

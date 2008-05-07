@@ -34,9 +34,9 @@ public class AbstractReportFactory {
 
 	public static final int RETURN_ALL_HITS = -1;
 
-	private InputStream inStream;
+	private final InputStream inStream;
 
-	private String characterEncoding;
+	private final String characterEncoding;
 
 	public AbstractReportFactory(InputStream inStream, String encoding) {
 		this.inStream = inStream;

@@ -25,9 +25,9 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class KeywordsDialog extends Dialog {
 
-	private List<String> selectedKeywords;
+	private final List<String> selectedKeywords;
 
-	private List<String> validKeywords;
+	private final List<String> validKeywords;
 
 	private CheckboxTableViewer keyWordsList;
 

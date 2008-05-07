@@ -45,7 +45,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private RepositoryAttachment attachment;
 
-	private Map<String, RepositoryTaskData> taskDataMap;
+	private final Map<String, RepositoryTaskData> taskDataMap;
 
 	private RepositoryTaskData repositoryTaskData;
 
@@ -53,13 +53,13 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private String errorMessage = null;
 
-	private AbstractAttributeFactory attributeFactory;
+	private final AbstractAttributeFactory attributeFactory;
 
-	private List<BugzillaCustomField> customFields;
+	private final List<BugzillaCustomField> customFields;
 
-	private LegacyTaskDataCollector collector;
-	
-	
+	private final LegacyTaskDataCollector collector;
+
+
 	//private int retrieved = 1;
 
 	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, LegacyTaskDataCollector collector, Map<String, RepositoryTaskData> taskDataMap, List<BugzillaCustomField> customFields) {
@@ -94,8 +94,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		characters = new StringBuffer();
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
-				if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX))
-						return;
+		if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+			return;
+		}
 		try {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 		} catch (RuntimeException e) {
@@ -221,7 +222,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		}
 
-			// Comment attributes
+		// Comment attributes
 		case WHO:
 			if (taskComment != null) {
 				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
@@ -252,7 +253,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 
-		// Attachment attributes
+			// Attachment attributes
 		case ATTACHID:
 		case DATE:
 		case DESC:
@@ -274,15 +275,15 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 
-		// IGNORED ELEMENTS
-		// case REPORTER_ACCESSIBLE:
-		// case CLASSIFICATION_ID:
-		// case CLASSIFICATION:
-		// case CCLIST_ACCESSIBLE:
-		// case EVERCONFIRMED:
+			// IGNORED ELEMENTS
+			// case REPORTER_ACCESSIBLE:
+			// case CLASSIFICATION_ID:
+			// case CLASSIFICATION:
+			// case CCLIST_ACCESSIBLE:
+			// case EVERCONFIRMED:
 		case BUGZILLA:
 			break;
-// Considering solution for bug#198714			
+// Considering solution for bug#198714
 //		case DELTA_TS:
 //			RepositoryTaskAttribute delta_ts_attribute = repositoryTaskData.getAttribute(tag.getKeyString());
 //			if (delta_ts_attribute == null) {
@@ -365,7 +366,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				}
 				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL,
 						repositoryTaskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX
-								+ attachment.getId());
+						+ attachment.getId());
 				attachment.setRepositoryKind(repositoryTaskData.getConnectorKind());
 				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
 				attachment.setTaskId(repositoryTaskData.getTaskId());
@@ -388,17 +389,17 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				}
 			}
 			break;
-		// All others added as report attribute
+			// All others added as report attribute
 		default:
 			RepositoryTaskAttribute attribute = repositoryTaskData.getAttribute(tag.getKeyString());
-			if (attribute == null) {
-				attribute = attributeFactory.createAttribute(tag.getKeyString());
-				attribute.setValue(parsedText);
-				repositoryTaskData.addAttribute(tag.getKeyString(), attribute);
-			} else {
-				attribute.addValue(parsedText);
-			}
-			break;
+		if (attribute == null) {
+			attribute = attributeFactory.createAttribute(tag.getKeyString());
+			attribute.setValue(parsedText);
+			repositoryTaskData.addAttribute(tag.getKeyString(), attribute);
+		} else {
+			attribute.addValue(parsedText);
+		}
+		break;
 		}
 
 	}

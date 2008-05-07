@@ -56,11 +56,11 @@ public class BugzillaUiExtensionReader {
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_LANGUAGES);
 			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();
-			for (int i = 0; i < templateExtensions.length; i++) {
-				IConfigurationElement[] elements = templateExtensions[i].getConfigurationElements();
-				for (int j = 0; j < elements.length; j++) {
-					if (elements[j].getName().equals(EXTENSION_TMPL_LANGUAGE)) {
-						readLanguageTemplate(elements[j]);
+			for (IExtension templateExtension : templateExtensions) {
+				IConfigurationElement[] elements = templateExtension.getConfigurationElements();
+				for (IConfigurationElement element : elements) {
+					if (element.getName().equals(EXTENSION_TMPL_LANGUAGE)) {
+						readLanguageTemplate(element);
 					}
 				}
 			}
@@ -75,7 +75,7 @@ public class BugzillaUiExtensionReader {
 
 		if (languageName != null) {
 			BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-					.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+			.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 			BugzillaLanguageSettings bugzillaLanguageSettings = new BugzillaLanguageSettings(languageName);
 
