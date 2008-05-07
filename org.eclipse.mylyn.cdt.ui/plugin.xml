@@ -184,26 +184,4 @@
          </includes>
       </viewerContentBinding>
    </extension>
-
-  <!-- Mylyn action provider for Common Navigator (should actually not be CDT-specific) -->
-  <extension
-       point="org.eclipse.ui.navigator.navigatorContent">
-    <actionProvider
-         class="org.eclipse.cdt.mylyn.internal.ui.actions.CNavigatorMylynActionProvider"
-         id="org.eclipse.cdt.mylyn.ui.navigator.actions">
-	  <enablement/>
-    </actionProvider>
-  </extension>
-  
-  <!-- Associate Mylyn actions with Project Explorer -->
-  <extension
-       point="org.eclipse.ui.navigator.viewer">
-    <viewerActionBinding
-          viewerId="org.eclipse.ui.navigator.ProjectExplorer">
-       <includes>
-          <actionExtension pattern="org.eclipse.cdt.mylyn.ui.navigator.actions"/>
-       </includes>
-    </viewerActionBinding>
-  </extension>
-  
 </plugin>
