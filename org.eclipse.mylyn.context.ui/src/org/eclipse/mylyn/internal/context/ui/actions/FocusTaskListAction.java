@@ -109,7 +109,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 				taskListView.getViewer().setSorter(taskListInterestSorter);
 				taskListView.getViewer().expandAll();
 				taskListView.setManualFiltersEnabled(false);
-//				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+//				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskList().getActiveTask());
 			} finally {
 				taskListView.getViewer().getControl().setRedraw(true);
 			}

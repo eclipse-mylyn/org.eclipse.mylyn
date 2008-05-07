@@ -194,7 +194,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			}
 			if (task == null && taskFullUrl != null) {
 				// search by fullUrl
-				for (AbstractTask currTask : TasksUi.getTaskList().getAllTasks()) {
+				for (AbstractTask currTask : TasksUiPlugin.getTaskList().getAllTasks()) {
 					if (currTask != null) {
 						String currUrl = currTask.getUrl();
 						if (taskFullUrl.equals(currUrl)) {

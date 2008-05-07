@@ -131,7 +131,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				if (!(restoredSet instanceof ContextChangeSet)) {
 					String encodedTitle = restoredSet.getName();
 					String taskHandle = ContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
-					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskHandle);
+					AbstractTask task = TasksUiPlugin.getTaskList().getTask(taskHandle);
 					if (task != null) {
 						try {
 							ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);

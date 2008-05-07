@@ -98,7 +98,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				}
 				String mementoString = null;
 				// API-3.0: remove coupling to AbstractTask, change where memento is stored
-				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				ITask task = TasksUiPlugin.getTaskList().getTask(
 						context.getHandleIdentifier());
 				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (task != null) {
@@ -226,7 +226,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				((WorkbenchPage) window.getActivePage()).getEditorManager().saveState(memento);
 			}
 
-			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+			ITask task = TasksUiPlugin.getTaskList().getTask(context.getHandleIdentifier());
 			if (task != null) {
 				// TODO: avoid storing with preferences due to bloat?
 				StringWriter writer = new StringWriter();
@@ -254,7 +254,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 			return;
 		}
 		closeAllButActiveTaskEditor(context.getHandleIdentifier());
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+		ITask task = TasksUiPlugin.getTaskList().getTask(context.getHandleIdentifier());
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 
 		if (task != null) {

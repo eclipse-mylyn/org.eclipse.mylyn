@@ -77,7 +77,7 @@ public class ContextMenuContributor implements IDynamicSubMenuContributor {
 //	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
 //		for (AbstractTaskContainer element : selectedElements) {
 //			if (element instanceof AbstractTask) {
-//				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((AbstractTask) element, category);
+//				TasksUiPlugin.getTaskList().moveToContainer((AbstractTask) element, category);
 //			}
 //		}
 //	}

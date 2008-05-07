@@ -78,7 +78,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 //			PartInitException {
 //		// need a task for mementos
 //		AbstractTask task = new LocalTask(contextId, contextId);
-//		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+//		TasksUiPlugin.getTaskList().addTask(task);
 //		manager.deleteContext(contextId);
 //		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
 //		assertEquals(0, page.getEditors().length);
@@ -102,7 +102,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 //		manager.activateContext(contextId);
 //		// TODO: verify number
 //		assertEquals(2, page.getEditors().length);
-//		TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
+//		TasksUiPlugin.getTaskList().deleteTask(task);
 //	}
 
 	public void testInterestCapturedForResourceOnFocus() throws CoreException, InvocationTargetException,

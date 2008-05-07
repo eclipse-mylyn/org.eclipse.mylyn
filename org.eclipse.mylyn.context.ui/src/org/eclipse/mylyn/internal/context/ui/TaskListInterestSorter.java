@@ -30,7 +30,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
 
-//		OrphanedTasksContainer localArchive = TasksUiPlugin.getTaskListManager().getTaskList().getOrphanContainer(
+//		OrphanedTasksContainer localArchive = TasksUiPlugin.getTaskList().getOrphanContainer(
 //				LocalRepositoryConnector.REPOSITORY_URL);
 //		if (o1 == localArchive && o2 instanceof AbstractTaskContainer) {
 //			return -1;

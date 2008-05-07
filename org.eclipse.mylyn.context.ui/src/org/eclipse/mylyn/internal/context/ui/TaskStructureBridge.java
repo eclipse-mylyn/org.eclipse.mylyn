@@ -44,7 +44,7 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public Object getObjectForHandle(String handle) {
-		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+		return TasksUiPlugin.getTaskList().getTask(handle);
 	}
 
 	@Override
