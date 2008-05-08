@@ -50,8 +50,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private boolean reminded = false;
 
-	private boolean floatingScheduledDate = false;
-
 	private final Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 
 	// ************ Synch ****************
@@ -76,7 +74,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private Date modificationDate = null;
 
-	private Date scheduledForDate = null;
+	private DateRange scheduledForDate = null;
 
 	private Date dueDate = null;
 
@@ -313,11 +311,11 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return completionDate;
 	}
 
-	public void setScheduledForDate(Date date) {
-		scheduledForDate = date;
+	public void setScheduledForDate(DateRange reminderDate) {
+		scheduledForDate = reminderDate;
 	}
 
-	public Date getScheduledForDate() {
+	public DateRange getScheduledForDate() {
 		return scheduledForDate;
 	}
 
@@ -356,8 +354,8 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (isCompleted() || scheduledForDate == null) {
 			return false;
 		} else {
-			Date now = new Date();
-			if (/*!internalIsFloatingScheduledDate() && */scheduledForDate.compareTo(now) < 0) {
+			if (/*!internalIsFloatingScheduledDate() && */scheduledForDate.getEndDate().compareTo(
+					TaskActivityUtil.getCalendar()) < 0) {
 				return true;
 			} else {
 				return false;
@@ -405,22 +403,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	public void setStale(boolean stale) {
 		this.stale = stale;
-	}
-
-	/**
-	 * @since 2.3
-	 * @API 3.0: rename/move
-	 */
-	public boolean internalIsFloatingScheduledDate() {
-		return floatingScheduledDate;
-	}
-
-	/**
-	 * @since 2.3
-	 * @API 3.0: rename/move
-	 */
-	public void internalSetFloatingScheduledDate(boolean floatingScheduledDate) {
-		this.floatingScheduledDate = floatingScheduledDate;
 	}
 
 	/**

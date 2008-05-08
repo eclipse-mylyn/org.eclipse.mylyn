@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author Rob Elves
@@ -51,6 +52,11 @@ public class TaskActivityUtil {
 		cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
 		cal.getTime();
 		return cal;
+	}
+
+	public static void snapToNextDay(Calendar cal) {
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		TaskActivityUtil.snapStartOfDay(cal);
 	}
 
 	public static Calendar snapNextDay(Calendar cal) {
@@ -165,6 +171,13 @@ public class TaskActivityUtil {
 		return false;
 	}
 
+	public static boolean isToday(DateRange time) {
+		if (time != null) {
+			return getCurrentWeek().getToday().compareTo(time) == 0;
+		}
+		return false;
+	}
+
 	public static Calendar getCalendar() {
 		Calendar cal = Calendar.getInstance();
 		cal.setFirstDayOfWeek(startDay);
@@ -177,6 +190,12 @@ public class TaskActivityUtil {
 		return snapStartOfWorkWeek(cal);
 	}
 
+	public static Calendar getStartOfNextWeek() {
+		Calendar cal = getCalendar();
+		snapNextWorkWeek(cal);
+		return snapStartOfWorkWeek(cal);
+	}
+
 	public static Calendar getEndOfCurrentWeek() {
 		Calendar cal = getCalendar();
 		return snapEndOfWeek(cal);
@@ -186,12 +205,45 @@ public class TaskActivityUtil {
 		return (time.compareTo(start) >= 0 && time.compareTo(end) <= 0);
 	}
 
-	public static void setStartDay(int startDay) {
+	protected static void setStartDay(int startDay) {
 		TaskActivityUtil.startDay = startDay;
+	}
+
+	protected static int getStartDay() {
+		return TaskActivityUtil.startDay;
 	}
 
 	public static void setEndHour(int endHour) {
 		TaskActivityUtil.endHour = endHour;
 	}
 
+	public static WeekDateRange getCurrentWeek() {
+		Calendar weekStart = getCalendar();
+		snapStartOfWorkWeek(weekStart);
+		Calendar weekEnd = getCalendar();
+		snapEndOfWeek(weekEnd);
+		return new WeekDateRange(weekStart, weekEnd);
+	}
+
+	public static DateRange getWeekOf(Date date) {
+		Calendar weekStart = getCalendar();
+		weekStart.setTime(date);
+		Calendar weekEnd = getCalendar();
+		weekEnd.setTime(date);
+
+		snapStartOfWorkWeek(weekStart);
+		snapEndOfWeek(weekEnd);
+		return new WeekDateRange(weekStart, weekEnd);
+	}
+
+	public static DateRange getDayOf(Date date) {
+		Calendar dayStart = getCalendar();
+		dayStart.setTime(date);
+		Calendar dayEnd = getCalendar();
+		dayEnd.setTime(date);
+
+		snapStartOfDay(dayStart);
+		snapEndOfDay(dayEnd);
+		return new DateRange(dayStart, dayEnd);
+	}
 }

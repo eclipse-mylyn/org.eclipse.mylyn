@@ -9,13 +9,14 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
+import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
@@ -36,27 +37,32 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 
 	@Override
 	public Object[] getElements(Object parent) {
-		if (parent.equals(this.taskListView.getViewSite())) {
-			List<ScheduledTaskContainer> temp = taskActivityManager.getDateRanges();
-			Set<AbstractTaskContainer> ranges = new HashSet<AbstractTaskContainer>();
-			for (ScheduledTaskContainer scheduledTaskContainer : temp) {
-				if (scheduledTaskContainer.isPresent() || scheduledTaskContainer.isFuture()) {
-					ranges.add(scheduledTaskContainer);
-				}
-			}
-			//ranges.addAll(taskActivityManager.getDateRanges());
-			ranges.add(taskActivityManager.getActivityThisWeek());
-			return applyFilter(ranges).toArray();
+		Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
+
+		WeekDateRange week = TaskActivityUtil.getCurrentWeek();
+		for (DateRange day : week.getRemainingDays()) {
+			containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), day));
+		}
+		containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), week));
+
+		ScheduledTaskContainer nextWeekContainer = new ScheduledTaskContainer(taskActivityManager, week.next());
+		containers.add(nextWeekContainer);
+
+		if (parent != null && parent.equals(this.taskListView.getViewSite())) {
+			return applyFilter(containers).toArray();
 		} else {
-			return super.getElements(parent);
+			return containers.toArray();
 		}
 	}
 
 	@Override
 	public Object getParent(Object child) {
-		if (child instanceof ScheduledTaskDelegate) {
-			return ((ScheduledTaskDelegate) child).getDateRangeContainer();
-		}
+//		for (Object o : getElements(null)) {
+//			ScheduledTaskContainer container = ((ScheduledTaskContainer) o);
+//			if (container.getChildren().contains(((ITask) child).getHandleIdentifier())) {
+//				return container;
+//			}
+//		}
 		return null;
 	}
 
@@ -84,4 +90,5 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 		}
 		return result.toArray();
 	}
+
 }

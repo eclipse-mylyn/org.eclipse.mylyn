@@ -27,8 +27,10 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -113,6 +115,10 @@ final class DelegatingTaskExternalizer {
 	static final String KEY_DATE_CREATION = "CreationDate";
 
 	static final String KEY_DATE_REMINDER = "ReminderDate";
+
+	static final String KEY_DATE_SCHEDULED_START = "ScheduledStartDate";
+
+	static final String KEY_DATE_SCHEDULED_END = "ScheduledEndDate";
 
 	static final String KEY_DATE_MODIFICATION = "ModificationDate";
 
@@ -212,17 +218,16 @@ final class DelegatingTaskExternalizer {
 		node.setAttribute(KEY_DATE_CREATION, formatExternDate(task.getCreationDate()));
 		node.setAttribute(KEY_DATE_MODIFICATION, formatExternDate(task.getModificationDate()));
 		node.setAttribute(KEY_DATE_DUE, formatExternDate(task.getDueDate()));
-		node.setAttribute(KEY_DATE_REMINDER, formatExternDate(task.getScheduledForDate()));
+		if (task.getScheduledForDate() != null) {
+			node.setAttribute(KEY_DATE_SCHEDULED_START, formatExternCalendar(task.getScheduledForDate().getStartDate()));
+			node.setAttribute(KEY_DATE_SCHEDULED_END, formatExternCalendar(task.getScheduledForDate().getEndDate()));
+		}
 		if (task.isReminded()) {
 			node.setAttribute(KEY_REMINDED, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_REMINDED, VAL_FALSE);
 		}
-		if (task.internalIsFloatingScheduledDate()) {
-			node.setAttribute(KEY_FLOATING, VAL_TRUE);
-		} else {
-			node.setAttribute(KEY_FLOATING, VAL_FALSE);
-		}
+
 		if (task.isStale()) {
 			node.setAttribute(KEY_STALE, VAL_TRUE);
 		} else {
@@ -301,6 +306,15 @@ final class DelegatingTaskExternalizer {
 		String f = DATE_FORMAT;
 		SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
 		return format.format(date);
+	}
+
+	private String formatExternCalendar(Calendar date) {
+		if (date == null) {
+			return "";
+		}
+		String f = DATE_FORMAT;
+		SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
+		return format.format(date.getTime());
 	}
 
 	public void readCategory(Node node, TaskList taskList) {
@@ -431,20 +445,42 @@ final class DelegatingTaskExternalizer {
 		} else {
 			task.setDueDate(null);
 		}
-		if (element.hasAttribute(KEY_DATE_REMINDER)) {
-			task.setScheduledForDate(getDateFromString(element.getAttribute(KEY_DATE_REMINDER)));
+
+		// Legacy 2.3.2 -> 3.0 migration of scheduled date
+		boolean isFloating = false;
+		if (element.hasAttribute(KEY_FLOATING) && element.getAttribute(KEY_FLOATING).compareTo(VAL_TRUE) == 0) {
+			isFloating = true;
 		} else {
-			task.setScheduledForDate(null);
+			isFloating = false;
 		}
+		if (element.hasAttribute(KEY_DATE_REMINDER)) {
+			Date date = getDateFromString(element.getAttribute(KEY_DATE_REMINDER));
+			if (date != null) {
+				if (isFloating) {
+					task.setScheduledForDate(TaskActivityUtil.getWeekOf(date));
+				} else {
+					task.setScheduledForDate(TaskActivityUtil.getDayOf(date));
+				}
+			}
+		}
+
+		// Scheduled date range (3.0)
+		if (element.hasAttribute(KEY_DATE_SCHEDULED_START) && element.hasAttribute(KEY_DATE_SCHEDULED_END)) {
+			Date startDate = getDateFromString(element.getAttribute(KEY_DATE_SCHEDULED_START));
+			Date endDate = getDateFromString(element.getAttribute(KEY_DATE_SCHEDULED_END));
+			if (startDate != null && endDate != null && startDate.compareTo(endDate) <= 0) {
+				Calendar calStart = TaskActivityUtil.getCalendar();
+				calStart.setTime(startDate);
+				Calendar calEnd = TaskActivityUtil.getCalendar();
+				calEnd.setTime(endDate);
+				task.setScheduledForDate(new DateRange(calStart, calEnd));
+			}
+		}
+
 		if (element.hasAttribute(KEY_REMINDED) && element.getAttribute(KEY_REMINDED).compareTo(VAL_TRUE) == 0) {
 			task.setReminded(true);
 		} else {
 			task.setReminded(false);
-		}
-		if (element.hasAttribute(KEY_FLOATING) && element.getAttribute(KEY_FLOATING).compareTo(VAL_TRUE) == 0) {
-			task.internalSetFloatingScheduledDate(true);
-		} else {
-			task.internalSetFloatingScheduledDate(false);
 		}
 		if (element.hasAttribute(KEY_STALE) && element.getAttribute(KEY_STALE).compareTo(VAL_TRUE) == 0) {
 			task.setStale(true);

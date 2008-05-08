@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +21,9 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
@@ -108,12 +105,13 @@ public class TaskListManager {
 		if (taskListSaveParticipant == null) {
 			taskListSaveParticipant = new TaskListExternalizationParticipant(taskList, taskListWriter,
 					TasksUiPlugin.getExternalizationManager());
-			//TasksUiExtensionReader.initStartupExtensions(taskListSaveParticipant.getTaskListWriter());
-			TasksUiPlugin.getExternalizationManager().addParticipant(taskListSaveParticipant);
-			taskList.addChangeListener(taskListSaveParticipant);
 		}
 
 		TasksUiPlugin.getExternalizationManager().load(taskListSaveParticipant);
+		TasksUiPlugin.getTaskActivityManager().reloadTimingData();
+		//TasksUiExtensionReader.initStartupExtensions(taskListSaveParticipant.getTaskListWriter());
+		TasksUiPlugin.getExternalizationManager().addParticipant(taskListSaveParticipant);
+		taskList.addChangeListener(taskListSaveParticipant);
 		return true;
 	}
 
@@ -128,11 +126,12 @@ public class TaskListManager {
 			if (!Platform.isRunning() || ContextCorePlugin.getDefault() == null) {
 				return;
 			} else {
-				Calendar now = TaskActivityUtil.getCalendar();
-				ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskActivityManager().getActivityThisWeek();
-				if (!thisWeek.includes(now)) {
-					TasksUiPlugin.getTaskActivityManager().setStartTime(now.getTime());
-				}
+//				if(TaskActivityUtil.getC)
+//				Calendar now = TaskActivityUtil.getCalendar();
+//				
+//				if (!thisWeek.includes(now)) {
+//					TasksUiPlugin.getTaskActivityManager().setStartTime(now.getTime());
+//				}
 			}
 		}
 	}

@@ -46,7 +46,7 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 	}
 
 	public void dispose() {
-		TasksUi.getTaskActivityManager().addActivityListener(this);
+		TasksUi.getTaskActivityManager().removeActivityListener(this);
 	}
 
 	private void update() {

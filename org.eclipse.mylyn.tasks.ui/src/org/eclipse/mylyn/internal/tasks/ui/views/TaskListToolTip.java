@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
@@ -141,7 +142,7 @@ public class TaskListToolTip extends ToolTip {
 		if (element instanceof ScheduledTaskContainer) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
-			Calendar start = ((ScheduledTaskContainer) element).getStart();
+			Calendar start = ((ScheduledTaskContainer) element).getDateRange().getStartDate();
 			sb.append("  [");
 			sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
 			sb.append("]");
@@ -166,8 +167,7 @@ public class TaskListToolTip extends ToolTip {
 			long elapsedTotal = 0;
 			for (ITask child : container.getChildren()) {
 				estimateTotal += (child).getEstimatedTimeHours();
-				elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(child, container.getStart(),
-						container.getEnd());
+				elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(child, container.getDateRange());
 			}
 			StringBuilder sb = new StringBuilder();
 			sb.append("Estimate: ");
@@ -236,7 +236,7 @@ public class TaskListToolTip extends ToolTip {
 //		} else 
 //			
 		if (element instanceof ITask) {
-			ITask task = (ITask) element;
+			AbstractTask task = (AbstractTask) element;
 
 			StringBuilder sb = new StringBuilder();
 
@@ -249,12 +249,12 @@ public class TaskListToolTip extends ToolTip {
 				sb.append('\n');
 			}
 
-			Date scheduledDate = task.getScheduledForDate();
+			DateRange scheduledDate = task.getScheduledForDate();
 			if (scheduledDate != null) {
 				sb.append("Scheduled: ");
-				sb.append(new SimpleDateFormat("E").format(scheduledDate)).append(", ");
-				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(scheduledDate));
-//				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date)).append(")\n");
+				sb.append(scheduledDate.toString());
+//				sb.append(new SimpleDateFormat("E").format(scheduledDate)).append(", ");
+//				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(scheduledDate));
 				sb.append('\n');
 			}
 

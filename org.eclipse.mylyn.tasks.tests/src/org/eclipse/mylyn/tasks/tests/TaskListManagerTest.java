@@ -328,37 +328,29 @@ public class TaskListManagerTest extends TestCase {
 		AbstractTask task = new LocalTask("1", "task-1");
 		assertFalse(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 
-		task.setScheduledForDate(new Date());
+		task.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday());
 		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 
 		task.setReminded(true);
 		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 		task.setReminded(true);
 
-		Calendar inAnHour = Calendar.getInstance();
-		inAnHour.set(Calendar.HOUR_OF_DAY, inAnHour.get(Calendar.HOUR_OF_DAY) + 1);
-		inAnHour.getTime();
-		task.setScheduledForDate(inAnHour.getTime());
-		Calendar tomorrow = Calendar.getInstance();
-		TasksUiPlugin.getTaskActivityManager().snapToNextDay(tomorrow);
-		assertEquals(-1, inAnHour.compareTo(tomorrow));
-
-		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
+//		Calendar inAnHour = Calendar.getInstance();
+//		inAnHour.set(Calendar.HOUR_OF_DAY, inAnHour.get(Calendar.HOUR_OF_DAY) + 1);
+//		inAnHour.getTime();
+//		task.setScheduledForDate(inAnHour.getTime());
+//		Calendar tomorrow = Calendar.getInstance();
+//		TaskActivityUtil.snapToNextDay(tomorrow);
+//		assertEquals(-1, inAnHour.compareTo(tomorrow));
+//		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 	}
 
 	public void testScheduledForToday() {
 		AbstractTask task = new LocalTask("1", "task-1");
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MINUTE, 2);
-		task.setScheduledForDate(cal.getTime());
+		task.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday());
 		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
-		TaskActivityUtil.snapForwardNumDays(cal, 1);
-		task.setScheduledForDate(cal.getTime());
+		task.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday().next());
 		assertFalse(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
-		cal = Calendar.getInstance();
-		TaskActivityUtil.snapEndOfWorkDay(cal);
-		task.setScheduledForDate(cal.getTime());
-		assertTrue(TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task));
 	}
 
 	public void testSchedulePastEndOfMonth() {
@@ -579,19 +571,13 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 	}
 
-	public void testCreateAndMove() {
+	public void testCreateAndMove() throws CoreException {
 		MockTask repositoryTask = new MockTask("1");
 		repositoryTask.setLastReadTimeStamp("now");
 		manager.getTaskList().addTask(repositoryTask);
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
-//		assertEquals(1, manager.getTaskList()
-//				.getOrphanContainer(MockRepositoryConnector.REPOSITORY_URL)
-//				.getChildren()
-//				.size());
-		manager.saveTaskList();
-
-		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
+		TasksUiPlugin.getExternalizationManager().requestSave();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 		assertEquals(1, manager.getTaskList()
 				.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL)
@@ -702,61 +688,54 @@ public class TaskListManagerTest extends TestCase {
 		}
 	}
 
-	public void testCreationAndExternalization() {
+	public void testCreationAndExternalization() throws CoreException {
 		Set<AbstractTask> rootTasks = new HashSet<AbstractTask>();
 		AbstractTask task1 = TasksUiInternal.createNewLocalTask("task 1");
 		rootTasks.add(task1);
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
 
 		AbstractTask sub1 = TasksUiInternal.createNewLocalTask("sub 1");
 		manager.getTaskList().addTask(sub1, task1);
+		assertEquals(3, manager.getTaskList().getRootElements().size());
 
 		//manager.getTaskList().moveToContainer(sub1, manager.getTaskList().getArchiveContainer());
 
 		AbstractTask task2 = TasksUiInternal.createNewLocalTask("task 2");
 		rootTasks.add(task2);
+		assertEquals(3, manager.getTaskList().getAllTasks().size());
 
 		Set<TaskCategory> categories = new HashSet<TaskCategory>();
 		Set<AbstractTask> cat1Contents = new HashSet<AbstractTask>();
 		TaskCategory cat1 = new TaskCategory("Category 1");
 		manager.getTaskList().addCategory(cat1);
 		categories.add(cat1);
+		assertEquals(4, manager.getTaskList().getRootElements().size());
+
 		AbstractTask task3 = TasksUiInternal.createNewLocalTask("task 3");
 		manager.getTaskList().addTask(task3, cat1);
 		cat1Contents.add(task3);
+		assertEquals(4, manager.getTaskList().getAllTasks().size());
 		assertEquals(cat1, TaskCategory.getParentTaskCategory(task3));
 		AbstractTask sub2 = TasksUiInternal.createNewLocalTask("sub 2");
+		assertEquals(5, manager.getTaskList().getAllTasks().size());
 		manager.getTaskList().addTask(sub2, task3);
 		//manager.getTaskList().moveToContainer(sub2, manager.getTaskList().getArchiveContainer());
 
 		AbstractTask task4 = TasksUiInternal.createNewLocalTask("task 4");
 		manager.getTaskList().addTask(task4, cat1);
 		cat1Contents.add(task4);
+		assertEquals(6, manager.getTaskList().getAllTasks().size());
 
 		MockTask reportInCat1 = new MockTask("123");
 		manager.getTaskList().addTask(reportInCat1, cat1);
 		assertEquals(cat1, TaskCategory.getParentTaskCategory(reportInCat1));
 		cat1Contents.add(reportInCat1);
+		assertEquals(7, manager.getTaskList().getAllTasks().size());
 
-//		MockRepositoryTask reportInRoot = new MockRepositoryTask("124");
-//		manager.getTaskList().moveTask(reportInRoot, manager.getTaskList().getOrphanContainer(repositoryUrl));
-//		//rootTasks.add(reportInRoot);
+		assertEquals(4, manager.getTaskList().getRootElements().size());
 
-		assertEquals(3, manager.getTaskList().getRootElements().size());
-
-		manager.saveTaskList();
-		assertNotNull(manager.getTaskList());
-		manager.resetTaskList();
-		// manager.getTaskList().clear();
-		// TaskList list = new TaskList();
-		// manager.setTaskList(list);
-		manager.readExistingOrCreateNewList();
-
-		assertNotNull(manager.getTaskList());
-
-		// XXX: Test should pass once tasks are removed from archive upon becoming
-		// a subtask
-//		assertTrue(rootTasks.containsAll(manager.getTaskList().getOrphanContainer(
-//				LocalRepositoryConnector.REPOSITORY_URL).getChildren()));
+		TasksUiPlugin.getExternalizationManager().requestSave();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
 
 		Collection<ITask> readList = manager.getTaskList().getDefaultCategory().getChildren();
 		for (ITask task : readList) {
@@ -764,9 +743,6 @@ public class TaskListManagerTest extends TestCase {
 				assertEquals(task1.getSummary(), task.getSummary());
 				assertEquals(1, task.getChildren().size());
 			}
-//			if (task.equals(reportInRoot)) {
-//				assertEquals(reportInRoot.getSummary(), task.getSummary());
-//			}
 		}
 
 		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskContainers();
@@ -777,7 +753,9 @@ public class TaskListManagerTest extends TestCase {
 			ITaskElement readCat1 = iterator.next();
 			if (cat1.equals(readCat1)) {
 				found = true;
-				assertEquals(cat1Contents, readCat1.getChildren());
+				for (ITask task : readCat1.getChildren()) {
+					assertTrue(cat1Contents.contains(task));
+				}
 			}
 		}
 		if (!found) {
@@ -785,22 +763,13 @@ public class TaskListManagerTest extends TestCase {
 		}
 	}
 
-	public void testExternalizationOfHandlesWithDash() {
-		Set<AbstractTask> rootTasks = new HashSet<AbstractTask>();
-
-// String handle = AbstractTask.getHandle("http://url/repo-location",
-// 1);
+	public void testExternalizationOfHandlesWithDash() throws CoreException {
 		AbstractTask task1 = TasksUiInternal.createNewLocalTask("task 1");
 		manager.getTaskList().addTask(task1, manager.getTaskList().getDefaultCategory());
-		rootTasks.add(task1);
 
-		manager.saveTaskList();
-		assertNotNull(manager.getTaskList());
-		manager.resetTaskList();
-		assertTrue(manager.readExistingOrCreateNewList());
-
-		assertNotNull(manager.getTaskList());
-		assertEquals(rootTasks, manager.getTaskList().getDefaultCategory().getChildren());
+		TasksUiPlugin.getExternalizationManager().requestSave();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
+		assertTrue(manager.getTaskList().getDefaultCategory().getChildren().contains(task1));
 	}
 
 	public void testgetQueriesAndHitsForHandle() {

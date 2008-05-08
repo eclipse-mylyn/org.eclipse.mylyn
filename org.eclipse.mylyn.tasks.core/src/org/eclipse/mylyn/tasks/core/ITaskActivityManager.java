@@ -19,10 +19,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
  */
 public interface ITaskActivityManager {
 
-	public abstract void addActivityListener(ITaskActivityListener listener);
-
-	public void removeActivityListener(ITaskActivityListener listener);
-
 	/**
 	 * activate the given <code>task</code>
 	 */
@@ -46,14 +42,9 @@ public interface ITaskActivityManager {
 	public abstract Set<AbstractTask> getActiveTasks(Calendar start, Calendar end);
 
 	/**
-	 * @return all tasks currently scheduled in the task list
+	 * @return the currently active task if any
 	 */
-	public abstract Set<ITask> getAllScheduledTasks();
-
-	/**
-	 * returns all tasks scheduled between <code>start</code> and <code>end</code>
-	 */
-	public abstract Set<ITask> getScheduledTasks(Calendar start, Calendar end);
+	public abstract ITask getActiveTask();
 
 	/**
 	 * returns all tasks with a due date set
@@ -71,6 +62,7 @@ public interface ITaskActivityManager {
 	/** total elapsed time based on activation history between <code>start</code> and <code>end</code> */
 	public abstract long getElapsedTime(ITask task, Calendar start, Calendar end);
 
-	public abstract ITask getActiveTask();
+	public abstract void addActivityListener(ITaskActivityListener listener);
 
+	public void removeActivityListener(ITaskActivityListener listener);
 }

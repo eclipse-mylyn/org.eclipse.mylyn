@@ -102,7 +102,7 @@ public class TaskListElementImporter {
 
 	private List<AbstractTaskListFactory> externalizers;
 
-	private DelegatingTaskExternalizer delagatingExternalizer;
+	private OldDelegatingTaskExternalizer delagatingExternalizer;
 
 	private final TaskRepositoriesExternalizer repositoriesExternalizer;
 
@@ -117,7 +117,7 @@ public class TaskListElementImporter {
 	private boolean hasCaughtException = false;
 
 	public TaskListElementImporter() {
-		this.delagatingExternalizer = new DelegatingTaskExternalizer();
+		this.delagatingExternalizer = new OldDelegatingTaskExternalizer();
 		this.repositoriesExternalizer = new TaskRepositoriesExternalizer();
 		this.contextExternalizer = new InteractionContextExternalizer();
 	}
@@ -272,7 +272,7 @@ public class TaskListElementImporter {
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
-						if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
+						if (!child.getNodeName().endsWith(OldDelegatingTaskExternalizer.KEY_CATEGORY)
 								&& !child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
 
 							AbstractTask task = delagatingExternalizer.readTask(child, null, null);
@@ -315,7 +315,7 @@ public class TaskListElementImporter {
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
-						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
+						if (child.getNodeName().endsWith(OldDelegatingTaskExternalizer.KEY_CATEGORY)) {
 							delagatingExternalizer.readCategory(child, taskList);
 						}
 					} catch (Exception e) {
@@ -381,21 +381,21 @@ public class TaskListElementImporter {
 			if (queryTagNames != null && queryTagNames.contains(child.getNodeName())) {
 				Element childElement = (Element) child;
 				// TODO: move this stuff into externalizer
-				String repositoryUrl = childElement.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
+				String repositoryUrl = childElement.getAttribute(OldDelegatingTaskExternalizer.KEY_REPOSITORY_URL);
 				String queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);
 				if (queryString.length() == 0) { // fallback for legacy
 					queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY);
 				}
-				String label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_NAME);
+				String label = childElement.getAttribute(OldDelegatingTaskExternalizer.KEY_NAME);
 				if (label.length() == 0) { // fallback for legacy
-					label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
+					label = childElement.getAttribute(OldDelegatingTaskExternalizer.KEY_LABEL);
 				}
 
 				query = externalizer.createQuery(repositoryUrl, queryString, label, childElement);
 				if (query != null) {
-					if (childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null
-							&& !childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
-						query.setLastSynchronizedStamp(childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
+					if (childElement.getAttribute(OldDelegatingTaskExternalizer.KEY_LAST_REFRESH) != null
+							&& !childElement.getAttribute(OldDelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
+						query.setLastSynchronizedStamp(childElement.getAttribute(OldDelegatingTaskExternalizer.KEY_LAST_REFRESH));
 					}
 				}
 
@@ -527,7 +527,7 @@ public class TaskListElementImporter {
 		}
 	}
 
-	public void setDelegatingExternalizer(DelegatingTaskExternalizer delagatingExternalizer) {
+	public void setDelegatingExternalizer(OldDelegatingTaskExternalizer delagatingExternalizer) {
 		this.delagatingExternalizer = delagatingExternalizer;
 	}
 
@@ -704,7 +704,7 @@ public class TaskListElementImporter {
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
-						if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
+						if (!child.getNodeName().endsWith(OldDelegatingTaskExternalizer.KEY_CATEGORY)
 								&& !child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
 							AbstractTask task = delagatingExternalizer.readTask(child, null, null);
 							if (task != null) {

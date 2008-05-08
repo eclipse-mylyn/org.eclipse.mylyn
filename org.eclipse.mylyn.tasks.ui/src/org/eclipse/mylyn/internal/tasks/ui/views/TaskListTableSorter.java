@@ -67,12 +67,13 @@ public class TaskListTableSorter extends ViewerSorter {
 		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
 			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
-			if (dateRangeTaskContainer1.isCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
-				return 1;
-			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
-				return -1;
-			}
-			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
+			return dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange());
+//			if (dateRangeTaskContainer1.isCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
+//				return 1;
+//			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
+//				return -1;
+//			}
+//			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
 		} else if (o1 instanceof ITaskElement && o2 instanceof ScheduledTaskContainer) {
 			return -1;
 		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ITaskElement) {
@@ -105,8 +106,7 @@ public class TaskListTableSorter extends ViewerSorter {
 			if (o2 instanceof ITaskElement || o2 instanceof IRepositoryQuery) {
 
 				return this.sortDirection
-						* ((ITaskElement) o1).getSummary().compareToIgnoreCase(
-								((ITaskElement) o2).getSummary());
+						* ((ITaskElement) o1).getSummary().compareToIgnoreCase(((ITaskElement) o2).getSummary());
 			} else {
 				return -1;
 			}

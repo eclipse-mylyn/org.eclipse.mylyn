@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -172,7 +173,7 @@ public class TasksReminderDialog extends Dialog {
 			if (sel != null && sel instanceof ITask) {
 				ITask t = (ITask) sel;
 				((AbstractTask) t).setReminded(false);
-				((AbstractTask) t).setScheduledForDate(new Date(new Date().getTime() + DAY));
+				((AbstractTask) t).setScheduledForDate(TaskActivityUtil.getDayOf(new Date(new Date().getTime() + DAY)));
 				tasks.remove(t);
 				if (tasks.isEmpty()) {
 					okPressed();
@@ -204,7 +205,7 @@ public class TasksReminderDialog extends Dialog {
 
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof ITask) {
-				ITask task = (ITask) element;
+				AbstractTask task = (AbstractTask) element;
 				switch (columnIndex) {
 				case 0:
 					return task.getSummary();
@@ -245,7 +246,7 @@ public class TasksReminderDialog extends Dialog {
 			case PRIORITY:
 				return comparePriority(t1, t2);
 			case DATE:
-				return compareDate(t1, t2);
+				return compareDate((AbstractTask) t1, (AbstractTask) t2);
 			default:
 				return 0;
 			}
@@ -259,7 +260,7 @@ public class TasksReminderDialog extends Dialog {
 			return task1.getPriority().compareTo(task2.getPriority());
 		}
 
-		private int compareDate(ITask task1, ITask task2) {
+		private int compareDate(AbstractTask task1, AbstractTask task2) {
 			return task2.getScheduledForDate().compareTo(task1.getScheduledForDate());
 		}
 	}

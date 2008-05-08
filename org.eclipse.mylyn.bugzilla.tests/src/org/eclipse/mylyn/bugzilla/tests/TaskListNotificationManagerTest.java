@@ -17,6 +17,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
@@ -46,9 +47,9 @@ public class TaskListNotificationManagerTest extends TestCase {
 		AbstractTask task1 = new LocalTask("1", "t1 - test 1");
 		AbstractTask task2 = new LocalTask("2", "t2 - test 2");
 
-		task0.setScheduledForDate(new Date(now.getTime() - 2000));
-		task1.setScheduledForDate(new Date(now.getTime() - 2000));
-		task2.setScheduledForDate(new Date(now.getTime() - 2000));
+		task0.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday().previous());
+		task1.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday().previous());
+		task2.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday().previous());
 
 		TasksUiPlugin.getTaskList().addTask(task0);
 		TasksUiPlugin.getTaskList().addTask(task1);
@@ -92,7 +93,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		BugzillaTask hit = new BugzillaTask("https://bugs.eclipse.org/bugs", "1", "summary");
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
-		"summary");
+				"summary");
 		TasksUiPlugin.getTaskList().addQuery(query);
 		TasksUiPlugin.getTaskList().addTask(hit, query);
 
@@ -112,7 +113,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		String hitHandle = hit.getHandleIdentifier();
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
-		"summary");
+				"summary");
 		TasksUiPlugin.getTaskList().addQuery(query);
 		TasksUiPlugin.getTaskList().addTask(hit, query);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();

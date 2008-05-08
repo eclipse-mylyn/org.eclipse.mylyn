@@ -119,7 +119,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private ScheduleDatePicker scheduleDatePicker;
 
-	private ITask task;
+	private AbstractTask task;
 
 	private Composite editorComposite;
 
@@ -190,10 +190,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public void updateTaskData(final AbstractTask updateTask) {
 		if (scheduleDatePicker != null && !scheduleDatePicker.isDisposed()) {
 			if (updateTask.getScheduledForDate() != null) {
-				scheduleDatePicker.setScheduledDate(updateTask.getScheduledForDate(),
-						updateTask.internalIsFloatingScheduledDate());
+				scheduleDatePicker.setScheduledDate(updateTask.getScheduledForDate());
 			} else {
-				scheduleDatePicker.setScheduledDate(null, false);
+				scheduleDatePicker.setScheduledDate(null);
 			}
 		}
 
@@ -258,15 +257,13 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
 			if (task.getScheduledForDate() == null
 					|| (task.getScheduledForDate() != null && !scheduleDatePicker.getScheduledDate().equals(
-							task.getScheduledForDate()))
-					|| ((AbstractTask) task).internalIsFloatingScheduledDate() != scheduleDatePicker.isFloatingDate()) {
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate(),
-						scheduleDatePicker.isFloatingDate());
-				((AbstractTask) task).setReminded(false);
+							task.getScheduledForDate())) || (task).getScheduledForDate().isDay()) {
+				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate());
+				(task).setReminded(false);
 			}
 		} else {
 			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
-			((AbstractTask) task).setReminded(false);
+			(task).setReminded(false);
 		}
 		if (dueDatePicker != null && dueDatePicker.getDate() != null) {
 			TasksUiPlugin.getTaskActivityManager().setDueDate(task, dueDatePicker.getDate().getTime());
@@ -299,7 +296,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		super.createFormContent(managedForm);
 		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
 
-		task = taskEditorInput.getTask();
+		task = (AbstractTask) taskEditorInput.getTask();
 
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
@@ -671,8 +668,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				scheduleDatePicker.setScheduledDate(null, false);
-				((AbstractTask) task).setReminded(false);
+				scheduleDatePicker.setScheduledDate(null);
+				(task).setReminded(false);
 				TaskPlanningEditor.this.markDirty(true);
 			}
 		});

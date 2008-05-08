@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +36,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -103,12 +101,12 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			protected void operations(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
 					InterruptedException {
 				Object currentTarget = getCurrentTarget();
-				List<AbstractTask> tasksToMove = new ArrayList<AbstractTask>();
+				List<ITask> tasksToMove = new ArrayList<ITask>();
 				if (isUrl(data) && createTaskFromUrl(data)) {
 					tasksToMove.add(newTask);
 				} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer) && data instanceof ITask[]) {
-					AbstractTask[] tasks = (AbstractTask[]) data;
-					for (AbstractTask task : tasks) {
+					ITask[] tasks = (ITask[]) data;
+					for (ITask task : tasks) {
 						if (task != null) {
 							tasksToMove.add(task);
 						}
@@ -190,13 +188,13 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						&& getCurrentLocation() == LOCATION_ON
 						&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 								TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
-					for (AbstractTask task : tasksToMove) {
-						if (!task.contains(((LocalTask) currentTarget).getHandleIdentifier())) {
+					for (ITask task : tasksToMove) {
+						if (!((AbstractTask) task).contains(((LocalTask) currentTarget).getHandleIdentifier())) {
 							TasksUi.getTaskList().addTask(task, (LocalTask) currentTarget);
 						}
 					}
 				} else {
-					for (AbstractTask task : tasksToMove) {
+					for (ITask task : tasksToMove) {
 						if (currentTarget instanceof UncategorizedTaskContainer) {
 							TasksUi.getTaskList().addTask(task, (UncategorizedTaskContainer) currentTarget);
 						} else if (currentTarget instanceof TaskCategory) {
@@ -224,14 +222,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 							}
 						} else if (currentTarget instanceof ScheduledTaskContainer) {
 							ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
-							Calendar newSchedule = TaskActivityUtil.getCalendar();
-							newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());
-							TaskActivityUtil.snapEndOfWorkDay(newSchedule);
-							TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, newSchedule.getTime(),
-									container.isCaptureFloating());
+							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
+									container.getDateRange());
 						} else if (currentTarget == null) {
-							TasksUi.getTaskList().addTask(newTask,
-									TasksUiPlugin.getTaskList().getDefaultCategory());
+							TasksUi.getTaskList().addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
 						}
 					}
 				}
@@ -259,7 +253,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	}
 
-	private boolean areAllLocalTasks(List<AbstractTask> tasksToMove) {
+	private boolean areAllLocalTasks(List<ITask> tasksToMove) {
 		for (ITask task : tasksToMove) {
 			if (!(task instanceof LocalTask)) {
 				return false;

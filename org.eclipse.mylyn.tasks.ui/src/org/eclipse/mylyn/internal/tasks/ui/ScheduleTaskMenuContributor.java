@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -22,8 +21,9 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DateSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
+import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.ui.PlatformUI;
@@ -63,21 +63,20 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		}
 
-		// Today
-		Action action = createDateSelectionAction(TasksUiPlugin.getTaskActivityManager().getActivityToday(),
-				CommonImages.SCHEDULE_DAY);
-		subMenuManager.add(action);
-
-		// Special case: Over scheduled tasks always 'scheduled' for today
-		if (singleTaskSelection != null && !isFloating(singleTaskSelection) && isPastReminder(singleTaskSelection)) {
-			action.setChecked(true);
-		}
-
-		// Days of week
-		List<ScheduledTaskContainer> weekDays = TasksUiPlugin.getTaskActivityManager().getActivityWeekDays();
-		for (final ScheduledTaskContainer scheduledTaskContainer : weekDays) {
-			if (scheduledTaskContainer.isFuture()) {
-				action = createDateSelectionAction(scheduledTaskContainer, null);
+		WeekDateRange week = TaskActivityUtil.getCurrentWeek();
+		for (DateRange day : week.getDaysOfWeek()) {
+			if (day.includes(TaskActivityUtil.getCalendar())) {
+				// Today
+				Action action = createDateSelectionAction(day, CommonImages.SCHEDULE_DAY);
+				subMenuManager.add(action);
+				// Special case: Over scheduled tasks always 'scheduled' for today
+				if (singleTaskSelection != null && day.equals(singleTaskSelection.getScheduledForDate())
+						&& isPastReminder(singleTaskSelection)) {
+					action.setChecked(true);
+				}
+			} else if (day.after(TaskActivityUtil.getCalendar())) {
+				// Week Days
+				Action action = createDateSelectionAction(day, null);
 				subMenuManager.add(action);
 			}
 		}
@@ -85,26 +84,16 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.add(new Separator());
 
 		// This Week
-		action = createDateSelectionAction(TasksUiPlugin.getTaskActivityManager().getActivityThisWeek(),
-				CommonImages.SCHEDULE_WEEK);
+		Action action = createDateSelectionAction(week, CommonImages.SCHEDULE_WEEK);
 		subMenuManager.add(action);
 
 		// Next Week
-		action = createDateSelectionAction(TasksUiPlugin.getTaskActivityManager().getActivityNextWeek(), null);
+		action = createDateSelectionAction(week.next(), null);
 		subMenuManager.add(action);
 
 		// Future
 		if (singleTaskSelection != null && getScheduledForDate(singleTaskSelection) != null) {
-
-			Calendar time = TaskActivityUtil.getCalendar();
-			time.setTime(getScheduledForDate(singleTaskSelection));
-
-			Calendar start = TaskActivityUtil.getCalendar();
-			start.setTime(TasksUiPlugin.getTaskActivityManager().getActivityFuture().getStart().getTime());
-			//start.add(Calendar.WEEK_OF_MONTH, 1);
-
-			if (time.compareTo(start) >= 0) {
-				// future
+			if (singleTaskSelection.getScheduledForDate().after(week.next().getEndDate())) {
 				action = new Action() {
 					@Override
 					public void run() {
@@ -125,7 +114,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			public void run() {
 				Calendar theCalendar = TaskActivityUtil.getCalendar();
 				if (getScheduledForDate(singleTaskSelection) != null) {
-					theCalendar.setTime(getScheduledForDate(singleTaskSelection));
+					theCalendar.setTime(getScheduledForDate(singleTaskSelection).getStartDate().getTime());
 				}
 				DateSelectionDialog reminderDialog = new DateSelectionDialog(PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow()
@@ -134,19 +123,12 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 						.getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 				int result = reminderDialog.open();
 				if (result == Window.OK) {
-					Calendar cal = null;
+					DateRange range = null;
 					if (reminderDialog.getDate() != null) {
-						cal = TaskActivityUtil.getCalendar();
-						cal.setTime(reminderDialog.getDate());
+						range = TaskActivityUtil.getDayOf(reminderDialog.getDate());
 					}
 
-					ScheduledTaskContainer dummy = TasksUiPlugin.getTaskActivityManager().getActivityContainer(cal,
-							false);
-					if (dummy == null) {
-						dummy = new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), cal, cal, "");
-					}
-
-					setScheduledDate(dummy);
+					setScheduledDate(range);
 				}
 			}
 		};
@@ -171,25 +153,20 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		return subMenuManager;
 	}
 
-	private Action createDateSelectionAction(final ScheduledTaskContainer dateContainer, ImageDescriptor imageDescriptor) {
+	private Action createDateSelectionAction(final DateRange dateContainer, ImageDescriptor imageDescriptor) {
 		Action action = new Action() {
 			@Override
 			public void run() {
 				setScheduledDate(dateContainer);
 			}
 		};
-		action.setText(dateContainer.getSummary());
+		action.setText(dateContainer.toString());
 		action.setImageDescriptor(imageDescriptor);
 		action.setEnabled(canSchedule());
 
-		Date scheduledDate = getScheduledForDate(singleTaskSelection);
+		DateRange scheduledDate = getScheduledForDate(singleTaskSelection);
 		if (scheduledDate != null) {
-
-			Calendar cal = TaskActivityUtil.getCalendar();
-			cal.setTime(scheduledDate);
-
-			action.setChecked(isFloating(singleTaskSelection) == dateContainer.isCaptureFloating()
-					&& dateContainer.includes(cal));
+			action.setChecked(dateContainer.equals(scheduledDate));
 		}
 		return action;
 	}
@@ -215,32 +192,30 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 //		}
 //	}
 
-	protected void setScheduledDate(ScheduledTaskContainer dateContainer) {
+	protected void setScheduledDate(DateRange dateContainer) {
 		for (ITaskElement element : taskListElementsToSchedule) {
 			AbstractTask task = getTaskForElement(element, true);
-			if (dateContainer != null && dateContainer.getStart() != null) {
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, dateContainer.getStart().getTime(),
-						dateContainer.isCaptureFloating());
+			if (dateContainer != null) {
+				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, dateContainer);
 			} else {
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null, false);
+				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
 			}
 		}
 	}
 
-	protected Date getScheduledForDate(final ITask singleTaskSelection) {
+	protected DateRange getScheduledForDate(final AbstractTask singleTaskSelection) {
 		if (singleTaskSelection != null) {
 			return singleTaskSelection.getScheduledForDate();
 		}
 		return null;
 	}
 
-	protected boolean isFloating(AbstractTask task) {
-		return task.internalIsFloatingScheduledDate();
-	}
+//	protected boolean isFloating(AbstractTask task) {
+//		return task.internalIsFloatingScheduledDate();
+//	}
 
-	private boolean isPastReminder(ITask task) {
-		Date date = getScheduledForDate(task);
-		return TasksUiPlugin.getTaskActivityManager().isPastReminder(date, task.isCompleted());
+	private boolean isPastReminder(AbstractTask task) {
+		return TasksUiPlugin.getTaskActivityManager().isPastReminder(task);
 	}
 
 	private AbstractTask getTaskForElement(ITaskElement element, boolean force) {

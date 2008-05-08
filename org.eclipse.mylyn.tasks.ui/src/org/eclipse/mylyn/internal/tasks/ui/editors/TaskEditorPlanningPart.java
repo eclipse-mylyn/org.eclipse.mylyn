@@ -8,21 +8,17 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.util.Calendar;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
+import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -38,7 +34,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 	private static final int DEFAULT_ESTIMATED_TIME = 1;
 
-	private DatePicker scheduledForDate;
+	private ScheduleDatePicker scheduledForDate;
 
 	private Spinner estimatedTime;
 
@@ -48,15 +44,15 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 	@Override
 	public void commit(boolean onSave) {
-		ITask task = getTaskEditorPage().getTask();
+		AbstractTask task = (AbstractTask) getTaskEditorPage().getTask();
 		Assert.isNotNull(task);
 
-		Calendar selectedDate = null;
+		DateRange selectedDate = null;
 		if (scheduledForDate != null) {
-			selectedDate = scheduledForDate.getDate();
+			selectedDate = scheduledForDate.getScheduledDate();
 		}
 		if (selectedDate != null) {
-			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, selectedDate.getTime());
+			TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, selectedDate);
 		}
 
 		if (estimatedTime != null) {
@@ -79,40 +75,71 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		sectionClient.setLayoutData(clientDataLayout);
 
 		// Reminder
-		getManagedForm().getToolkit().createLabel(sectionClient, "Scheduled for:");
-		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		scheduledForDate = new DatePicker(sectionClient, SWT.FLAT, DatePicker.LABEL_CHOOSE, true,
-				TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
-		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		Calendar newTaskSchedule = Calendar.getInstance();
-		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
-		// If past scheduledEndHour set for following day
-		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
-			TaskActivityUtil.snapForwardNumDays(newTaskSchedule, 1);
-		} else {
-			TaskActivityUtil.snapEndOfWorkDay(newTaskSchedule);
-		}
-		scheduledForDate.setDate(newTaskSchedule);
-//		Button removeReminder = getManagedForm().getToolkit().createButton(sectionClient, "Clear",
-//				SWT.PUSH | SWT.CENTER);
-//		removeReminder.addSelectionListener(new SelectionAdapter() {
+//		getManagedForm().getToolkit().createLabel(sectionClient, "Scheduled for:");
+//		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		scheduledForDate = new ScheduleDatePicker(sectionClient, SWT.FLAT, DatePicker.LABEL_CHOOSE, true,
+//				TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+//		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+//		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+//		Calendar newTaskSchedule = Calendar.getInstance();
+//		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+//				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
+//		// If past scheduledEndHour set for following day
+//		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
+//			TaskActivityUtil.snapForwardNumDays(newTaskSchedule, 1);
+//		} else {
+//			TaskActivityUtil.snapEndOfWorkDay(newTaskSchedule);
+//		}
+//		scheduledForDate.setDate(newTaskSchedule);
+////		Button removeReminder = getManagedForm().getToolkit().createButton(sectionClient, "Clear",
+////				SWT.PUSH | SWT.CENTER);
+////		removeReminder.addSelectionListener(new SelectionAdapter() {
+////			@Override
+////			public void widgetSelected(SelectionEvent e) {
+////				scheduledForDate.setDate(null);
+////			}
+////		});
+//
+//		ImageHyperlink clearReminder = getManagedForm().getToolkit().createImageHyperlink(sectionClient, SWT.NONE);
+//		clearReminder.setImage(CommonImages.getImage(CommonImages.REMOVE));
+//		clearReminder.setToolTipText("Clear");
+//		clearReminder.addHyperlinkListener(new HyperlinkAdapter() {
 //			@Override
-//			public void widgetSelected(SelectionEvent e) {
+//			public void linkActivated(HyperlinkEvent e) {
 //				scheduledForDate.setDate(null);
 //			}
 //		});
 
-		ImageHyperlink clearReminder = getManagedForm().getToolkit().createImageHyperlink(sectionClient, SWT.NONE);
-		clearReminder.setImage(CommonImages.getImage(CommonImages.REMOVE));
-		clearReminder.setToolTipText("Clear");
-		clearReminder.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				scheduledForDate.setDate(null);
-			}
-		});
+		///NEW
+//		ITask task = getTaskEditorPage().getTask();
+//		scheduledForDate = new ScheduleDatePicker(sectionClient, task, SWT.FLAT);
+//		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+//		toolkit.adapt(scheduledForDate, true, true);
+//		toolkit.paintBordersFor(sectionClient);
+//
+//		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+//		scheduledForDate.addPickerSelectionListener(new SelectionListener() {
+//			public void widgetSelected(SelectionEvent arg0) {
+//				getTaskEditorPage().getModel().attributeChanged(attribute);
+//			}
+//
+//			public void widgetDefaultSelected(SelectionEvent arg0) {
+//				// ignore
+//			}
+//		});
+//
+//		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
+//		clearScheduledDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
+//		clearScheduledDate.setToolTipText(CLEAR);
+//		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
+//
+//			@Override
+//			public void linkActivated(HyperlinkEvent e) {
+//				scheduledForDate.setScheduledDate(null);
+//				((AbstractTask) task).setReminded(false);
+//				TaskPlanningEditor.this.markDirty(true);
+//			}
+//		});
 
 		// 1 Blank column after Reminder clear button
 		Label dummy = getManagedForm().getToolkit().createLabel(sectionClient, "");

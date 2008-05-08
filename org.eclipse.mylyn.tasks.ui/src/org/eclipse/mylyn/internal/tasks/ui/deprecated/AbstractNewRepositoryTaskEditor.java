@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui.deprecated;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -26,6 +25,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -244,7 +244,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		clearReminder.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				scheduledForDate.setScheduledDate(null, false);
+				scheduledForDate.setScheduledDate(null);
 			}
 		});
 
@@ -480,7 +480,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					Date selectedDate = null;
+					DateRange selectedDate = null;
 					if (scheduledForDate != null) {
 						selectedDate = scheduledForDate.getScheduledDate();
 					}

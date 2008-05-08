@@ -261,7 +261,6 @@ public class TasksUiExtensionReader {
 			String iconPath = element.getAttribute(ATTR_ICON);
 			ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( // 
 					element.getContributor().getName(), iconPath);
-
 			AbstractTaskListPresentation presentation = (AbstractTaskListPresentation) element.createExecutableExtension(ATTR_CLASS);
 			presentation.setImageDescriptor(imageDescriptor);
 			presentation.setName(name);

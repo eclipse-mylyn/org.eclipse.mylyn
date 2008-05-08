@@ -22,11 +22,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -57,7 +59,7 @@ import org.w3c.dom.NodeList;
  * @author Ken Sueda (XML serialization support)
  * @author Steffen Pingel
  */
-final class DelegatingTaskExternalizer {
+final class OldDelegatingTaskExternalizer {
 
 	static final String DEFAULT_PRIORITY = PriorityLevel.P3.toString();
 
@@ -113,6 +115,10 @@ final class DelegatingTaskExternalizer {
 
 	static final String KEY_DATE_REMINDER = "ReminderDate";
 
+	static final String KEY_SCHEDULED_START = "ScheduledStart";
+
+	static final String KEY_SCHEDULED_END = "ScheduledEnd";
+
 	static final String KEY_DATE_MODIFICATION = "ModificationDate";
 
 	static final String KEY_DATE_DUE = "DueDate";
@@ -152,7 +158,7 @@ final class DelegatingTaskExternalizer {
 			return parent;
 		} else {
 			Element node = doc.createElement(getCategoryTagName());
-			node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, category.getSummary());
+			node.setAttribute(OldDelegatingTaskExternalizer.KEY_NAME, category.getSummary());
 			parent.appendChild(node);
 			for (ITask task : category.getChildren()) {
 				createTaskReference(KEY_TASK_REFERENCE, task, doc, node);
@@ -212,16 +218,20 @@ final class DelegatingTaskExternalizer {
 		node.setAttribute(KEY_DATE_CREATION, formatExternDate(task.getCreationDate()));
 		node.setAttribute(KEY_DATE_MODIFICATION, formatExternDate(task.getModificationDate()));
 		node.setAttribute(KEY_DATE_DUE, formatExternDate(task.getDueDate()));
-		node.setAttribute(KEY_DATE_REMINDER, formatExternDate(task.getScheduledForDate()));
+		if (task.getScheduledForDate() != null) {
+			node.setAttribute(KEY_SCHEDULED_START, formatExternDate(task.getScheduledForDate().getStartDate()));
+			node.setAttribute(KEY_SCHEDULED_END, formatExternDate(task.getScheduledForDate().getEndDate()));
+		}
+		//node.setAttribute(KEY_DATE_REMINDER, formatExternDate(task.getScheduledForDate()));
+//		if (task.internalIsFloatingScheduledDate()) {
+//			node.setAttribute(KEY_FLOATING, VAL_TRUE);
+//		} else {
+//			node.setAttribute(KEY_FLOATING, VAL_FALSE);
+//		}
 		if (task.isReminded()) {
 			node.setAttribute(KEY_REMINDED, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_REMINDED, VAL_FALSE);
-		}
-		if (task.internalIsFloatingScheduledDate()) {
-			node.setAttribute(KEY_FLOATING, VAL_TRUE);
-		} else {
-			node.setAttribute(KEY_FLOATING, VAL_FALSE);
 		}
 		if (task.isStale()) {
 			node.setAttribute(KEY_STALE, VAL_TRUE);
@@ -323,11 +333,20 @@ final class DelegatingTaskExternalizer {
 		return format.format(date);
 	}
 
+	private String formatExternDate(Calendar cal) {
+		if (cal == null) {
+			return "";
+		}
+		String f = DATE_FORMAT;
+		SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
+		return format.format(cal.getTime());
+	}
+
 	public void readCategory(Node node, TaskList taskList) throws TaskExternalizationException {
 		Element element = (Element) node;
 		AbstractTaskCategory category = null;
-		if (element.hasAttribute(DelegatingTaskExternalizer.KEY_NAME)) {
-			category = new TaskCategory(element.getAttribute(DelegatingTaskExternalizer.KEY_NAME));
+		if (element.hasAttribute(OldDelegatingTaskExternalizer.KEY_NAME)) {
+			category = new TaskCategory(element.getAttribute(OldDelegatingTaskExternalizer.KEY_NAME));
 			taskList.addCategory((TaskCategory) category);
 		} else {
 			// LEGACY: registry categories did not have names
@@ -451,20 +470,41 @@ final class DelegatingTaskExternalizer {
 		} else {
 			task.setDueDate(null);
 		}
-		if (element.hasAttribute(KEY_DATE_REMINDER)) {
-			task.setScheduledForDate(getDateFromString(element.getAttribute(KEY_DATE_REMINDER)));
+
+		// Legacy 2.3.2 -> 3.0 migration of scheduled date
+		boolean isFloating = false;
+		if (element.hasAttribute(KEY_FLOATING) && element.getAttribute(KEY_FLOATING).compareTo(VAL_TRUE) == 0) {
+			isFloating = true;
 		} else {
-			task.setScheduledForDate(null);
+			isFloating = false;
 		}
+		if (element.hasAttribute(KEY_DATE_REMINDER)) {
+			Date date = getDateFromString(element.getAttribute(KEY_DATE_REMINDER));
+			if (date != null) {
+				if (isFloating) {
+					task.setScheduledForDate(TaskActivityUtil.getWeekOf(date));
+				} else {
+					task.setScheduledForDate(TaskActivityUtil.getDayOf(date));
+				}
+			}
+		}
+
+		if (element.hasAttribute(KEY_SCHEDULED_START) && element.hasAttribute(KEY_SCHEDULED_END)) {
+			Date startDate = getDateFromString(element.getAttribute(KEY_SCHEDULED_START));
+			Date endDate = getDateFromString(element.getAttribute(KEY_SCHEDULED_END));
+			if (startDate != null && endDate != null && startDate.compareTo(endDate) <= 0) {
+				Calendar calStart = TaskActivityUtil.getCalendar();
+				calStart.setTime(startDate);
+				Calendar calEnd = TaskActivityUtil.getCalendar();
+				calEnd.setTime(endDate);
+				task.setScheduledForDate(new DateRange(calStart, calEnd));
+			}
+		}
+
 		if (element.hasAttribute(KEY_REMINDED) && element.getAttribute(KEY_REMINDED).compareTo(VAL_TRUE) == 0) {
 			task.setReminded(true);
 		} else {
 			task.setReminded(false);
-		}
-		if (element.hasAttribute(KEY_FLOATING) && element.getAttribute(KEY_FLOATING).compareTo(VAL_TRUE) == 0) {
-			task.internalSetFloatingScheduledDate(true);
-		} else {
-			task.internalSetFloatingScheduledDate(false);
 		}
 		if (element.hasAttribute(KEY_STALE) && element.getAttribute(KEY_STALE).compareTo(VAL_TRUE) == 0) {
 			task.setStale(true);
@@ -480,8 +520,8 @@ final class DelegatingTaskExternalizer {
 
 		task.setSynchronizing(false);
 
-		if (element.hasAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL)) {
-			task.setRepositoryUrl(element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL));
+		if (element.hasAttribute(OldDelegatingTaskExternalizer.KEY_REPOSITORY_URL)) {
+			task.setRepositoryUrl(element.getAttribute(OldDelegatingTaskExternalizer.KEY_REPOSITORY_URL));
 		}
 
 		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
@@ -556,11 +596,11 @@ final class DelegatingTaskExternalizer {
 		Element node = doc.createElement(queryTagName);
 		factory.setAdditionalAttributes(query, node);
 
-		node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, query.getSummary());
+		node.setAttribute(OldDelegatingTaskExternalizer.KEY_NAME, query.getSummary());
 		node.setAttribute(AbstractTaskListFactory.KEY_QUERY_STRING, query.getUrl());
-		node.setAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL, query.getRepositoryUrl());
+		node.setAttribute(OldDelegatingTaskExternalizer.KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		if (query.getLastSynchronizedTimeStamp() != null) {
-			node.setAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH, query.getLastSynchronizedTimeStamp());
+			node.setAttribute(OldDelegatingTaskExternalizer.KEY_LAST_REFRESH, query.getLastSynchronizedTimeStamp());
 		}
 		for (ITask hit : query.getChildren()) {
 			try {

@@ -34,7 +34,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 
 	/**
 	 * @param view
-	 *            can be null
+	 * 		can be null
 	 */
 	public TaskTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
 		super(provider, decorator);

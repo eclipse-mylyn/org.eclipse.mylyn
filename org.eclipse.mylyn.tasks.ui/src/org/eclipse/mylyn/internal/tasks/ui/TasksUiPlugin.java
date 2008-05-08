@@ -562,7 +562,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 				public void saving(ISaveContext context) throws CoreException {
 					if (context.getKind() == ISaveContext.FULL_SAVE) {
-						//externalizationManager.requestSave();
+						externalizationManager.stop();
 						taskDataStorageManager.stop();
 					}
 				}
@@ -581,17 +581,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private void updateTaskActivityManager() {
 		int endHour = getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR);
-		if (taskActivityManager.getEndHour() != endHour) {
-			taskActivityManager.setEndHour(endHour);
-			TaskActivityUtil.setEndHour(endHour);
-		}
+//		if (taskActivityManager.getEndHour() != endHour) {
+//			taskActivityManager.setEndHour(endHour);
+		TaskActivityUtil.setEndHour(endHour);
+//		}
 
 		int newWeekStartDay = getPreferenceStore().getInt(TasksUiPreferenceConstants.WEEK_START_DAY);
 		int oldWeekStartDay = taskActivityManager.getWeekStartDay();
 		if (oldWeekStartDay != newWeekStartDay) {
 			taskActivityManager.setWeekStartDay(newWeekStartDay);
-			TaskActivityUtil.setStartDay(newWeekStartDay);
-			taskActivityManager.setStartTime(new Date());
+//			taskActivityManager.setStartTime(new Date());
 		}
 
 		// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)

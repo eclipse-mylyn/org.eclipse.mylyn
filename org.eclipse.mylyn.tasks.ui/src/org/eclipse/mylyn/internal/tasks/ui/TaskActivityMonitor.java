@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -134,18 +133,10 @@ public class TaskActivityMonitor {
 	}
 
 	public void reloadActivityTime() {
-		reloadActivityTime(new Date());
-	}
-
-	public void reloadActivityTime(Date date) {
-		taskActivityManager.clear(date);
+		taskActivityManager.clearActivity();
 		List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
-		try {
-			for (InteractionEvent event : events) {
-				parseInteractionEvent(event, true);
-			}
-		} finally {
-
+		for (InteractionEvent event : events) {
+			parseInteractionEvent(event, true);
 		}
 	}
 

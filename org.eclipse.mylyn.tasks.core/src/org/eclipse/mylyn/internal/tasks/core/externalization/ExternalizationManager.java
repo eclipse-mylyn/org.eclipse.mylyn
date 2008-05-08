@@ -59,12 +59,17 @@ public class ExternalizationManager {
 	}
 
 	public void load(IExternalizationParticipant participant) {
-		IExternalizationContext loadContext = new LoadContext(rootFolderPath, participant);
-		ExternalizationJob job = createJob("Loading participant " + participant.getDescription(), loadContext);
-		job.setContext(loadContext);
-		// TODO: run async
-		job.run(new NullProgressMonitor());
-		//reschedule(job, loadContext);
+		try {
+			saveDisabled = true;
+			IExternalizationContext loadContext = new LoadContext(rootFolderPath, participant);
+			ExternalizationJob job = createJob("Loading participant " + participant.getDescription(), loadContext);
+			job.setContext(loadContext);
+			// TODO: run async
+			job.run(new NullProgressMonitor());
+			//reschedule(job, loadContext);
+		} finally {
+			saveDisabled = false;
+		}
 	}
 
 	public void setRootFolderPath(String rootFolderPath) {
@@ -80,6 +85,20 @@ public class ExternalizationManager {
 		}
 
 		reschedule(saveJob, saveContext);
+	}
+
+	public void stop() {
+		requestSave();
+
+		if (saveJob != null) {
+			try {
+				saveJob.join();
+				saveJob = null;
+			} catch (InterruptedException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Task List save on shutdown canceled."));
+			}
+		}
 	}
 
 	public synchronized void saveNow(IProgressMonitor monitor) {

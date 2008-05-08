@@ -8,7 +8,6 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.text.MessageFormat;
-import java.util.Calendar;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,9 +68,7 @@ public class AddExistingTaskJob extends Job {
 		try {
 			final AbstractTask newTask = (AbstractTask) TasksUiUtil.createTask(repository, taskId, monitor);
 			if (newTask != null) {
-				Calendar newSchedule = TaskActivityUtil.getCalendar();
-				TaskActivityUtil.snapEndOfWorkDay(newSchedule);
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, newSchedule.getTime());
+				TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, TaskActivityUtil.getCurrentWeek());
 
 				TasksUiInternal.refreshAndOpenTaskListElement(newTask);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

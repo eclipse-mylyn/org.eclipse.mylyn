@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
@@ -70,16 +71,26 @@ public class TaskListStandaloneTest extends TestCase {
 		assertTrue(readTask.getDueDate().compareTo(dueDate) == 0);
 	}
 
-	public void testPastReminder() {
+	public void testPastReminder() throws InterruptedException {
 		AbstractTask task = new LocalTask("1", "1");
 		long now = new Date().getTime();
-		task.setScheduledForDate(new Date(now - 1000));
+		task.setScheduledForDate(new DateRange(Calendar.getInstance()));
+		Thread.sleep(2000);
 		assertTrue(task.isPastReminder());
 
-		task.setScheduledForDate(new Date(now + 1000));
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MINUTE, 2);
+		task.setScheduledForDate(new DateRange(cal));
 		assertFalse(task.isPastReminder());
 
-		task.setScheduledForDate(new Date(now - 1000));
+		Calendar cal1 = Calendar.getInstance();
+		cal1.add(Calendar.MINUTE, -2);
+		task.setScheduledForDate(new DateRange(cal1, cal));
+		assertFalse(task.isPastReminder());
+
+		Calendar cal2 = Calendar.getInstance();
+		cal2.add(Calendar.MINUTE, -2);
+		task.setScheduledForDate(new DateRange(cal2));
 		task.setCompletionDate(new Date());
 		assertFalse(task.isPastReminder());
 	}
@@ -95,9 +106,6 @@ public class TaskListStandaloneTest extends TestCase {
 		task.setCompleted(true);
 		assertDatesCloseEnough(task.getCompletionDate(), start);
 
-		task.setScheduledForDate(start);
-		assertDatesCloseEnough(task.getScheduledForDate(), start);
-
 		assertEquals(1, manager.getTaskList().getRootElements().size());
 		manager.saveTaskList();
 
@@ -110,7 +118,7 @@ public class TaskListStandaloneTest extends TestCase {
 		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
 
 		Collection<ITask> readList = manager.getTaskList().getDefaultCategory().getChildren();
-		ITask readTask = readList.iterator().next();
+		AbstractTask readTask = (AbstractTask) readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 
 		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());

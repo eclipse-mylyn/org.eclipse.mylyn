@@ -38,7 +38,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
@@ -165,18 +164,8 @@ public class TasksUiInternal {
 	}
 
 	public static void refreshAndOpenTaskListElement(ITaskElement element) {
-		if (element instanceof ITask || element instanceof ScheduledTaskDelegate) {
-			final AbstractTask task;
-			if (element instanceof ScheduledTaskDelegate) {
-				task = ((ScheduledTaskDelegate) element).getCorrespondingTask();
-			} else {
-				task = (AbstractTask) element;
-			}
-
-			if (task == null) {
-				// FIXME display error?
-				return;
-			}
+		if (element instanceof ITask) {
+			final AbstractTask task = (AbstractTask) element;
 
 			if (task instanceof LocalTask) {
 				TasksUiUtil.openTask(task);

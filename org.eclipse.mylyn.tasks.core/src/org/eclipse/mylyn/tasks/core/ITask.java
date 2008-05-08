@@ -202,7 +202,7 @@ public interface ITask extends ITaskElement {
 
 	public abstract String getRepositoryUrl();
 
-	public abstract Date getScheduledForDate();
+	//public abstract DateRange getScheduledForDate();
 
 	public abstract String getSummary();
 
