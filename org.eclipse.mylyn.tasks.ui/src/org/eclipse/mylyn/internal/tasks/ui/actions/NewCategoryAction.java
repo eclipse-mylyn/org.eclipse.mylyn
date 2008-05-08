@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -58,8 +58,8 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
 			String name = dialog.getValue();
-			Set<RepositoryQuery> queries = TasksUi.getTaskList().getQueries();
-			Set<AbstractTaskCategory> categories = TasksUi.getTaskList().getCategories();
+			Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
+			Set<AbstractTaskCategory> categories = TasksUiInternal.getTaskList().getCategories();
 
 			for (AbstractTaskCategory category : categories) {
 				if (name != null && name.equals(category.getSummary())) {

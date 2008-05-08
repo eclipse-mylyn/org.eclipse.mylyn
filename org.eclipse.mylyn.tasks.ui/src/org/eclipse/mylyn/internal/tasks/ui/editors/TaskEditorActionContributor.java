@@ -47,10 +47,10 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.RepositoryTaskEditorInput;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
@@ -189,7 +189,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 		if (editor.getTaskEditorInput() == null && !(editor.getEditorInput() instanceof NewTaskEditorInput)) {
 			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
-			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskList()
+			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiInternal.getTaskList()
 					.getCategories());
 
 			Collections.sort(categories);

@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -33,7 +34,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -160,7 +160,7 @@ public class TaskListManager {
 			query.setHandleIdentifier(handle);
 
 			// add query
-			TasksUi.getTaskList().addQuery(query);
+			TasksUiInternal.getTaskList().addQuery(query);
 
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());

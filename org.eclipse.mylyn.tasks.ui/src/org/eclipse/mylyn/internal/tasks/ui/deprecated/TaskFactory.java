@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
@@ -22,8 +23,8 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskFactory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -60,7 +61,7 @@ public class TaskFactory implements ITaskFactory {
 		connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		synchManager = TasksUiPlugin.getTaskDataManager();
-		taskList = TasksUi.getTaskList();
+		taskList = TasksUiInternal.getTaskList();
 		//dataManager = TasksUiPlugin.getTaskDataManager();
 		dataHandler = connector.getLegacyTaskDataHandler();
 	}

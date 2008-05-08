@@ -15,9 +15,9 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Ken Sueda
@@ -46,7 +46,7 @@ public class RemoveFromCategoryAction extends Action {
 				AbstractTask task = (AbstractTask) selectedObject;
 				AbstractTaskCategory category = TaskCategory.getParentTaskCategory(task);
 				if (category != null) {
-					TasksUi.getTaskList().removeFromContainer(category, task);
+					TasksUiInternal.getTaskList().removeFromContainer(category, task);
 				}
 			}
 		}

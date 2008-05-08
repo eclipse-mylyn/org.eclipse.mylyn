@@ -40,6 +40,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
@@ -56,7 +57,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
-import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -123,7 +123,7 @@ public class TasksUiUtil {
 	// API 3.0 consider moving this somewhere else and renaming to addToTaskList
 	public static ITask createTask(TaskRepository repository, String id, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
-		ITaskList taskList = TasksUi.getTaskList();
+		ITaskList taskList = TasksUiInternal.getTaskList();
 		AbstractTask task = (AbstractTask) taskList.getTask(repository.getRepositoryUrl(), id);
 		if (task == null) {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
@@ -585,7 +585,7 @@ public class TasksUiUtil {
 	public static boolean openTask(String repositoryUrl, String taskId, String fullUrl) {
 		AbstractTask task = null;
 		if (repositoryUrl != null && taskId != null) {
-			task = (AbstractTask) TasksUi.getTaskList().getTask(repositoryUrl, taskId);
+			task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repositoryUrl, taskId);
 		}
 		if (task == null && fullUrl != null) {
 			task = TasksUiUtil.getTaskByUrl(fullUrl);
@@ -646,7 +646,7 @@ public class TasksUiUtil {
 		Assert.isNotNull(repository);
 		Assert.isNotNull(taskId);
 
-		AbstractTask task = (AbstractTask) TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
+		AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
 		if (task == null) {
 			task = TasksUiPlugin.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
 		}

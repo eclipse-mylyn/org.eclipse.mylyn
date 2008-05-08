@@ -25,9 +25,9 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -120,7 +120,7 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 				}
 			} else {
 				ContextCorePlugin.getContextManager().importContext(taskContexts.get(loadedTask));
-				TasksUi.getTaskList().addTask(loadedTask);
+				TasksUiInternal.getTaskList().addTask(loadedTask);
 			}
 		}
 

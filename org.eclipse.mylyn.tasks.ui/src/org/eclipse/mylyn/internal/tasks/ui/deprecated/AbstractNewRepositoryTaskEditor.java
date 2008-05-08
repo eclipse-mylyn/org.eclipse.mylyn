@@ -26,16 +26,16 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
-import org.eclipse.mylyn.tasks.core.ITaskList;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -363,7 +363,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 		getManagedForm().getToolkit().adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
-		ITaskList taskList = TasksUi.getTaskList();
+		ITaskList taskList = TasksUiInternal.getTaskList();
 		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
@@ -500,7 +500,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 					}
 
 					if (selectedObject instanceof TaskCategory) {
-						TasksUi.getTaskList().addTask(newTask, ((TaskCategory) selectedObject));
+						TasksUiInternal.getTaskList().addTask(newTask, ((TaskCategory) selectedObject));
 					}
 				}
 			});

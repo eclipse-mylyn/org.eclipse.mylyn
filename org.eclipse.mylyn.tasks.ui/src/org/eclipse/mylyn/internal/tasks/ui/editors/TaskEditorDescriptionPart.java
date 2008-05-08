@@ -23,8 +23,8 @@ import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -153,7 +153,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	public boolean searchForDuplicates(String duplicateDetectorName) {
 		RepositoryQuery duplicatesQuery = getDuplicateSearchCollector(duplicateDetectorName);
 		if (duplicatesQuery != null) {
-			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(),
+			SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(),
 					getTaskEditorPage().getTaskRepository(), duplicatesQuery);
 			if (collector != null) {
 				NewSearchUI.runQueryInBackground(collector);

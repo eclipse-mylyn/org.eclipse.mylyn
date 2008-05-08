@@ -95,6 +95,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -571,13 +572,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	public TaskListView() {
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);
-		TasksUi.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		TasksUi.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUiInternal.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		TasksUiPlugin.getTaskActivityManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 
 		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(this);

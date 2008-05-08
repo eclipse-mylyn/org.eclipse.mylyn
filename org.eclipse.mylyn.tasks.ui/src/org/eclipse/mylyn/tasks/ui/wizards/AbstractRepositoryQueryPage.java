@@ -16,6 +16,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -68,8 +69,8 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 			setErrorMessage("Please specify a title for the query.");
 			return false;
 		} else {
-			Set<RepositoryQuery> queries = TasksUi.getTaskList().getQueries();
-			Set<AbstractTaskCategory> categories = TasksUi.getTaskList().getCategories();
+			Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
+			Set<AbstractTaskCategory> categories = TasksUiInternal.getTaskList().getCategories();
 			if (getWizard() instanceof AbstractRepositoryQueryWizard) {
 				String oldSummary = ((AbstractRepositoryQueryWizard) getWizard()).getQuerySummary();
 				if (oldSummary != null && queryTitle.equals(oldSummary)) {
@@ -113,7 +114,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
 		if (connector != null) {
-			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(), taskRepository, getQuery());
+			SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), taskRepository, getQuery());
 			NewSearchUI.runQueryInBackground(collector);
 		}
 		return true;

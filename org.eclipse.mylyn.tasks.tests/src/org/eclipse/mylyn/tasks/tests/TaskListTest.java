@@ -10,10 +10,10 @@ package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.tasks.core.ITaskList;
 
 /**
  * @author Mik Kersten

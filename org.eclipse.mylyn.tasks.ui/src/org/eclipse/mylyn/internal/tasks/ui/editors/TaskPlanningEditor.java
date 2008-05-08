@@ -38,6 +38,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -183,7 +184,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, TasksUi.ID_PLANNING_PAGE, "Planning");
 		this.parentEditor = editor;
-		TasksUi.getTaskList().addChangeListener(TASK_LIST_LISTENER);
+		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 
 	/** public for testing */
@@ -248,7 +249,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			} else {
 				task.setCompletionDate(null);
 			}
-			TasksUi.getTaskList().notifyTaskChanged(task, false);
+			TasksUiInternal.getTaskList().notifyTaskChanged(task, false);
 		}
 
 		String note = noteEditor.getTextWidget().getText();// notes.getText();
@@ -958,7 +959,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (timingListener != null) {
 			TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		}
-		TasksUi.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
+		TasksUiInternal.getTaskList().removeChangeListener(TASK_LIST_LISTENER);
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class NewTracQueryWizard extends Wizard {
 	public boolean performFinish() {
 		RepositoryQuery query = queryPage.getQuery();
 		if (query != null) {
-			TasksUi.getTaskList().addQuery(query);
+			TasksUiInternal.getTaskList().addQuery(query);
 			AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
 					.getRepositoryConnector(repository.getConnectorKind());
 			if (connector != null) {

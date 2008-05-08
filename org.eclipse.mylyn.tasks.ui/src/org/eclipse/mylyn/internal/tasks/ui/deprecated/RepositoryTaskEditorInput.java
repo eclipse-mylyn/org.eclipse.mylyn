@@ -8,8 +8,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.deprecated;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 
 /**
@@ -33,7 +33,7 @@ public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput
 		super(repository, taskId);
 		this.taskId = taskId;
 		this.url = taskUrl;
-		AbstractTask task = (AbstractTask) TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
+		AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(), taskId);
 		if (task != null) {
 			this.repositoryTask = task;
 		}

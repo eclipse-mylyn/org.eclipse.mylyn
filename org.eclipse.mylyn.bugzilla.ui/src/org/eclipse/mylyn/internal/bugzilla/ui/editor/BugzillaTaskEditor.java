@@ -44,7 +44,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryOperation;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
@@ -355,7 +355,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
 				final String bugUrl = repository.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + bugId;
-				final AbstractTask task = (AbstractTask) TasksUi.getTaskList().getTask(
+				final AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(
 						repository.getRepositoryUrl(), bugId);
 				createTaskListHyperlink(hyperlinksComposite, bugId, bugUrl, task);
 			}

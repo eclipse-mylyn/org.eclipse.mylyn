@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+/**
+ * @since 3.0
+ */
 public interface IRepositoryQuery {
 
 	/**

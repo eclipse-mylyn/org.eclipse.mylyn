@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchResultTreeContentProvider.GroupBy;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListToolTip;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -377,7 +378,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		// HACK: this should be a contribution
 		final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW + " Category");
-		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUi.getTaskList()
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiInternal.getTaskList()
 				.getCategories());
 
 		Collections.sort(categories);

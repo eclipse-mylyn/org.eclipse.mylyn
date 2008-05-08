@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -106,7 +107,7 @@ public class DeleteAction extends Action {
 				AbstractTask task = null;
 				task = (AbstractTask) selectedObject;
 				TasksUi.getTaskActivityManager().deactivateTask(task);
-				TasksUi.getTaskList().deleteTask(task);
+				TasksUiInternal.getTaskList().deleteTask(task);
 				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 				TasksUiUtil.closeEditorInActivePage(task, false);
 			} else if (selectedObject instanceof IRepositoryQuery) {
@@ -115,7 +116,7 @@ public class DeleteAction extends Action {
 				// .getActiveWorkbenchWindow().getShell(), "Confirm delete",
 				// "Delete the selected query? Task data will not be deleted.");
 				// if (deleteConfirmed) {
-				TasksUi.getTaskList().deleteQuery((RepositoryQuery) selectedObject);
+				TasksUiInternal.getTaskList().deleteQuery((RepositoryQuery) selectedObject);
 				// }
 			} else if (selectedObject instanceof TaskCategory) {
 				// boolean deleteConfirmed =
@@ -130,7 +131,7 @@ public class DeleteAction extends Action {
 					ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 					TasksUiUtil.closeEditorInActivePage(task, false);
 				}
-				TasksUi.getTaskList().deleteCategory(cat);
+				TasksUiInternal.getTaskList().deleteCategory(cat);
 			} else if (selectedObject instanceof UnmatchedTaskContainer) {
 				// ignore
 			} else {

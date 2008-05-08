@@ -35,6 +35,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -54,7 +55,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
-import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -330,7 +330,7 @@ public class TasksUiInternal {
 	 */
 	public static Job synchronizeTasks(AbstractRepositoryConnector connector, Set<ITask> tasks, boolean force,
 			IJobChangeListener listener) {
-		ITaskList taskList = TasksUi.getTaskList();
+		ITaskList taskList = TasksUiInternal.getTaskList();
 		for (ITask task : tasks) {
 			((AbstractTask) task).setSynchronizing(true);
 			taskList.notifyTaskChanged(task, false);
@@ -432,7 +432,7 @@ public class TasksUiInternal {
 		TaskList taskList = TasksUiPlugin.getTaskList();
 		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
 		newTask.setPriority(PriorityLevel.P3.toString());
-		TasksUi.getTaskList().addTask(newTask);
+		TasksUiInternal.getTaskList().addTask(newTask);
 		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
 
 		Object selectedObject = null;
@@ -507,6 +507,10 @@ public class TasksUiInternal {
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open query dialog", e));
 		}
+	}
+
+	public static ITaskList getTaskList() {
+		return TasksUiPlugin.getTaskList();
 	}
 
 }

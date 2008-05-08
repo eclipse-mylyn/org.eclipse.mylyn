@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * the Task List.
  * 
  * @author Mik Kersten
- * @since 2.0
+ * @since 3.0
  */
 // API 3.0 generalize to make it usable for creating queries as well
 public abstract class AbstractRepositoryQueryWizard extends Wizard {

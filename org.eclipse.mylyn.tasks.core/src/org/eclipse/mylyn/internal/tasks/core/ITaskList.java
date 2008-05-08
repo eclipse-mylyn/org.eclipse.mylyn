@@ -6,13 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 
 /**
  * @author Steffen Pingel

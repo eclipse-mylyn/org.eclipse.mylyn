@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -82,7 +81,7 @@ public class AddExistingTaskJob extends Job {
 								category = (TaskCategory) selectedObject;
 							}
 						}
-						TasksUi.getTaskList().addTask(newTask, category);
+						TasksUiInternal.getTaskList().addTask(newTask, category);
 						taskListView.getViewer().setSelection(new StructuredSelection(newTask));
 					}
 				});

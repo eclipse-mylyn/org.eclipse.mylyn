@@ -15,10 +15,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
@@ -113,7 +113,7 @@ public class RepositoryTaskEditorDropListener implements DropTargetListener {
 	public void drop(DropTargetEvent event) {
 		if (textTransfer.isSupportedType(event.currentDataType)) {
 			String text = (String) event.data;
-			AbstractTask task = (AbstractTask) TasksUi.getTaskList().getTask(repository.getRepositoryUrl(),
+			AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(),
 					taskData.getTaskId());
 			if (!(task != null)) {
 				// Should not happen
@@ -127,7 +127,7 @@ public class RepositoryTaskEditorDropListener implements DropTargetListener {
 		if (fileTransfer.isSupportedType(event.currentDataType)) {
 			String[] files = (String[]) event.data;
 			if (files.length > 0) {
-				AbstractTask task = (AbstractTask) TasksUi.getTaskList().getTask(repository.getRepositoryUrl(),
+				AbstractTask task = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(),
 						taskData.getTaskId());
 				if (task == null) {
 					// Should not happen

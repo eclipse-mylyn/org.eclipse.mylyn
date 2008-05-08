@@ -23,11 +23,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 import org.eclipse.ui.PlatformUI;
@@ -79,12 +79,12 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	public TaskWorkingSetUpdater() {
-		TasksUi.getTaskList().addChangeListener(this);
+		TasksUiInternal.getTaskList().addChangeListener(this);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
 	public void dispose() {
-		TasksUi.getTaskList().removeChangeListener(this);
+		TasksUiInternal.getTaskList().removeChangeListener(this);
 	}
 
 	public void add(IWorkingSet workingSet) {

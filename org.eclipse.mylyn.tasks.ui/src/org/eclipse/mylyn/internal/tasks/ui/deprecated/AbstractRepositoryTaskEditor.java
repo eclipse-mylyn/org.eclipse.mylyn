@@ -541,7 +541,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
 		}
 		hasAttributeChanges = hasVisibleAttributeChanges();
-		TasksUi.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 	}
 
 	protected void initTaskEditor(IEditorSite site, RepositoryTaskEditorInput input) {
@@ -1258,7 +1258,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (duplicateDetector != null) {
 			RepositoryQuery duplicatesQuery = duplicateDetector.getDuplicatesQuery(repository, taskData);
 			if (duplicatesQuery != null) {
-				SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(), repository,
+				SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), repository,
 						duplicatesQuery);
 				NewSearchUI.runQueryInBackground(collector);
 				return true;
@@ -1698,7 +1698,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				SWT.PUSH);
 		attachScreenshotButton.setImage(CommonImages.getImage(CommonImages.IMAGE_CAPTURE));
 
-		final ITask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
+		final ITask task = TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 		if (task == null) {
 			attachFileButton.setEnabled(false);
 			attachScreenshotButton.setEnabled(false);
@@ -1740,7 +1740,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 
 				public void widgetSelected(SelectionEvent e) {
-					ITask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
+					ITask task = TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 					if (task == null) {
 						// Should not happen
 						return;
@@ -2798,7 +2798,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		ITask task = TasksUi.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
+		ITask task = TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 		if (attachContextEnabled && task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
@@ -2830,7 +2830,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			TasksUiPlugin.getTaskDataManager().saveOutgoing(repositoryTask, changedAttributes);
 		}
 		if (repositoryTask != null) {
-			TasksUi.getTaskList().notifyTaskChanged(repositoryTask, false);
+			TasksUiInternal.getTaskList().notifyTaskChanged(repositoryTask, false);
 		}
 		markDirty(false);
 	}
@@ -2885,7 +2885,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void dispose() {
-		TasksUi.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUiInternal.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		getSite().getPage().removeSelectionListener(selectionListener);
 		if (waitCursor != null) {
 			waitCursor.dispose();
@@ -3602,7 +3602,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
-						modifiedTask = (AbstractTask) TasksUi.getTaskList().getTask(repository.getRepositoryUrl(),
+						modifiedTask = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(),
 								taskData.getTaskId());
 					}
 
@@ -3832,7 +3832,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					if (getCategory() != null) {
-						TasksUi.getTaskList().addTask(newTask, getCategory());
+						TasksUiInternal.getTaskList().addTask(newTask, getCategory());
 					}
 				}
 			});
