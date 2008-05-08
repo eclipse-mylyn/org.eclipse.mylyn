@@ -20,9 +20,9 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.Person;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
@@ -275,8 +275,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE);
 				} else if (TasksUiPlugin.getTaskActivityManager().isDueToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_TODAY);
-				} else if (task.getScheduledForDate() != null && !task.getScheduledForDate().isDay()
-						&& task.isPastReminder()) {
+				} else if (task.getScheduledForDate() != null && task.getScheduledForDate().isDay()
+						&& TasksUiPlugin.getTaskActivityManager().isPastReminder(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_PAST);
 				} else if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_SCHEDULED_TODAY);

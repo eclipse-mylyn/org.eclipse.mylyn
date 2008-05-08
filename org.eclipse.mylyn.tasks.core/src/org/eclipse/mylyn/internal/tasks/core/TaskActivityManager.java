@@ -513,7 +513,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		if (date == null || isComplete) {
 			return false;
 		} else {
-			if (date.getEndDate().compareTo(TaskActivityUtil.getCalendar()) > 0) {
+			if (date.getEndDate().compareTo(TaskActivityUtil.getCalendar()) < 0) {
 				return true;
 			} else {
 				return false;
