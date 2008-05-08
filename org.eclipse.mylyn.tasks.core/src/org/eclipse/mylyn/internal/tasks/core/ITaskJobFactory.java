@@ -30,7 +30,7 @@ public interface ITaskJobFactory {
 			TaskRepository taskRepository, Set<ITask> tasks);
 
 	public abstract SynchronizationJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector,
-			TaskRepository repository, Set<AbstractRepositoryQuery> queries);
+			TaskRepository repository, Set<RepositoryQuery> queries);
 
 	public abstract SynchronizationJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories);
 

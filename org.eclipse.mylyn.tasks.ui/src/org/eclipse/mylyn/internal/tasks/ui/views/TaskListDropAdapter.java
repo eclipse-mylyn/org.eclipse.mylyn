@@ -32,7 +32,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -134,14 +134,14 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					} else {
 						// otherwise it is queries or tasks
 						final String[] names = (String[]) data;
-						List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+						List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 						Map<AbstractTask, InteractionContext> taskContexts = new HashMap<AbstractTask, InteractionContext>();
 						Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 
 						for (String path : names) {
 							File file = new File(path);
 							if (file.isFile()) {
-								List<AbstractRepositoryQuery> readQueries;
+								List<RepositoryQuery> readQueries;
 								try {
 									readQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(
 											file);

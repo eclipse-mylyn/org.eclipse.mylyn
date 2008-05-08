@@ -19,13 +19,14 @@ import java.util.Set;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -42,7 +43,7 @@ import org.eclipse.ui.actions.ActionFactory;
  */
 public class SynchronizeSelectedAction extends ActionDelegate implements IViewActionDelegate {
 
-	private final Map<AbstractRepositoryConnector, List<AbstractRepositoryQuery>> queriesToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractRepositoryQuery>>();
+	private final Map<AbstractRepositoryConnector, List<RepositoryQuery>> queriesToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<RepositoryQuery>>();
 
 	private final Map<AbstractRepositoryConnector, List<ITask>> tasksToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<ITask>>();
 
@@ -53,14 +54,14 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 			ISelection selection = TaskListView.getFromActivePerspective().getViewer().getSelection();
 			for (Object obj : ((IStructuredSelection) selection).toList()) {
-				if (obj instanceof AbstractRepositoryQuery) {
-					final AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) obj;
+				if (obj instanceof IRepositoryQuery) {
+					final RepositoryQuery repositoryQuery = (RepositoryQuery) obj;
 					AbstractRepositoryConnector client = TasksUi.getRepositoryManager().getRepositoryConnector(
 							repositoryQuery.getConnectorKind());
 					if (client != null) {
-						List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(client);
+						List<RepositoryQuery> queriesToSync = queriesToSyncMap.get(client);
 						if (queriesToSync == null) {
-							queriesToSync = new ArrayList<AbstractRepositoryQuery>();
+							queriesToSync = new ArrayList<RepositoryQuery>();
 							queriesToSyncMap.put(client, queriesToSync);
 						}
 						queriesToSync.add(repositoryQuery);
@@ -84,30 +85,30 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 			if (!queriesToSyncMap.isEmpty()) {
 
 				// determine which repositories to synch changed tasks for
-				HashMap<TaskRepository, Set<AbstractRepositoryQuery>> repositoriesToSync = new HashMap<TaskRepository, Set<AbstractRepositoryQuery>>();
+				HashMap<TaskRepository, Set<RepositoryQuery>> repositoriesToSync = new HashMap<TaskRepository, Set<RepositoryQuery>>();
 				for (AbstractRepositoryConnector connector : queriesToSyncMap.keySet()) {
-					List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
+					List<RepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
 					if (queriesToSync == null || queriesToSync.isEmpty()) {
 						continue;
 					}
 
-					for (AbstractRepositoryQuery query : queriesToSync) {
+					for (RepositoryQuery query : queriesToSync) {
 						TaskRepository repos = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 								query.getRepositoryUrl());
-						Set<AbstractRepositoryQuery> queries = repositoriesToSync.get(repos);
+						Set<RepositoryQuery> queries = repositoriesToSync.get(repos);
 						if (queries == null) {
-							queries = new HashSet<AbstractRepositoryQuery>();
+							queries = new HashSet<RepositoryQuery>();
 							repositoriesToSync.put(repos, queries);
 						}
 						queries.add(query);
 					}
 				}
 
-				for (Map.Entry<TaskRepository, Set<AbstractRepositoryQuery>> entry : repositoriesToSync.entrySet()) {
+				for (Map.Entry<TaskRepository, Set<RepositoryQuery>> entry : repositoriesToSync.entrySet()) {
 					TaskRepository repository = entry.getKey();
 					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 							repository.getConnectorKind());
-					Set<AbstractRepositoryQuery> queries = entry.getValue();
+					Set<RepositoryQuery> queries = entry.getValue();
 					TasksUiInternal.synchronizeQueries(connector, repository, queries, null, true);
 				}
 			}

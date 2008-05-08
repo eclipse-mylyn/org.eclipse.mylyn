@@ -24,7 +24,7 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -37,6 +37,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -145,8 +146,8 @@ public class TaskListToolTip extends ToolTip {
 			sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
 			sb.append("]");
 			return sb.toString();
-		} else if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+		} else if (element instanceof IRepositoryQuery) {
+			IRepositoryQuery query = (IRepositoryQuery) element;
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
 			sb.append("  [");
@@ -304,8 +305,8 @@ public class TaskListToolTip extends ToolTip {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			status = task.getSynchronizationStatus();
-		} else if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+		} else if (element instanceof IRepositoryQuery) {
+			RepositoryQuery query = (RepositoryQuery) element;
 			status = query.getSynchronizationStatus();
 		}
 
@@ -354,8 +355,8 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	private Image getImage(ITaskElement element) {
-		if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+		if (element instanceof IRepositoryQuery) {
+			IRepositoryQuery query = (IRepositoryQuery) element;
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					query.getConnectorKind());
 			if (connector != null) {
@@ -517,7 +518,7 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	private String getHelpText(ITaskElement element) {
-		if (element instanceof TaskCategory || element instanceof AbstractRepositoryQuery) {
+		if (element instanceof TaskCategory || element instanceof IRepositoryQuery) {
 			if (AbstractTaskListFilter.hasDescendantIncoming(element)) {
 				TaskListView taskListView = TaskListView.getFromActivePerspective();
 				if (taskListView != null) {
@@ -563,8 +564,8 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	private String getSynchText(ITaskElement element) {
-		if (element instanceof AbstractRepositoryQuery) {
-			String syncStamp = ((AbstractRepositoryQuery) element).getLastSynchronizedTimeStamp();
+		if (element instanceof IRepositoryQuery) {
+			String syncStamp = ((RepositoryQuery) element).getLastSynchronizedTimeStamp();
 			if (syncStamp != null) {
 				return "Synchronized: " + syncStamp;
 			}

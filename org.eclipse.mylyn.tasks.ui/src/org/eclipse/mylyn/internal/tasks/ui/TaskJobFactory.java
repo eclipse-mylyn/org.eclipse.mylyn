@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
@@ -74,7 +74,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 	}
 
 	public SynchronizationJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector,
-			TaskRepository repository, Set<AbstractRepositoryQuery> queries) {
+			TaskRepository repository, Set<RepositoryQuery> queries) {
 		SynchronizationJob job = new SynchronizeQueriesJob(taskList, taskDataManager, connector, repository, queries);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.DECORATE);

@@ -17,12 +17,12 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -401,8 +401,7 @@ public class UiLegendDialog extends PopupDialog {
 		for (AbstractRepositoryConnector connector : connectors) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
 			if (connectorUi != null) {
-				List<AbstractTaskContainer> elements = connectorUi.getLegendItems();
-
+				List<ITask> elements = connectorUi.getLegendItems();
 				if (!elements.isEmpty()) {
 					Section connectorSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
 					connectorSection.setLayout(new TableWrapLayout());

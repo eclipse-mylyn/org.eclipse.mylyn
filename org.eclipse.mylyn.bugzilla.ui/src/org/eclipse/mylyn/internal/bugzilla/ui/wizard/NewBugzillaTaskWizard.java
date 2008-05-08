@@ -107,7 +107,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 						repository.getConnectorKind());
 				AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 				if (taskDataHandler != null) {
-					taskDataHandler.cloneTaskData(taskSelection.getTaskData(), taskData);
+					taskDataHandler.cloneTaskData(taskSelection.getLegacyTaskData(), taskData);
 				}
 			}
 

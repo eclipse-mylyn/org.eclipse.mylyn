@@ -11,11 +11,11 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.ui.PlatformUI;
@@ -102,7 +102,7 @@ public class TaskListTableSorter extends ViewerSorter {
 		// if (o1 instanceof AbstractTaskContainer || o1 instanceof
 		// AbstractRepositoryQuery) {
 		if (!(o1 instanceof ITask)) {
-			if (o2 instanceof ITaskElement || o2 instanceof AbstractRepositoryQuery) {
+			if (o2 instanceof ITaskElement || o2 instanceof IRepositoryQuery) {
 
 				return this.sortDirection
 						* ((ITaskElement) o1).getSummary().compareToIgnoreCase(

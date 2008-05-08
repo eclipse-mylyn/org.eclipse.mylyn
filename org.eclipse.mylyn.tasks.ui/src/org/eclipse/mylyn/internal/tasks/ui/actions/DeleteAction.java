@@ -15,11 +15,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -81,7 +82,7 @@ public class DeleteAction extends Action {
 				}
 			} else if (object instanceof TaskCategory) {
 				message = "Permanently delete the category?  Local tasks will be moved to the Uncategorized folder. Repository tasks will be moved to the Unmatched folder.";
-			} else if (object instanceof AbstractRepositoryQuery) {
+			} else if (object instanceof IRepositoryQuery) {
 				message = "Permanently delete the query?  Contained tasks will be moved to the Unmatched folder.";
 			} else {
 				message = "Permanently delete the element listed below?";
@@ -108,13 +109,13 @@ public class DeleteAction extends Action {
 				TasksUi.getTaskList().deleteTask(task);
 				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 				TasksUiUtil.closeEditorInActivePage(task, false);
-			} else if (selectedObject instanceof AbstractRepositoryQuery) {
+			} else if (selectedObject instanceof IRepositoryQuery) {
 				// boolean deleteConfirmed =
 				// MessageDialog.openQuestion(PlatformUI.getWorkbench()
 				// .getActiveWorkbenchWindow().getShell(), "Confirm delete",
 				// "Delete the selected query? Task data will not be deleted.");
 				// if (deleteConfirmed) {
-				TasksUi.getTaskList().deleteQuery((AbstractRepositoryQuery) selectedObject);
+				TasksUi.getTaskList().deleteQuery((RepositoryQuery) selectedObject);
 				// }
 			} else if (selectedObject instanceof TaskCategory) {
 				// boolean deleteConfirmed =

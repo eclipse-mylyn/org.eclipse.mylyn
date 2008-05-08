@@ -8,34 +8,49 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
- * A container that stores tasks from a specific repository.
- * 
  * @author Mik Kersten
  * @author Eugene Kuleshov
  * @author Rob Elves
- * @since 2.0
  */
-public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
+public class RepositoryQuery extends AbstractTaskContainer implements IRepositoryQuery {
 
-	protected String repositoryUrl;
+	private final String connectorKind;
 
 	protected String lastSynchronizedStamp = "<never>";
 
-	private boolean synchronizing = false;
+	protected String repositoryUrl;
 
-	protected IStatus status = null;
+	protected IStatus status;
+
+	private boolean synchronizing;
+
+	private String summary;
+
+	@Deprecated
+	public RepositoryQuery(String description) {
+		this("", description);
+	}
+
+	public RepositoryQuery(String connectorKind, String handle) {
+		super(handle);
+		this.connectorKind = connectorKind;
+		setSummary(handle);
+	}
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getConnectorKind();
+	public String getConnectorKind() {
+		return connectorKind;
+	}
 
-	public AbstractRepositoryQuery(String description) {
-		super(description);
+	public String getLastSynchronizedTimeStamp() {
+		return lastSynchronizedStamp;
 	}
 
 	@Override
@@ -56,6 +71,18 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		return repositoryUrl;
 	}
 
+	public IStatus getSynchronizationStatus() {
+		return status;
+	}
+
+	public boolean isSynchronizing() {
+		return synchronizing;
+	}
+
+	public void setLastSynchronizedStamp(String lastRefreshTimeStamp) {
+		this.lastSynchronizedStamp = lastRefreshTimeStamp;
+	}
+
 	public void setRepositoryUrl(String newRepositoryUrl) {
 		if (repositoryUrl != null && url != null) {
 			// the repository url has changed, so change corresponding part of
@@ -65,28 +92,21 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		this.repositoryUrl = newRepositoryUrl;
 	}
 
-	public boolean isSynchronizing() {
-		return synchronizing;
+	public void setSynchronizationStatus(IStatus status) {
+		this.status = status;
 	}
 
 	public void setSynchronizing(boolean synchronizing) {
 		this.synchronizing = synchronizing;
 	}
 
-	public String getLastSynchronizedTimeStamp() {
-		return lastSynchronizedStamp;
+	@Override
+	public String getSummary() {
+		return summary;
 	}
 
-	public void setLastSynchronizedStamp(String lastRefreshTimeStamp) {
-		this.lastSynchronizedStamp = lastRefreshTimeStamp;
-	}
-
-	public IStatus getSynchronizationStatus() {
-		return status;
-	}
-
-	public void setSynchronizationStatus(IStatus status) {
-		this.status = status;
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 
 }

@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -74,12 +75,12 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 		}
 
 		// extract queries and tasks from selection
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 		for (Iterator<?> it = selection.iterator(); it.hasNext();) {
 			Object element = it.next();
-			if (element instanceof AbstractRepositoryQuery) {
-				queries.add((AbstractRepositoryQuery) element);
+			if (element instanceof IRepositoryQuery) {
+				queries.add((RepositoryQuery) element);
 			} else if (element instanceof ITask) {
 				tasks.add((AbstractTask) element);
 			}
@@ -87,7 +88,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 
 		List<File> taskFiles = new ArrayList<File>(queries.size() + tasks.size());
 		try {
-			for (AbstractRepositoryQuery query : queries) {
+			for (RepositoryQuery query : queries) {
 				String encodedName = URLEncoder.encode(query.getHandleIdentifier(), ITasksCoreConstants.FILENAME_ENCODING);
 				File file = File.createTempFile(encodedName, ITasksCoreConstants.FILE_EXTENSION, tempDir);
 				file.deleteOnExit();

@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.swt.SWT;
@@ -153,8 +154,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 					} else {
 						image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING);
 					}
-				} else if (element instanceof AbstractRepositoryQuery) {
-					AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+				} else if (element instanceof IRepositoryQuery) {
+					RepositoryQuery query = (RepositoryQuery) element;
 					if (query.getSynchronizationStatus() != null) {
 						image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_WARNING);
 						if (taskListView.synchronizationOverlaid) {
@@ -191,8 +192,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 			} else if (AbstractTaskListFilter.hasDescendantIncoming(element)) {
 				return true;
 			}
-		} else if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+		} else if (element instanceof IRepositoryQuery) {
+			RepositoryQuery query = (RepositoryQuery) element;
 			if (query.getSynchronizationStatus() != null) {
 				return true;
 			}
@@ -200,7 +201,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 		if (!taskListView.isFocusedMode()) {
 			return false;
-		} else if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
+		} else if (element instanceof IRepositoryQuery || element instanceof TaskCategory) {
 			return treeItem.getExpanded();
 		} else {
 			return false;

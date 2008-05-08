@@ -31,12 +31,12 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -133,7 +133,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager()
 						.getTaskList()
 						.getRepositoryQueries(((TaskRepository) parentElement).getRepositoryUrl())) {
-					if (element instanceof AbstractRepositoryQuery) {
+					if (element instanceof IRepositoryQuery) {
 						taskContainers.add(element);
 					}
 				}
@@ -311,8 +311,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	private void addUnmatchedCategories(Set<IAdaptable> validElements) {
 		HashSet<AbstractTaskContainer> orphanContainers = new HashSet<AbstractTaskContainer>();
 		for (IAdaptable element : validElements) {
-			if (element instanceof AbstractRepositoryQuery) {
-				AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+			if (element instanceof IRepositoryQuery) {
+				IRepositoryQuery query = (IRepositoryQuery) element;
 				if (query.getRepositoryUrl() != null) {
 					AbstractTaskContainer orphansContainer = TasksUiPlugin.getTaskListManager()
 							.getTaskList()

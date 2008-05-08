@@ -14,9 +14,9 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.swt.graphics.Image;
@@ -54,7 +54,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 				}
 			}
 		} else if (columnIndex == 1) {
-			if (element instanceof ITaskElement || element instanceof AbstractRepositoryQuery) {
+			if (element instanceof ITaskElement || element instanceof IRepositoryQuery) {
 				return null;
 			}
 			return super.getImage(element);

@@ -340,7 +340,7 @@
                tooltip="Synchronize with Repository">
             <enablement>
                <or>
-					<objectClass name="org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery"/>
+					<objectClass name="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery"/>
                		<objectClass name="org.eclipse.mylyn.internal.tasks.core.AbstractTask"/>
                  <objectClass name="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer"/>
                </or>
@@ -349,7 +349,7 @@
          
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryCloneAction"
-               enablesFor="org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery"
+               enablesFor="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery"
                icon="icons/etool16/query-new.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.clone.query"
                label="Clone Query..."
@@ -383,7 +383,7 @@
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryExportAction"
                definitionId="org.eclipse.ui.query.export"
-               enablesFor="org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery"
+               enablesFor="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery"
                icon="icons/etool16/export.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.export.query"
                label="Export Query..."
@@ -1337,7 +1337,7 @@
                <iterate>
                   <or>
                      <instanceof
-                           value="org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery">
+                           value="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery">
                      </instanceof>
                      <instanceof
                            value="org.eclipse.mylyn.internal.tasks.core.TaskCategory">

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -145,10 +145,10 @@ public class TaskListManager {
 	 * 		to insert
 	 * @return the list queries, which were not inserted since because the related repository was not found.
 	 */
-	public List<AbstractRepositoryQuery> insertQueries(List<AbstractRepositoryQuery> queries) {
-		List<AbstractRepositoryQuery> badQueries = new ArrayList<AbstractRepositoryQuery>();
+	public List<RepositoryQuery> insertQueries(List<RepositoryQuery> queries) {
+		List<RepositoryQuery> badQueries = new ArrayList<RepositoryQuery>();
 
-		for (AbstractRepositoryQuery query : queries) {
+		for (RepositoryQuery query : queries) {
 
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					query.getRepositoryUrl());
@@ -183,14 +183,14 @@ public class TaskListManager {
 	 * 	query's identifier, where x is a number.
 	 * @since 2.1
 	 */
-	public String resolveIdentifiersConflict(AbstractRepositoryQuery query) {
+	public String resolveIdentifiersConflict(RepositoryQuery query) {
 		String patternStr = "\\[(\\d+)\\]$"; // all string that end with [x], where x is a number
 		Pattern pattern = Pattern.compile(patternStr);
 
 		// resolve name conflict
-		Set<AbstractRepositoryQuery> existingQueries = getTaskList().getQueries();
-		Map<String, AbstractRepositoryQuery> queryMap = new HashMap<String, AbstractRepositoryQuery>();
-		for (AbstractRepositoryQuery existingQuery : existingQueries) {
+		Set<RepositoryQuery> existingQueries = getTaskList().getQueries();
+		Map<String, RepositoryQuery> queryMap = new HashMap<String, RepositoryQuery>();
+		for (RepositoryQuery existingQuery : existingQueries) {
 			queryMap.put(existingQuery.getHandleIdentifier(), existingQuery);
 		}
 

@@ -23,7 +23,7 @@ import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
@@ -75,7 +75,7 @@ public class QueryExportImportTest extends TestCase {
 		externalizers.add(new MockTaskListFactory());
 		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(externalizers);
 
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test Query");
 		query1.setRepositoryUrl(MockRepositoryConnector.REPOSITORY_URL);
@@ -90,7 +90,7 @@ public class QueryExportImportTest extends TestCase {
 		assertTrue(outFile.exists());
 
 		File inFile = new File(dest, "test-query.xml.zip");
-		List<AbstractRepositoryQuery> resultQueries = TasksUiPlugin.getTaskListManager()
+		List<RepositoryQuery> resultQueries = TasksUiPlugin.getTaskListManager()
 				.getTaskListWriter()
 				.readQueries(inFile);
 		assertEquals("2 Queries is imported", 2, resultQueries.size());
@@ -106,7 +106,7 @@ public class QueryExportImportTest extends TestCase {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		// create test data
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test Query");
 		query1.setRepositoryUrl(repository.getRepositoryUrl());
@@ -123,9 +123,9 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().insertQueries(queries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
-		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
-		for (AbstractRepositoryQuery query : queriesSet) {
+		Set<RepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
+		Map<String, RepositoryQuery> queriesMap = new HashMap<String, RepositoryQuery>();
+		for (RepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);
 		}
 
@@ -144,7 +144,7 @@ public class QueryExportImportTest extends TestCase {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		// create test data
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test2");
 		query1.setRepositoryUrl(repository.getRepositoryUrl());
@@ -161,9 +161,9 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().insertQueries(queries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
-		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
-		for (AbstractRepositoryQuery query : queriesSet) {
+		Set<RepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
+		Map<String, RepositoryQuery> queriesMap = new HashMap<String, RepositoryQuery>();
+		for (RepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);
 		}
 
@@ -183,7 +183,7 @@ public class QueryExportImportTest extends TestCase {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		// create test data
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test[-10]");
 		query1.setRepositoryUrl(repository.getRepositoryUrl());
@@ -206,9 +206,9 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().insertQueries(queries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
-		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
-		for (AbstractRepositoryQuery query : queriesSet) {
+		Set<RepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
+		Map<String, RepositoryQuery> queriesMap = new HashMap<String, RepositoryQuery>();
+		for (RepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);
 		}
 
@@ -229,7 +229,7 @@ public class QueryExportImportTest extends TestCase {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		// create test data
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test Query");
 		query1.setRepositoryUrl(repository.getRepositoryUrl());
@@ -240,12 +240,12 @@ public class QueryExportImportTest extends TestCase {
 		queries.add(query2);
 
 		// run tested functionality
-		List<AbstractRepositoryQuery> badQueries = TasksUiPlugin.getTaskListManager().insertQueries(queries);
+		List<RepositoryQuery> badQueries = TasksUiPlugin.getTaskListManager().insertQueries(queries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
-		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
-		for (AbstractRepositoryQuery query : queriesSet) {
+		Set<RepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
+		Map<String, RepositoryQuery> queriesMap = new HashMap<String, RepositoryQuery>();
+		for (RepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);
 		}
 
@@ -271,7 +271,7 @@ public class QueryExportImportTest extends TestCase {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		// create test data
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test Query");
 		query1.setRepositoryUrl(repository.getRepositoryUrl());
 		queries.add(query1);
@@ -298,7 +298,7 @@ public class QueryExportImportTest extends TestCase {
 		assertTrue("There are currently no repositories defined", TasksUiPlugin.getRepositoryManager().getRepository(
 				MockRepositoryConnector.REPOSITORY_URL) == null);
 
-		List<AbstractRepositoryQuery> resultQueries = TasksUiPlugin.getTaskListManager()
+		List<RepositoryQuery> resultQueries = TasksUiPlugin.getTaskListManager()
 				.getTaskListWriter()
 				.readQueries(outFile);
 		Set<TaskRepository> repositories = TasksUiPlugin.getTaskListManager().getTaskListWriter().readRepositories(
@@ -309,9 +309,9 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().insertQueries(resultQueries);
 
 		// extract results
-		Set<AbstractRepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
-		Map<String, AbstractRepositoryQuery> queriesMap = new HashMap<String, AbstractRepositoryQuery>();
-		for (AbstractRepositoryQuery query : queriesSet) {
+		Set<RepositoryQuery> queriesSet = TasksUiPlugin.getTaskList().getQueries();
+		Map<String, RepositoryQuery> queriesMap = new HashMap<String, RepositoryQuery>();
+		for (RepositoryQuery query : queriesSet) {
 			queriesMap.put(query.getHandleIdentifier(), query);
 		}
 

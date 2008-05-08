@@ -27,12 +27,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
@@ -61,8 +61,8 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public List<AbstractTaskContainer> getLegendItems() {
-		List<AbstractTaskContainer> legendItems = new ArrayList<AbstractTaskContainer>();
+	public List<ITask> getLegendItems() {
+		List<ITask> legendItems = new ArrayList<ITask>();
 
 		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical, Blocker");
 		blocker.setSeverity("critical");
@@ -179,12 +179,12 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
-		return new NewBugzillaTaskWizard(taskRepository, selection);
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection) {
+		return new NewBugzillaTaskWizard(taskRepository, (TaskSelection) selection);
 	}
 
 	@Override
-	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
+	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
 		if (query instanceof BugzillaRepositoryQuery) {
 			return new EditBugzillaQueryWizard(repository, (BugzillaRepositoryQuery) query);
 		} else {
@@ -208,8 +208,8 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		if (task instanceof BugzillaTask) {
 			// XXX This is only used in the planning editor, and if its input was set correctly as a RepositoryTaskEditorInput
 			// we wouldn't have to get the task data this way from here
-			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
-					task.getTaskId());
+			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
+					task.getRepositoryUrl(), task.getTaskId());
 			if (taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null) {
 				return true;
 			}

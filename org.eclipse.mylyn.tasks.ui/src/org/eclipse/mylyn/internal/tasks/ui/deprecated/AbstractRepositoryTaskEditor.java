@@ -74,7 +74,7 @@ import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
@@ -1256,7 +1256,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
 		AbstractDuplicateDetector duplicateDetector = getDuplicateDetector(duplicateDetectorName);
 		if (duplicateDetector != null) {
-			AbstractRepositoryQuery duplicatesQuery = duplicateDetector.getDuplicatesQuery(repository, taskData);
+			RepositoryQuery duplicatesQuery = duplicateDetector.getDuplicatesQuery(repository, taskData);
 			if (duplicatesQuery != null) {
 				SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(), repository,
 						duplicatesQuery);

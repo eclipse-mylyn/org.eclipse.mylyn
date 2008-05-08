@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
@@ -23,6 +22,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -58,7 +58,7 @@ public class SearchHitCollector extends LegacyTaskDataCollector implements ISear
 
 	private final TaskRepository repository;
 
-	private final AbstractRepositoryQuery repositoryQuery;
+	private final IRepositoryQuery repositoryQuery;
 
 	private final RepositorySearchResult searchResult;
 
@@ -67,7 +67,7 @@ public class SearchHitCollector extends LegacyTaskDataCollector implements ISear
 	/**
 	 * @since 3.0
 	 */
-	public SearchHitCollector(ITaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery) {
+	public SearchHitCollector(ITaskList tasklist, TaskRepository repository, IRepositoryQuery repositoryQuery) {
 		this.taskList = tasklist;
 		this.repository = repository;
 		this.repositoryQuery = repositoryQuery;
@@ -170,7 +170,7 @@ public class SearchHitCollector extends LegacyTaskDataCollector implements ISear
 		return taskResults;
 	}
 
-	public AbstractRepositoryQuery getRepositoryQuery() {
+	public IRepositoryQuery getRepositoryQuery() {
 		return repositoryQuery;
 	}
 

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -70,7 +70,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 				monitor.setTaskName("Processing " + repository.getRepositoryLabel());
 
 				final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
-				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getRepositoryUrl());
+				Set<RepositoryQuery> queries = taskList.getRepositoryQueries(repository.getRepositoryUrl());
 
 				if (isUser() || queries.isEmpty()) {
 					monitor.worked(20);

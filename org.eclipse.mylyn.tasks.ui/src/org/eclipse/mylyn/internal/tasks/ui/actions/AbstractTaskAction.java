@@ -11,9 +11,10 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 
@@ -30,8 +31,8 @@ public abstract class AbstractTaskAction extends Action {
 			if (element instanceof ITask) {
 				AbstractTask repositoryTask = (AbstractTask) element;
 				performActionOnTask(repositoryTask);
-			} else if (element instanceof AbstractRepositoryQuery) {
-				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
+			} else if (element instanceof IRepositoryQuery) {
+				RepositoryQuery repositoryQuery = (RepositoryQuery) element;
 				for (ITask queryHit : repositoryQuery.getChildren()) {
 					performActionOnTask(queryHit);
 				}

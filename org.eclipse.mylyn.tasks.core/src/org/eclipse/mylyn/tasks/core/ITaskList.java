@@ -10,7 +10,7 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 
@@ -24,7 +24,7 @@ public interface ITaskList {
 
 	public abstract void addChangeListener(ITaskListChangeListener listener);
 
-	public abstract void addQuery(AbstractRepositoryQuery query) throws IllegalArgumentException;
+	public abstract void addQuery(RepositoryQuery query) throws IllegalArgumentException;
 
 	/**
 	 * Add orphaned task to the task list
@@ -45,7 +45,7 @@ public interface ITaskList {
 
 	public abstract void deleteCategory(AbstractTaskCategory category);
 
-	public abstract void deleteQuery(AbstractRepositoryQuery query);
+	public abstract void deleteQuery(RepositoryQuery query);
 
 	/**
 	 * TODO: refactor around querying containers for their tasks
@@ -58,7 +58,7 @@ public interface ITaskList {
 
 	public abstract Set<AbstractTaskCategory> getCategories();
 
-	public abstract Set<AbstractRepositoryQuery> getQueries();
+	public abstract Set<RepositoryQuery> getQueries();
 
 	/**
 	 * @since 2.0

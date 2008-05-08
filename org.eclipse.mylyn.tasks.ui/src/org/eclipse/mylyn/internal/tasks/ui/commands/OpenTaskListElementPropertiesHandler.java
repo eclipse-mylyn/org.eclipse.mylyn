@@ -9,10 +9,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.commands;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
@@ -22,7 +22,7 @@ public class OpenTaskListElementPropertiesHandler extends AbstractTaskListViewHa
 
 	@Override
 	protected void execute(ExecutionEvent event, TaskListView taskListView, ITaskElement item) {
-		if (item instanceof TaskCategory || item instanceof AbstractRepositoryQuery) {
+		if (item instanceof TaskCategory || item instanceof IRepositoryQuery) {
 			TasksUiInternal.refreshAndOpenTaskListElement(item);
 		}
 	}

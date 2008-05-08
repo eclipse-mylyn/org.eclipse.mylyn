@@ -19,9 +19,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -47,7 +49,7 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
-		AbstractRepositoryQuery selectedQuery = getSelectedQuery(selection);
+		IRepositoryQuery selectedQuery = getSelectedQuery(selection);
 		action.setEnabled(true);
 		if (selectedQuery != null) {
 			action.setEnabled(true);
@@ -56,40 +58,39 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 		}
 	}
 
-	protected AbstractRepositoryQuery getSelectedQuery(ISelection newSelection) {
+	protected RepositoryQuery getSelectedQuery(ISelection newSelection) {
 		if (selection instanceof StructuredSelection) {
 			// allow to select only one element
 			if (((StructuredSelection) selection).size() == 1) {
 				Object selectedObject = ((StructuredSelection) selection).getFirstElement();
-				if (selectedObject instanceof AbstractRepositoryQuery) {
-					return (AbstractRepositoryQuery) selectedObject;
+				if (selectedObject instanceof IRepositoryQuery) {
+					return (RepositoryQuery) selectedObject;
 				}
 			}
 		}
 		return null;
 	}
 
-	public void run(AbstractRepositoryQuery selectedQuery) {
+	public void run(RepositoryQuery selectedQuery) {
 		if (selectedQuery == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					ITasksUiConstants.TITLE_DIALOG, "No query selected.");
 			return;
 		}
 
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 		queries.add(selectedQuery);
 
 		Document queryDoc = TasksUiPlugin.getTaskListManager().getTaskListWriter().createQueryDocument(queries);
-		List<AbstractRepositoryQuery> clonedQueries = TasksUiPlugin.getTaskListManager()
-				.getTaskListWriter()
-				.readQueryDocument(queryDoc);
+		List<RepositoryQuery> clonedQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueryDocument(
+				queryDoc);
 
 		if (clonedQueries.size() > 0) {
-			for (AbstractRepositoryQuery query : clonedQueries) {
+			for (RepositoryQuery query : clonedQueries) {
 				String handle = TasksUiPlugin.getTaskListManager().resolveIdentifiersConflict(query);
 				query.setHandleIdentifier(handle);
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getConnectorKind());
-				connectorUi.openEditQueryDialog(query);
+				TasksUiInternal.openEditQueryDialog(connectorUi, query);
 			}
 		} else {
 			// cannot happen

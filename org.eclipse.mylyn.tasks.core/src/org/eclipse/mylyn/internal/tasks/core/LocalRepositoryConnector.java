@@ -15,10 +15,11 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandle
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
 
 /**
  * @author Rob Elves
@@ -91,8 +92,8 @@ public class LocalRepositoryConnector extends AbstractLegacyRepositoryConnector 
 	}
 
 	@Override
-	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor) {
+	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
+			TaskDataCollector resultCollector, ISynchronizationContext event, IProgressMonitor monitor) {
 		// ignore
 		return null;
 	}

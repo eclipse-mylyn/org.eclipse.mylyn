@@ -39,7 +39,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -47,6 +47,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -129,7 +130,7 @@ public class TaskListExternalizer {
 		}
 
 		// create query nodes...
-		for (AbstractRepositoryQuery query : taskList.getQueries()) {
+		for (RepositoryQuery query : taskList.getQueries()) {
 			try {
 				delagatingExternalizer.createQueryElement(query, doc, root);
 			} catch (Throwable t) {
@@ -237,8 +238,8 @@ public class TaskListExternalizer {
 	 * 
 	 * @throws TaskExternalizationException
 	 */
-	private AbstractRepositoryQuery readQuery(TaskList taskList, Node child) {
-		AbstractRepositoryQuery query = null;
+	private IRepositoryQuery readQuery(TaskList taskList, Node child) {
+		RepositoryQuery query = null;
 		for (AbstractTaskListFactory externalizer : externalizers) {
 			Set<String> queryTagNames = externalizer.getQueryElementNames();
 			if (queryTagNames != null && queryTagNames.contains(child.getNodeName())) {

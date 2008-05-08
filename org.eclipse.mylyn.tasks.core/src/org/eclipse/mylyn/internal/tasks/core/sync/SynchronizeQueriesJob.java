@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -38,7 +38,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
 /**
@@ -72,11 +72,11 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 		private final Set<ITask> removedQueryResults;
 
-		private final AbstractRepositoryQuery repositoryQuery;
+		private final RepositoryQuery repositoryQuery;
 
 		private int resultCount;
 
-		public TaskCollector(AbstractRepositoryQuery repositoryQuery) {
+		public TaskCollector(RepositoryQuery repositoryQuery) {
 			this.repositoryQuery = repositoryQuery;
 			this.removedQueryResults = new HashSet<ITask>(repositoryQuery.getChildren());
 		}
@@ -99,7 +99,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			}
 			taskList.addTask(task, repositoryQuery);
 			if (!taskData.isPartial()) {
-				((TaskDataManager) synchronizationManager).saveIncoming(task, taskData, isUser());
+				((TaskDataManager) taskDataManager).saveIncoming(task, taskData, isUser());
 			} else if (changed && !task.isStale()
 					&& task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
 				// TODO move to synchronizationManager
@@ -127,21 +127,21 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private final AbstractRepositoryConnector connector;
 
-	private final Set<AbstractRepositoryQuery> queries;
+	private final Set<RepositoryQuery> queries;
 
 	private final TaskRepository repository;
 
-	private final ITaskDataManager synchronizationManager;
+	private final ITaskDataManager taskDataManager;
 
 	private final TaskList taskList;
 
 	private final HashSet<ITask> tasksToBeSynchronized = new HashSet<ITask>();
 
-	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager synchronizationManager,
-			AbstractRepositoryConnector connector, TaskRepository repository, Set<AbstractRepositoryQuery> queries) {
+	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager taskDataManager,
+			AbstractRepositoryConnector connector, TaskRepository repository, Set<RepositoryQuery> queries) {
 		super("Synchronizing Queries (" + repository.getRepositoryLabel() + ")");
 		this.taskList = taskList;
-		this.synchronizationManager = synchronizationManager;
+		this.taskDataManager = taskDataManager;
 		this.connector = connector;
 		this.repository = repository;
 		this.queries = queries;
@@ -155,7 +155,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			Set<ITask> allTasks;
 			if (!isFullSynchronization()) {
 				allTasks = new HashSet<ITask>();
-				for (AbstractRepositoryQuery query : queries) {
+				for (RepositoryQuery query : queries) {
 					allTasks.addAll(query.getChildren());
 				}
 			} else {
@@ -166,11 +166,11 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			try {
 				Job.getJobManager().beginRule(rule, monitor);
 
-				SynchronizationContext event = new SynchronizationContext();
-				event.taskRepository = repository;
-				event.fullSynchronization = isFullSynchronization();
-				event.tasks = allTasks;
-				event.performQueries = true;
+				SynchronizationContext event = new SynchronizationContext(taskDataManager);
+				event.setTaskRepository(repository);
+				event.setFullSynchronization(isFullSynchronization());
+				event.setTasks(allTasks);
+				event.setNeedsPerformQueries(true);
 
 				try {
 					// hook into the connector for checking for changed tasks and have the connector mark tasks that need synchronization
@@ -214,8 +214,8 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private void synchronizeQueries(IProgressMonitor monitor, SynchronizationContext event) {
-		for (AbstractRepositoryQuery repositoryQuery : queries) {
+	private void synchronizeQueries(IProgressMonitor monitor, ISynchronizationContext event) {
+		for (RepositoryQuery repositoryQuery : queries) {
 			Policy.checkCanceled(monitor);
 			repositoryQuery.setSynchronizationStatus(null);
 
@@ -231,7 +231,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		try {
 			Policy.checkCanceled(monitor);
 			monitor.subTask("Updating repository state");
-			event.changedTasks = tasksToBeSynchronized;
+			event.setChangedTasks(tasksToBeSynchronized);
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
@@ -243,7 +243,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private boolean firePreSynchronization(SynchronizationContext event, IProgressMonitor monitor) {
+	private boolean firePreSynchronization(ISynchronizationContext event, IProgressMonitor monitor) {
 		try {
 			Policy.checkCanceled(monitor);
 			monitor.subTask("Querying repository");
@@ -251,7 +251,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
 			connector.preSynchronization(event, monitor);
-			if (!event.performQueries && !isUser()) {
+			if (!event.needsPerformQueries() && !isUser()) {
 				updateQueryStatus(null);
 				return false;
 			}
@@ -263,7 +263,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private void synchronizeQuery(AbstractRepositoryQuery repositoryQuery, SynchronizationContext event,
+	private void synchronizeQuery(RepositoryQuery repositoryQuery, ISynchronizationContext event,
 			IProgressMonitor monitor) {
 		TaskCollector collector = new TaskCollector(repositoryQuery);
 
@@ -288,14 +288,14 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 	}
 
 	private void synchronizeTasks(IProgressMonitor monitor) {
-		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, synchronizationManager, connector, repository,
+		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, connector, repository,
 				tasksToBeSynchronized);
 		job.setUser(isUser());
 		job.run(monitor);
 	}
 
 	private void updateQueryStatus(final IStatus status) {
-		for (AbstractRepositoryQuery repositoryQuery : queries) {
+		for (RepositoryQuery repositoryQuery : queries) {
 			repositoryQuery.setSynchronizationStatus(status);
 			repositoryQuery.setSynchronizing(false);
 		}

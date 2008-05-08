@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskList;
@@ -201,7 +202,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testMigrateQueryUrlHandles() {
-		AbstractRepositoryQuery query = new MockRepositoryQuery("mquery");
+		RepositoryQuery query = new MockRepositoryQuery("mquery");
 		query.setRepositoryUrl("http://foo.bar");
 		query.setUrl("http://foo.bar/b");
 		manager.getTaskList().addQuery(query);
@@ -209,7 +210,7 @@ public class TaskListManagerTest extends TestCase {
 		runRepositoryUrlOperation("http://foo.bar", "http://bar.baz");
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://foo.bar").size() == 0);
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://bar.baz").size() > 0);
-		AbstractRepositoryQuery changedQuery = manager.getTaskList()
+		IRepositoryQuery changedQuery = manager.getTaskList()
 				.getRepositoryQueries("http://bar.baz")
 				.iterator()
 				.next();
@@ -217,7 +218,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testMigrateQueryHandles() {
-		AbstractRepositoryQuery query = new MockRepositoryQuery("mquery");
+		RepositoryQuery query = new MockRepositoryQuery("mquery");
 		query.setRepositoryUrl("http://a");
 		manager.getTaskList().addQuery(query);
 		runRepositoryUrlOperation("http://a", "http://b");
@@ -1031,7 +1032,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(2, query.getChildren().size());
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				MockRepositoryConnector.REPOSITORY_URL);
-		Set<AbstractRepositoryQuery> queries = new HashSet<AbstractRepositoryQuery>();
+		Set<RepositoryQuery> queries = new HashSet<RepositoryQuery>();
 		queries.add(query);
 		TasksUiInternal.synchronizeQueries(new MockRepositoryConnector(), repository, queries, null, true);
 		//assertEquals(2, manager.getTaskList().getArchiveContainer().getChildren().size());

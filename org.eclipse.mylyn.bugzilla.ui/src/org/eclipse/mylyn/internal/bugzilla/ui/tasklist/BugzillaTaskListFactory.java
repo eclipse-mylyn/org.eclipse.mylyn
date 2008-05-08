@@ -13,9 +13,10 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 
@@ -50,7 +51,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public boolean canCreate(AbstractRepositoryQuery category) {
+	public boolean canCreate(IRepositoryQuery category) {
 		return category instanceof BugzillaRepositoryQuery;
 	}
 
@@ -60,7 +61,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public String getQueryElementName(AbstractRepositoryQuery query) {
+	public String getQueryElementName(IRepositoryQuery query) {
 		if (query instanceof BugzillaRepositoryQuery) {
 			if (((BugzillaRepositoryQuery) query).isCustomQuery()) {
 				return TAG_BUGZILLA_CUSTOM_QUERY;
@@ -72,7 +73,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
+	public RepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repositoryUrl, queryString, label);
 		if (element.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			query.setCustomQuery(true);

@@ -17,20 +17,22 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
@@ -56,6 +58,8 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	@Deprecated
 	protected ITaskList taskList;
 
+	private ITaskDataManager taskDataManager;
+
 	private boolean userManaged = true;
 
 	/**
@@ -64,6 +68,15 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	@Deprecated
 	public void init(ITaskList taskList) {
 		this.taskList = taskList;
+	}
+
+	/**
+	 * Set upon construction
+	 * 
+	 * @since 3.0
+	 */
+	public void init(ITaskDataManager taskDataManager) {
+		this.taskDataManager = taskDataManager;
 	}
 
 	/**
@@ -165,11 +178,11 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 
 	/**
 	 * @since 2.0
-	 * @deprecated use {@link #performQuery(TaskRepository, AbstractRepositoryQuery, TaskDataCollector,
+	 * @deprecated use {@link #performQuery(TaskRepository, RepositoryQuery, TaskDataCollector,
 	 * 	SynchronizationContext, IProgressMonitor)} instead
 	 */
 	@Deprecated
-	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
+	public IStatus performQuery(IRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
 			final ITaskCollector resultCollector) {
 		return null;
 	}
@@ -410,6 +423,13 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	protected ITaskDataManager getTaskDataManager() {
+		return taskDataManager;
 	}
 
 }

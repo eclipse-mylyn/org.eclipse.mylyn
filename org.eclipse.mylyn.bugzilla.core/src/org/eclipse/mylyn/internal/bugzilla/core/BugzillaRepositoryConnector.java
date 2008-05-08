@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
@@ -37,12 +36,13 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.QueryHitCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
 
 /**
  * @author Mik Kersten
@@ -287,10 +287,10 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public void preSynchronization(SynchronizationContext event, IProgressMonitor monitor)
+	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor)
 	throws CoreException {
-		TaskRepository repository = event.taskRepository;
-		if (event.tasks.isEmpty()) {
+		TaskRepository repository = event.getTaskRepository();
+		if (event.getTasks().isEmpty()) {
 			return;
 		}
 
@@ -299,7 +299,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
 
 			if (repository.getSynchronizationTimeStamp() == null) {
-				for (ITask task : event.tasks) {
+				for (ITask task : event.getTasks()) {
 					task.setStale(true);
 				}
 				return;
@@ -330,7 +330,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 //			queryForChanged(repository, changedTasks, urlQueryString);
 
 			Set<ITask> changedTasks = new HashSet<ITask>();
-			Iterator<ITask> itr = event.tasks.iterator();
+			Iterator<ITask> itr = event.getTasks().iterator();
 			int queryCounter = 0;
 			Set<ITask> checking = new HashSet<ITask>();
 			while (itr.hasNext()) {
@@ -352,7 +352,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 				}
 			}
 
-			for (ITask task : event.tasks) {
+			for (ITask task : event.getTasks()) {
 				if (changedTasks.contains(task)) {
 					task.setStale(true);
 				}
@@ -396,8 +396,8 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public IStatus performQuery(TaskRepository repository, final AbstractRepositoryQuery query,
-			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor) {
+	public IStatus performQuery(TaskRepository repository, final IRepositoryQuery query,
+			TaskDataCollector resultCollector, ISynchronizationContext event, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Running query", IProgressMonitor.UNKNOWN);
 			BugzillaClient client = getClientManager().getClient(repository, monitor);
@@ -537,12 +537,12 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public void postSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void postSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
-			if (event.fullSynchronization) {
-				event.taskRepository.setSynchronizationTimeStamp(getSynchronizationTimestamp(event.taskRepository,
-						event.changedTasks));
+			if (event.isFullSynchronization()) {
+				event.getTaskRepository().setSynchronizationTimeStamp(getSynchronizationTimestamp(event.getTaskRepository(),
+						event.getChangedTasks()));
 			}
 		} finally {
 			monitor.done();

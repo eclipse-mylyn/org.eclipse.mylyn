@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 
 /**
  * @author Mik Kersten
@@ -21,7 +21,7 @@ public class NewTaskWizard extends MultiRepositoryAwareWizard {
 
 	private static final String TITLE = "New Task";
 
-	public NewTaskWizard(TaskSelection taskSelection) {
+	public NewTaskWizard(ITaskMapping taskSelection) {
 		super(new NewTaskPage(ITaskRepositoryFilter.CAN_CREATE_NEW_TASK, taskSelection), TITLE);
 		setNeedsProgressMonitor(true);
 	}

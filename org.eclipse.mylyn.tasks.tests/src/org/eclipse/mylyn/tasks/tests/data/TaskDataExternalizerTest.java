@@ -18,9 +18,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataState;
-import org.eclipse.mylyn.tasks.core.TaskMapper;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 
 @SuppressWarnings("deprecation")

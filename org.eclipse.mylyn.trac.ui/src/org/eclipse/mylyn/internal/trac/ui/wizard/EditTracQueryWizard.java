@@ -8,18 +8,18 @@
 
 package org.eclipse.mylyn.internal.trac.ui.wizard;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractEditQueryWizard;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryWizard;
 
 /**
  * @author Steffen Pingel
  */
-public class EditTracQueryWizard extends AbstractEditQueryWizard {
+public class EditTracQueryWizard extends AbstractRepositoryQueryWizard {
 
 //	private TracCustomQueryPage queryPage;
 
-	public EditTracQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
+	public EditTracQueryWizard(TaskRepository repository, IRepositoryQuery query) {
 		super(repository, query);
 	}
 

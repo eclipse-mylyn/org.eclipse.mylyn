@@ -14,6 +14,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -24,9 +25,9 @@ import org.eclipse.ui.IWorkbench;
  */
 public class NewLocalTaskWizard extends Wizard implements INewWizard {
 
-	private final TaskSelection taskSelection;
+	private final ITaskMapping taskSelection;
 
-	public NewLocalTaskWizard(TaskSelection taskSelection) {
+	public NewLocalTaskWizard(ITaskMapping taskSelection) {
 		this.taskSelection = taskSelection;
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		setNeedsProgressMonitor(true);
@@ -53,10 +54,11 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		LocalTask task = TasksUiInternal.createNewLocalTask(null);
-		if (taskSelection != null) {
-			task.setSummary(taskSelection.getTaskData().getSummary());
-			task.setNotes(taskSelection.getTaskData().getDescription());
+		if (taskSelection instanceof TaskSelection) {
+			task.setSummary(((TaskSelection) taskSelection).getLegacyTaskData().getSummary());
+			task.setNotes(((TaskSelection) taskSelection).getLegacyTaskData().getDescription());
 		}
+		// FIXME 3.0 TaskData support
 		if (task != null) {
 			TasksUiUtil.openEditor(task, true);
 			return true;

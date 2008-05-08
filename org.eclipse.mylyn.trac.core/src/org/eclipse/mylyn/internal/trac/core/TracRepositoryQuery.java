@@ -8,13 +8,13 @@
 
 package org.eclipse.mylyn.internal.trac.core;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 
 /**
  * @author Steffen Pingel
  */
-public class TracRepositoryQuery extends AbstractRepositoryQuery {
+public class TracRepositoryQuery extends RepositoryQuery {
 
 	public TracRepositoryQuery(String repositoryUrl, String queryUrl, String description) {
 		super(description);

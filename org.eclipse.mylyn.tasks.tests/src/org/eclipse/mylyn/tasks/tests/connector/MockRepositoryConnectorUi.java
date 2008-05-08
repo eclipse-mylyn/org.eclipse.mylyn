@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.tasks.tests.connector;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -37,13 +37,13 @@ public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
+	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
 		// ignore
 		return null;
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection) {
 		// ignore
 		return null;
 	}

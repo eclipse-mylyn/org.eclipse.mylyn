@@ -51,7 +51,7 @@ public class AttributeTaskMapper {
 
 	public TaskSelection createTaskSelection() {
 		TaskSelection selection = new TaskSelection("", "");
-		applyTo(selection.getTaskData());
+		applyTo(selection.getLegacyTaskData());
 		return selection;
 	}
 

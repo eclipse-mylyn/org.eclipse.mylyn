@@ -6,29 +6,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core.sync;
+package org.eclipse.mylyn.tasks.core;
 
-import java.util.Set;
+public interface IRepositoryQuery {
 
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getConnectorKind();
 
-/**
- * @author Steffen Pingel
- * @since 3.0
- */
-public class SynchronizationContext {
+	public abstract String getRepositoryUrl();
 
-	public boolean fullSynchronization;
+	public abstract String getUrl();
 
-	public boolean performQueries;
+	public abstract void setUrl(String url);
 
-	public Set<ITask> tasks;
+	public abstract String getSummary();
 
-	public Set<ITask> changedTasks;
-
-	public TaskRepository taskRepository;
-
-	public Object data;
+	public abstract void setSummary(String summary);
 
 }

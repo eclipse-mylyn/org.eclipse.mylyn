@@ -13,7 +13,7 @@ import java.net.URLEncoder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -28,7 +28,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 	//private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.";
 
 	@Override
-	public AbstractRepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
+	public RepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
 		String queryUrl = "";
 		String searchString = AbstractDuplicateDetector.getStackTraceFromDescription(taskData.getDescription());
 		if (searchString != null && searchString.length() > DESCRIPTION_MAX_CHARS) {

@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryOperation;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult;
@@ -39,7 +40,6 @@ import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
@@ -722,12 +722,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		SynchronizationContext event = new SynchronizationContext();
-		event.tasks = tasks;
-		event.performQueries = true;
-		event.taskRepository = repository;
-		event.fullSynchronization = true;
+		event.setTasks(tasks);
+		event.setNeedsPerformQueries(true);
+		event.setTaskRepository(repository);
+		event.setFullSynchronization(true);
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		// Always last known changed returned
 		assertFalse(task4.isStale());
 		assertTrue(task5.isStale());
@@ -757,10 +757,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		submit(task5, taskData5);
 
 		event = new SynchronizationContext();
-		event.tasks = tasks;
-		event.performQueries = true;
-		event.taskRepository = repository;
-		event.fullSynchronization = true;
+		event.setTasks(tasks);
+		event.setNeedsPerformQueries(true);
+		event.setTaskRepository(repository);
+		event.setFullSynchronization(true);
 		connector.preSynchronization(event, null);
 
 		assertTrue(task4.isStale());

@@ -95,7 +95,7 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 			}
 
 			TaskSelection taskSelection = mapper.createTaskSelection();
-			updateAttributes(taskSelection.getTaskData(), status);
+			updateAttributes(taskSelection.getLegacyTaskData(), status);
 
 			// fall back to opening wizard
 			TasksUiUtil.openNewTaskEditor(null, taskSelection, taskRepository);
@@ -146,7 +146,7 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 			throw new OperationCanceledException();
 		}
 
-		taskDataHandler.cloneTaskData(mapper.createTaskSelection().getTaskData(), taskData);
+		taskDataHandler.cloneTaskData(mapper.createTaskSelection().getLegacyTaskData(), taskData);
 
 		return taskData;
 	}

@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskList;
@@ -52,7 +53,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	private int maxLocalTaskId;
 
-	private Map<String, AbstractRepositoryQuery> queries;
+	private Map<String, RepositoryQuery> queries;
 
 	private Map<String, UnmatchedTaskContainer> repositoryOrphansMap;
 
@@ -98,7 +99,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	public void addQuery(AbstractRepositoryQuery query) throws IllegalArgumentException {
+	public void addQuery(RepositoryQuery query) throws IllegalArgumentException {
 		Assert.isNotNull(query);
 
 		try {
@@ -189,7 +190,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	public void deleteQuery(AbstractRepositoryQuery query) {
+	public void deleteQuery(RepositoryQuery query) {
 		try {
 			lock();
 			queries.remove(query.getHandleIdentifier());
@@ -301,18 +302,18 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		return task;
 	}
 
-	public Set<AbstractRepositoryQuery> getQueries() {
-		return Collections.unmodifiableSet(new HashSet<AbstractRepositoryQuery>(queries.values()));
+	public Set<RepositoryQuery> getQueries() {
+		return Collections.unmodifiableSet(new HashSet<RepositoryQuery>(queries.values()));
 	}
 
 	/**
 	 * return all queries for the given repository url
 	 */
-	public Set<AbstractRepositoryQuery> getRepositoryQueries(String repositoryUrl) {
+	public Set<RepositoryQuery> getRepositoryQueries(String repositoryUrl) {
 		Assert.isNotNull(repositoryUrl);
 
-		Set<AbstractRepositoryQuery> repositoryQueries = new HashSet<AbstractRepositoryQuery>();
-		for (AbstractRepositoryQuery query : queries.values()) {
+		Set<RepositoryQuery> repositoryQueries = new HashSet<RepositoryQuery>();
+		for (RepositoryQuery query : queries.values()) {
 			if (query.getRepositoryUrl().equals(repositoryUrl)) {
 				repositoryQueries.add(query);
 			}
@@ -326,7 +327,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		for (AbstractTaskCategory cat : categories.values()) {
 			roots.add(cat);
 		}
-		for (AbstractRepositoryQuery query : queries.values()) {
+		for (RepositoryQuery query : queries.values()) {
 			roots.add(query);
 		}
 		for (UnmatchedTaskContainer orphanContainer : repositoryOrphansMap.values()) {
@@ -427,7 +428,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			result = repositoryOrphansMap.get(((UnmatchedTaskContainer) taskListElement).getRepositoryUrl());
 		} else if (taskListElement instanceof TaskCategory) {
 			result = categories.get(taskListElement.getHandleIdentifier());
-		} else if (taskListElement instanceof AbstractRepositoryQuery) {
+		} else if (taskListElement instanceof IRepositoryQuery) {
 			result = queries.get(taskListElement.getHandleIdentifier());
 		}
 
@@ -502,7 +503,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 				}
 			}
 
-			for (AbstractRepositoryQuery query : queries.values()) {
+			for (RepositoryQuery query : queries.values()) {
 				if (query.getRepositoryUrl().equals(oldRepositoryUrl)) {
 					query.setRepositoryUrl(newRepositoryUrl);
 					delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.CHANGED));
@@ -588,10 +589,10 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			if (queries.remove(container.getHandleIdentifier()) != null) {
 				if (container instanceof AbstractTaskCategory) {
 					((AbstractTaskCategory) container).setHandleIdentifier(newDescription);
-				} else if (container instanceof AbstractRepositoryQuery) {
-					((AbstractRepositoryQuery) container).setHandleIdentifier(newDescription);
-					queries.put(((AbstractRepositoryQuery) container).getHandleIdentifier(),
-							((AbstractRepositoryQuery) container));
+				} else if (container instanceof IRepositoryQuery) {
+					((RepositoryQuery) container).setHandleIdentifier(newDescription);
+					queries.put(((RepositoryQuery) container).getHandleIdentifier(),
+							((RepositoryQuery) container));
 				}
 			} else if (container instanceof TaskCategory && categories.remove(container.getHandleIdentifier()) != null) {
 				((TaskCategory) container).setHandleIdentifier(newDescription);
@@ -615,7 +616,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			repositoryOrphansMap = new ConcurrentHashMap<String, UnmatchedTaskContainer>();
 
 			categories = new ConcurrentHashMap<String, AbstractTaskCategory>();
-			queries = new ConcurrentHashMap<String, AbstractRepositoryQuery>();
+			queries = new ConcurrentHashMap<String, RepositoryQuery>();
 
 			defaultCategory = new UncategorizedTaskContainer();
 

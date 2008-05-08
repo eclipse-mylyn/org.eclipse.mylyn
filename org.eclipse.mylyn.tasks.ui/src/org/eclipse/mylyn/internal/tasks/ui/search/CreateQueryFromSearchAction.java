@@ -13,11 +13,12 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.ui.ISearchQuery;
@@ -64,16 +65,16 @@ public class CreateQueryFromSearchAction extends Action {
 						.getRepositoryConnector(task.getConnectorKind());
 				if (queries.length != 0 && connector != null) {
 					SearchHitCollector searchHitCollector = (SearchHitCollector) queries[0];
-					AbstractRepositoryQuery query = searchHitCollector.getRepositoryQuery();
+					IRepositoryQuery query = searchHitCollector.getRepositoryQuery();
 					InputDialog dialog = new InputDialog(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
 							.getShell(), "Create Query", "Name of query to be added to the " + TaskListView.LABEL_VIEW
 							+ ": ", "", null);
 					int dialogResult = dialog.open();
 					if (dialogResult == Window.OK) {
-						query.setHandleIdentifier(dialog.getValue());
-						TasksUi.getTaskList().addQuery(query);
-						TasksUiInternal.synchronizeQuery(connector, query, null, true);
+						query.setSummary(dialog.getValue());
+						TasksUi.getTasksModel().addQuery(query);
+						TasksUiInternal.synchronizeQuery(connector, (RepositoryQuery) query, null, true);
 					}
 				}
 			}

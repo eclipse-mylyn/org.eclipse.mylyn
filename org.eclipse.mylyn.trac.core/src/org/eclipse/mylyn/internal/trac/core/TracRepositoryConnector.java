@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
@@ -39,12 +38,13 @@ import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
 
 /**
  * @author Steffen Pingel
@@ -145,8 +145,8 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor) {
+	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
+			TaskDataCollector resultCollector, ISynchronizationContext event, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Querying repository", IProgressMonitor.UNKNOWN);
 
@@ -176,21 +176,21 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public void preSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);
 
-			if (!event.fullSynchronization) {
+			if (!event.isFullSynchronization()) {
 				return;
 			}
 
 			// there are no Trac tasks in the task list, skip contacting the repository
-			if (event.tasks.isEmpty()) {
+			if (event.getTasks().isEmpty()) {
 				return;
 			}
 
-			TaskRepository repository = event.taskRepository;
+			TaskRepository repository = event.getTaskRepository();
 			if (!TracRepositoryConnector.hasChangedSince(repository)) {
 				// always run the queries for web mode
 				return;
@@ -198,7 +198,7 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 
 			if (repository.getSynchronizationTimeStamp() == null
 					|| repository.getSynchronizationTimeStamp().length() == 0) {
-				for (ITask task : event.tasks) {
+				for (ITask task : event.getTasks()) {
 					task.setStale(true);
 				}
 				return;
@@ -215,7 +215,7 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 				Set<Integer> ids = client.getChangedTickets(since, monitor);
 				if (ids.isEmpty()) {
 					// repository is unchanged
-					event.performQueries = false;
+					event.setNeedsPerformQueries(false);
 					return;
 				}
 
@@ -228,12 +228,12 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 					Date lastChanged = client.getTicketLastChanged(id, monitor);
 					if (since.equals(lastChanged)) {
 						// repository didn't actually change
-						event.performQueries = false;
+						event.setNeedsPerformQueries(false);
 						return;
 					}
 				}
 
-				for (ITask task : event.tasks) {
+				for (ITask task : event.getTasks()) {
 					Integer id = getTicketId(task.getTaskId());
 					if (ids.contains(id)) {
 						task.setStale(true);
@@ -427,12 +427,12 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public void postSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void postSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
-			if (event.fullSynchronization) {
-				event.taskRepository.setSynchronizationTimeStamp(getSynchronizationTimestamp(event.taskRepository,
-						event.changedTasks));
+			if (event.isFullSynchronization()) {
+				event.getTaskRepository().setSynchronizationTimeStamp(getSynchronizationTimestamp(event.getTaskRepository(),
+						event.getChangedTasks()));
 			}
 		} finally {
 			monitor.done();

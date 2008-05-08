@@ -11,12 +11,12 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractEditQueryWizard;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryWizard;
 
 /**
  * @author Rob Elves
  */
-public class EditBugzillaQueryWizard extends AbstractEditQueryWizard {
+public class EditBugzillaQueryWizard extends AbstractRepositoryQueryWizard {
 
 	public EditBugzillaQueryWizard(TaskRepository repository, BugzillaRepositoryQuery query) {
 		super(repository, query);

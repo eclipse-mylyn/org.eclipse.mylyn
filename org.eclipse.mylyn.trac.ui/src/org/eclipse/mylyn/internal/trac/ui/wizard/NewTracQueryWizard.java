@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -49,7 +49,7 @@ public class NewTracQueryWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		AbstractRepositoryQuery query = queryPage.getQuery();
+		RepositoryQuery query = queryPage.getQuery();
 		if (query != null) {
 			TasksUi.getTaskList().addQuery(query);
 			AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()

@@ -14,13 +14,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.swt.SWT;
@@ -91,7 +91,7 @@ class TaskListCellModifier implements ICellModifier {
 					break;
 				}
 			} else if (((TreeItem) element).getData() instanceof AbstractTaskCategory
-					|| ((TreeItem) element).getData() instanceof AbstractRepositoryQuery) {
+					|| ((TreeItem) element).getData() instanceof IRepositoryQuery) {
 				AbstractTaskContainer container = (AbstractTaskContainer) ((TreeItem) element).getData();
 				switch (columnIndex) {
 				case 0:
@@ -123,7 +123,7 @@ class TaskListCellModifier implements ICellModifier {
 				// check if activation column overlaps with tree expander control: element is on second hierarchy level and has children  
 				TreeItem parent = element.getParentItem();
 				if (parent != null
-						&& (parent.getData() instanceof AbstractRepositoryQuery || parent.getData() instanceof AbstractTaskCategory)
+						&& (parent.getData() instanceof IRepositoryQuery || parent.getData() instanceof AbstractTaskCategory)
 						&& element.getItemCount() > 0) {
 					return;
 				}

@@ -21,9 +21,9 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
@@ -131,7 +131,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	public void containersChanged(Set<TaskContainerDelta> delta) {
 		for (TaskContainerDelta taskContainerDelta : delta) {
 			if (taskContainerDelta.getContainer() instanceof TaskCategory
-					|| taskContainerDelta.getContainer() instanceof AbstractRepositoryQuery) {
+					|| taskContainerDelta.getContainer() instanceof IRepositoryQuery) {
 				synchronized (workingSets) {
 					switch (taskContainerDelta.getKind()) {
 					case REMOVED:

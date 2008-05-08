@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -34,8 +34,8 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
 		}
 
-		if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+		if (element instanceof IRepositoryQuery) {
+			IRepositoryQuery query = (IRepositoryQuery) element;
 			String repositoryUrl = query.getRepositoryUrl();
 			TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					repositoryUrl);

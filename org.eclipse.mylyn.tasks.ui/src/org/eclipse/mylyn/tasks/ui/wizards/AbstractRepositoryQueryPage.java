@@ -12,11 +12,12 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.ui.NewSearchUI;
@@ -67,10 +68,10 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 			setErrorMessage("Please specify a title for the query.");
 			return false;
 		} else {
-			Set<AbstractRepositoryQuery> queries = TasksUi.getTaskList().getQueries();
+			Set<RepositoryQuery> queries = TasksUi.getTaskList().getQueries();
 			Set<AbstractTaskCategory> categories = TasksUi.getTaskList().getCategories();
-			if (getWizard() instanceof AbstractEditQueryWizard) {
-				String oldSummary = ((AbstractEditQueryWizard) getWizard()).getQuerySummary();
+			if (getWizard() instanceof AbstractRepositoryQueryWizard) {
+				String oldSummary = ((AbstractRepositoryQueryWizard) getWizard()).getQuerySummary();
 				if (oldSummary != null && queryTitle.equals(oldSummary)) {
 					setErrorMessage(null);
 					return true;
@@ -82,7 +83,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 					return false;
 				}
 			}
-			for (AbstractRepositoryQuery query : queries) {
+			for (RepositoryQuery query : queries) {
 				if (queryTitle.equals(query.getSummary())) {
 					setErrorMessage("A query with this name already exists, please choose another name.");
 					return false;
@@ -93,7 +94,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		return true;
 	}
 
-	public abstract AbstractRepositoryQuery getQuery();
+	public abstract IRepositoryQuery getQuery();
 
 	public void saveState() {
 		// empty

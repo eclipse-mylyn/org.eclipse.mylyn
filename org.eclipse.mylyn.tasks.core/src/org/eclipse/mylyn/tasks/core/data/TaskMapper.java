@@ -6,20 +6,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Steffen Pingel
  * @since 3.0
  */
-public class TaskMapper {
+public class TaskMapper implements ITaskMapping {
 
 	private final TaskData taskData;
 
@@ -70,12 +70,16 @@ public class TaskMapper {
 		return changed;
 	}
 
-	public boolean getBooleanValue(String attributeKey) {
+	protected boolean getBooleanValue(String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getBooleanValue(attribute);
 		}
 		return false;
+	}
+
+	public Date getCompletionDate() {
+		return getDateValue(TaskAttribute.DATE_COMPLETION);
 	}
 
 	public String getComponent() {
@@ -86,15 +90,7 @@ public class TaskMapper {
 		return getDateValue(TaskAttribute.DATE_CREATION);
 	}
 
-	public Date getCompletionDate() {
-		return getDateValue(TaskAttribute.DATE_COMPLETION);
-	}
-
-	public Date getModificationDate() {
-		return getDateValue(TaskAttribute.DATE_MODIFIED);
-	}
-
-	private Date getDateValue(String attributeKey) {
+	protected Date getDateValue(String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getDateValue(attribute);
@@ -108,6 +104,10 @@ public class TaskMapper {
 
 	public Date getDueDate() {
 		return getDateValue(TaskAttribute.DATE_DUE);
+	}
+
+	public Date getModificationDate() {
+		return getDateValue(TaskAttribute.DATE_MODIFIED);
 	}
 
 	public String getOwner() {
@@ -127,12 +127,16 @@ public class TaskMapper {
 		return getValue(TaskAttribute.SUMMARY);
 	}
 
-	public String getTaskKind() {
-		return getValue(TaskAttribute.TASK_KIND);
+	public TaskData getTaskData() {
+		return taskData;
 	}
 
 	public String getTaskKey() {
 		return getValue(TaskAttribute.TASK_KEY);
+	}
+
+	public String getTaskKind() {
+		return getValue(TaskAttribute.TASK_KIND);
 	}
 
 	public String getTaskUrl() {
@@ -147,7 +151,7 @@ public class TaskMapper {
 		return null;
 	}
 
-	protected final boolean hasTaskPropertyChanged(Object existingProperty, Object newProperty) {
+	protected boolean hasTaskPropertyChanged(Object existingProperty, Object newProperty) {
 		// the query hit does not have this property
 		if (newProperty == null) {
 			return false;
@@ -164,6 +168,10 @@ public class TaskMapper {
 		return attribute;
 	}
 
+	public void setCompletionDate(Date dateCompleted) {
+		setDateValue(TaskAttribute.DATE_COMPLETION, dateCompleted);
+	}
+
 	public void setComponent(String component) {
 		setValue(TaskAttribute.COMPONENT, component);
 	}
@@ -172,15 +180,7 @@ public class TaskMapper {
 		setDateValue(TaskAttribute.DATE_CREATION, dateCreated);
 	}
 
-	public void setCompletionDate(Date dateCompleted) {
-		setDateValue(TaskAttribute.DATE_COMPLETION, dateCompleted);
-	}
-
-	public void setModificationDate(Date dateModified) {
-		setDateValue(TaskAttribute.DATE_MODIFIED, dateModified);
-	}
-
-	private TaskAttribute setDateValue(String attributeKey, Date value) {
+	protected TaskAttribute setDateValue(String attributeKey, Date value) {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
 		if (attribute == null) {
 			attribute = taskData.getRoot().createAttribute(attributeKey);
@@ -195,6 +195,10 @@ public class TaskMapper {
 
 	public void setDueDate(Date value) {
 		setDateValue(TaskAttribute.DATE_DUE, value);
+	}
+
+	public void setModificationDate(Date dateModified) {
+		setDateValue(TaskAttribute.DATE_MODIFIED, dateModified);
 	}
 
 	// TODO use Person class?
@@ -227,7 +231,7 @@ public class TaskMapper {
 		setValue(TaskAttribute.TASK_URL, taskUrl);
 	}
 
-	public TaskAttribute setValue(String attributeKey, String value) {
+	protected TaskAttribute setValue(String attributeKey, String value) {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
 		if (attribute == null) {
 			attribute = taskData.getRoot().createAttribute(attributeKey);

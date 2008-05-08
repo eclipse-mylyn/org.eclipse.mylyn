@@ -11,27 +11,20 @@ package org.eclipse.mylyn.tasks.ui;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -40,7 +33,6 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -74,20 +66,12 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 		can be null
 	 * @since 3.0
 	 */
-	public abstract IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit);
+	public abstract IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery queryToEdit);
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection);
-
-	/**
-	 * @deprecated use {@link #getNewTaskWizard(TaskRepository, TaskSelection)} instead
-	 */
-	@Deprecated
-	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
-		return null;
-	}
+	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection);
 
 	/**
 	 * Override to return a custom task editor ID. If overriding this method the connector becomes responsible for
@@ -105,7 +89,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * Contributions to the UI legend.
 	 */
-	public List<AbstractTaskContainer> getLegendItems() {
+	public List<ITask> getLegendItems() {
 		return Collections.emptyList();
 	}
 
@@ -127,7 +111,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @since 3.0
 	 */
 	public ImageDescriptor getTaskListElementIcon(ITaskElement element) {
-		if (element instanceof AbstractRepositoryQuery) {
+		if (element instanceof IRepositoryQuery) {
 			return TasksUiImages.QUERY;
 		} else if (element instanceof ITask) {
 			return TasksUiImages.TASK;
@@ -153,35 +137,6 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	public ImageDescriptor getTaskPriorityOverlay(ITask task) {
 		return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public void openEditQueryDialog(AbstractRepositoryQuery query) {
-		try {
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
-					query.getRepositoryUrl());
-			if (repository == null) {
-				return;
-			}
-
-			IWizard wizard = this.getQueryWizard(repository, query);
-
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (wizard != null && shell != null && !shell.isDisposed()) {
-				WizardDialog dialog = new WizardDialog(shell, wizard);
-				dialog.create();
-				dialog.setTitle("Edit Repository Query");
-				dialog.setBlockOnOpen(true);
-				if (dialog.open() == Window.CANCEL) {
-					dialog.close();
-					return;
-				}
-			}
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open query dialog", e));
-		}
 	}
 
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {

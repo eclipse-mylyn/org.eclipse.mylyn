@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.DefaultTaskSchema;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
@@ -44,7 +45,6 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
@@ -106,21 +106,21 @@ public class TracTaskDataHandlerTest extends TestCase {
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
 		SynchronizationContext event = new SynchronizationContext();
-		event.performQueries = true;
-		event.taskRepository = repository;
-		event.fullSynchronization = true;
-		event.tasks = tasks;
+		event.setNeedsPerformQueries(true);
+		event.setTaskRepository(repository);
+		event.setFullSynchronization(true);
+		event.setTasks(tasks);
 
 		assertEquals(null, repository.getSynchronizationTimeStamp());
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		assertEquals(null, repository.getSynchronizationTimeStamp());
 		assertFalse(task.isStale());
 
 		int time = (int) (System.currentTimeMillis() / 1000) + 1;
 		repository.setSynchronizationTimeStamp(time + "");
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		assertFalse(task.isStale());
 	}
 
@@ -146,21 +146,21 @@ public class TracTaskDataHandlerTest extends TestCase {
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
 		SynchronizationContext event = new SynchronizationContext();
-		event.performQueries = true;
-		event.taskRepository = repository;
-		event.fullSynchronization = true;
+		event.setNeedsPerformQueries(true);
+		event.setTaskRepository(repository);
+		event.setFullSynchronization(true);
 
 		// an empty set should not cause contact to the repository
 		repository.setSynchronizationTimeStamp(null);
-		event.tasks = new HashSet<ITask>();
+		event.setTasks(new HashSet<ITask>());
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		assertNull(repository.getSynchronizationTimeStamp());
 
 		repository.setSynchronizationTimeStamp(null);
-		event.tasks = tasks;
+		event.setTasks(tasks);
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		assertTrue(task.isStale());
 
 		// always returns the ticket because time comparison mode is >=
@@ -169,14 +169,14 @@ public class TracTaskDataHandlerTest extends TestCase {
 		connector.preSynchronization(event, null);
 		// TODO this was fixed so it returns false now but only if the 
 		// query returns a single task
-		assertFalse(event.performQueries);
+		assertFalse(event.needsPerformQueries());
 		assertFalse(task.isStale());
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
-		event.performQueries = true;
+		event.setNeedsPerformQueries(true);
 		connector.preSynchronization(event, null);
-		assertFalse(event.performQueries);
+		assertFalse(event.needsPerformQueries());
 		assertFalse(task.isStale());
 
 		// change ticket making sure it gets a new change time
@@ -186,9 +186,9 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
-		event.performQueries = true;
+		event.setNeedsPerformQueries(true);
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		assertTrue(task.isStale());
 	}
 
@@ -207,33 +207,33 @@ public class TracTaskDataHandlerTest extends TestCase {
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
 		SynchronizationContext event = new SynchronizationContext();
-		event.performQueries = true;
-		event.taskRepository = repository;
-		event.fullSynchronization = true;
-		event.tasks = tasks;
+		event.setNeedsPerformQueries(true);
+		event.setTaskRepository(repository);
+		event.setFullSynchronization(true);
+		event.setTasks(tasks);
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp(null);
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		assertTrue(task.isStale());
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp("");
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		assertTrue(task.isStale());
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp("0");
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		assertTrue(task.isStale());
 
 		task.setStale(false);
 		repository.setSynchronizationTimeStamp("abc");
 		connector.preSynchronization(event, null);
-		assertTrue(event.performQueries);
+		assertTrue(event.needsPerformQueries());
 		assertTrue(task.isStale());
 	}
 

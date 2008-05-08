@@ -17,7 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -59,7 +59,7 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 			File file = new File(path);
 			if (file.isFile()) {
 				try {
-					List<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
+					List<RepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
 							.getTaskListWriter()
 							.readQueries(file);
 					Set<TaskRepository> repositories = TasksUiPlugin.getTaskListManager()
@@ -84,14 +84,14 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 	 * @param repositories
 	 * @param shell
 	 */
-	public void importQueries(List<AbstractRepositoryQuery> queries, Set<TaskRepository> repositories, Shell shell) {
+	public void importQueries(List<RepositoryQuery> queries, Set<TaskRepository> repositories, Shell shell) {
 		TasksUiPlugin.getRepositoryManager().insertRepositories(repositories,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		List<AbstractRepositoryQuery> badQueries = TasksUiPlugin.getTaskListManager().insertQueries(queries);
+		List<RepositoryQuery> badQueries = TasksUiPlugin.getTaskListManager().insertQueries(queries);
 
 		// notify user about importing
 		String message = "The following queries were imported successfully: ";
-		for (AbstractRepositoryQuery imported : queries) {
+		for (RepositoryQuery imported : queries) {
 			if (!badQueries.contains(imported)) {
 				message += "\n" + imported.getHandleIdentifier();
 			}
@@ -99,7 +99,7 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 
 		if (badQueries.size() > 0) {
 			message += "\n\n These queries were not imported, since their repository was not found: ";
-			for (AbstractRepositoryQuery bad : badQueries) {
+			for (RepositoryQuery bad : badQueries) {
 				message += "\n" + bad.getHandleIdentifier();
 			}
 		}

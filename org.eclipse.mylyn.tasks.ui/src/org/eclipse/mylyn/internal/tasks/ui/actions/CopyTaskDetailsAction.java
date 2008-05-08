@@ -10,11 +10,12 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -83,8 +84,8 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			if (connector != null) {
 				text += "\n" + connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());
 			}
-		} else if (object instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) object;
+		} else if (object instanceof IRepositoryQuery) {
+			RepositoryQuery query = (RepositoryQuery) object;
 			text += query.getSummary();
 			text += "\n" + query.getUrl();
 		} else if (object instanceof ITaskElement) {

@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public class TracDuplicateDetector extends AbstractDuplicateDetector {
 
 	@Override
-	public AbstractRepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
+	public RepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
 		TracSearchFilter filter = new TracSearchFilter("description");
 		filter.setOperator(CompareOperator.CONTAINS);
 

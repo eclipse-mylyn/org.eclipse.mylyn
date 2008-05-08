@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
+import java.util.Date;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -16,13 +18,16 @@ import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager.ObjectCloner;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Steffen Pingel
  * @since 2.2
  */
 @Deprecated
-public class TaskSelection {
+public class TaskSelection implements ITaskMapping {
 
 	private final RepositoryTaskData taskData;
 
@@ -58,8 +63,143 @@ public class TaskSelection {
 		this.taskData = taskData;
 	}
 
-	public RepositoryTaskData getTaskData() {
+	public RepositoryTaskData getLegacyTaskData() {
 		return taskData;
+	}
+
+	public Date getCompletionDate() {
+		// ignore
+		return null;
+	}
+
+	public String getComponent() {
+		// ignore
+		return null;
+	}
+
+	public Date getCreationDate() {
+		// ignore
+		return null;
+	}
+
+	public String getDescription() {
+		// ignore
+		return null;
+	}
+
+	public Date getDueDate() {
+		// ignore
+		return null;
+	}
+
+	public Date getModificationDate() {
+		// ignore
+		return null;
+	}
+
+	public String getOwner() {
+		// ignore
+		return null;
+	}
+
+	public PriorityLevel getPriority() {
+		// ignore
+		return null;
+	}
+
+	public String getProduct() {
+		// ignore
+		return null;
+	}
+
+	public String getSummary() {
+		// ignore
+		return null;
+	}
+
+	public TaskData getTaskData() {
+		// ignore
+		return null;
+	}
+
+	public String getTaskKey() {
+		// ignore
+		return null;
+	}
+
+	public String getTaskKind() {
+		// ignore
+		return null;
+	}
+
+	public String getTaskUrl() {
+		// ignore
+		return null;
+	}
+
+	public void setCompletionDate(Date dateCompleted) {
+		// ignore
+
+	}
+
+	public void setComponent(String component) {
+		// ignore
+
+	}
+
+	public void setCreationDate(Date dateCreated) {
+		// ignore
+
+	}
+
+	public void setDescription(String description) {
+		// ignore
+
+	}
+
+	public void setDueDate(Date value) {
+		// ignore
+
+	}
+
+	public void setModificationDate(Date dateModified) {
+		// ignore
+
+	}
+
+	public void setOwner(String owner) {
+		// ignore
+
+	}
+
+	public void setPriority(PriorityLevel priority) {
+		// ignore
+
+	}
+
+	public void setProduct(String product) {
+		// ignore
+
+	}
+
+	public void setReporter(String reporter) {
+		// ignore
+
+	}
+
+	public void setSummary(String summary) {
+		// ignore
+
+	}
+
+	public void setTaskKind(String taskKind) {
+		// ignore
+
+	}
+
+	public void setTaskUrl(String taskUrl) {
+		// ignore
+
 	}
 
 }

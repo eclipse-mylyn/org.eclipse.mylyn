@@ -8,13 +8,13 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 
 /**
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
+public class BugzillaRepositoryQuery extends RepositoryQuery {
 
 	private boolean customQuery = false;
 

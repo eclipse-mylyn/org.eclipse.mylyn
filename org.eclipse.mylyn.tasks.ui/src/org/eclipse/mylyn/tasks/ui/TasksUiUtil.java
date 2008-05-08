@@ -38,14 +38,12 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -55,9 +53,11 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskList;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -242,8 +242,8 @@ public class TasksUiUtil {
 		Object element = selection.getFirstElement();
 		if (element instanceof TaskRepository) {
 			return (TaskRepository) selection.getFirstElement();
-		} else if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+		} else if (element instanceof IRepositoryQuery) {
+			IRepositoryQuery query = (IRepositoryQuery) element;
 			return TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(), query.getRepositoryUrl());
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
@@ -427,11 +427,11 @@ public class TasksUiUtil {
 	/**
 	 * @since 3.0
 	 */
-	public static boolean openNewLocalTaskEditor(Shell shell, TaskSelection taskSelection) {
+	public static boolean openNewLocalTaskEditor(Shell shell, ITaskMapping taskSelection) {
 		return openNewTaskEditor(shell, new NewLocalTaskWizard(taskSelection), taskSelection);
 	}
 
-	private static boolean openNewTaskEditor(Shell shell, IWizard wizard, TaskSelection taskSelection) {
+	private static boolean openNewTaskEditor(Shell shell, IWizard wizard, ITaskMapping taskSelection) {
 		WizardDialog dialog = new WizardDialog(shell, wizard);
 		dialog.setBlockOnOpen(true);
 
@@ -449,7 +449,7 @@ public class TasksUiUtil {
 	/**
 	 * @since 3.0
 	 */
-	public static boolean openNewTaskEditor(Shell shell, TaskSelection taskSelection, TaskRepository taskRepository) {
+	public static boolean openNewTaskEditor(Shell shell, ITaskMapping taskSelection, TaskRepository taskRepository) {
 		final IWizard wizard;
 		List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
 		if (taskRepository == null && repositories.size() == 1) {

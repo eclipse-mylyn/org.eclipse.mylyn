@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 
@@ -21,9 +21,9 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
  */
 public class NewTaskPage extends SelectRepositoryPage {
 
-	private final TaskSelection taskSelection;
+	private final ITaskMapping taskSelection;
 
-	public NewTaskPage(ITaskRepositoryFilter taskRepositoryFilter, TaskSelection taskSelection) {
+	public NewTaskPage(ITaskRepositoryFilter taskRepositoryFilter, ITaskMapping taskSelection) {
 		super(taskRepositoryFilter);
 		this.taskSelection = taskSelection;
 	}

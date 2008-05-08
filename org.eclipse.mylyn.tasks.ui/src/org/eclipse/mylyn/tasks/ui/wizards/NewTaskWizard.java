@@ -27,6 +27,8 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -47,12 +49,12 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 
 	private final TaskRepository taskRepository;
 
-	private TaskSelection taskSelection;
+	private ITaskMapping taskSelection;
 
 	/**
 	 * @since 3.0
 	 */
-	public NewTaskWizard(TaskRepository taskRepository, TaskSelection taskSelection) {
+	public NewTaskWizard(TaskRepository taskRepository, ITaskMapping taskSelection) {
 		this.taskRepository = taskRepository;
 		this.taskSelection = taskSelection;
 	}
@@ -73,61 +75,68 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		return true;
 	}
 
+	@SuppressWarnings( { "deprecation", "restriction" })
 	@Override
 	public boolean performFinish() {
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(taskRepository.getConnectorKind());
+		// FIXME 3.0 implement TaskData support
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				taskRepository.getConnectorKind());
+		if (connector instanceof AbstractLegacyRepositoryConnector) {
+			AbstractLegacyRepositoryConnector legacyConnector = (AbstractLegacyRepositoryConnector) connector;
 
-		final AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
-		if (taskDataHandler == null) {
-			TasksUiInternal.displayStatus("Error creating new task", new RepositoryStatus(IStatus.ERROR,
-					TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY,
-					"The selected repository does not support creating new tasks."));
-			return false;
-		}
-
-		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(
-				taskRepository.getRepositoryUrl(), taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
-
-		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getConnectorKind(),
-				taskRepository.getRepositoryUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
-		taskData.setNew(true);
-
-		try {
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						if (!taskDataHandler.initializeTaskData(taskRepository, taskData, monitor)) {
-							throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									RepositoryStatus.ERROR_REPOSITORY,
-									"The selected repository does not support creating new tasks."));
-						}
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					}
-				}
-			};
-
-			getContainer().run(true, true, runnable);
-		} catch (InvocationTargetException e) {
-			if (e.getCause() instanceof CoreException) {
-				TasksUiInternal.displayStatus("Error creating new task", ((CoreException) e.getCause()).getStatus());
-			} else {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error creating new task",
-						e.getCause()));
+			final AbstractTaskDataHandler taskDataHandler = legacyConnector.getLegacyTaskDataHandler();
+			if (taskDataHandler == null) {
+				TasksUiInternal.displayStatus("Error creating new task", new RepositoryStatus(IStatus.ERROR,
+						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY,
+						"The selected repository does not support creating new tasks."));
+				return false;
 			}
-			return false;
-		} catch (InterruptedException e) {
-			return false;
-		}
 
-		if (taskSelection != null) {
-			taskDataHandler.cloneTaskData(taskSelection.getTaskData(), taskData);
-		}
+			AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(
+					taskRepository.getRepositoryUrl(), taskRepository.getConnectorKind(),
+					AbstractTask.DEFAULT_TASK_KIND);
 
-		NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, taskData);
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
+			final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory,
+					taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(), TasksUiPlugin.getDefault()
+							.getNextNewRepositoryTaskId());
+			taskData.setNew(true);
+
+			try {
+				IRunnableWithProgress runnable = new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						try {
+							if (!taskDataHandler.initializeTaskData(taskRepository, taskData, monitor)) {
+								throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+										RepositoryStatus.ERROR_REPOSITORY,
+										"The selected repository does not support creating new tasks."));
+							}
+						} catch (CoreException e) {
+							throw new InvocationTargetException(e);
+						}
+					}
+				};
+
+				getContainer().run(true, true, runnable);
+			} catch (InvocationTargetException e) {
+				if (e.getCause() instanceof CoreException) {
+					TasksUiInternal.displayStatus("Error creating new task", ((CoreException) e.getCause()).getStatus());
+				} else {
+					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error creating new task",
+							e.getCause()));
+				}
+				return false;
+			} catch (InterruptedException e) {
+				return false;
+			}
+
+			if (taskSelection instanceof TaskSelection) {
+				taskDataHandler.cloneTaskData(((TaskSelection) taskSelection).getLegacyTaskData(), taskData);
+			}
+
+			NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, taskData);
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
+		}
 		return true;
 	}
 }

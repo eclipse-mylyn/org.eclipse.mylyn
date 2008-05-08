@@ -18,7 +18,6 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
@@ -30,6 +29,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
@@ -113,7 +113,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	//
 	// private UserSearchField ccField;
 
-	public TracCustomQueryPage(TaskRepository repository, AbstractRepositoryQuery query) {
+	public TracCustomQueryPage(TaskRepository repository, IRepositoryQuery query) {
 		super(TITLE, repository);
 		this.query = (TracRepositoryQuery) query;
 		setTitle(TITLE);

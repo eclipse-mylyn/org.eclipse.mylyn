@@ -12,7 +12,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -241,7 +241,7 @@ public class OrphanedTasksTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL);
 		assertFalse(tasks.isEmpty());
 
-		AbstractRepositoryQuery query = (AbstractRepositoryQuery) mockTask.getParentContainers().iterator().next();
+		RepositoryQuery query = (RepositoryQuery) mockTask.getParentContainers().iterator().next();
 		assertEquals(mockQuery, query);
 		assertFalse(query.isEmpty());
 		assertTrue(TasksUiPlugin.getTaskList().getUnmatchedContainer(

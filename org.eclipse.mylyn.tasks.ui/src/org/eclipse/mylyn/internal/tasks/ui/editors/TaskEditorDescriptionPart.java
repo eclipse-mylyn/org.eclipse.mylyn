@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
@@ -124,7 +124,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		toolBar.add(replyAction);
 	}
 
-	protected AbstractRepositoryQuery getDuplicateSearchCollector(String name) {
+	protected RepositoryQuery getDuplicateSearchCollector(String name) {
 		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
 		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
 
@@ -151,7 +151,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	}
 
 	public boolean searchForDuplicates(String duplicateDetectorName) {
-		AbstractRepositoryQuery duplicatesQuery = getDuplicateSearchCollector(duplicateDetectorName);
+		RepositoryQuery duplicatesQuery = getDuplicateSearchCollector(duplicateDetectorName);
 		if (duplicatesQuery != null) {
 			SearchHitCollector collector = new SearchHitCollector(TasksUi.getTaskList(),
 					getTaskEditorPage().getTaskRepository(), duplicatesQuery);

@@ -16,7 +16,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -58,7 +58,7 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
 			String name = dialog.getValue();
-			Set<AbstractRepositoryQuery> queries = TasksUi.getTaskList().getQueries();
+			Set<RepositoryQuery> queries = TasksUi.getTaskList().getQueries();
 			Set<AbstractTaskCategory> categories = TasksUi.getTaskList().getCategories();
 
 			for (AbstractTaskCategory category : categories) {
@@ -68,7 +68,7 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 					return;
 				}
 			}
-			for (AbstractRepositoryQuery query : queries) {
+			for (RepositoryQuery query : queries) {
 				if (name != null && name.equals(query.getSummary())) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"New Category", "A query with this name already exists, please choose another name.");

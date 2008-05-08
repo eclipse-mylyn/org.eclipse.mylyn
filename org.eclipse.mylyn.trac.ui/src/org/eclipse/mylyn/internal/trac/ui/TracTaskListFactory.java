@@ -11,11 +11,12 @@ package org.eclipse.mylyn.internal.trac.ui;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 
@@ -51,12 +52,12 @@ public class TracTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public boolean canCreate(AbstractRepositoryQuery category) {
+	public boolean canCreate(IRepositoryQuery category) {
 		return category instanceof TracRepositoryQuery;
 	}
 
 	@Override
-	public String getQueryElementName(AbstractRepositoryQuery query) {
+	public String getQueryElementName(IRepositoryQuery query) {
 		return query instanceof TracRepositoryQuery ? KEY_TRAC_QUERY : "";
 	}
 
@@ -73,7 +74,7 @@ public class TracTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
+	public RepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		return new TracRepositoryQuery(repositoryUrl, queryString, label);
 	}
 }

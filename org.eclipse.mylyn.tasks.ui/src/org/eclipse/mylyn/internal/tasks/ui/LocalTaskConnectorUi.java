@@ -10,11 +10,12 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -31,12 +32,12 @@ public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository, TaskSelection selection) {
-		return new NewLocalTaskWizard(selection);
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection) {
+		return new NewLocalTaskWizard((TaskSelection) selection);
 	}
 
 	@Override
-	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit) {
+	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery queryToEdit) {
 		return null;
 	}
 

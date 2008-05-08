@@ -11,8 +11,9 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 import java.util.Collections;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 
@@ -53,26 +54,26 @@ public abstract class AbstractTaskListFactory {
 	public abstract boolean canCreate(ITask task);
 
 	/**
-	 * Returns true if factory can create an XML element to store given {@link AbstractRepositoryQuery}.
+	 * Returns true if factory can create an XML element to store given {@link RepositoryQuery}.
 	 * <p>
-	 * The name of the XML element is taken from the {@link #getQueryElementName(AbstractRepositoryQuery)} method and
-	 * additional query attributes can be stored in {@link #setAdditionalAttributes(AbstractRepositoryQuery, Element)}.
+	 * The name of the XML element is taken from the {@link #getQueryElementName(RepositoryQuery)} method and
+	 * additional query attributes can be stored in {@link #setAdditionalAttributes(RepositoryQuery, Element)}.
 	 * 
 	 * @param query
 	 * 		a query instance to create an XML element for
 	 * 
 	 * @return true if factory can create XML element to store given {@link AbstractTask}.
 	 * 
-	 * @see #getQueryElementName(AbstractRepositoryQuery)
-	 * @see #setAdditionalAttributes(AbstractRepositoryQuery, Element)
+	 * @see #getQueryElementName(RepositoryQuery)
+	 * @see #setAdditionalAttributes(RepositoryQuery, Element)
 	 * @since 3.0
 	 */
-	public boolean canCreate(AbstractRepositoryQuery query) {
+	public boolean canCreate(IRepositoryQuery query) {
 		return false;
 	}
 
 	/**
-	 * Creates an {@link AbstractRepositoryQuery} instance from given XML element matching one of the names returned by
+	 * Creates an {@link RepositoryQuery} instance from given XML element matching one of the names returned by
 	 * {@link #getQueryElementNames()}.
 	 * <p>
 	 * Concrete implementation should populate required query configuration using method parameters and content of the
@@ -86,12 +87,12 @@ public abstract class AbstractTaskListFactory {
 	 * 		a query label or name
 	 * @param element
 	 * 		an XML element containing query data
-	 * @return instance of the {@link AbstractRepositoryQuery}
+	 * @return instance of the {@link RepositoryQuery}
 	 * 
 	 * @see #getQueryElementNames()
 	 * @since 3.0
 	 */
-	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
+	public RepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		return null;
 	}
 
@@ -110,7 +111,7 @@ public abstract class AbstractTaskListFactory {
 	 * 		a query label or name
 	 * @param element
 	 * 		an XML element containing query data
-	 * @return instance of the {@link AbstractRepositoryQuery}
+	 * @return instance of the {@link RepositoryQuery}
 	 * 
 	 * @see #getTaskElementName()
 	 * @since 3.0
@@ -118,26 +119,26 @@ public abstract class AbstractTaskListFactory {
 	public abstract AbstractTask createTask(String repositoryUrl, String taskId, String label, Element element);
 
 	/**
-	 * Returns name of the XML element used to store given query instance if {@link #canCreate(AbstractRepositoryQuery)}
+	 * Returns name of the XML element used to store given query instance if {@link #canCreate(RepositoryQuery)}
 	 * return true for given query instance.
 	 * 
 	 * @param query
 	 * 		a query instance to get the name for
 	 * 
 	 * @return name for the XML element to store given query instance or null if factory doesn't support given {@link
-	 * 	AbstractRepositoryQuery} instance.
+	 * 	RepositoryQuery} instance.
 	 * 
-	 * @see #canCreate(AbstractRepositoryQuery)
+	 * @see #canCreate(RepositoryQuery)
 	 * @since 3.0
 	 */
-	public String getQueryElementName(AbstractRepositoryQuery query) {
+	public String getQueryElementName(IRepositoryQuery query) {
 		return "";
 	}
 
 	/**
 	 * Returns names for all query elements.
 	 * <p>
-	 * This collection is used to determine if this factory can create {@link AbstractRepositoryQuery} instance from the
+	 * This collection is used to determine if this factory can create {@link RepositoryQuery} instance from the
 	 * XML element using {@link #createQuery(String, String, String, Element)} method.
 	 * 
 	 * @return a <code>Set</code> of query element names
@@ -160,7 +161,7 @@ public abstract class AbstractTaskListFactory {
 	public abstract String getTaskElementName();
 
 	/**
-	 * Adds additional attributes to an XML element used to store given {@link AbstractRepositoryQuery}.
+	 * Adds additional attributes to an XML element used to store given {@link RepositoryQuery}.
 	 * 
 	 * @param query
 	 * 		a query instance being stored
@@ -168,7 +169,7 @@ public abstract class AbstractTaskListFactory {
 	 * 		an XML element used to store given query instance
 	 * @since 3.0
 	 */
-	public void setAdditionalAttributes(AbstractRepositoryQuery query, Element node) {
+	public void setAdditionalAttributes(IRepositoryQuery query, Element node) {
 		// ignore
 	}
 

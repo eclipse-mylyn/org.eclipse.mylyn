@@ -90,7 +90,7 @@ public class NewTaskFromSelectionAction extends Action {
 				sb.append("\n\n");
 				if (taskSelection != null) {
 					// if text was selected, prefer that 
-					sb.append(taskSelection.getTaskData().getDescription());
+					sb.append(taskSelection.getLegacyTaskData().getDescription());
 				} else {
 					sb.append(comment.getText());
 				}
@@ -106,7 +106,7 @@ public class NewTaskFromSelectionAction extends Action {
 				}
 
 				sb.append("\n\n");
-				sb.append(taskSelection.getTaskData().getDescription());
+				sb.append(taskSelection.getLegacyTaskData().getDescription());
 
 				taskSelection = new TaskSelection("", sb.toString());
 			}

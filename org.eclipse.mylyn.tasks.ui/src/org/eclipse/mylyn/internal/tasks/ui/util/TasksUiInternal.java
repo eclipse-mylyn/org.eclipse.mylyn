@@ -27,19 +27,21 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
@@ -50,9 +52,11 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskList;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -79,7 +83,7 @@ import org.eclipse.ui.PlatformUI;
 
 public class TasksUiInternal {
 
-	public static MultiRepositoryAwareWizard createNewTaskWizard(TaskSelection taskSelection) {
+	public static MultiRepositoryAwareWizard createNewTaskWizard(ITaskMapping taskSelection) {
 		return new NewTaskWizard(taskSelection);
 	}
 
@@ -213,10 +217,10 @@ public class TasksUiInternal {
 			}
 		} else if (element instanceof TaskCategory) {
 			TasksUiInternal.openEditor((TaskCategory) element);
-		} else if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+		} else if (element instanceof IRepositoryQuery) {
+			RepositoryQuery query = (RepositoryQuery) element;
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getConnectorKind());
-			connectorUi.openEditQueryDialog(query);
+			TasksUiInternal.openEditQueryDialog(connectorUi, query);
 		}
 	}
 
@@ -259,11 +263,11 @@ public class TasksUiInternal {
 	}
 
 	public static final Job synchronizeQueries(AbstractRepositoryConnector connector, TaskRepository repository,
-			Set<AbstractRepositoryQuery> queries, IJobChangeListener listener, boolean force) {
+			Set<RepositoryQuery> queries, IJobChangeListener listener, boolean force) {
 		Assert.isTrue(queries.size() > 0);
 
 		TaskList taskList = TasksUiPlugin.getTaskList();
-		for (AbstractRepositoryQuery query : queries) {
+		for (RepositoryQuery query : queries) {
 			query.setSynchronizing(true);
 		}
 		taskList.notifyContainersUpdated(queries);
@@ -275,7 +279,7 @@ public class TasksUiInternal {
 			job.addJobChangeListener(listener);
 		}
 		if (force) {
-			final AbstractRepositoryQuery query = queries.iterator().next();
+			final RepositoryQuery query = queries.iterator().next();
 			job.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
@@ -298,8 +302,8 @@ public class TasksUiInternal {
 	 * For synchronizing a single query. Use synchronize(Set, IJobChangeListener) if synchronizing multiple queries at a
 	 * time.
 	 */
-	public static final Job synchronizeQuery(AbstractRepositoryConnector connector,
-			AbstractRepositoryQuery repositoryQuery, IJobChangeListener listener, boolean force) {
+	public static final Job synchronizeQuery(AbstractRepositoryConnector connector, RepositoryQuery repositoryQuery,
+			IJobChangeListener listener, boolean force) {
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryQuery.getConnectorKind(),
 				repositoryQuery.getRepositoryUrl());
 		return synchronizeQueries(connector, repository, Collections.singleton(repositoryQuery), listener, force);
@@ -485,6 +489,35 @@ public class TasksUiInternal {
 			}
 		}
 		return allTaskContainersInWorkingSets;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static void openEditQueryDialog(AbstractRepositoryConnectorUi connectorUi, IRepositoryQuery query) {
+		try {
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
+					query.getRepositoryUrl());
+			if (repository == null) {
+				return;
+			}
+
+			IWizard wizard = connectorUi.getQueryWizard(repository, query);
+
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			if (wizard != null && shell != null && !shell.isDisposed()) {
+				WizardDialog dialog = new WizardDialog(shell, wizard);
+				dialog.create();
+				dialog.setTitle("Edit Repository Query");
+				dialog.setBlockOnOpen(true);
+				if (dialog.open() == Window.CANCEL) {
+					dialog.close();
+					return;
+				}
+			}
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open query dialog", e));
+		}
 	}
 
 }

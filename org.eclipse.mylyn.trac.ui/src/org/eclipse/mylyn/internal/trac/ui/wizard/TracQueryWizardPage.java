@@ -17,13 +17,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -65,7 +65,7 @@ public class TracQueryWizardPage extends WizardPage {
 
 	private List<SearchField> searchFields;
 
-	public TracQueryWizardPage(TaskRepository repository, AbstractRepositoryQuery query) {
+	public TracQueryWizardPage(TaskRepository repository, IRepositoryQuery query) {
 		super(TITLE);
 
 		this.repository = repository;

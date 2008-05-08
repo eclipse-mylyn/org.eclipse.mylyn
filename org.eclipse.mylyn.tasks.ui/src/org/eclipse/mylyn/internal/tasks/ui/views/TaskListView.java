@@ -53,7 +53,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -98,6 +97,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
@@ -1194,7 +1194,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			}
 		}
-		if (element instanceof AbstractRepositoryQuery) {
+		if (element instanceof IRepositoryQuery) {
 			EditRepositoryPropertiesAction repositoryPropertiesAction = new EditRepositoryPropertiesAction();
 			repositoryPropertiesAction.selectionChanged(new StructuredSelection(element));
 			if (repositoryPropertiesAction.isEnabled()) {
@@ -1227,7 +1227,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskElement element) {
-		if ((element instanceof ITask) || element instanceof AbstractRepositoryQuery) {
+		if ((element instanceof ITask) || element instanceof IRepositoryQuery) {
 			manager.add(menuToAdd);
 		}
 	}
@@ -1283,7 +1283,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				if (element instanceof AbstractTaskCategory) {
 					AbstractTaskCategory container = (AbstractTaskCategory) element;
 					action.setEnabled(container.isUserManaged());
-				} else if (element instanceof AbstractRepositoryQuery) {
+				} else if (element instanceof IRepositoryQuery) {
 					action.setEnabled(true);
 				}
 			}

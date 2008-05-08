@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -26,7 +26,7 @@ public abstract class AbstractDuplicateDetector {
 
 	protected String kind;
 
-	public abstract AbstractRepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData);
+	public abstract RepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData);
 
 	public void setName(String name) {
 		this.name = name;

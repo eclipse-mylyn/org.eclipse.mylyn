@@ -14,6 +14,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -109,7 +110,7 @@ public abstract class AbstractTaskDataHandler {
 	 * 		the target task data values are copied to, the connector kind matches the one of this task data handler
 	 * @since 2.2
 	 */
-	public void cloneTaskData(TaskData sourceTaskData, TaskData targetTaskData) {
+	public void cloneTaskData(ITaskMapping source, TaskData target) {
 //		targetTaskData.setSummary(sourceTaskData.getSummary());
 //		targetTaskData.setDescription(sourceTaskData.getDescription());
 //		if (sourceTaskData.getConnectorKind().equals(targetTaskData.getConnectorKind())

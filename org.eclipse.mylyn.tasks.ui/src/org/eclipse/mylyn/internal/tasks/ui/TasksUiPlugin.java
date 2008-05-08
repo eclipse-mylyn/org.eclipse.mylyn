@@ -53,16 +53,17 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.TasksModel;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
@@ -80,6 +81,7 @@ import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationRem
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
@@ -301,7 +303,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 			}
 			// New query hits
-			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskList().getQueries()) {
+			for (RepositoryQuery query : TasksUiPlugin.getTaskList().getQueries()) {
 				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getConnectorKind());
 				if (!connectorUi.isCustomNotificationHandling()) {
 					for (ITask hit : query.getChildren()) {
@@ -354,6 +356,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private ServiceReference proxyServiceReference;
 
 	private IProxyChangeListener proxyChangeListener;
+
+	private static TasksModel tasksModel;
 
 	private class TasksUiInitializationJob extends UIJob {
 
@@ -482,6 +486,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			repositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
 			taskActivityManager = new TaskActivityManager(repositoryManager, taskListManager.getTaskList());
+			tasksModel = new TasksModel(taskListManager.getTaskList(), repositoryManager);
 			updateTaskActivityManager();
 
 			proxyServiceReference = context.getServiceReference(IProxyService.class.getName());
@@ -524,7 +529,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskDataManager.setDataPath(getDataDirectory());
 
 			for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
-				connector.init(taskDataManager);
+				if (connector instanceof AbstractLegacyRepositoryConnector) {
+					((AbstractLegacyRepositoryConnector) connector).init(taskDataManager);
+				}
 			}
 
 			loadTemplateRepositories();
@@ -833,8 +840,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		if (container instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery) container).getConnectorKind());
+		if (container instanceof IRepositoryQuery) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((IRepositoryQuery) container).getConnectorKind());
 			if (connectorUi != null) {
 				if (connectorUi.forceSubtaskHierarchy()) {
 					groupSubtasks = true;
@@ -1358,5 +1365,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public static TaskList getTaskList() {
 		return getTaskListManager().getTaskList();
+	}
+
+	public static TasksModel getTasksModel() {
+		return tasksModel;
 	}
 }

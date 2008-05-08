@@ -16,11 +16,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -109,7 +110,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	}
 
 	public void testQueryExternalization() {
-		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
+		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
 		// long time = 1234;
 		// Date oldDate = new Date(time);
 		// query.setLastRefresh(oldDate);
@@ -125,7 +126,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getQueries().size());
-		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
+		IRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
 		assertEquals(query.getUrl(), readQuery.getUrl());
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
 		assertEquals("today", query.getLastSynchronizedTimeStamp());
@@ -153,10 +154,10 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	}
 
 	public void testDeleteQuery() {
-		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
+		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
 		manager.getTaskList().addQuery(query);
 
-		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
+		IRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
 
 		manager.getTaskList().deleteQuery(query);
@@ -164,10 +165,10 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	}
 
 	public void testDeleteQueryAfterRename() {
-		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
+		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
 		manager.getTaskList().addQuery(query);
 
-		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
+		IRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
 		manager.getTaskList().renameContainer(query, "newName");
 		manager.getTaskList().deleteQuery(query);
@@ -175,10 +176,10 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	}
 
 	public void testCreateQueryWithSameName() {
-		AbstractRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
+		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
 		manager.getTaskList().addQuery(query);
 		assertEquals(1, manager.getTaskList().getQueries().size());
-		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
+		IRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
 
 		manager.getTaskList().addQuery(new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label"));

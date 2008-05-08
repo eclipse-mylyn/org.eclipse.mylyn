@@ -20,9 +20,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -49,7 +50,7 @@ public class QueryExportAction extends Action implements IViewActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
-		List<AbstractRepositoryQuery> selectedQueries = getSelectedQueries(selection);
+		List<RepositoryQuery> selectedQueries = getSelectedQueries(selection);
 		action.setEnabled(true);
 		if (selectedQueries.size() > 0) {
 			action.setEnabled(true);
@@ -59,20 +60,20 @@ public class QueryExportAction extends Action implements IViewActionDelegate {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected List<AbstractRepositoryQuery> getSelectedQueries(ISelection newSelection) {
-		List<AbstractRepositoryQuery> selectedQueries = new ArrayList<AbstractRepositoryQuery>();
+	protected List<RepositoryQuery> getSelectedQueries(ISelection newSelection) {
+		List<RepositoryQuery> selectedQueries = new ArrayList<RepositoryQuery>();
 		if (selection instanceof StructuredSelection) {
 			List selectedObjects = ((StructuredSelection) selection).toList();
 			for (Object selectedObject : selectedObjects) {
-				if (selectedObject instanceof AbstractRepositoryQuery) {
-					selectedQueries.add((AbstractRepositoryQuery) selectedObject);
+				if (selectedObject instanceof IRepositoryQuery) {
+					selectedQueries.add((RepositoryQuery) selectedObject);
 				}
 			}
 		}
 		return selectedQueries;
 	}
 
-	public void run(List<AbstractRepositoryQuery> queries) {
+	public void run(List<RepositoryQuery> queries) {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		FileDialog dialog = new FileDialog(shell, SWT.PRIMARY_MODAL | SWT.SAVE);
 		dialog.setFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION });

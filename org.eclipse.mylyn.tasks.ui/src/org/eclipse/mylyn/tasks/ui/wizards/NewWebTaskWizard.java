@@ -16,6 +16,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewWebTaskPage;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.Clipboard;
@@ -38,12 +39,12 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 
 	protected String newTaskUrl;
 
-	private final TaskSelection taskSelection;
+	private final ITaskMapping taskSelection;
 
 	/**
 	 * @since 3.0
 	 */
-	public NewWebTaskWizard(TaskRepository taskRepository, String newTaskUrl, TaskSelection taskSelection) {
+	public NewWebTaskWizard(TaskRepository taskRepository, String newTaskUrl, ITaskMapping taskSelection) {
 		this.taskRepository = taskRepository;
 		this.newTaskUrl = newTaskUrl;
 		this.taskSelection = taskSelection;
@@ -72,18 +73,21 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 		return true;
 	}
 
-	private void handleSelection(final TaskSelection taskSelection) {
+	private void handleSelection(final ITaskMapping taskSelection) {
 		if (taskSelection == null) {
 			return;
 		}
 
-		RepositoryTaskData taskData = taskSelection.getTaskData();
-		String summary = taskData.getSummary();
-		String description = taskData.getDescription();
+		if (taskSelection instanceof TaskSelection) {
+			RepositoryTaskData taskData = ((TaskSelection) taskSelection).getLegacyTaskData();
+			String summary = taskData.getSummary();
+			String description = taskData.getDescription();
 
-		Clipboard clipboard = new Clipboard(getShell().getDisplay());
-		clipboard.setContents(new Object[] { summary + "\n" + description },
-				new Transfer[] { TextTransfer.getInstance() });
+			Clipboard clipboard = new Clipboard(getShell().getDisplay());
+			clipboard.setContents(new Object[] { summary + "\n" + description },
+					new Transfer[] { TextTransfer.getInstance() });
+		}
+		// FIXME 3.0 implement TaskData support
 
 		MessageDialog.openInformation(
 				getShell(),

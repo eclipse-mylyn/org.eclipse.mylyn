@@ -11,9 +11,10 @@ package org.eclipse.mylyn.tasks.tests.connector;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 
@@ -31,7 +32,7 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public boolean canCreate(AbstractRepositoryQuery query) {
+	public boolean canCreate(IRepositoryQuery query) {
 		return query instanceof MockRepositoryQuery;
 	}
 
@@ -47,12 +48,12 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public String getQueryElementName(AbstractRepositoryQuery query) {
+	public String getQueryElementName(IRepositoryQuery query) {
 		return QUERY_ELEMENT_NAME;
 	}
 
 	@Override
-	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
+	public RepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		MockRepositoryQuery query = new MockRepositoryQuery(label, queryString);
 		query.setRepositoryUrl(repositoryUrl);
 		return query;

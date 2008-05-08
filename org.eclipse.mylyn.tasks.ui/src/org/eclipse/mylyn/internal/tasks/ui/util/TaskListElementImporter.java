@@ -46,7 +46,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -56,6 +56,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -158,7 +159,7 @@ public class TaskListElementImporter {
 		}
 
 		// create query nodes...
-		for (AbstractRepositoryQuery query : taskList.getQueries()) {
+		for (RepositoryQuery query : taskList.getQueries()) {
 			try {
 				delagatingExternalizer.createQueryElement(query, doc, root);
 			} catch (Throwable t) {
@@ -373,8 +374,8 @@ public class TaskListElementImporter {
 	 * 
 	 * @throws TaskExternalizationException
 	 */
-	private AbstractRepositoryQuery readQuery(TaskList taskList, Node child) throws TaskExternalizationException {
-		AbstractRepositoryQuery query = null;
+	private RepositoryQuery readQuery(TaskList taskList, Node child) throws TaskExternalizationException {
+		RepositoryQuery query = null;
 		for (AbstractTaskListFactory externalizer : externalizers) {
 			Set<String> queryTagNames = externalizer.getQueryElementNames();
 			if (queryTagNames != null && queryTagNames.contains(child.getNodeName())) {
@@ -534,9 +535,9 @@ public class TaskListElementImporter {
 		return externalizers;
 	}
 
-	public void writeQueries(List<AbstractRepositoryQuery> queries, File outFile) {
+	public void writeQueries(List<RepositoryQuery> queries, File outFile) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
-		for (AbstractRepositoryQuery query : queries) {
+		for (IRepositoryQuery query : queries) {
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					query.getRepositoryUrl());
 			if (repository != null) {
@@ -561,7 +562,7 @@ public class TaskListElementImporter {
 	/**
 	 * @return null if it was not possible to create the Query document.
 	 */
-	public Document createQueryDocument(List<AbstractRepositoryQuery> queries) {
+	public Document createQueryDocument(List<RepositoryQuery> queries) {
 		Document doc = createTaskListDocument();
 		if (doc == null) {
 			return null;
@@ -569,7 +570,7 @@ public class TaskListElementImporter {
 
 		Element root = createTaskListRoot(doc);
 
-		for (AbstractRepositoryQuery query : queries) {
+		for (RepositoryQuery query : queries) {
 			try {
 				delagatingExternalizer.createQueryElement(query, doc, root);
 			} catch (Throwable t) {
@@ -583,7 +584,7 @@ public class TaskListElementImporter {
 		return doc;
 	}
 
-	public List<AbstractRepositoryQuery> readQueries(File inFile) throws IOException {
+	public List<RepositoryQuery> readQueries(File inFile) throws IOException {
 		if (!inFile.exists()) {
 			throw new FileNotFoundException("File does not exist: " + inFile);
 		}
@@ -599,8 +600,8 @@ public class TaskListElementImporter {
 	 * @param Query
 	 * 		document to read.
 	 */
-	public List<AbstractRepositoryQuery> readQueryDocument(Document doc) {
-		List<AbstractRepositoryQuery> queries = new ArrayList<AbstractRepositoryQuery>();
+	public List<RepositoryQuery> readQueryDocument(Document doc) {
+		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 		Element root = doc.getDocumentElement();
 		readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 
@@ -612,7 +613,7 @@ public class TaskListElementImporter {
 				Node child = list.item(i);
 				try {
 					if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
-						AbstractRepositoryQuery query = readQuery(null, child);
+						RepositoryQuery query = readQuery(null, child);
 						if (query != null) {
 							queries.add(query);
 						}

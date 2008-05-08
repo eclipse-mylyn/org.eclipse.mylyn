@@ -13,13 +13,12 @@ import java.util.Date;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
 
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
@@ -33,8 +32,6 @@ import org.eclipse.mylyn.tasks.core.sync.SynchronizationContext;
 public abstract class AbstractRepositoryConnector {
 
 	private static final long REPOSITORY_CONFIGURATION_UPDATE_INTERVAL = 24 * 60 * 60 * 1000;
-
-	private ITaskDataManager taskDataManager;
 
 	public abstract boolean canCreateNewTask(TaskRepository repository);
 
@@ -105,13 +102,6 @@ public abstract class AbstractRepositoryConnector {
 		return null;
 	}
 
-	/**
-	 * @since 3.0
-	 */
-	protected ITaskDataManager getTaskDataManager() {
-		return taskDataManager;
-	}
-
 	public abstract String getTaskIdFromTaskUrl(String taskFullUrl);
 
 	/**
@@ -131,7 +121,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
-	public TaskMapper getTaskScheme(TaskData taskData) {
+	public ITaskMapping getTaskMapping(TaskData taskData) {
 		return new TaskMapper(taskData);
 	}
 
@@ -142,15 +132,6 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 */
 	public abstract boolean hasChanged(ITask task, TaskData taskData);
-
-	/**
-	 * Set upon construction
-	 * 
-	 * @since 3.0
-	 */
-	public void init(ITaskDataManager taskDataManager) {
-		this.taskDataManager = taskDataManager;
-	}
 
 	/**
 	 * Default implementation returns true every 24hrs
@@ -182,13 +163,13 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
-	public abstract IStatus performQuery(TaskRepository repository, AbstractRepositoryQuery query,
-			TaskDataCollector resultCollector, SynchronizationContext event, IProgressMonitor monitor);
+	public abstract IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
+			TaskDataCollector resultCollector, ISynchronizationContext event, IProgressMonitor monitor);
 
 	/**
 	 * @since 3.0
 	 */
-	public void postSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void postSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
 		} finally {
@@ -199,7 +180,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
-	public void preSynchronization(SynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
 		} finally {

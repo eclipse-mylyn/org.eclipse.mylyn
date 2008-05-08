@@ -8,12 +8,12 @@
 
 package org.eclipse.mylyn.tasks.tests.connector;
 
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 
 /**
  * @author Mik Kersten
  */
-public class MockRepositoryQuery extends AbstractRepositoryQuery {
+public class MockRepositoryQuery extends RepositoryQuery {
 
 	public String MOCK_QUERY_URL = MockRepositoryConnector.REPOSITORY_URL + ".query";
 

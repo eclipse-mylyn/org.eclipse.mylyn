@@ -15,9 +15,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
@@ -28,7 +25,9 @@ import org.eclipse.mylyn.internal.trac.ui.wizard.EditTracQueryWizard;
 import org.eclipse.mylyn.internal.trac.ui.wizard.NewTracQueryWizard;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracCustomQueryPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -68,7 +67,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository repository, TaskSelection selection) {
+	public IWizard getNewTaskWizard(TaskRepository repository, ITaskMapping selection) {
 		if (TracRepositoryConnector.hasRichEditor(repository)) {
 			return new NewTaskWizard(repository, selection);
 		} else {
@@ -78,7 +77,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
+	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
 		if (query instanceof TracRepositoryQuery) {
 			return new EditTracQueryWizard(repository, query);
 		} else {
@@ -105,8 +104,8 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public List<AbstractTaskContainer> getLegendItems() {
-		List<AbstractTaskContainer> legendItems = new ArrayList<AbstractTaskContainer>();
+	public List<ITask> getLegendItems() {
+		List<ITask> legendItems = new ArrayList<ITask>();
 
 		TracTask defect = new TracTask("", Kind.DEFECT.name(), Kind.DEFECT.toString());
 		defect.setTaskKind(Kind.DEFECT.toString());

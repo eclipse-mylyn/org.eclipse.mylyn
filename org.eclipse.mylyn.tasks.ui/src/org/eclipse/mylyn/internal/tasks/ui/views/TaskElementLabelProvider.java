@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -112,8 +113,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (connectorUi != null) {
 					compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
 				}
-			} else if (element instanceof AbstractRepositoryQuery) {
-				connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery) element).getConnectorKind());
+			} else if (element instanceof IRepositoryQuery) {
+				connectorUi = TasksUiPlugin.getConnectorUi(((IRepositoryQuery) element).getConnectorKind());
 			}
 
 			if (connectorUi != null) {
@@ -122,7 +123,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else {
 				if (element instanceof UnmatchedTaskContainer) {
 					compositeDescriptor.icon = TasksUiImages.QUERY_UNMATCHED;
-				} else if (element instanceof AbstractRepositoryQuery || object instanceof UnmatchedTaskContainer) {
+				} else if (element instanceof IRepositoryQuery || object instanceof UnmatchedTaskContainer) {
 					compositeDescriptor.icon = TasksUiImages.QUERY;
 				} else if (element instanceof ITask) {
 					compositeDescriptor.icon = TasksUiImages.TASK;
@@ -189,8 +190,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else if (imageDescriptor != null) {
 				return imageDescriptor;
 			}
-		} else if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+		} else if (element instanceof IRepositoryQuery) {
+			RepositoryQuery query = (RepositoryQuery) element;
 			if (query.getSynchronizationStatus() != null) {
 				return CommonImages.OVERLAY_SYNC_WARNING;
 			}
@@ -353,8 +354,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			}
 		}
 		if (element instanceof ITaskElement) {
-			if (element instanceof AbstractRepositoryQuery) {
-				if (((AbstractRepositoryQuery) element).isSynchronizing()) {
+			if (element instanceof IRepositoryQuery) {
+				if (((RepositoryQuery) element).isSynchronizing()) {
 					return CommonFonts.ITALIC;
 				}
 			}

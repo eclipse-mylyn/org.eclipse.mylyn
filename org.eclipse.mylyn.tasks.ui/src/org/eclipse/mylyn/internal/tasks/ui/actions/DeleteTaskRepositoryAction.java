@@ -17,9 +17,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.ISharedImages;
@@ -56,14 +57,14 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 					.getShell(), "Confirm Delete", "Delete the selected task repositories?");
 			if (deleteConfirmed) {
 				IStructuredSelection selection = getStructuredSelection();
-				Set<AbstractRepositoryQuery> queries = TasksUi.getTaskList().getQueries();
+				Set<RepositoryQuery> queries = TasksUi.getTaskList().getQueries();
 				List<TaskRepository> repositoriesInUse = new ArrayList<TaskRepository>();
 				List<TaskRepository> repositoriesToDelete = new ArrayList<TaskRepository>();
 				for (Object selectedObject : selection.toList()) {
 					if (selectedObject instanceof TaskRepository) {
 						TaskRepository taskRepository = (TaskRepository) selectedObject;
 						if (queries != null && queries.size() > 0) {
-							for (AbstractRepositoryQuery query : queries) {
+							for (IRepositoryQuery query : queries) {
 								if (query.getRepositoryUrl().equals(taskRepository.getRepositoryUrl())) {
 									repositoriesInUse.add(taskRepository);
 									break;

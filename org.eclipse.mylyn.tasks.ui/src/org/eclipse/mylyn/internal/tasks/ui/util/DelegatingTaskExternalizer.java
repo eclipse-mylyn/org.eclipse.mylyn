@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -537,7 +537,7 @@ final class DelegatingTaskExternalizer {
 		return KEY_TASK_CATEGORY;
 	}
 
-	public Element createQueryElement(AbstractRepositoryQuery query, Document doc, Element parent) {
+	public Element createQueryElement(RepositoryQuery query, Document doc, Element parent) {
 		AbstractTaskListFactory factory = null;
 		String queryTagName = null;
 		for (AbstractTaskListFactory currentFactory : factories) {
@@ -601,7 +601,7 @@ final class DelegatingTaskExternalizer {
 //		return false;
 //	}
 
-	public final void readQueryHit(Element element, TaskList taskList, AbstractRepositoryQuery query)
+	public final void readQueryHit(Element element, TaskList taskList, RepositoryQuery query)
 			throws TaskExternalizationException {
 
 		if (element.hasAttribute(KEY_HANDLE)) {

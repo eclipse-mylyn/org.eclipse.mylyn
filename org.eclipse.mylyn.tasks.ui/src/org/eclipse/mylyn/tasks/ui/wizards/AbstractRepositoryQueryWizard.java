@@ -9,10 +9,11 @@
 package org.eclipse.mylyn.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -23,21 +24,21 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Mik Kersten
  * @since 2.0
  */
-// API 3.0 rename to AbstractRepositoryQueryWizard?
-public abstract class AbstractEditQueryWizard extends Wizard {
+// API 3.0 generalize to make it usable for creating queries as well
+public abstract class AbstractRepositoryQueryWizard extends Wizard {
 
 	private static final String TITLE = "Edit Repository Query";
 
 	protected final TaskRepository repository;
 
-	protected AbstractRepositoryQuery query;
+	protected IRepositoryQuery query;
 
 	protected AbstractRepositoryQueryPage page;
 
 	/**
 	 * @since 3.0
 	 */
-	public AbstractEditQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
+	public AbstractRepositoryQueryWizard(TaskRepository repository, IRepositoryQuery query) {
 		this.repository = repository;
 		this.query = query;
 		setNeedsProgressMonitor(true);
@@ -48,16 +49,16 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		if (query != null) {
-			TasksUi.getTaskList().deleteQuery(query);
+			TasksUi.getTasksModel().deleteQuery(query);
 		}
-		AbstractRepositoryQuery queryToRun = page != null ? page.getQuery() : this.query;
+		IRepositoryQuery queryToRun = page != null ? page.getQuery() : this.query;
 		if (queryToRun != null) {
-			TasksUi.getTaskList().addQuery(queryToRun);
+			TasksUi.getTasksModel().addQuery(queryToRun);
 
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					repository.getConnectorKind());
 			if (connector != null) {
-				TasksUiInternal.synchronizeQuery(connector, queryToRun, null, true);
+				TasksUiInternal.synchronizeQuery(connector, (RepositoryQuery) queryToRun, null, true);
 			}
 		}
 

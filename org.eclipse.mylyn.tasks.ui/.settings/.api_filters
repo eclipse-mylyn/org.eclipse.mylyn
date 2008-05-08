@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<component id="org.eclipse.mylyn.tasks.ui" version="1">
-    <resource path="src/org/eclipse/mylyn/internal/tasks/ui/dialogs/AbstractWorkingSetDialogCOPY.java">
-        <filter id="574619656" messageargs="IWorkingSetSelectionDialog#AbstractWorkingSetDialogCOPY"/>
-        <filter id="574619656" messageargs="org.eclipse.ui.dialogs.IWorkingSetSelectionDialog"/>
+<component id="org.eclipse.mylyn.tasks.ui" version="2">
+    <resource path="src/org/eclipse/mylyn/internal/tasks/ui/dialogs/AbstractWorkingSetDialogCOPY.java" type="org.eclipse.mylyn.internal.tasks.ui.dialogs.AbstractWorkingSetDialogCOPY">
+        <filter id="574619656">
+            <message_arguments>
+                <message_argument value="IWorkingSetSelectionDialog"/>
+                <message_argument value="AbstractWorkingSetDialogCOPY"/>
+            </message_arguments>
+        </filter>
     </resource>
 </component>

@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -44,8 +44,8 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 		TaskRepository taskRepository = null;
 		if (selectedObject instanceof TaskRepository) {
 			taskRepository = (TaskRepository) selectedObject;
-		} else if (selectedObject instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) selectedObject;
+		} else if (selectedObject instanceof IRepositoryQuery) {
+			IRepositoryQuery query = (IRepositoryQuery) selectedObject;
 			taskRepository = TasksUi.getRepositoryManager().getRepository(query.getConnectorKind(),
 					query.getRepositoryUrl());
 		}

@@ -19,11 +19,11 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -542,7 +542,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		}
 
 		@Override
-		public AbstractRepositoryQuery getQuery() {
+		public IRepositoryQuery getQuery() {
 			return null;
 		}
 
@@ -579,7 +579,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		}
 
 		@Override
-		public AbstractRepositoryQuery getQuery() {
+		public IRepositoryQuery getQuery() {
 			return null;
 		}
 
