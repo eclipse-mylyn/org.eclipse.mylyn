@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.team.ui.templates;
 import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
@@ -292,7 +293,8 @@ public class CommitTemplateVariables {
 		public static class TaskReminder extends CommitTemplateDate {
 			@Override
 			protected java.util.Date getDate(ITask task) {
-				return task.getScheduledForDate();
+//				 TODO: Hide this field?
+				return ((AbstractTask) task).getScheduledForDate().getStartDate().getTime();
 			}
 		}
 	}

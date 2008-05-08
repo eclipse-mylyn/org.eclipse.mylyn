@@ -30,29 +30,30 @@ public class TaskListInterestSorter extends ViewerSorter {
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
 
-//		OrphanedTasksContainer localArchive = TasksUiPlugin.getTaskList().getOrphanContainer(
-//				LocalRepositoryConnector.REPOSITORY_URL);
-//		if (o1 == localArchive && o2 instanceof AbstractTaskContainer) {
-//			return -1;
-//		} else if (o1 instanceof AbstractTaskContainer && o2 == localArchive) {
-//			return 1;
-//		}
-
 		if (o1 instanceof ITaskElement && o2 instanceof UnmatchedTaskContainer) {
 			return -1;
 		} else if (o2 instanceof ITaskElement && o1 instanceof UnmatchedTaskContainer) {
 			return 1;
 		}
-
+//
+//		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
+//			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
+//			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
+//			if (dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange())getisCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
+//				return 1;
+//			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
+//				return -1;
+//			}
+//			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
 		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
 			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
-			if (dateRangeTaskContainer1.isCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
-				return 1;
-			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
-				return -1;
-			}
-			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
+			return dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange());
+//			if (dateRangeTaskContainer1.isCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
+//				return 1;
+//			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
+//				return -1;
+//			}
 		} else if (o1 instanceof ITaskElement && o2 instanceof ScheduledTaskContainer) {
 			return -1;
 		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ITaskElement) {
@@ -71,8 +72,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 		if (!(o1 instanceof ITask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
 			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
-				return ((ITaskElement) o1).getSummary().compareToIgnoreCase(
-						((ITaskElement) o2).getSummary());
+				return ((ITaskElement) o1).getSummary().compareToIgnoreCase(((ITaskElement) o2).getSummary());
 			} else {
 				return -1;
 			}
@@ -133,15 +133,15 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareScheduledDate(AbstractTask task1, AbstractTask task2) {
-		if (task1.internalIsFloatingScheduledDate() && !task2.internalIsFloatingScheduledDate()) {
-			return 1;
-		} else if (!task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
-			return -1;
-		} else if (task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
-			if (task1.getScheduledForDate() != null && task2.getScheduledForDate() != null) {
-				return 0;
-			}
-		}
+//		if (task1.internalIsFloatingScheduledDate() && !task2.internalIsFloatingScheduledDate()) {
+//			return 1;
+//		} else if (!task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
+//			return -1;
+//		} else if (task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
+//			if (task1.getScheduledForDate() != null && task2.getScheduledForDate() != null) {
+//				return 0;
+//			}
+//		}
 
 		if (isToday(task1) && !isToday(task2)) {
 			return -1;

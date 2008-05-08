@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.context.ui;
 
-import java.util.Calendar;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.IStatus;
@@ -18,6 +17,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -58,7 +58,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				}
 
 				for (ITask task : children) {
-					if (shouldAlwaysShow(child, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH)) {
+					if (shouldAlwaysShow(child, (AbstractTask) task, ITasksCoreConstants.MAX_SUBTASK_DEPTH)) {
 						return true;
 					}
 				}
@@ -71,15 +71,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean isDateRangeInteresting(ScheduledTaskContainer scheduleContainer) {
-		if (TasksUiPlugin.getTaskActivityManager().isWeekDay(scheduleContainer)
-				&& (scheduleContainer.isPresent() || scheduleContainer.isFuture())) {
-			return true;
-		}
-		if (scheduleContainer.isPresent() && scheduleContainer.isCaptureFloating()) {
+		if (TaskActivityUtil.getCurrentWeek().isCurrentWeekDay(scheduleContainer.getDateRange())) {
+			if (scheduleContainer.isPresent() || scheduleContainer.isFuture()) {
+				return true;
+			}
+		} else if (scheduleContainer.isPresent() /*&& scheduleContainer.isCaptureFloating()*/) {
 			return true;
 		}
 		return false;
-		//return TasksUiPlugin.getTaskActivityManager().isWeekDay(container);
 	}
 
 	// TODO: make meta-context more explicit
@@ -87,7 +86,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return shouldAlwaysShow(parent, task, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
 	}
 
-	public boolean shouldAlwaysShow(Object parent, ITask task, int depth) {
+	public boolean shouldAlwaysShow(Object parent, AbstractTask task, int depth) {
 
 		return task.isActive()
 				|| TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)
@@ -99,14 +98,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 						|| isInterestingForThisWeek(parent, task) || hasInterestingSubTasks(parent, task, depth));
 	}
 
-	private boolean hasInterestingSubTasks(Object parent, ITask task, int depth) {
+	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, int depth) {
 		if (depth > 0) {
 			if (!TasksUiPlugin.getDefault().groupSubtasks(task)) {
 				return false;
 			}
 			if (task.getChildren() != null && task.getChildren().size() > 0) {
 				for (ITask subTask : task.getChildren()) {
-					if (shouldAlwaysShow(parent, subTask, depth - 1)) {
+					if (shouldAlwaysShow(parent, (AbstractTask) subTask, depth - 1)) {
 						return true;
 					}
 				}
@@ -117,29 +116,23 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
 		if (parent instanceof ScheduledTaskContainer) {
-			if (((ScheduledTaskContainer) parent).isCaptureFloating()) {
+			ScheduledTaskContainer container = (ScheduledTaskContainer) parent;
+			if (container.isWeekDay() || container.isPresent()) {
 				return true;
 			}
-			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
-				return false;
-			}
+//			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
+//				return false;
+//			}
 			if (TasksUiPlugin.getTaskActivityManager().isOverdue(task) || task.isPastReminder()) {
 				return true;
 			}
 
-			ScheduledTaskContainer container = (ScheduledTaskContainer) parent;
-			Calendar previousCal = TasksUiPlugin.getTaskActivityManager().getActivityPrevious().getEnd();
-			Calendar nextCal = TasksUiPlugin.getTaskActivityManager().getActivityNextWeek().getStart();
-			if (container.getEnd().compareTo(previousCal) > 0 && container.getStart().compareTo(nextCal) < 0) {
-				// within workweek
-				return true;
-			}
 		}
 
 		return false;
 	}
 
-	public static boolean isInterestingForThisWeek(Object parent, ITask task) {
+	public static boolean isInterestingForThisWeek(Object parent, AbstractTask task) {
 		if (parent instanceof ScheduledTaskContainer) {
 			return shouldShowInFocusedWorkweekDateContainer(parent, task);
 		} else {
