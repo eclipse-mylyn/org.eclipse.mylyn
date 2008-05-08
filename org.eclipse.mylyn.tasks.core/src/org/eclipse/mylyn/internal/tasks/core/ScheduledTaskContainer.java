@@ -121,7 +121,11 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		Set<ITask> children = new HashSet<ITask>();
 
 		// All tasks scheduled for this date range
-		children.addAll(activityManager.getScheduledTasks(range));
+		for (ITask task : activityManager.getScheduledTasks(range)) {
+			if (!task.isCompleted()) {
+				children.add(task);
+			}
+		}
 
 		// Add due tasks if not the This Week container
 		if (!(range instanceof WeekDateRange && isPresent())) {

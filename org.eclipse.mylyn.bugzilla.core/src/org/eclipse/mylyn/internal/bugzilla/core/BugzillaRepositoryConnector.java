@@ -195,6 +195,13 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 						completionDate = new SimpleDateFormat(COMMENT_FORMAT).parse(taskComments.get(
 								taskComments.size() - 1).getCreated());
 
+					} else {
+						// Use last modified date
+						String lastMod = taskData.getLastModified();
+						if (lastMod != null && lastMod.length() > 0) {
+							completionDate = taskData.getAttributeFactory().getDateForAttributeType(
+									RepositoryTaskAttribute.DATE_MODIFIED, lastMod);
+						}
 					}
 
 				} catch (Exception e) {
