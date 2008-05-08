@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
@@ -189,7 +190,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				// XXX fix this hack (jira ids don't work here)
 				if (!taskId.contains(RepositoryTaskHandleUtil.HANDLE_DELIM)) {
 //					String handle = AbstractTask.getHandle(repositoryUrl, taskId);
-					task = TasksUi.getTaskList().getTask(repositoryUrl, taskId);
+					task = TasksUiInternal.getTaskList().getTask(repositoryUrl, taskId);
 				}
 			}
 			if (task == null && taskFullUrl != null) {

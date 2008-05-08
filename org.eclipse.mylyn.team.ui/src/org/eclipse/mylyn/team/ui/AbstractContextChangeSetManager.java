@@ -14,10 +14,10 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * Manages changes sets along with task context and activation.
@@ -32,7 +32,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 	public void enable() {
 		if (!isEnabled) {
 			isEnabled = true;
-			TasksUi.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+			TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
 			if (TasksUiPlugin.getTaskList().isInitialized()) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
@@ -46,7 +46,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 	public void disable() {
 		ContextCore.getContextManager().removeListener(this);
-		TasksUi.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUiInternal.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		isEnabled = false;
 	}
 
