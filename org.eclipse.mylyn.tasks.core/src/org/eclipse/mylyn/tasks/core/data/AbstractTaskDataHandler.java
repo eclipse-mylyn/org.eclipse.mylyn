@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
-import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -79,8 +78,8 @@ public abstract class AbstractTaskDataHandler {
 	/**
 	 * @return Task id for any sub tasks referenced by the provided task data
 	 */
-	public Set<String> getSubTaskIds(TaskData taskData) {
-		return Collections.emptySet();
+	public TaskRelation[] getTaskRelations(TaskData taskData) {
+		return new TaskRelation[0];
 	}
 
 	/**
