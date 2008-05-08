@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<component id="org.eclipse.mylyn.team.ui" version="1">
-    <resource path="src/org/eclipse/mylyn/team/ui/AbstractActiveChangeSetProvider.java">
-        <filter id="643842064" messageargs="org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager"/>
-    </resource>
-</component>
