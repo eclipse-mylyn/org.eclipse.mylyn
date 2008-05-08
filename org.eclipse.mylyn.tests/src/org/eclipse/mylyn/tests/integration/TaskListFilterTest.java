@@ -78,23 +78,22 @@ public class TaskListFilterTest extends TestCase {
 		manager.getTaskList().addTask(taskIncomplete);
 
 		taskOverdue = new LocalTask("3", "t-overdue");
-		taskOverdue.setScheduledForDate(TaskActivityUtil.snapForwardNumDays(Calendar.getInstance(), -1).getTime());
+		taskOverdue.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday().previous());
 		manager.getTaskList().addTask(taskOverdue);
 
 		taskDueToday = new LocalTask("4", "t-today");
-		taskDueToday.setScheduledForDate(TaskActivityUtil.snapEndOfWorkDay(Calendar.getInstance()).getTime());
+		taskDueToday.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday());
 		manager.getTaskList().addTask(taskDueToday);
 
 		taskCompletedToday = new LocalTask("5", "t-donetoday");
-		taskCompletedToday.setScheduledForDate(TaskActivityUtil.snapEndOfWorkDay(Calendar.getInstance()).getTime());
+		taskCompletedToday.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday());
 		taskCompletedToday.setCompletionDate(new Date());
 		manager.getTaskList().addTask(taskCompletedToday);
 
 		taskScheduledLastWeek = new LocalTask("6", "t-scheduledLastWeek");
 		manager.getTaskList().addTask(taskScheduledLastWeek);
-		Calendar lastWeek = Calendar.getInstance();
-		lastWeek.add(Calendar.WEEK_OF_MONTH, -1);
-		TasksUiPlugin.getTaskActivityManager().setScheduledFor(taskScheduledLastWeek, lastWeek.getTime(), true);
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(taskScheduledLastWeek,
+				TaskActivityUtil.getCurrentWeek().previous());
 
 		taskCompleteAndOverdue = new LocalTask("7", "t-completeandoverdue");
 		manager.getTaskList().addTask(taskCompleteAndOverdue);
