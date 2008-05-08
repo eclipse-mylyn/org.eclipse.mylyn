@@ -21,7 +21,7 @@
    </extension>
    
    <extension
-         point="org.eclipse.mylyn.monitor.core.errorReporters">
+         point="org.eclipse.mylyn.commons.core.errorReporters">
       <errorReporter
             class="org.eclipse.mylyn.internal.tasks.bugs.TaskErrorReporter"
             id="org.eclipse.mylyn.tasks.bugs.errorReporter"
