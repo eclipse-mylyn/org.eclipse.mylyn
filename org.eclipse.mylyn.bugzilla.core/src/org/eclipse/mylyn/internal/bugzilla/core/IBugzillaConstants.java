@@ -148,7 +148,6 @@ public interface IBugzillaConstants {
 
 	static final String VALUES_RESOLUTION = "org.eclipse.mylyn.bugzilla.values.resolution";
 
-
 	static final String VALUES_COMPONENT = "org.eclipse.mylyn.bugzilla.values.component";
 
 	static final String VALUES_VERSION = "org.eclipse.mylyn.bugzilla.values.version";
@@ -174,7 +173,7 @@ public interface IBugzillaConstants {
 	// Default values for keys
 
 	static final String[] DEFAULT_STATUS_VALUES = { "Unconfirmed", "New", "Assigned", "Reopened", "Resolved",
-		"Verified", "Closed" };
+			"Verified", "Closed" };
 
 	static final String[] DEFAULT_PRESELECTED_STATUS_VALUES = { "New", "Assigned", "Reopened" };
 
@@ -183,15 +182,15 @@ public interface IBugzillaConstants {
 	// "Worksforme", "Moved" };
 
 	static final String[] DEFAULT_SEVERITY_VALUES = { "blocker", "critical", "major", "normal", "minor", "trivial",
-	"enhancement" };
+			"enhancement" };
 
 	static final String[] DEFAULT_PRIORITY_VALUES = { "P1", "P2", "P3", "P4", "P5" };
 
 	static final String[] DEFAULT_HARDWARE_VALUES = { "All", "Macintosh", "PC", "Power PC", "Sun", "Other" };
 
 	static final String[] DEFAULT_OS_VALUES = { "All", "AIX Motif", "Windows 95", "Windows 98", "Windows CE",
-		"Windows ME", "Windows 2000", "Windows NT", "Windows XP", "Windows All", "MacOS X", "Linux", "Linux-GTK",
-		"Linux-Motif", "HP-UX", "Neutrino", "QNX-Photon", "Solaris", "Unix All", "other" };
+			"Windows ME", "Windows 2000", "Windows NT", "Windows XP", "Windows All", "MacOS X", "Linux", "Linux-GTK",
+			"Linux-Motif", "HP-UX", "Neutrino", "QNX-Photon", "Solaris", "Unix All", "other" };
 
 	static final String[] DEFAULT_PRODUCT_VALUES = {};
 

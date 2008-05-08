@@ -87,7 +87,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		}
 
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-		.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		TasksUi.getRepositoryManager().addListener(bugzillaConnector.getClientManager());
 
@@ -116,7 +116,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-		.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		TasksUi.getRepositoryManager().removeListener(bugzillaConnector.getClientManager());
 
@@ -135,14 +135,15 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 * Returns an image descriptor for the image file at the given plug-in relative path.
 	 * 
 	 * @param path
-	 *            the path
+	 * 		the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
-	public static String[] getQueryOptions(String prefId, String[] selectedProducts, RepositoryConfiguration repositoryConfiguration) {
+	public static String[] getQueryOptions(String prefId, String[] selectedProducts,
+			RepositoryConfiguration repositoryConfiguration) {
 		List<String> options = new ArrayList<String>();
 		if ((prefId.equals(IBugzillaConstants.VALUES_COMPONENT) || prefId.equals(IBugzillaConstants.VALUES_VERSION) || prefId.equals(IBugzillaConstants.VALUES_TARGET))
 				&& selectedProducts != null) {

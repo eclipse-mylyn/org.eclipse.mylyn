@@ -52,8 +52,8 @@ public class BugzillaQueryTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		connectorOriginal = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				BugzillaCorePlugin.REPOSITORY_KIND);
+		connectorOriginal = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 		BugzillaLanguageSettings language = BugzillaCorePlugin.getDefault().getLanguageSetting(
 				IBugzillaConstants.DEFAULT_LANG);
@@ -141,14 +141,15 @@ public class BugzillaQueryTest extends TestCase {
 	@SuppressWarnings("deprecation")
 	public void testQueryViaConnector() throws Exception {
 		String queryUrlString = repository.getRepositoryUrl()
-		+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+				+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 
 		// holds onto actual hit objects
 		ITaskList taskList = new TaskList();
 		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository));
 		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
 		connector.init(taskList);
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryUrlString, "summary");
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryUrlString,
+				"summary");
 		connector.performQuery(repository, query, collector, null, new NullProgressMonitor());
 		assertEquals(2, collector.getTasks().size());
 		for (ITask hit : collector.getTasks()) {

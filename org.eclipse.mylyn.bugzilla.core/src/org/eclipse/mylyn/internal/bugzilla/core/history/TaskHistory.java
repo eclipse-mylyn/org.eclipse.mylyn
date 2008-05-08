@@ -78,7 +78,7 @@ public class TaskHistory implements Iterable<TaskRevision>, Serializable {
 
 	public int size() {
 		return this.otherEvents.size() + this.statusEvents.size() + this.resolutionEvents.size()
-		+ this.assignmentEvents.size();
+				+ this.assignmentEvents.size();
 	}
 
 	@Override

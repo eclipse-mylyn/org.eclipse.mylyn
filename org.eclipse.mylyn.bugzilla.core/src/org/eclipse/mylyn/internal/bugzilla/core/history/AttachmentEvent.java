@@ -142,7 +142,7 @@ public class AttachmentEvent extends TaskRevision {
 	@Override
 	public String toString() {
 		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.attachmentId + " | "
-		+ this.getFlagsString();
+				+ this.getFlagsString();
 	}
 
 	public List<AttachmentFlag> getFlags() {

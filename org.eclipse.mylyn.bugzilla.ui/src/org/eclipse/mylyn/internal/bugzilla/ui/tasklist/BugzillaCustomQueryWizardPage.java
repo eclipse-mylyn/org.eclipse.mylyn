@@ -85,7 +85,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		queryText.setLayoutData(gd_queryText);
 		queryText.addModifyListener(modifyListener);
 
-		if(query!=null) {
+		if (query != null) {
 			queryTitle.setText(query.getSummary());
 			queryText.setText(query.getUrl());
 		}
@@ -103,8 +103,8 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public boolean isPageComplete() {
-		if(super.isPageComplete()) {
-			if(queryText.getText().length() > 0) {
+		if (super.isPageComplete()) {
+			if (queryText.getText().length() > 0) {
 				return true;
 			}
 			setErrorMessage("Please specify Query URL");
@@ -115,7 +115,8 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	@Override
 	public BugzillaRepositoryQuery getQuery() {
 		if (query == null) {
-			query = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), queryText.getText(), this.getQueryTitle());
+			query = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), queryText.getText(),
+					this.getQueryTitle());
 			query.setCustomQuery(true);
 		} else {
 			query.setHandleIdentifier(this.getQueryTitle());

@@ -120,8 +120,8 @@ public class BugzillaCorePlugin extends Plugin {
 	/**
 	 * Retrieves the latest repository configuration from the server
 	 */
-	public static RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh, IProgressMonitor monitor)
-	throws CoreException {
+	public static RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh,
+			IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
 			if (!cacheFileRead) {
@@ -240,7 +240,7 @@ public class BugzillaCorePlugin extends Plugin {
 	 * Convenience method for logging statuses to the plugin log
 	 * 
 	 * @param status
-	 *            the status to log
+	 * 		the status to log
 	 */
 	public static void log(IStatus status) {
 		getDefault().getLog().log(status);
@@ -250,7 +250,7 @@ public class BugzillaCorePlugin extends Plugin {
 	 * Convenience method for logging exceptions to the plugin log
 	 * 
 	 * @param e
-	 *            the exception to log
+	 * 		the exception to log
 	 */
 	public static void log(Exception e) {
 		String message = e.getMessage();
@@ -369,7 +369,8 @@ public class BugzillaCorePlugin extends Plugin {
 			}
 
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "could not set platform options", e));
+			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "could not set platform options",
+					e));
 		}
 	}
 

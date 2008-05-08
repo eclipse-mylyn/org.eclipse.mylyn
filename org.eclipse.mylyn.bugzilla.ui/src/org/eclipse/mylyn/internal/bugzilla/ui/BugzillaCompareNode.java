@@ -45,9 +45,9 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Constructor. The image for this node is set to <code>null</code>.
 	 * 
 	 * @param key
-	 *            The label for this node.
+	 * 		The label for this node.
 	 * @param value
-	 *            The data for this node.
+	 * 		The data for this node.
 	 */
 	public BugzillaCompareNode(String key, String value) {
 		this(key, value, null);
@@ -57,11 +57,11 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Constructor.
 	 * 
 	 * @param key
-	 *            The label for this node.
+	 * 		The label for this node.
 	 * @param value
-	 *            The data for this node.
+	 * 		The data for this node.
 	 * @param image
-	 *            The image for this node.
+	 * 		The image for this node.
 	 */
 	public BugzillaCompareNode(String key, String value, Image image) {
 		super();
@@ -76,9 +76,9 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * returned instead.
 	 * 
 	 * @param newValue
-	 *            The string to be checked.
-	 * @return If the text is <code>null</code>, then return the null string (<code>""</code>). Otherwise, return
-	 *         the text.
+	 * 		The string to be checked.
+	 * @return If the text is <code>null</code>, then return the null string (<code>""</code>). Otherwise, return the
+	 * 	text.
 	 */
 	private String checkText(String newValue) {
 		return ((newValue == null) ? "" : newValue);
@@ -92,7 +92,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Adds a node to this node's list of children.
 	 * 
 	 * @param bugNode
-	 *            The new child.
+	 * 		The new child.
 	 */
 	public void addChild(BugzillaCompareNode bugNode) {
 		if (nodeChildren == null) {
@@ -116,7 +116,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Set the label for this node.
 	 * 
 	 * @param key
-	 *            The new label.
+	 * 		The new label.
 	 */
 	public void setKey(String key) {
 		this.key = key;
@@ -133,7 +133,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Set the data for this node.
 	 * 
 	 * @param value
-	 *            The new data.
+	 * 		The new data.
 	 */
 	public void setValue(String value) {
 		this.value = checkText(value);
@@ -147,7 +147,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Sets the image for this object. This image is used when displaying this object in the UI.
 	 * 
 	 * @param newImage
-	 *            The new image.
+	 * 		The new image.
 	 */
 	public void setImage(Image newImage) {
 		this.image = newImage;
@@ -176,11 +176,11 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	}
 
 	/**
-	 * Parses the given <code>BugReport</code> into a tree of <code>BugzillaCompareNode</code>'s suitable for use
-	 * in a compare viewer.
+	 * Parses the given <code>BugReport</code> into a tree of <code>BugzillaCompareNode</code>'s suitable for use in a
+	 * compare viewer.
 	 * 
 	 * @param bug
-	 *            The <code>BugReport</code> that needs parsing.
+	 * 		The <code>BugReport</code> that needs parsing.
 	 * @return The tree of <code>BugzillaCompareNode</code>'s.
 	 */
 	public static BugzillaCompareNode parseBugReport(RepositoryTaskData bug) {

@@ -238,7 +238,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		String dependson = taskData.getAttributeValue(BugzillaReportElement.DEPENDSON.getKeyString());
 		String blocked = taskData.getAttributeValue(BugzillaReportElement.BLOCKED.getKeyString());
 		boolean addHyperlinks = (dependson != null && dependson.length() > 0)
-		|| (blocked != null && blocked.length() > 0);
+				|| (blocked != null && blocked.length() > 0);
 
 		if (addHyperlinks) {
 			getManagedForm().getToolkit().createLabel(composite, "");
@@ -298,7 +298,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		} catch (IOException e) {
 			MessageDialog.openInformation(null, "Attribute Display Error",
 					"Could not retrieve keyword list, ensure proper configuration in "
-					+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + "\n\nError reported: " + e.getMessage());
+							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + "\n\nError reported: " + e.getMessage());
 		}
 
 		addVoting(composite);

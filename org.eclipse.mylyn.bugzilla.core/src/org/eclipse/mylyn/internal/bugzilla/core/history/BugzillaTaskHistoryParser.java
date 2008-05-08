@@ -50,7 +50,7 @@ public class BugzillaTaskHistoryParser {
 	 * @return A BugActivity object containing the activity history
 	 */
 	public TaskHistory retrieveHistory(BugzillaLanguageSettings bugzillaLanguageSettings) throws IOException,
-	ParseException, LoginException {
+			ParseException, LoginException {
 		TaskHistory activity = new TaskHistory();
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(new BufferedReader(new InputStreamReader(inStream,
 				characterEncoding)), null);
@@ -72,8 +72,7 @@ public class BugzillaTaskHistoryParser {
 				if (token.getType() != Token.TAG) {
 					title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
 					continue;
-				} else if (token.getType() == Token.TAG
-						&& ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
+				} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
 						&& ((HtmlTag) token.getValue()).isEndTag()) {
 					// check if we may have a problem with login by looking
 					// at
@@ -102,8 +101,7 @@ public class BugzillaTaskHistoryParser {
 						token = tokenizer.nextToken();
 						if (token.getType() == Token.TAG) {
 							tag = (HtmlTag) token.getValue();
-							if ((tag.isEndTag() && tag.getTagType() == Tag.TR)
-									|| tag.getTagType() == Tag.P) {
+							if ((tag.isEndTag() && tag.getTagType() == Tag.TR) || tag.getTagType() == Tag.P) {
 								break;
 							}
 						}
@@ -125,9 +123,9 @@ public class BugzillaTaskHistoryParser {
 	 * Parse the events that have happened to the bug
 	 * 
 	 * @param tokenizer
-	 *            the token stream
+	 * 		the token stream
 	 * @param activity
-	 *            the activity object to store the events in
+	 * 		the activity object to store the events in
 	 * @return
 	 */
 	private void parseActivity(HtmlStreamTokenizer tokenizer, TaskHistory activity) throws IOException, ParseException {
@@ -152,9 +150,9 @@ public class BugzillaTaskHistoryParser {
 	 * Parse an activity entry
 	 * 
 	 * @param tokenizer
-	 *            the stream of tokens
+	 * 		the stream of tokens
 	 * @param activity
-	 *            the activity object to store events in
+	 * 		the activity object to store events in
 	 */
 	private void parseEvent(HtmlStreamTokenizer tokenizer, TaskHistory activity) {
 

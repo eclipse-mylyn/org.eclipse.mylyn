@@ -29,6 +29,6 @@ public class AssignmentEvent extends TaskRevision {
 	@Override
 	public String toString() {
 		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.getRemoved() + " | "
-		+ this.getAssigned();
+				+ this.getAssigned();
 	}
 }

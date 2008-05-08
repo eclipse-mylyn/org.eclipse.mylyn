@@ -60,9 +60,9 @@ public class BugzillaCompareStructureCreator implements IStructureCreator {
 	 * <code>AssertionFailedException</code> since we cannot update a bug report object.
 	 * 
 	 * @param structure
-	 *            the node for which to save the new content
+	 * 		the node for which to save the new content
 	 * @param input
-	 *            the object from which the structure tree was created in <code>getStructure</code>
+	 * 		the object from which the structure tree was created in <code>getStructure</code>
 	 */
 	public void save(IStructureComparator node, Object input) {
 		// ignore

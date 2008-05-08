@@ -103,8 +103,8 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 			productPage.saveDataToModel();
 
 			if (taskSelection != null) {
-				AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
-						repository.getConnectorKind());
+				AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
+						.getRepositoryConnector(repository.getConnectorKind());
 				AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 				if (taskDataHandler != null) {
 					taskDataHandler.cloneTaskData(taskSelection.getLegacyTaskData(), taskData);

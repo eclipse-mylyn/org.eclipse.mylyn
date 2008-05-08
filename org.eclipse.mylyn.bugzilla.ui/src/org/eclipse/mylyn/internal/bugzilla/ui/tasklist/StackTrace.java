@@ -36,13 +36,13 @@ public class StackTrace {
 	 * Constructor
 	 * 
 	 * @param stackTrace
-	 *            The stack trace string
+	 * 		The stack trace string
 	 * @param offset
-	 *            The offset of the stack trace in the original string
+	 * 		The offset of the stack trace in the original string
 	 * @param length
-	 *            The length of the stack trace in the original string
+	 * 		The length of the stack trace in the original string
 	 * @param comment
-	 *            The comment that the stack trace came from
+	 * 		The comment that the stack trace came from
 	 */
 	public StackTrace(String stackTrace, int offset, int length, Object comment) {
 		this.stackTrace = stackTrace;
@@ -92,10 +92,10 @@ public class StackTrace {
 	 * 
 	 * 
 	 * @param s
-	 *            The string to search for stack traces
+	 * 		The string to search for stack traces
 	 * @param comment
-	 *            The comment that the text came from.<br>
-	 *            Comment if a comment else a String
+	 * 		The comment that the text came from.<br>
+	 * 		Comment if a comment else a String
 	 * @return String[] of stack traces - each element is 1 trace
 	 */
 	public static StackTrace[] getStackTrace(String s, Object comment) {
@@ -192,14 +192,14 @@ public class StackTrace {
 	 * Get the next at clause from a potential stack trace -- looks ahead 4 lines
 	 * 
 	 * @param lines
-	 *            The array of all of the lines in the bug
+	 * 		The array of all of the lines in the bug
 	 * @param i
-	 *            The current position to start at
+	 * 		The current position to start at
 	 * @param charPos
-	 *            The current character position in the original string
+	 * 		The current character position in the original string
 	 * @return The next at clause, or <code>null</code><br>
-	 *         If an at line is matched, but the end isn't within the 4 lines, only the first line is returned. Also,
-	 *         charPos is updated as well as i
+	 * 	If an at line is matched, but the end isn't within the 4 lines, only the first line is returned. Also, charPos
+	 * 	is updated as well as i
 	 */
 	private static String getNextAt(String[] lines, int[] i, int[] charPos) {
 		String regexAtString = "^at.*";
@@ -276,13 +276,13 @@ public class StackTrace {
 	 * Get the StackTrace
 	 * 
 	 * @param l
-	 *            the list of lines that contain the trace
+	 * 		the list of lines that contain the trace
 	 * @param start
-	 *            the start of the stack trace
+	 * 		the start of the stack trace
 	 * @param offset
-	 *            the offset of the stack trace
+	 * 		the offset of the stack trace
 	 * @param comment
-	 *            The comment that the stack trace came from
+	 * 		The comment that the stack trace came from
 	 * @return The StackTrace for the given data
 	 */
 	private static StackTrace getStackTrace(List<String> l, int offset, int length, Object comment) {
@@ -298,7 +298,7 @@ public class StackTrace {
 	 * Convert a List StackTraces to a StackTrace[] <br>
 	 * 
 	 * @param l
-	 *            The List of StackTraces
+	 * 		The List of StackTraces
 	 * @return StackTrace[] of the List
 	 */
 	private static StackTrace[] getTracesFromList(List<StackTrace> l) {
@@ -325,9 +325,9 @@ public class StackTrace {
 	 * Escape all of the special regex characters from the string
 	 * 
 	 * @param s
-	 *            The string to escape the characters for
+	 * 		The string to escape the characters for
 	 * @return A string with all of the special characters escaped <br>
-	 *         <code>
+	 * 	<code>
 	 * 				. => \.<br>
 	 * 				$ => \$<br>
 	 * 				? => \?<br>

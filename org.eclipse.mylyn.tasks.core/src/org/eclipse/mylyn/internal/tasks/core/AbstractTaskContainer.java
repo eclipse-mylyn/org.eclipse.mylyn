@@ -38,7 +38,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 	protected String url = null;
 
 	public AbstractTaskContainer(String handleAndDescription) {
-		assert handleAndDescription != null;
+		Assert.isNotNull(handleAndDescription);
 		this.handleIdentifier = handleAndDescription;
 	}
 

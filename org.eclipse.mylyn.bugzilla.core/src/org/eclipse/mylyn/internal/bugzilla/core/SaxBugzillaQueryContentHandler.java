@@ -87,15 +87,15 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			case ID:
 				id = parsedText;
 				break;
-				// case BUG_SEVERITY:
-				// severity = parsedText;
-				// break;
+			// case BUG_SEVERITY:
+			// severity = parsedText;
+			// break;
 			case PRIORITY:
 				priority = parsedText;
 				break;
-				// case REP_PLATFORM:
-				// platform = parsedText;
-				// break;
+			// case REP_PLATFORM:
+			// platform = parsedText;
+			// break;
 			case ASSIGNED_TO:
 				//hit.setOwner(parsedText);
 				owner = parsedText;
@@ -103,9 +103,9 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			case BUG_STATUS:
 				//	state = parsedText;
 				break;
-				// case RESOLUTION:
-				// resolution = parsedText;
-				// break;
+			// case RESOLUTION:
+			// resolution = parsedText;
+			// break;
 			case SHORT_DESC:
 				description = parsedText;
 				break;

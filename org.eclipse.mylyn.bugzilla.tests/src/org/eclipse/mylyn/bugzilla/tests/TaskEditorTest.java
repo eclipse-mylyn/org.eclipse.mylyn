@@ -58,11 +58,11 @@ public class TaskEditorTest extends TestCase {
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 		model.setNew(true);
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
 		assertNotNull(connector);
 		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		assertNotNull(taskDataHandler);
@@ -87,13 +87,12 @@ public class TaskEditorTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
-
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 		model.setNew(true);
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
 		assertNotNull(connector);
 		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		assertNotNull(taskDataHandler);

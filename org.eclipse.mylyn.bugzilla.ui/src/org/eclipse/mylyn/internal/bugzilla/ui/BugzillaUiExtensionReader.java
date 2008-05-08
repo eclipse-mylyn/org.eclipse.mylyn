@@ -75,7 +75,7 @@ public class BugzillaUiExtensionReader {
 
 		if (languageName != null) {
 			BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-			.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+					.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 
 			BugzillaLanguageSettings bugzillaLanguageSettings = new BugzillaLanguageSettings(languageName);
 
@@ -89,7 +89,8 @@ public class BugzillaUiExtensionReader {
 			}
 			connector.addLanguageSetting(bugzillaLanguageSettings);
 		} else {
-			StatusHandler.log(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Could not load language template extension " + element.getName()));
+			StatusHandler.log(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID,
+					"Could not load language template extension " + element.getName()));
 		}
 	}
 }

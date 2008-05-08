@@ -68,10 +68,10 @@ public class RepositoryTaskHandleTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		BugzillaTask readReport = (BugzillaTask) manager.getTaskList()
-		.getUnmatchedContainer(repositoryUrl)
-		.getChildren()
-		.iterator()
-		.next();
+				.getUnmatchedContainer(repositoryUrl)
+				.getChildren()
+				.iterator()
+				.next();
 		assertEquals(readReport.getSummary(), readReport.getSummary());
 		assertEquals(readReport.getRepositoryUrl(), readReport.getRepositoryUrl());
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,

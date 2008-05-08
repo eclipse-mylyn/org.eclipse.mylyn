@@ -43,7 +43,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
-	throws CoreException {
+			throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
@@ -76,7 +76,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
-	throws CoreException {
+			throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
@@ -111,7 +111,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
-	throws CoreException {
+			throws CoreException {
 
 		if (data == null) {
 			return false;

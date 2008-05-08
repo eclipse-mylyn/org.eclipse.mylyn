@@ -116,12 +116,10 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	}
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
-		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, taskNumber,
-				new NullProgressMonitor());
+		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, taskNumber, new NullProgressMonitor());
 		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
 		assertNotNull(task);
-		TasksUiPlugin.getTaskList().addTask(task,
-				TasksUiPlugin.getTaskList().getDefaultCategory());
+		TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
 
 		return task;
 	}

@@ -28,7 +28,8 @@ public class BugzillaClientManager extends TaskRepositoryAdapter {
 	public BugzillaClientManager() {
 	}
 
-	public synchronized BugzillaClient getClient(TaskRepository taskRepository, IProgressMonitor monitor) throws MalformedURLException, CoreException {
+	public synchronized BugzillaClient getClient(TaskRepository taskRepository, IProgressMonitor monitor)
+			throws MalformedURLException, CoreException {
 		BugzillaClient client = clientByUrl.get(taskRepository.getRepositoryUrl());
 		if (client == null) {
 
@@ -38,7 +39,8 @@ public class BugzillaClientManager extends TaskRepositoryAdapter {
 			}
 			client = BugzillaClientFactory.createClient(taskRepository);
 			clientByUrl.put(taskRepository.getRepositoryUrl(), client);
-			client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false, monitor));
+			client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false,
+					monitor));
 		}
 		return client;
 	}

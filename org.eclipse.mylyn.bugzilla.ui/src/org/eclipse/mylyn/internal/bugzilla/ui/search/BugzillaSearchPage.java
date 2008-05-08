@@ -119,10 +119,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String[] keywordOperationValues = { "allwords", "anywords", "nowords" };
 
 	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1",
-	"emaillongdesc1" };
+			"emaillongdesc1" };
 
 	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2",
-	"emaillongdesc2" };
+			"emaillongdesc2" };
 
 	private BugzillaRepositoryQuery originalQuery = null;
 
@@ -459,8 +459,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				handleWidgetSelected(emailPattern, emailOperation, previousEmailPatterns);
 			}
 		});
-		ContentAssistCommandAdapter adapter = applyContentAssist(emailPattern,
-				createContentProposalProvider());
+		ContentAssistCommandAdapter adapter = applyContentAssist(emailPattern, createContentProposalProvider());
 		ILabelProvider propsalLabelProvider = createProposalLabelProvider();
 		if (propsalLabelProvider != null) {
 			adapter.setLabelProvider(propsalLabelProvider);
@@ -512,8 +511,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				handleWidgetSelected(emailPattern2, emailOperation2, previousEmailPatterns2);
 			}
 		});
-		ContentAssistCommandAdapter adapter2 = applyContentAssist(emailPattern2,
-				createContentProposalProvider());
+		ContentAssistCommandAdapter adapter2 = applyContentAssist(emailPattern2, createContentProposalProvider());
 		ILabelProvider propsalLabelProvider2 = createProposalLabelProvider();
 		if (propsalLabelProvider2 != null) {
 			adapter2.setLabelProvider(propsalLabelProvider2);
@@ -582,6 +580,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		Button keywordsSelectButton = new Button(keywordsComposite, SWT.NONE);
 		keywordsSelectButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (repositoryConfiguration != null) {
 					KeywordsDialog dialog = new KeywordsDialog(getShell(), keywords.getText(), //
@@ -942,6 +941,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	// TODO: avoid overriding?
+	@Override
 	public boolean performSearch() {
 		if (restoreQueryOptions) {
 			saveState();
@@ -1030,7 +1030,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					updateAttributesFromConfiguration(null);
 					if (product.getItemCount() == 0) {
 						try {
-							repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(), true, new NullProgressMonitor());
+							repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(
+									getTaskRepository(), true, new NullProgressMonitor());
 							updateAttributesFromConfiguration(null);
 						} catch (final CoreException e1) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -1038,7 +1039,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 									MessageDialog.openError(Display.getDefault().getActiveShell(),
 											"Bugzilla Search Page",
 											"Unable to get configuration. Ensure proper repository configuration in "
-											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
 								}
 							});
 						}
@@ -1085,13 +1086,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private boolean canQuery() {
 		if (isControlCreated()) {
 			return product.getSelectionCount() > 0 || component.getSelectionCount() > 0
-			|| version.getSelectionCount() > 0 || target.getSelectionCount() > 0
-			|| status.getSelectionCount() > 0 || resolution.getSelectionCount() > 0
-			|| severity.getSelectionCount() > 0 || priority.getSelectionCount() > 0
-			|| hardware.getSelectionCount() > 0 || os.getSelectionCount() > 0
-			|| summaryPattern.getText().length() > 0 || commentPattern.getText().length() > 0
-			|| emailPattern.getText().length() > 0 || emailPattern2.getText().length() > 0
-			|| keywords.getText().length() > 0;
+					|| version.getSelectionCount() > 0 || target.getSelectionCount() > 0
+					|| status.getSelectionCount() > 0 || resolution.getSelectionCount() > 0
+					|| severity.getSelectionCount() > 0 || priority.getSelectionCount() > 0
+					|| hardware.getSelectionCount() > 0 || os.getSelectionCount() > 0
+					|| summaryPattern.getText().length() > 0 || commentPattern.getText().length() > 0
+					|| emailPattern.getText().length() > 0 || emailPattern2.getText().length() > 0
+					|| keywords.getText().length() > 0;
 		} else {
 			return false;
 		}
@@ -1342,7 +1343,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			sb.append("&keywords_type=");
 			sb.append(keywordOperationValues[keywordsOperation.getSelectionIndex()]);
 			sb.append("&keywords=");
-			sb.append(URLEncoder.encode(keywords.getText().replace(',', ' '), getTaskRepository().getCharacterEncoding()));
+			sb.append(URLEncoder.encode(keywords.getText().replace(',', ' '),
+					getTaskRepository().getCharacterEncoding()));
 		}
 
 		return sb;
@@ -1365,7 +1367,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	private void updateAttributesFromConfiguration(String[] selectedProducts) {
-		if(repositoryConfiguration == null) {
+		if (repositoryConfiguration == null) {
 			updateConfiguration(false);
 		}
 		if (repositoryConfiguration != null) {
@@ -1383,11 +1385,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 			version.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_VERSION, selectedProducts,
 
-					repositoryConfiguration));
+			repositoryConfiguration));
 
 			target.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_TARGET, selectedProducts,
 
-					repositoryConfiguration));
+			repositoryConfiguration));
 
 			status.setItems(convertStringListToArray(repositoryConfiguration.getStatusValues()));
 			resolution.setItems(convertStringListToArray(repositoryConfiguration.getResolutions()));
@@ -1662,8 +1664,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public BugzillaRepositoryQuery getQuery() {
 		if (originalQuery == null) {
 			try {
-				originalQuery = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), getQueryURL(getTaskRepository(),
-						getQueryParameters()), getQueryTitle());
+				originalQuery = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), getQueryURL(
+						getTaskRepository(), getQueryParameters()), getQueryTitle());
 			} catch (UnsupportedEncodingException e) {
 				return null;
 			}
@@ -1780,14 +1782,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		this.restoreQueryOptions = restoreQueryOptions;
 	}
 
-
 	/**
 	 * Adds content assist to the given text field.
 	 * 
 	 * @param text
-	 *            text field to decorate.
+	 * 		text field to decorate.
 	 * @param proposalProvider
-	 *            instance providing content proposals
+	 * 		instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit
@@ -1817,19 +1818,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
 	 * @param attribute
-	 *            attribute for which to provide content assist.
+	 * 		attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit?
 	private IContentProposalProvider createContentProposalProvider() {
-		return new PersonProposalProvider(getTaskRepository().getRepositoryUrl(), getTaskRepository().getConnectorKind());
+		return new PersonProposalProvider(getTaskRepository().getRepositoryUrl(),
+				getTaskRepository().getConnectorKind());
 	}
 
 	// API 3.0 get this from the AttributeEditorToolkit?
 	private ILabelProvider createProposalLabelProvider() {
 		return new PersonProposalLabelProvider();
 	}
-
 
 	private String[] convertStringListToArray(java.util.List<String> stringList) {
 		return stringList.toArray(new String[stringList.size()]);
@@ -1844,7 +1845,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					}
 					try {
 						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
-						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(), force, monitor);
+						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(),
+								force, monitor);
 					} catch (final Exception e) {
 						throw new InvocationTargetException(e);
 					} finally {
@@ -1863,7 +1865,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					IProgressService service = PlatformUI.getWorkbench().getProgressService();
 					service.busyCursorWhile(updateRunnable);
 				}
-
 
 			} catch (InvocationTargetException ex) {
 				Shell shell = null;
@@ -1900,7 +1901,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 								cause));
 					}
 				}
-				if(ex.getCause() instanceof OperationCanceledException) {
+				if (ex.getCause() instanceof OperationCanceledException) {
 					return;
 				}
 
@@ -1918,6 +1919,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	@Override
 	public String getQueryTitle() {
-		return (queryTitle != null) ? queryTitle.getText() : null;
+		return (queryTitle != null) ? queryTitle.getText() : "";
 	}
 }

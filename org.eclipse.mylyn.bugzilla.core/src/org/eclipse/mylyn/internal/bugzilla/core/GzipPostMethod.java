@@ -18,13 +18,12 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.mylyn.commons.net.WebClientUtil;
 
 /**
- * Use <code>GzipPostMethod</code> instead of {@link PostMethod} to make Mylyn well-behaved when accessing
- * repositories that can supply gzipped responses.<br />
- * <br>
+ * Use <code>GzipPostMethod</code> instead of {@link PostMethod} to make Mylyn well-behaved when accessing repositories
+ * that can supply gzipped responses.<br /> <br>
  * References:
  * <ul>
  * <li><a href="http://www.schroepl.net/projekte/mod_gzip/index.htm">Gzip home</a></li>
- * <li><a href="http://www.oreilly.com/catalog/9780596529307/chapter/ch04.pdf">Gzip site comparison</a> </li>
+ * <li><a href="http://www.oreilly.com/catalog/9780596529307/chapter/ch04.pdf">Gzip site comparison</a></li>
  * </ul>
  * 
  * @see GzipGetMethod, PostMethod
@@ -38,9 +37,9 @@ public class GzipPostMethod extends PostMethod {
 
 	/**
 	 * @param requestPath
-	 *            the URI to request
+	 * 		the URI to request
 	 * @param gzipWanted
-	 *            is compression desired (for debugging or optionalizing)
+	 * 		is compression desired (for debugging or optionalizing)
 	 */
 	public GzipPostMethod(String requestPath, boolean gzipWanted) {
 		super(requestPath);
@@ -49,20 +48,20 @@ public class GzipPostMethod extends PostMethod {
 
 	/**
 	 * @return true if payload is zipped in any way. Two situations possible:<br />
-	 *         <ul>
-	 *         <li>content-encoding:gzip can be set by a dedicated perl script or mod_gzip</li>
-	 *         <li>content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix</li>
-	 *         </ul>
+	 * 	<ul>
+	 * 	<li>content-encoding:gzip can be set by a dedicated perl script or mod_gzip</li>
+	 * 	<li>content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix</li>
+	 * 	</ul>
 	 */
 	private boolean isZippedReply() {
 		// content-encoding:gzip can be set by a dedicated perl script or mod_gzip
 		boolean zipped = (null != this.getResponseHeader("Content-encoding") && this.getResponseHeader(
-		"Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP))
-		||
-		// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
-		(null != this.getResponseHeader("Content-Type") && this.getResponseHeader("Content-Type")
-				.getValue()
-				.equals("application/x-gzip"));
+				"Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP))
+				||
+				// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
+				(null != this.getResponseHeader("Content-Type") && this.getResponseHeader("Content-Type")
+						.getValue()
+						.equals("application/x-gzip"));
 		return zipped;
 	}
 

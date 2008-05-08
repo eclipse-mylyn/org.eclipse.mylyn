@@ -47,8 +47,8 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 	}
 
 	@Override
-	public void uploadAttachment(TaskRepository repository, ITask task, ITaskAttachment attachment,
-			String comment, IProgressMonitor monitor) throws CoreException {
+	public void uploadAttachment(TaskRepository repository, ITask task, ITaskAttachment attachment, String comment,
+			IProgressMonitor monitor) throws CoreException {
 		try {
 			String bugId = task.getTaskId();
 			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);

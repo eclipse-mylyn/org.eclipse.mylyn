@@ -43,8 +43,8 @@ public class DuplicateDetetionTest extends TestCase {
 		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 		model.setDescription(stackTrace);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -62,8 +62,8 @@ public class DuplicateDetetionTest extends TestCase {
 	public void testNoStackTrace() throws Exception {
 		String fakeStackTrace = "this is not really a stacktrace";
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 		model.setDescription(fakeStackTrace);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -84,8 +84,8 @@ public class DuplicateDetetionTest extends TestCase {
 		String extraText = "\nExtra text that isnt' part of the stack trace java:";
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 
 		model.setDescription(extraText + "\n" + stackTrace + "\n");
 		model.setNew(true);
@@ -95,8 +95,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription())
-				.trim());
+		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -105,17 +104,17 @@ public class DuplicateDetetionTest extends TestCase {
 	public void testStackTraceMisaligned() throws Exception {
 
 		String stackTrace = "java.lang.IllegalStateException: zip file closed\n"
-			+ "     at java.util.zip.ZipFile.ensureOpen (ZipFile.java:518)\n"
-			+ "at java.util.zip.ZipFile.getEntry (ZipFile.java:251)\n"
-			+ "   at java.util.jar.JarFile.getEntry(JarFile.java:200)\n"
-			+ "at sun.net.www.protocol.jar.URLJarFile.getEntry\n" + "     (URLJarFile.java:90)\n"
-			+ "at sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:112)\n"
-			+ "at sun.net.www.protocol.jar.JarURLConnection.getInputStream\n" + "(JarURLConnection.java:124)\n"
-			+ "at org.eclipse.jdt.internal.core.JavaElement\n.getURLContents(JavaElement.java:734)";
+				+ "     at java.util.zip.ZipFile.ensureOpen (ZipFile.java:518)\n"
+				+ "at java.util.zip.ZipFile.getEntry (ZipFile.java:251)\n"
+				+ "   at java.util.jar.JarFile.getEntry(JarFile.java:200)\n"
+				+ "at sun.net.www.protocol.jar.URLJarFile.getEntry\n" + "     (URLJarFile.java:90)\n"
+				+ "at sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:112)\n"
+				+ "at sun.net.www.protocol.jar.JarURLConnection.getInputStream\n" + "(JarURLConnection.java:124)\n"
+				+ "at org.eclipse.jdt.internal.core.JavaElement\n.getURLContents(JavaElement.java:734)";
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -125,8 +124,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription())
-				.trim());
+		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -136,17 +134,17 @@ public class DuplicateDetetionTest extends TestCase {
 
 		// SUN, IBM (no space before brackets, one set of brackets)
 		String stackTrace = "java.lang.IllegalStateException: zip file closed\n"
-			+ "     at java.util.zip.ZipFile.ensureOpen(ZipFile.java:518)\n"
-			+ "     at java.util.zip.ZipFile.getEntry(ZipFile.java:251)\n"
-			+ "     at java.util.jar.JarFile.getEntry(JarFile.java:200)\n"
-			+ "     at sun.net.www.protocol.jar.URLJarFile.getEntry(URLJarFile.java:90)\n"
-			+ "     at sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:112)\n"
-			+ "     at sun.net.www.protocol.jar.JarURLConnection.getInputStream(JarURLConnection.java:124)\n"
-			+ "     at org.eclipse.jdt.internal.core.JavaElement.getURLContents(JavaElement.java:734)";
+				+ "     at java.util.zip.ZipFile.ensureOpen(ZipFile.java:518)\n"
+				+ "     at java.util.zip.ZipFile.getEntry(ZipFile.java:251)\n"
+				+ "     at java.util.jar.JarFile.getEntry(JarFile.java:200)\n"
+				+ "     at sun.net.www.protocol.jar.URLJarFile.getEntry(URLJarFile.java:90)\n"
+				+ "     at sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:112)\n"
+				+ "     at sun.net.www.protocol.jar.JarURLConnection.getInputStream(JarURLConnection.java:124)\n"
+				+ "     at org.eclipse.jdt.internal.core.JavaElement.getURLContents(JavaElement.java:734)";
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -156,8 +154,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription())
-				.trim());
+		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -167,13 +164,13 @@ public class DuplicateDetetionTest extends TestCase {
 
 		// gcj/gij (path and lib names in additional brackets)
 		String stackTrace = "java.lang.Error: Something bad happened\n"
-			+ "	   at testcase.main(java.lang.String[]) (Unknown Source)\n"
-			+ "	   at gnu.java.lang.MainThread.call_main() (/usr/lib/libgcj.so.6.0.0)\n"
-			+ "	   at gnu.java.lang.MainThread.run() (/usr/lib/libgcj.so.6.0.0)";
+				+ "	   at testcase.main(java.lang.String[]) (Unknown Source)\n"
+				+ "	   at gnu.java.lang.MainThread.call_main() (/usr/lib/libgcj.so.6.0.0)\n"
+				+ "	   at gnu.java.lang.MainThread.run() (/usr/lib/libgcj.so.6.0.0)";
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -183,8 +180,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription())
-				.trim());
+		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -194,11 +190,11 @@ public class DuplicateDetetionTest extends TestCase {
 
 		// ikvm (no line numbers)
 		String stackTrace = "java.lang.Error: Something bad happened\n" + "	at testcase.main (testcase.java)\n"
-		+ "	at java.lang.reflect.Method.Invoke (Method.java)";
+				+ "	at java.lang.reflect.Method.Invoke (Method.java)";
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -208,8 +204,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription())
-				.trim());
+		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -219,14 +214,14 @@ public class DuplicateDetetionTest extends TestCase {
 
 		// jrockit (slash delimiters)
 		String stackTrace = "java.lang.Error: Something bad happened\n"
-			+ "	at java/io/BufferedReader.readLine(BufferedReader.java:331)\n"
-			+ "	at java/io/BufferedReader.readLine(BufferedReader.java:362)\n"
-			+ "	at java/util/Properties.load(Properties.java:192)\n"
-			+ "	at java/util/logging/LogManager.readConfiguration(L:555)";
+				+ "	at java/io/BufferedReader.readLine(BufferedReader.java:331)\n"
+				+ "	at java/io/BufferedReader.readLine(BufferedReader.java:362)\n"
+				+ "	at java/util/Properties.load(Properties.java:192)\n"
+				+ "	at java/util/logging/LogManager.readConfiguration(L:555)";
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -236,8 +231,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription())
-				.trim());
+		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -247,12 +241,12 @@ public class DuplicateDetetionTest extends TestCase {
 
 		// jamvm, sablevm, kaffe, cacao (space before brackets, one set of brackets)
 		String stackTrace = "java.lang.Error: Something bad happened\n" + "	   at testcase.main (testcase.java:3)\n"
-		+ "	   at java.lang.VirtualMachine.invokeMain (VirtualMachine.java)\n"
-		+ "	   at java.lang.VirtualMachine.main (VirtualMachine.java:108)";
+				+ "	   at java.lang.VirtualMachine.invokeMain (VirtualMachine.java)\n"
+				+ "	   at java.lang.VirtualMachine.main (VirtualMachine.java:108)";
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(), TasksUiPlugin.getTaskDataStorageManager()
-				.getNewRepositoryTaskId());
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -262,8 +256,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription())
-				.trim());
+		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();

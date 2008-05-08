@@ -21,7 +21,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Quick config rdf parser.
  * 
  * <pre>
- *        config.cgi?ctype=rdf
+ * config.cgi?ctype=rdf
  * </pre>
  * 
  * Populates a <link>ProductConfiguration</link> data structure.

@@ -144,8 +144,8 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does
-	 * not exist.
+	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does not
+	 * exist.
 	 */
 	public List<String> getVersions(String product) {
 		ProductEntry entry = products.get(product);
@@ -430,14 +430,12 @@ public class RepositoryConfiguration implements Serializable {
 		return customFields;
 	}
 
-
 	public void configureTaskData(RepositoryTaskData taskData) {
 		updateAttributeOptions(taskData);
 		addValidOperations(taskData);
 	}
 
-	public void updateAttributeOptions(RepositoryTaskData existingReport)
-	{
+	public void updateAttributeOptions(RepositoryTaskData existingReport) {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
 			if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
@@ -484,8 +482,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	}
 
-	private void addValidOperations(RepositoryTaskData bugReport)
-	{
+	private void addValidOperations(RepositoryTaskData bugReport) {
 		BUGZILLA_REPORT_STATUS status;
 		try {
 			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());

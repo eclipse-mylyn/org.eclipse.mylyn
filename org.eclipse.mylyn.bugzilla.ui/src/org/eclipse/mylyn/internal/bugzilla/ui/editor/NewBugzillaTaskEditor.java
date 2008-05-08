@@ -90,12 +90,12 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	public void submitToRepository() {
 		if (summaryText.getText().equals("")) {
 			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error",
-			"Please provide a brief summary with new reports.");
+					"Please provide a brief summary with new reports.");
 			summaryText.setFocus();
 			return;
 		} else if (descriptionTextViewer.getTextWidget().getText().equals("")) {
 			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error",
-			"Please proved a detailed description with new reports");
+					"Please proved a detailed description with new reports");
 			descriptionTextViewer.getTextWidget().setFocus();
 			return;
 		}
@@ -103,7 +103,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		String componentValue = attribute.getValue();
 		if (componentValue.equals("")) {
 			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error",
-			"Please select a component with new reports");
+					"Please select a component with new reports");
 			descriptionTextViewer.getTextWidget().setFocus();
 			return;
 		}
@@ -165,7 +165,8 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		if (assignedAttribute != null) {
 			String bugzillaVersion;
 			try {
-				bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor()).getInstallVersion();
+				bugzillaVersion = BugzillaCorePlugin.getRepositoryConfiguration(repository, false,
+						new NullProgressMonitor()).getInstallVersion();
 			} catch (CoreException e1) {
 				// ignore
 				bugzillaVersion = "2.18";

@@ -58,8 +58,7 @@ public class BugzillaStatus extends Status {
 
 		switch (getCode()) {
 		case RepositoryStatus.ERROR_REPOSITORY_LOGIN:
-			return NLS.bind(BugzillaMessages.repositoryLoginFailure, this.getRepositoryUrl(),
-					this.errorMessage);
+			return NLS.bind(BugzillaMessages.repositoryLoginFailure, this.getRepositoryUrl(), this.errorMessage);
 		case RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND:
 			return NLS.bind(BugzillaMessages.repositoryNotFound, this.errorMessage);
 		case RepositoryStatus.ERROR_REPOSITORY:

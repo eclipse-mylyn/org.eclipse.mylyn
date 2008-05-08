@@ -80,14 +80,14 @@ import org.eclipse.ui.progress.UIJob;
  * @author Eugene Kuleshov
  * @author Willian Mitsuda
  * 
- * Product selection page of new bug wizard
+ * 	Product selection page of new bug wizard
  */
 public class BugzillaProductPage extends WizardPage {
 
 	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
 
 	private static final String DESCRIPTION = "Pick a product to open the new bug editor.\n"
-		+ "Press the Update button if the product is not in the list.";
+			+ "Press the Update button if the product is not in the list.";
 
 	private static final String LABEL_UPDATE = "Update Products from Repository";
 
@@ -115,11 +115,11 @@ public class BugzillaProductPage extends WizardPage {
 	 * Constructor for BugzillaProductPage
 	 * 
 	 * @param workbench
-	 *            The instance of the workbench
+	 * 		The instance of the workbench
 	 * @param bugWiz
-	 *            The bug wizard which created this page
+	 * 		The bug wizard which created this page
 	 * @param repository
-	 *            The repository the data is coming from
+	 * 		The repository the data is coming from
 	 * @param selection
 	 */
 	public BugzillaProductPage(IWorkbench workbench, NewBugzillaTaskWizard bugWiz, TaskRepository repository) {
@@ -130,7 +130,7 @@ public class BugzillaProductPage extends WizardPage {
 		this.bugWizard = bugWiz;
 		this.repository = repository;
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.bugzilla.ui",
-		"icons/wizban/bug-wizard.gif"));
+				"icons/wizban/bug-wizard.gif"));
 
 	}
 
@@ -233,39 +233,46 @@ public class BugzillaProductPage extends WizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-					.getRepositoryConnector(repository.getConnectorKind());
+							.getRepositoryConnector(repository.getConnectorKind());
 
 					getContainer().run(true, false, new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
+								InterruptedException {
 							monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
 							try {
 								connector.updateRepositoryConfiguration(repository, monitor);
 							} catch (CoreException e) {
 								// TODO: remove exceptions from communication of connectivity errors to the user
 								if (e.getStatus().getException() instanceof GeneralSecurityException) {
-									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
-											+ "Please ensure proper configuration in "
-											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", e));
+									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING,
+											BugzillaUiPlugin.PLUGIN_ID,
+											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
+													+ "Please ensure proper configuration in "
+													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", e));
 								} else if (e.getStatus().getException() instanceof IOException) {
-									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Connection Error, please ensure proper configuration in "
-											+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", e));
+									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING,
+											BugzillaUiPlugin.PLUGIN_ID,
+											"Connection Error, please ensure proper configuration in "
+													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", e));
 								} else {
-									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID, "Error updating repository attributes for "
-											+ repository.getRepositoryUrl(), e));
+									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING,
+											BugzillaUiPlugin.PLUGIN_ID, "Error updating repository attributes for "
+													+ repository.getRepositoryUrl(), e));
 								}
 								return;
 							}
 
 							RepositoryConfiguration repositoryConfiguration = null;
 							try {
-								repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, monitor);
+								repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
+										false, monitor);
 							} catch (final CoreException e) {
 								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 									public void run() {
-										MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Search Page",
+										MessageDialog.openError(Display.getDefault().getActiveShell(),
+												"Bugzilla Search Page",
 												"Unable to get configuration. Ensure proper repository configuration in "
-												+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+														+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
 									}
 								});
 							}
@@ -297,14 +304,15 @@ public class BugzillaProductPage extends WizardPage {
 	private void initProducts() {
 		// try to get the list of products from the server
 		try {
-			products = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor()).getProducts();
+			products = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor())
+					.getProducts();
 
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE,
 							"Unable to get products. Ensure proper repository configuration in "
-							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
 				}
 			});
 		}
@@ -380,7 +388,7 @@ public class BugzillaProductPage extends WizardPage {
 	 * Applies the status to the status line of a dialog page.
 	 * 
 	 * @param status
-	 *            The status to apply to the status line
+	 * 		The status to apply to the status line
 	 */
 	protected void applyToStatusLine(IStatus status) {
 		String message = status.getMessage();
@@ -402,8 +410,8 @@ public class BugzillaProductPage extends WizardPage {
 			break;
 		default:
 			setErrorMessage(null);
-		setMessage(message, IMessageProvider.ERROR);
-		break;
+			setMessage(message, IMessageProvider.ERROR);
+			break;
 		}
 	}
 
@@ -414,16 +422,16 @@ public class BugzillaProductPage extends WizardPage {
 		RepositoryTaskData model = bugWizard.taskData;
 		model.setAttributeValue(BugzillaReportElement.PRODUCT.getKeyString(),
 				(String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement());
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
 		if (connector == null) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID,
-			"Error AbstractRepositoryConnector could not been retrieved.\n\n"));
+					"Error AbstractRepositoryConnector could not been retrieved.\n\n"));
 		}
 		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		if (taskDataHandler == null) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID,
-			"Error AbstractTaskDataHandler could not been retrieved.\n\n"));
+					"Error AbstractTaskDataHandler could not been retrieved.\n\n"));
 		}
 		taskDataHandler.initializeTaskData(repository, model, null);
 

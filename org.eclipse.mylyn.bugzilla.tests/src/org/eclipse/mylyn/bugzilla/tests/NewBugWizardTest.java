@@ -34,8 +34,8 @@ public class NewBugWizardTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
+		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnector(repository.getConnectorKind());
 		assertNotNull(connector);
 		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		assertNotNull(taskDataHandler);

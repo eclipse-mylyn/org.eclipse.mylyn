@@ -33,10 +33,11 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 
 	private static BugzillaAttributeFactory bugzillaAttributeFactory = new BugzillaAttributeFactory();
 
-	public void populateReport(Map<String, RepositoryTaskData> bugMap, LegacyTaskDataCollector collector, List<BugzillaCustomField> customFields) throws IOException, CoreException {
+	public void populateReport(Map<String, RepositoryTaskData> bugMap, LegacyTaskDataCollector collector,
+			List<BugzillaCustomField> customFields) throws IOException, CoreException {
 
-		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory, collector,
-				bugMap, customFields);
+		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory,
+				collector, bugMap, customFields);
 		collectResults(contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {

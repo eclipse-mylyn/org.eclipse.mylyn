@@ -39,6 +39,6 @@ public class AttachmentFlag implements Serializable {
 	@Override
 	public String toString() {
 		return this.status.name() + "[" + (this.state.equals(AttachmentFlagState.UNKNOWN) ? "" : this.state.name())
-		+ "]";
+				+ "]";
 	}
 }

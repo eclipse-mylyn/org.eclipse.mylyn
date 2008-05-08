@@ -112,7 +112,6 @@ public class KeywordsDialog extends Dialog {
 
 		keyWordsList.addCheckStateListener(new KeywordListener());
 
-
 		parent.pack();
 
 		return composite;

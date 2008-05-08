@@ -109,6 +109,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		getContainer().updateButtons();
 
 	}
+
 	@Override
 	protected void createAdditionalControls(Composite parent) {
 		addRepositoryTemplatesToServerUrlCombo();
@@ -210,7 +211,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 						getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
 
 							public void run(IProgressMonitor monitor) throws InvocationTargetException,
-							InterruptedException {
+									InterruptedException {
 								try {
 									monitor.beginTask("Retrieving repository configuration", IProgressMonitor.UNKNOWN);
 									repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
@@ -345,7 +346,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					}
 				}
 				if (i == -1) {
-					StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID, "Could not resolve repository version: " + version));
+					StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID,
+							"Could not resolve repository version: " + version));
 					i = repositoryVersionCombo.indexOf(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
 					if (i != -1) {
 						repositoryVersionCombo.select(i);

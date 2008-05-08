@@ -44,8 +44,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 	public void testDifferentReportEncoding() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, "57",
-				new NullProgressMonitor());
+		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, "57", new NullProgressMonitor());
 		assertNotNull(task);
 		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));
@@ -62,8 +61,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 	public void testProperEncodingUponPost() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, "57",
-				new NullProgressMonitor());
+		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, "57", new NullProgressMonitor());
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 		assertNotNull(task);

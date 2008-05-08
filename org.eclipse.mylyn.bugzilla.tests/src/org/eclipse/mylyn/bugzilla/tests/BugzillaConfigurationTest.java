@@ -57,8 +57,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, credentials, false);
 
-		AuthenticationCredentials webCredentials = new AuthenticationCredentials(htAuthUser,
-				htAuthPass);
+		AuthenticationCredentials webCredentials = new AuthenticationCredentials(htAuthUser, htAuthPass);
 		taskRepository.setCredentials(AuthenticationType.HTTP, webCredentials, false);
 		taskRepository.setCharacterEncoding(encoding);
 		return bugzillaClientManager.getClient(taskRepository, null);
@@ -66,8 +65,7 @@ public class BugzillaConfigurationTest extends TestCase {
 
 	public void test222RDFProductConfig() throws Exception {
 
-		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_222_URL, "", "",
-				"", "", "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_222_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.22.1", config.getInstallVersion());
@@ -85,8 +83,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test2201RDFProductConfig() throws Exception {
-		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_2201_URL, "", "",
-				"", "", "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_2201_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.20.1", config.getInstallVersion());
@@ -104,8 +101,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test220RDFProductConfig() throws Exception {
-		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_220_URL, "", "",
-				"", "", "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_220_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.20.3", config.getInstallVersion());
@@ -123,8 +119,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void test218RDFProductConfig() throws Exception {
-		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_218_URL, "", "",
-				"", "", "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.TEST_BUGZILLA_218_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("2.18.6", config.getInstallVersion());
@@ -142,8 +137,7 @@ public class BugzillaConfigurationTest extends TestCase {
 	}
 
 	public void testEclipseRDFProductConfig() throws Exception {
-		BugzillaClient client = createClient(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "", "", "",
-				"", "UTF-8");
+		BugzillaClient client = createClient(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
 		assertEquals("3.0.1", config.getInstallVersion());
@@ -245,7 +239,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertNotNull(config);
 
 		assertTrue(config.getProducts().contains(
-		"Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+				"Test-Long-Named-Product-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 
 		// Add your additional checking for valid data here if necessary
 

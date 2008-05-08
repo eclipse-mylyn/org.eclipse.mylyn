@@ -122,8 +122,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public boolean updateTaskFromTaskData(TaskRepository repository, ITask repositoryTask,
-			RepositoryTaskData taskData) {
+	public boolean updateTaskFromTaskData(TaskRepository repository, ITask repositoryTask, RepositoryTaskData taskData) {
 		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
 		if (taskData != null) {
 			if (taskData.isPartial()) {
@@ -180,8 +179,8 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 			// states are
 			if (taskData.getStatus() != null) {
 				isComplete = taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
-				|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
-				|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
+						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
+						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
 			}
 			bugzillaTask.setCompleted(isComplete);
 
@@ -287,8 +286,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor)
-	throws CoreException {
+	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
 		TaskRepository repository = event.getTaskRepository();
 		if (event.getTasks().isEmpty()) {
 			return;
@@ -311,7 +309,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 			}
 
 			String urlQueryBase = repository.getRepositoryUrl() + CHANGED_BUGS_CGI_QUERY
-			+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
+					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 
 			String urlQueryString = urlQueryBase + BUG_ID;
 
@@ -362,15 +360,16 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 			//return changedTasks.isEmpty();
 			return;
 		} catch (UnsupportedEncodingException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Repository configured with unsupported encoding: "
-					+ repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", e));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+					"Repository configured with unsupported encoding: " + repository.getCharacterEncoding()
+							+ "\n\n Unable to determine changed tasks.", e));
 		} finally {
 			monitor.done();
 		}
 	}
 
 	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString)
-	throws UnsupportedEncodingException, CoreException {
+			throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
 
 			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) {
@@ -452,7 +451,8 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 		try {
 			return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, taskId);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Error constructing task url for " + repositoryUrl + "  id:" + taskId, e));
+			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+					"Error constructing task url for " + repositoryUrl + "  id:" + taskId, e));
 		}
 		return null;
 	}
@@ -477,7 +477,8 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
+	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor)
+			throws CoreException {
 		if (super.isRepositoryConfigurationStale(repository, monitor)) {
 			boolean result = true;
 			try {
@@ -494,7 +495,8 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 					}
 				}
 			} catch (MalformedURLException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "Error retrieving configuration timestamp for " + repository.getRepositoryUrl(), e));
+				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						"Error retrieving configuration timestamp for " + repository.getRepositoryUrl(), e));
 			}
 			return result;
 		}
@@ -532,7 +534,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 
 	@Override
 	public RepositoryTaskData getLegacyTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
-	throws CoreException {
+			throws CoreException {
 		return getLegacyTaskDataHandler().getTaskData(repository, taskId, monitor);
 	}
 
@@ -541,8 +543,8 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 		try {
 			monitor.beginTask("", 1);
 			if (event.isFullSynchronization()) {
-				event.getTaskRepository().setSynchronizationTimeStamp(getSynchronizationTimestamp(event.getTaskRepository(),
-						event.getChangedTasks()));
+				event.getTaskRepository().setSynchronizationTimeStamp(
+						getSynchronizationTimestamp(event.getTaskRepository(), event.getChangedTasks()));
 			}
 		} finally {
 			monitor.done();

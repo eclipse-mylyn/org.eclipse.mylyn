@@ -42,15 +42,17 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 
 		try {
 			queryUrl = repository.getRepositoryUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-			+ URLEncoder.encode(searchString, repository.getCharacterEncoding());
+					+ URLEncoder.encode(searchString, repository.getCharacterEncoding());
 		} catch (UnsupportedEncodingException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID, "Error during duplicate detection", e));
+			StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+					"Error during duplicate detection", e));
 			return null;
 		}
 
 		queryUrl += "&product=" + taskData.getProduct();
 
-		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryUrl, "search");
+		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), queryUrl,
+				"search");
 		return bugzillaQuery;
 	}
 
