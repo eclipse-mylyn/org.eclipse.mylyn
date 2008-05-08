@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -34,6 +35,10 @@ public class TaskListTableSorter extends ViewerSorter {
 	private int sortDirection = DEFAULT_SORT_DIRECTION;
 
 	private SortByIndex sortByIndex = SortByIndex.PRIORITY;
+
+	private int sortDirection2 = DEFAULT_SORT_DIRECTION;
+
+	private SortByIndex sortByIndex2 = SortByIndex.DATE_CREATED;
 
 	private final TaskListView view;
 
@@ -127,30 +132,49 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	private int compareElements(ITaskElement element1, ITaskElement element2) {
 		if (SortByIndex.PRIORITY.equals(sortByIndex)) {
-			int result = this.sortDirection * element1.getPriority().compareTo(element2.getPriority());
+			int result = sortByPriority(element1, element2, sortDirection);
 			if (result != 0) {
 				return result;
 			}
-			return sortBySummary(element1, element2);
 
+			if (SortByIndex.DATE_CREATED.equals(sortByIndex2)) {
+				return sortByDate(element1, element2, sortDirection2);
+			} else {
+				if (SortByIndex.SUMMARY.equals(sortByIndex2)) {
+					return sortBySummary(element1, element2, sortDirection2);
+				} else {
+					return result;
+				}
+			}
 		} else if (SortByIndex.DATE_CREATED.equals(sortByIndex)) {
-			ITask t1 = null;
-			ITask t2 = null;
-			if (element1 instanceof ITask) {
-				t1 = (ITask) element1;
+			int result = sortByDate(element1, element2, sortDirection);
+			if (result != 0) {
+				return result;
 			}
-			if (element2 instanceof ITask) {
-				t2 = (ITask) element2;
-			}
-			if (t1 != null && t2 != null) {
-				if (t1.getCreationDate() != null) {
-					return t1.getCreationDate().compareTo(t2.getCreationDate());
+			if (SortByIndex.PRIORITY.equals(sortByIndex2)) {
+				return sortByPriority(element1, element2, sortDirection2);
+			} else {
+				if (SortByIndex.SUMMARY.equals(sortByIndex2)) {
+					return sortBySummary(element1, element2, sortDirection2);
+				} else {
+					return result;
 				}
 			}
 		} else {
-			return sortBySummary(element1, element2);
+			int result = sortBySummary(element1, element2, sortDirection);
+			if (result != 0) {
+				return result;
+			}
+			if (SortByIndex.DATE_CREATED.equals(sortByIndex2)) {
+				return sortByDate(element1, element2, sortDirection2);
+			} else {
+				if (SortByIndex.PRIORITY.equals(sortByIndex2)) {
+					return sortByPriority(element1, element2, sortDirection2);
+				} else {
+					return result;
+				}
+			}
 		}
-		return 0;
 	}
 
 	/**
@@ -160,13 +184,48 @@ public class TaskListTableSorter extends ViewerSorter {
 	 * @param element2
 	 * @return sort order
 	 */
-	private int sortBySummary(ITaskElement element1, ITaskElement element2) {
-		return this.sortDirection
+	private int sortBySummary(ITaskElement element1, ITaskElement element2, int sortDirection) {
+		return sortDirection
 				* taskKeyComparator.compare(getSortableFromElement(element1), getSortableFromElement(element2));
 	}
 
 	/**
-	 * Return a sortable string in the format "key: summary"
+	 * Determine the sort order of two tasks by priority
+	 * 
+	 * @param element1
+	 * @param element2
+	 * @return sort order
+	 */
+	private int sortByPriority(ITaskElement element1, ITaskElement element2, int sortDirection) {
+		return sortDirection * element1.getPriority().compareTo(element2.getPriority());
+	}
+
+	/**
+	 * Determine the sort order of two tasks by creation date
+	 * 
+	 * @param element1
+	 * @param element2
+	 * @return sort order
+	 */
+	private int sortByDate(ITaskElement element1, ITaskElement element2, int sortDirection) {
+		AbstractTask t1 = null;
+		AbstractTask t2 = null;
+		if (element1 instanceof AbstractTask) {
+			t1 = (AbstractTask) element1;
+		}
+		if (element2 instanceof AbstractTask) {
+			t2 = (AbstractTask) element2;
+		}
+		if (t1 != null && t2 != null) {
+			if (t1.getCreationDate() != null) {
+				return sortDirection * t1.getCreationDate().compareTo(t2.getCreationDate());
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * * Return a sortable string in the format "key: summary"
 	 * 
 	 * @param element
 	 * @return sortable string
@@ -224,6 +283,31 @@ public class TaskListTableSorter extends ViewerSorter {
 		int oldValue = this.sortDirection;
 		this.sortDirection = sortDirection;
 		if (oldValue != this.sortDirection) {
+			view.getViewer().refresh();
+		}
+	}
+
+	public SortByIndex getSortByIndex2() {
+		return sortByIndex2;
+	}
+
+	public void setSortByIndex2(SortByIndex sortByIndex) {
+		SortByIndex oldValue = this.sortByIndex2;
+		this.sortByIndex2 = sortByIndex;
+		if (!oldValue.equals(sortByIndex)) {
+			view.getViewer().refresh();
+		}
+
+	}
+
+	public int getSortDirection2() {
+		return sortDirection2;
+	}
+
+	public void setSortDirection2(int sortDirection) {
+		int oldValue = this.sortDirection2;
+		this.sortDirection2 = sortDirection;
+		if (oldValue != this.sortDirection2) {
 			view.getViewer().refresh();
 		}
 	}

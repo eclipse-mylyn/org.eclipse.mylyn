@@ -93,6 +93,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.RenameAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -178,6 +179,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection";
 
 	private static final String MEMENTO_KEY_SORTER = "sorter";
+
+	private static final String MEMENTO_KEY_SORTER2 = "sorter2";
 
 	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex";
 
@@ -270,7 +273,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private PriorityDropDownAction filterOnPriorityAction;
 
-	private SortyByDropDownAction sortByAction;
+	private TaskListSortAction sortDialogAction;
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
 
@@ -650,6 +653,19 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, tableSorter.getSortDirection());
+		IMemento m2 = sorter.createChild(MEMENTO_KEY_SORTER2);
+		switch (tableSorter.getSortByIndex2()) {
+		case SUMMARY:
+			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 1);
+			break;
+		case DATE_CREATED:
+			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 2);
+			break;
+		default:
+			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
+		}
+
+		m2.putInteger(MEMENTO_KEY_SORT_DIRECTION, tableSorter.getSortDirection2());
 		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
 		memento.putString(MEMENTO_PRESENTATION, currentPresentation.getId());
 	}
@@ -661,6 +677,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			int restoredSortIndex = 0;
 			if (sorterMemento != null) {
 				int sortDirection = -1;
+				tableSorter = new TaskListTableSorter(this);
 				IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
 				if (m != null) {
 					Integer sortIndexInt = m.getInteger(MEMENTO_KEY_SORT_INDEX);
@@ -670,7 +687,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					Integer sortDirInt = m.getInteger(MEMENTO_KEY_SORT_DIRECTION);
 					if (sortDirInt != null) {
 						sortDirection = sortDirInt.intValue();
-						tableSorter = new TaskListTableSorter(this);
 						tableSorter.setSortDirection(sortDirection);
 						switch (restoredSortIndex) {
 						case 1:
@@ -681,6 +697,29 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 							break;
 						default:
 							tableSorter.setSortByIndex(SortByIndex.PRIORITY);
+						}
+					}
+				}
+
+				IMemento m2 = sorterMemento.getChild(MEMENTO_KEY_SORTER2);
+				if (m2 != null) {
+					Integer sortIndexInt = m2.getInteger(MEMENTO_KEY_SORT_INDEX);
+					if (sortIndexInt != null) {
+						restoredSortIndex = sortIndexInt.intValue();
+					}
+					Integer sortDirInt = m2.getInteger(MEMENTO_KEY_SORT_DIRECTION);
+					if (sortDirInt != null) {
+						sortDirection = sortDirInt.intValue();
+						tableSorter.setSortDirection2(sortDirection);
+						switch (restoredSortIndex) {
+						case 1:
+							tableSorter.setSortByIndex2(SortByIndex.SUMMARY);
+							break;
+						case 2:
+							tableSorter.setSortByIndex2(SortByIndex.DATE_CREATED);
+							break;
+						default:
+							tableSorter.setSortByIndex2(SortByIndex.PRIORITY);
 						}
 					}
 				}
@@ -1070,7 +1109,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(collapseAll);
 		manager.add(expandAll);
 		manager.add(new Separator(ID_SEPARATOR_FILTERS));
-		manager.add(sortByAction);
+		manager.add(sortDialogAction);
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
 		//manager.add(filterArchiveCategory);
@@ -1315,7 +1354,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
 		openPreferencesAction = new OpenTasksUiPreferencesAction();
 		//filterArchiveCategory = new FilterArchiveContainerAction(this);
-		sortByAction = new SortyByDropDownAction(this);
+		sortDialogAction = new TaskListSortAction(getSite(), this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
 		linkWithEditorAction = new LinkWithEditorAction(this);
 		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this);
@@ -1579,7 +1618,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	public void setManualFiltersEnabled(boolean enabled) {
-		sortByAction.setEnabled(enabled);
+		sortDialogAction.setEnabled(enabled);
 		filterOnPriorityAction.setEnabled(enabled);
 		filterCompleteTask.setEnabled(enabled);
 		//filterArchiveCategory.setEnabled(enabled);
