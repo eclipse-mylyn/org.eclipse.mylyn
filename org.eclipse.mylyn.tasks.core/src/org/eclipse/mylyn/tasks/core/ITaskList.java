@@ -10,9 +10,9 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 
 /**
  * @author Steffen Pingel
