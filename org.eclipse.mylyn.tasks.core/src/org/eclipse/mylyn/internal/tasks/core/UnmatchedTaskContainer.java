@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
@@ -61,16 +60,6 @@ public class UnmatchedTaskContainer extends AbstractTaskCategory {
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
 		this.setHandleIdentifier(repositoryUrl + "-" + HANDLE);
-	}
-
-	@Override
-	public boolean contains(String handle) {
-		for (ITask child : getChildrenInternal()) {
-			if (child.getHandleIdentifier().equals(handle)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 }

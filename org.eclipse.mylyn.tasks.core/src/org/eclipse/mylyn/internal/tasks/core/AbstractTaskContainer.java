@@ -72,24 +72,13 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 	}
 
 	/**
-	 * Internal method. Do not use.
-	 * 
-	 * API-3.0: remove this method (bug 207659)
-	 * 
-	 * @since 3.0
-	 */
-	public Collection<ITask> getChildrenInternal() {
-		return Collections.unmodifiableCollection(children);
-	}
-
-	/**
 	 * Maxes out at a depth of 10.
 	 * 
 	 * TODO: review policy
 	 */
 	public boolean contains(String handle) {
 		Assert.isNotNull(handle);
-		return containsHelper(getChildrenInternal(), handle, new HashSet<ITaskElement>());
+		return containsHelper(children, handle, new HashSet<ITaskElement>());
 	}
 
 	private boolean containsHelper(Collection<ITask> children, String handle, Set<ITaskElement> visitedContainers) {
@@ -100,7 +89,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 			visitedContainers.add(child);
 
 			if (handle.equals(child.getHandleIdentifier())
-					|| containsHelper(((AbstractTask) child).getChildrenInternal(), handle, visitedContainers)) {
+					|| containsHelper(child.getChildren(), handle, visitedContainers)) {
 				return true;
 			}
 		}

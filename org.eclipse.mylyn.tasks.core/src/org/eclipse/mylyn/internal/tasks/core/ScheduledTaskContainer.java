@@ -229,11 +229,6 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		return children;
 	}
 
-	@Override
-	public Collection<ITask> getChildrenInternal() {
-		return getChildren();
-	}
-
 	public boolean isCaptureFloating() {
 		return captureFloating;
 	}

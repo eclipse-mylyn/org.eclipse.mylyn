@@ -261,9 +261,6 @@ public interface ITask extends ITaskElement {
 
 	public abstract void setEstimatedTimeHours(int estimated);
 
-	@Deprecated
-	public abstract void setLastReadTimeStamp(String lastReadTimeStamp);
-
 	/**
 	 * @since 3.0
 	 */

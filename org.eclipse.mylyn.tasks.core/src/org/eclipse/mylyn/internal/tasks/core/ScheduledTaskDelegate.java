@@ -304,9 +304,4 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		return true;
 	}
 
-	@Override
-	public Collection<ITask> getChildrenInternal() {
-		return task.getChildrenInternal();
-	}
-
 }

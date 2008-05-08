@@ -38,7 +38,4 @@ public interface ITaskElement extends Comparable<ITaskElement>, IAdaptable {
 
 	public abstract String getPriority();
 
-	@Deprecated
-	public Collection<ITask> getChildrenInternal();
-
 }

@@ -53,7 +53,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	private RepositoryTaskData newData;
 
 	public void testHasIncoming() {
-		ITask task = new MockTask(MOCCK_ID);
+		MockTask task = new MockTask(MOCCK_ID);
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getConnectorKind(),
 				MockRepositoryConnector.REPOSITORY_URL, MOCCK_ID);
 		task.setLastReadTimeStamp("never");
@@ -71,7 +71,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 
 	public void testHasIncomingDateComparison() {
 		final Stack<Date> dates = new Stack<Date>();
-		ITask task = new MockTask(MOCCK_ID);
+		MockTask task = new MockTask(MOCCK_ID);
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory() {
 			private static final long serialVersionUID = 1L;
 
