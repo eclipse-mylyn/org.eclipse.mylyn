@@ -128,7 +128,7 @@ public interface IInteractionContextManager {
 
 	public abstract Collection<IInteractionContext> getGlobalContexts();
 
-	public InteractionContext getActivityMetaContext();
+	public IInteractionContext getActivityMetaContext();
 
 	public void loadActivityMetaContext();
 
