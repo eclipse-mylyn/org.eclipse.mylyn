@@ -6,34 +6,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.tasks.ui.wizards;
 
-import java.util.Map;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
-/**
- * @since 3.0
- */
-public interface IRepositoryQuery {
+public interface ITaskRepositoryPage extends IWizardPage {
+
+	public abstract TaskRepository createTaskRepository();
 
 	/**
-	 * @since 3.0
+	 * @since 2.2
 	 */
-	public abstract String getConnectorKind();
+	public abstract void applyTo(TaskRepository repository);
 
 	public abstract String getRepositoryUrl();
-
-	public abstract String getUrl();
-
-	public abstract void setUrl(String url);
-
-	public abstract String getSummary();
-
-	public abstract void setSummary(String summary);
-
-	public abstract String getAttribute(String key);
-
-	public abstract void setAttribute(String key, String value);
-
-	public abstract Map<String, String> getAttributes();
 
 }

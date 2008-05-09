@@ -16,10 +16,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeTasksJob;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.ITasksModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -51,10 +52,14 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	private final ITaskRepositoryManager repositoryManager;
 
-	public TaskJobFactory(TaskList taskList, ITaskDataManager taskDataManager, ITaskRepositoryManager repositoryManager) {
+	private final ITasksModel tasksModel;
+
+	public TaskJobFactory(TaskList taskList, ITaskDataManager taskDataManager,
+			ITaskRepositoryManager repositoryManager, ITasksModel tasksModel) {
 		this.taskList = taskList;
 		this.taskDataManager = taskDataManager;
 		this.repositoryManager = repositoryManager;
+		this.tasksModel = tasksModel;
 	}
 
 	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector, Set<ITask> tasks) {
@@ -75,15 +80,16 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	public SynchronizationJob createSynchronizeQueriesJob(AbstractRepositoryConnector connector,
 			TaskRepository repository, Set<RepositoryQuery> queries) {
-		SynchronizationJob job = new SynchronizeQueriesJob(taskList, taskDataManager, connector, repository, queries);
+		SynchronizationJob job = new SynchronizeQueriesJob(taskList, taskDataManager, tasksModel, connector,
+				repository, queries);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.DECORATE);
 		return job;
 	}
 
 	public SynchronizationJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories) {
-		SynchronizeRepositoriesJob job = new SynchronizeRepositoriesJob(taskList, taskDataManager, repositoryManager,
-				repositories);
+		SynchronizeRepositoriesJob job = new SynchronizeRepositoriesJob(taskList, taskDataManager, tasksModel,
+				repositoryManager, repositories);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.DECORATE);
 		return job;

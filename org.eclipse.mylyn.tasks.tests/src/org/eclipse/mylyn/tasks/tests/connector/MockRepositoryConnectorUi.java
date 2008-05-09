@@ -13,7 +13,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 
 /**
  * @author Mik Kersten
@@ -26,7 +26,7 @@ public class MockRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public AbstractRepositorySettingsPage getSettingsPage() {
+	public ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository) {
 		// ignore
 		return null;
 	}

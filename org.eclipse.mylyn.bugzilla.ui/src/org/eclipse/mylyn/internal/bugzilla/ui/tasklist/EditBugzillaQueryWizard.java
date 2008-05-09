@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
+import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryQueryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryWizard;
 
 /**
  * @author Rob Elves

@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracException;
 import org.eclipse.mylyn.internal.trac.core.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.TracPermissionDeniedException;
@@ -26,7 +27,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -49,9 +49,8 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	/** Supported access types. */
 	private Version[] versions;
 
-	public TracRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
-		super(TITLE, DESCRIPTION, repositoryUi);
-
+	public TracRepositorySettingsPage(TaskRepository taskRepository) {
+		super(TITLE, DESCRIPTION, taskRepository);
 		setNeedsAnonymousLogin(true);
 		setNeedsEncoding(false);
 		setNeedsTimeZone(false);
@@ -236,6 +235,11 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	@Override
 	protected Validator getValidator(TaskRepository repository) {
 		return new TracValidator(repository, getTracVersion());
+	}
+
+	@Override
+	public String getConnectorKind() {
+		return TracCorePlugin.REPOSITORY_KIND;
 	}
 
 }

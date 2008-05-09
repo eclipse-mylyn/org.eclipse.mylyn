@@ -536,7 +536,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			loadTemplateRepositories();
 
-			tasksJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager);
+			tasksJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager,
+					tasksModel);
 
 			// NOTE: task list must be read before Task List view can be initialized
 			taskActivityManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);

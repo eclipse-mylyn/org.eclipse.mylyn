@@ -35,7 +35,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -75,7 +74,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Steffen Pingel
  * @author Frank Becker
  */
-public abstract class AbstractRepositorySettingsPage extends WizardPage {
+public abstract class AbstractRepositorySettingsPage extends WizardPage implements ITaskRepositoryPage {
 
 	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences";
 
@@ -203,14 +202,15 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private Button disconnectedButton;
 
-	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnectorUi repositoryUi) {
+	/**
+	 * @since 3.0
+	 */
+	public AbstractRepositorySettingsPage(String title, String description, TaskRepository taskRepository) {
 		super(title);
-		super.setTitle(title);
-		super.setDescription(description);
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repositoryUi.getConnectorKind());
-		this.connector = connector;
-
+		this.repository = taskRepository;
+		this.connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
+		setTitle(title);
+		setDescription(description);
 		setNeedsAnonymousLogin(false);
 		setNeedsEncoding(true);
 		setNeedsTimeZone(true);
@@ -218,6 +218,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		setNeedsValidation(true);
 		setNeedsAdvanced(true);
 	}
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract String getConnectorKind();
 
 	@Override
 	public void dispose() {
@@ -656,7 +661,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				TaskRepository repository = getRepository();
-				if (repository == null && getServerUrl() != null && getServerUrl().length() > 0) {
+				if (repository == null && getRepositoryUrl() != null && getRepositoryUrl().length() > 0) {
 					repository = createTaskRepository();
 				}
 				if (repository != null) {
@@ -1024,7 +1029,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	protected abstract boolean isValidUrl(String name);
 
 	void updateHyperlinks() {
-		if (getServerUrl() != null && getServerUrl().length() > 0) {
+		if (getRepositoryUrl() != null && getRepositoryUrl().length() > 0) {
 			TaskRepository repository = createTaskRepository();
 			String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 					.getAccountCreationUrl(repository);
@@ -1047,7 +1052,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		return repositoryLabelEditor.getStringValue();
 	}
 
-	public String getServerUrl() {
+	/**
+	 * @since 3.0
+	 */
+	public String getRepositoryUrl() {
 		return TaskRepositoryManager.stripSlashes(serverUrlCombo.getText());
 	}
 
@@ -1157,7 +1165,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	@Override
 	public boolean isPageComplete() {
 		String errorMessage = null;
-		String url = getServerUrl();
+		String url = getRepositoryUrl();
 		errorMessage = isUniqueUrl(url);
 		if (errorMessage == null && !isValidUrl(url)) {
 			errorMessage = "Enter a valid server url";
@@ -1197,10 +1205,12 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		return null;
 	}
 
+	@Deprecated
 	public void setRepository(TaskRepository repository) {
 		this.repository = repository;
 	}
 
+	@Deprecated
 	public void setVersion(String previousVersion) {
 		if (previousVersion == null) {
 			serverVersion = TaskRepository.NO_VERSION_SPECIFIED;
@@ -1234,7 +1244,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public TaskRepository createTaskRepository() {
-		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getServerUrl());
+		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getRepositoryUrl());
 		applyTo(repository);
 		return repository;
 	}
@@ -1341,10 +1351,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	public boolean needsValidation() {
 		return needsValidation;
-	}
-
-	public void updateProperties(TaskRepository repository) {
-		// none
 	}
 
 	/** for testing */

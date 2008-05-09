@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
 import org.eclipse.ui.IWorkbenchPage;
@@ -57,8 +57,10 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	public abstract String getConnectorKind();
 
-	// API 3.0 return IRepositorySettingsPage
-	public abstract AbstractRepositorySettingsPage getSettingsPage();
+	/**
+	 * @since 3.0
+	 */
+	public abstract ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository);
 
 	/**
 	 * @param repository
@@ -228,6 +230,7 @@ public abstract class AbstractRepositoryConnectorUi {
 		return null;
 	}
 
+	@Deprecated
 	public void setCustomNotificationHandling(boolean customNotifications) {
 		this.customNotificationHandling = customNotifications;
 	}

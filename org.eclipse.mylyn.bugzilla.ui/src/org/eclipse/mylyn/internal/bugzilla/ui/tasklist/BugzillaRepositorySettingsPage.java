@@ -34,7 +34,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -89,8 +88,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private Combo languageSettingCombo;
 
-	public BugzillaRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
-		super(TITLE, DESCRIPTION, repositoryUi);
+	public BugzillaRepositorySettingsPage(TaskRepository taskRepository) {
+		super(TITLE, DESCRIPTION, taskRepository);
 		setNeedsAnonymousLogin(true);
 		setNeedsEncoding(true);
 		setNeedsTimeZone(false);
@@ -359,7 +358,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	}
 
 	@Override
-	public void updateProperties(TaskRepository repository) {
+	public void applyTo(TaskRepository repository) {
+		super.applyTo(repository);
 		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN,
 				String.valueOf(cleanQAContact.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());
@@ -531,6 +531,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			return versions[0];
 		}
 
+	}
+
+	@Override
+	public String getConnectorKind() {
+		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
 }

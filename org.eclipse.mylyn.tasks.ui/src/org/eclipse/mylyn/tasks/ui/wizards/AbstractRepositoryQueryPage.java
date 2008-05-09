@@ -12,8 +12,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -42,22 +42,25 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	private final TaskRepository taskRepository;
 
-	public AbstractRepositoryQueryPage(String wizardTitle, TaskRepository taskRepository) {
-		super(wizardTitle);
+	private final IRepositoryQuery query;
+
+	public AbstractRepositoryQueryPage(String title, TaskRepository taskRepository, IRepositoryQuery query) {
+		super(title);
 		Assert.isNotNull(taskRepository);
 		this.taskRepository = taskRepository;
+		this.query = query;
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		setPageComplete(false);
 	}
 
-	/**
-	 * @deprecated use {@link #setQueryTitle(String)} instead
-	 */
-	@Deprecated
-	public AbstractRepositoryQueryPage(String wizardTitle, String queryTitle) {
-		this(wizardTitle, (TaskRepository) null);
+	public AbstractRepositoryQueryPage(String title, TaskRepository taskRepository) {
+		this(title, taskRepository, null);
+	}
+
+	public IRepositoryQuery getQuery() {
+		return query;
 	}
 
 	public abstract String getQueryTitle();
@@ -71,31 +74,40 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		} else {
 			Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
 			Set<AbstractTaskCategory> categories = TasksUiInternal.getTaskList().getCategories();
-			if (getWizard() instanceof AbstractRepositoryQueryWizard) {
-				String oldSummary = ((AbstractRepositoryQueryWizard) getWizard()).getQuerySummary();
+			if (query != null) {
+				String oldSummary = query.getSummary();
 				if (oldSummary != null && queryTitle.equals(oldSummary)) {
 					setErrorMessage(null);
 					return true;
 				}
 			}
-			for (AbstractTaskCategory category : categories) {
-				if (queryTitle.equals(category.getSummary())) {
-					setErrorMessage("A category with this name already exists, please choose another name.");
-					return false;
-				}
-			}
-			for (RepositoryQuery query : queries) {
-				if (queryTitle.equals(query.getSummary())) {
-					setErrorMessage("A query with this name already exists, please choose another name.");
-					return false;
-				}
-			}
+			// FIXME reeneable when all connectors implement getQuery()
+//			for (AbstractTaskCategory category : categories) {
+//				if (queryTitle.equals(category.getSummary())) {
+//					setErrorMessage("A category with this name already exists, please choose another name.");
+//					return false;
+//				}
+//			}
+//			for (RepositoryQuery query : queries) {
+//				if (queryTitle.equals(query.getSummary())) {
+//					setErrorMessage("A query with this name already exists, please choose another name.");
+//					return false;
+//				}
+//			}
 		}
 		setErrorMessage(null);
 		return true;
 	}
 
-	public abstract IRepositoryQuery getQuery();
+	public IRepositoryQuery createQuery() {
+		IRepositoryQuery query = TasksUi.getTasksModel().createQuery(getTaskRepository());
+		applyTo(query);
+		return query;
+	}
+
+	public void applyTo(IRepositoryQuery query) {
+		throw new UnsupportedOperationException();
+	}
 
 	public void saveState() {
 		// empty
@@ -114,7 +126,8 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
 		if (connector != null) {
-			SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), taskRepository, getQuery());
+			SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), taskRepository,
+					createQuery());
 			NewSearchUI.runQueryInBackground(collector);
 		}
 		return true;

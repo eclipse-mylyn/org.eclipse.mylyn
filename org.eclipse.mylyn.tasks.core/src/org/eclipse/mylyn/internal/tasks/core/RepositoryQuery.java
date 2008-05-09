@@ -7,6 +7,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.core;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -30,6 +34,8 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 	private boolean synchronizing;
 
 	private String summary;
+
+	private Map<String, String> attributes;
 
 	@Deprecated
 	public RepositoryQuery(String description) {
@@ -107,6 +113,25 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	public synchronized String getAttribute(String key) {
+		return (attributes != null) ? attributes.get(key) : null;
+	}
+
+	public synchronized Map<String, String> getAttributes() {
+		if (attributes != null) {
+			return new HashMap<String, String>(attributes);
+		} else {
+			return Collections.emptyMap();
+		}
+	}
+
+	public synchronized void setAttribute(String key, String value) {
+		if (attributes == null) {
+			attributes = new HashMap<String, String>();
+		}
+		attributes.put(key, value);
 	}
 
 }

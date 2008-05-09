@@ -19,15 +19,11 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -35,8 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Mik Kersten
  */
-// API 3.0 rename to SelectConnectorPage
-public class SelectRepositoryClientPage extends WizardPage {
+public class SelectRepositoryConnectorPage extends WizardPage {
 
 	private static final String DESCRIPTION = "You can connect to an existing account using one of the installed connectors.";
 
@@ -44,7 +39,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 
 	private TableViewer viewer;
 
-	private final AbstractRepositoryClientWizard wizard;
+	private AbstractRepositoryConnector connector;
 
 	static class RepositoryContentProvider implements IStructuredContentProvider {
 
@@ -66,17 +61,15 @@ public class SelectRepositoryClientPage extends WizardPage {
 		}
 	}
 
-	public SelectRepositoryClientPage(AbstractRepositoryClientWizard wizard) {
+	public SelectRepositoryConnectorPage() {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
-		this.wizard = wizard;
-		super.setWizard(wizard);
 	}
 
 	@Override
 	public boolean canFlipToNextPage() {
-		return wizard.getRepositoryConnector() != null;
+		return connector != null;
 	}
 
 	public void createControl(Composite parent) {
@@ -90,13 +83,11 @@ public class SelectRepositoryClientPage extends WizardPage {
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
 		viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection.getFirstElement() instanceof AbstractRepositoryConnector) {
-					wizard.setRepositoryConnector((AbstractRepositoryConnector) selection.getFirstElement());
-					SelectRepositoryClientPage.this.setPageComplete(true);
-					wizard.getContainer().updateButtons();
+					connector = (AbstractRepositoryConnector) selection.getFirstElement();
+					setPageComplete(true);
 				}
 			}
 
@@ -111,18 +102,8 @@ public class SelectRepositoryClientPage extends WizardPage {
 		setControl(container);
 	}
 
-	@Override
-	public IWizardPage getNextPage() {
-		if (isPageComplete()) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(wizard.getRepositoryConnector()
-					.getConnectorKind());
-
-			AbstractRepositorySettingsPage nextPage = connectorUi.getSettingsPage();
-			wizard.setRepositorySettingsPage(nextPage);
-			nextPage.setWizard(wizard);
-			return nextPage;
-		} else {
-			return super.getNextPage();
-		}
+	public AbstractRepositoryConnector getConnector() {
+		return connector;
 	}
+
 }

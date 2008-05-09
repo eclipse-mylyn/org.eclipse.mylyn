@@ -24,9 +24,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
@@ -34,9 +34,11 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITasksModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -68,6 +70,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private class TaskCollector extends LegacyTaskDataCollector {
 
 		private final Set<ITask> removedQueryResults;
@@ -79,6 +82,24 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		public TaskCollector(RepositoryQuery repositoryQuery) {
 			this.repositoryQuery = repositoryQuery;
 			this.removedQueryResults = new HashSet<ITask>(repositoryQuery.getChildren());
+		}
+
+		@Override
+		public void accept(TaskData taskData) {
+			ITask task = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
+			if (task == null) {
+				task = tasksModel.createTask(repository, taskData.getTaskId());
+				task.setStale(true);
+			} else {
+				removedQueryResults.remove(task);
+			}
+			try {
+				taskDataManager.putUpdatedTaskData(task, taskData, true);
+			} catch (CoreException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to save task", e));
+			}
+			taskList.addTask(task, repositoryQuery);
+			resultCount++;
 		}
 
 		@Override
@@ -137,11 +158,14 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private final HashSet<ITask> tasksToBeSynchronized = new HashSet<ITask>();
 
-	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager taskDataManager,
+	private final ITasksModel tasksModel;
+
+	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager taskDataManager, ITasksModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<RepositoryQuery> queries) {
 		super("Synchronizing Queries (" + repository.getRepositoryLabel() + ")");
 		this.taskList = taskList;
 		this.taskDataManager = taskDataManager;
+		this.tasksModel = tasksModel;
 		this.connector = connector;
 		this.repository = repository;
 		this.queries = queries;
@@ -279,7 +303,10 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 						+ repositoryQuery.getSummary()));
 			}
 
-			taskList.removeFromContainer(repositoryQuery, collector.getRemovedChildren());
+			Set<ITask> removedChildren = collector.getRemovedChildren();
+			if (!removedChildren.isEmpty()) {
+				taskList.removeFromContainer(repositoryQuery, removedChildren);
+			}
 
 			repositoryQuery.setLastSynchronizedStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
 		} else {

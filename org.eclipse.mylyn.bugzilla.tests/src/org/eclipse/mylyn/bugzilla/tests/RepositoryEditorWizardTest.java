@@ -77,7 +77,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		// page.getHttpAuthPassword(), page.getCharacterEncoding());
 		page.setPassword("bogus");
 		try {
-			BugzillaClient client = createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
+			BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 					page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 			client.validate(null);
 		} catch (CoreException e) {
@@ -93,7 +93,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		page.setUserId("bogus");
 		try {
-			BugzillaClient client = createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
+			BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 					page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 			client.validate(null);
 		} catch (CoreException e) {
@@ -109,7 +109,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		page.setUrl("http://mylar.eclipse.org");
 		try {
-			BugzillaClient client = createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
+			BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 					page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 			client.validate(null);
 		} catch (CoreException e) {
@@ -144,7 +144,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		BugzillaClient client = createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
+		BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 				page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 		client.validate(null);
 		page.setUrl(IBugzillaConstants.TEST_BUGZILLA_218_URL);
@@ -163,7 +163,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-		BugzillaClient client = createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
+		BugzillaClient client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 				page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 		client.validate(null);
 		page.setUserId("bogus");
@@ -177,7 +177,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		dialog.create();
 		page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		try {
-			client = createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
+			client = createClient(page.getRepositoryUrl(), page.getUserName(), page.getPassword(),
 					page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
 			client.validate(null);
 		} catch (CoreException e) {

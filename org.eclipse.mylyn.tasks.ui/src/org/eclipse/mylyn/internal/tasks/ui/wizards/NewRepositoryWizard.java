@@ -8,52 +8,109 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import java.util.Collection;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
+import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
-public class NewRepositoryWizard extends AbstractRepositoryClientWizard {
+public class NewRepositoryWizard extends Wizard implements INewWizard {
+
+	private AbstractRepositoryConnector connector;
+
+	/**
+	 * If not null, indicates that the wizard will initially jump to a specific connector page
+	 */
+	private final String connectorKind;
+
+	private TaskRepository taskRepository;
+
+	private SelectRepositoryConnectorPage selectConnectorPage;
+
+	private ITaskRepositoryPage settingsPage;
 
 	public NewRepositoryWizard() {
 		this(null);
 	}
 
-	public NewRepositoryWizard(String repositoryType) {
-		super(repositoryType);
+	public NewRepositoryWizard(String connectorKind) {
+		this.connectorKind = connectorKind;
+		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		setForcePreviousAndNextButtons(true);
 		setNeedsProgressMonitor(true);
 		setWindowTitle(AddRepositoryAction.TITLE);
 	}
 
 	@Override
-	public boolean performFinish() {
-		if (canFinish()) {
-			repository = abstractRepositorySettingsPage.createTaskRepository();
-			abstractRepositorySettingsPage.updateProperties(repository);
-			TasksUi.getRepositoryManager().addRepository(repository,
-					TasksUiPlugin.getDefault().getRepositoriesFilePath());
-			return true;
+	public void addPages() {
+		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager().getRepositoryConnectors();
+		if (connectorKind != null || connectors.size() == 1) {
+			if (connectorKind != null) {
+				connector = TasksUi.getRepositoryManager().getRepositoryConnector(connectorKind);
+			} else {
+				connector = connectors.toArray(new AbstractRepositoryConnector[1])[0];
+			}
+			updateSettingsPage();
+			addPage(settingsPage);
+		} else {
+			selectConnectorPage = new SelectRepositoryConnectorPage();
+			addPage(selectConnectorPage);
 		}
-		return false;
+	}
+
+	@Override
+	public boolean canFinish() {
+		return selectConnectorPage.isPageComplete();
+	}
+
+	@Override
+	public IWizardPage getNextPage(IWizardPage page) {
+		if (page == selectConnectorPage) {
+			connector = selectConnectorPage.getConnector();
+			updateSettingsPage();
+			return settingsPage;
+		}
+		return super.getNextPage(page);
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
 
 	@Override
-	public void setRepositorySettingsPage(AbstractRepositorySettingsPage abstractRepositorySettingsPage) {
-		this.abstractRepositorySettingsPage = abstractRepositorySettingsPage;
+	public boolean performFinish() {
+		if (canFinish()) {
+			taskRepository = settingsPage.createTaskRepository();
+			settingsPage.applyTo(taskRepository);
+			TasksUi.getRepositoryManager().addRepository(taskRepository,
+					TasksUiPlugin.getDefault().getRepositoriesFilePath());
+			return true;
+		}
+		return false;
 	}
 
-	@Override
-	public boolean canFinish() {
-		return super.canFinish() && abstractRepositorySettingsPage != null
-				&& abstractRepositorySettingsPage.isPageComplete();
+	public TaskRepository getTaskRepository() {
+		return taskRepository;
 	}
+
+	private void updateSettingsPage() {
+		assert connector != null;
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
+		settingsPage = connectorUi.getSettingsPage(null);
+		settingsPage.setWizard(this);
+	}
+
 }

@@ -12,9 +12,6 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
-            <meta.element />
-         </appinfo>
          <documentation>
             (no description available)
          </documentation>
@@ -199,6 +196,9 @@
                <documentation>
                   Allows a connector to turn off notifications for incoming and query hits for their task types.
                </documentation>
+               <appinfo>
+                  <meta.attribute deprecated="true"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -230,6 +230,7 @@
          [Enter API information here.]
       </documentation>
    </annotation>
+
 
    <annotation>
       <appinfo>

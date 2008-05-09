@@ -37,7 +37,7 @@ public class AddTaskRepositoryHandler extends AbstractHandler {
 			repositoryDialog.setBlockOnOpen(true);
 			repositoryDialog.open();
 			if (repositoryDialog.getReturnCode() == Window.OK) {
-				return repositoryWizard.getRepository();
+				return repositoryWizard.getTaskRepository();
 			}
 		}
 

@@ -23,12 +23,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -562,6 +562,7 @@ final class DelegatingTaskExternalizer {
 		Element node = doc.createElement(queryTagName);
 		factory.setAdditionalAttributes(query, node);
 
+		node.setAttribute(DelegatingTaskExternalizer.KEY_HANDLE, query.getHandleIdentifier());
 		node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, query.getSummary());
 		node.setAttribute(AbstractTaskListFactory.KEY_QUERY_STRING, query.getUrl());
 		node.setAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL, query.getRepositoryUrl());

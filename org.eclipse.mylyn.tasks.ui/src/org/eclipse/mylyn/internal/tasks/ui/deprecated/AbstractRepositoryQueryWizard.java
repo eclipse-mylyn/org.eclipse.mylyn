@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.wizards;
+package org.eclipse.mylyn.internal.tasks.ui.deprecated;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -16,6 +16,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 
 /**
  * Extend to provide a custom edit query dialog, typically invoked by the user requesting properties on a query node in
@@ -24,7 +25,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Mik Kersten
  * @since 3.0
  */
-// API 3.0 generalize to make it usable for creating queries as well
+@Deprecated
 public abstract class AbstractRepositoryQueryWizard extends Wizard {
 
 	private static final String TITLE = "Edit Repository Query";

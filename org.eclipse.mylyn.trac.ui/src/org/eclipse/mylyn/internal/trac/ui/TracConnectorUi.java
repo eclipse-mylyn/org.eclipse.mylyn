@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.NewWebTaskWizard;
@@ -52,8 +52,8 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public AbstractRepositorySettingsPage getSettingsPage() {
-		return new TracRepositorySettingsPage(this);
+	public ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository) {
+		return new TracRepositorySettingsPage(taskRepository);
 	}
 
 	@Override

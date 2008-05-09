@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Steffen Pingel
@@ -24,6 +25,8 @@ public interface ITaskDataManager {
 	public abstract void discardEdits(ITask task, String kind) throws CoreException;
 
 	public abstract TaskData getTaskData(ITask task, String kind) throws CoreException;
+
+	public abstract TaskData getTaskData(TaskRepository task, String taskId) throws CoreException;
 
 	public abstract boolean hasTaskData(ITask task, String connectorKind);
 

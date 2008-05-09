@@ -37,7 +37,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
-import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 
 /**
  * @author Mik Kersten
@@ -169,8 +169,8 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public AbstractRepositorySettingsPage getSettingsPage() {
-		return new BugzillaRepositorySettingsPage(this);
+	public ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository) {
+		return new BugzillaRepositorySettingsPage(taskRepository);
 	}
 
 	@Override

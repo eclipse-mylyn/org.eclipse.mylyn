@@ -17,7 +17,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -35,7 +34,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
 		repository.setCharacterEncoding("UTF-8");
 
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
 		page.setNeedsEncoding(true);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -47,7 +46,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testNeedsEncodingFalse() {
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(null);
 		page.setNeedsEncoding(false);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -58,7 +57,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testNeedsAnonyoumousLoginFalse() {
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(null);
 		page.setNeedsAnonymousLogin(false);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -69,7 +68,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testNeedsAnonyoumousLoginNoRepository() {
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(null);
 		page.setNeedsAnonymousLogin(true);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -91,7 +90,7 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
 
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
 		page.setNeedsAnonymousLogin(true);
 		page.setRepository(repository);
 
@@ -145,7 +144,7 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		assertTrue(repository.getSavePassword(AuthenticationType.REPOSITORY));
 
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
 		page.setRepository(repository);
 		try {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -156,7 +155,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 
 		repository.setCredentials(AuthenticationType.REPOSITORY, null, false);
-		page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		page = new MockRepositorySettingsPage(repository);
 		page.setRepository(repository);
 		try {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -173,7 +172,7 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		assertTrue(repository.getSavePassword(AuthenticationType.HTTP));
 
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
 		page.setNeedsHttpAuth(true);
 		page.setRepository(repository);
 		try {
@@ -185,7 +184,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 
 		repository.setCredentials(AuthenticationType.HTTP, null, false);
-		page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+//		page = new MockRepositorySettingsPage(repository);
 		page.setNeedsHttpAuth(true);
 		page.setRepository(repository);
 		try {
@@ -203,7 +202,7 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		assertTrue(repository.getSavePassword(AuthenticationType.PROXY));
 
-		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
 		page.setNeedsProxy(true);
 		page.setRepository(repository);
 		try {
@@ -215,7 +214,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 
 		repository.setCredentials(AuthenticationType.PROXY, null, false);
-		page = new MockRepositorySettingsPage(new MockRepositoryConnectorUi());
+		page = new MockRepositorySettingsPage(repository);
 		page.setNeedsProxy(true);
 		page.setRepository(repository);
 		try {
@@ -229,8 +228,8 @@ public class RepositorySettingsPageTest extends TestCase {
 
 	private class MockRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
-		public MockRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
-			super("title", "summary", repositoryUi);
+		public MockRepositorySettingsPage(TaskRepository taskRepository) {
+			super("title", "summary", taskRepository);
 		}
 
 		@Override
@@ -269,6 +268,11 @@ public class RepositorySettingsPageTest extends TestCase {
 		protected Validator getValidator(TaskRepository repository) {
 			// ignore
 			return null;
+		}
+
+		@Override
+		public String getConnectorKind() {
+			return MockRepositoryConnector.REPOSITORY_KIND;
 		}
 	}
 

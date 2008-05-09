@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  * 
  * @author Gail Murphy
  * @author Robert Elves
+ * @author Steffen Pingel
  * @since 3.0
  */
 public abstract class AbstractDuplicateDetector {
@@ -26,7 +27,7 @@ public abstract class AbstractDuplicateDetector {
 
 	protected String connectorKind;
 
-	public abstract IRepositoryQuery getDuplicatesQuery(TaskRepository repository, TaskData taskData);
+	public abstract IRepositoryQuery getDuplicatesQuery(TaskRepository repository, TaskData taskData, String text);
 
 	public void setName(String name) {
 		this.name = name;

@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -315,6 +316,17 @@ public class TaskDataManager implements ITaskDataManager {
 		Assert.isNotNull(task);
 		Assert.isNotNull(kind);
 		TaskDataState state = taskDataStore.getTaskDataState(findFile(task, kind));
+		if (state == null) {
+			return null;
+		}
+		return state.getRepositoryData();
+	}
+
+	public TaskData getTaskData(TaskRepository taskRepository, String taskId) throws CoreException {
+		Assert.isNotNull(taskRepository);
+		Assert.isNotNull(taskId);
+		TaskDataState state = taskDataStore.getTaskDataState(findFile(new TaskTask(taskRepository.getConnectorKind(),
+				taskRepository.getRepositoryUrl(), taskId), taskRepository.getConnectorKind()));
 		if (state == null) {
 			return null;
 		}

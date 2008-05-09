@@ -51,10 +51,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	}
 
 	public BugzillaCustomQueryWizardPage(TaskRepository repository) {
-		super(TITLE, repository);
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
-		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
+		this(repository, null);
 	}
 
 	public void createControl(Composite parent) {

@@ -84,6 +84,8 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private boolean markReadPending;
 
+	private String taskKey;
+
 	public AbstractTask(String repositoryUrl, String taskId, String summary) {
 		super(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 		this.repositoryUrl = repositoryUrl;
@@ -186,7 +188,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	 * Can return the same as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
 	 */
 	public String getTaskKey() {
-		return taskId;
+		return (taskKey == null) ? taskId : taskKey;
 	}
 
 	public boolean isSubmitting() {
@@ -431,6 +433,10 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	 */
 	public void setMarkReadPending(boolean markReadPending) {
 		this.markReadPending = markReadPending;
+	}
+
+	public void setTaskKey(String taskKey) {
+		this.taskKey = taskKey;
 	}
 
 }

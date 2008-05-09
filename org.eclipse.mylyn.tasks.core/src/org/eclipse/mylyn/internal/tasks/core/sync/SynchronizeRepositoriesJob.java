@@ -19,11 +19,12 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.ITasksModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -43,11 +44,14 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	private final Object family = new Object();
 
+	private final ITasksModel tasksModel;
+
 	public SynchronizeRepositoriesJob(TaskList taskList, ITaskDataManager synchronizationManager,
-			ITaskRepositoryManager repositoryManager, Set<TaskRepository> repositories) {
+			ITasksModel tasksModel, ITaskRepositoryManager repositoryManager, Set<TaskRepository> repositories) {
 		super("Synchronizing Task List");
 		this.taskList = taskList;
 		this.synchronizationManager = synchronizationManager;
+		this.tasksModel = tasksModel;
 		this.repositoryManager = repositoryManager;
 		this.repositories = repositories;
 	}
@@ -79,8 +83,8 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 					updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
 				}
 
-				SynchronizeQueriesJob job = new SynchronizeQueriesJob(taskList, synchronizationManager, connector,
-						repository, queries) {
+				SynchronizeQueriesJob job = new SynchronizeQueriesJob(taskList, synchronizationManager, tasksModel,
+						connector, repository, queries) {
 					@Override
 					public boolean belongsTo(Object family) {
 						return SynchronizeRepositoriesJob.this.family == family;

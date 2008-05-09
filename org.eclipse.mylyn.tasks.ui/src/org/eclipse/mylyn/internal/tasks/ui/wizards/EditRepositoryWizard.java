@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -31,18 +32,12 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	private static final String TITLE = "Properties for Task Repository";
 
-	private final AbstractRepositorySettingsPage abstractRepositorySettingsPage;
+	private ITaskRepositoryPage settingsPage;
 
 	private final TaskRepository repository;
 
 	public EditRepositoryWizard(TaskRepository repository) {
-		super();
 		this.repository = repository;
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-		abstractRepositorySettingsPage = connectorUi.getSettingsPage();
-		abstractRepositorySettingsPage.setRepository(repository);
-		abstractRepositorySettingsPage.setVersion(repository.getVersion());
-		abstractRepositorySettingsPage.setWizard(this);
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_SETTINGS);
 		setWindowTitle(TITLE);
@@ -55,7 +50,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		if (canFinish()) {
 			String oldUrl = repository.getRepositoryUrl();
-			String newUrl = abstractRepositorySettingsPage.getServerUrl();
+			String newUrl = settingsPage.getRepositoryUrl();
 			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
 				TasksUiPlugin.getTaskListManager().deactivateAllTasks();
 
@@ -74,8 +69,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.flushAuthenticationCredentials();
 
 			repository.setRepositoryUrl(newUrl);
-			abstractRepositorySettingsPage.applyTo(repository);
-			abstractRepositorySettingsPage.updateProperties(repository);
+			settingsPage.applyTo(repository);
 			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
 				TasksUiPlugin.getRepositoryManager().notifyRepositoryUrlChanged(repository, oldUrl);
 			}
@@ -91,17 +85,24 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		addPage(abstractRepositorySettingsPage);
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+		settingsPage = connectorUi.getSettingsPage(null);
+		if (settingsPage instanceof AbstractRepositorySettingsPage) {
+			((AbstractRepositorySettingsPage) settingsPage).setRepository(repository);
+			((AbstractRepositorySettingsPage) settingsPage).setVersion(repository.getVersion());
+		}
+		settingsPage.setWizard(this);
+		addPage(settingsPage);
 	}
 
 	@Override
 	public boolean canFinish() {
-		return abstractRepositorySettingsPage.isPageComplete();
+		return settingsPage.isPageComplete();
 	}
 
 	/** public for testing */
-	public AbstractRepositorySettingsPage getSettingsPage() {
-		return abstractRepositorySettingsPage;
+	public ITaskRepositoryPage getSettingsPage() {
+		return settingsPage;
 	}
 
 	public TaskRepository getRepository() {

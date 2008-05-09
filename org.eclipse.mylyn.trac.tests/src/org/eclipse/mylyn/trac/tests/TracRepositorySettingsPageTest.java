@@ -41,7 +41,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 		super.setUp();
 
 		connector = (TracConnectorUi) TasksUiPlugin.getConnectorUi(TracCorePlugin.REPOSITORY_KIND);
-		page = new TracRepositorySettingsPage(connector);
+		page = new TracRepositorySettingsPage(null);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		page.createControl(shell);

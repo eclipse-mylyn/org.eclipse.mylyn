@@ -280,4 +280,6 @@ public interface ITask extends ITaskElement {
 
 	public abstract void setUrl(String taskUrl);
 
+	public abstract void setTaskKey(String taskKey);
+
 }
