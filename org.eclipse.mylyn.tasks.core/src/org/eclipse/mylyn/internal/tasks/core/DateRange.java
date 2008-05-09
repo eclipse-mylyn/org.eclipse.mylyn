@@ -67,21 +67,34 @@ public class DateRange implements Comparable<DateRange> {
 	@Override
 	public String toString() {
 		if (isDay() && TaskActivityUtil.getCurrentWeek().includes(this)) {
+			String day = "";
 			switch (getStartDate().get(Calendar.DAY_OF_WEEK)) {
 			case Calendar.MONDAY:
-				return "Monday";
+				day = "Monday";
+				break;
 			case Calendar.TUESDAY:
-				return "Tuesday";
+				day = "Tuesday";
+				break;
 			case Calendar.WEDNESDAY:
-				return "Wednesday";
+				day = "Wednesday";
+				break;
 			case Calendar.THURSDAY:
-				return "Thursday";
+				day = "Thursday";
+				break;
 			case Calendar.FRIDAY:
-				return "Friday";
+				day = "Friday";
+				break;
 			case Calendar.SATURDAY:
-				return "Saturday";
+				day = "Saturday";
+				break;
 			case Calendar.SUNDAY:
-				return "Sunday";
+				day = "Sunday";
+				break;
+			}
+			if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == getStartDate().get(Calendar.DAY_OF_WEEK)) {
+				return day + " - Today";
+			} else {
+				return day;
 			}
 		} else if (isThisWeek()) {
 			return DESCRIPTION_THIS_WEEK;

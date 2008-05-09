@@ -14,13 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -63,8 +59,6 @@ public class TaskListManager {
 
 	private final TaskList taskList = new TaskList();
 
-	private final Timer timer;
-
 //	private AbstractTask activeTask;
 
 	private TaskListExternalizationParticipant taskListSaveParticipant;
@@ -73,8 +67,6 @@ public class TaskListManager {
 
 	public TaskListManager(TaskListExternalizer taskListWriter, File file) {
 		this.taskListWriter = taskListWriter;
-		timer = new Timer();
-		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
 		importer = new TaskListElementImporter();
 		importer.setDelegateExternalizers(taskListWriter.getExternalizers());
 	}
@@ -117,23 +109,6 @@ public class TaskListManager {
 
 	public TaskList getTaskList() {
 		return taskList;
-	}
-
-	private class RolloverCheck extends TimerTask {
-
-		@Override
-		public void run() {
-			if (!Platform.isRunning() || ContextCorePlugin.getDefault() == null) {
-				return;
-			} else {
-//				if(TaskActivityUtil.getC)
-//				Calendar now = TaskActivityUtil.getCalendar();
-//				
-//				if (!thisWeek.includes(now)) {
-//					TasksUiPlugin.getTaskActivityManager().setStartTime(now.getTime());
-//				}
-			}
-		}
 	}
 
 	/**

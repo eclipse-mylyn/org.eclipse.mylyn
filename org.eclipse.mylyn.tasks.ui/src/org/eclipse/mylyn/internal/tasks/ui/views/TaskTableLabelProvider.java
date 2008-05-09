@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
@@ -45,11 +44,11 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 		if (obj instanceof ITaskElement) {
 			switch (columnIndex) {
 			case 0:
-				if (obj instanceof ScheduledTaskContainer) {
-					if (((ScheduledTaskContainer) obj).isToday()) {
-						return super.getText(obj) + " - Today";
-					}
-				}
+//				if (obj instanceof ScheduledTaskContainer) {
+//					if (((ScheduledTaskContainer) obj).isToday()) {
+//						return super.getText(obj) + " - Today";
+//					}
+//				}
 				return super.getText(obj);
 			case 1:
 				return null;

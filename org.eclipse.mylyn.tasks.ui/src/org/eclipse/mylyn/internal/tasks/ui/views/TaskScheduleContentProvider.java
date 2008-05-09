@@ -10,7 +10,10 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -19,20 +22,26 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Used by Scheduled task list presentation
  * 
  * @author Rob Elves
  */
-public class TaskScheduleContentProvider extends TaskListContentProvider {
+public class TaskScheduleContentProvider extends TaskListContentProvider implements ITaskActivityListener {
 
 	private final TaskActivityManager taskActivityManager;
+
+	private Timer timer;
 
 	public TaskScheduleContentProvider(TaskListView taskListView) {
 		super(taskListView);
 		this.taskActivityManager = TasksUiPlugin.getTaskActivityManager();
+		taskActivityManager.addActivityListener(this);
+		timer = new Timer();
 	}
 
 	@Override
@@ -40,6 +49,11 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 		Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 
 		WeekDateRange week = TaskActivityUtil.getCurrentWeek();
+
+		timer.cancel();
+		timer = new Timer();
+		timer.schedule(new RolloverCheck(), week.getToday().getEndDate().getTime());
+
 		for (DateRange day : week.getRemainingDays()) {
 			containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), day));
 		}
@@ -89,6 +103,54 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			}
 		}
 		return result.toArray();
+	}
+
+	private void refresh() {
+		if (Platform.isRunning() && PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					taskListView.refresh();
+				}
+			});
+		}
+	}
+
+	@Override
+	public void dispose() {
+		taskActivityManager.removeActivityListener(this);
+		super.dispose();
+	}
+
+	private class RolloverCheck extends TimerTask {
+
+		@Override
+		public void run() {
+			refresh();
+		}
+	}
+
+	public void activityReset() {
+		refresh();
+	}
+
+	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
+		// ignore
+	}
+
+	public void preTaskActivated(ITask task) {
+		// ignore
+	}
+
+	public void preTaskDeactivated(ITask task) {
+		// ignore
+	}
+
+	public void taskActivated(ITask task) {
+		// ignore
+	}
+
+	public void taskDeactivated(ITask task) {
+		// ignore
 	}
 
 }

@@ -90,6 +90,9 @@ public class TaskActivityManager implements ITaskActivityManager {
 	public void setWeekStartDay(int startDay) {
 		TaskActivityUtil.setStartDay(startDay);
 		this.startDay = startDay;
+		for (ITaskActivityListener listener : activityListeners) {
+			listener.activityReset();
+		}
 	}
 
 	public void addActivityListener(ITaskActivityListener listener) {
