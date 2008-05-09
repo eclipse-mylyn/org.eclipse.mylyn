@@ -15,6 +15,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
@@ -30,7 +31,7 @@ public class ScheduledPresentationTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		ContextCore.getContextManager().getActivityMetaContext().reset();
+		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		ContextCore.getContextManager().saveActivityContext();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getExternalizationManager().requestSave();

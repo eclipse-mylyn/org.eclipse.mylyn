@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
@@ -131,9 +132,9 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 	}
 
 	private void refactorMetaContextHandles(String oldRepositoryUrl, String newRepositoryUrl) {
-		InteractionContext metaContext = ContextCore.getContextManager().getActivityMetaContext();
+		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		ContextCore.getContextManager().resetActivityHistory();
-		InteractionContext newMetaContext = ContextCore.getContextManager().getActivityMetaContext();
+		InteractionContext newMetaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		for (InteractionEvent event : metaContext.getInteractionHistory()) {
 			if (event.getStructureHandle() != null) {
 				String storedUrl = RepositoryTaskHandleUtil.getRepositoryUrl(event.getStructureHandle());

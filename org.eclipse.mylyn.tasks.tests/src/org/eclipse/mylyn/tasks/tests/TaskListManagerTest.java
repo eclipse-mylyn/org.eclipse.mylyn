@@ -25,14 +25,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.ITaskList;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -210,10 +211,7 @@ public class TaskListManagerTest extends TestCase {
 		runRepositoryUrlOperation("http://foo.bar", "http://bar.baz");
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://foo.bar").size() == 0);
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://bar.baz").size() > 0);
-		IRepositoryQuery changedQuery = manager.getTaskList()
-				.getRepositoryQueries("http://bar.baz")
-				.iterator()
-				.next();
+		IRepositoryQuery changedQuery = manager.getTaskList().getRepositoryQueries("http://bar.baz").iterator().next();
 		assertEquals("http://bar.baz/b", changedQuery.getUrl());
 	}
 
@@ -297,7 +295,7 @@ public class TaskListManagerTest extends TestCase {
 		endDate2.add(Calendar.MINUTE, 25);
 
 		ContextCore.getContextManager().resetActivityHistory();
-		InteractionContext metaContext = ContextCore.getContextManager().getActivityMetaContext();
+		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(0, metaContext.getInteractionHistory().size());
 
 		ContextCore.getContextManager().processActivityMetaContextEvent(
@@ -316,7 +314,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task2));
 		runRepositoryUrlOperation(firstUrl, secondUrl);
-		metaContext = ContextCore.getContextManager().getActivityMetaContext();
+		metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(2, metaContext.getInteractionHistory().size());
 		assertEquals(60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(new MockTask(secondUrl, "1")));
 		assertEquals(2 * 60 * 1000 * 5, TasksUiPlugin.getTaskActivityManager().getElapsedTime(

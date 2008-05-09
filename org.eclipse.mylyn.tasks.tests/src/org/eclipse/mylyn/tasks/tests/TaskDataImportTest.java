@@ -11,6 +11,7 @@ import java.io.File;
 
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard;
@@ -53,7 +54,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 		// make correct number of categories exist prior to import tests
 		assertEquals(1, manager.getTaskList().getTaskContainers().size());
-		ContextCore.getContextManager().getActivityMetaContext().reset();
+		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 	}
 
 	@Override
