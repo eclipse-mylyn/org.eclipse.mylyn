@@ -11,13 +11,14 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
+/**
+ * @author Steffen Pingel
+ * @since 3.0
+ */
 public interface ITaskRepositoryPage extends IWizardPage {
 
 	public abstract TaskRepository createTaskRepository();
 
-	/**
-	 * @since 2.2
-	 */
 	public abstract void applyTo(TaskRepository repository);
 
 	public abstract String getRepositoryUrl();

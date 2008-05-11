@@ -15,6 +15,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryQueryWizard;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -74,26 +75,29 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		} else {
 			Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
 			Set<AbstractTaskCategory> categories = TasksUiInternal.getTaskList().getCategories();
+			String oldSummary = null;
 			if (query != null) {
-				String oldSummary = query.getSummary();
-				if (oldSummary != null && queryTitle.equals(oldSummary)) {
-					setErrorMessage(null);
-					return true;
+				oldSummary = query.getSummary();
+			} else if (getWizard() instanceof AbstractRepositoryQueryWizard) {
+				oldSummary = ((AbstractRepositoryQueryWizard) getWizard()).getQuerySummary();
+			}
+			if (oldSummary != null && queryTitle.equals(oldSummary)) {
+				setErrorMessage(null);
+				return true;
+			}
+
+			for (AbstractTaskCategory category : categories) {
+				if (queryTitle.equals(category.getSummary())) {
+					setErrorMessage("A category with this name already exists, please choose another name.");
+					return false;
 				}
 			}
-			// FIXME reeneable when all connectors implement getQuery()
-//			for (AbstractTaskCategory category : categories) {
-//				if (queryTitle.equals(category.getSummary())) {
-//					setErrorMessage("A category with this name already exists, please choose another name.");
-//					return false;
-//				}
-//			}
-//			for (RepositoryQuery query : queries) {
-//				if (queryTitle.equals(query.getSummary())) {
-//					setErrorMessage("A query with this name already exists, please choose another name.");
-//					return false;
-//				}
-//			}
+			for (RepositoryQuery query : queries) {
+				if (queryTitle.equals(query.getSummary())) {
+					setErrorMessage("A query with this name already exists, please choose another name.");
+					return false;
+				}
+			}
 		}
 		setErrorMessage(null);
 		return true;
