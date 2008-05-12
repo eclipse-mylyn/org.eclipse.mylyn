@@ -1371,6 +1371,17 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			updateConfiguration(false);
 		}
 		if (repositoryConfiguration != null) {
+			String[] saved_product = product.getSelection();
+			String[] saved_component = component.getSelection();
+			String[] saved_version = version.getSelection();
+			String[] saved_target = target.getSelection();
+			String[] saved_status = status.getSelection();
+			String[] saved_resolution = resolution.getSelection();
+			String[] saved_severity = severity.getSelection();
+			String[] saved_priority = priority.getSelection();
+			String[] saved_hardware = hardware.getSelection();
+			String[] saved_os = os.getSelection();
+
 			if (selectedProducts == null) {
 				java.util.List<String> products = repositoryConfiguration.getProducts();
 				String[] productsList = products.toArray(new String[products.size()]);
@@ -1384,19 +1395,26 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			component.setItems(componentsList);
 
 			version.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_VERSION, selectedProducts,
-
-			repositoryConfiguration));
-
+					repositoryConfiguration));
 			target.setItems(BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_TARGET, selectedProducts,
-
-			repositoryConfiguration));
-
+					repositoryConfiguration));
 			status.setItems(convertStringListToArray(repositoryConfiguration.getStatusValues()));
 			resolution.setItems(convertStringListToArray(repositoryConfiguration.getResolutions()));
 			severity.setItems(convertStringListToArray(repositoryConfiguration.getSeverities()));
 			priority.setItems(convertStringListToArray(repositoryConfiguration.getPriorities()));
 			hardware.setItems(convertStringListToArray(repositoryConfiguration.getPlatforms()));
 			os.setItems(convertStringListToArray(repositoryConfiguration.getOSs()));
+
+			setSelection(product, saved_product);
+			setSelection(component, saved_component);
+			setSelection(version, saved_version);
+			setSelection(target, saved_target);
+			setSelection(status, saved_status);
+			setSelection(resolution, saved_resolution);
+			setSelection(severity, saved_severity);
+			setSelection(priority, saved_priority);
+			setSelection(hardware, saved_hardware);
+			setSelection(os, saved_os);
 		}
 	}
 
@@ -1786,9 +1804,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Adds content assist to the given text field.
 	 * 
 	 * @param text
-	 * 		text field to decorate.
+	 *            text field to decorate.
 	 * @param proposalProvider
-	 * 		instance providing content proposals
+	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit
@@ -1818,7 +1836,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
 	 * @param attribute
-	 * 		attribute for which to provide content assist.
+	 *            attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit?
@@ -1920,5 +1938,22 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	@Override
 	public String getQueryTitle() {
 		return (queryTitle != null) ? queryTitle.getText() : "";
+	}
+
+	private void setSelection(List listControl, String[] selection) {
+		for (String item : selection) {
+			int index = listControl.indexOf(item);
+			if (index > -1) {
+				listControl.select(index);
+			}
+		}
+		if (listControl.getSelectionCount() > 0) {
+			listControl.showSelection();
+		} else {
+			listControl.select(0);
+			listControl.showSelection();
+			listControl.deselectAll();
+		}
+
 	}
 }
