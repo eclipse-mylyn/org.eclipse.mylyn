@@ -107,7 +107,7 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor CONTEXT_INACTIVE = create(TOOL, "task-context.gif");
 
-	public static final ImageDescriptor CONTEXT_FOCUS = create(VIEW, "focus-view.gif");
+	public static final ImageDescriptor CONTEXT_FOCUS = create(VIEW, "focus.gif");
 
 	public static final ImageDescriptor CONTEXT_ATTACH = create(TOOL, "context-attach.gif");
 
