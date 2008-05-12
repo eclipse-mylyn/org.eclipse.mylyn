@@ -39,6 +39,8 @@ public interface IInteractionContextManager {
 
 	public static final String ACTIVITY_DELTA_STOPPED = "stopped";
 
+	public static final String ACTIVITY_HANDLE_NONE = "none";
+
 	public static final String ACTIVITY_ORIGINID_WORKBENCH = "org.eclipse.ui.workbench";
 
 	public static final String ACTIVITY_ORIGINID_OS = "os";
