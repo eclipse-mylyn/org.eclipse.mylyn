@@ -230,12 +230,6 @@ public interface ITask extends ITaskElement {
 
 	public abstract boolean isCompleted();
 
-	/**
-	 * True for tasks that can be modified without a round-trip to a server. For example, such a task can be marked
-	 * completed via the Task List.
-	 */
-	public abstract boolean isLocal();
-
 	public abstract boolean isPastReminder();
 
 	public abstract boolean isStale();

@@ -17,7 +17,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
@@ -302,10 +301,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
 
-		if (task != null) {
-			addHeaderControls();
-		}
-
 		editorComposite = form.getBody();
 		GridLayout editorLayout = new GridLayout();
 		editorLayout.verticalSpacing = 3;
@@ -324,34 +319,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		} else if (summaryEditor != null && summaryEditor.getTextWidget() != null) {
 			summaryEditor.getTextWidget().setFocus();
 		}
-	}
-
-	private void addHeaderControls() {
-
-		if (task.isLocal() && parentEditor.getTopForm() != null
-				&& parentEditor.getTopForm().getToolBarManager() != null) {
-			activateAction = new ToggleTaskActivationAction(task, parentEditor.getTopForm().getToolBarManager());
-			parentEditor.getTopForm().getToolBarManager().add(new Separator("activation"));
-			parentEditor.getTopForm().getToolBarManager().add(activateAction);
-			parentEditor.getTopForm().getToolBarManager().update(true);
-		}
-
-		// if (form.getToolBarManager() != null) {
-		// form.getToolBarManager().add(repositoryLabelControl);
-		// if (repositoryTask != null) {
-		// SynchronizeEditorAction synchronizeEditorAction = new
-		// SynchronizeEditorAction();
-		// synchronizeEditorAction.selectionChanged(new
-		// StructuredSelection(this));
-		// form.getToolBarManager().add(synchronizeEditorAction);
-		// }
-		//
-		// // Header drop down menu additions:
-		// // form.getForm().getMenuManager().add(new
-		// // SynchronizeSelectedAction());
-		//
-		// form.getToolBarManager().update(true);
-		// }
 	}
 
 	@Override

@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
@@ -39,7 +40,7 @@ public class MarkTaskUnreadAction extends AbstractTaskAction {
 //		} else {
 		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof ITask)) {
 			ITask task = (ITask) selectedElements.get(0);
-			setEnabled(!task.isLocal());
+			setEnabled(!((AbstractTask) task).isLocal());
 		} else {
 			setEnabled(true);
 		}

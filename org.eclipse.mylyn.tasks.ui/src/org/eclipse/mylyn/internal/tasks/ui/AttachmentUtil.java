@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.FileAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
@@ -38,6 +39,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Steffen Pingel
@@ -208,6 +210,44 @@ public class AttachmentUtil {
 					RepositoryStatus.ERROR_INTERNAL, "Could not create context file", e));
 		}
 		return true;
+	}
+
+	public static boolean canUploadAttachment(ITask task) {
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		if (connector instanceof AbstractLegacyRepositoryConnector) {
+			AbstractAttachmentHandler attachmentHandler = ((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler();
+			if (attachmentHandler != null) {
+				return attachmentHandler.canUploadAttachment(repository, task);
+			}
+		} else {
+			AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+			if (attachmentHandler != null) {
+				return attachmentHandler.canPostContent(repository, task);
+			}
+		}
+		return false;
+	}
+
+	public static boolean canDownloadAttachment(ITask task) {
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		if (connector instanceof AbstractLegacyRepositoryConnector) {
+			AbstractAttachmentHandler attachmentHandler = ((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler();
+			if (attachmentHandler != null) {
+				return attachmentHandler.canDownloadAttachment(repository, task);
+			}
+		} else {
+			AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+			if (attachmentHandler != null) {
+				return attachmentHandler.canGetContent(repository, task);
+			}
+		}
+		return false;
 	}
 
 }

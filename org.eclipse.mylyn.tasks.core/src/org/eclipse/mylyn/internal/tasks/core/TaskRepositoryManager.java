@@ -362,7 +362,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 	}
 
 	public boolean isOwnedByUser(ITask task) {
-		if (task.isLocal()) {
+		if (task instanceof LocalTask) {
 			return true;
 		}
 

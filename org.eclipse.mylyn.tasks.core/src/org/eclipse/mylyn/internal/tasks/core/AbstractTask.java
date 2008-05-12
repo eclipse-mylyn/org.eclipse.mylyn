@@ -105,7 +105,10 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	/**
 	 * True for tasks that can be modified without a round-trip to a server. For example, such a task can be marked
 	 * completed via the Task List.
+	 * 
+	 * @deprecated use <code>task instanceof LocalTask</code> instead
 	 */
+	@Deprecated
 	public abstract boolean isLocal();
 
 	public abstract String getConnectorKind();

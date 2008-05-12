@@ -26,7 +26,7 @@ public class AbstractChangeCompletionAction extends Action {
 			if (!(abstractTaskContainer instanceof ITask)) {
 				allLocalTasks = false;
 				break;
-			} else if (!((ITask) abstractTaskContainer).isLocal()) {
+			} else if (!((AbstractTask) abstractTaskContainer).isLocal()) {
 				allLocalTasks = false;
 				break;
 			}

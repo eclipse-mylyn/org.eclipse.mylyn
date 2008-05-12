@@ -15,8 +15,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -75,7 +75,7 @@ public class DeleteAction extends Action {
 		if (toDelete.size() == 1) {
 			Object object = toDelete.get(0);
 			if (object instanceof ITask) {
-				if (((ITask) object).isLocal()) {
+				if (((AbstractTask) object).isLocal()) {
 					message = "Permanently delete the task listed below?";
 				} else {
 					message = "Delete the planning information and context for the repository task?  The server"
