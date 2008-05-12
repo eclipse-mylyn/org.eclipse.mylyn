@@ -54,7 +54,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	private static final String OPERATION_LABEL_ACCEPT = "Accept (change status to ASSIGNED)";
 
-	private static final long serialVersionUID = -482656956042521023L;
+	private static final long serialVersionUID = 575019225495659016L;
 
 	private static final String VERSION_UNKNOWN = "unknown";
 
@@ -87,6 +87,8 @@ public class RepositoryConfiguration implements Serializable {
 	private final List<String> milestones = new ArrayList<String>();
 
 	private final List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
+
+	private final List<BugzillaFlag> flags = new ArrayList<BugzillaFlag>();
 
 	private String version = VERSION_UNKNOWN;
 
@@ -144,8 +146,8 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does not
-	 * exist.
+	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does
+	 * not exist.
 	 */
 	public List<String> getVersions(String product) {
 		ProductEntry entry = products.get(product);
@@ -584,4 +586,14 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
+	/**
+	 * Adds a flag to the configuration.
+	 */
+	public void addFlag(BugzillaFlag newFlag) {
+		flags.add(newFlag);
+	}
+
+	public List<BugzillaFlag> getFlags() {
+		return flags;
+	}
 }
