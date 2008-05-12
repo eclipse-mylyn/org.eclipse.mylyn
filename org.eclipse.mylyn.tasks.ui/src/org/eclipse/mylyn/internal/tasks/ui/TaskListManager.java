@@ -100,8 +100,6 @@ public class TaskListManager {
 		}
 
 		TasksUiPlugin.getExternalizationManager().load(taskListSaveParticipant);
-		TasksUiPlugin.getTaskActivityManager().reloadTimingData();
-		//TasksUiExtensionReader.initStartupExtensions(taskListSaveParticipant.getTaskListWriter());
 		TasksUiPlugin.getExternalizationManager().addParticipant(taskListSaveParticipant);
 		taskList.addChangeListener(taskListSaveParticipant);
 		return true;
