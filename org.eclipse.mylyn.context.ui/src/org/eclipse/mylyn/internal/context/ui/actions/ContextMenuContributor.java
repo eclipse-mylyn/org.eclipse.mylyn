@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
@@ -30,11 +31,12 @@ public class ContextMenuContributor implements IDynamicSubMenuContributor {
 
 		ITask task = (ITask) selectedElements.get(0);
 		StructuredSelection selection = new StructuredSelection(task);
-		if (!task.isLocal()) {
+		if (AttachmentUtil.canUploadAttachment(task)) {
 			ContextAttachAction attachAction = new ContextAttachAction();
 			attachAction.selectionChanged(attachAction, selection);
 			subMenuManager.add(attachAction);
-
+		}
+		if (AttachmentUtil.canDownloadAttachment(task)) {
 			ContextRetrieveAction retrieveAction = new ContextRetrieveAction();
 			retrieveAction.selectionChanged(retrieveAction, selection);
 			subMenuManager.add(retrieveAction);
@@ -70,15 +72,4 @@ public class ContextMenuContributor implements IDynamicSubMenuContributor {
 		return text;
 	}
 
-//	/**
-//	 * @param selectedElements
-//	 * @param category
-//	 */
-//	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
-//		for (AbstractTaskContainer element : selectedElements) {
-//			if (element instanceof AbstractTask) {
-//				TasksUiPlugin.getTaskList().moveToContainer((AbstractTask) element, category);
-//			}
-//		}
-//	}
 }
