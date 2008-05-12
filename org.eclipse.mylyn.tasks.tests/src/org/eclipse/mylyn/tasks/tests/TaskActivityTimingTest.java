@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -59,6 +60,36 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 		super.tearDown();
+	}
+
+	public void testActivityWithNoTaskActive() {
+		Calendar start = Calendar.getInstance();
+		Calendar end = Calendar.getInstance();
+		end.setTimeInMillis(start.getTimeInMillis());
+		end.add(Calendar.HOUR_OF_DAY, 2);
+
+		Calendar start2 = Calendar.getInstance();
+		start2.add(Calendar.DAY_OF_MONTH, 1);
+		Calendar end2 = Calendar.getInstance();
+		end2.setTime(start2.getTime());
+		end2.add(Calendar.HOUR_OF_DAY, 2);
+
+		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind", "none",
+				"originId", "navigatedRelation", IInteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(),
+				end.getTime());
+		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind", "none",
+				"originId", "navigatedRelation", IInteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start2.getTime(),
+				end2.getTime());
+
+		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event1, false);
+		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event2, false);
+
+		long expectedTotalTime = end.getTime().getTime() - start.getTime().getTime();
+		assertEquals(2 * expectedTotalTime, ((TaskActivityManager) activityManager).getElapsedNoTaskActive(start, end2));
+		assertEquals(end.getTimeInMillis() - start.getTimeInMillis(), TasksUiPlugin.getTaskActivityManager()
+				.getElapsedNoTaskActive(start, end));
+		assertEquals(end.getTimeInMillis() - start.getTimeInMillis(), TasksUiPlugin.getTaskActivityManager()
+				.getElapsedNoTaskActive(start2, end2));
 	}
 
 	public void testActivityCaptured() {

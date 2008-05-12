@@ -109,6 +109,9 @@ public class TaskActivityMonitor {
 					if (activatedTask != null) {
 						taskActivityManager.addElapsedTime(activatedTask, event.getDate(), event.getEndDate());
 						changed = true;
+					} else if (event.getStructureHandle().equals("none")) {
+						taskActivityManager.addElapsedNoTaskActive(event.getDate(), event.getEndDate());
+						changed = true;
 					}
 				} else if (event.getDelta().equals("removed")) {
 					ITask task = taskList.getTask(event.getStructureHandle());

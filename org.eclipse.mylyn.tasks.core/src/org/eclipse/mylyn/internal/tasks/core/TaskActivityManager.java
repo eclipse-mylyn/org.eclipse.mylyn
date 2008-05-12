@@ -56,6 +56,8 @@ public class TaskActivityManager implements ITaskActivityManager {
 	// For a given task maps Calendar Hour to duration of time spent (milliseconds) with task active 
 	private final Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
 
+	private final SortedMap<Calendar, Long> noTaskActiveMap = Collections.synchronizedSortedMap(new TreeMap<Calendar, Long>());
+
 	private final TaskList taskList;
 
 	private final TaskRepositoryManager repositoryManager;
@@ -115,6 +117,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		activeTasks.clear();
 		taskActivationHistory.clear();
 		taskElapsedTimeMap.clear();
+		noTaskActiveMap.clear();
 	}
 
 	public void reloadTimingData() {
@@ -151,6 +154,44 @@ public class TaskActivityManager implements ITaskActivityManager {
 			}
 		}
 
+	}
+
+	public void addElapsedNoTaskActive(Date startDate, Date endDate) {
+
+		long attentionSpan = endDate.getTime() - startDate.getTime();
+
+		// Ignore any potential negative or zero times
+		if (attentionSpan <= 0) {
+			return;
+		}
+
+		// granularity to the hour
+		Calendar hourOfDay = TaskActivityUtil.getCalendar();
+		hourOfDay.setTime(startDate);
+		snapToStartOfHour(hourOfDay);
+		Long daysActivity = noTaskActiveMap.get(hourOfDay);
+		if (daysActivity == null) {
+			daysActivity = new Long(0);
+		}
+
+		daysActivity = daysActivity.longValue() + attentionSpan;
+
+		noTaskActiveMap.put(hourOfDay, daysActivity);
+	}
+
+	public long getElapsedNoTaskActive(Calendar startDate, Calendar endDate) {
+
+		Calendar startRange = snapToStartOfHour(getNewInstance(startDate));
+
+		Calendar endRange = snapToEndOfHour(getNewInstance(endDate));
+		long result = 0;
+		Map<Calendar, Long> subMap = noTaskActiveMap.subMap(startRange, endRange);
+		for (Long time : subMap.values()) {
+			if (time != null && time > 0) {
+				result += time.longValue();
+			}
+		}
+		return result;
 	}
 
 	public void addElapsedTime(AbstractTask task, Date startDate, Date endDate) {
@@ -396,8 +437,16 @@ public class TaskActivityManager implements ITaskActivityManager {
 		return result;
 	}
 
-	/** total elapsed time based on activation history */
+	/**
+	 * total elapsed time based on activation history passing null for the task will return all active time with no task
+	 * active
+	 */
 	public long getElapsedTime(ITask task, Calendar start, Calendar end) {
+
+		if (task == null) {
+			return getElapsedNoTaskActive(start, end);
+		}
+
 		long result = 0;
 
 		Calendar startRange = snapToStartOfHour(getNewInstance(start));
