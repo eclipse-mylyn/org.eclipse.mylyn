@@ -54,10 +54,10 @@ public abstract class AbstractUserActivityMonitor {
 	}
 
 	public String getStructureHandle() {
-		if (ContextCore.getContextManager().getActiveContext() != null) {
+		if (ContextCore.getContextManager().getActiveContext().getHandleIdentifier() != null) {
 			return ContextCore.getContextManager().getActiveContext().getHandleIdentifier();
 		} else {
-			return null;
+			return IInteractionContextManager.ACTIVITY_DELTA_ADDED;
 		}
 	}
 
