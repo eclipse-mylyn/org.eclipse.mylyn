@@ -143,9 +143,7 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 			AuthenticationCredentials credentials = new AuthenticationCredentials(dialog.getUserName(),
 					dialog.getPassword());
 			taskRepository.setCredentials(authType, credentials, dialog.getSavePassword());
-
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(taskRepository);
-			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		}
 	}
 

@@ -56,6 +56,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -74,6 +75,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
+import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
@@ -484,7 +486,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			String path = getDataDirectory() + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
 			File taskListFile = new File(path);
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
+
 			repositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
+			IExternalizationParticipant participant = new RepositoryExternalizationParticipant(externalizationManager,
+					repositoryManager);
+
 			taskActivityManager = new TaskActivityManager(repositoryManager, taskListManager.getTaskList());
 			tasksModel = new TasksModel(taskListManager.getTaskList(), repositoryManager);
 			updateTaskActivityManager();
@@ -512,8 +518,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
 			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
-
-			repositoryManager.readRepositories(getRepositoriesFilePath());
+			externalizationManager.load(participant);
+			externalizationManager.addParticipant(participant);
+			//repositoryManager.readRepositories(getRepositoriesFilePath());
 
 			// instantiates taskDataManager
 			File root = new File(this.getDataDirectory() + '/' + FOLDER_OFFLINE);
@@ -745,8 +752,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					externalizationManager.setRootFolderPath(newPath);
 					taskActivityManager.clear();
 
-					getRepositoryManager().readRepositories(
-							newPath + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
+//					getRepositoryManager().readRepositories(
+//							newPath + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
 					loadTemplateRepositories();
 
 					getTaskListManager().resetTaskList();

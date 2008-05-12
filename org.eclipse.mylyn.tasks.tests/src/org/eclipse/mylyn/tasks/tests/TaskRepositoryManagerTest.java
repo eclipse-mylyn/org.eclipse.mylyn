@@ -131,8 +131,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 		manager.addRepository(repository3, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getDefault();
+		TasksUiPlugin.getExternalizationManager().reLoad();
+		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		if (manager.getRepositoryConnector("bugzilla") != null) {
 			assertTrue(manager.getAllRepositories().contains(repository2));
@@ -159,8 +160,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repository1.setTimeZoneId(fakeTimeZone);
 		repository1.setSynchronizationTimeStamp(dateString);
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getDefault();
+		TasksUiPlugin.getExternalizationManager().reLoad();
+		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TaskRepository temp = manager.getRepository(repository1.getConnectorKind(), repository1.getRepositoryUrl());
 		assertNotNull(temp);
 		assertEquals(version, temp.getVersion());
@@ -209,8 +211,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 				"http://jroller.com/page/eu");
 		repository.setProperty("owner", "euxx");
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getDefault();
+		TasksUiPlugin.getExternalizationManager().reLoad();
+		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		TaskRepository temp = manager.getRepository(repository.getConnectorKind(), repository.getRepositoryUrl());
 		assertNotNull(temp);
@@ -227,8 +230,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 		List<TaskRepository> repositoryList = new ArrayList<TaskRepository>();
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
-		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
+		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getDefault();
+		TasksUiPlugin.getExternalizationManager().reLoad();
 		assertEquals("got: " + manager.getAllRepositories(), 2, manager.getAllRepositories().size());
 	}
 

@@ -10,9 +10,6 @@ package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
@@ -31,9 +28,8 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 /**
  * @author Rob Elves
  */
-public class TaskListExternalizationParticipant implements IExternalizationParticipant, ITaskListChangeListener {
-
-	private static final String SNAPSHOT_PREFIX = ".";
+public class TaskListExternalizationParticipant extends AbstractExternalizationParticipant implements
+		IExternalizationParticipant, ITaskListChangeListener {
 
 	private final ExternalizationManager manager;
 
@@ -50,14 +46,17 @@ public class TaskListExternalizationParticipant implements IExternalizationParti
 		this.taskListWriter = taskListExternalizer;
 	}
 
+	@Override
 	public ISchedulingRule getSchedulingRule() {
 		return TaskList.getSchedulingRule();
 	}
 
+	@Override
 	public boolean isDirty() {
 		return dirty;
 	}
 
+	@Override
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
 		Assert.isNotNull(context);
 
@@ -140,26 +139,6 @@ public class TaskListExternalizationParticipant implements IExternalizationParti
 
 	}
 
-	private boolean restoreSnapshot(File file) {
-		File backup = new File(file.getParentFile(), SNAPSHOT_PREFIX + file.getName());
-		File originalFile = file.getAbsoluteFile();
-		if (originalFile.exists()) {
-			SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
-					Locale.ENGLISH);
-			File failed = new File(file.getParentFile(), "failed-" + format.format(new Date()) + "-"
-					+ originalFile.getName());
-			originalFile.renameTo(failed);
-		}
-		return backup.renameTo(originalFile);
-	}
-
-	private boolean takeSnapshot(File file) {
-		File originalFile = file.getAbsoluteFile();
-		File backup = new File(file.getParentFile(), SNAPSHOT_PREFIX + file.getName());
-		backup.delete();
-		return originalFile.renameTo(backup);
-	}
-
 	public void containersChanged(Set<TaskContainerDelta> containers) {
 		synchronized (TaskListExternalizationParticipant.this) {
 			dirty = true;
@@ -171,6 +150,7 @@ public class TaskListExternalizationParticipant implements IExternalizationParti
 		// ignore
 	}
 
+	@Override
 	public String getDescription() {
 		return "Task List";
 	}

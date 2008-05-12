@@ -74,7 +74,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 				TasksUiPlugin.getRepositoryManager().notifyRepositoryUrlChanged(repository, oldUrl);
 			}
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
-			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+			TasksUiPlugin.getExternalizationManager().requestSave();
 			return true;
 		}
 		return false;

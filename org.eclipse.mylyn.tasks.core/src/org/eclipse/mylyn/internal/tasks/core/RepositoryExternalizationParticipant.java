@@ -77,7 +77,6 @@ public class RepositoryExternalizationParticipant extends AbstractExternalizatio
 				if (restoreSnapshot(repositoriesFile)) {
 					repositoryManager.readRepositories(filePath);
 				} else {
-					// TODO: sufficient?
 					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 							"Failed to load repositories", e));
 				}

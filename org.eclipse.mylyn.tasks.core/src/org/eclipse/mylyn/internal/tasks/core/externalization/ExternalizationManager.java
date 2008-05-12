@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationCon
 
 /**
  * @author Rob Elves
+ * @since 3.0
  */
 public class ExternalizationManager {
 
@@ -39,7 +40,7 @@ public class ExternalizationManager {
 
 	private static boolean saveDisabled = false;
 
-	private final Set<IExternalizationParticipant> externalizationParticipants = new HashSet<IExternalizationParticipant>();
+	private final List<IExternalizationParticipant> externalizationParticipants = new ArrayList<IExternalizationParticipant>();
 
 	private boolean forceSave = false;
 
@@ -56,6 +57,12 @@ public class ExternalizationManager {
 
 	public void addParticipant(IExternalizationParticipant participant) {
 		externalizationParticipants.add(participant);
+	}
+
+	public void reLoad() {
+		for (IExternalizationParticipant participant : externalizationParticipants) {
+			load(participant);
+		}
 	}
 
 	public void load(IExternalizationParticipant participant) {

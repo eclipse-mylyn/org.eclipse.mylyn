@@ -40,7 +40,6 @@ public class DisconnectRepositoryAction extends Action implements ISelectionChan
 	public void run() {
 		repository.setOffline(isChecked());
 		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
-		TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

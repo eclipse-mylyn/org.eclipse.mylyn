@@ -227,7 +227,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		return null;
 	}
 
-	public Map<String, Set<TaskRepository>> readRepositories(String repositoriesFilePath) {
+	protected Map<String, Set<TaskRepository>> readRepositories(String repositoriesFilePath) {
 
 		repositoryMap.clear();
 		orphanedRepositories.clear();
@@ -246,42 +246,38 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 	}
 
 	private void loadRepositories(String repositoriesFilePath) {
-		try {
-			boolean migration = false;
-			// String dataDirectory =
-			// TasksUiPlugin.getDefault().getDataDirectory();
-			File repositoriesFile = new File(repositoriesFilePath);
+		boolean migration = false;
+		// String dataDirectory =
+		// TasksUiPlugin.getDefault().getDataDirectory();
+		File repositoriesFile = new File(repositoriesFilePath);
 
-			// Will only load repositories for which a connector exists
-			for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
-				repositoryMap.put(repositoryConnector.getConnectorKind(), new HashSet<TaskRepository>());
-			}
-			if (repositoriesFile.exists()) {
-				Set<TaskRepository> repositories = externalizer.readRepositoriesFromXML(repositoriesFile);
-				if (repositories != null && repositories.size() > 0) {
-					for (TaskRepository repository : repositories) {
+		// Will only load repositories for which a connector exists
+		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
+			repositoryMap.put(repositoryConnector.getConnectorKind(), new HashSet<TaskRepository>());
+		}
+		if (repositoriesFile.exists()) {
+			Set<TaskRepository> repositories = externalizer.readRepositoriesFromXML(repositoriesFile);
+			if (repositories != null && repositories.size() > 0) {
+				for (TaskRepository repository : repositories) {
 
-						if (removeHttpAuthMigration(repository)) {
-							migration = true;
-						}
+					if (removeHttpAuthMigration(repository)) {
+						migration = true;
+					}
 
-						if (migrateAnonymousRepository(repository)) {
-							migration = true;
-						}
+					if (migrateAnonymousRepository(repository)) {
+						migration = true;
+					}
 
-						if (repositoryMap.containsKey(repository.getConnectorKind())) {
-							repositoryMap.get(repository.getConnectorKind()).add(repository);
-						} else {
-							orphanedRepositories.add(repository);
-						}
+					if (repositoryMap.containsKey(repository.getConnectorKind())) {
+						repositoryMap.get(repository.getConnectorKind()).add(repository);
+					} else {
+						orphanedRepositories.add(repository);
 					}
 				}
-				if (migration) {
-					saveRepositories(repositoriesFilePath);
-				}
 			}
-		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not load repositories", t));
+			if (migration) {
+				saveRepositories(repositoriesFilePath);
+			}
 		}
 	}
 
@@ -320,8 +316,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		saveRepositories(repositoriesFilePath);
 	}
 
-	// TODO: Passing path here seems a little odd
-	public synchronized boolean saveRepositories(String destinationPath) {
+	protected synchronized boolean saveRepositories(String destinationPath) {
 //		if (!Platform.isRunning()) {// || TasksUiPlugin.getDefault() == null) {
 //			return false;
 //		}
