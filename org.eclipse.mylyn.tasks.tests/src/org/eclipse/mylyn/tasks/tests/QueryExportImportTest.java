@@ -102,8 +102,7 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		// create test data
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
@@ -140,8 +139,7 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		// create test data
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
@@ -179,8 +177,7 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		// create test data
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
@@ -225,8 +222,7 @@ public class QueryExportImportTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		// create test data
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
@@ -267,8 +263,7 @@ public class QueryExportImportTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		// create test data
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();

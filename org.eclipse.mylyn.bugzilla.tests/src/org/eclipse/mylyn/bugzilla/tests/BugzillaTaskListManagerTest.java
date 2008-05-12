@@ -42,8 +42,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		manager.saveTaskList();
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 

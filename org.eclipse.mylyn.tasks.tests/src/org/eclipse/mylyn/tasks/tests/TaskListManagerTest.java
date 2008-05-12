@@ -82,8 +82,7 @@ public class TaskListManagerTest extends TestCase {
 		TasksUiPlugin.getDefault().reloadDataDirectory();
 
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
@@ -542,8 +541,7 @@ public class TaskListManagerTest extends TestCase {
 	public void testDeleteRepositoryTask() {
 		String repositoryUrl = "http://somewhere.com";
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, repositoryUrl);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		MockTask task = new MockTask(repositoryUrl, "1");
 		TaskList taskList = TasksUiPlugin.getTaskList();
 		taskList.addTask(task, manager.getTaskList().getDefaultCategory());

@@ -65,7 +65,7 @@ public class TracTaskEditorTest extends TestCase {
 		repository.setCharacterEncoding(ITracClient.CHARSET);
 		repository.setVersion(version.name());
 
-		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.addRepository(repository);
 	}
 
 	public void testGetSelectedRepository() throws Exception {

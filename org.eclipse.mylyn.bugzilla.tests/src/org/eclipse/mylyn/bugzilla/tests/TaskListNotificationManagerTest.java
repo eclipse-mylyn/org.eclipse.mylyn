@@ -73,8 +73,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 	public void testTaskListNotificationIncoming() {
 
 		TaskRepository repository = new TaskRepository("bugzilla", "https://bugs.eclipse.org/bugs");
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		AbstractTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label");
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 		assertFalse(task.isNotified());

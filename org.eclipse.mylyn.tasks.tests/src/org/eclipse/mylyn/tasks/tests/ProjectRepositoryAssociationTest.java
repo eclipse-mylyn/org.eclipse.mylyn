@@ -44,8 +44,7 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 	public void testRepositoryForProject() throws CoreException {
 		assertNull(TasksUiPlugin.getDefault().getRepositoryForResource(projectWrapper.getProject()));
 		TaskRepository repository = new TaskRepository(REPOSITORY_KIND, REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		TasksUiPlugin.getDefault().setRepositoryForResource(projectWrapper.getProject(), repository);
 		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(
 				projectWrapper.getProject());
@@ -62,8 +61,7 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		assertTrue(folder.exists());
 		assertNull(TasksUiPlugin.getDefault().getRepositoryForResource(folder));
 		TaskRepository repository = new TaskRepository(REPOSITORY_KIND, REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		TasksUiPlugin.getDefault().setRepositoryForResource(folder, repository);
 		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(folder);
 		assertNotNull(returnedRepository);

@@ -54,7 +54,7 @@ public class AttachmentJobTest extends TestCase {
 		manager = TasksUiPlugin.getRepositoryManager();
 
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
-		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.addRepository(repository);
 
 		attachmentHandler = new MockAttachmentHandler();
 

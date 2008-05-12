@@ -20,7 +20,7 @@ public interface ITaskRepositoryManager {
 
 	public abstract void addListener(ITaskRepositoryListener listener);
 
-	public abstract void addRepository(TaskRepository repository, String repositoryFilePath);
+	public abstract void addRepository(TaskRepository repository);
 
 	public abstract List<TaskRepository> getAllRepositories();
 

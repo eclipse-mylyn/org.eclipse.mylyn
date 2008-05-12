@@ -36,7 +36,7 @@ public class TracRepositoryQueryTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND,
 				TracTestConstants.TEST_TRAC_096_URL);
-		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.addRepository(repository);
 
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getRepositoryUrl() + ITracClient.QUERY_URL + search.toUrl();

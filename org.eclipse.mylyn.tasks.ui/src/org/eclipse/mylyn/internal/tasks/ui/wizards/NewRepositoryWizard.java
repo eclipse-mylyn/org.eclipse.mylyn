@@ -95,8 +95,7 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 		if (canFinish()) {
 			taskRepository = settingsPage.createTaskRepository();
 			settingsPage.applyTo(taskRepository);
-			TasksUi.getRepositoryManager().addRepository(taskRepository,
-					TasksUiPlugin.getDefault().getRepositoriesFilePath());
+			TasksUi.getRepositoryManager().addRepository(taskRepository);
 			return true;
 		}
 		return false;

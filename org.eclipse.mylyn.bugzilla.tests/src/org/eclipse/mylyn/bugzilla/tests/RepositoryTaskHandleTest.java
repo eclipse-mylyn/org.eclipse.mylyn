@@ -55,8 +55,7 @@ public class RepositoryTaskHandleTest extends TestCase {
 	public void testRepositoryUrlHandles() {
 		String repositoryUrl = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, repositoryUrl);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		String id = "123";
 		BugzillaTask bugTask = new BugzillaTask(repositoryUrl, id, "label 124");

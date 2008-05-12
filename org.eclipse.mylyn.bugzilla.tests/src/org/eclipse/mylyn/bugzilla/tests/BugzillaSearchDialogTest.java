@@ -52,7 +52,7 @@ public class BugzillaSearchDialogTest extends TestCase {
 		TaskRepository repo = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		repo.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
-		manager.addRepository(repo, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.addRepository(repo);
 		BugzillaSearchPage page = new BugzillaSearchPage(repo);
 		Shell shell = BugzillaTestPlugin.getDefault().getWorkbench().getDisplay().getShells()[0];
 		page.createControl(shell);

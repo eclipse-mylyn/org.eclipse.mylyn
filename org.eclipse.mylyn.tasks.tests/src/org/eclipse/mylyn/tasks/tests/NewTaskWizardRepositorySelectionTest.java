@@ -35,8 +35,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 	public void testRepositorySettingWithTaskListSelection() {
 		TaskRepository mockRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
-		TasksUiPlugin.getRepositoryManager().addRepository(mockRepository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(mockRepository);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		TaskListView view = TaskListView.openInActivePerspective();

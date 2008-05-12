@@ -91,7 +91,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		return false;
 	}
 
-	public void addRepository(TaskRepository repository, String repositoryFilePath) {
+	public void addRepository(TaskRepository repository) {
 		Set<TaskRepository> repositories;
 		if (!repositoryMap.containsKey(repository.getConnectorKind())) {
 			repositories = new HashSet<TaskRepository>();
@@ -100,7 +100,6 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 			repositories = repositoryMap.get(repository.getConnectorKind());
 		}
 		repositories.add(repository);
-		saveRepositories(repositoryFilePath);
 
 		taskList.addUnmatchedContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
 				repository.getRepositoryUrl()));
@@ -357,7 +356,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 	public void insertRepositories(Set<TaskRepository> repositories, String repositoryFilePath) {
 		for (TaskRepository repository : repositories) {
 			if (getRepository(repository.getConnectorKind(), repository.getRepositoryUrl()) == null) {
-				addRepository(repository, repositoryFilePath);
+				addRepository(repository);
 			}
 		}
 	}

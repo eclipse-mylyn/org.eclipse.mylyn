@@ -625,7 +625,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setCharacterEncoding(template.characterEncoding);
 							taskRepository.setAnonymous(template.anonymous);
-							repositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
+							repositoryManager.addRepository(taskRepository);
 						}
 					} catch (Throwable t) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -652,7 +652,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			localRepository.setVersion(LocalRepositoryConnector.REPOSITORY_VERSION);
 			localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
 			localRepository.setAnonymous(true);
-			repositoryManager.addRepository(localRepository, getRepositoriesFilePath());
+			repositoryManager.addRepository(localRepository);
 		}
 		return localRepository;
 	}

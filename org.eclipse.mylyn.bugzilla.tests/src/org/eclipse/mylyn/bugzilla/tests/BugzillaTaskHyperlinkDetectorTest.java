@@ -190,7 +190,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		Region region = new Region(0, testString.length());
 		viewer.setRepository(null);
 
-		repositoryManager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		repositoryManager.addRepository(repository1);
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);
 		assertNotNull(links);
 		assertEquals(1, links.length);
@@ -203,7 +203,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(0, testString.length());
 		viewer.setRepository(repository1);
-		repositoryManager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		repositoryManager.addRepository(repository1);
 
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);
 		assertNotNull(links);
@@ -217,8 +217,8 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(0, testString.length());
 		viewer.setRepository(null);
-		repositoryManager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		repositoryManager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		repositoryManager.addRepository(repository1);
+		repositoryManager.addRepository(repository2);
 
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);
 		assertNotNull(links);
@@ -234,8 +234,8 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(0, testString.length());
 		viewer.setRepository(repository1);
-		repositoryManager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		repositoryManager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		repositoryManager.addRepository(repository1);
+		repositoryManager.addRepository(repository2);
 
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);
 		assertNotNull(links);

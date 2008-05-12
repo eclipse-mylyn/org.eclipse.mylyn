@@ -104,7 +104,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 		repository.setTimeZoneId("Canada/Eastern");
 		assertNotNull(manager);
-		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		manager.addRepository(repository);
 
 		taskList = TasksUiPlugin.getTaskList();
 

@@ -48,8 +48,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 		repository.setAnonymous(false);
-		TasksUiPlugin.getRepositoryManager().addRepository(repository,
-				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 	}
 
 	private BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,
