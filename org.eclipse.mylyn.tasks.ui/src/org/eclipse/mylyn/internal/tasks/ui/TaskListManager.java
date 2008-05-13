@@ -102,6 +102,7 @@ public class TaskListManager {
 		TasksUiPlugin.getExternalizationManager().load(taskListSaveParticipant);
 		TasksUiPlugin.getExternalizationManager().addParticipant(taskListSaveParticipant);
 		taskList.addChangeListener(taskListSaveParticipant);
+		TasksUiPlugin.getTaskActivityManager().reloadPlanningData();
 		return true;
 	}
 

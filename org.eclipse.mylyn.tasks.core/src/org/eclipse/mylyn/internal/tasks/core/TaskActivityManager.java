@@ -120,7 +120,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		noTaskActiveMap.clear();
 	}
 
-	public void reloadTimingData() {
+	public void reloadPlanningData() {
 		reloadScheduledData();
 		for (ITaskActivityListener listener : activityListeners) {
 			listener.activityReset();
