@@ -62,7 +62,6 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 				}
 				currentSelection = structuredSelection;
 
-//				Object selectedObject = structuredSelection.getFirstElement();
 				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
 					Object selectedObject = iterator.next();
 					if (selectedObject instanceof IJavaElement) {
