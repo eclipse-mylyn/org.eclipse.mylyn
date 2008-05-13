@@ -43,7 +43,6 @@ public class DateSelectionDialog extends Dialog {
 		super(parentShell);
 		this.includeTime = includeTime;
 		this.hourOfDay = hourOfDay;
-//		toolkit = new FormToolkit(parentShell.getDisplay());
 		if (title != null) {
 			this.title = title;
 		}
@@ -55,7 +54,6 @@ public class DateSelectionDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-//		parent.setBackground(toolkit.getColors().getBackground());
 		getShell().setText(title);
 		final DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime, hourOfDay);
 		datePanel.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -67,7 +65,6 @@ public class DateSelectionDialog extends Dialog {
 				}
 			}
 		});
-//		datePanel.setBackground(toolkit.getColors().getBackground());
 
 		datePanel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
@@ -76,13 +73,11 @@ public class DateSelectionDialog extends Dialog {
 
 	@Override
 	public boolean close() {
-//		toolkit.dispose();
 		return super.close();
 	}
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-//		parent.setBackground(toolkit.getColors().getBackground());
 		createButton(parent, IDialogConstants.CLIENT_ID + 1, "Clear", false);
 		super.createButtonsForButtonBar(parent);
 	}
