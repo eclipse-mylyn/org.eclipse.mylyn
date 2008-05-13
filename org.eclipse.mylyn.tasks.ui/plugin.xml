@@ -773,9 +773,6 @@
             class="org.eclipse.mylyn.internal.tasks.ui.ScheduleTaskMenuContributor"
             menuPath="tasks"/>
       <dynamicPopupMenu
-            class="org.eclipse.mylyn.internal.tasks.ui.MarkTaskMenuContributor"
-            menuPath="tasks"/>
-      <dynamicPopupMenu
             class="org.eclipse.mylyn.internal.tasks.ui.MoveToCategoryMenuContributor"
             menuPath="tasks"/>
    </extension>
@@ -836,27 +833,6 @@
                label="Search for Repository Task..."
                style="push"
                tooltip="Search for Repository Task"/>
-      </actionSet>
-      <actionSet
-            id="org.eclipse.mylyn.tasks.ui.tasklist.navigation"
-            label="Mylyn Task List Navigation"
-            visible="true">
-         <action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction"
-               definitionId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
-               id="org.eclipse.mylyn.tasklist.actions.goToNextUnread"
-               label="Next Unread Task"
-               menubarPath="navigate/goTo/taskList"
-               style="push">
-         </action>
-         <action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.GoToUnreadTaskAction"
-               definitionId="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
-               id="org.eclipse.mylyn.tasklist.actions.goToPreviousUnread"
-               label="Previous Unread Task"
-               menubarPath="navigate/goTo/taskList"
-               style="push">
-         </action>
       </actionSet>
    </extension>
    
@@ -1145,43 +1121,67 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.eclipse.ui.category.navigate"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.GoToUnreadTaskHandler$GoToPreviousUnreadTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
             name="Go To Previous Unread Task">
       </command>
       <command
             categoryId="org.eclipse.ui.category.navigate"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.GoToUnreadTaskHandler$GoToNextUnreadTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
             name="Go To Next Unread Task">
       </command>
       <command
             category="org.eclipse.mylyn.tasks.ui.commands"
             categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.TaskListToolTipHandler"
             id="org.eclipse.mylyn.tasks.ui.command.showToolTip"
             name="Show Tooltip Description">
       </command>
       <command
             category="org.eclipse.mylyn.tasks.ui.commands"
             categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskReadHandler"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
             name="Mark Task Read">
       </command>
       <command
             category="org.eclipse.mylyn.tasks.ui.commands"
             categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskUnreadHandler"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
             name="Mark Task Unread">
       </command>
       <command
             category="org.eclipse.mylyn.tasks.ui.commands"
             categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskReadGoToNextUnreadTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNextUnread"
             name="Mark Task Read and Go To Next Unread Task">
       </command>
       <command
             category="org.eclipse.mylyn.tasks.ui.commands"
             categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskReadGoToPreviousUnreadTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToPreviousUnread"
             name="Mark Task Read and Go To Previous Unread Task">
+      </command>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.command.markTaskComplete"
+            name="Mark Task Complete">
+      </command>
+      <command
+            category="org.eclipse.mylyn.tasks.ui.commands"
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.command.markTaskIncomplete"
+            name="Mark Task Incomplete">
+      </command>
+      <command
+            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.command.task.clearOutgoing"
+            name="Clear Outgoing Changes">
       </command>
       <command
             category="org.eclipse.mylyn.tasks.ui.commands"
@@ -1200,7 +1200,7 @@
       
       <category
             id="org.eclipse.mylyn.tasks.ui.tasklist"
-            name="Task List">
+            name="Task">
       </category>
       <command
             category="org.eclipse.mylyn.tasks.ui.commands"
@@ -1291,18 +1291,9 @@
          point="org.eclipse.ui.contexts">
       <context
             id="org.eclipse.mylyn.tasks.ui.views.tasks"
-            name="In Task List View"
+            name="In Tasks View"
             parentId="org.eclipse.ui.contexts.window">
       </context>
-   </extension>
-   <extension
-         point="org.eclipse.ui.actionSetPartAssociations">
-      <actionSetPartAssociation
-            targetID="org.eclipse.mylyn.tasks.ui.tasklist.navigation">
-         <part
-               id="org.eclipse.mylyn.tasks.ui.views.tasks">
-         </part>
-      </actionSetPartAssociation>
    </extension>
       
        
@@ -1367,6 +1358,50 @@
             class="org.eclipse.mylyn.internal.tasks.ui.commands.OpenTaskAttachmentInDefaultEditorHandler"
             commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInDefaultEditor">
       </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskCompleteHandler"
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskComplete">
+         <enabledWhen>
+            <iterate
+                  operator="or">
+               <and>
+                  <instanceof
+                        value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                  </instanceof>
+                  <test
+                        property="org.eclipse.mylyn.task.isLocal"
+                        value="true">
+                  </test>
+                  <test
+                        property="org.eclipse.mylyn.task.isCompleted"
+                        value="false">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskIncompleteHandler"
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskIncomplete">
+         <enabledWhen>
+            <iterate
+                  operator="or">
+               <and>
+                  <instanceof
+                        value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                  </instanceof>
+                  <test
+                        property="org.eclipse.mylyn.task.isLocal"
+                        value="true">
+                  </test>
+                  <test
+                        property="org.eclipse.mylyn.task.isCompleted"
+                        value="true">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1417,6 +1452,145 @@
                visible="false">
          </separator>
       </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?before=navigate">
+         <menu
+               id="org.eclipse.mylyn.tasks.ui.menu.task.mark"
+               label="Mark as">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                     </instanceof>
+                  </or>
+               </iterate>
+            </visibleWhen>
+            <separator
+                  name="group.taskStatus"
+                  visible="true">
+            </separator>
+            <separator
+                  name="group.synchronizationStatus"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
+                  label="Read"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
+                  label="Unread"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.mylyn.tasks.ui.command.task.clearOutgoing"
+                  label="Clear Outgoing"
+                  style="push">
+            </command>
+            <separator
+                  name="additions">
+            </separator>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.mylyn.tasks.ui.menu.task.mark?after=group.taskStatus">
+         <command
+               commandId="org.eclipse.mylyn.tasks.ui.command.markTaskComplete"
+               icon="icons/etool16/task-complete.gif"
+               label="Complete"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     operator="or">
+                  <and>
+                     <instanceof
+                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                     </instanceof>
+                     <test
+                           property="org.eclipse.mylyn.task.isLocal"
+                           value="true">
+                     </test>
+                  </and>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.mylyn.tasks.ui.command.markTaskIncomplete"
+               icon="icons/etool16/task-incomplete.gif"
+               label="Incomplete"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     operator="or">
+                  <and>
+                     <instanceof
+                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                     </instanceof>
+                     <test
+                           property="org.eclipse.mylyn.task.isLocal"
+                           value="true">
+                     </test>
+                  </and>
+               </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:goTo">
+         <separator
+               name="group.taskList"
+               visible="true">
+         </separator>
+         <command
+               commandId="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
+               label="Previous Unread Task"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeContexts">
+                  <iterate
+                        operator="or">
+                     <equals
+                           value="org.eclipse.mylyn.tasks.ui.views.tasks">
+                     </equals>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
+               label="Next Unread Task"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeContexts">
+                  <iterate
+                        operator="or">
+                     <equals
+                           value="org.eclipse.mylyn.tasks.ui.views.tasks">
+                     </equals>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.mylyn.internal.tasks.ui.util.TaskPropertyTester"
+            id="org.eclipse.mylyn.tasks.ui.propertyTester.task"
+            namespace="org.eclipse.mylyn.task"
+            properties="connectorKink,isLocal,isCompleted"
+            type="org.eclipse.mylyn.tasks.core.ITask">
+      </propertyTester>
    </extension>
      
 </plugin>

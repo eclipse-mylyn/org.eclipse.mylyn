@@ -19,4 +19,18 @@ public interface ITasksUiConstants {
 
 	public static final String URL_HOMEPAGE = "http://eclipse.org/mylyn";
 
+	public static final String ID_COMMAND_MARK_TASK_UNREAD = "org.eclipse.mylyn.tasks.ui.command.markTaskUnread";
+
+	public static final String ID_COMMAND_MARK_TASK_READ = "org.eclipse.mylyn.tasks.ui.command.markTaskRead";
+
+//	private static final String GO_TO_NEXT_UNREAD_TASK_COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.goToNextUnread";
+//
+//	private static final String GO_TO_PREVIOUS_UNREAD_TASK_COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread";
+//
+//	private static final String SHOW_TOOLTIP_COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.showToolTip";
+//
+//	private static final String MARK_TASK_READ_GOTO_NEXT_TASK_COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNextUnread";
+//
+//	private static final String MARK_TASK_READ_GOTO_PREVIOUS_TASK_COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToPreviousUnread";
+
 }

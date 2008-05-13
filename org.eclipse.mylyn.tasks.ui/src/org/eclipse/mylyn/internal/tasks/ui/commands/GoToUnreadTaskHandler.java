@@ -6,11 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.commands;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -19,30 +18,21 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * @author Steffen Pingel
  */
-public class GoToUnreadTaskAction extends Action implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
+public abstract class GoToUnreadTaskHandler extends AbstractTaskListViewHandler {
 
 	public static final String ID_NEXT = "org.eclipse.mylyn.tasklist.actions.goToNextUnread";
 
 	public static final String ID_PREVIOUS = "org.eclipse.mylyn.tasklist.actions.goToPreviousUnread";
 
-	private TaskListView taskListView;
-
 	private Direction direction = Direction.DOWN;
-
-	public void dispose() {
-		// ignore		
-	}
 
 	public Direction getDirection() {
 		return direction;
@@ -71,26 +61,9 @@ public class GoToUnreadTaskAction extends Action implements IViewActionDelegate,
 		return treeWalker.walk(visitor, selectedItem);
 	}
 
-	public void init(IViewPart view) {
-		this.taskListView = (TaskListView) view;
-	}
-
-	public void init(IWorkbenchWindow window) {
-	}
-
 	@Override
-	public void run() {
-		TreeViewer treeViewer;
-		if (taskListView == null) {
-			TaskListView activeTaskListView = TaskListView.getFromActivePerspective();
-			if (activeTaskListView == null) {
-				return;
-			}
-			treeViewer = activeTaskListView.getViewer();
-		} else {
-			treeViewer = taskListView.getViewer();
-		}
-
+	protected void execute(ExecutionEvent event, TaskListView taskListView, ITaskElement item) {
+		TreeViewer treeViewer = taskListView.getViewer();
 		Tree tree = treeViewer.getTree();
 
 		// need to expand nodes to traverse the tree, disable redraw to avoid flickering
@@ -108,21 +81,31 @@ public class GoToUnreadTaskAction extends Action implements IViewActionDelegate,
 		}
 	}
 
-	public void run(IAction action) {
-		if (ID_PREVIOUS.equals(action.getId())) {
-			setDirection(Direction.UP);
-		} else {
-			setDirection(Direction.DOWN);
-		}
-		run();
-	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore
-	}
-
 	public void setDirection(Direction direction) {
 		this.direction = direction;
+	}
+
+	public static void execute(ExecutionEvent event, Direction direction) throws ExecutionException {
+		GoToUnreadTaskHandler handler = new GoToUnreadTaskHandler() {
+		};
+		handler.setDirection(direction);
+		handler.execute(event);
+	}
+
+	public static class GoToNextUnreadTaskHandler extends GoToUnreadTaskHandler {
+
+		public GoToNextUnreadTaskHandler() {
+			setDirection(Direction.DOWN);
+		}
+
+	}
+
+	public static class GoToPreviousUnreadTaskHandler extends GoToUnreadTaskHandler {
+
+		public GoToPreviousUnreadTaskHandler() {
+			setDirection(Direction.UP);
+		}
+
 	}
 
 }

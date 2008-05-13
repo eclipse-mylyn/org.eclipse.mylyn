@@ -26,6 +26,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
  */
 public abstract class AbstractTaskListViewHandler extends AbstractHandler {
 
+	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
 		if (site instanceof IViewSite) {
@@ -39,7 +40,7 @@ public abstract class AbstractTaskListViewHandler extends AbstractHandler {
 		return null;
 	}
 
-	protected void execute(ExecutionEvent event, TaskListView taskListView) {
+	protected void execute(ExecutionEvent event, TaskListView taskListView) throws ExecutionException {
 		ITreeSelection selection = (ITreeSelection) taskListView.getViewer().getSelection();
 		for (Iterator<?> it = selection.iterator(); it.hasNext();) {
 			Object item = it.next();
@@ -49,7 +50,8 @@ public abstract class AbstractTaskListViewHandler extends AbstractHandler {
 		}
 	}
 
-	protected void execute(ExecutionEvent event, TaskListView taskListView, ITaskElement item) {
+	protected void execute(ExecutionEvent event, TaskListView taskListView, ITaskElement item)
+			throws ExecutionException {
 	}
 
 }

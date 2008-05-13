@@ -160,6 +160,7 @@ import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
@@ -493,8 +494,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private TaskListToolTip taskListToolTip;
 
-	private TaskListViewCommands commands;
-
 	private void configureGradientColors() {
 		categoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
 				CommonThemes.COLOR_CATEGORY_GRADIENT_START);
@@ -596,10 +595,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		categoryGradientStart.dispose();
 		categoryGradientEnd.dispose();
-
-		if (commands != null) {
-			commands.dispose();
-		}
 	}
 
 	private void updateDescription() {
@@ -929,8 +924,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		updateDescription();
 
-		commands = new TaskListViewCommands(this);
-		commands.activateHandlers();
+		IContextService contextSupport = (IContextService) getSite().getService(IContextService.class);
+		if (contextSupport != null) {
+			contextSupport.activateContext(TaskListView.ID);
+		}
 
 		getSite().setSelectionProvider(getViewer());
 		getSite().getPage().addPartListener(editorListener);
