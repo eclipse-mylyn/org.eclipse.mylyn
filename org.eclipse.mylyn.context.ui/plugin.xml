@@ -109,6 +109,17 @@
 	 -->
    </extension>
     
+    <!-- See org.eclipse.mylyn.tasks.ui/plugin.xml -->
+   	<extension
+         point="org.eclipse.mylyn.context.ui.bridges">
+      <preservedFilters
+			viewId="org.eclipse.ui.navigator.ProjectExplorer">
+			<filter
+				id="org.eclipse.mylyn.tasks.ui.navigator.filters.tasks">
+			</filter>
+	  </preservedFilters> 
+   </extension> 
+    
    <extension point="org.eclipse.mylyn.tasks.ui.actions">  
       <dynamicPopupMenu
             class="org.eclipse.mylyn.internal.context.ui.actions.ContextMenuContributor"

@@ -42,12 +42,6 @@
       <labelProvider
             class="org.eclipse.mylyn.internal.resources.ui.ResourceContextLabelProvider"
             contentType="resource"/>
-      <preservedFilters
-			viewId="org.eclipse.ui.navigator.ProjectExplorer">
-			<filter
-				id="org.eclipse.mylyn.resources.ui.ui.navigator.filters.tasks">
-			</filter>
-	  </preservedFilters>
    </extension>
    <extension
          point="org.eclipse.mylyn.context.ui.startup">
@@ -55,16 +49,6 @@
             class="org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin$ResourcesUiBridgeStartup">
       </startup>
    </extension>
-
-   	<extension point="org.eclipse.ui.navigator.viewer">
-		<viewerContentBinding
-			viewerId="org.eclipse.ui.navigator.ProjectExplorer">
-			<includes>
-				<contentExtension
-					pattern="org.eclipse.mylyn.resources.ui.ui.navigator.filters.*" />
-			</includes>
-		</viewerContentBinding>
-	</extension>
 
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer"/>
