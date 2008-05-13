@@ -23,6 +23,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationPopup;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -90,7 +91,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 		Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
 		popup = new TaskListNotificationPopup(shell);
-		popup.setFadingEnabled(TasksUiPlugin.isAnimationsEnabled());
+		popup.setFadingEnabled(TasksUiInternal.isAnimationsEnabled());
 		List<AbstractNotification> toDisplay = new ArrayList<AbstractNotification>(currentlyNotifying);
 		Collections.sort(toDisplay);
 		popup.setContents(toDisplay);

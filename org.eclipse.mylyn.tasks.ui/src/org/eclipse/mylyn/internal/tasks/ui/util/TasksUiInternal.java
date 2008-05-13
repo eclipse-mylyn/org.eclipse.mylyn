@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
@@ -75,6 +76,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PartInitException;
@@ -511,6 +513,11 @@ public class TasksUiInternal {
 
 	public static ITaskList getTaskList() {
 		return TasksUiPlugin.getTaskList();
+	}
+
+	public static boolean isAnimationsEnabled() {
+		IPreferenceStore store = PlatformUI.getPreferenceStore();
+		return store.getBoolean(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS);
 	}
 
 }

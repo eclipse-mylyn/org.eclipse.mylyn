@@ -590,8 +590,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 					((AbstractTaskCategory) container).setHandleIdentifier(newDescription);
 				} else if (container instanceof IRepositoryQuery) {
 					((RepositoryQuery) container).setHandleIdentifier(newDescription);
-					queries.put(((RepositoryQuery) container).getHandleIdentifier(),
-							((RepositoryQuery) container));
+					queries.put(((RepositoryQuery) container).getHandleIdentifier(), ((RepositoryQuery) container));
 				}
 			} else if (container instanceof TaskCategory && categories.remove(container.getHandleIdentifier()) != null) {
 				((TaskCategory) container).setHandleIdentifier(newDescription);

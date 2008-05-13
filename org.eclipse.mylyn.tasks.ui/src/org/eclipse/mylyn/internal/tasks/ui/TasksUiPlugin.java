@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -67,13 +66,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.TasksModel;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
@@ -98,7 +92,6 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
-import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.IProgressService;
@@ -115,8 +108,6 @@ import org.osgi.framework.ServiceReference;
 public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 20 * 1000;
-
-	private static final int MAX_CHANGED_ATTRIBUTES = 2;
 
 	private static final int LINK_PROVIDER_TIMEOUT_SECONDS = 5;
 
@@ -285,33 +276,46 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static ITaskListNotificationProvider INCOMING_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
+		@SuppressWarnings( { "deprecation", "restriction" })
 		public Set<AbstractNotification> getNotifications() {
 			Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
 			// Incoming Changes
 			for (TaskRepository repository : getRepositoryManager().getAllRepositories()) {
 				AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
 						repository.getConnectorKind());
-				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
-				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
-					for (ITask repositoryTask : TasksUiPlugin.getTaskList().getTasks(repository.getRepositoryUrl())) {
-						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING)
-								&& ((AbstractTask) repositoryTask).isNotified() == false) {
-							TaskListNotification notification = INSTANCE.getIncommingNotification(connector,
-									repositoryTask);
-							notifications.add(notification);
-							((AbstractTask) repositoryTask).setNotified(true);
+				if (connector instanceof AbstractLegacyRepositoryConnector) {
+					AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
+					if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
+						for (ITask itask : TasksUiPlugin.getTaskList().getTasks(repository.getRepositoryUrl())) {
+							if (itask instanceof AbstractTask) {
+								AbstractTask task = (AbstractTask) itask;
+								if ((task.getLastReadTimeStamp() == null || task.getSynchronizationState() == SynchronizationState.INCOMING)
+										&& task.isNotified() == false) {
+									TaskListNotification notification = LegacyChangeManager.getIncommingNotification(
+											connector, task);
+									notifications.add(notification);
+									task.setNotified(true);
+								}
+							}
 						}
 					}
 				}
 			}
 			// New query hits
 			for (RepositoryQuery query : TasksUiPlugin.getTaskList().getQueries()) {
-				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getConnectorKind());
-				if (!connectorUi.isCustomNotificationHandling()) {
-					for (ITask hit : query.getChildren()) {
-						if (((AbstractTask) hit).isNotified() == false) {
-							notifications.add(new TaskListNotificationQueryIncoming(hit));
-							((AbstractTask) hit).setNotified(true);
+				TaskRepository repository = getRepositoryManager().getRepository(query.getRepositoryUrl());
+				if (repository != null) {
+					AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
+							repository.getConnectorKind());
+					if (connector instanceof AbstractLegacyRepositoryConnector) {
+						AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getConnectorKind());
+						if (!connectorUi.isCustomNotificationHandling()) {
+							for (ITask hit : query.getChildren()) {
+								if (((AbstractTask) hit).isNotified() == false) {
+									notifications.add(new TaskListNotificationQueryIncoming(hit));
+									((AbstractTask) hit).setNotified(true);
+								}
+							}
 						}
 					}
 				}
@@ -1127,239 +1131,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return repository;
 	}
 
-//	/**
-//	 * Public for testing.
-//	 */
-//	public static TaskListSaveManager getTaskListSaveManager() {
-//		return INSTANCE.taskListSaveManager;
-//	}
-
 	public String getNextNewRepositoryTaskId() {
 		return getTaskDataStorageManager().getNewRepositoryTaskId();
-	}
-
-	/**
-	 * TODO 3.0: move, uses and exposes internal class.
-	 */
-	@SuppressWarnings("restriction")
-	@Deprecated
-	public TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector, ITask task) {
-
-		TaskListNotification notification = new TaskListNotification(task);
-		RepositoryTaskData newTaskData = getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
-				task.getTaskId());
-		RepositoryTaskData oldTaskData = getTaskDataStorageManager().getOldTaskData(task.getRepositoryUrl(),
-				task.getTaskId());
-
-		try {
-			if (task.getSynchronizationState().equals(SynchronizationState.INCOMING)
-					&& task.getLastReadTimeStamp() == null) {
-				notification.setDescription("New unread task ");
-			} else if (newTaskData != null && oldTaskData != null) {
-				StringBuilder description = new StringBuilder();
-				String changedDescription = getChangedDescription(newTaskData, oldTaskData);
-				String changedAttributes = getChangedAttributes(newTaskData, oldTaskData);
-				if (!"".equals(changedDescription.trim())) {
-					description.append(changedDescription);
-					if (!"".equals(changedAttributes)) {
-						description.append('\n');
-					}
-				}
-				if (!"".equals(changedAttributes)) {
-					description.append(changedAttributes);
-				}
-
-				notification.setDescription(description.toString());
-
-				if (connector instanceof AbstractLegacyRepositoryConnector) {
-					AbstractTaskDataHandler offlineHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
-					if (offlineHandler != null && newTaskData.getLastModified() != null) {
-						Date modified = newTaskData.getAttributeFactory().getDateForAttributeType(
-								RepositoryTaskAttribute.DATE_MODIFIED, newTaskData.getLastModified());
-						notification.setDate(modified);
-					}
-				}
-			} else {
-				notification.setDescription("Unread task");
-			}
-		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format notification for: "
-					+ task, t));
-		}
-		return notification;
-	}
-
-	public static boolean isAnimationsEnabled() {
-		IPreferenceStore store = PlatformUI.getPreferenceStore();
-		return store.getBoolean(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS);
-	}
-
-	private static String getChangedDescription(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData) {
-		String descriptionText = "";
-
-		if (newTaskData.getComments().size() > oldTaskData.getComments().size()) {
-			List<TaskComment> taskComments = newTaskData.getComments();
-			if (taskComments != null && taskComments.size() > 0) {
-				TaskComment lastComment = taskComments.get(taskComments.size() - 1);
-				if (lastComment != null) {
-//					descriptionText += "Comment by " + lastComment.getAuthor() + ":\n  ";
-					descriptionText += lastComment.getAuthor() + ":  ";
-					descriptionText += cleanValue(lastComment.getText());
-				}
-			}
-		}
-
-		return descriptionText;
-	}
-
-	private static String getChangedAttributes(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData) {
-		List<Change> changes = new ArrayList<Change>();
-		for (RepositoryTaskAttribute newAttribute : newTaskData.getAttributes()) {
-			if (ignoreAttribute(newTaskData, newAttribute)) {
-				continue;
-			}
-
-			List<String> newValues = newAttribute.getValues();
-			if (newValues != null) {
-				RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
-				if (oldAttribute == null) {
-					changes.add(getDiff(newTaskData, newAttribute, null, newValues));
-				}
-				if (oldAttribute != null) {
-					List<String> oldValues = oldAttribute.getValues();
-					if (!oldValues.equals(newValues)) {
-						changes.add(getDiff(newTaskData, newAttribute, oldValues, newValues));
-					}
-				}
-			}
-		}
-
-		for (RepositoryTaskAttribute oldAttribute : oldTaskData.getAttributes()) {
-			if (ignoreAttribute(oldTaskData, oldAttribute)) {
-				continue;
-			}
-
-			RepositoryTaskAttribute attribute = newTaskData.getAttribute(oldAttribute.getId());
-			List<String> values = oldAttribute.getValues();
-			if (attribute == null && values != null && !values.isEmpty()) {
-				changes.add(getDiff(oldTaskData, oldAttribute, values, null));
-			}
-		}
-
-		if (changes.isEmpty()) {
-			return "";
-		}
-
-		String details = "";
-		String sep = "";
-		int n = 0;
-		for (Change change : changes) {
-			String removed = cleanValues(change.removed);
-			String added = cleanValues(change.added);
-			details += sep + "  " + change.field + " " + removed;
-			if (removed.length() > 30) {
-//				details += "\n  ";
-				details += "\n  ";
-			}
-			details += " -> " + added;
-			sep = "\n";
-
-			if (++n == MAX_CHANGED_ATTRIBUTES) {
-				break;
-			}
-		}
-//		if (!details.equals("")) {
-//			return details;
-//			return "Attributes Changed:\n" + details;
-//		}
-		return details;
-	}
-
-	private static String cleanValues(List<String> values) {
-		StringBuilder sb = new StringBuilder();
-		boolean first = true;
-		for (String value : values) {
-			if (!first) {
-				sb.append(", ");
-			}
-			sb.append(cleanValue(value));
-			first = false;
-		}
-		return sb.toString();
-	}
-
-	private static String cleanValue(String value) {
-		if (value == null) {
-			return "";
-		}
-		String commentText = value.replaceAll("\\s", " ").trim();
-		if (commentText.length() > 60) {
-			commentText = commentText.substring(0, 55) + "...";
-		}
-		return commentText;
-	}
-
-	private static boolean ignoreAttribute(RepositoryTaskData taskData, RepositoryTaskAttribute attribute) {
-		AbstractAttributeFactory factory = taskData.getAttributeFactory();
-		return (attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED))
-				|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_CREATION))
-				|| "delta_ts".equals(attribute.getId()) || "longdesclength".equals(attribute.getId()));
-	}
-
-	private static Change getDiff(RepositoryTaskData taskData, RepositoryTaskAttribute attribute,
-			List<String> oldValues, List<String> newValues) {
-//		AbstractAttributeFactory factory = taskData.getAttributeFactory();
-//		if (attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_MODIFIED)) 
-//			|| attribute.getId().equals(factory.mapCommonAttributeKey(RepositoryTaskAttribute.DATE_CREATION))) {
-//			if (newValues != null && newValues.size() > 0) {
-//				for (int i = 0; i < newValues.size(); i++) {
-//					newValues.set(i, factory.getDateForAttributeType(attribute.getId(), newValues.get(i)).toString());
-//				}
-//			}
-//			
-//			Change change = new Change(attribute.getName(), newValues);
-//			if (oldValues != null) {
-//				for (String value : oldValues) {
-//					value = factory.getDateForAttributeType(attribute.getId(), value).toString();
-//					if (change.added.contains(value)) {
-//						change.added.remove(value);
-//					} else {
-//						change.removed.add(value);
-//					}
-//				}
-//			}
-//			return change;		
-//		}
-
-		Change change = new Change(attribute.getName(), newValues);
-		if (oldValues != null) {
-			for (String value : oldValues) {
-				if (change.added.contains(value)) {
-					change.added.remove(value);
-				} else {
-					change.removed.add(value);
-				}
-			}
-		}
-		return change;
-	}
-
-	private static class Change {
-
-		final String field;
-
-		final List<String> added;
-
-		final List<String> removed = new ArrayList<String>();
-
-		public Change(String field, List<String> newValues) {
-			this.field = field;
-			if (newValues != null) {
-				this.added = new ArrayList<String>(newValues);
-			} else {
-				this.added = new ArrayList<String>();
-			}
-		}
 	}
 
 	public static ExternalizationManager getExternalizationManager() {
