@@ -15,33 +15,7 @@
      <structureBridge
            class="org.eclipse.mylyn.internal.java.ui.JavaDebugStructureBridge"
            name="Java Debug Structure Bridge"/>
-     <relationProvider
-           class="org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider"
-           contentType="java">
-     </relationProvider>
-     <relationProvider
-           class="org.eclipse.mylyn.internal.java.ui.search.JavaReadAccessProvider"
-           contentType="java">
-     </relationProvider>
-     <relationProvider
-           class="org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider"
-           contentType="java">
-     </relationProvider>
-     <relationProvider
-           class="org.eclipse.mylyn.internal.java.ui.search.JavaWriteAccessProvider"
-           contentType="java">
-     </relationProvider>
-     <relationProvider
-           class="org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider"
-           contentType="java">
-     </relationProvider>
-	<!--
-     <relationProvider
-           class="org.eclipse.mylyn.internal.pde.ui.XmlJavaRelationProvider"
-           contentType="plugin.xml">
-     </relationProvider>
-    -->
-	</extension>
+    </extension>
 	   
 	<extension point="org.eclipse.mylyn.context.ui.bridges">
 	    <uiBridge

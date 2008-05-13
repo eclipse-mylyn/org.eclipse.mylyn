@@ -14,10 +14,10 @@ import java.util.Map;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
+import org.eclipse.mylyn.internal.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylyn.internal.pde.ui.PdeStructureBridge;
 import org.eclipse.mylyn.internal.pde.ui.XmlJavaRelationProvider;

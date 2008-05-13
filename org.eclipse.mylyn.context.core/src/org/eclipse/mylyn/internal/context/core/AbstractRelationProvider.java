@@ -6,15 +6,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.context.core;
+package org.eclipse.mylyn.internal.context.core;
 
 import java.util.List;
 
-import org.eclipse.mylyn.internal.context.core.CompositeContextElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
-import org.eclipse.mylyn.internal.context.core.InteractionContextElement;
-import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
+import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**

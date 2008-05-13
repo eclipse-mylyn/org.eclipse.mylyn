@@ -29,7 +29,6 @@ import org.eclipse.mylyn.commons.core.IStatusHandler;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStore;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.osgi.framework.BundleContext;
 
@@ -303,9 +302,11 @@ public class ContextCorePlugin extends Plugin {
 
 		private static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylyn.context.core.bridges";
 
+		private static final String EXTENSION_ID_RELATION_PROVIDERS = "org.eclipse.mylyn.context.core.relationProviders";
+
 		private static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
 
-		private static final String ELEMENT_RELATION_PROVIDER = "relationProvider";
+		private static final String ELEMENT_RELATION_PROVIDER = "provider";
 
 		private static final String ATTR_CLASS = "class";
 
@@ -325,7 +326,16 @@ public class ContextCorePlugin extends Plugin {
 					for (IConfigurationElement element : elements) {
 						if (element.getName().compareTo(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE) == 0) {
 							readBridge(element);
-						} else if (element.getName().compareTo(BridgesExtensionPointReader.ELEMENT_RELATION_PROVIDER) == 0) {
+						}
+					}
+				}
+
+				extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_RELATION_PROVIDERS);
+				extensions = extensionPoint.getExtensions();
+				for (IExtension extension : extensions) {
+					IConfigurationElement[] elements = extension.getConfigurationElements();
+					for (IConfigurationElement element : elements) {
+						if (element.getName().compareTo(BridgesExtensionPointReader.ELEMENT_RELATION_PROVIDER) == 0) {
 							readRelationProvider(element);
 						}
 					}

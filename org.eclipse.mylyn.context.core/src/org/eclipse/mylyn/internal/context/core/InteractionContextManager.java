@@ -37,7 +37,6 @@ import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;

@@ -10,7 +10,7 @@ package org.eclipse.mylyn.context.tests.support.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.internal.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 
 public class TestActiveSearchListener implements IActiveSearchListener {

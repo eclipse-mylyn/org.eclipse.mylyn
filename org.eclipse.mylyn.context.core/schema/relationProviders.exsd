@@ -3,23 +3,22 @@
 <schema targetNamespace="org.eclipse.mylyn.context.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.mylyn.context.core" id="bridges" name="bridges"/>
+         <meta.schema plugin="org.eclipse.mylyn.context.core" id="relationProviders" name="relationProviders"/>
       </appinfo>
       <documentation>
-         Structure Bridges connect the interaction context model to domain-specific artifacts, such as the Java classes and methods being worked on by a programmer.  For more information please see: http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Context_API
+         [Enter description of this extension point.]
       </documentation>
    </annotation>
 
    <element name="extension">
       <annotation>
          <appinfo>
-            <meta.element />
+            <meta.element internal="true" />
          </appinfo>
       </annotation>
       <complexType>
-         <sequence>
-            <element ref="structureBridge" minOccurs="0" maxOccurs="unbounded"/>
-            <element ref="contextStore" minOccurs="0" maxOccurs="1"/>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="provider"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -48,18 +47,8 @@
       </complexType>
    </element>
 
-   <element name="structureBridge">
+   <element name="provider">
       <complexType>
-         <attribute name="name" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute translatable="true"/>
-               </appinfo>
-            </annotation>
-         </attribute>
          <attribute name="id" type="string">
             <annotation>
                <documentation>
@@ -73,33 +62,11 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.core.AbstractContextStructureBridge"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.core.AbstractRelationProvider"/>
                </appinfo>
             </annotation>
          </attribute>
-         <attribute name="parentContentType" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <element name="contextStore">
-      <complexType>
-         <attribute name="class" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.core.AbstractContextStore"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="id" type="string">
+         <attribute name="contentType" type="string" use="required">
             <annotation>
                <documentation>
                   
@@ -114,12 +81,36 @@
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         1.0
+         [Enter the first release in which this extension point appears.]
       </documentation>
    </annotation>
 
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
 
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
 
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
 
 
 </schema>
