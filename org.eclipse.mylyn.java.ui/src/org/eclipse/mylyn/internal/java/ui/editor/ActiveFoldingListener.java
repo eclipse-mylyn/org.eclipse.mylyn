@@ -31,7 +31,6 @@ import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
@@ -46,8 +45,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private IJavaFoldingStructureProviderExtension updater;
 
-	private static JavaStructureBridge bridge = (JavaStructureBridge) ContextCorePlugin.getDefault()
-			.getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
+	private static JavaStructureBridge bridge = (JavaStructureBridge) ContextCore.getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
 
 	private boolean enabled = false;
 

@@ -31,7 +31,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 /**
  * @author Mik Kersten
  * 
- * TODO: move to UI
+ * 	TODO: move to UI
  */
 public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindowActionDelegate, IActionDelegate2 {
 
