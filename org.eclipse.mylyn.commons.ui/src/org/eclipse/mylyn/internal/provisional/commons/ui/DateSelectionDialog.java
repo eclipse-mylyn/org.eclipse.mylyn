@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class DateSelectionDialog extends Dialog {
 
-	private Date reminderDate = null;
+	private Date selectedDate = null;
 
 	private String title = "Date Selection";
 
@@ -50,24 +50,25 @@ public class DateSelectionDialog extends Dialog {
 		if (initialDate != null) {
 			this.initialCalendar.setTime(initialDate.getTime());
 		}
-		reminderDate = initialCalendar.getTime();
+		selectedDate = initialCalendar.getTime();
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 //		parent.setBackground(toolkit.getColors().getBackground());
 		getShell().setText(title);
-		DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime, hourOfDay);
+		final DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar, includeTime, hourOfDay);
 		datePanel.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (!event.getSelection().isEmpty()) {
 					DateSelection dateSelection = (DateSelection) event.getSelection();
-					reminderDate = dateSelection.getDate().getTime();
+					selectedDate = dateSelection.getDate().getTime();
 				}
 			}
 		});
 //		datePanel.setBackground(toolkit.getColors().getBackground());
+
 		datePanel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
 		return datePanel;
@@ -90,12 +91,12 @@ public class DateSelectionDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
 		if (buttonId == IDialogConstants.CLIENT_ID + 1) {
-			reminderDate = null;
+			selectedDate = null;
 			okPressed();
 		}
 	}
 
 	public Date getDate() {
-		return reminderDate;
+		return selectedDate;
 	}
 }
