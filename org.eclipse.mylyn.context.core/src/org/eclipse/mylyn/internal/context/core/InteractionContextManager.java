@@ -39,8 +39,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
-import org.eclipse.mylyn.context.core.IInteractionContextListener2;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -77,13 +76,13 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	private InteractionContext activityMetaContext = null;
 
-	private final List<IInteractionContextListener> activityMetaContextListeners = new CopyOnWriteArrayList<IInteractionContextListener>();
+	private final List<AbstractContextListener> activityMetaContextListeners = new CopyOnWriteArrayList<AbstractContextListener>();
 
 	private boolean contextCapturePaused = false;
 
 	private Set<File> contextFiles = null;
 
-	private final List<IInteractionContextListener> contextListeners = new CopyOnWriteArrayList<IInteractionContextListener>();
+	private final List<AbstractContextListener> contextListeners = new CopyOnWriteArrayList<AbstractContextListener>();
 
 	private final List<String> errorElementHandles = new ArrayList<String>();
 
@@ -99,7 +98,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	private boolean suppressListenerNotification = false;
 
-	private final List<IInteractionContextListener> waitingContextListeners = new ArrayList<IInteractionContextListener>();
+	private final List<AbstractContextListener> waitingContextListeners = new ArrayList<AbstractContextListener>();
 
 	public void activateContext(String handleIdentifier) {
 		try {
@@ -107,9 +106,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 			if (context == null) {
 				context = loadContext(handleIdentifier);
 			}
-			for (IInteractionContextListener listener : contextListeners) {
-				if (listener instanceof IInteractionContextListener2) {
-					((IInteractionContextListener2) listener).contextPreActivated(context);
+			for (AbstractContextListener listener : contextListeners) {
+				if (listener instanceof AbstractContextListener) {
+					(listener).contextPreActivated(context);
 				}
 			}
 			if (context != null) {
@@ -126,7 +125,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	public void addActivityMetaContextListener(IInteractionContextListener listener) {
+	public void addActivityMetaContextListener(AbstractContextListener listener) {
 		activityMetaContextListeners.add(listener);
 	}
 
@@ -185,7 +184,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	public void addListener(IInteractionContextListener listener) {
+	public void addListener(AbstractContextListener listener) {
 		Assert.isNotNull(listener);
 		if (suppressListenerNotification && !waitingContextListeners.contains(listener)) {
 			waitingContextListeners.add(listener);
@@ -203,12 +202,12 @@ public class InteractionContextManager implements IInteractionContextManager {
 		if (bridge.canBeLandmark(node.getHandleIdentifier())) {
 			if (previousInterest >= ContextCore.getCommonContextScaling().getLandmark()
 					&& !node.getInterest().isLandmark()) {
-				for (IInteractionContextListener listener : contextListeners) {
+				for (AbstractContextListener listener : contextListeners) {
 					listener.landmarkRemoved(node);
 				}
 			} else if (previousInterest < ContextCore.getCommonContextScaling().getLandmark()
 					&& node.getInterest().isLandmark()) {
-				for (IInteractionContextListener listener : contextListeners) {
+				for (AbstractContextListener listener : contextListeners) {
 					listener.landmarkAdded(node);
 				}
 			}
@@ -365,7 +364,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				activeContext.getContextMap().remove(handleIdentifier);
 
 				setContextCapturePaused(true);
-				for (IInteractionContextListener listener : contextListeners) {
+				for (AbstractContextListener listener : contextListeners) {
 					try {
 						listener.contextDeactivated(context);
 					} catch (Exception e) {
@@ -411,7 +410,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				file.delete();
 			}
 			setContextCapturePaused(true);
-			for (IInteractionContextListener listener : contextListeners) {
+			for (AbstractContextListener listener : contextListeners) {
 				listener.contextCleared(context);
 			}
 			setContextCapturePaused(false);
@@ -569,7 +568,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	/**
 	 * For testing.
 	 */
-	public List<IInteractionContextListener> getListeners() {
+	public List<AbstractContextListener> getListeners() {
 		return Collections.unmodifiableList(contextListeners);
 	}
 
@@ -634,7 +633,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 					IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
 		}
 
-		for (IInteractionContextListener listener : contextListeners) {
+		for (AbstractContextListener listener : contextListeners) {
 			try {
 				listener.contextActivated(context);
 			} catch (Exception e) {
@@ -729,9 +728,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public void loadActivityMetaContext() {
 		if (ContextCore.getContextStore() != null) {
-			for (IInteractionContextListener listener : activityMetaContextListeners) {
-				if (listener instanceof IInteractionContextListener2) {
-					((IInteractionContextListener2) listener).contextPreActivated(activityMetaContext);
+			for (AbstractContextListener listener : activityMetaContextListeners) {
+				if (listener instanceof AbstractContextListener) {
+					(listener).contextPreActivated(activityMetaContext);
 				}
 			}
 
@@ -755,7 +754,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				metaContextLock.release();
 			}
 
-			for (IInteractionContextListener listener : activityMetaContextListeners) {
+			for (AbstractContextListener listener : activityMetaContextListeners) {
 				listener.contextActivated(activityMetaContext);
 			}
 		} else {
@@ -895,25 +894,17 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return newMetaContext;
 	}
 
-	@SuppressWarnings("deprecation")
 	private void notifyElementsDeleted(List<IInteractionElement> interestDelta) {
 		if (!interestDelta.isEmpty()) {
-			for (IInteractionContextListener listener : contextListeners) {
-				if (listener instanceof IInteractionContextListener2) {
-					((IInteractionContextListener2) listener).elementsDeleted(interestDelta);
-				} else {
-					// need this for legacy support
-					for (IInteractionElement element : interestDelta) {
-						listener.elementDeleted(element);
-					}
-				}
+			for (AbstractContextListener listener : contextListeners) {
+				listener.elementsDeleted(interestDelta);
 			}
 		}
 	}
 
 	public void notifyInterestDelta(List<IInteractionElement> interestDelta) {
 		if (!interestDelta.isEmpty()) {
-			for (IInteractionContextListener listener : contextListeners) {
+			for (AbstractContextListener listener : contextListeners) {
 				listener.interestChanged(interestDelta);
 			}
 		}
@@ -928,14 +919,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 		if (suppressListenerNotification) {
 			return;
 		}
-		for (IInteractionContextListener listener : contextListeners) {
+		for (AbstractContextListener listener : contextListeners) {
 			listener.relationsChanged(node);
 		}
 	}
 
 	public void processActivityMetaContextEvent(InteractionEvent event) {
 		IInteractionElement element = getActivityMetaContext().parseEvent(event);
-		for (IInteractionContextListener listener : activityMetaContextListeners) {
+		for (AbstractContextListener listener : activityMetaContextListeners) {
 			try {
 				List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
 				changed.add(element);
@@ -1091,7 +1082,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	public void removeActivityMetaContextListener(IInteractionContextListener listener) {
+	public void removeActivityMetaContextListener(AbstractContextListener listener) {
 		activityMetaContextListeners.remove(listener);
 	}
 
@@ -1120,7 +1111,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			errorElementHandles.remove(handle);
 			// TODO: this results in double-notification
 			if (notify) {
-				for (IInteractionContextListener listener : contextListeners) {
+				for (AbstractContextListener listener : contextListeners) {
 					List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
 					changed.add(element);
 					listener.interestChanged(changed);
@@ -1133,7 +1124,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		globalContexts.remove(context);
 	}
 
-	public void removeListener(IInteractionContextListener listener) {
+	public void removeListener(AbstractContextListener listener) {
 		waitingContextListeners.remove(listener);
 		contextListeners.remove(listener);
 	}
@@ -1157,7 +1148,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				}
 			}
 		}
-		for (IInteractionContextListener listener : contextListeners) {
+		for (AbstractContextListener listener : contextListeners) {
 			listener.relationsChanged(null);
 		}
 	}
@@ -1248,13 +1239,13 @@ public class InteractionContextManager implements IInteractionContextManager {
 			return;
 		}
 		getActiveContext().updateElementHandle(element, newHandle);
-		for (IInteractionContextListener listener : contextListeners) {
+		for (AbstractContextListener listener : contextListeners) {
 			List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
 			changed.add(element);
 			listener.interestChanged(changed);
 		}
 		if (element.getInterest().isLandmark()) {
-			for (IInteractionContextListener listener : contextListeners) {
+			for (AbstractContextListener listener : contextListeners) {
 				listener.landmarkAdded(element);
 			}
 		}

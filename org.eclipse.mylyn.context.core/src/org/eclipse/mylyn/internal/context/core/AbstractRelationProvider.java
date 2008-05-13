@@ -10,10 +10,9 @@ package org.eclipse.mylyn.internal.context.core;
 
 import java.util.List;
 
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
-import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
@@ -25,7 +24,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * @author Mik Kersten
  * @since 2.0
  */
-public abstract class AbstractRelationProvider implements IInteractionContextListener {
+public abstract class AbstractRelationProvider extends AbstractContextListener {
 
 	protected final String DOS_0_LABEL = "disabled";
 
@@ -65,7 +64,7 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 
 	/**
 	 * @param limitTo
-	 *            Only used in thye AbstractJavaRelationshipProvider for the search type
+	 * 		Only used in thye AbstractJavaRelationshipProvider for the search type
 	 */
 	public abstract IActiveSearchOperation getSearchOperation(IInteractionElement node, int limitTo,
 			int degreeOfSeparation);
@@ -76,22 +75,11 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 		return true;
 	}
 
-	public void contextActivated(IInteractionContext taskscape) {
-
-	}
-
-	public void contextCleared(IInteractionContext context) {
-		// ignore
-	}
-
+	@Override
 	public void landmarkAdded(IInteractionElement node) {
 		if (enabled) {
 			findRelated(node, degreeOfSeparation);
 		}
-	}
-
-	public void landmarkRemoved(IInteractionElement node) {
-		// ContextCorePlugin.getTaskscapeManager().removeEdge(element, id);
 	}
 
 	protected void searchCompleted(IInteractionElement landmark) {
@@ -146,22 +134,6 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 
 	public int getCurrentDegreeOfSeparation() {
 		return degreeOfSeparation;
-	}
-
-	public void elementDeleted(IInteractionElement node) {
-		// we don't care when this happens
-	}
-
-	public void contextDeactivated(IInteractionContext taskscape) {
-		// we don't care about this event
-	}
-
-	public void interestChanged(List<IInteractionElement> nodes) {
-		// we don't care about this event
-	}
-
-	public void relationsChanged(IInteractionElement node) {
-		// we don't care about this event
 	}
 
 	@Override

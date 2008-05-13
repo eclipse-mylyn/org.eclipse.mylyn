@@ -10,9 +10,8 @@ package org.eclipse.mylyn.team.ui;
 
 import java.util.Set;
 
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
-import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -25,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
  * @author Mik Kersten
  * @since 1.0
  */
-public abstract class AbstractContextChangeSetManager implements IInteractionContextListener {
+public abstract class AbstractContextChangeSetManager extends AbstractContextListener {
 
 	protected boolean isEnabled = false;
 
@@ -77,20 +76,4 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 		}
 
 	};
-
-	public void elementDeleted(IInteractionElement node) {
-		// TODO: handle?
-	}
-
-	public void landmarkAdded(IInteractionElement node) {
-		// ignore
-	}
-
-	public void landmarkRemoved(IInteractionElement node) {
-		// ignore
-	}
-
-	public void relationsChanged(IInteractionElement node) {
-		// ignore
-	}
 }

@@ -27,10 +27,9 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
-import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
@@ -90,43 +89,21 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	 */
 	protected boolean internalSuppressExpandAll = false;
 
-	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
+	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
+		@Override
 		public void contextActivated(IInteractionContext context) {
 			if (updateEnablementWithContextActivation()) {
 				updateEnablement(initAction);
 			}
 		}
 
-		public void contextCleared(IInteractionContext context) {
-			// ignore	
-		}
-
+		@Override
 		public void contextDeactivated(IInteractionContext context) {
 			if (updateEnablementWithContextActivation()) {
 				updateEnablement(initAction);
 				update(false);
 			}
-		}
-
-		public void elementDeleted(IInteractionElement element) {
-			// ignore			
-		}
-
-		public void interestChanged(List<IInteractionElement> elements) {
-			// ignore
-		}
-
-		public void landmarkAdded(IInteractionElement element) {
-			// ignore	
-		}
-
-		public void landmarkRemoved(IInteractionElement element) {
-			// ignore			
-		}
-
-		public void relationsChanged(IInteractionElement element) {
-			// ignore
 		}
 	};
 
@@ -160,7 +137,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 		public void postShutdown(IWorkbench workbench) {
 			// ignore
-
 		}
 	};
 

@@ -8,16 +8,13 @@
 
 package org.eclipse.mylyn.context.ui;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
-import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.ui.IViewPart;
@@ -30,21 +27,36 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @since 2.0
  */
-public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewAction implements
-		IInteractionContextListener {
+public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewAction {
 
 	private boolean initialized = false;
+
+	// TODO: make final?
+	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
+
+		@Override
+		public void contextActivated(IInteractionContext context) {
+			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
+				AbstractAutoFocusViewAction.super.internalSuppressExpandAll = true;
+				AbstractAutoFocusViewAction.super.update(true);
+			} else {
+				AbstractAutoFocusViewAction.super.internalSuppressExpandAll = true;
+				AbstractAutoFocusViewAction.super.update(false);
+			}
+		}
+	};
 
 	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
 			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
-		ContextCore.getContextManager().addListener(this);
+		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		ContextCore.getContextManager().removeListener(this);
+		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 	}
 
 	@Override
@@ -82,44 +94,4 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 			}
 		});
 	}
-
-	public void contextActivated(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
-			internalSuppressExpandAll = true;
-			update(true);
-		} else {
-			internalSuppressExpandAll = true;
-			update(false);
-		}
-	}
-
-	public void contextDeactivated(IInteractionContext context) {
-		// now happens in super
-	}
-
-	public void contextCleared(IInteractionContext context) {
-		// ignore
-	}
-
-	public void relationsChanged(IInteractionElement element) {
-		// ignore
-	}
-
-	public void interestChanged(List<IInteractionElement> elements) {
-		// ignore
-	}
-
-	public void landmarkAdded(IInteractionElement element) {
-		// ignore
-	}
-
-	public void landmarkRemoved(IInteractionElement element) {
-		// ignore
-	}
-
-	public void elementDeleted(IInteractionElement element) {
-		// ignore
-	}
-
 }

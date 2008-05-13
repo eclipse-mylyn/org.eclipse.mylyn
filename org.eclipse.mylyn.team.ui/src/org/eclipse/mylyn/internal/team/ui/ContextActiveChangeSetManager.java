@@ -171,6 +171,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return null;
 	}
 
+	@Override
 	public void contextActivated(IInteractionContext context) {
 		try {
 			ITask task = getTask(context);
@@ -193,6 +194,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		}
 	}
 
+	@Override
 	public void contextDeactivated(IInteractionContext context) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
@@ -208,10 +210,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		activeChangeSets.clear();
 	}
 
-	public void contextCleared(IInteractionContext context) {
-		// ignore
-	}
-
+	@Override
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
 			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());

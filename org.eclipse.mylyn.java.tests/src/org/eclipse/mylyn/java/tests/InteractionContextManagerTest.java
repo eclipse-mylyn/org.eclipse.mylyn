@@ -22,10 +22,9 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.AbstractRelationProvider;
@@ -57,50 +56,20 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		super.tearDown();
 	};
 
-	class LandmarksModelListener implements IInteractionContextListener {
+	class LandmarksModelListener extends AbstractContextListener {
+
 		public int numAdditions = 0;
 
 		public int numDeletions = 0;
 
-		public void interestChanged(IInteractionElement info) {
-			// don't care about this event
-		}
-
+		@Override
 		public void landmarkAdded(IInteractionElement element) {
 			numAdditions++;
 		}
 
+		@Override
 		public void landmarkRemoved(IInteractionElement element) {
 			numDeletions++;
-		}
-
-		public void modelUpdated() {
-			// don't care about this event
-		}
-
-		public void relationsChanged(IInteractionElement node) {
-			// don't care about this event
-		}
-
-		public void elementDeleted(IInteractionElement node) {
-			// don't care about this event
-		}
-
-		public void contextActivated(IInteractionContext taskscapeActivated) {
-			// don't care about this event
-		}
-
-		public void contextCleared(IInteractionContext context) {
-			// ignore
-		}
-
-		public void contextDeactivated(IInteractionContext taskscapeDeactivated) {
-			// don't care about this event
-		}
-
-		public void interestChanged(List<IInteractionElement> elements) {
-			// ignore
-
 		}
 	}
 

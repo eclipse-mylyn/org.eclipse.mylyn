@@ -8,16 +8,14 @@
 
 package org.eclipse.mylyn.internal.context.ui.commands;
 
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
-import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -30,15 +28,28 @@ import org.eclipse.ui.menus.UIElement;
  */
 // TODO remove dependency on tasks ui
 public class ContextCapturePauseHandler extends AbstractHandler //
-		implements IElementUpdater, IInteractionContextListener {
+		implements IElementUpdater {
+
+	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
+
+		@Override
+		public void contextActivated(IInteractionContext context) {
+			resume();
+		}
+
+		@Override
+		public void contextDeactivated(IInteractionContext context) {
+			resume();
+		}
+	};
 
 	public ContextCapturePauseHandler() {
-		ContextCore.getContextManager().addListener(this);
+		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 	}
 
 	@Override
 	public void dispose() {
-		ContextCore.getContextManager().removeListener(this);
+		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 		super.dispose();
 	}
 
@@ -74,45 +85,9 @@ public class ContextCapturePauseHandler extends AbstractHandler //
 		}
 	}
 
-	// IElementUpdater
-
 	@SuppressWarnings("unchecked")
 	public void updateElement(UIElement element, Map parameters) {
 		element.setChecked(ContextCore.getContextManager().isContextCapturePaused());
-	}
-
-	// IInteractionContextListener
-
-	public void contextActivated(IInteractionContext context) {
-		resume();
-	}
-
-	public void contextDeactivated(IInteractionContext context) {
-		resume();
-	}
-
-	public void contextCleared(IInteractionContext context) {
-		// ignore
-	}
-
-	public void elementDeleted(IInteractionElement element) {
-		// ignore
-	}
-
-	public void interestChanged(List<IInteractionElement> elements) {
-		// ignore
-	}
-
-	public void landmarkAdded(IInteractionElement element) {
-		// ignore
-	}
-
-	public void landmarkRemoved(IInteractionElement element) {
-		// ignore
-	}
-
-	public void relationsChanged(IInteractionElement element) {
-		// ignore
 	}
 
 }

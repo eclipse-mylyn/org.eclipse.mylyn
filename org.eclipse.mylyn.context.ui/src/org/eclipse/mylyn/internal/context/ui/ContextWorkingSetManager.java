@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
@@ -27,18 +27,60 @@ import org.eclipse.ui.IWorkingSetUpdater;
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener2 {
+public class ContextWorkingSetManager implements IWorkingSetUpdater {
 
 	private static ContextWorkingSetManager INSTANCE = new ContextWorkingSetManager();
 
 	private List<ContextWorkingSetManager> workingSetUpdaters = null;
+
+	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
+
+		@Override
+		public void contextActivated(IInteractionContext context) {
+			updateWorkingSet();
+		}
+
+		@Override
+		public void contextDeactivated(IInteractionContext context) {
+			updateWorkingSet();
+		}
+
+		@Override
+		public void contextCleared(IInteractionContext context) {
+			updateWorkingSet();
+		}
+
+		@Override
+		public void interestChanged(List<IInteractionElement> nodes) {
+			updateWorkingSet();
+		}
+
+		@Override
+		public void elementsDeleted(List<IInteractionElement> elements) {
+			updateWorkingSet();
+		}
+
+		@Override
+		public void landmarkAdded(IInteractionElement node) {
+			updateWorkingSet();
+		}
+
+		@Override
+		public void landmarkRemoved(IInteractionElement node) {
+			updateWorkingSet();
+		}
+	};
 
 	public void addWorkingSetManager(ContextWorkingSetManager updater) {
 		if (workingSetUpdaters == null) {
 			workingSetUpdaters = new ArrayList<ContextWorkingSetManager>();
 		}
 		workingSetUpdaters.add(updater);
-		ContextCore.getContextManager().addListener(updater);
+		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
+	}
+
+	public void dispose() {
+		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 	}
 
 	public ContextWorkingSetManager getWorkingSetUpdater() {
@@ -65,50 +107,6 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 		return workingSets.contains(workingSet);
 	}
 
-	public void dispose() {
-		// nothing to do here
-	}
-
-	public void contextActivated(IInteractionContext context) {
-		updateWorkingSet();
-	}
-
-	public void contextDeactivated(IInteractionContext context) {
-		updateWorkingSet();
-	}
-
-	public void contextCleared(IInteractionContext context) {
-		updateWorkingSet();
-	}
-
-	public void interestChanged(List<IInteractionElement> nodes) {
-		updateWorkingSet();
-
-	}
-
-	public void elementDeleted(IInteractionElement node) {
-		updateWorkingSet();
-	}
-
-	public void elementsDeleted(List<IInteractionElement> elements) {
-		updateWorkingSet();
-	}
-
-	public void landmarkAdded(IInteractionElement node) {
-		updateWorkingSet();
-
-	}
-
-	public void landmarkRemoved(IInteractionElement node) {
-		updateWorkingSet();
-
-	}
-
-	public void relationsChanged(IInteractionElement node) {
-		// don't care about this relationship
-
-	}
-
 	private void updateWorkingSet() {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -126,8 +124,7 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
 		for (IInteractionElement node : ContextCore.getContextManager().getInterestingDocuments()) {
-			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-					node.getContentType());
+			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(node.getContentType());
 
 			// HACK comparing extension to string
 			// No need to add bugzilla resources to the taskscape
@@ -151,10 +148,4 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater, IInteractio
 	public static ContextWorkingSetManager getDefault() {
 		return INSTANCE;
 	}
-
-	public void contextPreActivated(IInteractionContext context) {
-		// ignore
-
-	}
-
 }

@@ -13,53 +13,69 @@ import java.util.List;
 /**
  * Notified of changes to the context model activity.
  * 
- * API-3.0: clean-up interface, e.g. make deletion take a list, consider removing relations stuff
+ * API-3.0: consider breaking out interest listener, consider removing relations stuff
  * 
  * @author Mik Kersten
  * @author Shawn Minto
- * @since 2.0
+ * @since 3.0
  */
-public interface IInteractionContextListener {
+public abstract class AbstractContextListener {
+
+	/**
+	 * @param context
+	 * 		can be null
+	 * @since 3.0
+	 */
+	public void contextPreActivated(IInteractionContext context) {
+	}
 
 	/**
 	 * The context is now active, e.g. as a result of a task activation.
 	 */
-	public void contextActivated(IInteractionContext context);
+	public void contextActivated(IInteractionContext context) {
+	}
 
 	/**
 	 * The context has been deactivated, e.g. as a result of a task deactivation.
 	 */
-	public void contextDeactivated(IInteractionContext context);
+	public void contextDeactivated(IInteractionContext context) {
+	}
 
 	/**
 	 * The context has been cleared, typically done by the user.
 	 */
-	public void contextCleared(IInteractionContext context);
+	public void contextCleared(IInteractionContext context) {
+	}
 
 	/**
 	 * Called when the interest level for multiple elements changes, sorted according to the containment hierarchy. The
 	 * last element is the element invoking the change.
 	 */
-	public void interestChanged(List<IInteractionElement> elements);
+	public void interestChanged(List<IInteractionElement> elements) {
+	}
 
 	/**
 	 * @param newLandmarks
-	 *            list of IJavaElement(s)
+	 * 		list of IJavaElement(s)
 	 */
-	public void landmarkAdded(IInteractionElement element);
+	public void landmarkAdded(IInteractionElement element) {
+	}
 
 	/**
 	 * @param newLandmarks
-	 *            list of IJavaElement(s)
+	 * 		list of IJavaElement(s)
 	 */
-	public void landmarkRemoved(IInteractionElement element);
+	public void landmarkRemoved(IInteractionElement element) {
+	}
 
 	/**
-	 * 
-	 * @see IInteractionContextListener2.elementsDeleted(List<IInteractionElement> elements)
+	 * @since 3.0
 	 */
+	public void elementsDeleted(List<IInteractionElement> elements) {
+	}
+
 	@Deprecated
-	public void elementDeleted(IInteractionElement element);
+	public void relationsChanged(IInteractionElement element) {
+	}
 
-	public void relationsChanged(IInteractionElement element);
 }

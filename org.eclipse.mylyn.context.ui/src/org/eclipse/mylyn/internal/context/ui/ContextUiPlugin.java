@@ -35,10 +35,10 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
@@ -78,57 +78,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.context.ui";
 
-	private class ContextActivationListener implements IInteractionContextListener2 {
+	private class ContextActivationListener extends AbstractContextListener {
 
+		@Override
 		public void contextPreActivated(IInteractionContext context) {
 			initLazyStart();
 		}
-
-		public void elementsDeleted(List<IInteractionElement> elements) {
-			// ignore
-
-		}
-
-		public void contextActivated(IInteractionContext context) {
-			// ignore
-
-		}
-
-		public void contextCleared(IInteractionContext context) {
-			// ignore
-
-		}
-
-		public void contextDeactivated(IInteractionContext context) {
-			// ignore
-
-		}
-
-		public void elementDeleted(IInteractionElement element) {
-			// ignore
-
-		}
-
-		public void interestChanged(List<IInteractionElement> elements) {
-			// ignore
-
-		}
-
-		public void landmarkAdded(IInteractionElement element) {
-			// ignore
-
-		}
-
-		public void landmarkRemoved(IInteractionElement element) {
-			// ignore
-
-		}
-
-		public void relationsChanged(IInteractionElement element) {
-			// ignore
-
-		}
-
 	}
 
 	private final ContextActivationListener contextActivationListener = new ContextActivationListener();

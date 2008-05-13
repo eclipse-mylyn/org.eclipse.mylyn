@@ -70,9 +70,9 @@ public interface IInteractionContextManager {
 	 */
 	public abstract IInteractionElement getElement(String elementHandle);
 
-	public abstract void addListener(IInteractionContextListener listener);
+	public abstract void addListener(AbstractContextListener listener);
 
-	public abstract void removeListener(IInteractionContextListener listener);
+	public abstract void removeListener(AbstractContextListener listener);
 
 	public abstract void removeAllListeners();
 
@@ -169,7 +169,7 @@ public interface IInteractionContextManager {
 	 */
 	public void setContextCapturePaused(boolean paused);
 
-	public void addActivityMetaContextListener(IInteractionContextListener listener);
+	public void addActivityMetaContextListener(AbstractContextListener listener);
 
 	/**
 	 * Lazily loads set of handles with corresponding contexts.
@@ -186,6 +186,6 @@ public interface IInteractionContextManager {
 
 	public abstract boolean isValidContextFile(File file);
 
-	public abstract void removeActivityMetaContextListener(IInteractionContextListener context_listener);
+	public abstract void removeActivityMetaContextListener(AbstractContextListener context_listener);
 
 }

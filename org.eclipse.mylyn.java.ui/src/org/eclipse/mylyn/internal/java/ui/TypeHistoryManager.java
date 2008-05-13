@@ -20,18 +20,17 @@ import org.eclipse.jdt.core.search.TypeNameMatch;
 import org.eclipse.jdt.internal.core.search.JavaSearchTypeNameMatch;
 import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 
 /**
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class TypeHistoryManager implements IInteractionContextListener2 {
+public class TypeHistoryManager extends AbstractContextListener {
 
-//	private TypeInfoFactory factory = new TypeInfoFactory();
-
+	@Override
 	public void contextActivated(IInteractionContext context) {
 		clearTypeHistory();
 		for (IInteractionElement node : context.getInteresting()) {
@@ -48,9 +47,6 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 			IType type = (IType) element;
 			try {
 				if (type.exists() && !type.isAnonymous() && !isAspectjType(type)) {
-//					TypeInfo info = factory.create(type.getPackageFragment().getElementName().toCharArray(), type
-//							.getElementName().toCharArray(), enclosingTypeNames(type), type.getFlags(), getPath(type));
-
 					JavaSearchTypeNameMatch typeNameMatch = new JavaSearchTypeNameMatch(type, type.getFlags());
 
 					if (add && !OpenTypeHistory.getInstance().contains(typeNameMatch)) {
@@ -79,10 +75,12 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 		}
 	}
 
+	@Override
 	public void contextDeactivated(IInteractionContext context) {
 		clearTypeHistory();
 	}
 
+	@Override
 	public void contextCleared(IInteractionContext context) {
 		clearTypeHistory();
 	}
@@ -97,36 +95,17 @@ public class TypeHistoryManager implements IInteractionContextListener2 {
 		}
 	}
 
+	@Override
 	public void interestChanged(List<IInteractionElement> nodes) {
 		for (IInteractionElement node : nodes) {
 			updateTypeHistory(node, true);
 		}
 	}
 
-	public void elementDeleted(IInteractionElement node) {
-		updateTypeHistory(node, false);
-	}
-
+	@Override
 	public void elementsDeleted(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
 			updateTypeHistory(element, false);
 		}
-	}
-
-	public void landmarkAdded(IInteractionElement node) {
-		// ignore
-	}
-
-	public void landmarkRemoved(IInteractionElement node) {
-		// ignore
-	}
-
-	public void relationsChanged(IInteractionElement node) {
-		// ignore
-	}
-
-	public void contextPreActivated(IInteractionContext context) {
-		// ignore
-
 	}
 }

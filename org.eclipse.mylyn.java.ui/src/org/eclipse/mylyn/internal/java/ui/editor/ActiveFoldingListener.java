@@ -27,9 +27,9 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
@@ -40,7 +40,8 @@ import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 /**
  * @author Mik Kersten
  */
-public class ActiveFoldingListener implements IInteractionContextListener {
+public class ActiveFoldingListener extends AbstractContextListener {
+
 	private final JavaEditor editor;
 
 	private IJavaFoldingStructureProviderExtension updater;
@@ -149,6 +150,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 		return allChildren;
 	}
 
+	@Override
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
 			if (updater == null || !enabled) {
@@ -182,6 +184,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 		}
 	}
 
+	@Override
 	public void contextActivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault()
 				.getPreferenceStore()
@@ -190,6 +193,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 		}
 	}
 
+	@Override
 	public void contextDeactivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault()
 				.getPreferenceStore()
@@ -198,27 +202,12 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 		}
 	}
 
+	@Override
 	public void contextCleared(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault()
 				.getPreferenceStore()
 				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
-	}
-
-	public void landmarkAdded(IInteractionElement element) {
-		// ignore
-	}
-
-	public void landmarkRemoved(IInteractionElement element) {
-		// ignore
-	}
-
-	public void relationsChanged(IInteractionElement node) {
-		// ignore
-	}
-
-	public void elementDeleted(IInteractionElement node) {
-		// ignore
 	}
 }

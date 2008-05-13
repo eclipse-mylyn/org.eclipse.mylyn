@@ -24,10 +24,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.ui.ISelectionListener;
@@ -40,7 +40,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class FocusedViewerManager implements IInteractionContextListener2, ISelectionListener {
+public class FocusedViewerManager extends AbstractContextListener implements ISelectionListener {
 
 	private final CopyOnWriteArrayList<StructuredViewer> managedViewers = new CopyOnWriteArrayList<StructuredViewer>();
 
@@ -99,10 +99,12 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 		filteredViewers.remove(viewer);
 	}
 
+	@Override
 	public void contextActivated(IInteractionContext context) {
 		refreshViewers();
 	}
 
+	@Override
 	public void contextDeactivated(IInteractionContext context) {
 		refreshViewers();
 		for (StructuredViewer structuredViewer : managedViewers) {
@@ -112,6 +114,7 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 		}
 	}
 
+	@Override
 	public void contextCleared(IInteractionContext context) {
 		contextDeactivated(context);
 	}
@@ -127,6 +130,7 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 		refreshViewers(toRefresh, updateLabels);
 	}
 
+	@Override
 	public void interestChanged(final List<IInteractionElement> nodes) {
 		refreshViewers(nodes, false);
 	}
@@ -220,36 +224,32 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 		}
 	}
 
-	public void elementDeleted(IInteractionElement node) {
-		AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(
-				node.getContentType());
-		IInteractionElement parent = ContextCore.getContextManager().getElement(
-				structureBridge.getParentHandle(node.getHandleIdentifier()));
-
-		if (parent != null) {
-			ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
-			toRefresh.add(parent);
-			refreshViewers(toRefresh, false);
-		}
-	}
-
 	/**
 	 * TODO: consider making this work per-element and parent
 	 */
+	@Override
 	public void elementsDeleted(List<IInteractionElement> elements) {
-		refreshViewers();
+		for (IInteractionElement interactionElement : elements) {
+			AbstractContextStructureBridge structureBridge = ContextCore.getStructureBridge(interactionElement.getContentType());
+			IInteractionElement parent = ContextCore.getContextManager().getElement(
+					structureBridge.getParentHandle(interactionElement.getHandleIdentifier()));
+
+			if (parent != null) {
+				ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
+				toRefresh.add(parent);
+				refreshViewers(toRefresh, false);
+			}
+		}
 	}
 
+	@Override
 	public void landmarkAdded(IInteractionElement node) {
 		refreshViewers(node, true);
 	}
 
+	@Override
 	public void landmarkRemoved(IInteractionElement node) {
 		refreshViewers(node, true);
-	}
-
-	public void relationsChanged(IInteractionElement node) {
-		// ignore
 	}
 
 	/**
@@ -259,6 +259,7 @@ public class FocusedViewerManager implements IInteractionContextListener2, ISele
 		this.syncRefreshMode = syncRefreshMode;
 	}
 
+	@Override
 	public void contextPreActivated(IInteractionContext context) {
 		// ignore
 

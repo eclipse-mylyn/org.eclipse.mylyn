@@ -21,10 +21,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
-import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
@@ -87,7 +86,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private ITask task;
 
-	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener2() {
+	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
 		private void refresh() {
 			if (commonViewer != null && !commonViewer.getTree().isDisposed()) {
@@ -96,45 +95,44 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		}
 
+		@Override
 		public void contextActivated(IInteractionContext context) {
 			refresh();
 		}
 
+		@Override
 		public void contextDeactivated(IInteractionContext context) {
 			refresh();
 		}
 
+		@Override
 		public void contextCleared(IInteractionContext context) {
 			refresh();
 		}
 
-		public void elementDeleted(IInteractionElement element) {
-			refresh();
-		}
-
+		@Override
 		public void elementsDeleted(List<IInteractionElement> element) {
 			refresh();
 		}
 
+		@Override
 		public void interestChanged(List<IInteractionElement> elements) {
 			refresh();
 		}
 
+		@Override
 		public void landmarkAdded(IInteractionElement element) {
 			refresh();
 		}
 
+		@Override
 		public void landmarkRemoved(IInteractionElement element) {
 			refresh();
 		}
 
+		@Override
 		public void relationsChanged(IInteractionElement element) {
 			refresh();
-		}
-
-		public void contextPreActivated(IInteractionContext context) {
-			// ignore
-
 		}
 	};
 

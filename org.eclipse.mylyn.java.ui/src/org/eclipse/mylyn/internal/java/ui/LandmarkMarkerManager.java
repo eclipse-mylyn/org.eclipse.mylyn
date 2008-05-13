@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.internal.java.ui;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -29,15 +28,15 @@ import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 
 /**
  * @author Mik Kersten
  */
-public class LandmarkMarkerManager implements IInteractionContextListener {
+public class LandmarkMarkerManager extends AbstractContextListener {
 
 	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark";
 
@@ -47,14 +46,17 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 		super();
 	}
 
+	@Override
 	public void contextActivated(IInteractionContext taskscape) {
 		modelUpdated();
 	}
 
+	@Override
 	public void contextDeactivated(IInteractionContext taskscape) {
 		modelUpdated();
 	}
 
+	@Override
 	public void contextCleared(IInteractionContext context) {
 		modelUpdated();
 	}
@@ -74,10 +76,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 		}
 	}
 
-	public void interestChanged(List<IInteractionElement> nodes) {
-		// don't care when the interest changes
-	}
-
+	@Override
 	public void landmarkAdded(final IInteractionElement node) {
 		if (node == null || node.getContentType() == null) {
 			return;
@@ -117,6 +116,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 		}
 	}
 
+	@Override
 	public void landmarkRemoved(final IInteractionElement node) {
 		if (node == null) {
 			return;
@@ -161,11 +161,4 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 		}
 	}
 
-	public void relationsChanged(IInteractionElement node) {
-		// don't care when the relationships changed
-	}
-
-	public void elementDeleted(IInteractionElement node) {
-		// don't care when a node is deleted
-	}
 }

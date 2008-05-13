@@ -23,10 +23,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
@@ -58,7 +58,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class ContextEditorManager implements IInteractionContextListener2 {
+public class ContextEditorManager extends AbstractContextListener {
 
 	private static final String PREFS_PREFIX = "editors.task.";
 
@@ -83,6 +83,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 		preferenceStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.mylyn.resources.ui");
 	}
 
+	@Override
 	public void contextActivated(IInteractionContext context) {
 		if (!Workbench.getInstance().isStarting()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -98,8 +99,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				}
 				String mementoString = null;
 				// API-3.0: remove coupling to AbstractTask, change where memento is stored
-				ITask task = TasksUiPlugin.getTaskList().getTask(
-						context.getHandleIdentifier());
+				ITask task = TasksUiPlugin.getTaskList().getTask(context.getHandleIdentifier());
 				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (task != null) {
 					try {
@@ -200,6 +200,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 		return preferenceStore.getString(PREFS_PREFIX + task.getHandleIdentifier());
 	}
 
+	@Override
 	public void contextDeactivated(IInteractionContext context) {
 		if (!PlatformUI.getWorkbench().isClosing()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -249,6 +250,7 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 		preferenceStore.setValue(PREFS_PREFIX + task.getHandleIdentifier(), memento);
 	}
 
+	@Override
 	public void contextCleared(IInteractionContext context) {
 		if (context == null) {
 			return;
@@ -397,16 +399,14 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 		return false;
 	}
 
+	@Override
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
 			closeEditor(element, false);
 		}
 	}
 
-	public void elementDeleted(IInteractionElement element) {
-		closeEditor(element, true);
-	}
-
+	@Override
 	public void elementsDeleted(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
 			closeEditor(element, true);
@@ -423,22 +423,5 @@ public class ContextEditorManager implements IInteractionContextListener2 {
 				}
 			}
 		}
-	}
-
-	public void landmarkAdded(IInteractionElement element) {
-		// ignore
-	}
-
-	public void landmarkRemoved(IInteractionElement element) {
-		// ignore
-	}
-
-	public void relationsChanged(IInteractionElement element) {
-		// ignore
-	}
-
-	public void contextPreActivated(IInteractionContext context) {
-		// ignore
-
 	}
 }
