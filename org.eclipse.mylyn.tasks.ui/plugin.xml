@@ -1305,7 +1305,8 @@
       </actionSetPartAssociation>
    </extension>
       
-   <extension point="org.eclipse.ui.navigator.navigatorContent">
+       
+	<extension point="org.eclipse.ui.navigator.navigatorContent">
 		<commonFilter
 			id="org.eclipse.mylyn.tasks.ui.navigator.filters.tasks"
 			name="Task List Elements (Recommended)"
@@ -1317,6 +1318,17 @@
 			</filterExpression>
 		</commonFilter>
    </extension>
+   <extension point="org.eclipse.ui.navigator.viewer">
+		<viewerContentBinding
+			viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+			<includes>
+				<contentExtension
+					pattern="org.eclipse.mylyn.tasks.ui.navigator.filters.tasks" />
+			</includes>
+		</viewerContentBinding>
+	</extension>
+    
+      
    <extension
          point="org.eclipse.ui.handlers">
       <handler
