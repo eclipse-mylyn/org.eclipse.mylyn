@@ -13,9 +13,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -34,24 +33,9 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class TaskActivityMonitor {
 
-	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
+	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
-		public void contextActivated(IInteractionContext context) {
-			// ignore
-		}
-
-		public void contextCleared(IInteractionContext context) {
-			// ignore
-		}
-
-		public void contextDeactivated(IInteractionContext context) {
-			// ignore
-		}
-
-		public void elementDeleted(IInteractionElement element) {
-			// ignore
-		}
-
+		@Override
 		public void interestChanged(List<IInteractionElement> elements) {
 			List<InteractionEvent> events = ContextCore.getContextManager()
 					.getActivityMetaContext()
@@ -59,18 +43,6 @@ public class TaskActivityMonitor {
 			InteractionEvent event = events.get(events.size() - 1);
 			parseInteractionEvent(event, false);
 
-		}
-
-		public void landmarkAdded(IInteractionElement element) {
-			// ignore
-		}
-
-		public void landmarkRemoved(IInteractionElement element) {
-			// ignore
-		}
-
-		public void relationsChanged(IInteractionElement element) {
-			// ignore
 		}
 	};
 
