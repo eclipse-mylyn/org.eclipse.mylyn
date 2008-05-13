@@ -1804,9 +1804,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Adds content assist to the given text field.
 	 * 
 	 * @param text
-	 *            text field to decorate.
+	 * 		text field to decorate.
 	 * @param proposalProvider
-	 *            instance providing content proposals
+	 * 		instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit
@@ -1836,7 +1836,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
 	 * @param attribute
-	 *            attribute for which to provide content assist.
+	 * 		attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit?

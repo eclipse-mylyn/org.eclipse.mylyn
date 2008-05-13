@@ -14,7 +14,6 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;

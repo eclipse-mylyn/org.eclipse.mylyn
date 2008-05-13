@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.security.auth.login.LoginException;
+import javax.swing.text.html.HTML.Tag;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
@@ -264,7 +265,7 @@ public class BugzillaClient {
 			} catch (IOException e) {
 				getMethod.getResponseBodyNoop();
 				getMethod.releaseConnection();
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
 			}
 
@@ -281,20 +282,20 @@ public class BugzillaClient {
 				authenticated = false;
 				getMethod.getResponseBodyNoop();
 				getMethod.releaseConnection();
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Proxy authentication required"));
 			} else {
 				getMethod.getResponseBodyNoop();
 				getMethod.releaseConnection();
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code)));
 				// throw new IOException("HttpClient connection error response
 				// code: " + code);
 			}
 		}
 
-		throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+		throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 				RepositoryStatus.ERROR_INTERNAL, "All connection attempts to " + repositoryUrl.toString()
 						+ " failed. Please verify connection and authentication information."));
 	}
@@ -315,7 +316,7 @@ public class BugzillaClient {
 
 					if (token.getType() == Token.TAG) {
 						HtmlTag tag = (HtmlTag) token.getValue();
-						if (tag.getTagType() == HtmlTag.Type.A) {
+						if (tag.getTagType() == Tag.A) {
 							if (tag.hasAttribute("href")) {
 								String id = tag.getAttribute("href");
 								if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
@@ -327,14 +328,14 @@ public class BugzillaClient {
 					}
 				}
 
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Logout unsuccessful."));
 			} finally {
 				in.close();
 			}
 		} catch (ParseException e) {
 			authenticated = false;
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 		} finally {
 			if (method != null) {
@@ -347,7 +348,7 @@ public class BugzillaClient {
 		monitor = Policy.monitorFor(monitor);
 		if (!hasAuthenticationCredentials()) {
 			authenticated = false;
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 					"Authentication credentials missing."));
 		}
@@ -381,7 +382,7 @@ public class BugzillaClient {
 				authenticated = false;
 				postMethod.getResponseBodyNoop();
 				postMethod.releaseConnection();
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"HTTP authentication failed."));
 
@@ -389,7 +390,7 @@ public class BugzillaClient {
 				authenticated = false;
 				postMethod.getResponseBodyNoop();
 				postMethod.releaseConnection();
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Proxy authentication required"));
 
@@ -397,7 +398,7 @@ public class BugzillaClient {
 				authenticated = false;
 				postMethod.getResponseBodyNoop();
 				postMethod.releaseConnection();
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code)));
 			}
 
@@ -409,14 +410,14 @@ public class BugzillaClient {
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 					if (token.getType() == Token.TAG) {
 						HtmlTag tag = (HtmlTag) token.getValue();
-						if (tag.getTagType() == HtmlTag.Type.A) {
+						if (tag.getTagType() == Tag.A) {
 							String id = tag.getAttribute("href");
 							if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
 								// throw new
 								// LoginException(IBugzillaConstants.INVALID_CREDENTIALS);
 								responseReader.close();
 								authenticated = false;
-								throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 										RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 										IBugzillaConstants.INVALID_CREDENTIALS));
 							}
@@ -427,11 +428,11 @@ public class BugzillaClient {
 			authenticated = true;
 		} catch (ParseException e) {
 			authenticated = false;
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 
 		} catch (IOException e) {
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
 		} finally {
 			if (postMethod != null) {
@@ -714,7 +715,7 @@ public class BugzillaClient {
 
 			} else {
 				postMethod.getResponseBodyNoop();
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Http error: "
 								+ HttpStatus.getStatusText(status)));
 				// throw new IOException("Communication error occurred during
@@ -759,7 +760,7 @@ public class BugzillaClient {
 			postMethod.getResponseBodyNoop();
 			postMethod.releaseConnection();
 			//StatusManager.log("Post failed: " + HttpStatus.getStatusText(status), this);
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_IO, repositoryUrl.toString(), new IOException(
 							"Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status))));
 //			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
@@ -809,7 +810,7 @@ public class BugzillaClient {
 
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
+				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TITLE
 						&& !((HtmlTag) (token.getValue())).isEndTag()) {
 					isTitle = true;
 					continue;
@@ -820,8 +821,7 @@ public class BugzillaClient {
 					if (token.getType() != Token.TAG) {
 						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " ";
 						continue;
-					} else if (token.getType() == Token.TAG
-							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
+					} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
 						boolean found = false;
@@ -874,7 +874,7 @@ public class BugzillaClient {
 			return result;
 		} catch (ParseException e) {
 			authenticated = false;
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 		} finally {
 			if (method != null) {

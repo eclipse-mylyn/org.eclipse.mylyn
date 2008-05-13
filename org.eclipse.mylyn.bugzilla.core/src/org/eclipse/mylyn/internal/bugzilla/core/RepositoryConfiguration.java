@@ -146,8 +146,8 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	/**
-	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does
-	 * not exist.
+	 * Returns an array of names of versions that exist for a given product or <code>null</code> if the product does not
+	 * exist.
 	 */
 	public List<String> getVersions(String product) {
 		ProductEntry entry = products.get(product);
