@@ -308,6 +308,9 @@ public class BugzillaClient {
 		try {
 			method = getConnect(loginUrl, monitor);
 			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+			if (method.isZippedReply()) {
+				in = getUnzippedStream(in);
+			}
 			try {
 				BufferedReader responseReader = new BufferedReader(new InputStreamReader(in, characterEncoding));
 
@@ -342,6 +345,20 @@ public class BugzillaClient {
 				method.releaseConnection();
 			}
 		}
+	}
+
+	private InputStream getUnzippedStream(InputStream input) throws IOException {
+		if (input.markSupported()) {
+			input.mark(3);
+		}
+		try {
+			return new java.util.zip.GZIPInputStream(input);
+		} catch (IOException e) {
+			if (input.markSupported()) {
+				input.reset();
+			}
+		}
+		return input;
 	}
 
 	public void authenticate(IProgressMonitor monitor) throws CoreException {
@@ -499,8 +516,12 @@ public class BugzillaClient {
 				Header responseTypeHeader = postMethod.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
-								postMethod.getResponseBodyAsStream(), characterEncoding);
+						InputStream stream = WebUtil.getResponseBodyAsStream(postMethod, monitor);
+						if (postMethod.isZippedReply()) {
+							stream = getUnzippedStream(stream);
+						}
+						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(stream,
+								characterEncoding);
 						int count = queryFactory.performQuery(repositoryUrl.toString(),
 								(LegacyTaskDataCollector) collector, TaskDataCollector.MAX_HITS);
 						return count > 0;
@@ -611,12 +632,14 @@ public class BugzillaClient {
 			method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF, monitor);
 			// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
 			// modified to also accept "application/x-gzip" as results from a 302 redirect to a previously gzipped file.
-
 			if (method == null) {
 				throw new IOException("Could not retrieve configuratoin. HttpClient return null method.");
 			}
 
 			InputStream stream = WebUtil.getResponseBodyAsStream(method, monitor);
+			if (method.isZippedReply()) {
+				stream = getUnzippedStream(stream);
+			}
 			try {
 				if (method.getResponseHeader("Content-Type") != null) {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
@@ -651,7 +674,11 @@ public class BugzillaClient {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
 		GzipGetMethod method = getConnectGzip(url, monitor);
 		try {
-			return WebUtil.getResponseBodyAsStream(method, monitor);
+			InputStream input = WebUtil.getResponseBodyAsStream(method, monitor);
+			if (method.isZippedReply()) {
+				input = getUnzippedStream(input);
+			}
+			return input;
 		} catch (IOException e) {
 			method.releaseConnection();
 			throw e;
@@ -1046,7 +1073,7 @@ public class BugzillaClient {
 		try {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				body += token.toString();
-				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
+				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TITLE
 						&& !((HtmlTag) (token.getValue())).isEndTag()) {
 					isTitle = true;
 					continue;
@@ -1057,8 +1084,7 @@ public class BugzillaClient {
 					if (token.getType() != Token.TAG) {
 						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " ";
 						continue;
-					} else if (token.getType() == Token.TAG
-							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
+					} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
 
 						boolean found = false;
@@ -1069,7 +1095,7 @@ public class BugzillaClient {
 						}
 						if (found) {
 							authenticated = false;
-							throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+							throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(), title));
 						}
 						found = false;
@@ -1080,7 +1106,7 @@ public class BugzillaClient {
 							found = found || title.indexOf(value) != -1;
 						}
 						if (found) {
-							throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+							throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.REPOSITORY_COLLISION, repositoryUrl.toString()));
 						}
 						found = false;
@@ -1091,7 +1117,7 @@ public class BugzillaClient {
 							found = found || title.indexOf(value) != -1;
 						}
 						if (found) {
-							throw new CoreException(new BugzillaStatus(Status.INFO, BugzillaCorePlugin.PLUGIN_ID,
+							throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.REPOSITORY_COMMENT_REQUIRED));
 						}
 						found = false;
@@ -1105,7 +1131,7 @@ public class BugzillaClient {
 							authenticated = false;
 							// throw new
 							// BugzillaException(IBugzillaConstants.LOGGED_OUT);
-							throw new CoreException(new BugzillaStatus(Status.INFO, BugzillaCorePlugin.PLUGIN_ID,
+							throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID,
 									RepositoryStatus.REPOSITORY_LOGGED_OUT,
 									"You have been logged out. Please retry operation."));
 						}
@@ -1130,7 +1156,7 @@ public class BugzillaClient {
 
 		} catch (ParseException e) {
 			authenticated = false;
-			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 		} finally {
 			in.close();
@@ -1148,18 +1174,21 @@ public class BugzillaClient {
 			method = getConnectGzip(url, monitor);
 			if (method != null) {
 				InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+				if (method.isZippedReply()) {
+					in = getUnzippedStream(in);
+				}
 				try {
 					BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(in, characterEncoding);
 					try {
 						return parser.retrieveHistory(bugzillaLanguageSettings);
 					} catch (LoginException e) {
 						authenticated = false;
-						throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 								RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 								IBugzillaConstants.INVALID_CREDENTIALS));
 					} catch (ParseException e) {
 						authenticated = false;
-						throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 								RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from "
 										+ repositoryUrl.toString() + "."));
 					}
@@ -1221,8 +1250,11 @@ public class BugzillaClient {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-							MultiBugReportFactory factory = new MultiBugReportFactory(method.getResponseBodyAsStream(),
-									characterEncoding);
+							InputStream input = WebUtil.getResponseBodyAsStream(method, monitor);
+							if (method.isZippedReply()) {
+								input = getUnzippedStream(input);
+							}
+							MultiBugReportFactory factory = new MultiBugReportFactory(input, characterEncoding);
 
 							LegacyTaskDataCollector collector2 = new LegacyTaskDataCollector() {
 
@@ -1279,7 +1311,7 @@ public class BugzillaClient {
 
 			lastModifiedSupported = false;
 
-			throw new CoreException(new Status(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					"Error retrieving configuration timestamp", e));
 		} finally {
 			if (method != null) {

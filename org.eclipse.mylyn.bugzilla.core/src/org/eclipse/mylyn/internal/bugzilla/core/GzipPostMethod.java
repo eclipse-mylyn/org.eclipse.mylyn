@@ -33,8 +33,6 @@ import org.eclipse.mylyn.commons.net.WebClientUtil;
 public class GzipPostMethod extends PostMethod {
 	private final boolean gzipWanted;
 
-	private boolean gzipReceived;
-
 	/**
 	 * @param requestPath
 	 * 		the URI to request
@@ -53,7 +51,11 @@ public class GzipPostMethod extends PostMethod {
 	 * 	<li>content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix</li>
 	 * 	</ul>
 	 */
-	private boolean isZippedReply() {
+	public boolean isZippedReply() {
+		if (this.getResponseHeader("Content-encoding") == null) {
+			return false;
+		}
+
 		// content-encoding:gzip can be set by a dedicated perl script or mod_gzip
 		boolean zipped = (null != this.getResponseHeader("Content-encoding") && this.getResponseHeader(
 				"Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP))
@@ -69,10 +71,9 @@ public class GzipPostMethod extends PostMethod {
 	public int execute(HttpState state, HttpConnection conn) throws HttpException, IOException {
 		// Insert accept-encoding header
 		if (gzipWanted) {
-//			this.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
+			this.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
 		}
 		int result = super.execute(state, conn);
-		gzipReceived = isZippedReply();
 		return result;
 	}
 
@@ -87,13 +88,22 @@ public class GzipPostMethod extends PostMethod {
 		super.getResponseBody();
 	}
 
-	@Override
-	public InputStream getResponseBodyAsStream() throws IOException {
+	/**
+	 * getResponseBodyAsUnzippedStream checks a usable (decoded if necessary) stream. It checks the headers the headers
+	 * and decides accordingly.
+	 * 
+	 * @return a decoded stream to be used as plain stream.
+	 * @throws IOException
+	 */
+	public InputStream getResponseBodyAsUnzippedStream() throws IOException {
 		InputStream input = super.getResponseBodyAsStream();
-		if (gzipReceived) {
-			//return new java.util.zip.GZIPInputStream(input);
+		if (true) {
+			try {
+				return new java.util.zip.GZIPInputStream(input);
+			} catch (IOException e) {
+				// FIXME log this
+			}
 		}
 		return input;
 	}
-
 }
