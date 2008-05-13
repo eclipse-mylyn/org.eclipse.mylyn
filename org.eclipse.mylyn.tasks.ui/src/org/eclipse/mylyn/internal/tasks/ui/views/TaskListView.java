@@ -53,6 +53,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
+import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -110,6 +111,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.RTFTransfer;
@@ -172,6 +174,44 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Eugene Kuleshov
  */
 public class TaskListView extends ViewPart implements IPropertyChangeListener {
+
+	private final class TaskListRefreshJob extends DelayedRefreshJob {
+
+		private TaskListRefreshJob(TreeViewer treeViewer, String name) {
+			super(treeViewer, name);
+		}
+
+		@Override
+		protected void refresh(Object[] items) {
+			if (items == null) {
+				treeViewer.refresh(true);
+			} else if (items.length > 0) {
+				try {
+					for (Object item : items) {
+						if (item instanceof ITask) {
+							ITask task = (ITask) item;
+							treeViewer.refresh(task, true);
+						} else {
+							treeViewer.refresh(item, true);
+						}
+						updateExpansionState(item);
+					}
+				} catch (SWTException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to refresh viewer: "
+							+ treeViewer, e));
+				}
+			}
+
+			updateToolTip(false);
+		}
+
+		@Override
+		protected void updateExpansionState(Object item) {
+			if (TaskListView.this.isFocusedMode()) {
+				TaskListView.this.getViewer().expandToLevel(item, 3);
+			}
+		}
+	}
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.tasks";
 
@@ -763,20 +803,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		getViewer().getTree().setHeaderVisible(false);
 		getViewer().setUseHashlookup(true);
-		refreshJob = new DelayedRefreshJob(getViewer(), "Task List Refresh") {
-			@Override
-			protected void refresh(Object[] items) {
-				super.refresh(items);
-				updateToolTip(false);
-			}
-
-			@Override
-			protected void updateExpansionState(Object item) {
-				if (TaskListView.this.isFocusedMode()) {
-					TaskListView.this.getViewer().expandToLevel(item, 3);
-				}
-			}
-		};
+		refreshJob = new TaskListRefreshJob(getViewer(), "Task List Refresh");
 
 		configureColumns(columnNames, columnWidths);
 
