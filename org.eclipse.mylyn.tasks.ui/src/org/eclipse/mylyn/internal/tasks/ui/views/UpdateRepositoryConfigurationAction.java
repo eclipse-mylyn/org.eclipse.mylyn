@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -73,8 +74,12 @@ public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryA
 			IProgressMonitor monitor) {
 		try {
 			connector.updateRepositoryConfiguration(repository, monitor);
-		} catch (CoreException ce) {
-			TasksUiInternal.displayStatus("Error updating repository configuration", ce.getStatus());
+		} catch (final CoreException e) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					TasksUiInternal.displayStatus("Error updating repository configuration", e.getStatus());
+				}
+			});
 		}
 	}
 

@@ -10,8 +10,11 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
@@ -27,7 +30,6 @@ import org.eclipse.mylyn.tasks.core.ITaskElement;
  * @author Rob Elves
  * @since 2.0
  */
-//API 3.0 move to internal package
 public abstract class AbstractTask extends AbstractTaskContainer implements ITask {
 
 	public static final String DEFAULT_TASK_KIND = "task";
@@ -86,6 +88,8 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private String taskKey;
 
+	private Map<String, String> attributes;
+
 	public AbstractTask(String repositoryUrl, String taskId, String summary) {
 		super(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 		this.repositoryUrl = repositoryUrl;
@@ -113,6 +117,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	public abstract String getConnectorKind();
 
+	@Deprecated
 	public String getLastReadTimeStamp() {
 		return lastReadTimeStamp;
 	}
@@ -209,11 +214,15 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	/**
 	 * Package visible in order to prevent sets that don't update the index.
+	 * 
+	 * @deprecated
 	 */
+	@Deprecated
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 
+	@Deprecated
 	public boolean isActive() {
 		return active;
 	}
@@ -440,6 +449,26 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	public void setTaskKey(String taskKey) {
 		this.taskKey = taskKey;
+	}
+
+	public synchronized String getAttribute(String key) {
+		return (attributes != null) ? attributes.get(key) : null;
+	}
+
+	public synchronized Map<String, String> getAttributes() {
+		if (attributes != null) {
+			return new HashMap<String, String>(attributes);
+		} else {
+			return Collections.emptyMap();
+		}
+	}
+
+	public synchronized void setAttribute(String key, String value) {
+		Assert.isNotNull(key);
+		if (attributes == null) {
+			attributes = new HashMap<String, String>();
+		}
+		attributes.put(key, value);
 	}
 
 }

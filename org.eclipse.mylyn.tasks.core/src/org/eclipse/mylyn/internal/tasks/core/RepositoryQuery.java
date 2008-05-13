@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -128,6 +129,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 	}
 
 	public synchronized void setAttribute(String key, String value) {
+		Assert.isNotNull(key);
 		if (attributes == null) {
 			attributes = new HashMap<String, String>();
 		}

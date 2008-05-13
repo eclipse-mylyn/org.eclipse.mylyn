@@ -26,21 +26,25 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -85,9 +89,28 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			return;
 		}
 
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(selectedTask.getConnectorKind());
-		final AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
+		TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(
+				selectedTask.getRepositoryUrl());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				selectedTask.getConnectorKind());
+		if (connector instanceof AbstractLegacyRepositoryConnector) {
+			runLegacy((AbstractLegacyRepositoryConnector) connector);
+			return;
+		}
+
+		ITask task = TasksUiInternal.createNewLocalTask(null);
+		((TaskTask) task).setSynchronizationState(SynchronizationState.OUTGOING);
+		TaskRepository localTaskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		TaskEditorInput editorInput = new TaskEditorInput(localTaskRepository, task);
+		// FIXME editorInput.setData(data);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
+	}
+
+	@Deprecated
+	private void runLegacy(AbstractLegacyRepositoryConnector connector) {
+		final org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		if (taskDataHandler == null) {
 			return;
 		}
@@ -152,6 +175,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 	public void init(IViewPart view) {
 	}
 
+	@SuppressWarnings( { "deprecation", "restriction" })
 	public void selectionChanged(IAction action, ISelection selection) {
 		selectedTask = null;
 		if (selection instanceof StructuredSelection) {
@@ -163,12 +187,18 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 				}
 			} else if (selectedObject instanceof ITask) {
 				selectedTask = (AbstractTask) selectedObject;
-
-				AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
-						.getRepositoryConnector(selectedTask.getConnectorKind());
-				final AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
-				if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(selectedTask, null)) {
-					selectedTask = null;
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+						selectedTask.getConnectorKind());
+				if (connector instanceof AbstractLegacyRepositoryConnector) {
+					org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler taskDataHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
+					if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(selectedTask, null)) {
+						selectedTask = null;
+					}
+				} else {
+					AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+					if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(selectedTask, null)) {
+						selectedTask = null;
+					}
 				}
 			}
 		}

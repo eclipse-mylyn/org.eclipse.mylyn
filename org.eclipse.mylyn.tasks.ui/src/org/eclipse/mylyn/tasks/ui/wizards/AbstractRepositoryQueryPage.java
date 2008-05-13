@@ -130,9 +130,15 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
 		if (connector != null) {
-			SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), taskRepository,
-					createQuery());
-			NewSearchUI.runQueryInBackground(collector);
+			try {
+				SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), taskRepository,
+						createQuery());
+				NewSearchUI.runQueryInBackground(collector);
+			} catch (UnsupportedOperationException e) {
+				SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(), taskRepository,
+						getQuery());
+				NewSearchUI.runQueryInBackground(collector);
+			}
 		}
 		return true;
 	}

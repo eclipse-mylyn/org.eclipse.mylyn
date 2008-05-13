@@ -146,9 +146,13 @@ public class SearchHitCollector extends LegacyTaskDataCollector implements ISear
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repositoryQuery.getConnectorKind());
 		if (connector != null) {
-			IStatus status = connector.performQuery(repository, repositoryQuery, this, null, monitor);
+			final IStatus status = connector.performQuery(repository, repositoryQuery, this, null, monitor);
 			if (!status.isOK()) {
-				TasksUiInternal.displayStatus("Search failed", status);
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						TasksUiInternal.displayStatus("Search failed", status);
+					}
+				});
 			}
 		} else {
 			return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, IStatus.OK,

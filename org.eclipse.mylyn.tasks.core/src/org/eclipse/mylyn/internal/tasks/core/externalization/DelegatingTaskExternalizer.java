@@ -36,6 +36,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -141,7 +142,13 @@ final class DelegatingTaskExternalizer {
 
 	static final String KEY_STALE = "Stale";
 
+	static final String KEY_CONNECTOR_KIND = "ConnectorKind";
+
 	static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp";
+
+	static final String NODE_ATTRIBUTE = "Attribute";
+
+	static final String KEY_KEY = "Key";
 
 	private List<AbstractTaskListFactory> factories = new ArrayList<AbstractTaskListFactory>();
 
@@ -258,8 +265,21 @@ final class DelegatingTaskExternalizer {
 			createTaskReference(KEY_SUBTASK, t, doc, node);
 		}
 
+		createAttributes(task, doc, node);
+
 		parent.appendChild(node);
 		return node;
+	}
+
+	private void createAttributes(IAttributeContainer container, Document doc, Element parent) {
+		Map<String, String> attributes = container.getAttributes();
+		for (Map.Entry<String, String> entry : attributes.entrySet()) {
+			Element node = doc.createElement(NODE_ATTRIBUTE);
+			node.setAttribute(KEY_KEY, entry.getKey());
+			node.setTextContent(entry.getValue());
+			parent.appendChild(node);
+		}
+
 	}
 
 	/**
@@ -367,9 +387,24 @@ final class DelegatingTaskExternalizer {
 //		}
 		if (task != null) {
 			readTaskInfo(task, element, parent, legacyCategory);
+			readAttributes(task, element);
 		}
 
 		return task;
+	}
+
+	private void readAttributes(IAttributeContainer container, Element parent) {
+		NodeList list = parent.getChildNodes();
+		for (int i = 0; i < list.getLength(); i++) {
+			Node child = list.item(i);
+			if (child instanceof Element && child.getNodeName().equals(DelegatingTaskExternalizer.NODE_ATTRIBUTE)) {
+				Element element = (Element) child;
+				String key = element.getAttribute(KEY_PRIORITY);
+				if (key.length() > 0) {
+					container.setAttribute(key, element.getTextContent());
+				}
+			}
+		}
 	}
 
 	private void readTaskInfo(AbstractTask task, Element element, ITask parent, AbstractTaskCategory legacyCategory) {
@@ -576,6 +611,9 @@ final class DelegatingTaskExternalizer {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, e.getMessage(), e));
 			}
 		}
+
+		createAttributes(query, doc, node);
+
 		parent.appendChild(node);
 		return node;
 	}

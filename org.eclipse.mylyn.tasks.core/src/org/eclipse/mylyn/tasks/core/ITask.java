@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
  * @author Mik Kersten
  * @since 3.0
  */
-public interface ITask extends ITaskElement {
+public interface ITask extends ITaskElement, IAttributeContainer {
 
 	/**
 	 * @since 3.0

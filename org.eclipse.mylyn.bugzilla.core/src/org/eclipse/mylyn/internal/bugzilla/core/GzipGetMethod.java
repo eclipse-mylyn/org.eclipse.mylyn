@@ -69,7 +69,7 @@ public class GzipGetMethod extends GetMethod {
 	public int execute(HttpState state, HttpConnection conn) throws HttpException, IOException {
 		// Insert accept-encoding header
 		if (gzipWanted) {
-			this.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
+			//this.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
 		}
 		int result = super.execute(state, conn);
 		gzipReceived = isZippedReply();
@@ -91,7 +91,7 @@ public class GzipGetMethod extends GetMethod {
 	public InputStream getResponseBodyAsStream() throws IOException {
 		InputStream input = super.getResponseBodyAsStream();
 		if (gzipReceived) {
-			return new java.util.zip.GZIPInputStream(input);
+			//return new java.util.zip.GZIPInputStream(input);
 		}
 		return input;
 	}

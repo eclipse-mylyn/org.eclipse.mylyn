@@ -8,25 +8,18 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import java.util.Map;
 
 /**
+ * @author Steffen Pingel
  * @since 3.0
  */
-public interface IRepositoryQuery extends IAttributeContainer {
+public interface IAttributeContainer {
 
-	/**
-	 * @since 3.0
-	 */
-	public abstract String getConnectorKind();
+	public abstract String getAttribute(String key);
 
-	public abstract String getRepositoryUrl();
+	public abstract void setAttribute(String key, String value);
 
-	public abstract String getUrl();
-
-	public abstract void setUrl(String url);
-
-	public abstract String getSummary();
-
-	public abstract void setSummary(String summary);
+	public abstract Map<String, String> getAttributes();
 
 }
