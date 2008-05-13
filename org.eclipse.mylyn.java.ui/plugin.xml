@@ -373,7 +373,7 @@
         <action
                definitionId="org.eclipse.mylyn.java.ui.search.context"
                label="Search the current task context"
-               class="org.eclipse.mylyn.internal.java.ui.actions.FindReferencesInContextAction"
+               class="org.eclipse.mylyn.internal.sandbox.ui.actions.FindReferencesInContextAction"
                id="org.eclipse.mylyn.java.ui.search.context">
          </action>
         -->
