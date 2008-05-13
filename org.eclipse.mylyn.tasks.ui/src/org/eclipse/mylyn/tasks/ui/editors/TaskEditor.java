@@ -494,7 +494,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	@Override
 	public void showBusy(boolean busy) {
 		if (busy) {
-			if (TasksUiPlugin.isAnimationsEnabled()) {
+			if (TasksUiInternal.isAnimationsEnabled()) {
 				editorBusyIndicator.start();
 			}
 		} else {

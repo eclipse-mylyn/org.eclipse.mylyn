@@ -24,15 +24,17 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.LegacyChangeManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -271,13 +273,12 @@ public class TaskListToolTip extends ToolTip {
 
 	private String getIncommingText(ITaskElement element) {
 		if (element instanceof ITask) {
-			AbstractTask task = (AbstractTask) element;
+			ITask task = (ITask) element;
 			if (task.getSynchronizationState().isIncoming()) {
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						task.getConnectorKind());
-				if (connector != null) {
-					AbstractNotification notification = TasksUiPlugin.getDefault().getIncommingNotification(connector,
-							task);
+				if (connector instanceof AbstractLegacyRepositoryConnector) {
+					AbstractNotification notification = LegacyChangeManager.getIncommingNotification(connector, task);
 					if (notification != null) {
 						String res = null;
 						if (notification.getDescription() != null) {
