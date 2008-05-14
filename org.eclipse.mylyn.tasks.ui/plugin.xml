@@ -1451,29 +1451,22 @@
          <command
                commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser"
                label="Open With Browser"
+               mnemonic="O"
                style="push">
          </command>
          <menu
-               label="Open With">
+               label="Open With"
+               mnemonic="h">
             <command
                   commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInDefaultEditor"
                   label="Default Editor"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.eclipse.mylyn.tasks.ui.command4"
-                  label="Text Editor"
+                  mnemonic="D"
                   style="push">
             </command>
          </menu>
          <separator
                name="group.save">
          </separator>
-         <command
-               commandId="org.eclipse.mylyn.tasks.ui.command5"
-               label="Save"
-               style="push">
-         </command>
          <separator
                name="additions"
                visible="false">
@@ -1483,7 +1476,7 @@
             locationURI="popup:org.eclipse.ui.popup.any?before=navigate">
          <menu
                id="org.eclipse.mylyn.tasks.ui.menu.task.mark"
-               label="Mark as">
+               label="&amp;Mark as">
             <visibleWhen
                   checkEnabled="false">
                <iterate>
@@ -1505,16 +1498,19 @@
             <command
                   commandId="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
                   label="Read"
+                  mnemonic="R"
                   style="push">
             </command>
             <command
                   commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
                   label="Unread"
+                  mnemonic="U"
                   style="push">
             </command>
             <command
                   commandId="org.eclipse.mylyn.tasks.ui.command.task.clearOutgoing"
                   label="Clear Outgoing"
+                  mnemonic="C"
                   style="push">
             </command>
             <separator
@@ -1528,6 +1524,7 @@
                commandId="org.eclipse.mylyn.tasks.ui.command.markTaskComplete"
                icon="icons/etool16/task-complete.gif"
                label="Complete"
+               mnemonic="C"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -1549,6 +1546,7 @@
                commandId="org.eclipse.mylyn.tasks.ui.command.markTaskIncomplete"
                icon="icons/etool16/task-incomplete.gif"
                label="Incomplete"
+               mnemonic="I"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -1576,6 +1574,7 @@
          <command
                commandId="org.eclipse.mylyn.tasks.ui.command.goToPreviousUnread"
                label="Previous Unread Task"
+               mnemonic="P"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -1593,6 +1592,7 @@
          <command
                commandId="org.eclipse.mylyn.tasks.ui.command.goToNextUnread"
                label="Next Unread Task"
+               mnemonic="N"
                style="push">
             <visibleWhen
                   checkEnabled="false">
