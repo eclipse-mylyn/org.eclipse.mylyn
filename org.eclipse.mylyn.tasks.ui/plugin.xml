@@ -1275,13 +1275,13 @@
             commandId="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M3+R">
+            sequence="M2+M3+R">
       </key>
       <key
             commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M3+U">
+            sequence="M2+M3+U">
       </key>
       <key
             commandId="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNextUnread"
