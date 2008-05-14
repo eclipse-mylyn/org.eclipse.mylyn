@@ -242,10 +242,6 @@ public class BugzillaClient {
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
 
-			if (gzip) {
-				getMethod.setRequestHeader("Accept-encoding", "gzip");
-			}
-
 			// Resolves bug#195113
 			httpClient.getParams().setParameter("http.protocol.single-cookie-header", true);
 
@@ -648,7 +644,7 @@ public class BugzillaClient {
 
 			InputStream stream = null;
 			try {
-				WebUtil.getResponseBodyAsStream(method, monitor);
+				stream = WebUtil.getResponseBodyAsStream(method, monitor);
 				if (method.isZippedReply()) {
 					stream = getUnzippedStream(stream);
 				}
@@ -1377,7 +1373,7 @@ public class BugzillaClient {
 			} catch (IOException e) {
 				headMethod.getResponseBody();
 				headMethod.releaseConnection();
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
 			}
 
@@ -1393,7 +1389,7 @@ public class BugzillaClient {
 				authenticated = false;
 				headMethod.getResponseBody();
 				headMethod.releaseConnection();
-				throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
 						"Proxy authentication required"));
 			} else {

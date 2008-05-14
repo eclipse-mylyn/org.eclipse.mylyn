@@ -71,7 +71,7 @@ public class GzipPostMethod extends PostMethod {
 	public int execute(HttpState state, HttpConnection conn) throws HttpException, IOException {
 		// Insert accept-encoding header
 		if (gzipWanted) {
-			this.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
+			//this.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
 		}
 		int result = super.execute(state, conn);
 		return result;
@@ -97,12 +97,8 @@ public class GzipPostMethod extends PostMethod {
 	 */
 	public InputStream getResponseBodyAsUnzippedStream() throws IOException {
 		InputStream input = super.getResponseBodyAsStream();
-		if (true) {
-			try {
-				return new java.util.zip.GZIPInputStream(input);
-			} catch (IOException e) {
-				// FIXME log this
-			}
+		if (isZippedReply()) {
+			return new java.util.zip.GZIPInputStream(input);
 		}
 		return input;
 	}
