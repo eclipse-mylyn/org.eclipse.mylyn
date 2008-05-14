@@ -44,8 +44,8 @@ public class TaskRepositoryAdapterFactory implements IAdapterFactory {
 								.getRepositoryConnector(repository.getConnectorKind());
 						return null != connectorUi.getQueryWizard(repository, null) && connector.canQuery(repository);
 					} else if ("supportNewTask".equals(name)) {
-						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-								.getRepositoryConnector(repository.getConnectorKind());
+						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+								repository.getConnectorKind());
 						return connector.canCreateNewTask(repository);
 					} else if ("hasRepository".equals(name)) {
 						return !repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND);

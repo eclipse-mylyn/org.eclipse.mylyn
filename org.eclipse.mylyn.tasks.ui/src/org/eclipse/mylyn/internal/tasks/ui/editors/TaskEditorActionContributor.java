@@ -224,11 +224,12 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			IStructuredSelection selection = new StructuredSelection(task);
 			openWithBrowserAction.selectionChanged(selection);
 			copyTaskDetailsAction.selectionChanged(selection);
-			attachAction.selectionChanged(selection);
-			attachAction.setEditor(editor);
-			attachScreenshotAction.selectionChanged(selection);
-			attachScreenshotAction.setEditor(editor);
-
+			if (getPage() instanceof AbstractRepositoryTaskEditor) {
+				attachAction.selectionChanged(selection);
+				attachAction.setEditor(editor);
+				attachScreenshotAction.selectionChanged(selection);
+				attachScreenshotAction.setEditor(editor);
+			}
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
 			showInTaskListAction.selectionChanged(selection);
 
@@ -255,6 +256,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			manager.add(showInTaskListAction);
 
 			manager.add(new Separator());
+			manager.add(new GroupMarker(TaskListView.ID_SEPARATOR_OPERATIONS));
+			manager.add(new GroupMarker(TaskListView.ID_SEPARATOR_CONTEXT));
 
 			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
 				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
@@ -271,10 +274,12 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 					}
 				}
 			}
-
-			manager.add(new Separator());
-			manager.add(attachAction);
-			manager.add(attachScreenshotAction);
+			manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+			if (getPage() instanceof AbstractRepositoryTaskEditor) {
+				manager.add(new Separator());
+				manager.add(attachAction);
+				manager.add(attachScreenshotAction);
+			}
 
 			manager.add(new Separator());
 			// HACK: there should be a saner way of doing this

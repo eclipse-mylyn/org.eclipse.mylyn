@@ -13,9 +13,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,6 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
@@ -39,6 +43,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -109,7 +114,7 @@ public class AttachmentUtil {
 	 * 
 	 * @return an empty set if no contexts
 	 */
-	public static Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, ITask task) {
+	public static Set<RepositoryAttachment> getLegacyContextAttachments(TaskRepository repository, ITask task) {
 		TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
 		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
 		if (taskDataManager != null) {
@@ -127,13 +132,56 @@ public class AttachmentUtil {
 		return contextAttachments;
 	}
 
+	public static ITaskAttachment[] getContextAttachments(TaskRepository repository, ITask task) {
+		List<ITaskAttachment> contextAttachments = new ArrayList<ITaskAttachment>();
+		TaskData taskData;
+		try {
+			taskData = TasksUi.getTaskDataManager().getTaskData(task, task.getConnectorKind());
+		} catch (CoreException e) {
+			// ignore
+			return new ITaskAttachment[0];
+		}
+		if (taskData != null) {
+			TaskAttribute[] taskAttachments = taskData.getAttributeMapper().getAttributesByType(taskData,
+					TaskAttribute.TYPE_ATTACHMENT);
+			for (TaskAttribute attribute : taskAttachments) {
+				TaskAttachment taskAttachment = new TaskAttachment(repository, task, attribute);
+				taskData.getAttributeMapper().updateTaskAttachment(taskAttachment, attribute);
+				if (isContext(taskAttachment)) {
+					contextAttachments.add(taskAttachment);
+				}
+			}
+		}
+		return contextAttachments.toArray(new ITaskAttachment[0]);
+	}
+
 	public static boolean hasContext(TaskRepository repository, ITask task) {
 		if (repository == null || task == null) {
 			return false;
 		} else {
-			Set<RepositoryAttachment> remoteContextAttachments = getContextAttachments(repository, task);
+			Set<RepositoryAttachment> remoteContextAttachments = getLegacyContextAttachments(repository, task);
 			return (remoteContextAttachments != null && remoteContextAttachments.size() > 0);
 		}
+	}
+
+	public static boolean hasContextAttachment(ITask task) {
+		Assert.isNotNull(task);
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		if (connector instanceof AbstractLegacyRepositoryConnector) {
+			Set<RepositoryAttachment> remoteContextAttachments = getLegacyContextAttachments(repository, task);
+			return (remoteContextAttachments != null && remoteContextAttachments.size() > 0);
+		} else {
+			ITaskAttachment[] contextAttachments = getContextAttachments(repository, task);
+			return contextAttachments.length > 0;
+		}
+	}
+
+	public static boolean hasLocalContext(ITask task) {
+		Assert.isNotNull(task);
+		return ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 	}
 
 	@Deprecated

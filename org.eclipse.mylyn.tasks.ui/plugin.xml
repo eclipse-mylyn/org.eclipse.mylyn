@@ -1067,6 +1067,26 @@
           class="org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryAdapterFactory">
        <adapter type="org.eclipse.ui.IActionFilter"/>
     </factory>
+    <factory
+          adaptableType="org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput"
+          class="org.eclipse.mylyn.internal.tasks.ui.TasksAdapterFactory">
+       <adapter
+             type="org.eclipse.mylyn.tasks.core.ITask">
+       </adapter>
+       <adapter
+             type="org.eclipse.mylyn.tasks.core.TaskRepository">
+       </adapter>
+    </factory>
+    <factory
+          adaptableType="org.eclipse.mylyn.tasks.core.ITaskAttachment"
+          class="org.eclipse.mylyn.internal.tasks.ui.TasksAdapterFactory">
+       <adapter
+             type="org.eclipse.mylyn.tasks.core.ITask">
+       </adapter>
+       <adapter
+             type="org.eclipse.mylyn.tasks.core.TaskRepository">
+       </adapter>
+    </factory>
  </extension>
 
  <extension
@@ -1588,7 +1608,7 @@
             class="org.eclipse.mylyn.internal.tasks.ui.util.TaskPropertyTester"
             id="org.eclipse.mylyn.tasks.ui.propertyTester.task"
             namespace="org.eclipse.mylyn.task"
-            properties="connectorKink,isLocal,isCompleted"
+            properties="connectorKink,isLocal,isCompleted,canPostAttachment,canGetAttachment,hasLocalContext,hasRepositoryContext"
             type="org.eclipse.mylyn.tasks.core.ITask">
       </propertyTester>
    </extension>

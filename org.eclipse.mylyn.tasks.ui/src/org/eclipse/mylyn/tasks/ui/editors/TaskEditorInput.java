@@ -12,7 +12,6 @@ package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -90,8 +89,6 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	public Object getAdapter(Class adapter) {
 		if (adapter == IEditorInput.class) {
 			return this;
-		} else if (adapter == AbstractTask.class) {
-			return task;
 		}
 		return null;
 	}
