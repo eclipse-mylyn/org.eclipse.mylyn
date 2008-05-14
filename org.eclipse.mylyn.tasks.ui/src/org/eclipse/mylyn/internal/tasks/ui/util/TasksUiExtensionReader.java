@@ -22,7 +22,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
@@ -30,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -283,7 +283,7 @@ public class TasksUiExtensionReader {
 			if (obj instanceof AbstractDuplicateDetector) {
 				AbstractDuplicateDetector duplicateDetector = (AbstractDuplicateDetector) obj;
 				duplicateDetector.setName(element.getAttribute(ATTR_NAME));
-				duplicateDetector.setKind(element.getAttribute(ATTR_KIND));
+				duplicateDetector.setConnectorKind(element.getAttribute(ATTR_KIND));
 				TasksUiPlugin.getDefault().addDuplicateDetector(duplicateDetector);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,

@@ -12,7 +12,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * Extend to provide task duplicate detection facilities to the task editor (e.g. Java stack trace matching).
@@ -20,28 +23,22 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Gail Murphy
  * @since 3.0
  */
-public abstract class AbstractDuplicateDetector {
-
-	protected String name;
-
-	protected String kind;
+@Deprecated
+public abstract class AbstractLegacyDuplicateDetector extends AbstractDuplicateDetector {
 
 	public abstract RepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData);
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public void setKind(String kind) {
-		this.kind = kind;
-	}
-
-	public String getName() {
-		return this.name;
+		setConnectorKind(kind);
 	}
 
 	public String getKind() {
-		return this.kind;
+		return getConnectorKind();
+	}
+
+	@Override
+	public IRepositoryQuery getDuplicatesQuery(TaskRepository repository, TaskData taskData) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

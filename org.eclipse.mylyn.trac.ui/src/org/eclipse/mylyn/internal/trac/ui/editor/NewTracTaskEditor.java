@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.trac.ui.editor;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractNewRepositoryTaskEditor;
 import org.eclipse.swt.SWT;
@@ -34,7 +34,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 	}
 
 	@Override
-	public AbstractDuplicateDetector getDuplicateDetector(String name) {
+	public AbstractLegacyDuplicateDetector getDuplicateDetector(String name) {
 		return new TracDuplicateDetector();
 	}
 

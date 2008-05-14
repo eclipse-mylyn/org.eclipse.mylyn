@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
@@ -18,14 +18,14 @@ import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
-public class TracDuplicateDetector extends AbstractDuplicateDetector {
+public class TracDuplicateDetector extends AbstractLegacyDuplicateDetector {
 
 	@Override
 	public RepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
 		TracSearchFilter filter = new TracSearchFilter("description");
 		filter.setOperator(CompareOperator.CONTAINS);
 
-		String searchString = AbstractDuplicateDetector.getStackTraceFromDescription(taskData.getDescription());
+		String searchString = AbstractLegacyDuplicateDetector.getStackTraceFromDescription(taskData.getDescription());
 
 		filter.addValue(searchString);
 

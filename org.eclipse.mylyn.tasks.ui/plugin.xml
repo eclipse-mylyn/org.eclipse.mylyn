@@ -13,6 +13,13 @@
        <contextStore
              class="org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore">
        </contextStore>
+    </extension>
+    <extension
+          point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
+       <detector
+             class="org.eclipse.mylyn.internal.tasks.ui.search.StackTraceDuplicateDetector"
+             name="Stack Trace">
+       </detector>
     </extension> 
     
 	<extension point="org.eclipse.ui.views">

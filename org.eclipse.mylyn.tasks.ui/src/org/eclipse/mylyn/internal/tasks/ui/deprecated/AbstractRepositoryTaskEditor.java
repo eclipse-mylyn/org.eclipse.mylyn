@@ -78,7 +78,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
@@ -116,6 +116,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
+import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
@@ -1224,11 +1225,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	/**
 	 * @since 3.0
 	 */
-	protected AbstractDuplicateDetector getDuplicateDetector(String name) {
+	protected AbstractLegacyDuplicateDetector getDuplicateDetector(String name) {
 		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
-		Set<AbstractDuplicateDetector> allDetectors = getDuplicateDetectorList();
+		Set<AbstractLegacyDuplicateDetector> allDetectors = getDuplicateDetectorList();
 
-		for (AbstractDuplicateDetector detector : allDetectors) {
+		for (AbstractLegacyDuplicateDetector detector : allDetectors) {
 			if (detector.getName().equals(duplicateDetectorName)) {
 				return detector;
 			}
@@ -1240,13 +1241,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	/**
 	 * @since 3.0
 	 */
-	protected Set<AbstractDuplicateDetector> getDuplicateDetectorList() {
-		Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
+	protected Set<AbstractLegacyDuplicateDetector> getDuplicateDetectorList() {
+		Set<AbstractLegacyDuplicateDetector> duplicateDetectors = new HashSet<AbstractLegacyDuplicateDetector>();
 		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
 				.getDuplicateSearchCollectorsList()) {
-			if (abstractDuplicateDetector.getKind() == null
-					|| abstractDuplicateDetector.getKind().equals(getConnector().getConnectorKind())) {
-				duplicateDetectors.add(abstractDuplicateDetector);
+			if (abstractDuplicateDetector instanceof AbstractLegacyDuplicateDetector
+					&& (abstractDuplicateDetector.getConnectorKind() == null || abstractDuplicateDetector.getConnectorKind()
+							.equals(getConnector().getConnectorKind()))) {
+				duplicateDetectors.add((AbstractLegacyDuplicateDetector) abstractDuplicateDetector);
 			}
 		}
 		return duplicateDetectors;
@@ -1254,7 +1256,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public boolean searchForDuplicates() {
 		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
-		AbstractDuplicateDetector duplicateDetector = getDuplicateDetector(duplicateDetectorName);
+		AbstractLegacyDuplicateDetector duplicateDetector = getDuplicateDetector(duplicateDetectorName);
 		if (duplicateDetector != null) {
 			RepositoryQuery duplicatesQuery = duplicateDetector.getDuplicatesQuery(repository, taskData);
 			if (duplicatesQuery != null) {
@@ -1928,7 +1930,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void addDuplicateDetection(Composite composite) {
-		List<AbstractDuplicateDetector> allCollectors = new ArrayList<AbstractDuplicateDetector>();
+		List<AbstractLegacyDuplicateDetector> allCollectors = new ArrayList<AbstractLegacyDuplicateDetector>();
 		if (getDuplicateDetectorList() != null) {
 			allCollectors.addAll(getDuplicateDetectorList());
 		}
@@ -1951,15 +1953,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			duplicateDetectorChooser.setFont(TEXT_FONT);
 			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 
-			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
+			Collections.sort(allCollectors, new Comparator<AbstractLegacyDuplicateDetector>() {
 
-				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
+				public int compare(AbstractLegacyDuplicateDetector c1, AbstractLegacyDuplicateDetector c2) {
 					return c1.getName().compareToIgnoreCase(c2.getName());
 				}
 
 			});
 
-			for (AbstractDuplicateDetector detector : allCollectors) {
+			for (AbstractLegacyDuplicateDetector detector : allCollectors) {
 				duplicateDetectorChooser.add(detector.getName());
 			}
 

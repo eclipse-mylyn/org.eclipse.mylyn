@@ -5,7 +5,7 @@
 <extension
    		point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
             <detector
-                  class="org.eclipse.mylyn.internal.bugzilla.core.StackTraceDuplicateDetector"
+                  class="org.eclipse.mylyn.internal.bugzilla.core.BugzillaStackTraceDuplicateDetector"
                   kind="bugzilla"
                   name="Stack Trace">
             </detector>       

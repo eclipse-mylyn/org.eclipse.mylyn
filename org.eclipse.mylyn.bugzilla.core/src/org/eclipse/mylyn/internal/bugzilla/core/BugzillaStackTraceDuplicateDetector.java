@@ -14,14 +14,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Meghan Allen
  */
-public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
+public class BugzillaStackTraceDuplicateDetector extends AbstractLegacyDuplicateDetector {
 
 	private static final int DESCRIPTION_MAX_CHARS = 6000;
 
@@ -30,7 +30,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 	@Override
 	public RepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
 		String queryUrl = "";
-		String searchString = AbstractDuplicateDetector.getStackTraceFromDescription(taskData.getDescription());
+		String searchString = AbstractLegacyDuplicateDetector.getStackTraceFromDescription(taskData.getDescription());
 		if (searchString != null && searchString.length() > DESCRIPTION_MAX_CHARS) {
 			searchString = searchString.substring(0, DESCRIPTION_MAX_CHARS);
 		}

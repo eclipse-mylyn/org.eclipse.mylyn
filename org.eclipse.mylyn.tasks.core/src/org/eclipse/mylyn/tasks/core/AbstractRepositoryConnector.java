@@ -33,8 +33,14 @@ public abstract class AbstractRepositoryConnector {
 
 	private static final long REPOSITORY_CONFIGURATION_UPDATE_INTERVAL = 24 * 60 * 60 * 1000;
 
+	/**
+	 * @since 2.0
+	 */
 	public abstract boolean canCreateNewTask(TaskRepository repository);
 
+	/**
+	 * @since 2.0
+	 */
 	// API 3.0 rename to canCreateTaskFromId?
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
 
@@ -47,11 +53,14 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * @return the unique kind of the repository, e.g. "bugzilla"
+	 * @since 2.0
 	 */
 	public abstract String getConnectorKind();
 
 	/**
 	 * The connector's summary i.e. "JIRA (supports 3.3.1 and later)"
+	 * 
+	 * @since 2.0
 	 */
 	// API 3.0: move to AbstractRepositoryConnectorUi?
 	public abstract String getLabel();
@@ -102,18 +111,22 @@ public abstract class AbstractRepositoryConnector {
 		return null;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public abstract String getTaskIdFromTaskUrl(String taskFullUrl);
 
 	/**
 	 * Used for referring to the task in the UI.
-	 * 
-	 * @return
 	 */
 	// API 3.0 move to RepositoryConnectorUi?
 	public String getTaskIdPrefix() {
 		return "task";
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String[] getTaskIdsFromComment(TaskRepository repository, String comment) {
 		return null;
 	}
@@ -125,6 +138,9 @@ public abstract class AbstractRepositoryConnector {
 		return new TaskMapper(taskData);
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	// API 3.0 change type of taskId to AbstractTask
 	public abstract String getTaskUrl(String repositoryUrl, String taskId);
 
@@ -134,13 +150,9 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean hasChanged(ITask task, TaskData taskData);
 
 	/**
-	 * Default implementation returns true every 24hrs
-	 * 
-	 * @param monitor
-	 * 		TODO
+	 * Default implementation returns true every 24hrs.
 	 * 
 	 * @return true to indicate that the repository configuration is stale and requires update
-	 * @throws CoreException
 	 * @since 3.0
 	 */
 	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor)
@@ -154,6 +166,9 @@ public abstract class AbstractRepositoryConnector {
 		return isStale;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean isUserManaged() {
 		return true;
 	}

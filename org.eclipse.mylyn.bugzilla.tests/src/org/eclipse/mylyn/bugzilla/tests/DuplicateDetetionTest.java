@@ -14,7 +14,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
@@ -72,7 +72,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertNull(AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()));
+		assertNull(AbstractLegacyDuplicateDetector.getStackTraceFromDescription(model.getDescription()));
 
 		editor.markDirty(false);
 		editor.close();
@@ -95,7 +95,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
+		assertEquals(stackTrace, AbstractLegacyDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -124,7 +124,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
+		assertEquals(stackTrace, AbstractLegacyDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -154,7 +154,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
+		assertEquals(stackTrace, AbstractLegacyDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -180,7 +180,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
+		assertEquals(stackTrace, AbstractLegacyDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -204,7 +204,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
+		assertEquals(stackTrace, AbstractLegacyDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -231,7 +231,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
+		assertEquals(stackTrace, AbstractLegacyDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();
@@ -256,7 +256,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
-		assertEquals(stackTrace, AbstractDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
+		assertEquals(stackTrace, AbstractLegacyDuplicateDetector.getStackTraceFromDescription(model.getDescription()).trim());
 
 		editor.markDirty(false);
 		editor.close();

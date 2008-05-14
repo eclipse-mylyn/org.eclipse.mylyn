@@ -52,6 +52,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
+import org.eclipse.mylyn.internal.tasks.core.AbstractSearchHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -66,7 +67,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.TasksModel;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
@@ -76,6 +76,7 @@ import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQue
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
+import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -177,6 +178,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private TaskEditorBloatMonitor taskEditorBloatManager;
 
 	private TaskJobFactory tasksJobFactory;
+
+	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<AbstractSearchHandler>();
 
 	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient"));
 
@@ -1021,9 +1024,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public void addDuplicateDetector(AbstractDuplicateDetector duplicateDetector) {
-		if (duplicateDetector != null) {
-			duplicateDetectors.add(duplicateDetector);
-		}
+		Assert.isNotNull(duplicateDetector);
+		duplicateDetectors.add(duplicateDetector);
 	}
 
 	public Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
@@ -1150,4 +1152,23 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	public static TasksModel getTasksModel() {
 		return tasksModel;
 	}
+
+	public void addSearchHandler(AbstractSearchHandler searchHandler) {
+		searchHandlers.add(searchHandler);
+	}
+
+	public void removeSearchHandler(AbstractSearchHandler searchHandler) {
+		searchHandlers.remove(searchHandler);
+	}
+
+	public AbstractSearchHandler getSearchHandler(String connectorKind) {
+		Assert.isNotNull(connectorKind);
+		for (AbstractSearchHandler searchHandler : searchHandlers) {
+			if (searchHandler.getConnectorKind().equals(connectorKind)) {
+				return searchHandler;
+			}
+		}
+		return null;
+	}
+
 }

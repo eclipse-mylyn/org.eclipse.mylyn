@@ -15,15 +15,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
-import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
@@ -39,6 +41,9 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
+/**
+ * @author Steffen Pingel
+ */
 public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 	private static final String LABEL_SEARCH_DUPS = "Search";
@@ -56,8 +61,11 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 			allCollectors.addAll(getDuplicateSearchCollectorsList());
 		}
 		if (!allCollectors.isEmpty()) {
-			Section duplicatesSection = toolkit.createSection(composite, ExpandableComposite.TWISTIE
-					| ExpandableComposite.SHORT_TITLE_BAR);
+			int style = ExpandableComposite.TWISTIE | ExpandableComposite.SHORT_TITLE_BAR;
+			if (getTaskData().isNew()) {
+				style |= ExpandableComposite.EXPANDED;
+			}
+			Section duplicatesSection = toolkit.createSection(composite, style);
 			duplicatesSection.setText(LABEL_SELECT_DETECTOR);
 			duplicatesSection.setLayout(new GridLayout());
 			GridDataFactory.fillDefaults().indent(SWT.DEFAULT, 15).applyTo(duplicatesSection);
@@ -124,44 +132,48 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		toolBar.add(replyAction);
 	}
 
-	protected RepositoryQuery getDuplicateSearchCollector(String name) {
+	protected IRepositoryQuery getDuplicateQuery(String name) throws CoreException {
 		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
-		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
-
-		for (AbstractDuplicateDetector detector : allDetectors) {
+		for (AbstractDuplicateDetector detector : getDuplicateSearchCollectorsList()) {
 			if (detector.getName().equals(duplicateDetectorName)) {
-				return detector.getDuplicatesQuery(getTaskEditorPage().getTaskRepository(), TaskDataUtil.toLegacyData(
-						getTaskData(), IdentityAttributeFactory.getInstance()));
+				return detector.getDuplicatesQuery(getTaskEditorPage().getTaskRepository(), getTaskData());
 			}
 		}
-		// didn't find it
 		return null;
 	}
 
 	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
 		Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
-		for (AbstractDuplicateDetector abstractDuplicateDetector : TasksUiPlugin.getDefault()
-				.getDuplicateSearchCollectorsList()) {
-			if (abstractDuplicateDetector.getKind() == null
-					|| abstractDuplicateDetector.getKind().equals(getTaskEditorPage().getConnectorKind())) {
-				duplicateDetectors.add(abstractDuplicateDetector);
+		for (AbstractDuplicateDetector detector : TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList()) {
+			if (isValidDuplicateDetector(detector)) {
+				duplicateDetectors.add(detector);
 			}
 		}
 		return duplicateDetectors;
 	}
 
-	public boolean searchForDuplicates(String duplicateDetectorName) {
-		RepositoryQuery duplicatesQuery = getDuplicateSearchCollector(duplicateDetectorName);
-		if (duplicatesQuery != null) {
-			SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(),
-					getTaskEditorPage().getTaskRepository(), duplicatesQuery);
-			if (collector != null) {
-				NewSearchUI.runQueryInBackground(collector);
-				return true;
-			}
-		}
+	@SuppressWarnings( { "deprecation", "restriction" })
+	private boolean isValidDuplicateDetector(AbstractDuplicateDetector detector) {
+		return !(detector instanceof AbstractLegacyDuplicateDetector) //
+				&& (detector.getConnectorKind() == null || detector.getConnectorKind().equals(
+						getTaskEditorPage().getConnectorKind())) //
+				&& detector.canQuery(getTaskData());
+	}
 
-		return false;
+	public void searchForDuplicates(String duplicateDetectorName) {
+		try {
+			IRepositoryQuery duplicatesQuery = getDuplicateQuery(duplicateDetectorName);
+			if (duplicatesQuery != null) {
+				SearchHitCollector collector = new SearchHitCollector(TasksUiInternal.getTaskList(),
+						getTaskEditorPage().getTaskRepository(), duplicatesQuery);
+				NewSearchUI.runQueryInBackground(collector);
+			} else {
+				TasksUiInternal.displayStatus("Duplicate Detection Failed", new Status(IStatus.ERROR,
+						TasksUiPlugin.ID_PLUGIN, "The duplicate detector did not return a valid query."));
+			}
+		} catch (CoreException e) {
+			TasksUiInternal.displayStatus("Duplicate Detection Failed", e.getStatus());
+		}
 	}
 
 }
