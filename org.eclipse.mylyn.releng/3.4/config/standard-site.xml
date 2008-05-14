@@ -32,6 +32,6 @@
    </feature>
    <category-def name="Features" label="Mylyn Features"/>
    <category-def name="Integration" label="Mylyn Integration"/>
-   <category-def name="SDK" label="Mylyn Development"/>
+   <category-def name="SDK" label="Mylyn Plug-in Development"/>
 </site>
 
