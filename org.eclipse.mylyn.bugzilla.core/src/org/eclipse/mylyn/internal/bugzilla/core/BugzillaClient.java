@@ -525,8 +525,7 @@ public class BugzillaClient {
 				}
 			}
 
-			parseHtmlError(new BufferedReader(new InputStreamReader(getResponseStream(postMethod, monitor),
-					characterEncoding)));
+			parseHtmlError(getResponseStream(postMethod, monitor));
 		} finally {
 			if (postMethod != null) {
 				postMethod.releaseConnection();
@@ -614,11 +613,9 @@ public class BugzillaClient {
 					}
 
 				}
-				parseHtmlError(new BufferedReader(new InputStreamReader(stream, characterEncoding)));
+				parseHtmlError(stream);
 			} finally {
-				if (stream != null) {
-					stream.close();
-				}
+				stream.close();
 			}
 			return null;
 		} finally {
@@ -691,9 +688,7 @@ public class BugzillaClient {
 			if (status == HttpStatus.SC_OK) {
 				InputStream input = getResponseStream(postMethod, monitor);
 				try {
-					InputStreamReader reader = new InputStreamReader(input, postMethod.getResponseCharSet());
-					BufferedReader bufferedReader = new BufferedReader(reader);
-					parseHtmlError(bufferedReader);
+					parseHtmlError(input);
 				} finally {
 					input.close();
 				}
@@ -860,7 +855,7 @@ public class BugzillaClient {
 				} catch (IOException e) {
 					// ignore
 				}
-				parseHtmlError(in);
+				parseHtmlError(input);
 			}
 
 			return result;
@@ -1031,7 +1026,10 @@ public class BugzillaClient {
 	/**
 	 * Utility method for determining what potential error has occurred from a bugzilla html reponse page
 	 */
-	public void parseHtmlError(BufferedReader in) throws IOException, CoreException {
+	public void parseHtmlError(InputStream inputStream) throws IOException, CoreException {
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, characterEncoding));
+
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
 		boolean isTitle = false;
@@ -1241,8 +1239,7 @@ public class BugzillaClient {
 				}
 
 				if (!parseable) {
-					parseHtmlError(new BufferedReader(new InputStreamReader(getResponseStream(method, monitor),
-							characterEncoding)));
+					parseHtmlError(getResponseStream(method, monitor));
 					break;
 				}
 
