@@ -307,11 +307,12 @@ public class BugzillaClient {
 		GzipGetMethod method = null;
 		try {
 			method = getConnect(loginUrl, monitor);
-			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
-			if (method.isZippedReply()) {
-				in = getUnzippedStream(in);
-			}
+			InputStream in = null;
 			try {
+				in = WebUtil.getResponseBodyAsStream(method, monitor);
+				if (method.isZippedReply()) {
+					in = getUnzippedStream(in);
+				}
 				BufferedReader responseReader = new BufferedReader(new InputStreamReader(in, characterEncoding));
 
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
@@ -334,7 +335,9 @@ public class BugzillaClient {
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Logout unsuccessful."));
 			} finally {
-				in.close();
+				if (in != null) {
+					in.close();
+				}
 			}
 		} catch (ParseException e) {
 			authenticated = false;
@@ -516,15 +519,22 @@ public class BugzillaClient {
 				Header responseTypeHeader = postMethod.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-						InputStream stream = WebUtil.getResponseBodyAsStream(postMethod, monitor);
-						if (postMethod.isZippedReply()) {
-							stream = getUnzippedStream(stream);
+						InputStream stream = null;
+						try {
+							stream = WebUtil.getResponseBodyAsStream(postMethod, monitor);
+							if (postMethod.isZippedReply()) {
+								stream = getUnzippedStream(stream);
+							}
+							RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(stream,
+									characterEncoding);
+							int count = queryFactory.performQuery(repositoryUrl.toString(),
+									(LegacyTaskDataCollector) collector, TaskDataCollector.MAX_HITS);
+							return count > 0;
+						} finally {
+							if (stream != null) {
+								stream.close();
+							}
 						}
-						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(stream,
-								characterEncoding);
-						int count = queryFactory.performQuery(repositoryUrl.toString(),
-								(LegacyTaskDataCollector) collector, TaskDataCollector.MAX_HITS);
-						return count > 0;
 					}
 				}
 			}
@@ -636,11 +646,12 @@ public class BugzillaClient {
 				throw new IOException("Could not retrieve configuratoin. HttpClient return null method.");
 			}
 
-			InputStream stream = WebUtil.getResponseBodyAsStream(method, monitor);
-			if (method.isZippedReply()) {
-				stream = getUnzippedStream(stream);
-			}
+			InputStream stream = null;
 			try {
+				WebUtil.getResponseBodyAsStream(method, monitor);
+				if (method.isZippedReply()) {
+					stream = getUnzippedStream(stream);
+				}
 				if (method.getResponseHeader("Content-Type") != null) {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
@@ -659,7 +670,9 @@ public class BugzillaClient {
 				}
 				parseHtmlError(new BufferedReader(new InputStreamReader(stream, characterEncoding)));
 			} finally {
-				stream.close();
+				if (stream != null) {
+					stream.close();
+				}
 			}
 			return null;
 		} finally {
@@ -828,7 +841,9 @@ public class BugzillaClient {
 			}
 			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
 					method.getRequestCharSet()));
-			in.mark(1028);
+			if (in.markSupported()) {
+				in.mark(1028);
+			}
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
 			boolean existingBugPosted = false;
@@ -891,7 +906,9 @@ public class BugzillaClient {
 
 			if ((!taskData.isNew() && existingBugPosted != true) || (taskData.isNew() && result == null)) {
 				try {
-					in.reset();
+					if (in.markSupported()) {
+						in.reset();
+					}
 				} catch (IOException e) {
 					// ignore
 				}
@@ -1173,11 +1190,12 @@ public class BugzillaClient {
 			String url = repositoryUrl + IBugzillaConstants.SHOW_ACTIVITY + taskId;
 			method = getConnectGzip(url, monitor);
 			if (method != null) {
-				InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
-				if (method.isZippedReply()) {
-					in = getUnzippedStream(in);
-				}
+				InputStream in = null;
 				try {
+					in = WebUtil.getResponseBodyAsStream(method, monitor);
+					if (method.isZippedReply()) {
+						in = getUnzippedStream(in);
+					}
 					BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(in, characterEncoding);
 					try {
 						return parser.retrieveHistory(bugzillaLanguageSettings);
@@ -1193,7 +1211,9 @@ public class BugzillaClient {
 										+ repositoryUrl.toString() + "."));
 					}
 				} finally {
-					in.close();
+					if (in != null) {
+						in.close();
+					}
 				}
 			}
 
@@ -1250,26 +1270,33 @@ public class BugzillaClient {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-							InputStream input = WebUtil.getResponseBodyAsStream(method, monitor);
-							if (method.isZippedReply()) {
-								input = getUnzippedStream(input);
-							}
-							MultiBugReportFactory factory = new MultiBugReportFactory(input, characterEncoding);
-
-							LegacyTaskDataCollector collector2 = new LegacyTaskDataCollector() {
-
-								@Override
-								public void accept(RepositoryTaskData taskData) {
-									getRepositoryConfiguration().configureTaskData(taskData);
-									((LegacyTaskDataCollector) collector).accept(taskData);
-									monitor.worked(1);
+							InputStream input = null;
+							try {
+								input = WebUtil.getResponseBodyAsStream(method, monitor);
+								if (method.isZippedReply()) {
+									input = getUnzippedStream(input);
 								}
-							};
+								MultiBugReportFactory factory = new MultiBugReportFactory(input, characterEncoding);
 
-							factory.populateReport(taskDataMap, collector2, customFields);
-							taskIds.removeAll(idsToRetrieve);
-							parseable = true;
-							break;
+								LegacyTaskDataCollector collector2 = new LegacyTaskDataCollector() {
+
+									@Override
+									public void accept(RepositoryTaskData taskData) {
+										getRepositoryConfiguration().configureTaskData(taskData);
+										((LegacyTaskDataCollector) collector).accept(taskData);
+										monitor.worked(1);
+									}
+								};
+
+								factory.populateReport(taskDataMap, collector2, customFields);
+								taskIds.removeAll(idsToRetrieve);
+								parseable = true;
+								break;
+							} finally {
+								if (input != null) {
+									input.close();
+								}
+							}
 						}
 					}
 				}
