@@ -34,6 +34,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
@@ -55,6 +56,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer;
 import org.eclipse.mylyn.commons.net.HtmlTag;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.commons.net.WebClientUtil;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
@@ -250,9 +252,6 @@ public class BugzillaClient {
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 
-//			if (!isValidation) {
-//				getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
-//			}
 			getMethod.setDoAuthentication(true);
 
 			int code;
@@ -303,12 +302,8 @@ public class BugzillaClient {
 		GzipGetMethod method = null;
 		try {
 			method = getConnect(loginUrl, monitor);
-			InputStream in = null;
+			InputStream in = getResponseStream(method, monitor);
 			try {
-				in = WebUtil.getResponseBodyAsStream(method, monitor);
-				if (method.isZippedReply()) {
-					in = getUnzippedStream(in);
-				}
 				BufferedReader responseReader = new BufferedReader(new InputStreamReader(in, characterEncoding));
 
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
@@ -331,9 +326,7 @@ public class BugzillaClient {
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Logout unsuccessful."));
 			} finally {
-				if (in != null) {
-					in.close();
-				}
+				in.close();
 			}
 		} catch (ParseException e) {
 			authenticated = false;
@@ -346,18 +339,24 @@ public class BugzillaClient {
 		}
 	}
 
-	private InputStream getUnzippedStream(InputStream input) throws IOException {
-		if (input.markSupported()) {
-			input.mark(3);
+	private InputStream getResponseStream(HttpMethodBase method, IProgressMonitor monitor) throws IOException {
+		InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
+		if (isZippedReply(method)) {
+			in = new java.util.zip.GZIPInputStream(in);
 		}
-		try {
-			return new java.util.zip.GZIPInputStream(input);
-		} catch (IOException e) {
-			if (input.markSupported()) {
-				input.reset();
-			}
-		}
-		return input;
+		return in;
+	}
+
+	private boolean isZippedReply(HttpMethodBase method) {
+		// content-encoding:gzip can be set by a dedicated perl script or mod_gzip
+		boolean zipped = (null != method.getResponseHeader("Content-encoding") && method.getResponseHeader(
+				"Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP))
+				||
+				// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
+				(null != method.getResponseHeader("Content-Type") && method.getResponseHeader("Content-Type")
+						.getValue()
+						.equals("application/x-gzip"));
+		return zipped;
 	}
 
 	public void authenticate(IProgressMonitor monitor) throws CoreException {
@@ -386,10 +385,6 @@ public class BugzillaClient {
 					+ characterEncoding);
 			postMethod.setRequestBody(formData);
 			postMethod.setDoAuthentication(true);
-//			if (!isValidation) {
-//				postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
-//			}
-			// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebUtil.CONNNECT_TIMEOUT);
 			postMethod.setFollowRedirects(false);
 
 			httpClient.getParams().setAuthenticationPreemptive(true);
@@ -419,26 +414,28 @@ public class BugzillaClient {
 			}
 
 			if (hasAuthenticationCredentials()) {
-				BufferedReader responseReader = new BufferedReader(new InputStreamReader(
-						postMethod.getResponseBodyAsStream(), characterEncoding));
 
-				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
-				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-					if (token.getType() == Token.TAG) {
-						HtmlTag tag = (HtmlTag) token.getValue();
-						if (tag.getTagType() == Tag.A) {
-							String id = tag.getAttribute("href");
-							if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
-								// throw new
-								// LoginException(IBugzillaConstants.INVALID_CREDENTIALS);
-								responseReader.close();
-								authenticated = false;
-								throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-										RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
-										IBugzillaConstants.INVALID_CREDENTIALS));
+				InputStream input = getResponseStream(postMethod, monitor);
+				try {
+					BufferedReader responseReader = new BufferedReader(new InputStreamReader(input, characterEncoding));
+					HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
+					for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+						if (token.getType() == Token.TAG) {
+							HtmlTag tag = (HtmlTag) token.getValue();
+							if (tag.getTagType() == Tag.A) {
+								String id = tag.getAttribute("href");
+								if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
+									responseReader.close();
+									authenticated = false;
+									throw new CoreException(new BugzillaStatus(IStatus.ERROR,
+											BugzillaCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
+											repositoryUrl.toString(), IBugzillaConstants.INVALID_CREDENTIALS));
+								}
 							}
 						}
 					}
+				} finally {
+					input.close();
 				}
 			}
 			authenticated = true;
@@ -510,32 +507,25 @@ public class BugzillaClient {
 
 			postMethod = postFormData(IBugzillaConstants.URL_BUGLIST, pairs.toArray(new NameValuePair[pairs.size()]),
 					monitor);
-			//System.err.println(postMethod.getResponseBodyAsString());
 			if (postMethod.getResponseHeader("Content-Type") != null) {
 				Header responseTypeHeader = postMethod.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-						InputStream stream = null;
+						InputStream stream = getResponseStream(postMethod, monitor);
 						try {
-							stream = WebUtil.getResponseBodyAsStream(postMethod, monitor);
-							if (postMethod.isZippedReply()) {
-								stream = getUnzippedStream(stream);
-							}
 							RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(stream,
 									characterEncoding);
 							int count = queryFactory.performQuery(repositoryUrl.toString(),
 									(LegacyTaskDataCollector) collector, TaskDataCollector.MAX_HITS);
 							return count > 0;
 						} finally {
-							if (stream != null) {
-								stream.close();
-							}
+							stream.close();
 						}
 					}
 				}
 			}
 
-			parseHtmlError(new BufferedReader(new InputStreamReader(postMethod.getResponseBodyAsStream(),
+			parseHtmlError(new BufferedReader(new InputStreamReader(getResponseStream(postMethod, monitor),
 					characterEncoding)));
 		} finally {
 			if (postMethod != null) {
@@ -544,42 +534,6 @@ public class BugzillaClient {
 		}
 		return false;
 	}
-
-//	/**
-//	 * Returns ids of bugs that match given query
-//	 */
-//	public Set<String> getSearchHits(AbstractRepositoryQuery query) throws IOException, CoreException {
-//		GetMethod method = null;
-//		try {
-//			String queryUrl = query.getUrl();
-//			// Test that we don't specify content type twice.
-//			// Should only be specified here (not in passed in url if possible)
-//			if (!queryUrl.contains("ctype=rdf")) {
-//				queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
-//			}
-//
-//			method = getConnect(queryUrl);
-//			if (method.getResponseHeader("Content-Type") != null) {
-//				Header responseTypeHeader = method.getResponseHeader("Content-Type");
-//				for (String type : VALID_CONFIG_CONTENT_TYPES) {
-//					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-//						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
-//								.getResponseBodyAsStream(), characterEncoding);
-//						queryFactory.performQuery(repositoryUrl.toString(), QueryHitCollector.MAX_HITS);
-//
-//						return queryFactory.getHits();
-//					}
-//				}
-//			}
-//			parseHtmlError(new BufferedReader(
-//					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
-//		} finally {
-//			if (method != null) {
-//				method.releaseConnection();
-//			}
-//		}
-//		return new HashSet<String>();
-//	}
 
 	public static void setupExistingBugAttributes(String serverUrl, RepositoryTaskData existingReport) {
 		// ordered list of elements as they appear in UI
@@ -642,12 +596,8 @@ public class BugzillaClient {
 				throw new IOException("Could not retrieve configuratoin. HttpClient return null method.");
 			}
 
-			InputStream stream = null;
+			InputStream stream = getResponseStream(method, monitor);
 			try {
-				stream = WebUtil.getResponseBodyAsStream(method, monitor);
-				if (method.isZippedReply()) {
-					stream = getUnzippedStream(stream);
-				}
 				if (method.getResponseHeader("Content-Type") != null) {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
@@ -683,10 +633,7 @@ public class BugzillaClient {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
 		GzipGetMethod method = getConnectGzip(url, monitor);
 		try {
-			InputStream input = WebUtil.getResponseBodyAsStream(method, monitor);
-			if (method.isZippedReply()) {
-				input = getUnzippedStream(input);
-			}
+			InputStream input = getResponseStream(method, monitor);
 			return input;
 		} catch (IOException e) {
 			method.releaseConnection();
@@ -740,14 +687,16 @@ public class BugzillaClient {
 
 			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));
 			postMethod.setDoAuthentication(true);
-			// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 			int status = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
 			if (status == HttpStatus.SC_OK) {
-				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsStream(),
-						postMethod.getResponseCharSet());
-				BufferedReader bufferedReader = new BufferedReader(reader);
-
-				parseHtmlError(bufferedReader);
+				InputStream input = getResponseStream(postMethod, monitor);
+				try {
+					InputStreamReader reader = new InputStreamReader(input, postMethod.getResponseCharSet());
+					BufferedReader bufferedReader = new BufferedReader(reader);
+					parseHtmlError(bufferedReader);
+				} finally {
+					input.close();
+				}
 
 			} else {
 				postMethod.getResponseBodyNoop();
@@ -825,6 +774,7 @@ public class BugzillaClient {
 
 		String result = null;
 		GzipPostMethod method = null;
+		InputStream input = null;
 		try {
 			if (taskData.isNew()) {
 				method = postFormData(POST_BUG_CGI, formData, monitor);
@@ -835,8 +785,10 @@ public class BugzillaClient {
 			if (method == null) {
 				throw new IOException("Could not post form, client returned null method.");
 			}
-			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
-					method.getRequestCharSet()));
+
+			input = getResponseStream(method, monitor);
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(input, method.getRequestCharSet()));
 			if (in.markSupported()) {
 				in.mark(1028);
 			}
@@ -917,6 +869,9 @@ public class BugzillaClient {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 		} finally {
+			if (input != null) {
+				input.close();
+			}
 			if (method != null) {
 				method.releaseConnection();
 			}
@@ -1186,12 +1141,8 @@ public class BugzillaClient {
 			String url = repositoryUrl + IBugzillaConstants.SHOW_ACTIVITY + taskId;
 			method = getConnectGzip(url, monitor);
 			if (method != null) {
-				InputStream in = null;
+				InputStream in = getResponseStream(method, monitor);
 				try {
-					in = WebUtil.getResponseBodyAsStream(method, monitor);
-					if (method.isZippedReply()) {
-						in = getUnzippedStream(in);
-					}
 					BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(in, characterEncoding);
 					try {
 						return parser.retrieveHistory(bugzillaLanguageSettings);
@@ -1207,9 +1158,7 @@ public class BugzillaClient {
 										+ repositoryUrl.toString() + "."));
 					}
 				} finally {
-					if (in != null) {
-						in.close();
-					}
+					in.close();
 				}
 			}
 
@@ -1266,12 +1215,8 @@ public class BugzillaClient {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
 						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-							InputStream input = null;
+							InputStream input = getResponseStream(method, monitor);
 							try {
-								input = WebUtil.getResponseBodyAsStream(method, monitor);
-								if (method.isZippedReply()) {
-									input = getUnzippedStream(input);
-								}
 								MultiBugReportFactory factory = new MultiBugReportFactory(input, characterEncoding);
 
 								LegacyTaskDataCollector collector2 = new LegacyTaskDataCollector() {
@@ -1289,16 +1234,14 @@ public class BugzillaClient {
 								parseable = true;
 								break;
 							} finally {
-								if (input != null) {
-									input.close();
-								}
+								input.close();
 							}
 						}
 					}
 				}
 
 				if (!parseable) {
-					parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+					parseHtmlError(new BufferedReader(new InputStreamReader(getResponseStream(method, monitor),
 							characterEncoding)));
 					break;
 				}

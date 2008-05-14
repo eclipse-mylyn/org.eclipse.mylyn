@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
@@ -44,34 +43,11 @@ public class GzipPostMethod extends PostMethod {
 		this.gzipWanted = gzipWanted;
 	}
 
-	/**
-	 * @return true if payload is zipped in any way. Two situations possible:<br />
-	 * 	<ul>
-	 * 	<li>content-encoding:gzip can be set by a dedicated perl script or mod_gzip</li>
-	 * 	<li>content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix</li>
-	 * 	</ul>
-	 */
-	public boolean isZippedReply() {
-		if (this.getResponseHeader("Content-encoding") == null) {
-			return false;
-		}
-
-		// content-encoding:gzip can be set by a dedicated perl script or mod_gzip
-		boolean zipped = (null != this.getResponseHeader("Content-encoding") && this.getResponseHeader(
-				"Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP))
-				||
-				// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
-				(null != this.getResponseHeader("Content-Type") && this.getResponseHeader("Content-Type")
-						.getValue()
-						.equals("application/x-gzip"));
-		return zipped;
-	}
-
 	@Override
 	public int execute(HttpState state, HttpConnection conn) throws HttpException, IOException {
 		// Insert accept-encoding header
 		if (gzipWanted) {
-			//this.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
+			this.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
 		}
 		int result = super.execute(state, conn);
 		return result;
@@ -86,20 +62,5 @@ public class GzipPostMethod extends PostMethod {
 	public void getResponseBodyNoop() throws IOException {
 		// result is ignored
 		super.getResponseBody();
-	}
-
-	/**
-	 * getResponseBodyAsUnzippedStream checks a usable (decoded if necessary) stream. It checks the headers the headers
-	 * and decides accordingly.
-	 * 
-	 * @return a decoded stream to be used as plain stream.
-	 * @throws IOException
-	 */
-	public InputStream getResponseBodyAsUnzippedStream() throws IOException {
-		InputStream input = super.getResponseBodyAsStream();
-		if (isZippedReply()) {
-			return new java.util.zip.GZIPInputStream(input);
-		}
-		return input;
 	}
 }
