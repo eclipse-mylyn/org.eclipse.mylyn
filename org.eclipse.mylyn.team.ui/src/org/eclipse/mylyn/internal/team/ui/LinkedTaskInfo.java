@@ -16,6 +16,7 @@ import org.eclipse.team.internal.core.subscribers.ChangeSet;
  * Default implementation of {@link AbstractTaskReference}
  * 
  * @author Eugene Kuleshov
+ * @author Mik Kersten
  */
 public class LinkedTaskInfo extends AbstractTaskReference {
 
