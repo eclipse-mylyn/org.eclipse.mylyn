@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.ui.commands.ClearContextHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -21,7 +22,9 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @deprecated use {@link ClearContextHandler} instead
  */
+@Deprecated
 public class ContextClearAction extends TaskContextAction {
 
 	public static final String ID = "org.eclipse.mylyn.ui.clear.context";

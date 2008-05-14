@@ -120,12 +120,6 @@
 	  </preservedFilters> 
    </extension> 
     
-   <extension point="org.eclipse.mylyn.tasks.ui.actions">  
-      <dynamicPopupMenu
-            class="org.eclipse.mylyn.internal.context.ui.actions.ContextMenuContributor"
-            menuPath="context"/>
-   </extension>
-    
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -266,8 +260,8 @@
                               
    <extension point="org.eclipse.ui.commands">
       <category
-            name="Mylyn UI"
-            description="Mylyn UI Commands"
+            name="Focused UI"
+            description="Mylyn Task-Focused UI"
             id="org.eclipse.mylyn.context.ui.commands">
       </category>
       <command
@@ -298,9 +292,31 @@
                optional="false">
          </commandParameter>
       </command>
-      <command id="org.eclipse.mylyn.ui.context.capture.pause.command"
-               name="Pause Capturing Context"
-               defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.ContextCapturePauseHandler"/>
+      <command
+            categoryId="org.eclipse.mylyn.context.ui.commands"
+            defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.ContextCapturePauseHandler"
+            id="org.eclipse.mylyn.ui.context.capture.pause.command"
+            name="Pause Capturing Context"/>
+      <command
+            categoryId="org.eclipse.mylyn.context.ui.commands"
+            id="org.eclipse.mylyn.context.ui.commands.task.attachContext"
+            name="Attach Context">
+      </command>
+      <command
+            categoryId="org.eclipse.mylyn.context.ui.commands"
+            id="org.eclipse.mylyn.context.ui.commands.task.retrieveContext"
+            name="Retrieve Context">
+      </command>
+      <command
+            categoryId="org.eclipse.mylyn.context.ui.commands"
+            id="org.eclipse.mylyn.context.ui.commands.task.copyContext"
+            name="Copy Context">
+      </command>
+      <command
+            categoryId="org.eclipse.mylyn.context.ui.commands"
+            id="org.eclipse.mylyn.context.ui.commands.task.clearContext"
+            name="Clear Context">
+      </command>
    </extension>
      
    <extension point="org.eclipse.ui.bindings">     
@@ -378,5 +394,146 @@
   		</action> 
   	</viewContribution>
    </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          locationURI="popup:org.eclipse.ui.popup.any?after=operations">
+       <menu
+             id="org.eclipse.mylyn.context.ui.menu.task.context"
+             label="Context">
+          <visibleWhen
+                checkEnabled="false">
+             <and>
+                <count
+                      value="1">
+                </count>
+                <iterate>
+                   <adapt
+                         type="org.eclipse.mylyn.tasks.core.ITask">
+                   </adapt>
+                </iterate>
+             </and>
+          </visibleWhen>
+          <separator
+                name="group.repository"
+                visible="true">
+          </separator>
+          <command
+                commandId="org.eclipse.mylyn.context.ui.commands.task.attachContext"
+                icon="icons/etool16/context-attach.gif"
+                label="Attach..."
+                style="push">
+          </command>
+          <command
+                commandId="org.eclipse.mylyn.context.ui.commands.task.retrieveContext"
+                icon="icons/etool16/context-retrieve.gif"
+                label="Retrieve..."
+                style="push">
+          </command>
+          <separator
+                name="group.local"
+                visible="true">
+          </separator>
+          <command
+                commandId="org.eclipse.mylyn.context.ui.commands.task.copyContext"
+                icon="icons/elcl16/context-transfer.gif"
+                label="Copy to..."
+                style="push">
+          </command>
+          <command
+                commandId="org.eclipse.mylyn.context.ui.commands.task.clearContext"
+                icon="icons/elcl16/context-clear.gif"
+                label="Clear"
+                style="push">
+          </command>
+          <separator
+                name="additions">
+          </separator>
+       </menu>
+    </menuContribution>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.eclipse.mylyn.internal.context.ui.commands.AttachContextHandler"
+          commandId="org.eclipse.mylyn.context.ui.commands.task.attachContext">
+       <enabledWhen>
+          <iterate
+                ifEmpty="false"
+                operator="and">
+             <and>
+                <instanceof
+                      value="org.eclipse.mylyn.tasks.core.ITask">
+                </instanceof>
+                <test
+                      property="org.eclipse.mylyn.task.canPostAttachment"
+                      value="true">
+                </test>
+             </and>
+          </iterate>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextHandler"
+          commandId="org.eclipse.mylyn.context.ui.commands.task.retrieveContext">
+       <enabledWhen>
+          <iterate
+                ifEmpty="false"
+                operator="and">
+             <and>
+                <instanceof
+                      value="org.eclipse.mylyn.tasks.core.ITask">
+                </instanceof>
+                <test
+                      property="org.eclipse.mylyn.task.canPostAttachment"
+                      value="true">
+                </test>
+                <test
+                      property="org.eclipse.mylyn.task.hasRepositoryContext"
+                      value="true">
+                </test>
+             </and>
+          </iterate>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.eclipse.mylyn.internal.context.ui.commands.CopyContextHandler"
+          commandId="org.eclipse.mylyn.context.ui.commands.task.copyContext">
+       <enabledWhen>
+          <iterate
+                ifEmpty="false"
+                operator="and">
+             <and>
+                <instanceof
+                      value="org.eclipse.mylyn.tasks.core.ITask">
+                </instanceof>
+                <test
+                      property="org.eclipse.mylyn.task.hasLocalContext"
+                      value="true">
+                </test>
+             </and>
+          </iterate>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.eclipse.mylyn.internal.context.ui.commands.ClearContextHandler"
+          commandId="org.eclipse.mylyn.context.ui.commands.task.clearContext">
+       <enabledWhen>
+          <iterate
+                ifEmpty="false"
+                operator="and">
+             <and>
+                <instanceof
+                      value="org.eclipse.mylyn.tasks.core.ITask">
+                </instanceof>
+                <test
+                      property="org.eclipse.mylyn.task.hasLocalContext"
+                      value="true">
+                </test>
+             </and>
+          </iterate>
+       </enabledWhen>
+    </handler>
+ </extension>
    
 </plugin>

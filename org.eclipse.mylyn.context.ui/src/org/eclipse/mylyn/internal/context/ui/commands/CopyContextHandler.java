@@ -6,54 +6,30 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.context.ui.actions;
+package org.eclipse.mylyn.internal.context.ui.commands;
 
-import org.eclipse.jface.action.IAction;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.internal.context.ui.commands.CopyContextHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
+import org.eclipse.mylyn.internal.tasks.ui.commands.AbstractTaskHandler;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * @author Mik Kersten
- * @deprecated use {@link CopyContextHandler} instead
+ * @author Steffen Pingel
  */
-@Deprecated
-public class ContextCopyAction extends TaskContextAction {
-
-	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.copy.context.to";
-
-	public ContextCopyAction() {
-		setText("Copy to...");
-		setToolTipText("Copy Task Context to...");
-		setId(ID_ACTION);
-		setImageDescriptor(TasksUiImages.CONTEXT_TRANSFER);
-	}
-
-	public void init(IViewPart view) {
-		// ignore
-	}
+public class CopyContextHandler extends AbstractTaskHandler {
 
 	@Override
-	public void run() {
-		run(getSelectedTask(selection));
-	}
-
-	public void run(IAction action) {
-		run(getSelectedTask(selection));
-	}
-
-	public void run(ITask sourceTask) {
+	protected void execute(ExecutionEvent event, ITask sourceTask) throws ExecutionException {
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					ITasksUiConstants.TITLE_DIALOG, "No source task selected.");
@@ -104,4 +80,5 @@ public class ContextCopyAction extends TaskContextAction {
 					ITasksUiConstants.TITLE_DIALOG, "No target task selected.");
 		}
 	}
+
 }

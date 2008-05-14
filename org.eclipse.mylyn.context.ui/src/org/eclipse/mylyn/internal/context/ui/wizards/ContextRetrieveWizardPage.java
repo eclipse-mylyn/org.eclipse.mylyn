@@ -119,7 +119,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 		List<RepositoryAttachment> contextAttachments = new ArrayList<RepositoryAttachment>();
 		if (connector.getAttachmentHandler() != null) {
-			contextAttachments = new ArrayList<RepositoryAttachment>(AttachmentUtil.getContextAttachments(repository,
+			contextAttachments = new ArrayList<RepositoryAttachment>(AttachmentUtil.getLegacyContextAttachments(repository,
 					task));
 		}
 

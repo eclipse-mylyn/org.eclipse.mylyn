@@ -16,10 +16,10 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.context.ui.ContextUiUtil;
+import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextAttachmentHandler;
+import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextHandler;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextRetrieveWizard;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -38,14 +38,14 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
+ * @deprecated use {@link RetrieveContextHandler} or {@link RetrieveContextAttachmentHandler} instead
  */
+@Deprecated
 public class ContextRetrieveAction extends Action implements IViewActionDelegate {
 
 	private AbstractTask task;
 
 	private TaskRepository repository;
-
-	private AbstractLegacyRepositoryConnector connector;
 
 	private StructuredSelection selection;
 
@@ -113,7 +113,6 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
-
 		if (selectedTask == null) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			this.selection = structuredSelection;
@@ -128,11 +127,7 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 		} else {
 			task = selectedTask;
 			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
-			connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
-					task.getConnectorKind());
-			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
-			action.setEnabled(handler != null && handler.canDownloadAttachment(repository, task)
-					&& connector.getAttachmentHandler() != null && AttachmentUtil.hasContext(repository, task));
+			action.setEnabled(AttachmentUtil.canDownloadAttachment(task) && AttachmentUtil.hasContext(repository, task));
 		}
 	}
 }

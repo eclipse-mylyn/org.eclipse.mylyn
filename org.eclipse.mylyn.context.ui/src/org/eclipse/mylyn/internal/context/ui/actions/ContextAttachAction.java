@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.ui.commands.AttachContextHandler;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
@@ -36,7 +37,9 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
+ * @deprecated use {@link AttachContextHandler} instead
  */
+@Deprecated
 public class ContextAttachAction extends Action implements IViewActionDelegate {
 
 	private ITask task;
