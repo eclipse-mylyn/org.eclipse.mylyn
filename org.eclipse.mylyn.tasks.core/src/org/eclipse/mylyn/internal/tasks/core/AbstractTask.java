@@ -64,7 +64,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	private SynchronizationState synchronizationState = SynchronizationState.SYNCHRONIZED;
 
 	// transient
-	private IStatus synchronizationStatus = null;
+	private IStatus errorStatus = null;
 
 	private boolean stale = false;
 
@@ -163,12 +163,12 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.owner = owner;
 	}
 
-	public IStatus getSynchronizationStatus() {
-		return synchronizationStatus;
+	public IStatus getErrorStatus() {
+		return errorStatus;
 	}
 
-	public void setSynchronizationStatus(IStatus status) {
-		this.synchronizationStatus = status;
+	public void setErrorStatus(IStatus status) {
+		this.errorStatus = status;
 	}
 
 	public final String getTaskId() {

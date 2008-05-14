@@ -60,7 +60,7 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 	}
 
 	@Override
-	public IStatus getError() {
+	public IStatus getErrorStatus() {
 		return error;
 	}
 

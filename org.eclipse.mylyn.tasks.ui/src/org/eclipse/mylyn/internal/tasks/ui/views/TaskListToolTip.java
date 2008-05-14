@@ -305,7 +305,7 @@ public class TaskListToolTip extends ToolTip {
 		IStatus status = null;
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			status = task.getSynchronizationStatus();
+			status = task.getErrorStatus();
 		} else if (element instanceof IRepositoryQuery) {
 			RepositoryQuery query = (RepositoryQuery) element;
 			status = query.getSynchronizationStatus();

@@ -112,7 +112,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	@SuppressWarnings("deprecation")
 	private void synchronizeTask(IProgressMonitor monitor, ITask task) {
 		monitor.subTask("Receiving task " + task.getSummary());
-		((AbstractTask) task).setSynchronizationStatus(null);
+		((AbstractTask) task).setErrorStatus(null);
 		taskList.notifyTaskChanged(task, false);
 		try {
 			String taskId = task.getTaskId();
@@ -224,7 +224,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	private void updateStatus(TaskRepository repository, ITask task, IStatus status) {
-		((AbstractTask) task).setSynchronizationStatus(status);
+		((AbstractTask) task).setErrorStatus(status);
 		if (!isUser()) {
 			((AbstractTask) task).setSynchronizing(false);
 		}

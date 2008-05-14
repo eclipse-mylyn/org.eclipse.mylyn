@@ -185,7 +185,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
 				imageDescriptor = CommonImages.OVERLAY_SYNC_CONFLICT;
 			}
-			if (imageDescriptor == null && repositoryTask.getSynchronizationStatus() != null) {
+			if (imageDescriptor == null && repositoryTask.getErrorStatus() != null) {
 				return CommonImages.OVERLAY_SYNC_WARNING;
 			} else if (imageDescriptor != null) {
 				return imageDescriptor;

@@ -262,7 +262,7 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	public abstract IStatus getSynchronizationStatus();
+	public abstract IStatus getErrorStatus();
 
 	/**
 	 * @since 3.0

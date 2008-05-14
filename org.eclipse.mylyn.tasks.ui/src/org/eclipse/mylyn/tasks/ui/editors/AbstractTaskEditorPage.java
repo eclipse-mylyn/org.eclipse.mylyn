@@ -158,7 +158,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				}
 
 				public void run() {
-					if (job.getError() == null) {
+					if (job.getErrorStatus() == null) {
 						if (job.getTask().equals(getTask())) {
 							refreshFormContent();
 						} else {
@@ -683,7 +683,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private void handleSubmitError(SubmitJob job) {
 		if (form != null && !form.isDisposed()) {
-			final IStatus status = job.getError();
+			final IStatus status = job.getErrorStatus();
 			if (status.getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
 				TasksUiInternal.displayStatus("Comment required", status);
 				if (newCommentPart != null) {

@@ -65,6 +65,9 @@ public final class TaskRepository extends PlatformObject {
 
 	private static final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories";
 
+	// transient
+	private IStatus errorStatus = null;
+
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
 	 * 	credentials
@@ -785,6 +788,20 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public IRepositoryPerson createPerson(String personId) {
 		return new RepositoryPerson(this, personId);
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public IStatus getErrorStatus() {
+		return errorStatus;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void setErrorStatus(IStatus errorStatus) {
+		this.errorStatus = errorStatus;
 	}
 
 }

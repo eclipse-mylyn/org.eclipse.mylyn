@@ -235,10 +235,10 @@ public class TasksUiInternal {
 				synchronized (taskRepository) {
 					taskRepository.setUpdating(false);
 				}
-				if (job.getError() != null) {
+				if (job.getErrorStatus() != null) {
 					Display display = PlatformUI.getWorkbench().getDisplay();
 					if (!display.isDisposed()) {
-						TasksUiInternal.displayStatus("Configuration Refresh Failed", job.getError());
+						TasksUiInternal.displayStatus("Configuration Refresh Failed", job.getErrorStatus());
 					}
 				}
 			}
@@ -355,9 +355,9 @@ public class TasksUiInternal {
 			job.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
-					if (task.getSynchronizationStatus() != null) {
+					if (task.getErrorStatus() != null) {
 						TasksUiInternal.asyncDisplayStatus("Task Synchronization Failed",
-								task.getSynchronizationStatus());
+								task.getErrorStatus());
 					}
 				}
 			});
