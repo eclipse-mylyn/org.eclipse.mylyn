@@ -23,5 +23,5 @@ cp -a $BUILD_ROOT/3.4/build/extrasUpdateSite $SITE/extras
 cp -a $BUILD_ROOT/3.4/build/experimentalUpdateSite $SITE/experimental
 
 tar -C $SITE -cvf tmp/site.tar .
-scp tmp/site.tar $1@download1.eclipse.org:
-ssh $1@download1.eclipse.org downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER -dev
+scp tmp/site.tar $1@dev.eclipse.org:
+ssh $1@dev.eclipse.org downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER -dev
