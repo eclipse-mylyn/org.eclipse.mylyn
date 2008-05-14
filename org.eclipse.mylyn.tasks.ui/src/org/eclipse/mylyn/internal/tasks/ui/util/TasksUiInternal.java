@@ -356,11 +356,8 @@ public class TasksUiInternal {
 				@Override
 				public void done(IJobChangeEvent event) {
 					if (task.getSynchronizationStatus() != null) {
-						Display display = PlatformUI.getWorkbench().getDisplay();
-						if (!display.isDisposed()) {
-							TasksUiInternal.displayStatus("Task Synchronization Failed",
-									task.getSynchronizationStatus());
-						}
+						TasksUiInternal.asyncDisplayStatus("Task Synchronization Failed",
+								task.getSynchronizationStatus());
 					}
 				}
 			});
@@ -412,6 +409,19 @@ public class TasksUiInternal {
 					break;
 				}
 			}
+		}
+	}
+
+	public static void asyncDisplayStatus(final String title, final IStatus status) {
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		if (!display.isDisposed()) {
+			display.asyncExec(new Runnable() {
+				public void run() {
+					displayStatus(title, status);
+				}
+			});
+		} else {
+			StatusHandler.log(status);
 		}
 	}
 
