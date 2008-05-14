@@ -92,11 +92,15 @@ public class OpenRepositoryTaskJob extends Job {
 				});
 			}
 		} catch (final CoreException e) {
-			TasksUiInternal.displayStatus("Unable to open task", e.getStatus());
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					TasksUiInternal.displayStatus("Unable to open task", e.getStatus());
+				}
+			});
 		} finally {
 			monitor.done();
 		}
-		return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null);
+		return Status.OK_STATUS;
 	}
 
 	private void openEditor(final TaskRepository repository, final AbstractLegacyRepositoryConnector connector,
