@@ -255,7 +255,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			});
 
 			manager.add(openWithBrowserAction);
-			if (activeTask.hasValidUrl()) {
+			if (TasksUiInternal.isValidUrl(activeTask.getUrl())) {
 				openWithBrowserAction.setEnabled(true);
 			} else {
 				openWithBrowserAction.setEnabled(false);

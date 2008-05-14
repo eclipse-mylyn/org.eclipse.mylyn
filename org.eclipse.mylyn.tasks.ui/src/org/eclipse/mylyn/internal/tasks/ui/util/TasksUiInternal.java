@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -521,6 +523,22 @@ public class TasksUiInternal {
 	public static boolean isAnimationsEnabled() {
 		IPreferenceStore store = PlatformUI.getPreferenceStore();
 		return store.getBoolean(IWorkbenchPreferenceConstants.ENABLE_ANIMATIONS);
+	}
+
+	public static boolean hasValidUrl(ITask task) {
+		return isValidUrl(task.getUrl());
+	}
+
+	public static boolean isValidUrl(String url) {
+		if (url != null && !url.equals("") && !url.equals("http://") && !url.equals("https://")) {
+			try {
+				new URL(url);
+				return true;
+			} catch (MalformedURLException e) {
+				return false;
+			}
+		}
+		return false;
 	}
 
 }

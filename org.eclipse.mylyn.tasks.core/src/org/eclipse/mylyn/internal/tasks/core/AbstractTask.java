@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -375,19 +373,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 				return false;
 			}
 		}
-	}
-
-	public boolean hasValidUrl() {
-		String taskUrl = getUrl();
-		if (taskUrl != null && !taskUrl.equals("") && !taskUrl.equals("http://") && !taskUrl.equals("https://")) {
-			try {
-				new URL(taskUrl);
-				return true;
-			} catch (MalformedURLException e) {
-				return false;
-			}
-		}
-		return false;
 	}
 
 	public String getTaskKind() {

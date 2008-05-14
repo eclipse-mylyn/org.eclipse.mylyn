@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  * @since 3.0
  */
 public interface ITask extends ITaskElement, IAttributeContainer {
@@ -52,6 +53,9 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 			}
 		}
 
+		/**
+		 * @since 3.0
+		 */
 		public boolean isSynchronized() {
 			switch (this) {
 			case SYNCHRONIZED:
@@ -62,6 +66,9 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
 
@@ -83,6 +90,9 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 			}
 		}
 
+		/**
+		 * @since 3.0
+		 */
 		public String getDescription() {
 			switch (this) {
 			case P1:
@@ -101,7 +111,7 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 		}
 
 		/**
-		 * @since 2.3
+		 * @since 3.0
 		 */
 		public static PriorityLevel fromLevel(int level) {
 			if (level <= 1) {
@@ -122,6 +132,9 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 			return getDefault();
 		}
 
+		/**
+		 * @since 3.0
+		 */
 		public static PriorityLevel fromString(String string) {
 			if (string.equals("P1")) {
 				return P1;
@@ -141,6 +154,9 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 			return getDefault();
 		}
 
+		/**
+		 * @since 3.0
+		 */
 		public static PriorityLevel fromDescription(String string) {
 			if (string == null) {
 				return null;
@@ -163,17 +179,32 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 			return getDefault();
 		}
 
+		/**
+		 * @since 3.0
+		 */
 		public static PriorityLevel getDefault() {
 			return P3;
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract Date getCompletionDate();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract String getConnectorKind();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract Date getCreationDate();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract Date getDueDate();
 
 	/**
@@ -183,6 +214,8 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 
 	/**
 	 * Final to preserve the handle identifier format required by the framework.
+	 * 
+	 * @since 3.0
 	 */
 	public abstract String getHandleIdentifier();
 
@@ -194,16 +227,31 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	 */
 	public abstract Date getModificationDate();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract String getNotes();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract String getOwner();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract String getPriority();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract String getRepositoryUrl();
 
 	//public abstract DateRange getScheduledForDate();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract String getSummary();
 
 	/**
@@ -211,48 +259,86 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	 */
 	public abstract SynchronizationState getSynchronizationState();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract IStatus getSynchronizationStatus();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract String getTaskId();
 
 	/**
 	 * User identifiable key for the task to be used in UI facilities such as label displays and hyperlinked references.
 	 * Can return the same as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
+	 * 
+	 * @since 3.0
 	 */
 	public abstract String getTaskKey();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract String getTaskKind();
 
-	public abstract boolean hasValidUrl();
-
+	/**
+	 * @since 3.0
+	 */
 	@Deprecated
 	public abstract boolean isActive();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract boolean isCompleted();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract boolean isPastReminder();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract boolean isStale();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract boolean isSubmitting();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract boolean isSynchronizing();
-
-	@Deprecated
-	public abstract void setActive(boolean b);
 
 	/**
 	 * @deprecated use {@link #setCompletionDate(Date)} instead
+	 * @since 3.0
 	 */
 	@Deprecated
 	public abstract void setCompleted(boolean completed);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setCompletionDate(Date completionDate);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setCreationDate(Date date);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setDueDate(Date date);
 
+	/**
+	 * @since 3.0
+	 */
+	// API 3.0 why is the granularity limited to hours?
 	public abstract void setEstimatedTimeHours(int estimated);
 
 	/**
@@ -260,20 +346,44 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	 */
 	public abstract void setModificationDate(Date modificationDate);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setNotes(String notes);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setOwner(String owner);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setPriority(String priority);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setStale(boolean stale);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setSummary(String summary);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setTaskKind(String kind);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setUrl(String taskUrl);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void setTaskKey(String taskKey);
 
 }

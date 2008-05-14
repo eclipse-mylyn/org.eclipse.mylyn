@@ -10,10 +10,11 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -69,7 +70,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			}
 
 			text += task.getSummary();
-			if (task.hasValidUrl()) {
+			if (TasksUiInternal.isValidUrl(task.getUrl())) {
 				text += "\n" + task.getUrl();
 			}
 		} else if (object instanceof RepositoryTaskData) {

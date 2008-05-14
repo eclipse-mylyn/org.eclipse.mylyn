@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.Iterator;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -46,7 +47,7 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 		String urlString = null;
 		if (selectedObject instanceof ITask) {
 			AbstractTask task = (AbstractTask) selectedObject;
-			if (task.hasValidUrl()) {
+			if (TasksUiInternal.isValidUrl(task.getUrl())) {
 				urlString = task.getUrl();
 			}
 		} else if (selectedObject instanceof ITaskElement) {

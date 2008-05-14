@@ -1307,7 +1307,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private void updateActionEnablement(Action action, ITaskElement element) {
 		if (element instanceof ITask) {
 			if (action instanceof OpenWithBrowserAction) {
-				if (((ITask) element).hasValidUrl()) {
+				if (TasksUiInternal.isValidUrl(((ITask) element).getUrl())) {
 					action.setEnabled(true);
 				} else {
 					action.setEnabled(false);

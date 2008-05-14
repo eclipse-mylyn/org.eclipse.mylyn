@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
@@ -34,19 +35,19 @@ public class TaskTest extends TestCase {
 	public void testUrl() {
 		AbstractTask task = new LocalTask("handle", "label");
 		task.setUrl("http://eclipse.org/mylyn/doc");
-		assertTrue(task.hasValidUrl());
+		assertTrue(TasksUiInternal.isValidUrl(task.getUrl()));
 
 		task.setUrl("http://");
-		assertFalse(task.hasValidUrl());
+		assertFalse(TasksUiInternal.isValidUrl(task.getUrl()));
 
 		task.setUrl("https://");
-		assertFalse(task.hasValidUrl());
+		assertFalse(TasksUiInternal.isValidUrl(task.getUrl()));
 
 		task.setUrl("");
-		assertFalse(task.hasValidUrl());
+		assertFalse(TasksUiInternal.isValidUrl(task.getUrl()));
 
 		task.setUrl(null);
-		assertFalse(task.hasValidUrl());
+		assertFalse(TasksUiInternal.isValidUrl(task.getUrl()));
 	}
 
 	public void testPriorityNeverNull() {

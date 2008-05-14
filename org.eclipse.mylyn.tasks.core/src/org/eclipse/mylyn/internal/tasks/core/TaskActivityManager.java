@@ -346,7 +346,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		}
 
 		activeTask = task;
-		activeTask.setActive(true);
+		((AbstractTask) activeTask).setActive(true);
 
 		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 			try {
@@ -380,7 +380,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 				}
 			}
 
-			activeTask.setActive(false);
+			((AbstractTask) activeTask).setActive(false);
 			activeTask = null;
 
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {

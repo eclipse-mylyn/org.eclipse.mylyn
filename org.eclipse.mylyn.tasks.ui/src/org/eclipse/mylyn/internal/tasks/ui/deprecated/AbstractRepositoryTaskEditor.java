@@ -74,10 +74,10 @@ import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
@@ -735,7 +735,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			if (connector != null) {
 				String taskUrl = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskKey());
-				if (taskUrl == null && repositoryTask != null && repositoryTask.hasValidUrl()) {
+				if (taskUrl == null && repositoryTask != null && TasksUiInternal.hasValidUrl(repositoryTask)) {
 					taskUrl = repositoryTask.getUrl();
 				}
 
@@ -1740,7 +1740,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 
 				public void widgetSelected(SelectionEvent e) {
-					ITask task = TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(), taskData.getTaskId());
+					ITask task = TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(),
+							taskData.getTaskId());
 					if (task == null) {
 						// Should not happen
 						return;
@@ -3602,8 +3603,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
-						modifiedTask = (AbstractTask) TasksUiInternal.getTaskList().getTask(repository.getRepositoryUrl(),
-								taskData.getTaskId());
+						modifiedTask = (AbstractTask) TasksUiInternal.getTaskList().getTask(
+								repository.getRepositoryUrl(), taskData.getTaskId());
 					}
 
 					// Synchronization accounting...
