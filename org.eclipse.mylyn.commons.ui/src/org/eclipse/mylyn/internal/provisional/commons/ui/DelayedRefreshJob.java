@@ -57,6 +57,9 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 	}
 
 	public synchronized void refreshElement(Object element) {
+		if (element == null) {
+			return;
+		}
 		queue.add(element);
 
 		if (scheduleTime == NOT_SCHEDULED) {
