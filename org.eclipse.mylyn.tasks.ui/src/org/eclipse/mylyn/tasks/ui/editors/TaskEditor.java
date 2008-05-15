@@ -98,6 +98,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private TaskDragSourceListener titleDragSourceListener;
 
+	private boolean hasLegacyPage;
+
 	public TaskEditor() {
 	}
 
@@ -220,6 +222,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			}
 		});
 		for (AbstractTaskEditorFactory factory : factories) {
+			hasLegacyPage = true;
 			addPage(factory);
 		}
 
@@ -510,7 +513,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings( { "deprecation", "restriction" })
 	private void updateHeader() {
 		IEditorInput input = getEditorInput();
 		if (input instanceof TaskEditorInput) {
@@ -591,6 +594,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
+	@SuppressWarnings("restriction")
 	@Deprecated
 	private void updateHeaderLabel(RepositoryTaskData taskData) {
 		String kindLabel = taskData.getTaskKind();
@@ -640,6 +644,14 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		} else {
 			setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
 		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	@Deprecated
+	public boolean hasLegacyPage() {
+		return hasLegacyPage;
 	}
 
 }

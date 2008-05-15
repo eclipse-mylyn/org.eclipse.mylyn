@@ -37,9 +37,9 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
@@ -166,7 +166,7 @@ public class TasksUiUtil {
 	}
 
 	/**
-	 * @deprecated use {@link #openTaskAndRefresh(AbstractTask)} instead
+	 * @deprecated use {@link #openTask(AbstractTask)} instead
 	 * @since 3.0
 	 */
 	@Deprecated
@@ -177,7 +177,7 @@ public class TasksUiUtil {
 	/**
 	 * Set asyncExec false for testing purposes.
 	 * 
-	 * @deprecated use {@link #openTaskAndRefresh(AbstractTask)} instead
+	 * @deprecated use {@link #openTask(AbstractTask)} instead
 	 * @since 3.0
 	 */
 	@Deprecated
@@ -200,7 +200,7 @@ public class TasksUiUtil {
 							openUrl(task.getUrl());
 						} else {
 							IWorkbenchPage page = window.getActivePage();
-							wasOpen = refreshIfOpen(task, editorInput);
+							wasOpen = refreshEditorContentsIfOpen(task, editorInput);
 
 							if (!wasOpen) {
 								IEditorPart part = openEditor(editorInput, taskEditorId, page);
@@ -399,6 +399,7 @@ public class TasksUiUtil {
 	/**
 	 * @since 3.0
 	 */
+	@SuppressWarnings("deprecation")
 	public static boolean openTask(ITask task) {
 		Assert.isNotNull(task);
 
@@ -413,14 +414,22 @@ public class TasksUiUtil {
 				TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 						task.getRepositoryUrl());
 				IEditorInput editorInput = new TaskEditorInput(taskRepository, task);
-				boolean wasOpen = refreshIfOpen(task, editorInput);
+				boolean wasOpen = refreshEditorContentsIfOpen(task, editorInput);
 				if (wasOpen) {
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+							task.getConnectorKind());
+					TasksUiInternal.synchronizeTask(connector, task, false, null);
 					return true;
 				} else {
 					IWorkbenchPage page = window.getActivePage();
 					IEditorPart editor = openEditor(editorInput, getTaskEditorId(task), page);
 					if (editor != null) {
-						TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+								task.getConnectorKind());
+						TasksUiInternal.synchronizeTask(connector, task, false, null);
+						if (((TaskEditor) editor).hasLegacyPage()) {
+							TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+						}
 						return true;
 					}
 				}
@@ -440,7 +449,7 @@ public class TasksUiUtil {
 	public static void openTask(String url) {
 		AbstractTask task = TasksUiUtil.getTaskByUrl(url);
 		if (task != null && !(task instanceof LocalTask)) {
-			openTaskAndRefresh(task);
+			openTask(task);
 		} else {
 			boolean opened = false;
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
@@ -476,7 +485,7 @@ public class TasksUiUtil {
 		}
 
 		if (task != null) {
-			return TasksUiUtil.openTaskAndRefresh(task);
+			return TasksUiUtil.openTask(task);
 		}
 
 		boolean opened = false;
@@ -532,7 +541,7 @@ public class TasksUiUtil {
 			task = TasksUiPlugin.getTaskList().getTaskByKey(repository.getRepositoryUrl(), taskId);
 		}
 		if (task != null) {
-			return TasksUiUtil.openTaskAndRefresh(task);
+			return TasksUiUtil.openTask(task);
 		} else {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 			if (connectorUi != null) {
@@ -543,31 +552,6 @@ public class TasksUiUtil {
 							"Internal error while opening repository task", e));
 				}
 			}
-		}
-		return false;
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public static boolean openTaskAndRefresh(final ITask task) {
-		if (openTask(task)) {
-			Job updateTaskData = new Job("Refresh Task") {
-				@Override
-				protected IStatus run(IProgressMonitor monitor) {
-					if (task != null) {
-						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-								task.getConnectorKind());
-						if (connector != null) {
-							TasksUiInternal.synchronizeTask(connector, task, false, null);
-						}
-					}
-					return Status.OK_STATUS;
-				}
-			};
-			updateTaskData.setSystem(true);
-			updateTaskData.schedule();
-			return true;
 		}
 		return false;
 	}
@@ -646,7 +630,7 @@ public class TasksUiUtil {
 	/**
 	 * If task is already open and has incoming, must force refresh in place
 	 */
-	private static boolean refreshIfOpen(ITask task, IEditorInput editorInput) {
+	private static boolean refreshEditorContentsIfOpen(ITask task, IEditorInput editorInput) {
 		if (task != null) {
 			if (task.getSynchronizationState() == SynchronizationState.INCOMING
 					|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {

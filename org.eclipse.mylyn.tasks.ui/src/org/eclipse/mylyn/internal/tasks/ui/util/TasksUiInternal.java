@@ -203,11 +203,11 @@ public class TasksUiInternal {
 						RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
 								task.getRepositoryUrl(), task.getTaskId());
 						if (taskData != null || connector.getTaskDataHandler() == null) {
-							TasksUiUtil.openTaskAndRefresh(task);
+							TasksUiUtil.openTask(task);
 							opened = true;
 						}
 					} else if (TasksUiPlugin.getTaskDataManager().hasTaskData(task, task.getConnectorKind())) {
-						TasksUiUtil.openTaskAndRefresh(task);
+						TasksUiUtil.openTask(task);
 					}
 
 					if (!opened) {
