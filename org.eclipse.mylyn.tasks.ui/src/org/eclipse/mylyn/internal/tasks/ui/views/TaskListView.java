@@ -64,6 +64,7 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
@@ -72,7 +73,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
@@ -475,15 +475,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	};
 
 	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new TaskListChangeAdapter() {
-
-		@Override
-		public void taskListRead() {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					refreshJob.refresh();
-				}
-			});
-		}
 
 		@Override
 		public void containersChanged(final Set<TaskContainerDelta> deltas) {
@@ -1628,9 +1619,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public static String getCurrentPriorityLevel() {
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(ITasksUiPreferenceConstants.FILTER_PRIORITY)) {
-			return TasksUiPlugin.getDefault()
-					.getPreferenceStore()
-					.getString(ITasksUiPreferenceConstants.FILTER_PRIORITY);
+			return TasksUiPlugin.getDefault().getPreferenceStore().getString(
+					ITasksUiPreferenceConstants.FILTER_PRIORITY);
 		} else {
 			return PriorityLevel.P5.toString();
 		}

@@ -57,8 +57,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	private Map<String, AbstractTask> tasks;
 
-	private boolean readComplete;
-
 	private Set<TaskContainerDelta> delta;
 
 	public TaskList() {
@@ -229,14 +227,12 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	}
 
 	private void fireDelta(HashSet<TaskContainerDelta> deltasToFire) {
-		if (readComplete) {
-			for (ITaskListChangeListener listener : changeListeners) {
-				try {
-					listener.containersChanged(Collections.unmodifiableSet(deltasToFire));
-				} catch (Throwable t) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Notification failed for: " + listener, t));
-				}
+		for (ITaskListChangeListener listener : changeListeners) {
+			try {
+				listener.containersChanged(Collections.unmodifiableSet(deltasToFire));
+			} catch (Throwable t) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Notification failed for: "
+						+ listener, t));
 			}
 		}
 	}
@@ -617,17 +613,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	public void preTaskListRead() {
-		readComplete = false;
-	}
-
-	public void postTaskListRead() {
-		readComplete = true;
-		for (ITaskListChangeListener listener : changeListeners) {
-			listener.taskListRead();
-		}
-	}
-
 	public void run(ITaskListRunnable runnable) throws CoreException {
 		run(runnable, null);
 	}
@@ -683,8 +668,4 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		return ITasksCoreConstants.TASKLIST_SCHEDULING_RULE;
 	}
 
-	// API-3.0: remove or make the TaskList know more about its lifecycle
-	public boolean isInitialized() {
-		return readComplete;
-	}
 }

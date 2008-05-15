@@ -100,21 +100,15 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 						if (recover()) {
 							resetAndLoad();
 						} else {
-							//XXX taskList.reset();
-//							throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-//								"Task List recovered from snapshot"))
-//							StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-//									"Task List not found"));
-							throw e;
+							throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+									"Unable to load Task List", e));
 						}
 					}
 				}
 
 				private void resetAndLoad() throws CoreException {
-					// XXX: taskList.reset();
-					taskList.preTaskListRead();
+					taskList.reset();
 					taskListWriter.readTaskList(taskList, taskListFile);
-					taskList.postTaskListRead();
 				}
 
 				private boolean recover() {
@@ -149,10 +143,6 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 				return;
 			}
 		}
-	}
-
-	public void taskListRead() {
-		// ignore
 	}
 
 	@Override
