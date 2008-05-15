@@ -163,7 +163,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		// ignore
 	}
 
-	class Unscheduled extends ScheduledTaskContainer {
+	public class Unscheduled extends ScheduledTaskContainer {
 
 		private final TaskActivityManager activityManager;
 
