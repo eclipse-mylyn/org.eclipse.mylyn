@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
@@ -59,10 +58,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 
 	private final TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 
-	private final TaskList taskList;
-
-	public TaskRepositoryManager(TaskList taskList) {
-		this.taskList = taskList;
+	public TaskRepositoryManager() {
 	}
 
 	public Collection<AbstractRepositoryConnector> getRepositoryConnectors() {
@@ -75,9 +71,6 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 
 	public void addRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
 		if (!repositoryConnectors.values().contains(repositoryConnector)) {
-			if (repositoryConnector instanceof AbstractLegacyRepositoryConnector) {
-				((AbstractLegacyRepositoryConnector) repositoryConnector).init(taskList);
-			}
 			repositoryConnectors.put(repositoryConnector.getConnectorKind(), repositoryConnector);
 		}
 	}
@@ -100,10 +93,6 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 			repositories = repositoryMap.get(repository.getConnectorKind());
 		}
 		repositories.add(repository);
-
-		taskList.addUnmatchedContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
-				repository.getRepositoryUrl()));
-
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositoryAdded(repository);
 		}
@@ -114,8 +103,6 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		if (repositories != null) {
 			repository.flushAuthenticationCredentials();
 			repositories.remove(repository);
-			// XXX 
-			//taskList.removeUnmatchedContainer(taskList.getUnmatchedContainer(repository.getRepositoryUrl()));
 		}
 		saveRepositories(repositoryFilePath);
 		for (ITaskRepositoryListener listener : listeners) {

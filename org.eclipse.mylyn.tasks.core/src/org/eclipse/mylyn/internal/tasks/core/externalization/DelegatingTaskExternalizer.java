@@ -10,14 +10,16 @@ package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,17 +30,24 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.core.TasksModel;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IAttributeContainer;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.w3c.dom.Document;
@@ -61,7 +70,7 @@ import org.w3c.dom.NodeList;
  * @author Ken Sueda (XML serialization support)
  * @author Steffen Pingel
  */
-final class DelegatingTaskExternalizer {
+public final class DelegatingTaskExternalizer {
 
 	static final String DEFAULT_PRIORITY = PriorityLevel.P3.toString();
 
@@ -69,15 +78,15 @@ final class DelegatingTaskExternalizer {
 
 	static final String KEY_NOTIFIED_INCOMING = "NotifiedIncoming";
 
-	static final String KEY_NAME = "Name";
+	public static final String KEY_NAME = "Name";
 
-	static final String KEY_LABEL = "Label";
+	public static final String KEY_LABEL = "Label";
 
 	static final String KEY_HANDLE = "Handle";
 
-	static final String KEY_REPOSITORY_URL = "RepositoryUrl";
+	public static final String KEY_REPOSITORY_URL = "RepositoryUrl";
 
-	static final String KEY_CATEGORY = "Category";
+	public static final String KEY_CATEGORY = "Category";
 
 	static final String VAL_ROOT = "Root";
 
@@ -140,23 +149,46 @@ final class DelegatingTaskExternalizer {
 
 	static final String KEY_OWNER = "Owner";
 
+	static final String KEY_MARK_READ_PENDING = "MarkReadPending";
+
 	static final String KEY_STALE = "Stale";
 
 	static final String KEY_CONNECTOR_KIND = "ConnectorKind";
 
-	static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp";
+	static final String KEY_TASK_ID = "TaskId";
+
+	public static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp";
 
 	static final String NODE_ATTRIBUTE = "Attribute";
 
+	static final String NODE_QUERY = "Query";
+
+	static final String NODE_TASK = "Task";
+
 	static final String KEY_KEY = "Key";
 
-	private List<AbstractTaskListFactory> factories = new ArrayList<AbstractTaskListFactory>();
+	private List<AbstractTaskListFactory> factories;
 
 	// 2.0 -> 3.0 migration holds tasks to category handles 
-	private final Map<AbstractTask, String> parentCategoryMap = new HashMap<AbstractTask, String>();
+	private final Map<AbstractTask, String> parentCategoryMap;
 
-	public void setFactories(List<AbstractTaskListFactory> externalizers) {
+	private final TasksModel tasksModel;
+
+	private List<AbstractTaskListMigrator> migrators;
+
+	public DelegatingTaskExternalizer(TasksModel tasksModel) {
+		Assert.isNotNull(tasksModel);
+		this.tasksModel = tasksModel;
+		this.parentCategoryMap = new HashMap<AbstractTask, String>();
+		this.factories = Collections.emptyList();
+		this.migrators = Collections.emptyList();
+	}
+
+	public void initialize(List<AbstractTaskListFactory> externalizers, List<AbstractTaskListMigrator> migrators) {
+		Assert.isNotNull(externalizers);
+		Assert.isNotNull(migrators);
 		this.factories = externalizers;
+		this.migrators = migrators;
 	}
 
 	public Element createCategoryElement(ITaskElement category, Document doc, Element parent) {
@@ -174,38 +206,34 @@ final class DelegatingTaskExternalizer {
 	}
 
 	public Element createTaskElement(AbstractTask task, Document doc, Element parent) {
-		AbstractTaskListFactory factory = null;
-		for (AbstractTaskListFactory currentFactory : factories) {
-			if (currentFactory.canCreate(task)) {
-				factory = currentFactory;
-				break;
-			}
-		}
-
-		String taskTagName;
-		if (factory != null) {
-			taskTagName = factory.getTaskElementName();
+		Element node;
+		if (task.getClass() == TaskTask.class || task instanceof LocalTask) {
+			node = doc.createElement(NODE_TASK);
 		} else {
-			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "No externalizer for task: "
-					+ task));
-			return null;
+			AbstractTaskListFactory factory = null;
+			for (AbstractTaskListFactory currentFactory : factories) {
+				if (currentFactory.canCreate(task)) {
+					factory = currentFactory;
+					break;
+				}
+			}
+			String taskTagName;
+			if (factory != null) {
+				taskTagName = factory.getTaskElementName();
+			} else {
+				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+						"No externalizer for task: " + task));
+				return null;
+			}
+			node = doc.createElement(taskTagName);
+			factory.setAdditionalAttributes(task, node);
 		}
-		Element node = doc.createElement(taskTagName);
-		factory.setAdditionalAttributes(task, node);
 
 		node.setAttribute(KEY_LABEL, stripControlCharacters(task.getSummary()));
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
+		node.setAttribute(KEY_TASK_ID, task.getTaskId());
+		node.setAttribute(KEY_CONNECTOR_KIND, task.getConnectorKind());
 		node.setAttribute(KEY_REPOSITORY_URL, task.getRepositoryUrl());
-
-		//**** TODO API 3.0 to be removed
-		ITaskElement container = TaskCategory.getParentTaskCategory(task);
-		if (container != null) {
-			if (container.getHandleIdentifier().equals(UncategorizedTaskContainer.HANDLE)) {
-				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
-			} else {
-				node.setAttribute(KEY_CATEGORY, container.getHandleIdentifier());
-			}
-		}
 
 		node.setAttribute(KEY_PRIORITY, task.getPriority());
 		node.setAttribute(KEY_KIND, task.getTaskKind());
@@ -234,38 +262,36 @@ final class DelegatingTaskExternalizer {
 		} else {
 			node.setAttribute(KEY_REMINDED, VAL_FALSE);
 		}
-
 		if (task.isStale()) {
 			node.setAttribute(KEY_STALE, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_STALE, VAL_FALSE);
 		}
-
+		if (task.isMarkReadPending()) {
+			node.setAttribute(KEY_MARK_READ_PENDING, VAL_TRUE);
+		} else {
+			node.setAttribute(KEY_MARK_READ_PENDING, VAL_FALSE);
+		}
 		if (task.getLastReadTimeStamp() != null) {
 			node.setAttribute(KEY_LAST_MOD_DATE, task.getLastReadTimeStamp());
 		}
-
 		if (task.isNotified()) {
 			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
 		}
-
 		if (task.getSynchronizationState() != null) {
 			node.setAttribute(KEY_SYNC_STATE, task.getSynchronizationState().toString());
 		} else {
 			node.setAttribute(KEY_SYNC_STATE, SynchronizationState.SYNCHRONIZED.toString());
 		}
-
 		if (task.getOwner() != null) {
 			node.setAttribute(KEY_OWNER, task.getOwner());
 		}
-
+		createAttributes(task, doc, node);
 		for (ITask t : task.getChildren()) {
 			createTaskReference(KEY_SUBTASK, t, doc, node);
 		}
-
-		createAttributes(task, doc, node);
 
 		parent.appendChild(node);
 		return node;
@@ -340,8 +366,8 @@ final class DelegatingTaskExternalizer {
 	public void readCategory(Node node, TaskList taskList) {
 		Element element = (Element) node;
 		AbstractTaskCategory category = null;
-		if (element.hasAttribute(DelegatingTaskExternalizer.KEY_NAME)) {
-			category = new TaskCategory(element.getAttribute(DelegatingTaskExternalizer.KEY_NAME));
+		if (element.hasAttribute(KEY_NAME)) {
+			category = new TaskCategory(element.getAttribute(KEY_NAME));
 			taskList.addCategory((TaskCategory) category);
 		} else {
 			// LEGACY: registry categories did not have names
@@ -355,15 +381,18 @@ final class DelegatingTaskExternalizer {
 
 	public final AbstractTask readTask(Node node, AbstractTaskCategory legacyCategory, ITask parent)
 			throws CoreException {
-		AbstractTask task = null;
-		String taskId = null;
-		String repositoryUrl = null;
+		String handle;
+		String taskId;
+		String repositoryUrl;
 		String summary = "";
-//		boolean alreadyRead = false;
-
 		Element element = (Element) node;
-		if (element.hasAttribute(KEY_HANDLE)) {
-			String handle = element.getAttribute(KEY_HANDLE);
+		if (element.hasAttribute(KEY_REPOSITORY_URL) && element.hasAttribute(KEY_TASK_ID)
+				&& element.hasAttribute(KEY_HANDLE)) {
+			handle = element.getAttribute(KEY_HANDLE);
+			repositoryUrl = element.getAttribute(KEY_REPOSITORY_URL);
+			taskId = element.getAttribute(KEY_TASK_ID);
+		} else if (element.hasAttribute(KEY_HANDLE)) {
+			handle = element.getAttribute(KEY_HANDLE);
 			repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
 			taskId = RepositoryTaskHandleUtil.getTaskId(handle);
 		} else {
@@ -374,22 +403,35 @@ final class DelegatingTaskExternalizer {
 			summary = element.getAttribute(KEY_LABEL);
 		}
 
-		for (AbstractTaskListFactory externalizer : factories) {
-			if (node.getNodeName().equals(externalizer.getTaskElementName())) {
-				task = externalizer.createTask(repositoryUrl, taskId, summary, element);
-				break;
+		AbstractTask task = null;
+		if (NODE_TASK.equals(node.getNodeName())) {
+			String connectorKind = element.getAttribute(DelegatingTaskExternalizer.KEY_CONNECTOR_KIND);
+			task = readDefaultTask(connectorKind, repositoryUrl, taskId, summary, element);
+		}
+		// attempt migration from < 3.0 task list
+		if (task == null) {
+			for (AbstractTaskListMigrator migrator : migrators) {
+				if (node.getNodeName().equals(migrator.getTaskElementName())) {
+					task = readDefaultTask(migrator.getConnectorKind(), repositoryUrl, taskId, summary, element);
+					migrator.migrateTask(task, element);
+					break;
+				}
 			}
 		}
-
-//		if (!alreadyRead && this.canReadTask(node)) {
-//			task = this.createTask(repositoryUrl, taskId, summary, element, taskList, category, parent);
-//			alreadyRead = true;
-//		}
+		// legacy support
+		if (task == null) {
+			for (AbstractTaskListFactory externalizer : factories) {
+				if (node.getNodeName().equals(externalizer.getTaskElementName())) {
+					task = externalizer.createTask(repositoryUrl, taskId, summary, element);
+					break;
+				}
+			}
+		}
+		// populate common attributes
 		if (task != null) {
 			readTaskInfo(task, element, parent, legacyCategory);
 			readAttributes(task, element);
 		}
-
 		return task;
 	}
 
@@ -397,7 +439,7 @@ final class DelegatingTaskExternalizer {
 		NodeList list = parent.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
-			if (child instanceof Element && child.getNodeName().equals(DelegatingTaskExternalizer.NODE_ATTRIBUTE)) {
+			if (child instanceof Element && child.getNodeName().equals(NODE_ATTRIBUTE)) {
 				Element element = (Element) child;
 				String key = element.getAttribute(KEY_PRIORITY);
 				if (key.length() > 0) {
@@ -408,10 +450,6 @@ final class DelegatingTaskExternalizer {
 	}
 
 	private void readTaskInfo(AbstractTask task, Element element, ITask parent, AbstractTaskCategory legacyCategory) {
-		if (task == null) {
-			return;
-		}
-
 		if (element.hasAttribute(KEY_CATEGORY)) {
 			// Migration 2.0 -> 3.0 task list.  Category no longer maintained on the task element but
 			// task handles held within category nodes similar to query children
@@ -422,17 +460,14 @@ final class DelegatingTaskExternalizer {
 			//task.setCategoryHandle(categoryHandle);
 			parentCategoryMap.put(task, categoryHandle);
 		}
-
 		if (element.hasAttribute(KEY_PRIORITY)) {
 			task.setPriority(element.getAttribute(KEY_PRIORITY));
 		} else {
 			task.setPriority(DEFAULT_PRIORITY);
 		}
-
 		if (element.hasAttribute(KEY_KIND)) {
 			task.setTaskKind(element.getAttribute(KEY_KIND));
 		}
-
 		if (element.getAttribute(KEY_ACTIVE).compareTo(VAL_TRUE) == 0) {
 			task.setActive(true);
 		} else {
@@ -448,7 +483,6 @@ final class DelegatingTaskExternalizer {
 		} else {
 			task.setNotes("");
 		}
-
 		if (element.hasAttribute(KEY_TIME_ESTIMATED)) {
 			String est = element.getAttribute(KEY_TIME_ESTIMATED);
 			try {
@@ -480,7 +514,6 @@ final class DelegatingTaskExternalizer {
 		} else {
 			task.setDueDate(null);
 		}
-
 		// Legacy 2.3.2 -> 3.0 migration of scheduled date
 		boolean isFloating = false;
 		if (element.hasAttribute(KEY_FLOATING) && element.getAttribute(KEY_FLOATING).compareTo(VAL_TRUE) == 0) {
@@ -498,7 +531,6 @@ final class DelegatingTaskExternalizer {
 				}
 			}
 		}
-
 		// Scheduled date range (3.0)
 		if (element.hasAttribute(KEY_DATE_SCHEDULED_START) && element.hasAttribute(KEY_DATE_SCHEDULED_END)) {
 			Date startDate = getDateFromString(element.getAttribute(KEY_DATE_SCHEDULED_START));
@@ -511,7 +543,6 @@ final class DelegatingTaskExternalizer {
 				task.setScheduledForDate(new DateRange(calStart, calEnd));
 			}
 		}
-
 		if (element.hasAttribute(KEY_REMINDED) && element.getAttribute(KEY_REMINDED).compareTo(VAL_TRUE) == 0) {
 			task.setReminded(true);
 		} else {
@@ -522,41 +553,39 @@ final class DelegatingTaskExternalizer {
 		} else {
 			task.setStale(false);
 		}
-
-		AbstractTask abstractTask = task;
-		abstractTask.setSynchronizing(false);
-
-		if (element.hasAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL)) {
-			abstractTask.setRepositoryUrl(element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL));
-		}
-
-		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
-			abstractTask.setLastReadTimeStamp(element.getAttribute(KEY_LAST_MOD_DATE));
-		}
-
-		if (element.hasAttribute(KEY_OWNER)) {
-			abstractTask.setOwner(element.getAttribute(KEY_OWNER));
-		}
-
-		if (VAL_TRUE.equals(element.getAttribute(KEY_NOTIFIED_INCOMING))) {
-			abstractTask.setNotified(true);
+		if (element.hasAttribute(KEY_MARK_READ_PENDING)
+				&& element.getAttribute(KEY_MARK_READ_PENDING).compareTo(VAL_TRUE) == 0) {
+			task.setMarkReadPending(true);
 		} else {
-			abstractTask.setNotified(false);
+			task.setMarkReadPending(false);
 		}
-
+		task.setSynchronizing(false);
+		if (element.hasAttribute(KEY_REPOSITORY_URL)) {
+			task.setRepositoryUrl(element.getAttribute(KEY_REPOSITORY_URL));
+		}
+		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
+			task.setLastReadTimeStamp(element.getAttribute(KEY_LAST_MOD_DATE));
+		}
+		if (element.hasAttribute(KEY_OWNER)) {
+			task.setOwner(element.getAttribute(KEY_OWNER));
+		}
+		if (VAL_TRUE.equals(element.getAttribute(KEY_NOTIFIED_INCOMING))) {
+			task.setNotified(true);
+		} else {
+			task.setNotified(false);
+		}
 		if (element.hasAttribute(KEY_SYNC_STATE)) {
 			String syncState = element.getAttribute(KEY_SYNC_STATE);
 			if (syncState.compareTo(SynchronizationState.SYNCHRONIZED.toString()) == 0) {
-				abstractTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 			} else if (syncState.compareTo(SynchronizationState.INCOMING.toString()) == 0) {
-				abstractTask.setSynchronizationState(SynchronizationState.INCOMING);
+				task.setSynchronizationState(SynchronizationState.INCOMING);
 			} else if (syncState.compareTo(SynchronizationState.OUTGOING.toString()) == 0) {
-				abstractTask.setSynchronizationState(SynchronizationState.OUTGOING);
+				task.setSynchronizationState(SynchronizationState.OUTGOING);
 			} else if (syncState.compareTo(SynchronizationState.CONFLICT.toString()) == 0) {
-				abstractTask.setSynchronizationState(SynchronizationState.CONFLICT);
+				task.setSynchronizationState(SynchronizationState.CONFLICT);
 			}
 		}
-
 	}
 
 	private Date getDateFromString(String dateString) {
@@ -579,57 +608,43 @@ final class DelegatingTaskExternalizer {
 	}
 
 	public Element createQueryElement(RepositoryQuery query, Document doc, Element parent) {
-		AbstractTaskListFactory factory = null;
-		String queryTagName = null;
-		for (AbstractTaskListFactory currentFactory : factories) {
-			if (currentFactory.canCreate(query)) {
-				factory = currentFactory;
-				queryTagName = factory.getQueryElementName(query);
-				break;
+		Element node;
+		if (query.getClass() == RepositoryQuery.class) {
+			node = doc.createElement(NODE_QUERY);
+		} else {
+			String queryTagName = null;
+			AbstractTaskListFactory factory = null;
+			for (AbstractTaskListFactory currentFactory : factories) {
+				if (currentFactory.canCreate(query)) {
+					factory = currentFactory;
+					queryTagName = factory.getQueryElementName(query);
+					break;
+				}
 			}
-		}
-		if (factory == null || queryTagName == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-					"Could not externalize query: " + query));
-			return null;
+			if (factory == null || queryTagName == null) {
+				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+						"Could not externalize query: " + query));
+				return null;
+			}
+			node = doc.createElement(queryTagName);
+			factory.setAdditionalAttributes(query, node);
 		}
 
-		Element node = doc.createElement(queryTagName);
-		factory.setAdditionalAttributes(query, node);
-
-		node.setAttribute(DelegatingTaskExternalizer.KEY_HANDLE, query.getHandleIdentifier());
-		node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, query.getSummary());
+		node.setAttribute(KEY_HANDLE, query.getHandleIdentifier());
+		node.setAttribute(KEY_CONNECTOR_KIND, query.getConnectorKind());
+		node.setAttribute(KEY_NAME, query.getSummary());
 		node.setAttribute(AbstractTaskListFactory.KEY_QUERY_STRING, query.getUrl());
-		node.setAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL, query.getRepositoryUrl());
+		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		if (query.getLastSynchronizedTimeStamp() != null) {
-			node.setAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH, query.getLastSynchronizedTimeStamp());
+			node.setAttribute(KEY_LAST_REFRESH, query.getLastSynchronizedTimeStamp());
 		}
-		for (ITask hit : query.getChildren()) {
-			try {
-				createTaskReference(KEY_QUERY_HIT, hit, doc, node);
-			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, e.getMessage(), e));
-			}
-		}
-
 		createAttributes(query, doc, node);
+		for (ITask hit : query.getChildren()) {
+			createTaskReference(KEY_QUERY_HIT, hit, doc, node);
+		}
 
 		parent.appendChild(node);
 		return node;
-	}
-
-	public final void readQueryHit(Element element, TaskList taskList, RepositoryQuery query)
-			throws TaskExternalizationException {
-
-		if (element.hasAttribute(KEY_HANDLE)) {
-			String handle = element.getAttribute(KEY_HANDLE);
-			AbstractTask hit = taskList.getTask(handle);
-			if (hit != null) {
-				taskList.addTask(hit, query);
-			}
-		} else {
-			throw new TaskExternalizationException("Handle not stored for repository task");
-		}
 	}
 
 	public List<AbstractTaskListFactory> getDelegateExternalizers() {
@@ -639,4 +654,83 @@ final class DelegatingTaskExternalizer {
 	public Map<AbstractTask, String> getLegacyParentCategoryMap() {
 		return parentCategoryMap;
 	}
+
+	/**
+	 * Reads the Query from the specified Node. If taskList is not null, then also adds this query to the TaskList
+	 * 
+	 * @throws TaskExternalizationException
+	 */
+	public RepositoryQuery readQuery(Node node, TaskList taskList) {
+		Element element = (Element) node;
+		String repositoryUrl = element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
+		String queryString = element.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);
+		if (queryString.length() == 0) { // fallback for legacy
+			queryString = element.getAttribute(AbstractTaskListFactory.KEY_QUERY);
+		}
+		String label = element.getAttribute(DelegatingTaskExternalizer.KEY_NAME);
+		if (label.length() == 0) { // fallback for legacy
+			label = element.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
+		}
+
+		RepositoryQuery query = null;
+		if (NODE_QUERY.equals(node.getNodeName())) {
+			String connectorKind = element.getAttribute(DelegatingTaskExternalizer.KEY_CONNECTOR_KIND);
+			query = readDefaultQuery(connectorKind, repositoryUrl, queryString, label, element);
+		}
+		// attempt migration from < 3.0 task list
+		if (query == null) {
+			for (AbstractTaskListMigrator migrator : migrators) {
+				Set<String> queryTagNames = migrator.getQueryElementNames();
+				if (queryTagNames != null && queryTagNames.contains(node.getNodeName())) {
+					query = readDefaultQuery(migrator.getConnectorKind(), repositoryUrl, queryString, label, element);
+					migrator.migrateQuery(query, element);
+					break;
+				}
+			}
+		}
+		// legacy support
+		if (query == null) {
+			for (AbstractTaskListFactory externalizer : factories) {
+				Set<String> queryTagNames = externalizer.getQueryElementNames();
+				if (queryTagNames != null && queryTagNames.contains(node.getNodeName())) {
+					query = externalizer.createQuery(repositoryUrl, queryString, label, element);
+					break;
+				}
+			}
+		}
+		// populate common attributes
+		if (query != null) {
+			if (element.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null
+					&& !element.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
+				query.setLastSynchronizedStamp(element.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
+			}
+			String handle = element.getAttribute(DelegatingTaskExternalizer.KEY_HANDLE);
+			if (handle.length() > 0) {
+				query.setHandleIdentifier(handle);
+			}
+		}
+		return query;
+	}
+
+	private RepositoryQuery readDefaultQuery(String connectorKind, String repositoryUrl, String queryString,
+			String label, Element childElement) {
+		TaskRepository taskRepository = tasksModel.getTaskRepository(connectorKind, repositoryUrl);
+		IRepositoryQuery query = tasksModel.createQuery(taskRepository);
+		query.setSummary(label);
+		query.setUrl(queryString);
+		return (RepositoryQuery) query;
+	}
+
+	private AbstractTask readDefaultTask(String connectorKind, String repositoryUrl, String taskId, String summary,
+			Element element) {
+		TaskRepository taskRepository = tasksModel.getTaskRepository(connectorKind, repositoryUrl);
+		if (repositoryUrl.equals(LocalRepositoryConnector.REPOSITORY_URL)) {
+			LocalTask task = new LocalTask(taskId, summary);
+			return task;
+		}
+		ITask task = tasksModel.createTask(taskRepository, taskId);
+		task.setSummary(summary);
+		return (AbstractTask) task;
+	}
+
 }
