@@ -147,7 +147,7 @@ public class TaskDataManager implements ITaskDataManager {
 				result[0] = state;
 			}
 		});
-		taskList.notifyTaskChanged(task, false);
+		taskList.notifyElementChanged(task);
 		return result[0];
 	}
 
@@ -163,7 +163,7 @@ public class TaskDataManager implements ITaskDataManager {
 				taskList.addTask(task);
 			}
 		});
-		taskList.notifyTaskChanged(task, true);
+		taskList.notifyElementChanged(task);
 	}
 
 	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, boolean user) throws CoreException {
@@ -206,7 +206,7 @@ public class TaskDataManager implements ITaskDataManager {
 					task.setSynchronizing(false);
 				}
 			});
-			taskList.notifyTaskChanged(task, true);
+			taskList.notifyElementChanged(task);
 		}
 	}
 
@@ -249,14 +249,14 @@ public class TaskDataManager implements ITaskDataManager {
 				}
 			}
 		});
-		taskList.notifyTaskChanged(task, true);
+		taskList.notifyElementChanged(task);
 	}
 
 	@Deprecated
 	public void discardOutgoing(AbstractTask repositoryTask) {
 		taskDataStorageManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 		repositoryTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-		taskList.notifyTaskChanged(repositoryTask, true);
+		taskList.notifyElementChanged(repositoryTask);
 	}
 
 	private File findFile(ITask task, String kind) {
@@ -362,7 +362,7 @@ public class TaskDataManager implements ITaskDataManager {
 				task.setSubmitting(false);
 			}
 		});
-		taskList.notifyTaskChanged(task, false);
+		taskList.notifyElementChanged(task);
 	}
 
 	/**
@@ -444,7 +444,7 @@ public class TaskDataManager implements ITaskDataManager {
 		repositoryTask.setSynchronizationState(SynchronizationState.OUTGOING);
 		taskDataStorageManager.saveEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId(),
 				Collections.unmodifiableSet(modifiedAttributes));
-		taskList.notifyTaskChanged(repositoryTask, false);
+		taskList.notifyElementChanged(repositoryTask);
 	}
 
 	public void setDataPath(String dataPath) {
@@ -495,7 +495,7 @@ public class TaskDataManager implements ITaskDataManager {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Unexpected error while marking task read", e));
 		}
-		taskList.notifyTaskChanged(task, false);
+		taskList.notifyElementChanged(task);
 	}
 
 	@Deprecated
@@ -508,13 +508,13 @@ public class TaskDataManager implements ITaskDataManager {
 				taskDataStorageManager.setOldTaskData(taskData);
 			}
 			task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-			taskList.notifyTaskChanged(task, false);
+			taskList.notifyElementChanged(task);
 		} else if (read && task.getSynchronizationState().equals(SynchronizationState.CONFLICT)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				task.setLastReadTimeStamp(taskData.getLastModified());
 			}
 			task.setSynchronizationState(SynchronizationState.OUTGOING);
-			taskList.notifyTaskChanged(task, false);
+			taskList.notifyElementChanged(task);
 		} else if (read && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				task.setLastReadTimeStamp(taskData.getLastModified());
@@ -536,7 +536,7 @@ public class TaskDataManager implements ITaskDataManager {
 
 		} else if (!read && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
 			task.setSynchronizationState(SynchronizationState.INCOMING);
-			taskList.notifyTaskChanged(task, false);
+			taskList.notifyElementChanged(task);
 		}
 
 		// for connectors that don't support task data set read date to now (bug#204741)

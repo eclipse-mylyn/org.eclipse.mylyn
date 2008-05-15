@@ -154,8 +154,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (taskContainerDelta.getContainer() instanceof ITask) {
-					final AbstractTask updateTask = (AbstractTask) taskContainerDelta.getContainer();
+				if (taskContainerDelta.getTarget() instanceof ITask) {
+					final AbstractTask updateTask = (AbstractTask) taskContainerDelta.getTarget();
 					if (updateTask != null && task != null
 							&& updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
@@ -248,7 +248,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			} else {
 				task.setCompletionDate(null);
 			}
-			TasksUiInternal.getTaskList().notifyTaskChanged(task, false);
+			TasksUiInternal.getTaskList().notifyElementChanged(task);
 		}
 
 		String note = noteEditor.getTextWidget().getText();// notes.getText();

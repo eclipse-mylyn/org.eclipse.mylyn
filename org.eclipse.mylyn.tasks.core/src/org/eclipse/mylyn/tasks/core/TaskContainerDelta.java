@@ -18,24 +18,17 @@ public final class TaskContainerDelta {
 
 	public enum Kind {
 		/**
-		 * One container added to another or to the root.
+		 * One container (source) added to another (target)
 		 */
 		ADDED,
 
 		/**
-		 * One container removed from another or from the root.
+		 * One container (source) removed from another (target)
 		 */
 		REMOVED,
 
 		/**
-		 * Container has changed, e.g. has new children, a task's priority or planning info. For tasks changed state
-		 * tends to be show in a view.
-		 */
-		CHANGED,
-
-		/**
-		 * The content of the container has changed, e.g. new data has been downloaded for a task from the repository.
-		 * For tasks content tends to be show in an editor.
+		 * The internal state of the container (target) has changed, e.g. attributes, summary, priority, etc
 		 */
 		CONTENT,
 
@@ -45,27 +38,66 @@ public final class TaskContainerDelta {
 		ROOT
 	}
 
-	private final ITaskElement container;
+	private final ITaskElement target;
+
+	private final ITaskElement source;
 
 	private final Kind kind;
+
+	private boolean isTransient;
 
 	/**
 	 * @since 3.0
 	 */
 	public TaskContainerDelta(ITaskElement container, Kind kind) {
-		this.container = container;
+		this.source = container;
+		this.target = null;
 		this.kind = kind;
 	}
 
 	/**
 	 * @since 3.0
 	 */
-	public ITaskElement getContainer() {
-		return container;
+	public TaskContainerDelta(ITaskElement source, ITaskElement target, Kind kind) {
+		this.source = source;
+		this.target = target;
+		this.kind = kind;
+	}
+
+	/**
+	 * The target is the container modified or the target destination for the <code>source</code> element
+	 * 
+	 * @since 3.0
+	 */
+	public ITaskElement getTarget() {
+		return target;
+	}
+
+	/**
+	 * The element being acted upon in relation to the <code>target</code>
+	 * 
+	 * @since 3.0
+	 */
+	public ITaskElement getSource() {
+		return source;
 	}
 
 	public Kind getKind() {
 		return kind;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void setTransient(boolean isTransient) {
+		this.isTransient = isTransient;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public boolean isTransient() {
+		return isTransient;
 	}
 
 }

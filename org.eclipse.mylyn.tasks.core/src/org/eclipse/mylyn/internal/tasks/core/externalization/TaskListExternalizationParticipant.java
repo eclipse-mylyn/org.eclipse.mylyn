@@ -140,10 +140,15 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 	}
 
 	public void containersChanged(Set<TaskContainerDelta> containers) {
-		synchronized (TaskListExternalizationParticipant.this) {
-			dirty = true;
+		for (TaskContainerDelta taskContainerDelta : containers) {
+			if (!taskContainerDelta.isTransient()) {
+				synchronized (TaskListExternalizationParticipant.this) {
+					dirty = true;
+				}
+				manager.requestSave();
+				return;
+			}
 		}
-		manager.requestSave();
 	}
 
 	public void taskListRead() {

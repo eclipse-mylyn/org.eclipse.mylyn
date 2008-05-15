@@ -86,7 +86,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		} catch (OperationCanceledException e) {
 			for (ITask task : tasks) {
 				((AbstractTask) task).setSynchronizing(false);
-				taskList.notifyTaskChanged(task, false);
+				taskList.notifyElementChanged(task);
 			}
 			return Status.CANCEL_STATUS;
 		} catch (Exception e) {
@@ -113,7 +113,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	private void synchronizeTask(IProgressMonitor monitor, ITask task) {
 		monitor.subTask("Receiving task " + task.getSummary());
 		((AbstractTask) task).setErrorStatus(null);
-		taskList.notifyTaskChanged(task, false);
+		taskList.notifyElementChanged(task);
 		try {
 			String taskId = task.getTaskId();
 			if (!isUser()) {
@@ -174,8 +174,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler().getMultiTaskData(repository,
 					Collections.unmodifiableSet(idToTask.keySet()), collector, monitor);
 		} else {
-			connector.getTaskDataHandler().getMultiTaskData(repository,
-					Collections.unmodifiableSet(idToTask.keySet()), collector, monitor);
+			connector.getTaskDataHandler().getMultiTaskData(repository, Collections.unmodifiableSet(idToTask.keySet()),
+					collector, monitor);
 		}
 
 	}
@@ -207,12 +207,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 		task.setStale(false);
 		((AbstractTask) task).setSynchronizing(false);
-		if (task.getSynchronizationState() == SynchronizationState.INCOMING
-				|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
-			taskList.notifyTaskChanged(task, true);
-		} else {
-			taskList.notifyTaskChanged(task, false);
-		}
+		taskList.notifyElementChanged(task);
 	}
 
 	private void updateFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
@@ -228,7 +223,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		if (!isUser()) {
 			((AbstractTask) task).setSynchronizing(false);
 		}
-		taskList.notifyTaskChanged(task, false);
+		taskList.notifyElementChanged(task);
 	}
 
 }

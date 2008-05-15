@@ -94,7 +94,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		if (orphans != null) {
 			task.addParentContainer(orphans);
 			orphans.internalAddChild(task);
-			delta.add(new TaskContainerDelta(orphans, TaskContainerDelta.Kind.CHANGED));
+			delta.add(new TaskContainerDelta(task, orphans, TaskContainerDelta.Kind.ADDED));
 		}
 	}
 
@@ -158,8 +158,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 			(task).addParentContainer(container);
 			container.internalAddChild(task);
-			delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
-			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
+			delta.add(new TaskContainerDelta(task, container, TaskContainerDelta.Kind.ADDED));
 		} finally {
 			unlock();
 		}
@@ -231,10 +230,15 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	private void fireDelta(HashSet<TaskContainerDelta> deltaToFire) {
+	private void fireDelta(HashSet<TaskContainerDelta> deltasToFire) {
 		if (readComplete) {
 			for (ITaskListChangeListener listener : changeListeners) {
-				listener.containersChanged(deltaToFire);
+				try {
+					listener.containersChanged(Collections.unmodifiableSet(deltasToFire));
+				} catch (Throwable t) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Notification failed for: " + listener, t));
+				}
 			}
 		}
 	}
@@ -443,45 +447,32 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		return rule instanceof TaskList || rule instanceof ITaskElement;
 	}
 
-	public void notifyContainersUpdated(Set<? extends AbstractTaskContainer> containers) {
-		HashSet<TaskContainerDelta> containersUpdatedDelta = new HashSet<TaskContainerDelta>();
-		if (containers == null) {
-			containersUpdatedDelta.add(new TaskContainerDelta(null, TaskContainerDelta.Kind.ROOT));
+	public void notifyElementsChanged(Set<? extends ITaskElement> elements) {
+		HashSet<TaskContainerDelta> deltas = new HashSet<TaskContainerDelta>();
+		if (elements == null) {
+			deltas.add(new TaskContainerDelta(null, TaskContainerDelta.Kind.ROOT));
 		} else {
-			for (AbstractTaskContainer abstractTaskContainer : containers) {
-				containersUpdatedDelta.add(new TaskContainerDelta(abstractTaskContainer,
-						TaskContainerDelta.Kind.CHANGED));
+			for (ITaskElement element : elements) {
+				deltas.add(new TaskContainerDelta(element, TaskContainerDelta.Kind.CONTENT));
 			}
 		}
 
-		for (ITaskListChangeListener listener : changeListeners) {
-			try {
-				listener.containersChanged(Collections.unmodifiableSet(containersUpdatedDelta));
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Notification failed for: "
-						+ listener, t));
-			}
-		}
+		fireDelta(deltas);
 	}
 
-	public void notifyTaskChanged(ITask task, boolean content) {
+	public void notifySyncStateChanged(Set<? extends AbstractTaskContainer> containers) {
 		HashSet<TaskContainerDelta> taskChangeDeltas = new HashSet<TaskContainerDelta>();
-		TaskContainerDelta.Kind kind;
-		if (content) {
-			kind = TaskContainerDelta.Kind.CONTENT;
-		} else {
-			kind = TaskContainerDelta.Kind.CHANGED;
+		for (AbstractTaskContainer abstractTaskContainer : containers) {
+			TaskContainerDelta delta = new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CONTENT);
+			delta.setTransient(true);
+			taskChangeDeltas.add(delta);
 		}
-		taskChangeDeltas.add(new TaskContainerDelta(task, kind));
 
-		for (ITaskListChangeListener listener : changeListeners) {
-			try {
-				listener.containersChanged(Collections.unmodifiableSet(taskChangeDeltas));
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Notification failed for: "
-						+ listener, t));
-			}
-		}
+		fireDelta(taskChangeDeltas);
+	}
+
+	public void notifyElementChanged(ITaskElement element) {
+		notifyElementsChanged(Collections.singleton(element));
 	}
 
 	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
@@ -505,7 +496,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			for (RepositoryQuery query : queries.values()) {
 				if (query.getRepositoryUrl().equals(oldRepositoryUrl)) {
 					query.setRepositoryUrl(newRepositoryUrl);
-					delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.CHANGED));
+					delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.CONTENT));
 				}
 			}
 
@@ -516,7 +507,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 					orphans.setRepositoryUrl(newRepositoryUrl);
 					repositoryOrphansMap.put(newRepositoryUrl, orphans);
 					//categories.put(orphans.getHandleIdentifier(), orphans);
-					delta.add(new TaskContainerDelta(orphans, TaskContainerDelta.Kind.CHANGED));
+					delta.add(new TaskContainerDelta(orphans, TaskContainerDelta.Kind.CONTENT));
 				}
 			}
 		} finally {
@@ -558,15 +549,14 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		container.internalRemoveChild(task);
 		((AbstractTask) task).removeParentContainer(container);
 
-		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
-		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
+		delta.add(new TaskContainerDelta(task, container, TaskContainerDelta.Kind.REMOVED));
 	}
 
 	private void removeOrphan(AbstractTask task, Set<TaskContainerDelta> delta) {
 		AbstractTaskContainer orphans = getUnmatchedContainer(task.getRepositoryUrl());
 		if (orphans != null) {
 			if (orphans.internalRemoveChild(task)) {
-				delta.add(new TaskContainerDelta(orphans, TaskContainerDelta.Kind.CHANGED));
+				delta.add(new TaskContainerDelta(task, orphans, TaskContainerDelta.Kind.REMOVED));
 				task.removeParentContainer(orphans);
 			}
 		}

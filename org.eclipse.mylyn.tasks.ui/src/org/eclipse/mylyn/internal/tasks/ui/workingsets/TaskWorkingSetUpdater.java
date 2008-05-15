@@ -130,8 +130,8 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	public void containersChanged(Set<TaskContainerDelta> delta) {
 		for (TaskContainerDelta taskContainerDelta : delta) {
-			if (taskContainerDelta.getContainer() instanceof TaskCategory
-					|| taskContainerDelta.getContainer() instanceof IRepositoryQuery) {
+			if (taskContainerDelta.getTarget() instanceof TaskCategory
+					|| taskContainerDelta.getTarget() instanceof IRepositoryQuery) {
 				synchronized (workingSets) {
 					switch (taskContainerDelta.getKind()) {
 					case REMOVED:
@@ -139,7 +139,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 						for (IWorkingSet workingSet : workingSets) {
 							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
 									Arrays.asList(workingSet.getElements()));
-							elements.remove(taskContainerDelta.getContainer());
+							elements.remove(taskContainerDelta.getTarget());
 							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
 						}
 						break;
@@ -148,12 +148,9 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 						for (IWorkingSet workingSet : TaskWorkingSetUpdater.getEnabledSets()) {
 							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
 									Arrays.asList(workingSet.getElements()));
-							elements.add(taskContainerDelta.getContainer());
+							elements.add(taskContainerDelta.getTarget());
 							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
 						}
-						break;
-					case CHANGED:
-						// Ignore since containers change during synch with server
 						break;
 					}
 				}

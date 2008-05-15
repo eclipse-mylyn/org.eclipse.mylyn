@@ -164,7 +164,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			@Override
 			public void containersChanged(Set<TaskContainerDelta> containers) {
 				for (TaskContainerDelta taskContainerDelta : containers) {
-					if (taskContainerDelta.getContainer() instanceof ITask) {
+					if (taskContainerDelta.getTarget() instanceof ITask) {
 						updateTaskProgressBar();
 						break;
 					}
@@ -328,8 +328,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			@Override
 			public void containersChanged(Set<TaskContainerDelta> containers) {
 				for (TaskContainerDelta taskContainerDelta : containers) {
-					if (taskContainerDelta.getContainer() instanceof ITask) {
-						final AbstractTask changedTask = (AbstractTask) (taskContainerDelta.getContainer());
+					if (taskContainerDelta.getTarget() instanceof ITask) {
+						final AbstractTask changedTask = (AbstractTask) (taskContainerDelta.getTarget());
 						if (Platform.isRunning() && PlatformUI.getWorkbench() != null && Display.getCurrent() == null) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 

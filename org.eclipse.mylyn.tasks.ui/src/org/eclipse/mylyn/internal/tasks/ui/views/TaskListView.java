@@ -465,7 +465,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		public void taskDeactivated(final ITask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					refreshJob.refreshTask(task);
+					refreshJob.refreshElement(task);
 					updateDescription();
 					filteredTree.indicateNoActiveTask();
 				}
@@ -505,10 +505,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 								refreshJob.refresh();
 								break;
 							default:
-								if (taskContainerDelta.getContainer() == null) {
+								if (taskContainerDelta.getTarget() == null) {
 									refreshJob.refresh();
 								} else {
-									refreshJob.refreshTask(taskContainerDelta.getContainer());
+									refreshJob.refreshElement(taskContainerDelta.getTarget());
 								}
 							}
 

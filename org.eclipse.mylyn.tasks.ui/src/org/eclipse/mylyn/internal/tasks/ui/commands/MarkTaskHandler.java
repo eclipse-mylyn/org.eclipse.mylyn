@@ -30,7 +30,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 			if (task instanceof LocalTask || (task instanceof AbstractTask && ((AbstractTask) task).isLocal())) {
 				task.setCompletionDate(new Date());
-				TasksUiPlugin.getTaskList().notifyTaskChanged(task, false);
+				TasksUiPlugin.getTaskList().notifyElementChanged(task);
 			}
 		}
 	}
@@ -40,7 +40,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 			if (task instanceof LocalTask || (task instanceof AbstractTask && ((AbstractTask) task).isLocal())) {
 				task.setCompletionDate(null);
-				TasksUiPlugin.getTaskList().notifyTaskChanged(task, false);
+				TasksUiPlugin.getTaskList().notifyElementChanged(task);
 			}
 		}
 	}

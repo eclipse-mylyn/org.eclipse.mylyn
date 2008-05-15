@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 
 /**
@@ -66,10 +67,9 @@ public interface ITaskList {
 
 	/**
 	 * @param task
-	 * @param content
-	 * 		true if the content for the task (e.g. repository task data) has changed
+	 * 		list element
 	 */
-	public abstract void notifyTaskChanged(ITask task, boolean content);
+	public abstract void notifyElementChanged(ITaskElement element);
 
 	public abstract void removeChangeListener(ITaskListChangeListener listener);
 

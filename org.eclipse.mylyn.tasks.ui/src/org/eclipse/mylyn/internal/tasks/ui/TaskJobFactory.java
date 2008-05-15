@@ -108,7 +108,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
 		}
-		taskList.notifyTaskChanged(task, false);
+		taskList.notifyElementChanged(task);
 		return job;
 	}
 
@@ -161,7 +161,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
 		}
-		taskList.notifyTaskChanged(task, false);
+		taskList.notifyElementChanged(task);
 		job.setUser(true);
 		return job;
 	}

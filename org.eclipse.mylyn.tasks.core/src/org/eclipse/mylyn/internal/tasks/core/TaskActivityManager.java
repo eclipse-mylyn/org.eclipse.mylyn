@@ -518,7 +518,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 			removeScheduledTask(task);
 			addScheduledTask(task);
 		}
-		taskList.notifyTaskChanged(task, false);
+		taskList.notifyElementChanged(task);
 	}
 
 	public void setDueDate(ITask task, Date dueDate) {
@@ -529,7 +529,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 			removeDueTask(task);
 			addDueTask(task);
 		}
-		taskList.notifyTaskChanged(task, false);
+		taskList.notifyElementChanged(task);
 	}
 
 	/**

@@ -81,7 +81,7 @@ class TaskListCellModifier implements ICellModifier {
 				case 0:
 					if (task != null) {
 						task.setSummary(((String) value).trim());
-						TasksUiPlugin.getTaskList().notifyTaskChanged(task, false);
+						TasksUiPlugin.getTaskList().notifyElementChanged(task);
 					}
 					break;
 				case 1:

@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.tasks.ui.wizards;
 
-import java.util.Collections;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -63,7 +61,9 @@ public class RepositoryQueryWizard extends Wizard {
 		IRepositoryQuery query = page.getQuery();
 		if (query != null) {
 			page.applyTo(query);
-			TasksUiPlugin.getTaskList().notifyContainersUpdated(Collections.singleton((RepositoryQuery) query));
+			if (query instanceof RepositoryQuery) {
+				TasksUiPlugin.getTaskList().notifyElementChanged((RepositoryQuery) query);
+			}
 		} else {
 			query = page.createQuery();
 			TasksUi.getTasksModel().addQuery(query);

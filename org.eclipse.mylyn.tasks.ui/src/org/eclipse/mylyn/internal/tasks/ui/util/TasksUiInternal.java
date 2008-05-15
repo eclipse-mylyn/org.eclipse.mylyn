@@ -266,7 +266,7 @@ public class TasksUiInternal {
 		for (RepositoryQuery query : queries) {
 			query.setSynchronizing(true);
 		}
-		taskList.notifyContainersUpdated(queries);
+		taskList.notifySyncStateChanged(queries);
 
 		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeQueriesJob(connector, repository,
 				queries);
@@ -340,7 +340,7 @@ public class TasksUiInternal {
 		ITaskList taskList = TasksUiInternal.getTaskList();
 		for (ITask task : tasks) {
 			((AbstractTask) task).setSynchronizing(true);
-			taskList.notifyTaskChanged(task, false);
+			taskList.notifyElementChanged(task);
 		}
 		// TODO notify task list?
 
@@ -356,8 +356,7 @@ public class TasksUiInternal {
 				@Override
 				public void done(IJobChangeEvent event) {
 					if (task.getErrorStatus() != null) {
-						TasksUiInternal.asyncDisplayStatus("Task Synchronization Failed",
-								task.getErrorStatus());
+						TasksUiInternal.asyncDisplayStatus("Task Synchronization Failed", task.getErrorStatus());
 					}
 				}
 			});
