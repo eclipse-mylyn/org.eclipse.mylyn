@@ -190,6 +190,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	private class TaskListChangeListener extends TaskListChangeAdapter {
 		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
+			if (refreshDisabled) {
+				return;
+			}
 			ITask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (task.equals(taskContainerDelta.getTarget())) {
@@ -291,6 +294,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	private FormToolkit toolkit;
 
 	private MenuManager menuManager;
+
+	private volatile boolean refreshDisabled = true;
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label");
@@ -835,11 +840,14 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private void refreshInput() {
 		try {
+			refreshDisabled = true;
 			model.refresh(null);
 		} catch (CoreException e) {
 			getTaskEditor().setMessage("Failed to read task data: " + e.getMessage(), IMessageProvider.ERROR);
 			taskData = null;
 			return;
+		} finally {
+			refreshDisabled = false;
 		}
 
 		setTaskData(model.getTaskData());
