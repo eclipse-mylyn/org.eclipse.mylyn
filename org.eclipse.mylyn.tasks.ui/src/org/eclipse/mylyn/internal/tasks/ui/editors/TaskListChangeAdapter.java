@@ -18,7 +18,4 @@ public class TaskListChangeAdapter implements ITaskListChangeListener {
 	public void containersChanged(Set<TaskContainerDelta> containers) {
 	}
 
-	public void taskListRead() {
-	}
-
 }

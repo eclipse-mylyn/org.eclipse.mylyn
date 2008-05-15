@@ -295,8 +295,4 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		}
 	}
 
-	public void taskListRead() {
-		// ignore
-	}
-
 }
