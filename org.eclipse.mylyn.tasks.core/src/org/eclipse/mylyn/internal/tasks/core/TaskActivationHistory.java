@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -76,19 +77,17 @@ public class TaskActivationHistory {
 		if (containers.isEmpty()) {
 			return getPreviousTasks();
 		}
-
 		Set<ITask> allWorkingSetTasks = new HashSet<ITask>();
 		for (ITaskElement container : containers) {
 			allWorkingSetTasks.addAll(container.getChildren());
 		}
-
-		List<AbstractTask> allScopedTasks = getPreviousTasks();
-		for (ITask task : getPreviousTasks()) {
+		List<AbstractTask> allScopedTasks = new ArrayList<AbstractTask>(getPreviousTasks());
+		for (Iterator<AbstractTask> it = allScopedTasks.iterator(); it.hasNext();) {
+			AbstractTask task = it.next();
 			if (!allWorkingSetTasks.contains(task)) {
-				allScopedTasks.remove(task);
+				it.remove();
 			}
 		}
-
 		return Collections.unmodifiableList(allScopedTasks);
 	}
 
