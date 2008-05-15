@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 
 /**
  * @author Mik Kersten
@@ -26,12 +26,12 @@ public class SynchronizeAutomaticallyAction extends Action {
 		setToolTipText(LABEL);
 		setId(ID);
 		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 	}
 
 	@Override
 	public void run() {
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, isChecked());
+				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, isChecked());
 	}
 }

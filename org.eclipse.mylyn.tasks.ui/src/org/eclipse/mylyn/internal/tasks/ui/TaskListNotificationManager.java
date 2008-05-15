@@ -114,7 +114,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	public void startNotification(long initialStartupTime) {
 		if (TasksUiPlugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
+				.getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
 			if (!openJob.cancel()) {
 				try {
 					openJob.join();
@@ -153,7 +153,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
+		if (event.getProperty().equals(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
 			Object newValue = event.getNewValue();
 			if (!(newValue instanceof Boolean)) {
 				// default if no preference value

@@ -101,7 +101,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	private final IPropertyChangeListener SHOW_TRIM_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			String property = event.getProperty();
-			if (property.equals(TasksUiPreferenceConstants.SHOW_TRIM)) {
+			if (property.equals(ITasksUiPreferenceConstants.SHOW_TRIM)) {
 				setTrimVisible((Boolean) event.getNewValue());
 			}
 		}
@@ -164,7 +164,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		parent.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				IPreferenceStore uiPreferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
-				setTrimVisible(uiPreferenceStore.getBoolean(TasksUiPreferenceConstants.SHOW_TRIM));
+				setTrimVisible(uiPreferenceStore.getBoolean(ITasksUiPreferenceConstants.SHOW_TRIM));
 			}
 		});
 

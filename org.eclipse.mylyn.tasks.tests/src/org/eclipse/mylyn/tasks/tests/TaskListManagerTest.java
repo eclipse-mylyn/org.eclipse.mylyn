@@ -39,7 +39,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -64,7 +64,7 @@ public class TaskListManagerTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getTaskListManager();
 		for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
 			TasksUiPlugin.getRepositoryManager().removeRepository(repository,

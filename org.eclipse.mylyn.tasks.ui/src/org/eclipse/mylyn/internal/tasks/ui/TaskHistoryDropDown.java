@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;

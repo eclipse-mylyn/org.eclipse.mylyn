@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 
 /**
@@ -32,12 +32,12 @@ public class FilterCompletedTasksAction extends Action {
 		setId(ID);
 		setImageDescriptor(CommonImages.FILTER_COMPLETE);
 		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().contains(
-				TasksUiPreferenceConstants.FILTER_COMPLETE_MODE));
+				ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE));
 	}
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.FILTER_COMPLETE_MODE,
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE,
 				isChecked());
 		if (isChecked()) {
 			view.addFilter(view.getCompleteFilter());

@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 
 /**
@@ -33,14 +33,14 @@ public class GroupSubTasksAction extends Action {
 		// setImageDescriptor(TasksUiImages.FILTER_COMPLETE);
 		setChecked(TasksUiPlugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(TasksUiPreferenceConstants.GROUP_SUBTASKS));
+				.getBoolean(ITasksUiPreferenceConstants.GROUP_SUBTASKS));
 	}
 
 	@Override
 	public void run() {
 		TasksUiPlugin.getDefault()
 				.getPreferenceStore()
-				.setValue(TasksUiPreferenceConstants.GROUP_SUBTASKS, isChecked());
+				.setValue(ITasksUiPreferenceConstants.GROUP_SUBTASKS, isChecked());
 		// TODO: refresh not getting rid of subtasks
 
 		view.refresh(true);

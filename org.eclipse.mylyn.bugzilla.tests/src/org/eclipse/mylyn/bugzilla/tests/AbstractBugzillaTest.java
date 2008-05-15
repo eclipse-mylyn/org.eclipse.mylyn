@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -58,7 +58,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		TasksUiPlugin.getTaskDataStorageManager().clear();
 		manager = TasksUiPlugin.getRepositoryManager();
 		TasksUiPlugin.getTaskListManager().resetTaskList();//getTaskList().reset();

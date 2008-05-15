@@ -10,7 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 

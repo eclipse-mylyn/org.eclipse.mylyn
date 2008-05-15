@@ -39,12 +39,11 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListModifyOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskImportAction;
@@ -53,6 +52,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.DND;
@@ -187,7 +187,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						&& areAllLocalTasks(tasksToMove)
 						&& getCurrentLocation() == LOCATION_ON
 						&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-								TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
+								ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
 					for (ITask task : tasksToMove) {
 						if (!((AbstractTask) task).contains(((LocalTask) currentTarget).getHandleIdentifier())) {
 							TasksUiInternal.getTaskList().addTask(task, (LocalTask) currentTarget);
@@ -380,7 +380,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			} else if (getCurrentTarget() instanceof LocalTask
 					&& getCurrentLocation() == ViewerDropAdapter.LOCATION_ON
 					&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-							TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
+							ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
 				return true;
 			} else {
 				return false;

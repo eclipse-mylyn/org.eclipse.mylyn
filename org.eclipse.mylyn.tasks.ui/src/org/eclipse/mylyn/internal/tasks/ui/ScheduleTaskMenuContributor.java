@@ -120,7 +120,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 						.getActiveWorkbenchWindow()
 						.getShell(), theCalendar, DatePicker.TITLE_DIALOG, false, TasksUiPlugin.getDefault()
 						.getPreferenceStore()
-						.getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+						.getInt(ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
 				int result = reminderDialog.open();
 				if (result == Window.OK) {
 					DateRange range = null;

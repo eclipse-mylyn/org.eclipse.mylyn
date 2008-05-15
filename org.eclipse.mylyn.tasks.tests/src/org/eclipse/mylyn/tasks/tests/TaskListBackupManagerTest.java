@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 
 /**
  * @author Rob Elves
@@ -45,12 +45,12 @@ public class TaskListBackupManagerTest extends TestCase {
 
 	public void testAutoBackupDisabled() throws InterruptedException {
 		TaskListBackupManager backupManager = TasksUiPlugin.getBackupManager();
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST, 0f);
-		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore().getLong(TasksUiPreferenceConstants.BACKUP_LAST));
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.BACKUP_LAST, 0f);
+		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore().getLong(ITasksUiPreferenceConstants.BACKUP_LAST));
 		backupManager.start(5);
 		Thread.sleep(3000);
-		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore().getLong(TasksUiPreferenceConstants.BACKUP_LAST));
+		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore().getLong(ITasksUiPreferenceConstants.BACKUP_LAST));
 	}
 
 	public void testAutoBackupEnabled() throws InterruptedException, InvocationTargetException, IOException {

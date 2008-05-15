@@ -24,8 +24,8 @@ public class TaskRepositoryUtil {
 	 */
 	public static boolean isAddAutomaticallyDisabled(String repositoryUrl) {
 		String deletedTemplates = TasksUiPlugin.getDefault().getPreferenceStore().getString(
-				TasksUiPreferenceConstants.TEMPLATES_DELETED);
-		String[] templateUrls = deletedTemplates.split("\\" + TasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM);
+				ITasksUiPreferenceConstants.TEMPLATES_DELETED);
+		String[] templateUrls = deletedTemplates.split("\\" + ITasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM);
 		for (String deletedUrl : templateUrls) {
 			if (deletedUrl.equalsIgnoreCase(repositoryUrl)) {
 				return true;
@@ -42,9 +42,9 @@ public class TaskRepositoryUtil {
 	public static void disableAddAutomatically(String repositoryUrl) {
 		if (!isAddAutomaticallyDisabled(repositoryUrl) && isAddAutomatically(repositoryUrl)) {
 			String deletedTemplates = TasksUiPlugin.getDefault().getPreferenceStore().getString(
-					TasksUiPreferenceConstants.TEMPLATES_DELETED);
-			deletedTemplates += TasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM + repositoryUrl;
-			TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.TEMPLATES_DELETED,
+					ITasksUiPreferenceConstants.TEMPLATES_DELETED);
+			deletedTemplates += ITasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM + repositoryUrl;
+			TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.TEMPLATES_DELETED,
 					deletedTemplates);
 			TasksUiPlugin.getDefault().savePluginPreferences();
 		}

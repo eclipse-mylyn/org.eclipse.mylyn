@@ -21,8 +21,6 @@ import org.eclipse.ui.internal.PageLayout;
  */
 public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 
-	public static final String ID_PERSPECTIVE = "org.eclipse.mylyn.tasks.ui.perspectives.planning";
-
 	public void createInitialLayout(IPageLayout layout) {
 		defineActions(layout);
 		defineLayout(layout);

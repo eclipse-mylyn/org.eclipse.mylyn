@@ -38,6 +38,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.progress.IProgressConstants;
 
 /**

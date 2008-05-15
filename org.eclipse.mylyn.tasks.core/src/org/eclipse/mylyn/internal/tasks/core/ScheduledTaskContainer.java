@@ -190,7 +190,6 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	@Override
 	public Object getAdapter(Class adapter) {
-		// ignore
 		return null;
 	}
 

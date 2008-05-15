@@ -349,13 +349,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 //				}
 //			}
 
-			if (event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_ENDHOUR)
-					|| event.getProperty().equals(TasksUiPreferenceConstants.WEEK_START_DAY)) {
+			if (event.getProperty().equals(ITasksUiPreferenceConstants.PLANNING_ENDHOUR)
+					|| event.getProperty().equals(ITasksUiPreferenceConstants.WEEK_START_DAY)) {
 				updateTaskActivityManager();
 			}
 
-			if (event.getProperty().equals(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
-					|| event.getProperty().equals(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
+			if (event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
+					|| event.getProperty().equals(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
 				updateSynchronizationScheduler(false);
 			}
 		}
@@ -464,10 +464,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private void updateSynchronizationScheduler(boolean initial) {
 		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
+				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (enabled) {
 			long interval = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
-					TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+					ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 			if (initial) {
 				synchronizationScheduler.setInterval(DELAY_QUERY_REFRESH_ON_STARTUP, interval);
 			} else {
@@ -605,13 +605,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	private void updateTaskActivityManager() {
-		int endHour = getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR);
+		int endHour = getPreferenceStore().getInt(ITasksUiPreferenceConstants.PLANNING_ENDHOUR);
 //		if (taskActivityManager.getEndHour() != endHour) {
 //			taskActivityManager.setEndHour(endHour);
 		TaskActivityUtil.setEndHour(endHour);
 //		}
 
-		int newWeekStartDay = getPreferenceStore().getInt(TasksUiPreferenceConstants.WEEK_START_DAY);
+		int newWeekStartDay = getPreferenceStore().getInt(ITasksUiPreferenceConstants.WEEK_START_DAY);
 		int oldWeekStartDay = taskActivityManager.getWeekStartDay();
 		if (oldWeekStartDay != newWeekStartDay) {
 			taskActivityManager.setWeekStartDay(newWeekStartDay);
@@ -808,28 +808,28 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(ContextPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
-		store.setDefault(TasksUiPreferenceConstants.GROUP_SUBTASKS, true);
-		store.setDefault(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, true);
-		store.setDefault(TasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
-		store.setDefault(TasksUiPreferenceConstants.EDITOR_TASKS_RICH, true);
-		store.setDefault(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED, false);
-		store.setDefault(TasksUiPreferenceConstants.SHOW_TRIM, false);
-		store.setDefault(TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED, false);
+		store.setDefault(ITasksUiPreferenceConstants.GROUP_SUBTASKS, true);
+		store.setDefault(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, true);
+		store.setDefault(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
+		store.setDefault(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, true);
+		store.setDefault(ITasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED, false);
+		store.setDefault(ITasksUiPreferenceConstants.SHOW_TRIM, false);
+		store.setDefault(ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED, false);
 
-		store.setDefault(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
-		store.setDefault(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000));
+		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
+		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000));
 
 		//store.setDefault(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
-		store.setDefault(TasksUiPreferenceConstants.BACKUP_MAXFILES, 20);
-		store.setDefault(TasksUiPreferenceConstants.BACKUP_LAST, 0f);
+		store.setDefault(ITasksUiPreferenceConstants.BACKUP_MAXFILES, 20);
+		store.setDefault(ITasksUiPreferenceConstants.BACKUP_LAST, 0f);
 
-		store.setDefault(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE, true);
-		store.setDefault(TasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
-		store.setValue(TasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
+		store.setDefault(ITasksUiPreferenceConstants.FILTER_ARCHIVE_MODE, true);
+		store.setDefault(ITasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
+		store.setValue(ITasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
 
-		store.setDefault(TasksUiPreferenceConstants.WEEK_START_DAY, Calendar.getInstance().getFirstDayOfWeek());
+		store.setDefault(ITasksUiPreferenceConstants.WEEK_START_DAY, Calendar.getInstance().getFirstDayOfWeek());
 		//store.setDefault(TasksUiPreferenceConstants.PLANNING_STARTHOUR, 9);
-		store.setDefault(TasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
+		store.setDefault(ITasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
 	}
 
 	public static TaskListManager getTaskListManager() {
@@ -853,7 +853,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public boolean groupSubtasks(ITaskElement container) {
 		boolean groupSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.GROUP_SUBTASKS);
+				ITasksUiPreferenceConstants.GROUP_SUBTASKS);
 
 		if (container instanceof ITask) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((ITask) container).getConnectorKind());

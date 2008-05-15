@@ -34,9 +34,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -48,7 +47,9 @@ import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -181,7 +182,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private ITaskActivityListener timingListener;
 
 	public TaskPlanningEditor(TaskEditor editor) {
-		super(editor, TasksUi.ID_PLANNING_PAGE, "Planning");
+		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, "Planning");
 		this.parentEditor = editor;
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
@@ -647,7 +648,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE, true,
-				TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
+				TasksUiPlugin.getDefault().getPreferenceStore().getInt(ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
 
 		Calendar calendar = TaskActivityUtil.getCalendar();
 

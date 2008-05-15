@@ -36,9 +36,8 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepository
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.LegacyChangeManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -47,6 +46,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -526,7 +526,7 @@ public class TaskListToolTip extends ToolTip {
 
 					if (!taskListView.isFocusedMode()
 							&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-									TasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
+									ITasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
 						Object[] children = ((TaskListContentProvider) taskListView.getViewer().getContentProvider()).getChildren(element);
 						boolean hasIncoming = false;
 						for (Object child : children) {

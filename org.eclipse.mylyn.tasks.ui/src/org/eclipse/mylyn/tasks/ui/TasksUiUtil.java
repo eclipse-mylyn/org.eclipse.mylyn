@@ -47,7 +47,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepository
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
@@ -302,7 +302,7 @@ public class TasksUiUtil {
 	@Deprecated
 	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
 		final boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.EDITOR_TASKS_RICH);
+				ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
 
 		final String taskEditorId = getTaskEditorId(task);
 
@@ -524,7 +524,7 @@ public class TasksUiUtil {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					TasksUiPreferenceConstants.EDITOR_TASKS_RICH);
+					ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
 			if (openWithBrowser) {
 				openUrl(task.getUrl());
 				return true;

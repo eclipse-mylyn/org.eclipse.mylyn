@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**
  * @author Mik Kersten

@@ -30,9 +30,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -42,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -182,7 +182,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof LocalTask) {
 				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						TasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
+						ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
 					selectedTask = (AbstractTask) selectedObject;
 				}
 			} else if (selectedObject instanceof ITask) {

@@ -10,10 +10,10 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 
 public abstract class AbstractReplyToCommentAction extends Action {

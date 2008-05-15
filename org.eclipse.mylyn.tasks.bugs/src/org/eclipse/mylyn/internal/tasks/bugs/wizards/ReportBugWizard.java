@@ -14,7 +14,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.bugs.PluginRepositoryMappingManager;
 import org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**
  * @author Steffen Pingel

@@ -16,11 +16,10 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 
 /**
  * @author Steffen Pingel
+ * @author Mik Kersten
  * @since 3.0
  */
 public class TasksUi {
-
-	public static final String ID_PLANNING_PAGE = "org.eclipse.mylyn.tasks.ui.pageFactory.Planning";
 
 	public static ITaskActivityManager getTaskActivityManager() {
 		return TasksUiPlugin.getTaskActivityManager();

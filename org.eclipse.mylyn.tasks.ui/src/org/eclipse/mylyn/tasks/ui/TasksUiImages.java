@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui;
+package org.eclipse.mylyn.tasks.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,6 +14,7 @@ import java.net.URL;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -126,6 +127,10 @@ public class TasksUiImages {
 	public static final ImageDescriptor CONTEXT_HISTORY_NEXT = create(TOOL, "navigate-next.gif");
 
 	public static final ImageDescriptor CONTEXT_CAPTURE_PAUSE = create(TOOL, "capture-pause.gif");
+
+	public static final ImageDescriptor CONTEXT_ADD = create(TOOL, "context-add.gif");
+
+	public static final ImageDescriptor CONTEXT_COPY = create(TOOL, "context-transfer.gif");
 
 	// Comments and collaboration
 
