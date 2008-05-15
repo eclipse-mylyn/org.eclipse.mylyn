@@ -495,7 +495,8 @@ public class TaskDataManager implements ITaskDataManager {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Unexpected error while marking task read", e));
 		}
-		taskList.notifyElementChanged(task);
+		taskList.notifySyncStateChanged(task);
+		//taskList.notifyElementChanged(task);
 	}
 
 	@Deprecated

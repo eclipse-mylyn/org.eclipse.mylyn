@@ -24,6 +24,7 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
@@ -113,7 +114,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	private void synchronizeTask(IProgressMonitor monitor, ITask task) {
 		monitor.subTask("Receiving task " + task.getSummary());
 		((AbstractTask) task).setErrorStatus(null);
-		taskList.notifyElementChanged(task);
+		((TaskList) taskList).notifySyncStateChanged(task);
 		try {
 			String taskId = task.getTaskId();
 			if (!isUser()) {
