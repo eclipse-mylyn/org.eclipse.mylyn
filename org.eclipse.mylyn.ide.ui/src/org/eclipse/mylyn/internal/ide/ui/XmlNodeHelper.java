@@ -8,7 +8,7 @@
 /*
  * Created on Apr 4, 2005
  */
-package org.eclipse.mylyn.internal.ide.xml;
+package org.eclipse.mylyn.internal.ide.ui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +18,6 @@ import java.io.InputStreamReader;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 
 /**
  * Class to help get the handle for an xml file

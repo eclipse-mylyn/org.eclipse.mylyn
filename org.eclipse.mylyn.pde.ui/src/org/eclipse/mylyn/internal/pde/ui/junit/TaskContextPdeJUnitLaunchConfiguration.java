@@ -24,6 +24,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
 public class TaskContextPdeJUnitLaunchConfiguration extends JUnitLaunchConfigurationDelegate {
 
 	@Override

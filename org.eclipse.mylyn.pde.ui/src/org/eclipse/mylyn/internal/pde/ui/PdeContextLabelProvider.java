@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
 public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	public static final String LABEL_RELATION = "referenced by";

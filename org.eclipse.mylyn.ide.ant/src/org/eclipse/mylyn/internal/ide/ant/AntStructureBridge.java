@@ -35,7 +35,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.internal.ide.ui.XmlNodeHelper;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
@@ -44,6 +44,7 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
 public class AntStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = "build.xml";
@@ -100,8 +101,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				}
 			}
 		} else if (o instanceof IFile) {
-			AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(
-					parentContentType);
+			AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
 			return parentBridge.getParentHandle(handle);
 		} else {
 			// return null if we can't get a parents
@@ -218,9 +218,8 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#canBeLandmark(Object)
-	 * 
-	 * TODO: make a non-handle based test
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#canBeLandmark(Object) TODO: make a non-handle
+	 * 	based test
 	 */
 	@Override
 	public boolean canBeLandmark(String handle) {

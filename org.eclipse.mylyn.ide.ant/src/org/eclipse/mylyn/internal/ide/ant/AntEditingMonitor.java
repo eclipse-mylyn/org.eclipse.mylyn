@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.internal.ide.ui.XmlNodeHelper;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
@@ -31,6 +31,7 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
 public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 
 	public AntEditingMonitor() {

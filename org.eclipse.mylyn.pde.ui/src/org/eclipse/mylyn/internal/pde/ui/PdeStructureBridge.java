@@ -27,7 +27,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.internal.ide.ui.XmlNodeHelper;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
 import org.eclipse.pde.internal.core.text.plugin.PluginNode;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
@@ -41,6 +41,7 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
  * @author Mik Kersten
  * 
  */
+@SuppressWarnings("restriction")
 public class PdeStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = "plugin.xml";

@@ -32,7 +32,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
 import org.eclipse.pde.internal.ui.editor.FormOutlinePage;
 import org.eclipse.pde.internal.ui.editor.ISortableContentOutlinePage;
@@ -64,7 +63,8 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylyn.context.ui.AbstractContextUiBridge#open(org.eclipse.mylyn.context.core.IInteractionElement)
+	 * @see
+	 * 	org.eclipse.mylyn.context.ui.AbstractContextUiBridge#open(org.eclipse.mylyn.context.core.IInteractionElement)
 	 */
 	@Override
 	public void open(IInteractionElement node) {
@@ -125,18 +125,15 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	 * Open a file in the appropriate editor
 	 * 
 	 * @param file
-	 *            The IFile to open
+	 * 		The IFile to open
 	 * @param activate
-	 *            Whether to activate the editor or not
+	 * 		Whether to activate the editor or not
 	 * @return The IEditorPart that the file opened in
 	 * @throws PartInitException
 	 */
 	private IEditorPart openInEditor(IFile file, boolean activate) throws PartInitException {
 		if (file != null) {
-			IWorkbenchPage p = ResourcesUiBridgePlugin.getDefault()
-					.getWorkbench()
-					.getActiveWorkbenchWindow()
-					.getActivePage();
+			IWorkbenchPage p = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (p != null && file.exists()) {
 				IEditorPart editorPart = IDE.openEditor(p, file, activate);
 				// initializeHighlightRange(editorPart);

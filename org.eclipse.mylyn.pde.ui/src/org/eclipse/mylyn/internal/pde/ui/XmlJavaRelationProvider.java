@@ -44,7 +44,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
-import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.internal.ide.ui.XmlNodeHelper;
 import org.eclipse.mylyn.internal.java.ui.search.XmlActiveSearchUpdater;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.search.core.text.TextSearchScope;
@@ -58,6 +58,7 @@ import org.eclipse.search.ui.text.Match;
  * @author Shawn Minto
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
 public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 	public static final String SOURCE_ID = "org.eclipse.mylyn.xml.search.references";
@@ -146,8 +147,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 			// create a search scope for the projects of landmarks
 			Set<IProject> projectsToSearch = new HashSet<IProject>();
 			for (IInteractionElement landmark : landmarks) {
-				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-						landmark.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(landmark.getContentType());
 				IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(landmark, true);
 				IProject project = null;
 				if (resource != null) {
@@ -374,7 +374,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		 * Add a listener for when the bugzilla search is completed
 		 * 
 		 * @param l
-		 *            The listener to add
+		 * 		The listener to add
 		 */
 		public void addListener(IActiveSearchListener l) {
 			// add the listener to the list
@@ -385,7 +385,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		 * Remove a listener for when the bugzilla search is completed
 		 * 
 		 * @param l
-		 *            The listener to remove
+		 * 		The listener to remove
 		 */
 		public void removeListener(IActiveSearchListener l) {
 			// remove the listener from the list
@@ -396,9 +396,9 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		 * Notify all of the listeners that the bugzilla search is completed
 		 * 
 		 * @param doiList
-		 *            A list of BugzillaSearchHitDoiInfo
+		 * 		A list of BugzillaSearchHitDoiInfo
 		 * @param member
-		 *            The IMember that the search was performed on
+		 * 		The IMember that the search was performed on
 		 */
 		public void notifySearchCompleted(List<Object> l) {
 			// go through all of the listeners and call
