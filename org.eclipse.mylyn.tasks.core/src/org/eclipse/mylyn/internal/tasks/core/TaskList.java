@@ -459,15 +459,19 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		fireDelta(deltas);
 	}
 
-	public void notifySyncStateChanged(Set<? extends AbstractTaskContainer> containers) {
+	public void notifySyncStateChanged(Set<? extends ITaskElement> elements) {
 		HashSet<TaskContainerDelta> taskChangeDeltas = new HashSet<TaskContainerDelta>();
-		for (AbstractTaskContainer abstractTaskContainer : containers) {
+		for (ITaskElement abstractTaskContainer : elements) {
 			TaskContainerDelta delta = new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CONTENT);
 			delta.setTransient(true);
 			taskChangeDeltas.add(delta);
 		}
 
 		fireDelta(taskChangeDeltas);
+	}
+
+	public void notifySyncStateChanged(ITaskElement element) {
+		notifySyncStateChanged(Collections.singleton(element));
 	}
 
 	public void notifyElementChanged(ITaskElement element) {

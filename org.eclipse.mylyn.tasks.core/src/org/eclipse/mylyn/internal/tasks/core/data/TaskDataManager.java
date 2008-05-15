@@ -147,7 +147,7 @@ public class TaskDataManager implements ITaskDataManager {
 				result[0] = state;
 			}
 		});
-		taskList.notifyElementChanged(task);
+		taskList.notifySyncStateChanged(task);
 		return result[0];
 	}
 
