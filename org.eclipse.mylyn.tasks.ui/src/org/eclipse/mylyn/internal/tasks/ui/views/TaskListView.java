@@ -499,17 +499,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 								refreshJob.refresh();
 								break;
 							case ADDED:
-								refreshJob.refresh();
+								refreshJob.refreshElement(taskContainerDelta.getSource());
+								refreshJob.refreshElement(taskContainerDelta.getTarget());
 								break;
 							case REMOVED:
-								refreshJob.refresh();
+								refreshJob.refreshElement(taskContainerDelta.getSource());
+								refreshJob.refreshElement(taskContainerDelta.getTarget());
 								break;
-							default:
-								if (taskContainerDelta.getTarget() == null) {
-									refreshJob.refresh();
-								} else {
-									refreshJob.refreshElement(taskContainerDelta.getTarget());
-								}
+							case CONTENT:
+								refreshJob.refreshElement(taskContainerDelta.getTarget());
 							}
 
 						}
@@ -794,8 +792,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
-		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL | SWT.NO_SCROLL
-				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
+		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
+				| SWT.NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html

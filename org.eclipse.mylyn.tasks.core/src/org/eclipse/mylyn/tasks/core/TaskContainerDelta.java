@@ -49,9 +49,9 @@ public final class TaskContainerDelta {
 	/**
 	 * @since 3.0
 	 */
-	public TaskContainerDelta(ITaskElement container, Kind kind) {
-		this.source = container;
-		this.target = null;
+	public TaskContainerDelta(ITaskElement target, Kind kind) {
+		this.target = target;
+		this.source = null;
 		this.kind = kind;
 	}
 
@@ -74,7 +74,7 @@ public final class TaskContainerDelta {
 	}
 
 	/**
-	 * The element being acted upon in relation to the <code>target</code>
+	 * The element being ADDED or REMOVED wrt the <code>target</code>
 	 * 
 	 * @since 3.0
 	 */
