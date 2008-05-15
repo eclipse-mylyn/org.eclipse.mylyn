@@ -66,7 +66,7 @@ public class RepositoryQueryWizard extends Wizard {
 			}
 		} else {
 			query = page.createQuery();
-			TasksUi.getTasksModel().addQuery(query);
+			TasksUiInternal.getTaskList().addQuery((RepositoryQuery) query);
 		}
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				getTaskRepository().getConnectorKind());

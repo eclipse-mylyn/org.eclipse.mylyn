@@ -24,9 +24,9 @@ public interface ITaskRepositoryManager {
 
 	public abstract List<TaskRepository> getAllRepositories();
 
-	public abstract Set<TaskRepository> getRepositories(String kind);
+	public abstract Set<TaskRepository> getRepositories(String connectorKind);
 
-	public abstract TaskRepository getRepository(String kind, String urlString);
+	public abstract TaskRepository getRepository(String connectorKind, String urlString);
 
 	public abstract AbstractRepositoryConnector getRepositoryConnector(String connectorKind);
 

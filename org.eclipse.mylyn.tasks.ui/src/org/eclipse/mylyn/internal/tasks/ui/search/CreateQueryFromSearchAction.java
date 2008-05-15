@@ -73,7 +73,7 @@ public class CreateQueryFromSearchAction extends Action {
 					int dialogResult = dialog.open();
 					if (dialogResult == Window.OK) {
 						query.setSummary(dialog.getValue());
-						TasksUi.getTasksModel().addQuery(query);
+						TasksUiInternal.getTaskList().addQuery((RepositoryQuery) query);
 						TasksUiInternal.synchronizeQuery(connector, (RepositoryQuery) query, null, true);
 					}
 				}

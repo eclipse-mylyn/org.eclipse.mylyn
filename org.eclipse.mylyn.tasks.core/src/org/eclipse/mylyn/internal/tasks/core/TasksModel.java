@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITasksModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryAdapter;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
@@ -37,14 +38,23 @@ public class TasksModel implements ITasksModel {
 	public TasksModel(TaskList taskList, ITaskRepositoryManager repositoryManager) {
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
+		initialize();
 	}
 
-	public void addQuery(IRepositoryQuery query) {
-		taskList.addQuery((RepositoryQuery) query);
-	}
+	private void initialize() {
+		repositoryManager.addListener(new TaskRepositoryAdapter() {
+			@Override
+			public void repositoryAdded(TaskRepository repository) {
+				taskList.addUnmatchedContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
+						repository.getRepositoryUrl()));
+			}
 
-	public void addTask(ITask task) {
-		taskList.addTask(task);
+			@Override
+			public void repositoryRemoved(TaskRepository repository) {
+				// TODO 
+				//taskList.removeUnmatchedContainer(taskList.getUnmatchedContainer(repository.getRepositoryUrl()));
+			}
+		});
 	}
 
 	public IRepositoryQuery createQuery(TaskRepository taskRepository) {
@@ -84,20 +94,21 @@ public class TasksModel implements ITasksModel {
 		return taskComment;
 	}
 
-	public void deleteQuery(IRepositoryQuery query) {
-		taskList.deleteQuery((RepositoryQuery) query);
-	}
-
-	public void deleteTask(ITask task) {
-		taskList.deleteTask(task);
-	}
-
 	public synchronized ITask getTask(TaskRepository taskRepository, String taskId) {
 		return taskByHandle.get(getTaskHandle(taskRepository, taskId));
 	}
 
 	private String getTaskHandle(TaskRepository taskRepository, String taskId) {
 		return taskRepository.getConnectorKind() + "-" + taskRepository.getRepositoryUrl() + "-" + taskId;
+	}
+
+	public TaskRepository getTaskRepository(String connectorKind, String repositoryUrl) {
+		TaskRepository taskRepository = repositoryManager.getRepository(connectorKind, repositoryUrl);
+		if (taskRepository == null) {
+			taskRepository = new TaskRepository(connectorKind, repositoryUrl);
+			repositoryManager.addRepository(taskRepository);
+		}
+		return taskRepository;
 	}
 
 }
