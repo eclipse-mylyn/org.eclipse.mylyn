@@ -107,7 +107,6 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 				}
 
 				private void resetAndLoad() throws CoreException {
-					taskList.reset();
 					taskListWriter.readTaskList(taskList, taskListFile);
 				}
 
