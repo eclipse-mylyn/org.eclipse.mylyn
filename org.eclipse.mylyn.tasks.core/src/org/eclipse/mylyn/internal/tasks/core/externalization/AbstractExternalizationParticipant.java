@@ -9,21 +9,40 @@
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 
 /**
+ * File based externalization participant
+ * 
  * @author Rob Elves
  */
 public abstract class AbstractExternalizationParticipant implements IExternalizationParticipant {
 
 	static final String SNAPSHOT_PREFIX = ".";
+
+	public abstract void load(String rootPath, IProgressMonitor monitor) throws CoreException;
+
+	public abstract void save(String rootPath, IProgressMonitor monitor) throws CoreException;
+
+	public abstract String getDescription();
+
+	public abstract ISchedulingRule getSchedulingRule();
+
+	public abstract boolean isDirty();
+
+	public abstract String getFileName();
 
 	public AbstractExternalizationParticipant() {
 		super();
@@ -49,12 +68,40 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 		return originalFile.renameTo(backup);
 	}
 
-	public abstract void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException;
+	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
+		Assert.isNotNull(context);
+		monitor = Policy.monitorFor(monitor);
+		switch (context.getKind()) {
+		case SAVE:
+			save(context.getRootPath(), monitor);
+			break;
+		case LOAD:
+			load(context.getRootPath(), monitor);
+			break;
+		case SNAPSHOT:
+			break;
+		}
 
-	public abstract String getDescription();
+	}
 
-	public abstract ISchedulingRule getSchedulingRule();
+	public File getFile(String rootPath) throws CoreException {
+		String filePath = rootPath + File.separator + getFileName();
 
-	public abstract boolean isDirty();
+		final File file = new File(filePath);
+
+		if (!file.exists()) {
+			try {
+				if (!file.createNewFile()) {
+					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, getDescription()
+							+ " file not found, error creating new file."));
+				}
+			} catch (IOException e) {
+				throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, getDescription()
+						+ " file not found, error creating new file.", e));
+			}
+		}
+
+		return file;
+	}
 
 }

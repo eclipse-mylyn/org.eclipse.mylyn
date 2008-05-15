@@ -13,8 +13,8 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
 /**
@@ -30,8 +30,10 @@ public class BackgroundSaveTest extends TestCase {
 			System.out.println("> BackgroundSaveTest.testBackgroundSave() not run on Linux due to IO concurrency");
 		} else {
 			LocalTask task = new LocalTask("1", "summary");
-			File file = TaskListExternalizationParticipant.getTaskListFile(TasksUiPlugin.getDefault()
-					.getDataDirectory());
+			String filePath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
+					+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
+
+			final File file = new File(filePath);
 			long previouslyModified = file.lastModified();
 			TasksUiPlugin.getTaskList().addTask(task);
 			TasksUiPlugin.getExternalizationManager().requestSave();

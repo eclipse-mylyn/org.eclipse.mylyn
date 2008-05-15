@@ -14,18 +14,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationContext;
-import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 
 /**
  * @author Rob Elves
  */
-public class ActivityExternalizationParticipant extends TaskActivityAdapter implements IExternalizationParticipant {
+public class ActivityExternalizationParticipant extends AbstractExternalizationParticipant implements
+		ITaskActivityListener {
 
 	private boolean isDirty = false;
 
+	@Override
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
 		Assert.isNotNull(context);
 		switch (context.getKind()) {
@@ -40,29 +42,74 @@ public class ActivityExternalizationParticipant extends TaskActivityAdapter impl
 		}
 	}
 
+	@Override
 	public String getDescription() {
 		return "Activity Context";
 	}
 
+	@Override
 	public ISchedulingRule getSchedulingRule() {
 		return ITasksCoreConstants.ACTIVITY_SCHEDULING_RULE;
 	}
 
+	@Override
 	public boolean isDirty() {
 		synchronized (this) {
 			return isDirty;
 		}
 	}
 
-	@Override
-	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-		setDirty(true);
-	}
-
 	private void setDirty(boolean dirty) {
 		synchronized (this) {
 			isDirty = dirty;
 		}
+	}
+
+	@Override
+	public String getFileName() {
+		// ignore
+		return null;
+	}
+
+	@Override
+	public void load(String rootPath, IProgressMonitor monitor) throws CoreException {
+		// ignore
+
+	}
+
+	@Override
+	public void save(String rootPath, IProgressMonitor monitor) throws CoreException {
+		ContextCore.getContextManager().saveActivityContext();
+		setDirty(false);
+	}
+
+	public void activityReset() {
+		// ignore
+
+	}
+
+	public void preTaskActivated(ITask task) {
+		// ignore
+
+	}
+
+	public void preTaskDeactivated(ITask task) {
+		// ignore
+
+	}
+
+	public void taskActivated(ITask task) {
+		// ignore
+
+	}
+
+	public void taskDeactivated(ITask task) {
+		// ignore
+
+	}
+
+	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
+		setDirty(true);
 	}
 
 }
