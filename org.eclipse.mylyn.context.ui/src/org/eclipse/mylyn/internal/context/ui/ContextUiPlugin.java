@@ -407,8 +407,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public ILabelProvider getContextLabelProvider(String extension) {
-		// if (!UiExtensionPointReader.extensionsRead)
-		// UiExtensionPointReader.initExtensions();
 		ILabelProvider provider = contextLabelProviders.get(extension);
 		if (provider != null) {
 			return provider;

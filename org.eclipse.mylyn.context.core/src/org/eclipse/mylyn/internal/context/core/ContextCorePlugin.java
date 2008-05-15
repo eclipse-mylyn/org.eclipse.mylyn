@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -44,7 +44,7 @@ public class ContextCorePlugin extends Plugin {
 
 	private final Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
 
-	private final Map<String, List<String>> childContentTypeMap = new ConcurrentHashMap<String, List<String>>();
+	private final Map<String, Set<String>> childContentTypeMap = new ConcurrentHashMap<String, Set<String>>();
 
 	private AbstractContextStructureBridge defaultBridge = null;
 
@@ -195,7 +195,7 @@ public class ContextCorePlugin extends Plugin {
 		return (defaultBridge == null) ? DEFAULT_BRIDGE : defaultBridge;
 	}
 
-	public Set<String> getKnownContentTypes() {
+	public Set<String> getContentTypes() {
 		BridgesExtensionPointReader.initExtensions();
 		return bridges.keySet();
 	}
@@ -226,10 +226,10 @@ public class ContextCorePlugin extends Plugin {
 			bridges.put(bridge.getContentType(), bridge);
 		}
 		if (bridge.getParentContentType() != null) {
-			List<String> childContentTypes = childContentTypeMap.get(bridge.getParentContentType());
+			Set<String> childContentTypes = childContentTypeMap.get(bridge.getParentContentType());
 			if (childContentTypes == null) {
 				// CopyOnWriteArrayList handles concurrent access to the content types
-				childContentTypes = new CopyOnWriteArrayList<String>();
+				childContentTypes = new CopyOnWriteArraySet<String>();
 			}
 
 			childContentTypes.add(bridge.getContentType());
@@ -424,12 +424,12 @@ public class ContextCorePlugin extends Plugin {
 		}
 	}
 
-	public List<String> getChildContentTypes(String contentType) {
-		List<String> contentTypes = childContentTypeMap.get(contentType);
+	public Set<String> getChildContentTypes(String contentType) {
+		Set<String> contentTypes = childContentTypeMap.get(contentType);
 		if (contentTypes != null) {
 			return contentTypes;
 		} else {
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 	}
 }

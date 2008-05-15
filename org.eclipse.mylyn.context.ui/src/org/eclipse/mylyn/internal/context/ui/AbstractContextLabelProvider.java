@@ -55,7 +55,6 @@ public abstract class AbstractContextLabelProvider implements ILabelProvider {
 
 	public void addListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
-
 	}
 
 	public void dispose() {

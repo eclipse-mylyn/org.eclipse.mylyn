@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
@@ -52,7 +51,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 			IContainer parent = resource.getParent();
 			// try to adapt to the corresponding content type's parent
 			if (resource instanceof IFile) {
-				for (String contentType : ContextCorePlugin.getDefault().getChildContentTypes(CONTENT_TYPE)) {
+				for (String contentType : ContextCore.getChildContentTypes(CONTENT_TYPE)) {
 					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(contentType);
 					Object adaptedParent = parentBridge.getAdaptedParent(resource);
 					// HACK: only returns first

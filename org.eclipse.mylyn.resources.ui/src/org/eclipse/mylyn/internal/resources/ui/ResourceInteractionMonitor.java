@@ -21,7 +21,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.EditorPart;
@@ -51,8 +51,7 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 					if (object instanceof IFile) {
 						IFile file = (IFile) object;
 						if (file.getFileExtension() != null
-								&& !ContextCorePlugin.getDefault().getKnownContentTypes().contains(
-										file.getFileExtension())) {
+								&& !ContextCore.getContentTypes().contains(file.getFileExtension())) {
 							super.handleElementEdit(part, object, contributeToContext);
 						}
 					}

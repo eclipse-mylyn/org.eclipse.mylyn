@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
 public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override

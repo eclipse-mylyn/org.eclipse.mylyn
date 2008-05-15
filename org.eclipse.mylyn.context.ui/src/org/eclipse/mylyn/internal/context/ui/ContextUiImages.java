@@ -51,13 +51,10 @@ public class ContextUiImages {
 	@Deprecated
 	public static final ImageDescriptor EDGE_ACCESS_WRITE = create(T_ELCL, "edge-write.gif");
 
-	@Deprecated
 	public static final ImageDescriptor FILE_XML = create(T_ELCL, "file-xml.gif");
 
-	@Deprecated
 	public static final ImageDescriptor FILE_GENERIC = create(T_ELCL, "file_obj.gif");
 
-	@Deprecated
 	public static final ImageDescriptor FOLDER_GENERIC = create(T_ELCL, "fldr_obj.gif");
 
 	public static ImageDescriptor create(String prefix, String name) {

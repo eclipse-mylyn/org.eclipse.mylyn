@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.context.core;
 
+import java.util.Set;
+
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 
@@ -41,6 +43,14 @@ public final class ContextCore {
 
 	public static AbstractContextStructureBridge getStructureBridge(String contentType) {
 		return ContextCorePlugin.getDefault().getStructureBridge(contentType);
+	}
+
+	public static Set<String> getContentTypes() {
+		return ContextCorePlugin.getDefault().getContentTypes();
+	}
+
+	public static Set<String> getChildContentTypes(String contentType) {
+		return ContextCorePlugin.getDefault().getChildContentTypes(contentType);
 	}
 
 	public static AbstractContextStore getContextStore() {

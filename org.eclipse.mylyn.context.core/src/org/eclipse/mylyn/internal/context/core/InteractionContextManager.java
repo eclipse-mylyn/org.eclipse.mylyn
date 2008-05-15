@@ -36,10 +36,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -1030,7 +1030,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		String parentHandle = bridge.getParentHandle(node.getHandleIdentifier());
 
 		// check if should use child bridge
-		for (String contentType : ContextCorePlugin.getDefault().getChildContentTypes(bridge.getContentType())) {
+		for (String contentType : ContextCore.getChildContentTypes(bridge.getContentType())) {
 			AbstractContextStructureBridge childBridge = ContextCore.getStructureBridge(contentType);
 			Object resolved = childBridge.getObjectForHandle(parentHandle);
 			if (resolved != null) {
