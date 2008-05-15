@@ -10,12 +10,14 @@ package org.eclipse.mylyn.internal.tasks.core.sync;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -24,16 +26,16 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -51,9 +53,11 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final ITaskList taskList;
 
-	private final TaskRepository taskRepository;
+	private final Set<ITask> allTasks;
 
-	private final Set<ITask> tasks;
+	private final ITaskRepositoryManager repositoryManager;
+
+	private TaskRepository taskRepository;
 
 	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<ITask> tasks) {
@@ -62,16 +66,69 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		this.taskDataManager = synchronizationManager;
 		this.connector = connector;
 		this.taskRepository = taskRepository;
-		this.tasks = tasks;
+		this.allTasks = tasks;
+		this.repositoryManager = null;
+	}
+
+	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager,
+			AbstractRepositoryConnector connector, ITaskRepositoryManager repositoryManager, Set<ITask> tasks) {
+		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
+		this.taskList = taskList;
+		this.taskDataManager = synchronizationManager;
+		this.connector = connector;
+		this.repositoryManager = repositoryManager;
+		this.allTasks = tasks;
 	}
 
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Processing", tasks.size() * 100);
+			if (taskRepository == null) {
+				try {
+					monitor.beginTask("Processing", allTasks.size() * 100);
+					// group tasks by repository
+					Map<TaskRepository, Set<ITask>> tasksByRepository = new HashMap<TaskRepository, Set<ITask>>();
+					for (ITask task : allTasks) {
+						TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
+								task.getRepositoryUrl());
+						Set<ITask> tasks = tasksByRepository.get(repository);
+						if (tasks == null) {
+							tasks = new HashSet<ITask>();
+							tasksByRepository.put(repository, tasks);
+						}
+						tasks.add(task);
+					}
+					// synchronize tasks for each repositories
+					for (TaskRepository taskRepository : tasksByRepository.keySet()) {
+						setName("Synchronizing Tasks (" + taskRepository.getRepositoryLabel() + ")");
+						this.taskRepository = taskRepository;
+						Set<ITask> repositoryTasks = tasksByRepository.get(taskRepository);
+						run(repositoryTasks, new SubProgressMonitor(monitor, repositoryTasks.size() * 100));
+					}
+				} finally {
+					monitor.done();
+				}
+			} else {
+				run(allTasks, monitor);
+			}
+		} catch (OperationCanceledException e) {
+			for (ITask task : allTasks) {
+				((AbstractTask) task).setSynchronizing(false);
+				taskList.notifyElementChanged(task);
+			}
+			return Status.CANCEL_STATUS;
+		}
+		return Status.OK_STATUS;
+	}
 
+	private void run(Set<ITask> tasks, IProgressMonitor monitor) {
+		try {
+			monitor.beginTask("Processing", tasks.size() * 100);
 			if (canGetMultiTaskData()) {
 				try {
+					for (ITask task : tasks) {
+						resetStatus(task);
+					}
 					synchronizeTasks(new SubProgressMonitor(monitor, tasks.size() * 100), taskRepository, tasks);
 				} catch (CoreException e) {
 					for (ITask task : tasks) {
@@ -81,22 +138,19 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			} else {
 				for (ITask task : tasks) {
 					Policy.checkCanceled(monitor);
-					synchronizeTask(new SubProgressMonitor(monitor, 100), task);
+					resetStatus(task);
+					try {
+						synchronizeTask(new SubProgressMonitor(monitor, 100), task);
+					} catch (CoreException e) {
+						updateStatus(taskRepository, task, e.getStatus());
+					}
 				}
 			}
-		} catch (OperationCanceledException e) {
-			for (ITask task : tasks) {
-				((AbstractTask) task).setSynchronizing(false);
-				taskList.notifyElementChanged(task);
-			}
-			return Status.CANCEL_STATUS;
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e));
 		} finally {
 			monitor.done();
 		}
-
-		return Status.OK_STATUS;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -111,33 +165,34 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void synchronizeTask(IProgressMonitor monitor, ITask task) {
+	private void synchronizeTask(IProgressMonitor monitor, ITask task) throws CoreException {
 		monitor.subTask("Receiving task " + task.getSummary());
-		((AbstractTask) task).setErrorStatus(null);
-		((TaskList) taskList).notifySyncStateChanged(task);
-		try {
-			String taskId = task.getTaskId();
-			if (!isUser()) {
-				monitor = Policy.backgroundMonitorFor(monitor);
-			}
-			if (connector instanceof AbstractLegacyRepositoryConnector) {
-				RepositoryTaskData downloadedTaskData = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskData(
-						taskRepository, taskId, monitor);
-				if (downloadedTaskData != null) {
-					updateFromTaskData(taskRepository, task, downloadedTaskData);
-				}
-			} else {
-				TaskData taskData = connector.getTaskData(taskRepository, taskId, monitor);
-				if (taskData != null) {
-					updateFromTaskData(taskRepository, task, taskData);
-				} else {
-					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Connector failed to return task data for task \"" + task + "\""));
-				}
-			}
-		} catch (final CoreException e) {
-			updateStatus(taskRepository, task, e.getStatus());
+		resetStatus(task);
+
+		String taskId = task.getTaskId();
+		if (!isUser()) {
+			monitor = Policy.backgroundMonitorFor(monitor);
 		}
+		if (connector instanceof AbstractLegacyRepositoryConnector) {
+			RepositoryTaskData downloadedTaskData = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskData(
+					taskRepository, taskId, monitor);
+			if (downloadedTaskData != null) {
+				updateFromTaskData(taskRepository, task, downloadedTaskData);
+			}
+		} else {
+			TaskData taskData = connector.getTaskData(taskRepository, taskId, monitor);
+			if (taskData != null) {
+				updateFromTaskData(taskRepository, task, taskData);
+			} else {
+				throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Connector failed to return task data for task \"" + task + "\""));
+			}
+		}
+	}
+
+	private void resetStatus(ITask task) {
+		((AbstractTask) task).setErrorStatus(null);
+		taskList.notifySyncStateChanged(task);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -186,14 +241,23 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		// HACK: part of hack below
 		//Date oldDueDate = repositoryTask.getDueDate();
 
-		boolean changed = ((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task,
-				taskData);
-		if (!taskData.isPartial()) {
-			((TaskDataManager) taskDataManager).saveIncoming(task, taskData, isUser());
-		} else if (changed && !task.isStale() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
-			// TODO move to synchronizationManager
-			// set incoming marker for web tasks 
-			((AbstractTask) task).setSynchronizationState(SynchronizationState.INCOMING);
+//		boolean changed = ((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task,
+//				taskData);
+//		if (!taskData.isPartial()) {
+//			((TaskDataManager) taskDataManager).saveIncoming(task, taskData, isUser());
+//		} else if (changed && !task.isStale() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
+//			// TODO move to synchronizationManager
+//			// set incoming marker for web tasks 
+//			((AbstractTask) task).setSynchronizationState(SynchronizationState.INCOMING);
+//		}
+
+		TaskFactory factory = new TaskFactory(repository, true, isUser(),
+				(AbstractLegacyRepositoryConnector) connector, (TaskDataManager) taskDataManager, taskList);
+		try {
+			task = factory.createTask(taskData, new NullProgressMonitor());
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e));
+			return;
 		}
 
 		// HACK: Remove once connectors can get access to

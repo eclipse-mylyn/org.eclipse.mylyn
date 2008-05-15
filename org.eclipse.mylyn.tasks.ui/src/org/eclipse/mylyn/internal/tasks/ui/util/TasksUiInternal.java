@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -191,12 +192,19 @@ public class TasksUiInternal {
 				}
 
 				if (connector != null) {
-					RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
-							task.getRepositoryUrl(), task.getTaskId());
-					if ((taskData != null || connector instanceof AbstractRepositoryConnector)
-							|| connector.getTaskDataHandler() != null) {
+					boolean opened = false;
+					if (connector instanceof AbstractLegacyRepositoryConnector) {
+						RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
+								task.getRepositoryUrl(), task.getTaskId());
+						if (taskData != null || connector.getTaskDataHandler() == null) {
+							TasksUiUtil.openTaskAndRefresh(task);
+							opened = true;
+						}
+					} else if (TasksUiPlugin.getTaskDataManager().hasTaskData(task, task.getConnectorKind())) {
 						TasksUiUtil.openTaskAndRefresh(task);
-					} else {
+					}
+
+					if (!opened) {
 						// TODO consider moving this into the editor, i.e. have the editor refresh the task if task data is missing
 						TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
 							@Override

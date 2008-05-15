@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
-import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeAllTasksJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeQueriesJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeRepositoriesJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeTasksJob;
@@ -63,8 +62,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 	}
 
 	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector, Set<ITask> tasks) {
-		SynchronizeAllTasksJob job = new SynchronizeAllTasksJob(taskList, taskDataManager, repositoryManager,
-				connector, tasks);
+		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, connector, repositoryManager,
+				tasks);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.LONG);
 		return job;

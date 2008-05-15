@@ -562,4 +562,9 @@ public class TaskDataManager implements ITaskDataManager {
 		taskDataStorageManager.setNewTaskData(taskData);
 	}
 
+	@Deprecated
+	public TaskDataStorageManager getTaskDataStorageManager() {
+		return taskDataStorageManager;
+	}
+
 }
