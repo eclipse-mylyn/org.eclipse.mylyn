@@ -229,11 +229,14 @@ public final class DelegatingTaskExternalizer {
 			factory.setAdditionalAttributes(task, node);
 		}
 
-		node.setAttribute(KEY_LABEL, stripControlCharacters(task.getSummary()));
-		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
-		node.setAttribute(KEY_TASK_ID, task.getTaskId());
 		node.setAttribute(KEY_CONNECTOR_KIND, task.getConnectorKind());
 		node.setAttribute(KEY_REPOSITORY_URL, task.getRepositoryUrl());
+		node.setAttribute(KEY_TASK_ID, task.getTaskId());
+		if (task.getTaskKey() != null) {
+			node.setAttribute(KEY_KEY, task.getTaskKey());
+		}
+		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
+		node.setAttribute(KEY_LABEL, stripControlCharacters(task.getSummary()));
 
 		node.setAttribute(KEY_PRIORITY, task.getPriority());
 		node.setAttribute(KEY_KIND, task.getTaskKind());
@@ -585,6 +588,9 @@ public final class DelegatingTaskExternalizer {
 			} else if (syncState.compareTo(SynchronizationState.CONFLICT.toString()) == 0) {
 				task.setSynchronizationState(SynchronizationState.CONFLICT);
 			}
+		}
+		if (element.hasAttribute(KEY_KEY)) {
+			task.setTaskKey(element.getAttribute(KEY_KEY));
 		}
 	}
 

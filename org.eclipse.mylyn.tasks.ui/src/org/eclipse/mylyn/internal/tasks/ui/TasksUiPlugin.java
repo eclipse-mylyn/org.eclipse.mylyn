@@ -492,8 +492,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
-			String path = getDataDirectory() + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
-			File taskListFile = new File(path);
 
 			// create data model
 			externalizationManager = new ExternalizationManager(getDataDirectory());

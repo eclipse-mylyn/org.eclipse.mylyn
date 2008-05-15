@@ -99,7 +99,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	public void addQuery(RepositoryQuery query) throws IllegalArgumentException {
 		Assert.isNotNull(query);
-
 		try {
 			lock();
 			queries.put(query.getHandleIdentifier(), query);

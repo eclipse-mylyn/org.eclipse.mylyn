@@ -295,7 +295,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private MenuManager menuManager;
 
-	private volatile boolean refreshDisabled = true;
+	private volatile boolean refreshDisabled;
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label");
