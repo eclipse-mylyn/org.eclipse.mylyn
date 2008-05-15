@@ -33,7 +33,7 @@ public class ClearContextHandler extends AbstractTaskHandler {
 		}
 
 		ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
-		TasksUiInternal.getTaskList().notifyTaskChanged(task, false);
+		TasksUiInternal.getTaskList().notifyElementChanged(task);
 	}
 
 }

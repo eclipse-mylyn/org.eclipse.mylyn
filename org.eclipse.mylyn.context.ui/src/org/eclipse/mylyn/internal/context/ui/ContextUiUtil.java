@@ -80,7 +80,7 @@ public class ContextUiUtil {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
 			} else {
-				TasksUiInternal.getTaskList().notifyTaskChanged(task, false);
+				TasksUiInternal.getTaskList().notifyElementChanged(task);
 				TasksUi.getTaskActivityManager().activateTask(task);
 			}
 		} catch (InvocationTargetException e) {

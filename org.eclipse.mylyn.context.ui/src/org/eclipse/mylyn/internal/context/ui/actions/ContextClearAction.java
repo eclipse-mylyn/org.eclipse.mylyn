@@ -64,7 +64,7 @@ public class ContextClearAction extends TaskContextAction {
 		}
 
 		ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
-		TasksUiInternal.getTaskList().notifyTaskChanged(task, false);
+		TasksUiInternal.getTaskList().notifyElementChanged(task);
 		return true;
 	}
 

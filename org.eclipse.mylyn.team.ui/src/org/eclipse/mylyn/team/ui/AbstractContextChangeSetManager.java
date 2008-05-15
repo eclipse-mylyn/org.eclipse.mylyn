@@ -64,10 +64,10 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (taskContainerDelta.getContainer() instanceof ITask) {
-					ITask task = (ITask) taskContainerDelta.getContainer();
+				if (taskContainerDelta.getTarget() instanceof ITask) {
+					ITask task = (ITask) taskContainerDelta.getTarget();
 					switch (taskContainerDelta.getKind()) {
-					case CHANGED:
+					case CONTENT:
 						updateChangeSetLabel(task);
 						break;
 					}
