@@ -16,7 +16,7 @@ import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -37,7 +37,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		@Override
 		public void contextActivated(IInteractionContext context) {
 			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
+					IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS)) {
 				AbstractAutoFocusViewAction.super.internalSuppressExpandAll = true;
 				AbstractAutoFocusViewAction.super.update(true);
 			} else {
@@ -83,7 +83,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 				try {
 					if (ContextCore.getContextManager().isContextActive()
 							&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-									ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
+									IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS)) {
 						internalSuppressExpandAll = true;
 						update(true);
 					}

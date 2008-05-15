@@ -21,9 +21,9 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
+import org.eclipse.mylyn.context.ui.IContextAwareEditor;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylyn.internal.context.ui.IContextAwareEditor;
+import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
 import org.eclipse.ui.IEditorPart;
@@ -61,8 +61,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				Object adapter;
 				adapter = editorReference.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IFile) {
-					String handle = ContextCore.getStructureBridge(adapter).getHandleIdentifier(
-							adapter);
+					String handle = ContextCore.getStructureBridge(adapter).getHandleIdentifier(adapter);
 					element = ContextCore.getContextManager().getElement(handle);
 				}
 				if (!ContextCore.getContextManager().isContextCapturePaused() && element != null
@@ -91,15 +90,14 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
 		} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION)
-//				&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION)
 				&& !otherEditorsOpenForResource(editorPart)
 				&& !(editorPart instanceof CompareEditor)
 				&& !(editorPart instanceof IContextAwareEditor)) {
 
 			if (ContextCore.getContextManager().isContextActive()
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-							ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
+							IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
 				try {
 					if (!CoreUtil.TEST_MODE) {
 						MessageDialog.openInformation(
@@ -112,7 +110,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 					}
 				} finally {
 					ContextUiPlugin.getDefault().getPreferenceStore().setValue(
-							ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
+							IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
 				}
 			}
 
@@ -128,15 +126,12 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IResource) {
 					IResource resource = (IResource) adapter;
-					AbstractContextStructureBridge resourceBridge = ContextCore.getStructureBridge(
-							resource);
-					element = ContextCore.getContextManager().getElement(
-							resourceBridge.getHandleIdentifier(resource));
+					AbstractContextStructureBridge resourceBridge = ContextCore.getStructureBridge(resource);
+					element = ContextCore.getContextManager().getElement(resourceBridge.getHandleIdentifier(resource));
 				}
 			}
 			if (element != null) {
-				ContextCore.getContextManager().manipulateInterestForElement(element, false, false, false,
-						SOURCE_ID);
+				ContextCore.getContextManager().manipulateInterestForElement(element, false, false, false, SOURCE_ID);
 			}
 		}
 	}

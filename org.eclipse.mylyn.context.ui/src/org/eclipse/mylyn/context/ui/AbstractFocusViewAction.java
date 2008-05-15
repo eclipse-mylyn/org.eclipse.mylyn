@@ -31,9 +31,9 @@ import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorPart;
@@ -169,7 +169,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		this.manageLinking = manageLinking;
 		setText(ACTION_LABEL);
 		setToolTipText(ACTION_LABEL);
-		setImageDescriptor(ContextUiImages.INTEREST_FILTERING);
+		setImageDescriptor(TasksUiImages.CONTEXT_FOCUS);
 		PlatformUI.getWorkbench().addWorkbenchListener(WORKBENCH_LISTENER);
 		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 	}
@@ -181,7 +181,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				ContextUiPlugin.getViewerManager().removeManagedViewer(viewer, viewPart);
 			}
 		}
-		MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
+		MonitorUi.removeWindowPostSelectionListener(this);
 		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 		PlatformUI.getWorkbench().removeWorkbenchListener(WORKBENCH_LISTENER);
 	}
@@ -277,9 +277,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	private void updateLinking(boolean on) {
 		if (on) {
 			wasLinkingEnabled = isDefaultLinkingEnabled();
-			MonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
+			MonitorUi.addWindowPostSelectionListener(this);
 		} else {
-			MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
+			MonitorUi.removeWindowPostSelectionListener(this);
 			setDefaultLinkingEnabled(wasLinkingEnabled);
 		}
 	}

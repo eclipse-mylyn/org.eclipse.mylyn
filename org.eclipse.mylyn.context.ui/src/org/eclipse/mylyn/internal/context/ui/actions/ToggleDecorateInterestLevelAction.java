@@ -9,9 +9,7 @@
 package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 
 /**
  * @author Mik Kersten
@@ -20,9 +18,11 @@ public class ToggleDecorateInterestLevelAction extends Action {
 
 	public static final String PREF_ID = "org.eclipse.mylyn.ui.decorators.interest";
 
+	public static final String PREF_INTERSECTION_MODE = "org.eclipse.mylyn.ui.interest.intersection";
+
 	public ToggleDecorateInterestLevelAction() {
 		super();
-		setImageDescriptor(ContextUiImages.DECORATE_INTEREST);
+		setText("Decorate Interest");
 		setToolTipText("Toggle Interest Level Decorator");
 
 		boolean checked = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_ID);
@@ -39,6 +39,6 @@ public class ToggleDecorateInterestLevelAction extends Action {
 		if (store) {
 			ContextUiPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on);
 		}
-		ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.INTERSECTION_MODE, true);
+		ContextUiPlugin.getDefault().getPreferenceStore().setValue(PREF_INTERSECTION_MODE, true);
 	}
 }

@@ -31,8 +31,6 @@ import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 
@@ -51,7 +49,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+			if (event.getProperty().equals(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
 				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
 					enabled = true;
 				} else {
@@ -64,35 +62,30 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	public ActiveFoldingListener(JavaEditor editor) {
 		this.editor = editor;
-		if (ContextUiPlugin.getDefault() == null) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not update folding",
-					new Exception()));
-		} else {
-			ContextCore.getContextManager().addListener(this);
-			ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
+		ContextCore.getContextManager().addListener(this);
+		JavaUiBridgePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
-			enabled = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED);
-			try {
-				Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
-				if (adapter instanceof IJavaFoldingStructureProviderExtension) {
-					updater = (IJavaFoldingStructureProviderExtension) adapter;
-				} else {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-							"Could not install active folding on provider: " + adapter + ", must extend "
-									+ IJavaFoldingStructureProviderExtension.class.getName()));
-				}
-			} catch (Exception e) {
+		enabled = JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
+				JavaUiBridgePlugin.AUTO_FOLDING_ENABLED);
+		try {
+			Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
+			if (adapter instanceof IJavaFoldingStructureProviderExtension) {
+				updater = (IJavaFoldingStructureProviderExtension) adapter;
+			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-						"Could not install auto folding, reflection denied", e));
+						"Could not install active folding on provider: " + adapter + ", must extend "
+								+ IJavaFoldingStructureProviderExtension.class.getName()));
 			}
-			updateFolding();
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
+					"Could not install auto folding, reflection denied", e));
 		}
+		updateFolding();
 	}
 
 	public void dispose() {
 		ContextCore.getContextManager().removeListener(this);
-		ContextUiPlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
+		JavaUiBridgePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
 
 	public static void resetProjection(JavaEditor javaEditor) {
@@ -184,27 +177,21 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	@Override
 	public void contextActivated(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+		if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
 
 	@Override
 	public void contextDeactivated(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+		if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
 
 	@Override
 	public void contextCleared(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+		if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}

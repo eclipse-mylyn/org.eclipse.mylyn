@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.context.ui;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -50,7 +50,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 
 	public void taskActivated(ITask task) {
 		try {
-			IWorkbenchWindow launchingWindow = MonitorUiPlugin.getDefault().getLaunchingWorkbenchWindow();
+			IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();
 			if (launchingWindow != null) {
 				IPerspectiveDescriptor descriptor = launchingWindow.getActivePage().getPerspective();
 				ContextUiPlugin.getDefault().setPerspectiveIdFor(null, descriptor.getId());
@@ -67,8 +67,8 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		try {
 			if (PlatformUI.isWorkbenchRunning()
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-							ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
-				IWorkbenchWindow launchingWindow = MonitorUiPlugin.getDefault().getLaunchingWorkbenchWindow();
+							IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES)) {
+				IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();
 				if (launchingWindow != null) {
 					IPerspectiveDescriptor descriptor = launchingWindow.getActivePage().getPerspective();
 					ContextUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
@@ -86,8 +86,8 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		if (perspectiveId != null
 				&& !"".equals(perspectiveId)
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
-			IWorkbenchWindow launchingWindow = MonitorUiPlugin.getDefault().getLaunchingWorkbenchWindow();
+						IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES)) {
+			IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();
 			try {
 				if (launchingWindow != null) {
 

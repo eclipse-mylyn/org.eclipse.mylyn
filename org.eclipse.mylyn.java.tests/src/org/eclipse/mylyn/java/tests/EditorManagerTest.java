@@ -25,7 +25,7 @@ import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.internal.java.ui.ActiveFoldingEditorTracker;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
@@ -55,10 +55,10 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		view = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(view);
 		assertTrue(ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
 
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
-				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
 	}
 
 	@Override
@@ -67,9 +67,9 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		ContextUiPlugin.getEditorManager().closeAllEditors();
 
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
-				ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
 				ContextUiPlugin.getDefault().getPreferenceStore().getDefaultBoolean(
-						ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING));
+						IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING));
 	}
 
 	// XXX: Put back

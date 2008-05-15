@@ -18,10 +18,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorPart;
@@ -43,7 +41,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 		super();
 		INSTANCE = this;
 		setText("Active folding");
-		setImageDescriptor(ContextUiImages.INTEREST_FOLDING);
+		setImageDescriptor(TasksUiImages.CONTEXT_FOCUS);
 	}
 
 	public static void toggleFolding(boolean on) {
@@ -62,8 +60,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 				JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
 			}
 			action.setChecked(on);
-			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED,
-					on);
+			JavaUiBridgePlugin.getDefault().getPreferenceStore().setValue(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED, on);
 		} catch (Throwable t) {
 			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
 					"Could not enable editor management", t));
@@ -80,8 +77,8 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 
 	public void init(IAction action) {
 		this.parentAction = action;
-		valueChanged(action, ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED));
+		valueChanged(action, JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
+				JavaUiBridgePlugin.AUTO_FOLDING_ENABLED));
 	}
 
 	public void dispose() {

@@ -35,6 +35,8 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.java.ui";
 
+	public static final String AUTO_FOLDING_ENABLED = "org.eclipse.mylyn.context.ui.editor.folding.enabled";
+
 	private static JavaUiBridgePlugin INSTANCE;
 
 	private ActiveFoldingEditorTracker editorTracker;
@@ -159,7 +161,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	 * Returns an image descriptor for the image file at the given plug-in relative path.
 	 * 
 	 * @param path
-	 *            the path
+	 * 		the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {

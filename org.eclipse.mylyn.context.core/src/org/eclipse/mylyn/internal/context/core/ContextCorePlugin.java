@@ -42,8 +42,6 @@ public class ContextCorePlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.core";
 
-	public static final String CONTENT_TYPE_RESOURCE = "resource";
-
 	private final Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
 
 	private final Map<String, List<String>> childContentTypeMap = new ConcurrentHashMap<String, List<String>>();
@@ -222,7 +220,7 @@ public class ContextCorePlugin extends Plugin {
 	 * one bridge per content type is supported. Overriding content types is not supported.
 	 */
 	public synchronized void addStructureBridge(AbstractContextStructureBridge bridge) {
-		if (bridge.getContentType().equals(CONTENT_TYPE_RESOURCE)) {
+		if (bridge.getContentType().equals(ContextCore.CONTENT_TYPE_RESOURCE)) {
 			defaultBridge = bridge;
 		} else {
 			bridges.put(bridge.getContentType(), bridge);

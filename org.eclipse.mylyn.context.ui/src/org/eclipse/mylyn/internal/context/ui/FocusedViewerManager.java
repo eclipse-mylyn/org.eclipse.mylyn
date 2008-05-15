@@ -214,7 +214,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		if (viewer instanceof TreeViewer
 				&& filteredViewers.contains(viewer)
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ContextUiPrefContstants.AUTO_MANAGE_EXPANSION)) {
+						IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION)) {
 			TreeViewer treeViewer = (TreeViewer) viewer;
 			if (objectToRefresh == null) {
 				treeViewer.expandAll();

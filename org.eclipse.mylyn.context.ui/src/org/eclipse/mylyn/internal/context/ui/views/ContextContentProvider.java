@@ -21,7 +21,6 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
@@ -73,7 +72,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 				List<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
 				nodes = new ArrayList<IInteractionElement>();
 				for (IInteractionElement node : landmarks) {
-					if (!node.getContentType().equals(ContextCorePlugin.CONTENT_TYPE_RESOURCE)
+					if (!node.getContentType().equals(ContextCore.CONTENT_TYPE_RESOURCE)
 							&& !node.getInterest().isPredicted()) {
 						// && node.getRelations().size() > 0) {
 						nodes.add(node);

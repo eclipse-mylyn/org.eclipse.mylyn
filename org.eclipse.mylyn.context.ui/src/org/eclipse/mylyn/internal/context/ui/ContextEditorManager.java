@@ -30,6 +30,7 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
+import org.eclipse.mylyn.context.ui.IContextAwareEditor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
@@ -87,7 +88,7 @@ public class ContextEditorManager extends AbstractContextListener {
 	public void contextActivated(IInteractionContext context) {
 		if (!Workbench.getInstance().isStarting()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+						IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS)) {
 			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
 			previousCloseEditorsSetting = workbench.getPreferenceStore().getBoolean(
 					IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
@@ -204,7 +205,7 @@ public class ContextEditorManager extends AbstractContextListener {
 	public void contextDeactivated(IInteractionContext context) {
 		if (!PlatformUI.getWorkbench().isClosing()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+						IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS)) {
 			closeAllButActiveTaskEditor(context.getHandleIdentifier());
 
 			XMLMemento rootMemento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
@@ -414,7 +415,7 @@ public class ContextEditorManager extends AbstractContextListener {
 	}
 
 	private void closeEditor(IInteractionElement element, boolean force) {
-		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS)) {
 			if (force || !element.getInterest().isInteresting()) {
 				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
 				if (bridge.isDocument(element.getHandleIdentifier())) {

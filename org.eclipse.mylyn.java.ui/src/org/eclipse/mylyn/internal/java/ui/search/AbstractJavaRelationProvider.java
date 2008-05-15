@@ -56,6 +56,7 @@ import org.eclipse.search2.internal.ui.InternalSearchUI;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractJavaRelationProvider extends AbstractRelationProvider {
 
 	public static final String ID_GENERIC = "org.eclipse.mylyn.java.relation";
@@ -121,8 +122,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		int includeMask = IJavaSearchScope.SOURCES;
 		if (degreeOfSeparation == 1) {
 			for (IInteractionElement landmark : landmarks) {
-				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-						landmark.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(landmark.getContentType());
 				if (includeNodeInScope(landmark, bridge)) {
 					Object o = bridge.getObjectForHandle(landmark.getHandleIdentifier());
 					if (o instanceof IJavaElement) {
@@ -139,8 +139,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 2) {
 			for (IInteractionElement interesting : interestingElements) {
-				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-						interesting.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					Object object = bridge.getObjectForHandle(interesting.getHandleIdentifier());
 					if (object instanceof IJavaElement) {
@@ -157,8 +156,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
 			for (IInteractionElement interesting : interestingElements) {
-				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-						interesting.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					// TODO what to do when the element is not a java element,
 					// how determine if a javaProject?
@@ -380,7 +378,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		 * Add a listener for when the bugzilla search is completed
 		 * 
 		 * @param l
-		 *            The listener to add
+		 * 		The listener to add
 		 */
 		public void addListener(IActiveSearchListener l) {
 			// add the listener to the list
@@ -391,7 +389,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		 * Remove a listener for when the bugzilla search is completed
 		 * 
 		 * @param l
-		 *            The listener to remove
+		 * 		The listener to remove
 		 */
 		public void removeListener(IActiveSearchListener l) {
 			// remove the listener from the list
@@ -402,9 +400,9 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		 * Notify all of the listeners that the bugzilla search is completed
 		 * 
 		 * @param doiList
-		 *            A list of BugzillaSearchHitDoiInfo
+		 * 		A list of BugzillaSearchHitDoiInfo
 		 * @param member
-		 *            The IMember that the search was performed on
+		 * 		The IMember that the search was performed on
 		 */
 		public void notifySearchCompleted(List<Object> l) {
 			// go through all of the listeners and call

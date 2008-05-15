@@ -17,6 +17,8 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
  */
 public final class ContextCore {
 
+	public static final String CONTENT_TYPE_RESOURCE = "resource";
+
 	private static InteractionContextScaling commonContextScaling = new InteractionContextScaling();
 
 	/**

@@ -37,7 +37,7 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
  */
 public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
-	public final static String CONTENT_TYPE = ContextCorePlugin.CONTENT_TYPE_RESOURCE;
+	public final static String CONTENT_TYPE = ContextCore.CONTENT_TYPE_RESOURCE;
 
 	@Override
 	public String getContentType() {

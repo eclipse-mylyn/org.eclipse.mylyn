@@ -20,8 +20,8 @@ import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 
 /**
  * TODO: parametrize relevance levels (requires JDT changes, bug 119063)
@@ -136,7 +136,7 @@ public class FocusedJavaProposalProcessor {
 
 	static class FocusedProposalSeparator extends JavaCompletionProposal {
 		public FocusedProposalSeparator() {
-			super("", 0, 0, ContextUiImages.getImage(ContextUiImages.CONTENT_ASSIST_SEPARATOR), LABEL_SEPARATOR,
+			super("", 0, 0, CommonImages.getImage(CommonImages.SEPARATOR_LIST), LABEL_SEPARATOR,
 					FocusedJavaProposalProcessor.THRESHOLD_INTEREST);
 		}
 	}

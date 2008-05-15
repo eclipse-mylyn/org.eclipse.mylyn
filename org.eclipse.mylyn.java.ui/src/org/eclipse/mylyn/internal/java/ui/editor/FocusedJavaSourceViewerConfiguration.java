@@ -5,9 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-/*
- * Created on Mar 14, 2005
- */
+
 package org.eclipse.mylyn.internal.java.ui.editor;
 
 import org.eclipse.jdt.ui.text.IColorManager;

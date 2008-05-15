@@ -21,10 +21,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ui.ResourcesUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
@@ -46,7 +46,7 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 	public AddToTaskContextAction() {
 		setText(LABEL);
 		setToolTipText(LABEL);
-		setImageDescriptor(ContextUiImages.CONTEXT_ADD);
+		setImageDescriptor(TasksUiImages.CONTEXT_ADD);
 	}
 
 	public void init(IViewPart view) {

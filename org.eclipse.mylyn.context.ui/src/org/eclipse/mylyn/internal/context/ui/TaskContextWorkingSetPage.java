@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -70,7 +71,7 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 
 		label = new Label(composite, SWT.WRAP);
 		label.setText("NOTE: this working set should only be used for searches.  Do not select it in the Package Explorer.");
-		label.setFont(ContextUiPrefContstants.BOLD);
+		label.setFont(CommonFonts.BOLD);
 		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 

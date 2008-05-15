@@ -16,6 +16,7 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -70,7 +71,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		IInteractionElement node = getNode(element);
 		if (node != null) {
 			if (node.getInterest().isLandmark() && !node.getInterest().isPropagated()) {
-				return ContextUiPrefContstants.BOLD;
+				return CommonFonts.BOLD;
 			}
 		}
 		return null;

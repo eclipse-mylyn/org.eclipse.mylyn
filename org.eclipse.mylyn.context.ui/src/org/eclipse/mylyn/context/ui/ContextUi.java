@@ -33,5 +33,4 @@ public final class ContextUi {
 	public static AbstractContextUiBridge getUiBridgeForEditor(IEditorPart editorPart) {
 		return ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 	}
-
 }

@@ -44,16 +44,15 @@ import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
-import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
+import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -218,7 +217,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
-		initializeDefaultPreferences(getPreferenceStore());
+		initDefaultPrefs(getPreferenceStore());
 
 		viewerManager = new FocusedViewerManager();
 
@@ -246,11 +245,11 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private void lazyStart(IWorkbench workbench) {
 		try {
 			ContextCore.getContextManager().addListener(viewerManager);
-			MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
+			MonitorUi.addWindowPartListener(contentOutlineManager);
 
-			perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
+			perspectiveManager.addManagedPerspective(ITasksUiConstants.ID_PERSPECTIVE_PLANNING);
 			TasksUi.getTaskActivityManager().addActivityListener(perspectiveManager);
-			MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
+			MonitorUi.addWindowPerspectiveListener(perspectiveManager);
 			TasksUi.getTaskActivityManager().addActivityListener(TASK_ACTIVATION_LISTENER);
 
 			editorManager = new ContextEditorManager();
@@ -292,10 +291,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 
 		ContextCore.getContextManager().removeListener(viewerManager);
-		MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
+		MonitorUi.removeWindowPartListener(contentOutlineManager);
 
 		TasksUi.getTaskActivityManager().removeActivityListener(perspectiveManager);
-		MonitorUiPlugin.getDefault().removeWindowPerspectiveListener(perspectiveManager);
+		MonitorUi.removeWindowPerspectiveListener(perspectiveManager);
 		TasksUi.getTaskActivityManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
 	}
 
@@ -312,19 +311,17 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 
 		super.stop(context);
-		perspectiveManager.removeManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
+		perspectiveManager.removeManagedPerspective(ITasksUiConstants.ID_PERSPECTIVE_PLANNING);
 		viewerManager.dispose();
 	}
 
-	@Override
-	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE, true);
-
-		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, false);
-		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, true);
-		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION, true);
-		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION, true);
-		store.setDefault(ContextUiPrefContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, true);
+	private void initDefaultPrefs(IPreferenceStore store) {
+		store.setDefault(IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS, true);
+		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, false);
+		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS, true);
+		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION, true);
+		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION, true);
+		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, true);
 	}
 
 	/**
@@ -592,9 +589,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public String getPerspectiveIdFor(ITask task) {
 		if (task != null) {
 			return getPreferenceStore().getString(
-					ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
+					IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
 		} else {
-			return getPreferenceStore().getString(ContextUiPrefContstants.PERSPECTIVE_NO_ACTIVE_TASK);
+			return getPreferenceStore().getString(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK);
 		}
 	}
 
@@ -605,9 +602,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public void setPerspectiveIdFor(ITask task, String perspectiveId) {
 		if (task != null) {
 			getPreferenceStore().setValue(
-					ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(), perspectiveId);
+					IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
+					perspectiveId);
 		} else {
-			getPreferenceStore().setValue(ContextUiPrefContstants.PERSPECTIVE_NO_ACTIVE_TASK, perspectiveId);
+			getPreferenceStore().setValue(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK, perspectiveId);
 		}
 	}
 

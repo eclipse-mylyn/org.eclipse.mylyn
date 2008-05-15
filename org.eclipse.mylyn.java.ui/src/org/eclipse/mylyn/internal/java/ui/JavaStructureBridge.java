@@ -44,8 +44,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
@@ -99,7 +97,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 						}
 					}
 					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
-					if (parentBridge != null && parentBridge instanceof ResourceStructureBridge) {
+					if (parentBridge != null && ContextCore.CONTENT_TYPE_RESOURCE.equals(parentBridge.getContentType())) {
 						if (element.getElementType() < IJavaElement.TYPE) {
 							List<String> resourceChildren = parentBridge.getChildHandles(handle);
 							if (!resourceChildren.isEmpty()) {
@@ -111,7 +109,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 					return childHandles;
 				} catch (JavaModelException e) {
 					// NOTE: it would be better if this was not hard-wired but used the parent/child bridge mapping
-					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(ContextCorePlugin.CONTENT_TYPE_RESOURCE);
+					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(ContextCore.CONTENT_TYPE_RESOURCE);
 					return parentBridge.getChildHandles(handle);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get children",
