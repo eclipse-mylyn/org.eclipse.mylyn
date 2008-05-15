@@ -16,9 +16,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public interface ITasksModel {
 
+	@Deprecated
 	public abstract void addQuery(IRepositoryQuery query);
-
-	public abstract void addTask(ITask task);
 
 	public abstract IRepositoryQuery createQuery(TaskRepository taskRepository);
 
@@ -28,8 +27,10 @@ public interface ITasksModel {
 
 	public abstract ITaskComment createTaskComment(TaskAttribute taskAttribute);
 
+	@Deprecated
 	public abstract void deleteQuery(IRepositoryQuery query);
 
+	@Deprecated
 	public abstract void deleteTask(ITask task);
 
 	public abstract ITask getTask(TaskRepository taskRepository, String taskId);
