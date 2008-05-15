@@ -31,10 +31,10 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
@@ -225,7 +225,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 							TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
 									container.getDateRange());
 						} else if (currentTarget == null) {
-							TasksUiInternal.getTaskList().addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
+							TasksUiInternal.getTaskList().addTask(newTask,
+									TasksUiPlugin.getTaskList().getDefaultCategory());
 						}
 					}
 				}
@@ -234,7 +235,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				if (newTask != null) {
 					StructuredSelection ss = new StructuredSelection(newTask);
 					getViewer().setSelection(ss);
-					getViewer().refresh();
+					//getViewer().refresh();
 				}
 
 			}

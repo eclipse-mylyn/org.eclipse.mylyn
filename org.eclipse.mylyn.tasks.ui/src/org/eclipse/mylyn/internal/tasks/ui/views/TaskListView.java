@@ -499,12 +499,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 								refreshJob.refresh();
 								break;
 							case ADDED:
-								refreshJob.refreshElement(taskContainerDelta.getSource());
-								refreshJob.refreshElement(taskContainerDelta.getTarget());
-								break;
 							case REMOVED:
-								refreshJob.refreshElement(taskContainerDelta.getSource());
-								refreshJob.refreshElement(taskContainerDelta.getTarget());
+								if (taskContainerDelta.getSource() != null) {
+									refreshJob.refreshElement(taskContainerDelta.getSource());
+								}
+								if (taskContainerDelta.getTarget() != null) {
+									refreshJob.refreshElement(taskContainerDelta.getTarget());
+								}
 								break;
 							case CONTENT:
 								refreshJob.refreshElement(taskContainerDelta.getTarget());
