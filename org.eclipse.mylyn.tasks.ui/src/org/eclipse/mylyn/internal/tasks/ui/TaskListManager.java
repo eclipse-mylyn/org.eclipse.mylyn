@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,18 +56,18 @@ public class TaskListManager {
 
 //	private TaskListSaveManager taskListSaveManager;
 
-	private final TaskList taskList = new TaskList();
-
 //	private AbstractTask activeTask;
 
 	private TaskListExternalizationParticipant taskListSaveParticipant;
 
 	private final TaskListElementImporter importer;
 
-	public TaskListManager(TaskListExternalizer taskListWriter, File file) {
+	private final TaskList taskList;
+
+	public TaskListManager(TaskList taskList, TaskListExternalizer taskListWriter, TaskListElementImporter importer) {
+		this.taskList = taskList;
 		this.taskListWriter = taskListWriter;
-		importer = new TaskListElementImporter();
-		importer.setDelegateExternalizers(taskListWriter.getExternalizers());
+		this.importer = importer;
 	}
 
 	public ITaskList resetTaskList() {

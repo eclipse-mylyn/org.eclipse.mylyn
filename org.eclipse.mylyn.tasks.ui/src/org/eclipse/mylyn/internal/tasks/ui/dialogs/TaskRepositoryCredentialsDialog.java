@@ -11,6 +11,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -190,9 +191,12 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 			}
 		}
 
-		keyLockImage = AbstractUIPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN, IMAGE_FILE_KEYLOCK)
-				.createImage();
-		setTitleImage(keyLockImage);
+		ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(TasksUiPlugin.ID_PLUGIN,
+				IMAGE_FILE_KEYLOCK);
+		if (descriptor != null) {
+			keyLockImage = descriptor.createImage();
+			setTitleImage(keyLockImage);
+		}
 		if (message != null) {
 			super.setMessage(message);
 		} else {

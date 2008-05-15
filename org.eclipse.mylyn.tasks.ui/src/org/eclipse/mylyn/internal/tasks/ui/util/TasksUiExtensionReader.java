@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
@@ -88,6 +89,8 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_EXTERNALIZER = "taskListFactory";
 
+	public static final String ELMNT_MIGRATOR = "taskListMigrator";
+
 	public static final String ATTR_BRANDING_ICON = "brandingIcon";
 
 	public static final String ATTR_OVERLAY_ICON = "overlayIcon";
@@ -138,12 +141,15 @@ public class TasksUiExtensionReader {
 
 	private static boolean coreExtensionsRead = false;
 
-	public static void initStartupExtensions(TaskListExternalizer delegatingExternalizer) {
-		List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
+	@SuppressWarnings("deprecation")
+	public static void initStartupExtensions(TaskListExternalizer taskListExternalizer,
+			TaskListElementImporter taskListImporter) {
 		if (!coreExtensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 			// NOTE: has to be read first, consider improving
+			List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
+			List<AbstractTaskListMigrator> migrators = new ArrayList<AbstractTaskListMigrator>();
 			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 			IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
 			for (IExtension repositoryExtension : repositoryExtensions) {
@@ -153,10 +159,13 @@ public class TasksUiExtensionReader {
 						readRepositoryConnectorCore(element);
 					} else if (element.getName().equals(ELMNT_EXTERNALIZER)) {
 						readExternalizer(element, externalizers);
+					} else if (element.getName().equals(ELMNT_MIGRATOR)) {
+						readMigrator(element, migrators);
 					}
 				}
 			}
-			delegatingExternalizer.setDelegateExternalizers(externalizers);
+			taskListExternalizer.initialize(externalizers, migrators);
+			taskListImporter.setDelegateExternalizers(externalizers, migrators);
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
 			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();
@@ -371,8 +380,8 @@ public class TasksUiExtensionReader {
 			if (connectorCore instanceof AbstractRepositoryConnector && type != null) {
 				AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) connectorCore;
 				TasksUiPlugin.getRepositoryManager().addRepositoryConnector(repositoryConnector);
-
 				if (repositoryConnector instanceof AbstractLegacyRepositoryConnector) {
+					((AbstractLegacyRepositoryConnector) repositoryConnector).init(TasksUiInternal.getTaskList());
 					String userManagedString = element.getAttribute(ATTR_USER_MANAGED);
 					if (userManagedString != null) {
 						boolean userManaged = Boolean.parseBoolean(userManagedString);
@@ -496,4 +505,22 @@ public class TasksUiExtensionReader {
 					"Could not load task handler extension", e));
 		}
 	}
+
+	private static void readMigrator(IConfigurationElement element, List<AbstractTaskListMigrator> migrators) {
+		try {
+			Object migratorObject = element.createExecutableExtension(ATTR_CLASS);
+			if (migratorObject instanceof AbstractTaskListMigrator) {
+				AbstractTaskListMigrator migrator = (AbstractTaskListMigrator) migratorObject;
+				migrators.add(migrator);
+			} else {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not load task list migrator migrator: " + migratorObject.getClass().getCanonicalName()
+								+ " must implement " + AbstractTaskListMigrator.class.getCanonicalName()));
+			}
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Could not load task list migrator extension", e));
+		}
+	}
+
 }

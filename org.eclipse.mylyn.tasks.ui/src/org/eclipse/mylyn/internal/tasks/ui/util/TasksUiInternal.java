@@ -280,11 +280,8 @@ public class TasksUiInternal {
 				@Override
 				public void done(IJobChangeEvent event) {
 					if (query.getSynchronizationStatus() != null) {
-						Display display = PlatformUI.getWorkbench().getDisplay();
-						if (!display.isDisposed()) {
-							TasksUiInternal.displayStatus("Query Synchronization Failed",
-									query.getSynchronizationStatus());
-						}
+						TasksUiInternal.asyncDisplayStatus("Query Synchronization Failed",
+								query.getSynchronizationStatus());
 					}
 				}
 			});

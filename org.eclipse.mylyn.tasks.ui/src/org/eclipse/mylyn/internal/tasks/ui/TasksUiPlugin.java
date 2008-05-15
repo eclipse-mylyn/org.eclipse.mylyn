@@ -74,6 +74,7 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalize
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
@@ -161,7 +162,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private final TreeSet<AbstractTaskRepositoryLinkProvider> repositoryLinkProviders = new TreeSet<AbstractTaskRepositoryLinkProvider>(
 			new OrderComparator());
 
-	private TaskListExternalizer taskListWriter;
+	private TaskListExternalizer taskListExternalizer;
 
 	private ITaskHighlighter highlighter;
 
@@ -366,6 +367,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private IProxyChangeListener proxyChangeListener;
 
+	private static TaskList taskList;
+
 	private static TasksModel tasksModel;
 
 	private class TasksUiInitializationJob extends UIJob {
@@ -475,31 +478,40 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		// NOTE: startup order is very sensitive
 		try {
+			// initialize framwork and settings
 			StatusHandler.setDefaultStatusHandler(new RepositoryAwareStatusHandler());
 			WebUtil.init();
 			WebClientLog.setLoggingEnabled(DEBUG_HTTPCLIENT);
 			initializeDefaultPreferences(getPreferenceStore());
-			taskListWriter = new TaskListExternalizer();
-
-			externalizationManager = new ExternalizationManager(getDataDirectory());
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
 			String path = getDataDirectory() + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE;
 			File taskListFile = new File(path);
-			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 
-			repositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
+			// create data model
+			externalizationManager = new ExternalizationManager(getDataDirectory());
+
+			repositoryManager = new TaskRepositoryManager();
+
+			taskList = new TaskList();
+			tasksModel = new TasksModel(taskList, repositoryManager);
+			taskListExternalizer = new TaskListExternalizer(tasksModel);
+			TaskListElementImporter taskListImporter = new TaskListElementImporter(repositoryManager, tasksModel);
+
+			taskActivityManager = new TaskActivityManager(repositoryManager, taskList);
+
 			IExternalizationParticipant participant = new RepositoryExternalizationParticipant(externalizationManager,
 					repositoryManager);
+			taskListManager = new TaskListManager(taskList, taskListExternalizer, taskListImporter);
 
-			taskActivityManager = new TaskActivityManager(repositoryManager, taskListManager.getTaskList());
-			tasksModel = new TasksModel(taskListManager.getTaskList(), repositoryManager);
+			// initialize
 			updateTaskActivityManager();
 
 			proxyServiceReference = context.getServiceReference(IProxyService.class.getName());
@@ -524,7 +536,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
-			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
+			TasksUiExtensionReader.initStartupExtensions(taskListExternalizer, taskListImporter);
 			externalizationManager.load(participant);
 			externalizationManager.addParticipant(participant);
 			//repositoryManager.readRepositories(getRepositoriesFilePath());
@@ -1146,7 +1158,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public static TaskList getTaskList() {
-		return getTaskListManager().getTaskList();
+		return taskList;
 	}
 
 	public static TasksModel getTasksModel() {
