@@ -15,7 +15,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 
 /**
  * @author Mik Kersten
@@ -44,14 +44,14 @@ public class EncodingTest extends AbstractBugzillaTest {
 	public void testDifferentReportEncoding() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, "57", new NullProgressMonitor());
+		BugzillaTask task = (BugzillaTask) TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
 		assertNotNull(task);
 		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));
 		taskList.deleteTask(task);
 		connector.getClientManager().repositoryRemoved(repository);
 		repository.setCharacterEncoding("ISO-8859-1");
-		task = (BugzillaTask) TasksUiUtil.createTask(repository, "57", new NullProgressMonitor());
+		task = (BugzillaTask) TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
 		assertNotNull(task);
 		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		// iso-8859-1 'incorrect' interpretation
@@ -61,7 +61,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 	public void testProperEncodingUponPost() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) TasksUiUtil.createTask(repository, "57", new NullProgressMonitor());
+		BugzillaTask task = (BugzillaTask) TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 		assertNotNull(task);
@@ -77,7 +77,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 
 		submit(task, taskData);
 		taskList.deleteTask(task);
-		task = (BugzillaTask) TasksUiUtil.createTask(repository, "57", new NullProgressMonitor());
+		task = (BugzillaTask) TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
 		assertNotNull(task);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));
 	}

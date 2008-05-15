@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -65,7 +64,7 @@ public class AddExistingTaskJob extends Job {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			final AbstractTask newTask = (AbstractTask) TasksUiUtil.createTask(repository, taskId, monitor);
+			final AbstractTask newTask = (AbstractTask) TasksUiInternal.createTask(repository, taskId, monitor);
 			if (newTask != null) {
 				TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, TaskActivityUtil.getCurrentWeek());
 

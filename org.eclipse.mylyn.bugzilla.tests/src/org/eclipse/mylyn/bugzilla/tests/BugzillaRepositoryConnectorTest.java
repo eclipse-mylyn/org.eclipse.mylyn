@@ -40,7 +40,6 @@ import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Mik Kersten
@@ -424,7 +423,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
 		try {
-			TasksUiUtil.createTask(repository, "9999", new NullProgressMonitor());
+			TasksUiInternal.createTask(repository, "9999", new NullProgressMonitor());
 			fail();
 		} catch (CoreException ce) {
 
@@ -660,7 +659,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// repository.getUserName(), repository.getPassword(),
 		// Proxy.NO_PROXY));
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-		task = (BugzillaTask) TasksUiUtil.createTask(repository, taskNumber, new NullProgressMonitor());
+		task = (BugzillaTask) TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
 		TasksUiInternal.synchronizeTask(connector, task, true, null);
 
 		assertEquals(numAttached, taskData.getAttachments().size());
@@ -680,7 +679,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			fail();
 		} catch (Exception e) {
 		}
-		task = (BugzillaTask) TasksUiUtil.createTask(repository, taskNumber, new NullProgressMonitor());
+		task = (BugzillaTask) TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
 		TasksUiInternal.synchronizeTask(connector, task, true, null);
 		taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals(numAttached, taskData.getAttachments().size());
@@ -698,7 +697,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		attachment.setFilename(fileToAttach.getName());
 		client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment, null);
 
-		task = (BugzillaTask) TasksUiUtil.createTask(repository, taskNumber, new NullProgressMonitor());
+		task = (BugzillaTask) TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
 		TasksUiInternal.synchronizeTask(connector, task, true, null);
 		taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals(numAttached + 1, taskData.getAttachments().size());

@@ -45,7 +45,6 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
@@ -101,7 +100,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {
 		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.offlineHandlerTicketId + "", null);
+		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.offlineHandlerTicketId + "", null);
 
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
@@ -136,7 +135,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	private void markStaleTasks() throws Exception {
 		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
-		TracTask task = (TracTask) TasksUiUtil.createTask(repository, ticket.getId() + "", null);
+		TracTask task = (TracTask) TasksUiInternal.createTask(repository, ticket.getId() + "", null);
 		TasksUiInternal.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
@@ -203,7 +202,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	private void markStaleTasksNoTimeStamp() throws Exception {
-		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.offlineHandlerTicketId + "", null);
+		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.offlineHandlerTicketId + "", null);
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
 		SynchronizationContext event = new SynchronizationContext();
@@ -285,7 +284,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	private void postTaskDataInvalidCredentials() throws Exception {
-		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.offlineHandlerTicketId + "", null);
+		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.offlineHandlerTicketId + "", null);
 		TasksUiInternal.synchronizeTask(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());

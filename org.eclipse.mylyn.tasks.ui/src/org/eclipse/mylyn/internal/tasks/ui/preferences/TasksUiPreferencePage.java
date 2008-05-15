@@ -22,7 +22,6 @@ import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -736,7 +735,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			taskDataDirectoryAction = dialogConfirm.open();
 
 			for (TaskEditor taskEditor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
-				TasksUiUtil.closeEditorInActivePage(taskEditor.getTaskEditorInput().getTask(), true);
+				TasksUiInternal.closeEditorInActivePage(taskEditor.getTaskEditorInput().getTask(), true);
 			}
 
 		} else {

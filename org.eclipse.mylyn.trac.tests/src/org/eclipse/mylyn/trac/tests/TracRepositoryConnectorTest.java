@@ -47,7 +47,6 @@ import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 import org.eclipse.swt.widgets.Shell;
@@ -141,14 +140,14 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	protected void createTaskFromExistingKey() throws CoreException {
 		String id = data.tickets.get(0).getId() + "";
-		AbstractTask task = (AbstractTask) TasksUiUtil.createTask(repository, id, null);
+		AbstractTask task = (AbstractTask) TasksUiInternal.createTask(repository, id, null);
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
 		assertEquals(repository.getRepositoryUrl() + ITracClient.TICKET_URL + id, task.getUrl());
 
 		try {
-			task = (AbstractTask) TasksUiUtil.createTask(repository, "does not exist", null);
+			task = (AbstractTask) TasksUiInternal.createTask(repository, "does not exist", null);
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}
@@ -273,7 +272,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContextXmlRpc010() throws Exception {
 		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "", null);
+		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.attachmentTicketId + "", null);
 		TasksUiInternal.synchronizeTask(connector, task, true, null);
 
 		//int size = task.getTaskData().getAttachments().size();
@@ -295,7 +294,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContextWeb096() throws Exception {
 		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) TasksUiUtil.createTask(repository, data.attachmentTicketId + "", null);
+		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.attachmentTicketId + "", null);
 
 		File sourceContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();

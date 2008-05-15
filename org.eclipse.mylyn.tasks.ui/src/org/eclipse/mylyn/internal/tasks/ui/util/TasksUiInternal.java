@@ -17,11 +17,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.ProgressMonitorWrapper;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
@@ -35,6 +38,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
@@ -43,6 +47,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
@@ -62,6 +67,7 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
@@ -553,6 +559,117 @@ public class TasksUiInternal {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static void closeEditorInActivePage(ITask task, boolean save) {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window == null) {
+			return;
+		}
+		IWorkbenchPage page = window.getActivePage();
+		if (page == null) {
+			return;
+		}
+		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		IEditorInput input = new TaskEditorInput(taskRepository, task);
+		IEditorPart editor = page.findEditor(input);
+		if (editor != null) {
+			page.closeEditor(editor, save);
+		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	// API 3.0 consider moving this somewhere else and renaming to addToTaskList
+	public static ITask createTask(TaskRepository repository, String id, IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
+		ITaskList taskList = getTaskList();
+		AbstractTask task = (AbstractTask) taskList.getTask(repository.getRepositoryUrl(), id);
+		if (task == null) {
+			AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(repository.getConnectorKind());
+			if (connector instanceof AbstractLegacyRepositoryConnector) {
+				RepositoryTaskData taskData = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskData(
+						repository, id, new SubProgressMonitor(monitor, 1));
+				if (taskData != null) {
+					task = createTaskFromTaskData((AbstractLegacyRepositoryConnector) connector, taskList, repository,
+							taskData, true, new SubProgressMonitor(monitor, 1));
+					if (task != null) {
+						task.setSynchronizationState(SynchronizationState.INCOMING);
+						taskList.addTask(task);
+					}
+				}
+			}
+			// FIXME 3.0 support new task data
+		}
+		return task;
+	}
+
+	/**
+	 * Create new repository task, adding result to tasklist
+	 */
+	public static AbstractTask createTaskFromExistingId(AbstractLegacyRepositoryConnector connector,
+			ITaskList taskList, TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor)
+			throws CoreException {
+		AbstractTask task = (AbstractTask) taskList.getTask(repository.getRepositoryUrl(), id);
+		if (task == null) {
+			RepositoryTaskData taskData = connector.getLegacyTaskData(repository, id,
+					new SubProgressMonitor(monitor, 1));
+			if (taskData != null) {
+				task = createTaskFromTaskData(connector, taskList, repository, taskData, retrieveSubTasks,
+						new SubProgressMonitor(monitor, 1));
+				if (task != null) {
+					task.setSynchronizationState(SynchronizationState.INCOMING);
+					taskList.addTask(task);
+				}
+			}
+		}
+		return task;
+	}
+
+	/**
+	 * Creates a new task from the given task data. Does NOT add resulting task to the task list.
+	 */
+	private static AbstractTask createTaskFromTaskData(AbstractLegacyRepositoryConnector connector, ITaskList taskList,
+			TaskRepository repository, RepositoryTaskData taskData, boolean retrieveSubTasks, IProgressMonitor monitor)
+			throws CoreException {
+		AbstractTask task = null;
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		}
+		try {
+			TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
+			if (taskData != null) {
+				// Use connector task factory
+				task = connector.createTask(repository.getRepositoryUrl(), taskData.getTaskId(), taskData.getTaskId()
+						+ ": " + taskData.getDescription());
+				connector.updateTaskFromTaskData(repository, task, taskData);
+				taskDataManager.setNewTaskData(taskData);
+	
+				if (retrieveSubTasks) {
+					monitor.beginTask("Creating task", connector.getLegacyTaskDataHandler()
+							.getSubTaskIds(taskData)
+							.size());
+					for (String subId : connector.getLegacyTaskDataHandler().getSubTaskIds(taskData)) {
+						if (subId == null || subId.trim().equals("")) {
+							continue;
+						}
+						AbstractTask subTask = createTaskFromExistingId(connector, taskList, repository, subId, false,
+								new SubProgressMonitor(monitor, 1));
+						if (subTask != null) {
+							taskList.addTask(subTask, task);
+						}
+					}
+				}
+			}
+		} finally {
+			monitor.done();
+		}
+		return task;
 	}
 
 }

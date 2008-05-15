@@ -25,7 +25,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchImages;
@@ -109,7 +108,7 @@ public class DeleteAction extends Action {
 				TasksUi.getTaskActivityManager().deactivateTask(task);
 				TasksUiInternal.getTaskList().deleteTask(task);
 				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
-				TasksUiUtil.closeEditorInActivePage(task, false);
+				TasksUiInternal.closeEditorInActivePage(task, false);
 			} else if (selectedObject instanceof IRepositoryQuery) {
 				// boolean deleteConfirmed =
 				// MessageDialog.openQuestion(PlatformUI.getWorkbench()
@@ -129,7 +128,7 @@ public class DeleteAction extends Action {
 				TaskCategory cat = (TaskCategory) selectedObject;
 				for (ITask task : cat.getChildren()) {
 					ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
-					TasksUiUtil.closeEditorInActivePage(task, false);
+					TasksUiInternal.closeEditorInActivePage(task, false);
 				}
 				TasksUiInternal.getTaskList().deleteCategory(cat);
 			} else if (selectedObject instanceof UnmatchedTaskContainer) {

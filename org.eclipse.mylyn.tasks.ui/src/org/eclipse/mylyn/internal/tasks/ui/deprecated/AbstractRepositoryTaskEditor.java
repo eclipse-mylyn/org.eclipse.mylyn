@@ -3829,7 +3829,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected AbstractTask updateSubmittedTask(String postResult, IProgressMonitor monitor) throws CoreException {
-		final AbstractTask newTask = (AbstractTask) TasksUiUtil.createTask(repository, postResult, monitor);
+		final AbstractTask newTask = (AbstractTask) TasksUiInternal.createTask(repository, postResult, monitor);
 
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
