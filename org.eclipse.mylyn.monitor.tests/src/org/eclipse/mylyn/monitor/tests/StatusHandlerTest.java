@@ -20,6 +20,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 /**
  * @author Shawn Minto
  */
+@SuppressWarnings("deprecation")
 public class StatusHandlerTest extends TestCase {
 
 	private class MockDefaultStatusHandler implements IStatusHandler {
@@ -31,7 +32,6 @@ public class StatusHandlerTest extends TestCase {
 		public void fail(IStatus status, boolean informUser) {
 
 		}
-
 	}
 
 	private class MockStatusHandler implements IStatusHandler {

@@ -23,6 +23,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("deprecation")
 public class InteractionEventExternalizationTest extends AbstractContextTest {
 
 	private static final String PATH = "test-log.xml";

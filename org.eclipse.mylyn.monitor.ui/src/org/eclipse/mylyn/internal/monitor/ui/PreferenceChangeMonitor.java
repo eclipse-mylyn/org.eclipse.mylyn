@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.monitor.ui;
 
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
@@ -21,9 +20,7 @@ public class PreferenceChangeMonitor implements IPropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent event) {
 		String newValue = obfuscateValueIfContainsPath(event.getNewValue().toString());
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(event.getProperty(), newValue);
-		if (ContextCorePlugin.getDefault() != null) {
-			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
-		}
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	private String obfuscateValueIfContainsPath(String preferenceValue) {

@@ -17,6 +17,7 @@ import org.eclipse.mylyn.monitor.core.IActivityTimerListener;
  * @author Shawn Minto
  * @author Mik Kersten
  */
+@SuppressWarnings("deprecation")
 public class ActiveTimerTest extends TestCase {
 
 	private boolean gotTimeOut = false;
@@ -37,7 +38,6 @@ public class ActiveTimerTest extends TestCase {
 		@SuppressWarnings("unused")
 		public void fireActive() {
 			// ignore
-
 		}
 
 	};

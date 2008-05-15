@@ -13,13 +13,25 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPerspectiveListener;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * @author Steffen Pingel
+ * @author Mik Kersten
  * @since 3.0
  */
 public class MonitorUi {
+
+	public static void addWindowPostSelectionListener(ISelectionListener listener) {
+		MonitorUiPlugin.getDefault().addWindowPostSelectionListener(listener);
+	}
+
+	public static void removeWindowPostSelectionListener(ISelectionListener listener) {
+		MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(listener);
+	}
 
 	public static void addInteractionListener(IInteractionEventListener listener) {
 		MonitorUiPlugin.getDefault().addInteractionListener(listener);
@@ -45,4 +57,19 @@ public class MonitorUi {
 		return MonitorUiPlugin.getDefault().getMonitoredWindows();
 	}
 
+	public static void addWindowPartListener(IPartListener listener) {
+		MonitorUiPlugin.getDefault().addWindowPartListener(listener);
+	}
+
+	public static void removeWindowPartListener(IPartListener listener) {
+		MonitorUiPlugin.getDefault().removeWindowPartListener(listener);
+	}
+
+	public static void addWindowPerspectiveListener(IPerspectiveListener listener) {
+		MonitorUiPlugin.getDefault().addWindowPerspectiveListener(listener);
+	}
+
+	public static void removeWindowPerspectiveListener(IPerspectiveListener listener) {
+		MonitorUiPlugin.getDefault().removeWindowPerspectiveListener(listener);
+	}
 }
