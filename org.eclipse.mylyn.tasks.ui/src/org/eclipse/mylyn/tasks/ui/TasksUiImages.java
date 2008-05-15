@@ -12,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -20,6 +19,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * API-3.0: consider removing images not used by clients
+ * 
  * @author Mik Kersten
  * @since 3.0
  */
@@ -27,13 +28,11 @@ public class TasksUiImages {
 
 	private static final URL baseURL = TasksUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
-	private static ImageRegistry imageRegistry;
-
 	private static final String VIEW = "eview16";
 
 	private static final String TOOL = "etool16";
 
-	public static final String OBJ = "obj16";
+	private static final String OBJ = "obj16";
 
 	private static final String OVR = "ovr16";
 
