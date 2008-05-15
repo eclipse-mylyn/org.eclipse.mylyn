@@ -289,7 +289,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				if (task != null) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							TasksUiUtil.openTaskAndRefresh(task);
+							TasksUiUtil.openTask(task);
 						}
 					});
 					return Status.OK_STATUS;
