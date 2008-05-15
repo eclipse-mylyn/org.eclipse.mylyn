@@ -355,6 +355,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private boolean ignoreLocationEvents = false;
 
+	private boolean refreshing = false;
+
 	private TaskComment selectedComment = null;
 
 	/**
@@ -423,7 +425,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ITask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (repositoryTask != null && repositoryTask.equals(taskContainerDelta.getTarget())) {
-					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
+					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)
+							&& !taskContainerDelta.isTransient() && !refreshing) {
 						taskToRefresh = (ITask) taskContainerDelta.getTarget();
 						break;
 					}
@@ -3711,7 +3714,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				// If not, incomings resulting from subsequent synchronization
 				// can get marked as read (without having been viewed by user
 				if (repositoryTask != null) {
-					TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
+					try {
+						refreshing = true;
+						TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
+					} finally {
+						refreshing = false;
+					}
 				}
 
 				this.setInputWithNotify(this.getEditorInput());
@@ -3721,6 +3729,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				updateHeaderControls();
 
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
 					public void run() {
 						if (editorComposite != null && !editorComposite.isDisposed()) {
 							if (taskData != null) {
@@ -3749,9 +3758,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 									outlinePage.getOutlineTreeViewer().refresh(true);
 								}
 
-								if (repositoryTask != null) {
-									TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
-								}
+//								if (repositoryTask != null) {
+//									TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
+//								}
 
 								setSubmitEnabled(true);
 							}
