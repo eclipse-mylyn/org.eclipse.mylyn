@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 
 public class TaskListChangeAdapter implements ITaskListChangeListener {
 

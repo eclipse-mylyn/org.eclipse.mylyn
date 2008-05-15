@@ -10,6 +10,8 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
+
 /**
  * Listener for task list modifications and task content modifications.
  * 
