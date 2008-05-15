@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.ui;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITasksModel;
@@ -21,16 +22,24 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
  */
 public class TasksUi {
 
+	public static AbstractRepositoryConnector getConnector(String kind) {
+		return TasksUiPlugin.getConnector(kind);
+	}
+
+	public static AbstractRepositoryConnectorUi getConnectorUi(String kind) {
+		return TasksUiPlugin.getConnectorUi(kind);
+	}
+
+	public static ITaskRepositoryManager getRepositoryManager() {
+		return TasksUiPlugin.getRepositoryManager();
+	}
+
 	public static ITaskActivityManager getTaskActivityManager() {
 		return TasksUiPlugin.getTaskActivityManager();
 	}
 
 	public static ITaskDataManager getTaskDataManager() {
 		return TasksUiPlugin.getTaskDataManager();
-	}
-
-	public static ITaskRepositoryManager getRepositoryManager() {
-		return TasksUiPlugin.getRepositoryManager();
 	}
 
 	public static ITasksModel getTasksModel() {

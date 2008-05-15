@@ -89,8 +89,20 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * Contributions to the UI legend.
+	 * 
+	 * @deprecated use {@link #getLegendElements()} instead
 	 */
+	@Deprecated
 	public List<ITask> getLegendItems() {
+		return Collections.emptyList();
+	}
+
+	/**
+	 * Contributions to the UI legend.
+	 * 
+	 * @since 3.0
+	 */
+	public List<LegendElement> getLegendElements() {
 		return Collections.emptyList();
 	}
 

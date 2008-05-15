@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.help.ui.dialogs;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,7 +18,6 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.LegendElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -62,6 +63,8 @@ public class UiLegendDialog extends PopupDialog {
 
 	private final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
+	private final ArrayList<LegendElement> legendElements = new ArrayList<LegendElement>();
+
 	// TODO e3.4 move to new api
 	@SuppressWarnings("deprecation")
 	public UiLegendDialog(Shell parent) {
@@ -84,6 +87,9 @@ public class UiLegendDialog extends PopupDialog {
 
 	@Override
 	public boolean close() {
+		for (LegendElement element : legendElements) {
+			element.dispose();
+		}
 		if (toolkit != null) {
 			if (toolkit.getColors() != null) {
 				toolkit.dispose();
@@ -384,6 +390,7 @@ public class UiLegendDialog extends PopupDialog {
 		toolkit.createLabel(synchroClient, "Conflicting changes, need to synchronize");
 	}
 
+	@SuppressWarnings("deprecation")
 	private void createConnectorsSection(Composite parent) {
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 3;
@@ -399,46 +406,94 @@ public class UiLegendDialog extends PopupDialog {
 
 		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager().getRepositoryConnectors();
 		for (AbstractRepositoryConnector connector : connectors) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUi.getConnectorUi(connector.getConnectorKind());
 			if (connectorUi != null) {
-				List<ITask> elements = connectorUi.getLegendItems();
-				if (!elements.isEmpty()) {
-					Section connectorSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
-					connectorSection.setLayout(new TableWrapLayout());
-					connectorSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-
-					String label = connector.getLabel();
-					int parenIndex = label.indexOf('(');
-					if (parenIndex != -1) {
-						label = label.substring(0, parenIndex);
-					}
-					connectorSection.setText(label);
-
-					TableWrapLayout clientLayout = new TableWrapLayout();
-					clientLayout.numColumns = 2;
-					clientLayout.makeColumnsEqualWidth = false;
-					clientLayout.verticalSpacing = 1;
-					clientLayout.topMargin = 1;
-					clientLayout.bottomMargin = 1;
-
-					Composite connectorClient = toolkit.createComposite(connectorSection);
-					connectorClient.setLayout(clientLayout);
-					connectorClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-					connectorSection.setClient(connectorClient);
-
-					Label imageLabel;
-					for (ITaskElement taskListElement : elements) {
-						imageLabel = toolkit.createLabel(connectorClient, "");
-						imageLabel.setImage(labelProvider.getImage(taskListElement));
-						toolkit.createLabel(connectorClient, taskListElement.getSummary());
-					}
-
-					if (elements.size() < 4) {
-						imageLabel = toolkit.createLabel(connectorClient, "");
-						toolkit.createLabel(connectorClient, "");
+				List<LegendElement> elements = connectorUi.getLegendElements();
+				if (elements != null && elements.size() > 0) {
+					legendElements.addAll(elements);
+					addLegendElements(composite, connector, elements);
+				} else {
+					List<ITask> items = connectorUi.getLegendItems();
+					if (items != null && !items.isEmpty()) {
+						addLegacyLegendItems(composite, connector, items);
 					}
 				}
 			}
+		}
+	}
+
+	private void addLegendElements(Composite composite, AbstractRepositoryConnector connector,
+			List<LegendElement> elements) {
+		Section connectorSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
+		connectorSection.setLayout(new TableWrapLayout());
+		connectorSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+
+		String label = connector.getLabel();
+		int parenIndex = label.indexOf('(');
+		if (parenIndex != -1) {
+			label = label.substring(0, parenIndex);
+		}
+		connectorSection.setText(label);
+
+		TableWrapLayout clientLayout = new TableWrapLayout();
+		clientLayout.numColumns = 2;
+		clientLayout.makeColumnsEqualWidth = false;
+		clientLayout.verticalSpacing = 1;
+		clientLayout.topMargin = 1;
+		clientLayout.bottomMargin = 1;
+
+		Composite connectorClient = toolkit.createComposite(connectorSection);
+		connectorClient.setLayout(clientLayout);
+		connectorClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		connectorSection.setClient(connectorClient);
+
+		Label imageLabel;
+		for (LegendElement element : elements) {
+			imageLabel = toolkit.createLabel(connectorClient, "");
+			imageLabel.setImage(element.getImage());
+			toolkit.createLabel(connectorClient, element.getLabel());
+		}
+
+		if (elements.size() < 4) {
+			imageLabel = toolkit.createLabel(connectorClient, "");
+			toolkit.createLabel(connectorClient, "");
+		}
+	}
+
+	private void addLegacyLegendItems(Composite composite, AbstractRepositoryConnector connector, List<ITask> elements) {
+		Section connectorSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
+		connectorSection.setLayout(new TableWrapLayout());
+		connectorSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+
+		String label = connector.getLabel();
+		int parenIndex = label.indexOf('(');
+		if (parenIndex != -1) {
+			label = label.substring(0, parenIndex);
+		}
+		connectorSection.setText(label);
+
+		TableWrapLayout clientLayout = new TableWrapLayout();
+		clientLayout.numColumns = 2;
+		clientLayout.makeColumnsEqualWidth = false;
+		clientLayout.verticalSpacing = 1;
+		clientLayout.topMargin = 1;
+		clientLayout.bottomMargin = 1;
+
+		Composite connectorClient = toolkit.createComposite(connectorSection);
+		connectorClient.setLayout(clientLayout);
+		connectorClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		connectorSection.setClient(connectorClient);
+
+		Label imageLabel;
+		for (ITaskElement taskListElement : elements) {
+			imageLabel = toolkit.createLabel(connectorClient, "");
+			imageLabel.setImage(labelProvider.getImage(taskListElement));
+			toolkit.createLabel(connectorClient, taskListElement.getSummary());
+		}
+
+		if (elements.size() < 4) {
+			imageLabel = toolkit.createLabel(connectorClient, "");
+			toolkit.createLabel(connectorClient, "");
 		}
 	}
 
