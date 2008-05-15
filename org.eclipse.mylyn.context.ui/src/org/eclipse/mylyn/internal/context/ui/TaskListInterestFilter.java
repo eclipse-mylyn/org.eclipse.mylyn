@@ -20,6 +20,7 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 
@@ -71,6 +72,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	private boolean isDateRangeInteresting(ScheduledTaskContainer scheduleContainer) {
+		if (scheduleContainer instanceof TaskScheduleContentProvider.Unscheduled) {
+			return true;
+		}
 		if (TaskActivityUtil.getCurrentWeek().isCurrentWeekDay(scheduleContainer.getDateRange())) {
 			if (scheduleContainer.isPresent() || scheduleContainer.isFuture()) {
 				return true;
@@ -143,7 +147,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	public static boolean hasChanges(Object parent, ITask task) {
-		if (parent instanceof ScheduledTaskContainer) {
+		if (parent instanceof ScheduledTaskContainer && !(parent instanceof TaskScheduleContentProvider.Unscheduled)) {
 			if (!shouldShowInFocusedWorkweekDateContainer(parent, task)) {
 				return false;
 			}
@@ -154,7 +158,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	private static boolean hasChangesHelper(Object parent, ITask task) {
 		if (task.getSynchronizationState().isOutgoing()) {
 			return true;
-		} else if (task.getSynchronizationState().isIncoming() && !(parent instanceof ScheduledTaskContainer)) {
+		} else if (task.getSynchronizationState().isIncoming()) {
 			return true;
 		}
 		for (ITask child : task.getChildren()) {
