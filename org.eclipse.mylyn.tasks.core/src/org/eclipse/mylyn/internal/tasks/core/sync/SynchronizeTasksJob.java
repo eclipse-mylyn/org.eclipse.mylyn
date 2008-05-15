@@ -146,6 +146,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 					}
 				}
 			}
+		} catch (OperationCanceledException e) {
+			throw e;
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e));
 		} finally {
