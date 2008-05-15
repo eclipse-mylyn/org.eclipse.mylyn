@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
@@ -37,10 +39,16 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	private Timer timer;
 
+	private final Unscheduled unscheduled;
+
 	public TaskScheduleContentProvider(TaskListView taskListView) {
 		super(taskListView);
 		this.taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 		taskActivityManager.addActivityListener(this);
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 5000);
+		cal.getTime();
+		unscheduled = new Unscheduled(taskActivityManager, new DateRange(cal));
 		timer = new Timer();
 	}
 
@@ -61,6 +69,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 		ScheduledTaskContainer nextWeekContainer = new ScheduledTaskContainer(taskActivityManager, week.next());
 		containers.add(nextWeekContainer);
+
+		containers.add(unscheduled);
 
 		if (parent != null && parent.equals(this.taskListView.getViewSite())) {
 			return applyFilter(containers).toArray();
@@ -151,6 +161,25 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	public void taskDeactivated(ITask task) {
 		// ignore
+	}
+
+	class Unscheduled extends ScheduledTaskContainer {
+
+		private final TaskActivityManager activityManager;
+
+		public Unscheduled(TaskActivityManager activityManager, DateRange range) {
+			super(activityManager, range, "Unscheduled");
+			this.activityManager = activityManager;
+		}
+
+		@Override
+		public Collection<ITask> getChildren() {
+			Set<ITask> all = new HashSet<ITask>();
+			for (ITask task : activityManager.getUnscheduled()) {
+				all.add(task);
+			}
+			return all;
+		}
 	}
 
 }

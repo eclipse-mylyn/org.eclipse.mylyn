@@ -731,6 +731,14 @@ public class TaskActivityManager implements ITaskActivityManager {
 		}
 		return children;
 	}
+
+	public Collection<AbstractTask> getUnscheduled() {
+		Set<AbstractTask> allTasks = new HashSet<AbstractTask>(taskList.getAllTasks());
+		for (ITask abstractTask : getAllScheduledTasks()) {
+			allTasks.remove(abstractTask);
+		}
+		return allTasks;
+	}
 }
 
 //public ScheduledTaskContainer getActivityToday() {
