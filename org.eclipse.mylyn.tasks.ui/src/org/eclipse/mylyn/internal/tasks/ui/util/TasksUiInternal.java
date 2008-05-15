@@ -337,8 +337,8 @@ public class TasksUiInternal {
 		ITaskList taskList = TasksUiInternal.getTaskList();
 		for (ITask task : tasks) {
 			((AbstractTask) task).setSynchronizing(true);
-			taskList.notifyElementChanged(task);
 		}
+		((TaskList) taskList).notifySyncStateChanged(tasks);
 		// TODO notify task list?
 
 		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeTasksJob(connector, tasks);

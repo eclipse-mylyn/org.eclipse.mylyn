@@ -147,7 +147,9 @@ public class TaskDataManager implements ITaskDataManager {
 				result[0] = state;
 			}
 		});
+		// TODO: Review
 		taskList.notifySyncStateChanged(task);
+		//taskList.notifyElementChanged(task);
 		return result[0];
 	}
 
@@ -362,7 +364,7 @@ public class TaskDataManager implements ITaskDataManager {
 				task.setSubmitting(false);
 			}
 		});
-		taskList.notifyElementChanged(task);
+		taskList.notifySyncStateChanged(task);
 	}
 
 	/**
@@ -495,8 +497,8 @@ public class TaskDataManager implements ITaskDataManager {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Unexpected error while marking task read", e));
 		}
-		taskList.notifySyncStateChanged(task);
-		//taskList.notifyElementChanged(task);
+		//taskList.notifySyncStateChanged(task);
+		taskList.notifyElementChanged(task);
 	}
 
 	@Deprecated
