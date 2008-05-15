@@ -13,7 +13,7 @@ import java.util.Set;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -28,11 +28,13 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 
 	protected boolean isEnabled = false;
 
+	private boolean isInitialized = false;
+
 	public void enable() {
 		if (!isEnabled) {
 			isEnabled = true;
 			TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
-			if (TasksUiPlugin.getTaskList().isInitialized()) {
+			if (!isInitialized) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
 
@@ -56,14 +58,15 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 	 */
 	protected abstract void updateChangeSetLabel(ITask task);
 
-	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
+	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new TaskListChangeAdapter() {
 
-		public void taskListRead() {
-			initContextChangeSets();
-		}
-
+		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
+				if (taskContainerDelta.getKind() == TaskContainerDelta.Kind.ROOT && !isInitialized) {
+					initContextChangeSets();
+					isInitialized = true;
+				}
 				if (taskContainerDelta.getTarget() instanceof ITask) {
 					ITask task = (ITask) taskContainerDelta.getTarget();
 					switch (taskContainerDelta.getKind()) {
