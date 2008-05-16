@@ -444,7 +444,7 @@ public final class DelegatingTaskExternalizer {
 			Node child = list.item(i);
 			if (child instanceof Element && child.getNodeName().equals(NODE_ATTRIBUTE)) {
 				Element element = (Element) child;
-				String key = element.getAttribute(KEY_PRIORITY);
+				String key = element.getAttribute(KEY_KEY);
 				if (key.length() > 0) {
 					container.setAttribute(key, element.getTextContent());
 				}
@@ -714,6 +714,7 @@ public final class DelegatingTaskExternalizer {
 			if (handle.length() > 0) {
 				query.setHandleIdentifier(handle);
 			}
+			readAttributes(query, element);
 		}
 		return query;
 	}
