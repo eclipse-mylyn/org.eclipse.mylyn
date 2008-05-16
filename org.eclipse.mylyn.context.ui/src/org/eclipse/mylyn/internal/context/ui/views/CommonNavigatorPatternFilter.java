@@ -9,12 +9,12 @@
 package org.eclipse.mylyn.internal.context.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 
 /**
  * @author Mik Kersten
  */
-public class CommonNavigatorPatternFilter extends TaskListPatternFilter {
+public class CommonNavigatorPatternFilter extends SubstringPatternFilter {
 	@Override
 	public boolean isLeafMatch(Viewer viewer, Object element) {
 		return super.isLeafMatch(viewer, element);

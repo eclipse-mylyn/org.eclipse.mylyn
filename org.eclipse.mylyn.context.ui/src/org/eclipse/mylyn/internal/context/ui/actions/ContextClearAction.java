@@ -12,7 +12,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.ui.commands.ClearContextHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -24,6 +23,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @deprecated use {@link ClearContextHandler} instead
  */
+@SuppressWarnings("restriction")
 @Deprecated
 public class ContextClearAction extends TaskContextAction {
 
@@ -48,7 +48,7 @@ public class ContextClearAction extends TaskContextAction {
 	}
 
 	public void run(IAction action) {
-		AbstractTask task = TaskListView.getFromActivePerspective().getSelectedTask();
+		ITask task = TaskListView.getFromActivePerspective().getSelectedTask();
 		if (task != null) {
 			run(task);
 		}

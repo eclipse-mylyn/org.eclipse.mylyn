@@ -31,8 +31,6 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.context.ui.IContextAwareEditor;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -100,34 +98,31 @@ public class ContextEditorManager extends AbstractContextListener {
 				}
 				String mementoString = null;
 				// API-3.0: remove coupling to AbstractTask, change where memento is stored
-				ITask task = TasksUiPlugin.getTaskList().getTask(context.getHandleIdentifier());
 				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				if (task != null) {
-					try {
-						mementoString = readEditorMemento(task);
-						if (mementoString != null && !mementoString.trim().equals("")) {
-							IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
-							IMemento[] children = memento.getChildren(KEY_MONITORED_WINDOW_OPEN_EDITORS);
-							if (children.length > 0) {
-								// This code supports restore from multiple windows
-								for (IMemento child : children) {
-									WorkbenchPage page = getWorkbenchPageForMemento(child, activeWindow);
-									if (child != null && page != null) {
-										restoreEditors(page, child, page.getWorkbenchWindow() == activeWindow);
-									}
-								}
-							} else {
-								// This code is for supporting the old editor management - only the active window
-								WorkbenchPage page = (WorkbenchPage) activeWindow.getActivePage();
-								if (memento != null) {
-									restoreEditors(page, memento, true);
+				try {
+					mementoString = readEditorMemento(context);
+					if (mementoString != null && !mementoString.trim().equals("")) {
+						IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
+						IMemento[] children = memento.getChildren(KEY_MONITORED_WINDOW_OPEN_EDITORS);
+						if (children.length > 0) {
+							// This code supports restore from multiple windows
+							for (IMemento child : children) {
+								WorkbenchPage page = getWorkbenchPageForMemento(child, activeWindow);
+								if (child != null && page != null) {
+									restoreEditors(page, child, page.getWorkbenchWindow() == activeWindow);
 								}
 							}
+						} else {
+							// This code is for supporting the old editor management - only the active window
+							WorkbenchPage page = (WorkbenchPage) activeWindow.getActivePage();
+							if (memento != null) {
+								restoreEditors(page, memento, true);
+							}
 						}
-					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-								"Could not restore all editors, memento: \"" + mementoString + "\"", e));
 					}
+				} catch (Exception e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
+							"Could not restore all editors, memento: \"" + mementoString + "\"", e));
 				}
 				activeWindow.setActivePage(activeWindow.getActivePage());
 				IInteractionElement activeNode = context.getActiveNode();
@@ -197,8 +192,8 @@ public class ContextEditorManager extends AbstractContextListener {
 		return null;
 	}
 
-	private String readEditorMemento(ITask task) {
-		return preferenceStore.getString(PREFS_PREFIX + task.getHandleIdentifier());
+	private String readEditorMemento(IInteractionContext context) {
+		return preferenceStore.getString(PREFS_PREFIX + context.getHandleIdentifier());
 	}
 
 	@Override
@@ -227,28 +222,24 @@ public class ContextEditorManager extends AbstractContextListener {
 				memento.putBoolean(ATTRIBUTE_IS_ACTIVE, window == activeWindow);
 				((WorkbenchPage) window.getActivePage()).getEditorManager().saveState(memento);
 			}
-
-			ITask task = TasksUiPlugin.getTaskList().getTask(context.getHandleIdentifier());
-			if (task != null) {
-				// TODO: avoid storing with preferences due to bloat?
-				StringWriter writer = new StringWriter();
-				try {
-					rootMemento.save(writer);
-					writeEditorMemento(task, writer.getBuffer().toString());
-				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-							"Could not store editor state", e));
-				}
-
-				Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
-						previousCloseEditorsSetting);
+			// TODO: avoid storing with preferences due to bloat?
+			StringWriter writer = new StringWriter();
+			try {
+				rootMemento.save(writer);
+				writeEditorMemento(context, writer.getBuffer().toString());
+			} catch (IOException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not store editor state",
+						e));
 			}
+
+			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
+					previousCloseEditorsSetting);
 			closeAllEditors();
 		}
 	}
 
-	public void writeEditorMemento(ITask task, String memento) {
-		preferenceStore.setValue(PREFS_PREFIX + task.getHandleIdentifier(), memento);
+	public void writeEditorMemento(IInteractionContext context, String memento) {
+		preferenceStore.setValue(PREFS_PREFIX + context.getHandleIdentifier(), memento);
 	}
 
 	@Override
@@ -257,23 +248,19 @@ public class ContextEditorManager extends AbstractContextListener {
 			return;
 		}
 		closeAllButActiveTaskEditor(context.getHandleIdentifier());
-		ITask task = TasksUiPlugin.getTaskList().getTask(context.getHandleIdentifier());
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 
-		if (task != null) {
-			// TODO: avoid storing with preferences due to bloat?
-			StringWriter writer = new StringWriter();
-			try {
-				memento.save(writer);
-				writeEditorMemento(task, writer.getBuffer().toString());
-			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not store editor state",
-						e));
-			}
-
-			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
-					previousCloseEditorsSetting);
+		// TODO: avoid storing with preferences due to bloat?
+		StringWriter writer = new StringWriter();
+		try {
+			memento.save(writer);
+			writeEditorMemento(context, writer.getBuffer().toString());
+		} catch (IOException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not store editor state", e));
 		}
+
+		Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
+				previousCloseEditorsSetting);
 		closeAllEditors();
 	}
 
@@ -388,10 +375,11 @@ public class ContextEditorManager extends AbstractContextListener {
 		return true;
 	}
 
+	@SuppressWarnings( { "deprecation", "restriction" })
 	private boolean isUnsubmittedTaskEditor(IEditorReference editorReference) {
 		try {
 			IEditorInput input = editorReference.getEditorInput();
-			if (input instanceof NewTaskEditorInput) {
+			if (input instanceof org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput) {
 				return true;
 			}
 		} catch (PartInitException e) {
@@ -415,7 +403,8 @@ public class ContextEditorManager extends AbstractContextListener {
 	}
 
 	private void closeEditor(IInteractionElement element, boolean force) {
-		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS)) {
+		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS)) {
 			if (force || !element.getInterest().isInteresting()) {
 				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
 				if (bridge.isDocument(element.getHandleIdentifier())) {

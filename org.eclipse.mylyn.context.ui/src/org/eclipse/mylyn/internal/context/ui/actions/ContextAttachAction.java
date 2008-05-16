@@ -39,6 +39,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Steffen Pingel
  * @deprecated use {@link AttachContextHandler} instead
  */
+@SuppressWarnings("restriction")
 @Deprecated
 public class ContextAttachAction extends Action implements IViewActionDelegate {
 
@@ -95,7 +96,6 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 		}
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
 	public void selectionChanged(IAction action, ISelection selection) {
 		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
 		if (selectedTask != null) {

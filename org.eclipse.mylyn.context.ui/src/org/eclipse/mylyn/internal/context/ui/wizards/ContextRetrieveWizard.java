@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.internal.context.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.internal.context.ui.ContextUiUtil;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -21,6 +21,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
+@SuppressWarnings( { "deprecation", "restriction" })
 public class ContextRetrieveWizard extends Wizard {
 
 	private static final String TITLE = "Task Repository";
@@ -49,7 +50,7 @@ public class ContextRetrieveWizard extends Wizard {
 	@Override
 	public final boolean performFinish() {
 		RepositoryAttachment attachment = wizardPage.getSelectedContext();
-		return ContextUiUtil.downloadContext(task, attachment, getContainer());
+		return AttachmentUtil.downloadContext(task, attachment, getContainer());
 	}
 
 }

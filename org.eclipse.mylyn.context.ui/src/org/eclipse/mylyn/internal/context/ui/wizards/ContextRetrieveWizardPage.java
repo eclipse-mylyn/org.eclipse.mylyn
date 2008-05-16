@@ -22,9 +22,9 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Rob Elves
  * @author Mik Kersten
  */
+@SuppressWarnings( { "deprecation", "restriction" })
 public class ContextRetrieveWizardPage extends WizardPage {
 
 	private static final String WIZARD_TITLE = "Retrieve context";
@@ -119,8 +120,8 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 		List<RepositoryAttachment> contextAttachments = new ArrayList<RepositoryAttachment>();
 		if (connector.getAttachmentHandler() != null) {
-			contextAttachments = new ArrayList<RepositoryAttachment>(AttachmentUtil.getLegacyContextAttachments(repository,
-					task));
+			contextAttachments = new ArrayList<RepositoryAttachment>(AttachmentUtil.getLegacyContextAttachments(
+					repository, task));
 		}
 
 		Collections.sort(contextAttachments, new Comparator<RepositoryAttachment>() {

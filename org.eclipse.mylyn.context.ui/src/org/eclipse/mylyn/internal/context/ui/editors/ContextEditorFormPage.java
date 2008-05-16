@@ -128,11 +128,6 @@ public class ContextEditorFormPage extends FormPage {
 		public void landmarkRemoved(IInteractionElement element) {
 			refresh();
 		}
-
-		@Override
-		public void relationsChanged(IInteractionElement element) {
-			refresh();
-		}
 	};
 
 	public ContextEditorFormPage(FormEditor editor, String id, String title) {

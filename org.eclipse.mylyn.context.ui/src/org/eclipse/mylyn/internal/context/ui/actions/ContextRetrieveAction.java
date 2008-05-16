@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.internal.context.ui.ContextUiUtil;
 import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextAttachmentHandler;
 import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextHandler;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextRetrieveWizard;
@@ -40,6 +39,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Steffen Pingel
  * @deprecated use {@link RetrieveContextHandler} or {@link RetrieveContextAttachmentHandler} instead
  */
+@SuppressWarnings("restriction")
 @Deprecated
 public class ContextRetrieveAction extends Action implements IViewActionDelegate {
 
@@ -86,7 +86,7 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 				}
 
 				if (currentTask != null) {
-					ContextUiUtil.downloadContext(currentTask, attachment, PlatformUI.getWorkbench()
+					AttachmentUtil.downloadContext(currentTask, attachment, PlatformUI.getWorkbench()
 							.getProgressService());
 				} else {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),

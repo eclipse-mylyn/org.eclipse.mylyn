@@ -12,9 +12,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -44,7 +44,7 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public Object getObjectForHandle(String handle) {
-		return TasksUiPlugin.getTaskList().getTask(handle);
+		return TasksUi.getTasksModel().getTask(handle);
 	}
 
 	@Override

@@ -13,7 +13,8 @@ import java.util.List;
 /**
  * Notified of changes to the context model activity.
  * 
- * API-3.0: consider breaking out interest listener, consider removing relations stuff
+ * API-3.0: rename to InteractionContextListener, consider breaking out interest listener, consider removing relations
+ * stuff
  * 
  * @author Mik Kersten
  * @author Shawn Minto

@@ -28,6 +28,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @deprecated use {@link CopyContextHandler} instead
  */
+@SuppressWarnings("restriction")
 @Deprecated
 public class ContextCopyAction extends TaskContextAction {
 

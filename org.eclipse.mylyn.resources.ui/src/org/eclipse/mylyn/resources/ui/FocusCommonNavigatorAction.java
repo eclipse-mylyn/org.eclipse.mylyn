@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.resources.ui;
+package org.eclipse.mylyn.resources.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,7 @@ import org.eclipse.ui.navigator.ILinkHelper;
 
 /**
  * @author Mik Kersten
+ * @since 3.0
  */
 public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAction {
 

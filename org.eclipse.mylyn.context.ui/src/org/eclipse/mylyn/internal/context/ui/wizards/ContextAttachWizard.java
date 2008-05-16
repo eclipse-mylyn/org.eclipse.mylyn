@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.context.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.internal.context.ui.ContextUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -46,7 +46,7 @@ public class ContextAttachWizard extends Wizard {
 
 	@Override
 	public final boolean performFinish() {
-		return ContextUiUtil.uploadContext(repository, task, wizardPage.getComment(), getContainer());
+		return AttachmentUtil.uploadContext(repository, task, wizardPage.getComment(), getContainer());
 	}
 
 }

@@ -43,9 +43,6 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
-import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -190,15 +187,15 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 						task.getConnectorKind());
 				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 						task.getRepositoryUrl());
-				if (connector instanceof AbstractLegacyRepositoryConnector
-						&& ((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler() != null
-						&& AttachmentUtil.hasContext(repository, task)) {
+				if (connector instanceof org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector
+						&& ((org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector) connector).getAttachmentHandler() != null
+						&& org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil.hasContext(repository, task)) {
 					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
 							.getShell(), ITasksUiConstants.TITLE_DIALOG,
 							"No local task context exists.  Retrieve from repository?");
 					if (getRemote) {
-						new ContextRetrieveAction().run(task);
+						new org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction().run(task);
 					}
 				}
 			}
