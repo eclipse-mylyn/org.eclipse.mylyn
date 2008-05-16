@@ -272,7 +272,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @since 3.0
 	 */
-	public IWizardPage getAttachmentPage(TaskAttachmentModel model) {
+	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
 		return new TaskAttachmentPage(model);
 	}
 }

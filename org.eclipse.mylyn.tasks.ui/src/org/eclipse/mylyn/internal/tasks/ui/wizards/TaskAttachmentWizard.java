@@ -253,7 +253,7 @@ public class TaskAttachmentWizard extends Wizard {
 		}
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(model.getTaskRepository()
 				.getConnectorKind());
-		editPage = connectorUi.getAttachmentPage(model);
+		editPage = connectorUi.getTaskAttachmentPage(model);
 		addPage(editPage);
 
 		previewPage = new PreviewAttachmentPage2(model);
