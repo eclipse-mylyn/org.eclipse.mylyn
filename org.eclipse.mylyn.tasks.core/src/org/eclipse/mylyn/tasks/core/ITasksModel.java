@@ -26,4 +26,6 @@ public interface ITasksModel {
 
 	public abstract ITask getTask(TaskRepository taskRepository, String taskId);
 
+	public abstract ITask getTask(String handle);
+
 }

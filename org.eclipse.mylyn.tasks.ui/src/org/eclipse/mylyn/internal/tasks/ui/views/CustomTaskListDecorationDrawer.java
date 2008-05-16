@@ -8,18 +8,20 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -143,7 +145,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 		if (element != null) {
 			if (element instanceof ITask) {
-				image = CommonImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element,
+				image = CommonImages.getImage(getSynchronizationImageDescriptor(element,
 						taskListView.synchronizationOverlaid));
 			} else {
 				int imageOffset = 0;
@@ -212,5 +214,54 @@ class CustomTaskListDecorationDrawer implements Listener {
 		Rectangle rect = image.getBounds();
 		int offset = Math.max(0, (event.height - rect.height) / 2);
 		event.gc.drawImage(image, activationImageOffset, event.y + offset);
+	}
+
+	private ImageDescriptor getSynchronizationImageDescriptor(Object element, boolean synchViewStyle) {
+		if (element instanceof ITask) {
+			ITask repositoryTask = (ITask) element;
+			if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
+				if (synchViewStyle) {
+					return CommonImages.OVERLAY_SYNC_OLD_INCOMMING_NEW;
+				} else {
+					return CommonImages.OVERLAY_SYNC_INCOMMING_NEW;
+				}
+			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
+					&& repositoryTask.getLastReadTimeStamp() == null) {
+				if (synchViewStyle) {
+					return CommonImages.OVERLAY_SYNC_OLD_INCOMMING_NEW;
+				} else {
+					return CommonImages.OVERLAY_SYNC_INCOMMING_NEW;
+				}
+			}
+			ImageDescriptor imageDescriptor = null;
+			if (repositoryTask.getSynchronizationState() == SynchronizationState.OUTGOING
+					|| repositoryTask.getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
+				if (synchViewStyle) {
+					imageDescriptor = CommonImages.OVERLAY_SYNC_OLD_OUTGOING;
+				} else {
+					imageDescriptor = CommonImages.OVERLAY_SYNC_OUTGOING;
+				}
+			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
+				if (synchViewStyle) {
+					imageDescriptor = CommonImages.OVERLAY_SYNC_OLD_INCOMMING;
+				} else {
+					imageDescriptor = CommonImages.OVERLAY_SYNC_INCOMMING;
+				}
+			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
+				imageDescriptor = CommonImages.OVERLAY_SYNC_CONFLICT;
+			}
+			if (imageDescriptor == null && repositoryTask.getErrorStatus() != null) {
+				return CommonImages.OVERLAY_SYNC_WARNING;
+			} else if (imageDescriptor != null) {
+				return imageDescriptor;
+			}
+		} else if (element instanceof IRepositoryQuery) {
+			RepositoryQuery query = (RepositoryQuery) element;
+			if (query.getSynchronizationStatus() != null) {
+				return CommonImages.OVERLAY_SYNC_WARNING;
+			}
+		}
+		// HACK: need a proper blank image
+		return CommonImages.OVERLAY_CLEAR;
 	}
 }

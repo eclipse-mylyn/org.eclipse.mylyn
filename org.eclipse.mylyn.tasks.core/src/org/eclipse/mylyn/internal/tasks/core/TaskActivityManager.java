@@ -739,6 +739,11 @@ public class TaskActivityManager implements ITaskActivityManager {
 		}
 		return allTasks;
 	}
+
+	public boolean isActive(ITask task) {
+		Assert.isNotNull(task);
+		return task.equals(getActiveTask());
+	}
 }
 
 //public ScheduledTaskContainer getActivityToday() {

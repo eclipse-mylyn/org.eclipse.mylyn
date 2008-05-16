@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 
 /**
  * @author Mik Kersten

@@ -649,7 +649,7 @@ public class TasksUiInternal {
 						+ ": " + taskData.getDescription());
 				connector.updateTaskFromTaskData(repository, task, taskData);
 				taskDataManager.setNewTaskData(taskData);
-	
+
 				if (retrieveSubTasks) {
 					monitor.beginTask("Creating task", connector.getLegacyTaskDataHandler()
 							.getSubTaskIds(taskData)
@@ -670,6 +670,14 @@ public class TasksUiInternal {
 			monitor.done();
 		}
 		return task;
+	}
+
+	public static AbstractTask getCorrespondingTask(ITaskElement element) {
+		if (element instanceof ITask) {
+			return (AbstractTask) element;
+		} else {
+			return null;
+		}
 	}
 
 }

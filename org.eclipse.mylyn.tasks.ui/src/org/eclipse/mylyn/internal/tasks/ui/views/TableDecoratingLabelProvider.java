@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
@@ -38,7 +39,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 			if (element instanceof ITaskElement && !(element instanceof ITask)) {
 				return super.getImage(element);
 			} else {
-				AbstractTask task = TaskElementLabelProvider.getCorrespondingTask((ITaskElement) element);
+				AbstractTask task = TasksUiInternal.getCorrespondingTask((ITaskElement) element);
 				if (task != null) {
 					if (task.isActive()) {
 						return CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE);

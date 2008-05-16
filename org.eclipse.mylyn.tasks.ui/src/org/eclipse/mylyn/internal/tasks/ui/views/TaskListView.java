@@ -54,6 +54,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -68,7 +69,6 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
@@ -107,6 +107,7 @@ import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -785,7 +786,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
-				| SWT.NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
+				| SWT.NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new SubstringPatternFilter());
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.views;
+package org.eclipse.mylyn.tasks.ui;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,15 +30,11 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -47,8 +43,8 @@ import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * @author Mik Kersten
+ * @since 3.0
  */
-// API 3.0 rename to TaskContainerLabelProvider?
 public class TaskElementLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
 
 	private static final String NO_SUMMARY_AVAILABLE = ": <no summary available>";
@@ -67,9 +63,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	};
 
-//	public TaskElementLabelProvider() {
-//		super();
-//	}
+	public TaskElementLabelProvider() {
+		this(false);
+	}
 
 	public TaskElementLabelProvider(boolean wideImages) {
 		super();
@@ -135,87 +131,17 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					TaskRepository repository = TasksUi.getRepositoryManager().getRepository(person.getConnectorKind(),
 							person.getRepositoryUrl());
 
-//					for (TaskRepository repository : TasksUiPlugin.getRepositoryManager().getAllRepositories()) {
 					if (repository != null
 							&& !repository.isAnonymous()
 							&& (repository.getUserName() != null && repository.getUserName().equalsIgnoreCase(
 									element.getHandleIdentifier()))) {
 						compositeDescriptor.icon = CommonImages.PERSON_ME;
-//						break;
 					}
-//					}
 				}
 				return compositeDescriptor;
 			}
 		}
 		return compositeDescriptor;
-	}
-
-	public static ImageDescriptor getSynchronizationImageDescriptor(Object element, boolean synchViewStyle) {
-		if (element instanceof ITask) {
-			ITask repositoryTask = (ITask) element;
-			if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
-				if (synchViewStyle) {
-					return CommonImages.OVERLAY_SYNC_OLD_INCOMMING_NEW;
-				} else {
-					return CommonImages.OVERLAY_SYNC_INCOMMING_NEW;
-				}
-			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
-					&& repositoryTask.getLastReadTimeStamp() == null) {
-				if (synchViewStyle) {
-					return CommonImages.OVERLAY_SYNC_OLD_INCOMMING_NEW;
-				} else {
-					return CommonImages.OVERLAY_SYNC_INCOMMING_NEW;
-				}
-			}
-			ImageDescriptor imageDescriptor = null;
-			if (repositoryTask.getSynchronizationState() == SynchronizationState.OUTGOING
-					|| repositoryTask.getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
-				if (synchViewStyle) {
-					imageDescriptor = CommonImages.OVERLAY_SYNC_OLD_OUTGOING;
-				} else {
-					imageDescriptor = CommonImages.OVERLAY_SYNC_OUTGOING;
-				}
-			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
-				if (synchViewStyle) {
-					imageDescriptor = CommonImages.OVERLAY_SYNC_OLD_INCOMMING;
-				} else {
-					imageDescriptor = CommonImages.OVERLAY_SYNC_INCOMMING;
-				}
-			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
-				imageDescriptor = CommonImages.OVERLAY_SYNC_CONFLICT;
-			}
-			if (imageDescriptor == null && repositoryTask.getErrorStatus() != null) {
-				return CommonImages.OVERLAY_SYNC_WARNING;
-			} else if (imageDescriptor != null) {
-				return imageDescriptor;
-			}
-		} else if (element instanceof IRepositoryQuery) {
-			RepositoryQuery query = (RepositoryQuery) element;
-			if (query.getSynchronizationStatus() != null) {
-				return CommonImages.OVERLAY_SYNC_WARNING;
-			}
-		}
-		// HACK: need a proper blank image
-		return CommonImages.OVERLAY_CLEAR;
-	}
-
-	public static ImageDescriptor getPriorityImageDescriptor(Object element) {
-		AbstractRepositoryConnectorUi connectorUi;
-		if (element instanceof ITask) {
-			ITask repositoryTask = (ITask) element;
-			connectorUi = TasksUiPlugin.getConnectorUi(((ITask) element).getConnectorKind());
-			if (connectorUi != null) {
-				return connectorUi.getTaskPriorityOverlay(repositoryTask);
-			}
-		}
-		if (element instanceof ITask) {
-			ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskElement) element);
-			if (task != null) {
-				return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
-			}
-		}
-		return null;
 	}
 
 	@Override
@@ -263,13 +189,13 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	public Color getForeground(Object object) {
 		if (object instanceof ITaskElement && object instanceof ITask) {
-			AbstractTask task = getCorrespondingTask((ITaskElement) object);
+			AbstractTask task = TasksUiInternal.getCorrespondingTask((ITaskElement) object);
 			if (task != null) {
 				if (TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED_TODAY);
 				} else if (task.isCompleted()) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED);
-				} else if (task.isActive()) {
+				} else if (TasksUi.getTaskActivityManager().isActive(task)) {
 					return CommonColors.CONTEXT_ACTIVE;
 				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE);
@@ -299,39 +225,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return null;
 	}
 
-//	private boolean showHasChildrenPastDueHelper(AbstractTaskContainer container) {
-//		for (AbstractTaskContainer child : container.getChildren()) {
-//			if (child instanceof AbstractTask && ((AbstractTask) child).isPastReminder()
-//					&& !((AbstractTask) child).isCompleted()) {
-//				return true;
-//			} else {
-//				if (showHasChildrenPastDueHelper(child)) {
-//					return true;
-//				}
-//			}
-//		}
-//		return false;
-//	}
-
-//	private boolean showHasChildrenPastDue(AbstractTaskContainer container) {
-//		if (!TasksUiPlugin.getDefault().groupSubtasks(container)) {
-//			return false;
-//		}
-//
-//		return showHasChildrenPastDueHelper(container);
-//	}
-
-	/**
-	 * TODO: move
-	 */
-	public static AbstractTask getCorrespondingTask(ITaskElement element) {
-		if (element instanceof ITask) {
-			return (AbstractTask) element;
-		} else {
-			return null;
-		}
-	}
-
 	public Color getBackground(Object element) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
@@ -347,7 +240,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (!(element instanceof ITaskElement)) {
 			return null;
 		}
-		AbstractTask task = getCorrespondingTask((ITaskElement) element);
+		AbstractTask task = TasksUiInternal.getCorrespondingTask((ITaskElement) element);
 		if (task != null) {
 			ITask repositoryTask = task;
 			if (repositoryTask.isSynchronizing()) {

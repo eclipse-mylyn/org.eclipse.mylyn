@@ -25,12 +25,12 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.internal.provisional.commons.ui.SubstringPatternFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchResultTreeContentProvider.GroupBy;
@@ -250,7 +250,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		}
 
 		FilteredTree searchTree = new FilteredTree(treeComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,
-				new TaskListPatternFilter());
+				new SubstringPatternFilter());
 		return searchTree.getViewer();
 	}
 

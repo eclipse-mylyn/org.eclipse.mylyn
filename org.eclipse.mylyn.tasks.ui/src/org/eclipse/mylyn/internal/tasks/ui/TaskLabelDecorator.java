@@ -16,11 +16,15 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**
  * @author Mik Kersten
@@ -29,7 +33,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
 
-		ImageDescriptor priorityOverlay = TaskElementLabelProvider.getPriorityImageDescriptor(element);
+		ImageDescriptor priorityOverlay = getPriorityImageDescriptor(element);
 		if (priorityOverlay != null) {
 			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
 		}
@@ -83,6 +87,24 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 
 	public void removeListener(ILabelProviderListener listener) {
 		// ignore
+	}
+
+	private ImageDescriptor getPriorityImageDescriptor(Object element) {
+		AbstractRepositoryConnectorUi connectorUi;
+		if (element instanceof ITask) {
+			ITask repositoryTask = (ITask) element;
+			connectorUi = TasksUiPlugin.getConnectorUi(((ITask) element).getConnectorKind());
+			if (connectorUi != null) {
+				return connectorUi.getTaskPriorityOverlay(repositoryTask);
+			}
+		}
+		if (element instanceof ITask) {
+			ITask task = TasksUiInternal.getCorrespondingTask((ITaskElement) element);
+			if (task != null) {
+				return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
+			}
+		}
+		return null;
 	}
 
 }

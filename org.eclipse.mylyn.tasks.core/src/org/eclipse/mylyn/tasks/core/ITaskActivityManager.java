@@ -64,5 +64,12 @@ public interface ITaskActivityManager {
 
 	public abstract void addActivityListener(ITaskActivityListener listener);
 
-	public void removeActivityListener(ITaskActivityListener listener);
+	public abstract void removeActivityListener(ITaskActivityListener listener);
+
+	/**
+	 * @param task
+	 * 		cannot be null
+	 * @return whether the task is the single currently active task
+	 */
+	public abstract boolean isActive(ITask task);
 }
