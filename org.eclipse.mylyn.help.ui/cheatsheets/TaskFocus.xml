@@ -18,7 +18,7 @@ You need an existing project for this sheet.
       <description>
          In the Task List view, click on the right mouse button, then select <b>New &gt; Category</b>. Enter <b>Tutorials</b> for the category&apos;s name.
 <br/><br/>
-Then right click on the <b>Tutorials</b> category and select <b>New &gt; Task</b>. In the <b>New Task</b> dialog select <b>Local Tasks</b> then click on the <b>Finish</b> button.
+Then right click on the <b>Tutorials</b> category and select <b>New &gt; Task</b>. In the <b>New Task</b> dialog select <b>Local</b> then click on the <b>Finish</b> button.
  Enter <b>Learn task-focus</b>  for the task&apos;s title and change the priority to <b>High</b>. You can add some notes,  too.
 <br/><br/>
 Right click on the new task and select <b>Activate</b> to activate the task.

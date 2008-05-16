@@ -626,7 +626,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private void loadTemplateRepositories() {
 		// Add standard local task repository
-		getLocalTaskRepository();
+		TaskRepository localRepository = getLocalTaskRepository();
+		localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
 
 		// Add the automatically created templates
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {

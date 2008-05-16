@@ -26,7 +26,7 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
  */
 public class LocalRepositoryConnector extends AbstractLegacyRepositoryConnector {
 
-	public static final String REPOSITORY_LABEL = "Local Tasks";
+	public static final String REPOSITORY_LABEL = "Local";
 
 	public static final String CONNECTOR_KIND = "local";
 
@@ -92,8 +92,8 @@ public class LocalRepositoryConnector extends AbstractLegacyRepositoryConnector 
 	}
 
 	@Override
-	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
-			TaskDataCollector resultCollector, ISynchronizationContext event, IProgressMonitor monitor) {
+	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector resultCollector,
+			ISynchronizationContext event, IProgressMonitor monitor) {
 		// ignore
 		return null;
 	}

@@ -334,7 +334,7 @@ public class TasksUiUtil {
 		final IWizard wizard;
 		List<TaskRepository> repositories = TasksUi.getRepositoryManager().getAllRepositories();
 		if (taskRepository == null && repositories.size() == 1) {
-			// only the Local Tasks connector is available
+			// only the Local repository connector is available
 			taskRepository = repositories.get(0);
 		}
 
