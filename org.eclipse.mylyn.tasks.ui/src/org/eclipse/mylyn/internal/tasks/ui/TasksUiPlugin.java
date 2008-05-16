@@ -70,6 +70,7 @@ import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
+import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
@@ -90,6 +91,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.swt.graphics.Image;
@@ -165,8 +167,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private TaskListExternalizer taskListExternalizer;
 
 	private ITaskHighlighter highlighter;
-
-	private boolean initialized = false;
 
 	private final Map<String, Image> brandingIcons = new HashMap<String, Image>();
 
@@ -367,6 +367,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private IProxyChangeListener proxyChangeListener;
 
+	private TaskListExternalizationParticipant taskListSaveParticipant;
+
 	private static TaskList taskList;
 
 	private static TasksModel tasksModel;
@@ -399,7 +401,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						break;
 					}
 				}
-				taskActivityMonitor.reloadActivityTime();
+				//taskActivityMonitor.reloadActivityTime();
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not initialize task activity", t));
@@ -431,10 +433,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			monitor.worked(1);
 
 			try {
-				//taskListSaveManager = new TaskListSaveManager();
-				//taskListManager.setTaskListSaveManager(taskListSaveManager);
-
-				//ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 				getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 
@@ -497,17 +495,24 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			externalizationManager = new ExternalizationManager(getDataDirectory());
 
 			repositoryManager = new TaskRepositoryManager();
+			IExternalizationParticipant repositoryParticipant = new RepositoryExternalizationParticipant(
+					externalizationManager, repositoryManager);
+			externalizationManager.addParticipant(repositoryParticipant);
 
 			taskList = new TaskList();
 			tasksModel = new TasksModel(taskList, repositoryManager);
 			taskListExternalizer = new TaskListExternalizer(tasksModel);
 			TaskListElementImporter taskListImporter = new TaskListElementImporter(repositoryManager, tasksModel);
 
+			taskListSaveParticipant = new TaskListExternalizationParticipant(taskList, taskListExternalizer,
+					externalizationManager, repositoryManager);
+			//externalizationManager.load(taskListSaveParticipant);
+			externalizationManager.addParticipant(taskListSaveParticipant);
+			taskList.addChangeListener(taskListSaveParticipant);
+
 			taskActivityManager = new TaskActivityManager(repositoryManager, taskList);
 
-			IExternalizationParticipant participant = new RepositoryExternalizationParticipant(externalizationManager,
-					repositoryManager);
-			taskListManager = new TaskListManager(taskList, taskListExternalizer, taskListImporter);
+			taskListManager = new TaskListManager(taskList, taskListSaveParticipant, taskListImporter);
 
 			// initialize
 			updateTaskActivityManager();
@@ -535,9 +540,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
 			TasksUiExtensionReader.initStartupExtensions(taskListExternalizer, taskListImporter);
-			externalizationManager.load(participant);
-			externalizationManager.addParticipant(participant);
-			//repositoryManager.readRepositories(getRepositoriesFilePath());
 
 			// instantiates taskDataManager
 			File root = new File(this.getDataDirectory() + '/' + FOLDER_OFFLINE);
@@ -558,18 +560,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 			}
 
-			loadTemplateRepositories();
-
 			tasksJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager,
 					tasksModel);
 
-			// NOTE: task list must be read before Task List view can be initialized
 			taskActivityManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
-
-			// readExistingOrCreateNewList() must be called after repositories have been read in
-			taskListManager.readExistingOrCreateNewList();
-
-			initialized = true;
 
 			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCore.getContextManager());
 			taskActivityMonitor.start();
@@ -597,7 +591,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			ActivityExternalizationParticipant ACTIVITY_EXTERNALIZTAION_PARTICIPANT = new ActivityExternalizationParticipant();
 			externalizationManager.addParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 			taskActivityManager.addActivityListener(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
-
+			loadDataSources();
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list initialization failed", e));
@@ -733,8 +727,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	public void setDataDirectory(final String newPath, IProgressMonitor monitor) throws CoreException {
 
 		externalizationManager.saveNow(monitor);
-		//getBackupManager().backupNow(true);
-		// TODO: save repositories, activity
+		// TODO: backup now?
 		//TasksUiPlugin.getBackupManager().backupNow(true);
 		loadDataDirectory(newPath);
 		getPreferenceStore().setValue(ContextPreferenceContstants.PREF_DATA_DIR, newPath);
@@ -748,10 +741,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Only support task data versions post 0.7
-	 * 
-	 * @throws CoreException
-	 * @throws InterruptedException
+	 * Load's data sources from <code>newPath</code> and executes with progress
 	 */
 	private synchronized void loadDataDirectory(final String newPath) throws CoreException {
 
@@ -760,28 +750,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 				try {
-					monitor.beginTask("Set Data Directory", IProgressMonitor.UNKNOWN);
+					monitor.beginTask("Load Data Directory", IProgressMonitor.UNKNOWN);
 					Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE,
 							new SubProgressMonitor(monitor, 1));
 					if (monitor.isCanceled()) {
 						throw new InterruptedException();
 					}
-					externalizationManager.reset();
+					TasksUi.getTaskActivityManager().deactivateActiveTask();
 					externalizationManager.setRootFolderPath(newPath);
-					taskActivityManager.clear();
 
-//					getRepositoryManager().readRepositories(
-//							newPath + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
-					loadTemplateRepositories();
-
-					getTaskListManager().resetTaskList();
-//					getTaskListManager().setTaskListFile(
-//							new File(newPath + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE));
-
-					ContextCore.getContextManager().loadActivityMetaContext();
-
-					getTaskListManager().readExistingOrCreateNewList();
-					taskActivityMonitor.reloadActivityTime();
+					loadDataSources();
 				} finally {
 					Job.getJobManager().endRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
 					monitor.done();
@@ -804,6 +782,20 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			throw new OperationCanceledException();
 		}
 
+	}
+
+	/**
+	 * called on startup and when the mylyn data structures are reloaded from disk
+	 */
+	private void loadDataSources() {
+		externalizationManager.reLoad();
+		// TODO: Move management of template repositories to TaskRepositoryManager
+		loadTemplateRepositories();
+
+		taskActivityManager.clear();
+		ContextCore.getContextManager().loadActivityMetaContext();
+		taskActivityMonitor.reloadActivityTime();
+		taskActivityManager.reloadPlanningData();
 	}
 
 	@Override
@@ -971,9 +963,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return overlayIcons.get(repositoryType);
 	}
 
-	public boolean isInitialized() {
-		return initialized;
-	}
+//	public boolean isInitialized() {
+//		return initialized;
+//	}
 
 	public IHyperlinkDetector[] getTaskHyperlinkDetectors() {
 		return hyperlinkDetectors.toArray(new IHyperlinkDetector[1]);

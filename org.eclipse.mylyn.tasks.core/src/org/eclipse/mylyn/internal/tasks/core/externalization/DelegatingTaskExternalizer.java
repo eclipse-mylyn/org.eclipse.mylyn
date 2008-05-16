@@ -192,17 +192,13 @@ public final class DelegatingTaskExternalizer {
 	}
 
 	public Element createCategoryElement(ITaskElement category, Document doc, Element parent) {
-		if (category instanceof UncategorizedTaskContainer) {
-			return parent;
-		} else {
-			Element node = doc.createElement(getCategoryTagName());
-			node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, category.getSummary());
-			parent.appendChild(node);
-			for (ITask task : category.getChildren()) {
-				createTaskReference(KEY_TASK_REFERENCE, task, doc, node);
-			}
-			return node;
+		Element node = doc.createElement(getCategoryTagName());
+		node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, category.getSummary());
+		parent.appendChild(node);
+		for (ITask task : category.getChildren()) {
+			createTaskReference(KEY_TASK_REFERENCE, task, doc, node);
 		}
+		return node;
 	}
 
 	public Element createTaskElement(AbstractTask task, Document doc, Element parent) {
@@ -370,8 +366,12 @@ public final class DelegatingTaskExternalizer {
 		Element element = (Element) node;
 		AbstractTaskCategory category = null;
 		if (element.hasAttribute(KEY_NAME)) {
-			category = new TaskCategory(element.getAttribute(KEY_NAME));
-			taskList.addCategory((TaskCategory) category);
+			String handle = element.getAttribute(KEY_NAME);
+			category = taskList.getContainerForHandle(handle);
+			if (category == null) {
+				category = new TaskCategory(element.getAttribute(KEY_NAME));
+				taskList.addCategory((TaskCategory) category);
+			}
 		} else {
 			// LEGACY: registry categories did not have names
 			// category = taskList.getArchiveContainer();

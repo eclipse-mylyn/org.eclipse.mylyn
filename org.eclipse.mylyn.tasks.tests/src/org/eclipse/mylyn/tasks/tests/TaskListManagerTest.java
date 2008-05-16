@@ -36,10 +36,10 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -101,7 +101,7 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(query.contains(task.getHandleIdentifier()));
 		assertTrue(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
 
-		TasksUiPlugin.getExternalizationManager().saveNow(null);
+		TasksUiPlugin.getExternalizationManager().requestSave();
 		manager.resetTaskList();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 		assertFalse(manager.getTaskList().getDefaultCategory().contains(task.getHandleIdentifier()));
@@ -687,7 +687,7 @@ public class TaskListManagerTest extends TestCase {
 
 		AbstractTask sub1 = TasksUiInternal.createNewLocalTask("sub 1");
 		manager.getTaskList().addTask(sub1, task1);
-		assertEquals(3, manager.getTaskList().getRootElements().size());
+		assertEquals(4, manager.getTaskList().getRootElements().size());
 
 		//manager.getTaskList().moveToContainer(sub1, manager.getTaskList().getArchiveContainer());
 
@@ -700,7 +700,7 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("Category 1");
 		manager.getTaskList().addCategory(cat1);
 		categories.add(cat1);
-		assertEquals(4, manager.getTaskList().getRootElements().size());
+		assertEquals(5, manager.getTaskList().getRootElements().size());
 
 		AbstractTask task3 = TasksUiInternal.createNewLocalTask("task 3");
 		manager.getTaskList().addTask(task3, cat1);
@@ -723,7 +723,7 @@ public class TaskListManagerTest extends TestCase {
 		cat1Contents.add(reportInCat1);
 		assertEquals(7, manager.getTaskList().getAllTasks().size());
 
-		assertEquals(4, manager.getTaskList().getRootElements().size());
+		assertEquals(5, manager.getTaskList().getRootElements().size());
 
 		TasksUiPlugin.getExternalizationManager().requestSave();
 		TasksUiPlugin.getDefault().reloadDataDirectory();

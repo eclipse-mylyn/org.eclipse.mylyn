@@ -120,7 +120,7 @@ public class TaskListExternalizer {
 			delagatingExternalizer.createTaskElement(task, doc, root);
 		}
 
-		// create the categorie nodes...
+		// create the category nodes...
 		for (ITaskElement category : taskList.getCategories()) {
 			delagatingExternalizer.createCategoryElement(category, doc, root);
 		}

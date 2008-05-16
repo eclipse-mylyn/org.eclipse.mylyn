@@ -19,7 +19,7 @@ public class UncategorizedTaskContainer extends AbstractTaskCategory {
 
 	public static final String LABEL = "Uncategorized";
 
-	public static final String HANDLE = "uncategorized";
+	public static final String HANDLE = LABEL;
 
 	public UncategorizedTaskContainer() {
 		super(HANDLE);

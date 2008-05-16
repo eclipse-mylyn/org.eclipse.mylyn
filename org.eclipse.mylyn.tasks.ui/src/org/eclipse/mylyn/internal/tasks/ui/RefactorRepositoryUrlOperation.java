@@ -58,10 +58,10 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 			refactorOfflineHandles(oldUrl, newUrl);
 			getTaskList().refactorRepositoryUrl(oldUrl, newUrl);
 			refactorMetaContextHandles(oldUrl, newUrl);
-			TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 			refactorContextFileNames();
 			TasksUiPlugin.getExternalizationManager()
 					.saveNow(new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+			TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 		} finally {
 			monitor.done();
 		}

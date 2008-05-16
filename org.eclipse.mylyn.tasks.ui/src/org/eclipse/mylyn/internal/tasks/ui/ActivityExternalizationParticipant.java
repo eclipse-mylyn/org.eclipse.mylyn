@@ -36,6 +36,7 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 			setDirty(false);
 			break;
 		case LOAD:
+			ContextCore.getContextManager().loadActivityMetaContext();
 			break;
 		case SNAPSHOT:
 			break;

@@ -605,7 +605,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			queries = new ConcurrentHashMap<String, RepositoryQuery>();
 
 			defaultCategory = new UncategorizedTaskContainer();
-
+			
 			maxLocalTaskId = 0;
 			categories.put(defaultCategory.getHandleIdentifier(), defaultCategory);
 		} finally {

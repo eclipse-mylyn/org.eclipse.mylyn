@@ -19,9 +19,13 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Rob Elves
@@ -39,11 +43,14 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 
 	private boolean dirty;
 
+	private final TaskRepositoryManager taskRepositoryManager;
+
 	public TaskListExternalizationParticipant(TaskList taskList, TaskListExternalizer taskListExternalizer,
-			ExternalizationManager manager) {
+			ExternalizationManager manager, TaskRepositoryManager repositoryManager) {
 		this.manager = manager;
 		this.taskList = taskList;
 		this.taskListWriter = taskListExternalizer;
+		this.taskRepositoryManager = repositoryManager;
 	}
 
 	@Override
@@ -75,7 +82,10 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 			}
 
 			private void resetAndLoad() throws CoreException {
+				resetTaskList();
 				taskListWriter.readTaskList(taskList, taskListFile);
+
+				// TODO: fire ROOT event
 			}
 
 			private boolean recover() {
@@ -92,6 +102,23 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 		};
 
 		taskList.run(loadRunnable, monitor);
+	}
+
+	/**
+	 * public for tests
+	 */
+	public void resetTaskList() {
+		taskList.reset();
+		prepareOrphanContainers();
+	}
+
+	private void prepareOrphanContainers() {
+		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
+			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
+				taskList.addUnmatchedContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
+						repository.getRepositoryUrl()));
+			}
+		}
 	}
 
 	@Override

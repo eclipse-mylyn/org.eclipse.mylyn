@@ -60,12 +60,13 @@ public class ExternalizationManager {
 	}
 
 	public void reLoad() {
+		reset();
 		for (IExternalizationParticipant participant : externalizationParticipants) {
 			load(participant);
 		}
 	}
 
-	public void load(IExternalizationParticipant participant) {
+	private void load(IExternalizationParticipant participant) {
 		try {
 			saveDisabled = true;
 			IExternalizationContext loadContext = new LoadContext(rootFolderPath, participant);
@@ -142,7 +143,7 @@ public class ExternalizationManager {
 		return loadStatus;
 	}
 
-	public void reset() {
+	private void reset() {
 		saveDisabled = false;
 		loadStatus = null;
 		if (saveJob != null) {
