@@ -345,6 +345,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 				}
 			}
 		});
+		scrolledComposite.setEnabled(false);
 
 		vf.setTopLeft(tbm.createControl(vf));
 		vf.setContent(scrolledComposite);
@@ -470,6 +471,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 				workImageGC.setLineWidth(4);
 				workImageGC.setLineCap(SWT.CAP_ROUND);
 
+				scrolledComposite.setEnabled(true);
 				clearSelection();
 				refreshCanvasSize();
 
