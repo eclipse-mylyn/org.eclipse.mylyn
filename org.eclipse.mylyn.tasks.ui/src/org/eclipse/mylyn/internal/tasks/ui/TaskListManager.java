@@ -23,13 +23,12 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 /**
  * Provides facilities for using and managing the Task List and task activity information.
  * 
- * TODO: pull task activity management out into new TaskActivityManager NOTE: likely to change for 3.0
- * 
  * @author Mik Kersten
  * @author Rob Elves (task activity)
  * @author Jevgeni Holodkov (insertQueries)
  * @since 3.0
  */
+@Deprecated
 public class TaskListManager {
 
 	private final TaskListElementImporter importer;
@@ -58,6 +57,7 @@ public class TaskListManager {
 		}
 	}
 
+	@Deprecated
 	public TaskListElementImporter getTaskListWriter() {
 		return importer;
 	}
@@ -86,8 +86,9 @@ public class TaskListManager {
 	}
 
 	/**
-	 * TODO: move this to TasksUIPlugin
+	 * @deprecated use {@link TasksUiPlugin#getTaskList()} instead
 	 */
+	@Deprecated
 	public TaskList getTaskList() {
 		return taskList;
 	}
