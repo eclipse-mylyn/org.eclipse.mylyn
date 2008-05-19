@@ -457,12 +457,12 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				disposeImageResources();
 				Rectangle displayBounds = display.getBounds();
-				originalImage = new Image(display, displayBounds);
-				workImage = new Image(display, displayBounds);
+				originalImage = new Image(display, displayBounds.width, displayBounds.height);
+				workImage = new Image(display, displayBounds.width, displayBounds.height);
 
 				GC gc = new GC(display);
-				gc.copyArea(originalImage, 0, 0);
-				gc.copyArea(workImage, 0, 0);
+				gc.copyArea(originalImage, displayBounds.x, displayBounds.y);
+				gc.copyArea(workImage, displayBounds.x, displayBounds.y);
 				gc.dispose();
 
 				workImageGC = new GC(workImage);
