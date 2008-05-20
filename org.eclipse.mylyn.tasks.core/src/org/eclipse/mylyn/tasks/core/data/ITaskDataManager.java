@@ -18,13 +18,13 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public interface ITaskDataManager {
 
-	public ITaskDataWorkingCopy createWorkingCopy(ITask task, String kind, TaskData taskData);
+	public ITaskDataWorkingCopy createWorkingCopy(ITask task, String connectorKind, TaskData taskData);
 
-	public abstract ITaskDataWorkingCopy getWorkingCopy(ITask task, String kind) throws CoreException;
+	public abstract ITaskDataWorkingCopy getWorkingCopy(ITask task, String connectorKind) throws CoreException;
 
-	public abstract void discardEdits(ITask task, String kind) throws CoreException;
+	public abstract void discardEdits(ITask task, String connectorKind) throws CoreException;
 
-	public abstract TaskData getTaskData(ITask task, String kind) throws CoreException;
+	public abstract TaskData getTaskData(ITask task, String connectorKind) throws CoreException;
 
 	public abstract TaskData getTaskData(TaskRepository task, String taskId) throws CoreException;
 

@@ -18,6 +18,10 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractTaskListMigrator {
 
+	public static final String KEY_QUERY = "Query";
+
+	public static final String KEY_TASK = "Task";
+
 	public abstract String getTaskElementName();
 
 	public abstract Set<String> getQueryElementNames();

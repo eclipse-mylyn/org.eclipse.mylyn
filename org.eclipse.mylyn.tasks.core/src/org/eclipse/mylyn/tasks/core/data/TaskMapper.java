@@ -71,7 +71,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	protected boolean getBooleanValue(String attributeKey) {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getBooleanValue(attribute);
 		}
@@ -91,7 +91,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	protected Date getDateValue(String attributeKey) {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getDateValue(attribute);
 		}
@@ -144,7 +144,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	public String getValue(String attributeKey) {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getValue(attribute);
 		}
@@ -160,11 +160,17 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	public TaskAttribute setBooleanValue(String attributeKey, boolean value) {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute == null) {
-			attribute = taskData.getRoot().createAttribute(attributeKey);
+			attribute = createAttribute(attributeKey);
 		}
 		taskData.getAttributeMapper().setBooleanValue(attribute, value);
+		return attribute;
+	}
+
+	private TaskAttribute createAttribute(String attributeKey) {
+		attributeKey = taskData.getAttributeMapper().mapToRepositoryKey(taskData.getRoot(), attributeKey);
+		TaskAttribute attribute = taskData.getRoot().createAttribute(attributeKey);
 		return attribute;
 	}
 
@@ -181,9 +187,9 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	protected TaskAttribute setDateValue(String attributeKey, Date value) {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute == null) {
-			attribute = taskData.getRoot().createAttribute(attributeKey);
+			attribute = createAttribute(attributeKey);
 		}
 		taskData.getAttributeMapper().setDateValue(attribute, value);
 		return attribute;
@@ -232,9 +238,9 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	protected TaskAttribute setValue(String attributeKey, String value) {
-		TaskAttribute attribute = taskData.getRoot().getAttribute(attributeKey);
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute == null) {
-			attribute = taskData.getRoot().createAttribute(attributeKey);
+			attribute = createAttribute(attributeKey);
 		}
 		taskData.getAttributeMapper().setValue(attribute, value);
 		return attribute;

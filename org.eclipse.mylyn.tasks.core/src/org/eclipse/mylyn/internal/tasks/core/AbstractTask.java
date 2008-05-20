@@ -92,6 +92,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		super(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
+		this.taskKey = taskId;
 		this.summary = summary;
 		this.url = "";
 	}
@@ -194,7 +195,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	 * Can return the same as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
 	 */
 	public String getTaskKey() {
-		return (taskKey == null) ? taskId : taskKey;
+		return taskKey;
 	}
 
 	public boolean isSubmitting() {
