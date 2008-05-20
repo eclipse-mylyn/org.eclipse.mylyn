@@ -10,6 +10,8 @@
  */
 package org.eclipse.mylyn.internal.ide.ui;
 
+import java.lang.reflect.Method;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
@@ -23,18 +25,21 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
-		System.err.println(">>>>>> " + element.getClass());
 
 		if (element instanceof MarkerItem) {
 			if (element.getClass().getSimpleName().equals("MarkerCategory")) {
 
-//				Class<?> clazz = ExtendedMarkersView.class;
-//				Field field = clazz.getDeclaredField("viewer");
-//				field.setAccessible(true);
-//				cachedViewer = (MarkersTreeViewer) field.get(viewPart);
-//				if (!cachedViewer.getControl().isDisposed()) {
-//					updateMarkerViewLabelProvider(cachedViewer);
-//				}
+				// HACK: using reflection to gain accessibily
+				Class<?> clazz;
+				try {
+					clazz = Class.forName("org.eclipse.ui.internal.views.markers.MarkerCategory");
+					Method method = clazz.getDeclaredMethod("getChildren", new Class[] {});
+					method.setAccessible(true);
+					Object result = method.invoke(element, new Object[] {});
+					System.err.println(">>>>>> " + result.getClass());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 				return true;
 			} else if (element.getClass().getSimpleName().equals("MarkerEntry")) {

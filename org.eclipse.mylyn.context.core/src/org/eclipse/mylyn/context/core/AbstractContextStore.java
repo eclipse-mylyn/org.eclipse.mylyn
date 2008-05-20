@@ -16,7 +16,7 @@ import java.util.List;
  * File-based store used for writing Mylyn-specific date such as the task list and task contexts (e.g.
  * workspace/.metadata/.mylyn folder).
  * 
- * @author Mik Kersten *
+ * @author Mik Kersten
  * @since 2.0
  */
 public abstract class AbstractContextStore {
