@@ -24,6 +24,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -63,7 +65,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	}
 
 	private void expandComment(FormToolkit toolkit, Composite composite, Composite toolBarComposite,
-			TaskComment taskComment, boolean expanded) {
+			final TaskComment taskComment, boolean expanded) {
 		toolBarComposite.setVisible(expanded);
 		if (expanded && composite.getData(KEY_EDITOR) == null) {
 			// create viewer
@@ -73,6 +75,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (editor != null) {
 				editor.setDecorationEnabled(false);
 				editor.createControl(composite, toolkit);
+				editor.getControl().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseDown(MouseEvent e) {
+						getTaskEditorPage().selectionChanged(taskComment);
+					}
+				});
 				composite.setData(KEY_EDITOR, editor);
 
 				GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(editor.getControl());
@@ -88,7 +96,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			composite.setData(KEY_EDITOR, null);
 			getTaskEditorPage().reflow();
 		}
-		//getTaskEditorPage().selectionChanged(taskComment);
+		getTaskEditorPage().selectionChanged(taskComment);
 	}
 
 	private void initialize() {

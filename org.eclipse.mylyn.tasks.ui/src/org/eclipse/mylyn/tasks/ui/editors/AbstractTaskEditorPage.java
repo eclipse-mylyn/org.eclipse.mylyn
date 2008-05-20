@@ -918,20 +918,22 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		selectionChangedListeners.remove(listener);
 	}
 
+	public void selectionChanged(Object element) {
+		selectionChanged(new SelectionChangedEvent(this, new StructuredSelection(element)));
+	}
+
 	public void selectionChanged(SelectionChangedEvent event) {
 		ISelection selection = event.getSelection();
 		if (selection instanceof TextSelection) {
 			// only update global actions
 			((TaskEditorActionContributor) getEditorSite().getActionBarContributor()).updateSelectableActions(event.getSelection());
-			// reset to default selection
-			selection = defaultSelection;
+			return;
 		}
 		if (selection.isEmpty()) {
 			// something was unselected, reset to default selection
 			selection = defaultSelection;
 		}
 		if (!selection.equals(lastSelection)) {
-			System.err.println("fire: " + selection);
 			this.lastSelection = selection;
 			fireSelectionChanged(lastSelection);
 		}
