@@ -278,9 +278,6 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		if (attribute instanceof Integer) {
 			charStart = ((Integer) attribute).intValue();
 		}
-		if (charStart == -1) {
-			System.err.println(">>> " + marker.getAttribute(IMarker.LINE_NUMBER, 0));
-		}
 
 		try {
 			ICompilationUnit compilationUnit = null;
