@@ -913,14 +913,16 @@ public class InteractionContextManager implements IInteractionContextManager {
 	/**
 	 * Copy the listener list in case it is modified during the notificiation.
 	 * 
-	 * @param node
+	 * @param element
 	 */
-	public void notifyRelationshipsChanged(IInteractionElement node) {
+	public void notifyRelationshipsChanged(IInteractionElement element) {
 		if (suppressListenerNotification) {
 			return;
 		}
 		for (AbstractContextListener listener : contextListeners) {
-			listener.relationsChanged(node);
+			if (listener instanceof IRelationsListener) {
+				((IRelationsListener) listener).relationsChanged(element);
+			}
 		}
 	}
 
@@ -1149,7 +1151,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 		}
 		for (AbstractContextListener listener : contextListeners) {
-			listener.relationsChanged(null);
+			if (listener instanceof IRelationsListener) {
+				((IRelationsListener) listener).relationsChanged(null);
+			}
 		}
 	}
 

@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
-import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.xml.sax.Attributes;
@@ -78,16 +77,17 @@ public class SaxContextContentHandler extends DefaultHandler {
 	}
 
 	// API-3.0: make this method non-static and private?
+	@SuppressWarnings( { "deprecation", "restriction" })
 	public static InteractionEvent createEventFromAttributes(Attributes attributes) throws ParseException {
-		String delta = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_DELTA));
+		String delta = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_DELTA));
 		String endDate = attributes.getValue(InteractionContextExternalizer.ATR_END_DATE);
 		String interest = attributes.getValue(InteractionContextExternalizer.ATR_INTEREST);
 		String kind = attributes.getValue(InteractionContextExternalizer.ATR_KIND);
-		String navigation = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_NAVIGATION));
-		String originId = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_ORIGIN_ID));
+		String navigation = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_NAVIGATION));
+		String originId = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_ORIGIN_ID));
 		String startDate = attributes.getValue(InteractionContextExternalizer.ATR_START_DATE);
-		String structureHandle = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_HANDLE));
-		String structureKind = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_KIND));
+		String structureHandle = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_HANDLE));
+		String structureKind = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_KIND));
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING,
 				Locale.ENGLISH);

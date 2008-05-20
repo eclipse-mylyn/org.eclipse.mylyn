@@ -24,7 +24,7 @@ public abstract class AbstractContextListener {
 
 	/**
 	 * @param context
-	 * 		can be null
+	 *            can be null
 	 * @since 3.0
 	 */
 	public void contextPreActivated(IInteractionContext context) {
@@ -57,14 +57,14 @@ public abstract class AbstractContextListener {
 
 	/**
 	 * @param newLandmarks
-	 * 		list of IJavaElement(s)
+	 *            list of IJavaElement(s)
 	 */
 	public void landmarkAdded(IInteractionElement element) {
 	}
 
 	/**
 	 * @param newLandmarks
-	 * 		list of IJavaElement(s)
+	 *            list of IJavaElement(s)
 	 */
 	public void landmarkRemoved(IInteractionElement element) {
 	}
@@ -73,10 +73,6 @@ public abstract class AbstractContextListener {
 	 * @since 3.0
 	 */
 	public void elementsDeleted(List<IInteractionElement> elements) {
-	}
-
-	@Deprecated
-	public void relationsChanged(IInteractionElement element) {
 	}
 
 }

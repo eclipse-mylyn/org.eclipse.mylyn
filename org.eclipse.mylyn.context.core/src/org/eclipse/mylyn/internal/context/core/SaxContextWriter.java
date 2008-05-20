@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -174,6 +173,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 	}
 
 	// API-3.0: make this method non-static and private?
+	@SuppressWarnings( { "deprecation", "restriction" })
 	public static Attributes createEventAttributes(InteractionEvent ie) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING,
 				Locale.ENGLISH);
@@ -181,7 +181,8 @@ public class SaxContextWriter implements IInteractionContextWriter {
 		AttributesImpl ieAttributes = new AttributesImpl();
 
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_DELTA,
-				InteractionContextExternalizer.ATR_DELTA, "", XmlStringConverter.convertToXmlString(ie.getDelta()));
+				InteractionContextExternalizer.ATR_DELTA, "",
+				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getDelta()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_END_DATE,
 				InteractionContextExternalizer.ATR_END_DATE, "", dateFormat.format(ie.getEndDate()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_INTEREST,
@@ -190,18 +191,18 @@ public class SaxContextWriter implements IInteractionContextWriter {
 				"", ie.getKind().toString());
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_NAVIGATION,
 				InteractionContextExternalizer.ATR_NAVIGATION, "",
-				XmlStringConverter.convertToXmlString(ie.getNavigation()));
+				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getNavigation()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_ORIGIN_ID,
 				InteractionContextExternalizer.ATR_ORIGIN_ID, "",
-				XmlStringConverter.convertToXmlString(ie.getOriginId()));
+				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getOriginId()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_START_DATE,
 				InteractionContextExternalizer.ATR_START_DATE, "", dateFormat.format(ie.getDate()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_HANDLE,
 				InteractionContextExternalizer.ATR_STRUCTURE_HANDLE, "",
-				XmlStringConverter.convertToXmlString(ie.getStructureHandle()));
+				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getStructureHandle()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_KIND,
 				InteractionContextExternalizer.ATR_STRUCTURE_KIND, "",
-				XmlStringConverter.convertToXmlString(ie.getStructureKind()));
+				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getStructureKind()));
 		return ieAttributes;
 	}
 }

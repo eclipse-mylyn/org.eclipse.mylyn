@@ -21,7 +21,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
 import org.eclipse.mylyn.internal.context.core.IInteractionContextReader;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -34,7 +33,7 @@ import org.w3c.dom.NodeList;
 /**
  * @author Mik Kersten
  * 
- * 	TODO: merge into a single externalizer
+ *         TODO: merge into a single externalizer
  */
 public class DomContextReader implements IInteractionContextReader {
 
@@ -84,17 +83,18 @@ public class DomContextReader implements IInteractionContextReader {
 		return document;
 	}
 
+	@SuppressWarnings( { "deprecation" })
 	public InteractionEvent readInteractionEvent(Node n) {
 		try {
 			Element e = (Element) n;
 			String kind = e.getAttribute("Kind");
 			String startDate = e.getAttribute("StartDate");
 			String endDate = e.getAttribute("EndDate");
-			String originId = XmlStringConverter.convertXmlToString(e.getAttribute("OriginId"));
-			String structureKind = XmlStringConverter.convertXmlToString(e.getAttribute("StructureKind"));
-			String structureHandle = XmlStringConverter.convertXmlToString(e.getAttribute("StructureHandle"));
-			String navigation = XmlStringConverter.convertXmlToString(e.getAttribute("Navigation"));
-			String delta = XmlStringConverter.convertXmlToString(e.getAttribute("Delta"));
+			String originId = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("OriginId"));
+			String structureKind = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("StructureKind"));
+			String structureHandle = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("StructureHandle"));
+			String navigation = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("Navigation"));
+			String delta = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("Delta"));
 			String interest = e.getAttribute("Interest");
 
 			String formatString = "yyyy-MM-dd HH:mm:ss.S z";

@@ -260,11 +260,6 @@
       </command>
       <command
             categoryId="org.eclipse.mylyn.context.ui.commands"
-            defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.ContextCapturePauseHandler"
-            id="org.eclipse.mylyn.ui.context.capture.pause.command"
-            name="Pause Capturing Context"/>
-      <command
-            categoryId="org.eclipse.mylyn.context.ui.commands"
             id="org.eclipse.mylyn.context.ui.commands.task.attachContext"
             name="Attach Context">
       </command>

@@ -72,11 +72,11 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	protected Map<StructuredViewer, List<ViewerFilter>> previousFilters = new WeakHashMap<StructuredViewer, List<ViewerFilter>>();
 
-	private boolean manageViewer = true;
+	private final boolean manageViewer;
 
-	private boolean manageFilters = true;
+	private final boolean manageFilters;
 
-	private boolean manageLinking = false;
+	private final boolean manageLinking;
 
 	private boolean wasLinkingEnabled = false;
 
