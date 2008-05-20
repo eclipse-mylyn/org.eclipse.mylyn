@@ -17,7 +17,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
 
-import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -57,11 +56,12 @@ public class AbstractReportFactory {
 		final BufferedInputStream is = new BufferedInputStream(inStream, 1024);
 
 		InputStream iis = new InputStream() {
+			@SuppressWarnings( { "deprecation", "restriction" })
 			@Override
 			public int read() throws IOException {
 				int c;
 				while ((c = is.read()) != -1) {
-					if (XmlStringConverter.isValid((char) c)) {
+					if (org.eclipse.mylyn.internal.commons.core.XmlStringConverter.isValid((char) c)) {
 						return c;
 					}
 				}

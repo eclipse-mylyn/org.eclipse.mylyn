@@ -22,7 +22,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
@@ -143,6 +142,7 @@ public class SaxRepositoriesWriter {
 			return errorHandler;
 		}
 
+		@SuppressWarnings( { "deprecation", "restriction" })
 		public void parse(InputSource input) throws IOException, SAXException {
 			if (!(input instanceof TaskRepositoriesInputSource)) {
 				throw new SAXException("Can only parse writable input sources");
@@ -162,8 +162,13 @@ public class SaxRepositoriesWriter {
 
 				AttributesImpl ieAttributes = new AttributesImpl();
 				for (String key : repository.getProperties().keySet()) {
-					ieAttributes.addAttribute("", key, key, "",
-							XmlStringConverter.convertToXmlString(repository.getProperties().get(key)));
+					ieAttributes.addAttribute(
+							"",
+							key,
+							key,
+							"",
+							org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(repository.getProperties()
+									.get(key)));
 				}
 
 				handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY,

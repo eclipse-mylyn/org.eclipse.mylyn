@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -337,11 +336,12 @@ public final class DelegatingTaskExternalizer {
 
 	}
 
+	@SuppressWarnings( { "deprecation", "restriction" })
 	private String stripControlCharacters(String text) {
 		if (text == null) {
 			return "";
 		}
-		return XmlStringConverter.cleanXmlString(text);
+		return org.eclipse.mylyn.internal.commons.core.XmlStringConverter.cleanXmlString(text);
 	}
 
 	private String formatExternDate(Date date) {

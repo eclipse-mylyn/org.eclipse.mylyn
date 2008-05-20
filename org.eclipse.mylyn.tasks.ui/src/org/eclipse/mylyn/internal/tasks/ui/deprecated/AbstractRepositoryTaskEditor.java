@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.deprecated;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -867,11 +868,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (taskDataManager != null) {
 			Date created = taskData.getAttributeFactory().getDateForAttributeType(
 					RepositoryTaskAttribute.DATE_CREATION, taskData.getCreated());
-			openedDateString = created != null ? DateUtil.getFormattedDate(created, HEADER_DATE_FORMAT) : "";
+			openedDateString = created != null ? new SimpleDateFormat(HEADER_DATE_FORMAT).format(created) : "";
 
 			Date modified = taskData.getAttributeFactory().getDateForAttributeType(
 					RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
-			modifiedDateString = modified != null ? DateUtil.getFormattedDate(modified, HEADER_DATE_FORMAT) : "";
+			modifiedDateString = modified != null ? new SimpleDateFormat(HEADER_DATE_FORMAT).format(modified) : "";
 		}
 
 		RepositoryTaskAttribute creationAttribute = taskData.getAttribute(RepositoryTaskAttribute.DATE_CREATION);

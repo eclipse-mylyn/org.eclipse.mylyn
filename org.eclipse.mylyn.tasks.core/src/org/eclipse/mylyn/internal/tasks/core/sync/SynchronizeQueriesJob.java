@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -308,7 +309,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				taskList.removeFromContainer(repositoryQuery, removedChildren);
 			}
 
-			repositoryQuery.setLastSynchronizedStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
+			repositoryQuery.setLastSynchronizedStamp(new SimpleDateFormat("MMM d, H:mm:ss").format(new Date()));
 		} else {
 			repositoryQuery.setSynchronizationStatus(result);
 		}

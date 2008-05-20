@@ -14,11 +14,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.commons.core.IStatusHandler;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
-import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -51,43 +47,6 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 
 	private MessageDialog createDialog(Shell shell, String title, String message, int type) {
 		return new MessageDialog(shell, title, null, message, type, new String[] { IDialogConstants.OK_LABEL }, 0);
-	}
-
-	public void displayStatus(Shell shell, final String title, final IStatus status) {
-		if (status.getCode() == RepositoryStatus.ERROR_INTERNAL) {
-			StatusHandler.log(status);
-			fail(status, true);
-		} else {
-			if (status instanceof RepositoryStatus && ((RepositoryStatus) status).isHtmlMessage()) {
-				WebBrowserDialog.openAcceptAgreement(shell, title, status.getMessage(),
-						((RepositoryStatus) status).getHtmlMessage());
-			} else {
-				switch (status.getSeverity()) {
-				case IStatus.CANCEL:
-				case IStatus.INFO:
-					createDialog(shell, title, status.getMessage(), MessageDialog.INFORMATION).open();
-					break;
-				case IStatus.WARNING:
-					createDialog(shell, title, status.getMessage(), MessageDialog.WARNING).open();
-					break;
-				case IStatus.ERROR:
-				default:
-					createDialog(shell, title, status.getMessage(), MessageDialog.ERROR).open();
-					break;
-				}
-			}
-		}
-	}
-
-	public void displayStatus(final String title, final IStatus status) {
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		if (workbench != null && !workbench.getDisplay().isDisposed()
-				&& workbench.getDisplay().getActiveShell() != null) {
-			Shell shell = workbench.getDisplay().getActiveShell();
-			displayStatus(shell, title, status);
-		} else {
-			StatusHandler.log(status);
-		}
 	}
 
 	@Deprecated
