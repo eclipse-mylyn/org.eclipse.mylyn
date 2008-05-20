@@ -186,42 +186,8 @@
          </includes>
        </viewerActionBinding>
    </extension>	
- 
-	<!-- ==================== Markers ==================== -->
-	
-    <extension point="org.eclipse.ui.ide.markerImageProviders">
-    <imageprovider 
-  		markertype="org.eclipse.mylyn.context.ui.markers.landmark" 
-  		icon="icons/elcl16/interest-landmark.gif" 
-  		id="org.eclipse.mylyn.context.ui.landmarkMarkerProvider" /> 
-   </extension> 
-  
-  <extension point="org.eclipse.ui.editors.annotationTypes">
-  	<type
-         markerSeverity="0"
-         markerType="org.eclipse.mylyn.context.ui.markers.landmark"
-         name="org.eclipse.mylyn.context.ui.markers.landmark.annotation"/> 
-  </extension> 
-   
-  <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
-  	<specification annotationType="org.eclipse.mylyn.context.ui.markers.landmark.annotation" 
-  		label="Task Context Landmark" 
-  		icon="icons/elcl16/interest-landmark.gif" 
-  		textPreferenceKey="landmarkIndication" 
-  		textPreferenceValue="false" 
-  		highlightPreferenceKey="landmarkHighlighting" 
-  		highlightPreferenceValue="true" 
-  		contributesToHeader="true" 
-  		overviewRulerPreferenceKey="landmarkIndicationInOverviewRuler" 
-  		overviewRulerPreferenceValue="true" 
-  		verticalRulerPreferenceKey="landmarkIndicationInVerticalRuler" 
-  		verticalRulerPreferenceValue="true" 
-  		colorPreferenceKey="landmarkIndicationColor" 
-  		colorPreferenceValue="255,255,255" 
-  		presentationLayer="0" 
-  		showInNextPrevDropdownToolbarActionKey="showLandmarkInNextPrevDropdownToolbarAction" 
-  		showInNextPrevDropdownToolbarAction="true" /> 
-  </extension>
+     
+   <!-- ==================== Actions ==================== -->
     
    <extension
        	 point="org.eclipse.ui.actionSets">
