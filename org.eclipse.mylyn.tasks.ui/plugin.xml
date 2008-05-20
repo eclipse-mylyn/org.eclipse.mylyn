@@ -239,16 +239,7 @@
               visible="true"/>
         <viewShortcut id="org.eclipse.mylyn.tasks.ui.views.repositories"/>
      </perspectiveExtension>
-     <perspectiveExtension targetID="org.tigris.subversion.subclipse.ui.svnPerspective">
-        <view
-              id="org.eclipse.mylyn.tasks.ui.views.repositories"
-              minimized="false"
-              ratio="0.7"
-              relationship="bottom"
-              relative="org.tigris.subversion.subclipse.ui.repository.RepositoriesView"
-              visible="true"/>
-        <viewShortcut id="org.eclipse.mylyn.tasks.ui.views.repositories"/>
-     </perspectiveExtension>
+     
      <perspectiveExtension targetID="org.eclipse.team.ui.TeamSynchronizingPerspective">
         <view
               id="org.eclipse.mylyn.tasks.ui.views.repositories"
@@ -989,11 +980,15 @@
     <extension
           point="org.eclipse.ui.propertyPages">
        <page
-             adaptable="true"
              class="org.eclipse.mylyn.internal.tasks.ui.properties.ProjectTaskRepositoryPage"
              id="org.eclipse.mylyn.tasks.ui.properties.pages.project.repository"
-             name="Task Repository"
-             objectClass="org.eclipse.core.resources.IProject"/>
+             name="Task Repository">
+          <enabledWhen>
+             <adapt
+                   type="org.eclipse.core.resources.IProject">
+             </adapt>
+          </enabledWhen>
+       </page>
     </extension>
     <extension
           point="org.eclipse.ui.commands">
