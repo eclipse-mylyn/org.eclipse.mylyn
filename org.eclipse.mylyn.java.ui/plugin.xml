@@ -165,14 +165,6 @@
             id="org.eclipse.mylyn.java.junit.launchconfig"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
-         <fileExtension
-               default="false"
-               extension="java">
-         </fileExtension>
-         <fileExtension
-               default="false"
-               extension="class">
-         </fileExtension>
       </launchConfigurationType>
     </extension>
     
@@ -465,5 +457,16 @@
          name="Toggle Active Folding">
       </command>
     </extension>
+    <!--
+   <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            class="org.eclipse.mylyn.java.ui.LaunchShortcut1"
+            id="org.eclipse.mylyn.java.ui.shortcut1"
+            label="label"
+            modes="org.eclipse.mylyn.java.ui.shortcut1">
+      </shortcut>
+   </extension>
+   -->
    
 </plugin>

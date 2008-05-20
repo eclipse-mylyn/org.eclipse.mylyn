@@ -39,9 +39,6 @@
       <uiBridge
             class="org.eclipse.mylyn.internal.resources.ui.ResourceUiBridge"
             contentType="resource"/>
-      <labelProvider
-            class="org.eclipse.mylyn.internal.resources.ui.ResourceContextLabelProvider"
-            contentType="resource"/>
    </extension>
    <extension
          point="org.eclipse.mylyn.context.ui.startup">

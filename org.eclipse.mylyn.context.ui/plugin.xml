@@ -322,19 +322,16 @@
    <extension point="org.eclipse.ui.bindings">     
       <key
             sequence="M1+M2+M3+ARROW_UP"
-            contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylyn.context.ui.commands.interest.increment"
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
             sequence="M1+M2+M3+ARROW_DOWN"
-            contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
             sequence="M1+M2+M3+ARROW_RIGHT"
-            contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>

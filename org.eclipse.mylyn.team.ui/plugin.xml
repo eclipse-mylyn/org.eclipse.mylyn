@@ -27,8 +27,12 @@
             id="org.eclipse.mylyn.team.ui.changeset.decorator"
             label="Task Change Set Decorator"
             lightweight="true"
-            objectClass="org.eclipse.mylyn.internal.team.ui.ContextChangeSet"
             state="true">
+         <enablement>
+            <objectClass
+                  name="org.eclipse.mylyn.internal.team.ui.ContextChangeSet">
+            </objectClass>
+         </enablement>
       </decorator>
     </extension>
     
