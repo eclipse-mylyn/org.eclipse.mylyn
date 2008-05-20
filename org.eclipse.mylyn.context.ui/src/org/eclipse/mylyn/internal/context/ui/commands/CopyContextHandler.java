@@ -17,7 +17,6 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.ui.commands.AbstractTaskHandler;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -70,10 +69,6 @@ public class CopyContextHandler extends AbstractTaskHandler {
 						targetTask.getHandleIdentifier());
 
 				TasksUi.getTaskActivityManager().activateTask(targetTask);
-				TaskListView view = TaskListView.getFromActivePerspective();
-				if (view != null) {
-					view.refresh();
-				}
 			}
 		} else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
