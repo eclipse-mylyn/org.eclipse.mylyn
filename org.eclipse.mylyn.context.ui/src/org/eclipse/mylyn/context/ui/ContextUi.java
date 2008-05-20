@@ -8,7 +8,10 @@
 
 package org.eclipse.mylyn.context.ui;
 
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.ui.ColorMap;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -32,5 +35,20 @@ public final class ContextUi {
 	 */
 	public static AbstractContextUiBridge getUiBridgeForEditor(IEditorPart editorPart) {
 		return ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+	}
+
+	// API-3.0: move?
+	public static Color getForeground(IInteractionElement node) {
+		if (node == null) {
+			return null;
+		}
+		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
+			return ColorMap.GRAY_MEDIUM;
+		} else if (node.getInterest().isLandmark()) {
+			return ColorMap.LANDMARK;
+		} else if (node.getInterest().isInteresting()) {
+			return null;
+		}
+		return ColorMap.GRAY_MEDIUM;
 	}
 }

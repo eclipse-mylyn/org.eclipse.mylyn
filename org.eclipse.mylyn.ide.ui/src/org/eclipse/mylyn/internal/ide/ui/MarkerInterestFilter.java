@@ -13,14 +13,13 @@ package org.eclipse.mylyn.internal.ide.ui;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.ide.ui.AbstractMarkerInterestFilter;
 import org.eclipse.ui.views.markers.MarkerItem;
 
 /**
  * @author Mik Kersten
  */
-public class MarkerInterestFilter extends InterestFilter {
+public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
@@ -52,7 +51,8 @@ public class MarkerInterestFilter extends InterestFilter {
 //		}
 	}
 
-	private boolean isImplicitlyInteresting(IMarker marker) {
+	@Override
+	protected boolean isImplicitlyInteresting(IMarker marker) {
 		try {
 			Object severity = marker.getAttribute(IMarker.SEVERITY);
 			return severity != null && severity.equals(IMarker.SEVERITY_ERROR);
@@ -60,20 +60,5 @@ public class MarkerInterestFilter extends InterestFilter {
 			// ignore
 		}
 		return false;
-	}
-
-	private boolean isInteresting(IMarker marker, Viewer viewer, Object parent) {
-		if (isImplicitlyInteresting(marker)) {
-			return true;
-		} else {
-			String handle = ContextCore.getStructureBridge(marker.getResource().getFileExtension())
-					.getHandleForOffsetInObject(marker, 0);
-			if (handle == null) {
-				return false;
-			} else {
-				return super.select(viewer, parent, ContextCore.getContextManager().getElement(handle));
-			}
-		}
-
 	}
 }

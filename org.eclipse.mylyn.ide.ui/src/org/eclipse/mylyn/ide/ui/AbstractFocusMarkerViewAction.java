@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.ide.ui.actions;
+package org.eclipse.mylyn.ide.ui;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
+import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 import org.eclipse.mylyn.internal.ide.ui.MarkerInterestFilter;
 import org.eclipse.mylyn.internal.ide.ui.MarkerViewLabelProvider;
@@ -29,13 +30,19 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
 /**
  * @author Mik Kersten
+ * @since 3.0
  */
 public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAction {
 
-	protected StructuredViewer cachedViewer = null;
+	private StructuredViewer cachedViewer = null;
 
 	public AbstractFocusMarkerViewAction() {
 		super(new MarkerInterestFilter(), true, true, false);
+	}
+
+	public AbstractFocusMarkerViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
+			boolean manageLinking) {
+		super(interestFilter, manageFilters, manageFilters, manageLinking);
 	}
 
 	/**
@@ -54,7 +61,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 	 * HACK: changing accessibility
 	 */
 	@Override
-	public final List<StructuredViewer> getViewers() {
+	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		if (cachedViewer == null) {
 			try {

@@ -19,10 +19,10 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.mylyn.internal.context.ui.TaskListInterestFilter;
-import org.eclipse.mylyn.internal.context.ui.TaskListInterestSorter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.IFilteredTreeListener;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestFilter;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IViewPart;
 

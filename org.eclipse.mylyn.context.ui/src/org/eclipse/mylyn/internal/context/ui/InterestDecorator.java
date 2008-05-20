@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.swt.graphics.Color;
@@ -26,11 +27,8 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author Mik Kersten
  */
+@Deprecated
 public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColorDecorator {
-
-	public InterestDecorator() {
-		super();
-	}
 
 	private IInteractionElement getNode(Object element) {
 		IInteractionElement node = null;
@@ -82,38 +80,12 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		if (element instanceof InteractionContextRelation) {
 			return ColorMap.RELATIONSHIP;
 		} else if (node != null) {
-			return getForegroundForElement(node);
+			return ContextUi.getForeground(node);
 		}
 		return null;
 	}
 
 	public Color decorateBackground(Object element) {
 		return null;
-//		IInteractionElement node = getNode(element);
-//		if (node != null) {
-//			return UiUtil.getBackgroundForElement(node);
-//		} else {
-//			return null;
-//		}
-	}
-
-	public static Color getForegroundForElement(IInteractionElement node) {
-		if (node == null) {
-			return null;
-		}
-		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
-//			if (node.getInterest().getValue() >= InteractionContextManager.getScalingFactors().getLandmark() / 3) {
-//				return ColorMap.GRAY_DARK;
-//			} else if (node.getInterest().getValue() >= 10) {
-//				return ColorMap.GRAY_MEDIUM;
-//			} else {
-			return ColorMap.GRAY_MEDIUM;
-//			}
-		} else if (node.getInterest().isLandmark()) {
-			return ColorMap.LANDMARK;
-		} else if (node.getInterest().isInteresting()) {
-			return null;
-		}
-		return ColorMap.GRAY_MEDIUM;
 	}
 }

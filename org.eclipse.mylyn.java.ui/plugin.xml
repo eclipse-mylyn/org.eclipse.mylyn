@@ -48,6 +48,7 @@
            </filter>
         </preservedFilters>
    </extension>
+   
  <extension
        point="org.eclipse.mylyn.context.ui.startup">
     <startup
@@ -230,6 +231,23 @@
        id="org.eclipse.mylyn.ui.views.active.search.contribution"
        targetID="org.eclipse.mylyn.ui.views.active.search">
  		</viewContribution>
+ 	
+	 <viewContribution
+         id="org.eclipse.mylyn.java.ui.markers.breakpoints.contribution"
+         targetID="org.eclipse.debug.ui.BreakpointView">
+      <action
+            class="org.eclipse.mylyn.internal.java.ui.actions.FocusBreakpointsViewAction"
+            disabledIcon="icons/elcl16/focus-disabled.gif"
+            enablesFor="*"
+            icon="icons/elcl16/focus.gif"
+            id="org.eclipse.mylyn.java.ui.actions.focus.markers.breakpoints"
+            label="Focus on Active Task"
+            menubarPath="mylyn"
+            style="toggle"
+            toolbarPath="mylyn"
+            tooltip="Focus on Active Task">
+      </action>
+   	</viewContribution> 
  		
  	<viewContribution 
 		id="org.eclipse.mylyn.ui.debug.view.contribution" 

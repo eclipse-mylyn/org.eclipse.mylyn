@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.ide.ui.actions;
 
+import org.eclipse.mylyn.ide.ui.AbstractFocusMarkerViewAction;
+
 /**
  * @author Mik Kersten
  */

@@ -278,6 +278,9 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		if (attribute instanceof Integer) {
 			charStart = ((Integer) attribute).intValue();
 		}
+		if (charStart == -1) {
+			System.err.println(">>> " + marker.getAttribute(IMarker.LINE_NUMBER, 0));
+		}
 
 		try {
 			ICompilationUnit compilationUnit = null;
@@ -306,7 +309,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			}
 		} catch (JavaModelException ex) {
 			if (!ex.isDoesNotExist()) {
-				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-2$ //$NON-NLS-1$
+				ExceptionHandler.handle(ex, "error", "could not find java element");
 			}
 			return null;
 		} catch (Throwable t) {

@@ -19,6 +19,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
@@ -61,7 +62,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 					}
 				}
 				if (node != null) {
-					decoration.setForegroundColor(InterestDecorator.getForegroundForElement(node));
+					decoration.setForegroundColor(ContextUi.getForeground(node));
 					if (bridge != null && bridge.canBeLandmark(node.getHandleIdentifier())
 							&& node.getInterest().isLandmark() && !node.getInterest().isPropagated()
 							&& !node.getInterest().isPredicted()) {

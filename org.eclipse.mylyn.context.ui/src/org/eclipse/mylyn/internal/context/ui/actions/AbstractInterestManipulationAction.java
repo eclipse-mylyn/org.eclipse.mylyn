@@ -17,7 +17,6 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.UiUtil;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -29,6 +28,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  */
 public abstract class AbstractInterestManipulationAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
+
+	private static final String LABEL_SHELL = "Interest Manipulation";
 
 	private static final String MESSAGE_NO_CONTEXT = "No task context is active, or element not found in context";
 
@@ -66,8 +67,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
 	public void run(IAction action) {
 		if (!ContextCore.getContextManager().isContextActive()) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
-					MESSAGE_NO_CONTEXT);
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_SHELL, MESSAGE_NO_CONTEXT);
 			return;
 		}
 
@@ -109,8 +109,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 					UiUtil.displayInterestManipulationFailure();
 				}
 			} else {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
-						MESSAGE_NO_CONTEXT);
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_SHELL, MESSAGE_NO_CONTEXT);
 			}
 		}
 	}

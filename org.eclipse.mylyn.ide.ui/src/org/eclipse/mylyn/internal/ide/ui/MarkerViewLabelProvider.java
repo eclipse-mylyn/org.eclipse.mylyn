@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.context.ui.InterestDecorator;
+import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -59,7 +59,7 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 		if (element instanceof ConcreteMarker) {
 			String handle = ContextCore.getStructureBridge(((ConcreteMarker) element).getResource().getFileExtension())
 					.getHandleForOffsetInObject((element), 0);
-			return InterestDecorator.getForegroundForElement(ContextCore.getContextManager().getElement(handle));
+			return ContextUi.getForeground(ContextCore.getContextManager().getElement(handle));
 		} else {
 			return null;
 		}
