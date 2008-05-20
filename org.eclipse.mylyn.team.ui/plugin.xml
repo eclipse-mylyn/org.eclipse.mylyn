@@ -254,15 +254,19 @@
        <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
     </factory>
   </extension>
+  
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            adaptable="true"
             category="org.eclipse.mylyn.tasks.ui.properties.pages.project.repository"
             class="org.eclipse.mylyn.internal.team.ui.properties.ProjectTeamPage"
             id="org.eclipse.mylyn.tasks.ui.properties.pages.project.team"
-            name="Team"
-            objectClass="org.eclipse.core.resources.IProject">
+            name="Commit Template">
+         <enabledWhen>
+            <adapt
+                  type="org.eclipse.core.resources.IProject">
+            </adapt>
+         </enabledWhen>
       </page>
    </extension>
 	
