@@ -16,12 +16,12 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.ui.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestFilter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**

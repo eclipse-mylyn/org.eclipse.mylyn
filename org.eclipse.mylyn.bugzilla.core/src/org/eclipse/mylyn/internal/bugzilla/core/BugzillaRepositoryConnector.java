@@ -331,7 +331,6 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 //				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
 //				urlQueryString += newurlQueryString;
 //			}
-//			System.err.println(">>>> markStale "+tasks.size());
 //			queryForChanged(repository, changedTasks, urlQueryString);
 
 			Set<ITask> changedTasks = new HashSet<ITask>();
