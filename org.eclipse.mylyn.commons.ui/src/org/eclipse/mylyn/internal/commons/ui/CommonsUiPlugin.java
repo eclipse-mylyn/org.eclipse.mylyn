@@ -14,11 +14,11 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class WorkbenchExtensionsPlugin extends AbstractUIPlugin {
+public class CommonsUiPlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.workbench.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.ui";
 
-	private static WorkbenchExtensionsPlugin plugin;
+	private static CommonsUiPlugin plugin;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -32,7 +32,7 @@ public class WorkbenchExtensionsPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	public static WorkbenchExtensionsPlugin getDefault() {
+	public static CommonsUiPlugin getDefault() {
 		return plugin;
 	}
 }

@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.mylyn.internal.commons.ui.WorkbenchExtensionsPlugin;
+import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -63,8 +63,8 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			refreshJob = (Job) refreshField.get(this);
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob, super.getFilterControl());
 		} catch (Exception e) {
-			WorkbenchExtensionsPlugin.getDefault().getLog().log(
-					new Status(IStatus.ERROR, WorkbenchExtensionsPlugin.ID_PLUGIN, "Could not get refresh job", e));
+			CommonsUiPlugin.getDefault().getLog().log(
+					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Could not get refresh job", e));
 		}
 		setInitialText("");
 	}

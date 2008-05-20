@@ -17,7 +17,7 @@ import org.eclipse.mylyn.internal.commons.ui.CompositeContainerImageDescriptor;
 import org.eclipse.mylyn.internal.commons.ui.CompositeElementImageDescriptor;
 import org.eclipse.mylyn.internal.commons.ui.CompositeSyncImageDescriptor;
 import org.eclipse.mylyn.internal.commons.ui.TaskListImageDescriptor;
-import org.eclipse.mylyn.internal.commons.ui.WorkbenchExtensionsPlugin;
+import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -26,7 +26,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class CommonImages {
 
-	private static final URL baseURL = WorkbenchExtensionsPlugin.getDefault().getBundle().getEntry("/icons/");
+	private static final URL baseURL = CommonsUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
 	private static ImageRegistry imageRegistry;
 

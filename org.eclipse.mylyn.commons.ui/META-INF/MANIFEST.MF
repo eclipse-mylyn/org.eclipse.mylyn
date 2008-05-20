@@ -4,10 +4,11 @@ Bundle-Name: Mylyn Workbench Extensions Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.commons.ui
 Bundle-Version: 3.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.mylyn.commons.net;bundle-version="[3.0.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Activator: org.eclipse.mylyn.internal.commons.ui.WorkbenchExtensionsPlugin
+Bundle-Activator: org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin
 Export-Package: org.eclipse.mylyn.internal.commons.ui;x-internal:=true;
   uses:="org.eclipse.jface.window,
    org.eclipse.core.runtime,
