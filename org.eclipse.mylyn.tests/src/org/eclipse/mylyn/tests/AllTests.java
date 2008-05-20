@@ -12,7 +12,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.tests.AllContextTests;
 import org.eclipse.mylyn.ide.tests.AllIdeTests;
 import org.eclipse.mylyn.java.tests.AllJavaTests;
@@ -22,7 +21,6 @@ import org.eclipse.mylyn.resources.tests.AllResourcesTests;
 import org.eclipse.mylyn.tasks.tests.AllTasksTests;
 import org.eclipse.mylyn.team.tests.AllTeamTests;
 import org.eclipse.mylyn.tests.integration.AllIntegrationTests;
-import org.eclipse.mylyn.tests.integration.TestingStatusNotifier;
 import org.eclipse.mylyn.tests.misc.AllMiscTests;
 import org.eclipse.mylyn.trac.tests.AllTracTests;
 import org.eclipse.mylyn.xplanner.tests.AllXPlannerTests;
@@ -33,13 +31,9 @@ import org.eclipse.mylyn.xplanner.tests.AllXPlannerTests;
 public class AllTests {
 
 	public static Test suite() {
-		StatusHandler.addStatusHandler(new TestingStatusNotifier());
-//		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
-
 		// TODO: the order of these tests might still matter, but shouldn't
 
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
-		// $JUnit-BEGIN$
 		suite.addTest(AllContextTests.suite());
 		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllMonitorTests.suite());
@@ -54,7 +48,6 @@ public class AllTests {
 		suite.addTest(AllJiraTests.suite());
 		suite.addTest(AllTracTests.suite());
 		suite.addTest(AllXPlannerTests.suite());
-		// $JUnit-END$
 		return suite;
 	}
 }

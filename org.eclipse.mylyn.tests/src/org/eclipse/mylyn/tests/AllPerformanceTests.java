@@ -11,9 +11,7 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.tests.AllTasksPerformanceTests;
-import org.eclipse.mylyn.tests.integration.TestingStatusNotifier;
 
 /**
  * @author Steffen Pingel
@@ -21,8 +19,6 @@ import org.eclipse.mylyn.tests.integration.TestingStatusNotifier;
 public class AllPerformanceTests {
 
 	public static Test suite() {
-		StatusHandler.addStatusHandler(new TestingStatusNotifier());
-
 		TestSuite suite = new TestSuite("Performance tests for org.eclipse.mylyn.tests");
 		suite.addTest(AllTasksPerformanceTests.suite());
 		return suite;
