@@ -612,12 +612,26 @@
   <extension point="org.eclipse.ui.bindings">
       <key
             sequence="M2+M3+Q K"
-            contextId="org.eclipse.ui.contexts.window"
             commandId="org.eclipse.ui.views.showView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
             <parameter 
             	id="org.eclipse.ui.views.showView.viewId"
             	value="org.eclipse.mylyn.tasks.ui.views.tasks"/>
+      </key>
+      <key
+            platform="carbon"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+Q K">
+      </key>
+      <key
+            commandId="org.eclipse.ui.views.showView"
+            platform="carbon"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="COMMAND+ALT+Q K">
+         <parameter
+               id="org.eclipse.ui.views.showView.viewId"
+               value="org.eclipse.mylyn.tasks.ui.views.tasks">
+         </parameter>
       </key>
   </extension>
   
