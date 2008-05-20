@@ -432,21 +432,22 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			}
 			if (taskToRefresh != null) {
+				Thread.dumpStack();
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
-								|| repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
-							parentEditor.setMessage("Task has incoming changes", IMessageProvider.WARNING,
-									new HyperlinkAdapter() {
-										@Override
-										public void linkActivated(HyperlinkEvent e) {
-											refreshEditor();
-										}
-									});
-							setSubmitEnabled(false);
-						} else {
-							refreshEditor();
-						}
+//						if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
+//								|| repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
+						parentEditor.setMessage("Task has incoming changes", IMessageProvider.WARNING,
+								new HyperlinkAdapter() {
+									@Override
+									public void linkActivated(HyperlinkEvent e) {
+										refreshEditor();
+									}
+								});
+						setSubmitEnabled(false);
+//						} else {
+//							refreshEditor();
+//						}
 					}
 				});
 			}
@@ -519,7 +520,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Call upon change to attribute value
 	 * 
 	 * @param attribute
-	 * 		changed attribute
+	 *            changed attribute
 	 */
 	protected boolean attributeChanged(RepositoryTaskAttribute attribute) {
 		if (attribute == null) {
@@ -553,6 +554,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		repositoryTask = editorInput.getRepositoryTask();
 		repository = editorInput.getRepository();
 		taskData = editorInput.getTaskData();
+		TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
 		connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		commentSortIsUp = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -1276,9 +1278,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Adds content assist to the given text field.
 	 * 
 	 * @param text
-	 * 		text field to decorate.
+	 *            text field to decorate.
 	 * @param proposalProvider
-	 * 		instance providing content proposals
+	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
 	protected ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
@@ -1307,7 +1309,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
 	 * @param attribute
-	 * 		attribute for which to provide content assist.
+	 *            attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
 	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
@@ -1318,7 +1320,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given operation.
 	 * 
 	 * @param operation
-	 * 		operation for which to provide content assist.
+	 *            operation for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
 	protected IContentProposalProvider createContentProposalProvider(RepositoryOperation operation) {
@@ -1339,7 +1341,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Called to check if there's content assist available for the given attribute.
 	 * 
 	 * @param attribute
-	 * 		the attribute
+	 *            the attribute
 	 * @return true if content assist is available for the specified attribute.
 	 */
 	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
@@ -1350,7 +1352,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Called to check if there's content assist available for the given operation.
 	 * 
 	 * @param operation
-	 * 		the operation
+	 *            the operation
 	 * @return true if content assist is available for the specified operation.
 	 */
 	protected boolean hasContentAssist(RepositoryOperation operation) {
@@ -1362,7 +1364,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * 
 	 * @author Raphael Ackermann (modifications) (bug 195514)
 	 * @param attributesComposite
-	 * 		The composite to add the text editor to.
+	 *            The composite to add the text editor to.
 	 */
 	protected void addSummaryText(Composite attributesComposite) {
 		Composite summaryComposite = toolkit.createComposite(attributesComposite);
@@ -2604,15 +2606,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * preview of new comments must override this method.
 	 * 
 	 * @param buttonComposite
-	 * 		the composite that holds the button
+	 *            the composite that holds the button
 	 * @param editor
-	 * 		the TextViewer for editing text
+	 *            the TextViewer for editing text
 	 * @param previewBrowser
-	 * 		the Browser for displaying the preview
+	 *            the Browser for displaying the preview
 	 * @param editorLayout
-	 * 		the StackLayout of the <code>editorComposite</code>
+	 *            the StackLayout of the <code>editorComposite</code>
 	 * @param editorComposite
-	 * 		the composite that holds <code>editor</code> and <code>previewBrowser</code>
+	 *            the composite that holds <code>editor</code> and <code>previewBrowser</code>
 	 * @since 2.1
 	 */
 	private void createPreviewButton(final Composite buttonComposite, final TextViewer editor,
@@ -2785,7 +2787,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Adds buttons to this composite. Subclasses can override this method to provide different/additional buttons.
 	 * 
 	 * @param buttonComposite
-	 * 		Composite to add the buttons to.
+	 *            Composite to add the buttons to.
 	 */
 	protected void addActionButtons(Composite buttonComposite) {
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
@@ -2906,7 +2908,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * <code>selectionChangedListeners</code>.
 	 * 
 	 * @param event
-	 * 		The selection event.
+	 *            The selection event.
 	 */
 	protected void fireSelectionChanged(final SelectionChangedEvent event) {
 		Object[] listeners = selectionChangedListeners.toArray();
@@ -3065,9 +3067,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Selects the given object in the editor.
 	 * 
 	 * @param o
-	 * 		The object to be selected.
+	 *            The object to be selected.
 	 * @param highlight
-	 * 		Whether or not the object should be highlighted.
+	 *            Whether or not the object should be highlighted.
 	 */
 	public boolean select(Object o, boolean highlight) {
 		Control control = controlBySelectableObject.get(o);
@@ -3156,7 +3158,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Scroll to a specified piece of text
 	 * 
 	 * @param selectionComposite
-	 * 		The StyledText to scroll to
+	 *            The StyledText to scroll to
 	 */
 	private void focusOn(Control selectionComposite, boolean highlight) {
 		int pos = 0;

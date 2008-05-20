@@ -427,9 +427,6 @@ public class TasksUiUtil {
 						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 								task.getConnectorKind());
 						TasksUiInternal.synchronizeTask(connector, task, false, null);
-						if (((TaskEditor) editor).hasLegacyPage()) {
-							TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-						}
 						return true;
 					}
 				}

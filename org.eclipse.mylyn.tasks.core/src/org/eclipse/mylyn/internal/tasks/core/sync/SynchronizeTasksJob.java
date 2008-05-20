@@ -274,7 +274,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 		task.setStale(false);
 		((AbstractTask) task).setSynchronizing(false);
-		taskList.notifyElementChanged(task);
+		taskList.notifySyncStateChanged(task);
 	}
 
 	private void updateFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {

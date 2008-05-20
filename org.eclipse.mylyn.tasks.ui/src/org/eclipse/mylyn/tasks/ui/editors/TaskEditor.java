@@ -100,8 +100,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private TaskDragSourceListener titleDragSourceListener;
 
-	private boolean hasLegacyPage;
-
 	public TaskEditor() {
 	}
 
@@ -214,7 +212,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			}
 		});
 		for (AbstractTaskEditorFactory factory : factories) {
-			hasLegacyPage = true;
 			addPage(factory);
 		}
 
@@ -639,14 +636,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		} else {
 			setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
 		}
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	@Deprecated
-	public boolean hasLegacyPage() {
-		return hasLegacyPage;
 	}
 
 }
