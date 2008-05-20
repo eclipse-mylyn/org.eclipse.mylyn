@@ -18,7 +18,7 @@
             class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaConnectorUi"
             name="Bugzilla Repository Ui"
             overlayIcon="icons/eview16/overlay-bugzilla.gif"/>
-              
+
 	  <taskListFactory 
             class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListFactory"
             id="org.eclipse.mylyn.bugzilla.tasklist.factory"/>

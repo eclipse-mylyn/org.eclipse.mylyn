@@ -187,12 +187,6 @@
                      relative="org.eclipse.ui.views.ContentOutline"
                      visible="true"/>
                <newWizardShortcut
-                     id="org.eclipse.mylyn.tasks.ui.wizards.new.task">
-               </newWizardShortcut>
-               <newWizardShortcut
-                     id="org.eclipse.mylyn.tasks.ui.wizards.new.task">
-               </newWizardShortcut>
-               <newWizardShortcut
                      id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task">
                </newWizardShortcut>
           </perspectiveExtension>
@@ -210,17 +204,11 @@
                 relative="org.eclipse.ui.views.ContentOutline">
          </view>
           <newWizardShortcut
-                id="org.eclipse.mylyn.tasks.ui.wizards.new.task">
-          </newWizardShortcut>
-          <newWizardShortcut
                 id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task">
           </newWizardShortcut> 
       </perspectiveExtension>
      <perspectiveExtension
            targetID="org.eclipse.mylyn.tasks.ui.perspectives.planning">
-        <newWizardShortcut
-              id="org.eclipse.mylyn.tasks.ui.wizards.new.task">
-        </newWizardShortcut>
         <newWizardShortcut
               id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task">
         </newWizardShortcut>
@@ -380,7 +368,6 @@
          
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryExportAction"
-               definitionId="org.eclipse.ui.query.export"
                enablesFor="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery"
                icon="icons/etool16/export.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.export.query"
@@ -391,7 +378,6 @@
   		
 		  <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction"
-               definitionId="org.eclipse.ui.query.import"
                enablesFor="*"
                icon="icons/etool16/import.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.import.query"
@@ -402,7 +388,6 @@
 
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.TaskExportAction"
-               definitionId="org.eclipse.ui.task.export"
                enablesFor="org.eclipse.mylyn.internal.tasks.core.AbstractTask"
                icon="icons/etool16/export.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.export.task"
@@ -413,7 +398,6 @@
 
 		  <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.TaskImportAction"
-               definitionId="org.eclipse.ui.task.import"
                enablesFor="*"
                icon="icons/etool16/import.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.import.task"
@@ -601,12 +585,20 @@
 
    </extension>
 
+   <extension
+   		point="org.eclipse.ui.keywords">
+      <keyword
+            label="mylyn tasks"
+            id="org.eclipse.mylyn.tasks.ui.keywords"/>
+   </extension>
+
   <extension point="org.eclipse.ui.preferencePages">
 	  <page
             name="Mylyn"
             class="org.eclipse.mylyn.internal.tasks.ui.preferences.TaskFocusedUiPreferencePage"
             id="org.eclipse.mylyn.ui.preferences">
-            <keywordReference id="org.eclipse.mylyn.tasks.keywords"/>
+            <keywordReference 
+            	id="org.eclipse.mylyn.tasks.ui.keywords"/>
       </page>  
       <page 
          name="Task List"
@@ -615,13 +607,6 @@
          category="org.eclipse.mylyn.ui.preferences">
          <keywordReference id="org.eclipse.mylyn.tasks.ui.keywords"/>
       </page> 
-   </extension>
-   
-   <extension
-   		point="org.eclipse.ui.keywords">
-      <keyword
-            label="mylyn tasks"
-            id="org.eclipse.mylyn.tasks.ui.keywords"/>
    </extension>
  
   <extension point="org.eclipse.ui.bindings">
@@ -881,7 +866,6 @@
 	          icon="icons/etool16/navigate-previous.gif"
 	          id="org.eclipse.mylyn.tasks.ui.navigate.task.history"
 	          label="Activate Previous Task"
-	          pulldown="true"
 	          style="pulldown"
 	          toolbarPath="org.eclipse.ui.workbench.navigate/Tasks"
 	          tooltip="Activate Previous Task">
@@ -997,7 +981,6 @@
              name="Task Repositories">
        </category>
        <command
-             category="org.eclipse.mylyn.tasks.ui.commands"
              categoryId="org.eclipse.mylyn.tasks.ui.commands"
              defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.AddTaskRepositoryHandler"
              id="org.eclipse.mylyn.tasks.ui.command.addTaskRepository"
@@ -1107,8 +1090,7 @@
             class="org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector"
             id="org.eclipse.mylyn.tasks.connector.local"
             name="Local Repository Connector"
-            type="local"
-            userManaged="false"/>
+            type="local"/>
             
       <connectorUi
             brandingIcon="icons/etool16/person.gif"
@@ -1154,79 +1136,69 @@
             name="Go To Next Unread Task">
       </command>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.TaskListToolTipHandler"
             id="org.eclipse.mylyn.tasks.ui.command.showToolTip"
             name="Show Tooltip Description">
       </command>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskReadHandler"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskRead"
             name="Mark Task Read">
       </command>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskUnreadHandler"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
             name="Mark Task Unread">
       </command>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskReadGoToNextUnreadTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToNextUnread"
             name="Mark Task Read and Go To Next Unread Task">
       </command>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$MarkTaskReadGoToPreviousUnreadTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskReadGoToPreviousUnread"
             name="Mark Task Read and Go To Previous Unread Task">
       </command>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskComplete"
             name="Mark Task Complete">
       </command>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             id="org.eclipse.mylyn.tasks.ui.command.markTaskIncomplete"
             name="Mark Task Incomplete">
       </command>
       <command
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             id="org.eclipse.mylyn.tasks.ui.command.task.clearOutgoing"
             name="Clear Outgoing Changes">
       </command>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.NewSubTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.new.subtask"
             name="New Subtask">
       </command>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.NewLocalTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.new.local.task"
             name="New Local Task">
       </command>
       
       <category
-            id="org.eclipse.mylyn.tasks.ui.tasklist"
+            id="org.eclipse.mylyn.tasks.ui.commands"
             name="Task">
       </category>
       <command
-            category="org.eclipse.mylyn.tasks.ui.commands"
-            categoryId="org.eclipse.mylyn.tasks.ui.tasklist"
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.OpenSelectedTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.openSelectedTask"
             name="Open Selected Task">

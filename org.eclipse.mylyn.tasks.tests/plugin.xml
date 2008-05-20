@@ -18,7 +18,6 @@
             id="org.eclipse.mylyn.tasks.tests.factory"/>
       <connectorUi
             class="org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi"
-            customNotifications="false"
             id="org.eclipse.mylyn.tasks.tests.repositories.ui"
             name="Mock Repository Connector UI">
       </connectorUi>

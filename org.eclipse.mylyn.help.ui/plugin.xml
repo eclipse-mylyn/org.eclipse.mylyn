@@ -14,12 +14,11 @@
   
    <extension point="org.eclipse.ui.commands">
    <category
-         id="org.eclipse.mylyn.doc.commands"
+         id="org.eclipse.mylyn.help.ui.commands"
          name="Mylyn Help">
    </category>
 	  <command
-         category="org.eclipse.mylyn.doc.commands"
-         categoryId="org.eclipse.mylyn.doc.commands"
+         categoryId="org.eclipse.mylyn.help.ui.commands"
          description="Show Mylyn UI Legend"
          id="org.eclipse.mylyn.doc.legend.show"
          name="Show Mylyn UI Legend">
@@ -29,11 +28,11 @@
    <extension point="org.eclipse.ui.bindings">   
       <key
             sequence="M1+M2+M3+?"
-            contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylyn.doc.legend.show"
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension>
+   
    <extension
          point="org.eclipse.ui.intro.configExtension">
       <configExtension
