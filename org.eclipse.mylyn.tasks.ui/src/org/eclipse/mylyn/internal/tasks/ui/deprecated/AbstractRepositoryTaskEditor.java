@@ -555,7 +555,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		repositoryTask = editorInput.getRepositoryTask();
 		repository = editorInput.getRepository();
 		taskData = editorInput.getTaskData();
-		TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
+		if (repositoryTask != null) {
+			TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
+		}
 		connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
 		commentSortIsUp = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
