@@ -82,7 +82,7 @@ public class TaskFactory implements ITaskFactory {
 
 		} else {
 			if (updateTasklist) {
-				taskDataManager.saveIncoming(repositoryTask, taskData, forced);
+				boolean changed = taskDataManager.saveIncoming(repositoryTask, taskData, forced);
 				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
 				if (dataHandler != null) {
 					for (ITask child : repositoryTask.getChildren()) {
@@ -101,6 +101,9 @@ public class TaskFactory implements ITaskFactory {
 							}
 						}
 					}
+				}
+				if (changed) {
+					taskList.notifyElementChanged(repositoryTask);
 				}
 			}
 		}
