@@ -11,10 +11,10 @@ package org.eclipse.mylyn.internal.commons.core;
 /**
  * @author Ken Sueda
  */
-@Deprecated
-// should use xerces or some other parser's facilities
+// API-3.0: should use xerces or some other parser's facilities
 public class XmlStringConverter {
 
+	@Deprecated
 	public static String convertToXmlString(String s) {
 		if (s == null) {
 			return "";
@@ -59,6 +59,7 @@ public class XmlStringConverter {
 		return null;
 	}
 
+	@Deprecated
 	public static String convertXmlToString(String string) {
 		StringBuffer result = new StringBuffer(string.length() + 10);
 		for (int i = 0; i < string.length(); ++i) {
@@ -110,6 +111,7 @@ public class XmlStringConverter {
 	 *            string to clean
 	 * @return string with all non valid characters removed, if text is null return null
 	 */
+	@Deprecated
 	public static String cleanXmlString(String text) {
 		if (text == null) {
 			return null;
@@ -129,6 +131,7 @@ public class XmlStringConverter {
 	 * 
 	 * @see http://www.w3.org/TR/REC-xml/
 	 */
+	@Deprecated
 	public static boolean isValid(char ch) {
 		return (0x0A == ch || 0x0D == ch || 0x09 == ch) || (ch >= 0x20 && ch <= 0xD7FF)
 				|| (ch >= 0xE000 && ch <= 0xFFFD) || (ch >= 0x10000 && ch <= 0x10FFFF);

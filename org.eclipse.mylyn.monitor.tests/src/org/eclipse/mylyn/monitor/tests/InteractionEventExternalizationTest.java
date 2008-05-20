@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
-import org.eclipse.mylyn.internal.commons.core.XmlStringConverter;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylyn.internal.monitor.usage.MonitorPreferenceConstants;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
@@ -33,7 +32,9 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 				"<more complicated=\"xml\"><example with='comp:licated'/></more>",
 				"<embedded>\rcarriage-returns\nnewlines\tand tabs" };
 		for (String s : testStrings) {
-			assertEquals(s, XmlStringConverter.convertXmlToString(XmlStringConverter.convertToXmlString(s)));
+			assertEquals(
+					s,
+					org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(s)));
 		}
 	}
 

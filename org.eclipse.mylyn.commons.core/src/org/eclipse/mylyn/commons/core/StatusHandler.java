@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.commons.core;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -100,17 +103,18 @@ public class StatusHandler {
 	 * Plug-ins that require running in Eclipse are encouraged to use their plug-in log.
 	 * 
 	 * @param status
-	 * 		status to log
+	 *            status to log
 	 */
 	public static void log(IStatus status) {
 		if (InternalPlatform.getDefault() != null && PlatformActivator.getContext() != null) {
-//			InternalPlatform.getDefault().log(status);
 			ILog log = InternalPlatform.getDefault().getLog(PlatformActivator.getContext().getBundle());
 			if (log != null) {
 				log.log(status);
 			}
 		}
-		// FIXME log to console if no log available?
+		if (CoreUtil.TEST_MODE) {
+			dumpErrorToConsole(status);
+		}
 	}
 
 	/**
@@ -144,11 +148,11 @@ public class StatusHandler {
 
 	/**
 	 * @param throwable
-	 * 		can be null
+	 *            can be null
 	 * @param message
-	 * 		The message to include
+	 *            The message to include
 	 * @param informUser
-	 * 		if true dialog box will be popped up
+	 *            if true dialog box will be popped up
 	 * @deprecated use {@link #fail(IStatus)} or {{@link #log(IStatus)} instead
 	 */
 	@Deprecated
@@ -176,6 +180,7 @@ public class StatusHandler {
 	 * @see #log(IStatus)
 	 * @since 2.3
 	 */
+	@SuppressWarnings("deprecation")
 	public static void fail(IStatus status) {
 		log(status);
 		for (IStatusHandler handler : handlers) {
@@ -185,6 +190,7 @@ public class StatusHandler {
 		//getErrorReporterManager().fail(status);
 	}
 
+	@SuppressWarnings("unused")
 	private static synchronized ErrorReporterManager getErrorReporterManager() {
 		if (errorReporterManager == null) {
 			errorReporterManager = new ErrorReporterManager();
@@ -192,4 +198,24 @@ public class StatusHandler {
 		return errorReporterManager;
 	}
 
+	private static void dumpErrorToConsole(IStatus status) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		Calendar now = Calendar.getInstance();
+		sb.append(DateUtil.getIsoFormattedDateTime(now));
+		sb.append("] ");
+		sb.append(status.toString() + ", ");
+
+		if (status.getException() != null) {
+			sb.append("exception: ");
+			sb.append(printStrackTrace(status.getException()));
+		}
+		System.err.println(sb.toString());
+	}
+
+	private static String printStrackTrace(Throwable t) {
+		StringWriter writer = new StringWriter();
+		t.printStackTrace(new PrintWriter(writer));
+		return writer.toString();
+	}
 }

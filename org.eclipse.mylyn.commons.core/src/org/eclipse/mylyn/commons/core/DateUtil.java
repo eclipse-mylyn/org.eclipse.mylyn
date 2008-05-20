@@ -8,14 +8,7 @@
 
 package org.eclipse.mylyn.commons.core;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.commons.core.ICommonsCoreConstants;
 
 /**
  * Used for formatting dates.
@@ -25,13 +18,7 @@ import org.eclipse.mylyn.internal.commons.core.ICommonsCoreConstants;
  */
 public class DateUtil {
 
-	@Deprecated
-	public static String getFormattedDate() {
-		return getFormattedDate(Calendar.getInstance());
-	}
-
-	@Deprecated
-	public static String getFormattedDate(Calendar calendar) {
+	public static String getIsoFormattedDate(Calendar calendar) {
 		try {
 			int monthInt = (calendar.get(Calendar.MONTH) + 1);
 			String month = "" + monthInt;
@@ -49,19 +36,12 @@ public class DateUtil {
 		}
 	}
 
-	@Deprecated
-	public static String getFormattedTime() {
-		return Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + ":" + Calendar.getInstance().get(Calendar.MINUTE)
-				+ ":" + Calendar.getInstance().get(Calendar.SECOND);
-	}
-
-	@Deprecated
-	public static String getFormattedDateTime(long time) {
-		// XXX: need to get UTC times
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(time);
-		return getFormattedDate() + "-" + c.get(Calendar.HOUR) + "-" + c.get(Calendar.MINUTE) + "-"
-				+ c.get(Calendar.SECOND);
+	/**
+	 * @return Time formatted according to: http://www.iso.org/iso/date_and_time_format
+	 */
+	public static String getIsoFormattedDateTime(Calendar calendar) {
+		return getIsoFormattedDate(calendar) + "T" + calendar.get(Calendar.HOUR) + "-" + calendar.get(Calendar.MINUTE)
+				+ "-" + calendar.get(Calendar.SECOND);
 	}
 
 	/** Returns the time in the format: HHH:MM */
@@ -153,34 +133,5 @@ public class DateUtil {
 			}
 		}
 		return formatted;
-	}
-
-	@Deprecated
-	public static String getZoneFormattedDate(TimeZone zone, Date date, String dateFormat) {
-		SimpleDateFormat formatter = new SimpleDateFormat();
-
-		formatter.setTimeZone(zone);
-		formatter.applyPattern(dateFormat);
-		return formatter.format(date);
-	}
-
-	@Deprecated
-	public static String getFormattedDate(Date date, String format) {
-		SimpleDateFormat formatter = new SimpleDateFormat();
-
-		formatter.setTimeZone(TimeZone.getDefault());
-		formatter.applyPattern(format);
-		return formatter.format(date);
-	}
-
-	@Deprecated
-	public static TimeZone getTimeZone(String zoneId) {
-		TimeZone timeZone = TimeZone.getTimeZone(zoneId);
-		if (!timeZone.getID().equals(zoneId)) {
-			StatusHandler.log(new Status(IStatus.INFO, ICommonsCoreConstants.ID_PLUGIN,
-					"Specified time zone not available, using " + timeZone.getDisplayName()
-							+ ". Check repository settings."));
-		}
-		return timeZone;
 	}
 }
