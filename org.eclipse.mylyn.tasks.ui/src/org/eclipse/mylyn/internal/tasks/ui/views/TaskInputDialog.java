@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
-import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.swt.SWT;
@@ -228,7 +228,7 @@ public class TaskInputDialog extends Dialog {
 	 */
 	protected void retrieveTaskDescription(final String url) {
 		try {
-			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(issueURLTextWidget.getText()) {
+			AbstractRetrieveTitleFromUrlJob job = new AbstractRetrieveTitleFromUrlJob(issueURLTextWidget.getText()) {
 				@Override
 				protected void titleRetrieved(final String pageTitle) {
 					taskNameTextWidget.setText(pageTitle);

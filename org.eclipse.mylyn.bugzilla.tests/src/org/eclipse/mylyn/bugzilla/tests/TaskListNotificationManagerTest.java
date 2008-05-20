@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
-import java.util.Date;
-
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
@@ -40,8 +38,6 @@ public class TaskListNotificationManagerTest extends TestCase {
 	}
 
 	public void testTaskListNotificationReminder() throws InterruptedException {
-
-		Date now = new Date();
 
 		AbstractTask task0 = new LocalTask("0", "t0 - test 0");
 		AbstractTask task1 = new LocalTask("1", "t1 - test 1");

@@ -73,7 +73,7 @@ public class TaskListStandaloneTest extends TestCase {
 
 	public void testPastReminder() throws InterruptedException {
 		AbstractTask task = new LocalTask("1", "1");
-		long now = new Date().getTime();
+
 		task.setScheduledForDate(new DateRange(Calendar.getInstance()));
 		Thread.sleep(2000);
 		assertTrue(task.isPastReminder());
