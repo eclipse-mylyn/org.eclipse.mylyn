@@ -66,13 +66,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 ////		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository, false, false));
 ////		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
-////		System.err.println(">>> Collector: "+collector.getTasks().size());
 ////		for (AbstractTask task : collector.getTasks()) {
 ////			TasksUiPlugin.getTaskList().addTask(task);
 ////		}
 //
 //		TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
-//		//System.err.println(">>> initial size: "+query.getChildren().size());
 //		for (AbstractTask task : query.getChildren()) {
 //			assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
 //			TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);

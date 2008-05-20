@@ -131,7 +131,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
