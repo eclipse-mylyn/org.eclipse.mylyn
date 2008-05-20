@@ -48,7 +48,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 				.next();
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);
-		assertNull(TasksUiPlugin.getTaskListManager().getActiveTask());
+		assertNull(TasksUiPlugin.getTaskActivityManager().getActiveTask());
 	}
 
 	@Override
@@ -70,11 +70,11 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		changeSetManager.disable();
 
 		AbstractTask task1 = new LocalTask("task1", "label");
-		TasksUiPlugin.getTaskListManager().activateTask(task1);
+		TasksUiPlugin.getTaskActivityManager().activateTask(task1);
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 		assertEquals(0, collector.getSets().length);
 
-		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
+		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
 		changeSetManager.enable();
 	}
 
@@ -90,16 +90,16 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 
 		AbstractTask task1 = new LocalTask("task1", "label");
-		TasksUiPlugin.getTaskListManager().activateTask(task1);
+		TasksUiPlugin.getTaskActivityManager().activateTask(task1);
 		assertEquals(1, changeSetManager.getActiveChangeSets().size());
 		assertEquals(1, collector.getSets().length);
 
-		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
+		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
 		assertFalse(ContextCore.getContextManager().isContextActive());
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 		assertEquals(0, collector.getSets().length); // deleted because no
 		// active resources
-		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
+		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
 
 		// TODO: test with resource
 	}
@@ -109,7 +109,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 
 		AbstractTask task1 = new LocalTask("task1", "label");
-		TasksUiPlugin.getTaskListManager().activateTask(task1);
+		TasksUiPlugin.getTaskActivityManager().activateTask(task1);
 
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
 		IInteractionElement fileElement = ContextCore.getContextManager().getElement(
@@ -129,6 +129,6 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertTrue("" + fileElement.getInterest().getValue(), fileElement.getInterest().getValue() < 0);
 		assertTrue("length: " + resources.length, resources.length <= 2);
 
-		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
+		TasksUiPlugin.getTaskActivityManager().deactivateTask(task1);
 	}
 }

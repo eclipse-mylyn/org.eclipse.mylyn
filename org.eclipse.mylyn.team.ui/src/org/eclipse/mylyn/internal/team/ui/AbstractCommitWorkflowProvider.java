@@ -11,8 +11,11 @@ package org.eclipse.mylyn.internal.team.ui;
 import org.eclipse.core.resources.IResource;
 
 /**
+ * No longer used.
+ * 
  * @author Mik Kersten
  */
+@Deprecated
 public class AbstractCommitWorkflowProvider {
 
 	/**
@@ -23,7 +26,7 @@ public class AbstractCommitWorkflowProvider {
 	 * 
 	 * @param resources
 	 * @return <code>true</code> if the team provider manages at least one of the resources or <code>false</code>
-	 *         otherwise.
+	 * 	otherwise.
 	 */
 	public boolean hasOutgoingChanges(IResource[] resources) {
 		return false;
@@ -35,7 +38,7 @@ public class AbstractCommitWorkflowProvider {
 	 * resources from projects that are not managed by your provider or not managed at all.
 	 * 
 	 * @param resources
-	 *            Set of resources that need to be committed
+	 * 		Set of resources that need to be committed
 	 */
 	public void commit(IResource[] resources) {
 	}

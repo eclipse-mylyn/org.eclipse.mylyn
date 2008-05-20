@@ -18,7 +18,10 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * 
+ * 	TODO: consider deleting, not used
  */
+@SuppressWarnings( { "deprecation", "restriction" })
 public class CvsCommitWorkflowProvider extends AbstractCommitWorkflowProvider {
 
 	private static final String WIZARD_LABEL = "Commit Resources in Task Context";
