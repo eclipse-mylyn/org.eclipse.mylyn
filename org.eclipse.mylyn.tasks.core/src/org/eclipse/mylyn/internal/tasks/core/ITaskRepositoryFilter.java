@@ -50,6 +50,6 @@ public interface ITaskRepositoryFilter {
 		}
 	};
 
-	boolean accept(TaskRepository repository, AbstractRepositoryConnector connector);
+	public abstract boolean accept(TaskRepository repository, AbstractRepositoryConnector connector);
 
 }
