@@ -54,7 +54,7 @@ public class PersonProposalProviderTest extends TestCase {
 	public void testGetProposalsCurrentTask() {
 		MockTask task = new MockTask(null, "1", null);
 		task.setOwner("foo");
-		PersonProposalProvider provider = new PersonProposalProvider(task, null);
+		PersonProposalProvider provider = new PersonProposalProvider(task, (RepositoryTaskData) null);
 		IContentProposal[] result = provider.getProposals("", 0);
 		assertNotNull(result);
 		assertEquals(1, result.length);
@@ -80,7 +80,7 @@ public class PersonProposalProviderTest extends TestCase {
 
 		MockTask task = new MockTask(null, "1", null);
 		task.setOwner("foo");
-		PersonProposalProvider provider = new PersonProposalProvider(task, null);
+		PersonProposalProvider provider = new PersonProposalProvider(task, (RepositoryTaskData) null);
 
 		result = provider.getProposals("f,xx", 1);
 		assertNotNull(result);

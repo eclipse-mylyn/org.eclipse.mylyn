@@ -28,8 +28,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.core.IdentityAttributeFactory;
-import org.eclipse.mylyn.internal.tasks.core.data.TaskDataUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -214,8 +212,7 @@ public class AttributeEditorToolkit {
 	 * @return the IContentProposalProvider.
 	 */
 	private IContentProposalProvider createContentProposalProvider(TaskAttribute attribute) {
-		return new PersonProposalProvider(null, TaskDataUtil.toLegacyData(attribute.getTaskData(),
-				IdentityAttributeFactory.getInstance()));
+		return new PersonProposalProvider(null, attribute.getTaskData());
 	}
 
 	private ILabelProvider createLabelProposalProvider(TaskAttribute attribute) {

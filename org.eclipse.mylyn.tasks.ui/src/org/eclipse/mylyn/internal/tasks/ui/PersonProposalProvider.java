@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  */
+@SuppressWarnings( { "deprecation", "restriction" })
 public class PersonProposalProvider implements IContentProposalProvider {
 
 	private final AbstractTask currentTask;
@@ -47,6 +49,20 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private String connectorKind;
 
+	public PersonProposalProvider(AbstractTask task, TaskData taskData) {
+		this.currentTask = task;
+		// TODO EDITOR keep reference to task data
+		this.currentTaskData = null;
+		if (task != null) {
+			repositoryUrl = task.getRepositoryUrl();
+			connectorKind = task.getConnectorKind();
+		} else if (taskData != null) {
+			repositoryUrl = taskData.getRepositoryUrl();
+			connectorKind = taskData.getConnectorKind();
+		}
+	}
+
+	@Deprecated
 	public PersonProposalProvider(AbstractTask task, RepositoryTaskData taskData) {
 		this.currentTask = task;
 		this.currentTaskData = taskData;

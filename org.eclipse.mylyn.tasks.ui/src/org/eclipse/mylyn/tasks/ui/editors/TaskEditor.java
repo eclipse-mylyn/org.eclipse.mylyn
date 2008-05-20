@@ -78,6 +78,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  * @author Eric Booth (initial prototype)
  * @author Rob Elves
  */
+@SuppressWarnings( { "deprecation", "restriction" })
 public class TaskEditor extends SharedHeaderFormEditor {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
@@ -153,7 +154,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void addPages() {
 		initialize();
@@ -241,7 +241,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	@Deprecated
-	protected void configureContextMenuManager(MenuManager manager) {
+	public void configureContextMenuManager(MenuManager manager) {
 		if (manager == null) {
 			return;
 		}
@@ -512,7 +512,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
 	private void updateHeader() {
 		IEditorInput input = getEditorInput();
 		if (input instanceof TaskEditorInput) {
@@ -534,7 +533,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	/**
 	 * @since 3.0
 	 */
-	@SuppressWarnings("deprecation")
 	public void updateHeaderToolBar() {
 		Form form = getHeaderForm().getForm().getForm();
 		IToolBarManager toolBarManager = form.getToolBarManager();
@@ -593,7 +591,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
-	@SuppressWarnings("restriction")
 	@Deprecated
 	private void updateHeaderLabel(RepositoryTaskData taskData) {
 		String kindLabel = taskData.getTaskKind();
@@ -628,7 +625,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		updateHeader();
 	}
 
-	@SuppressWarnings("deprecation")
 	private void updateTitleImage() {
 		if (task != null) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
