@@ -19,10 +19,6 @@ import org.eclipse.core.runtime.IAdaptable;
 public interface ITaskElement extends Comparable<ITaskElement>, IAdaptable {
 
 	/**
-	 * Removes any cyclic dependencies in children.
-	 * 
-	 * TODO: review to make sure that this is too expensive, or move to creation.
-	 * 
 	 * @since 3.0
 	 */
 	public abstract Collection<ITask> getChildren();

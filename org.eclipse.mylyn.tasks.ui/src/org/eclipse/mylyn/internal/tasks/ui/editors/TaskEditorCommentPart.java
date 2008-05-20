@@ -63,11 +63,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	}
 
 	private void expandComment(FormToolkit toolkit, Composite composite, Composite toolBarComposite,
-			TaskAttribute attribute, boolean expanded) {
+			TaskComment taskComment, boolean expanded) {
 		toolBarComposite.setVisible(expanded);
 		if (expanded && composite.getData(KEY_EDITOR) == null) {
 			// create viewer
-			TaskAttribute textAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(attribute);
+			TaskAttribute textAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
+					taskComment.getTaskAttribute());
 			AbstractAttributeEditor editor = createEditor(textAttribute);
 			if (editor != null) {
 				editor.setDecorationEnabled(false);
@@ -82,11 +83,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		} else if (!expanded && composite.getData(KEY_EDITOR) != null) {
 			// dispose viewer
 			AbstractAttributeEditor editor = (AbstractAttributeEditor) composite.getData(KEY_EDITOR);
-			getTaskEditorPage().getAttributeEditorToolkit().dispose(editor);
+			editor.getControl().setMenu(null);
 			editor.getControl().dispose();
 			composite.setData(KEY_EDITOR, null);
 			getTaskEditorPage().reflow();
 		}
+		//getTaskEditorPage().selectionChanged(taskComment);
 	}
 
 	private void initialize() {
@@ -119,7 +121,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		commentComposites = new ArrayList<ExpandableComposite>();
 		for (final TaskAttribute commentAttribute : comments) {
 			boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
-			TaskComment taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(),
+			final TaskComment taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(),
 					commentAttribute);
 			getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
 			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
@@ -176,13 +178,13 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			commentComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override
 				public void expansionStateChanged(ExpansionEvent event) {
-					expandComment(toolkit, commentTextComposite, buttonComposite, commentAttribute, event.getState());
+					expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, event.getState());
 				}
 			});
 
 			if (hasIncomingChanges) {
 				commentComposite.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
-				expandComment(toolkit, commentTextComposite, buttonComposite, commentAttribute, true);
+				expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, true);
 			}
 		}
 

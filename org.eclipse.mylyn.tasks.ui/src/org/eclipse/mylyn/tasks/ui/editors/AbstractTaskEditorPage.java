@@ -23,10 +23,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttachmentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
@@ -115,6 +116,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * Extend to provide customized task editing.
@@ -129,8 +131,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 // TODO EDITOR selection service
 // TODO EDITOR outline
 public abstract class AbstractTaskEditorPage extends FormPage implements ISelectionProvider, ISelectionChangedListener {
-
-	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.page";
 
 	private class SubmitTaskJobListener extends SubmitJobListener {
 
@@ -227,11 +227,17 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				});
 			}
 		}
-	};
+	}
 
-	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
+	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";;
+
+//	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.page";
 
 	private TaskEditorActionPart actionPart;
+
+	private AttributeEditorFactory attributeEditorFactory;
+
+	private AttributeEditorToolkit attributeEditorToolkit;
 
 	private Action clearOutgoingAction;
 
@@ -279,6 +285,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private boolean reflow;
 
+	private volatile boolean refreshDisabled;
+
 	private final ListenerList selectionChangedListeners = new ListenerList();
 
 	private TaskEditorSummaryPart summaryPart;
@@ -293,9 +301,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private FormToolkit toolkit;
 
-	private MenuManager menuManager;
-
-	private volatile boolean refreshDisabled;
+	private StructuredSelection defaultSelection;
 
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label");
@@ -330,6 +336,10 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		newCommentPart.setFocus();
 	}
 
+	public boolean canPerformAction(String actionId) {
+		return EditorUtil.canPerformAction(actionId, EditorUtil.getFocusControl(this));
+	}
+
 	public void close() {
 		Display activeDisplay = getSite().getShell().getDisplay();
 		activeDisplay.asyncExec(new Runnable() {
@@ -359,6 +369,15 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	private void createAttachmentSection(Composite composite) {
 		TaskEditorAttachmentPart attachmentPart = new TaskEditorAttachmentPart();
 		initializePart(composite, attachmentPart);
+	}
+
+	protected AttributeEditorFactory createAttributeEditorFactory() {
+		return new AttributeEditorFactory(getModel(), getTaskRepository());
+	}
+
+	protected AttributeEditorToolkit createAttributeEditorToolkit() {
+		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		return new AttributeEditorToolkit(handlerService);
 	}
 
 	private void createAttributeSection(Composite composite) {
@@ -394,6 +413,12 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			editorComposite.setLayout(editorLayout);
 			editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+//			menuManager = new MenuManager();
+//			menuManager.setRemoveAllWhenShown(true);
+//			getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, this, true);
+//			editorComposite.setMenu(menuManager.createContextMenu(editorComposite));
+			editorComposite.setMenu(getTaskEditor().getMenu());
+
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(getConnectorKind());
 			if (connectorUi == null) {
 				getTaskEditor().setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
@@ -406,13 +431,43 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			}
 
 			if (taskData != null) {
-				createSections();
+				createFormContentInternal();
 			}
 			updateHeaderMessage();
 		} finally {
 			setReflow(true);
 		}
 		reflow();
+	}
+
+	private void createFormContentInternal() {
+		// end life-cycle of previous editor controls
+		if (attributeEditorToolkit != null) {
+			attributeEditorToolkit.dispose();
+		}
+
+		// start life-cycle of previous editor controls 
+		if (attributeEditorFactory == null) {
+			attributeEditorFactory = createAttributeEditorFactory();
+			Assert.isNotNull(attributeEditorFactory);
+		}
+		attributeEditorToolkit = createAttributeEditorToolkit();
+		Assert.isNotNull(attributeEditorToolkit);
+		attributeEditorToolkit.setMenu(editorComposite.getMenu());
+		attributeEditorToolkit.setSelectionChangedListener(this);
+
+		createSections();
+
+		FocusListener listener = new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				lastFocusControl = (Control) e.widget;
+			}
+		};
+		addFocusListener(editorComposite, listener);
+		if (summaryPart != null) {
+			lastFocusControl = summaryPart.getControl();
+		}
 	}
 
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
@@ -472,23 +527,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		createPeopleSection(bottomComposite);
 
 		bottomComposite.pack(true);
-
-		FocusListener listener = new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				lastFocusControl = (Control) e.widget;
-			}
-		};
-		addFocusListener(editorComposite, listener);
-		if (summaryPart != null) {
-			lastFocusControl = summaryPart.getControl();
-		}
-
-		menuManager = new MenuManager();
-		menuManager.setRemoveAllWhenShown(true);
-		getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, this, true);
-
-		editorComposite.setMenu(menuManager.createContextMenu(editorComposite));
 	}
 
 	private void createSummarySection(Composite composite) {
@@ -500,11 +538,15 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	@Override
 	public void dispose() {
-		if (menuManager != null) {
-			menuManager.dispose();
+		if (attributeEditorToolkit != null) {
+			attributeEditorToolkit.dispose();
 		}
 		TasksUiInternal.getTaskList().removeChangeListener(taskListChangeListener);
 		super.dispose();
+	}
+
+	public void doAction(String actionId) {
+		EditorUtil.doAction(actionId, EditorUtil.getFocusControl(this));
 	}
 
 	@Override
@@ -648,9 +690,13 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		}
 	}
 
-	public abstract AttributeEditorFactory getAttributeEditorFactory();
+	public AttributeEditorFactory getAttributeEditorFactory() {
+		return attributeEditorFactory;
+	}
 
-	public abstract AttributeEditorToolkit getAttributeEditorToolkit();
+	public AttributeEditorToolkit getAttributeEditorToolkit() {
+		return attributeEditorToolkit;
+	}
 
 	public AbstractRepositoryConnector getConnector() {
 		return connector;
@@ -726,6 +772,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 		TaskEditorInput taskEditorInput = (TaskEditorInput) input;
 		this.task = taskEditorInput.getTask();
+		this.defaultSelection = new StructuredSelection(task);
+		this.lastSelection = defaultSelection;
 		try {
 			setModel(createModel(taskEditorInput));
 		} catch (final CoreException e) {
@@ -816,7 +864,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					// restore menu
 					editorComposite.setMenu(menu);
 
-					createSections();
+					createFormContentInternal();
 
 					getTaskEditor().setMessage(null, 0);
 					getTaskEditor().setActivePage(getId());
@@ -871,8 +919,22 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {
-		lastSelection = event.getSelection();
-		fireSelectionChanged(lastSelection);
+		ISelection selection = event.getSelection();
+		if (selection instanceof TextSelection) {
+			// only update global actions
+			((TaskEditorActionContributor) getEditorSite().getActionBarContributor()).updateSelectableActions(event.getSelection());
+			// reset to default selection
+			selection = defaultSelection;
+		}
+		if (selection.isEmpty()) {
+			// something was unselected, reset to default selection
+			selection = defaultSelection;
+		}
+		if (!selection.equals(lastSelection)) {
+			System.err.println("fire: " + selection);
+			this.lastSelection = selection;
+			fireSelectionChanged(lastSelection);
+		}
 	}
 
 	public void setExpandAttributeSection(boolean expandAttributeSection) {
@@ -997,4 +1059,5 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					});
 		}
 	}
+
 }

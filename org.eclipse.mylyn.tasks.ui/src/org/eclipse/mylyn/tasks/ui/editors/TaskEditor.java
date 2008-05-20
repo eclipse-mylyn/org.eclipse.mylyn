@@ -27,8 +27,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -57,6 +57,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -155,19 +156,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void addPages() {
-		editorBusyIndicator = new EditorBusyIndicator(new IBusyEditor() {
-			public Image getTitleImage() {
-				return TaskEditor.this.getTitleImage();
-			}
-
-			public void setTitleImage(Image image) {
-				TaskEditor.this.setTitleImage(image);
-			}
-		});
-
-		menuManager = new MenuManager();
-		configureContextMenuManager(menuManager);
-		getContainer().setMenu(menuManager.createContextMenu(getContainer()));
+		initialize();
 
 		// API REVIEW remove check
 		if (taskEditorInput != null) {
@@ -196,7 +185,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				}
 			});
 
-			// createPages
+			// create pages
 			for (AbstractTaskEditorPageFactory factory : pageFactories) {
 				try {
 					FormPage page = factory.createPage(this);
@@ -205,6 +194,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					setPageText(index, factory.getPageText());
 					if (factory.getPriority() == AbstractTaskEditorPageFactory.PRIORITY_TASK) {
 						setActivePage(index);
+					}
+					if (page instanceof ISelectionProvider) {
+						((ISelectionProvider) page).addSelectionChangedListener(getActionBarContributor());
 					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -230,18 +222,26 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		updateHeaderToolBar();
 	}
 
-	@Deprecated
-	protected void configureContextMenuManager(MenuManager manager) {
-		configureContextMenuManager(manager, null);
+	private void initialize() {
+		editorBusyIndicator = new EditorBusyIndicator(new IBusyEditor() {
+			public Image getTitleImage() {
+				return TaskEditor.this.getTitleImage();
+			}
+
+			public void setTitleImage(Image image) {
+				TaskEditor.this.setTitleImage(image);
+			}
+		});
+
+		menuManager = new MenuManager();
+		configureContextMenuManager(menuManager);
+		Menu menu = menuManager.createContextMenu(getContainer());
+		getContainer().setMenu(menu);
+		getEditorSite().registerContextMenu(menuManager, getEditorSite().getSelectionProvider(), false);
 	}
 
-	/**
-	 * Configures the standard task editor context menu
-	 * 
-	 * @Since 2.3
-	 */
 	@Deprecated
-	public void configureContextMenuManager(MenuManager manager, TextViewer textViewer) {
+	protected void configureContextMenuManager(MenuManager manager) {
 		if (manager == null) {
 			return;
 		}
@@ -252,19 +252,11 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		};
 		manager.setRemoveAllWhenShown(true);
 		manager.addMenuListener(listener);
-
-		if (textViewer != null) {
-			TaskEditorActionContributor contributor = getActionBarContributor();
-			if (contributor != null) {
-				contributor.addTextViewer(textViewer);
-			}
-		}
 	}
 
 	@Deprecated
 	protected void contextMenuAboutToShow(IMenuManager manager) {
 		TaskEditorActionContributor contributor = getActionBarContributor();
-		// IFormPage page = getActivePageInstance();
 		if (contributor != null) {
 			contributor.contextMenuAboutToShow(manager);
 		}
@@ -314,13 +306,20 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		return getAdapterDelgate(adapter);
 	}
 
-	public Object getAdapterDelgate(Class<?> adapter) {
+	private Object getAdapterDelgate(Class<?> adapter) {
 		// TODO: consider adding: IContentOutlinePage.class.equals(adapter) &&
 		if (contentOutlineProvider != null) {
 			return contentOutlineProvider.getAdapter(adapter);
 		} else {
 			return super.getAdapter(adapter);
 		}
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public Menu getMenu() {
+		return getContainer().getMenu();
 	}
 
 	@SuppressWarnings("unchecked")

@@ -29,12 +29,12 @@ import org.eclipse.swt.SWT;
  */
 public class AttributeEditorFactory {
 
-	private final TaskDataModel manager;
+	private final TaskDataModel model;
 
 	private final TaskRepository taskRepository;
 
-	public AttributeEditorFactory(TaskDataModel manager, TaskRepository taskRepository) {
-		this.manager = manager;
+	public AttributeEditorFactory(TaskDataModel model, TaskRepository taskRepository) {
+		this.model = model;
 		this.taskRepository = taskRepository;
 	}
 
@@ -42,25 +42,25 @@ public class AttributeEditorFactory {
 		Assert.isNotNull(type);
 
 		if (TaskAttribute.TYPE_BOOLEAN.equals(type)) {
-			return new BooleanAttributeEditor(manager, taskAttribute);
+			return new BooleanAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_DATE.equals(type)) {
-			return new DateAttributeEditor(manager, taskAttribute);
+			return new DateAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_PERSON.equals(type)) {
-			return new PersonAttributeEditor(manager, taskAttribute);
+			return new PersonAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_LONG_RICH_TEXT.equals(type)) {
-			return new RichTextAttributeEditor(manager, taskRepository, taskAttribute);
+			return new RichTextAttributeEditor(model, taskRepository, taskAttribute);
 		} else if (TaskAttribute.TYPE_LONG_TEXT.equals(type)) {
-			return new LongTextAttributeEditor(manager, taskAttribute);
+			return new LongTextAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_MULTI_SELECT.equals(type)) {
-			return new MultiSelectionAttributeEditor(manager, taskAttribute);
+			return new MultiSelectionAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_SHORT_RICH_TEXT.equals(type)) {
-			return new RichTextAttributeEditor(manager, taskRepository, taskAttribute, SWT.SINGLE);
+			return new RichTextAttributeEditor(model, taskRepository, taskAttribute, SWT.SINGLE);
 		} else if (TaskAttribute.TYPE_SHORT_TEXT.equals(type)) {
-			return new TextAttributeEditor(manager, taskAttribute);
+			return new TextAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_SINGLE_SELECT.equals(type)) {
-			return new SingleSelectionAttributeEditor(manager, taskAttribute);
+			return new SingleSelectionAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
-			return new TaskDependendyAttributeEditor(manager, taskAttribute, taskRepository);
+			return new TaskDependendyAttributeEditor(model, taskAttribute, taskRepository);
 		}
 
 		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\"");
