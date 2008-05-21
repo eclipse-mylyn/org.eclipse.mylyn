@@ -185,28 +185,27 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		@Override
 		protected void refresh(Object[] items) {
 			if (items == null) {
-				treeViewer.refresh(true);
+				viewer.refresh(true);
 			} else if (items.length > 0) {
 				try {
 					for (Object item : items) {
 						if (item instanceof ITask) {
 							ITask task = (ITask) item;
-							treeViewer.refresh(task, true);
+							viewer.refresh(task, true);
 						} else {
-							treeViewer.refresh(item, true);
+							viewer.refresh(item, true);
 						}
 						updateExpansionState(item);
 					}
 				} catch (SWTException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to refresh viewer: "
-							+ treeViewer, e));
+							+ viewer, e));
 				}
 			}
 
 			updateToolTip(false);
 		}
 
-		@Override
 		protected void updateExpansionState(Object item) {
 			if (TaskListView.this.isFocusedMode()) {
 				TaskListView.this.getViewer().expandToLevel(item, 3);
