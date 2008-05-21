@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
@@ -62,7 +63,7 @@ public class TaskListFilterTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		view = TaskListView.openInActivePerspective();
+		view = (TaskListView) TasksUiUtil.openTasksViewInActivePerspective();
 		assertNotNull(view);
 		previousFilters = view.getFilters();
 		view.clearFilters(false);
