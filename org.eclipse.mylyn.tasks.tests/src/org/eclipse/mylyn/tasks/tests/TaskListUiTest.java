@@ -84,7 +84,7 @@ public class TaskListUiTest extends TestCase {
 
 	@Override
 	public void setUp() throws Exception {
-		TaskListView.openInActivePerspective();
+		TasksUiUtil.openTasksViewInActivePerspective();
 		manager = TasksUiPlugin.getTaskListManager();
 
 		// make sure no unmatched folders exist

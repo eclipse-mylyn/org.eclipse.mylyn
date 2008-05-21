@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.SelectRepositoryPage;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -38,7 +39,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(mockRepository);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		TaskListView view = TaskListView.openInActivePerspective();
+		TaskListView view = (TaskListView) TasksUiUtil.openTasksViewInActivePerspective();
 		MockTask mockTask = new MockTask("mock.task");
 		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(mockTask);
 		TasksUiPlugin.getTaskList().addTask(mockTask);
@@ -68,7 +69,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 
 	// see bug bug 202184
 	public void testDefaultWithNoTaskListSelection() {
-		TaskListView view = TaskListView.openInActivePerspective();
+		TaskListView view = (TaskListView) TasksUiUtil.openTasksViewInActivePerspective();
 		view.getViewer().setSelection(new StructuredSelection());
 
 		NewTaskWizard wizard = new NewTaskWizard(null);

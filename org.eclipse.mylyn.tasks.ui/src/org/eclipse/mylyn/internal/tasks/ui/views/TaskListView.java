@@ -592,15 +592,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		return null;
 	}
 
-	public static TaskListView openInActivePerspective() {
-		try {
-			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not show Task List view", e));
-			return null;
-		}
-	}
-
 	public TaskListView() {
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
 		TasksUiPlugin.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);

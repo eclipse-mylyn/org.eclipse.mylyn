@@ -18,7 +18,6 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
@@ -177,7 +176,7 @@ public class UiLegendDialog extends PopupDialog {
 		openView.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkActivated(HyperlinkEvent e) {
 				close();
-				TaskListView.openInActivePerspective();
+				TasksUiUtil.openTasksViewInActivePerspective();
 			}
 
 			public void linkEntered(HyperlinkEvent e) {

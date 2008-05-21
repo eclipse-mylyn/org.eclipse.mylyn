@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.help.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.help.ui.dialogs.UiLegendDialog;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -44,7 +44,7 @@ public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate, IV
 			introMgr.setIntroStandby(intro, true);
 		}
 
-		TaskListView.openInActivePerspective();
+		TasksUiUtil.openTasksViewInActivePerspective();
 		Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		UiLegendDialog uiLegendDialog = new UiLegendDialog(parentShell);
 		uiLegendDialog.open();

@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Felix Schwarz
@@ -34,7 +35,7 @@ public class TaskListContentProviderTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		TaskListView.openInActivePerspective();
+		TasksUiUtil.openTasksViewInActivePerspective();
 		view = TaskListView.getFromActivePerspective();
 		provider = (TaskListContentProvider) view.getViewer().getContentProvider();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.GROUP_SUBTASKS, true);

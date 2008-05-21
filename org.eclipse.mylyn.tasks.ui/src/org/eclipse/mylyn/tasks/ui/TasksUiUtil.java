@@ -41,6 +41,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.MultiRepositoryAwareWizard;
@@ -59,6 +60,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -399,7 +401,6 @@ public class TasksUiUtil {
 	/**
 	 * @since 3.0
 	 */
-	@SuppressWarnings("deprecation")
 	public static boolean openTask(ITask task) {
 		Assert.isNotNull(task);
 
@@ -665,5 +666,18 @@ public class TasksUiUtil {
 				result[0] = (dialog.open() == Window.OK);
 			}
 		});
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static IViewPart openTasksViewInActivePerspective() {
+		try {
+			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+					TaskListView.ID);
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not show Task List view", e));
+			return null;
+		}
 	}
 }

@@ -16,7 +16,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPop
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -125,7 +125,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				remainingHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
-						TaskListView.openInActivePerspective().setFocus();
+						TasksUiUtil.openTasksViewInActivePerspective().setFocus();
 						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						if (window != null) {
 							Shell windowShell = window.getShell();
