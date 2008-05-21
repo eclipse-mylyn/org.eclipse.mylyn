@@ -27,7 +27,7 @@ public class InteractionContextScaling implements IInteractionContextScaling {
 
 	private static final float DEFAULT_EVENT_EDIT = .7f;
 
-	private static final float DEFAULT_DECAY = .017f;
+	private static final float DEFAULT_DECAY = .7f;
 
 	private static final float DEFAULT_LANDMARK = 30f;
 

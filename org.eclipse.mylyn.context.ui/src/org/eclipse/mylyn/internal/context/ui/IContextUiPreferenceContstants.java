@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.context.ui;
  */
 public interface IContextUiPreferenceContstants {
 
-	public static final String AUTO_MANAGE_EDITOR_CLOSE_ACTION = "org.eclipse.mylyn.context.ui.close.action.manage";
+	public static final String AUTO_MANAGE_EDITOR_CLOSE = "org.eclipse.mylyn.context.ui.close.action.manage";
 
 	public static final String AUTO_MANAGE_EDITOR_CLOSE_WARNING = "org.eclipse.mylyn.context.ui.close.action.manage.warning";
 

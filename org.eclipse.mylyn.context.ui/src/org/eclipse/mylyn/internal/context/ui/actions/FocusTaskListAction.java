@@ -31,6 +31,7 @@ import org.eclipse.ui.IViewPart;
  * 
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
 public class FocusTaskListAction extends AbstractFocusViewAction implements IFilteredTreeListener {
 
 	private final TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();

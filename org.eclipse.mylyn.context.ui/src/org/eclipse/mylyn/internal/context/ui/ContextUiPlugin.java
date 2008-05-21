@@ -317,7 +317,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES, false);
 		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS, true);
 		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION, true);
-		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION, true);
+		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE, true);
 		store.setDefault(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, true);
 	}
 

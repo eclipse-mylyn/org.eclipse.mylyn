@@ -23,6 +23,8 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
+@Deprecated
 public class ShowFilteredChildrenAction extends Action implements IObjectActionDelegate, IViewActionDelegate {
 
 	private BrowseFilteredListener browseFilteredListener;

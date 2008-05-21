@@ -97,7 +97,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 				managePerspectivesButton.getSelection());
 		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION,
 				manageExpansionButton.getSelection());
-		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION,
+		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE,
 				mapCloseToRemoveButton.getSelection());
 
 		return true;
@@ -185,7 +185,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		mapCloseToRemoveButton = new Button(groupEditors, SWT.CHECK);
 		mapCloseToRemoveButton.setText("Remove file from context when editor is closed");
 		mapCloseToRemoveButton.setSelection(getPreferenceStore().getBoolean(
-				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION));
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE));
 
 		Group groupPerspectives = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		groupPerspectives.setLayout(new GridLayout(1, false));

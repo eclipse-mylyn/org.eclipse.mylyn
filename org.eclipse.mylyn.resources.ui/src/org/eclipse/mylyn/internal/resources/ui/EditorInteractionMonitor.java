@@ -22,8 +22,6 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.context.ui.IContextAwareEditor;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
 import org.eclipse.ui.IEditorPart;
@@ -53,6 +51,9 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 
 	@Override
 	public void editorOpened(IEditorPart editorPartOpened) {
+		if (!ContextUi.isEditorAutoManageEnabled() || ContextCore.getContextManager().isContextCapturePaused()) {
+			return;
+		}
 		IWorkbenchPage page = editorPartOpened.getSite().getPage();
 		List<IEditorReference> toClose = new ArrayList<IEditorReference>();
 		for (IEditorReference editorReference : page.getEditorReferences()) {
@@ -64,8 +65,8 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 					String handle = ContextCore.getStructureBridge(adapter).getHandleIdentifier(adapter);
 					element = ContextCore.getContextManager().getElement(handle);
 				}
-				if (!ContextCore.getContextManager().isContextCapturePaused() && element != null
-						&& !element.getInterest().isInteresting() && !isSameEditor(editorPartOpened, editorReference)) {
+				if (element != null && !element.getInterest().isInteresting()
+						&& !isSameEditor(editorPartOpened, editorReference)) {
 					toClose.add(editorReference);
 				}
 			} catch (PartInitException e) {
@@ -85,19 +86,22 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 		}
 	}
 
+	/**
+	 * Decrement interest if an editor for a resource is closed.
+	 */
+	@SuppressWarnings("restriction")
 	@Override
 	public void editorClosed(IEditorPart editorPart) {
 		if (PlatformUI.getWorkbench().isClosing()) {
 			return;
-		} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_ACTION)
-				&& !otherEditorsOpenForResource(editorPart)
-				&& !(editorPart instanceof CompareEditor)
-				&& !(editorPart instanceof IContextAwareEditor)) {
+		} else if (ContextUi.isEditorAutoCloseEnabled() && !otherEditorsOpenForResource(editorPart)
+				&& !(editorPart instanceof CompareEditor) && !(editorPart instanceof IContextAwareEditor)) {
 
 			if (ContextCore.getContextManager().isContextActive()
-					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-							IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
+					&& org.eclipse.mylyn.internal.context.ui.ContextUiPlugin.getDefault()
+							.getPreferenceStore()
+							.getBoolean(
+									org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING)) {
 				try {
 					if (!CoreUtil.TEST_MODE) {
 						MessageDialog.openInformation(
@@ -109,8 +113,11 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 										+ "This dialog will not show again.");
 					}
 				} finally {
-					ContextUiPlugin.getDefault().getPreferenceStore().setValue(
-							IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
+					org.eclipse.mylyn.internal.context.ui.ContextUiPlugin.getDefault()
+							.getPreferenceStore()
+							.setValue(
+									org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING,
+									false);
 				}
 			}
 

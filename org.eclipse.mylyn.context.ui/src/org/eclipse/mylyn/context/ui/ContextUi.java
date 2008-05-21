@@ -11,6 +11,7 @@ package org.eclipse.mylyn.context.ui;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ColorMap;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.IEditorPart;
 
@@ -50,5 +51,15 @@ public final class ContextUi {
 			return null;
 		}
 		return ColorMap.GRAY_MEDIUM;
+	}
+
+	public static boolean isEditorAutoCloseEnabled() {
+		return ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE);
+	}
+
+	public static boolean isEditorAutoManageEnabled() {
+		return ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS);
 	}
 }
