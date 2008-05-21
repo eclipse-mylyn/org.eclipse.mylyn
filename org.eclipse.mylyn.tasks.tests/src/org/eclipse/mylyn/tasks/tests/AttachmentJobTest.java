@@ -14,7 +14,6 @@ import java.io.RandomAccessFile;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -23,7 +22,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockAttachmentHandler;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
-import org.eclipse.mylyn.tasks.tests.connector.MockStatusHandler;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
@@ -40,8 +38,6 @@ public class AttachmentJobTest extends TestCase {
 	private MockRepositoryConnector connector;
 
 	private MockAttachmentHandler attachmentHandler;
-
-	private MockStatusHandler statusHandler;
 
 	private TaskRepository repository;
 
@@ -62,9 +58,6 @@ public class AttachmentJobTest extends TestCase {
 		connector.setAttachmentHandler(attachmentHandler);
 		manager.addRepositoryConnector(connector);
 
-		statusHandler = new MockStatusHandler();
-		StatusHandler.addStatusHandler(statusHandler);
-
 		attachment = new RepositoryAttachment(null);
 		attachment.setRepositoryKind(repository.getConnectorKind());
 		attachment.setRepositoryUrl(repository.getRepositoryUrl());
@@ -73,10 +66,6 @@ public class AttachmentJobTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		manager.removeRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		if (statusHandler != null) {
-			StatusHandler.removeStatusHandler(statusHandler);
-		}
 	}
 
 	public void testCopyToClipboardAction() throws Exception {
@@ -103,7 +92,6 @@ public class AttachmentJobTest extends TestCase {
 		job.join();
 
 		assertEquals(Status.OK_STATUS, job.getResult());
-		statusHandler.assertNoStatus();
 
 		RandomAccessFile raf = new RandomAccessFile(file, "r");
 		byte[] data = new byte[expected.getBytes().length];

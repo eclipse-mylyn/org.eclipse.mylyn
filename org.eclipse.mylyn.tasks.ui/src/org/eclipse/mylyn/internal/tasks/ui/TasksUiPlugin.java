@@ -476,14 +476,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings( { "deprecation", "restriction" })
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		// NOTE: startup order is very sensitive
 		try {
-			// initialize framwork and settings
-			StatusHandler.setDefaultStatusHandler(new RepositoryAwareStatusHandler());
+			// initialize framework and settings
 			WebUtil.init();
 			WebClientLog.setLoggingEnabled(DEBUG_HTTPCLIENT);
 			initializeDefaultPreferences(getPreferenceStore());
@@ -1064,9 +1063,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * Associate a Task Repository with a workbench project
 	 * 
 	 * @param resource
-	 * 		project or resource belonging to a project
+	 *            project or resource belonging to a project
 	 * @param repository
-	 * 		task repository to associate with given project
+	 *            task repository to associate with given project
 	 * @throws CoreException
 	 */
 	public void setRepositoryForResource(IResource resource, TaskRepository repository) throws CoreException {

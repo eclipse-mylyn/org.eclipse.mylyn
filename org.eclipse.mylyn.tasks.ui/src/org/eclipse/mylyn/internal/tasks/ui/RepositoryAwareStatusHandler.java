@@ -11,9 +11,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.commons.core.IStatusHandler;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -21,7 +18,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class RepositoryAwareStatusHandler implements IStatusHandler {
+@Deprecated
+public class RepositoryAwareStatusHandler {
 
 	protected static final String ERROR_MESSAGE = "Please report the following error at:\n"
 			+ "http://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylyn\n\n"
@@ -43,10 +41,6 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 
 	public RepositoryAwareStatusHandler() {
 		instance = this;
-	}
-
-	private MessageDialog createDialog(Shell shell, String title, String message, int type) {
-		return new MessageDialog(shell, title, null, message, type, new String[] { IDialogConstants.OK_LABEL }, 0);
 	}
 
 	@Deprecated

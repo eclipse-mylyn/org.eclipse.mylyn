@@ -13,14 +13,15 @@ package org.eclipse.mylyn.internal.tasks.bugs;
  */
 public class IRepositoryConstants {
 
-	public static final String REPOSITORY_URL = "repositoryUrl"; 
+	public static final String REPOSITORY_URL = "repositoryUrl";
 
-	public static final String REPOSITORY_KIND = "repositoryKind"; 
+	public static final String CONNECTOR_KIND = "repositoryKind";
 
 	public static final String COMPONENT = "component";
-	
+
 	public static final String PRODUCT = "product";
-	
+
+	@Deprecated
 	public static final String BRANDING = "branding";
-	
+
 }

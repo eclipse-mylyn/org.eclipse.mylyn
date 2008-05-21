@@ -11,6 +11,11 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="mapping" minOccurs="1" maxOccurs="unbounded"/>
@@ -45,7 +50,10 @@
    <element name="mapping">
       <complexType>
          <sequence>
-            <element ref="attributes"/>
+            <element ref="repository" minOccurs="0" maxOccurs="1"/>
+            <element ref="branding" minOccurs="0" maxOccurs="1"/>
+            <element ref="product" minOccurs="0" maxOccurs="1"/>
+            <element ref="component" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="pluginIdPrefix" type="string" use="required">
             <annotation>
@@ -57,7 +65,80 @@
       </complexType>
    </element>
 
-   <element name="attributes" type="string">
+   <element name="repository">
+      <complexType>
+         <attribute name="url" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="kind" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="component" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="branding">
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="category" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="product">
+      <complexType>
+         <attribute name="value" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="component">
+      <complexType>
+         <attribute name="value" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
    </element>
 
    <annotation>
@@ -86,7 +167,6 @@
          [Enter API information here.]
       </documentation>
    </annotation>
-
 
    <annotation>
       <appinfo>

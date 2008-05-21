@@ -24,6 +24,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepository
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
+import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -36,18 +37,20 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings( { "restriction", "deprecation" })
 public class TaskErrorReporter extends AbstractErrorReporter {
 
-	private PluginRepositoryMappingManager manager;
+	private final PluginRepositoryMappingManager manager;
 
 	TaskErrorReporter() {
 		manager = new PluginRepositoryMappingManager();
 	}
 
+	// API 3.0 remove: always enable
 	public boolean isEnabled() {
-		return manager.hasMappings();
+		return false; //manager.hasMappings();
 	}
-	
+
 	@Override
 	public int getPriority(IStatus status) {
 		Assert.isNotNull(status);
@@ -65,37 +68,27 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 	@Override
 	public void handle(IStatus status) {
 		Assert.isNotNull(status);
+		if (true) {
+			RepositoryAwareStatusHandler.getInstance().fail(status, true);
+			return;
+		}
 
 		String pluginId = status.getPlugin();
 		Map<String, String> attributes = manager.getAllAttributes(pluginId);
-
-		openNewTaskEditor(status, attributes);
-	}
-
-	private void openNewTaskEditor(IStatus status, Map<String, String> attributes) {
 		AttributeTaskMapper mapper = new AttributeTaskMapper(attributes);
-
 		TaskRepository taskRepository = mapper.getTaskRepository();
 		try {
 			if (taskRepository != null) {
-				RepositoryTaskData taskData = createTaskData(taskRepository, mapper);
-				if (taskData != null) {
-					taskData.setSummary(status.getMessage());
-
-					TaskContributorManager manager = new TaskContributorManager();
-					manager.updateAttributes(taskData, status);
-
-					String editorId = manager.getEditorId(status);
-
-					NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, taskData);
-					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					TasksUiUtil.openEditor(editorInput, editorId, page);
-					return;
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+						taskRepository.getConnectorKind());
+				if (connector instanceof AbstractLegacyRepositoryConnector) {
+					if (openLegacyTaskEditor(status, taskRepository, mapper)) {
+						return;
+					}
 				}
 			}
 
 			TaskSelection taskSelection = mapper.createTaskSelection();
-			updateAttributes(taskSelection.getLegacyTaskData(), status);
 
 			// fall back to opening wizard
 			TasksUiUtil.openNewTaskEditor(null, taskSelection, taskRepository);
@@ -104,7 +97,27 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 		}
 	}
 
-	private RepositoryTaskData createTaskData(final TaskRepository taskRepository, AttributeTaskMapper mapper) {
+	@Deprecated
+	private boolean openLegacyTaskEditor(IStatus status, TaskRepository taskRepository, AttributeTaskMapper mapper) {
+		RepositoryTaskData taskData = createLegacyTaskData(taskRepository, mapper);
+		if (taskData != null) {
+			taskData.setSummary(status.getMessage());
+
+			TaskContributorManager manager = new TaskContributorManager();
+			manager.updateAttributes(taskData, status);
+
+			String editorId = manager.getEditorId(status);
+
+			NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, taskData);
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			TasksUiUtil.openEditor(editorInput, editorId, page);
+			return true;
+		}
+		return false;
+	}
+
+	@Deprecated
+	private RepositoryTaskData createLegacyTaskData(final TaskRepository taskRepository, AttributeTaskMapper mapper) {
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getConnectorKind());
 		if (!(connector instanceof AbstractLegacyRepositoryConnector)) {
@@ -115,8 +128,8 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 			return null;
 		}
 
-		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getRepositoryUrl(),
-				taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
+		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(
+				taskRepository.getRepositoryUrl(), taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
 
 		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getConnectorKind(),
 				taskRepository.getRepositoryUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
@@ -149,10 +162,6 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 		taskDataHandler.cloneTaskData(mapper.createTaskSelection().getLegacyTaskData(), taskData);
 
 		return taskData;
-	}
-
-	private void updateAttributes(RepositoryTaskData taskData, IStatus status) {
-
 	}
 
 }

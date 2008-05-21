@@ -19,13 +19,13 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 /**
  * @author Steffen Pingel
  */
-public class ReportBugWizard extends Wizard {
+public class ReportBugOrEnhancementWizard extends Wizard {
 
 	private SelectProductPage selectProductPage;
 
 	private PluginRepositoryMappingManager manager;
 
-	public ReportBugWizard() {
+	public ReportBugOrEnhancementWizard() {
 		setForcePreviousAndNextButtons(true);
 		setNeedsProgressMonitor(false);
 		setWindowTitle("Report Bug or Enhancement");

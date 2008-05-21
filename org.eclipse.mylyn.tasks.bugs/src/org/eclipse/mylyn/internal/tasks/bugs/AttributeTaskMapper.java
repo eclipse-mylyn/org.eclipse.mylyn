@@ -15,35 +15,33 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.DefaultTaskSchema;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings("deprecation")
 public class AttributeTaskMapper {
 
 	private final Map<String, String> attributes;
 
 	public AttributeTaskMapper(Map<String, String> attributes) {
 		Assert.isNotNull(attributes);
-		this.attributes = attributes;		
+		this.attributes = attributes;
 	}
 
 	public boolean isMappingComplete() {
 		return getTaskRepository() != null && attributes.get(IRepositoryConstants.PRODUCT) != null;
 	}
-	
+
 	public TaskRepository getTaskRepository() {
 		TaskRepository taskRepository = null;
 		String repositoryUrl = attributes.get(IRepositoryConstants.REPOSITORY_URL);
 		if (repositoryUrl != null) {
-			String repositoryKind = attributes.get(IRepositoryConstants.REPOSITORY_KIND);
-			if (repositoryKind != null) {
-				taskRepository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
-			} else {
-				taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
+			String connectorKind = attributes.get(IRepositoryConstants.CONNECTOR_KIND);
+			if (connectorKind != null) {
+				taskRepository = TasksUi.getRepositoryManager().getRepository(connectorKind, repositoryUrl);
 			}
 		}
 		return taskRepository;

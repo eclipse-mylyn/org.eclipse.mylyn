@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +27,30 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
  */
 public class PluginRepositoryMappingManager {
 
+	private static final String[] MAPPING_CHILD_ELEMENTS = new String[] { IRepositoryConstants.PRODUCT,
+			IRepositoryConstants.COMPONENT };
+
 	private static final String EXTENSION_ID_PLUGIN_REPOSITORY_MAPPING = "org.eclipse.mylyn.tasks.bugs.pluginRepositoryMappings";
 
 	private static final String ELEMENT_MAPPING = "mapping";
 
-	private static final String ELEMENT_MAPPING_ATTRIBUTES = "attributes";
+	private static final String ELEMENT_BRANDING = "branding";
 
-	private static final String ATTRIBUTE_PLUGID_ID_PREFIX = "pluginIdPrefix";
+	private static final String ELEMENT_REPOSITORY = "repository";
+
+	private static final String ATTRIBUTE_PLUGIN_ID_PREFIX = "pluginIdPrefix";
+
+	private static final String ATTRIBUTE_REPOSITORY_URL = "url";
+
+	private static final String ATTRIBUTE_REPOSITORY_KIND = "kind";
+
+	private static final String ATTRIBUTE_BRANDING_NAME = "name";
+
+	private static final String ATTRIBUTE_BRANDING_DESCRIPTION = "description";
+
+	private static final String ATTRIBUTE_BRANDING_CATEGORY = "category";
+
+	private static final String ATTRIBUTE_VALUE = "value";
 
 	private TreeMap<String, PluginRepositoryMapping> mappingByPrefix;
 
@@ -43,30 +59,44 @@ public class PluginRepositoryMappingManager {
 	}
 
 	private void readMapping(IConfigurationElement element) {
-		String pluginIdPrefix = element.getAttribute(ATTRIBUTE_PLUGID_ID_PREFIX);
-
-		Map<String, String> attributes = null;
-		IConfigurationElement[] attributeElements = element.getChildren(ELEMENT_MAPPING_ATTRIBUTES);
-		for (IConfigurationElement attributeElement : attributeElements) {
-			String repositoryAttributes = attributeElement.getValue();
-			try {
-				KeyValueParser parser = new KeyValueParser(repositoryAttributes);
-				attributes = parser.parse();
-			} catch (ParseException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, TasksBugsPlugin.ID_PLUGIN,
-						"Invalid attributes in extension.", e));
-				return;
+		String pluginIdPrefix = element.getAttribute(ATTRIBUTE_PLUGIN_ID_PREFIX);
+		Map<String, String> attributes = new HashMap<String, String>();
+		// repository
+		for (IConfigurationElement attributeElement : element.getChildren(ELEMENT_REPOSITORY)) {
+			String repositoryUrl = attributeElement.getAttribute(ATTRIBUTE_REPOSITORY_URL);
+			attributes.put(IRepositoryConstants.REPOSITORY_URL, repositoryUrl);
+			String connectorKind = attributeElement.getAttribute(ATTRIBUTE_REPOSITORY_KIND);
+			attributes.put(IRepositoryConstants.CONNECTOR_KIND, connectorKind);
+		}
+		// attributes
+		for (String elementName : MAPPING_CHILD_ELEMENTS) {
+			for (IConfigurationElement attributeElement : element.getChildren(elementName)) {
+				String value = attributeElement.getAttribute(ATTRIBUTE_VALUE);
+				attributes.put(elementName, value);
 			}
 		}
-		
-		if (attributes != null) {
+		// branding
+		for (IConfigurationElement attributeElement : element.getChildren(ELEMENT_BRANDING)) {
+			attributes.put("brandingName", attributeElement.getAttribute(ATTRIBUTE_BRANDING_NAME));
+			String description = attributeElement.getAttribute(ATTRIBUTE_BRANDING_DESCRIPTION);
+			if (description != null) {
+				attributes.put("brandingDescription", description);
+			}
+			String category = attributeElement.getAttribute(ATTRIBUTE_BRANDING_CATEGORY);
+			if (category != null) {
+				attributes.put("brandingCategory", category);
+			}
+		}
+
+		if (!attributes.isEmpty()) {
 			PluginRepositoryMapping pluginRepositoryMapping = new PluginRepositoryMapping();
 			pluginRepositoryMapping.addAttributes(attributes);
 			pluginRepositoryMapping.addPrefix(pluginIdPrefix);
 			addPluginRepositoryMapping(pluginRepositoryMapping);
 		} else {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN,
-					"Missing attributes in extension."));			
+			StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Missing attributes in "
+					+ EXTENSION_ID_PLUGIN_REPOSITORY_MAPPING + " extension for id \"" + ATTRIBUTE_PLUGIN_ID_PREFIX
+					+ "\""));
 		}
 	}
 
@@ -79,7 +109,6 @@ public class PluginRepositoryMappingManager {
 
 	private synchronized void readExtensions() {
 		mappingByPrefix = new TreeMap<String, PluginRepositoryMapping>();
-
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_PLUGIN_REPOSITORY_MAPPING);
 		IExtension[] extensions = extensionPoint.getExtensions();
@@ -124,5 +153,5 @@ public class PluginRepositoryMappingManager {
 	public boolean hasMappings() {
 		return !mappingByPrefix.isEmpty();
 	}
-	
+
 }

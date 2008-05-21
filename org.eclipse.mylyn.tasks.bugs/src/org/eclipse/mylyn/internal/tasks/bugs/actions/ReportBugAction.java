@@ -12,7 +12,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin;
-import org.eclipse.mylyn.internal.tasks.bugs.wizards.ReportBugWizard;
+import org.eclipse.mylyn.internal.tasks.bugs.wizards.ReportBugOrEnhancementWizard;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -33,7 +33,7 @@ public class ReportBugAction implements IWorkbenchWindowActionDelegate {
 
 	public void run(IAction action) {
 		if (TasksBugsPlugin.getTaskErrorReporter().isEnabled()) {
-			WizardDialog dialog = new WizardDialog(window.getShell(), new ReportBugWizard());
+			WizardDialog dialog = new WizardDialog(window.getShell(), new ReportBugOrEnhancementWizard());
 			dialog.open();
 		} else {
 			new NewTaskAction().run(action);
