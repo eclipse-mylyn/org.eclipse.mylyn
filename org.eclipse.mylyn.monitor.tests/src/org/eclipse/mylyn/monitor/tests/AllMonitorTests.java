@@ -21,10 +21,6 @@ public class AllMonitorTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.monitor.ui.tests");
-
-		// suite.addTestSuite(TaskTimerTest.class);
-
-		// $JUnit-BEGIN$
 		suite.addTest(AllMonitorUsageTests.suite());
 		suite.addTest(AllMonitorReportTests.suite());
 		suite.addTestSuite(InteractionLoggerTest.class);
@@ -34,9 +30,6 @@ public class AllMonitorTests {
 		suite.addTestSuite(InteractionEventExternalizationTest.class);
 		suite.addTestSuite(MonitorPackagingTest.class);
 		suite.addTestSuite(MultiWindowMonitorTest.class);
-		suite.addTestSuite(StatusHandlerTest.class);
-		// $JUnit-END$
-
 		return suite;
 	}
 

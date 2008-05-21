@@ -67,7 +67,7 @@ public class ErrorReporterManager {
 		if (interestedReporters.isEmpty()) {
 			return;
 		} else if (interestedReporters.size() > 1) {
-			// TODO prompt user
+			// TODO prompt user?
 			reporter = interestedReporters.get(0);
 		} else {
 			reporter = interestedReporters.get(0);
