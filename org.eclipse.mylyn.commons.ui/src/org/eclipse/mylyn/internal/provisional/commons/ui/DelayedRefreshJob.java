@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.provisional.commons.ui;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -15,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -31,9 +33,9 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	static final long REFRESH_DELAY_DEFAULT = 200;
 
-	static final long REFRESH_DELAY_MAX = 500;
+	static final long REFRESH_DELAY_MAX = REFRESH_DELAY_DEFAULT * 2;
 
-	protected final TreeViewer treeViewer;
+	protected final StructuredViewer viewer;
 
 	private static final int NOT_SCHEDULED = -1;
 
@@ -41,9 +43,9 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	private long scheduleTime = NOT_SCHEDULED;
 
-	public DelayedRefreshJob(TreeViewer treeViewer, String name) {
+	public DelayedRefreshJob(StructuredViewer treeViewer, String name) {
 		super(name);
-		this.treeViewer = treeViewer;
+		this.viewer = treeViewer;
 		setSystem(true);
 	}
 
@@ -54,6 +56,19 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	public synchronized void refresh() {
 		refreshElement(null);
+	}
+
+	public synchronized void refreshElements(Object[] elements) {
+		queue.addAll(Arrays.asList(elements));
+
+		if (scheduleTime == NOT_SCHEDULED) {
+			scheduleTime = System.currentTimeMillis();
+			schedule(REFRESH_DELAY_DEFAULT);
+		} else if (System.currentTimeMillis() - scheduleTime < REFRESH_DELAY_MAX - REFRESH_DELAY_DEFAULT) {
+			// reschedule to aggregate more refreshes
+			cancel();
+			schedule(REFRESH_DELAY_DEFAULT);
+		}
 	}
 
 	public synchronized void refreshElement(Object element) {
@@ -71,7 +86,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		if (treeViewer.getControl() == null || treeViewer.getControl().isDisposed()) {
+		if (viewer.getControl() == null || viewer.getControl().isDisposed()) {
 			return Status.CANCEL_STATUS;
 		}
 
@@ -86,25 +101,31 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 			scheduleTime = NOT_SCHEDULED;
 		}
 
-		// in case the refresh removes the currently selected item, 
-		// remember the next item in the tree to restore the selection
-		// TODO: consider making this optional
-		TreeItem[] selection = treeViewer.getTree().getSelection();
+		TreeViewer treeViewer = null;
 		TreePath treePath = null;
-		if (selection.length > 0) {
-			TreeWalker treeWalker = new TreeWalker(treeViewer);
-			treePath = treeWalker.walk(new TreeVisitor() {
-				@Override
-				public boolean visit(Object object) {
-					return true;
-				}
-			}, selection[selection.length - 1]);
+		if (viewer instanceof TreeViewer) {
+			treeViewer = (TreeViewer) viewer;
+		}
+		if (treeViewer != null) {
+			// in case the refresh removes the currently selected item, 
+			// remember the next item in the tree to restore the selection
+			// TODO: consider making this optional
+			TreeItem[] selection = treeViewer.getTree().getSelection();
+			if (selection.length > 0) {
+				TreeWalker treeWalker = new TreeWalker(treeViewer);
+				treePath = treeWalker.walk(new TreeVisitor() {
+					@Override
+					public boolean visit(Object object) {
+						return true;
+					}
+				}, selection[selection.length - 1]);
+			}
 		}
 
 		refresh(items);
 
-		if (treePath != null) {
-			ISelection newSelection = treeViewer.getSelection();
+		if (treeViewer != null && treePath != null) {
+			ISelection newSelection = viewer.getSelection();
 			if (newSelection == null || newSelection.isEmpty()) {
 				treeViewer.setSelection(new TreeSelection(treePath), true);
 			}
@@ -114,7 +135,4 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 	}
 
 	protected abstract void refresh(final Object[] items);
-
-	protected abstract void updateExpansionState(Object item);
-
 }
