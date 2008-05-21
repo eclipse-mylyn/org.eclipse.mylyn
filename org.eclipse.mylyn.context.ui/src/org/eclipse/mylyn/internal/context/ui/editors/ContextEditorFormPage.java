@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.context.ui.editors;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -17,14 +18,18 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextClearAction;
@@ -32,6 +37,7 @@ import org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -85,14 +91,50 @@ public class ContextEditorFormPage extends FormPage {
 
 	private ITask task;
 
-	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
+	private class ContextEditorDelayedRefreshJob extends DelayedRefreshJob {
 
-		private void refresh() {
+		public ContextEditorDelayedRefreshJob(StructuredViewer treeViewer, String name) {
+			super(treeViewer, name);
+		}
+
+		@Override
+		protected void refresh(Object[] items) {
 			if (commonViewer != null && !commonViewer.getTree().isDisposed()) {
 				commonViewer.refresh();
-				commonViewer.expandAll();
+				if (items != null) {
+					for (Object item : items) {
+						updateExpansionState(item);
+					}
+				} else {
+					updateExpansionState(null);
+				}
 			}
 		}
+
+		protected void updateExpansionState(Object item) {
+			if (commonViewer != null && !commonViewer.getTree().isDisposed()) {
+				try {
+					commonViewer.getTree().setRedraw(false);
+					if (/*!mouseDown && */item == null) {
+						commonViewer.expandAll();
+					} else if (item != null && item instanceof IInteractionElement) {
+						IInteractionElement node = (IInteractionElement) item;
+						AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
+								.getStructureBridge(node.getContentType());
+						Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
+						if (objectToRefresh != null) {
+							commonViewer.expandToLevel(objectToRefresh, AbstractTreeViewer.ALL_LEVELS);
+						}
+					}
+				} finally {
+					commonViewer.getTree().setRedraw(true);
+				}
+			}
+		}
+
+	}
+
+	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
 		@Override
 		public void contextActivated(IInteractionContext context) {
@@ -111,22 +153,22 @@ public class ContextEditorFormPage extends FormPage {
 
 		@Override
 		public void elementsDeleted(List<IInteractionElement> element) {
-			refresh();
+			refresh(element);
 		}
 
 		@Override
 		public void interestChanged(List<IInteractionElement> elements) {
-			refresh();
+			refresh(elements);
 		}
 
 		@Override
 		public void landmarkAdded(IInteractionElement element) {
-			refresh();
+			refresh(Arrays.asList(new IInteractionElement[] { element }));
 		}
 
 		@Override
 		public void landmarkRemoved(IInteractionElement element) {
-			refresh();
+			refresh(Arrays.asList(new IInteractionElement[] { element }));
 		}
 	};
 
@@ -162,6 +204,8 @@ public class ContextEditorFormPage extends FormPage {
 		// this);
 		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 	}
+
+	private boolean mouseDown = false;
 
 	private void createActionsSection(Composite composite) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
@@ -199,15 +243,17 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 		doiScale.addMouseListener(new MouseListener() {
+
 			public void mouseDoubleClick(MouseEvent e) {
 				// don't care about double click
 			}
 
 			public void mouseDown(MouseEvent e) {
-				// don't care about mouse down
+				mouseDown = true;
 			}
 
 			public void mouseUp(MouseEvent e) {
+				mouseDown = false;
 				setFilterThreshold();
 			}
 		});
@@ -295,6 +341,8 @@ public class ContextEditorFormPage extends FormPage {
 		section.setExpanded(true);
 	}
 
+	private ContextEditorDelayedRefreshJob job;
+
 	/**
 	 * Scales logarithmically to a reasonable interest threshold range (e.g. -10000..10000).
 	 */
@@ -303,8 +351,22 @@ public class ContextEditorFormPage extends FormPage {
 		double threshold = Math.signum(setting) * Math.pow(Math.exp(Math.abs(setting)), 1.5);
 
 		interestFilter.setThreshold(threshold);
-		commonViewer.refresh();
-		commonViewer.expandAll();
+
+		refresh();
+	}
+
+	private void refresh() {
+		if (job == null) {
+			job = new ContextEditorDelayedRefreshJob(commonViewer, "refresh viewer");
+		}
+		job.refresh();
+	}
+
+	private void refresh(List<IInteractionElement> elements) {
+		if (job == null) {
+			job = new ContextEditorDelayedRefreshJob(commonViewer, "refresh viewer");
+		}
+		job.refresh(elements.toArray());
 	}
 
 	private void createDisplaySection(Composite composite) {

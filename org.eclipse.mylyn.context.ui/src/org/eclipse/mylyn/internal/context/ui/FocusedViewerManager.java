@@ -30,6 +30,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -49,6 +50,76 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 	private final Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
 
 	private final Map<IWorkbenchPart, StructuredViewer> partToViewerMap = new HashMap<IWorkbenchPart, StructuredViewer>();
+
+	private final Map<StructuredViewer, FocusedViewerDelayedRefreshJob> fullRefreshJobs = new HashMap<StructuredViewer, FocusedViewerDelayedRefreshJob>();
+
+	// TODO: consider merging in order to discard minors when majors come in, see bug 209846
+	private final Map<StructuredViewer, FocusedViewerDelayedRefreshJob> minorRefreshJobs = new HashMap<StructuredViewer, FocusedViewerDelayedRefreshJob>();
+
+	private class FocusedViewerDelayedRefreshJob extends DelayedRefreshJob {
+
+		private boolean minor = false;
+
+		public FocusedViewerDelayedRefreshJob(StructuredViewer viewer, String name, boolean minor) {
+			super(viewer, name);
+			this.minor = minor;
+		}
+
+		@Override
+		protected void refresh(Object[] items) {
+
+			if (viewer == null) {
+				return;
+			} else if (viewer.getControl().isDisposed()) {
+				managedViewers.remove(viewer);
+			} else {
+				if (items == null || items.length == 0) {
+					if (!minor) {
+						viewer.refresh(false);
+						FocusedViewerManager.this.updateExpansionState(viewer, null);
+					} else {
+						try {
+							viewer.getControl().setRedraw(false);
+							viewer.refresh(true);
+							FocusedViewerManager.this.updateExpansionState(viewer, null);
+						} finally {
+							viewer.getControl().setRedraw(true);
+						}
+					}
+				} else {
+					if (filteredViewers.contains(viewer)) {
+						try {
+							viewer.getControl().setRedraw(false);
+							viewer.refresh(minor);
+							FocusedViewerManager.this.updateExpansionState(viewer, null);
+						} finally {
+							viewer.getControl().setRedraw(true);
+						}
+					} else { // don't need to worry about content changes
+						try {
+							viewer.getControl().setRedraw(false);
+							for (Object item : items) {
+								Object objectToRefresh = item;
+								if (item instanceof IInteractionElement) {
+									IInteractionElement node = (IInteractionElement) item;
+									AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
+											.getStructureBridge(node.getContentType());
+									objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
+								}
+								if (objectToRefresh != null) {
+									viewer.update(objectToRefresh, null);
+									FocusedViewerManager.this.updateExpansionState(viewer, objectToRefresh);
+								}
+							}
+						} finally {
+							viewer.getControl().setRedraw(true);
+						}
+					}
+				}
+			}
+
+		}
+	}
 
 	/**
 	 * For testing.
@@ -163,51 +234,20 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 
 	private void refreshViewer(final Set<IInteractionElement> nodesToRefresh, final boolean minor,
 			StructuredViewer viewer) {
-		if (viewer == null) {
-			return;
-		} else if (viewer.getControl().isDisposed()) {
-			managedViewers.remove(viewer);
+
+		Map<StructuredViewer, FocusedViewerDelayedRefreshJob> refreshJobs = null;
+		if (minor) {
+			refreshJobs = minorRefreshJobs;
 		} else {
-			if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
-				if (!minor) {
-					viewer.refresh(false);
-					updateExpansionState(viewer, null);
-				} else {
-					try {
-						viewer.getControl().setRedraw(false);
-						viewer.refresh(true);
-						updateExpansionState(viewer, null);
-					} finally {
-						viewer.getControl().setRedraw(true);
-					}
-				}
-			} else {
-				if (filteredViewers.contains(viewer)) {
-					try {
-						viewer.getControl().setRedraw(false);
-						viewer.refresh(minor);
-						updateExpansionState(viewer, null);
-					} finally {
-						viewer.getControl().setRedraw(true);
-					}
-				} else { // don't need to worry about content changes
-					try {
-						viewer.getControl().setRedraw(false);
-						for (IInteractionElement node : nodesToRefresh) {
-							AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
-									.getStructureBridge(node.getContentType());
-							Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
-							if (objectToRefresh != null) {
-								viewer.update(objectToRefresh, null);
-								updateExpansionState(viewer, objectToRefresh);
-							}
-						}
-					} finally {
-						viewer.getControl().setRedraw(true);
-					}
-				}
-			}
+			refreshJobs = fullRefreshJobs;
 		}
+		FocusedViewerDelayedRefreshJob job = refreshJobs.get(viewer);
+		if (job == null) {
+			job = new FocusedViewerDelayedRefreshJob(viewer, "refresh viewer", minor);
+			refreshJobs.put(viewer, job);
+		}
+		job.refreshElements(nodesToRefresh.toArray());
+
 	}
 
 	private void updateExpansionState(StructuredViewer viewer, Object objectToRefresh) {
