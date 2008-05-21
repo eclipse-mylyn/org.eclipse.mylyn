@@ -205,8 +205,6 @@ public class ContextEditorFormPage extends FormPage {
 		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 	}
 
-	private boolean mouseDown = false;
-
 	private void createActionsSection(Composite composite) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText("Actions");
@@ -240,21 +238,6 @@ public class ContextEditorFormPage extends FormPage {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// don't care about default selection
-			}
-		});
-		doiScale.addMouseListener(new MouseListener() {
-
-			public void mouseDoubleClick(MouseEvent e) {
-				// don't care about double click
-			}
-
-			public void mouseDown(MouseEvent e) {
-				mouseDown = true;
-			}
-
-			public void mouseUp(MouseEvent e) {
-				mouseDown = false;
-				setFilterThreshold();
 			}
 		});
 
