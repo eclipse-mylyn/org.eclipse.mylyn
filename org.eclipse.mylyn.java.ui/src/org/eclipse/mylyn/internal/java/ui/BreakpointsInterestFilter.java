@@ -30,7 +30,9 @@ public class BreakpointsInterestFilter extends AbstractMarkerInterestFilter {
 //			} catch (CoreException e) {
 //				// XXX
 //			}
-			return isInteresting(((IBreakpoint) element).getMarker(), viewer, parent);
+			IBreakpoint breakpoint = (IBreakpoint) element;
+			// TODO: could use breakpoint.isEnabled()
+			return isInteresting(breakpoint.getMarker(), viewer, parent);
 		}
 		return false;
 	}
