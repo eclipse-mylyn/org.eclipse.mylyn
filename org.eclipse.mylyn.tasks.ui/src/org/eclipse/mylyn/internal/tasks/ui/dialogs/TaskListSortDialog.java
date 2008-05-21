@@ -194,14 +194,12 @@ public class TaskListSortDialog extends SelectionDialog {
 	@Override
 	protected void okPressed() {
 		if (isDirty()) {
-			taskListView.getSorter()
-					.setSortByIndex(
-							SortByIndex.valueOf(priorityCombos[0].getItem(priorityCombos[0].getSelectionIndex())
-									.toUpperCase()));
-			taskListView.getSorter()
-					.setSortByIndex2(
-							SortByIndex.valueOf(priorityCombos[1].getItem(priorityCombos[1].getSelectionIndex())
-									.toUpperCase()));
+			taskListView.getSorter().setSortByIndex(
+					SortByIndex.valueOf(priorityCombos[0].getItem(priorityCombos[0].getSelectionIndex()).replace(' ',
+							'_').toUpperCase()));
+			taskListView.getSorter().setSortByIndex2(
+					SortByIndex.valueOf(priorityCombos[1].getItem(priorityCombos[1].getSelectionIndex()).replace(' ',
+							'_').toUpperCase()));
 			if (descendingButtons[0].getSelection()) {
 				taskListView.getSorter().setSortDirection(-1);
 			} else {
