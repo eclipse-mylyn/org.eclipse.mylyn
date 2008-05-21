@@ -8,9 +8,11 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -493,7 +495,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	private void createParts() {
-		Set<TaskEditorPartDescriptor> descriptors = createPartDescriptors();
+		List<TaskEditorPartDescriptor> descriptors = new LinkedList<TaskEditorPartDescriptor>(createPartDescriptors());
 		// single column
 		createParts(PATH_HEADER, editorComposite, descriptors);
 		createParts(PATH_ATTRIBUTES, editorComposite, descriptors);
@@ -509,7 +511,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		bottomComposite.pack(true);
 	}
 
-	private void createParts(String path, Composite parent, Set<TaskEditorPartDescriptor> descriptors) {
+	private void createParts(String path, Composite parent, Collection<TaskEditorPartDescriptor> descriptors) {
 		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			TaskEditorPartDescriptor descriptor = it.next();
 			if (path == null || path.equals(descriptor.getPath())) {
