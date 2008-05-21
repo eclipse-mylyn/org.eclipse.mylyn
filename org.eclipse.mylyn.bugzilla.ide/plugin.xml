@@ -25,9 +25,9 @@
          <product
                value="Mylyn">
          </product>
-         <feature
+         <branding
                name="Eclipse Mylyn - Eclipse.org Open Source Project">
-         </feature>
+         </branding>
       </mapping>
    </extension>
 </plugin>
