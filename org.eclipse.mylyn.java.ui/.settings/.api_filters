@@ -8,19 +8,19 @@
             </message_arguments>
         </filter>
     </resource>
-    <resource path="src/org/eclipse/mylyn/internal/java/ui/search/AbstractJavaRelationProvider.java" type="org.eclipse.mylyn.internal.java.ui.search.AbstractJavaRelationProvider">
-        <filter id="572522506">
-            <message_arguments>
-                <message_argument value="ElementQuerySpecification"/>
-                <message_argument value="AbstractJavaRelationProvider"/>
-            </message_arguments>
-        </filter>
-    </resource>
     <resource path="src/org/eclipse/mylyn/internal/java/ui/junit/TaskContextJUnitMainTab.java" type="org.eclipse.mylyn.internal.java.ui.junit.TaskContextJUnitMainTab">
         <filter id="571473929">
             <message_arguments>
                 <message_argument value="JUnitLaunchConfigurationTab"/>
                 <message_argument value="TaskContextJUnitMainTab"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/mylyn/internal/java/ui/search/AbstractJavaRelationProvider.java" type="org.eclipse.mylyn.internal.java.ui.search.AbstractJavaRelationProvider">
+        <filter id="572522506">
+            <message_arguments>
+                <message_argument value="ElementQuerySpecification"/>
+                <message_argument value="AbstractJavaRelationProvider"/>
             </message_arguments>
         </filter>
     </resource>

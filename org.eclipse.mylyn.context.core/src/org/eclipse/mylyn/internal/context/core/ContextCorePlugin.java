@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.IStatusHandler;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStore;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
@@ -376,50 +375,6 @@ public class ContextCorePlugin extends Plugin {
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
 						"Could not load relation provider", e));
-			}
-		}
-	}
-
-	static class HandlersExtensionPointReader {
-
-		private static final String EXTENSION_ID_HANDLERS = "org.eclipse.mylyn.context.core.handlers";
-
-		private static final String ELEMENT_STATUS = "status";
-
-		private static final String ELEMENT_CLASS = "class";
-
-		private static boolean extensionsRead = false;
-
-		public static void initExtensions() {
-			if (!extensionsRead) {
-				IExtensionRegistry registry = Platform.getExtensionRegistry();
-				IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_HANDLERS);
-				IExtension[] extensions = extensionPoint.getExtensions();
-				for (IExtension extension : extensions) {
-					IConfigurationElement[] elements = extension.getConfigurationElements();
-					for (IConfigurationElement element : elements) {
-						if (element.getName().compareTo(ELEMENT_STATUS) == 0) {
-							readHandler(element);
-						}
-					}
-				}
-				extensionsRead = true;
-			}
-		}
-
-		private static void readHandler(IConfigurationElement element) {
-			try {
-				Object object = element.createExecutableExtension(ELEMENT_CLASS);
-				if (!(object instanceof IStatusHandler)) {
-					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
-							"Could not load handler: " + object.getClass().getCanonicalName() + " must implement "
-									+ AbstractContextStructureBridge.class.getCanonicalName()));
-					return;
-				}
-
-				IStatusHandler handler = (IStatusHandler) object;
-				StatusHandler.addStatusHandler(handler);
-			} catch (CoreException e) {
 			}
 		}
 	}
