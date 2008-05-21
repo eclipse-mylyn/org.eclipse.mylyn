@@ -61,8 +61,6 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 
 	private boolean hasIncoming;
 
-	private boolean expandOnCreation;
-
 	public TaskEditorAttributePart() {
 		setPartName("Attributes");
 	}
@@ -126,7 +124,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		initialize();
 
-		Section section = createSection(parent, toolkit, isExpandOnCreation() || hasIncoming);
+		Section section = createSection(parent, toolkit, getTaskEditorPage().isExpandAttributesSection() || hasIncoming);
 
 		// Attributes Composite- this holds all the combo fields and text fields
 		Composite attributesComposite = toolkit.createComposite(section);
@@ -252,11 +250,4 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		});
 	}
 
-	public void setExpandOnCreation(boolean expandOnCreation) {
-		this.expandOnCreation = expandOnCreation;
-	}
-
-	public boolean isExpandOnCreation() {
-		return expandOnCreation;
-	}
 }

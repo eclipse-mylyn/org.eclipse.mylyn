@@ -71,7 +71,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			// create viewer
 			TaskAttribute textAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
 					taskComment.getTaskAttribute());
-			AbstractAttributeEditor editor = createEditor(textAttribute);
+			AbstractAttributeEditor editor = createAttributeEditor(textAttribute);
 			if (editor != null) {
 				editor.setDecorationEnabled(false);
 				editor.createControl(composite, toolkit);

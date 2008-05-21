@@ -29,7 +29,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
-		AbstractAttributeEditor editor = createEditor(attribute);
+		AbstractAttributeEditor editor = createAttributeEditor(attribute);
 		if (editor != null) {
 			editor.createLabelControl(composite, toolkit);
 			GridDataFactory.defaultsFor(editor.getLabelControl()).indent(COLUMN_MARGIN, 0).applyTo(

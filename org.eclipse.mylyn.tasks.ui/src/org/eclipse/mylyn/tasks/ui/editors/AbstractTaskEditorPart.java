@@ -36,26 +36,16 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	private Control control;
 
-	private AbstractTaskEditorPage taskEditorPage;
-
 	private String partName;
+
+	private String partId;
+
+	private AbstractTaskEditorPage taskEditorPage;
 
 	public AbstractTaskEditorPart() {
 	}
 
-	protected Section createSection(Composite parent, FormToolkit toolkit, boolean expandedState) {
-		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
-		if (expandedState) {
-			style |= ExpandableComposite.EXPANDED;
-		}
-		Section section = toolkit.createSection(parent, style);
-		section.setText(getPartName());
-		return section;
-	}
-
-	public abstract void createControl(Composite parent, FormToolkit toolkit);
-
-	protected AbstractAttributeEditor createEditor(TaskAttribute attribute) {
+	protected AbstractAttributeEditor createAttributeEditor(TaskAttribute attribute) {
 		if (attribute == null) {
 			return null;
 		}
@@ -70,12 +60,35 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 		return null;
 	}
 
+	public abstract void createControl(Composite parent, FormToolkit toolkit);
+
+	protected Section createSection(Composite parent, FormToolkit toolkit, boolean expandedState) {
+		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
+		if (expandedState) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+		Section section = toolkit.createSection(parent, style);
+		section.setText(getPartName());
+		return section;
+	}
+
+	protected void fillToolBar(ToolBarManager toolBarManager) {
+	}
+
 	public Control getControl() {
 		return control;
 	}
 
 	public TaskDataModel getModel() {
 		return getTaskEditorPage().getModel();
+	}
+
+	public String getPartId() {
+		return partId;
+	}
+
+	public String getPartName() {
+		return partName;
 	}
 
 	public TaskData getTaskData() {
@@ -86,19 +99,16 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 		return taskEditorPage;
 	}
 
-	public void setControl(Control control) {
-		this.control = control;
-	}
-
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
 		this.taskEditorPage = taskEditorPage;
 	}
 
-	protected void fillToolBar(ToolBarManager toolBarManager) {
+	public void setControl(Control control) {
+		this.control = control;
 	}
 
-	public String getPartName() {
-		return partName;
+	void setPartId(String partId) {
+		this.partId = partId;
 	}
 
 	protected void setPartName(String partName) {
@@ -110,7 +120,7 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
 			fillToolBar(toolBarManager);
 
-			// TODO EDITOR toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+			// TODO toolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
 			if (toolBarManager.getSize() > 0) {
 				Composite toolbarComposite = toolkit.createComposite(section);

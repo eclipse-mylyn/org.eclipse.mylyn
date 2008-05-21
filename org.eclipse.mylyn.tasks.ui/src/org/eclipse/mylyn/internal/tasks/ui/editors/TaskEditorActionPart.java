@@ -85,9 +85,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private Button attachContextButton;
 
-	private boolean needsAttachContext = true;
-
-	private boolean needsAddToCategory;
+//	private boolean needsAttachContext = true;
 
 	private Button addToCategory;
 
@@ -110,7 +108,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 * Adds buttons to this composite. Subclasses can override this method to provide different/additional buttons.
 	 * 
 	 * @param buttonComposite
-	 * 		Composite to add the buttons to.
+	 *            Composite to add the buttons to.
 	 * @param toolkit
 	 */
 	private void createActionButtons(Composite buttonComposite, FormToolkit toolkit) {
@@ -129,9 +127,9 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		if (needsAttachContext) {
-			addAttachContextButton(buttonComposite, toolkit);
-		}
+//		if (needsAttachContext) {
+		addAttachContextButton(buttonComposite, toolkit);
+//		}
 	}
 
 	/**
@@ -207,7 +205,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		buttonLayout.numColumns = 4;
 		buttonComposite.setLayout(buttonLayout);
 
-		if (needsAddToCategory) {
+		if (getTaskEditorPage().needsAddToCategory()) {
 			createCategoryChooser(buttonComposite, toolkit);
 		}
 
@@ -225,7 +223,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, Button button) {
-		AbstractAttributeEditor editor = createEditor(attribute);
+		AbstractAttributeEditor editor = createAttributeEditor(attribute);
 		if (editor != null) {
 			editor.createControl(composite, toolkit);
 			GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -290,21 +288,13 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	boolean needsAddToCategory() {
-		return needsAddToCategory;
-	}
-
-	boolean needsAttachContext() {
-		return needsAttachContext;
-	}
-
-	public void setNeedsAddToCategory(boolean needsAddToCategory) {
-		this.needsAddToCategory = needsAddToCategory;
-	}
-
-	void setNeedsAttachContext(boolean attachContextEnabled) {
-		this.needsAttachContext = attachContextEnabled;
-	}
+//	boolean needsAttachContext() {
+//		return needsAttachContext;
+//	}
+//
+//	void setNeedsAttachContext(boolean attachContextEnabled) {
+//		this.needsAttachContext = attachContextEnabled;
+//	}
 
 	public void setSubmitEnabled(boolean enabled) {
 		if (submitButton != null && !submitButton.isDisposed()) {

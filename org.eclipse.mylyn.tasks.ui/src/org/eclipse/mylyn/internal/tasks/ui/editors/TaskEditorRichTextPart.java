@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -24,29 +23,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
+/**
+ * @author Steffen Pingel
+ */
 public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 	private RichTextAttributeEditor editor;
 
-	private final TaskAttribute attribute;
+	private TaskAttribute attribute;
 
 	private Composite composite;
 
-//	/**
-//	 * A listener for selection of the textbox where a new comment is entered in.
-//	 */
-//	private class NewCommentListener implements Listener {
-//		public void handleEvent(Event event) {
-//			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-//					new RepositoryTaskSelection(getTaskData().getId(), getTaskData().getRepositoryUrl(),
-//							getTaskData().getRepositoryKind(), getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION), false,
-//							getTaskData().getSummary()))));
-//		}
-//	}
-
-	public TaskEditorRichTextPart(TaskAttribute attribute) {
-		Assert.isNotNull(attribute);
-		this.attribute = attribute;
+	public TaskEditorRichTextPart() {
 	}
 
 	public void appendText(String text) {
@@ -70,16 +58,12 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		editor.getViewer().getTextWidget().setCaretOffset(strBuilder.length());
 	}
 
-	protected RichTextAttributeEditor getEditor() {
-		return editor;
-	}
-
-	protected Composite getComposite() {
-		return composite;
-	}
-
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
+		if (attribute == null) {
+			return;
+		}
+
 		Section section = createSection(parent, toolkit, true);
 
 		composite = toolkit.createComposite(section);
@@ -141,6 +125,22 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		setSection(toolkit, section);
+	}
+
+	public TaskAttribute getAttribute() {
+		return attribute;
+	}
+
+	protected Composite getComposite() {
+		return composite;
+	}
+
+	protected RichTextAttributeEditor getEditor() {
+		return editor;
+	}
+
+	public void setAttribute(TaskAttribute attribute) {
+		this.attribute = attribute;
 	}
 
 	@Override

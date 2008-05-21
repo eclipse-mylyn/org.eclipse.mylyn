@@ -20,13 +20,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -50,8 +50,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 	private static final String LABEL_SELECT_DETECTOR = "Duplicate Detection";
 
-	public TaskEditorDescriptionPart(TaskAttribute attribute) {
-		super(attribute);
+	public TaskEditorDescriptionPart() {
 		setPartName("Description");
 	}
 
@@ -117,7 +116,6 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		super.createControl(parent, toolkit);
-
 		addDuplicateDetection(getComposite(), toolkit);
 	}
 
@@ -152,9 +150,15 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		return duplicateDetectors;
 	}
 
+	@Override
+	public void initialize(AbstractTaskEditorPage taskEditorPage) {
+		super.initialize(taskEditorPage);
+		setAttribute(getModel().getTaskData().getMappedAttribute(TaskAttribute.DESCRIPTION));
+	}
+
 	@SuppressWarnings( { "deprecation", "restriction" })
 	private boolean isValidDuplicateDetector(AbstractDuplicateDetector detector) {
-		return !(detector instanceof AbstractLegacyDuplicateDetector) //
+		return !(detector instanceof org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector) //
 				&& (detector.getConnectorKind() == null || detector.getConnectorKind().equals(
 						getTaskEditorPage().getConnectorKind())) //
 				&& detector.canQuery(getTaskData());

@@ -9,6 +9,8 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,6 +52,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttachmentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorDescriptionPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorNewCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPlanningPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
@@ -62,9 +65,7 @@ import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
@@ -119,17 +120,13 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.handlers.IHandlerService;
 
 /**
- * Extend to provide customized task editing.
- * 
- * NOTE: This class is work in progress
+ * Extend to provide a task editor page.
  * 
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
  * @since 3.0
  */
-// TODO EDITOR selection service
-// TODO EDITOR outline
 public abstract class AbstractTaskEditorPage extends FormPage implements ISelectionProvider, ISelectionChangedListener {
 
 	private class SubmitTaskJobListener extends SubmitJobListener {
@@ -147,8 +144,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 				private void openNewTask(ITask newTask) {
 					AbstractTaskContainer parent = null;
-					if (actionPart != null) {
-						parent = actionPart.getCategory();
+					AbstractTaskEditorPart actionPart = getPart(ID_PART_ACTIONS);
+					if (actionPart instanceof TaskEditorAttributePart) {
+						parent = ((TaskEditorActionPart) actionPart).getCategory();
 					}
 					// TODO copy context and scheduling
 					TasksUiInternal.getTaskList().addTask(newTask, parent);
@@ -206,34 +204,60 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			if (taskToRefresh != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (task.getSynchronizationState() == SynchronizationState.INCOMING
-								|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
-							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
-									new HyperlinkAdapter() {
-										@Override
-										public void linkActivated(HyperlinkEvent e) {
-											refreshFormContent();
-										}
-									});
-
-							// TODO EDITOR this needs to be tracked somewhere else
-							if (actionPart != null) {
-								actionPart.setSubmitEnabled(false);
-							}
-						} else {
-							refreshFormContent();
-						}
+//						if (task.getSynchronizationState() == SynchronizationState.INCOMING
+//								|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
+						getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+								new HyperlinkAdapter() {
+									@Override
+									public void linkActivated(HyperlinkEvent e) {
+										refreshFormContent();
+									}
+								});
+						setSubmitEnabled(false);
+//						} else {
+//							refreshFormContent();
+//						}
 					}
 				});
 			}
 		}
 	}
 
-	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";;
+	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
+
+	public static final String ID_PART_ACTIONS = "org.eclipse.mylyn.tasks.ui.editors.parts.actions";
+
+	public static final String ID_PART_ATTACHMENTS = "org.eclipse.mylyn.tasks.ui.editors.parts.attachments";
+
+	public static final String ID_PART_ATTRIBUTES = "org.eclipse.mylyn.tasks.ui.editors.parts.attributes";
+
+	public static final String ID_PART_COMMENTS = "org.eclipse.mylyn.tasks.ui.editors.parts.comments";
+
+	public static final String ID_PART_DESCRIPTION = "org.eclipse.mylyn.tasks.ui.editors.part.descriptions";
+
+	public static final String ID_PART_NEW_COMMENT = "org.eclipse.mylyn.tasks.ui.editors.part.newComment";
+
+	public static final String ID_PART_PEOPLE = "org.eclipse.mylyn.tasks.ui.editors.part.people";
+
+	public static final String ID_PART_PLANNING = "org.eclipse.mylyn.tasks.ui.editors.part.planning";
+
+	public static final String ID_PART_SUMMARY = "org.eclipse.mylyn.tasks.ui.editors.part.summary";
+
+	public static final String PATH_ACTIONS = "actions";
+
+	public static final String PATH_ATTACHMENTS = "attachments";
+
+	public static final String PATH_ATTRIBUTES = "attributes";
+
+	public static final String PATH_COMMENTS = "attachments";
+
+	public static final String PATH_HEADER = "header";
+
+	public static final String PATH_PEOPLE = "people";
+
+	public static final String PATH_PLANNING = "planning";
 
 //	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.page";
-
-	private TaskEditorActionPart actionPart;
 
 	private AttributeEditorFactory attributeEditorFactory;
 
@@ -241,17 +265,15 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private Action clearOutgoingAction;
 
-	private TaskEditorCommentPart commentPart;
-
 	private AbstractRepositoryConnector connector;
 
 	private final String connectorKind;
 
-	private TaskEditorDescriptionPart descriptionPart;
+	private StructuredSelection defaultSelection;
 
 	private Composite editorComposite;
 
-	private boolean expandedStateAttributes;
+	private boolean expandAttributesSection;
 
 	private ScrolledForm form;
 
@@ -267,29 +289,15 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private boolean needsAddToCategory;
 
-	private boolean needsAttachments;
-
-	private boolean needsComments;
-
-	private boolean needsHeader;
-
-	private boolean needsPlanning;
-
-	private TaskEditorRichTextPart newCommentPart;
-
 	private NewSubTaskAction newSubTaskAction;
 
 	private Action openBrowserAction;
-
-	private TaskEditorPlanningPart planningPart;
 
 	private boolean reflow;
 
 	private volatile boolean refreshDisabled;
 
-	private final ListenerList selectionChangedListeners = new ListenerList();
-
-	private TaskEditorSummaryPart summaryPart;
+	private final ListenerList selectionChangedListeners;
 
 	private SynchronizeEditorAction synchronizeEditorAction;
 
@@ -301,13 +309,12 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private FormToolkit toolkit;
 
-	private StructuredSelection defaultSelection;
-
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label");
 		Assert.isNotNull(connectorKind);
 		this.connectorKind = connectorKind;
 		this.reflow = true;
+		this.selectionChangedListeners = new ListenerList();
 	}
 
 	private void addFocusListener(Composite composite, FocusListener listener) {
@@ -332,8 +339,11 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	public void appendTextToNewComment(String text) {
-		newCommentPart.appendText(text);
-		newCommentPart.setFocus();
+		AbstractTaskEditorPart newCommentPart = getPart(ID_PART_NEW_COMMENT);
+		if (newCommentPart instanceof TaskEditorRichTextPart) {
+			((TaskEditorRichTextPart) newCommentPart).appendText(text);
+			newCommentPart.setFocus();
+		}
 	}
 
 	public boolean canPerformAction(String actionId) {
@@ -355,22 +365,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		});
 	}
 
-	/**
-	 * Creates the button layout. This displays options and buttons at the bottom of the editor to allow actions to be
-	 * performed on the bug.
-	 */
-	private void createActionsSection(Composite composite) {
-		actionPart = new TaskEditorActionPart();
-		actionPart.setNeedsAddToCategory(needsAddToCategory);
-		initializePart(composite, actionPart);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(actionPart.getControl());
-	}
-
-	private void createAttachmentSection(Composite composite) {
-		TaskEditorAttachmentPart attachmentPart = new TaskEditorAttachmentPart();
-		initializePart(composite, attachmentPart);
-	}
-
 	protected AttributeEditorFactory createAttributeEditorFactory() {
 		return new AttributeEditorFactory(getModel(), getTaskRepository());
 	}
@@ -378,25 +372,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	protected AttributeEditorToolkit createAttributeEditorToolkit() {
 		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 		return new AttributeEditorToolkit(handlerService);
-	}
-
-	private void createAttributeSection(Composite composite) {
-		TaskEditorAttributePart attributePart = new TaskEditorAttributePart();
-		attributePart.setExpandOnCreation(expandedStateAttributes);
-		initializePart(composite, attributePart);
-	}
-
-	private void createCommentSection(Composite composite) {
-		commentPart = new TaskEditorCommentPart();
-		initializePart(composite, commentPart);
-	}
-
-	private void createDescriptionSection(Composite composite) {
-		TaskAttribute attribute = getModel().getTaskData().getMappedAttribute(TaskAttribute.DESCRIPTION);
-		if (attribute != null) {
-			descriptionPart = new TaskEditorDescriptionPart(attribute);
-			initializePart(composite, descriptionPart);
-		}
 	}
 
 	@Override
@@ -456,7 +431,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		attributeEditorToolkit.setMenu(editorComposite.getMenu());
 		attributeEditorToolkit.setSelectionChangedListener(this);
 
-		createSections();
+		createParts();
 
 		FocusListener listener = new FocusAdapter() {
 			@Override
@@ -465,6 +440,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			}
 		};
 		addFocusListener(editorComposite, listener);
+		AbstractTaskEditorPart summaryPart = getPart(ID_PART_SUMMARY);
 		if (summaryPart != null) {
 			lastFocusControl = summaryPart.getControl();
 		}
@@ -477,63 +453,72 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		return new TaskDataModel(taskRepository, input.getTask(), taskDataState);
 	}
 
-	private void createNewCommentSection(Composite composite) {
-		TaskAttribute attribute = getModel().getTaskData().getMappedAttribute(TaskAttribute.COMMENT_NEW);
-		if (attribute != null) {
-			newCommentPart = new TaskEditorRichTextPart(attribute);
-			newCommentPart.setPartName("New Comment");
-			initializePart(composite, newCommentPart);
-			newCommentPart.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
+		Set<TaskEditorPartDescriptor> descriptors = new LinkedHashSet<TaskEditorPartDescriptor>();
+		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_SUMMARY) //
+				.setClassName(TaskEditorSummaryPart.class.getName())
+				.setPath(PATH_HEADER));
+		//summaryPart.getControl().setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_ATTRIBUTES) //
+				.setClassName(TaskEditorAttributePart.class.getName())
+				.setPath(PATH_ATTRIBUTES));
+		if (!taskData.isNew()) {
+			descriptors.add(TaskEditorPartDescriptor.create(ID_PART_ATTACHMENTS) //
+					.setClassName(TaskEditorAttachmentPart.class.getName())
+					.setPath(PATH_ATTACHMENTS));
 		}
+		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_DESCRIPTION) //
+				.setClassName(TaskEditorDescriptionPart.class.getName())
+				.setPath(PATH_COMMENTS));
+		if (!taskData.isNew()) {
+			descriptors.add(TaskEditorPartDescriptor.create(ID_PART_COMMENTS) //
+					.setClassName(TaskEditorCommentPart.class.getName())
+					.setPath(PATH_COMMENTS));
+		}
+		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_NEW_COMMENT) //
+				.setClassName(TaskEditorNewCommentPart.class.getName())
+				.setPath(PATH_COMMENTS));
+		if (taskData.isNew()) {
+			descriptors.add(TaskEditorPartDescriptor.create(ID_PART_PLANNING) //
+					.setClassName(TaskEditorPlanningPart.class.getName())
+					.setPath(PATH_PLANNING));
+		}
+		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_ACTIONS) //
+				.setClassName(TaskEditorActionPart.class.getName())
+				.setPath(PATH_ACTIONS));
+		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_PEOPLE) //
+				.setClassName(TaskEditorPeoplePart.class.getName())
+				.setPath(PATH_PEOPLE));
+		return descriptors;
 	}
 
-	private void createPeopleSection(Composite composite) {
-		TaskEditorPeoplePart peoplePart = new TaskEditorPeoplePart();
-		initializePart(composite, peoplePart);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(peoplePart.getControl());
-	}
-
-	private void createPlanningSection(Composite composite) {
-		planningPart = new TaskEditorPlanningPart();
-		initializePart(composite, planningPart);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(planningPart.getControl());
-	}
-
-	private void createSections() {
-		createSummarySection(editorComposite);
-
-		createAttributeSection(editorComposite);
-
-		if (needsAttachments()) {
-			createAttachmentSection(editorComposite);
-		}
-
-		createDescriptionSection(editorComposite);
-
-		if (needsComments()) {
-			createCommentSection(editorComposite);
-			createNewCommentSection(editorComposite);
-		}
-
-		if (needsPlanning()) {
-			createPlanningSection(editorComposite);
-		}
-
+	private void createParts() {
+		Set<TaskEditorPartDescriptor> descriptors = createPartDescriptors();
+		// single column
+		createParts(PATH_HEADER, editorComposite, descriptors);
+		createParts(PATH_ATTRIBUTES, editorComposite, descriptors);
+		createParts(PATH_ATTACHMENTS, editorComposite, descriptors);
+		createParts(PATH_COMMENTS, editorComposite, descriptors);
+		createParts(PATH_PLANNING, editorComposite, descriptors);
+		// two column
 		Composite bottomComposite = toolkit.createComposite(editorComposite);
 		bottomComposite.setLayout(new GridLayout(2, false));
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(bottomComposite);
-
-		createActionsSection(bottomComposite);
-		createPeopleSection(bottomComposite);
-
+		createParts(PATH_ACTIONS, bottomComposite, descriptors);
+		createParts(PATH_PEOPLE, bottomComposite, descriptors);
 		bottomComposite.pack(true);
 	}
 
-	private void createSummarySection(Composite composite) {
-		summaryPart = new TaskEditorSummaryPart();
-		summaryPart.setNeedsHeader(needsHeader());
-		initializePart(composite, summaryPart);
-		summaryPart.getControl().setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+	private void createParts(String path, Composite parent, Set<TaskEditorPartDescriptor> descriptors) {
+		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
+			TaskEditorPartDescriptor descriptor = it.next();
+			if (path == null || path.equals(descriptor.getPath())) {
+				AbstractTaskEditorPart part = descriptor.createPart();
+				part.setPartId(descriptor.getId());
+				initializePart(parent, part);
+				it.remove();
+			}
+		}
 	}
 
 	@Override
@@ -586,12 +571,12 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector,
 				getModel().getTaskRepository(), task, getModel().getTaskData(), getModel().getChangedAttributes());
-		submitJob.addSubmitJobListener(new SubmitTaskJobListener(actionPart.getAttachContext()));
+		submitJob.addSubmitJobListener(new SubmitTaskJobListener(getAttachContext()));
 		submitJob.schedule();
 	}
 
 	/**
-	 * Override for customizing the toolbar.
+	 * Override for customizing the tool bar.
 	 */
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		final TaskRepository taskRepository = (model != null) ? getModel().getTaskRepository() : null;
@@ -690,6 +675,14 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		}
 	}
 
+	private boolean getAttachContext() {
+		AbstractTaskEditorPart actionPart = getPart(ID_PART_ACTIONS);
+		if (actionPart instanceof TaskEditorAttributePart) {
+			return ((TaskEditorActionPart) actionPart).getAttachContext();
+		}
+		return false;
+	}
+
 	public AttributeEditorFactory getAttributeEditorFactory() {
 		return attributeEditorFactory;
 	}
@@ -717,6 +710,19 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		return model;
 	}
 
+	public AbstractTaskEditorPart getPart(String partId) {
+		Assert.isNotNull(partId);
+		for (IFormPart part : getManagedForm().getParts()) {
+			if (part instanceof AbstractTaskEditorPart) {
+				AbstractTaskEditorPart taskEditorPart = (AbstractTaskEditorPart) part;
+				if (partId.equals(taskEditorPart.getPartId())) {
+					return taskEditorPart;
+				}
+			}
+		}
+		return null;
+	}
+
 	public ISelection getSelection() {
 		return lastSelection;
 	}
@@ -738,6 +744,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			final IStatus status = job.getErrorStatus();
 			if (status.getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
 				TasksUiInternal.displayStatus("Comment required", status);
+				AbstractTaskEditorPart newCommentPart = getPart(ID_PART_NEW_COMMENT);
 				if (newCommentPart != null) {
 					newCommentPart.setFocus();
 				}
@@ -789,12 +796,20 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		getManagedForm().addPart(part);
 		part.initialize(this);
 		part.createControl(parent, toolkit);
-		part.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		if (ID_PART_NEW_COMMENT.equals(part.getPartId())) {
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(part.getControl());
+		} else {
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(part.getControl());
+		}
 	}
 
 	@Override
 	public boolean isDirty() {
 		return (getModel() != null && getModel().isDirty()) || (getManagedForm() != null && getManagedForm().isDirty());
+	}
+
+	public boolean isExpandAttributesSection() {
+		return expandAttributesSection;
 	}
 
 	@Override
@@ -806,24 +821,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		return needsAddToCategory;
 	}
 
-	public boolean needsAttachments() {
-		return needsAttachments;
-	}
-
-	public boolean needsComments() {
-		return needsComments;
-	}
-
-	public boolean needsHeader() {
-		return needsHeader;
-	}
-
-	public boolean needsPlanning() {
-		return needsPlanning;
-	}
-
 	/**
-	 * force a re-layout of entire form
+	 * Force a re-layout of entire form.
 	 */
 	public void reflow() {
 		if (reflow) {
@@ -833,7 +832,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	/**
-	 * Update editor contents in place.
+	 * Updates the editor contents in place.
 	 */
 	public void refreshFormContent() {
 		if (getManagedForm().getForm().isDisposed()) {
@@ -869,9 +868,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					getTaskEditor().setMessage(null, 0);
 					getTaskEditor().setActivePage(getId());
 
-					if (actionPart != null) {
-						actionPart.setSubmitEnabled(true);
-					}
+					setSubmitEnabled(true);
 				} finally {
 					setReflow(true);
 				}
@@ -940,7 +937,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	public void setExpandAttributeSection(boolean expandAttributeSection) {
-		this.expandedStateAttributes = expandAttributeSection;
+		this.expandAttributesSection = expandAttributeSection;
 	}
 
 	@Override
@@ -978,6 +975,10 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		});
 	}
 
+	public void setNeedsAddToCategory(boolean needsAddToCategory) {
+		this.needsAddToCategory = needsAddToCategory;
+	}
+
 	public void setReflow(boolean reflow) {
 		this.reflow = reflow;
 		form.setRedraw(reflow);
@@ -995,14 +996,16 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		}
 	}
 
+	// TODO EDITOR this needs to be tracked somewhere else
+	private void setSubmitEnabled(boolean enabled) {
+		AbstractTaskEditorPart actionPart = getPart(ID_PART_ACTIONS);
+		if (actionPart instanceof TaskEditorAttributePart) {
+			((TaskEditorActionPart) actionPart).setSubmitEnabled(enabled);
+		}
+	}
+
 	private void setTaskData(TaskData taskData) {
 		this.taskData = taskData;
-
-		needsComments = !taskData.isNew();
-		needsAttachments = !taskData.isNew();
-		needsHeader = !taskData.isNew();
-		needsPlanning = taskData.isNew();
-		needsAddToCategory = taskData.isNew();
 	}
 
 	@Override
@@ -1041,10 +1044,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	public void showEditorBusy(boolean busy) {
 		getTaskEditor().showBusy(busy);
-	}
-
-	protected boolean supportsRefreshAttributes() {
-		return true;
 	}
 
 	private void updateHeaderMessage() {

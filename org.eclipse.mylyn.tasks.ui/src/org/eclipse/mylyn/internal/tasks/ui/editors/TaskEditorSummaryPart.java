@@ -43,8 +43,6 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 	private Composite headerComposite;
 
-	private boolean needsHeader;
-
 	private AbstractAttributeEditor summaryEditor;
 
 	public TaskEditorSummaryPart() {
@@ -56,7 +54,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute, int indent) {
-		AbstractAttributeEditor editor = createEditor(attribute);
+		AbstractAttributeEditor editor = createAttributeEditor(attribute);
 		if (editor != null) {
 			// having editable controls in the header looks odd
 			editor.setReadOnly(true);
@@ -70,7 +68,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	private void addSummaryText(Composite composite, FormToolkit toolkit) {
-		summaryEditor = createEditor(getTaskData().getMappedAttribute(TaskAttribute.SUMMARY));
+		summaryEditor = createAttributeEditor(getTaskData().getMappedAttribute(TaskAttribute.SUMMARY));
 		if (summaryEditor != null) {
 			summaryEditor.createControl(composite, toolkit);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryEditor.getControl());
@@ -129,7 +127,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	public boolean needsHeader() {
-		return needsHeader;
+		return !getTaskData().isNew();
 	}
 
 	@Override
@@ -137,10 +135,6 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		if (summaryEditor != null) {
 			summaryEditor.getControl().setFocus();
 		}
-	}
-
-	public void setNeedsHeader(boolean needsHeader) {
-		this.needsHeader = needsHeader;
 	}
 
 }
