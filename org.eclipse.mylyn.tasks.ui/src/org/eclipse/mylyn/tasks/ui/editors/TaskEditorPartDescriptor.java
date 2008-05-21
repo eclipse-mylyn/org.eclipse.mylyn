@@ -9,48 +9,42 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Steffen Pingel
  * @since 3.0
  */
-public class TaskEditorPartDescriptor {
-
-	private String className;
+public abstract class TaskEditorPartDescriptor {
 
 	private final String id;
 
 	private String path;
+
+//	public AbstractTaskEditorPart createPart() {
+//		final AbstractTaskEditorPart[] result = new AbstractTaskEditorPart[1];
+//		SafeRunnable.run(new ISafeRunnable() {
+//
+//			public void handleException(Throwable exception) {
+//				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+//						"Unable to create instance of class \"" + getClassName() + "\" for task editor part \""
+//								+ getId() + "\""));
+//			}
+//
+//			public void run() throws Exception {
+//				Class<?> clazz = Class.forName(getClassName());
+//				result[0] = (AbstractTaskEditorPart) clazz.newInstance();
+//			}
+//
+//		});
+//		return result[0];
+//	}
 
 	public TaskEditorPartDescriptor(String id) {
 		Assert.isNotNull(id);
 		this.id = id;
 	}
 
-	public AbstractTaskEditorPart createPart() {
-		final AbstractTaskEditorPart[] result = new AbstractTaskEditorPart[1];
-		SafeRunnable.run(new ISafeRunnable() {
-
-			public void handleException(Throwable exception) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Unable to create instance of class \"" + getClassName() + "\" for task editor part \""
-								+ getId() + "\""));
-			}
-
-			public void run() throws Exception {
-				Class<?> clazz = Class.forName(getClassName());
-				result[0] = (AbstractTaskEditorPart) clazz.newInstance();
-			}
-
-		});
-		return result[0];
-	}
+	public abstract AbstractTaskEditorPart createPart();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -74,10 +68,6 @@ public class TaskEditorPartDescriptor {
 		return true;
 	}
 
-	public String getClassName() {
-		return className;
-	}
-
 	public String getId() {
 		return id;
 	}
@@ -94,18 +84,9 @@ public class TaskEditorPartDescriptor {
 		return result;
 	}
 
-	public TaskEditorPartDescriptor setClassName(String className) {
-		this.className = className;
-		return this;
-	}
-
 	public TaskEditorPartDescriptor setPath(String path) {
 		this.path = path;
 		return this;
-	}
-
-	public static TaskEditorPartDescriptor create(String id) {
-		return new TaskEditorPartDescriptor(id);
 	}
 
 }

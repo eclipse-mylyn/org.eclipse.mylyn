@@ -251,7 +251,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	public static final String PATH_ATTRIBUTES = "attributes";
 
-	public static final String PATH_COMMENTS = "attachments";
+	public static final String PATH_COMMENTS = "comments";
 
 	public static final String PATH_HEADER = "header";
 
@@ -457,40 +457,66 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = new LinkedHashSet<TaskEditorPartDescriptor>();
-		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_SUMMARY) //
-				.setClassName(TaskEditorSummaryPart.class.getName())
-				.setPath(PATH_HEADER));
-		//summaryPart.getControl().setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
-		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_ATTRIBUTES) //
-				.setClassName(TaskEditorAttributePart.class.getName())
-				.setPath(PATH_ATTRIBUTES));
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new TaskEditorSummaryPart();
+			}
+		}.setPath(PATH_HEADER));
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTRIBUTES) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new TaskEditorAttributePart();
+			}
+		}.setPath(PATH_ATTRIBUTES));
 		if (!taskData.isNew()) {
-			descriptors.add(TaskEditorPartDescriptor.create(ID_PART_ATTACHMENTS) //
-					.setClassName(TaskEditorAttachmentPart.class.getName())
-					.setPath(PATH_ATTACHMENTS));
+			descriptors.add(new TaskEditorPartDescriptor(ID_PART_ATTACHMENTS) {
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new TaskEditorAttachmentPart();
+				}
+			}.setPath(PATH_ATTACHMENTS));
 		}
-		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_DESCRIPTION) //
-				.setClassName(TaskEditorDescriptionPart.class.getName())
-				.setPath(PATH_COMMENTS));
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_DESCRIPTION) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new TaskEditorDescriptionPart();
+			}
+		}.setPath(PATH_COMMENTS));
 		if (!taskData.isNew()) {
-			descriptors.add(TaskEditorPartDescriptor.create(ID_PART_COMMENTS) //
-					.setClassName(TaskEditorCommentPart.class.getName())
-					.setPath(PATH_COMMENTS));
+			descriptors.add(new TaskEditorPartDescriptor(ID_PART_COMMENTS) {
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new TaskEditorCommentPart();
+				}
+			}.setPath(PATH_COMMENTS));
 		}
-		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_NEW_COMMENT) //
-				.setClassName(TaskEditorNewCommentPart.class.getName())
-				.setPath(PATH_COMMENTS));
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_NEW_COMMENT) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new TaskEditorNewCommentPart();
+			}
+		}.setPath(PATH_COMMENTS));
 		if (taskData.isNew()) {
-			descriptors.add(TaskEditorPartDescriptor.create(ID_PART_PLANNING) //
-					.setClassName(TaskEditorPlanningPart.class.getName())
-					.setPath(PATH_PLANNING));
+			descriptors.add(new TaskEditorPartDescriptor(ID_PART_PLANNING) {
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new TaskEditorPlanningPart();
+				}
+			}.setPath(PATH_PLANNING));
 		}
-		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_ACTIONS) //
-				.setClassName(TaskEditorActionPart.class.getName())
-				.setPath(PATH_ACTIONS));
-		descriptors.add(TaskEditorPartDescriptor.create(ID_PART_PEOPLE) //
-				.setClassName(TaskEditorPeoplePart.class.getName())
-				.setPath(PATH_PEOPLE));
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_ACTIONS) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new TaskEditorActionPart();
+			}
+		}.setPath(PATH_ACTIONS));
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PEOPLE) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new TaskEditorPeoplePart();
+			}
+		}.setPath(PATH_PEOPLE));
 		return descriptors;
 	}
 
