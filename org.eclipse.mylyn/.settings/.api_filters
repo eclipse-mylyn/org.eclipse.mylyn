@@ -4,6 +4,12 @@
         <filter id="925892614">
             <message_arguments>
                 <message_argument value="3.0.0.qualifier"/>
+                <message_argument value="2.3.1.v20080312-1300"/>
+            </message_arguments>
+        </filter>
+        <filter id="925892614">
+            <message_arguments>
+                <message_argument value="3.0.0.qualifier"/>
                 <message_argument value="2.3.2.v20080402-2100"/>
             </message_arguments>
         </filter>
