@@ -5,6 +5,9 @@ sed -e s/QUALIFIER=.*/QUALIFIER=$BUILD/ -i local.sh
 
 BUILD_ROOT=$(cd $(dirname $0); pwd)
 
+rm -R $BUILD_ROOT/3.3/build || true
+rm -R $BUILD_ROOT/3.4/build || true
+
 #$BUILD_ROOT/build-3.3.sh
 $BUILD_ROOT/build-3.4.sh
 

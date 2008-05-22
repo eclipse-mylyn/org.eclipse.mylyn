@@ -1,5 +1,11 @@
 #!/bin/sh -e
 
+if [ $# -eq 0 ]
+then
+ echo "usage: copy-orbit-bundles.sh path"
+ exit 1
+fi
+
 SRC=$1/plugins
 DEST=$1
 

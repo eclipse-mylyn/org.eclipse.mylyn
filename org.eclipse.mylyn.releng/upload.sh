@@ -12,16 +12,22 @@ source $BUILD_ROOT/local.sh
 
 SITE=$BUILD_ROOT/tmp/site
 
-rm -r $SITE || true
-rm tmp/site.tar || true
+if [ "$2" != "-extract" ]
+then
+  rm -r $SITE || true
+  rm tmp/site.tar || true
 
-mkdir -p $SITE
+  mkdir -p $SITE
 
-#cp -a $BUILD_ROOT/3.3/build/standardUpdateSite $SITE/e3.3
-cp -a $BUILD_ROOT/3.4/build/standardUpdateSite $SITE/e3.4
-cp -a $BUILD_ROOT/3.4/build/extrasUpdateSite $SITE/extras
-cp -a $BUILD_ROOT/3.4/build/experimentalUpdateSite $SITE/experimental
+  #cp -a $BUILD_ROOT/3.3/build/standardUpdateSite $SITE/e3.3
+  cp -a $BUILD_ROOT/3.4/build/standardUpdateSite $SITE/e3.4
+  cp -a $BUILD_ROOT/3.4/build/extrasUpdateSite $SITE/extras
+  cp -a $BUILD_ROOT/3.4/build/experimentalUpdateSite $SITE/experimental
 
-tar -C $SITE -cvf tmp/site.tar .
-scp tmp/site.tar $1@dev.eclipse.org:
-ssh $1@dev.eclipse.org downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER -dev
+  tar -C $SITE -cvf tmp/site.tar .
+  scp tmp/site.tar $1@dev.eclipse.org:
+else
+  PARM=-force
+fi
+
+ssh $1@dev.eclipse.org downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER $PARM -dev

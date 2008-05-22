@@ -150,8 +150,11 @@
 	<target name="postBuild">
 		<antcall target="gatherLogs" />
 		<exec executable="${buildDirectory}/../../copy-orbit-bundles.sh" failonerror="true">
-	       <arg value="${buildDirectory}" />
-	    </exec>
+			<arg value="${buildDirectory}" />
+		</exec>
+		<exec executable="${buildDirectory}/../../fix-build-files.sh" failonerror="true">
+			<arg value="${buildDirectory}" />
+		</exec>
 		<antcall target="generateUpdateSite">
 			<param name="UpdateSiteLocation" value="${buildDirectory}/standardUpdateSite" />
 			<param name="SiteXmlFile" value="standard-site.xml" />
