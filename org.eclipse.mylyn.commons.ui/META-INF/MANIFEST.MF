@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Workbench Extensions Plug-in
+Bundle-Name: Mylyn Commons UI
 Bundle-SymbolicName: org.eclipse.mylyn.commons.ui
 Bundle-Version: 3.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
@@ -68,3 +68,4 @@ Export-Package: org.eclipse.mylyn.internal.commons.ui;x-internal:=true;
    org.eclipse.ui.dialogs,
    org.eclipse.swt.widgets,
    org.eclipse.jface.dialogs"
+Bundle-Vendor: Eclipse.org

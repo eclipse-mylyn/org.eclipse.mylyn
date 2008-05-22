@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Commons Net Plug-in
+Bundle-Name: Mylyn Commons Net
 Bundle-SymbolicName: org.eclipse.mylyn.commons.net
 Bundle-Version: 3.0.0.qualifier
 Bundle-Vendor: Eclipse.org
