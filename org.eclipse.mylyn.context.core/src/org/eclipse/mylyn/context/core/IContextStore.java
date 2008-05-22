@@ -24,11 +24,6 @@ public interface IContextStore {
 	/**
 	 * @since 3.0
 	 */
-	public abstract void saveContext(String handleIdentifier);
-
-	/**
-	 * @since 3.0
-	 */
 	public abstract boolean hasContext(String handleIdentifier);
 
 	/**

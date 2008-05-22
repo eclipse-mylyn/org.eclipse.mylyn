@@ -52,7 +52,7 @@ public final class ContextCore {
 	}
 
 	public static IContextStore getContextStore() {
-		return ContextCorePlugin.getDefault().getContextStore();
+		return ContextCorePlugin.getContextStore();
 	}
 
 }
