@@ -27,11 +27,6 @@ public interface IContextStore {
 	public abstract boolean hasContext(String handleIdentifier);
 
 	/**
-	 * @since 3.0
-	 */
-	public abstract void deleteContext(String handleIdentifier);
-
-	/**
 	 * @param zipFile
 	 *            A zip file that contains a context with the specified handle identifier in its root.
 	 * @since 3.0

@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IContextStore;
-import org.eclipse.mylyn.context.core.IContextStoreListener;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
@@ -120,6 +119,7 @@ public class LocalContextStore implements IContextStore {
 	 */
 
 	public void saveContext(String handleIdentifier) {
+		// FIXME this should not reference the context manager
 		IInteractionContext context = ContextCore.getContextManager().getActiveContext();
 		if (context != null && context.getHandleIdentifier() != null
 				&& context.getHandleIdentifier().equals(handleIdentifier)) {
@@ -132,11 +132,13 @@ public class LocalContextStore implements IContextStore {
 	}
 
 	public void saveContext(IInteractionContext context) {
+		// FIXME this should not reference the context manager
 		boolean wasPaused = ContextCore.getContextManager().isContextCapturePaused();
 		try {
 			// XXX: make this asynchronous by creating a copy
 
 			if (!wasPaused) {
+				// FIXME this should not reference the context manager
 				ContextCore.getContextManager().setContextCapturePaused(true);
 			}
 
@@ -154,6 +156,7 @@ public class LocalContextStore implements IContextStore {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "could not save context", t));
 		} finally {
 			if (!wasPaused) {
+				// FIXME this should not reference the context manager
 				ContextCore.getContextManager().setContextCapturePaused(false);
 			}
 		}
@@ -193,6 +196,7 @@ public class LocalContextStore implements IContextStore {
 	public boolean copyContext(File sourceContextFile, String targetcontextHandle) {
 		if (sourceContextFile.exists()
 				&& sourceContextFile.getName().endsWith(IInteractionContextManager.CONTEXT_FILE_EXTENSION)) {
+			// FIXME this should not reference the ContextCore
 			IInteractionContext context = externalizer.readContextFromXml("temp", sourceContextFile,
 					ContextCore.getCommonContextScaling());
 			if (context == null) {
@@ -203,6 +207,7 @@ public class LocalContextStore implements IContextStore {
 		File targetContextFile = getFileForContext(targetcontextHandle);
 		targetContextFile.delete();
 		try {
+			// FIXME this implementation is broken: it does not refactor the context handle
 			copy(sourceContextFile, targetContextFile);
 			contextFiles.add(targetContextFile);
 		} catch (IOException e) {
@@ -259,6 +264,7 @@ public class LocalContextStore implements IContextStore {
 		}
 	}
 
+	@Deprecated
 	private void copy(File src, File dest) throws IOException {
 		InputStream in = new FileInputStream(src);
 		try {
@@ -285,11 +291,14 @@ public class LocalContextStore implements IContextStore {
 		externalizer.writeContext(context, outputStream);
 	}
 
+	@Deprecated
 	public void addListener(IContextStoreListener listener) {
 		listeners.add(listener);
 	}
 
+	@Deprecated
 	public void removeListener(IContextStoreListener listener) {
 		listeners.remove(listener);
 	}
+
 }
