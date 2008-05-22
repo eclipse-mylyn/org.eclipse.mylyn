@@ -78,7 +78,7 @@ public class AttachmentUtil {
 	@Deprecated
 	public static boolean attachContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
 			ITask task, String longComment, IProgressMonitor monitor) throws CoreException {
-		ContextCore.getContextStore().saveContext(task.getHandleIdentifier());
+		ContextCorePlugin.getContextStore().saveContext(task.getHandleIdentifier());
 		final File sourceContextFile = ContextCorePlugin.getContextStore()
 				.getFileForContext(task.getHandleIdentifier());
 
@@ -108,7 +108,7 @@ public class AttachmentUtil {
 	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
 			String comment, IProgressMonitor monitor) throws CoreException {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-		ContextCore.getContextStore().saveContext(task.getHandleIdentifier());
+		ContextCorePlugin.getContextStore().saveContext(task.getHandleIdentifier());
 		File file = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 		if (file != null && file.exists()) {
 			FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
