@@ -75,43 +75,55 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.mylyn"/>
       <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.mylyn.commons.net"/>
+      <import plugin="org.eclipse.mylyn.bugzilla.ide" version="2.3.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.commons.ui" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.pde"/>
       <import plugin="org.eclipse.pde.core"/>
       <import plugin="org.eclipse.mylyn.monitor.ui"/>
       <import plugin="org.eclipse.mylyn.monitor.core"/>
-      <import plugin="org.eclipse.mylyn.ide.ui"/>
-      <import plugin="org.eclipse.mylyn.context.ui"/>
+      <import plugin="org.eclipse.mylyn.commons.core"/>
       <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.team.core"/>
-      <import plugin="org.eclipse.jdt"/>
-      <import plugin="org.eclipse.team.cvs.ui"/>
       <import plugin="org.eclipse.mylyn.team.ui"/>
       <import plugin="org.eclipse.mylyn.resources.ui"/>
-      <import plugin="org.eclipse.team.cvs.core"/>
       <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.mylyn.java.ui"/>
+      <import plugin="org.eclipse.mylyn.ide.ui"/>
+      <import plugin="org.eclipse.mylyn.context.ui"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.mylyn.pde.ui"/>
       <import plugin="org.eclipse.mylyn.jira.core"/>
       <import plugin="org.eclipse.mylyn.jira.ui"/>
       <import plugin="org.eclipse.mylyn.monitor.usage"/>
+      <import plugin="org.eclipse.jdt"/>
       <import plugin="org.eclipse.ui.browser"/>
       <import plugin="org.eclipse.mylyn.sandbox.ui"/>
       <import plugin="org.eclipse.core.net"/>
       <import plugin="org.eclipse.mylyn.web.tasks"/>
       <import plugin="org.eclipse.test.performance"/>
+      <import plugin="org.eclipse.mylyn.tasks.bugs"/>
       <import plugin="org.eclipse.mylyn.team.cvs"/>
-      <import plugin="org.eclipse.mylyn.web.ui"/>
+      <import plugin="org.eclipse.team.core"/>
+      <import plugin="org.eclipse.team.cvs.ui"/>
+      <import plugin="org.eclipse.team.cvs.core"/>
+      <import plugin="org.apache.xmlrpc" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylyn.trac.ui"/>
       <import plugin="org.eclipse.mylyn.trac.core"/>
       <import plugin="org.eclipse.mylyn.xplanner.core"/>
       <import plugin="org.eclipse.mylyn.xplanner.ui"/>
-      <import plugin="org.eclipse.mylyn.bugzilla.ide" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.tasks.bugs"/>
-      <import plugin="org.apache.xmlrpc" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.context.core" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.monitor.usage" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.context.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.tasks.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.monitor.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.monitor.core" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.core" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.ui.navigator"/>
+      <import plugin="org.eclipse.mylyn.tasks.core" version="3.0.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.commons.ui" version="3.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -200,6 +212,13 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
 
    <plugin
          id="org.eclipse.mylyn.monitor.reports"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.web.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
