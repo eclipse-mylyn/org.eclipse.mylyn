@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 
 /**
@@ -109,8 +108,8 @@ public class InteractionContextExternalizer {
 	public void writeContext(IInteractionContext context, ZipOutputStream outputStream, IInteractionContextWriter writer)
 			throws IOException {
 		String handleIdentifier = context.getHandleIdentifier();
-		String encoded = URLEncoder.encode(handleIdentifier, IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
-		ZipEntry zipEntry = new ZipEntry(encoded + IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
+		String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+		ZipEntry zipEntry = new ZipEntry(encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		outputStream.putNextEntry(zipEntry);
 		outputStream.setMethod(ZipOutputStream.DEFLATED);
 

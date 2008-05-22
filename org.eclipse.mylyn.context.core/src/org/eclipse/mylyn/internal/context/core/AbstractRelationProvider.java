@@ -64,7 +64,7 @@ public abstract class AbstractRelationProvider extends AbstractContextListener {
 
 	/**
 	 * @param limitTo
-	 * 		Only used in thye AbstractJavaRelationshipProvider for the search type
+	 *            Only used in thye AbstractJavaRelationshipProvider for the search type
 	 */
 	public abstract IActiveSearchOperation getSearchOperation(IInteractionElement node, int limitTo,
 			int degreeOfSeparation);
@@ -94,7 +94,7 @@ public abstract class AbstractRelationProvider extends AbstractContextListener {
 		// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle,
 				getSourceId(), getId(), null, predictedInterest);
-		ContextCore.getContextManager().processInteractionEvent(event, false, false);
+		ContextCorePlugin.getContextManager().processInteractionEvent(event, false, false);
 		createEdge(node, elementKind, elementHandle);
 	}
 

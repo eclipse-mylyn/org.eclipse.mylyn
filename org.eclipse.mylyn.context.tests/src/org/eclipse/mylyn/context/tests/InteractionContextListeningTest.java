@@ -13,12 +13,12 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.AbstractContextListener;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 
 /**
@@ -28,7 +28,7 @@ public class InteractionContextListeningTest extends TestCase {
 
 	private final InteractionContext mockContext = new InteractionContext("doitest", new InteractionContextScaling());
 
-	private IInteractionContextManager contextManager;
+	private InteractionContextManager contextManager;
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -37,7 +37,7 @@ public class InteractionContextListeningTest extends TestCase {
 	}
 
 	public void testAddRemoveListenerInContextActivated() {
-		contextManager = ContextCore.getContextManager();
+		contextManager = ContextCorePlugin.getContextManager();
 		((CompositeInteractionContext) contextManager.getActiveContext()).getContextMap().put("handle", mockContext);
 
 		final StubContextListener listener = new StubContextListener();

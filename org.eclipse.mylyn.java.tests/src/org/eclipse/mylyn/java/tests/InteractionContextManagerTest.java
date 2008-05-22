@@ -25,12 +25,12 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 import org.eclipse.mylyn.internal.context.core.LocalContextStore;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
@@ -99,12 +99,12 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 	public void testShellLifecycleActivityStart() {
 		List<InteractionEvent> events = manager.getActivityMetaContext().getInteractionHistory();
-		assertEquals(IInteractionContextManager.ACTIVITY_DELTA_STARTED, events.get(0).getDelta());
-		assertEquals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED, events.get(1).getDelta());
+		assertEquals(InteractionContextManager.ACTIVITY_DELTA_STARTED, events.get(0).getDelta());
+		assertEquals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, events.get(1).getDelta());
 	}
 
 	public void testActivityHistory() {
-		manager.resetActivityHistory();
+		manager.resetActivityMetaContext();
 		InteractionContext history = manager.getActivityMetaContext();
 		assertNotNull(history);
 		assertEquals(0, manager.getActivityMetaContext().getInteractionHistory().size());
@@ -276,7 +276,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
 				new JavaStructureBridge().getContentType(), m1.getHandleIdentifier(), "source");
-		ContextCore.getContextManager().processInteractionEvent(event, true);
+		ContextCorePlugin.getContextManager().processInteractionEvent(event, true);
 
 		node = ContextCore.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
@@ -288,7 +288,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 		InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
 				new JavaStructureBridge().getContentType(), m1.getHandleIdentifier(), "source");
-		ContextCore.getContextManager().processInteractionEvent(selectionEvent, true);
+		ContextCorePlugin.getContextManager().processInteractionEvent(selectionEvent, true);
 		parentNode = ContextCore.getContextManager().getElement(parent.getHandleIdentifier());
 		assertTrue(parentNode.getInterest().isInteresting());
 	}
@@ -410,29 +410,29 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 	public void testEventProcessWithObject() throws JavaModelException {
 		InteractionContext context = new InteractionContext("global-id", new InteractionContextScaling());
 		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
-		ContextCore.getContextManager().addGlobalContext(context);
+		ContextCorePlugin.getContextManager().addGlobalContext(context);
 
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		assertEquals(0, context.getAllElements().size());
-		ContextCore.getContextManager().processInteractionEvent(type1, InteractionEvent.Kind.SELECTION, MOCK_ORIGIN,
-				context);
+		ContextCorePlugin.getContextManager().processInteractionEvent(type1, InteractionEvent.Kind.SELECTION,
+				MOCK_ORIGIN, context);
 		assertEquals(6, context.getAllElements().size());
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
-		ContextCore.getContextManager().removeGlobalContext(context);
+		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}
 
 	public void testEventProcessWithNonExistentObject() throws JavaModelException {
 		InteractionContext context = new InteractionContext("global-id", new InteractionContextScaling());
 		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
-		ContextCore.getContextManager().addGlobalContext(context);
+		ContextCorePlugin.getContextManager().addGlobalContext(context);
 
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
 		assertEquals(0, context.getAllElements().size());
-		ContextCore.getContextManager().processInteractionEvent(new String("non existent"),
+		ContextCorePlugin.getContextManager().processInteractionEvent(new String("non existent"),
 				InteractionEvent.Kind.SELECTION, MOCK_ORIGIN, context);
 		assertEquals(0, context.getAllElements().size());
 		assertEquals(0, ContextCore.getContextManager().getActiveContext().getAllElements().size());
-		ContextCore.getContextManager().removeGlobalContext(context);
+		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}
 
 }

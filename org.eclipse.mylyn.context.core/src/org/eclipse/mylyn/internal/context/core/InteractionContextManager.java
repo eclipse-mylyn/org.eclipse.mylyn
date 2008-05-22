@@ -89,6 +89,48 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	private final LocalContextStore contextStore;
 
+	public static final String SOURCE_ID_DECAY = "org.eclipse.mylyn.core.model.interest.decay";
+
+	public static final String CONTEXT_FILE_EXTENSION_OLD = ".xml";
+
+	public static final String CONTEXT_FILE_EXTENSION = ".xml.zip";
+
+	public static final String CONTAINMENT_PROPAGATION_ID = "org.eclipse.mylyn.core.model.edges.containment";
+
+	public static final String OLD_CONTEXT_HISTORY_FILE_NAME = "context-history";
+
+	public static final String CONTEXT_HISTORY_FILE_NAME = "activity";
+
+	public static final String CONTEXT_FILENAME_ENCODING = "UTF-8";
+
+	public static final String PROPERTY_CONTEXT_ACTIVE = "org.eclipse.mylyn.context.core.context.active";
+
+	public static final String ACTIVITY_STRUCTUREKIND_ACTIVATION = "activation";
+
+	public static final String ACTIVITY_STRUCTUREKIND_TIMING = "timing";
+
+	public static final String ACTIVITY_STRUCTUREKIND_LIFECYCLE = "lifecycle";
+
+	public static final String ACTIVITY_ORIGINID_USER = "user";
+
+	public static final String ACTIVITY_ORIGINID_OS = "os";
+
+	public static final String ACTIVITY_ORIGINID_WORKBENCH = "org.eclipse.ui.workbench";
+
+	public static final String ACTIVITY_HANDLE_NONE = "none";
+
+	public static final String ACTIVITY_DELTA_STOPPED = "stopped";
+
+	public static final String ACTIVITY_DELTA_STARTED = "started";
+
+	public static final String ACTIVITY_DELTA_REMOVED = "removed";
+
+	public static final String ACTIVITY_DELTA_ADDED = "added";
+
+	public static final String ACTIVITY_DELTA_ACTIVATED = "activated";
+
+	public static final String ACTIVITY_DELTA_DEACTIVATED = "deactivated";
+
 	public InteractionContextManager(LocalContextStore contextStore) {
 		this.contextStore = contextStore;
 	}
@@ -209,12 +251,12 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public InteractionContext collapseActivityMetaContext(InteractionContext context) {
 		Map<String, List<InteractionEvent>> attention = new HashMap<String, List<InteractionEvent>>();
-		InteractionContext tempContext = new InteractionContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME,
+		InteractionContext tempContext = new InteractionContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME,
 				ContextCore.getCommonContextScaling());
 		for (InteractionEvent event : context.getInteractionHistory()) {
 
 			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)
-					&& event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ADDED)) {
+					&& event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ADDED)) {
 				if (event.getStructureHandle() == null || event.getStructureHandle().equals("")) {
 					continue;
 				}
@@ -312,7 +354,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public void deactivateContext(String handleIdentifier) {
 		try {
-			System.setProperty(IInteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.FALSE.toString());
+			System.setProperty(InteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.FALSE.toString());
 
 			IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
@@ -332,9 +374,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 			if (!activationHistorySuppressed) {
 				processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-						IInteractionContextManager.ACTIVITY_STRUCTUREKIND_ACTIVATION, handleIdentifier,
-						IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-						IInteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_ACTIVATION, handleIdentifier,
+						InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+						InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
 			}
 //			saveActivityMetaContext();
 		} catch (Throwable t) {
@@ -342,7 +384,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	public void delete(IInteractionElement element) {
+	public void deleteElement(IInteractionElement element) {
 		delete(element, getActiveContext());
 		notifyElementsDeleted(Arrays.asList(new IInteractionElement[] { element }));
 	}
@@ -474,11 +516,11 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return globalContexts;
 	}
 
-	public Collection<IInteractionElement> getInterestingDocuments() {
-		return getInterestingDocuments(activeContext);
+	public Collection<IInteractionElement> getActiveDocuments() {
+		return getActiveDocuments(activeContext);
 	}
 
-	public Collection<IInteractionElement> getInterestingDocuments(IInteractionContext context) {
+	public Collection<IInteractionElement> getActiveDocuments(IInteractionContext context) {
 		Set<IInteractionElement> set = new HashSet<IInteractionElement>();
 		if (context == null) {
 			return set;
@@ -521,16 +563,16 @@ public class InteractionContextManager implements IInteractionContextManager {
 	public void internalActivateContext(IInteractionContext context) {
 		Assert.isTrue(context instanceof InteractionContext, "Must provide a concrete InteractionContext");
 
-		System.setProperty(IInteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
+		System.setProperty(InteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
 		activeContext.getContextMap().put(context.getHandleIdentifier(), (InteractionContext) context);
 //		if (contextFiles != null) {
 //			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
 //		}
 		if (!activationHistorySuppressed) {
 			processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-					IInteractionContextManager.ACTIVITY_STRUCTUREKIND_ACTIVATION, context.getHandleIdentifier(),
-					IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-					IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
+					InteractionContextManager.ACTIVITY_STRUCTUREKIND_ACTIVATION, context.getHandleIdentifier(),
+					InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+					InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
 		}
 
 		for (AbstractContextListener listener : contextListeners) {
@@ -594,7 +636,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	@Deprecated
 	public boolean isContextActivePropertySet() {
-		return Boolean.parseBoolean(System.getProperty(IInteractionContextManager.PROPERTY_CONTEXT_ACTIVE));
+		return Boolean.parseBoolean(System.getProperty(InteractionContextManager.PROPERTY_CONTEXT_ACTIVE));
 	}
 
 	public boolean isContextCapturePaused() {
@@ -628,10 +670,10 @@ public class InteractionContextManager implements IInteractionContextManager {
 			try {
 				metaContextLock.acquire();
 
-				activityMetaContext = (InteractionContext) contextStore.loadContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+				activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 
 				if (activityMetaContext == null) {
-					resetActivityHistory();
+					resetActivityMetaContext();
 				} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(
 						PREFERENCE_ATTENTION_MIGRATED)) {
 					activityMetaContext = migrateLegacyActivity(activityMetaContext);
@@ -647,7 +689,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				listener.contextActivated(activityMetaContext);
 			}
 		} else {
-			resetActivityHistory();
+			resetActivityMetaContext();
 			StatusHandler.log(new Status(IStatus.INFO, ContextCorePlugin.PLUGIN_ID,
 					"No context store installed, not restoring activity context."));
 		}
@@ -667,7 +709,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			InteractionContext context = getActivityMetaContext();
 
 			contextStore.saveContext(collapseActivityMetaContext(context),
-					IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+					InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not save activity history",
 					t));
@@ -950,7 +992,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				increment = node.getInterest().getValue() - parentPreviousInterest;
 				InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION,
 						parentContentType, parentHandle, SOURCE_ID_MODEL_PROPAGATION,
-						IInteractionContextManager.CONTAINMENT_PROPAGATION_ID, increment);
+						InteractionContextManager.CONTAINMENT_PROPAGATION_ID, increment);
 				parentElement = addInteractionEvent(interactionContext, propagationEvent);
 			}
 
@@ -1021,10 +1063,10 @@ public class InteractionContextManager implements IInteractionContextManager {
 		contextListeners.remove(listener);
 	}
 
-	public void resetActivityHistory() {
+	public void resetActivityMetaContext() {
 		try {
 			metaContextLock.acquire();
-			activityMetaContext = new InteractionContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME,
+			activityMetaContext = new InteractionContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME,
 					ContextCore.getCommonContextScaling());
 			saveActivityMetaContext();
 		} finally {

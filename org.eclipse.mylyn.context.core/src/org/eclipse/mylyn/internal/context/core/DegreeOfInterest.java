@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylyn.context.core.IDegreeOfInterest;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
@@ -164,7 +163,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		if (!allCollapsed.isEmpty()) {
 			allCollapsed.add(0, new InteractionEvent(InteractionEvent.Kind.MANIPULATION, allCollapsed.get(0)
 					.getStructureKind(), allCollapsed.get(0).getStructureHandle(),
-					IInteractionContextManager.SOURCE_ID_DECAY, -getDecayValue()));
+					InteractionContextManager.SOURCE_ID_DECAY, -getDecayValue()));
 		}
 		return allCollapsed;
 	}

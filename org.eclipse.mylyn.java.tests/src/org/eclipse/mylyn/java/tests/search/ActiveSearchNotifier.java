@@ -14,6 +14,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
@@ -54,7 +55,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 
 	public IInteractionElement getElement(String handle, String kind) {
 		IInteractionElement node = context.addEvent(mockSelection(handle, kind, source));
-		ContextCore.getContextManager().processInteractionEvent(
+		ContextCorePlugin.getContextManager().processInteractionEvent(
 				mockUserEvent(handle, kind, source, (1 / ContextCore.getCommonContextScaling().getLandmark()) * -2),
 				true);
 		return node;

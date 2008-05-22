@@ -29,7 +29,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IContextStore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 
 /**
@@ -195,7 +194,7 @@ public class LocalContextStore implements IContextStore {
 	@Deprecated
 	public boolean copyContext(File sourceContextFile, String targetcontextHandle) {
 		if (sourceContextFile.exists()
-				&& sourceContextFile.getName().endsWith(IInteractionContextManager.CONTEXT_FILE_EXTENSION)) {
+				&& sourceContextFile.getName().endsWith(InteractionContextManager.CONTEXT_FILE_EXTENSION)) {
 			// FIXME this should not reference the ContextCore
 			IInteractionContext context = externalizer.readContextFromXml("temp", sourceContextFile,
 					ContextCore.getCommonContextScaling());
@@ -237,9 +236,9 @@ public class LocalContextStore implements IContextStore {
 	public File getFileForContext(String handleIdentifier) {
 		String encoded;
 		try {
-			encoded = URLEncoder.encode(handleIdentifier, IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
+			encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 			File contextDirectory = getContextDirectory();
-			File contextFile = new File(contextDirectory, encoded + IInteractionContextManager.CONTEXT_FILE_EXTENSION);
+			File contextFile = new File(contextDirectory, encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION);
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,

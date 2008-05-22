@@ -13,7 +13,6 @@ import java.io.File;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
@@ -23,6 +22,7 @@ import org.eclipse.mylyn.context.tests.support.FileTool;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.SaxContextReader;
 
 /**
@@ -64,7 +64,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		File dataDirectory = ContextCorePlugin.getContextStore().getContextDirectory().getParentFile();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
-				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
 		IInteractionContext loaded = externalizer.readContextFromXml(CONTEXT_HANDLE, zippedContextFile, scaling);
 		assertNotNull(loaded);
@@ -163,7 +163,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		File dataDirectory = ContextCorePlugin.getContextStore().getContextDirectory().getParentFile();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
-				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
 		IInteractionContext loaded = externalizer.readContextFromXml(CONTEXT_HANDLE, zippedContextFile, scaling);
 		assertNotNull(loaded);

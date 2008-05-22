@@ -102,7 +102,7 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 	public void finish() {
 		String workingSetName = workingSetNameText.getText();
 		ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(1);
-		ContextWorkingSetManager.getElementsFromTaskscape(elements);
+		ContextWorkingSetManager.getElementsFromContext(elements);
 		if (workingSet == null) {
 			IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			if ((workingSet = workingSetManager.getWorkingSet(workingSetName)) == null) {

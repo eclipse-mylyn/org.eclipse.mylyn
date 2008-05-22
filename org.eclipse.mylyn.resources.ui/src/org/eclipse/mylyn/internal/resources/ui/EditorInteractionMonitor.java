@@ -22,6 +22,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.context.ui.IContextAwareEditor;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
 import org.eclipse.ui.IEditorPart;
@@ -138,7 +139,8 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				}
 			}
 			if (element != null) {
-				ContextCore.getContextManager().manipulateInterestForElement(element, false, false, false, SOURCE_ID);
+				ContextCorePlugin.getContextManager().manipulateInterestForElement(element, false, false, false,
+						SOURCE_ID);
 			}
 		}
 	}

@@ -127,7 +127,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	public List<IResource> getInterestingResources(IInteractionContext context) {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		Collection<IInteractionElement> resourceElements = ContextCore.getContextManager().getInterestingDocuments(
+		Collection<IInteractionElement> resourceElements = ContextCore.getContextManager().getActiveDocuments(
 				context);
 		for (IInteractionElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);

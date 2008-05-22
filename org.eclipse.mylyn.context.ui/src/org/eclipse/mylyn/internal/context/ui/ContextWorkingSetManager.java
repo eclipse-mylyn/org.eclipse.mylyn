@@ -17,6 +17,7 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
@@ -116,14 +117,14 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater {
 				IWorkingSet set = workingSets.get(0);
 				set.setElements(new IAdaptable[] {});
 				List<IAdaptable> elements = new ArrayList<IAdaptable>();
-				getElementsFromTaskscape(elements);
+				getElementsFromContext(elements);
 				set.setElements(elements.toArray(new IAdaptable[elements.size()]));
 			}
 		});
 	}
 
-	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
-		for (IInteractionElement node : ContextCore.getContextManager().getInterestingDocuments()) {
+	public static void getElementsFromContext(List<IAdaptable> elements) {
+		for (IInteractionElement node : ContextCorePlugin.getContextManager().getActiveDocuments()) {
 			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(node.getContentType());
 
 			// HACK comparing extension to string

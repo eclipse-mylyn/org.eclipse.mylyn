@@ -96,13 +96,13 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private void delete(final IInteractionElement element) {
 		if (!asyncExecMode) {
-			ContextCore.getContextManager().delete(element);
+			ContextCore.getContextManager().deleteElement(element);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						ContextCore.getContextManager().delete(element);
+						ContextCore.getContextManager().deleteElement(element);
 					}
 				});
 			}

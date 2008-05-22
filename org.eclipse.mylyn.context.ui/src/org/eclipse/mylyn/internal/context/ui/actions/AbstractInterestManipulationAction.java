@@ -16,6 +16,7 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.UiUtil;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
@@ -93,8 +94,8 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 							// ignore
 						}
 					}
-					boolean manipulated = ContextCore.getContextManager().manipulateInterestForElement(node, increment,
-							false, preserveUninteresting, SOURCE_ID, getContext());
+					boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
+							increment, false, preserveUninteresting, SOURCE_ID, getContext());
 					if (!manipulated) {
 						UiUtil.displayInterestManipulationFailure();
 					}
@@ -103,8 +104,8 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		} else {
 			IInteractionElement node = ContextCore.getContextManager().getActiveElement();
 			if (node != null) {
-				boolean manipulated = ContextCore.getContextManager().manipulateInterestForElement(node, increment,
-						false, false, SOURCE_ID, getContext());
+				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
+						increment, false, false, SOURCE_ID, getContext());
 				if (!manipulated) {
 					UiUtil.displayInterestManipulationFailure();
 				}
