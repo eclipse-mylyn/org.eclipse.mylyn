@@ -28,9 +28,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -168,14 +168,14 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 			if (exportActivationHistory) {
 				try {
 					File sourceActivationHistoryFile = new File(contextsDirectory,
-							IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-									+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
+							InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+									+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 
 					if (sourceActivationHistoryFile.exists()) {
 
 						File destActivationHistoryFile = new File(destinationDirectory + File.separator
-								+ IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-								+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
+								+ InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+								+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 
 						if (zip) {
 							filesToZip.add(sourceActivationHistoryFile);

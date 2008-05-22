@@ -21,10 +21,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -288,20 +287,20 @@ public class TaskListManagerTest extends TestCase {
 		Calendar endDate2 = Calendar.getInstance();
 		endDate2.add(Calendar.MINUTE, 25);
 
-		ContextCore.getContextManager().resetActivityHistory();
+		ContextCorePlugin.getContextManager().resetActivityMetaContext();
 		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertEquals(0, metaContext.getInteractionHistory().size());
 
-		ContextCore.getContextManager().processActivityMetaContextEvent(
+		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
-						"origin", null, IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
+						"origin", null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
 						endDate.getTime()));
 
-		ContextCore.getContextManager().processActivityMetaContextEvent(
+		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(),
-						"origin", null, IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(),
+						"origin", null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
 						endDate2.getTime()));
 
 		assertEquals(2, metaContext.getInteractionHistory().size());

@@ -29,8 +29,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -134,13 +134,13 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 				if (!importPage.importActivationHistory()
 						&& entry.getName().endsWith(
-								IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-										+ IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD)) {
+								InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+										+ InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD)) {
 					continue;
 				}
 				if (!importPage.importTaskContexts()
 						&& entry.getName().matches(
-								".*-\\d*" + IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
+								".*-\\d*" + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
 					continue;
 				}
 

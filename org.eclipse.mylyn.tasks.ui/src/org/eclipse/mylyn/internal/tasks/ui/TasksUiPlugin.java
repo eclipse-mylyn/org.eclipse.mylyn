@@ -564,7 +564,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			taskActivityManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 
-			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCore.getContextManager());
+			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCorePlugin.getContextManager());
 			taskActivityMonitor.start();
 
 			saveParticipant = new ISaveParticipant() {
@@ -797,7 +797,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		loadTemplateRepositories();
 
 		taskActivityManager.clear();
-		ContextCore.getContextManager().loadActivityMetaContext();
+		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		taskActivityMonitor.reloadActivityTime();
 		taskActivityManager.reloadPlanningData();
 	}

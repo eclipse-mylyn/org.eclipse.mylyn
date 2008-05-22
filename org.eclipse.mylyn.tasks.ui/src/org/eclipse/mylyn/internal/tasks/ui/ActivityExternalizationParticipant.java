@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationContext;
@@ -27,16 +27,17 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	private boolean isDirty = false;
 
+	@SuppressWarnings("restriction")
 	@Override
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
 		Assert.isNotNull(context);
 		switch (context.getKind()) {
 		case SAVE:
-			ContextCore.getContextManager().saveActivityMetaContext();
+			ContextCorePlugin.getContextManager().saveActivityMetaContext();
 			setDirty(false);
 			break;
 		case LOAD:
-			ContextCore.getContextManager().loadActivityMetaContext();
+			ContextCorePlugin.getContextManager().loadActivityMetaContext();
 			break;
 		case SNAPSHOT:
 			break;
@@ -80,7 +81,7 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	@Override
 	public void save(String rootPath, IProgressMonitor monitor) throws CoreException {
-		ContextCore.getContextManager().saveActivityMetaContext();
+		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		setDirty(false);
 	}
 

@@ -9,7 +9,6 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.io.File;
 
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
@@ -59,7 +58,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		ContextCore.getContextManager().resetActivityHistory();
+		ContextCorePlugin.getContextManager().resetActivityMetaContext();
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		super.tearDown();

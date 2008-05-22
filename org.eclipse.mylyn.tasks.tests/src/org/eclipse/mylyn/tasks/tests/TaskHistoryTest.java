@@ -12,7 +12,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
@@ -71,7 +71,7 @@ public class TaskHistoryTest extends TestCase {
 	private void resetHistory() {
 		manager.deactivateAllTasks();
 		TasksUiPlugin.getTaskActivityManager().clear();
-		ContextCore.getContextManager().resetActivityHistory();
+		ContextCorePlugin.getContextManager().resetActivityMetaContext();
 	}
 
 	/**

@@ -14,9 +14,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -31,28 +30,27 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * @author Steffen Pingel
  * @since 3.0
  */
+@SuppressWarnings("restriction")
 public class TaskActivityMonitor {
+
+	private final InteractionContextManager contextManager;
+
+	private final TaskActivityManager taskActivityManager;
+
+	private final TaskList taskList;
 
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
 		@Override
 		public void interestChanged(List<IInteractionElement> elements) {
-			List<InteractionEvent> events = ContextCore.getContextManager()
-					.getActivityMetaContext()
-					.getInteractionHistory();
+			List<InteractionEvent> events = contextManager.getActivityMetaContext().getInteractionHistory();
 			InteractionEvent event = events.get(events.size() - 1);
 			parseInteractionEvent(event, false);
 
 		}
 	};
 
-	private final IInteractionContextManager contextManager;
-
-	private final TaskActivityManager taskActivityManager;
-
-	private final TaskList taskList;
-
-	public TaskActivityMonitor(TaskActivityManager taskActivityManager, IInteractionContextManager contextManager) {
+	public TaskActivityMonitor(TaskActivityManager taskActivityManager, InteractionContextManager contextManager) {
 		this.taskActivityManager = taskActivityManager;
 		this.contextManager = contextManager;
 		this.taskList = TasksUiPlugin.getTaskList();
@@ -66,7 +64,7 @@ public class TaskActivityMonitor {
 	public boolean parseInteractionEvent(InteractionEvent event, boolean isReloading) {
 		try {
 			if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
-				if ((event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED))) {
+				if ((event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED))) {
 					//addActivationHistory
 					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
 					if (activatedTask != null) {
@@ -119,9 +117,8 @@ public class TaskActivityMonitor {
 	 * Returns the task corresponding to the interaction event history item at the specified position
 	 */
 	protected ITask getHistoryTaskAt(int pos) {
-		InteractionEvent event = ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().get(
-				pos);
-		if (event.getDelta().equals(IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
+		InteractionEvent event = contextManager.getActivityMetaContext().getInteractionHistory().get(pos);
+		if (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
 			return TasksUiPlugin.getTaskList().getTask(event.getStructureHandle());
 		} else {
 			return null;

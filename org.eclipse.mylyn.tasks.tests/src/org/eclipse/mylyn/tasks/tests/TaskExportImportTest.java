@@ -19,10 +19,10 @@ import java.util.zip.ZipInputStream;
 
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -100,8 +100,8 @@ public class TaskExportImportTest extends AbstractContextTest {
 		assertTrue("exported file contains a file with queries", files.contains(ITasksCoreConstants.OLD_TASK_LIST_FILE));
 
 		String handleIdentifier = mockContext.getHandleIdentifier();
-		String encoded = URLEncoder.encode(handleIdentifier, IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
-		String contextName = encoded + IInteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
+		String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+		String contextName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
 		assertTrue("exported file contains a file with context", files.contains(contextName));
 
 		// reset all data
@@ -132,7 +132,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		assertEquals("Saved context is the same as original one", mockContext, savedContext);
 		assertEquals("Saved task is the same as original one", task, taskList.getTask(task.getHandleIdentifier()));
 
-		ContextCore.getContextManager().deactivateAllContexts();
+		ContextCorePlugin.getContextManager().deactivateAllContexts();
 	}
 
 	private void removeFiles(File root) {

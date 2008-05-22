@@ -19,10 +19,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
@@ -80,7 +79,7 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 						String storedHandle;
 						try {
 							storedHandle = URLDecoder.decode(file.getName().substring(0, dotIndex),
-									IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
+									InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 							int delimIndex = storedHandle.lastIndexOf(RepositoryTaskHandleUtil.HANDLE_DELIM);
 							if (delimIndex != -1) {
 								String storedUrl = storedHandle.substring(0, delimIndex);
@@ -132,9 +131,10 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 		TasksUiPlugin.getTaskDataStorageManager().saveNow();
 	}
 
+	@SuppressWarnings("restriction")
 	private void refactorMetaContextHandles(String oldRepositoryUrl, String newRepositoryUrl) {
 		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
-		ContextCore.getContextManager().resetActivityHistory();
+		ContextCorePlugin.getContextManager().resetActivityMetaContext();
 		InteractionContext newMetaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		for (InteractionEvent event : metaContext.getInteractionHistory()) {
 			if (event.getStructureHandle() != null) {

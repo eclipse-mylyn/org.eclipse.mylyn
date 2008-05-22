@@ -21,8 +21,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -120,8 +120,8 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 		final File destTaskListFile = new File(destDir + File.separator + ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
 		final File destActivationHistoryFile = new File(destDir + File.separator
-				+ IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME
-				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
+				+ InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 		final File destZipFile = new File(destDir + File.separator + getZipFileName());
 
 		// Prompt the user to confirm if ANY of the save repositoryOperations will cause
