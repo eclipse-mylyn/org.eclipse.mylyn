@@ -148,7 +148,7 @@ public class AttachmentUtil {
 		List<ITaskAttachment> contextAttachments = new ArrayList<ITaskAttachment>();
 		TaskData taskData;
 		try {
-			taskData = TasksUi.getTaskDataManager().getTaskData(task, task.getConnectorKind());
+			taskData = TasksUi.getTaskDataManager().getTaskData(task);
 		} catch (CoreException e) {
 			// ignore
 			return new ITaskAttachment[0];

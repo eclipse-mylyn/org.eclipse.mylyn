@@ -27,8 +27,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
@@ -76,13 +74,14 @@ public class TaskDataManager implements ITaskDataManager {
 
 	/** public for testing purposes */
 	@Deprecated
-	public boolean checkHasIncoming(ITask repositoryTask, RepositoryTaskData newData) {
+	public boolean checkHasIncoming(ITask repositoryTask,
+			org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData newData) {
 		if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
 			return true;
 		}
 
 		String lastModified = repositoryTask.getLastReadTimeStamp();
-		RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
+		org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute.DATE_MODIFIED);
 		if (lastModified != null && modifiedDateAttribute != null && modifiedDateAttribute.getValue() != null) {
 			if (lastModified.trim().compareTo(modifiedDateAttribute.getValue().trim()) == 0) {
 				// Only set to synchronized state if not in incoming state.
@@ -92,9 +91,11 @@ public class TaskDataManager implements ITaskDataManager {
 			}
 
 			Date modifiedDate = newData.getAttributeFactory().getDateForAttributeType(
-					RepositoryTaskAttribute.DATE_MODIFIED, modifiedDateAttribute.getValue());
+					org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute.DATE_MODIFIED,
+					modifiedDateAttribute.getValue());
 			Date lastModifiedDate = newData.getAttributeFactory().getDateForAttributeType(
-					RepositoryTaskAttribute.DATE_MODIFIED, lastModified);
+					org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute.DATE_MODIFIED,
+					lastModified);
 			if (modifiedDate != null && lastModifiedDate != null && modifiedDate.equals(lastModifiedDate)) {
 				return false;
 			}
@@ -103,9 +104,8 @@ public class TaskDataManager implements ITaskDataManager {
 		return true;
 	}
 
-	public ITaskDataWorkingCopy createWorkingCopy(final ITask task, final String kind, final TaskData taskData) {
+	public ITaskDataWorkingCopy createWorkingCopy(final ITask task, final TaskData taskData) {
 		Assert.isNotNull(task);
-		Assert.isNotNull(kind);
 		final TaskDataState state = new TaskDataState(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
 				taskData.getTaskId());
 		state.setRepositoryData(taskData);
@@ -116,10 +116,10 @@ public class TaskDataManager implements ITaskDataManager {
 		return state;
 	}
 
-	public ITaskDataWorkingCopy getWorkingCopy(final ITask itask, final String kind) throws CoreException {
+	public ITaskDataWorkingCopy getWorkingCopy(final ITask itask) throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
-		Assert.isNotNull(kind);
+		final String kind = task.getConnectorKind();
 		final TaskDataState[] result = new TaskDataState[1];
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
@@ -151,10 +151,10 @@ public class TaskDataManager implements ITaskDataManager {
 		return result[0];
 	}
 
-	public void saveWorkingCopy(final ITask itask, final String kind, final TaskDataState state) throws CoreException {
+	public void saveWorkingCopy(final ITask itask, final TaskDataState state) throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
-		Assert.isNotNull(kind);
+		final String kind = task.getConnectorKind();
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				final File file = getFile(task, kind);
@@ -232,10 +232,10 @@ public class TaskDataManager implements ITaskDataManager {
 		return file;
 	}
 
-	public void discardEdits(final ITask itask, final String kind) throws CoreException {
+	public void discardEdits(final ITask itask) throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
-		Assert.isNotNull(kind);
+		final String kind = task.getConnectorKind();
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				taskDataStore.discardEdits(getFile(task, kind));
@@ -312,9 +312,9 @@ public class TaskDataManager implements ITaskDataManager {
 
 	}
 
-	public TaskData getTaskData(ITask task, String kind) throws CoreException {
+	public TaskData getTaskData(ITask task) throws CoreException {
 		Assert.isNotNull(task);
-		Assert.isNotNull(kind);
+		final String kind = task.getConnectorKind();
 		TaskDataState state = taskDataStore.getTaskDataState(findFile(task, kind));
 		if (state == null) {
 			return null;
@@ -333,9 +333,9 @@ public class TaskDataManager implements ITaskDataManager {
 		return state.getRepositoryData();
 	}
 
-	public boolean hasTaskData(ITask task, String kind) {
+	public boolean hasTaskData(ITask task) {
 		Assert.isNotNull(task);
-		Assert.isNotNull(kind);
+		final String kind = task.getConnectorKind();
 		return getFile(task, kind).exists();
 	}
 
@@ -371,14 +371,15 @@ public class TaskDataManager implements ITaskDataManager {
 	 * @return true if call results in change of sync state
 	 */
 	@Deprecated
-	public synchronized boolean saveIncoming(final ITask itask, final RepositoryTaskData newTaskData, boolean forceSync) {
+	public synchronized boolean saveIncoming(final ITask itask,
+			final org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData newTaskData, boolean forceSync) {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(newTaskData);
 		final SynchronizationState startState = task.getSynchronizationState();
 		SynchronizationState status = task.getSynchronizationState();
 
-		RepositoryTaskData previousTaskData = taskDataStorageManager.getNewTaskData(task.getRepositoryUrl(),
-				task.getTaskId());
+		org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData previousTaskData = taskDataStorageManager.getNewTaskData(
+				task.getRepositoryUrl(), task.getTaskId());
 
 		if (task.isSubmitting()) {
 			status = SynchronizationState.SYNCHRONIZED;
@@ -429,18 +430,19 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	@Deprecated
-	public void saveOffline(ITask task, RepositoryTaskData taskData) {
+	public void saveOffline(ITask task, org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData taskData) {
 		taskDataStorageManager.setNewTaskData(taskData);
 	}
 
 	/**
 	 * @param repositoryTask
-	 * 		task that changed
+	 *            task that changed
 	 * @param modifiedAttributes
-	 * 		attributes that have changed during edit session
+	 *            attributes that have changed during edit session
 	 */
 	@Deprecated
-	public synchronized void saveOutgoing(AbstractTask repositoryTask, Set<RepositoryTaskAttribute> modifiedAttributes) {
+	public synchronized void saveOutgoing(AbstractTask repositoryTask,
+			Set<org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute> modifiedAttributes) {
 		repositoryTask.setSynchronizationState(SynchronizationState.OUTGOING);
 		taskDataStorageManager.saveEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId(),
 				Collections.unmodifiableSet(modifiedAttributes));
@@ -453,9 +455,9 @@ public class TaskDataManager implements ITaskDataManager {
 
 	/**
 	 * @param task
-	 * 		repository task to mark as read or unread
+	 *            repository task to mark as read or unread
 	 * @param read
-	 * 		true to mark as read, false to mark as unread
+	 *            true to mark as read, false to mark as unread
 	 */
 	public void setTaskRead(final ITask itask, final boolean read) {
 		final AbstractTask task = (AbstractTask) itask;
@@ -501,7 +503,8 @@ public class TaskDataManager implements ITaskDataManager {
 	@Deprecated
 	private void setTaskReadDeprecated(ITask itask, boolean read) {
 		final AbstractTask task = (AbstractTask) itask;
-		RepositoryTaskData taskData = taskDataStorageManager.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData taskData = taskDataStorageManager.getNewTaskData(
+				task.getRepositoryUrl(), task.getTaskId());
 		if (read && task.getSynchronizationState().equals(SynchronizationState.INCOMING)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				task.setLastReadTimeStamp(taskData.getLastModified());
@@ -545,20 +548,21 @@ public class TaskDataManager implements ITaskDataManager {
 		}
 	}
 
-	void putEdits(ITask task, String kind, TaskData editsData) throws CoreException {
+	void putEdits(ITask task, TaskData editsData) throws CoreException {
 		Assert.isNotNull(task);
-		Assert.isNotNull(kind);
+		final String kind = task.getConnectorKind();
 		Assert.isNotNull(editsData);
 		taskDataStore.putEdits(getFile(task, kind), editsData);
 	}
 
 	@Deprecated
-	public RepositoryTaskData getNewTaskData(String repositoryUrl, String taskId) {
+	public org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData getNewTaskData(String repositoryUrl,
+			String taskId) {
 		return taskDataStorageManager.getNewTaskData(repositoryUrl, taskId);
 	}
 
 	@Deprecated
-	public void setNewTaskData(RepositoryTaskData taskData) {
+	public void setNewTaskData(org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData taskData) {
 		taskDataStorageManager.setNewTaskData(taskData);
 	}
 

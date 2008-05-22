@@ -118,7 +118,7 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 	}
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {
-		ITaskDataWorkingCopy state = taskDataManager.getWorkingCopy(task, connectorKind);
+		ITaskDataWorkingCopy state = taskDataManager.getWorkingCopy(task);
 		setRepositoryData(state.getRepositoryData());
 		setEditsData(state.getEditsData());
 		setLastReadData(state.getLastReadData());
@@ -143,9 +143,9 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 			editsTaskData.getRoot().deepAddCopy(edit);
 		}
 		if (saved) {
-			taskDataManager.putEdits(task, getConnectorKind(), editsTaskData);
+			taskDataManager.putEdits(task, editsTaskData);
 		} else {
-			taskDataManager.saveWorkingCopy(task, getConnectorKind(), this);
+			taskDataManager.saveWorkingCopy(task, this);
 			setSaved(true);
 		}
 	}

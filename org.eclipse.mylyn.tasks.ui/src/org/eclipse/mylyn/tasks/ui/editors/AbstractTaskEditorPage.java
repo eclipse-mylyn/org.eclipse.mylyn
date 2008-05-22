@@ -449,7 +449,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
-		ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task, getConnectorKind());
+		ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);
 		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(getConnectorKind(),
 				taskDataState.getRepositoryUrl());
 		return new TaskDataModel(taskRepository, input.getTask(), taskDataState);

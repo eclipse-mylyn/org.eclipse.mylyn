@@ -90,6 +90,28 @@ public class TasksUiUtil {
 
 	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
+	private static final String ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND = "outgoingNewConnectorKind";
+
+	/**
+	 * @since 3.0
+	 */
+	public static ITask createOutgoingNewTask(String connectorKind) {
+		Assert.isNotNull(connectorKind);
+		LocalTask task = TasksUiInternal.createNewLocalTask(null);
+		task.setAttribute(ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND, connectorKind);
+		task.setSynchronizationState(SynchronizationState.OUTGOING_NEW);
+		return task;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static boolean isOutgoingNewTask(ITask task, String connectorKind) {
+		Assert.isNotNull(task);
+		Assert.isNotNull(connectorKind);
+		return connectorKind.equals(task.getAttribute(ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND));
+	}
+
 	/**
 	 * @deprecated Use {@link TasksUiInternal#getActiveRepositoryTaskEditors()} instead
 	 */
@@ -673,8 +695,7 @@ public class TasksUiUtil {
 	 */
 	public static IViewPart openTasksViewInActivePerspective() {
 		try {
-			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
-					TaskListView.ID);
+			return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(TaskListView.ID);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not show Task List view", e));
 			return null;

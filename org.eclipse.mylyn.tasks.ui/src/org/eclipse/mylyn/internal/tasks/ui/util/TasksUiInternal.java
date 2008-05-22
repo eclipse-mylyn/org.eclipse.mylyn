@@ -209,7 +209,7 @@ public class TasksUiInternal {
 							TasksUiUtil.openTask(task);
 							opened = true;
 						}
-					} else if (TasksUiPlugin.getTaskDataManager().hasTaskData(task, task.getConnectorKind())) {
+					} else if (TasksUiPlugin.getTaskDataManager().hasTaskData(task)) {
 						TasksUiUtil.openTask(task);
 					}
 
@@ -338,7 +338,7 @@ public class TasksUiInternal {
 	 * you should call synchronize(Set<Set<AbstractTask> repositoryTasks, ...)
 	 * 
 	 * @param listener
-	 * 		can be null
+	 *            can be null
 	 */
 	public static Job synchronizeTask(AbstractRepositoryConnector connector, ITask task, boolean force,
 			IJobChangeListener listener) {
@@ -347,7 +347,7 @@ public class TasksUiInternal {
 
 	/**
 	 * @param listener
-	 * 		can be null
+	 *            can be null
 	 */
 	public static Job synchronizeTasks(AbstractRepositoryConnector connector, Set<ITask> tasks, boolean force,
 			IJobChangeListener listener) {
@@ -453,7 +453,7 @@ public class TasksUiInternal {
 	 * Creates a new local task and schedules for today
 	 * 
 	 * @param summary
-	 * 		if null DEFAULT_SUMMARY (New Task) used.
+	 *            if null DEFAULT_SUMMARY (New Task) used.
 	 */
 	public static LocalTask createNewLocalTask(String summary) {
 		if (summary == null) {
@@ -684,29 +684,29 @@ public class TasksUiInternal {
 	}
 
 	public static void importTasks(Collection<AbstractTask> tasks, Set<TaskRepository> repositories, File zipFile,
-				Shell shell) {
-			TasksUiPlugin.getRepositoryManager().insertRepositories(repositories,
-					TasksUiPlugin.getDefault().getRepositoriesFilePath());
-	
-			for (AbstractTask loadedTask : tasks) {
-				// need to deactivate since activation is managed centrally
-				loadedTask.setActive(false);
-	
-				TaskList taskList = TasksUiPlugin.getTaskList();
-				if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
-					boolean confirmed = MessageDialog.openConfirm(shell, "Import Task", "Task '" + loadedTask.getSummary()
-							+ "' already exists. Do you want to override it's context with the source?");
-					if (confirmed) {
-	//					ContextCore.getContextStore().importContext(taskContexts.get(loadedTask));
-						ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
-					}
-				} else {
-	//				ContextCore.getContextStore().importContext(taskContexts.get(loadedTask));
+			Shell shell) {
+		TasksUiPlugin.getRepositoryManager().insertRepositories(repositories,
+				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+
+		for (AbstractTask loadedTask : tasks) {
+			// need to deactivate since activation is managed centrally
+			loadedTask.setActive(false);
+
+			TaskList taskList = TasksUiPlugin.getTaskList();
+			if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
+				boolean confirmed = MessageDialog.openConfirm(shell, "Import Task", "Task '" + loadedTask.getSummary()
+						+ "' already exists. Do you want to override it's context with the source?");
+				if (confirmed) {
+					//					ContextCore.getContextStore().importContext(taskContexts.get(loadedTask));
 					ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
-					getTaskList().addTask(loadedTask);
 				}
+			} else {
+				//				ContextCore.getContextStore().importContext(taskContexts.get(loadedTask));
+				ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
+				getTaskList().addTask(loadedTask);
 			}
-	
 		}
+
+	}
 
 }
