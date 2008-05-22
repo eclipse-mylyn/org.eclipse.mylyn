@@ -26,7 +26,7 @@ import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
  * @author Eike Stepper
  * @author Mik Kersten
  * 
- * 	TODO refactor into extension point
+ *         TODO refactor into extension point
  */
 public class CommitTemplateVariables {
 
@@ -220,9 +220,14 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskNotes extends AbstractCommitTemplateVariable {
+		@SuppressWarnings("restriction")
 		@Override
 		public String getValue(ITask task) {
-			return task.getNotes();
+			if (task instanceof AbstractTask) {
+				return ((AbstractTask) task).getNotes();
+			} else {
+				return "";
+			}
 		}
 	}
 
