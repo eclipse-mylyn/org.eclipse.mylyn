@@ -62,14 +62,18 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	public abstract void createControl(Composite parent, FormToolkit toolkit);
 
+	protected Section createSection(Composite parent, FormToolkit toolkit, int style) {
+		Section section = toolkit.createSection(parent, style);
+		section.setText(getPartName());
+		return section;
+	}
+
 	protected Section createSection(Composite parent, FormToolkit toolkit, boolean expandedState) {
 		int style = ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE;
 		if (expandedState) {
 			style |= ExpandableComposite.EXPANDED;
 		}
-		Section section = toolkit.createSection(parent, style);
-		section.setText(getPartName());
-		return section;
+		return createSection(parent, toolkit, style);
 	}
 
 	protected void fillToolBar(ToolBarManager toolBarManager) {

@@ -71,7 +71,7 @@ public interface ITaskList {
 	 */
 	public abstract void notifyElementChanged(ITaskElement element);
 
-	public abstract void notifySyncStateChanged(ITaskElement element);
+	public abstract void notifySynchronizationStateChanged(ITaskElement element);
 
 	public abstract void removeChangeListener(ITaskListChangeListener listener);
 

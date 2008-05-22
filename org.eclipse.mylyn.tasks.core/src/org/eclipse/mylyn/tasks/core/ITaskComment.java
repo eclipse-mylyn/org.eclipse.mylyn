@@ -42,6 +42,8 @@ public interface ITaskComment {
 
 	public abstract void setCreationDate(Date creationDate);
 
+	public abstract void setNumber(int number);
+
 	public abstract void setText(String text);
 
 	public abstract void setUrl(String url);

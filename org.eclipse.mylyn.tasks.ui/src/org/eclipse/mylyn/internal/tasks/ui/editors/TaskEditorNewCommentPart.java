@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
  * @author Steffen Pingel
@@ -18,6 +19,7 @@ public class TaskEditorNewCommentPart extends TaskEditorRichTextPart {
 
 	public TaskEditorNewCommentPart() {
 		setPartName("New Comment");
+		setSectionStyle(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 	}
 
 	@Override

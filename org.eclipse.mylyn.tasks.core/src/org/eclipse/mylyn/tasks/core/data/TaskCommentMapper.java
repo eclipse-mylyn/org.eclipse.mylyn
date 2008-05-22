@@ -22,6 +22,8 @@ import org.eclipse.mylyn.tasks.core.ITaskComment;
  */
 public class TaskCommentMapper {
 
+	private static final int DEFAULT_NUMBER = -1;
+
 	private IRepositoryPerson author;
 
 	private final String commentId;
@@ -87,11 +89,6 @@ public class TaskCommentMapper {
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		String commentId = mapper.getValue(taskAttribute);
 		TaskCommentMapper comment = new TaskCommentMapper(commentId);
-		try {
-			comment.setNumber(Integer.parseInt(taskAttribute.getId()));
-		} catch (NumberFormatException e) {
-			// ignore
-		}
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
 		if (child != null) {
 			IRepositoryPerson person = mapper.getRepositoryPerson(child);
@@ -107,6 +104,11 @@ public class TaskCommentMapper {
 		if (child != null) {
 			comment.setCreationDate(mapper.getDateValue(child));
 		}
+		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_NUMBER);
+		if (child != null) {
+			Integer value = mapper.getIntegerValue(child);
+			comment.setNumber((value != null) ? value : DEFAULT_NUMBER);
+		}
 		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_URL);
 		if (child != null) {
 			comment.setUrl(mapper.getValue(child));
@@ -121,11 +123,12 @@ public class TaskCommentMapper {
 	public void applyTo(TaskAttribute taskAttribute) {
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
-
 		mapper.setValue(taskAttribute, getCommentId());
 		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_COMMENT).applyTo(taskAttribute);
 		taskAttribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
-
+		if (getNumber() >= 0) {
+			mapper.setIntegerValue(taskAttribute, getNumber());
+		}
 		if (getAuthor() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_AUTHOR);
 			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_PERSON).applyTo(child);
@@ -135,6 +138,11 @@ public class TaskCommentMapper {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_DATE);
 			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_DATE).applyTo(child);
 			mapper.setDateValue(child, getCreationDate());
+		}
+		if (getNumber() != DEFAULT_NUMBER) {
+			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_NUMBER);
+			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_NUMBER).applyTo(child);
+			mapper.setIntegerValue(child, getNumber());
 		}
 		if (getUrl() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_URL);
@@ -154,6 +162,9 @@ public class TaskCommentMapper {
 		}
 		if (getCreationDate() != null) {
 			taskComment.setCreationDate(getCreationDate());
+		}
+		if (getNumber() != DEFAULT_NUMBER) {
+			taskComment.setNumber(getNumber());
 		}
 		if (getUrl() != null) {
 			taskComment.setUrl(getUrl());

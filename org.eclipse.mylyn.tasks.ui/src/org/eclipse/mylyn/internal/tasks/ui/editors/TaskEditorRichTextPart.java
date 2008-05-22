@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -34,7 +35,10 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 	private Composite composite;
 
+	private int sectionStyle;
+
 	public TaskEditorRichTextPart() {
+		setSectionStyle(ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 	}
 
 	public void appendText(String text) {
@@ -58,13 +62,21 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		editor.getViewer().getTextWidget().setCaretOffset(strBuilder.length());
 	}
 
+	protected int getSectionStyle() {
+		return sectionStyle;
+	}
+
+	protected void setSectionStyle(int sectionStyle) {
+		this.sectionStyle = sectionStyle;
+	}
+
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		if (attribute == null) {
 			return;
 		}
 
-		Section section = createSection(parent, toolkit, true);
+		Section section = createSection(parent, toolkit, sectionStyle);
 
 		composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();

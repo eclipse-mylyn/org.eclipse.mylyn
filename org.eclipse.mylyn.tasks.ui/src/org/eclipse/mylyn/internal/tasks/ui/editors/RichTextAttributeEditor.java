@@ -66,8 +66,8 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		this(manager, taskRepository, taskAttribute, SWT.MULTI);
 	}
 
-	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository,
-			TaskAttribute taskAttribute, int style) {
+	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository, TaskAttribute taskAttribute,
+			int style) {
 		super(manager, taskAttribute);
 		this.taskRepository = taskRepository;
 		this.style = style;
@@ -78,26 +78,21 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		AnnotationModel annotationModel = new AnnotationModel();
 		viewer.showAnnotations(false);
 		viewer.showAnnotationsOverview(false);
-
 		IAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
-
 		final SourceViewerDecorationSupport support = new SourceViewerDecorationSupport(viewer, null, annotationAccess,
 				EditorsUI.getSharedTextColors());
-
 		@SuppressWarnings("unchecked")
 		Iterator e = new MarkerAnnotationPreferences().getAnnotationPreferences().iterator();
 		while (e.hasNext()) {
 			support.setAnnotationPreference((AnnotationPreference) e.next());
 		}
-
 		support.install(EditorsUI.getPreferenceStore());
-
-		viewer.getTextWidget().setIndent(2);
 		viewer.getTextWidget().addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				support.uninstall();
 			}
 		});
+		viewer.getTextWidget().setIndent(2);
 
 		// !Do Not Delete! hover manager that shows text when we hover
 		// AnnotationBarHoverManager fAnnotationHoverManager = new AnnotationBarHoverManager(fCompositeRuler,

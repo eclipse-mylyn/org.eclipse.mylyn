@@ -25,6 +25,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 /**
  * @author Steffen Pingel
  */
+@Deprecated
 public class TaskDataUtil {
 
 	private static class TaskDataAccessor {

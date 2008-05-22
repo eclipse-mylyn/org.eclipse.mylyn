@@ -138,6 +138,8 @@ public class TaskDataManager implements ITaskDataManager {
 				case INCOMING:
 				case INCOMING_NEW:
 					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+					// XXX legacy support for showing correct synchronization decoration in task list
+					task.setLastReadTimeStamp(new Date().toString());
 					break;
 				case CONFLICT:
 					task.setSynchronizationState(SynchronizationState.OUTGOING);
@@ -196,6 +198,8 @@ public class TaskDataManager implements ITaskDataManager {
 							if (newTask) {
 								// FIXME this won't work for tasks that have partial task data 
 								task.setSynchronizationState(SynchronizationState.INCOMING_NEW);
+								// XXX legacy support for showing correct synchronization decoration in task list
+								task.setLastReadTimeStamp(null);
 							} else {
 								task.setSynchronizationState(SynchronizationState.INCOMING);
 							}
@@ -207,6 +211,14 @@ public class TaskDataManager implements ITaskDataManager {
 				}
 			});
 			taskList.notifyElementChanged(task);
+		} else {
+			taskList.run(new ITaskListRunnable() {
+				public void execute(IProgressMonitor monitor) throws CoreException {
+					task.setStale(false);
+					task.setSynchronizing(false);
+				}
+			});
+			taskList.notifySynchronizationStateChanged(task);
 		}
 	}
 
@@ -362,7 +374,7 @@ public class TaskDataManager implements ITaskDataManager {
 				task.setSubmitting(false);
 			}
 		});
-		taskList.notifySyncStateChanged(task);
+		taskList.notifySynchronizationStateChanged(task);
 	}
 
 	/**

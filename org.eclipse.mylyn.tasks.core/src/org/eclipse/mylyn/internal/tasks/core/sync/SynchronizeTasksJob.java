@@ -194,7 +194,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private void resetStatus(ITask task) {
 		((AbstractTask) task).setErrorStatus(null);
-		taskList.notifySyncStateChanged(task);
+		taskList.notifySynchronizationStateChanged(task);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -274,7 +274,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 		task.setStale(false);
 		((AbstractTask) task).setSynchronizing(false);
-		taskList.notifySyncStateChanged(task);
+		taskList.notifySynchronizationStateChanged(task);
 	}
 
 	private void updateFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {

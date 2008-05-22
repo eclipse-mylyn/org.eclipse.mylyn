@@ -48,7 +48,7 @@ public class TaskDataStateReader extends DefaultHandler {
 
 			// create a unique id for each attachment since the actual id is in a child attribute
 			attribute = container.createAttribute(++attachmentId + "");
-			attribute.setValue(attachmentId + "");
+			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_ID) + "");
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_CREATOR));
 			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_PERSON);
@@ -172,6 +172,10 @@ public class TaskDataStateReader extends DefaultHandler {
 			child = createAttribute(attribute, TaskAttribute.COMMENT_HAS_ATTACHMENT);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_HAS_ATTACHMENT));
 			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_BOOLEAN);
+
+			child = createAttribute(attribute, TaskAttribute.COMMENT_NUMBER);
+			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER));
+			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_NUMBER);
 
 			addElementHandler(new AttributeHandler10(this, attribute));
 		}

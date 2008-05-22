@@ -827,7 +827,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		if (ID_PART_NEW_COMMENT.equals(part.getPartId())) {
 			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(part.getControl());
 		} else {
-			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(part.getControl());
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(part.getControl());
 		}
 	}
 

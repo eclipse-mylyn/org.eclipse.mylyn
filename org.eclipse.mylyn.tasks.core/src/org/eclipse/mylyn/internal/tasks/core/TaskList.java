@@ -412,7 +412,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	 * Task added if does not exist already. Ensures the element exists in the task list
 	 * 
 	 * @throws IllegalAgumentException
-	 * 		if null argument passed or element does not exist in task list
+	 *             if null argument passed or element does not exist in task list
 	 * @return element as passed in or instance from task list with same handle if exists
 	 */
 	private AbstractTaskContainer getValidElement(ITaskElement taskListElement) {
@@ -454,7 +454,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		fireDelta(deltas);
 	}
 
-	public void notifySyncStateChanged(Set<? extends ITaskElement> elements) {
+	public void notifySynchronizationStateChanged(Set<? extends ITaskElement> elements) {
 		HashSet<TaskContainerDelta> taskChangeDeltas = new HashSet<TaskContainerDelta>();
 		for (ITaskElement abstractTaskContainer : elements) {
 			TaskContainerDelta delta = new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CONTENT);
@@ -465,8 +465,8 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		fireDelta(taskChangeDeltas);
 	}
 
-	public void notifySyncStateChanged(ITaskElement element) {
-		notifySyncStateChanged(Collections.singleton(element));
+	public void notifySynchronizationStateChanged(ITaskElement element) {
+		notifySynchronizationStateChanged(Collections.singleton(element));
 	}
 
 	public void notifyElementChanged(ITaskElement element) {
@@ -605,7 +605,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			queries = new ConcurrentHashMap<String, RepositoryQuery>();
 
 			defaultCategory = new UncategorizedTaskContainer();
-			
+
 			maxLocalTaskId = 0;
 			categories.put(defaultCategory.getHandleIdentifier(), defaultCategory);
 		} finally {

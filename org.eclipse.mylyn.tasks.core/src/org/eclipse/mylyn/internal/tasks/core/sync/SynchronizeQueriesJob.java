@@ -248,7 +248,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			synchronizeQuery(repositoryQuery, event, new SubProgressMonitor(monitor, 20));
 
 			repositoryQuery.setSynchronizing(false);
-			taskList.notifySyncStateChanged(Collections.singleton(repositoryQuery));
+			taskList.notifySynchronizationStateChanged(Collections.singleton(repositoryQuery));
 		}
 	}
 

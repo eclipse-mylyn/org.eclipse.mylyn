@@ -60,6 +60,11 @@ public final class TaskAttribute {
 
 	public static final String COMMENT_NEW = "task.common.comment.new";
 
+	/**
+	 * @since 3.0
+	 */
+	public static final String COMMENT_NUMBER = "task.common.comment.number";
+
 	public static final String COMMENT_TEXT = "task.common.comment.text";
 
 	public static final String COMMENT_URL = "task.common.comment.url";
@@ -452,9 +457,9 @@ public final class TaskAttribute {
 	 * Adds an attribute option value
 	 * 
 	 * @param readableValue
-	 * 		The value displayed on the screen
+	 *            The value displayed on the screen
 	 * @param parameterValue
-	 * 		The option value used when sending the form to the server
+	 *            The option value used when sending the form to the server
 	 */
 	public void putOption(String key, String value) {
 		Assert.isNotNull(key);
