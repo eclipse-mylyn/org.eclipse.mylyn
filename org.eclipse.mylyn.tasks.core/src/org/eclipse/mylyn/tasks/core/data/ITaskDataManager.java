@@ -15,6 +15,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 /**
  * @author Steffen Pingel
  * @since 3.0
+ * @noimplement
  */
 public interface ITaskDataManager {
 
