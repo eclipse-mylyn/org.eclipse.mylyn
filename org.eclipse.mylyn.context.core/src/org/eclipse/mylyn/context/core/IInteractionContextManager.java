@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.context.core;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
@@ -37,9 +37,9 @@ public interface IInteractionContextManager {
 
 	public abstract IInteractionContext getActiveContext();
 
-	public abstract List<IInteractionElement> getActiveLandmarks();
+	public abstract Set<IInteractionElement> getActiveLandmarks();
 
-	public abstract Collection<IInteractionElement> getActiveDocuments(IInteractionContext context);
+	public abstract Set<IInteractionElement> getActiveDocuments(IInteractionContext context);
 
 	public abstract void updateHandle(IInteractionElement element, String newHandle);
 

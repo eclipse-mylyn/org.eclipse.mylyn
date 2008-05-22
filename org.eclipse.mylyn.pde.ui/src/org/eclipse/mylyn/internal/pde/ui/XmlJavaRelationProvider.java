@@ -108,7 +108,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 	}
 
 	protected TextSearchScope createTextSearchScope(int degreeOfSeparation) {
-		List<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
+		Set<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
 
 		switch (degreeOfSeparation) {
 		case 1:
@@ -374,7 +374,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		 * Add a listener for when the bugzilla search is completed
 		 * 
 		 * @param l
-		 * 		The listener to add
+		 *            The listener to add
 		 */
 		public void addListener(IActiveSearchListener l) {
 			// add the listener to the list
@@ -385,7 +385,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		 * Remove a listener for when the bugzilla search is completed
 		 * 
 		 * @param l
-		 * 		The listener to remove
+		 *            The listener to remove
 		 */
 		public void removeListener(IActiveSearchListener l) {
 			// remove the listener from the list
@@ -396,9 +396,9 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		 * Notify all of the listeners that the bugzilla search is completed
 		 * 
 		 * @param doiList
-		 * 		A list of BugzillaSearchHitDoiInfo
+		 *            A list of BugzillaSearchHitDoiInfo
 		 * @param member
-		 * 		The IMember that the search was performed on
+		 *            The IMember that the search was performed on
 		 */
 		public void notifySearchCompleted(List<Object> l) {
 			// go through all of the listeners and call

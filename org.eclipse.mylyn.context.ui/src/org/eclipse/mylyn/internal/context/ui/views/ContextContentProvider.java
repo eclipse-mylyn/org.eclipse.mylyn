@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -69,7 +70,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		if (matchesParent(parent)) {
 			List<IInteractionElement> nodes;
 			if (landmarkOnlyMode) {
-				List<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
+				Set<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
 				nodes = new ArrayList<IInteractionElement>();
 				for (IInteractionElement node : landmarks) {
 					if (!node.getContentType().equals(ContextCore.CONTENT_TYPE_RESOURCE)
@@ -83,8 +84,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 			}
 			List<Object> resolvedNodes = new ArrayList<Object>();
 			for (IInteractionElement node : nodes) {
-				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-						node.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(node.getContentType());
 				Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
 				if (object != null) {
 					resolvedNodes.add(object);
@@ -152,8 +152,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		for (InteractionContextRelation edge : edges) {
 			if (edge.getRelationshipHandle().equals(kind)) {
 				IInteractionElement target = edge.getTarget();
-				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-						target.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(target.getContentType());
 				Object object = bridge.getObjectForHandle(target.getHandleIdentifier());
 				if (object != null) {
 					targets.add(object);

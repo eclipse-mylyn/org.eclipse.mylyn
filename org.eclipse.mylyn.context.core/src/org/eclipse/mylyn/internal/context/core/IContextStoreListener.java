@@ -16,9 +16,7 @@ import org.eclipse.mylyn.context.core.IContextStore;
  * Notified of events where {@link IContextStore} is moved.
  * 
  * @author Mik Kersten
- * @since 2.0
  */
-@Deprecated
 public interface IContextStoreListener {
 
 	/**

@@ -445,9 +445,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	public List<IInteractionElement> getActiveLandmarks() {
+	public Set<IInteractionElement> getActiveLandmarks() {
 		List<IInteractionElement> allLandmarks = activeContext.getLandmarks();
-		List<IInteractionElement> acceptedLandmarks = new ArrayList<IInteractionElement>();
+		Set<IInteractionElement> acceptedLandmarks = new HashSet<IInteractionElement>();
 		for (IInteractionElement node : allLandmarks) {
 			AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(node.getContentType());
 
@@ -520,7 +520,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return getActiveDocuments(activeContext);
 	}
 
-	public Collection<IInteractionElement> getActiveDocuments(IInteractionContext context) {
+	public Set<IInteractionElement> getActiveDocuments(IInteractionContext context) {
 		Set<IInteractionElement> set = new HashSet<IInteractionElement>();
 		if (context == null) {
 			return set;

@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -38,6 +39,7 @@ public class CompositeContextElement implements IInteractionElement {
 
 	public CompositeContextElement(String handle, List<InteractionContextElement> nodes,
 			IInteractionContextScaling contextScaling) {
+		Assert.isNotNull(handle);
 		this.nodes = nodes;
 		this.handle = handle;
 		this.contextScaling = contextScaling;
