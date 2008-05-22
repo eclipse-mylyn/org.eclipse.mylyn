@@ -8,14 +8,6 @@
 
 package org.eclipse.mylyn.internal.context.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -41,7 +33,6 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
-import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -80,13 +71,9 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	private boolean contextCapturePaused = false;
 
-	private Set<File> contextFiles = null;
-
 	private final List<AbstractContextListener> contextListeners = new CopyOnWriteArrayList<AbstractContextListener>();
 
 	private final List<String> errorElementHandles = new ArrayList<String>();
-
-	private final InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
 	/**
 	 * Global contexts do not participate in the regular activation lifecycle but are instead activated and deactivated
@@ -100,11 +87,17 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	private final List<AbstractContextListener> waitingContextListeners = new ArrayList<AbstractContextListener>();
 
+	private final LocalContextStore contextStore;
+
+	public InteractionContextManager(LocalContextStore contextStore) {
+		this.contextStore = contextStore;
+	}
+
 	public void activateContext(String handleIdentifier) {
 		try {
-			InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
+			IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context == null) {
-				context = loadContext(handleIdentifier);
+				context = contextStore.loadContext(handleIdentifier);
 			}
 			for (AbstractContextListener listener : contextListeners) {
 				if (listener instanceof AbstractContextListener) {
@@ -214,19 +207,6 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	/**
-	 * clones context from source to destination
-	 * 
-	 * @since 2.1
-	 */
-	public void cloneContext(String sourceContextHandle, String destinationContextHandle) {
-		InteractionContext source = loadContext(sourceContextHandle);
-		if (source != null) {
-			source.setHandleIdentifier(destinationContextHandle);
-			saveContext(source);
-		}
-	}
-
 	public InteractionContext collapseActivityMetaContext(InteractionContext context) {
 		Map<String, List<InteractionEvent>> attention = new HashMap<String, List<InteractionEvent>>();
 		InteractionContext tempContext = new InteractionContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME,
@@ -323,30 +303,6 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return collapsedEvents;
 	}
 
-	private void copy(File src, File dest) throws IOException {
-		InputStream in = new FileInputStream(src);
-		OutputStream out = new FileOutputStream(dest);
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
-		}
-		in.close();
-		out.close();
-	}
-
-	public void copyContext(String targetcontextHandle, File sourceContextFile) {
-		File targetContextFile = getFileForContext(targetcontextHandle);
-		targetContextFile.delete();
-		try {
-			copy(sourceContextFile, targetContextFile);
-			contextFiles.add(targetContextFile);
-		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Cold not transfer context: "
-					+ targetcontextHandle, e));
-		}
-	}
-
 	public void deactivateAllContexts() {
 		Set<String> handles = new HashSet<String>(activeContext.getContextMap().keySet());
 		for (String handleIdentifier : handles) {
@@ -360,7 +316,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 			IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
-				saveContext(handleIdentifier);
+				contextStore.saveContext(handleIdentifier);
 				activeContext.getContextMap().remove(handleIdentifier);
 
 				setContextCapturePaused(true);
@@ -372,9 +328,6 @@ public class InteractionContextManager implements IInteractionContextManager {
 								"Context listener failed: " + listener.getClass().getCanonicalName(), e));
 					}
 				}
-				if (context.getAllElements().size() == 0) {
-					contextFiles.remove(getFileForContext(context.getHandleIdentifier()));
-				}
 				setContextCapturePaused(false);
 			}
 			if (!activationHistorySuppressed) {
@@ -383,7 +336,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 						IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
 						IInteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
 			}
-			saveActivityContext();
+//			saveActivityMetaContext();
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not deactivate context", t));
 		}
@@ -403,23 +356,15 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public void deleteContext(String handleIdentifier) {
 		IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
-		eraseContext(handleIdentifier, false);
-		try {
-			File file = getFileForContext(handleIdentifier);
-			if (file.exists()) {
-				file.delete();
-			}
-			setContextCapturePaused(true);
-			for (AbstractContextListener listener : contextListeners) {
-				listener.contextCleared(context);
-			}
-			setContextCapturePaused(false);
-			if (contextFiles != null) {
-				contextFiles.remove(getFileForContext(handleIdentifier));
-			}
-		} catch (SecurityException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not delete context file", e));
+
+		setContextCapturePaused(true);
+		eraseContext(handleIdentifier);
+
+		contextStore.deleteContext(handleIdentifier);
+		for (AbstractContextListener listener : contextListeners) {
+			listener.contextCleared(context);
 		}
+		setContextCapturePaused(false);
 	}
 
 	private float ensureIsInteresting(IInteractionContext interactionContext, String contentType, String handle,
@@ -433,10 +378,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return decayOffset;
 	}
 
-	private void eraseContext(String handleIdentifier, boolean notify) {
-		if (contextFiles != null) {
-			contextFiles.remove(getFileForContext(handleIdentifier));
-		}
+	private void eraseContext(String handleIdentifier) {
 		InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 		if (context == null) {
 			return;
@@ -528,20 +470,6 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	public File getFileForContext(String handleIdentifier) {
-		String encoded;
-		try {
-			encoded = URLEncoder.encode(handleIdentifier, IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
-			File contextDirectory = ContextCore.getContextStore().getContextDirectory();
-			File contextFile = new File(contextDirectory, encoded + IInteractionContextManager.CONTEXT_FILE_EXTENSION);
-			return contextFile;
-		} catch (UnsupportedEncodingException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
-					"Could not determine path for context", e));
-		}
-		return null;
-	}
-
 	public Collection<IInteractionContext> getGlobalContexts() {
 		return globalContexts;
 	}
@@ -579,53 +507,25 @@ public class InteractionContextManager implements IInteractionContextManager {
 		if (handleIdentifier == null) {
 			return false;
 		}
-		if (contextFiles == null) {
-			contextFiles = new HashSet<File>();
-			File contextDirectory = ContextCore.getContextStore().getContextDirectory();
-			File[] files = contextDirectory.listFiles();
-			for (File file : files) {
-				contextFiles.add(file);
-			}
-		}
+
 		if (getActiveContext() != null && handleIdentifier.equals(getActiveContext().getHandleIdentifier())) {
 			return !getActiveContext().getAllElements().isEmpty();
 		} else {
-			File file = getFileForContext(handleIdentifier);
-			return contextFiles.contains(file);
-		}
-// File contextFile = getFileForContext(path);
-// return contextFile.exists() && contextFile.length() > 0;
-	}
-
-	/**
-	 * Creates a file for specified context and activates it
-	 */
-	public void importContext(InteractionContext context) {
-		externalizer.writeContextToXml(context, getFileForContext(context.getHandleIdentifier()));
-		if (contextFiles == null) {
-			contextFiles = new HashSet<File>();
-		}
-		contextFiles.add(getFileForContext(context.getHandleIdentifier()));
-		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
-
-		if (!activationHistorySuppressed) {
-			processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-					IInteractionContextManager.ACTIVITY_STRUCTUREKIND_ACTIVATION, context.getHandleIdentifier(),
-					IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-					IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
+			return contextStore.hasContext(handleIdentifier);
 		}
 	}
 
 	/**
 	 * Public for testing, activate via handle
 	 */
-	public void internalActivateContext(InteractionContext context) {
-		System.setProperty(IInteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
+	public void internalActivateContext(IInteractionContext context) {
+		Assert.isTrue(context instanceof InteractionContext, "Must provide a concrete InteractionContext");
 
-		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
-		if (contextFiles != null) {
-			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
-		}
+		System.setProperty(IInteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
+		activeContext.getContextMap().put(context.getHandleIdentifier(), (InteractionContext) context);
+//		if (contextFiles != null) {
+//			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
+//		}
 		if (!activationHistorySuppressed) {
 			processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
 					IInteractionContextManager.ACTIVITY_STRUCTUREKIND_ACTIVATION, context.getHandleIdentifier(),
@@ -717,17 +617,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	public boolean isValidContextFile(File file) {
-		if (file.exists() && file.getName().endsWith(IInteractionContextManager.CONTEXT_FILE_EXTENSION)) {
-			InteractionContext context = externalizer.readContextFromXML("temp", file,
-					ContextCore.getCommonContextScaling());
-			return context != null;
-		}
-		return false;
-	}
-
 	public void loadActivityMetaContext() {
-		if (ContextCore.getContextStore() != null) {
+		if (contextStore != null) {
 			for (AbstractContextListener listener : activityMetaContextListeners) {
 				if (listener instanceof AbstractContextListener) {
 					(listener).contextPreActivated(activityMetaContext);
@@ -737,16 +628,14 @@ public class InteractionContextManager implements IInteractionContextManager {
 			try {
 				metaContextLock.acquire();
 
-				File contextActivityFile = getFileForContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
-				activityMetaContext = externalizer.readContextFromXML(
-						IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME, contextActivityFile,
-						ContextCore.getCommonContextScaling());
+				activityMetaContext = (InteractionContext) contextStore.loadContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+
 				if (activityMetaContext == null) {
 					resetActivityHistory();
 				} else if (!ContextCorePlugin.getDefault().getPluginPreferences().getBoolean(
 						PREFERENCE_ATTENTION_MIGRATED)) {
 					activityMetaContext = migrateLegacyActivity(activityMetaContext);
-					saveActivityContext();
+					saveActivityMetaContext();
 					ContextCorePlugin.getDefault().getPluginPreferences().setValue(PREFERENCE_ATTENTION_MIGRATED, true);
 					ContextCorePlugin.getDefault().savePluginPreferences();
 				}
@@ -764,29 +653,30 @@ public class InteractionContextManager implements IInteractionContextManager {
 		}
 	}
 
-	/**
-	 * @return false if the map could not be read for any reason
-	 */
-	public InteractionContext loadContext(String handleIdentifier) {
-		return loadContext(handleIdentifier, getFileForContext(handleIdentifier));
-	}
-
-	public InteractionContext loadContext(String handleIdentifier, File file) {
-		return loadContext(handleIdentifier, file, ContextCore.getCommonContextScaling());
-	}
-
-	private InteractionContext loadContext(String handleIdentifier, File file, IInteractionContextScaling contextScaling) {
-		InteractionContext loadedContext = externalizer.readContextFromXML(handleIdentifier, file, contextScaling);
-		if (loadedContext == null) {
-			return new InteractionContext(handleIdentifier, contextScaling);
-		} else {
-			return loadedContext;
+	public void saveActivityMetaContext() {
+		if (contextStore == null) {
+			return;
 		}
-	}
+		boolean wasPaused = contextCapturePaused;
+		try {
+			metaContextLock.acquire();
+			if (!wasPaused) {
+				setContextCapturePaused(true);
+			}
 
-	@Deprecated
-	public InteractionContext loadContext(String handleIdentifier, InteractionContextScaling contextScaling) {
-		return loadContext(handleIdentifier, getFileForContext(handleIdentifier), contextScaling);
+			InteractionContext context = getActivityMetaContext();
+
+			contextStore.saveContext(collapseActivityMetaContext(context),
+					IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+		} catch (Throwable t) {
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not save activity history",
+					t));
+		} finally {
+			metaContextLock.release();
+			if (!wasPaused) {
+				setContextCapturePaused(false);
+			}
+		}
 	}
 
 	/**
@@ -1136,7 +1026,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			metaContextLock.acquire();
 			activityMetaContext = new InteractionContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME,
 					ContextCore.getCommonContextScaling());
-			saveActivityContext();
+			saveActivityMetaContext();
 		} finally {
 			metaContextLock.release();
 		}
@@ -1154,68 +1044,6 @@ public class InteractionContextManager implements IInteractionContextManager {
 			if (listener instanceof IRelationsListener) {
 				((IRelationsListener) listener).relationsChanged(null);
 			}
-		}
-	}
-
-	public void saveActivityContext() {
-		if (ContextCore.getContextStore() == null) {
-			return;
-		}
-		boolean wasPaused = contextCapturePaused;
-		try {
-			metaContextLock.acquire();
-			if (!wasPaused) {
-				setContextCapturePaused(true);
-			}
-
-			InteractionContext context = getActivityMetaContext();
-			externalizer.writeContextToXml(collapseActivityMetaContext(context),
-					getFileForContext(IInteractionContextManager.CONTEXT_HISTORY_FILE_NAME));
-		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not save activity history",
-					t));
-		} finally {
-			metaContextLock.release();
-			if (!wasPaused) {
-				setContextCapturePaused(false);
-			}
-		}
-	}
-
-	public void saveContext(InteractionContext context) {
-		boolean wasPaused = getContextCaputurePaused();
-		try {
-			if (!wasPaused) {
-				setContextCapturePaused(true);
-			}
-
-			context.collapse();
-			externalizer.writeContextToXml(context, getFileForContext(context.getHandleIdentifier()));
-			if (contextFiles == null) {
-				contextFiles = new HashSet<File>();
-			}
-			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
-		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "could not save context", t));
-		} finally {
-			if (!wasPaused) {
-				setContextCapturePaused(false);
-			}
-		}
-	}
-
-	private boolean getContextCaputurePaused() {
-		synchronized (InteractionContextManager.this) {
-			return contextCapturePaused;
-		}
-	}
-
-	public void saveContext(String handleIdentifier) {
-		InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
-		if (context == null) {
-			return;
-		} else {
-			saveContext(context);
 		}
 	}
 

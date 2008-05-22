@@ -12,6 +12,7 @@ import java.io.File;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
@@ -19,6 +20,7 @@ import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.tests.support.DomContextReader;
 import org.eclipse.mylyn.context.tests.support.DomContextWriter;
 import org.eclipse.mylyn.context.tests.support.FileTool;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
 import org.eclipse.mylyn.internal.context.core.SaxContextReader;
@@ -50,7 +52,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	public void testContentAttributeExternalization() {
 		// Gets a file to write to and creates contexts folder if necessary
-		File file = ContextCore.getContextManager().getFileForContext(context.getHandleIdentifier());
+		File file = ContextCorePlugin.getContextStore().getFileForContext(context.getHandleIdentifier());
 		file.deleteOnExit();
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		context.parseEvent(mockSelection("1"));
@@ -58,12 +60,13 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 		externalizer.writeContextToXml(context, file);
 
-		File dataDirectory = ContextCore.getContextStore().getRootDirectory();
+		// TODO: fix up directory refs
+		File dataDirectory = ContextCorePlugin.getContextStore().getContextDirectory().getParentFile();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
 				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
-		InteractionContext loaded = externalizer.readContextFromXML(CONTEXT_HANDLE, zippedContextFile, scaling);
+		IInteractionContext loaded = externalizer.readContextFromXml(CONTEXT_HANDLE, zippedContextFile, scaling);
 		assertNotNull(loaded);
 
 		assertEquals("foobar", loaded.getContentLimitedTo());
@@ -75,11 +78,11 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertTrue(file.getAbsolutePath(), file.exists());
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 //		externalizer.setReader(new DomContextReader());
-		InteractionContext domReadContext = externalizer.readContextFromXML(CONTEXT_HANDLE, file,
+		IInteractionContext domReadContext = externalizer.readContextFromXml(CONTEXT_HANDLE, file,
 				new DomContextReader(), scaling);
 
 //		externalizer.setReader(new SaxContextReader());
-		InteractionContext saxReadContext = externalizer.readContextFromXML(CONTEXT_HANDLE, file,
+		IInteractionContext saxReadContext = externalizer.readContextFromXml(CONTEXT_HANDLE, file,
 				new SaxContextReader(), scaling);
 		assertEquals(284, saxReadContext.getInteractionHistory().size()); // known
 		// from
@@ -98,10 +101,10 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals(domOut.length(), saxOut.length());
 
 		//externalizer.setReader(new DomContextReader());
-		InteractionContext domReadAfterWrite = externalizer.readContextFromXML(CONTEXT_HANDLE, file,
+		IInteractionContext domReadAfterWrite = externalizer.readContextFromXml(CONTEXT_HANDLE, file,
 				new DomContextReader(), scaling);
 		//externalizer.setReader(new SaxContextReader());
-		InteractionContext saxReadAfterWrite = externalizer.readContextFromXML(CONTEXT_HANDLE, file,
+		IInteractionContext saxReadAfterWrite = externalizer.readContextFromXml(CONTEXT_HANDLE, file,
 				new SaxContextReader(), scaling);
 
 		assertEquals(domReadAfterWrite, saxReadAfterWrite);
@@ -135,7 +138,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	public void testExternalization() {
 		// Gets a file to write to and creates contexts folder if necessary
-		File file = ContextCore.getContextManager().getFileForContext(context.getHandleIdentifier());
+		File file = ContextCorePlugin.getContextStore().getFileForContext(context.getHandleIdentifier());
 		file.deleteOnExit();
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
@@ -156,12 +159,13 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 		externalizer.writeContextToXml(context, file);
 
-		File dataDirectory = ContextCore.getContextStore().getRootDirectory();
+		// TODO: fix up directory refs
+		File dataDirectory = ContextCorePlugin.getContextStore().getContextDirectory().getParentFile();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
 				+ IInteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
-		InteractionContext loaded = externalizer.readContextFromXML(CONTEXT_HANDLE, zippedContextFile, scaling);
+		IInteractionContext loaded = externalizer.readContextFromXml(CONTEXT_HANDLE, zippedContextFile, scaling);
 		assertNotNull(loaded);
 		assertEquals(3, loaded.getInteractionHistory().size());
 		IInteractionElement loadedNode = loaded.get("1");

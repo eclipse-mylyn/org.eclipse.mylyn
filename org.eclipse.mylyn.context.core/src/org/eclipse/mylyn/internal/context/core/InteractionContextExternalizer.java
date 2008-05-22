@@ -20,6 +20,7 @@ import java.util.zip.ZipOutputStream;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 
@@ -57,14 +58,14 @@ public class InteractionContextExternalizer {
 
 	static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss.S z";
 
-	public void writeContextToXml(InteractionContext context, File file) {
+	public void writeContextToXml(IInteractionContext context, File file) {
 		writeContextToXml(context, file, new SaxContextWriter());
 	}
 
 	/**
 	 * For testing
 	 */
-	public void writeContextToXml(InteractionContext context, File file, IInteractionContextWriter writer) {
+	public void writeContextToXml(IInteractionContext context, File file, IInteractionContextWriter writer) {
 		if (context.getInteractionHistory().isEmpty()) {
 			return;
 		}
@@ -98,14 +99,14 @@ public class InteractionContextExternalizer {
 		}
 	}
 
-	public void writeContext(InteractionContext context, ZipOutputStream outputStream) throws IOException {
+	public void writeContext(IInteractionContext context, ZipOutputStream outputStream) throws IOException {
 		writeContext(context, outputStream, new SaxContextWriter());
 	}
 
 	/**
 	 * For testing
 	 */
-	public void writeContext(InteractionContext context, ZipOutputStream outputStream, IInteractionContextWriter writer)
+	public void writeContext(IInteractionContext context, ZipOutputStream outputStream, IInteractionContextWriter writer)
 			throws IOException {
 		String handleIdentifier = context.getHandleIdentifier();
 		String encoded = URLEncoder.encode(handleIdentifier, IInteractionContextManager.CONTEXT_FILENAME_ENCODING);
@@ -119,14 +120,14 @@ public class InteractionContextExternalizer {
 		outputStream.closeEntry();
 	}
 
-	public InteractionContext readContextFromXML(String handleIdentifier, File file, IInteractionContextScaling scaling) {
-		return readContextFromXML(handleIdentifier, file, new SaxContextReader(), scaling);
+	public IInteractionContext readContextFromXml(String handleIdentifier, File file, IInteractionContextScaling scaling) {
+		return readContextFromXml(handleIdentifier, file, new SaxContextReader(), scaling);
 	}
 
 	/**
 	 * Public for testing
 	 */
-	public InteractionContext readContextFromXML(String handleIdentifier, File file, IInteractionContextReader reader,
+	public IInteractionContext readContextFromXml(String handleIdentifier, File file, IInteractionContextReader reader,
 			IInteractionContextScaling scaling) {
 		try {
 			if (!file.exists()) {
@@ -144,21 +145,5 @@ public class InteractionContextExternalizer {
 		}
 		return null;
 	}
-
-//	public IInteractionContextReader getReader() {
-//		return reader;
-//	}
-//
-//	public void setReader(IInteractionContextReader reader) {
-//		this.reader = reader;
-//	}
-//
-//	public IInteractionContextWriter getWriter() {
-//		return writer;
-//	}
-//
-//	public void setWriter(IInteractionContextWriter writer) {
-//		this.writer = writer;
-//	}
 
 }

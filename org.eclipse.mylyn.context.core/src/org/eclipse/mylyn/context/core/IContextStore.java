@@ -9,41 +9,43 @@
 package org.eclipse.mylyn.context.core;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * File-based store used for writing Mylyn-specific date such as the task list and task contexts (e.g.
  * workspace/.metadata/.mylyn folder).
  * 
  * @author Mik Kersten
- * @since 2.0
+ * @author Steffen Pingel
+ * @noimplement
+ * @since 3.0
  */
-public abstract class AbstractContextStore {
-
-	private final List<IContextStoreListener> listeners = new ArrayList<IContextStoreListener>();
-
-	public abstract void init();
+public interface IContextStore {
 
 	/**
-	 * @return a directory that can be written to.
+	 * @since 3.0
 	 */
-	public abstract File getRootDirectory();
+	public abstract void saveContext(String handleIdentifier);
 
-	public abstract File getContextDirectory();
+	/**
+	 * @since 3.0
+	 */
+	public abstract boolean hasContext(String handleIdentifier);
 
-	public void contextStoreMoved() {
-		init();
-		for (IContextStoreListener listener : listeners) {
-			listener.contextStoreMoved();
-		}
-	}
+	/**
+	 * @since 3.0
+	 */
+	public abstract void deleteContext(String handleIdentifier);
 
-	public void addListener(IContextStoreListener listener) {
-		listeners.add(listener);
-	}
+	/**
+	 * @param zipFile
+	 *            A zip file that contains a context with the specified handle identifier in its root.
+	 * @since 3.0
+	 */
+	public abstract IInteractionContext importContext(String handleIdentifier, File zipFile);
 
-	public void removeListener(IContextStoreListener listener) {
-		listeners.remove(listener);
-	}
+	/**
+	 * @since 3.0
+	 */
+	public abstract IInteractionContext cloneContext(String sourceHandleIdentifier, String destinationHandleIdentifier);
+
 }

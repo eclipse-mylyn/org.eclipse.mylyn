@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.context.core;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,11 +16,12 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 
 /**
+ * @author Mik Kersten
  * @since 3.0
+ * @noimplement
  */
+// API-3.0: move constants, consider moving meta activity context stuff
 public interface IInteractionContextManager {
-
-	// API-3.0: move constants
 
 	public static final String PROPERTY_CONTEXT_ACTIVE = "org.eclipse.mylyn.context.core.context.active";
 
@@ -80,18 +80,12 @@ public interface IInteractionContextManager {
 
 	public abstract void activateContext(String handleIdentifier);
 
+	// API-3.0: confusing in terms of what's composite and what's not
 	public abstract void deactivateAllContexts();
 
 	public abstract void deactivateContext(String handleIdentifier);
 
 	public abstract void deleteContext(String handleIdentifier);
-
-	/**
-	 * @return false if the map could not be read for any reason
-	 */
-	public abstract IInteractionContext loadContext(String handleIdentifier);
-
-	public abstract void saveContext(String handleIdentifier);
 
 	public abstract IInteractionContext getActiveContext();
 
@@ -118,15 +112,6 @@ public interface IInteractionContextManager {
 	public abstract void updateHandle(IInteractionElement element, String newHandle);
 
 	public abstract void delete(IInteractionElement element);
-
-	public abstract void copyContext(String targetcontextHandle, File sourceContextFile);
-
-	/**
-	 * clones context from source to destination
-	 * 
-	 * @since 2.1
-	 */
-	public abstract void cloneContext(String sourceContextHandle, String destinationContextHandle);
 
 	public abstract Collection<IInteractionContext> getGlobalContexts();
 
@@ -155,12 +140,7 @@ public interface IInteractionContextManager {
 	public IInteractionElement processInteractionEvent(InteractionEvent event, boolean propagateToParents,
 			boolean notifyListeners);
 
-	public void saveActivityContext();
-
-	/** public for testing * */
-	public List<InteractionEvent> collapseEventsByHour(List<InteractionEvent> eventsToCollapse);
-
-	public File getFileForContext(String handleIdentifier);
+	public void saveActivityMetaContext();
 
 	public boolean isContextActive();
 
@@ -184,8 +164,6 @@ public interface IInteractionContextManager {
 
 	public abstract boolean isContextCapturePaused();
 
-	public abstract boolean isValidContextFile(File file);
-
-	public abstract void removeActivityMetaContextListener(AbstractContextListener context_listener);
+	public abstract void removeActivityMetaContextListener(AbstractContextListener listener);
 
 }

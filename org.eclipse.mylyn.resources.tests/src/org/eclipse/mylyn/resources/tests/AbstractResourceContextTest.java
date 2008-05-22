@@ -60,7 +60,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		assertTrue(context.getInteresting().isEmpty());
 		manager.deactivateContext(taskId);
 		manager.deleteContext(taskId);
-		manager.getFileForContext(taskId).delete();
+		ContextCorePlugin.getContextStore().getFileForContext(taskId).delete();
 		ResourceTestUtil.deleteProject(project.getProject());
 		super.tearDown();
 	}

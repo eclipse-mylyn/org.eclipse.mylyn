@@ -14,7 +14,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.ui.commands.AbstractTaskHandler;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -26,6 +25,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Steffen Pingel
  */
 public class CopyContextHandler extends AbstractTaskHandler {
+
+	private static final String TITLE_DIALOG = "Copy Context";
 
 	@Override
 	protected void execute(ExecutionEvent event, ITask sourceTask) throws ExecutionException {
@@ -48,31 +49,25 @@ public class CopyContextHandler extends AbstractTaskHandler {
 
 		Object result = dialog.getFirstResult();
 
-		AbstractTask targetTask = null;
 		if (result instanceof ITask) {
-			targetTask = (AbstractTask) result;
-		}
-
-		if (targetTask != null) {
+			ITask targetTask = (ITask) result;
 			TasksUi.getTaskActivityManager().deactivateActiveTask();
-			IInteractionContext source = ContextCore.getContextManager().loadContext(sourceTask.getHandleIdentifier());
-
 			if (targetTask.equals(sourceTask)) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						ITasksUiConstants.TITLE_DIALOG, "Target task can not be the same as source task.");
-			} else if (source == null /*!contextFile.exists()*/) {
-				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						ITasksUiConstants.TITLE_DIALOG, "Source task does not have a context.");
+						TITLE_DIALOG, "Target task can not be the same as source task.");
 			} else {
-
-				ContextCore.getContextManager().cloneContext(sourceTask.getHandleIdentifier(),
-						targetTask.getHandleIdentifier());
-
-				TasksUi.getTaskActivityManager().activateTask(targetTask);
+				IInteractionContext context = ContextCore.getContextStore().cloneContext(
+						sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
+				if (context == null) {
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							TITLE_DIALOG, "Source task does not have a context.");
+				} else {
+					TasksUi.getTaskActivityManager().activateTask(targetTask);
+				}
 			}
 		} else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					ITasksUiConstants.TITLE_DIALOG, "No target task selected.");
+					TITLE_DIALOG, "No target task selected.");
 		}
 	}
 

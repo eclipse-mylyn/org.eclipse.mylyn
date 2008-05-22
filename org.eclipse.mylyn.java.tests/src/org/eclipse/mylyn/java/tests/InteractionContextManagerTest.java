@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
+import org.eclipse.mylyn.internal.context.core.LocalContextStore;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IWorkbenchPart;
@@ -44,10 +45,13 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 	private PackageExplorerPart explorer;
 
+	private LocalContextStore contextStore;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		explorer = PackageExplorerPart.openInActivePerspective();
+		contextStore = ContextCorePlugin.getContextStore();
 		assertNotNull(explorer);
 	}
 
@@ -75,7 +79,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 
 	public void testHandleToPathConversion() throws IOException {
 		String handle = "https://bugs.eclipse.org/bugs-123";
-		File file = manager.getFileForContext(handle);
+		File file = contextStore.getFileForContext(handle);
 		assertFalse(file.exists());
 		file.createNewFile();
 		assertTrue(file.exists());
@@ -105,7 +109,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertNotNull(history);
 		assertEquals(0, manager.getActivityMetaContext().getInteractionHistory().size());
 
-		manager.internalActivateContext(manager.loadContext("1"));
+		manager.internalActivateContext(contextStore.loadContext("1"));
 		assertEquals(1, manager.getActivityMetaContext().getInteractionHistory().size());
 
 		manager.deactivateContext("2");
@@ -122,18 +126,19 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(changed.getInterest().isInteresting());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testCopyContext() {
-		File sourceFile = ContextCore.getContextManager().getFileForContext(context.getHandleIdentifier());
+		File sourceFile = contextStore.getFileForContext(context.getHandleIdentifier());
 		context.parseEvent(mockSelection("1"));
-		manager.saveContext(context.getHandleIdentifier());
+		contextStore.saveContext(context.getHandleIdentifier());
 		assertTrue(sourceFile.exists());
 
 		InteractionContext toContext = new InteractionContext("toContext", scaling);
-		File toFile = ContextCore.getContextManager().getFileForContext(toContext.getHandleIdentifier());
+		File toFile = contextStore.getFileForContext(toContext.getHandleIdentifier());
 		assertFalse(toFile.exists());
 
-		manager.copyContext(toContext.getHandleIdentifier(), sourceFile);
-		manager.saveContext(toContext.getHandleIdentifier());
+		contextStore.copyContext(sourceFile, toContext.getHandleIdentifier());
+		contextStore.saveContext(toContext.getHandleIdentifier());
 		manager.activateContext(toContext.getHandleIdentifier());
 		assertEquals(((CompositeInteractionContext) manager.getActiveContext()).get("toContext").getHandleIdentifier(),
 				toContext.getHandleIdentifier());
@@ -144,27 +149,27 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testHasContext() {
-		manager.getFileForContext("1").delete();
-		assertFalse(manager.getFileForContext("1").exists());
+		contextStore.getFileForContext("1").delete();
+		assertFalse(contextStore.getFileForContext("1").exists());
 		assertFalse(manager.hasContext("1"));
-		manager.internalActivateContext(manager.loadContext("1"));
+		manager.internalActivateContext(contextStore.loadContext("1"));
 		assertTrue(manager.isContextActive());
 
 		manager.deactivateContext("1");
 		assertFalse(manager.hasContext("1"));
 
-		manager.internalActivateContext(manager.loadContext("1"));
+		manager.internalActivateContext(contextStore.loadContext("1"));
 		manager.processInteractionEvent(mockSelection());
 		manager.deactivateContext("1");
 		assertTrue(manager.hasContext("1"));
-		manager.getFileForContext("1").delete();
+		contextStore.getFileForContext("1").delete();
 	}
 
 	public void testDelete() {
-		manager.getFileForContext("1").delete();
-		assertFalse(manager.getFileForContext("1").exists());
+		contextStore.getFileForContext("1").delete();
+		assertFalse(contextStore.getFileForContext("1").exists());
 		assertFalse(manager.hasContext("1"));
-		manager.internalActivateContext(manager.loadContext("1"));
+		manager.internalActivateContext(contextStore.loadContext("1"));
 		assertTrue(manager.isContextActive());
 
 		InteractionContext activeContext = ((CompositeInteractionContext) manager.getActiveContext()).getContextMap()
@@ -186,11 +191,11 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 				.next();
 		assertFalse(containsHandle(activeContext, MOCK_HANDLE));
 
-		manager.internalActivateContext(manager.loadContext("1"));
+		manager.internalActivateContext(contextStore.loadContext("1"));
 		manager.processInteractionEvent(mockSelection());
 		manager.deactivateContext("1");
 		assertTrue(manager.hasContext("1"));
-		manager.getFileForContext("1").delete();
+		contextStore.getFileForContext("1").delete();
 	}
 
 	private boolean containsHandle(InteractionContext context, String mockHandle) {

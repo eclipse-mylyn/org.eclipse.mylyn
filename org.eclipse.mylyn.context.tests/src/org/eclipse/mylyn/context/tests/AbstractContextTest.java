@@ -14,6 +14,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
@@ -36,7 +37,7 @@ public abstract class AbstractContextTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		if (ContextCore.getContextManager() != null) {
-			assertFalse("" + ContextCore.getContextManager().getActiveContexts(),
+			assertFalse("" + ((InteractionContextManager) ContextCore.getContextManager()).getActiveContexts(),
 					ContextCore.getContextManager().isContextActive());
 		}
 	}
@@ -45,7 +46,7 @@ public abstract class AbstractContextTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (ContextCore.getContextManager() != null) {
-			assertFalse("" + ContextCore.getContextManager().getActiveContexts(),
+			assertFalse("" + ((InteractionContextManager) ContextCore.getContextManager()).getActiveContexts(),
 					ContextCore.getContextManager().isContextActive());
 		}
 	}

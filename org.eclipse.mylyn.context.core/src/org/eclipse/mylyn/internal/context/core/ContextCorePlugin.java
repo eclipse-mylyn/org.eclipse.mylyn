@@ -26,9 +26,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.AbstractContextStore;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -51,11 +51,11 @@ public class ContextCorePlugin extends Plugin {
 
 	private InteractionContextManager contextManager;
 
-	private AbstractContextStore contextStore;
+	private static LocalContextStore contextStore;
 
 	private final Map<String, Set<AbstractRelationProvider>> relationProviders = new HashMap<String, Set<AbstractRelationProvider>>();
 
-	private boolean contextStoreRead = false;
+	private final InteractionContextScaling commonContextScaling = new InteractionContextScaling();
 
 	private static final AbstractContextStructureBridge DEFAULT_BRIDGE = new AbstractContextStructureBridge() {
 
@@ -127,8 +127,8 @@ public class ContextCorePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
-		contextManager = new InteractionContextManager();
+		contextStore = new LocalContextStore(commonContextScaling);
+		contextManager = new InteractionContextManager(contextStore);
 	}
 
 	@Override
@@ -236,16 +236,16 @@ public class ContextCorePlugin extends Plugin {
 		}
 	}
 
-	public synchronized AbstractContextStore getContextStore() {
-		if (!contextStoreRead) {
-			contextStoreRead = true;
-			ContextStoreExtensionReader.initExtensions();
-			if (contextStore != null) {
-				contextStore.init();
-			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "No context store specified"));
-			}
-		}
+	public static LocalContextStore getContextStore() {
+//		if (!contextStoreRead) {
+//			contextStoreRead = true;
+//			ContextStoreExtensionReader.initExtensions();
+//			if (contextStore != null) {
+//				contextStore.init();
+//			} else {
+//				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "No context store specified"));
+//			}
+//		}
 		return contextStore;
 	}
 
@@ -253,47 +253,47 @@ public class ContextCorePlugin extends Plugin {
 //		ContextCorePlugin.contextStore = contextStore;
 //	}
 
-	static class ContextStoreExtensionReader {
-
-		private static final String ELEMENT_CONTEXT_STORE = "contextStore";
-
-		private static boolean extensionsRead = false;
-
-		public static void initExtensions() {
-			if (!extensionsRead) {
-				IExtensionRegistry registry = Platform.getExtensionRegistry();
-				IExtensionPoint extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
-				IExtension[] extensions = extensionPoint.getExtensions();
-				for (IExtension extension : extensions) {
-					IConfigurationElement[] elements = extension.getConfigurationElements();
-					for (IConfigurationElement element : elements) {
-						if (element.getName().compareTo(ELEMENT_CONTEXT_STORE) == 0) {
-							readStore(element);
-						}
-					}
-				}
-				extensionsRead = true;
-			}
-		}
-
-		private static void readStore(IConfigurationElement element) {
-			// Currently disabled
-			try {
-				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
-				if (!(object instanceof AbstractContextStore)) {
-					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
-							"Could not load bridge: " + object.getClass().getCanonicalName() + " must implement "
-									+ AbstractContextStructureBridge.class.getCanonicalName()));
-					return;
-				} else {
-					INSTANCE.contextStore = (AbstractContextStore) object;
-				}
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
-						"Could not load bridge extension", e));
-			}
-		}
-	}
+//	static class ContextStoreExtensionReader {
+//
+//		private static final String ELEMENT_CONTEXT_STORE = "contextStore";
+//
+//		private static boolean extensionsRead = false;
+//
+//		public static void initExtensions() {
+//			if (!extensionsRead) {
+//				IExtensionRegistry registry = Platform.getExtensionRegistry();
+//				IExtensionPoint extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
+//				IExtension[] extensions = extensionPoint.getExtensions();
+//				for (IExtension extension : extensions) {
+//					IConfigurationElement[] elements = extension.getConfigurationElements();
+//					for (IConfigurationElement element : elements) {
+//						if (element.getName().compareTo(ELEMENT_CONTEXT_STORE) == 0) {
+//							readStore(element);
+//						}
+//					}
+//				}
+//				extensionsRead = true;
+//			}
+//		}
+//
+//		private static void readStore(IConfigurationElement element) {
+//			// Currently disabled
+//			try {
+//				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
+//				if (!(object instanceof AbstractContextStore)) {
+//					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+//							"Could not load bridge: " + object.getClass().getCanonicalName() + " must implement "
+//									+ AbstractContextStructureBridge.class.getCanonicalName()));
+//					return;
+//				} else {
+//					ContextCorePlugin.contextStore = (AbstractContextStore) object;
+//				}
+//			} catch (CoreException e) {
+//				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+//						"Could not load bridge extension", e));
+//			}
+//		}
+//	}
 
 	static class BridgesExtensionPointReader {
 
@@ -386,5 +386,9 @@ public class ContextCorePlugin extends Plugin {
 		} else {
 			return Collections.emptySet();
 		}
+	}
+
+	public IInteractionContextScaling getCommonContextScaling() {
+		return commonContextScaling;
 	}
 }

@@ -77,7 +77,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		assertTrue(context.getInteresting().isEmpty());
 		manager.deactivateContext(contextId);
 		manager.deleteContext(contextId);
-		manager.getFileForContext(contextId).delete();
+		ContextCorePlugin.getContextStore().getFileForContext(contextId).delete();
 
 		ResourceTestUtil.deleteProject(project.getProject());
 		ResourceTestUtil.deleteProject(nonJavaProject.getProject());

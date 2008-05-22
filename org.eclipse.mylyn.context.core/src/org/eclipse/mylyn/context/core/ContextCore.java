@@ -11,7 +11,6 @@ package org.eclipse.mylyn.context.core;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
 
 /**
  * @author Mik Kersten
@@ -19,9 +18,8 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextScaling;
  */
 public final class ContextCore {
 
+	// API-3.0: move?
 	public static final String CONTENT_TYPE_RESOURCE = "resource";
-
-	private static InteractionContextScaling commonContextScaling = new InteractionContextScaling();
 
 	/**
 	 * @since 3.0
@@ -31,7 +29,7 @@ public final class ContextCore {
 	}
 
 	public static IInteractionContextScaling getCommonContextScaling() {
-		return commonContextScaling;
+		return ContextCorePlugin.getDefault().getCommonContextScaling();
 	}
 
 	/**
@@ -53,7 +51,7 @@ public final class ContextCore {
 		return ContextCorePlugin.getDefault().getChildContentTypes(contentType);
 	}
 
-	public static AbstractContextStore getContextStore() {
+	public static IContextStore getContextStore() {
 		return ContextCorePlugin.getDefault().getContextStore();
 	}
 

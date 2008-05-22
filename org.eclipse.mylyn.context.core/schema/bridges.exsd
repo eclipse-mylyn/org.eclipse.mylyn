@@ -19,7 +19,6 @@
       <complexType>
          <sequence>
             <element ref="structureBridge" minOccurs="0" maxOccurs="unbounded"/>
-            <element ref="contextStore" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -78,28 +77,6 @@
             </annotation>
          </attribute>
          <attribute name="parentContentType" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <element name="contextStore">
-      <complexType>
-         <attribute name="class" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.core.AbstractContextStore"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="id" type="string">
             <annotation>
                <documentation>
                   

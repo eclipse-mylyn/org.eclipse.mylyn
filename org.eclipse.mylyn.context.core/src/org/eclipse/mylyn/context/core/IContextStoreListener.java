@@ -8,14 +8,19 @@
 
 package org.eclipse.mylyn.context.core;
 
+import java.io.File;
+
 /**
- * Notified of events where {@link AbstractContextStore} is moved.
+ * Notified of events where {@link IContextStore} is moved.
  * 
  * @author Mik Kersten
  * @since 2.0
  */
 public interface IContextStoreListener {
 
-	public abstract void contextStoreMoved();
+	/**
+	 * @since 3.0
+	 */
+	public abstract void contextStoreMoved(File newDirectory);
 
 }
