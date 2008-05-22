@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.monitor.ui;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.swt.events.ShellEvent;
@@ -39,6 +38,7 @@ public class ShellLifecycleListener implements ShellListener {
 	}
 
 	public void shellClosed(ShellEvent shellEvent) {
+		// XXX: if this is only used for saving this is not right
 		manager.deactivateAllContexts();
 
 		String productId = IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
@@ -50,7 +50,7 @@ public class ShellLifecycleListener implements ShellListener {
 				IInteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
 				IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
 				IInteractionContextManager.ACTIVITY_DELTA_STOPPED, 1f));
-		ContextCore.getContextManager().saveActivityContext();
+//		ContextCore.getContextManager().saveActivityMetaContext();
 	}
 
 	public void shellDeactivated(ShellEvent arg0) {
