@@ -47,48 +47,6 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
  */
 public class InteractionContextManager implements IInteractionContextManager {
 
-	// TODO: move constants
-	private static final int MAX_PROPAGATION = 17; // TODO: parametrize this
-
-	private static final ILock metaContextLock = Job.getJobManager().newLock();
-
-	private static final String PREFERENCE_ATTENTION_MIGRATED = "mylyn.attention.migrated";
-
-	private static final String SOURCE_ID_DECAY_CORRECTION = "org.eclipse.mylyn.core.model.interest.decay.correction";
-
-	private static final String SOURCE_ID_MODEL_ERROR = "org.eclipse.mylyn.core.model.interest.propagation";
-
-	private static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylyn.core.model.interest.propagation";
-
-	private boolean activationHistorySuppressed = false;
-
-	private final CompositeInteractionContext activeContext = new CompositeInteractionContext(
-			ContextCore.getCommonContextScaling());
-
-	private InteractionContext activityMetaContext = null;
-
-	private final List<AbstractContextListener> activityMetaContextListeners = new CopyOnWriteArrayList<AbstractContextListener>();
-
-	private boolean contextCapturePaused = false;
-
-	private final List<AbstractContextListener> contextListeners = new CopyOnWriteArrayList<AbstractContextListener>();
-
-	private final List<String> errorElementHandles = new ArrayList<String>();
-
-	/**
-	 * Global contexts do not participate in the regular activation lifecycle but are instead activated and deactivated
-	 * by clients.
-	 */
-	private final Collection<IInteractionContext> globalContexts = new HashSet<IInteractionContext>();
-
-	private int numInterestingErrors = 0;
-
-	private boolean suppressListenerNotification = false;
-
-	private final List<AbstractContextListener> waitingContextListeners = new ArrayList<AbstractContextListener>();
-
-	private final LocalContextStore contextStore;
-
 	public static final String SOURCE_ID_DECAY = "org.eclipse.mylyn.core.model.interest.decay";
 
 	public static final String CONTEXT_FILE_EXTENSION_OLD = ".xml";
@@ -130,6 +88,48 @@ public class InteractionContextManager implements IInteractionContextManager {
 	public static final String ACTIVITY_DELTA_ACTIVATED = "activated";
 
 	public static final String ACTIVITY_DELTA_DEACTIVATED = "deactivated";
+
+	// TODO: move constants
+	private static final int MAX_PROPAGATION = 17; // TODO: parametrize this
+
+	private static final ILock metaContextLock = Job.getJobManager().newLock();
+
+	private static final String PREFERENCE_ATTENTION_MIGRATED = "mylyn.attention.migrated";
+
+	private static final String SOURCE_ID_DECAY_CORRECTION = "org.eclipse.mylyn.core.model.interest.decay.correction";
+
+	private static final String SOURCE_ID_MODEL_ERROR = "org.eclipse.mylyn.core.model.interest.propagation";
+
+	private static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylyn.core.model.interest.propagation";
+
+	private boolean activationHistorySuppressed = false;
+
+	private final CompositeInteractionContext activeContext = new CompositeInteractionContext(
+			ContextCore.getCommonContextScaling());
+
+	private InteractionContext activityMetaContext = null;
+
+	private final List<AbstractContextListener> activityMetaContextListeners = new CopyOnWriteArrayList<AbstractContextListener>();
+
+	private boolean contextCapturePaused = false;
+
+	private final List<AbstractContextListener> contextListeners = new CopyOnWriteArrayList<AbstractContextListener>();
+
+	private final List<String> errorElementHandles = new ArrayList<String>();
+
+	/**
+	 * Global contexts do not participate in the regular activation lifecycle but are instead activated and deactivated
+	 * by clients.
+	 */
+	private final Collection<IInteractionContext> globalContexts = new HashSet<IInteractionContext>();
+
+	private int numInterestingErrors = 0;
+
+	private boolean suppressListenerNotification = false;
+
+	private final List<AbstractContextListener> waitingContextListeners = new ArrayList<AbstractContextListener>();
+
+	private final LocalContextStore contextStore;
 
 	public InteractionContextManager(LocalContextStore contextStore) {
 		this.contextStore = contextStore;
