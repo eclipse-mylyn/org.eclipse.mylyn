@@ -71,7 +71,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
@@ -433,7 +432,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			}
 			if (taskToRefresh != null) {
-				Thread.dumpStack();
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 //						if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
