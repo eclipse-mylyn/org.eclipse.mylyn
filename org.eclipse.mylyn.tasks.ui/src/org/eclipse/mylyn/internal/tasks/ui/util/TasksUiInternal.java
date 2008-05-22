@@ -8,9 +8,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +41,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
@@ -679,5 +682,31 @@ public class TasksUiInternal {
 			return null;
 		}
 	}
+
+	public static void importTasks(Collection<AbstractTask> tasks, Set<TaskRepository> repositories, File zipFile,
+				Shell shell) {
+			TasksUiPlugin.getRepositoryManager().insertRepositories(repositories,
+					TasksUiPlugin.getDefault().getRepositoriesFilePath());
+	
+			for (AbstractTask loadedTask : tasks) {
+				// need to deactivate since activation is managed centrally
+				loadedTask.setActive(false);
+	
+				TaskList taskList = TasksUiPlugin.getTaskList();
+				if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
+					boolean confirmed = MessageDialog.openConfirm(shell, "Import Task", "Task '" + loadedTask.getSummary()
+							+ "' already exists. Do you want to override it's context with the source?");
+					if (confirmed) {
+	//					ContextCore.getContextStore().importContext(taskContexts.get(loadedTask));
+						ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
+					}
+				} else {
+	//				ContextCore.getContextStore().importContext(taskContexts.get(loadedTask));
+					ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
+					getTaskList().addTask(loadedTask);
+				}
+			}
+	
+		}
 
 }

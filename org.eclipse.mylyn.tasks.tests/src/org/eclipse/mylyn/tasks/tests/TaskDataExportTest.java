@@ -51,7 +51,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		super.setUp();
 
 		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
-		ContextCore.getContextStore().init();
+//		ContextCore.getContextStore().init();
 
 		// Create the export wizard
 		wizard = new TaskDataExportWizard();
@@ -72,15 +72,15 @@ public class TaskDataExportTest extends AbstractContextTest {
 		// Create a task and context with an interaction event to be saved
 		task1 = TasksUiInternal.createNewLocalTask("Export Test Task");
 		manager.getTaskList().addTask(task1);
-		mockContext = ContextCorePlugin.getContextManager().loadContext(task1.getHandleIdentifier());
+		mockContext = (InteractionContext) ContextCorePlugin.getContextStore().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);
 		ContextCorePlugin.getContextManager().internalActivateContext(mockContext);
 
 		// Save the context file and check that it exists
-		assertTrue(ContextCore.getContextStore().getContextDirectory().exists());
-		ContextCore.getContextManager().saveContext(mockContext.getHandleIdentifier());
-		File taskFile = ContextCore.getContextManager().getFileForContext(task1.getHandleIdentifier());
+		assertTrue(ContextCorePlugin.getContextStore().getContextDirectory().exists());
+		ContextCore.getContextStore().saveContext(mockContext.getHandleIdentifier());
+		File taskFile = ContextCorePlugin.getContextStore().getFileForContext(task1.getHandleIdentifier());
 		assertTrue(ContextCore.getContextManager().hasContext(task1.getHandleIdentifier()));
 		assertTrue(taskFile.exists());
 	}

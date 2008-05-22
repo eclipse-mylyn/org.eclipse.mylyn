@@ -32,7 +32,7 @@ public class ScheduledPresentationTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
-		ContextCore.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().saveActivityMetaContext();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getExternalizationManager().requestSave();
 	}

@@ -49,7 +49,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.WebClientLog;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.tasks.core.AbstractSearchHandler;
@@ -485,7 +485,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// initialize framework and settings
 			WebUtil.init();
 			WebClientLog.setLoggingEnabled(DEBUG_HTTPCLIENT);
-			initializeDefaultPreferences(getPreferenceStore());
+			initializePreferences(getPreferenceStore());
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
@@ -714,7 +714,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	public String getDataDirectory() {
-		return getPreferenceStore().getString(ContextPreferenceContstants.PREF_DATA_DIR);
+		return getPreferenceStore().getString(ITasksUiPreferenceConstants.PREF_DATA_DIR);
 	}
 
 	/**
@@ -723,15 +723,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * 
 	 * @throws CoreException
 	 */
+	@SuppressWarnings("restriction")
 	public void setDataDirectory(final String newPath, IProgressMonitor monitor) throws CoreException {
-
 		externalizationManager.saveNow(monitor);
-		// TODO: backup now?
-		//TasksUiPlugin.getBackupManager().backupNow(true);
 		loadDataDirectory(newPath);
-		getPreferenceStore().setValue(ContextPreferenceContstants.PREF_DATA_DIR, newPath);
-		ContextCore.getContextStore().contextStoreMoved();
-
+		getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, newPath);
+		File newFile = new File(newPath, ITasksCoreConstants.CONTEXTS_DIRECTORY);
+		if (!newFile.exists()) {
+			newFile.mkdirs();
+		}
+		ContextCorePlugin.getContextStore().setContextDirectory(newFile);
 	}
 
 	public void reloadDataDirectory() throws CoreException {
@@ -786,7 +787,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	/**
 	 * called on startup and when the mylyn data structures are reloaded from disk
 	 */
+	@SuppressWarnings("restriction")
 	private void loadDataSources() {
+		File storeFile = getContextStoreDir();
+		ContextCorePlugin.getContextStore().setContextDirectory(storeFile);
+
 		externalizationManager.reLoad();
 		// TODO: Move management of template repositories to TaskRepositoryManager
 		loadTemplateRepositories();
@@ -797,9 +802,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		taskActivityManager.reloadPlanningData();
 	}
 
-	@Override
-	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(ContextPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
+	private File getContextStoreDir() {
+		File storeFile = new File(getDataDirectory(), ITasksCoreConstants.CONTEXTS_DIRECTORY);
+		if (!storeFile.exists()) {
+			storeFile.mkdirs();
+		}
+		return storeFile;
+	}
+
+	private void initializePreferences(IPreferenceStore store) {
+		store.setDefault(ITasksUiPreferenceConstants.PREF_DATA_DIR, getDefaultDataDirectory());
 		store.setDefault(ITasksUiPreferenceConstants.GROUP_SUBTASKS, true);
 		store.setDefault(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, true);
 		store.setDefault(ITasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
@@ -961,10 +973,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	public ImageDescriptor getOverlayIcon(String repositoryType) {
 		return overlayIcons.get(repositoryType);
 	}
-
-//	public boolean isInitialized() {
-//		return initialized;
-//	}
 
 	public IHyperlinkDetector[] getTaskHyperlinkDetectors() {
 		return hyperlinkDetectors.toArray(new IHyperlinkDetector[1]);

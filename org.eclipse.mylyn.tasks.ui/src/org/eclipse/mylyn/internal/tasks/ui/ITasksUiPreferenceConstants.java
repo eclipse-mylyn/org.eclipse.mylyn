@@ -53,4 +53,7 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String LOCAL_SUB_TASKS_ENABLED = "org.eclipse.mylyn.tasks.ui.subtasks.local";
 
+	// NOTE: legacy name, do not change
+	public static final String PREF_DATA_DIR = "org.eclipse.mylyn.data.dir";
+
 }

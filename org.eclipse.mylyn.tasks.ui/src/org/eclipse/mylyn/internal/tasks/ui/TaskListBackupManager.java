@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -279,7 +278,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
+		if (event.getProperty().equals(ITasksUiPreferenceConstants.PREF_DATA_DIR)) {
 			if (export != null) {
 				export.cancel();
 				export = null;

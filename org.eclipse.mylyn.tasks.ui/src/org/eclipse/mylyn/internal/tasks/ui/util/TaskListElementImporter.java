@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
@@ -611,7 +610,7 @@ public class TaskListElementImporter {
 
 	/**
 	 * @param Query
-	 * 		document to read.
+	 *            document to read.
 	 */
 	public List<RepositoryQuery> readQueryDocument(Document doc) {
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
@@ -681,8 +680,8 @@ public class TaskListElementImporter {
 			writeTaskList(doc, outputStream);
 
 			// write context data
-			InteractionContext context = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
-			contextExternalizer.writeContext(context, outputStream);
+			ContextCorePlugin.getContextStore().export(task.getHandleIdentifier(), outputStream);
+
 			if (repositories.size() > 0) {
 				repositoriesExternalizer.writeRepositories(repositories, outputStream);
 			}

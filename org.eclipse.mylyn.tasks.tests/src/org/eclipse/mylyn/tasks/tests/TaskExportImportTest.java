@@ -18,6 +18,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -42,7 +43,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
-		ContextCore.getContextStore().init();
+//		ContextCore.getContextStore().init();
 
 		// Create test export destination directory
 		dest = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
@@ -71,15 +72,16 @@ public class TaskExportImportTest extends AbstractContextTest {
 		taskList.addTask(task, taskList.getDefaultCategory());
 		assertTrue(taskList.getAllTasks().size() > 0);
 
-		InteractionContext mockContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
+		InteractionContext mockContext = (InteractionContext) ContextCorePlugin.getContextStore().loadContext(
+				task.getHandleIdentifier());
 
 		ContextCorePlugin.getContextManager().internalActivateContext(mockContext);
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);
 		ContextCore.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
 
-		assertTrue(ContextCore.getContextStore().getContextDirectory().exists());
-		ContextCore.getContextManager().saveContext(mockContext.getHandleIdentifier());
+		assertTrue(ContextCorePlugin.getContextStore().getContextDirectory().exists());
+		ContextCore.getContextStore().saveContext(mockContext.getHandleIdentifier());
 		assertTrue(ContextCore.getContextManager().hasContext(task.getHandleIdentifier()));
 
 		File outFile = new File(dest + File.separator + "local-task.xml.zip");
@@ -111,8 +113,8 @@ public class TaskExportImportTest extends AbstractContextTest {
 
 		// load data back
 		List<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskListWriter().readTasks(outFile);
-		InteractionContext loadedContext = ContextCorePlugin.getContextManager().loadContext(
-				task.getHandleIdentifier(), outFile);
+		IInteractionContext loadedContext = ContextCore.getContextStore().importContext(task.getHandleIdentifier(),
+				outFile);
 
 		// check with original one
 		assertEquals("There is 1 task loaded", 1, tasks.size());
@@ -123,10 +125,10 @@ public class TaskExportImportTest extends AbstractContextTest {
 		for (AbstractTask loadedTask : tasks) {
 			taskList.addTask(loadedTask);
 		}
-		ContextCorePlugin.getContextManager().importContext(loadedContext);
+		ContextCorePlugin.getContextStore().importContext(loadedContext);
 
 		// check that context was imported and is the same as original one
-		InteractionContext savedContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
+		IInteractionContext savedContext = ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier());
 		assertEquals("Saved context is the same as original one", mockContext, savedContext);
 		assertEquals("Saved task is the same as original one", task, taskList.getTask(task.getHandleIdentifier()));
 

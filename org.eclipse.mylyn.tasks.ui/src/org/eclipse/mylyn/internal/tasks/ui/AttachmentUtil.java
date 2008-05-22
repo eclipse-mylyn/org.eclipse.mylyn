@@ -31,6 +31,7 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
@@ -73,11 +74,13 @@ public class AttachmentUtil {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
+	@SuppressWarnings("restriction")
 	@Deprecated
 	public static boolean attachContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
 			ITask task, String longComment, IProgressMonitor monitor) throws CoreException {
-		ContextCore.getContextManager().saveContext(task.getHandleIdentifier());
-		final File sourceContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
+		ContextCore.getContextStore().saveContext(task.getHandleIdentifier());
+		final File sourceContextFile = ContextCorePlugin.getContextStore()
+				.getFileForContext(task.getHandleIdentifier());
 
 		SynchronizationState previousState = task.getSynchronizationState();
 
@@ -105,8 +108,8 @@ public class AttachmentUtil {
 	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
 			String comment, IProgressMonitor monitor) throws CoreException {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-		ContextCore.getContextManager().saveContext(task.getHandleIdentifier());
-		File file = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
+		ContextCore.getContextStore().saveContext(task.getHandleIdentifier());
+		File file = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 		if (file != null && file.exists()) {
 			FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
 			attachment.setDescription(CONTEXT_DESCRIPTION);
@@ -308,6 +311,7 @@ public class AttachmentUtil {
 		return ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 	}
 
+	@SuppressWarnings("restriction")
 	@Deprecated
 	public static boolean isContext(RepositoryAttachment attachment) {
 		return CONTEXT_DESCRIPTION.equals(attachment.getDescription())
@@ -324,12 +328,13 @@ public class AttachmentUtil {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
+	@SuppressWarnings("restriction")
 	@Deprecated
 	public static boolean retrieveContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
 			ITask task, RepositoryAttachment attachment, String destinationPath, IProgressMonitor monitor)
 			throws CoreException {
 
-		File destinationContextFile = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
+		File destinationContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 
 		// TODO: add functionality for not overwriting previous context
 		if (destinationContextFile.exists()) {
@@ -360,7 +365,7 @@ public class AttachmentUtil {
 	public static boolean getContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
 			TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-		File file = ContextCore.getContextManager().getFileForContext(task.getHandleIdentifier());
+		File file = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 		try {
 			FileOutputStream out = new FileOutputStream(file);
 			try {

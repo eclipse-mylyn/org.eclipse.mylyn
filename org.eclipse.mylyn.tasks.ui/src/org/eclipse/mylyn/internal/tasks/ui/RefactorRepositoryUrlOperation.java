@@ -67,6 +67,7 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 		}
 	}
 
+	@SuppressWarnings("restriction")
 	public void refactorContextFileNames() {
 
 		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), ITasksCoreConstants.CONTEXTS_DIRECTORY);
@@ -86,7 +87,7 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 								if (oldUrl.equals(storedUrl)) {
 									String id = RepositoryTaskHandleUtil.getTaskId(storedHandle);
 									String newHandle = RepositoryTaskHandleUtil.getHandle(newUrl, id);
-									File newFile = ContextCore.getContextManager().getFileForContext(newHandle);
+									File newFile = ContextCorePlugin.getContextStore().getFileForContext(newHandle);
 									file.renameTo(newFile);
 								}
 							}

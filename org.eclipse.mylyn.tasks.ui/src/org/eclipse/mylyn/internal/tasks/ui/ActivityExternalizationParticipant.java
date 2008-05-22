@@ -32,7 +32,7 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 		Assert.isNotNull(context);
 		switch (context.getKind()) {
 		case SAVE:
-			ContextCore.getContextManager().saveActivityContext();
+			ContextCore.getContextManager().saveActivityMetaContext();
 			setDirty(false);
 			break;
 		case LOAD:
@@ -80,7 +80,7 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	@Override
 	public void save(String rootPath, IProgressMonitor monitor) throws CoreException {
-		ContextCore.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().saveActivityMetaContext();
 		setDirty(false);
 	}
 

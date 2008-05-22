@@ -50,7 +50,7 @@ public class TaskActivityTimingTest extends TestCase {
 		activityManager = TasksUi.getTaskActivityManager();
 		taskList = TasksUiInternal.getTaskList();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
-		ContextCore.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().saveActivityMetaContext();
 		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 	}
 
@@ -175,7 +175,7 @@ public class TaskActivityTimingTest extends TestCase {
 		// Half gone since end date is exclusive (removes up to but not including hour)
 		assertEquals(expectedTotalTime, activityManager.getElapsedTime(task1));
 
-		ContextCore.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().saveActivityMetaContext();
 		ContextCore.getContextManager().loadActivityMetaContext();
 		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 
@@ -449,7 +449,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		assertEquals(26000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 
-		ContextCorePlugin.getContextManager().saveActivityContext();
+		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 
@@ -485,7 +485,7 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event2, false);
 		assertEquals(20000, TasksUiPlugin.getTaskActivityManager().getElapsedTime(task1));
 
-		ContextCore.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().saveActivityMetaContext();
 		ContextCore.getContextManager().loadActivityMetaContext();
 		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 
@@ -612,7 +612,7 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(4, ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 
 		TasksUiPlugin.getTaskListManager().saveTaskList();
-		ContextCorePlugin.getContextManager().saveActivityContext();
+		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 		ContextCore.getContextManager().loadActivityMetaContext();
@@ -713,7 +713,7 @@ public class TaskActivityTimingTest extends TestCase {
 		events.add(activityEvent1);
 		events.add(activityEvent2);
 		events.add(activityEvent3);
-		List<InteractionEvent> collapsedEvents = ContextCore.getContextManager().collapseEventsByHour(events);
+		List<InteractionEvent> collapsedEvents = ContextCorePlugin.getContextManager().collapseEventsByHour(events);
 
 		assertEquals(2, collapsedEvents.size());
 	}
@@ -823,7 +823,7 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().deactivateAllTasks();
 		assertEquals(4, ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 		TasksUiPlugin.getTaskListManager().saveTaskList();
-		ContextCore.getContextManager().saveActivityContext();
+		ContextCore.getContextManager().saveActivityMetaContext();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCore.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();

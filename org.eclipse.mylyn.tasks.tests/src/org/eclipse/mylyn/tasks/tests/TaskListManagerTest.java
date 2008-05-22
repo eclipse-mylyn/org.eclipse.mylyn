@@ -186,12 +186,12 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testMigrateTaskContextFiles() throws IOException {
-		File fileA = ContextCore.getContextManager().getFileForContext("http://a-1");
+		File fileA = ContextCorePlugin.getContextStore().getFileForContext("http://a-1");
 		fileA.createNewFile();
 		fileA.deleteOnExit();
 		assertTrue(fileA.exists());
 		runRepositoryUrlOperation("http://a", "http://b");
-		File fileB = ContextCore.getContextManager().getFileForContext("http://b-1");
+		File fileB = ContextCorePlugin.getContextStore().getFileForContext("http://b-1");
 		assertTrue(fileB.exists());
 		assertFalse(fileA.exists());
 	}

@@ -12,10 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -28,9 +26,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
@@ -40,19 +35,16 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListModifyOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.TaskImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.DND;
@@ -115,71 +107,72 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					tasksToMove.add(newTask);
 				} else if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
 					// transfer the context if the target is a Task
-					if (getCurrentTarget() instanceof ITask) {
-						AbstractTask targetTask = (AbstractTask) getCurrentTarget();
-						final String[] names = (String[]) data;
-						boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(),
-								ITasksUiConstants.TITLE_DIALOG,
-								"Overwrite the context of the target task with the source's?");
-						if (confirmed) {
-							String path = names[0];
-							File file = new File(path);
-							if (ContextCore.getContextManager().isValidContextFile(file)) {
-								ContextCore.getContextManager().copyContext(targetTask.getHandleIdentifier(), file);
-								new TaskActivateAction().run(targetTask);
+//					if (getCurrentTarget() instanceof ITask) {
+//						final AbstractTask targetTask = (AbstractTask) getCurrentTarget();
+//						final String[] names = (String[]) data;
+//						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//
+//							public void run() {
+//								boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(),
+//										"Task Import", "Overwrite the context of the target task with the source's?");
+//								if (confirmed) {
+//									String path = names[0];
+//									File file = new File(path);
+//									boolean succeeded = ContextCore.getContextStore().copyContext(file,
+//											targetTask.getHandleIdentifier());
+//									if (succeeded) {
+//										new TaskActivateAction().run(targetTask);
+//									}
+//								}
+//							}
+//						});
+//					} else {
+					// otherwise it is queries or tasks
+					final String[] names = (String[]) data;
+					for (String path : names) {
+						final File file = new File(path);
+						final List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
+						final Set<TaskRepository> repositories = new HashSet<TaskRepository>();
+						final List<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager()
+								.getTaskListWriter()
+								.readTasks(file);
+						if (file.isFile()) {
+							List<RepositoryQuery> readQueries;
+							try {
+								readQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(file);
+								if (readQueries.size() > 0) {
+									queries.addAll(readQueries);
+									repositories.addAll(TasksUiPlugin.getTaskListManager()
+											.getTaskListWriter()
+											.readRepositories(file));
+								} else {
+									repositories.addAll(TasksUiPlugin.getTaskListManager()
+											.getTaskListWriter()
+											.readRepositories(file));
+								}
+							} catch (IOException e) {
+								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+									public void run() {
+										MessageDialog.openError(null, "Query Import Error",
+												"The specified file is not an exported query. Please, check that you have provided the correct file.");
+									}
+								});
 							}
 						}
-					} else {
-						// otherwise it is queries or tasks
-						final String[] names = (String[]) data;
-						List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
-						Map<AbstractTask, InteractionContext> taskContexts = new HashMap<AbstractTask, InteractionContext>();
-						Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 
-						for (String path : names) {
-							File file = new File(path);
-							if (file.isFile()) {
-								List<RepositoryQuery> readQueries;
-								try {
-									readQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(
-											file);
-									if (readQueries.size() > 0) {
-										queries.addAll(readQueries);
-										repositories.addAll(TasksUiPlugin.getTaskListManager()
-												.getTaskListWriter()
-												.readRepositories(file));
-									} else {
-										List<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager()
-												.getTaskListWriter()
-												.readTasks(file);
-										for (AbstractTask task : readTasks) {
-											taskContexts.put(task, ContextCorePlugin.getContextManager().loadContext(
-													task.getHandleIdentifier(), file));
-										}
-										repositories.addAll(TasksUiPlugin.getTaskListManager()
-												.getTaskListWriter()
-												.readRepositories(file));
-									}
-								} catch (IOException e) {
-									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-										public void run() {
-											MessageDialog.openError(null, "Query Import Error",
-													"The specified file is not an exported query. Please, check that you have provided the correct file.");
-										}
-									});
+						// FIXME: remove async exec
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								// TODO: we should consider batching this up
+								if (queries.size() > 0) {
+									new QueryImportAction().importQueries(queries, repositories,
+											getViewer().getControl().getShell());
+								} else {
+									TasksUiInternal.importTasks(readTasks, repositories, file, getViewer().getControl()
+											.getShell());
 								}
 							}
-
-						}
-
-						if (queries.size() > 0) {
-							new QueryImportAction().importQueries(queries, repositories, getViewer().getControl()
-									.getShell());
-						} else {
-							TaskImportAction action = new TaskImportAction();
-							action.importTasks(taskContexts, repositories, getViewer().getControl().getShell());
-							action.refreshTaskListView();
-						}
+						});
 					}
 				}
 
@@ -279,7 +272,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	/**
 	 * @param data
-	 * 		string containing url and title separated by <quote>\n</quote>
+	 *            string containing url and title separated by <quote>\n</quote>
 	 * @return true if task succesfully created, false otherwise
 	 */
 	public boolean createTaskFromUrl(Object data) {

@@ -30,6 +30,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContextManager;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -44,7 +45,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * @author Mik Kersten
  * @author Rob Elves
  * 
- * 	TODO: Move into internal.tasks.core
+ *         TODO: Move into internal.tasks.core
  */
 public class TaskDataExportOperation implements IRunnableWithProgress {
 
@@ -203,7 +204,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 						// copy
 					}
 
-					File sourceTaskContextFile = ContextCore.getContextManager().getFileForContext(
+					File sourceTaskContextFile = ContextCorePlugin.getContextStore().getFileForContext(
 							task.getHandleIdentifier());
 
 					File destTaskFile = new File(destinationDirectory + File.separator

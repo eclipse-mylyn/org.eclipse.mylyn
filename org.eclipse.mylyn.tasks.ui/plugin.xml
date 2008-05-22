@@ -10,9 +10,11 @@
 
     <extension
           point="org.eclipse.mylyn.context.core.bridges">
+       <!--
        <contextStore
-             class="org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore">
+             class="org.eclipse.mylyn.internal.tasks.ui.LocalContextStore">
        </contextStore>
+       -->
     </extension>
     <extension
           point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
