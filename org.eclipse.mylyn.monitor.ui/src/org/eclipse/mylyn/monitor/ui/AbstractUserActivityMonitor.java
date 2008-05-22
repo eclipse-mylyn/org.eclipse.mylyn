@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.monitor.ui;
 
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 
 /**
  * Extend to monitor periods of user activity and inactivity.
@@ -46,18 +46,18 @@ public abstract class AbstractUserActivityMonitor {
 	}
 
 	public String getOriginId() {
-		return IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+		return InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
 	}
 
 	public String getStructureKind() {
-		return IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING;
+		return InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING;
 	}
 
 	public String getStructureHandle() {
 		if (ContextCore.getContextManager().getActiveContext().getHandleIdentifier() != null) {
 			return ContextCore.getContextManager().getActiveContext().getHandleIdentifier();
 		} else {
-			return IInteractionContextManager.ACTIVITY_DELTA_ADDED;
+			return InteractionContextManager.ACTIVITY_DELTA_ADDED;
 		}
 	}
 

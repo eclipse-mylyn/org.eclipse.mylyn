@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
@@ -400,7 +400,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				addListenersToWindow(window);
 			}
 
-			shellLifecycleListener = new ShellLifecycleListener(ContextCore.getContextManager());
+			shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
 			getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
 
 			monitors.add(new WorkbenchUserActivityMonitor());

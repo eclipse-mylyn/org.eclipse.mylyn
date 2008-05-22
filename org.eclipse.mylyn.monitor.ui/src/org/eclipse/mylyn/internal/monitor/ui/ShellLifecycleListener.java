@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.monitor.ui;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
@@ -19,37 +19,38 @@ import org.eclipse.swt.events.ShellListener;
  * 
  * @author Mik Kersten
  */
+@SuppressWarnings("restriction")
 public class ShellLifecycleListener implements ShellListener {
 
-	private final IInteractionContextManager manager;
+	private final InteractionContextManager manager;
 
-	public ShellLifecycleListener(IInteractionContextManager manager) {
+	public ShellLifecycleListener(InteractionContextManager manager) {
 		this.manager = manager;
 
-		String productId = IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+		String productId = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
 		if (Platform.getProduct() != null) {
 			productId = Platform.getProduct().getId();
 		}
 
 		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				IInteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
-				IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-				IInteractionContextManager.ACTIVITY_DELTA_STARTED, 1f));
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_STARTED, 1f));
 	}
 
 	public void shellClosed(ShellEvent shellEvent) {
 		// XXX: if this is only used for saving this is not right
 		manager.deactivateAllContexts();
 
-		String productId = IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+		String productId = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
 		if (Platform.getProduct() != null) {
 			productId = Platform.getProduct().getId();
 		}
 
 		manager.processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-				IInteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
-				IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-				IInteractionContextManager.ACTIVITY_DELTA_STOPPED, 1f));
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_LIFECYCLE, productId,
+				InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+				InteractionContextManager.ACTIVITY_DELTA_STOPPED, 1f));
 //		ContextCore.getContextManager().saveActivityMetaContext();
 	}
 

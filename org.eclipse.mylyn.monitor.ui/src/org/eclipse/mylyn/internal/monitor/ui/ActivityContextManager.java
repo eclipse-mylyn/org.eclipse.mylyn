@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IInteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
 import org.eclipse.mylyn.monitor.ui.IActivityContextManager;
@@ -94,10 +94,10 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	private void addMonitoredActivityTime(long start, long end) {
 		if (end > start) {
-			ContextCore.getContextManager().processActivityMetaContextEvent(
+			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 					new InteractionEvent(InteractionEvent.Kind.ATTENTION, userActivityMonitor.getStructureKind(),
 							userActivityMonitor.getStructureHandle(), userActivityMonitor.getOriginId(), null,
-							IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionGained();
 			}
@@ -106,21 +106,21 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	public void addActivityTime(String handle, long start, long end) {
 		if (handle != null) {
-			ContextCore.getContextManager().processActivityMetaContextEvent(
+			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 					new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-							IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
-							IInteractionContextManager.ACTIVITY_ORIGINID_USER, null,
-							IInteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+							InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
+							InteractionContextManager.ACTIVITY_ORIGINID_USER, null,
+							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
 		}
 	}
 
 	public void removeActivityTime(String handle, long start, long end) {
 		if (handle != null) {
-			ContextCore.getContextManager().processActivityMetaContextEvent(
+			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 					new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-							IInteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
-							IInteractionContextManager.ACTIVITY_ORIGINID_USER, null,
-							IInteractionContextManager.ACTIVITY_DELTA_REMOVED, 1f, new Date(start), new Date(end)));
+							InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle,
+							InteractionContextManager.ACTIVITY_ORIGINID_USER, null,
+							InteractionContextManager.ACTIVITY_DELTA_REMOVED, 1f, new Date(start), new Date(end)));
 		}
 	}
 
