@@ -230,11 +230,6 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	public abstract String getNotes();
-
-	/**
-	 * @since 3.0
-	 */
 	public abstract String getOwner();
 
 	/**
@@ -345,11 +340,6 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	 * @since 3.0
 	 */
 	public abstract void setModificationDate(Date modificationDate);
-
-	/**
-	 * @since 3.0
-	 */
-	public abstract void setNotes(String notes);
 
 	/**
 	 * @since 3.0

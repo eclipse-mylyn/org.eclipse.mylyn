@@ -14,11 +14,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -58,12 +58,13 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 		run();
 	}
 
+	@SuppressWarnings( { "deprecation", "restriction" })
 	@Override
 	public void run() {
 		try {
 			for (Object selectedObject : getStructuredSelection().toList()) {
-				if (selectedObject instanceof ITask) {
-					ITask task = (ITask) selectedObject;
+				if (selectedObject instanceof AbstractTask) {
+					AbstractTask task = (AbstractTask) selectedObject;
 
 					String description = "Cloned from: " + CopyTaskDetailsAction.getTextForTask(task);
 
@@ -72,7 +73,8 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 							task.getRepositoryUrl(), task.getTaskId());
 					if (taskData != null) {
 						taskSelection = new TaskSelection(taskData);
-						taskSelection.getLegacyTaskData().setDescription(description + "\n\n> " + taskData.getDescription());
+						taskSelection.getLegacyTaskData().setDescription(
+								description + "\n\n> " + taskData.getDescription());
 					} else {
 						taskSelection = new TaskSelection(task);
 						if (task instanceof LocalTask) {
