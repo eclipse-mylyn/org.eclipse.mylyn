@@ -31,17 +31,17 @@ import org.eclipse.mylyn.context.core.IInteractionRelation;
  */
 public class CompositeContextElement implements IInteractionElement {
 
-	private List<InteractionContextElement> nodes = null;
+	private final List<InteractionContextElement> nodes;
 
-	private String handle = "<no handle>";
+	private String handle;
 
 	private final IInteractionContextScaling contextScaling;
 
 	public CompositeContextElement(String handle, List<InteractionContextElement> nodes,
 			IInteractionContextScaling contextScaling) {
 		Assert.isNotNull(handle);
-		this.nodes = nodes;
 		this.handle = handle;
+		this.nodes = nodes;
 		this.contextScaling = contextScaling;
 	}
 
@@ -80,6 +80,7 @@ public class CompositeContextElement implements IInteractionElement {
 	}
 
 	public void setHandleIdentifier(String handle) {
+		Assert.isNotNull(handle);
 		this.handle = handle;
 		for (IInteractionElement node : nodes) {
 			node.setHandleIdentifier(handle);
