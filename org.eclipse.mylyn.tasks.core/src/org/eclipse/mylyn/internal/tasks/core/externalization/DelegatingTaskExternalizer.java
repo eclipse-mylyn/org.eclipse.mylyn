@@ -591,6 +591,8 @@ public final class DelegatingTaskExternalizer {
 		}
 		if (element.hasAttribute(KEY_KEY)) {
 			task.setTaskKey(element.getAttribute(KEY_KEY));
+		} else {
+			task.setTaskKey(null);
 		}
 	}
 
