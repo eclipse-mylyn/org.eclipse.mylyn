@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -32,6 +33,7 @@ import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
  * @author Rob Elves
  * @since 2.0
  */
+@SuppressWarnings("restriction")
 public class ActivityContextManager implements IActivityContextManager {
 
 	private final int TICK = 30 * 1000;
@@ -95,9 +97,9 @@ public class ActivityContextManager implements IActivityContextManager {
 	private void addMonitoredActivityTime(long start, long end) {
 		if (end > start) {
 			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-					new InteractionEvent(InteractionEvent.Kind.ATTENTION, userActivityMonitor.getStructureKind(),
-							userActivityMonitor.getStructureHandle(), userActivityMonitor.getOriginId(), null,
-							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+					new InteractionEvent(InteractionEvent.Kind.ATTENTION, InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, getStructureHandle(),
+							InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start),
+							new Date(end)));
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionGained();
 			}
@@ -204,5 +206,13 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	public int getInactivityTimeout() {
 		return timeout;
+	}
+
+	public String getStructureHandle() {
+		if (ContextCore.getContextManager().getActiveContext().getHandleIdentifier() != null) {
+			return ContextCore.getContextManager().getActiveContext().getHandleIdentifier();
+		} else {
+			return InteractionContextManager.ACTIVITY_DELTA_ADDED;
+		}
 	}
 }
