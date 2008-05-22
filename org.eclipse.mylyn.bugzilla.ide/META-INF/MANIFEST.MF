@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Bugzilla Connector IDE
+Bundle-Name: Mylyn Bugzilla IDE Extensions
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.ide;singleton:=true
 Bundle-Version: 3.0.0.qualifier
 Require-Bundle: org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",

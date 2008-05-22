@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Java
+Bundle-Name: Mylyn Java Bridge
 Bundle-SymbolicName: org.eclipse.mylyn.java.ui;singleton:=true
 Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin
