@@ -48,6 +48,8 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	public MenuManager getSubMenuManager(final List<ITaskElement> selectedElements) {
 
+		taskListElementsToSchedule.clear();
+
 		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
 
 		if (selectedElements.size() == 1) {
