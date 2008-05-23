@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -537,13 +538,22 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		bottomComposite.pack(true);
 	}
 
-	private void createParts(String path, Composite parent, Collection<TaskEditorPartDescriptor> descriptors) {
+	private void createParts(String path, final Composite parent, Collection<TaskEditorPartDescriptor> descriptors) {
 		for (Iterator<TaskEditorPartDescriptor> it = descriptors.iterator(); it.hasNext();) {
-			TaskEditorPartDescriptor descriptor = it.next();
+			final TaskEditorPartDescriptor descriptor = it.next();
 			if (path == null || path.equals(descriptor.getPath())) {
-				AbstractTaskEditorPart part = descriptor.createPart();
-				part.setPartId(descriptor.getId());
-				initializePart(parent, part);
+				SafeRunner.run(new ISafeRunnable() {
+					public void handleException(Throwable e) {
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Error creating task editor part: \"" + descriptor.getId() + "\"", e));
+					}
+
+					public void run() throws Exception {
+						AbstractTaskEditorPart part = descriptor.createPart();
+						part.setPartId(descriptor.getId());
+						initializePart(parent, part);
+					}
+				});
 				it.remove();
 			}
 		}
