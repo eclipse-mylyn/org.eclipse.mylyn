@@ -1,15 +1,20 @@
 #!/bin/bash -e
 
-BUILD=`date -u +I%Y%m%d-%H00`
-sed -e s/QUALIFIER=.*/QUALIFIER=$BUILD/ -i local.sh
+if [ "$1" == "-rebuild" ];
+then
+ shift
+else
+ BUILD=`date -u +I%Y%m%d-%H00`
+ sed -e s/QUALIFIER=.*/QUALIFIER=$BUILD/ -i local.sh
+fi
 
 BUILD_ROOT=$(cd $(dirname $0); pwd)
 
 rm -R $BUILD_ROOT/3.3/build || true
 rm -R $BUILD_ROOT/3.4/build || true
 
-#$BUILD_ROOT/build-3.3.sh
-$BUILD_ROOT/build-3.4.sh
+#$BUILD_ROOT/build-3.3.sh $*
+$BUILD_ROOT/build-3.4.sh $*
 
 source $BUILD_ROOT/local.sh
 

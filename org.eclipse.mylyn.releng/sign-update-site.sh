@@ -38,24 +38,26 @@ pack() {
   -outputDir $DIR $DIR
 }
 
-
-# extract site
-if [ 1 -gt 2 ]
+if [ ! -e $TMP ]
 then
-/bin/rm $TMP || true
-unzip e3.4
-unzip extras
-unzip experimental
 
-/bin/rm $DST/mylyn.zip || true
-cd $TMP
-/usr/bin/find -name "org.eclipse.mylyn*.jar" | zip $DST/mylyn.zip -@
+ # extract site
 
-# sign
+ /bin/rm $TMP || true
+ unzip e3.4
+ unzip extras
+ unzip experimental
 
-mkdir -p $OUT
-/bin/rm $OUT/mylyn.zip || true
-/usr/bin/sign $DST/mylyn.zip nomail $OUT
+ /bin/rm $DST/mylyn.zip || true
+ cd $TMP
+ /usr/bin/find -name "org.eclipse.mylyn*.jar" | zip $DST/mylyn.zip -@
+
+ # sign
+
+ mkdir -p $OUT
+ /bin/rm $OUT/mylyn.zip || true
+ /usr/bin/sign $DST/mylyn.zip nomail $OUT
+fi
 
 I=0
 while [ $I -lt 10 ] && [ ! -e $OUT/mylyn.zip ]; do
