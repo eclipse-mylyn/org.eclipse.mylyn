@@ -86,7 +86,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		if (viewer.getControl() == null || viewer.getControl().isDisposed()) {
+		if (viewer.getControl() == null || viewer.getControl() == null || viewer.getControl().isDisposed()) {
 			return Status.CANCEL_STATUS;
 		}
 
