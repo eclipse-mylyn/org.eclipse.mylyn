@@ -599,10 +599,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
 		if (connectorUi != null && task != null) {
 			kindLabel = connectorUi.getTaskKindLabel(task);
-			if (taskData.isNew()) {
-				kindLabel = "New " + kindLabel;
-				idLabel = "";
-			}
+		}
+		if (taskData.isNew()) {
+			kindLabel = "New " + kindLabel;
+			idLabel = "";
 		}
 
 		if (getHeaderForm().getForm() != null) {

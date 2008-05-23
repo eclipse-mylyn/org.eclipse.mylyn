@@ -328,16 +328,11 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			retrieveTaskDescription(url);
 
 			newTask = TasksUiInternal.createNewLocalTask(urlTitle);
-
 			if (newTask == null) {
 				return false;
 			}
 			newTask.setUrl(url);
-
-			// NOTE: setting boolean param as false so that we go directly to
-			// the
-			// browser tab as with a previously-created task
-			TasksUiUtil.openEditor(newTask, false);
+			TasksUiUtil.openTask(newTask);
 			return true;
 		}
 	}
@@ -350,7 +345,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			return false;
 		} else {
 			//newTask.setPriority(Task.PriorityLevel.P3.toString());
-			TasksUiUtil.openEditor(newTask, false);
+			TasksUiUtil.openTask(newTask);
 			return true;
 		}
 	}

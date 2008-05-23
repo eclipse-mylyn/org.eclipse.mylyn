@@ -30,8 +30,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -85,7 +85,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			newTask.setPriority(PriorityLevel.P3.toString());
 			TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
 			taskList.addTask(newTask, selectedTask);
-			TasksUiUtil.openEditor(newTask, true);
+			TasksUiUtil.openTask(newTask);
 			return;
 		}
 

@@ -17,16 +17,9 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.IPreferenceNode;
-import org.eclipse.jface.preference.IPreferencePage;
-import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.preference.PreferenceManager;
-import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -35,7 +28,6 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
@@ -49,13 +41,11 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -110,14 +100,6 @@ public class TasksUiUtil {
 		Assert.isNotNull(task);
 		Assert.isNotNull(connectorKind);
 		return connectorKind.equals(task.getAttribute(ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND));
-	}
-
-	/**
-	 * @deprecated Use {@link TasksUiInternal#getActiveRepositoryTaskEditors()} instead
-	 */
-	@Deprecated
-	public static List<TaskEditor> getActiveRepositoryTaskEditors() {
-		return TasksUiInternal.getActiveRepositoryTaskEditors();
 	}
 
 	public static TaskRepository getSelectedRepository() {
@@ -189,112 +171,98 @@ public class TasksUiUtil {
 		return taskEditorId;
 	}
 
-	/**
-	 * @deprecated use {@link #openTask(AbstractTask)} instead
-	 * @since 3.0
-	 */
-	@Deprecated
-	public static void openEditor(final ITask task, boolean newTask) {
-		openEditor(task, true, newTask);
-	}
+//	/**
+//	 * @deprecated use {@link #openTask(AbstractTask)} instead
+//	 * @since 3.0
+//	 */
+//	@Deprecated
+//	public static void openEditor(final ITask task, boolean newTask) {
+//		openEditor(task, true, newTask);
+//	}
 
-	/**
-	 * Set asyncExec false for testing purposes.
-	 * 
-	 * @deprecated use {@link #openTask(AbstractTask)} instead
-	 * @since 3.0
-	 */
-	@Deprecated
-	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
-		final boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
-
-		final String taskEditorId = getTaskEditorId(task);
-
-		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
-
-		if (asyncExec) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				private boolean wasOpen = false;
-
-				public void run() {
-					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					if (window != null) {
-						if (openWithBrowser) {
-							openUrl(task.getUrl());
-						} else {
-							IWorkbenchPage page = window.getActivePage();
-							wasOpen = refreshEditorContentsIfOpen(task, editorInput);
-
-							if (!wasOpen) {
-								IEditorPart part = openEditor(editorInput, taskEditorId, page);
-								if (newTask && part instanceof TaskEditor) {
-									TaskEditor taskEditor = (TaskEditor) part;
-									taskEditor.setFocusOfActivePage();
-								}
-							}
-						}
-
-						Job updateTaskData = new Job("Update Task State") {
-
-							@Override
-							protected IStatus run(IProgressMonitor monitor) {
-								if (task != null) {
-									AbstractTask repositoryTask = (AbstractTask) task;
-									if (!wasOpen) {
-										TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
-									}
-									// Synchronization must happen after marked
-									// read.
-									AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-											.getRepositoryConnector(repositoryTask.getConnectorKind());
-									if (connector != null) {
-										TasksUiInternal.synchronizeTask(connector, repositoryTask, false, null);
-									}
-
-								}
-								return Status.OK_STATUS;
-							}
-						};
-
-						updateTaskData.setSystem(true);
-						updateTaskData.schedule();
-
-					}
-				}
-			});
-		} else {
-			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (window != null) {
-				if (openWithBrowser) {
-					openUrl(task.getUrl());
-				} else {
-					IWorkbenchPage page = window.getActivePage();
-					openEditor(editorInput, taskEditorId, page);
-				}
-				if (task != null) {
-					TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-				}
-			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \""
-						+ task.getSummary() + "\": no active workbench window"));
-			}
-		}
-	}
-
-	/**
-	 * @deprecated use {@link #openTask(AbstractTask)} instead
-	 * @since 3.0
-	 */
-	@Deprecated
-	public static void openEditor(ITask task, String pageId) {
-		final IEditorInput editorInput = new TaskEditorInput(task, false);
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IEditorPart part = openEditor(editorInput, getTaskEditorId(task), window.getActivePage());
-		if (part instanceof TaskEditor) {
-			((TaskEditor) part).setActivePage(pageId);
-		}
-	}
+//	/**
+//	 * Set asyncExec false for testing purposes.
+//	 * 
+//	 * @deprecated use {@link #openTask(AbstractTask)} instead
+//	 * @since 3.0
+//	 */
+//	@Deprecated
+//	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
+//		final boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+//				ITasksUiPreferenceConstants.EDITOR_TASKS_RICH);
+//
+//		final String taskEditorId = getTaskEditorId(task);
+//
+//		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
+//
+//		if (asyncExec) {
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				private boolean wasOpen = false;
+//
+//				public void run() {
+//					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//					if (window != null) {
+//						if (openWithBrowser) {
+//							openUrl(task.getUrl());
+//						} else {
+//							IWorkbenchPage page = window.getActivePage();
+//							wasOpen = refreshEditorContentsIfOpen(task, editorInput);
+//
+//							if (!wasOpen) {
+//								IEditorPart part = openEditor(editorInput, taskEditorId, page);
+//								if (newTask && part instanceof TaskEditor) {
+//									TaskEditor taskEditor = (TaskEditor) part;
+//									taskEditor.setFocusOfActivePage();
+//								}
+//							}
+//						}
+//
+//						Job updateTaskData = new Job("Update Task State") {
+//
+//							@Override
+//							protected IStatus run(IProgressMonitor monitor) {
+//								if (task != null) {
+//									AbstractTask repositoryTask = (AbstractTask) task;
+//									if (!wasOpen) {
+//										TasksUiPlugin.getTaskDataManager().setTaskRead(repositoryTask, true);
+//									}
+//									// Synchronization must happen after marked
+//									// read.
+//									AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
+//											.getRepositoryConnector(repositoryTask.getConnectorKind());
+//									if (connector != null) {
+//										TasksUiInternal.synchronizeTask(connector, repositoryTask, false, null);
+//									}
+//
+//								}
+//								return Status.OK_STATUS;
+//							}
+//						};
+//
+//						updateTaskData.setSystem(true);
+//						updateTaskData.schedule();
+//
+//					}
+//				}
+//			});
+//		} else {
+//			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//			if (window != null) {
+//				if (openWithBrowser) {
+//					openUrl(task.getUrl());
+//				} else {
+//					IWorkbenchPage page = window.getActivePage();
+//					openEditor(editorInput, taskEditorId, page);
+//				}
+//				if (task != null) {
+//					TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+//				}
+//			} else {
+//				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \""
+//						+ task.getSummary() + "\": no active workbench window"));
+//			}
+//		}
+//	}
 
 	public static IEditorPart openEditor(IEditorInput input, String editorId, IWorkbenchPage page) {
 		try {
@@ -589,18 +557,6 @@ public class TasksUiUtil {
 		openUrl(location, FLAG_NO_RICH_EDITOR);
 	}
 
-	/**
-	 * @deprecated use {@link #openTask(String)} or {@link #openUrl(String)} instead
-	 */
-	@Deprecated
-	public static void openUrl(String url, boolean useRichEditorIfAvailable) {
-		if (useRichEditorIfAvailable && url != null) {
-			openTask(url);
-		} else {
-			openUrl(url);
-		}
-	}
-
 	private static void openUrl(String location, int customFlags) {
 		try {
 			URL url = null;
@@ -645,15 +601,6 @@ public class TasksUiUtil {
 	}
 
 	/**
-	 * @deprecated Use {@link TasksUiInternal#refreshAndOpenTaskListElement(AbstractTaskContainer)} instead
-	 * @since 3.0
-	 */
-	@Deprecated
-	public static void refreshAndOpenTaskListElement(ITaskElement element) {
-		TasksUiInternal.refreshAndOpenTaskListElement(element);
-	}
-
-	/**
 	 * If task is already open and has incoming, must force refresh in place
 	 */
 	private static boolean refreshEditorContentsIfOpen(ITask task, IEditorInput editorInput) {
@@ -670,30 +617,6 @@ public class TasksUiUtil {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Use PreferencesUtil.createPreferenceDialogOn(..) instead.
-	 * 
-	 * @since 3.0
-	 */
-	@Deprecated
-	public static void showPreferencePage(String id, IPreferencePage page) {
-		final IPreferenceNode targetNode = new PreferenceNode(id, page);
-
-		PreferenceManager manager = new PreferenceManager();
-		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getShell(), manager);
-		final boolean[] result = new boolean[] { false };
-		BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-			public void run() {
-				dialog.create();
-				dialog.setMessage(targetNode.getLabelText());
-				result[0] = (dialog.open() == Window.OK);
-			}
-		});
 	}
 
 	/**
