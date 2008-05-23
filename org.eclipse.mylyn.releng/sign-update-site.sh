@@ -60,7 +60,7 @@ then
 fi
 
 I=0
-while [ $I -lt 10 ] && [ ! -e $OUT/mylyn.zip ]; do
+while [ $I -lt 20 ] && [ ! -e $OUT/mylyn.zip ]; do
   echo Waiting for $OUT/mylyn.zip
   sleep 30
   let I=I+1
