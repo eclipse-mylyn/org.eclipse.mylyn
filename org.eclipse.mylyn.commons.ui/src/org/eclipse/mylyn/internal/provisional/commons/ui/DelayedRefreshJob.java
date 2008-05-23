@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -43,9 +44,10 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	private long scheduleTime = NOT_SCHEDULED;
 
-	public DelayedRefreshJob(StructuredViewer treeViewer, String name) {
+	public DelayedRefreshJob(StructuredViewer viewer, String name) {
 		super(name);
-		this.viewer = treeViewer;
+		Assert.isNotNull(viewer);
+		this.viewer = viewer;
 		setSystem(true);
 	}
 
@@ -86,7 +88,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		if (viewer.getControl() == null || viewer.getControl() == null || viewer.getControl().isDisposed()) {
+		if (viewer.getControl() == null || viewer.getControl().isDisposed()) {
 			return Status.CANCEL_STATUS;
 		}
 
