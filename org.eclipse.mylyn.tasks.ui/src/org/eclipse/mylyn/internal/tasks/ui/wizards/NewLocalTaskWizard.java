@@ -60,7 +60,7 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 		}
 		// FIXME 3.0 TaskData support
 		if (task != null) {
-			TasksUiUtil.openEditor(task, true);
+			TasksUiUtil.openTask(task);
 			return true;
 		} else {
 			return false;

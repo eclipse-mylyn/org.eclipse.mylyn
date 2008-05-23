@@ -439,17 +439,13 @@ public class TasksUiUtil {
 				IEditorInput editorInput = new TaskEditorInput(taskRepository, task);
 				boolean wasOpen = refreshEditorContentsIfOpen(task, editorInput);
 				if (wasOpen) {
-					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-							task.getConnectorKind());
-					TasksUiInternal.synchronizeTask(connector, task, false, null);
+					synchronizeTask(task);
 					return true;
 				} else {
 					IWorkbenchPage page = window.getActivePage();
 					IEditorPart editor = openEditor(editorInput, getTaskEditorId(task), page);
 					if (editor != null) {
-						AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-								task.getConnectorKind());
-						TasksUiInternal.synchronizeTask(connector, task, false, null);
+						synchronizeTask(task);
 						return true;
 					}
 				}
@@ -459,6 +455,16 @@ public class TasksUiUtil {
 					+ task.getSummary() + "\": no active workbench window"));
 		}
 		return false;
+	}
+
+	private static void synchronizeTask(ITask task) {
+		if (task instanceof LocalTask) {
+			return;
+		}
+
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				task.getConnectorKind());
+		TasksUiInternal.synchronizeTask(connector, task, false, null);
 	}
 
 	/**

@@ -11,20 +11,18 @@ package org.eclipse.mylyn.internal.tasks.core;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
 
 /**
  * @author Rob Elves
  */
-public class LocalRepositoryConnector extends AbstractLegacyRepositoryConnector {
+public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String REPOSITORY_LABEL = "Local";
 
@@ -47,17 +45,6 @@ public class LocalRepositoryConnector extends AbstractLegacyRepositoryConnector 
 	}
 
 	@Override
-	public AbstractTask createTask(String repositoryUrl, String id, String summary) {
-		return new LocalTask(id, summary);
-	}
-
-	@Override
-	public AbstractAttachmentHandler getAttachmentHandler() {
-		// TODO: Implement local attachments
-		return null;
-	}
-
-	@Override
 	public String getLabel() {
 		return "Local Task Repository";
 	}
@@ -70,12 +57,6 @@ public class LocalRepositoryConnector extends AbstractLegacyRepositoryConnector 
 	@Override
 	public String getRepositoryUrlFromTaskUrl(String taskFullUrl) {
 		// ignore
-		return null;
-	}
-
-	@Override
-	public AbstractTaskDataHandler getLegacyTaskDataHandler() {
-		// not currently needed
 		return null;
 	}
 
@@ -104,19 +85,26 @@ public class LocalRepositoryConnector extends AbstractLegacyRepositoryConnector 
 	}
 
 	@Override
-	public boolean updateTaskFromTaskData(TaskRepository repository, ITask repositoryTask, RepositoryTaskData taskData) {
-		return false;
-	}
-
-	@Override
 	public boolean isUserManaged() {
 		return false;
 	}
 
 	@Override
-	public RepositoryTaskData getLegacyTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
+		// ignore
 		return null;
+	}
+
+	@Override
+	public boolean hasChanged(ITask task, TaskData taskData) {
+		// ignore
+		return false;
+	}
+
+	@Override
+	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
+		// ignore
 	}
 
 }
