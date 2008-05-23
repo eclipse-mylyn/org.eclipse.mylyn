@@ -49,11 +49,13 @@ public final class TaskContainerDelta {
 	private boolean isTransient;
 
 	/**
+	 * @param source
+	 *            - object being moved/added/removed, source assumed to be root
 	 * @since 3.0
 	 */
-	public TaskContainerDelta(ITaskElement target, Kind kind) {
-		this.target = target;
-		this.source = null;
+	public TaskContainerDelta(ITaskElement source, Kind kind) {
+		this.source = source;
+		this.target = null;
 		this.kind = kind;
 	}
 
@@ -67,7 +69,7 @@ public final class TaskContainerDelta {
 	}
 
 	/**
-	 * The target is the container modified or the target destination for the <code>source</code> element
+	 * The <code>target</code> is the container that the <code>source</code> is being moved from/to
 	 * 
 	 * @since 3.0
 	 */

@@ -195,10 +195,10 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			}
 			ITask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (task.equals(taskContainerDelta.getTarget())) {
+				if (task.equals(taskContainerDelta.getSource())) {
 					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)
 							&& !taskContainerDelta.isTransient()) {
-						taskToRefresh = (ITask) taskContainerDelta.getTarget();
+						taskToRefresh = (ITask) taskContainerDelta.getSource();
 						break;
 					}
 				}
