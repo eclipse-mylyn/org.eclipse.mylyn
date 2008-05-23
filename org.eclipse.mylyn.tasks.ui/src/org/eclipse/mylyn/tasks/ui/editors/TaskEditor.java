@@ -237,6 +237,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		getEditorSite().registerContextMenu(menuManager, getEditorSite().getSelectionProvider(), false);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	@Deprecated
 	public void configureContextMenuManager(MenuManager manager) {
 		if (manager == null) {
