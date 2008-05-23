@@ -855,7 +855,7 @@ public class BugzillaClient {
 				} catch (IOException e) {
 					// ignore
 				}
-				parseHtmlError(input);
+				parseHtmlError(in);
 			}
 
 			return result;
@@ -1026,9 +1026,13 @@ public class BugzillaClient {
 	/**
 	 * Utility method for determining what potential error has occurred from a bugzilla html reponse page
 	 */
-	public void parseHtmlError(InputStream inputStream) throws IOException, CoreException {
+	private void parseHtmlError(InputStream inputStream) throws IOException, CoreException {
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, characterEncoding));
+		parseHtmlError(in);
+	}
+
+	private void parseHtmlError(BufferedReader in) throws IOException, CoreException {
 
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
