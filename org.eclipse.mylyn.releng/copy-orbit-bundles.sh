@@ -63,3 +63,8 @@ cp -v org.apache.axis*.jar $DEST/allUpdateSite/plugins
 cp -v org.apache.commons.discovery*.jar $DEST/allUpdateSite/plugins
 cp -v org.apache.commons.logging*.jar $DEST/allUpdateSite/plugins
 cp -v org.jdom*.jar $DEST/allUpdateSite/plugins
+
+#BUILD_ROOT=$(cd $(dirname $0); pwd)
+#source $BUILD_ROOT/local.sh
+#cp -v $ECLIPSE_HOME_3_4/plugins/org.eclipse.ui.views.log_*jar $DEST/standardUpdateSite/plugins
+#cp -v $ECLIPSE_HOME_3_4/plugins/org.eclipse.ui.views.log_*jar $DEST/allUpdateSite/plugins
