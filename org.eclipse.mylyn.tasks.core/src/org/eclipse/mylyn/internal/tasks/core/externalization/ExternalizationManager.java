@@ -52,6 +52,7 @@ public class ExternalizationManager {
 		//create save job
 		ExternalizationJob job = new ExternalizationJob(jobName, context);
 		job.setUser(false);
+		job.setSystem(true);
 		return job;
 	}
 
