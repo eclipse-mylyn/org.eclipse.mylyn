@@ -127,35 +127,35 @@ public class TaskCommentMapper {
 		Assert.isNotNull(taskAttribute);
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
-		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_COMMENT).applyTo(taskAttribute);
+		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_COMMENT);
 		if (getCommentId() != null) {
 			mapper.setValue(taskAttribute, getCommentId());
 		}
 		if (getAuthor() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_AUTHOR);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_PERSON).applyTo(child);
+			child.getMetaData().setType(TaskAttribute.TYPE_PERSON);
 			mapper.setRepositoryPerson(child, getAuthor());
 		}
 		if (getCreationDate() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_DATE);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_DATE).applyTo(child);
+			child.getMetaData().setType(TaskAttribute.TYPE_DATE);
 			mapper.setDateValue(child, getCreationDate());
 		}
 		if (getNumber() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_NUMBER);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_INTEGER).applyTo(child);
+			child.getMetaData().setType(TaskAttribute.TYPE_INTEGER);
 			mapper.setIntegerValue(child, getNumber());
 		}
 		if (getUrl() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_URL);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_URL).applyTo(child);
+			child.getMetaData().setType(TaskAttribute.TYPE_URL);
 			mapper.setValue(child, getUrl());
 		}
 		if (getText() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_TEXT);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_LONG_RICH_TEXT).applyTo(child);
+			child.getMetaData().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
 			mapper.setValue(child, getText());
-			taskAttribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
+			taskAttribute.putMetaDatum(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
 		}
 	}
 

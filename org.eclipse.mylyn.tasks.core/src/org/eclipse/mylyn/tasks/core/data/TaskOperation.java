@@ -20,7 +20,7 @@ public class TaskOperation {
 	public static void applyTo(TaskAttribute taskAttribute, String operationId, String label) {
 		TaskData taskData = taskAttribute.getTaskData();
 		taskData.getAttributeMapper().setValue(taskAttribute, operationId);
-		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_OPERATION).setLabel(label).applyTo(taskAttribute);
+		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_OPERATION).setLabel(label);
 	}
 
 	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
@@ -28,8 +28,7 @@ public class TaskOperation {
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
 				taskData.getTaskId(), taskAttribute.getValue());
-		TaskAttributeProperties properties = TaskAttributeProperties.from(taskAttribute);
-		operation.setLabel(properties.getLabel());
+		operation.setLabel(taskAttribute.getMetaData().getLabel());
 		operation.setTaskAttribute(taskAttribute);
 		return operation;
 	}

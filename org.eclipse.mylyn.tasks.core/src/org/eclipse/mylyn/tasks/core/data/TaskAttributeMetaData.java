@@ -31,6 +31,11 @@ public class TaskAttributeMetaData {
 		return this;
 	}
 
+	public TaskAttributeMetaData clear() {
+		taskAttribute.clearMetaDataMap();
+		return this;
+	}
+
 	public String getDefaultOption() {
 		return taskAttribute.getMetaDatum(TaskAttribute.META_DEFAULT_OPTION);
 	}
@@ -55,17 +60,17 @@ public class TaskAttributeMetaData {
 		return taskAttribute.getMetaDataMap();
 	}
 
-	public TaskAttributeMetaData putValue(String key, String value) {
-		taskAttribute.putMetaDatum(key, value);
-		return this;
-	}
-
 	public boolean isReadOnly() {
 		return Boolean.parseBoolean(taskAttribute.getMetaDatum(TaskAttribute.META_READ_ONLY));
 	}
 
 	public boolean isShowInToolTip() {
 		return Boolean.parseBoolean(taskAttribute.getMetaDatum(TaskAttribute.META_SHOW_IN_TOOL_TIP));
+	}
+
+	public TaskAttributeMetaData putValue(String key, String value) {
+		taskAttribute.putMetaDatum(key, value);
+		return this;
 	}
 
 	public TaskAttributeMetaData setDefaultOption(String defaultOption) {

@@ -295,7 +295,7 @@ public final class TaskAttribute {
 		attributeById = null;
 	}
 
-	void clearMetaData() {
+	void clearMetaDataMap() {
 		metaData = null;
 	}
 
