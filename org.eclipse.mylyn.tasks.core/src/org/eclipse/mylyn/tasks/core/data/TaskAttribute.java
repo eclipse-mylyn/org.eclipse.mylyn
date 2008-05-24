@@ -36,6 +36,9 @@ public final class TaskAttribute {
 
 	public static final String ATTACHMENT_DATE = "task.common.attachment.date";
 
+	// NOTE: uses the same value as DESCRIPTION to support migration of legacy task data 
+	public static final String ATTACHMENT_DESCRIPTION = "task.common.description";
+
 	public static final String ATTACHMENT_FILENAME = "filename";
 
 	public static final String ATTACHMENT_ID = "task.common.attachment.id";
@@ -52,6 +55,7 @@ public final class TaskAttribute {
 
 	public static final String COMMENT_AUTHOR = "task.common.comment.author";
 
+	@Deprecated
 	public static final String COMMENT_AUTHOR_NAME = "task.common.comment.author.name";
 
 	public static final String COMMENT_DATE = "task.common.comment.date";
@@ -74,10 +78,13 @@ public final class TaskAttribute {
 	 */
 	public static final String COMPONENT = "task.common.component";
 
+	@Deprecated
 	public static final String CONTAINER_ATTACHMENTS = "task.common.attachments";
 
+	@Deprecated
 	public static final String CONTAINER_COMMENTS = "task.common.comments";
 
+	@Deprecated
 	public static final String CONTAINER_OPERATIONS = "task.common.operations";
 
 	/**
@@ -92,7 +99,7 @@ public final class TaskAttribute {
 	 */
 	public static final String DATE_DUE = "task.common.date.due";
 
-	public static final String DATE_MODIFIED = "task.common.date.modified";
+	public static final String DATE_MODIFICATION = "task.common.date.modified";
 
 	public static final String DESCRIPTION = "task.common.description";
 
@@ -104,6 +111,7 @@ public final class TaskAttribute {
 
 	public static final String KIND_PEOPLE = "task.common.kind.default";
 
+	@Deprecated
 	public static final String META_ARTIFICIAL = "task.meta.artificial";
 
 	//public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";
@@ -124,7 +132,8 @@ public final class TaskAttribute {
 
 	public static final String NEW_ATTACHMENT = "task.common.new.attachment";
 
-	public static final String NEW_CC = "task.common.newcc";
+	// XXX merge with USER_CC
+	//public static final String NEW_CC = "task.common.newcc";
 
 	public static final String OPERATION = "task.common.operation";
 
@@ -134,7 +143,8 @@ public final class TaskAttribute {
 
 	public static final String PRODUCT = "task.common.product";
 
-	public static final String REMOVE_CC = "task.common.removecc";
+	// XXX merge with USER_CC
+	//public static final String REMOVE_CC = "task.common.removecc";
 
 	public static final String RESOLUTION = "task.common.resolution";
 
@@ -194,7 +204,7 @@ public final class TaskAttribute {
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_NUMBER = "number";
+	public static final String TYPE_INTEGER = "integer";
 
 	public static final String TYPE_OPERATION = "operation";
 
@@ -232,13 +242,9 @@ public final class TaskAttribute {
 
 	public static final String USER_CC = "task.common.user.cc";
 
-	/**
-	 * Key for the author of a comment.
-	 */
-	public static final String USER_OWNER = "task.common.user.owner";
-
 	public static final String USER_REPORTER = "task.common.user.reporter";
 
+	@Deprecated
 	public static final String USER_REPORTER_NAME = "task.common.user.reporter.name";
 
 	private Map<String, TaskAttribute> attributeById;

@@ -145,7 +145,7 @@ public class TaskAttachmentMapper {
 		if (child != null) {
 			attachment.setCreationDate(mapper.getDateValue(child));
 		}
-		child = taskAttribute.getMappedAttribute(TaskAttribute.DESCRIPTION);
+		child = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
 		if (child != null) {
 			attachment.setDescription(mapper.getValue(child));
 		}
@@ -199,7 +199,7 @@ public class TaskAttachmentMapper {
 			mapper.setDateValue(child, getCreationDate());
 		}
 		if (getDescription() != null) {
-			child = taskAttribute.createAttribute(TaskAttribute.DESCRIPTION);
+			child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
 			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_SHORT_TEXT).applyTo(child);
 			mapper.setValue(child, getDescription());
 		}

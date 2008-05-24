@@ -103,7 +103,7 @@ public class DefaultTaskSchema {
 	}
 
 	public String getOwner() {
-		return getValue(RepositoryTaskAttribute.USER_OWNER);
+		return getValue(RepositoryTaskAttribute.USER_ASSIGNED);
 	}
 
 	public PriorityLevel getPriority() {
@@ -190,7 +190,7 @@ public class DefaultTaskSchema {
 
 	// TODO use Person class?
 	public void setOwner(String owner) {
-		setValue(RepositoryTaskAttribute.USER_OWNER, owner);
+		setValue(RepositoryTaskAttribute.USER_ASSIGNED, owner);
 	}
 
 	public void setPriority(PriorityLevel priority) {

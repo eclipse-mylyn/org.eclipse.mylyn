@@ -96,8 +96,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 	}
 
 	public SubmitJob createSubmitTaskJob(AbstractRepositoryConnector connector, TaskRepository taskRepository,
-			final ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes) {
-		SubmitJob job = new SubmitTaskJob(taskDataManager, connector, taskRepository, task, taskData, changedAttributes);
+			final ITask task, TaskData taskData, Set<TaskAttribute> oldAttributes) {
+		SubmitJob job = new SubmitTaskJob(taskDataManager, connector, taskRepository, task, taskData, oldAttributes);
 		job.setPriority(Job.INTERACTIVE);
 		try {
 			taskList.run(new ITaskListRunnable() {

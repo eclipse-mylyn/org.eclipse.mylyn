@@ -63,7 +63,7 @@ public class TaskDataModel {
 	 * Invoke upon change to attribute value.
 	 * 
 	 * @param attribute
-	 * 		changed attribute
+	 *            changed attribute
 	 */
 	public void attributeChanged(TaskAttribute attribute) {
 		if (attribute.getParentAttribute() != getTaskData().getRoot()) {
@@ -92,6 +92,11 @@ public class TaskDataModel {
 
 	public Set<TaskAttribute> getChangedAttributes() {
 		return new HashSet<TaskAttribute>(workingCopy.getEditsData().getRoot().getAttributes().values());
+	}
+
+	public Set<TaskAttribute> getChangedOldAttributes() {
+		// FIXME implement
+		return null;
 	}
 
 	public ITask getTask() {

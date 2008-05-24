@@ -175,7 +175,7 @@ public class TaskDataStateReader extends DefaultHandler {
 
 			child = createAttribute(attribute, TaskAttribute.COMMENT_NUMBER);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER));
-			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_NUMBER);
+			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_INTEGER);
 
 			addElementHandler(new AttributeHandler10(this, attribute));
 		}

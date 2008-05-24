@@ -608,7 +608,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		doSave(new NullProgressMonitor());
 
 		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector,
-				getModel().getTaskRepository(), task, getModel().getTaskData(), getModel().getChangedAttributes());
+				getModel().getTaskRepository(), task, getModel().getTaskData(), getModel().getChangedOldAttributes());
 		submitJob.addSubmitJobListener(new SubmitTaskJobListener(getAttachContext()));
 		submitJob.schedule();
 	}

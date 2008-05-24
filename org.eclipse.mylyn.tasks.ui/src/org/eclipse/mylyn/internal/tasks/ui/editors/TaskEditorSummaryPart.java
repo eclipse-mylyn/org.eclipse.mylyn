@@ -122,7 +122,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		TaskAttribute dateCreation = getTaskData().getMappedAttribute(TaskAttribute.DATE_CREATION);
 		addAttribute(headerComposite, toolkit, dateCreation);
 
-		TaskAttribute dateModified = getTaskData().getMappedAttribute(TaskAttribute.DATE_MODIFIED);
+		TaskAttribute dateModified = getTaskData().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		addAttribute(headerComposite, toolkit, dateModified);
 	}
 

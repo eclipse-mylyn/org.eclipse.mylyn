@@ -218,6 +218,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		createActionButtons(buttonComposite, toolkit);
 
+		toolkit.paintBordersFor(buttonComposite);
 		section.setClient(buttonComposite);
 		setSection(toolkit, section);
 	}
@@ -277,7 +278,6 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			}
 			setSelectedRadionButton(selectedButton);
 		}
-		toolkit.paintBordersFor(buttonComposite);
 	}
 
 	public boolean getAttachContext() {

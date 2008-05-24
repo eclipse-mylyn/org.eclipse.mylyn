@@ -44,21 +44,21 @@ public class SubmitTaskJob extends SubmitJob {
 
 	private ITask task;
 
-	private final Set<TaskAttribute> changedAttributes;
+	private final Set<TaskAttribute> oldAttributes;
 
 	private final ITaskDataManager taskDataManager;
 
 	private RepositoryResponse response;
 
 	public SubmitTaskJob(ITaskDataManager taskDataManager, AbstractRepositoryConnector connector,
-			TaskRepository taskRepository, ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes) {
+			TaskRepository taskRepository, ITask task, TaskData taskData, Set<TaskAttribute> oldAttributes) {
 		super("Submitting Task");
 		this.taskDataManager = taskDataManager;
 		this.connector = connector;
 		this.taskRepository = taskRepository;
 		this.task = task;
 		this.taskData = taskData;
-		this.changedAttributes = changedAttributes;
+		this.oldAttributes = oldAttributes;
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class SubmitTaskJob extends SubmitJob {
 			// post task data
 			AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 			monitor.subTask("Sending data");
-			response = taskDataHandler.postTaskData(taskRepository, taskData, changedAttributes, Policy.subMonitorFor(
+			response = taskDataHandler.postTaskData(taskRepository, taskData, oldAttributes, Policy.subMonitorFor(
 					monitor, 100));
 			if (response == null || response.getTaskId() == null) {
 				throw new CoreException(new RepositoryStatus(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
@@ -81,8 +81,7 @@ public class SubmitTaskJob extends SubmitJob {
 			// update task in task list
 			String taskId = response.getTaskId();
 			monitor.subTask("Receiving data");
-			TaskData updatedTaskData = connector.getTaskData(taskRepository, taskId,
-					Policy.subMonitorFor(monitor, 100));
+			TaskData updatedTaskData = connector.getTaskData(taskRepository, taskId, Policy.subMonitorFor(monitor, 100));
 			task = createTask(monitor, updatedTaskData);
 			taskDataManager.putSubmittedTaskData(task, updatedTaskData);
 			fireTaskSynchronized(monitor);

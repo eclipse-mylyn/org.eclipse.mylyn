@@ -141,7 +141,7 @@ public class TaskCommentMapper {
 		}
 		if (getNumber() != DEFAULT_NUMBER) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_NUMBER);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_NUMBER).applyTo(child);
+			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_INTEGER).applyTo(child);
 			mapper.setIntegerValue(child, getNumber());
 		}
 		if (getUrl() != null) {

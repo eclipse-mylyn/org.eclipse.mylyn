@@ -45,7 +45,7 @@ public abstract class AbstractTaskDataHandler {
 	 * Return a reference to the newly created report in the case of new task submission, null otherwise
 	 */
 	public abstract RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
-			Set<TaskAttribute> changedAttributes, IProgressMonitor monitor) throws CoreException;
+			Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Initialize a new task data object with default attributes and values
@@ -64,9 +64,9 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * @param task
-	 * 		the parent task, may be null
+	 *            the parent task, may be null
 	 * @param task
-	 * 		the parent task data, may be null
+	 *            the parent task data, may be null
 	 * @since 2.2
 	 */
 	public boolean canInitializeSubTaskData(ITask task, TaskData parentTaskData) {
@@ -84,7 +84,7 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * @return true if connector support downloading multiple task data in single request, false otherwise. If true,
-	 * 	override and implement getMultiTaskData
+	 *         override and implement getMultiTaskData
 	 */
 	public boolean canGetMultiTaskData() {
 		return false;
@@ -103,10 +103,11 @@ public abstract class AbstractTaskDataHandler {
 	 * Other attribute values are only set if they exist on <code>sourceTaskData</code> and <code>targetTaskData</code>.
 	 * 
 	 * @param sourceTaskData
-	 * 		the source task data values are copied from, the connector kind of repository of <code>sourceTaskData</code>
-	 * 		can be different from <code>targetTaskData</code>
+	 *            the source task data values are copied from, the connector kind of repository of
+	 *            <code>sourceTaskData</code> can be different from <code>targetTaskData</code>
 	 * @param targetTaskData
-	 * 		the target task data values are copied to, the connector kind matches the one of this task data handler
+	 *            the target task data values are copied to, the connector kind matches the one of this task data
+	 *            handler
 	 * @since 2.2
 	 */
 	public void cloneTaskData(ITaskMapping source, TaskData target) {

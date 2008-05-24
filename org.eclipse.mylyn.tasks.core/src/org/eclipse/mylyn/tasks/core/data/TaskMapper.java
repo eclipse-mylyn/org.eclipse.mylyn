@@ -107,11 +107,11 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	public Date getModificationDate() {
-		return getDateValue(TaskAttribute.DATE_MODIFIED);
+		return getDateValue(TaskAttribute.DATE_MODIFICATION);
 	}
 
 	public String getOwner() {
-		return getValue(TaskAttribute.USER_OWNER);
+		return getValue(TaskAttribute.USER_ASSIGNED);
 	}
 
 	public PriorityLevel getPriority() {
@@ -204,12 +204,12 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	public void setModificationDate(Date dateModified) {
-		setDateValue(TaskAttribute.DATE_MODIFIED, dateModified);
+		setDateValue(TaskAttribute.DATE_MODIFICATION, dateModified);
 	}
 
 	// TODO use Person class?
 	public void setOwner(String owner) {
-		setValue(TaskAttribute.USER_OWNER, owner);
+		setValue(TaskAttribute.USER_ASSIGNED, owner);
 	}
 
 	public void setPriority(PriorityLevel priority) {
