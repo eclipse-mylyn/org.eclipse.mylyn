@@ -210,7 +210,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		selectedOperationAttribute = getTaskData().getMappedAttribute(TaskAttribute.OPERATION);
 		if (selectedOperationAttribute != null
-				&& TaskAttribute.TYPE_OPERATION.equals(selectedOperationAttribute.getProperties().getType())) {
+				&& TaskAttribute.TYPE_OPERATION.equals(selectedOperationAttribute.getMetaData().getType())) {
 			TaskOperation selectedOperation = getTaskData().getAttributeMapper().getTaskOperation(
 					selectedOperationAttribute);
 			createRadioButtons(buttonComposite, toolkit, selectedOperation);

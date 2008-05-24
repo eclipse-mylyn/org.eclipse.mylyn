@@ -44,7 +44,7 @@ public class TaskAttributeMapper {
 	}
 
 	public TaskAttribute getAssoctiatedAttribute(TaskAttribute taskAttribute) {
-		String id = taskAttribute.getMetaData(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+		String id = taskAttribute.getMetaDatum(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 		if (id != null) {
 			// look up as nested attribute first
 			TaskAttribute associatedAttribute = taskAttribute.getAttribute(id);
@@ -70,7 +70,7 @@ public class TaskAttributeMapper {
 		Assert.isNotNull(type);
 		List<TaskAttribute> result = new ArrayList<TaskAttribute>();
 		for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
-			if (type.equals(taskAttribute.getProperties().getType())) {
+			if (type.equals(taskAttribute.getMetaData().getType())) {
 				result.add(taskAttribute);
 			}
 		}
@@ -98,7 +98,7 @@ public class TaskAttributeMapper {
 	}
 
 	public String getDefaultOption(TaskAttribute taskAttribute) {
-		return TaskAttributeProperties.from(taskAttribute).getDefaultOption();
+		return taskAttribute.getMetaData().getDefaultOption();
 	}
 
 	public Integer getIntegerValue(TaskAttribute attribute) {
@@ -114,7 +114,7 @@ public class TaskAttributeMapper {
 	}
 
 	public String getLabel(TaskAttribute taskAttribute) {
-		return TaskAttributeProperties.from(taskAttribute).getLabel();
+		return taskAttribute.getMetaData().getLabel();
 	}
 
 	public Long getLongValue(TaskAttribute attribute) {
@@ -150,7 +150,7 @@ public class TaskAttributeMapper {
 		TaskData taskData = operationsAttribute.getTaskData();
 		List<TaskOperation> result = new ArrayList<TaskOperation>();
 		for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
-			if (TaskAttribute.TYPE_OPERATION.equals(taskAttribute.getProperties().getType())
+			if (TaskAttribute.TYPE_OPERATION.equals(taskAttribute.getMetaData().getType())
 					&& !taskAttribute.getId().equals(mapToRepositoryKey(taskData.getRoot(), TaskAttribute.OPERATION))) {
 				result.add(TaskOperation.createFrom(taskAttribute));
 			}
@@ -168,7 +168,7 @@ public class TaskAttributeMapper {
 	}
 
 	public String getType(TaskAttribute taskAttribute) {
-		return TaskAttributeProperties.from(taskAttribute).getType();
+		return taskAttribute.getMetaData().getType();
 	}
 
 	public String getValue(TaskAttribute taskAttribute) {

@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -223,7 +223,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		TaskAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
 		Map<String, TaskAttribute> attributes = getTaskData().getRoot().getAttributes();
 		for (TaskAttribute attribute : attributes.values()) {
-			TaskAttributeProperties properties = TaskAttributeProperties.from(attribute);
+			TaskAttributeMetaData properties = attribute.getMetaData();
 			if (!TaskAttribute.KIND_DEFAULT.equals(properties.getKind())) {
 				continue;
 			}

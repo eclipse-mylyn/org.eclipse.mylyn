@@ -14,7 +14,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -42,21 +41,20 @@ public class TaskDataStateReader extends DefaultHandler {
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			// create a unique id for each attachment since the actual id is in a child attribute
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_ATTACHMENT + ++id);
-			TaskAttributeProperties.defaults().setReadOnly(true).setType(TaskAttribute.TYPE_ATTACHMENT).applyTo(
-					attribute);
+			attribute.getMetaData().defaults().setReadOnly(true).setType(TaskAttribute.TYPE_ATTACHMENT);
 			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_ID) + "");
 
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_CREATOR));
-			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_PERSON);
+			child.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_PERSON);
 
 			child = createAttribute(attribute, TaskAttribute.ATTACHMENT_IS_DEPRECATED);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_OBSOLETE));
-			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_BOOLEAN);
+			child.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_BOOLEAN);
 
 			child = createAttribute(attribute, TaskAttribute.ATTACHMENT_IS_PATCH);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_PATCH));
-			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_BOOLEAN);
+			child.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_BOOLEAN);
 
 			addElementHandler(new AttributeHandler10(this, attribute));
 		}
@@ -79,9 +77,11 @@ public class TaskDataStateReader extends DefaultHandler {
 			// detect type
 			if (attribute.getOptions().size() > 0) {
 				if (attribute.getValues().size() > 1) {
-					attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_MULTI_SELECT);
+					attribute.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE,
+							TaskAttribute.TYPE_MULTI_SELECT);
 				} else {
-					attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_SINGLE_SELECT);
+					attribute.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE,
+							TaskAttribute.TYPE_SINGLE_SELECT);
 				}
 			}
 		}
@@ -94,7 +94,7 @@ public class TaskDataStateReader extends DefaultHandler {
 			boolean readOnly = Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_READONLY));
 			attribute = parentAttribute.createAttribute(id);
 			String kind = (hidden) ? null : TaskAttribute.KIND_DEFAULT;
-			TaskAttributeProperties.defaults().setLabel(label).setReadOnly(readOnly).setKind(kind).applyTo(attribute);
+			attribute.getMetaData().defaults().setLabel(label).setReadOnly(readOnly).setKind(kind);
 
 			addElementHandler(new OptionHandler10(this, attribute));
 			addElementHandler(new ValueHandler10(this, attribute));
@@ -144,16 +144,16 @@ public class TaskDataStateReader extends DefaultHandler {
 		protected void end(String uri, String localName, String name) {
 			TaskAttribute child = attribute.getMappedAttribute(TaskAttribute.COMMENT_TEXT);
 			if (child != null) {
-				child.putMetaDataValue(TaskAttribute.META_READ_ONLY, Boolean.toString(true));
-				child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_LONG_RICH_TEXT);
+				child.getMetaData().putValue(TaskAttribute.META_READ_ONLY, Boolean.toString(true));
+				child.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_LONG_RICH_TEXT);
 			}
 		}
 
 		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_COMMENT + ++id);
-			TaskAttributeProperties.defaults().setReadOnly(true).setType(TaskAttribute.TYPE_COMMENT).applyTo(attribute);
-			attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
+			attribute.getMetaData().defaults().setReadOnly(true).setType(TaskAttribute.TYPE_COMMENT);
+			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
 			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER));
 
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.COMMENT_ATTACHMENT_ID);
@@ -161,11 +161,11 @@ public class TaskDataStateReader extends DefaultHandler {
 
 			child = createAttribute(attribute, TaskAttribute.COMMENT_HAS_ATTACHMENT);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_HAS_ATTACHMENT));
-			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_BOOLEAN);
+			child.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_BOOLEAN);
 
 			child = createAttribute(attribute, TaskAttribute.COMMENT_NUMBER);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER));
-			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_INTEGER);
+			child.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_INTEGER);
 
 			addElementHandler(new AttributeHandler10(this, attribute));
 		}
@@ -185,7 +185,7 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		@Override
 		public void end(String uri, String localName, String name) {
-			attribute.putMetaDataValue(key, getCurrentElementText());
+			attribute.getMetaData().putValue(key, getCurrentElementText());
 		}
 
 		@Override
@@ -239,9 +239,9 @@ public class TaskDataStateReader extends DefaultHandler {
 		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_OPERATION + ++id);
-			attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_CONTAINER);
-			attribute.putMetaDataValue(TaskAttribute.META_LABEL, getValue(attributes,
-					ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
+			attribute.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_CONTAINER);
+			attribute.getMetaData().putValue(TaskAttribute.META_LABEL,
+					getValue(attributes, ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
 			String operationId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_KNOB_NAME);
 			attribute.setValue(operationId);
 
@@ -252,24 +252,18 @@ public class TaskDataStateReader extends DefaultHandler {
 			String value = getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_OPTION_NAME);
 			TaskAttribute child;
 			if (value.length() > 0) {
-				attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, value);
+				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, value);
 				child = createAttribute(attribute, value);
 				child.setValue(getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_OPTION_SELECTION));
-				TaskAttributeProperties.defaults()
-						.setReadOnly(false)
-						.setType(TaskAttribute.TYPE_SINGLE_SELECT)
-						.applyTo(attribute);
+				attribute.getMetaData().defaults().setReadOnly(false).setType(TaskAttribute.TYPE_SINGLE_SELECT);
 				addElementHandler(new NameHandler(this, child));
 			} else {
 				value = getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_INPUT_NAME);
 				if (value.length() > 0) {
-					attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, value);
+					attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, value);
 					child = createAttribute(attribute, value);
 					child.setValue(getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_INPUT_VALUE));
-					TaskAttributeProperties.defaults()
-							.setReadOnly(false)
-							.setType(TaskAttribute.TYPE_SHORT_TEXT)
-							.applyTo(attribute);
+					attribute.getMetaData().defaults().setReadOnly(false).setType(TaskAttribute.TYPE_SHORT_TEXT);
 				}
 			}
 		}
@@ -498,7 +492,7 @@ public class TaskDataStateReader extends DefaultHandler {
 			if (ITaskDataConstants.ELEMENT_OPTION.equals(getElementName())) {
 				attribute.putOption(key, value);
 			} else if (ITaskDataConstants.ELEMENT_META.equals(getElementName())) {
-				attribute.putMetaDataValue(key, value);
+				attribute.getMetaData().putValue(key, value);
 			}
 			key = "";
 			value = "";
@@ -554,7 +548,7 @@ public class TaskDataStateReader extends DefaultHandler {
 
 	private TaskAttribute createAttribute(TaskAttribute parent, String id) {
 		TaskAttribute attribute = parent.createAttribute(id);
-		TaskAttributeProperties.defaults().applyTo(attribute);
+		attribute.getMetaData().defaults();
 		return attribute;
 	}
 

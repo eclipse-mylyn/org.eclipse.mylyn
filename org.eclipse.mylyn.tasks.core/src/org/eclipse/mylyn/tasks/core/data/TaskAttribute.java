@@ -295,7 +295,7 @@ public final class TaskAttribute {
 		attributeById = null;
 	}
 
-	public void clearMetaDatas() {
+	void clearMetaData() {
 		metaData = null;
 	}
 
@@ -381,11 +381,11 @@ public final class TaskAttribute {
 				attributeId)) : null;
 	}
 
-	public String getMetaData(String key) {
+	String getMetaDatum(String key) {
 		return (metaData != null) ? metaData.get(key) : null;
 	}
 
-	public Map<String, String> getMetaDatas() {
+	Map<String, String> getMetaDataMap() {
 		if (metaData != null) {
 			return Collections.unmodifiableMap(metaData);
 		} else {
@@ -420,8 +420,8 @@ public final class TaskAttribute {
 		return path.toArray(new String[0]);
 	}
 
-	public TaskAttributeProperties getProperties() {
-		return TaskAttributeProperties.from(this);
+	public TaskAttributeMetaData getMetaData() {
+		return new TaskAttributeMetaData(this);
 	}
 
 	public TaskData getTaskData() {
@@ -448,7 +448,7 @@ public final class TaskAttribute {
 		return result;
 	}
 
-	public void putMetaDataValue(String key, String value) {
+	void putMetaDatum(String key, String value) {
 		Assert.isNotNull(key);
 		Assert.isNotNull(value);
 		if (metaData == null) {
@@ -480,7 +480,7 @@ public final class TaskAttribute {
 		}
 	}
 
-	public void removeMetaDataValue(String metaDataId) {
+	void removeMetaDataValue(String metaDataId) {
 		if (metaData != null) {
 			metaData.remove(metaDataId);
 		}

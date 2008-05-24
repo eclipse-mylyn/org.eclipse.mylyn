@@ -184,43 +184,43 @@ public class TaskAttachmentMapper {
 		Assert.isNotNull(taskAttribute);
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
-		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_ATTACHMENT).applyTo(taskAttribute);
+		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_ATTACHMENT);
 		if (getAttachmentId() != null) {
 			mapper.setValue(taskAttribute, getAttachmentId());
 		}
 		if (getAuthor() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_AUTHOR);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_PERSON).applyTo(child);
+			child.getMetaData().defaults().setType(TaskAttribute.TYPE_PERSON);
 			mapper.setRepositoryPerson(child, getAuthor());
 		}
 		if (getContentType() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_CONTENT_TYPE);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_SHORT_TEXT).applyTo(child);
+			child.getMetaData().defaults().setType(TaskAttribute.TYPE_SHORT_TEXT);
 			mapper.setValue(child, getContentType());
 		}
 		if (getCreationDate() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_DATE);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_DATE).applyTo(child);
+			child.getMetaData().defaults().setType(TaskAttribute.TYPE_DATE);
 			mapper.setDateValue(child, getCreationDate());
 		}
 		if (getDescription() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_DESCRIPTION);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_SHORT_TEXT).applyTo(child);
+			child.getMetaData().defaults().setType(TaskAttribute.TYPE_SHORT_TEXT);
 			mapper.setValue(child, getDescription());
 		}
 		if (getFileName() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_FILENAME);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_SHORT_TEXT).applyTo(child);
+			child.getMetaData().defaults().setType(TaskAttribute.TYPE_SHORT_TEXT);
 			mapper.setValue(child, getFileName());
 		}
 		if (isDeprecated() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_BOOLEAN).applyTo(child);
+			child.getMetaData().defaults().setType(TaskAttribute.TYPE_BOOLEAN);
 			mapper.setBooleanValue(child, isDeprecated());
 		}
 		if (isPatch() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_BOOLEAN).applyTo(child);
+			child.getMetaData().defaults().setType(TaskAttribute.TYPE_BOOLEAN);
 			mapper.setBooleanValue(child, isPatch());
 		}
 		if (getLength() != null) {
@@ -229,7 +229,7 @@ public class TaskAttachmentMapper {
 		}
 		if (getUrl() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_URL);
-			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_URL).applyTo(child);
+			child.getMetaData().defaults().setType(TaskAttribute.TYPE_URL);
 			mapper.setValue(child, getUrl());
 		}
 	}

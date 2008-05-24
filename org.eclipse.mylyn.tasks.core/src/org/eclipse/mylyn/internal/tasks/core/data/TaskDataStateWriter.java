@@ -91,7 +91,7 @@ public class TaskDataStateWriter {
 		handler.endElement("", "", ITaskDataConstants.ELEMENT_OPTIONS);
 
 		handler.startElement("", "", ITaskDataConstants.ELEMENT_META_DATA, atts);
-		writeMap(atts, attribute.getMetaDatas(), ITaskDataConstants.ELEMENT_META);
+		writeMap(atts, attribute.getMetaData().getValues(), ITaskDataConstants.ELEMENT_META);
 		handler.endElement("", "", ITaskDataConstants.ELEMENT_META_DATA);
 
 		handler.startElement("", "", ITaskDataConstants.ELEMENT_ATTRIBUTES, atts);
