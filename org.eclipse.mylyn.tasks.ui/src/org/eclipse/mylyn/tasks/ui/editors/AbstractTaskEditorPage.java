@@ -1084,6 +1084,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	public void showEditorBusy(boolean busy) {
 		getTaskEditor().showBusy(busy);
+		refreshDisabled = busy;
 	}
 
 	private void updateHeaderMessage() {
