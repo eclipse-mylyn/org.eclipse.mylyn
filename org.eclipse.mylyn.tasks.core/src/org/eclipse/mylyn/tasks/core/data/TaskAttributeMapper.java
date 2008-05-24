@@ -158,7 +158,7 @@ public class TaskAttributeMapper {
 		return result.toArray(new TaskOperation[0]);
 	}
 
-	public TaskOperation getTaskOperationValue(TaskAttribute taskAttribute) {
+	public TaskOperation getTaskOperation(TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskAttribute);
 		return TaskOperation.createFrom(taskAttribute);
 	}
@@ -250,7 +250,7 @@ public class TaskAttributeMapper {
 		}
 	}
 
-	public void setTaskOperationValue(TaskAttribute taskAttribute, TaskOperation taskOperation) {
+	public void setTaskOperation(TaskAttribute taskAttribute, TaskOperation taskOperation) {
 		Assert.isNotNull(taskAttribute);
 		Assert.isNotNull(taskOperation);
 		TaskOperation.applyTo(taskAttribute, taskOperation.getOperationId(), taskOperation.getLabel());

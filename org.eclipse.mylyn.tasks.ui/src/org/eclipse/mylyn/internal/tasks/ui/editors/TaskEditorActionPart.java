@@ -51,7 +51,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		public void widgetSelected(SelectionEvent event) {
 			setSelectedRadionButton((Button) event.widget);
 			TaskOperation taskOperation = (TaskOperation) event.widget.getData(KEY_OPERATION);
-			getTaskData().getAttributeMapper().setTaskOperationValue(selectedOperationAttribute, taskOperation);
+			getTaskData().getAttributeMapper().setTaskOperation(selectedOperationAttribute, taskOperation);
 			getModel().attributeChanged(selectedOperationAttribute);
 		}
 
@@ -211,7 +211,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		selectedOperationAttribute = getTaskData().getMappedAttribute(TaskAttribute.OPERATION);
 		if (selectedOperationAttribute != null
 				&& TaskAttribute.TYPE_OPERATION.equals(selectedOperationAttribute.getProperties().getType())) {
-			TaskOperation selectedOperation = getTaskData().getAttributeMapper().getTaskOperationValue(
+			TaskOperation selectedOperation = getTaskData().getAttributeMapper().getTaskOperation(
 					selectedOperationAttribute);
 			createRadioButtons(buttonComposite, toolkit, selectedOperation);
 		}
