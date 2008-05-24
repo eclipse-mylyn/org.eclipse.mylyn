@@ -34,8 +34,6 @@ public class TasksUiImages {
 
 	private static final String OBJ = "obj16";
 
-	private static final String OVR = "ovr16";
-
 	private static final String WIZBAN = "wizban";
 
 	// Tasks and Task List elements
@@ -144,12 +142,6 @@ public class TasksUiImages {
 	public static final ImageDescriptor COMMENT_SORT_UP_GRAY = create(TOOL, "sort-up-gray.gif");
 
 	public static final ImageDescriptor COMMENT_REPLY = create(TOOL, "reply.gif");
-
-	// Overlays
-
-	public static final ImageDescriptor OVERLAY_TASK_LOCAL = create(OVR, "overlay-local-task.gif");
-
-	public static final ImageDescriptor OVERLAY_TASK_WEB = create(TOOL, "overlay-web.gif");
 
 	// Wizard banners
 
