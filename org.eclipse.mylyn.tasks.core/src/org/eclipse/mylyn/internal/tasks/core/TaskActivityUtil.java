@@ -112,7 +112,6 @@ public class TaskActivityUtil {
 	public static Calendar snapNextWorkWeek(Calendar calendar) {
 		calendar.add(Calendar.WEEK_OF_MONTH, 1);
 		snapStartOfWorkWeek(calendar);
-		snapEndOfWorkDay(calendar);
 		return calendar;
 	}
 
@@ -221,6 +220,15 @@ public class TaskActivityUtil {
 		Calendar weekStart = getCalendar();
 		snapStartOfWorkWeek(weekStart);
 		Calendar weekEnd = getCalendar();
+		snapEndOfWeek(weekEnd);
+		return new WeekDateRange(weekStart, weekEnd);
+	}
+
+	public static WeekDateRange getNextWeek() {
+		Calendar weekStart = getCalendar();
+		snapNextWorkWeek(weekStart);
+		Calendar weekEnd = getCalendar();
+		weekEnd.setTimeInMillis(weekStart.getTimeInMillis());
 		snapEndOfWeek(weekEnd);
 		return new WeekDateRange(weekStart, weekEnd);
 	}

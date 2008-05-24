@@ -83,6 +83,15 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		}
 
+		// Next week days
+		int toAdd = TaskActivityUtil.getCalendar().get(Calendar.DAY_OF_WEEK) - 1;
+		WeekDateRange nextWeek = TaskActivityUtil.getNextWeek();
+		for (int x = 1; x <= toAdd; x++) {
+			DateRange day = nextWeek.getDayOfWeek(x);
+			Action action = createDateSelectionAction(day, null);
+			subMenuManager.add(action);
+		}
+
 		subMenuManager.add(new Separator());
 
 		// This Week
