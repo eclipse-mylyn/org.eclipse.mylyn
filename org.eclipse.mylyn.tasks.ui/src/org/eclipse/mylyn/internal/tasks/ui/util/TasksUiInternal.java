@@ -210,7 +210,7 @@ public class TasksUiInternal {
 							opened = true;
 						}
 					} else if (TasksUiPlugin.getTaskDataManager().hasTaskData(task)) {
-						TasksUiUtil.openTask(task);
+						opened = TasksUiUtil.openTask(task);
 					}
 
 					if (!opened) {

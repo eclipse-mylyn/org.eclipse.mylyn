@@ -67,7 +67,6 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
  * @author Steffen Pingel
  * @author Shawn Minto
  */
-// API 3.0 move to util package?
 public class TasksUiUtil {
 
 	/**
@@ -393,7 +392,6 @@ public class TasksUiUtil {
 	 */
 	public static boolean openTask(ITask task) {
 		Assert.isNotNull(task);
-
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
