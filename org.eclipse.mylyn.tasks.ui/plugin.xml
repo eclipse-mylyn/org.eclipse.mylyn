@@ -1483,18 +1483,45 @@
                   label="Read"
                   mnemonic="R"
                   style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate>
+                     <test
+                           property="org.eclipse.mylyn.task.isLocal"
+                           value="false">
+                     </test>
+                  </iterate>
+               </visibleWhen>
             </command>
             <command
                   commandId="org.eclipse.mylyn.tasks.ui.command.markTaskUnread"
                   label="Unread"
                   mnemonic="U"
                   style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate>
+                     <test
+                           property="org.eclipse.mylyn.task.isLocal"
+                           value="false">
+                     </test>
+                  </iterate>
+               </visibleWhen>
             </command>
             <command
                   commandId="org.eclipse.mylyn.tasks.ui.command.task.clearOutgoing"
                   label="Clear Outgoing"
                   mnemonic="C"
                   style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate>
+                     <test
+                           property="org.eclipse.mylyn.task.isLocal"
+                           value="false">
+                     </test>
+                  </iterate>
+               </visibleWhen>
             </command>
             <separator
                   name="additions">
