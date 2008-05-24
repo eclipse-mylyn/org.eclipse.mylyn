@@ -327,15 +327,6 @@ public final class TaskAttribute {
 		}
 	}
 
-	// API 3.0 remove
-	public void deepCopyFrom(TaskAttribute source) {
-		if (source.attributeById != null) {
-			for (TaskAttribute child : source.attributeById.values()) {
-				deepAddCopy(child);
-			}
-		}
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

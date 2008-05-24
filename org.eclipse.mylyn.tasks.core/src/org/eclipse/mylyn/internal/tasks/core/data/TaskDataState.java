@@ -128,13 +128,19 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 	public void revert() {
 		localTaskData = new TaskData(repositoryTaskData.getAttributeMapper(), repositoryTaskData.getConnectorKind(),
 				repositoryTaskData.getRepositoryUrl(), repositoryTaskData.getTaskId());
-		localTaskData.getRoot().deepCopyFrom(repositoryTaskData.getRoot());
+		deepCopyChildren(repositoryTaskData.getRoot(), localTaskData.getRoot());
 		if (editsTaskData != null) {
-			localTaskData.getRoot().deepCopyFrom(editsTaskData.getRoot());
+			deepCopyChildren(editsTaskData.getRoot(), localTaskData.getRoot());
 		} else {
 			editsTaskData = new TaskData(repositoryTaskData.getAttributeMapper(),
 					repositoryTaskData.getConnectorKind(), repositoryTaskData.getRepositoryUrl(),
 					repositoryTaskData.getTaskId());
+		}
+	}
+
+	private void deepCopyChildren(TaskAttribute source, TaskAttribute target) {
+		for (TaskAttribute child : source.getAttributes().values()) {
+			target.deepAddCopy(child);
 		}
 	}
 
