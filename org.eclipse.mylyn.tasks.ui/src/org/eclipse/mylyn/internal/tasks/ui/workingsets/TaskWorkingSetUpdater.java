@@ -130,8 +130,8 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	public void containersChanged(Set<TaskContainerDelta> delta) {
 		for (TaskContainerDelta taskContainerDelta : delta) {
-			if (taskContainerDelta.getSource() instanceof TaskCategory
-					|| taskContainerDelta.getSource() instanceof IRepositoryQuery) {
+			if (taskContainerDelta.getElement() instanceof TaskCategory
+					|| taskContainerDelta.getElement() instanceof IRepositoryQuery) {
 				synchronized (workingSets) {
 					switch (taskContainerDelta.getKind()) {
 					case REMOVED:
@@ -139,7 +139,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 						for (IWorkingSet workingSet : workingSets) {
 							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
 									Arrays.asList(workingSet.getElements()));
-							elements.remove(taskContainerDelta.getSource());
+							elements.remove(taskContainerDelta.getElement());
 							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
 						}
 						break;
@@ -148,7 +148,7 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 						for (IWorkingSet workingSet : TaskWorkingSetUpdater.getEnabledSets()) {
 							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
 									Arrays.asList(workingSet.getElements()));
-							elements.add(taskContainerDelta.getSource());
+							elements.add(taskContainerDelta.getElement());
 							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
 						}
 						break;

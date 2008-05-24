@@ -40,31 +40,31 @@ public final class TaskContainerDelta {
 		ROOT
 	}
 
-	private final ITaskElement target;
+	private final ITaskElement parent;
 
-	private final ITaskElement source;
+	private final ITaskElement element;
 
 	private final Kind kind;
 
 	private boolean isTransient;
 
 	/**
-	 * @param source
+	 * @param element
 	 *            - object being moved/added/removed, source assumed to be root
 	 * @since 3.0
 	 */
-	public TaskContainerDelta(ITaskElement source, Kind kind) {
-		this.source = source;
-		this.target = null;
+	public TaskContainerDelta(ITaskElement element, Kind kind) {
+		this.element = element;
+		this.parent = null;
 		this.kind = kind;
 	}
 
 	/**
 	 * @since 3.0
 	 */
-	public TaskContainerDelta(ITaskElement source, ITaskElement target, Kind kind) {
-		this.source = source;
-		this.target = target;
+	public TaskContainerDelta(ITaskElement element, ITaskElement parent, Kind kind) {
+		this.element = element;
+		this.parent = parent;
 		this.kind = kind;
 	}
 
@@ -73,8 +73,8 @@ public final class TaskContainerDelta {
 	 * 
 	 * @since 3.0
 	 */
-	public ITaskElement getTarget() {
-		return target;
+	public ITaskElement getParent() {
+		return parent;
 	}
 
 	/**
@@ -82,8 +82,8 @@ public final class TaskContainerDelta {
 	 * 
 	 * @since 3.0
 	 */
-	public ITaskElement getSource() {
-		return source;
+	public ITaskElement getElement() {
+		return element;
 	}
 
 	public Kind getKind() {

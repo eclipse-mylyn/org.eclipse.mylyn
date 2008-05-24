@@ -423,10 +423,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			ITask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (repositoryTask != null && repositoryTask.equals(taskContainerDelta.getSource())) {
+				if (repositoryTask != null && repositoryTask.equals(taskContainerDelta.getElement())) {
 					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)
 							&& !taskContainerDelta.isTransient() && !refreshing) {
-						taskToRefresh = (ITask) taskContainerDelta.getSource();
+						taskToRefresh = (ITask) taskContainerDelta.getElement();
 						break;
 					}
 				}

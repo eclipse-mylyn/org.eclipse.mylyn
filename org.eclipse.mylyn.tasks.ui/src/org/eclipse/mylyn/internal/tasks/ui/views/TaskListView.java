@@ -191,7 +191,17 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					for (Object item : items) {
 						if (item instanceof ITask) {
 							ITask task = (ITask) item;
-							viewer.refresh(task, true);
+							if (TaskListView.this.isFocusedMode()) {
+								viewer.refresh(task, true);
+								if (item instanceof AbstractTask) {
+									Set<AbstractTaskContainer> parents = ((AbstractTask) item).getParentContainers();
+									for (AbstractTaskContainer parent : parents) {
+										viewer.refresh(parent, false);
+									}
+								}
+							} else {
+								viewer.refresh(task, true);
+							}
 						} else {
 							viewer.refresh(item, true);
 						}
@@ -491,18 +501,18 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 								break;
 							case ADDED:
 							case REMOVED:
-								if (taskContainerDelta.getSource() != null) {
-									refreshJob.refreshElement(taskContainerDelta.getSource());
+								if (taskContainerDelta.getElement() != null) {
+									refreshJob.refreshElement(taskContainerDelta.getElement());
 								}
-								if (taskContainerDelta.getTarget() != null) {
-									refreshJob.refreshElement(taskContainerDelta.getTarget());
+								if (taskContainerDelta.getParent() != null) {
+									refreshJob.refreshElement(taskContainerDelta.getParent());
 								} else {
 									// element was added/removed from the root
 									refreshJob.refresh();
 								}
 								break;
 							case CONTENT:
-								refreshJob.refreshElement(taskContainerDelta.getTarget());
+								refreshJob.refreshElement(taskContainerDelta.getElement());
 							}
 
 						}
