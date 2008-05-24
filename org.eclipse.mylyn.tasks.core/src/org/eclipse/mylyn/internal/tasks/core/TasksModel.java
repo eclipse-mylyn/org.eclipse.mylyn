@@ -95,7 +95,11 @@ public class TasksModel implements ITasksModel {
 	}
 
 	public ITask getTask(String handleIdentifier) {
-		return taskByHandle.get(handleIdentifier);
+		ITask task = taskByHandle.get(handleIdentifier);
+		if (task == null) {
+			task = taskList.getTask(handleIdentifier);
+		}
+		return task;
 	}
 
 	public synchronized ITask getTask(TaskRepository taskRepository, String taskId) {

@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -95,7 +94,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				removedQueryResults.remove(task);
 			}
 			try {
-				taskDataManager.putUpdatedTaskData(task, taskData, true);
+				taskDataManager.putUpdatedTaskData(task, taskData, isUser());
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to save task", e));
 			}

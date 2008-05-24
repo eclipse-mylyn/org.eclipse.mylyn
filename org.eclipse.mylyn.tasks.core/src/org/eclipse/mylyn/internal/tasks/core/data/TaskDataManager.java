@@ -49,9 +49,11 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private static final String EXTENSION = ".zip";
 
-	private static final String FOLDER_DATA = "tasks";
+	private static final String FOLDER_TASKS = "tasks";
 
-	private static final String FOLDER_DATA_1_0 = "offline";
+	private static final String FOLDER_DATA = "offline";
+
+	private static final String FOLDER_TASKS_1_0 = "offline";
 
 	private String dataPath;
 
@@ -292,10 +294,9 @@ public class TaskDataManager implements ITaskDataManager {
 //					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
 //			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
 			String repositoryPath = task.getConnectorKind() + "-" + encode(task.getRepositoryUrl());
-			String taskPath = encode(task.getTaskId());
-			String fileName = kind + "-data" + EXTENSION;
-			File path = new File(dataPath + File.separator + FOLDER_DATA + File.separator + repositoryPath
-					+ File.separator + taskPath);
+			String fileName = encode(task.getTaskId()) + EXTENSION;
+			File path = new File(dataPath + File.separator + FOLDER_TASKS + File.separator + repositoryPath
+					+ File.separator + FOLDER_DATA);
 			return new File(path, fileName);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
@@ -306,7 +307,7 @@ public class TaskDataManager implements ITaskDataManager {
 		StringBuffer sb = new StringBuffer(text.length());
 		char[] chars = text.toCharArray();
 		for (char c : chars) {
-			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {
+			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '.') {
 				sb.append(c);
 			} else {
 				sb.append("%" + Integer.toHexString(c).toUpperCase());
@@ -319,7 +320,7 @@ public class TaskDataManager implements ITaskDataManager {
 		try {
 			String pathName = URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
 			String fileName = task.getTaskId() + EXTENSION;
-			File path = new File(dataPath + File.separator + FOLDER_DATA_1_0, pathName);
+			File path = new File(dataPath + File.separator + FOLDER_TASKS_1_0, pathName);
 			return new File(path, fileName);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
