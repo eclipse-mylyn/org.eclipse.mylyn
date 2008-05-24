@@ -25,7 +25,7 @@ public class TaskEditorNewCommentPart extends TaskEditorRichTextPart {
 	@Override
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
 		super.initialize(taskEditorPage);
-		setAttribute(getModel().getTaskData().getMappedAttribute(TaskAttribute.COMMENT_NEW));
+		setAttribute(getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW));
 	}
 
 }

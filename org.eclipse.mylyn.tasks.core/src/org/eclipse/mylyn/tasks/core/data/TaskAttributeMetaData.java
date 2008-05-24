@@ -74,7 +74,7 @@ public class TaskAttributeMetaData {
 	}
 
 	public TaskAttributeMetaData setDefaultOption(String defaultOption) {
-		if (getDefaultOption() != null) {
+		if (defaultOption != null) {
 			taskAttribute.putMetaDatum(TaskAttribute.META_DEFAULT_OPTION, defaultOption);
 		} else {
 			taskAttribute.removeMetaDatum(TaskAttribute.META_DEFAULT_OPTION);
@@ -111,7 +111,7 @@ public class TaskAttributeMetaData {
 	}
 
 	public TaskAttributeMetaData setType(String value) {
-		if (getType() != null) {
+		if (value != null) {
 			taskAttribute.putMetaDatum(TaskAttribute.META_ATTRIBUTE_TYPE, value);
 		} else {
 			taskAttribute.removeMetaDatum(TaskAttribute.META_ATTRIBUTE_TYPE);

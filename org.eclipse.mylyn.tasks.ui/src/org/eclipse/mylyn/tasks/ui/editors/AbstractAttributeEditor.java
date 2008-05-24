@@ -51,7 +51,6 @@ public abstract class AbstractAttributeEditor {
 	public AbstractAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		Assert.isNotNull(manager);
 		Assert.isNotNull(taskAttribute);
-
 		this.manager = manager;
 		this.taskAttribute = taskAttribute;
 		setDecorationEnabled(true);

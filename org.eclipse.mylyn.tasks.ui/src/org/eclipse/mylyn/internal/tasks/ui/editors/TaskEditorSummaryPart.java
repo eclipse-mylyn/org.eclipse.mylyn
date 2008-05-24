@@ -68,7 +68,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	}
 
 	private void addSummaryText(Composite composite, FormToolkit toolkit) {
-		summaryEditor = createAttributeEditor(getTaskData().getMappedAttribute(TaskAttribute.SUMMARY));
+		summaryEditor = createAttributeEditor(getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY));
 		if (summaryEditor != null) {
 			summaryEditor.createControl(composite, toolkit);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryEditor.getControl());
@@ -108,21 +108,21 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		layout.marginWidth = 1;
 		headerComposite.setLayout(layout);
 
-		TaskAttribute statusAtribute = getTaskData().getMappedAttribute(TaskAttribute.STATUS);
+		TaskAttribute statusAtribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		addAttribute(headerComposite, toolkit, statusAtribute, 0);
 
 		// TODO show resolution
 
-		TaskAttribute priorityAttribute = getTaskData().getMappedAttribute(TaskAttribute.PRIORITY);
+		TaskAttribute priorityAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
 		addAttribute(headerComposite, toolkit, priorityAttribute);
 
-		TaskAttribute keyAttribute = getTaskData().getMappedAttribute(TaskAttribute.TASK_KEY);
+		TaskAttribute keyAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.TASK_KEY);
 		addAttribute(headerComposite, toolkit, keyAttribute);
 
-		TaskAttribute dateCreation = getTaskData().getMappedAttribute(TaskAttribute.DATE_CREATION);
+		TaskAttribute dateCreation = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_CREATION);
 		addAttribute(headerComposite, toolkit, dateCreation);
 
-		TaskAttribute dateModified = getTaskData().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		TaskAttribute dateModified = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 		addAttribute(headerComposite, toolkit, dateModified);
 	}
 

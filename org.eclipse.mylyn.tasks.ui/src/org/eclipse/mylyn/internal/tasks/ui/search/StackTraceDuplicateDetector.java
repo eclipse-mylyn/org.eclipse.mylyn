@@ -35,9 +35,9 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 	}
 
 	private String getDescription(TaskData taskData) {
-		TaskAttribute attribute = taskData.getMappedAttribute(TaskAttribute.DESCRIPTION);
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
 		if (attribute == null) {
-			attribute = taskData.getMappedAttribute(TaskAttribute.COMMENT_NEW);
+			attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		}
 		return (attribute != null) ? attribute.getTaskData().getAttributeMapper().getValueLabel(attribute) : "";
 	}

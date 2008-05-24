@@ -153,7 +153,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	@Override
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
 		super.initialize(taskEditorPage);
-		setAttribute(getModel().getTaskData().getMappedAttribute(TaskAttribute.DESCRIPTION));
+		setAttribute(getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION));
 	}
 
 	@SuppressWarnings( { "deprecation", "restriction" })

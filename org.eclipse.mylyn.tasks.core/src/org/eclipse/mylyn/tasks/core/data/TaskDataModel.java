@@ -121,7 +121,7 @@ public class TaskDataModel {
 			return false;
 		}
 
-		TaskAttribute oldAttribute = lastReadData.getMappedAttribute(taskAttribute.getPath());
+		TaskAttribute oldAttribute = lastReadData.getRoot().getMappedAttribute(taskAttribute.getPath());
 		if (oldAttribute == null) {
 			return true;
 		}
@@ -130,7 +130,7 @@ public class TaskDataModel {
 	}
 
 	public boolean hasOutgoingChanges(TaskAttribute taskAttribute) {
-		return workingCopy.getEditsData().getMappedAttribute(taskAttribute.getPath()) != null;
+		return workingCopy.getEditsData().getRoot().getMappedAttribute(taskAttribute.getPath()) != null;
 	}
 
 	public boolean isDirty() {

@@ -208,7 +208,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			createCategoryChooser(buttonComposite, toolkit);
 		}
 
-		selectedOperationAttribute = getTaskData().getMappedAttribute(TaskAttribute.OPERATION);
+		selectedOperationAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.OPERATION);
 		if (selectedOperationAttribute != null
 				&& TaskAttribute.TYPE_OPERATION.equals(selectedOperationAttribute.getMetaData().getType())) {
 			TaskOperation selectedOperation = getTaskData().getAttributeMapper().getTaskOperation(

@@ -372,6 +372,17 @@ public final class TaskAttribute {
 				attributeId)) : null;
 	}
 
+	public TaskAttribute getMappedAttribute(String[] path) {
+		TaskAttribute attribute = this;
+		for (String id : path) {
+			attribute = attribute.getMappedAttribute(id);
+			if (attribute == null) {
+				break;
+			}
+		}
+		return attribute;
+	}
+
 	String getMetaDatum(String key) {
 		return (metaData != null) ? metaData.get(key) : null;
 	}
