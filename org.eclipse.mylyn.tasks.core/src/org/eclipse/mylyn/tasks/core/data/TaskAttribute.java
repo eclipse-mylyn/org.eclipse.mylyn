@@ -480,7 +480,7 @@ public final class TaskAttribute {
 		}
 	}
 
-	void removeMetaDataValue(String metaDataId) {
+	void removeMetaDatum(String metaDataId) {
 		if (metaData != null) {
 			metaData.remove(metaDataId);
 		}

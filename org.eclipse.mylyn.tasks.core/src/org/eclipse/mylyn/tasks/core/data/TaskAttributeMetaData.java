@@ -77,7 +77,7 @@ public class TaskAttributeMetaData {
 		if (getDefaultOption() != null) {
 			taskAttribute.putMetaDatum(TaskAttribute.META_DEFAULT_OPTION, defaultOption);
 		} else {
-			taskAttribute.removeMetaDataValue(TaskAttribute.META_DEFAULT_OPTION);
+			taskAttribute.removeMetaDatum(TaskAttribute.META_DEFAULT_OPTION);
 		}
 		return this;
 	}
@@ -86,7 +86,7 @@ public class TaskAttributeMetaData {
 		if (value != null) {
 			taskAttribute.putMetaDatum(TaskAttribute.META_ATTRIBUTE_KIND, value);
 		} else {
-			taskAttribute.removeMetaDataValue(TaskAttribute.META_ATTRIBUTE_KIND);
+			taskAttribute.removeMetaDatum(TaskAttribute.META_ATTRIBUTE_KIND);
 		}
 		return this;
 	}
@@ -95,7 +95,7 @@ public class TaskAttributeMetaData {
 		if (value != null) {
 			taskAttribute.putMetaDatum(TaskAttribute.META_LABEL, value);
 		} else {
-			taskAttribute.removeMetaDataValue(TaskAttribute.META_LABEL);
+			taskAttribute.removeMetaDatum(TaskAttribute.META_LABEL);
 		}
 		return this;
 	}
@@ -114,7 +114,7 @@ public class TaskAttributeMetaData {
 		if (getType() != null) {
 			taskAttribute.putMetaDatum(TaskAttribute.META_ATTRIBUTE_TYPE, value);
 		} else {
-			taskAttribute.removeMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE);
+			taskAttribute.removeMetaDatum(TaskAttribute.META_ATTRIBUTE_TYPE);
 		}
 		return this;
 	}
