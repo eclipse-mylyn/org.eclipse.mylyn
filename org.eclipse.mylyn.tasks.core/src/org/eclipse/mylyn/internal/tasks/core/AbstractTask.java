@@ -84,7 +84,8 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private boolean markReadPending;
 
-	private String taskKey;
+	// TODO 3.0 make private
+	protected String taskKey;
 
 	private Map<String, String> attributes;
 
@@ -92,7 +93,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		super(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
-		this.taskKey = taskId;
 		this.summary = summary;
 		this.url = "";
 	}
@@ -195,7 +195,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	 * Can return the same as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
 	 */
 	public String getTaskKey() {
-		return taskKey;
+		return (taskKey == null) ? taskId : taskKey;
 	}
 
 	public boolean isSubmitting() {
