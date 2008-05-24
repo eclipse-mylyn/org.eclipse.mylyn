@@ -49,15 +49,24 @@ public class RepositoryQueryWizard extends Wizard {
 	}
 
 	@Override
+	public boolean canFinish() {
+		IWizardPage currentPage = getContainer().getCurrentPage();
+		if (currentPage instanceof AbstractRepositoryQueryPage) {
+			return currentPage.isPageComplete();
+		}
+		return false;
+	}
+
+	@Override
 	public boolean performFinish() {
-		IWizardPage[] pages = getPages();
-		if (pages.length == 0 || !(pages[pages.length - 1] instanceof AbstractRepositoryQueryPage)) {
+		IWizardPage currentPage = getContainer().getCurrentPage();
+		if (!(currentPage instanceof AbstractRepositoryQueryPage)) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Last wizard page does not extends AbstractRepositoryQueryPage"));
+					"Current wizard page does not extends AbstractRepositoryQueryPage"));
 			return false;
 		}
 
-		AbstractRepositoryQueryPage page = (AbstractRepositoryQueryPage) pages[pages.length - 1];
+		AbstractRepositoryQueryPage page = (AbstractRepositoryQueryPage) currentPage;
 		IRepositoryQuery query = page.getQuery();
 		if (query != null) {
 			page.applyTo(query);

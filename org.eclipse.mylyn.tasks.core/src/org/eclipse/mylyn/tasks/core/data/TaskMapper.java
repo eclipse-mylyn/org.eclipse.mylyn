@@ -58,6 +58,10 @@ public class TaskMapper implements ITaskMapping {
 			task.setSummary(getSummary());
 			changed = true;
 		}
+		if (hasTaskPropertyChanged(task.getTaskKey(), getTaskKey())) {
+			task.setTaskKey(getTaskKey());
+			changed = true;
+		}
 		if (hasTaskPropertyChanged(task.getTaskKind(), getTaskKind())) {
 			task.setTaskKind(getTaskKind());
 			changed = true;
@@ -146,7 +150,7 @@ public class TaskMapper implements ITaskMapping {
 	public String getValue(String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
-			return taskData.getAttributeMapper().getValue(attribute);
+			return taskData.getAttributeMapper().getValueLabel(attribute);
 		}
 		return null;
 	}
