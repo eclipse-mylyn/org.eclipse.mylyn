@@ -67,8 +67,8 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 					initContextChangeSets();
 					isInitialized = true;
 				}
-				if (taskContainerDelta.getSource() instanceof ITask) {
-					ITask task = (ITask) taskContainerDelta.getSource();
+				if (taskContainerDelta.getElement() instanceof ITask) {
+					ITask task = (ITask) taskContainerDelta.getElement();
 					switch (taskContainerDelta.getKind()) {
 					case CONTENT:
 						updateChangeSetLabel(task);
