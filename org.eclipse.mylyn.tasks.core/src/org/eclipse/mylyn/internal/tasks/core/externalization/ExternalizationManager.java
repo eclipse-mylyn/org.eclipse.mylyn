@@ -97,17 +97,17 @@ public class ExternalizationManager {
 	}
 
 	public void stop() {
-		requestSave();
-
-		if (saveJob != null) {
-			try {
-				saveJob.join();
-				saveJob = null;
-			} catch (InterruptedException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Task List save on shutdown canceled."));
-			}
-		}
+//		requestSave();
+//
+//		if (saveJob != null) {
+//			try {
+//				saveJob.join();
+//				saveJob = null;
+//			} catch (InterruptedException e) {
+//				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+//						"Task List save on shutdown canceled."));
+//			}
+//		}
 	}
 
 	public synchronized void saveNow(IProgressMonitor monitor) {
@@ -129,7 +129,7 @@ public class ExternalizationManager {
 		if (!saveDisabled) {
 			if (!CoreUtil.TEST_MODE) {
 				job.setContext(context);
-				job.schedule(5000);
+				job.schedule(3000);
 			} else {
 				job.run(new NullProgressMonitor());
 			}
