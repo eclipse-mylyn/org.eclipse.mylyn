@@ -27,11 +27,9 @@ public class TaskDataStateReader extends DefaultHandler {
 
 	private class AttachmentHandler10 extends ElementHandler {
 
-		private int attachmentId;
+		private int id;
 
 		private TaskAttribute attribute;
-
-		private TaskAttribute container;
 
 		private final TaskAttribute parentAttribute;
 
@@ -42,12 +40,8 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
-			if (container == null) {
-				container = createAttribute(parentAttribute, TaskAttribute.CONTAINER_ATTACHMENTS);
-			}
-
 			// create a unique id for each attachment since the actual id is in a child attribute
-			attribute = container.createAttribute(++attachmentId + "");
+			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_ATTACHMENT + ++id);
 			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_ID) + "");
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_CREATOR));
@@ -136,8 +130,6 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		private TaskAttribute attribute;
 
-		private TaskAttribute container;
-
 		private final TaskAttribute parentAttribute;
 
 		public CommentHandler10(ElementHandler parent, TaskAttribute parentAttribute) {
@@ -156,12 +148,7 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
-			if (container == null) {
-				container = createAttribute(parentAttribute, TaskAttribute.CONTAINER_COMMENTS);
-				container.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_CONTAINER);
-			}
-
-			attribute = container.createAttribute(++id + "");
+			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_COMMENT + ++id);
 			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER));
 			TaskAttributeProperties.defaults().setReadOnly(true).setType(TaskAttribute.TYPE_COMMENT).applyTo(attribute);
 			attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
@@ -234,9 +221,7 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		private TaskAttribute attribute;
 
-		private TaskAttribute container;
-
-		private TaskAttribute operationAttribute;
+		private final TaskAttribute operationAttribute;
 
 		private final TaskAttribute parentAttribute;
 
@@ -245,16 +230,12 @@ public class TaskDataStateReader extends DefaultHandler {
 		public OperationHandler10(ElementHandler parent, TaskAttribute parentAttribute) {
 			super(parent, ITaskDataConstants.ELEMENT_OPERATION);
 			this.parentAttribute = parentAttribute;
+			this.operationAttribute = createAttribute(parentAttribute, TaskAttribute.OPERATION);
 		}
 
 		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
-			if (container == null) {
-				container = createAttribute(parentAttribute, TaskAttribute.CONTAINER_OPERATIONS);
-				operationAttribute = createAttribute(parentAttribute, TaskAttribute.OPERATION);
-			}
-
-			attribute = container.createAttribute(++id + "");
+			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_OPERATION + ++id);
 			String operationId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_KNOB_NAME);
 			attribute.setValue(operationId);
 			attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_CONTAINER);
@@ -571,7 +552,6 @@ public class TaskDataStateReader extends DefaultHandler {
 	private TaskAttribute createAttribute(TaskAttribute parent, String id) {
 		TaskAttribute attribute = parent.createAttribute(id);
 		TaskAttributeProperties.defaults().applyTo(attribute);
-		attribute.putMetaDataValue(TaskAttribute.META_ARTIFICIAL, Boolean.toString(true));
 		return attribute;
 	}
 

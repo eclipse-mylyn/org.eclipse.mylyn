@@ -49,6 +49,9 @@ public class TaskAttributeProperties {
 
 	private String defaultOption;
 
+	private TaskAttributeProperties() {
+	}
+
 	public void applyTo(TaskAttribute attribute) {
 		if (getKind() != null) {
 			attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_KIND, getKind());

@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
+import org.eclipse.core.runtime.Assert;
+
 /**
  * @author Rob Elves
  * @author Steffen Pingel
@@ -56,14 +58,19 @@ public class TaskOperation {
 		this.label = label;
 	}
 
-	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
+	public static TaskOperation createFrom(TaskAttribute taskAttribute, String operationId) {
+		Assert.isNotNull(taskAttribute);
+		Assert.isNotNull(operationId);
 		TaskData taskData = taskAttribute.getTaskData();
-		String operationId = taskData.getAttributeMapper().getValue(taskAttribute);
 		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
 				taskData.getTaskId(), operationId);
 		TaskAttributeProperties properties = TaskAttributeProperties.from(taskAttribute);
 		operation.setLabel(properties.getLabel());
 		return operation;
+	}
+
+	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
+		return createFrom(taskAttribute, taskAttribute.getValue());
 	}
 
 	public void applyTo(TaskAttribute taskAttribute) {

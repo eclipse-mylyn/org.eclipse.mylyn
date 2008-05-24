@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,9 +101,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	}
 
 	private void initialize() {
-		TaskAttribute container = getTaskData().getMappedAttribute(TaskAttribute.CONTAINER_COMMENTS);
-		if (container != null) {
-			comments = new ArrayList<TaskAttribute>(container.getAttributes().values());
+		TaskAttribute[] attributes = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
+				TaskAttribute.TYPE_COMMENT);
+		if (attributes.length > 0) {
+			comments = new ArrayList<TaskAttribute>(Arrays.asList(attributes));
 			for (TaskAttribute commentAttribute : comments) {
 				if (getModel().hasIncomingChanges(commentAttribute)) {
 					hasIncoming = true;

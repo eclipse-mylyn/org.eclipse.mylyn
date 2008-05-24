@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 
@@ -26,7 +27,7 @@ public class TaskCommentMapper {
 
 	private IRepositoryPerson author;
 
-	private final String commentId;
+	private String commentId;
 
 	private Date creationDate;
 
@@ -36,8 +37,7 @@ public class TaskCommentMapper {
 
 	private String url;
 
-	public TaskCommentMapper(String commentId) {
-		this.commentId = commentId;
+	public TaskCommentMapper() {
 	}
 
 	public IRepositoryPerson getAuthor() {
@@ -68,6 +68,10 @@ public class TaskCommentMapper {
 		this.author = author;
 	}
 
+	public void setCommentId(String commentId) {
+		this.commentId = commentId;
+	}
+
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
@@ -85,10 +89,11 @@ public class TaskCommentMapper {
 	}
 
 	public static TaskCommentMapper createFrom(TaskAttribute taskAttribute) {
+		Assert.isNotNull(taskAttribute);
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
-		String commentId = mapper.getValue(taskAttribute);
-		TaskCommentMapper comment = new TaskCommentMapper(commentId);
+		TaskCommentMapper comment = new TaskCommentMapper();
+		comment.setCommentId(mapper.getValue(taskAttribute));
 		TaskAttribute child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_AUTHOR);
 		if (child != null) {
 			IRepositoryPerson person = mapper.getRepositoryPerson(child);
@@ -121,13 +126,12 @@ public class TaskCommentMapper {
 	}
 
 	public void applyTo(TaskAttribute taskAttribute) {
+		Assert.isNotNull(taskAttribute);
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
-		mapper.setValue(taskAttribute, getCommentId());
 		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_COMMENT).applyTo(taskAttribute);
-		taskAttribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
-		if (getNumber() >= 0) {
-			mapper.setIntegerValue(taskAttribute, getNumber());
+		if (getCommentId() != null) {
+			mapper.setValue(taskAttribute, getCommentId());
 		}
 		if (getAuthor() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_AUTHOR);
@@ -153,10 +157,12 @@ public class TaskCommentMapper {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_TEXT);
 			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_LONG_RICH_TEXT).applyTo(child);
 			mapper.setValue(child, getText());
+			taskAttribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
 		}
 	}
 
 	public void applyTo(ITaskComment taskComment) {
+		Assert.isNotNull(taskComment);
 		if (getAuthor() != null) {
 			taskComment.setAuthor(getAuthor());
 		}

@@ -47,23 +47,24 @@ public class TaskAttributeMapper {
 	public TaskAttribute getAssoctiatedAttribute(TaskAttribute taskAttribute) {
 		String id = taskAttribute.getMetaData(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 		if (id != null) {
+			if (TaskAttribute.TYPE_OPERATION.equals(TaskAttributeProperties.from(taskAttribute).getType())) {
+				return taskAttribute.getTaskData().getRoot().getAttribute(id);
+			}
 			return taskAttribute.getAttribute(id);
 		}
 		return null;
 	}
 
 	public TaskAttribute[] getAttributesByType(TaskData taskData, String type) {
-		TaskAttribute container = null;
-		if (type.equals(TaskAttribute.TYPE_COMMENT)) {
-			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_COMMENTS);
-		} else if (type.equals(TaskAttribute.TYPE_ATTACHMENT)) {
-			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_ATTACHMENTS);
-
-		} else if (type.equals(TaskAttribute.TYPE_OPERATION)) {
-			container = taskData.getMappedAttribute(TaskAttribute.CONTAINER_OPERATIONS);
+		Assert.isNotNull(taskData);
+		Assert.isNotNull(type);
+		List<TaskAttribute> result = new ArrayList<TaskAttribute>();
+		for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
+			if (type.equals(taskAttribute.getProperties().getType())) {
+				result.add(taskAttribute);
+			}
 		}
-		return (container != null) ? container.getAttributes().values().toArray(new TaskAttribute[0])
-				: new TaskAttribute[0];
+		return result.toArray(new TaskAttribute[0]);
 	}
 
 	public boolean getBooleanValue(TaskAttribute attribute) {
