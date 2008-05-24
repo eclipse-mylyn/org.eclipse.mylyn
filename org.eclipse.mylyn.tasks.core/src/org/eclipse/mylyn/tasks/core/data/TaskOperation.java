@@ -17,6 +17,23 @@ import org.eclipse.core.runtime.Assert;
  */
 public class TaskOperation {
 
+	public static void applyTo(TaskAttribute taskAttribute, String operationId, String label) {
+		TaskData taskData = taskAttribute.getTaskData();
+		taskData.getAttributeMapper().setValue(taskAttribute, operationId);
+		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_OPERATION).setLabel(label).applyTo(taskAttribute);
+	}
+
+	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
+		Assert.isNotNull(taskAttribute);
+		TaskData taskData = taskAttribute.getTaskData();
+		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
+				taskData.getTaskId(), taskAttribute.getValue());
+		TaskAttributeProperties properties = TaskAttributeProperties.from(taskAttribute);
+		operation.setLabel(properties.getLabel());
+		operation.setTaskAttribute(taskAttribute);
+		return operation;
+	}
+
 	private final String connectorKind;
 
 	private String label;
@@ -25,13 +42,46 @@ public class TaskOperation {
 
 	private final String repositoryUrl;
 
+	private TaskAttribute taskAttribute;
+
 	private final String taskId;
 
 	public TaskOperation(String connectorKind, String repositoryUrl, String taskId, String operationId) {
+		Assert.isNotNull(connectorKind);
+		Assert.isNotNull(repositoryUrl);
+		Assert.isNotNull(taskId);
+		Assert.isNotNull(operationId);
 		this.connectorKind = connectorKind;
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 		this.operationId = operationId;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		TaskOperation other = (TaskOperation) obj;
+		if (!connectorKind.equals(other.connectorKind)) {
+			return false;
+		}
+		if (!operationId.equals(other.operationId)) {
+			return false;
+		}
+		if (!repositoryUrl.equals(other.repositoryUrl)) {
+			return false;
+		}
+		if (!taskId.equals(other.taskId)) {
+			return false;
+		}
+		return true;
 	}
 
 	public String getConnectorKind() {
@@ -50,34 +100,31 @@ public class TaskOperation {
 		return repositoryUrl;
 	}
 
+	public TaskAttribute getTaskAttribute() {
+		return taskAttribute;
+	}
+
 	public String getTaskId() {
 		return taskId;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + connectorKind.hashCode();
+		result = prime * result + operationId.hashCode();
+		result = prime * result + repositoryUrl.hashCode();
+		result = prime * result + taskId.hashCode();
+		return result;
 	}
 
 	public void setLabel(String label) {
 		this.label = label;
 	}
 
-	public static TaskOperation createFrom(TaskAttribute taskAttribute, String operationId) {
-		Assert.isNotNull(taskAttribute);
-		Assert.isNotNull(operationId);
-		TaskData taskData = taskAttribute.getTaskData();
-		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
-				taskData.getTaskId(), operationId);
-		TaskAttributeProperties properties = TaskAttributeProperties.from(taskAttribute);
-		operation.setLabel(properties.getLabel());
-		return operation;
-	}
-
-	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
-		return createFrom(taskAttribute, taskAttribute.getValue());
-	}
-
-	public void applyTo(TaskAttribute taskAttribute) {
-		TaskData taskData = taskAttribute.getTaskData();
-		taskData.getAttributeMapper().setValue(taskAttribute, getOperationId());
-		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_OPERATION).setLabel(getLabel()).applyTo(
-				taskAttribute);
+	public void setTaskAttribute(TaskAttribute taskAttribute) {
+		this.taskAttribute = taskAttribute;
 	}
 
 }

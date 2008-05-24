@@ -161,14 +161,17 @@ public class TaskDataManager implements ITaskDataManager {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				final File file = getFile(task, kind);
 				taskDataStore.putTaskData(ensurePathExists(file), state);
-				task.setSynchronizationState(SynchronizationState.OUTGOING);
+				switch (task.getSynchronizationState()) {
+				case SYNCHRONIZED:
+					task.setSynchronizationState(SynchronizationState.OUTGOING);
+				}
 				taskList.addTask(task);
 			}
 		});
 		taskList.notifyElementChanged(task);
 	}
 
-	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, boolean user) throws CoreException {
+	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, final boolean user) throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskData);
@@ -183,7 +186,7 @@ public class TaskDataManager implements ITaskDataManager {
 					if (!taskData.isPartial()) {
 						File file = getMigratedFile(task, task.getConnectorKind());
 						newTask = !file.exists();
-						taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending());
+						taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending(), user);
 						task.setMarkReadPending(false);
 					}
 
@@ -560,11 +563,27 @@ public class TaskDataManager implements ITaskDataManager {
 		}
 	}
 
-	void putEdits(ITask task, TaskData editsData) throws CoreException {
+	void putEdits(final ITask itask, final TaskData editsData) throws CoreException {
+		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
 		Assert.isNotNull(editsData);
-		taskDataStore.putEdits(getFile(task, kind), editsData);
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				taskDataStore.putEdits(getFile(task, kind), editsData);
+				switch (task.getSynchronizationState()) {
+				case INCOMING:
+				case INCOMING_NEW:
+					// TODO throw exception instead?
+					task.setSynchronizationState(SynchronizationState.CONFLICT);
+					break;
+				case SYNCHRONIZED:
+					task.setSynchronizationState(SynchronizationState.OUTGOING);
+					break;
+				}
+			}
+		});
+		taskList.notifySynchronizationStateChanged(task);
 	}
 
 	@Deprecated

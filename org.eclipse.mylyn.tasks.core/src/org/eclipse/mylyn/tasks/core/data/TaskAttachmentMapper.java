@@ -28,15 +28,15 @@ public class TaskAttachmentMapper {
 
 	private Date creationDate;
 
-	private boolean deprecated;
+	private Boolean deprecated;
 
 	private String description;
 
 	private String fileName;
 
-	private long length;
+	private Long length;
 
-	private boolean patch;
+	private Boolean patch;
 
 	private String url;
 
@@ -73,7 +73,7 @@ public class TaskAttachmentMapper {
 		return fileName;
 	}
 
-	public long getLength() {
+	public Long getLength() {
 		return length;
 	}
 
@@ -81,11 +81,11 @@ public class TaskAttachmentMapper {
 		return url;
 	}
 
-	public boolean isDeprecated() {
+	public Boolean isDeprecated() {
 		return deprecated;
 	}
 
-	public boolean isPatch() {
+	public Boolean isPatch() {
 		return patch;
 	}
 
@@ -109,7 +109,7 @@ public class TaskAttachmentMapper {
 		this.creationDate = creationDate;
 	}
 
-	public void setDeprecated(boolean deprecated) {
+	public void setDeprecated(Boolean deprecated) {
 		this.deprecated = deprecated;
 	}
 
@@ -121,11 +121,11 @@ public class TaskAttachmentMapper {
 		this.fileName = fileName;
 	}
 
-	public void setLength(long length) {
+	public void setLength(Long length) {
 		this.length = length;
 	}
 
-	public void setPatch(boolean patch) {
+	public void setPatch(Boolean patch) {
 		this.patch = patch;
 	}
 
@@ -213,19 +213,25 @@ public class TaskAttachmentMapper {
 			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_SHORT_TEXT).applyTo(child);
 			mapper.setValue(child, getFileName());
 		}
+		if (isDeprecated() != null) {
+			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_BOOLEAN).applyTo(child);
+			mapper.setBooleanValue(child, isDeprecated());
+		}
+		if (isPatch() != null) {
+			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
+			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_BOOLEAN).applyTo(child);
+			mapper.setBooleanValue(child, isPatch());
+		}
+		if (getLength() != null) {
+			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_SIZE);
+			mapper.setLongValue(child, getLength());
+		}
 		if (getUrl() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_URL);
 			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_URL).applyTo(child);
 			mapper.setValue(child, getUrl());
 		}
-		TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
-		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_BOOLEAN).applyTo(child);
-		mapper.setBooleanValue(child, isDeprecated());
-		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_IS_PATCH);
-		TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_BOOLEAN).applyTo(child);
-		mapper.setBooleanValue(child, isPatch());
-		child = taskAttribute.createAttribute(TaskAttribute.ATTACHMENT_SIZE);
-		mapper.setLongValue(child, getLength());
 	}
 
 	public void applyTo(ITaskAttachment taskAttachment) {
@@ -245,12 +251,18 @@ public class TaskAttachmentMapper {
 		if (getFileName() != null) {
 			taskAttachment.setFileName(getFileName());
 		}
+		if (isDeprecated() != null) {
+			taskAttachment.setDeprecated(isDeprecated());
+		}
+		if (isPatch() != null) {
+			taskAttachment.setPatch(isPatch());
+		}
+		if (getLength() != null) {
+			taskAttachment.setLength(getLength());
+		}
 		if (url != null) {
 			taskAttachment.setUrl(getUrl());
 		}
-		taskAttachment.setDeprecated(isDeprecated());
-		taskAttachment.setPatch(isPatch());
-		taskAttachment.setLength(getLength());
 	}
 
 }

@@ -53,7 +53,6 @@ public class TaskDataStore {
 	public synchronized void putEdits(File file, TaskData data) throws CoreException {
 		Assert.isNotNull(file);
 		Assert.isNotNull(data);
-
 		TaskDataState state = readState(file);
 		if (state == null) {
 			state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());
@@ -62,16 +61,22 @@ public class TaskDataStore {
 		writeState(file, state);
 	}
 
-	public synchronized void putTaskData(File file, TaskData data, boolean setLastRead) throws CoreException {
+	public synchronized void putTaskData(File file, TaskData data, boolean setLastRead, boolean user)
+			throws CoreException {
 		Assert.isNotNull(file);
 		Assert.isNotNull(data);
-
 		TaskDataState state = null;
 		try {
 			state = readState(file);
 		} catch (CoreException e) {
-			// FIME: now what? reading failed: purge user edits or propagate exception?
-			e.printStackTrace();
+			if (!user) {
+				throw new CoreException(
+						new Status(
+								IStatus.ERROR,
+								ITasksCoreConstants.ID_PLUGIN,
+								"Reading of existing task data failed. Forcing synchronization will override outgoing changes.",
+								e));
+			}
 		}
 		if (state == null) {
 			state = new TaskDataState(data.getConnectorKind(), data.getRepositoryUrl(), data.getTaskId());

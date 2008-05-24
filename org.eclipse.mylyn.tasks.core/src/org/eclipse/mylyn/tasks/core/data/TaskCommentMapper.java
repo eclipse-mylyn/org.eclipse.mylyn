@@ -23,15 +23,13 @@ import org.eclipse.mylyn.tasks.core.ITaskComment;
  */
 public class TaskCommentMapper {
 
-	private static final int DEFAULT_NUMBER = -1;
-
 	private IRepositoryPerson author;
 
 	private String commentId;
 
 	private Date creationDate;
 
-	private int number;
+	private Integer number;
 
 	private String text;
 
@@ -52,7 +50,7 @@ public class TaskCommentMapper {
 		return creationDate;
 	}
 
-	public int getNumber() {
+	public Integer getNumber() {
 		return number;
 	}
 
@@ -76,7 +74,7 @@ public class TaskCommentMapper {
 		this.creationDate = creationDate;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(Integer number) {
 		this.number = number;
 	}
 
@@ -88,6 +86,7 @@ public class TaskCommentMapper {
 		this.url = url;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static TaskCommentMapper createFrom(TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskAttribute);
 		TaskData taskData = taskAttribute.getTaskData();
@@ -111,8 +110,7 @@ public class TaskCommentMapper {
 		}
 		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_NUMBER);
 		if (child != null) {
-			Integer value = mapper.getIntegerValue(child);
-			comment.setNumber((value != null) ? value : DEFAULT_NUMBER);
+			comment.setNumber(mapper.getIntegerValue(child));
 		}
 		child = taskAttribute.getMappedAttribute(TaskAttribute.COMMENT_URL);
 		if (child != null) {
@@ -143,7 +141,7 @@ public class TaskCommentMapper {
 			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_DATE).applyTo(child);
 			mapper.setDateValue(child, getCreationDate());
 		}
-		if (getNumber() != DEFAULT_NUMBER) {
+		if (getNumber() != null) {
 			TaskAttribute child = taskAttribute.createAttribute(TaskAttribute.COMMENT_NUMBER);
 			TaskAttributeProperties.defaults().setType(TaskAttribute.TYPE_INTEGER).applyTo(child);
 			mapper.setIntegerValue(child, getNumber());
@@ -169,7 +167,7 @@ public class TaskCommentMapper {
 		if (getCreationDate() != null) {
 			taskComment.setCreationDate(getCreationDate());
 		}
-		if (getNumber() != DEFAULT_NUMBER) {
+		if (getNumber() != null) {
 			taskComment.setNumber(getNumber());
 		}
 		if (getUrl() != null) {

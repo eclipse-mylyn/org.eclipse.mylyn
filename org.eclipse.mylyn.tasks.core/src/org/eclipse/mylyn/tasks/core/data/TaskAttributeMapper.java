@@ -23,7 +23,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Steffen Pingel
  * @since 3.0
  */
-// TODO EDITOR return null if attribute value invalid for primitive types? 
 public class TaskAttributeMapper {
 
 	private final TaskRepository taskRepository;
@@ -47,10 +46,21 @@ public class TaskAttributeMapper {
 	public TaskAttribute getAssoctiatedAttribute(TaskAttribute taskAttribute) {
 		String id = taskAttribute.getMetaData(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 		if (id != null) {
-			if (TaskAttribute.TYPE_OPERATION.equals(TaskAttributeProperties.from(taskAttribute).getType())) {
-				return taskAttribute.getTaskData().getRoot().getAttribute(id);
+			// look up as nested attribute first
+			TaskAttribute associatedAttribute = taskAttribute.getAttribute(id);
+			if (associatedAttribute != null) {
+				return associatedAttribute;
 			}
-			return taskAttribute.getAttribute(id);
+			// fall back to root
+			return taskAttribute.getTaskData().getRoot().getAttribute(id);
+		}
+		return null;
+	}
+
+	public TaskAttribute getAssoctiatedAttribute(TaskOperation taskOperation) {
+		TaskAttribute taskAttribute = taskOperation.getTaskAttribute();
+		if (taskAttribute != null) {
+			return getAssoctiatedAttribute(taskAttribute);
 		}
 		return null;
 	}
@@ -135,7 +145,21 @@ public class TaskAttributeMapper {
 		return person;
 	}
 
-	public TaskOperation getTaskOperation(TaskAttribute taskAttribute) {
+	public TaskOperation[] getTaskOperations(TaskAttribute operationsAttribute) {
+		Assert.isNotNull(operationsAttribute);
+		TaskData taskData = operationsAttribute.getTaskData();
+		List<TaskOperation> result = new ArrayList<TaskOperation>();
+		for (TaskAttribute taskAttribute : taskData.getRoot().getAttributes().values()) {
+			if (TaskAttribute.TYPE_OPERATION.equals(taskAttribute.getProperties().getType())
+					&& !taskAttribute.getId().equals(mapToRepositoryKey(taskData.getRoot(), TaskAttribute.OPERATION))) {
+				result.add(TaskOperation.createFrom(taskAttribute));
+			}
+		}
+		return result.toArray(new TaskOperation[0]);
+	}
+
+	public TaskOperation getTaskOperationValue(TaskAttribute taskAttribute) {
+		Assert.isNotNull(taskAttribute);
 		return TaskOperation.createFrom(taskAttribute);
 	}
 
@@ -226,8 +250,10 @@ public class TaskAttributeMapper {
 		}
 	}
 
-	public void setTaskOperation(TaskAttribute taskAttribute, TaskOperation taskOperation) {
-		taskOperation.applyTo(taskAttribute);
+	public void setTaskOperationValue(TaskAttribute taskAttribute, TaskOperation taskOperation) {
+		Assert.isNotNull(taskAttribute);
+		Assert.isNotNull(taskOperation);
+		TaskOperation.applyTo(taskAttribute, taskOperation.getOperationId(), taskOperation.getLabel());
 	}
 
 	public void setValue(TaskAttribute attribute, String value) {

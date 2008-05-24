@@ -42,7 +42,10 @@ public class TaskDataStateReader extends DefaultHandler {
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			// create a unique id for each attachment since the actual id is in a child attribute
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_ATTACHMENT + ++id);
+			TaskAttributeProperties.defaults().setReadOnly(true).setType(TaskAttribute.TYPE_ATTACHMENT).applyTo(
+					attribute);
 			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_ID) + "");
+
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_CREATOR));
 			child.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_PERSON);
@@ -149,9 +152,9 @@ public class TaskDataStateReader extends DefaultHandler {
 		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_COMMENT + ++id);
-			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER));
 			TaskAttributeProperties.defaults().setReadOnly(true).setType(TaskAttribute.TYPE_COMMENT).applyTo(attribute);
 			attribute.putMetaDataValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
+			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_NUMBER));
 
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.COMMENT_ATTACHMENT_ID);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_ATTACHMENT_ID));
@@ -236,11 +239,11 @@ public class TaskDataStateReader extends DefaultHandler {
 		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_OPERATION + ++id);
-			String operationId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_KNOB_NAME);
-			attribute.setValue(operationId);
 			attribute.putMetaDataValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_CONTAINER);
 			attribute.putMetaDataValue(TaskAttribute.META_LABEL, getValue(attributes,
 					ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
+			String operationId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_KNOB_NAME);
+			attribute.setValue(operationId);
 
 			if (Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_CHECKED))) {
 				operationAttribute.setValue(operationId);

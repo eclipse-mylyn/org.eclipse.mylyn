@@ -22,7 +22,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeProperties;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -52,7 +51,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		public void widgetSelected(SelectionEvent event) {
 			setSelectedRadionButton((Button) event.widget);
 			TaskOperation taskOperation = (TaskOperation) event.widget.getData(KEY_OPERATION);
-			getTaskData().getAttributeMapper().setTaskOperation(selectedOperationAttribute, taskOperation);
+			getTaskData().getAttributeMapper().setTaskOperationValue(selectedOperationAttribute, taskOperation);
 			getModel().attributeChanged(selectedOperationAttribute);
 		}
 
@@ -211,9 +210,10 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		selectedOperationAttribute = getTaskData().getMappedAttribute(TaskAttribute.OPERATION);
 		if (selectedOperationAttribute != null
-				&& TaskAttribute.TYPE_OPERATION.equals(TaskAttributeProperties.from(selectedOperationAttribute)
-						.getType())) {
-			createRadioButtons(buttonComposite, toolkit);
+				&& TaskAttribute.TYPE_OPERATION.equals(selectedOperationAttribute.getProperties().getType())) {
+			TaskOperation selectedOperation = getTaskData().getAttributeMapper().getTaskOperationValue(
+					selectedOperationAttribute);
+			createRadioButtons(buttonComposite, toolkit, selectedOperation);
 		}
 
 		createActionButtons(buttonComposite, toolkit);
@@ -242,34 +242,29 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	private void createRadioButtons(Composite buttonComposite, FormToolkit toolkit) {
-		TaskAttribute[] attributes = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
-				TaskAttribute.TYPE_OPERATION);
-		if (attributes.length > 0) {
+	private void createRadioButtons(Composite buttonComposite, FormToolkit toolkit, TaskOperation selectedOperation) {
+		TaskOperation[] operations = getTaskData().getAttributeMapper().getTaskOperations(selectedOperationAttribute);
+		if (operations.length > 0) {
 			operationButtons = new ArrayList<Button>();
 			Button selectedButton = null;
-			for (TaskAttribute attribute : attributes) {
-				TaskOperation operation = getTaskData().getAttributeMapper().getTaskOperation(attribute);
-				if (operation != null) {
-					Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
-					button.setFont(TEXT_FONT);
-					button.setData(KEY_OPERATION, operation);
-					GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-					TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
-							attribute);
-					if (associatedAttribute != null) {
-						radioData.horizontalSpan = 1;
-						addAttribute(buttonComposite, toolkit, associatedAttribute, button);
-					} else {
-						radioData.horizontalSpan = 4;
-					}
-					button.setLayoutData(radioData);
-					button.addSelectionListener(new RadioButtonListener());
-					operationButtons.add(button);
-
-					if (getTaskData().getAttributeMapper().equals(attribute, selectedOperationAttribute)) {
-						selectedButton = button;
-					}
+			for (TaskOperation operation : operations) {
+				Button button = toolkit.createButton(buttonComposite, operation.getLabel(), SWT.RADIO);
+				button.setFont(TEXT_FONT);
+				button.setData(KEY_OPERATION, operation);
+				GridData radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				TaskAttribute associatedAttribute = getTaskData().getAttributeMapper().getAssoctiatedAttribute(
+						operation);
+				if (associatedAttribute != null) {
+					radioData.horizontalSpan = 1;
+					addAttribute(buttonComposite, toolkit, associatedAttribute, button);
+				} else {
+					radioData.horizontalSpan = 4;
+				}
+				button.setLayoutData(radioData);
+				button.addSelectionListener(new RadioButtonListener());
+				operationButtons.add(button);
+				if (operation.equals(selectedOperation)) {
+					selectedButton = button;
 				}
 			}
 			// do this last to ensure only a single button is selected

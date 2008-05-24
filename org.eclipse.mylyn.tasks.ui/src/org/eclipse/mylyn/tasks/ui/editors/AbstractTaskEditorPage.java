@@ -834,10 +834,12 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		getManagedForm().addPart(part);
 		part.initialize(this);
 		part.createControl(parent, toolkit);
-		if (ID_PART_NEW_COMMENT.equals(part.getPartId())) {
-			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(part.getControl());
-		} else {
-			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(part.getControl());
+		if (part.getControl() != null) {
+			if (ID_PART_NEW_COMMENT.equals(part.getPartId())) {
+				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(part.getControl());
+			} else {
+				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(part.getControl());
+			}
 		}
 	}
 
