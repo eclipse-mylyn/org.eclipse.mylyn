@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
+ * TODO use extensible deltas instead of Objects for refresh
+ * 
  * @author Steffen Pingel
  * @author Mik Kersten
  */
@@ -36,6 +38,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	static final long REFRESH_DELAY_MAX = REFRESH_DELAY_DEFAULT * 2;
 
+	// FIXME make private
 	protected final StructuredViewer viewer;
 
 	private static final int NOT_SCHEDULED = -1;
@@ -51,6 +54,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 		setSystem(true);
 	}
 
+	// XXX needs to be called from UI thread
 	public void forceRefresh() {
 		queue.add(null);
 		runInUIThread(new NullProgressMonitor());
@@ -62,7 +66,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	public synchronized void refreshElements(Object[] elements) {
 		queue.addAll(Arrays.asList(elements));
-
+		// FIXME this is a copy of refreshElement(Object)
 		if (scheduleTime == NOT_SCHEDULED) {
 			scheduleTime = System.currentTimeMillis();
 			schedule(REFRESH_DELAY_DEFAULT);
@@ -103,6 +107,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 			scheduleTime = NOT_SCHEDULED;
 		}
 
+		// XXX this code is difficult to read
 		TreeViewer treeViewer = null;
 		TreePath treePath = null;
 		if (viewer instanceof TreeViewer) {
@@ -136,5 +141,8 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 		return Status.OK_STATUS;
 	}
 
+	// API 3.0 rename to doRefresh() and pass viewer
+	// API 3.0 provide default implementation?
 	protected abstract void refresh(final Object[] items);
+
 }
