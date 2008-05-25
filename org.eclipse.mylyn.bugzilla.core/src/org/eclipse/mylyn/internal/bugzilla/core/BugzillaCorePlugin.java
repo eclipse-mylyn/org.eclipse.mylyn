@@ -39,6 +39,8 @@ public class BugzillaCorePlugin extends Plugin {
 
 	private static final String ERROR_DELETING_CONFIGURATION = "Error removing corrupt repository configuration file.";
 
+	private static final String WARNING_CONFIGURATION_WRONG_VERSION = "Incomaptable repository configuration file.";
+
 	/**
 	 * API 3.0: Rename to CONNECTOR_KIND
 	 */
@@ -181,7 +183,7 @@ public class BugzillaCorePlugin extends Plugin {
 				}
 			}
 		} catch (Exception e) {
-			log(e);
+			log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, 0, WARNING_CONFIGURATION_WRONG_VERSION, e));
 			try {
 				if (in != null) {
 					in.close();
@@ -240,7 +242,7 @@ public class BugzillaCorePlugin extends Plugin {
 	 * Convenience method for logging statuses to the plugin log
 	 * 
 	 * @param status
-	 * 		the status to log
+	 *            the status to log
 	 */
 	public static void log(IStatus status) {
 		getDefault().getLog().log(status);
@@ -250,7 +252,7 @@ public class BugzillaCorePlugin extends Plugin {
 	 * Convenience method for logging exceptions to the plugin log
 	 * 
 	 * @param e
-	 * 		the exception to log
+	 *            the exception to log
 	 */
 	public static void log(Exception e) {
 		String message = e.getMessage();
