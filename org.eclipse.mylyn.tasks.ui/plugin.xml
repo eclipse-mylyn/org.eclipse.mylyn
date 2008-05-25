@@ -1486,10 +1486,11 @@
                <visibleWhen
                      checkEnabled="false">
                   <iterate>
-                     <test
-                           property="org.eclipse.mylyn.task.isLocal"
-                           value="false">
-                     </test>
+                     <not>
+                        <instanceof
+                              value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                        </instanceof>
+                     </not>
                   </iterate>
                </visibleWhen>
             </command>
@@ -1501,10 +1502,11 @@
                <visibleWhen
                      checkEnabled="false">
                   <iterate>
-                     <test
-                           property="org.eclipse.mylyn.task.isLocal"
-                           value="false">
-                     </test>
+                     <not>
+                        <instanceof
+                              value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                        </instanceof>
+                     </not>
                   </iterate>
                </visibleWhen>
             </command>
@@ -1516,10 +1518,11 @@
                <visibleWhen
                      checkEnabled="false">
                   <iterate>
-                     <test
-                           property="org.eclipse.mylyn.task.isLocal"
-                           value="false">
-                     </test>
+                     <not>
+                        <instanceof
+                              value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                        </instanceof>
+                     </not>
                   </iterate>
                </visibleWhen>
             </command>

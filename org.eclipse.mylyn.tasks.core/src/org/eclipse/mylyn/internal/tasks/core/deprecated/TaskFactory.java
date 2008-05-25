@@ -63,9 +63,9 @@ public class TaskFactory implements ITaskFactory {
 
 	/**
 	 * @param updateTasklist
-	 * 		- synchronize task with the provided taskData
+	 *            - synchronize task with the provided taskData
 	 * @param forced
-	 * 		- user requested synchronization
+	 *            - user requested synchronization
 	 * @throws CoreException
 	 */
 	public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
@@ -73,17 +73,31 @@ public class TaskFactory implements ITaskFactory {
 		if (repositoryTask == null) {
 			repositoryTask = createTaskFromTaskData(connector, repository, taskData, updateTasklist, monitor);
 			repositoryTask.setSynchronizationState(SynchronizationState.INCOMING);
-			if (updateTasklist) {
-				taskList.addTask(repositoryTask);
-				taskDataManager.saveIncoming(repositoryTask, taskData, forced);
-			} else {
-				taskDataManager.saveOffline(repositoryTask, taskData);
+			if (!taskData.isPartial()) {
+				if (updateTasklist) {
+					taskList.addTask(repositoryTask);
+					taskDataManager.saveIncoming(repositoryTask, taskData, forced);
+				} else {
+					taskDataManager.saveOffline(repositoryTask, taskData);
+				}
 			}
-
 		} else {
 			if (updateTasklist) {
-				boolean changed = taskDataManager.saveIncoming(repositoryTask, taskData, forced);
-				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
+				boolean changed;
+				if (!taskData.isPartial()) {
+					changed = taskDataManager.saveIncoming(repositoryTask, taskData, forced);
+					connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
+				} else {
+					changed = connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
+					if (changed) {
+						switch (repositoryTask.getSynchronizationState()) {
+						case OUTGOING:
+							repositoryTask.setSynchronizationState(SynchronizationState.CONFLICT);
+						case SYNCHRONIZED:
+							repositoryTask.setSynchronizationState(SynchronizationState.INCOMING);
+						}
+					}
+				}
 				if (dataHandler != null) {
 					for (ITask child : repositoryTask.getChildren()) {
 						taskList.removeFromContainer(repositoryTask, child);
@@ -125,7 +139,9 @@ public class TaskFactory implements ITaskFactory {
 				repositoryTask = connector.createTask(repository.getRepositoryUrl(), taskData.getTaskId(),
 						taskData.getTaskId() + ": " + taskData.getDescription());
 				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
-				taskDataStorageManager.setNewTaskData(taskData);
+				if (!taskData.isPartial()) {
+					taskDataStorageManager.setNewTaskData(taskData);
+				}
 
 				if (retrieveSubTasks) {
 					monitor.beginTask("Creating task", connector.getLegacyTaskDataHandler()
