@@ -324,7 +324,7 @@ public class ContextEditorFormPage extends FormPage {
 		section.setExpanded(true);
 	}
 
-	private ContextEditorDelayedRefreshJob job;
+	private ContextEditorDelayedRefreshJob refreshJob;
 
 	/**
 	 * Scales logarithmically to a reasonable interest threshold range (e.g. -10000..10000).
@@ -339,17 +339,26 @@ public class ContextEditorFormPage extends FormPage {
 	}
 
 	private void refresh() {
-		if (job == null) {
-			job = new ContextEditorDelayedRefreshJob(commonViewer, "refresh viewer");
+		createRefreshJob();
+		if (refreshJob != null) {
+			refreshJob.refresh();
 		}
-		job.refresh();
+	}
+
+	private synchronized void createRefreshJob() {
+		if (commonViewer == null) {
+			return;
+		}
+		if (refreshJob == null) {
+			refreshJob = new ContextEditorDelayedRefreshJob(commonViewer, "refresh viewer");
+		}
 	}
 
 	private void refresh(List<IInteractionElement> elements) {
-		if (job == null) {
-			job = new ContextEditorDelayedRefreshJob(commonViewer, "refresh viewer");
+		createRefreshJob();
+		if (refreshJob != null) {
+			refreshJob.refresh(elements.toArray());
 		}
-		job.refresh(elements.toArray());
 	}
 
 	private void createDisplaySection(Composite composite) {
