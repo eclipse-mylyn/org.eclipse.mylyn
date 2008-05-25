@@ -466,6 +466,7 @@ public class TasksUiExtensionReader {
 				}
 			}
 		} else {
+			// TODO change error message to include hints about the cause of the error 
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load repository template extension " + element.getName()));
 		}
