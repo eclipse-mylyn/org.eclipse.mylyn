@@ -276,7 +276,7 @@ public class TaskDataManager implements ITaskDataManager {
 	public void discardOutgoing(AbstractTask repositoryTask) {
 		taskDataStorageManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 		repositoryTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-		taskList.notifyElementChanged(repositoryTask);
+		//taskList.notifyElementChanged(repositoryTask);
 	}
 
 	private File findFile(ITask task, String kind) {

@@ -423,7 +423,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			ITask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (repositoryTask != null && repositoryTask.equals(taskContainerDelta.getElement())) {
+				if (!localChange && repositoryTask != null && repositoryTask.equals(taskContainerDelta.getElement())) {
 					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)
 							&& !taskContainerDelta.isTransient() && !refreshing) {
 						taskToRefresh = (ITask) taskContainerDelta.getElement();
@@ -434,19 +434,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (taskToRefresh != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-//						if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
-//								|| repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
-						parentEditor.setMessage("Task has incoming changes", IMessageProvider.WARNING,
-								new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										refreshEditor();
-									}
-								});
-						setSubmitEnabled(false);
-//						} else {
-//							refreshEditor();
-//						}
+						if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
+								|| repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
+							parentEditor.setMessage("Task has incoming changes", IMessageProvider.WARNING,
+									new HyperlinkAdapter() {
+										@Override
+										public void linkActivated(HyperlinkEvent e) {
+											refreshEditor();
+										}
+									});
+							setSubmitEnabled(false);
+						} else {
+							refreshEditor();
+						}
 					}
 				});
 			}
@@ -514,6 +514,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private NewSubTaskAction newSubTaskAction;
 
 	private Control lastFocusControl;
+
+	private boolean localChange = false;
 
 	/**
 	 * Call upon change to attribute value
@@ -2835,10 +2837,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			return;
 		}
 		if (repositoryTask != null) {
-			TasksUiPlugin.getTaskDataManager().saveOutgoing(repositoryTask, changedAttributes);
-		}
-		if (repositoryTask != null) {
-			TasksUiInternal.getTaskList().notifyElementChanged(repositoryTask);
+			try {
+				localChange = true;
+
+				TasksUiPlugin.getTaskDataManager().saveOutgoing(repositoryTask, changedAttributes);
+			} finally {
+				localChange = false;
+			}
 		}
 		markDirty(false);
 	}
@@ -3638,11 +3643,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 										}
 									});
 								} else {
-									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-										public void run() {
-											refreshEditor();
-										}
-									});
+//									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//										public void run() {
+//											refreshEditor();
+//										}
+//									});
 								}
 							}
 						});
