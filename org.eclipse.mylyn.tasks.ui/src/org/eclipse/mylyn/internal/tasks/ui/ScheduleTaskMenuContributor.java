@@ -56,6 +56,18 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			ITaskElement selectedElement = selectedElements.get(0);
 			if (selectedElement instanceof ITask) {
 				singleTaskSelection = (AbstractTask) selectedElement;
+				if (singleTaskSelection.isCompleted()) {
+					Action action = new Action() {
+						@Override
+						public void run() {
+							// ignore
+						}
+					};
+					action.setText("Cannot schedule completed tasks");
+					action.setEnabled(false);
+					subMenuManager.add(action);
+					return subMenuManager;
+				}
 			}
 		}
 
