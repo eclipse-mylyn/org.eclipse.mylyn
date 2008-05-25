@@ -28,6 +28,8 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 import org.eclipse.ui.PlatformUI;
@@ -207,7 +209,14 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 //	}
 
 	public static IWorkingSet[] getEnabledSets() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getWorkingSets();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IWorkbenchPage page = window.getActivePage();
+			if (page != null) {
+				return page.getWorkingSets();
+			}
+		}
+		return new IWorkingSet[0];
 	}
 
 	/**
