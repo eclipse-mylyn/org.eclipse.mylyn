@@ -296,7 +296,7 @@ public class TaskListExternalizer {
 		doc = openAsDOM(inFile);
 
 		if (doc == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Empty TaskList"));
+			//StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Empty TaskList"));
 			return;
 		}
 
