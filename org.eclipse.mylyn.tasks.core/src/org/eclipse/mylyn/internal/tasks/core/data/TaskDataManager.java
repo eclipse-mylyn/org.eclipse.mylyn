@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.core.data;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
@@ -255,7 +256,10 @@ public class TaskDataManager implements ITaskDataManager {
 		final String kind = task.getConnectorKind();
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
-				taskDataStore.discardEdits(getFile(task, kind));
+				File dataFile = getFile(task, kind);
+				if (dataFile.exists()) {
+					taskDataStore.discardEdits(dataFile);
+				}
 				switch (task.getSynchronizationState()) {
 				case OUTGOING:
 					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
