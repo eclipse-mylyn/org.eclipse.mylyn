@@ -66,8 +66,10 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		}
 
 		WeekDateRange week = TaskActivityUtil.getCurrentWeek();
+		int days = 0;
 		for (DateRange day : week.getDaysOfWeek()) {
 			if (day.includes(TaskActivityUtil.getCalendar())) {
+				days++;
 				// Today
 				Action action = createDateSelectionAction(day, CommonImages.SCHEDULE_DAY);
 				subMenuManager.add(action);
@@ -77,6 +79,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 					action.setChecked(true);
 				}
 			} else if (day.after(TaskActivityUtil.getCalendar())) {
+				days++;
 				// Week Days
 				Action action = createDateSelectionAction(day, null);
 				subMenuManager.add(action);
@@ -84,10 +87,10 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		}
 
 		// Next week days
-		int toAdd = TaskActivityUtil.getCalendar().get(Calendar.DAY_OF_WEEK) - 1;
+		int toAdd = 7 - days;
 		WeekDateRange nextWeek = TaskActivityUtil.getNextWeek();
-		for (int x = 1; x <= toAdd; x++) {
-			DateRange day = nextWeek.getDayOfWeek(x);
+		for (int x = 0; x < toAdd; x++) {
+			DateRange day = nextWeek.getDayOfWeek(TasksUiPlugin.getTaskActivityManager().getWeekStartDay() + x);
 			Action action = createDateSelectionAction(day, null);
 			subMenuManager.add(action);
 		}
