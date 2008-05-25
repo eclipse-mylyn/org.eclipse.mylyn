@@ -28,7 +28,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
  */
 public class ErrorReporterManager {
 
-	private static final String EXTENSION_ID_ERROR_REPORTERS = "org.eclipse.mylyn.monitor.core.errorReporters";
+	private static final String EXTENSION_ID_ERROR_REPORTERS = "org.eclipse.mylyn.commons.core.errorReporters";
 
 	private static final String ELEMENT_ERROR_REPORTER = "errorReporter";
 
