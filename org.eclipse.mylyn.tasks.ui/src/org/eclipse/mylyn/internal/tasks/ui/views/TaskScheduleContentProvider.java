@@ -176,7 +176,9 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		public Collection<ITask> getChildren() {
 			Set<ITask> all = new HashSet<ITask>();
 			for (ITask task : activityManager.getUnscheduled()) {
-				all.add(task);
+				if (!task.isCompleted() || (task.isCompleted() && !task.getSynchronizationState().isSynchronized())) {
+					all.add(task);
+				}
 			}
 			return all;
 		}
