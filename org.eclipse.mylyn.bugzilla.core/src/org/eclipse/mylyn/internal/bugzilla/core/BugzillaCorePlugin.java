@@ -39,7 +39,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 	private static final String ERROR_DELETING_CONFIGURATION = "Error removing corrupt repository configuration file.";
 
-	private static final String WARNING_CONFIGURATION_WRONG_VERSION = "Incomaptable repository configuration file.";
+	private static final String ERROR_INCOMPATIBLE_CONFIGURATION = "Incomaptible repository configuration file.";
 
 	/**
 	 * API 3.0: Rename to CONNECTOR_KIND
@@ -183,7 +183,7 @@ public class BugzillaCorePlugin extends Plugin {
 				}
 			}
 		} catch (Exception e) {
-			log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, 0, WARNING_CONFIGURATION_WRONG_VERSION, e));
+			log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_INCOMPATIBLE_CONFIGURATION, e));
 			try {
 				if (in != null) {
 					in.close();
