@@ -13,12 +13,12 @@ import java.util.Date;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.mylyn.internal.commons.ui.TreeWalker.Direction;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector.Capability;
 
 /**
  * @author Steffen Pingel
@@ -28,7 +28,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	public static class MarkTaskCompleteHandler extends AbstractTaskHandler {
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
-			if (task instanceof LocalTask || (task instanceof AbstractTask && ((AbstractTask) task).isLocal())) {
+			if (TasksUiInternal.hasCapability(task, Capability.LOCAL_COMPLETION_STATE)) {
 				task.setCompletionDate(new Date());
 				TasksUiPlugin.getTaskList().notifyElementChanged(task);
 			}
@@ -38,7 +38,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	public static class MarkTaskIncompleteHandler extends AbstractTaskHandler {
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
-			if (task instanceof LocalTask || (task instanceof AbstractTask && ((AbstractTask) task).isLocal())) {
+			if (TasksUiInternal.hasCapability(task, Capability.LOCAL_COMPLETION_STATE)) {
 				task.setCompletionDate(null);
 				TasksUiPlugin.getTaskList().notifyElementChanged(task);
 			}

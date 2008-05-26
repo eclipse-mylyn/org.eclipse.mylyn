@@ -404,7 +404,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 * @since 3.0
 	 */
 	@Override
-	public boolean hasChanged(ITask task, TaskData taskData) {
+	public boolean hasChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		throw new UnsupportedOperationException();
 	}
 

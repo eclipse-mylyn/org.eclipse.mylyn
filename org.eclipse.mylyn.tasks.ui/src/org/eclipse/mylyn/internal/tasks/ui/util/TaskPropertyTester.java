@@ -12,6 +12,7 @@ import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector.Capability;
 
 /**
  * @author Steffen Pingel
@@ -31,6 +32,8 @@ public class TaskPropertyTester extends PropertyTester {
 	private static final String PROPERTY_IS_COMPLETED = "isCompleted";
 
 	private static final String PROPERTY_IS_LOCAL = "isLocal";
+
+	private static final String PROPERTY_LOCAL_COMPLETION_STATE = "hasLocalCompletionState";
 
 	private boolean equals(boolean value, Object expectedValue) {
 		return new Boolean(value).equals(expectedValue);
@@ -54,6 +57,8 @@ public class TaskPropertyTester extends PropertyTester {
 				return equals(task.isCompleted(), expectedValue);
 			} else if (PROPERTY_IS_LOCAL.equals(property)) {
 				return (task instanceof AbstractTask) && equals(((AbstractTask) task).isLocal(), expectedValue);
+			} else if (PROPERTY_LOCAL_COMPLETION_STATE.equals(property)) {
+				return equals(TasksUiInternal.hasCapability(task, Capability.LOCAL_COMPLETION_STATE), expectedValue);
 			}
 		}
 		return false;

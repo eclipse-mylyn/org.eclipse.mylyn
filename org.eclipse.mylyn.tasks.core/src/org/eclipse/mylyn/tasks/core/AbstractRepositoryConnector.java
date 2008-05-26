@@ -31,6 +31,13 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
  */
 public abstract class AbstractRepositoryConnector {
 
+	/**
+	 * @since 3.0
+	 */
+	public enum Capability {
+		LOCAL_COMPLETION_STATE, REPOSITORY_DUE_DATE,
+	};
+
 	private static final long REPOSITORY_CONFIGURATION_UPDATE_INTERVAL = 24 * 60 * 60 * 1000;
 
 	/**
@@ -145,9 +152,10 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getTaskUrl(String repositoryUrl, String taskId);
 
 	/**
+	 * @param taskRepository TODO
 	 * @since 3.0
 	 */
-	public abstract boolean hasChanged(ITask task, TaskData taskData);
+	public abstract boolean hasChanged(TaskRepository taskRepository, ITask task, TaskData taskData);
 
 	/**
 	 * Default implementation returns true every 24hrs.
@@ -215,5 +223,13 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 */
 	public abstract void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData);
+
+	/**
+	 * @since 3.0
+	 */
+	public boolean hasCapability(Capability capability, TaskRepository taskRepository, ITask task,
+			ICapabilityContext context) {
+		return false;
+	}
 
 }

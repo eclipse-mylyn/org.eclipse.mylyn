@@ -1373,7 +1373,7 @@
                         value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
                   </instanceof>
                   <test
-                        property="org.eclipse.mylyn.task.isLocal"
+                        property="org.eclipse.mylyn.task.hasLocalCompletionState"
                         value="true">
                   </test>
                   <test
@@ -1395,7 +1395,7 @@
                         value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
                   </instanceof>
                   <test
-                        property="org.eclipse.mylyn.task.isLocal"
+                        property="org.eclipse.mylyn.task.hasLocalCompletionState"
                         value="true">
                   </test>
                   <test
@@ -1622,7 +1622,7 @@
             class="org.eclipse.mylyn.internal.tasks.ui.util.TaskPropertyTester"
             id="org.eclipse.mylyn.tasks.ui.propertyTester.task"
             namespace="org.eclipse.mylyn.task"
-            properties="connectorKind,isLocal,isCompleted,canPostAttachment,canGetAttachment,hasLocalContext,hasRepositoryContext"
+            properties="canGetAttachment,canPostAttachment,connectorKind,hasLocalContext,hasLocalCompletionState,hasRepositoryContext,isCompleted,isLocal,"
             type="org.eclipse.mylyn.tasks.core.ITask">
       </propertyTester>
    </extension>

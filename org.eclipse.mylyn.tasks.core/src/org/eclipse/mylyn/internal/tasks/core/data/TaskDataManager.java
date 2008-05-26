@@ -180,7 +180,7 @@ public class TaskDataManager implements ITaskDataManager {
 		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
 		final TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
-		final boolean changed = connector.hasChanged(task, taskData);
+		final boolean changed = connector.hasChanged(repository, task, taskData);
 		if (changed || user) {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {

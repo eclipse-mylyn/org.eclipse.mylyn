@@ -69,6 +69,7 @@ import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector.Capability;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
@@ -707,6 +708,15 @@ public class TasksUiInternal {
 			}
 		}
 
+	}
+
+	public static boolean hasCapability(ITask task, Capability capability) {
+		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				task.getConnectorKind());
+		return connector.hasCapability(capability, taskRepository, task, new CapabilityContext(
+				TasksUi.getTaskDataManager()));
 	}
 
 }
