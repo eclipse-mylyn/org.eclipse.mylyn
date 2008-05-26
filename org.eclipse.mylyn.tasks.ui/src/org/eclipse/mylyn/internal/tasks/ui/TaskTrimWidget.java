@@ -31,9 +31,9 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
-import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
+import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
@@ -82,7 +82,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Point p;
 
-	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
+	private final ITaskActivationListener TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
 
 		@Override
 		public void taskActivated(ITask task) {
@@ -108,7 +108,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	};
 
 	public TaskTrimWidget() {
-		TasksUi.getTaskActivityManager().addActivityListener(TASK_ACTIVITY_LISTENER);
+		TasksUi.getTaskActivityManager().addActivationListener(TASK_ACTIVATION_LISTENER);
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(SHOW_TRIM_LISTENER);
 		hookContextMenu();
 	}
@@ -141,7 +141,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		}
 		menu = null;
 
-		TasksUi.getTaskActivityManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
+		TasksUi.getTaskActivityManager().removeActivationListener(TASK_ACTIVATION_LISTENER);
 		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(SHOW_TRIM_LISTENER);
 	}
 

@@ -9,26 +9,29 @@
 package org.eclipse.mylyn.tasks.core;
 
 /**
- * Notified of task activity changes.
- * 
- * @author Mik Kersten
  * @author Rob Elves
- * @author Shawn Minto
- * @since 2.0
+ * @since 3.0
  */
-public interface ITaskActivityListener {
+public interface ITaskActivationListener {
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void activityReset();
+	public abstract void preTaskActivated(ITask task);
 
 	/**
-	 * Warning: This is called frequently (i.e. every 15s) Implementers are responsible for launching jobs for long
-	 * running activity.
-	 * 
 	 * @since 3.0
 	 */
-	public abstract void elapsedTimeUpdated(ITask task, long newElapsedTime);
+	public abstract void preTaskDeactivated(ITask task);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void taskActivated(ITask task);
+
+	/**
+	 * @since 3.0
+	 */
+	public abstract void taskDeactivated(ITask task);
 
 }

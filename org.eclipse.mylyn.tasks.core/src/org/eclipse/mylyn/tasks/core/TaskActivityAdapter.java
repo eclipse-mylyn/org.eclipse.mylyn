@@ -20,16 +20,4 @@ public class TaskActivityAdapter implements ITaskActivityListener {
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 	}
 
-	public void preTaskActivated(ITask task) {
-	}
-
-	public void preTaskDeactivated(ITask task) {
-	}
-
-	public void taskActivated(ITask task) {
-	}
-
-	public void taskDeactivated(ITask task) {
-	}
-
 }

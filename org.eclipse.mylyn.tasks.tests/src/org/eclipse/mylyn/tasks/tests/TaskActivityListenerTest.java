@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
+import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
  */
 public class TaskActivityListenerTest extends TestCase {
 
-	private class MockTaskActivationListener extends TaskActivityAdapter {
+	private class MockTaskActivationListener extends TaskActivationAdapter {
 
 		private boolean hasActivated = false;
 
@@ -74,7 +74,7 @@ public class TaskActivityListenerTest extends TestCase {
 		MockTask task = new MockTask("test:activation");
 		MockTaskActivationListener listener = new MockTaskActivationListener();
 		try {
-			TasksUiPlugin.getTaskActivityManager().addActivityListener(listener);
+			TasksUiPlugin.getTaskActivityManager().addActivationListener(listener);
 			try {
 				TasksUiPlugin.getTaskListManager().activateTask(task);
 				assertTrue(listener.hasPreActivated);
@@ -91,7 +91,7 @@ public class TaskActivityListenerTest extends TestCase {
 			assertTrue(listener.hasPreDeactivated);
 			assertTrue(listener.hasDeactivated);
 		} finally {
-			TasksUiPlugin.getTaskActivityManager().removeActivityListener(listener);
+			TasksUiPlugin.getTaskActivityManager().removeActivationListener(listener);
 		}
 	}
 

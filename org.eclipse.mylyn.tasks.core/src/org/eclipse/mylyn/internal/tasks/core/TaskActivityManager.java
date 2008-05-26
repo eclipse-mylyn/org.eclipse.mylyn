@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -45,6 +46,8 @@ public class TaskActivityManager implements ITaskActivityManager {
 	private final TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
 
 	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
+
+	private final List<ITaskActivationListener> activationListeners = new ArrayList<ITaskActivationListener>();
 
 	private final Set<ITask> allScheduledTasks = new HashSet<ITask>();
 
@@ -119,6 +122,14 @@ public class TaskActivityManager implements ITaskActivityManager {
 
 	public void removeActivityListener(ITaskActivityListener listener) {
 		activityListeners.remove(listener);
+	}
+
+	public void addActivationListener(ITaskActivationListener listener) {
+		activationListeners.add(listener);
+	}
+
+	public void removeActivationListener(ITaskActivationListener listener) {
+		activationListeners.remove(listener);
 	}
 
 	public void clear() {
@@ -357,7 +368,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		deactivateActiveTask();
 
 		// notify that a task is about to be activated
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
 			try {
 				listener.preTaskActivated(task);
 			} catch (Throwable t) {
@@ -369,7 +380,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		activeTask = task;
 		((AbstractTask) activeTask).setActive(true);
 
-		for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+		for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
 			try {
 				listener.taskActivated(task);
 			} catch (Throwable t) {
@@ -392,7 +403,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 
 		if (task.isActive() && task == activeTask) {
 			// notify that a task is about to be deactivated
-			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+			for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
 				try {
 					listener.preTaskDeactivated(task);
 				} catch (Throwable t) {
@@ -404,7 +415,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 			((AbstractTask) activeTask).setActive(false);
 			activeTask = null;
 
-			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
+			for (ITaskActivationListener listener : new ArrayList<ITaskActivationListener>(activationListeners)) {
 				try {
 					listener.taskDeactivated(task);
 				} catch (Throwable t) {

@@ -82,10 +82,10 @@ import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
-import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
+import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -249,7 +249,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		EDITOR, INTERNAL_BROWSER, EXTERNAL_BROWSER;
 	}
 
-	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new TaskActivityAdapter() {
+	private static ITaskActivationListener CONTEXT_TASK_ACTIVATION_LISTENER = new TaskActivationAdapter() {
 
 		@Override
 		public void taskActivated(final ITask task) {
@@ -562,7 +562,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			tasksJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager,
 					tasksModel);
 
-			taskActivityManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
+			taskActivityManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
 
 			taskActivityMonitor = new TaskActivityMonitor(taskActivityManager, ContextCorePlugin.getContextManager());
 			taskActivityMonitor.start();
