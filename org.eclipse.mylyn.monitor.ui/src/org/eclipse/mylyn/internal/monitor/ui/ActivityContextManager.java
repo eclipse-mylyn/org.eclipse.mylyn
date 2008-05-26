@@ -25,6 +25,10 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
 import org.eclipse.mylyn.monitor.ui.IActivityContextManager;
 import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Manages the meta task-activity context.
@@ -35,6 +39,8 @@ import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
  */
 @SuppressWarnings("restriction")
 public class ActivityContextManager implements IActivityContextManager {
+
+	private static final char WORKINGSET_DELIMETER = '\u200B'; // unicode zero width space
 
 	private final int TICK = 30 * 1000;
 
@@ -97,9 +103,10 @@ public class ActivityContextManager implements IActivityContextManager {
 	private void addMonitoredActivityTime(long start, long end) {
 		if (end > start) {
 			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-					new InteractionEvent(InteractionEvent.Kind.ATTENTION, InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, getStructureHandle(),
-							InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start),
-							new Date(end)));
+					new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+							InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, getStructureHandle(),
+							InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
+							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionGained();
 			}
@@ -212,7 +219,33 @@ public class ActivityContextManager implements IActivityContextManager {
 		if (ContextCore.getContextManager().getActiveContext().getHandleIdentifier() != null) {
 			return ContextCore.getContextManager().getActiveContext().getHandleIdentifier();
 		} else {
-			return InteractionContextManager.ACTIVITY_DELTA_ADDED;
+			final String[] handle = new String[1];
+			handle[0] = "";
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
+				public void run() {
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					if (window != null) {
+						IWorkbenchPage page = window.getActivePage();
+						IWorkingSet[] workingSets;
+						if (page != null) {
+							workingSets = page.getWorkingSets();
+							for (IWorkingSet workingSet : workingSets) {
+								String workingSetId = workingSet.getId();
+								if (workingSetId == null) {
+									workingSetId = "";
+								}
+								handle[0] += workingSetId + "." + workingSet.getName() + WORKINGSET_DELIMETER;
+							}
+						}
+					}
+				}
+			});
+
+			if (handle[0].length() > 0) {
+				return handle[0];
+			}
 		}
+		return InteractionContextManager.ACTIVITY_HANDLE_NONE;
 	}
 }
