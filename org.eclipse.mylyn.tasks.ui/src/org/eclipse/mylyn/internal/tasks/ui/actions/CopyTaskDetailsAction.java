@@ -43,27 +43,25 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		setToolTipText(LABEL);
 		setId(ID);
 		setImageDescriptor(CommonImages.COPY);
-
+		// FIXME the clipboard is not disposed
 		Display display = PlatformUI.getWorkbench().getDisplay();
 		clipboard = new Clipboard(display);
 	}
 
 	@Override
 	public void run() {
-		ISelection selection = super.getStructuredSelection();
-		String text = "";
-
+		ISelection selection = getStructuredSelection();
+		StringBuilder sb = new StringBuilder();
 		Object[] seletedElements = ((IStructuredSelection) selection).toArray();
 		for (int i = 0; i < seletedElements.length; i++) {
 			if (i > 0) {
-				text += "\n\n";
+				sb.append("\n\n");
 			}
-			text += getTextForTask(seletedElements[i]);
+			sb.append(getTextForTask(seletedElements[i]));
 		}
-
-		TextTransfer textTransfer = TextTransfer.getInstance();
-		if (text != null && !text.equals("")) {
-			clipboard.setContents(new Object[] { text }, new Transfer[] { textTransfer });
+		if (sb.length() > 0) {
+			TextTransfer textTransfer = TextTransfer.getInstance();
+			clipboard.setContents(new Object[] { sb.toString() }, new Transfer[] { textTransfer });
 		}
 	}
 
