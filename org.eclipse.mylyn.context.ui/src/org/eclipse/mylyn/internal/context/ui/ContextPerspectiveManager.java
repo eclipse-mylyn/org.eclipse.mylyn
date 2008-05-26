@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener4;
 import org.eclipse.ui.IWorkbenchPage;
@@ -28,7 +28,7 @@ import org.eclipse.ui.internal.registry.IActionSetDescriptor;
  * @author Mik Kersten
  * @author Shawn Minto
  */
-public class ContextPerspectiveManager implements ITaskActivityListener, IPerspectiveListener4 {
+public class ContextPerspectiveManager implements ITaskActivationListener, IPerspectiveListener4 {
 
 	private final Set<String> managedPerspectiveIds = new HashSet<String>();
 
@@ -162,13 +162,4 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 	public void preTaskDeactivated(ITask task) {
 		// ignore		
 	}
-
-	public void activityReset() {
-		// ignore
-	}
-
-	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-		// ignore
-	}
-
 }
