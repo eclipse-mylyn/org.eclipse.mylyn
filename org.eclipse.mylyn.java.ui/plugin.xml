@@ -100,9 +100,10 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeCompletionProposalComputer">
-		<javaCompletionProposalComputer 
-			class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaTypeProposalComputer"
-			categoryId="org.eclipse.mylyn.java.ui.javaTypeProposalCategory">
+		<javaCompletionProposalComputer
+        activate="true"
+        categoryId="org.eclipse.mylyn.java.ui.javaTypeProposalCategory"
+        class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaTypeProposalComputer">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_string"/>
 		</javaCompletionProposalComputer>
@@ -110,9 +111,10 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaNoTypeCompletionProposalComputer">
-		<javaCompletionProposalComputer 
-			class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaNoTypeProposalComputer"
-			categoryId="org.eclipse.mylyn.java.ui.javaNoTypeProposalCategory">
+		<javaCompletionProposalComputer
+        activate="true"
+        categoryId="org.eclipse.mylyn.java.ui.javaNoTypeProposalCategory"
+        class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaNoTypeProposalComputer">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_string"/>
 		</javaCompletionProposalComputer>
@@ -121,8 +123,9 @@
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="TemplateProposalComputer">
 		<javaCompletionProposalComputer
-			class="org.eclipse.jdt.internal.ui.text.java.TemplateCompletionProposalComputer"
-			categoryId="org.eclipse.mylyn.java.ui.templateProposalCategory">
+        activate="true"
+        categoryId="org.eclipse.mylyn.java.ui.templateProposalCategory"
+        class="org.eclipse.jdt.internal.ui.text.java.TemplateCompletionProposalComputer">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_singleline_comment"/> <!-- to get NLS templates -->
 			<partition type="__java_javadoc"/>
@@ -132,27 +135,30 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="org.eclipse.mylyn.java.editor.LegacyJavadocCompletionProposalComputer">
-		<javaCompletionProposalComputer 
-			class="org.eclipse.jdt.internal.ui.text.javadoc.LegacyJavadocCompletionProposalComputer"
-			categoryId="org.eclipse.mylyn.java.ui.javaNoTypeProposalCategory">
+		<javaCompletionProposalComputer
+        activate="true"
+        categoryId="org.eclipse.mylyn.java.ui.javaNoTypeProposalCategory"
+        class="org.eclipse.jdt.internal.ui.text.javadoc.LegacyJavadocCompletionProposalComputer">
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="org.eclipse.mylyn.java.editor.JavadocCompletionProposalComputer">
-		<javaCompletionProposalComputer 
-			class="org.eclipse.jdt.internal.ui.text.javadoc.JavadocCompletionProposalComputer"
-			categoryId="org.eclipse.mylyn.java.ui.javaNoTypeProposalCategory">
+		<javaCompletionProposalComputer
+        activate="true"
+        categoryId="org.eclipse.mylyn.java.ui.javaNoTypeProposalCategory"
+        class="org.eclipse.jdt.internal.ui.text.javadoc.JavadocCompletionProposalComputer">
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="org.eclipse.mylyn.java.editor.JavadocHTMLCompletionProposalComputer">
-		<javaCompletionProposalComputer 
-			class="org.eclipse.jdt.internal.ui.text.javadoc.HTMLTagCompletionProposalComputer"
-			categoryId="org.eclipse.mylyn.java.ui.javaNoTypeProposalCategory">
+		<javaCompletionProposalComputer
+        activate="true"
+        categoryId="org.eclipse.mylyn.java.ui.javaNoTypeProposalCategory"
+        class="org.eclipse.jdt.internal.ui.text.javadoc.HTMLTagCompletionProposalComputer">
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
