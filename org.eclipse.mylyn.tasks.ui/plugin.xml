@@ -1097,26 +1097,20 @@
           id="org.eclipse.mylyn.tasks.ui.workingSets.elementFactory">
     </factory>
 </extension>
-    <extension
+   <extension
          id="org.eclipse.mylyn.tasks.local.repository" 
          name="Local Task Repository"
          point="org.eclipse.mylyn.tasks.ui.repositories">
-
       <connectorCore
             class="org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector"
             id="org.eclipse.mylyn.tasks.connector.local"
             name="Local Repository Connector"
-            type="local"/>
-            
+            type="local"/>            
       <connectorUi
             brandingIcon="icons/etool16/person.gif"
-            class="org.eclipse.mylyn.internal.tasks.ui.LocalTaskConnectorUi"
+            class="org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryConnectorUi"
             name="Local Repository Ui"
             overlayIcon="icons/ovr16/overlay-local.gif"/>
-             
-      <taskListFactory
-            class="org.eclipse.mylyn.internal.tasks.core.LocalTaskListFactory"
-            id="org.eclipse.mylyn.tasks.ui.local.factory"/>
    </extension>
          
    <extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">

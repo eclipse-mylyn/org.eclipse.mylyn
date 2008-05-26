@@ -23,7 +23,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.LocalTaskConnectorUi;
+import org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryConnectorUi;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -52,7 +52,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 			// NOTE: this click-saving should be generalized
 			for (TaskRepository taskRepository : repositories) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
-				if (!(connectorUi instanceof LocalTaskConnectorUi)) {
+				if (!(connectorUi instanceof LocalRepositoryConnectorUi)) {
 					wizard = connectorUi.getQueryWizard(taskRepository, null);
 					if (wizard == null) {
 						continue;
@@ -65,7 +65,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 			wizard = connectorUi.getQueryWizard(taskRepository, null);
 			((Wizard) wizard).setForcePreviousAndNextButtons(true);
-			if (connectorUi instanceof LocalTaskConnectorUi) {
+			if (connectorUi instanceof LocalRepositoryConnectorUi) {
 				wizard.performFinish();
 				return;
 			}

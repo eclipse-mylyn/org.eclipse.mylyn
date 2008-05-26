@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -24,7 +23,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
+public class LocalRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public ImageDescriptor getTaskKindOverlay(ITask task) {
@@ -33,7 +32,7 @@ public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection) {
-		return new NewLocalTaskWizard((TaskSelection) selection);
+		return new NewLocalTaskWizard(selection);
 	}
 
 	@Override

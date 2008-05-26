@@ -407,6 +407,7 @@ public final class DelegatingTaskExternalizer {
 		}
 
 		AbstractTask task = null;
+		AbstractTaskListMigrator taskMigrator = null;
 		if (NODE_TASK.equals(node.getNodeName())) {
 			String connectorKind = element.getAttribute(DelegatingTaskExternalizer.KEY_CONNECTOR_KIND);
 			task = readDefaultTask(connectorKind, repositoryUrl, taskId, summary, element);
@@ -416,7 +417,7 @@ public final class DelegatingTaskExternalizer {
 			for (AbstractTaskListMigrator migrator : migrators) {
 				if (node.getNodeName().equals(migrator.getTaskElementName())) {
 					task = readDefaultTask(migrator.getConnectorKind(), repositoryUrl, taskId, summary, element);
-					migrator.migrateTask(task, element);
+					taskMigrator = migrator;
 					break;
 				}
 			}
@@ -434,6 +435,9 @@ public final class DelegatingTaskExternalizer {
 		if (task != null) {
 			readTaskInfo(task, element, parent, legacyCategory);
 			readAttributes(task, element);
+			if (taskMigrator != null) {
+				taskMigrator.migrateTask(task, element);
+			}
 		}
 		return task;
 	}
@@ -680,6 +684,7 @@ public final class DelegatingTaskExternalizer {
 			label = element.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
 		}
 
+		AbstractTaskListMigrator queryMigrator = null;
 		RepositoryQuery query = null;
 		if (NODE_QUERY.equals(node.getNodeName())) {
 			String connectorKind = element.getAttribute(DelegatingTaskExternalizer.KEY_CONNECTOR_KIND);
@@ -691,7 +696,7 @@ public final class DelegatingTaskExternalizer {
 				Set<String> queryTagNames = migrator.getQueryElementNames();
 				if (queryTagNames != null && queryTagNames.contains(node.getNodeName())) {
 					query = readDefaultQuery(migrator.getConnectorKind(), repositoryUrl, queryString, label, element);
-					migrator.migrateQuery(query, element);
+					queryMigrator = migrator;
 					break;
 				}
 			}
@@ -717,6 +722,9 @@ public final class DelegatingTaskExternalizer {
 				query.setHandleIdentifier(handle);
 			}
 			readAttributes(query, element);
+			if (queryMigrator != null) {
+				queryMigrator.migrateQuery(query, element);
+			}
 		}
 		return query;
 	}
