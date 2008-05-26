@@ -51,8 +51,15 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	@Override
 	public void run() {
 		ISelection selection = super.getStructuredSelection();
-		Object object = ((IStructuredSelection) selection).getFirstElement();
-		String text = getTextForTask(object);
+		String text = "";
+
+		Object[] seletedElements = ((IStructuredSelection) selection).toArray();
+		for (int i = 0; i < seletedElements.length; i++) {
+			if (i > 0) {
+				text += "\n\n";
+			}
+			text += getTextForTask(seletedElements[i]);
+		}
 
 		TextTransfer textTransfer = TextTransfer.getInstance();
 		if (text != null && !text.equals("")) {
