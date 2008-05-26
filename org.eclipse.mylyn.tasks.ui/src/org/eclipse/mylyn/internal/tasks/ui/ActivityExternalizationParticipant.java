@@ -61,7 +61,7 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 		}
 	}
 
-	private void setDirty(boolean dirty) {
+	public void setDirty(boolean dirty) {
 		synchronized (this) {
 			isDirty = dirty;
 		}

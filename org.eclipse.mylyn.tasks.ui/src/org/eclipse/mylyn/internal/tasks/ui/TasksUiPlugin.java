@@ -590,6 +590,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			ActivityExternalizationParticipant ACTIVITY_EXTERNALIZTAION_PARTICIPANT = new ActivityExternalizationParticipant();
 			externalizationManager.addParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 			taskActivityManager.addActivityListener(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
+			taskActivityMonitor.setExternalizationParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 			loadDataSources();
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {

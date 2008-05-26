@@ -39,6 +39,9 @@ import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
  */
 public class TaskActivityManager implements ITaskActivityManager {
 
+	// From ActivityContextManager (not visible)
+	private static final char WORKINGSET_DELIMETER = '\u200B'; // unicode zero width space
+
 	private final TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
 
 	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
@@ -100,7 +103,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 	 * @see http://en.wikipedia.org/wiki/Days_of_the_week#First_day_of_the_week
 	 * 
 	 * @param startDay
-	 * 		(Calendar.SUNDAY | Calendar.MONDAY)
+	 *            (Calendar.SUNDAY | Calendar.MONDAY)
 	 */
 	public void setWeekStartDay(int startDay) {
 		TaskActivityUtil.setStartDay(startDay);
@@ -169,7 +172,12 @@ public class TaskActivityManager implements ITaskActivityManager {
 
 	}
 
-	public void addElapsedNoTaskActive(Date startDate, Date endDate) {
+	public void addElapsedNoTaskActive(String handle, Date startDate, Date endDate) {
+
+		// 3.0 TODO: break out working set ids and store time per working set
+//		if (handle != null && !handle.equals("none")) {
+//			String[] parts = handle.split("" + WORKINGSET_DELIMETER);
+//		}
 
 		long attentionSpan = endDate.getTime() - startDate.getTime();
 

@@ -50,6 +50,8 @@ public class TaskActivityMonitor {
 		}
 	};
 
+	private ActivityExternalizationParticipant externalizationParticipant;
+
 	public TaskActivityMonitor(TaskActivityManager taskActivityManager, InteractionContextManager contextManager) {
 		this.taskActivityManager = taskActivityManager;
 		this.contextManager = contextManager;
@@ -79,8 +81,10 @@ public class TaskActivityMonitor {
 					if (activatedTask != null) {
 						taskActivityManager.addElapsedTime(activatedTask, event.getDate(), event.getEndDate());
 						changed = true;
-					} else if (event.getStructureHandle().equals("none")) {
-						taskActivityManager.addElapsedNoTaskActive(event.getDate(), event.getEndDate());
+					} else {
+						taskActivityManager.addElapsedNoTaskActive(event.getStructureHandle(), event.getDate(),
+								event.getEndDate());
+						externalizationParticipant.setDirty(true);
 						changed = true;
 					}
 				} else if (event.getDelta().equals("removed")) {
@@ -123,6 +127,10 @@ public class TaskActivityMonitor {
 		} else {
 			return null;
 		}
+	}
+
+	public void setExternalizationParticipant(ActivityExternalizationParticipant participant) {
+		this.externalizationParticipant = participant;
 	}
 
 }
