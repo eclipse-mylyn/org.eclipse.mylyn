@@ -25,20 +25,19 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 
 	public BooleanAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
-		// ignore
 	}
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		final Button button = toolkit.createButton(parent, super.getLabel(), SWT.CHECK);
 		button.setEnabled(!isReadOnly());
+		button.setSelection(getValue());
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setValue(button.getSelection());
 			}
 		});
-
 		setControl(button);
 	}
 

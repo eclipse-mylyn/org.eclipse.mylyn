@@ -12,11 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -69,7 +68,9 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			}
 
 			datePicker = new DatePicker(dateWithClearComposite, /* SWT.NONE */SWT.BORDER, value, true,
-					TasksUiPlugin.getDefault().getPreferenceStore().getInt(ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
+					TasksUiPlugin.getDefault()
+							.getPreferenceStore()
+							.getInt(ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
 			datePicker.setEnabled(!isReadOnly());
 			datePicker.setFont(TEXT_FONT);
 			datePicker.setDatePattern("yyyy-MM-dd");
@@ -113,11 +114,9 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	@Override
-	public void decorate(Color color) {
+	protected void decorateIncoming(Color color) {
 		if (datePicker != null) {
 			datePicker.setBackground(color);
-		} else {
-			super.decorate(color);
 		}
 	}
 

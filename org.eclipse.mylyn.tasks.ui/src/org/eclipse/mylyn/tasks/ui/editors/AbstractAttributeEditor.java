@@ -124,13 +124,23 @@ public abstract class AbstractAttributeEditor {
 	public void decorate(Color color) {
 		if (isDecorationEnabled()) {
 			if (manager.hasIncomingChanges(getTaskAttribute())) {
-				getControl().setBackground(color);
+				decorateIncoming(color);
 			}
 			if (manager.hasOutgoingChanges(getTaskAttribute())) {
-				if (labelControl != null) {
-					labelControl.setText("*" + labelControl.getText());
-				}
+				decorateOutgoing(color);
 			}
+		}
+	}
+
+	protected void decorateOutgoing(Color color) {
+		if (labelControl != null) {
+			labelControl.setText("*" + labelControl.getText());
+		}
+	}
+
+	protected void decorateIncoming(Color color) {
+		if (getControl() != null) {
+			getControl().setBackground(color);
 		}
 	}
 

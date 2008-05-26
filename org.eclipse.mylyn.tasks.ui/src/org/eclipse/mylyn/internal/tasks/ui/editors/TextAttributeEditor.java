@@ -49,7 +49,6 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 				}
 			});
 		}
-
 		setControl(text);
 	}
 
