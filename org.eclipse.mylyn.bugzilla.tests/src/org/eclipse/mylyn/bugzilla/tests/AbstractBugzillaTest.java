@@ -33,6 +33,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -118,9 +119,13 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	}
 
 	protected ITask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
-		ITask task = TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
+		ITask task = TasksUi.getTasksModel().createTask(repository, taskNumber);
+		task.setStale(true);
+		TasksUiPlugin.getTaskList().addTask(task);
+		TasksUiInternal.synchronizeTask(connector, task, true, null);
+//		ITask task = TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
 		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-		assertNotNull(task);
+//		assertNotNull(task);
 		//TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
 
 		return task;

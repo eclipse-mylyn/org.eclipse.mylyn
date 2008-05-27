@@ -106,15 +106,15 @@ public class AttachmentUtil {
 	}
 
 	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
-			String comment, IProgressMonitor monitor) throws CoreException {
+			String comment, TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		ContextCorePlugin.getContextStore().saveContext(task.getHandleIdentifier());
 		File file = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
-		if (file != null && file.exists()) {
+		if (attachmentHandler != null && file != null && file.exists()) {
 			FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(file);
 			attachment.setDescription(CONTEXT_DESCRIPTION);
 			attachment.setName(CONTEXT_FILENAME);
-			attachmentHandler.postContent(repository, task, attachment, comment, null, monitor);
+			attachmentHandler.postContent(repository, task, attachment, comment, attribute, monitor);
 			return true;
 		}
 		return false;

@@ -8,15 +8,28 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -57,4 +70,108 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		assertEquals("Tests", commentMap.getAuthor().getName());
 		assertEquals("test", commentMap.getText());
 	}
+
+	public void testMidAirCollision() throws Exception {
+		init30();
+		String taskNumber = "5";
+
+		TasksUiPlugin.getTaskDataStorageManager().clear();
+
+		// Get the task
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+
+		ITaskDataWorkingCopy workingCopy = TasksUiPlugin.getTaskDataManager().getWorkingCopy(task);
+		TaskData taskData = workingCopy.getLocalData();
+		assertNotNull(taskData);
+
+//		TasksUiPlugin.getTaskList().addTask(task);
+
+		String newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test " + (new Date()).toString();
+		TaskAttribute attrNewComment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		attrNewComment.setValue(newCommentText);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		changed.add(attrNewComment);
+		TaskAttribute attrDeltaTs = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		attrDeltaTs.setValue("2007-01-01 00:00:00");
+		changed.add(attrDeltaTs);
+
+		workingCopy.save(changed, new NullProgressMonitor());
+
+		try {
+			// Submit changes
+			submit(task, taskData, changed);
+			fail("Mid-air collision expected");
+		} catch (CoreException e) {
+			assertTrue(e.getStatus().getMessage().indexOf("Mid-air collision occurred while submitting") != -1);
+			return;
+		}
+		fail("Mid-air collision expected");
+	}
+
+	public void testAuthenticationCredentials() throws Exception {
+		init218();
+		ITask task = generateLocalTaskAndDownload("3");
+		assertNotNull(task);
+		TasksUiPlugin.getTaskActivityManager().activateTask(task);
+		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+		sourceContextFile.createNewFile();
+		sourceContextFile.deleteOnExit();
+		AuthenticationCredentials oldCreds = repository.getCredentials(AuthenticationType.REPOSITORY);
+		AuthenticationCredentials wrongCreds = new AuthenticationCredentials("wrong", "wrong");
+		repository.setCredentials(AuthenticationType.REPOSITORY, wrongCreds, false);
+		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
+		TaskData taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		TaskAttributeMapper mapper = taskData.getAttributeMapper();
+		TaskAttribute attribute = mapper.createTaskAttachment(taskData);
+		try {
+			AttachmentUtil.postContext(connector, repository, task, "test", attribute, new NullProgressMonitor());
+		} catch (CoreException e) {
+			assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+			assertTrue(e.getStatus().getMessage().indexOf("Invalid repository credentials.") != -1);
+			return;
+		} finally {
+			repository.setCredentials(AuthenticationType.REPOSITORY, oldCreds, false);
+			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
+		}
+		fail("Should have failed due to invalid userid and password.");
+	}
+//	public void testMissingHits() throws Exception {
+//	// query for all mylyn bugzilla tasks.
+//	// reset sync date
+//	// mark stale tasks should equal number of tasks
+//	TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+//	init(IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+//	repository.setAuthenticationCredentials("username", "password");
+//	String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=NEW&priority=P1&priority=P2&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+//	//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&priority=P1&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+//	//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&component=Tasks&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+//	BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, queryString, "test" );
+//	//TasksUiPlugin.getTaskList().addQuery(query);
+//	AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+////	QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository, false, false));
+////	connector.performQuery(query, repository, new NullProgressMonitor(), collector);
+////	for (AbstractTask task : collector.getTasks()) {
+////		TasksUiPlugin.getTaskList().addTask(task);
+////	}
+//
+//	TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
+//	for (AbstractTask task : query.getChildren()) {
+//		assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
+//		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
+//		task.setLastReadTimeStamp("1970-01-01");
+//		assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
+//	}
+//
+//	for (AbstractTask task : query.getChildren()) {
+//		assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
+//	}
+//
+//	repository.setSynchronizationTimeStamp("1970-01-01");//getSynchronizationTimeStamp();
+//	//connector.markStaleTasks(repository, query.getChildren(), new NullProgressMonitor());
+//	TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
+//	for (AbstractTask task : query.getChildren()) {
+//		assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
+//	}
+//}
 }

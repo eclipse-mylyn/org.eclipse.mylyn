@@ -69,6 +69,8 @@ import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
@@ -178,7 +180,10 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
 			// attach context if required
 			if (attachContext) {
-				AttachmentUtil.postContext(connector, getModel().getTaskRepository(), task, "", monitor);
+				// TODO: review
+				TaskAttributeMapper mapper = getModel().getTaskData().getAttributeMapper();
+				TaskAttribute attribute = mapper.createTaskAttachment(getModel().getTaskData());
+				AttachmentUtil.postContext(connector, getModel().getTaskRepository(), task, "", attribute, monitor);
 			}
 		}
 
