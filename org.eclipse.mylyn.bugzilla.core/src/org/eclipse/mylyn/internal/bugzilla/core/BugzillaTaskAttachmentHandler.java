@@ -97,7 +97,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 		}
 	}
 
-	static class AttachmentPartSource implements PartSource {
+	public static class AttachmentPartSource implements PartSource {
 
 		private final AbstractTaskAttachmentSource attachment;
 

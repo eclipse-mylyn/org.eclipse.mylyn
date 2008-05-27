@@ -107,7 +107,7 @@ public enum BugzillaReportElement {
 
 	REPORTER_ACCESSIBLE("Reporter", "reporter_accessible", TaskAttribute.TYPE_BOOLEAN, true, false),
 
-	RESOLUTION("Resolution:", "resolution", TaskAttribute.TYPE_SINGLE_SELECT, false, true), // Exiting bug field, new cc
+	RESOLUTION("Resolution:", "resolution", TaskAttribute.TYPE_SHORT_TEXT, false, true), 
 
 	REMAINING_TIME("Hours Left:", "remaining_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
@@ -175,9 +175,9 @@ public enum BugzillaReportElement {
 
 	private final String type;
 
-	BugzillaReportElement(String prettyName, String fieldName, String type, boolean hidden, boolean readonly) {
+	BugzillaReportElement(String prettyName, String idKey, String type, boolean hidden, boolean readonly) {
 		this.prettyName = prettyName;
-		this.keyString = fieldName;
+		this.keyString = idKey;
 		this.type = type;
 		this.isHidden = hidden;
 		this.isReadOnly = readonly;

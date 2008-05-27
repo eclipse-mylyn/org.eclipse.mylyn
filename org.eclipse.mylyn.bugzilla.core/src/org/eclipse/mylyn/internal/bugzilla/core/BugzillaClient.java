@@ -634,7 +634,6 @@ public class BugzillaClient {
 				parseHtmlError(method.getResponseBodyAsStream());
 			}
 		} catch (IOException e) {
-			method.releaseConnection();
 			throw e;
 		} finally {
 			method.releaseConnection();
@@ -1002,13 +1001,16 @@ public class BugzillaClient {
 				if (inputAttribute != null) {
 					if (inputAttribute.getOptions().size() > 0) {
 						String sel = inputAttribute.getValue();
-						fields.put(inputAttribute.getId(), new NameValuePair(inputAttribute.getId(),
-								inputAttribute.getOption(sel)));
+						String knob = inputAttribute.getId();
+						if (knob.equals(BUGZILLA_OPERATION.resolve.getInputId())) {
+							knob = BugzillaReportElement.RESOLUTION.getKey();
+						}
+						fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
 					} else {
 						String sel = inputAttribute.getValue();
 						String knob = attributeOperation.getValue();
 						if (knob.equals(BUGZILLA_OPERATION.reassign.toString())) {
-							knob = "assigned_to";
+							knob = BugzillaReportElement.ASSIGNED_TO.getKey();
 						}
 						fields.put(knob, new NameValuePair(knob, sel));
 					}

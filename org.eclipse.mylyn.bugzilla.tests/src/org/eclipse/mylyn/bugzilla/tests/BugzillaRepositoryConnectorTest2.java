@@ -19,9 +19,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskAttachmentHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -30,6 +33,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
@@ -40,6 +44,95 @@ import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
+
+	public void testAttachToExistingReport() throws Exception {
+		init222();
+		String taskNumber = "33";
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+		assertEquals(taskNumber, taskData.getTaskId());
+		int numAttached = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).length;
+		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
+
+		assertNotNull(repository.getUserName());
+		assertNotNull(repository.getPassword());
+
+		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
+		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
+
+		/* Initialize a local attachment */
+		attachmentMapper.setDescription("Test attachment " + new Date());
+		attachmentMapper.setContentType("text/plain");
+		attachmentMapper.setPatch(false);
+		attachmentMapper.setComment("Automated JUnit attachment test");
+
+		/* Test attempt to upload a non-existent file */
+		String filePath = "/this/is/not/a/real-file";
+		BugzillaTaskAttachmentHandler.AttachmentPartSource source = new BugzillaTaskAttachmentHandler.AttachmentPartSource(
+				new FileTaskAttachmentSource(new File(filePath)));
+		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
+		try {
+			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachmentMapper, source,
+					new NullProgressMonitor());
+			fail();
+		} catch (Exception e) {
+		}
+//		// attachmentHandler.uploadAttachment(repository, task, comment,
+//		// summary, file, contentType, isPatch, proxySettings)
+//		// assertFalse(attachmentHandler.uploadAttachment(attachment,
+//		// repository.getUserName(), repository.getPassword(),
+//		// Proxy.NO_PROXY));
+//		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+//		task = TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
+//		TasksUiInternal.synchronizeTask(connector, task, true, null);
+//
+//		assertEquals(numAttached, taskData.getAttachments().size());
+//
+//		/* Test attempt to upload an empty file */
+//		File attachFile = new File(fileName);
+//		attachment.setFilePath(attachFile.getAbsolutePath());
+//		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+//		attachFile = new File(attachment.getFilePath());
+//		attachment.setFile(attachFile);
+//		attachment.setFilename(attachFile.getName());
+//		// assertFalse(attachmentHandler.uploadAttachment(attachment,
+//		// repository.getUserName(), repository.getPassword(),
+//		// Proxy.NO_PROXY));
+//		try {
+//			client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment, null);
+//			fail();
+//		} catch (Exception e) {
+//		}
+//		task = TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
+//		TasksUiInternal.synchronizeTask(connector, task, true, null);
+//		taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+//		assertEquals(numAttached, taskData.getAttachments().size());
+//
+//		/* Test uploading a proper file */
+//		write.write("test file");
+//		write.close();
+//		attachment.setFilePath(attachFile.getAbsolutePath());
+//		// assertTrue(attachmentHandler.uploadAttachment(attachment,
+//		// repository.getUserName(), repository.getPassword(),
+//		// Proxy.NO_PROXY));
+//		File fileToAttach = new File(attachment.getFilePath());
+//		assertTrue(fileToAttach.exists());
+//		attachment.setFile(fileToAttach);
+//		attachment.setFilename(fileToAttach.getName());
+//		client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment, null);
+//
+//		task = TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
+//		TasksUiInternal.synchronizeTask(connector, task, true, null);
+//		taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+//		assertEquals(numAttached + 1, taskData.getAttachments().size());
+//
+//		// use assertion to track clean-up
+//		assertTrue(attachFile.delete());
+	}
 
 	public void testDataRetrieval() throws CoreException, ParseException {
 		init(IBugzillaConstants.TEST_BUGZILLA_30_URL);
@@ -161,17 +254,9 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		model.attributeChanged(attrNewComment);
 		model.save(new NullProgressMonitor());
 		assertEquals(SynchronizationState.OUTGOING, task.getSynchronizationState());
-		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
-				task, model.getTaskData(), model.getChangedOldAttributes());
-		submitJob.schedule();
-		submitJob.join();
-
-		// Submit changes
-		//submit(task, taskData, changed);
+		submit(model);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-//		TasksUiInternal.synchronizeTask(connector, task, true, null);
-//		// After submit task should be in SYNCHRONIZED state
-//		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+
 //		TaskData taskData2 = workingCopy.getRepositoryData();
 //		TaskMapper taskData2Mapper = new TaskMapper(taskData2);
 //		TaskMapper taskData1Mapper = new TaskMapper(taskData);
@@ -203,6 +288,17 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 //		// Comment lastComment = comments.get(comments.size() - 1);
 //		// assertEquals(newCommentText, lastComment.getText());
 
+	}
+
+	private void submit(TaskDataModel model) {
+		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
+				model.getTask(), model.getTaskData(), model.getChangedOldAttributes());
+		submitJob.schedule();
+		try {
+			submitJob.join();
+		} catch (InterruptedException e) {
+			fail(e.getMessage());
+		}
 	}
 
 	protected TaskDataModel createModel(ITask task) throws CoreException {

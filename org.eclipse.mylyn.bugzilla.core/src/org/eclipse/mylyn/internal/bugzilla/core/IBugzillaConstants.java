@@ -225,7 +225,7 @@ public interface IBugzillaConstants {
 
 		accept("Accept (change status to ASSIGNED)"),
 
-		resolve("Resolve as", "resolution"),
+		resolve("Resolve as", "resolutionInput"),
 
 		duplicate("Mark as duplicate of #", "dup_id"),
 
