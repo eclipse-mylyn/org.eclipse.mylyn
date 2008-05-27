@@ -60,13 +60,11 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private final TaskDataCollector collector;
 
-//	private TaskAttribute commentContainer;
-//
-//	private TaskAttribute attachmentContainer;
-
 	private boolean isDeprecated = false;
 
 	private boolean isPatch = false;
+
+	private TaskAttribute attachmentAttribute;
 
 	//private int retrieved = 1;
 
@@ -257,9 +255,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 		// Attachment attributes
 		case ATTACHID:
-			TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(
+			attachmentAttribute = repositoryTaskData.getRoot().createAttribute(
 					TaskAttribute.PREFIX_ATTACHMENT + parsedText);
-			attachment = TaskAttachmentMapper.createFrom(attribute);
+			attachment = TaskAttachmentMapper.createFrom(attachmentAttribute);
 			attachment.setPatch(isPatch);
 			attachment.setDeprecated(isDeprecated);
 			break;
@@ -292,9 +290,13 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		case DATA:
 			break;
 		case ATTACHMENT:
+			if (attachment != null) {
+				attachment.applyTo(attachmentAttribute);
+			}
 			isPatch = false;
 			isDeprecated = false;
 			attachment = null;
+			attachmentAttribute = null;
 			break;
 
 		// IGNORED ELEMENTS
@@ -319,24 +321,22 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			// comments
 
 			int longDescsSize = longDescs.size() - 1;
+			commentNum = 1;
 			if (longDescsSize == 0) {
 				addDescription(longDescs.get(0).commentText);
 			} else if (longDescsSize == 1) {
 				if (longDescs.get(0).createdTimeStamp.compareTo(longDescs.get(1).createdTimeStamp) <= 0) {
 					// if created_0 is equal to created_1 we assume that longDescs at index 0 is the description.
 					addDescription(longDescs.get(0).commentText);
-					addComment(longDescs.get(1), 0);
+					addComment(longDescs.get(1));
 				} else {
 					addDescription(longDescs.get(1).commentText);
-					commentNum = 1;
-					longDescs.get(0).number = commentNum;
-					addComment(longDescs.get(0), commentNum);
+					addComment(longDescs.get(0));
 				}
 			} else if (longDescsSize > 1) {
 				String created_0 = longDescs.get(0).createdTimeStamp;
 				String created_1 = longDescs.get(1).createdTimeStamp;
 				String created_n = longDescs.get(longDescsSize).createdTimeStamp;
-				commentNum = 1;
 				if (created_0.compareTo(created_1) <= 0 && created_0.compareTo(created_n) < 0) {
 					// if created_0 is equal to created_1 we assume that longDescs at index 0 is the description.
 //					BugzillaTaskDataHandler.createAttribute(repositoryTaskData.getRoot(),
@@ -345,26 +345,22 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 					if (created_1.compareTo(created_n) < 0) {
 						for (int i = 1; i <= longDescsSize; i++) {
-							longDescs.get(i).number = commentNum++;
-							addComment(longDescs.get(i), commentNum);
+							addComment(longDescs.get(i));
 						}
 					} else {
 						for (int i = longDescsSize; i > 0; i--) {
-							longDescs.get(i).number = commentNum++;
-							addComment(longDescs.get(i), commentNum);
+							addComment(longDescs.get(i));
 						}
 					}
 				} else {
 					addDescription(longDescs.get(longDescsSize).commentText);
 					if (created_0.compareTo(created_1) < 0) {
 						for (int i = 0; i < longDescsSize; i++) {
-							longDescs.get(i).number = commentNum++;
-							addComment(longDescs.get(i), commentNum);
+							addComment(longDescs.get(i));
 						}
 					} else {
 						for (int i = longDescsSize - 1; i >= 0; i--) {
-							longDescs.get(i).number = commentNum++;
-							addComment(longDescs.get(i), commentNum);
+							addComment(longDescs.get(i));
 						}
 					}
 				}
@@ -449,10 +445,12 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		attrDescription.getMetaData().defaults().setReadOnly(true);
 	}
 
-	private void addComment(TaskComment comment, int i) {
-		TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(TaskAttribute.PREFIX_COMMENT + i);
+	private void addComment(TaskComment comment) {
+		TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(
+				TaskAttribute.PREFIX_COMMENT + commentNum);
 		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
 		taskComment.setCommentId(attribute.getId());
+		taskComment.setNumber(commentNum);
 		IRepositoryPerson author = repositoryTaskData.getAttributeMapper().getTaskRepository().createPerson(
 				comment.author);
 		author.setName(comment.authorName);
@@ -462,6 +460,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		taskComment.setCreationDate(repositoryTaskData.getAttributeMapper().getDateValue(attrTimestamp));
 		taskComment.setText(comment.commentText);
 		taskComment.applyTo(attribute);
+		commentNum++;
 	}
 
 	/** determines attachment id from comment */

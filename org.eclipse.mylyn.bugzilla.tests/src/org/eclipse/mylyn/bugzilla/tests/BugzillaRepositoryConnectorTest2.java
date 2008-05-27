@@ -24,7 +24,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -32,7 +34,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 
@@ -136,6 +141,77 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		}
 		fail("Should have failed due to invalid userid and password.");
 	}
+
+	public void testSynchronize() throws CoreException, Exception {
+		init222();
+
+		// Get the task
+		ITask task = generateLocalTaskAndDownload("3");
+		TasksUi.getTaskDataManager().discardEdits(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+
+		int numComments = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).length;
+
+		// Modify it
+		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
+		TaskAttribute attrNewComment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		attrNewComment.setValue(newCommentText);
+		model.attributeChanged(attrNewComment);
+		model.save(new NullProgressMonitor());
+		assertEquals(SynchronizationState.OUTGOING, task.getSynchronizationState());
+		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
+				task, model.getTaskData(), model.getChangedOldAttributes());
+		submitJob.schedule();
+		submitJob.join();
+
+		// Submit changes
+		//submit(task, taskData, changed);
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+//		TasksUiInternal.synchronizeTask(connector, task, true, null);
+//		// After submit task should be in SYNCHRONIZED state
+//		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+//		TaskData taskData2 = workingCopy.getRepositoryData();
+//		TaskMapper taskData2Mapper = new TaskMapper(taskData2);
+//		TaskMapper taskData1Mapper = new TaskMapper(taskData);
+//		assertFalse(taskData2Mapper.getModificationDate().equals(taskData1Mapper.getModificationDate()));
+//		// Still not read
+//		assertFalse(taskData2.getLastModified().equals(task.getLastReadTimeStamp()));
+//		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+//		assertEquals(taskData2.getLastModified(), task.getLastReadTimeStamp());
+//		assertTrue(taskData2.getComments().size() > numComments);
+//
+//		// Has no outgoing changes or conflicts yet needs synch
+//		// because task doesn't have bug report (new query hit)
+//		// Result: retrieved with no incoming status
+//		// task.setSyncState(SynchronizationState.SYNCHRONIZED);
+//		TasksUiPlugin.getTaskDataStorageManager().remove(task.getRepositoryUrl(), task.getTaskId());
+//		TasksUiInternal.synchronizeTask(connector, task, false, null);
+//		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+//		RepositoryTaskData bugReport2 = null;
+//		bugReport2 = TasksUiPlugin.getTaskDataStorageManager()
+//				.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+//		assertNotNull(bugReport2);
+//		assertEquals(task.getTaskId(), bugReport2.getTaskId());
+//
+//		assertEquals(newCommentText, bugReport2.getComments().get(numComments).getText());
+//		// TODO: Test that comment was appended
+//		// ArrayList<Comment> comments = task.getTaskData().getComments();
+//		// assertNotNull(comments);
+//		// assertTrue(comments.size() > 0);
+//		// Comment lastComment = comments.get(comments.size() - 1);
+//		// assertEquals(newCommentText, lastComment.getText());
+
+	}
+
+	protected TaskDataModel createModel(ITask task) throws CoreException {
+		ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);
+		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				taskDataState.getRepositoryUrl());
+		return new TaskDataModel(taskRepository, task, taskDataState);
+	}
+
 //	public void testMissingHits() throws Exception {
 //	// query for all mylyn bugzilla tasks.
 //	// reset sync date

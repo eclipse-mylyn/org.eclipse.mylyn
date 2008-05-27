@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -39,11 +40,13 @@ import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartBase;
+import org.apache.commons.httpclient.methods.multipart.PartSource;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.net.proxy.IProxyData;
@@ -63,11 +66,11 @@ import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -619,21 +622,27 @@ public class BugzillaClient {
 		}
 	}
 
-	public InputStream getAttachmentData(String attachmentId, IProgressMonitor monitor) throws IOException,
+	public void getAttachmentData(String attachmentId, OutputStream out, IProgressMonitor monitor) throws IOException,
 			CoreException {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
-		GzipGetMethod method = getConnectGzip(url, monitor);
+		GetMethod method = connectInternal(url, false, monitor);//getConnectGzip(url, monitor);
 		try {
-			InputStream input = getResponseStream(method, monitor);
-			return input;
+			int status = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+			if (status == HttpStatus.SC_OK) {
+				out.write(method.getResponseBody());
+			} else {
+				parseHtmlError(method.getResponseBodyAsStream());
+			}
 		} catch (IOException e) {
 			method.releaseConnection();
 			throw e;
+		} finally {
+			method.releaseConnection();
 		}
 	}
 
-	public void postAttachment(String bugReportID, String comment, ITaskAttachment attachment, IProgressMonitor monitor)
-			throws HttpException, IOException, CoreException {
+	public void postAttachment(String bugReportID, String comment, TaskAttachmentMapper attachment, PartSource source,
+			IProgressMonitor monitor) throws HttpException, IOException, CoreException {
 		monitor = Policy.monitorFor(monitor);
 		if (bugReportID == null || comment == null || attachment == null) {
 			throw new IllegalArgumentException("Must not pass in a null parameter");
@@ -667,7 +676,7 @@ public class BugzillaClient {
 			if (comment != null) {
 				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, characterEncoding));
 			}
-			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, new AttachmentPartSource(attachment)));
+			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, source));
 
 			if (attachment.isPatch()) {
 				parts.add(new StringPart(ATTRIBUTE_ISPATCH, VALUE_ISPATCH));

@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -58,7 +59,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String DEADLINE_FORMAT = "yyyy-MM-dd";
 
-//	private BugzillaAttachmentHandler attachmentHandler;
+	private final BugzillaTaskAttachmentHandler attachmentHandler = new BugzillaTaskAttachmentHandler(this);
 
 	private final BugzillaTaskDataHandler taskDataHandler = new BugzillaTaskDataHandler(this);
 
@@ -66,33 +67,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private final Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
 
-//	@Override
-//	public void init(ITaskList taskList) {
-//		super.init(taskList);
-//		this.taskDataHandler = new BugzillaTaskDataHandler(this);
-//		this.attachmentHandler = new BugzillaAttachmentHandler(this);
-//		BugzillaCorePlugin.setConnector(this);
-//		BugzillaLanguageSettings enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
-//		enSetting.addLanguageAttribute("error_login", "Login");
-//		enSetting.addLanguageAttribute("error_login", "log in");
-//		enSetting.addLanguageAttribute("error_login", "check e-mail");
-//		enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password");
-//		enSetting.addLanguageAttribute("error_collision", "Mid-air collision!");
-//		enSetting.addLanguageAttribute("error_comment_required", "Comment Required");
-//		enSetting.addLanguageAttribute("error_logged_out", "logged out");
-//		enSetting.addLanguageAttribute("bad_login", "Login");
-//		enSetting.addLanguageAttribute("bad_login", "log in");
-//		enSetting.addLanguageAttribute("bad_login", "check e-mail");
-//		enSetting.addLanguageAttribute("bad_login", "Invalid Username Or Password");
-//		enSetting.addLanguageAttribute("bad_login", "error");
-//		enSetting.addLanguageAttribute("processed", "processed");
-//		enSetting.addLanguageAttribute("changes_submitted", "Changes submitted");
-//		languages.add(enSetting);
-//	}
-
 	@Override
 	public String getLabel() {
 		return CLIENT_LABEL;
+	}
+
+	@Override
+	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
+		return attachmentHandler;
 	}
 
 	@Override
@@ -475,7 +457,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public BugzillaClientManager getClientManager() {
 		if (clientManager == null) {
 			clientManager = new BugzillaClientManager();
-
 			// TODO: Move this initialization elsewhere
 			BugzillaCorePlugin.setConnector(this);
 			BugzillaLanguageSettings enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
