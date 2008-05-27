@@ -41,10 +41,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 	private static final String ERROR_INCOMPATIBLE_CONFIGURATION = "Incomaptible repository configuration file.";
 
-	/**
-	 * API 3.0: Rename to CONNECTOR_KIND
-	 */
-	public static final String REPOSITORY_KIND = "bugzilla";
+	public static final String CONNECTOR_KIND = "bugzilla";
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.bugzilla";
 
@@ -278,8 +275,8 @@ public class BugzillaCorePlugin extends Plugin {
 
 		// set both or none
 		if (null != os && null != platform) {
-			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS.getKeyString());
-			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString());
+			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS.getKey());
+			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM.getKey());
 
 			// TODO something can still go wrong when the allowed values on the repository change...
 			opSysAttribute.setValue(os);
@@ -296,8 +293,8 @@ public class BugzillaCorePlugin extends Plugin {
 			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
 			// Defaults to the first of each (sorted) list All, All
-			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS.getKeyString());
-			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString());
+			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS.getKey());
+			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM.getKey());
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();

@@ -48,10 +48,10 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 		layout.marginWidth = 5;
 		peopleComposite.setLayout(layout);
 
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getAttribute(TaskAttribute.USER_ASSIGNED));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getAttribute(TaskAttribute.USER_REPORTER));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getAttribute(TaskAttribute.ADD_SELF_CC));
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getAttribute(TaskAttribute.USER_CC));
+		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
+		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
+		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC));
+		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_CC));
 
 		toolkit.paintBordersFor(peopleComposite);
 		section.setClient(peopleComposite);

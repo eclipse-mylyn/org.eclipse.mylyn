@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 
-import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * @author Rob Elves
@@ -28,8 +29,10 @@ public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 	 * 
 	 * @throws GeneralSecurityException
 	 */
-	public int performQuery(String repositoryUrl, LegacyTaskDataCollector collector, int maxHits) throws IOException {
-		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(repositoryUrl, collector);
+	public int performQuery(String repositoryUrl, TaskDataCollector collector, TaskAttributeMapper mapper, int maxHits)
+			throws IOException {
+		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(repositoryUrl, collector,
+				mapper);
 		collectResults(contentHandler, false);
 		return contentHandler.getResultCount();
 	}

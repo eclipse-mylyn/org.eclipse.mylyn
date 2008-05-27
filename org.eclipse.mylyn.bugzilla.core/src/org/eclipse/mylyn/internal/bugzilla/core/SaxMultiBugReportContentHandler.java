@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -43,27 +43,36 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private int commentNum = 0;
 
-	private RepositoryAttachment attachment;
+	private TaskAttachmentMapper attachment;
 
-	private final Map<String, RepositoryTaskData> taskDataMap;
+	private final Map<String, TaskData> taskDataMap;
 
-	private RepositoryTaskData repositoryTaskData;
+	private TaskData repositoryTaskData;
 
 	private List<TaskComment> longDescs;
 
 	private String errorMessage = null;
 
-	private final AbstractAttributeFactory attributeFactory;
+	private final TaskAttributeMapper attributeMapper;
 
 	private final List<BugzillaCustomField> customFields;
 
-	private final LegacyTaskDataCollector collector;
+	private final TaskDataCollector collector;
+
+//	private TaskAttribute commentContainer;
+//
+//	private TaskAttribute attachmentContainer;
+
+	private boolean isDeprecated = false;
+
+	private boolean isPatch = false;
 
 	//private int retrieved = 1;
 
-	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, LegacyTaskDataCollector collector,
-			Map<String, RepositoryTaskData> taskDataMap, List<BugzillaCustomField> customFields) {
-		this.attributeFactory = factory;
+	public SaxMultiBugReportContentHandler(TaskAttributeMapper mapper, TaskDataCollector collector,
+			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields) {
+
+		this.attributeMapper = mapper;
 		this.taskDataMap = taskDataMap;
 		this.customFields = customFields;
 		this.collector = collector;
@@ -120,15 +129,23 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			longDescs = new ArrayList<TaskComment>();
 			break;
 		case LONG_DESC:
-			taskComment = new TaskComment(attributeFactory, commentNum++);
+			taskComment = new TaskComment(commentNum++);
+//			TaskAttributeProperties.defaults()
+//					.setReadOnly(true)
+//					.setKind(TaskAttribute.KIND_DEFAULT)
+//					.setLabel("comment")
+//					.setType(TaskAttribute.TYPE_LONG_TEXT)
+//					.applyTo(taskComment);
 			break;
 		case WHO:
 			if (taskComment != null) {
 				if (attributes != null && attributes.getLength() > 0) {
 					String name = attributes.getValue(ATTRIBUTE_NAME);
 					if (name != null) {
-						taskComment.setAttributeValue(BugzillaReportElement.WHO_NAME.getKeyString(), name);
+						taskComment.authorName = name;
 					}
+//						BugzillaTaskDataHandler.createAttribute(taskComment, BugzillaReportElement.WHO_NAME).setValue(
+//								name);
 				}
 			}
 			break;
@@ -136,9 +153,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (attributes != null && attributes.getLength() > 0) {
 				String name = attributes.getValue(ATTRIBUTE_NAME);
 				if (name != null) {
-					RepositoryTaskAttribute attr = attributeFactory.createAttribute(BugzillaReportElement.REPORTER_NAME.getKeyString());
-					attr.setValue(name);
-					repositoryTaskData.addAttribute(BugzillaReportElement.REPORTER_NAME.getKeyString(), attr);
+					BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaReportElement.REPORTER_NAME)
+							.setValue(name);
 				}
 			}
 			break;
@@ -146,23 +162,15 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (attributes != null && attributes.getLength() > 0) {
 				String name = attributes.getValue(ATTRIBUTE_NAME);
 				if (name != null) {
-					RepositoryTaskAttribute attr = attributeFactory.createAttribute(BugzillaReportElement.ASSIGNED_TO_NAME.getKeyString());
-					attr.setValue(name);
-					repositoryTaskData.addAttribute(BugzillaReportElement.ASSIGNED_TO_NAME.getKeyString(), attr);
+					BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaReportElement.ASSIGNED_TO_NAME)
+							.setValue(name);
 				}
 			}
 			break;
 		case ATTACHMENT:
-			attachment = new RepositoryAttachment(attributeFactory);
 			if (attributes != null) {
-				if ("1".equals(attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()))) {
-					attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString(),
-							attributeFactory.createAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString()));
-					attachment.setObsolete(true);
-				}
-				if ("1".equals(attributes.getValue(BugzillaReportElement.IS_PATCH.getKeyString()))) {
-					attachment.setPatch(true);
-				}
+				isDeprecated = "1".equals(attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKey()));
+				isPatch = "1".equals(attributes.getValue(BugzillaReportElement.IS_PATCH.getKey()));
 			}
 			break;
 		}
@@ -175,20 +183,19 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		String parsedText = characters.toString();
 
 		if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
-			RepositoryTaskAttribute attribute = repositoryTaskData.getAttribute(localName);
-			if (attribute == null) {
+			TaskAttribute endAttribute = repositoryTaskData.getRoot().getAttribute(localName);
+			if (endAttribute == null) {
 				String desc = "???";
 				for (BugzillaCustomField bugzillaCustomField : customFields) {
 					if (localName.equals(bugzillaCustomField.getName())) {
 						desc = bugzillaCustomField.getDescription();
 					}
 				}
-				RepositoryTaskAttribute newattribute = new RepositoryTaskAttribute(localName, desc, true);
-				newattribute.setReadOnly(false);
-				newattribute.setValue(parsedText);
-				repositoryTaskData.addAttribute(localName, newattribute);
+				TaskAttribute atr = repositoryTaskData.getRoot().createAttribute(localName);
+				atr.getMetaData().defaults().setLabel(desc).setReadOnly(true);
+				atr.setValue(parsedText);
 			} else {
-				attribute.addValue(parsedText);
+				endAttribute.addValue(parsedText);
 			}
 		}
 
@@ -213,35 +220,29 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				errorMessage = "Bug id from server did not match requested id.";
 			}
 
-			RepositoryTaskAttribute attr = repositoryTaskData.getAttribute(tag.getKeyString());
+			TaskAttribute attr = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
 			if (attr == null) {
-				attr = attributeFactory.createAttribute(tag.getKeyString());
-				repositoryTaskData.addAttribute(tag.getKeyString(), attr);
+				attr = BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaReportElement.BUG_ID);
 			}
 			attr.setValue(parsedText);
+
 			break;
 		}
 
 			// Comment attributes
 		case WHO:
 			if (taskComment != null) {
-				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
-				attr.setValue(parsedText);
-				taskComment.addAttribute(tag.getKeyString(), attr);
+				taskComment.author = parsedText;
 			}
 			break;
 		case BUG_WHEN:
 			if (taskComment != null) {
-				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
-				attr.setValue(parsedText);
-				taskComment.addAttribute(tag.getKeyString(), attr);
+				taskComment.createdTimeStamp = parsedText;
 			}
 			break;
 		case THETEXT:
 			if (taskComment != null) {
-				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
-				attr.setValue(parsedText);
-				taskComment.addAttribute(tag.getKeyString(), attr);
+				taskComment.commentText = parsedText;
 
 				// Check for attachment
 				parseAttachment(taskComment, parsedText);
@@ -255,24 +256,44 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 		// Attachment attributes
 		case ATTACHID:
+			TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(
+					TaskAttribute.PREFIX_ATTACHMENT + parsedText);
+			attachment = TaskAttachmentMapper.createFrom(attribute);
+			attachment.setPatch(isPatch);
+			attachment.setDeprecated(isDeprecated);
+			break;
+
 		case DATE:
 		case DESC:
+			if (attachment != null) {
+				attachment.setDescription(parsedText);
+			}
 		case FILENAME:
+			if (attachment != null) {
+				attachment.setFileName(parsedText);
+			}
 		case CTYPE:
 		case TYPE:
+			if (attachment != null) {
+				attachment.setContentType(parsedText);
+			}
 		case SIZE:
 			if (attachment != null) {
-				RepositoryTaskAttribute attr = attributeFactory.createAttribute(tag.getKeyString());
-				attr.setValue(parsedText);
-				attachment.addAttribute(tag.getKeyString(), attr);
+				try {
+					if (parsedText != null) {
+						attachment.setLength(Long.parseLong(parsedText));
+					}
+				} catch (NumberFormatException e) {
+					// ignore
+				}
 			}
 			break;
 		case DATA:
 			break;
 		case ATTACHMENT:
-			if (attachment != null) {
-				repositoryTaskData.addAttachment(attachment);
-			}
+			isPatch = false;
+			isDeprecated = false;
+			attachment = null;
 			break;
 
 		// IGNORED ELEMENTS
@@ -295,92 +316,100 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		case BUG:
 			// Reached end of bug. Need to set LONGDESCLENGTH to number of
 			// comments
+
 			int longDescsSize = longDescs.size() - 1;
 			if (longDescsSize == 0) {
-				repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(0).getText());
+				addDescription(longDescs.get(0).commentText);
 			} else if (longDescsSize == 1) {
-				if (longDescs.get(0).getCreated().compareTo(longDescs.get(1).getCreated()) <= 0) {
+				if (longDescs.get(0).createdTimeStamp.compareTo(longDescs.get(1).createdTimeStamp) <= 0) {
 					// if created_0 is equal to created_1 we assume that longDescs at index 0 is the description.
-					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(0)
-							.getText());
-					repositoryTaskData.addComment(longDescs.get(1));
+					addDescription(longDescs.get(0).commentText);
+					addComment(longDescs.get(1), 0);
 				} else {
-					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(1)
-							.getText());
+					addDescription(longDescs.get(1).commentText);
 					commentNum = 1;
-					longDescs.get(0).setNumber(commentNum);
-					repositoryTaskData.addComment(longDescs.get(0));
+					longDescs.get(0).number = commentNum;
+					addComment(longDescs.get(0), commentNum);
 				}
 			} else if (longDescsSize > 1) {
-				String created_0 = longDescs.get(0).getCreated();
-				String created_1 = longDescs.get(1).getCreated();
-				String created_n = longDescs.get(longDescsSize).getCreated();
+				String created_0 = longDescs.get(0).createdTimeStamp;
+				String created_1 = longDescs.get(1).createdTimeStamp;
+				String created_n = longDescs.get(longDescsSize).createdTimeStamp;
 				commentNum = 1;
 				if (created_0.compareTo(created_1) <= 0 && created_0.compareTo(created_n) < 0) {
 					// if created_0 is equal to created_1 we assume that longDescs at index 0 is the description.
-					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(0)
-							.getText());
+//					BugzillaTaskDataHandler.createAttribute(repositoryTaskData.getRoot(),
+//							BugzillaReportElement.LONG_DESC).setValue(longDescs.get(0).commentText);
+					addDescription(longDescs.get(0).commentText);
+
 					if (created_1.compareTo(created_n) < 0) {
 						for (int i = 1; i <= longDescsSize; i++) {
-							longDescs.get(i).setNumber(commentNum++);
-							repositoryTaskData.addComment(longDescs.get(i));
+							longDescs.get(i).number = commentNum++;
+							addComment(longDescs.get(i), commentNum);
 						}
 					} else {
 						for (int i = longDescsSize; i > 0; i--) {
-							longDescs.get(i).setNumber(commentNum++);
-							repositoryTaskData.addComment(longDescs.get(i));
+							longDescs.get(i).number = commentNum++;
+							addComment(longDescs.get(i), commentNum);
 						}
 					}
 				} else {
-					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, longDescs.get(
-							longDescsSize).getText());
+					addDescription(longDescs.get(longDescsSize).commentText);
 					if (created_0.compareTo(created_1) < 0) {
 						for (int i = 0; i < longDescsSize; i++) {
-							longDescs.get(i).setNumber(commentNum++);
-							repositoryTaskData.addComment(longDescs.get(i));
+							longDescs.get(i).number = commentNum++;
+							addComment(longDescs.get(i), commentNum);
 						}
 					} else {
 						for (int i = longDescsSize - 1; i >= 0; i--) {
-							longDescs.get(i).setNumber(commentNum++);
-							repositoryTaskData.addComment(longDescs.get(i));
+							longDescs.get(i).number = commentNum++;
+							addComment(longDescs.get(i), commentNum);
 						}
 					}
 				}
 			}
 
-			RepositoryTaskAttribute numCommentsAttribute = repositoryTaskData.getAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
+			TaskAttribute numCommentsAttribute = repositoryTaskData.getRoot().getMappedAttribute(
+					BugzillaReportElement.LONGDESCLENGTH.getKey());
+			TaskAttribute[] taskAttachments = repositoryTaskData.getAttributeMapper().getAttributesByType(
+					repositoryTaskData, TaskAttribute.TYPE_ATTACHMENT);
+
 			if (numCommentsAttribute == null) {
-				numCommentsAttribute = attributeFactory.createAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
-				numCommentsAttribute.setValue("" + repositoryTaskData.getComments().size());
-				repositoryTaskData.addAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString(),
-						numCommentsAttribute);
+				numCommentsAttribute = BugzillaTaskDataHandler.createAttribute(repositoryTaskData,
+						BugzillaReportElement.LONGDESCLENGTH);
+				numCommentsAttribute.setValue("" + taskAttachments.length);
 			} else {
-				numCommentsAttribute.setValue("" + repositoryTaskData.getComments().size());
+				numCommentsAttribute.setValue(""
+						+ repositoryTaskData.getRoot()
+								.getMappedAttribute(BugzillaReportElement.LONGDESCLENGTH.getKey())
+								.getValue());
 			}
 
 			// Set the creator name on all attachments
-			for (RepositoryAttachment attachment : repositoryTaskData.getAttachments()) {
+			for (TaskAttribute attachment : taskAttachments) {
+				TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attachment);
 				TaskComment taskComment = attachIdToComment.get(attachment.getId());
 				if (taskComment != null) {
-					attachment.setCreator(taskComment.getAuthor());
+					String commentAuthor = taskComment.author;
+					attachmentMapper.setAuthor(repositoryTaskData.getAttributeMapper()
+							.getTaskRepository()
+							.createPerson(commentAuthor));
 				}
-				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL,
-						repositoryTaskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX
-								+ attachment.getId());
-				attachment.setRepositoryKind(repositoryTaskData.getConnectorKind());
-				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
-				attachment.setTaskId(repositoryTaskData.getTaskId());
+				attachmentMapper.setUrl(repositoryTaskData.getRepositoryUrl()
+						+ IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachment.getId());
+//				attachment.setRepositoryKind(repositoryTaskData.getConnectorKind());
+//				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
+//				attachment.setTaskId(repositoryTaskData.getTaskId());
 			}
 			collector.accept(repositoryTaskData);
 			break;
 
 		case BLOCKED:
 		case DEPENDSON:
-			RepositoryTaskAttribute dependancyAttribute = repositoryTaskData.getAttribute(tag.getKeyString());
+			TaskAttribute dependancyAttribute = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
 			if (dependancyAttribute == null) {
-				dependancyAttribute = attributeFactory.createAttribute(tag.getKeyString());
-				dependancyAttribute.setValue(parsedText);
-				repositoryTaskData.addAttribute(tag.getKeyString(), dependancyAttribute);
+				BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaReportElement.DEPENDSON).setValue(
+						parsedText);
 			} else {
 				if (dependancyAttribute.getValue().equals("")) {
 					dependancyAttribute.setValue(parsedText);
@@ -390,18 +419,45 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 		// All others added as report attribute
-		default:
-			RepositoryTaskAttribute attribute = repositoryTaskData.getAttribute(tag.getKeyString());
-			if (attribute == null) {
-				attribute = attributeFactory.createAttribute(tag.getKeyString());
-				attribute.setValue(parsedText);
-				repositoryTaskData.addAttribute(tag.getKeyString(), attribute);
+		case ASSIGNED_TO:
+			TaskAttribute assignedAttribute = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
+			if (assignedAttribute == null) {
+				assignedAttribute = BugzillaTaskDataHandler.createAttribute(repositoryTaskData, tag);
+				assignedAttribute.setValue(parsedText);
 			} else {
-				attribute.addValue(parsedText);
+				assignedAttribute.addValue(parsedText);
+			}
+			break;
+
+		default:
+			TaskAttribute defaultAttribute = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
+			if (defaultAttribute == null) {
+				defaultAttribute = BugzillaTaskDataHandler.createAttribute(repositoryTaskData, tag);
+				defaultAttribute.setValue(parsedText);
+			} else {
+				defaultAttribute.addValue(parsedText);
 			}
 			break;
 		}
 
+	}
+
+	private void addDescription(String commentText) {
+		TaskAttribute attrDescription = repositoryTaskData.getRoot().createAttribute(TaskAttribute.DESCRIPTION);
+		attrDescription.setValue(commentText);
+		attrDescription.getMetaData().defaults().setReadOnly(true);
+	}
+
+	private void addComment(TaskComment comment, int i) {
+		TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(TaskAttribute.PREFIX_COMMENT + i);
+		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
+		taskComment.setCommentId(attribute.getId());
+		taskComment.setAuthor(repositoryTaskData.getAttributeMapper().getTaskRepository().createPerson(comment.author));
+		TaskAttribute attrTimestamp = attribute.createAttribute(BugzillaReportElement.BUG_WHEN.getKey());
+		attrTimestamp.setValue(comment.createdTimeStamp);
+		taskComment.setCreationDate(repositoryTaskData.getAttributeMapper().getDateValue(attrTimestamp));
+		taskComment.setText(comment.commentText);
+		taskComment.applyTo(attribute);
 	}
 
 	/** determines attachment id from comment */
@@ -414,11 +470,33 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (endIndex > 0 && endIndex < commentText.length()) {
 				attachmentID = commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex);
 				if (!attachmentID.equals("")) {
-					taskComment.setHasAttachment(true);
-					taskComment.setAttachmentId(attachmentID);
+					taskComment.hasAttachment = true;
+					taskComment.attachmentId = attachmentID;
 					attachIdToComment.put(attachmentID, taskComment);
 				}
 			}
 		}
 	}
+
+	private class TaskComment {
+
+		public int number;
+
+		public String author;
+
+		public String authorName;
+
+		public String createdTimeStamp;
+
+		public String commentText;
+
+		public boolean hasAttachment;
+
+		public String attachmentId;
+
+		public TaskComment(int num) {
+			this.number = num;
+		}
+	}
+
 }

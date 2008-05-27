@@ -199,7 +199,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getConnectorKind() {
-		return BugzillaCorePlugin.REPOSITORY_KIND;
+		return BugzillaCorePlugin.CONNECTOR_KIND;
 	}
 
 	@SuppressWarnings("restriction")
@@ -210,7 +210,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			// we wouldn't have to get the task data this way from here
 			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
 					task.getRepositoryUrl(), task.getTaskId());
-			if (taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null) {
+			if (taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKey()) != null) {
 				return true;
 			}
 		}

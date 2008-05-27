@@ -14,9 +14,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.ui.IPersistableElement;
 
 /**
@@ -33,8 +33,8 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugzillaTask, boolean offline) {
 		super(repository, bugzillaTask.getTaskId(), bugzillaTask.getUrl());
 		this.bugTask = bugzillaTask;
-		updateOptions(getTaskData());
-		updateOptions(getOldTaskData());
+//		updateOptions(getTaskData());
+//		updateOptions(getOldTaskData());
 	}
 
 	protected void setBugTitle(String str) {
@@ -70,7 +70,7 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 		return bugTask;
 	}
 
-	private void updateOptions(RepositoryTaskData taskData) {
+	private void updateOptions(TaskData taskData) {
 		try {
 			if (taskData != null) {
 				RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false,

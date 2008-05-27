@@ -69,13 +69,13 @@ public class EncodingTest extends AbstractBugzillaTest {
 		String priority = null;
 		if (task.getPriority().equals("P1")) {
 			priority = "P2";
-			taskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
+			taskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKey(), priority);
 		} else {
 			priority = "P1";
-			taskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
+			taskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKey(), priority);
 		}
 
-		submit(task, taskData);
+		submit(task, taskData, null);
 		taskList.deleteTask(task);
 		task = (BugzillaTask) TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
 		assertNotNull(task);

@@ -43,7 +43,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 		super.setUp();
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(NUM_REPOSITORIES, TasksUiPlugin.getRepositoryManager().getRepositories(
-				BugzillaCorePlugin.REPOSITORY_KIND).size());
+				BugzillaCorePlugin.CONNECTOR_KIND).size());
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 // }
 
 	public void testSearching218() throws Exception {
-		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		repository.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -72,7 +72,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 	}
 
 	public void testSearching220() throws Exception {
-		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
 		repository.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -80,7 +80,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 	}
 
 	public void testSearching2201() throws Exception {
-		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_2201_URL);
 		repository.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_220.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -88,7 +88,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 	}
 
 	public void testSearching222() throws Exception {
-		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		repository.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -99,14 +99,14 @@ public class BugzillaSearchEngineTest extends TestCase {
 	@SuppressWarnings("deprecation")
 	private Set<AbstractTask> runQuery(String repositoryURL, String SearchString) throws Exception {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				BugzillaCorePlugin.REPOSITORY_KIND, repositoryURL);
+				BugzillaCorePlugin.CONNECTOR_KIND, repositoryURL);
 		assertNotNull(repository);
 
 		final BugzillaRepositoryQuery repositoryQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(),
 				repository.getRepositoryUrl() + BUG_DESC_SUBSTRING_SEARCH + SearchString, QUERY_NAME);
 
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				BugzillaCorePlugin.REPOSITORY_KIND);
+				BugzillaCorePlugin.CONNECTOR_KIND);
 //		TaskList taskList = TasksUiPlugin.getTaskList();
 		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository));
 

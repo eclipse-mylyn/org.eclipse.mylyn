@@ -199,7 +199,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		for (TaskComment taskComment : bug.getComments()) {
 			String bodyString = "Comment from " + taskComment.getAuthorName() + ":\n\n" + taskComment.getText();
 			comments.addChild(new BugzillaCompareNode(
-					taskComment.getAttributeValue(BugzillaReportElement.BUG_WHEN.getKeyString()), bodyString,
+					taskComment.getAttributeValue(BugzillaReportElement.BUG_WHEN.getKey()), bodyString,
 					defaultImage));
 		}
 		topNode.addChild(comments);

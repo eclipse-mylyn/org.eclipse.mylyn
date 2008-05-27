@@ -44,7 +44,7 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 		super.setUp();
 		connector = new BugzillaRepositoryConnector();
 		connector.init(new TaskList());
-		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);

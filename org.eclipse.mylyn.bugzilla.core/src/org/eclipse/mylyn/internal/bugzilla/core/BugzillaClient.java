@@ -19,6 +19,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -59,15 +60,17 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebClientUtil;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryOperation;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
@@ -86,8 +89,6 @@ public class BugzillaClient {
 	private static final String KEY_ID = "id";
 
 	private static final String VAL_TRUE = "true";
-
-	private static final String KEY_REMOVECC = "removecc";
 
 	private static final String KEY_CC = "cc";
 
@@ -139,8 +140,6 @@ public class BugzillaClient {
 			CONTENT_TYPE_TEXT_XML };
 
 	private static final String ATTR_CHARSET = "charset";
-
-	private static final BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
 	protected Proxy proxy = Proxy.NO_PROXY;
 
@@ -214,8 +213,8 @@ public class BugzillaClient {
 	 * 
 	 * @param serverURL
 	 * @return a GetMethod with possibly gzip encoded response body, so caller MUST check with
-	 * 	"gzip".equals(method.getResponseHeader("Content-encoding") or use the utility method
-	 * 	getResponseBodyAsUnzippedStream().
+	 *         "gzip".equals(method.getResponseHeader("Content-encoding") or use the utility method
+	 *         getResponseBodyAsUnzippedStream().
 	 * @throws IOException
 	 * @throws CoreException
 	 */
@@ -455,26 +454,27 @@ public class BugzillaClient {
 		}
 	}
 
-	public RepositoryTaskData getTaskData(int id, IProgressMonitor monitor) throws IOException, CoreException {
+	public TaskData getTaskData(int id, TaskAttributeMapper mapper, IProgressMonitor monitor) throws IOException,
+			CoreException {
 		final String idString = String.valueOf(id);
 		Set<String> data = new HashSet<String>();
 		data.add(idString);
 
-		LegacyTaskDataCollector collector = new LegacyTaskDataCollector() {
+		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
-			public void accept(RepositoryTaskData taskData) {
+			public void accept(TaskData taskData) {
 				getRepositoryConfiguration().configureTaskData(taskData);
 			}
 		};
 
-		Map<String, RepositoryTaskData> returnedData = getTaskData(data, collector, monitor);
+		Map<String, TaskData> returnedData = getTaskData(data, collector, mapper, monitor);
 
 		return returnedData.get(idString);
 
 	}
 
-	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector, IProgressMonitor monitor)
-			throws IOException, CoreException {
+	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
+			IProgressMonitor monitor) throws IOException, CoreException {
 		GzipPostMethod postMethod = null;
 
 		try {
@@ -515,8 +515,8 @@ public class BugzillaClient {
 						try {
 							RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(stream,
 									characterEncoding);
-							int count = queryFactory.performQuery(repositoryUrl.toString(),
-									(LegacyTaskDataCollector) collector, TaskDataCollector.MAX_HITS);
+							int count = queryFactory.performQuery(repositoryUrl.toString(), collector, mapper,
+									TaskDataCollector.MAX_HITS);
 							return count > 0;
 						} finally {
 							stream.close();
@@ -534,7 +534,7 @@ public class BugzillaClient {
 		return false;
 	}
 
-	public static void setupExistingBugAttributes(String serverUrl, RepositoryTaskData existingReport) {
+	public static void setupExistingBugAttributes(String serverUrl, TaskData existingReport) {
 		// ordered list of elements as they appear in UI
 		// and additional elements that may not appear in the incoming xml
 		// stream but need to be present for bug submission / not always dirty
@@ -550,8 +550,7 @@ public class BugzillaClient {
 				BugzillaReportElement.STATUS_WHITEBOARD, BugzillaReportElement.DEADLINE };
 
 		for (BugzillaReportElement element : reportElements) {
-			RepositoryTaskAttribute reportAttribute = BugzillaClient.makeNewAttribute(element);
-			existingReport.addAttribute(element.getKeyString(), reportAttribute);
+			BugzillaTaskDataHandler.createAttribute(existingReport, element);
 		}
 	}
 
@@ -577,11 +576,6 @@ public class BugzillaClient {
 			}
 		}
 		return null;
-	}
-
-	protected static RepositoryTaskAttribute makeNewAttribute(
-			org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement tag) {
-		return attributeFactory.createAttribute(tag.getKeyString());
 	}
 
 	public RepositoryConfiguration getRepositoryConfiguration(IProgressMonitor monitor) throws IOException,
@@ -748,7 +742,8 @@ public class BugzillaClient {
 
 	}
 
-	public String postTaskData(RepositoryTaskData taskData, IProgressMonitor monitor) throws IOException, CoreException {
+	public RepositoryResponse postTaskData(TaskData taskData, IProgressMonitor monitor) throws IOException,
+			CoreException {
 		NameValuePair[] formData = null;
 		String prefix = null;
 		String prefix2 = null;
@@ -858,7 +853,11 @@ public class BugzillaClient {
 				parseHtmlError(in);
 			}
 
-			return result;
+			if (taskData.isNew()) {
+				return new RepositoryResponse(ResponseKind.TASK_CREATED, result);
+			} else {
+				return new RepositoryResponse(ResponseKind.TASK_UPDATED, taskData.getTaskId());
+			}
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
@@ -874,23 +873,26 @@ public class BugzillaClient {
 
 	}
 
-	private NameValuePair[] getPairsForNew(RepositoryTaskData taskData) {
+	private NameValuePair[] getPairsForNew(TaskData taskData) {
 		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
 
 		// go through all of the attributes and add them to
 		// the bug post
-		Iterator<RepositoryTaskAttribute> itr = taskData.getAttributes().iterator();
+		Collection<TaskAttribute> attributes = taskData.getRoot().getAttributes().values();
+		Iterator<TaskAttribute> itr = attributes.iterator();
 		while (itr.hasNext()) {
-			RepositoryTaskAttribute a = itr.next();
+			TaskAttribute a = itr.next();
 			if (a != null && a.getId() != null && a.getId().compareTo("") != 0) {
 				String value = null;
 				value = a.getValue();
 				if (value == null) {
 					continue;
 				}
-				if (a.getId().equals(BugzillaReportElement.NEWCC.getKeyString())) {
-					RepositoryTaskAttribute b = new RepositoryTaskAttribute(BugzillaReportElement.CC.getKeyString(),
-							BugzillaReportElement.CC.toString(), false);
+				if (a.getId().equals(BugzillaReportElement.NEWCC.getKey())) {
+					TaskAttribute b = taskData.getRoot().createAttribute(BugzillaReportElement.CC.getKey());
+					b.getMetaData().defaults().setReadOnly(BugzillaReportElement.CC.isReadOnly()).setKind(
+							BugzillaReportElement.CC.getKind()).setLabel(BugzillaReportElement.CC.toString()).setType(
+							BugzillaReportElement.CC.getType());
 					for (String val : a.getValues()) {
 						if (val != null) {
 							b.addValue(val);
@@ -905,21 +907,22 @@ public class BugzillaClient {
 			}
 		}
 
-		if (taskData.getDescription().length() != 0) {
-			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, taskData.getDescription()));
+		TaskAttribute descAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
+		if (descAttribute != null && !descAttribute.getValue().equals("")) {
+			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, descAttribute.getValue()));
 		}
 
 		return fields.values().toArray(new NameValuePair[fields.size()]);
 
 	}
 
-	private void cleanQAContact(RepositoryTaskAttribute a) {
-		if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKeyString())) {
+	private void cleanQAContact(TaskAttribute a) {
+		if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKey())) {
 			cleanIfShortLogin(a);
 		}
 	}
 
-	private void cleanIfShortLogin(RepositoryTaskAttribute a) {
+	private void cleanIfShortLogin(TaskAttribute a) {
 		if ("true".equals(configParameters.get(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN))) {
 			if (a.getValue() != null && a.getValue().length() > 0) {
 				int atIndex = a.getValue().indexOf("@");
@@ -931,28 +934,31 @@ public class BugzillaClient {
 		}
 	}
 
-	private NameValuePair[] getPairsForExisting(RepositoryTaskData model) {
+	private NameValuePair[] getPairsForExisting(TaskData model) {
 
 		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
 		fields.put(KEY_FORM_NAME, new NameValuePair(KEY_FORM_NAME, VAL_PROCESS_BUG));
 		// go through all of the attributes and add them to the bug post
-		for (RepositoryTaskAttribute a : model.getAttributes()) {
+		Collection<TaskAttribute> attributes = model.getRoot().getAttributes().values();
+		Iterator<TaskAttribute> itr = attributes.iterator();
+		while (itr.hasNext()) {
+			TaskAttribute a = itr.next();
 
 			if (a == null) {
 				continue;
-			} else if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKeyString())
-					|| a.getId().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())) {
+			} else if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKey())
+					|| a.getId().equals(BugzillaReportElement.ASSIGNED_TO.getKey())) {
 				cleanIfShortLogin(a);
-			} else if (a.getId().equals(BugzillaReportElement.REPORTER.getKeyString())
-					|| a.getId().equals(BugzillaReportElement.CC.getKeyString())
-					|| a.getId().equals(RepositoryTaskAttribute.REMOVE_CC)
-					|| a.getId().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
+			} else if (a.getId().equals(BugzillaReportElement.REPORTER.getKey())
+					|| a.getId().equals(BugzillaReportElement.CC.getKey())
+					|| a.getId().equals(BugzillaReportElement.REMOVECC.getKey())
+					|| a.getId().equals(BugzillaReportElement.CREATION_TS.getKey())) {
 				continue;
 			}
 
 			if (a.getId() != null && a.getId().compareTo("") != 0) {
 				String value = a.getValue();
-				if (a.getId().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
+				if (a.getId().equals(BugzillaReportElement.DELTA_TS.getKey())) {
 					value = stripTimeZone(value);
 				}
 				fields.put(a.getId(), new NameValuePair(a.getId(), value != null ? value : ""));
@@ -960,41 +966,71 @@ public class BugzillaClient {
 		}
 
 		// when posting the bug id is encoded in a hidden field named 'id'
-		fields.put(KEY_ID, new NameValuePair(KEY_ID,
-				model.getAttributeValue(BugzillaReportElement.BUG_ID.getKeyString())));
+		TaskAttribute attributeBugId = model.getRoot().getAttribute(BugzillaReportElement.BUG_ID.getKey());
+		if (attributeBugId != null) {
+			fields.put(KEY_ID, new NameValuePair(KEY_ID, attributeBugId.getValue()));
+		}
 
 		// add the operation to the bug post
-		RepositoryOperation o = model.getSelectedOperation();
-		if (o == null) {
+		TaskAttribute attributeOperation = model.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		if (attributeOperation == null) {
 			fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, VAL_NONE));
 		} else {
-			fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, o.getKnobName()));
-			if (o.hasOptions()) {
-				String sel = o.getOptionValue(o.getOptionSelection());
-				fields.put(o.getOptionName(), new NameValuePair(o.getOptionName(), sel));
-			} else if (o.isInput()) {
-				String sel = o.getInputValue();
-				fields.put(o.getInputName(), new NameValuePair(o.getInputName(), sel));
+			TaskAttribute originalOperation = model.getRoot().getAttribute(
+					TaskAttribute.PREFIX_OPERATION + attributeOperation.getValue());
+			String inputAttributeId = originalOperation.getMetaData().getValue(
+					TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+			if (originalOperation == null) {
+				fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, VAL_NONE));
+			} else if (inputAttributeId == null || inputAttributeId.equals("")) {
+				String sel = attributeOperation.getValue();
+				fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, sel));
+			} else {
+				fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, attributeOperation.getValue()));
+				TaskAttribute inputAttribute = attributeOperation.getTaskData()
+						.getRoot()
+						.getAttribute(inputAttributeId);
+				if (inputAttribute != null) {
+					if (inputAttribute.getOptions().size() > 0) {
+						String sel = inputAttribute.getValue();
+						fields.put(inputAttribute.getId(), new NameValuePair(inputAttribute.getId(),
+								inputAttribute.getOption(sel)));
+					} else {
+						String sel = inputAttribute.getValue();
+						String knob = attributeOperation.getValue();
+						if (knob.equals(BUGZILLA_OPERATION.reassign.toString())) {
+							knob = "assigned_to";
+						}
+						fields.put(knob, new NameValuePair(knob, sel));
+					}
+				}
 			}
 		}
 
-		if (model.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()) != null) {
-			fields.put(KEY_SHORT_DESC, new NameValuePair(KEY_SHORT_DESC, model.getAttribute(
-					BugzillaReportElement.SHORT_DESC.getKeyString()).getValue()));
+		if (model.getRoot().getMappedAttribute(BugzillaReportElement.SHORT_DESC.getKey()) != null) {
+			fields.put(KEY_SHORT_DESC, new NameValuePair(KEY_SHORT_DESC, model.getRoot().getMappedAttribute(
+					BugzillaReportElement.SHORT_DESC.getKey()).getValue()));
 		}
 
-		if (model.getNewComment().length() != 0) {
-			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getNewComment()));
-		} else if (o != null && o.getKnobName().equals(IBugzillaConstants.BUGZILLA_OPERATION.duplicate.toString())) {
+		if (model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW) != null
+				&& model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).getValue().length() > 0) {
+			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getRoot().getMappedAttribute(
+					TaskAttribute.COMMENT_NEW).getValue()));
+		} else if (attributeOperation != null
+				&& attributeOperation.getValue().equals(IBugzillaConstants.BUGZILLA_OPERATION.duplicate.toString())) {
 			// fix for bug#198677
 			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, ""));
 		}
 
-		List<String> removeCC = model.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
-		if (removeCC != null && removeCC.size() > 0) {
-			String[] s = new String[removeCC.size()];
-			fields.put(KEY_CC, new NameValuePair(KEY_CC, toCommaSeparatedList(removeCC.toArray(s))));
-			fields.put(KEY_REMOVECC, new NameValuePair(KEY_REMOVECC, VAL_TRUE));
+		TaskAttribute attributeRemoveCC = model.getRoot().getMappedAttribute(BugzillaReportElement.REMOVECC.getKey());
+		if (attributeRemoveCC != null) {
+			List<String> removeCC = attributeRemoveCC.getValues();
+			if (removeCC != null && removeCC.size() > 0) {
+				String[] s = new String[removeCC.size()];
+				fields.put(KEY_CC, new NameValuePair(KEY_CC, toCommaSeparatedList(removeCC.toArray(s))));
+				fields.put(BugzillaReportElement.REMOVECC.getKey(), new NameValuePair(
+						BugzillaReportElement.REMOVECC.getKey(), VAL_TRUE));
+			}
 		}
 
 		return fields.values().toArray(new NameValuePair[fields.size()]);
@@ -1172,10 +1208,10 @@ public class BugzillaClient {
 		return null;
 	}
 
-	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds, final TaskDataCollector collector,
-			final IProgressMonitor monitor) throws IOException, CoreException {
+	public Map<String, TaskData> getTaskData(Set<String> taskIds, final TaskDataCollector collector,
+			final TaskAttributeMapper mapper, final IProgressMonitor monitor) throws IOException, CoreException {
 		GzipPostMethod method = null;
-		HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
+		HashMap<String, TaskData> taskDataMap = new HashMap<String, TaskData>();
 		// make a copy to modify set
 		taskIds = new HashSet<String>(taskIds);
 		while (taskIds.size() > 0) {
@@ -1199,8 +1235,8 @@ public class BugzillaClient {
 				for (; itr.hasNext(); x++) {
 					String taskId = itr.next();
 					formData[x] = new NameValuePair("id", taskId);
-					RepositoryTaskData taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
-							BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), taskId);
+					TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND,
+							repositoryUrl.toString(), taskId);
 					setupExistingBugAttributes(repositoryUrl.toString(), taskData);
 					taskDataMap.put(taskId, taskData);
 				}
@@ -1221,17 +1257,17 @@ public class BugzillaClient {
 							try {
 								MultiBugReportFactory factory = new MultiBugReportFactory(input, characterEncoding);
 
-								LegacyTaskDataCollector collector2 = new LegacyTaskDataCollector() {
+								TaskDataCollector collector2 = new TaskDataCollector() {
 
 									@Override
-									public void accept(RepositoryTaskData taskData) {
+									public void accept(TaskData taskData) {
 										getRepositoryConfiguration().configureTaskData(taskData);
-										((LegacyTaskDataCollector) collector).accept(taskData);
+										((TaskDataCollector) collector).accept(taskData);
 										monitor.worked(1);
 									}
 								};
 
-								factory.populateReport(taskDataMap, collector2, customFields);
+								factory.populateReport(taskDataMap, collector2, mapper, customFields);
 								taskIds.removeAll(idsToRetrieve);
 								parseable = true;
 								break;

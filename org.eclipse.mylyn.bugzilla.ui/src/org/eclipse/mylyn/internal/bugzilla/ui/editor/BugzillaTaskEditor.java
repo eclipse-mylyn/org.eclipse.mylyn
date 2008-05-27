@@ -198,7 +198,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			// ignore
 		}
 
-		attribute = this.taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());
+		attribute = this.taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKey());
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
@@ -216,7 +216,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			getManagedForm().getToolkit().paintBordersFor(textFieldComposite);
 		}
 
-		attribute = this.taskData.getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
+		attribute = this.taskData.getAttribute(BugzillaReportElement.BLOCKED.getKey());
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
@@ -234,23 +234,23 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			getManagedForm().getToolkit().paintBordersFor(textFieldComposite);
 		}
 
-		String dependson = taskData.getAttributeValue(BugzillaReportElement.DEPENDSON.getKeyString());
-		String blocked = taskData.getAttributeValue(BugzillaReportElement.BLOCKED.getKeyString());
+		String dependson = taskData.getAttributeValue(BugzillaReportElement.DEPENDSON.getKey());
+		String blocked = taskData.getAttributeValue(BugzillaReportElement.BLOCKED.getKey());
 		boolean addHyperlinks = (dependson != null && dependson.length() > 0)
 				|| (blocked != null && blocked.length() > 0);
 
 		if (addHyperlinks) {
 			getManagedForm().getToolkit().createLabel(composite, "");
-			addBugHyperlinks(composite, BugzillaReportElement.DEPENDSON.getKeyString());
+			addBugHyperlinks(composite, BugzillaReportElement.DEPENDSON.getKey());
 		}
 
 		if (addHyperlinks) {
 			getManagedForm().getToolkit().createLabel(composite, "");
-			addBugHyperlinks(composite, BugzillaReportElement.BLOCKED.getKeyString());
+			addBugHyperlinks(composite, BugzillaReportElement.BLOCKED.getKey());
 		}
 
 		// NOTE: urlText should not be back ported to 3.3 due to background color failure
-		attribute = this.taskData.getAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString());
+		attribute = this.taskData.getAttribute(BugzillaReportElement.BUG_FILE_LOC.getKey());
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
@@ -280,10 +280,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 		}
 
-		attribute = this.taskData.getAttribute(BugzillaReportElement.STATUS_WHITEBOARD.getKeyString());
+		attribute = this.taskData.getAttribute(BugzillaReportElement.STATUS_WHITEBOARD.getKey());
 		if (attribute == null) {
-			this.taskData.setAttributeValue(BugzillaReportElement.STATUS_WHITEBOARD.getKeyString(), "");
-			attribute = this.taskData.getAttribute(BugzillaReportElement.STATUS_WHITEBOARD.getKeyString());
+			this.taskData.setAttributeValue(BugzillaReportElement.STATUS_WHITEBOARD.getKey(), "");
+			attribute = this.taskData.getAttribute(BugzillaReportElement.STATUS_WHITEBOARD.getKey());
 		}
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
@@ -303,11 +303,11 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		addVoting(composite);
 
 		// If groups is available add roles
-		if (taskData.getAttribute(BugzillaReportElement.GROUP.getKeyString()) != null) {
+		if (taskData.getAttribute(BugzillaReportElement.GROUP.getKey()) != null) {
 			addRoles(composite);
 		}
 
-		if (taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null) {
+		if (taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKey()) != null) {
 			addBugzillaTimeTracker(getManagedForm().getToolkit(), composite);
 		}
 	}
@@ -316,14 +316,14 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (taskData == null) {
 			return false;
 		}
-		String customAttributeKeys[] = { BugzillaReportElement.BUG_FILE_LOC.getKeyString(),
-				BugzillaReportElement.DEPENDSON.getKeyString(), BugzillaReportElement.BLOCKED.getKeyString(),
-				BugzillaReportElement.KEYWORDS.getKeyString(), BugzillaReportElement.VOTES.getKeyString(),
-				BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString(),
-				BugzillaReportElement.CCLIST_ACCESSIBLE.getKeyString(),
-				BugzillaReportElement.ESTIMATED_TIME.getKeyString(),
-				BugzillaReportElement.REMAINING_TIME.getKeyString(), BugzillaReportElement.ACTUAL_TIME.getKeyString(),
-				BugzillaReportElement.DEADLINE.getKeyString(), BugzillaReportElement.STATUS_WHITEBOARD.getKeyString() };
+		String customAttributeKeys[] = { BugzillaReportElement.BUG_FILE_LOC.getKey(),
+				BugzillaReportElement.DEPENDSON.getKey(), BugzillaReportElement.BLOCKED.getKey(),
+				BugzillaReportElement.KEYWORDS.getKey(), BugzillaReportElement.VOTES.getKey(),
+				BugzillaReportElement.REPORTER_ACCESSIBLE.getKey(),
+				BugzillaReportElement.CCLIST_ACCESSIBLE.getKey(),
+				BugzillaReportElement.ESTIMATED_TIME.getKey(),
+				BugzillaReportElement.REMAINING_TIME.getKey(), BugzillaReportElement.ACTUAL_TIME.getKey(),
+				BugzillaReportElement.DEADLINE.getKey(), BugzillaReportElement.STATUS_WHITEBOARD.getKey() };
 		for (String key : customAttributeKeys) {
 			RepositoryTaskAttribute attribute = taskData.getAttribute(key);
 			if (hasChanged(attribute)) {
@@ -383,10 +383,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		rolesComposite.setLayoutData(attributesData);
 		rolesSection.setClient(rolesComposite);
 
-		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString());
+		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.REPORTER_ACCESSIBLE.getKey());
 		if (attribute == null) {
-			taskData.setAttributeValue(BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString(), "0");
-			attribute = taskData.getAttribute(BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString());
+			taskData.setAttributeValue(BugzillaReportElement.REPORTER_ACCESSIBLE.getKey(), "0");
+			attribute = taskData.getAttribute(BugzillaReportElement.REPORTER_ACCESSIBLE.getKey());
 		}
 		Button button = addButtonField(rolesComposite, attribute, SWT.CHECK);
 		if (hasChanged(attribute)) {
@@ -394,10 +394,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		attribute = null;
-		attribute = taskData.getAttribute(BugzillaReportElement.CCLIST_ACCESSIBLE.getKeyString());
+		attribute = taskData.getAttribute(BugzillaReportElement.CCLIST_ACCESSIBLE.getKey());
 		if (attribute == null) {
-			taskData.setAttributeValue(BugzillaReportElement.CCLIST_ACCESSIBLE.getKeyString(), "0");
-			attribute = taskData.getAttribute(BugzillaReportElement.CCLIST_ACCESSIBLE.getKeyString());
+			taskData.setAttributeValue(BugzillaReportElement.CCLIST_ACCESSIBLE.getKey(), "0");
+			attribute = taskData.getAttribute(BugzillaReportElement.CCLIST_ACCESSIBLE.getKey());
 		}
 		button = addButtonField(rolesComposite, attribute, SWT.CHECK);
 		if (hasChanged(attribute)) {
@@ -407,7 +407,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
-		return BugzillaReportElement.NEWCC.getKeyString().equals(attribute.getId());
+		return BugzillaReportElement.NEWCC.getKey().equals(attribute.getId());
 	}
 
 	@Override
@@ -477,7 +477,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		gd.horizontalSpan = 5;
 		timeComposite.setLayoutData(gd);
 
-		RepositoryTaskAttribute attribute = this.taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString());
+		RepositoryTaskAttribute attribute = this.taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKey());
 		if (attribute != null && !attribute.isReadOnly()) {
 			createLabel(timeComposite, attribute);
 			estimateText = createTextField(timeComposite, attribute, SWT.FLAT);
@@ -488,7 +488,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		float total = 0;
 		try {
-			total = (Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())) + Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString())));
+			total = (Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKey())) + Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKey())));
 		} catch (Exception e) {
 			// ignore likely NumberFormatException
 		}
@@ -498,7 +498,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		currentEstimate.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		currentEstimate.setEditable(false);
 
-		attribute = this.taskData.getAttribute(BugzillaReportElement.ACTUAL_TIME.getKeyString());
+		attribute = this.taskData.getAttribute(BugzillaReportElement.ACTUAL_TIME.getKey());
 		if (attribute != null) {
 
 			createLabel(timeComposite, attribute);
@@ -508,13 +508,13 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		// Add Time
-		taskData.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), "0");
-		final RepositoryTaskAttribute addTimeAttribute = this.taskData.getAttribute(BugzillaReportElement.WORK_TIME.getKeyString());
+		taskData.setAttributeValue(BugzillaReportElement.WORK_TIME.getKey(), "0");
+		final RepositoryTaskAttribute addTimeAttribute = this.taskData.getAttribute(BugzillaReportElement.WORK_TIME.getKey());
 		if (addTimeAttribute != null) {
 
 			createLabel(timeComposite, addTimeAttribute);
 			addTimeText = toolkit.createText(timeComposite,
-					taskData.getAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString()), SWT.BORDER);
+					taskData.getAttributeValue(BugzillaReportElement.WORK_TIME.getKey()), SWT.BORDER);
 			addTimeText.setFont(TEXT_FONT);
 			addTimeText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 			addTimeText.addModifyListener(new ModifyListener() {
@@ -524,13 +524,13 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 				}
 			});
 		}
-		attribute = this.taskData.getAttribute(BugzillaReportElement.REMAINING_TIME.getKeyString());
+		attribute = this.taskData.getAttribute(BugzillaReportElement.REMAINING_TIME.getKey());
 		if (attribute != null) {
 			createLabel(timeComposite, attribute);
 			createTextField(timeComposite, attribute, SWT.FLAT);
 		}
 
-		attribute = this.taskData.getAttribute(BugzillaReportElement.DEADLINE.getKeyString());
+		attribute = this.taskData.getAttribute(BugzillaReportElement.DEADLINE.getKey());
 		if (attribute != null) {
 			createLabel(timeComposite, attribute);
 
@@ -540,7 +540,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			dateWithClear.setLayout(layout);
 
 			deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER,
-					taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()), false, 0);
+					taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKey()), false, 0);
 			deadlinePicker.setFont(TEXT_FONT);
 			deadlinePicker.setDatePattern("yyyy-MM-dd");
 			if (hasChanged(attribute)) {
@@ -559,13 +559,13 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 						SimpleDateFormat f = (SimpleDateFormat) DateFormat.getDateInstance();
 						f.applyPattern("yyyy-MM-dd");
 
-						taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), f.format(d));
-						attributeChanged(taskData.getAttribute(BugzillaReportElement.DEADLINE.getKeyString()));
+						taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKey(), f.format(d));
+						attributeChanged(taskData.getAttribute(BugzillaReportElement.DEADLINE.getKey()));
 						// TODO goes dirty even if user presses cancel
 						// markDirty(true);
 					} else {
-						taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), "");
-						attributeChanged(taskData.getAttribute(BugzillaReportElement.DEADLINE.getKeyString()));
+						taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKey(), "");
+						attributeChanged(taskData.getAttribute(BugzillaReportElement.DEADLINE.getKey()));
 						deadlinePicker.setDate(null);
 					}
 				}
@@ -578,8 +578,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
-					taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), "");
-					attributeChanged(taskData.getAttribute(BugzillaReportElement.DEADLINE.getKeyString()));
+					taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKey(), "");
+					attributeChanged(taskData.getAttribute(BugzillaReportElement.DEADLINE.getKey()));
 					deadlinePicker.setDate(null);
 				}
 			});
@@ -661,7 +661,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		layout.marginWidth = 0;
 		votingComposite.setLayout(layout);
 
-		RepositoryTaskAttribute votesAttribute = taskData.getAttribute(BugzillaReportElement.VOTES.getKeyString());
+		RepositoryTaskAttribute votesAttribute = taskData.getAttribute(BugzillaReportElement.VOTES.getKey());
 
 		votesText = createTextField(votingComposite, votesAttribute, SWT.FLAT | SWT.READ_ONLY);
 		votesText.setFont(TEXT_FONT);
@@ -755,10 +755,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			FormToolkit toolkit = getManagedForm().getToolkit();
 			Label dummylabel = toolkit.createLabel(peopleComposite, "");
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(dummylabel);
-			RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString());
+			RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKey());
 			if (attribute == null) {
-				taskData.setAttributeValue(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString(), "0");
-				attribute = taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKeyString());
+				taskData.setAttributeValue(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKey(), "0");
+				attribute = taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKey());
 			}
 			addButtonField(peopleComposite, attribute, SWT.CHECK);
 		}
@@ -771,7 +771,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		// Support comment wrapping for bugzilla 2.18
-		if (attribute.getId().equals(BugzillaReportElement.NEW_COMMENT.getKeyString())) {
+		if (attribute.getId().equals(BugzillaReportElement.NEW_COMMENT.getKey())) {
 			if (repository.getVersion().startsWith("2.18")) {
 				attribute.setValue(BugzillaUiPlugin.formatTextToLineWrap(attribute.getValue(), true));
 			}
@@ -784,9 +784,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		// XXX: Work around for adding QAContact to People section. Update once bug#179254 is complete
 		boolean haveRealName = false;
-		RepositoryTaskAttribute qaContact = taskData.getAttribute(BugzillaReportElement.QA_CONTACT_NAME.getKeyString());
+		RepositoryTaskAttribute qaContact = taskData.getAttribute(BugzillaReportElement.QA_CONTACT_NAME.getKey());
 		if (qaContact == null) {
-			qaContact = taskData.getAttribute(BugzillaReportElement.QA_CONTACT.getKeyString());
+			qaContact = taskData.getAttribute(BugzillaReportElement.QA_CONTACT.getKey());
 		} else {
 			haveRealName = true;
 		}
@@ -809,7 +809,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(textField);
 			if (haveRealName) {
 				textField.setText(textField.getText() + " <"
-						+ taskData.getAttributeValue(BugzillaReportElement.QA_CONTACT.getKeyString()) + ">");
+						+ taskData.getAttributeValue(BugzillaReportElement.QA_CONTACT.getKey()) + ">");
 			}
 		}
 

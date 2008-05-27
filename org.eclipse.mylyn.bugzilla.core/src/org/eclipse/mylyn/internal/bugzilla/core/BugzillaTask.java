@@ -15,7 +15,9 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @deprecated
  */
+@Deprecated
 public class BugzillaTask extends AbstractTask {
 
 	private String severity;
@@ -39,7 +41,7 @@ public class BugzillaTask extends AbstractTask {
 
 	@Override
 	public String getConnectorKind() {
-		return BugzillaCorePlugin.REPOSITORY_KIND;
+		return BugzillaCorePlugin.CONNECTOR_KIND;
 	}
 
 	public String getSeverity() {

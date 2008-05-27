@@ -18,13 +18,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
@@ -33,23 +36,20 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
-	private final AbstractAttributeFactory attributeFactory = new BugzillaAttributeFactory();
-
 	private final BugzillaRepositoryConnector connector;
 
 	public BugzillaTaskDataHandler(BugzillaRepositoryConnector connector) {
 		this.connector = connector;
 	}
 
-	@Override
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 			int bugId = BugzillaRepositoryConnector.getBugId(taskId);
-			RepositoryTaskData taskData;
-			taskData = client.getTaskData(bugId, monitor);
+			TaskData taskData;
+			taskData = client.getTaskData(bugId, getAttributeMapper(repository), monitor);
 			return taskData;
 
 		} catch (IOException e) {
@@ -65,7 +65,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			monitor.beginTask("Receiving tasks", taskIds.size());
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
-			client.getTaskData(taskIds, collector, monitor);
+
+			client.getTaskData(taskIds, collector, getAttributeMapper(repository), monitor);
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
@@ -75,8 +76,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
-			throws CoreException {
+	public RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
+			Set<TaskAttribute> changedAttributes, IProgressMonitor monitor) throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
@@ -99,156 +100,198 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind) {
-		// we don't care about the repository information right now
-		return attributeFactory;
-	}
-
-	@Override
-	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
-		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getConnectorKind(), taskData.getTaskKind());
-	}
-
-	@Override
-	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
+	public boolean initializeTaskData(TaskRepository repository, TaskData data, IProgressMonitor monitor)
 			throws CoreException {
 
 		if (data == null) {
 			return false;
 		}
-		String product = data.getProduct();
-		if (product.equals("")) {
+
+		TaskAttribute root = data.getRoot();
+
+		TaskAttribute oldProductAttribute = root.getAttribute(TaskAttribute.PRODUCT);
+		if (oldProductAttribute == null) {
+			return false;
+		}
+
+		if (oldProductAttribute.getValue().equals("")) {
 			// Bugzilla needs a product to create task data
 			// If I see it right the product is never an empty String.
 			// but to be save I return false as before bug# 213077
 			return false;
 		}
-		data.removeAllAttributes();
+
+		root.clearAttributes();
+		// TODO: Are the following necessary?
+		root.getMetaData().clear();
+		root.clearOptions();
+		root.clearValues();
 
 		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
 				false, monitor);
 
-		RepositoryTaskAttribute a = BugzillaClient.makeNewAttribute(BugzillaReportElement.PRODUCT);
+		TaskAttribute productAttribute = createAttribute(data, BugzillaReportElement.PRODUCT);
+		productAttribute.setValue(oldProductAttribute.getValue());
+
 		List<String> optionValues = repositoryConfiguration.getProducts();
 		Collections.sort(optionValues);
-		a.setValue(product);
-		a.setReadOnly(true);
+		for (String optionValue : optionValues) {
+			productAttribute.putOption(optionValue, optionValue);
+		}
 
-		data.addAttribute(BugzillaReportElement.PRODUCT.getKeyString(), a);
-
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_STATUS);
+		TaskAttribute attributeStatus = createAttribute(data, BugzillaReportElement.BUG_STATUS);
 		optionValues = repositoryConfiguration.getStatusValues();
 		for (String option : optionValues) {
-			a.addOption(option, option);
+			attributeStatus.putOption(option, option);
 		}
-		a.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
 
-		data.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), a);
+		attributeStatus.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
 
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.SHORT_DESC);
-		data.addAttribute(BugzillaReportElement.SHORT_DESC.getKeyString(), a);
+		createAttribute(data, BugzillaReportElement.SHORT_DESC);
 
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.VERSION);
-		optionValues = repositoryConfiguration.getVersions(data.getProduct());
+		TaskAttribute attributeVersion = createAttribute(data, BugzillaReportElement.VERSION);
+		optionValues = repositoryConfiguration.getVersions(productAttribute.getValue());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
-			a.addOption(option, option);
+			attributeVersion.putOption(option, option);
 		}
 		if (optionValues.size() > 0) {
-			a.setValue(optionValues.get(optionValues.size() - 1));
+			attributeVersion.setValue(optionValues.get(optionValues.size() - 1));
 		}
 
-		data.addAttribute(BugzillaReportElement.VERSION.getKeyString(), a);
-
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.COMPONENT);
-		optionValues = repositoryConfiguration.getComponents(data.getProduct());
+		TaskAttribute attributeComponent = createAttribute(data, BugzillaReportElement.COMPONENT);
+		optionValues = repositoryConfiguration.getComponents(productAttribute.getValue());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
-			a.addOption(option, option);
+			attributeComponent.putOption(option, option);
 		}
 		if (optionValues.size() == 1) {
-			a.setValue(optionValues.get(0));
+			attributeComponent.setValue(optionValues.get(0));
 		}
 
-		data.addAttribute(BugzillaReportElement.COMPONENT.getKeyString(), a);
-
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.REP_PLATFORM);
+		TaskAttribute attributePlatform = createAttribute(data, BugzillaReportElement.REP_PLATFORM);
 		optionValues = repositoryConfiguration.getPlatforms();
 		for (String option : optionValues) {
-			a.addOption(option, option);
+			attributePlatform.putOption(option, option);
 		}
 		if (optionValues.size() > 0) {
 			// bug 159397 choose first platform: All
-			a.setValue(optionValues.get(0));
+			attributePlatform.setValue(optionValues.get(0));
 		}
 
-		data.addAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString(), a);
-
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.OP_SYS);
+		TaskAttribute attributeOPSYS = createAttribute(data, BugzillaReportElement.OP_SYS);
 		optionValues = repositoryConfiguration.getOSs();
 		for (String option : optionValues) {
-			a.addOption(option, option);
+			attributeOPSYS.putOption(option, option);
 		}
 		if (optionValues.size() > 0) {
 			// bug 159397 change to choose first op_sys All
-			a.setValue(optionValues.get(0));
+			attributeOPSYS.setValue(optionValues.get(0));
 		}
 
-		data.addAttribute(BugzillaReportElement.OP_SYS.getKeyString(), a);
-
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.PRIORITY);
+		TaskAttribute attributePriority = createAttribute(data, BugzillaReportElement.PRIORITY);
 		optionValues = repositoryConfiguration.getPriorities();
 		for (String option : optionValues) {
-			a.addOption(option, option);
+			attributePriority.putOption(option, option);
 		}
 		if (optionValues.size() > 0) {
-			a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle priority
+			// choose middle priority
+			attributePriority.setValue(optionValues.get((optionValues.size() / 2)));
 		}
 
-		data.addAttribute(BugzillaReportElement.PRIORITY.getKeyString(), a);
-
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_SEVERITY);
+		TaskAttribute attributeSeverity = createAttribute(data, BugzillaReportElement.BUG_SEVERITY);
 		optionValues = repositoryConfiguration.getSeverities();
 		for (String option : optionValues) {
-			a.addOption(option, option);
+			attributeSeverity.putOption(option, option);
 		}
 		if (optionValues.size() > 0) {
-			a.setValue(optionValues.get((optionValues.size() / 2))); // choose middle severity
+			// choose middle severity
+			attributeSeverity.setValue(optionValues.get((optionValues.size() / 2)));
 		}
 
-		data.addAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString(), a);
+		TaskAttribute attributeAssignedTo = createAttribute(data, BugzillaReportElement.ASSIGNED_TO);
+		attributeAssignedTo.setValue("");
+//		attributeAssignedTo.setReadOnly(false);
 
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.ASSIGNED_TO);
-		a.setValue("");
-		a.setReadOnly(false);
+		TaskAttribute attributeBugFileLoc = createAttribute(data, BugzillaReportElement.BUG_FILE_LOC);
+		attributeBugFileLoc.setValue("http://");
+		//a.setHidden(false);
 
-		data.addAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString(), a);
-
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_FILE_LOC);
-		a.setValue("http://");
-		a.setHidden(false);
-
-		data.addAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString(), a);
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.DEPENDSON);
-		a.setValue("");
-		a.setReadOnly(false);
-		data.addAttribute(BugzillaReportElement.DEPENDSON.getKeyString(), a);
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BLOCKED);
-		a.setValue("");
-		a.setReadOnly(false);
-		data.addAttribute(BugzillaReportElement.BLOCKED.getKeyString(), a);
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.NEWCC);
-		a.setValue("");
-		a.setReadOnly(false);
-		data.addAttribute(BugzillaReportElement.NEWCC.getKeyString(), a);
+		createAttribute(data, BugzillaReportElement.DEPENDSON);
+//		a.setValue("");
+//		a.setReadOnly(false);
+		createAttribute(data, BugzillaReportElement.BLOCKED);
+//		a.setValue("");
+//		a.setReadOnly(false);
+		createAttribute(data, BugzillaReportElement.NEWCC);
+//		a.setValue("");
+//		a.setReadOnly(false);
 		return true;
 	}
 
-	// TODO: Move to AbstractTaskDataHandler
+	public static TaskAttribute createAttribute(TaskData data, BugzillaReportElement key) {
+		return createAttribute(data.getRoot(), key);
+	}
+
+	public static TaskAttribute createAttribute(TaskAttribute parent, BugzillaReportElement key) {
+		TaskAttribute attribute = parent.createAttribute(key.getKey());
+		attribute.getMetaData()
+				.defaults()
+				.setReadOnly(key.isReadOnly())
+				.setKind(key.getKind())
+				.setLabel(key.toString())
+				.setType(key.getType());
+		return attribute;
+	}
+
+	private void addAttributeValue(TaskData data, BugzillaReportElement key, String value) {
+		data.getRoot().getAttribute(key.getKey()).addValue(value);
+	}
+
 	@Override
+	public boolean canGetMultiTaskData() {
+		return true;
+	}
+
+	@Override
+	public boolean canInitializeSubTaskData(ITask task, TaskData parentTaskData) {
+		return true;
+	}
+
+	@Override
+	public boolean initializeSubTaskData(TaskRepository repository, TaskData subTaskData, TaskData parentTaskData,
+			IProgressMonitor monitor) throws CoreException {
+		TaskAttribute attributeProject = parentTaskData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
+		String product = attributeProject.getValue();
+
+		TaskAttribute subAttributeProject = createAttribute(subTaskData, BugzillaReportElement.PRODUCT);
+		subAttributeProject.setValue(product);
+
+		initializeTaskData(repository, subTaskData, monitor);
+		// TODO:
+		//cloneTaskData(parentTaskData, subTaskData);
+		TaskAttribute attributeBlocked = createAttribute(subTaskData, BugzillaReportElement.BLOCKED);
+		attributeBlocked.setValue(parentTaskData.getTaskId());
+
+		TaskAttribute parentAttributeAssigned = parentTaskData.getRoot()
+				.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+		TaskAttribute attributeAssigned = createAttribute(subTaskData, BugzillaReportElement.ASSIGNED_TO);
+		attributeAssigned.setValue(parentAttributeAssigned.getValue());
+
+		return true;
+	}
+
+	@Override
+	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
+		//client = connector.getClientManager().getClient(taskRepository, new NullProgressMonitor());
+		return new BugzillaAttributeMapper(taskRepository);
+	}
+
+	//*************************** OLD API
+
 	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
 		Set<String> result = new HashSet<String>();
-		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());
+		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKey());
 		if (attribute != null) {
 			String[] ids = attribute.getValue().split(",");
 			for (String id : ids) {
@@ -263,28 +306,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	}
 
-	@Override
-	public boolean canGetMultiTaskData() {
-		return true;
-	}
-
-	@Override
-	public boolean initializeSubTaskData(TaskRepository taskRepository, RepositoryTaskData taskData,
-			RepositoryTaskData parentTaskData, IProgressMonitor monitor) throws CoreException {
-		String project = parentTaskData.getProduct();
-		taskData.setAttributeValue(RepositoryTaskAttribute.PRODUCT, project);
-		initializeTaskData(taskRepository, taskData, monitor);
-		cloneTaskData(parentTaskData, taskData);
-		taskData.setAttributeValue(BugzillaReportElement.BLOCKED.getKeyString(), parentTaskData.getTaskId());
-		taskData.setAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED, parentTaskData.getAssignedTo());
-		taskData.setDescription("");
-		taskData.setSummary("");
-		return true;
-	}
-
-	@Override
-	public boolean canInitializeSubTaskData(ITask task, RepositoryTaskData parentTaskData) {
-		return true;
-	}
+//	@Override
+//	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
+//		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getConnectorKind(), taskData.getTaskKind());
+//	}
 
 }

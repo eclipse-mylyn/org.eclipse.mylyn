@@ -43,7 +43,7 @@ public class BugzillaProductParserTest extends TestCase {
 	}
 
 	private TaskRepository setRepository(String url) {
-		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, url);
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, url);
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 		return repository;

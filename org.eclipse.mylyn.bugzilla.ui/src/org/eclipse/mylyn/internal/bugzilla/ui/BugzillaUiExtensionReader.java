@@ -75,7 +75,7 @@ public class BugzillaUiExtensionReader {
 
 		if (languageName != null) {
 			BugzillaRepositoryConnector connector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-					.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+					.getRepositoryConnector(BugzillaCorePlugin.CONNECTOR_KIND);
 
 			BugzillaLanguageSettings bugzillaLanguageSettings = new BugzillaLanguageSettings(languageName);
 

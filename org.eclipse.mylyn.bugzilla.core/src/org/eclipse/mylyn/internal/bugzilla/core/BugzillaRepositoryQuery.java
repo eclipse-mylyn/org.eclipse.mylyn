@@ -26,7 +26,7 @@ public class BugzillaRepositoryQuery extends RepositoryQuery {
 
 	@Override
 	public String getConnectorKind() {
-		return BugzillaCorePlugin.REPOSITORY_KIND;
+		return BugzillaCorePlugin.CONNECTOR_KIND;
 	}
 
 	public boolean isCustomQuery() {

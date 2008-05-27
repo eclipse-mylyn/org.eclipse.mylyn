@@ -10,10 +10,10 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.util.Locale;
 
-import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -38,15 +38,18 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
 	private StringBuffer characters;
 
-	private final LegacyTaskDataCollector collector;
+	private final TaskDataCollector collector;
 
 	private final String repositoryUrl;
 
 	private int resultCount;
 
-	public SaxBugzillaQueryContentHandler(String repositoryUrl, LegacyTaskDataCollector collector) {
+	private final TaskAttributeMapper mapper;
+
+	public SaxBugzillaQueryContentHandler(String repositoryUrl, TaskDataCollector collector, TaskAttributeMapper mapper) {
 		this.repositoryUrl = repositoryUrl;
 		this.collector = collector;
+		this.mapper = mapper;
 	}
 
 	@Override
@@ -113,11 +116,11 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 				description = parsedText;
 				break;
 			case LI:
-				RepositoryTaskData taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
-						BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, id);
-				taskData.setAttributeValue(RepositoryTaskAttribute.SUMMARY, description);
-				taskData.setAttributeValue(RepositoryTaskAttribute.PRIORITY, priority);
-				taskData.setAttributeValue(RepositoryTaskAttribute.USER_OWNER, owner);
+				TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, repositoryUrl, id);
+				BugzillaTaskDataHandler.createAttribute(taskData, BugzillaReportElement.SHORT_DESC).setValue(
+						description);
+				BugzillaTaskDataHandler.createAttribute(taskData, BugzillaReportElement.PRIORITY).setValue(priority);
+				BugzillaTaskDataHandler.createAttribute(taskData, BugzillaReportElement.ASSIGNED_TO).setValue(owner);
 				taskData.setPartial(true);
 				collector.accept(taskData);
 				resultCount++;

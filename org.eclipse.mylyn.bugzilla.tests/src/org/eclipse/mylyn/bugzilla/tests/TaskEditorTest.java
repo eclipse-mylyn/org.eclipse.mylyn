@@ -54,11 +54,11 @@ public class TaskEditorTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testAccessNewEditor() throws Exception {
-		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				BugzillaCorePlugin.CONNECTOR_KIND, repository.getRepositoryUrl(),
 				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 		model.setNew(true);
 		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()
@@ -84,11 +84,11 @@ public class TaskEditorTest extends TestCase {
 	}
 
 	public void testinitializeTaskData() throws Exception {
-		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, repository.getRepositoryUrl(),
+				BugzillaCorePlugin.CONNECTOR_KIND, repository.getRepositoryUrl(),
 				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
 		model.setNew(true);
 		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()

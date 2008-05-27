@@ -420,7 +420,7 @@ public class BugzillaProductPage extends WizardPage {
 	 */
 	public void saveDataToModel() throws CoreException {
 		RepositoryTaskData model = bugWizard.taskData;
-		model.setAttributeValue(BugzillaReportElement.PRODUCT.getKeyString(),
+		model.setAttributeValue(BugzillaReportElement.PRODUCT.getKey(),
 				(String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement());
 		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
 				.getRepositoryConnector(repository.getConnectorKind());

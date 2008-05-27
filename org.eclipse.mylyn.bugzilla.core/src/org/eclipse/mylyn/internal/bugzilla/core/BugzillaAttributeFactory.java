@@ -18,7 +18,9 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 /**
  * @author Rob Elves
  * @author Mik Kersten
+ * @deprecated
  */
+@Deprecated
 public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 
 	private static final String DATE_FORMAT_1 = "yyyy-MM-dd HH:mm";
@@ -42,59 +44,59 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	@Override
 	public String mapCommonAttributeKey(String key) {
 		if (key.equals(RepositoryTaskAttribute.NEW_CC)) {
-			return BugzillaReportElement.NEWCC.getKeyString();
+			return BugzillaReportElement.NEWCC.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_DATE)) {
-			return BugzillaReportElement.BUG_WHEN.getKeyString();
+			return BugzillaReportElement.BUG_WHEN.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_AUTHOR)) {
-			return BugzillaReportElement.WHO.getKeyString();
+			return BugzillaReportElement.WHO.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_AUTHOR_NAME)) {
-			return BugzillaReportElement.WHO_NAME.getKeyString();
+			return BugzillaReportElement.WHO_NAME.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.USER_CC)) {
-			return BugzillaReportElement.CC.getKeyString();
+			return BugzillaReportElement.CC.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_TEXT)) {
-			return BugzillaReportElement.THETEXT.getKeyString();
+			return BugzillaReportElement.THETEXT.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.DATE_CREATION)) {
-			return BugzillaReportElement.CREATION_TS.getKeyString();
+			return BugzillaReportElement.CREATION_TS.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.DESCRIPTION)) {
-			return BugzillaReportElement.DESC.getKeyString();
+			return BugzillaReportElement.DESC.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.ATTACHMENT_ID)) {
-			return BugzillaReportElement.ATTACHID.getKeyString();
+			return BugzillaReportElement.ATTACHID.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.ATTACHMENT_TYPE)) {
-			return BugzillaReportElement.TYPE.getKeyString();
+			return BugzillaReportElement.TYPE.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.ATTACHMENT_CTYPE)) {
-			return BugzillaReportElement.CTYPE.getKeyString();
+			return BugzillaReportElement.CTYPE.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.USER_ASSIGNED)) {
-			return BugzillaReportElement.ASSIGNED_TO.getKeyString();
+			return BugzillaReportElement.ASSIGNED_TO.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.USER_ASSIGNED_NAME)) {
-			return BugzillaReportElement.ASSIGNED_TO_NAME.getKeyString();
+			return BugzillaReportElement.ASSIGNED_TO_NAME.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.RESOLUTION)) {
-			return BugzillaReportElement.RESOLUTION.getKeyString();
+			return BugzillaReportElement.RESOLUTION.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.STATUS)) {
-			return BugzillaReportElement.BUG_STATUS.getKeyString();
+			return BugzillaReportElement.BUG_STATUS.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.DATE_MODIFIED)) {
-			return BugzillaReportElement.DELTA_TS.getKeyString();
+			return BugzillaReportElement.DELTA_TS.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.USER_REPORTER)) {
-			return BugzillaReportElement.REPORTER.getKeyString();
+			return BugzillaReportElement.REPORTER.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.USER_REPORTER_NAME)) {
-			return BugzillaReportElement.REPORTER_NAME.getKeyString();
+			return BugzillaReportElement.REPORTER_NAME.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.SUMMARY)) {
-			return BugzillaReportElement.SHORT_DESC.getKeyString();
+			return BugzillaReportElement.SHORT_DESC.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.PRODUCT)) {
-			return BugzillaReportElement.PRODUCT.getKeyString();
+			return BugzillaReportElement.PRODUCT.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.KEYWORDS)) {
-			return BugzillaReportElement.KEYWORDS.getKeyString();
+			return BugzillaReportElement.KEYWORDS.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.ATTACHMENT_DATE)) {
-			return BugzillaReportElement.DATE.getKeyString();
+			return BugzillaReportElement.DATE.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.ATTACHMENT_SIZE)) {
-			return BugzillaReportElement.SIZE.getKeyString();
+			return BugzillaReportElement.SIZE.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.ADD_SELF_CC)) {
-			return BugzillaReportElement.ADDSELFCC.getKeyString();
+			return BugzillaReportElement.ADDSELFCC.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.PRIORITY)) {
-			return BugzillaReportElement.PRIORITY.getKeyString();
+			return BugzillaReportElement.PRIORITY.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_NEW)) {
-			return BugzillaReportElement.NEW_COMMENT.getKeyString();
+			return BugzillaReportElement.NEW_COMMENT.getKey();
 		} else if (key.equals(RepositoryTaskAttribute.COMPONENT)) {
-			return BugzillaReportElement.COMPONENT.getKeyString();
+			return BugzillaReportElement.COMPONENT.getKey();
 		} else {
 			return key;
 		}
@@ -135,13 +137,13 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 		try {
 			String mappedKey = mapCommonAttributeKey(attributeKey);
 			Date parsedDate = null;
-			if (mappedKey.equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
+			if (mappedKey.equals(BugzillaReportElement.DELTA_TS.getKey())) {
 				parsedDate = new SimpleDateFormat(delta_ts_format).parse(dateString);
-			} else if (mappedKey.equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
+			} else if (mappedKey.equals(BugzillaReportElement.CREATION_TS.getKey())) {
 				parsedDate = new SimpleDateFormat(creation_ts_format).parse(dateString);
-			} else if (mappedKey.equals(BugzillaReportElement.BUG_WHEN.getKeyString())) {
+			} else if (mappedKey.equals(BugzillaReportElement.BUG_WHEN.getKey())) {
 				parsedDate = new SimpleDateFormat(comment_creation_ts_format).parse(dateString);
-			} else if (mappedKey.equals(BugzillaReportElement.DATE.getKeyString())) {
+			} else if (mappedKey.equals(BugzillaReportElement.DATE.getKey())) {
 				parsedDate = new SimpleDateFormat(attachment_creation_ts_format).parse(dateString);
 			}
 			return parsedDate;

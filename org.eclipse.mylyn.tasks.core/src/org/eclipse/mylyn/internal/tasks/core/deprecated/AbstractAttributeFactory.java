@@ -11,13 +11,14 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 
 /**
  * Extend to provide mapping between repository task attribute IDs and native repository IDs.
  * 
  * @author Rob Elves
  * @since 2.0
- * @deprecated use {@link AttributeMapper} instead
+ * @deprecated use {@link TaskAttributeMapper} instead
  */
 @SuppressWarnings("serial")
 @Deprecated

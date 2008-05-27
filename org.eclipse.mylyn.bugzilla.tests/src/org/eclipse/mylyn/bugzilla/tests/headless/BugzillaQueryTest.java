@@ -53,7 +53,7 @@ public class BugzillaQueryTest extends TestCase {
 		super.setUp();
 
 		connectorOriginal = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()
-				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+				.getRepositoryConnector(BugzillaCorePlugin.CONNECTOR_KIND);
 
 		BugzillaLanguageSettings language = BugzillaCorePlugin.getDefault().getLanguageSetting(
 				IBugzillaConstants.DEFAULT_LANG);
@@ -62,7 +62,7 @@ public class BugzillaQueryTest extends TestCase {
 		connector.init(new TaskList());
 		connector.addLanguageSetting(language);
 		handler = connector.getLegacyTaskDataHandler();
-		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 	}
@@ -94,7 +94,7 @@ public class BugzillaQueryTest extends TestCase {
 
 		// You can use the getAttributeValue to pull up the information on any
 		// part of the bug
-		assertEquals("P1", taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKeyString()));
+		assertEquals("P1", taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKey()));
 	}
 
 	// TODO: Uncomment when bug#176513 completed

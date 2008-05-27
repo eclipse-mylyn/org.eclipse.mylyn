@@ -18,10 +18,9 @@
             class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaConnectorUi"
             name="Bugzilla Repository Ui"
             overlayIcon="icons/eview16/overlay-bugzilla.gif"/>
-
-	  <taskListFactory 
-            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListFactory"
-            id="org.eclipse.mylyn.bugzilla.tasklist.factory"/>
+              
+	  <taskListMigrator 
+            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListMigrator"/>
    </extension> 
     <extension 
          point="org.eclipse.mylyn.bugzilla.core.languages"> 
@@ -60,9 +59,12 @@
       </language> 
    </extension>    
   
-   <extension
+     <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
-      <editorFactory class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskEditorFactory"/>
+      <pageFactory
+            class="org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditorPageFactory"
+            id="org.eclipse.mylyn.bugzilla.ui.pageFactory">
+      </pageFactory>            
    </extension>
    
 </plugin>

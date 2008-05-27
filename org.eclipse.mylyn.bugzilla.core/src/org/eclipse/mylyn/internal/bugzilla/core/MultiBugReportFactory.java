@@ -16,9 +16,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * Reads bug reports from repository.
@@ -31,13 +32,11 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 		super(inStream, encoding);
 	}
 
-	private static BugzillaAttributeFactory bugzillaAttributeFactory = new BugzillaAttributeFactory();
-
-	public void populateReport(Map<String, RepositoryTaskData> bugMap, LegacyTaskDataCollector collector,
+	public void populateReport(Map<String, TaskData> bugMap, TaskDataCollector collector, TaskAttributeMapper mapper,
 			List<BugzillaCustomField> customFields) throws IOException, CoreException {
 
-		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(bugzillaAttributeFactory,
-				collector, bugMap, customFields);
+		SaxMultiBugReportContentHandler contentHandler = new SaxMultiBugReportContentHandler(mapper, collector, bugMap,
+				customFields);
 		collectResults(contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {

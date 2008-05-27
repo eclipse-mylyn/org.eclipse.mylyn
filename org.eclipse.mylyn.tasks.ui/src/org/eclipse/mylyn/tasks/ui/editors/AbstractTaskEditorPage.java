@@ -622,6 +622,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			ControlContribution repositoryLabelControl = new ControlContribution("Title") {
 				@Override
 				protected Control createControl(Composite parent) {
+					FormToolkit toolkit = getTaskEditor().getHeaderForm().getToolkit();
 					Composite composite = toolkit.createComposite(parent);
 					composite.setLayout(new RowLayout());
 					composite.setBackground(null);

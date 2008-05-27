@@ -87,7 +87,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		}
 
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+				.getRepositoryConnector(BugzillaCorePlugin.CONNECTOR_KIND);
 
 		TasksUi.getRepositoryManager().addListener(bugzillaConnector.getClientManager());
 
@@ -116,7 +116,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+				.getRepositoryConnector(BugzillaCorePlugin.CONNECTOR_KIND);
 
 		TasksUi.getRepositoryManager().removeListener(bugzillaConnector.getClientManager());
 

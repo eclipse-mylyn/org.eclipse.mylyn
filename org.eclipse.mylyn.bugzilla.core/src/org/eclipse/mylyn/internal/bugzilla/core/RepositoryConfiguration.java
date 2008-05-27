@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,9 +22,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryOperation;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 
 /**
  * Class describing the configuration of products and components for a given Bugzilla installation.
@@ -31,28 +32,6 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
  * @author Rob Elves
  */
 public class RepositoryConfiguration implements Serializable {
-
-	private static final String OPERATION_INPUT_ASSIGNED_TO = "assigned_to";
-
-	private static final String OPERATION_INPUT_DUP_ID = "dup_id";
-
-	private static final String OPERATION_OPTION_RESOLUTION = "resolution";
-
-	private static final String OPERATION_LABEL_CLOSE = "Mark as CLOSED";
-
-	private static final String OPERATION_LABEL_VERIFY = "Mark as VERIFIED";
-
-	private static final String OPERATION_LABEL_REOPEN = "Reopen bug";
-
-	private static final String OPERATION_LABEL_REASSIGN_DEFAULT = "Reassign to default assignee";
-
-	private static final String OPERATION_LABEL_REASSIGN = "Reassign to";
-
-	private static final String OPERATION_LABEL_DUPLICATE = "Mark as duplicate of #";
-
-	private static final String OPERATION_LABEL_RESOLVE = "Resolve as";
-
-	private static final String OPERATION_LABEL_ACCEPT = "Accept (change status to ASSIGNED)";
 
 	private static final long serialVersionUID = 575019225495659016L;
 
@@ -432,14 +411,19 @@ public class RepositoryConfiguration implements Serializable {
 		return customFields;
 	}
 
-	public void configureTaskData(RepositoryTaskData taskData) {
+	public void configureTaskData(TaskData taskData) {
 		updateAttributeOptions(taskData);
 		addValidOperations(taskData);
 	}
 
-	public void updateAttributeOptions(RepositoryTaskData existingReport) {
-		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
-		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
+	public void updateAttributeOptions(TaskData existingReport) {
+		TaskAttribute attributeProduct = existingReport.getRoot().getMappedAttribute(
+				BugzillaReportElement.PRODUCT.getKey());
+		if (attributeProduct == null) {
+			return;
+		}
+		String product = attributeProduct.getValue();
+		for (TaskAttribute attribute : new HashSet<TaskAttribute>(existingReport.getRoot().getAttributes().values())) {
 			if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 				attribute.clearOptions();
 				List<BugzillaCustomField> customFields = getCustomFields();
@@ -448,13 +432,22 @@ public class RepositoryConfiguration implements Serializable {
 					if (bugzillaCustomField.getName().equals(attribute.getId())) {
 						List<String> optionList = bugzillaCustomField.getOptions();
 						for (String option : optionList) {
-							attribute.addOption(option, option);
+							attribute.putOption(option, option);
 						}
 					}
 				}
 			} else {
-				BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getId().trim().toUpperCase(
-						Locale.ENGLISH));
+
+				BugzillaReportElement element;
+				try {
+					element = BugzillaReportElement.valueOf(attribute.getId().trim().toUpperCase(Locale.ENGLISH));
+				} catch (RuntimeException e) {
+					if (e instanceof IllegalArgumentException) {
+						// ignore unrecognized tags
+						continue;
+					}
+					throw e;
+				}
 				attribute.clearOptions();
 				List<String> optionValues = getOptionValues(element, product);
 				if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
@@ -463,12 +456,12 @@ public class RepositoryConfiguration implements Serializable {
 				}
 				if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
 
-					existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
+					existingReport.getRoot().removeAttribute(BugzillaReportElement.TARGET_MILESTONE.getKey());
 					continue;
 				}
 				attribute.clearOptions();
 				for (String option : optionValues) {
-					attribute.addOption(option, option);
+					attribute.putOption(option, option);
 				}
 
 				// TODO: bug#162428, bug#150680 - something along the lines of...
@@ -484,14 +477,21 @@ public class RepositoryConfiguration implements Serializable {
 
 	}
 
-	private void addValidOperations(RepositoryTaskData bugReport) {
-		BUGZILLA_REPORT_STATUS status;
-		try {
-			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
-		} catch (RuntimeException e) {
-			StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Unrecognized status: "
-					+ bugReport.getStatus(), e));
-			status = BUGZILLA_REPORT_STATUS.NEW;
+	private void addValidOperations(TaskData bugReport) {
+		TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+
+		BUGZILLA_REPORT_STATUS status = BUGZILLA_REPORT_STATUS.NEW;
+		if (attributeStatus == null) {
+			StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+					"Status not found for task.  Synchronize task to correct."));
+		} else {
+			try {
+				status = BUGZILLA_REPORT_STATUS.valueOf(attributeStatus.getValue());
+			} catch (RuntimeException e) {
+				StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Unrecognized status: "
+						+ attributeStatus.getValue(), e));
+				status = BUGZILLA_REPORT_STATUS.NEW;
+			}
 		}
 		switch (status) {
 		case UNCONFIRMED:
@@ -535,54 +535,48 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
-	private void addOperation(RepositoryTaskData bugReport, BUGZILLA_OPERATION opcode) {
-		RepositoryOperation newOperation = null;
+	private void addOperation(TaskData bugReport, BUGZILLA_OPERATION opcode) {
+		TaskAttribute attribute;
+		TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(TaskAttribute.OPERATION);
+		if (operationAttribute == null) {
+			operationAttribute = bugReport.getRoot().createAttribute(TaskAttribute.OPERATION);
+		}
+
 		switch (opcode) {
 		case none:
-			newOperation = new RepositoryOperation(opcode.toString(), "Leave as " + bugReport.getStatus() + " "
-					+ bugReport.getResolution());
-			newOperation.setChecked(true);
-			break;
-		case accept:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_ACCEPT);
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
+
+			TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+			TaskAttribute attributeResolution = bugReport.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
+
+			String label = String.format(opcode.getLabel(), attributeStatus.getValue(), attributeResolution.getValue());
+
+			TaskOperation.applyTo(attribute, opcode.toString(), label);
+			// set as default
+			TaskOperation.applyTo(operationAttribute, opcode.toString(), label);
 			break;
 		case resolve:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_RESOLVE);
-			newOperation.setUpOptions(OPERATION_OPTION_RESOLUTION);
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
+			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
+			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(opcode.getInputId());
+			attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
 			for (String resolution : getResolutions()) {
 				// DUPLICATE and MOVED have special meanings so do not show as resolution
 				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) {
-					newOperation.addOption(resolution, resolution);
+					attrResolvedInput.putOption(resolution, resolution);
 				}
 			}
 			break;
-		case duplicate:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_DUPLICATE);
-			newOperation.setInputName(OPERATION_INPUT_DUP_ID);
-			newOperation.setInputValue("");
-			break;
-		case reassign:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REASSIGN);
-			newOperation.setInputName(OPERATION_INPUT_ASSIGNED_TO);
-			newOperation.setInputValue("");
-			break;
-		case reassignbycomponent:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REASSIGN_DEFAULT);
-			break;
-		case reopen:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_REOPEN);
-			break;
-		case verify:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_VERIFY);
-			break;
-		case close:
-			newOperation = new RepositoryOperation(opcode.toString(), OPERATION_LABEL_CLOSE);
-			break;
 		default:
+			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
+			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
+			if (opcode.getInputId() != null) {
+				TaskAttribute attrInput = bugReport.getRoot().createAttribute(opcode.getInputId());
+				attrInput.getMetaData().defaults().setReadOnly(false).setType(TaskAttribute.TYPE_SHORT_TEXT);
+				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
+			}
 			break;
-		}
-		if (newOperation != null) {
-			bugReport.addOperation(newOperation);
 		}
 	}
 

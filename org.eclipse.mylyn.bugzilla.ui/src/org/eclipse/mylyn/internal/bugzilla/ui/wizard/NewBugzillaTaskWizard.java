@@ -58,7 +58,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 
 	public NewBugzillaTaskWizard(TaskRepository repository) {
 		this(false, repository);
-		taskData = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND,
+		taskData = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.CONNECTOR_KIND,
 				repository.getRepositoryUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		taskData.setNew(true);
 		super.setDefaultPageImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(

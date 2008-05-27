@@ -72,8 +72,8 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 		detector = new TaskHyperlinkDetector();
 
-		repository1 = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, "repository_url1");
-		repository2 = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, "repository_url2");
+		repository1 = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "repository_url1");
+		repository2 = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "repository_url2");
 
 		shell = new Shell();
 		viewer = new RepositoryTextViewer(repository1, shell, SWT.NONE);

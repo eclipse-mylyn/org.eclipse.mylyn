@@ -52,7 +52,7 @@ public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask) task;
 			final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-					BugzillaCorePlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
+					BugzillaCorePlugin.CONNECTOR_KIND, bugzillaTask.getRepositoryUrl());
 			BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
 			return input;
 		}
@@ -77,7 +77,7 @@ public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 	@Override
 	public boolean canCreateEditorFor(IEditorInput input) {
 		if (input instanceof RepositoryTaskEditorInput) {
-			return BugzillaCorePlugin.REPOSITORY_KIND.equals(((RepositoryTaskEditorInput) input).getRepository()
+			return BugzillaCorePlugin.CONNECTOR_KIND.equals(((RepositoryTaskEditorInput) input).getRepository()
 					.getConnectorKind());
 		}
 		return false;

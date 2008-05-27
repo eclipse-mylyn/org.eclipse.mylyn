@@ -44,7 +44,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 		repository.setAnonymous(false);
@@ -53,7 +53,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 
 	private BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,
 			String htAuthPass, String encoding) throws MalformedURLException {
-		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, hostUrl);
+		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, hostUrl);
 
 		AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, credentials, false);
@@ -149,7 +149,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUrl(IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
-		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		assertNotNull(repositoryTest);
 		assertEquals(tempUid, repositoryTest.getUserName());
@@ -168,7 +168,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUserId("bogus");
 		wizard.performFinish();
 		assertEquals(1, manager.getAllRepositories().size());
-		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+		TaskRepository repositoryTest = manager.getRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		assertNotNull(repositoryTest);
 		wizard = new EditRepositoryWizard(repositoryTest);

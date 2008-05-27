@@ -49,7 +49,7 @@ public class BugzillaSearchDialogTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testSearchDialogInit() throws Exception {
-		TaskRepository repo = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
+		TaskRepository repo = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		repo.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
 		manager.addRepository(repo);

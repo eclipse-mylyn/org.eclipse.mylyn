@@ -22,7 +22,9 @@ import org.w3c.dom.Element;
 
 /**
  * @author Mik Kersten
+ * @deprecated see BugzillaTaskListMigrator
  */
+@Deprecated
 public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 
 	private static final String KEY_SEVERITY = "bugzilla.severity";

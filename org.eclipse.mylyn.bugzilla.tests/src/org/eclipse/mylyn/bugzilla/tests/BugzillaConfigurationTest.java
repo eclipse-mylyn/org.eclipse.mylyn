@@ -52,7 +52,7 @@ public class BugzillaConfigurationTest extends TestCase {
 
 	private BugzillaClient createClient(String hostUrl, String username, String password, String htAuthUser,
 			String htAuthPass, String encoding) throws MalformedURLException, CoreException {
-		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, hostUrl);
+		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, hostUrl);
 
 		AuthenticationCredentials credentials = new AuthenticationCredentials(username, password);
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, credentials, false);

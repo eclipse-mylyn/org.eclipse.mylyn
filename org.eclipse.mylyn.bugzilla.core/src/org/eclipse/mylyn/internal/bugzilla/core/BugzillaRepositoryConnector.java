@@ -12,12 +12,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -27,28 +28,23 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.ITaskList;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskFactory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.QueryHitCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnector {
+public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String BUG_ID = "&bug_id=";
 
@@ -62,37 +58,37 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 
 	private static final String DEADLINE_FORMAT = "yyyy-MM-dd";
 
-	private BugzillaAttachmentHandler attachmentHandler;
+//	private BugzillaAttachmentHandler attachmentHandler;
 
-	private BugzillaTaskDataHandler taskDataHandler;
+	private final BugzillaTaskDataHandler taskDataHandler = new BugzillaTaskDataHandler(this);
 
 	private BugzillaClientManager clientManager;
 
 	private final Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
 
-	@Override
-	public void init(ITaskList taskList) {
-		super.init(taskList);
-		this.taskDataHandler = new BugzillaTaskDataHandler(this);
-		this.attachmentHandler = new BugzillaAttachmentHandler(this);
-		BugzillaCorePlugin.setConnector(this);
-		BugzillaLanguageSettings enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
-		enSetting.addLanguageAttribute("error_login", "Login");
-		enSetting.addLanguageAttribute("error_login", "log in");
-		enSetting.addLanguageAttribute("error_login", "check e-mail");
-		enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password");
-		enSetting.addLanguageAttribute("error_collision", "Mid-air collision!");
-		enSetting.addLanguageAttribute("error_comment_required", "Comment Required");
-		enSetting.addLanguageAttribute("error_logged_out", "logged out");
-		enSetting.addLanguageAttribute("bad_login", "Login");
-		enSetting.addLanguageAttribute("bad_login", "log in");
-		enSetting.addLanguageAttribute("bad_login", "check e-mail");
-		enSetting.addLanguageAttribute("bad_login", "Invalid Username Or Password");
-		enSetting.addLanguageAttribute("bad_login", "error");
-		enSetting.addLanguageAttribute("processed", "processed");
-		enSetting.addLanguageAttribute("changes_submitted", "Changes submitted");
-		languages.add(enSetting);
-	}
+//	@Override
+//	public void init(ITaskList taskList) {
+//		super.init(taskList);
+//		this.taskDataHandler = new BugzillaTaskDataHandler(this);
+//		this.attachmentHandler = new BugzillaAttachmentHandler(this);
+//		BugzillaCorePlugin.setConnector(this);
+//		BugzillaLanguageSettings enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
+//		enSetting.addLanguageAttribute("error_login", "Login");
+//		enSetting.addLanguageAttribute("error_login", "log in");
+//		enSetting.addLanguageAttribute("error_login", "check e-mail");
+//		enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password");
+//		enSetting.addLanguageAttribute("error_collision", "Mid-air collision!");
+//		enSetting.addLanguageAttribute("error_comment_required", "Comment Required");
+//		enSetting.addLanguageAttribute("error_logged_out", "logged out");
+//		enSetting.addLanguageAttribute("bad_login", "Login");
+//		enSetting.addLanguageAttribute("bad_login", "log in");
+//		enSetting.addLanguageAttribute("bad_login", "check e-mail");
+//		enSetting.addLanguageAttribute("bad_login", "Invalid Username Or Password");
+//		enSetting.addLanguageAttribute("bad_login", "error");
+//		enSetting.addLanguageAttribute("processed", "processed");
+//		enSetting.addLanguageAttribute("changes_submitted", "Changes submitted");
+//		languages.add(enSetting);
+//	}
 
 	@Override
 	public String getLabel() {
@@ -100,37 +96,23 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public AbstractAttachmentHandler getAttachmentHandler() {
-		return attachmentHandler;
-	}
-
-	@Override
-	public AbstractTaskDataHandler getLegacyTaskDataHandler() {
-		return taskDataHandler;
-	}
-
-	@Override
 	public String getConnectorKind() {
-		return BugzillaCorePlugin.REPOSITORY_KIND;
+		return BugzillaCorePlugin.CONNECTOR_KIND;
 	}
 
 	@Override
-	public AbstractTask createTask(String repositoryUrl, String id, String summary) {
-		BugzillaTask task = new BugzillaTask(repositoryUrl, id, summary);
-		task.setCreationDate(new Date());
-		return task;
-	}
-
-	@Override
-	public boolean updateTaskFromTaskData(TaskRepository repository, ITask repositoryTask, RepositoryTaskData taskData) {
-		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
+	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
 		if (taskData != null) {
-			if (taskData.isPartial()) {
-				bugzillaTask.setSummary(taskData.getAttributeValue(RepositoryTaskAttribute.SUMMARY));
-				bugzillaTask.setPriority(taskData.getAttributeValue(RepositoryTaskAttribute.PRIORITY));
-				bugzillaTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_OWNER));
-				return false;
-			}
+			TaskMapper scheme = new TaskMapper(taskData);
+			scheme.applyTo(task);
+
+//			if (taskData.isPartial()) {
+//				
+//				bugzillaTask.setSummary(getAtaskData.getAttributeValue(RepositoryTaskAttribute.SUMMARY));
+//				bugzillaTask.setPriority(taskData.getAttributeValue(RepositoryTaskAttribute.PRIORITY));
+//				bugzillaTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_OWNER));
+//				return;
+//			}
 
 ////			// subtasks
 //			repositoryTask.dropSubTasks();
@@ -154,117 +136,123 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 //			}
 
 			// Summary
-			String summary = taskData.getSummary();
-			bugzillaTask.setSummary(summary);
+//			String summary = taskData.getSummary();
+//			bugzillaTask.setSummary(summary);
 
 			// Owner
-			String owner = taskData.getAssignedTo();
-			if (owner != null && !owner.equals("")) {
-				bugzillaTask.setOwner(owner);
-			}
+//			String owner = taskData.getAssignedTo();
+//			if (owner != null && !owner.equals("")) {
+//				bugzillaTask.setOwner(owner);
+//			}
 
 			// Creation Date
-			String createdString = taskData.getCreated();
-			if (createdString != null && createdString.length() > 0) {
-				Date dateCreated = taskData.getAttributeFactory().getDateForAttributeType(
-						RepositoryTaskAttribute.DATE_CREATION, taskData.getCreated());
-				if (dateCreated != null) {
-					bugzillaTask.setCreationDate(dateCreated);
-				}
-			}
+//			String createdString = taskData.getCreated();
+//			if (createdString != null && createdString.length() > 0) {
+//				Date dateCreated = taskData.getAttributeFactory().getDateForAttributeType(
+//						RepositoryTaskAttribute.DATE_CREATION, taskData.getCreated());
+//				if (dateCreated != null) {
+//					bugzillaTask.setCreationDate(dateCreated);
+//				}
+//			}
 
 			// Completed
 			boolean isComplete = false;
 			// TODO: use repository configuration to determine what -completed-
 			// states are
-			if (taskData.getStatus() != null) {
-				isComplete = taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
-						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
-						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
+
+			TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+
+			if (attributeStatus != null) {
+				isComplete = attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
+						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
+						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
 			}
-			bugzillaTask.setCompleted(isComplete);
 
 			// Completion Date
 			if (isComplete) {
 				Date completionDate = null;
-				try {
 
-					List<TaskComment> taskComments = taskData.getComments();
-					if (taskComments != null && !taskComments.isEmpty()) {
-						// TODO: fix not to be based on comment
-						completionDate = new SimpleDateFormat(COMMENT_FORMAT).parse(taskComments.get(
-								taskComments.size() - 1).getCreated());
+				TaskAttribute[] taskComments = taskData.getAttributeMapper().getAttributesByType(taskData,
+						TaskAttribute.TYPE_COMMENT);
 
-					} else {
-						// Use last modified date
-						String lastMod = taskData.getLastModified();
-						if (lastMod != null && lastMod.length() > 0) {
-							completionDate = taskData.getAttributeFactory().getDateForAttributeType(
-									RepositoryTaskAttribute.DATE_MODIFIED, lastMod);
+				if (taskComments != null && taskComments.length > 0) {
+					TaskAttribute lastComment = taskComments[taskComments.length - 1];
+					if (lastComment != null) {
+						TaskAttribute attributeCommentDate = lastComment.getMappedAttribute(TaskAttribute.COMMENT_DATE);
+						if (attributeCommentDate != null) {
+							try {
+								completionDate = new SimpleDateFormat(COMMENT_FORMAT).parse(attributeCommentDate.getValue());
+							} catch (ParseException e) {
+								// ignore
+							}
 						}
 					}
 
-				} catch (Exception e) {
-
+				} else {
+					// Use last modified date
+					TaskAttribute attributeLastModified = taskData.getRoot().getMappedAttribute(
+							TaskAttribute.DATE_MODIFICATION);
+					if (attributeLastModified != null && attributeLastModified.getValue().length() > 0) {
+						completionDate = taskData.getAttributeMapper().getDateValue(attributeLastModified);
+					}
 				}
 
-				if (bugzillaTask.getCompletionDate() != null && completionDate != null) {
-					// if changed:
-					// TODO: get taskListManger.setDueDate(ITask task, Date
-					// dueDate)
+				if (task.getCompletionDate() != null && completionDate != null) {
+					// TODO: if changed notify via task list
 				}
-				bugzillaTask.setCompletionDate(completionDate);
+				task.setCompletionDate(completionDate);
 
 			}
 
-			// Priority
-			String priority = PriorityLevel.getDefault().toString();
-			if (taskData.getAttribute(RepositoryTaskAttribute.PRIORITY) != null) {
-				priority = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY).getValue();
-			}
-			bugzillaTask.setPriority(priority);
+//			// Priority
+//			String priority = PriorityLevel.getDefault().toString();
+//			if (taskData.getAttribute(RepositoryTaskAttribute.PRIORITY) != null) {
+//				priority = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY).getValue();
+//			}
+//			bugzillaTask.setPriority(priority);
 
 			// Task Web Url
 			String url = getTaskUrl(repository.getRepositoryUrl(), taskData.getTaskId());
 			if (url != null) {
-				bugzillaTask.setUrl(url);
+				task.setUrl(url);
 			}
 
 			// Bugzilla Specific Attributes
 
 			// Product
-			if (taskData.getProduct() != null) {
-				bugzillaTask.setProduct(taskData.getProduct());
+			if (scheme.getProduct() != null) {
+				task.setAttribute(TaskAttribute.PRODUCT, scheme.getProduct());
 			}
 
 			// Severity
-			String severity = taskData.getAttributeValue(BugzillaReportElement.BUG_SEVERITY.getKeyString());
-			if (severity != null && !severity.equals("")) {
-				bugzillaTask.setSeverity(severity);
+			TaskAttribute attrSeverity = taskData.getRoot().getMappedAttribute(
+					BugzillaReportElement.BUG_SEVERITY.getKey());
+			if (attrSeverity != null && !attrSeverity.getValue().equals("")) {
+				task.setAttribute(BugzillaReportElement.BUG_SEVERITY.getKey(), attrSeverity.getValue());
 			}
 
 			// Due Date
-			if (taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null) {
+			if (taskData.getRoot().getMappedAttribute(BugzillaReportElement.ESTIMATED_TIME.getKey()) != null) {
 				Date dueDate = null;
 				// HACK: if estimated_time field exists, time tracking is
 				// enabled
 				try {
-					String dueStr = taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString());
-					if (dueStr != null) {
-						dueDate = new SimpleDateFormat(DEADLINE_FORMAT).parse(dueStr);
+					TaskAttribute attributeDeadline = taskData.getRoot().getMappedAttribute(
+							BugzillaReportElement.DEADLINE.getKey());
+					if (attributeDeadline != null) {
+						dueDate = new SimpleDateFormat(DEADLINE_FORMAT).parse(attributeDeadline.getValue());
 					}
 				} catch (Exception e) {
 					// ignore
 				}
-				bugzillaTask.setDueDate(dueDate);
+				task.setDueDate(dueDate);
 			}
 
 		}
-		return false;
 	}
 
-	@Override
-	public boolean updateTaskFromQueryHit(TaskRepository repository, ITask existingTask, AbstractTask newTask) {
+//	@Override
+//	public boolean updateTaskFromQueryHit(TaskRepository repository, ITask existingTask, AbstractTask newTask) {
 //		// these properties are not provided by Bugzilla queries
 //		newTask.setCompleted(existingTask.isCompleted());
 //		//	newTask.setCompletionDate(existingTask.getCompletionDate());
@@ -289,8 +277,8 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 //				changed = true;
 //			}
 //		}
-		return false;
-	}
+//		return false;
+//	}
 
 	@Override
 	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
@@ -344,7 +332,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
 				urlQueryString += newurlQueryString;
 				if (queryCounter >= 1000) {
-					queryForChanged(repository, changedTasks, urlQueryString);
+					queryForChanged(repository, changedTasks, urlQueryString, event);
 
 					queryCounter = 0;
 					urlQueryString = urlQueryBase + BUG_ID;
@@ -352,7 +340,7 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 				}
 
 				if (!itr.hasNext() && queryCounter != 0) {
-					queryForChanged(repository, changedTasks, urlQueryString);
+					queryForChanged(repository, changedTasks, urlQueryString, event);
 				}
 			}
 
@@ -374,20 +362,35 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 		}
 	}
 
-	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString)
-			throws UnsupportedEncodingException, CoreException {
-		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
+	/**
+	 * TODO: clean up use of BugzillaTaskDataCollector
+	 */
+	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString,
+			ISynchronizationContext context) throws UnsupportedEncodingException, CoreException {
 
-			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) {
-				// do not construct actual task objects here as query shouldn't result in new tasks
-				return (AbstractTask) taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
+		HashMap<String, ITask> taskById = new HashMap<String, ITask>();
+		for (ITask task : context.getTasks()) {
+			taskById.put(task.getTaskId(), task);
+		}
+		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.add(taskData);
 			}
-		});
+		};
 
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), urlQueryString, "");
-		performQuery(repository, query, collector, null, new NullProgressMonitor());
+		performQuery(repository, query, collector, context, new NullProgressMonitor());
 
-		changedTasks.addAll(collector.getTasks());
+		for (TaskData data : changedTaskData) {
+			ITask changedTask = taskById.get(data.getTaskId());
+			if (changedTask != null) {
+				changedTasks.add(changedTask);
+			}
+		}
+
 	}
 
 	@Override
@@ -406,12 +409,13 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 		try {
 			monitor.beginTask("Running query", IProgressMonitor.UNKNOWN);
 			BugzillaClient client = getClientManager().getClient(repository, monitor);
-			boolean hitsReceived = client.getSearchHits(query, resultCollector, monitor);
+			TaskAttributeMapper mapper = getTaskDataHandler().getAttributeMapper(repository);
+			boolean hitsReceived = client.getSearchHits(query, resultCollector, mapper, monitor);
 			if (!hitsReceived) {
 				// XXX: HACK in case of ip change bugzilla can return 0 hits
 				// due to invalid authorization token, forcing relogin fixes
 				client.logout(monitor);
-				client.getSearchHits(query, resultCollector, monitor);
+				client.getSearchHits(query, resultCollector, mapper, monitor);
 			}
 
 			return Status.OK_STATUS;
@@ -471,6 +475,26 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	public BugzillaClientManager getClientManager() {
 		if (clientManager == null) {
 			clientManager = new BugzillaClientManager();
+
+			// TODO: Move this initialization elsewhere
+			BugzillaCorePlugin.setConnector(this);
+			BugzillaLanguageSettings enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
+			enSetting.addLanguageAttribute("error_login", "Login");
+			enSetting.addLanguageAttribute("error_login", "log in");
+			enSetting.addLanguageAttribute("error_login", "check e-mail");
+			enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password");
+			enSetting.addLanguageAttribute("error_collision", "Mid-air collision!");
+			enSetting.addLanguageAttribute("error_comment_required", "Comment Required");
+			enSetting.addLanguageAttribute("error_logged_out", "logged out");
+			enSetting.addLanguageAttribute("bad_login", "Login");
+			enSetting.addLanguageAttribute("bad_login", "log in");
+			enSetting.addLanguageAttribute("bad_login", "check e-mail");
+			enSetting.addLanguageAttribute("bad_login", "Invalid Username Or Password");
+			enSetting.addLanguageAttribute("bad_login", "error");
+			enSetting.addLanguageAttribute("processed", "processed");
+			enSetting.addLanguageAttribute("changes_submitted", "Changes submitted");
+			languages.add(enSetting);
+
 		}
 		return clientManager;
 	}
@@ -490,7 +514,6 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 			try {
 				BugzillaClient client = getClientManager().getClient(repository, monitor);
 				if (client != null) {
-					int x;
 					String timestamp = client.getConfigurationTimestamp(monitor);
 					if (timestamp != null) {
 						String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
@@ -539,22 +562,38 @@ public class BugzillaRepositoryConnector extends AbstractLegacyRepositoryConnect
 	}
 
 	@Override
-	public RepositoryTaskData getLegacyTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
-			throws CoreException {
-		return getLegacyTaskDataHandler().getTaskData(repository, taskId, monitor);
+	public void postSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+//		try {
+//			monitor.beginTask("", 1);
+//			if (event.isFullSynchronization()) {
+//				event.getTaskRepository().setSynchronizationTimeStamp(
+//						getSynchronizationTimestamp(event.getTaskRepository(), event.getChangedTasks()));
+//			}
+//		} finally {
+//			monitor.done();
+//		}
 	}
 
 	@Override
-	public void postSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
-		try {
-			monitor.beginTask("", 1);
-			if (event.isFullSynchronization()) {
-				event.getTaskRepository().setSynchronizationTimeStamp(
-						getSynchronizationTimestamp(event.getTaskRepository(), event.getChangedTasks()));
-			}
-		} finally {
-			monitor.done();
+	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
+		return taskDataHandler.getTaskData(repository, taskId, monitor);
+	}
+
+	@Override
+	public AbstractTaskDataHandler getTaskDataHandler() {
+		return taskDataHandler;
+	}
+
+	@Override
+	public boolean hasChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
+		TaskMapper mapper = new TaskMapper(taskData);
+		Date localDate = task.getModificationDate();
+		Date repositoryDate = mapper.getModificationDate();
+		if (repositoryDate != null && repositoryDate.equals(localDate)) {
+			return false;
 		}
+		return true;
 	}
 
 }

@@ -535,7 +535,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	@Override
 	public String getConnectorKind() {
-		return BugzillaCorePlugin.REPOSITORY_KIND;
+		return BugzillaCorePlugin.CONNECTOR_KIND;
 	}
 
 }

@@ -64,6 +64,9 @@ public class DateRange implements Comparable<DateRange> {
 		return endDate;
 	}
 
+	/**
+	 * TODO: Move into label provider
+	 */
 	@Override
 	public String toString() {
 		boolean isThisWeek = TaskActivityUtil.getCurrentWeek().includes(this);

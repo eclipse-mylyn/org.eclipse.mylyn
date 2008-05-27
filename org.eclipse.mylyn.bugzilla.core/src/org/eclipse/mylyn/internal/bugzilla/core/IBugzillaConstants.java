@@ -221,7 +221,44 @@ public interface IBugzillaConstants {
 	public static final String VALUE_RESOLUTION_LATER = "LATER";
 
 	public static enum BUGZILLA_OPERATION {
-		none, accept, resolve, duplicate, reassign, reassignbycomponent, reopen, verify, close;
+		none("Leave as %s %s"),
+
+		accept("Accept (change status to ASSIGNED)"),
+
+		resolve("Resolve as", "resolution"),
+
+		duplicate("Mark as duplicate of #", "dup_id"),
+
+		reassign("Reassign to", "reassignInput"),
+
+		reassignbycomponent("Reassign to default assignee"),
+
+		reopen("Reopen bug"),
+
+		verify("Mark as VERIFIED"),
+
+		close("Mark as CLOSED");
+
+		private final String label;
+
+		private final String inputId;
+
+		BUGZILLA_OPERATION(String label) {
+			this(label, null);
+		}
+
+		BUGZILLA_OPERATION(String label, String inputId) {
+			this.label = label;
+			this.inputId = inputId;
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public String getInputId() {
+			return inputId;
+		}
 	}
 
 	public static enum BUGZILLA_REPORT_STATUS {
