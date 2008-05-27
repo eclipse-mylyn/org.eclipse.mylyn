@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -452,7 +453,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(TaskAttribute.PREFIX_COMMENT + i);
 		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
 		taskComment.setCommentId(attribute.getId());
-		taskComment.setAuthor(repositoryTaskData.getAttributeMapper().getTaskRepository().createPerson(comment.author));
+		IRepositoryPerson author = repositoryTaskData.getAttributeMapper().getTaskRepository().createPerson(
+				comment.author);
+		author.setName(comment.authorName);
+		taskComment.setAuthor(author);
 		TaskAttribute attrTimestamp = attribute.createAttribute(BugzillaReportElement.BUG_WHEN.getKey());
 		attrTimestamp.setValue(comment.createdTimeStamp);
 		taskComment.setCreationDate(repositoryTaskData.getAttributeMapper().getDateValue(attrTimestamp));

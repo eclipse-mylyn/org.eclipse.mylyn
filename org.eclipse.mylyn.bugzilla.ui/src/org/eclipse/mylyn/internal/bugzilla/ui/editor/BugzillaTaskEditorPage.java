@@ -29,12 +29,16 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	@Override
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
+
+		// remove unnecessary default editor parts
 		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
 			if (taskEditorPartDescriptor.getId().equals(ID_PART_PEOPLE)) {
 				descriptors.remove(taskEditorPartDescriptor);
 				break;
 			}
 		}
+
+		// Add the updated Bugzilla people part
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PEOPLE) {
 			@Override
 			public AbstractTaskEditorPart createPart() {

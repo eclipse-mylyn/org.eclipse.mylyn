@@ -48,15 +48,12 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		//assertEquals("", mapper.getTaskKey());
 
 		// test comments
-		TaskAttribute comments = data.getMappedAttribute(TaskAttribute.CONTAINER_COMMENTS);
-		assertEquals(12, comments.getAttributes().size());
-		TaskCommentMapper commentMap = TaskCommentMapper.createFrom(comments.getAttribute("0"));
-		assertEquals("Rob Elves", commentMap.getAuthor().getName());
-		assertEquals("Test new bug submission", commentMap.getText());
-		commentMap = TaskCommentMapper.createFrom(comments.getAttribute("1"));
+		TaskAttribute[] comments = data.getAttributeMapper().getAttributesByType(data, TaskAttribute.TYPE_COMMENT);
+		assertEquals(11, comments.length);
+		TaskCommentMapper commentMap = TaskCommentMapper.createFrom(comments[0]);
 		assertEquals("Rob Elves", commentMap.getAuthor().getName());
 		assertEquals("Created an attachment (id=1)\ntest\n\ntest attachments", commentMap.getText());
-		commentMap = TaskCommentMapper.createFrom(comments.getAttribute("11"));
+		commentMap = TaskCommentMapper.createFrom(comments[10]);
 		assertEquals("Tests", commentMap.getAuthor().getName());
 		assertEquals("test", commentMap.getText());
 	}

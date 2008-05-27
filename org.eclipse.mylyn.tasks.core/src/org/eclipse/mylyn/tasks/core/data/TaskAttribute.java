@@ -523,4 +523,10 @@ public final class TaskAttribute {
 		}
 	}
 
+	public TaskAttribute createMappedAttribute(String attributeId) {
+		Assert.isNotNull(attributeId);
+		String mappedAttributeId = getTaskData().getAttributeMapper().mapToRepositoryKey(this, attributeId);
+		Assert.isNotNull(mappedAttributeId);
+		return new TaskAttribute(this, mappedAttributeId);
+	}
 }
