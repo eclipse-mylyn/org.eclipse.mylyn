@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.bugs;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.CoreException;
@@ -16,12 +17,14 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.bugs.AbstractTaskContributor;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Steffen Pingel
@@ -96,18 +99,39 @@ public class TaskContributorManager {
 		taskContributors.remove(taskContributor);
 	}
 
-	public void updateAttributes(RepositoryTaskData taskData, IStatus status) {
+	public void postProcess(final IStatus status, final TaskData taskData) {
 		readExtensions();
 
-		for (AbstractTaskContributor contributor : taskContributors) {
-			String description = contributor.getDescription(status);
-			if (description != null) {
-				taskData.setDescription(description);
-				return;
-			}
-		}
+		for (final AbstractTaskContributor contributor : taskContributors) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e));
+				}
 
-		taskData.setDescription(defaultTaskContributor.getDescription(status));
+				public void run() throws Exception {
+					contributor.postProcess(status, taskData);
+				}
+			});
+		}
+	}
+
+	public void preProcess(final IStatus status, final Map<String, String> attributes) {
+		readExtensions();
+
+		for (final AbstractTaskContributor contributor : taskContributors) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Task contributor failed", e));
+				}
+
+				public void run() throws Exception {
+					Map<String, String> contributorAttributes = contributor.getAttributes(status);
+					if (contributorAttributes != null) {
+						attributes.putAll(contributorAttributes);
+					}
+				}
+			});
+		}
 	}
 
 }

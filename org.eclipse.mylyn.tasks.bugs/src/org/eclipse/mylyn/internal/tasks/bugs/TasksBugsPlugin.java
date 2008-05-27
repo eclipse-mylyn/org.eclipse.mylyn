@@ -8,6 +8,11 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.commons.core.AbstractErrorReporter;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -16,8 +21,31 @@ import org.osgi.framework.BundleContext;
  */
 public class TasksBugsPlugin extends AbstractUIPlugin {
 
+	public static class Reporter extends AbstractErrorReporter {
+
+		@Override
+		public int getPriority(IStatus status) {
+			return getTaskErrorReporter().getPriority(status);
+		}
+
+		@Override
+		public void handle(final IStatus status) {
+			IWorkbench workbench = PlatformUI.getWorkbench();
+			if (workbench != null) {
+				Display display = workbench.getDisplay();
+				if (display != null && !display.isDisposed()) {
+					display.asyncExec(new Runnable() {
+						public void run() {
+							getTaskErrorReporter().handle(status);
+						}
+					});
+				}
+			}
+		}
+	}
+
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.bugs";
-	
+
 	private static TasksBugsPlugin INSTANCE;
 
 	private static TaskErrorReporter taskErrorReporter;
@@ -32,7 +60,7 @@ public class TasksBugsPlugin extends AbstractUIPlugin {
 		}
 		return taskErrorReporter;
 	}
-	
+
 	public TasksBugsPlugin() {
 	}
 
@@ -47,5 +75,5 @@ public class TasksBugsPlugin extends AbstractUIPlugin {
 		INSTANCE = null;
 		super.stop(context);
 	}
-	
+
 }

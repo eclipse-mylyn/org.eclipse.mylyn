@@ -39,14 +39,12 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -73,6 +71,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		setImageDescriptor(TasksUiImages.TASK_NEW_SUB);
 	}
 
+	@SuppressWarnings( { "deprecation", "restriction" })
 	@Override
 	public void run() {
 		if (selectedTask == null) {
@@ -94,29 +93,19 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				selectedTask.getConnectorKind());
 		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			runLegacy((AbstractLegacyRepositoryConnector) connector);
+			createLegacyTask((AbstractLegacyRepositoryConnector) connector);
 			return;
 		}
 
-		ITask task = TasksUiUtil.createOutgoingNewTask(selectedTask.getConnectorKind());
 		TaskData taskData = createTaskData(connector);
 		if (taskData != null) {
-			ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(task, taskData);
 			try {
-				workingCopy.save(null, null);
+				TasksUiInternal.createAndOpenNewTask(taskData);
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to save task data for task: " + task.getUrl(), e));
-				TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.WARNING,
-						TasksUiPlugin.ID_PLUGIN, "Could not retrieve task data for task: " + selectedTask.getUrl()));
-				return;
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open new sub task", e));
+				TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.ERROR,
+						TasksUiPlugin.ID_PLUGIN, "Failed to create new sub task: " + e.getMessage()));
 			}
-
-			TaskRepository localTaskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-					task.getRepositoryUrl());
-			TaskEditorInput editorInput = new TaskEditorInput(localTaskRepository, task);
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 		}
 	}
 
@@ -186,7 +175,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 	}
 
 	@Deprecated
-	private void runLegacy(AbstractLegacyRepositoryConnector connector) {
+	private void createLegacyTask(AbstractLegacyRepositoryConnector connector) {
 		final org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
 		if (taskDataHandler == null) {
 			return;

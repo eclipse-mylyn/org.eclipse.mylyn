@@ -8,160 +8,164 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.AbstractErrorReporter;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
-import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.mylyn.internal.tasks.bugs.wizards.ReportErrorWizard;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Steffen Pingel
  */
-@SuppressWarnings( { "restriction", "deprecation" })
-public class TaskErrorReporter extends AbstractErrorReporter {
+public class TaskErrorReporter {
 
-	private final PluginRepositoryMappingManager manager;
+	private final PluginRepositoryMappingManager mappingManager;
+
+	private final TaskContributorManager contributorManager;
 
 	public TaskErrorReporter() {
-		manager = new PluginRepositoryMappingManager();
+		this.contributorManager = new TaskContributorManager();
+		this.mappingManager = new PluginRepositoryMappingManager();
 	}
 
-	// API 3.0 remove: always enable
-	public boolean isEnabled() {
-		return false; //manager.hasMappings();
+	public TaskContributorManager getContributorManager() {
+		return contributorManager;
 	}
 
-	@Override
+	public PluginRepositoryMappingManager getMappingManager() {
+		return mappingManager;
+	}
+
 	public int getPriority(IStatus status) {
 		Assert.isNotNull(status);
-
 		String pluginId = status.getPlugin();
 		for (int i = 0; i <= pluginId.length(); i++) {
-			if (manager.getMapping(pluginId.substring(0, i)) != null) {
-				return PRIORITY_DEFAULT;
+			if (mappingManager.getMapping(pluginId.substring(0, i)) != null) {
+				return AbstractErrorReporter.PRIORITY_DEFAULT;
 			}
 		}
-
-		return PRIORITY_NONE;
+		return AbstractErrorReporter.PRIORITY_NONE;
 	}
 
-	@Override
-	public void handle(IStatus status) {
+	public void process(IStatus status) {
 		Assert.isNotNull(status);
-		if (true) {
-			RepositoryAwareStatusHandler.getInstance().fail(status, true);
-			return;
-		}
+		AttributeTaskMapper mapper = preProcess(status);
+		postProcess(mapper);
+	}
 
+	public AttributeTaskMapper preProcess(IStatus status) {
+		Assert.isNotNull(status);
 		String pluginId = status.getPlugin();
-		Map<String, String> attributes = manager.getAllAttributes(pluginId);
-		AttributeTaskMapper mapper = new AttributeTaskMapper(attributes);
-		TaskRepository taskRepository = mapper.getTaskRepository();
+		Map<String, String> attributes = mappingManager.getAllAttributes(pluginId);
+		contributorManager.preProcess(status, attributes);
+		return new AttributeTaskMapper(attributes);
+	}
+
+	public void postProcess(AttributeTaskMapper mapper) {
+		Assert.isNotNull(mapper);
+		TaskData taskData;
 		try {
-			if (taskRepository != null) {
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						taskRepository.getConnectorKind());
-				if (connector instanceof AbstractLegacyRepositoryConnector) {
-					if (openLegacyTaskEditor(status, taskRepository, mapper)) {
-						return;
-					}
-				}
-			}
-
-			TaskSelection taskSelection = mapper.createTaskSelection();
-
-			// fall back to opening wizard
-			TasksUiUtil.openNewTaskEditor(null, taskSelection, taskRepository);
-		} catch (OperationCanceledException e) {
-			// ignore
+			taskData = mapper.createTaskData(null);
+			TasksUiInternal.createAndOpenNewTask(taskData);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
-	@Deprecated
-	private boolean openLegacyTaskEditor(IStatus status, TaskRepository taskRepository, AttributeTaskMapper mapper) {
-		RepositoryTaskData taskData = createLegacyTaskData(taskRepository, mapper);
-		if (taskData != null) {
-			taskData.setSummary(status.getMessage());
-
-			TaskContributorManager manager = new TaskContributorManager();
-			manager.updateAttributes(taskData, status);
-
-			String editorId = manager.getEditorId(status);
-
-			NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, taskData);
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			TasksUiUtil.openEditor(editorInput, editorId, page);
-			return true;
-		}
-		return false;
+	public void handle(final IStatus status) {
+		ReportErrorWizard wizard = new ReportErrorWizard(TaskErrorReporter.this, status);
+		WizardDialog dialog = new WizardDialog(TasksUiInternal.getShell(), wizard);
+		dialog.setBlockOnOpen(false);
+		dialog.open();
 	}
 
-	@Deprecated
-	private RepositoryTaskData createLegacyTaskData(final TaskRepository taskRepository, AttributeTaskMapper mapper) {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				taskRepository.getConnectorKind());
-		if (!(connector instanceof AbstractLegacyRepositoryConnector)) {
-			return null;
-		}
-		final AbstractTaskDataHandler taskDataHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
-		if (taskDataHandler == null) {
-			return null;
-		}
-
-		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(
-				taskRepository.getRepositoryUrl(), taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
-
-		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getConnectorKind(),
-				taskRepository.getRepositoryUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
-		taskData.setNew(true);
-
-		mapper.applyTo(taskData);
-
-		try {
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						if (!taskDataHandler.initializeTaskData(taskRepository, taskData, monitor)) {
-							throw new InvocationTargetException(new Exception());
-						}
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					} catch (OperationCanceledException e) {
-						throw new InterruptedException();
-					}
-				}
-			};
-
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
-		} catch (InvocationTargetException e) {
-			return null;
-		} catch (InterruptedException e) {
-			throw new OperationCanceledException();
-		}
-
-		taskDataHandler.cloneTaskData(mapper.createTaskSelection().getLegacyTaskData(), taskData);
-
-		return taskData;
-	}
+	// legacy support
+//	TaskRepository taskRepository = mapper.getTaskRepository();
+//	if (taskRepository != null) {
+//		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+//				taskRepository.getConnectorKind());
+//		if (connector instanceof AbstractLegacyRepositoryConnector) {
+//			try {
+//				if (openLegacyTaskEditor(status, taskRepository, mapper)) {
+//					return;
+//				}
+//			} catch (OperationCanceledException e) {
+//				return;
+//			}
+//		}
+//	}
+//
+//	@Deprecated
+//	private boolean openLegacyTaskEditor(IStatus status, TaskRepository taskRepository, AttributeTaskMapper mapper) {
+//		RepositoryTaskData taskData = createLegacyTaskData(taskRepository, mapper);
+//		if (taskData != null) {
+//			taskData.setSummary(status.getMessage());
+//
+//			TaskContributorManager manager = new TaskContributorManager();
+//			manager.updateAttributes(taskData, status);
+//
+//			String editorId = manager.getEditorId(status);
+//
+//			NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, taskData);
+//			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//			TasksUiUtil.openEditor(editorInput, editorId, page);
+//			return true;
+//		}
+//		return false;
+//	}
+//
+//	@Deprecated
+//	private RepositoryTaskData createLegacyTaskData(final TaskRepository taskRepository, AttributeTaskMapper mapper) {
+//		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+//				taskRepository.getConnectorKind());
+//		if (!(connector instanceof AbstractLegacyRepositoryConnector)) {
+//			return null;
+//		}
+//		final AbstractTaskDataHandler taskDataHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
+//		if (taskDataHandler == null) {
+//			return null;
+//		}
+//
+//		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(
+//				taskRepository.getRepositoryUrl(), taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
+//
+//		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getConnectorKind(),
+//				taskRepository.getRepositoryUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
+//		taskData.setNew(true);
+//
+//		mapper.applyTo(taskData);
+//
+//		try {
+//			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+//				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+//					try {
+//						if (!taskDataHandler.initializeTaskData(taskRepository, taskData, monitor)) {
+//							throw new InvocationTargetException(new Exception());
+//						}
+//					} catch (CoreException e) {
+//						throw new InvocationTargetException(e);
+//					} catch (OperationCanceledException e) {
+//						throw new InterruptedException();
+//					}
+//				}
+//			};
+//
+//			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
+//		} catch (InvocationTargetException e) {
+//			return null;
+//		} catch (InterruptedException e) {
+//			throw new OperationCanceledException();
+//		}
+//
+//		taskDataHandler.cloneTaskData(mapper.createTaskSelection().getLegacyTaskData(), taskData);
+//
+//		return taskData;
+//	}
 
 }

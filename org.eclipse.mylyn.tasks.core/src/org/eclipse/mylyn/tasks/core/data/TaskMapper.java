@@ -279,10 +279,18 @@ public class TaskMapper implements ITaskMapping {
 				copyAttributeValue(sourceAttribute, this.getTaskData().getRoot().getAttribute(sourceAttribute.getId()));
 			}
 		} else {
-			setDescription(source.getDescription());
-			setSummary(source.getSummary());
-			setPriority(getPriority());
-			setProduct(getProduct());
+			if (source.getDescription() != null) {
+				setDescription(source.getDescription());
+			}
+			if (source.getSummary() != null) {
+				setSummary(source.getSummary());
+			}
+			if (source.getPriority() != null) {
+				setPriority(source.getPriority());
+			}
+			if (source.getProduct() != null) {
+				setProduct(source.getProduct());
+			}
 		}
 //		targetTaskData.setSummary(sourceTaskData.getSummary());
 //		targetTaskData.setDescription(sourceTaskData.getDescription());

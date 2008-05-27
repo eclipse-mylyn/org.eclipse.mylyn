@@ -11,8 +11,8 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -26,10 +26,11 @@ public class BugzillaTaskEditorPageFactory extends AbstractTaskEditorPageFactory
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
-		if (input.getTask().getConnectorKind().equals(BugzillaCorePlugin.CONNECTOR_KIND)) {
+		if (input.getTask().getConnectorKind().equals(BugzillaCorePlugin.CONNECTOR_KIND)
+				|| TasksUiUtil.isOutgoingNewTask(input.getTask(), BugzillaCorePlugin.CONNECTOR_KIND)) {
 			return true;
 		}
-		return TasksUi.getTaskDataManager().hasTaskData(input.getTask());
+		return false;
 	}
 
 	@Override

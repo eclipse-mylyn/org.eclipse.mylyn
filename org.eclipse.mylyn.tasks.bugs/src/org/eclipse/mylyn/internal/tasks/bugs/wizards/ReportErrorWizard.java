@@ -10,9 +10,10 @@ package org.eclipse.mylyn.internal.tasks.bugs.wizards;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.tasks.bugs.AttributeTaskMapper;
+import org.eclipse.mylyn.internal.tasks.bugs.TaskErrorReporter;
 import org.eclipse.mylyn.internal.tasks.core.ITaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskPage;
-import org.eclipse.mylyn.tasks.core.ITaskMapping;
 
 /**
  * @author Steffen Pingel
@@ -21,31 +22,37 @@ public class ReportErrorWizard extends Wizard {
 
 	private final IStatus status;
 
-	private final ITaskMapping taskMapping;
+	private final AttributeTaskMapper mapper;
 
 	private ReportErrorPage reportErrorPage;
 
 	private NewTaskPage newTaskPage;
 
-	public ReportErrorWizard(IStatus status, ITaskMapping taskMapping) {
+	private final TaskErrorReporter taskErrorReporter;
+
+	public ReportErrorWizard(TaskErrorReporter taskErrorReporter, IStatus status) {
+		this.taskErrorReporter = taskErrorReporter;
 		this.status = status;
-		this.taskMapping = taskMapping;
+		this.mapper = taskErrorReporter.preProcess(status);
 		setWindowTitle("Report Error");
 	}
 
 	@SuppressWarnings("restriction")
 	@Override
 	public void addPages() {
-		reportErrorPage = new ReportErrorPage(status);
+		reportErrorPage = new ReportErrorPage(mapper, status);
 		addPage(reportErrorPage);
-		newTaskPage = new NewTaskPage(ITaskRepositoryFilter.CAN_CREATE_NEW_TASK, taskMapping);
-		addPage(reportErrorPage);
+		newTaskPage = new NewTaskPage(ITaskRepositoryFilter.CAN_CREATE_NEW_TASK, mapper.getTaskMapping());
+		addPage(newTaskPage);
 	}
 
 	@Override
 	public boolean performFinish() {
-		// ignore
-		return false;
+		if (reportErrorPage.getTaskRepository() != null) {
+			taskErrorReporter.postProcess(mapper);
+			return true;
+		} else {
+			return newTaskPage.performFinish();
+		}
 	}
-
 }

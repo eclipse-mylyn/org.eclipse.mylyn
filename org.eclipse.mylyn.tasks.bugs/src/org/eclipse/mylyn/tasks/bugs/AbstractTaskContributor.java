@@ -11,19 +11,21 @@ package org.eclipse.mylyn.tasks.bugs;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
- * Note: This API is likely to change for 3.0.
- * 
  * @author Steffen Pingel
- * @since 2.3
+ * @since 3.0
  */
 public abstract class AbstractTaskContributor {
 
 	public abstract Map<String, String> getAttributes(IStatus status);
-		
-	public abstract String getDescription(IStatus status);
-	
-	public abstract String getEditorId(IStatus status);
-	
+
+	public String getEditorId(IStatus status) {
+		return null;
+	}
+
+	public void postProcess(IStatus status, TaskData taskData) {
+	}
+
 }

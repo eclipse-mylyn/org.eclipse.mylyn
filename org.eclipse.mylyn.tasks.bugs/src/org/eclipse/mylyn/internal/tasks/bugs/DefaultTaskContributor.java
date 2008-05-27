@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.bugs;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IBundleGroup;
@@ -26,29 +27,25 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 
 	@Override
 	public Map<String, String> getAttributes(IStatus status) {
-		return null;
-	}
-
-	@Override
-	public String getDescription(IStatus status) {
+		Map<String, String> attributes = new HashMap<String, String>();
 		if (status instanceof FeatureStatus) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\n\n\n");
 			sb.append("-- Installed Plug-ins --\n");
-			IBundleGroup bundleGroup = ((FeatureStatus)status).getBundleGroup();
-			
+			IBundleGroup bundleGroup = ((FeatureStatus) status).getBundleGroup();
+
 			sb.append(bundleGroup.getIdentifier());
 			sb.append(" ");
 			sb.append(bundleGroup.getVersion());
-			
+
 			Bundle[] bundles = bundleGroup.getBundles();
 			if (bundles != null) {
 				for (Bundle bundle : bundles) {
 					sb.append(bundle.getBundleId());
 				}
 			}
-			return sb.toString();
-			
+			attributes.put(IRepositoryConstants.DESCRIPTION, sb.toString());
+
 		} else {
 			StringBuilder sb = new StringBuilder();
 			sb.append("\n\n-- Error Details --\n");
@@ -58,8 +55,9 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 				status.getException().printStackTrace(new PrintWriter(writer));
 				sb.append(writer.getBuffer());
 			}
-			return sb.toString();
+			attributes.put(IRepositoryConstants.DESCRIPTION, sb.toString());
 		}
+		return attributes;
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -100,38 +101,25 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public boolean initializeTaskData(TaskRepository repository, TaskData data, IProgressMonitor monitor)
+	public boolean initializeTaskData(TaskRepository repository, TaskData data, ITaskMapping initializationData,
+			IProgressMonitor monitor) throws CoreException {
+		if (initializationData == null) {
+			return false;
+		}
+		String product = initializationData.getProduct();
+		if (product == null) {
+			return false;
+		}
+		return initializeTaskData(repository, data, product, monitor);
+	}
+
+	public boolean initializeTaskData(TaskRepository repository, TaskData data, String product, IProgressMonitor monitor)
 			throws CoreException {
-
-		if (data == null) {
-			return false;
-		}
-
-		TaskAttribute root = data.getRoot();
-
-		TaskAttribute oldProductAttribute = root.getAttribute(TaskAttribute.PRODUCT);
-		if (oldProductAttribute == null) {
-			return false;
-		}
-
-		if (oldProductAttribute.getValue().equals("")) {
-			// Bugzilla needs a product to create task data
-			// If I see it right the product is never an empty String.
-			// but to be save I return false as before bug# 213077
-			return false;
-		}
-
-		root.clearAttributes();
-		// TODO: Are the following necessary?
-		root.getMetaData().clear();
-		root.clearOptions();
-		root.clearValues();
-
 		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
 				false, monitor);
 
 		TaskAttribute productAttribute = createAttribute(data, BugzillaReportElement.PRODUCT);
-		productAttribute.setValue(oldProductAttribute.getValue());
+		productAttribute.setValue(product);
 
 		List<String> optionValues = repositoryConfiguration.getProducts();
 		Collections.sort(optionValues);
@@ -263,11 +251,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			IProgressMonitor monitor) throws CoreException {
 		TaskAttribute attributeProject = parentTaskData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
 		String product = attributeProject.getValue();
-
-		TaskAttribute subAttributeProject = createAttribute(subTaskData, BugzillaReportElement.PRODUCT);
-		subAttributeProject.setValue(product);
-
-		initializeTaskData(repository, subTaskData, monitor);
+		initializeTaskData(repository, subTaskData, product, monitor);
 		// TODO:
 		//cloneTaskData(parentTaskData, subTaskData);
 		TaskAttribute attributeBlocked = createAttribute(subTaskData, BugzillaReportElement.BLOCKED);

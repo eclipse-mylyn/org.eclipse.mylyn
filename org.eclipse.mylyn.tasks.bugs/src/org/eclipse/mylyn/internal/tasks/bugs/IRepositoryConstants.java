@@ -24,4 +24,6 @@ public class IRepositoryConstants {
 	@Deprecated
 	public static final String BRANDING = "branding";
 
+	public static final String DESCRIPTION = "description";
+
 }

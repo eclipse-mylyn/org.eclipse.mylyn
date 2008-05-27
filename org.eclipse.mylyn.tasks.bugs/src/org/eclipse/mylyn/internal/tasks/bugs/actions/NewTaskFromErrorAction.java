@@ -17,8 +17,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -84,13 +82,8 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 		StringBuilder sb = new StringBuilder();
 		buildDescriptionFromLogEntry(entry, sb, includeChildren);
 
-		if (TasksBugsPlugin.getTaskErrorReporter().isEnabled()) {
-			Status status = new Status(entry.getSeverity(), entry.getPluginId(), entry.getMessage());
-			TasksBugsPlugin.getTaskErrorReporter().handle(status);
-		} else {
-			TaskSelection taskSelection = new TaskSelection("", sb.toString());
-			TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);			
-		}
+		Status status = new Status(entry.getSeverity(), entry.getPluginId(), entry.getMessage());
+		TasksBugsPlugin.getTaskErrorReporter().handle(status);
 	}
 
 	public void run() {

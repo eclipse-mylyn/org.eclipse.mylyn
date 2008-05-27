@@ -73,7 +73,11 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector.Capability;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -717,6 +721,41 @@ public class TasksUiInternal {
 				task.getConnectorKind());
 		return connector.hasCapability(capability, taskRepository, task, new CapabilityContext(
 				TasksUi.getTaskDataManager()));
+	}
+
+	public static Shell getShell() {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			return window.getShell();
+		}
+		return Display.getDefault().getActiveShell();
+	}
+
+	public static TaskData createTaskData(TaskRepository taskRepository, ITaskMapping initializationData,
+			ITaskMapping selectionData, IProgressMonitor monitor) throws CoreException {
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				taskRepository.getConnectorKind());
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
+		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
+				"");
+		taskDataHandler.initializeTaskData(taskRepository, taskData, initializationData, monitor);
+		if (selectionData != null) {
+			connector.getTaskMapping(taskData).copyFrom(selectionData);
+		}
+		return taskData;
+	}
+
+	public static void createAndOpenNewTask(TaskData taskData) throws CoreException {
+		ITask task = TasksUiUtil.createOutgoingNewTask(taskData.getConnectorKind());
+		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(task, taskData);
+		workingCopy.save(null, null);
+
+		TaskRepository localTaskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
+				task.getRepositoryUrl());
+		TaskEditorInput editorInput = new TaskEditorInput(localTaskRepository, task);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 	}
 
 }
