@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -58,6 +59,17 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getTaskHistoryUrl(TaskRepository taskRepository, ITask task) {
 		return taskRepository.getRepositoryUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + task.getTaskId();
+	}
+
+	@Override
+	public String getReply(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
+		if (taskComment == null) {
+			return "(In reply to comment #0)";
+		} else if (includeTask) {
+			return "(In reply to " + task.getTaskKey() + " comment #" + taskComment.getNumber() + ")";
+		} else {
+			return "(In reply to comment #" + taskComment.getNumber() + ")";
+		}
 	}
 
 	@Override
