@@ -124,7 +124,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	private void run(Set<ITask> tasks, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Processing", tasks.size() * 100);
-			if (canGetMultiTaskData()) {
+			if (canGetMultiTaskData(taskRepository)) {
 				try {
 					for (ITask task : tasks) {
 						resetStatus(task);
@@ -156,13 +156,13 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	@SuppressWarnings("deprecation")
-	private boolean canGetMultiTaskData() {
+	private boolean canGetMultiTaskData(TaskRepository taskRepository) {
 		if (connector instanceof AbstractLegacyRepositoryConnector) {
 			AbstractTaskDataHandler taskDataHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
 			return taskDataHandler != null && taskDataHandler.canGetMultiTaskData();
 		} else {
 			org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-			return taskDataHandler != null && taskDataHandler.canGetMultiTaskData();
+			return taskDataHandler != null && taskDataHandler.canGetMultiTaskData(taskRepository);
 		}
 	}
 

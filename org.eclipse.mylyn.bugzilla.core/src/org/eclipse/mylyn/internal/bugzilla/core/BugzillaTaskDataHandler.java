@@ -249,12 +249,12 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public boolean canGetMultiTaskData() {
+	public boolean canGetMultiTaskData(TaskRepository taskRepository) {
 		return true;
 	}
 
 	@Override
-	public boolean canInitializeSubTaskData(ITask task, TaskData parentTaskData) {
+	public boolean canInitializeSubTaskData(TaskRepository taskRepository, ITask task) {
 		return true;
 	}
 

@@ -42,7 +42,7 @@ public class TaskErrorReporter extends AbstractErrorReporter {
 
 	private final PluginRepositoryMappingManager manager;
 
-	TaskErrorReporter() {
+	public TaskErrorReporter() {
 		manager = new PluginRepositoryMappingManager();
 	}
 

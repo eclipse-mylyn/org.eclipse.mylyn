@@ -62,13 +62,15 @@ public abstract class AbstractTaskDataHandler {
 	}
 
 	/**
+	 * @param taskRepository
+	 *            TODO
 	 * @param task
 	 *            the parent task, may be null
 	 * @param task
 	 *            the parent task data, may be null
 	 * @since 2.2
 	 */
-	public boolean canInitializeSubTaskData(ITask task, TaskData parentTaskData) {
+	public boolean canInitializeSubTaskData(TaskRepository taskRepository, ITask task) {
 		return false;
 	}
 
@@ -82,10 +84,12 @@ public abstract class AbstractTaskDataHandler {
 	}
 
 	/**
+	 * @param taskRepository
+	 *            TODO
 	 * @return true if connector support downloading multiple task data in single request, false otherwise. If true,
 	 *         override and implement getMultiTaskData
 	 */
-	public boolean canGetMultiTaskData() {
+	public boolean canGetMultiTaskData(TaskRepository taskRepository) {
 		return false;
 	}
 
