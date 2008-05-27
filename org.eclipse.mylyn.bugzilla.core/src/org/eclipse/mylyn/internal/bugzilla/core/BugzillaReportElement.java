@@ -33,7 +33,7 @@ public enum BugzillaReportElement {
 
 	BUG("bug", "bug", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
-	BUG_FILE_LOC("URL:", "bug_file_loc", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	BUG_FILE_LOC("URL:", "bug_file_loc", TaskAttribute.TYPE_SHORT_TEXT, false, false),
 
 	BUG_ID("Bug:", "bug_id", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
@@ -85,7 +85,7 @@ public enum BugzillaReportElement {
 
 	IS_PATCH("Patch", "ispatch", TaskAttribute.TYPE_BOOLEAN, true, false),
 
-	KEYWORDS("Keywords:", "keywords", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	KEYWORDS("Keywords:", "keywords", IBugzillaConstants.EDITOR_TYPE_KEYWORDS, false, false),
 
 	LONG_DESC("Description:", "long_desc", TaskAttribute.TYPE_LONG_TEXT, false, false),
 
@@ -107,7 +107,7 @@ public enum BugzillaReportElement {
 
 	REPORTER_ACCESSIBLE("Reporter", "reporter_accessible", TaskAttribute.TYPE_BOOLEAN, true, false),
 
-	RESOLUTION("Resolution:", "resolution", TaskAttribute.TYPE_SHORT_TEXT, false, true), 
+	RESOLUTION("Resolution:", "resolution", TaskAttribute.TYPE_SHORT_TEXT, false, true),
 
 	REMAINING_TIME("Hours Left:", "remaining_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
@@ -118,7 +118,7 @@ public enum BugzillaReportElement {
 
 	SIZE("Size:", "size", TaskAttribute.TYPE_SHORT_TEXT, false, false),
 
-	TARGET_MILESTONE("Target milestone:", "target_milestone", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	TARGET_MILESTONE("Target milestone:", "target_milestone", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
 
 	THETEXT("thetext", "thetext", TaskAttribute.TYPE_SHORT_TEXT, false, true),
 

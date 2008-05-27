@@ -305,4 +305,6 @@ public interface IBugzillaConstants {
 
 	public static final String DEFAULT_LANG = "en (default)";
 
+	public static final String EDITOR_TYPE_KEYWORDS = "bugzilla.editor.keywords";
+
 }
