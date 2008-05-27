@@ -108,8 +108,7 @@ public class AttributeTaskMapper {
 		}
 
 		public String getDescription() {
-			// ignore
-			return null;
+			return attributes.get(IRepositoryConstants.DESCRIPTION);
 		}
 
 		public Date getDueDate() {

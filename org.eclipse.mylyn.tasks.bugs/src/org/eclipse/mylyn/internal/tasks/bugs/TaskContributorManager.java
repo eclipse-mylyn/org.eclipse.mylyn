@@ -118,6 +118,7 @@ public class TaskContributorManager {
 	public void preProcess(final IStatus status, final Map<String, String> attributes) {
 		readExtensions();
 
+		final boolean[] handled = new boolean[1];
 		for (final AbstractTaskContributor contributor : taskContributors) {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -127,10 +128,14 @@ public class TaskContributorManager {
 				public void run() throws Exception {
 					Map<String, String> contributorAttributes = contributor.getAttributes(status);
 					if (contributorAttributes != null) {
+						handled[0] = true;
 						attributes.putAll(contributorAttributes);
 					}
 				}
 			});
+		}
+		if (!handled[0]) {
+			attributes.putAll(defaultTaskContributor.getAttributes(status));
 		}
 	}
 
