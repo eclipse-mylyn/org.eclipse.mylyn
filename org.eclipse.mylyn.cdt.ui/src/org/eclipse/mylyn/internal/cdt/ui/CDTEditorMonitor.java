@@ -16,9 +16,10 @@ import org.eclipse.cdt.core.model.IFunction;
 import org.eclipse.cdt.core.model.IMethod;
 import org.eclipse.cdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -44,7 +45,8 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 	 * Only public for testing
 	 */
 	@Override
-	public void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
+	public void handleWorkbenchPartSelection(IWorkbenchPart part,
+			ISelection selection, boolean contributeToContext) {
 		try {
 			ICElement selectedElement = null;
 			if (selection instanceof StructuredSelection) {
@@ -55,9 +57,11 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 				}
 				currentSelection = structuredSelection;
 
-//				Object selectedObject = structuredSelection.getFirstElement();
-				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
-					Object selectedObject = iterator.next();					
+				// Object selectedObject =
+				// structuredSelection.getFirstElement();
+				for (Iterator<?> iterator = structuredSelection.iterator(); iterator
+						.hasNext();) {
+					Object selectedObject = iterator.next();
 					if (selectedObject instanceof ICElement) {
 						ICElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((ICElement) selectedObject);
 						if (checkedElement == null) {
@@ -67,21 +71,25 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 						}
 					}
 					if (selectedElement != null) {
-						super.handleElementSelection(part, selectedElement, contributeToContext);
+						super.handleElementSelection(part, selectedElement,
+								contributeToContext);
 					}
 				}
 			} else {
 				if (part instanceof CEditor) {
 					currentEditor = (CEditor) part;
-					selectedElement = SelectionConverter.getElementAtOffset(currentEditor);
+					selectedElement = SelectionConverter
+							.getElementAtOffset(currentEditor);
 					if (selectedElement == null)
 						return; // nothing selected
 
 					if (selectedElement != null) {
 						if (selectedElement.equals(lastSelectedElement)) {
-							super.handleElementEdit(part, selectedElement, contributeToContext);
+							super.handleElementEdit(part, selectedElement,
+									contributeToContext);
 						} else if (!selectedElement.equals(lastSelectedElement)) {
-							super.handleElementSelection(part, selectedElement, contributeToContext);
+							super.handleElementSelection(part, selectedElement,
+									contributeToContext);
 						}
 					}
 
@@ -97,9 +105,8 @@ public class CDTEditorMonitor extends AbstractUserInteractionMonitor {
 				lastSelectedElement = selectedElement;
 			}
 		} catch (CModelException e) {
-			// ignore, fine to fail to resolve an element if the model is not up-to-date
-		} catch (Throwable t) {
-			StatusHandler.log(t, CDTUIBridgePlugin.getResourceString("MylynCDT.log.updateModelFailed")); // $NON-NLS-1$
+			// ignore, fine to fail to resolve an element if the model is not
+			// up-to-date
 		}
 	}
 

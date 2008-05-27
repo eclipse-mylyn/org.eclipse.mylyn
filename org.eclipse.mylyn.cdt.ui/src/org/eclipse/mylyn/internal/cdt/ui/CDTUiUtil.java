@@ -24,9 +24,11 @@ import org.eclipse.cdt.ui.PreferenceConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
@@ -112,7 +114,8 @@ public class CDTUiUtil {
 						CDTUIBridgePlugin.getResourceString("MylynCDT.findCElementFailure")); //$NON-NLS-1$
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.fail(t, CDTUIBridgePlugin.getFormattedString("MylynCDT.findElementFailure", new String[]{marker.toString()}), false); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
+					CDTUIBridgePlugin.getFormattedString("MylynCDT.findElementFailure", new String[]{marker.toString()}), t)); // $NON-NLS-1$
 			return null;
 		}
 	}

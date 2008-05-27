@@ -22,23 +22,24 @@ import org.eclipse.cdt.internal.ui.editor.CEditor;
 import org.eclipse.cdt.internal.ui.editor.CSourceViewer;
 import org.eclipse.cdt.mylyn.internal.ui.CDTStructureBridge;
 import org.eclipse.cdt.mylyn.internal.ui.CDTUIBridgePlugin;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 
 /**
  * @author Mik Kersten
  * @author Jeff Johnston
  */
-public class ActiveFoldingListener implements IInteractionContextListener {
+public class ActiveFoldingListener extends AbstractContextListener {
 	private final CEditor editor;
 
 	private ProjectionAnnotationModel updater;
@@ -50,7 +51,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 
 	private IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+			if (event.getProperty().equals(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
 				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
 					enabled = true;
 				} else {
@@ -64,13 +65,14 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 	public ActiveFoldingListener(CEditor editor) {
 		this.editor = editor;
 		if (ContextUiPlugin.getDefault() == null) {
-			StatusHandler.fail(null, CDTUIBridgePlugin.getResourceString("MylynCDT.initFoldingFailure"), false); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
+					CDTUIBridgePlugin.getResourceString("MylynCDT.initFoldingFailure"))); // $NON-NLS-1$
 		} else { 
 			ContextCorePlugin.getContextManager().addListener(this);
 			ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 			enabled = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED);
+					CDTUIBridgePlugin.AUTO_FOLDING_ENABLED);
 			updateFolding();
 		}
 	}
@@ -135,7 +137,8 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 				expandElements(toExpand.toArray(new ICElement[toExpand.size()]));
 					
 			} catch (Exception e) {
-				StatusHandler.fail(e, CDTUIBridgePlugin.getResourceString("MylynCDT.updateFoldingFailure"), false); // $NON-NLS-1$
+				StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
+						CDTUIBridgePlugin.getResourceString("MylynCDT.updateFoldingFailure"), e)); // $NON-NLS-1$
 			}
 		}
 	}
@@ -191,7 +194,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 	public void contextActivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+				.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
@@ -199,7 +202,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 	public void contextDeactivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+				.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
@@ -207,7 +210,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 	public void contextCleared(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault()
 				.getPreferenceStore()
-				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+				.getBoolean(CDTUIBridgePlugin.AUTO_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}

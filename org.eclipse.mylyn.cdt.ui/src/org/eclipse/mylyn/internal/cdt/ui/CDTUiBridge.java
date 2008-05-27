@@ -22,12 +22,14 @@ import org.eclipse.cdt.internal.ui.editor.AbstractCModelOutlinePage;
 import org.eclipse.cdt.internal.ui.editor.CContentOutlinePage;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
 import org.eclipse.cdt.internal.ui.util.EditorUtility;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -49,7 +51,8 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 			cOutlineField = AbstractCModelOutlinePage.class.getDeclaredField("fTreeViewer");
 			cOutlineField.setAccessible(true);
 		} catch (Exception e) {
-			StatusHandler.fail(e, CDTUIBridgePlugin.getResourceString("MylynCDT.outlineViewerFailure"), true); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
+					CDTUIBridgePlugin.getResourceString("MylynCDT.outlineViewerFailure"), e)); // $NON-NLS-1$
 		}
 	}
 
@@ -61,7 +64,9 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 				return;
 			IEditorPart part = EditorUtility.openInEditor(cElement);
 		} catch (Throwable t) {
-			StatusHandler.fail(t, CDTUIBridgePlugin.getFormattedString("MylynCDT.openEditorFailure", new String[]{node.toString()}), true); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
+					CDTUIBridgePlugin.getFormattedString("MylynCDT.openEditorFailure", // $NON-NLS-1$ 
+					new String[]{node.getHandleIdentifier()}), t));
 		}
 	}
 
@@ -87,7 +92,8 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, CDTUIBridgePlugin.getResourceString("MylynCDT.autoCloseEditorFailure"), false); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
+					CDTUIBridgePlugin.getResourceString("MylynCDT.autoCloseEditorFailure"), t)); // $NON-NLS-1$ 
 		}
 	}
 
@@ -121,7 +127,8 @@ public class CDTUiBridge extends AbstractContextUiBridge {
 				try {
 					viewers.add((TreeViewer) cOutlineField.get(page));
 				} catch (Exception e) {
-					StatusHandler.log(e, CDTUIBridgePlugin.getResourceString("MylynCDT.log.getOutlineViewerFailure")); // $NON-NLS-1$
+					StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
+							CDTUIBridgePlugin.getResourceString("MylynCDT.log.getOutlineViewerFailure"), e)); // $NON-NLS-1$ 
 				}
 			}
 		}

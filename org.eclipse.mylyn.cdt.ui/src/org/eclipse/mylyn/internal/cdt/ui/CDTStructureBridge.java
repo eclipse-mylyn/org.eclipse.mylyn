@@ -25,11 +25,11 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
@@ -100,8 +100,6 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 					return childHandles;
 				} catch (CModelException e) {
 					// ignore these, usually indicate no-existent element
-				} catch (Exception e) {
-					StatusHandler.fail(e, CDTUIBridgePlugin.getResourceString("MylynCDT.childAccessFailed"), false); // $NON-NLS-1$
 				}
 			}
 		}
@@ -109,52 +107,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 	}
 	
 	public static ICElement getElementForHandle(String handle) {
-//		System.out.println("[handle is " + handle);
-//		ICElement s = null;
-//
-//		s = CoreModel.create(handle);
-//		if (s == null)
-//			System.out.println("[null handle is " + handle);
-//		else
-//			System.out.println("[element is " + s.getElementName());
-//
-//		return s;
 		return CoreModel.create(handle);
-//		try {
-//			String[] s = handle.split("\\|"); // $NON-NLS-1$
-//			if (s.length < 1)
-//				return null;
-//			int kind = Integer.valueOf(s[0]);
-//			switch (kind) {
-//			case ICElement.C_PROJECT: {
-//				return CoreModel.getDefault().getCModel().getCProject(s[1]);
-//			}
-//			case ICElement.C_CCONTAINER: {
-//				ICProject cproject = CoreModel.getDefault().getCModel().getCProject(s[1]);
-//				return cproject.findElement(new Path(s[3]));
-//			}
-//			case C_SOURCEROOT: {
-//				ICProject cproject = CoreModel.getDefault().getCModel().getCProject(s[1]);
-//				return cproject.findSourceRoot(new Path(s[3]));
-//			}
-//			case ICElement.C_MODEL: {
-//				return CoreModel.getDefault().getCModel();
-//			}
-//			case ICElement.C_UNIT: {
-//				IPath path = new Path(s[3]);
-//				ICElement element = CoreModel.getDefault().create(path);
-//				return (ITranslationUnit)element;
-//			}
-//			}
-//
-//			// Otherwise, find the element by name within the TranslationUnit
-//			IPath path = new Path(s[3]);
-//			ICElement element = CoreModel.getDefault().create(path);
-//			return ((ITranslationUnit)element).getElement(s[2]);
-//		} catch (CModelException e) {
-//			StatusHandler.log(CDTUIBridgePlugin.getFormattedString("MylynCDT.log.noObjectForHandle", new String[]{handle}), null); // $NON-NLS-1$
-//			return null;
-//		}
 	}
 
 
@@ -170,39 +123,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 	// The element name (optional) allows us to find an element within the
 	// TranslationUnit.
 	public static String getHandleForElement(ICElement element) {
-//		System.out.println("element is " + element.getClass().getName());
-//		System.out.println("handle is " + element.getHandleIdentifier());
 		return element.getHandleIdentifier();
-//		IPath path = element.getUnderlyingResource().getRawLocation();
-//		int elementType = element.getElementType();
-//		switch (elementType) {
-//		case ICElement.C_PROJECT:
-//			return ICElement.C_PROJECT + "|" + element.getCProject().getElementName() + "||"; // $NON-NLS-1$ // $NON-NLS-2$
-//		case ICElement.C_UNIT:
-//			// FIXME: don't need project (external files won't have project
-//			return ICElement.C_UNIT + "|" + element.getCProject().getElementName() + "||" + path.toPortableString();  // $NON-NLS-1$ // $NON-NLS-2$
-//		case ICElement.C_MODEL:
-//			return ICElement.C_MODEL + "|"; // $NON-NLS-1$
-//		case ICElement.C_CCONTAINER: {
-//			if (element instanceof ISourceRoot) {
-//				// Special case of CContainer.  A SourceRoot doesn't have a path set.
-//				ISourceRoot root = (ISourceRoot)element;
-//				path = element.getPath();
-//				return Integer.toString(C_SOURCEROOT) + "|" + element.getCProject().getElementName() + "||" + path.toPortableString(); // $NON-NLS-1$ // $NON-NLS-2$
-//			}
-//			return ICElement.C_CCONTAINER + "|" + element.getCProject().getElementName() + "||" + path.toPortableString(); // $NON-NLS-1$ // $NON-NLS-2$
-//		}
-//		case ICElement.C_BINARY:
-//		case ICElement.C_ARCHIVE:
-//		case ICElement.C_VCONTAINER:
-//		case ICElement.C_UNKNOWN_DECLARATION:
-//			// FIXME: For now, don't handle these
-//			return null;
-//		default:
-//			// We default all other elements as children of the TranslationUnit
-//			return Integer.toString(0) + "|" + element.getCProject().getElementName() + "|" + element.getElementName() // $NON-NLS-1$ // $NON-NLS-2$ 
-//			+ "|" + path.toPortableString(); // $NON-NLS-1$
-//		}
 	}
 	
 	/**
@@ -328,10 +249,7 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 			}
 		} catch (CModelException ex) {
 			if (ex.doesNotExist())
-				StatusHandler.fail(ex, ex.getLocalizedMessage(), false);
-			return null;
-		} catch (Throwable t) {
-			StatusHandler.fail(t, CDTUIBridgePlugin.getFormattedString("MylynCDT.cantFindElement", new String[]{marker.toString()}), false); // $NON-NLS-1$
+				StatusHandler.fail(ex.getStatus());
 			return null;
 		}
 	}

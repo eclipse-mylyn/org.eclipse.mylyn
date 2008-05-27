@@ -26,17 +26,19 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 
 /**
  * @author Mik Kersten
  * @author Jeff Johnston
  */
-public class LandmarkMarkerManager implements IInteractionContextListener {
+public class LandmarkMarkerManager extends AbstractContextListener {
 
 	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark"; // $NON-NLS-1$
 
@@ -68,7 +70,8 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				landmarkAdded(node);
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, CDTUIBridgePlugin.getResourceString("MylynCDT.landmarkUpdateFailure"), false); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
+					CDTUIBridgePlugin.getResourceString("MylynCDT.landmarkUpdateFailure"), t)); // $NON-NLS-1$
 		}
 	}
 
@@ -103,9 +106,11 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 						resource.getWorkspace().run(runnable, null);
 					}
 				} catch (CModelException e) {
-					StatusHandler.fail(e, CDTUIBridgePlugin.getResourceString("MylynCDT.markerUpdateFailure"), false); // $NON-NLS-1$
+					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
+							CDTUIBridgePlugin.getResourceString("MylynCDT.markerUpdateFailure"), e)); // $NON-NLS-1$
 				} catch (CoreException e) {
-					StatusHandler.fail(e, CDTUIBridgePlugin.getResourceString("MylynCDT.markerUpdateFailure"), false); // $NON-NLS-1$
+					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
+							CDTUIBridgePlugin.getResourceString("MylynCDT.markerUpdateFailure"), e)); // $NON-NLS-1$
 				}
 			}
 		}
@@ -136,7 +141,8 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 											marker.delete();
 									}
 								} catch (NullPointerException e) {
-									StatusHandler.log(e, CDTUIBridgePlugin.getResourceString("MylynCDT.log.markerUpdateFailure")); // $NON-NLS-1$
+									StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
+											CDTUIBridgePlugin.getResourceString("MylynCDT.log.markerUpdateFailure"), e)); // $NON-NLS-1$
 								}
 							}
 						}
@@ -145,7 +151,8 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				} catch (CModelException e) {
 					// ignore the Java Model errors
 				} catch (CoreException e) {
-					StatusHandler.fail(e, CDTUIBridgePlugin.getResourceString("MylynCDT.landmarkUpdateFailure"), false); // $NON-NLS-1$
+					StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
+							CDTUIBridgePlugin.getResourceString("MylynCDT.landmarkUpdateFailure"), e)); // $NON-NLS-1$
 				}
 			}
 		}

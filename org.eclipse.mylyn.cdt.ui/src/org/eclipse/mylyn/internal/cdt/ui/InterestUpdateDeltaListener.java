@@ -13,9 +13,11 @@ import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.cdt.core.model.ICElementDelta;
 import org.eclipse.cdt.core.model.IElementChangedListener;
 import org.eclipse.cdt.core.model.ITranslationUnit;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
@@ -76,7 +78,8 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.fail(t, CDTUIBridgePlugin.getResourceString("MylynCDT.deltaUpdateFailure"), false); // $NON-NLS-1$
+			StatusHandler.fail(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID,
+					CDTUIBridgePlugin.getResourceString("MylynCDT.deltaUpdateFailure"), t)); // $NON-NLS-1$
 		}
 	}
 
@@ -97,13 +100,13 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private void delete(final IInteractionElement element) {
 		if (!asyncExecMode) {
-			ContextCorePlugin.getContextManager().delete(element);
+			ContextCorePlugin.getContextManager().deleteElement(element);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						ContextCorePlugin.getContextManager().delete(element);
+						ContextCorePlugin.getContextManager().deleteElement(element);
 					}
 				});
 			}

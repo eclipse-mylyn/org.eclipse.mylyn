@@ -13,11 +13,13 @@ import org.eclipse.cdt.internal.ui.util.IProblemChangedListener;
 import org.eclipse.cdt.ui.CUIPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.monitor.core.StatusHandler;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 
 /**
  * @author Mik Kersten
@@ -54,7 +56,8 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(e, CDTUIBridgePlugin.getResourceString("MylynCDT.updateMarkerFailure")); // $NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, CDTUIBridgePlugin.PLUGIN_ID, 
+					CDTUIBridgePlugin.getResourceString("MylynCDT.updateMarkerFailure"), e)); // $NON-NLS-1$
 		}
 	}
 

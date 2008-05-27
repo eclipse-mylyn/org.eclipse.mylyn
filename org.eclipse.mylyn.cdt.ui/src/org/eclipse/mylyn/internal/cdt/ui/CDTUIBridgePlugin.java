@@ -17,12 +17,10 @@ import java.util.ResourceBundle;
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.internal.ui.editor.CEditor;
 import org.eclipse.cdt.mylyn.internal.ui.editor.ActiveFoldingListener;
-import org.eclipse.cdt.mylyn.internal.ui.wizards.RecommendedPreferencesWizard;
 import org.eclipse.cdt.ui.CUIPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.ui.AbstractContextUiPlugin;
-import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbench;
@@ -36,9 +34,14 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  * @author Jeff Johnston
  */
-public class CDTUIBridgePlugin extends AbstractContextUiPlugin {
+public class CDTUIBridgePlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.cdt.mylyn.ui"; // $NON-NLS-1$
+	
+	public static final String AUTO_FOLDING_ENABLED = "org.eclipse.mylyn.context.ui.editor.folding.enabled"; // $NON-NLS-1$
+
+	private static final String MYLYN_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9";
+
 	public static final int	START_ACTIVATION_POLICY	= 0x00000002;
 	
 	private static CDTUIBridgePlugin INSTANCE;
@@ -73,18 +76,17 @@ public class CDTUIBridgePlugin extends AbstractContextUiPlugin {
 		initDefaultPrefs();
 
 		// NOTE: moved out of wizard and first task activation to avoid bug 194766
-		if (getPreferenceStore().getBoolean(RecommendedPreferencesWizard.MYLYN_FIRST_RUN)) {
-			getPreferenceStore().setValue(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, false);
+		if (getPreferenceStore().getBoolean(MYLYN_FIRST_RUN)) {
+			getPreferenceStore().setValue(MYLYN_FIRST_RUN, false);
 			CDTUiUtil.installContentAssist(CUIPlugin.getDefault().getPreferenceStore(), true);
 		}
 	}
 
-	@Override
-	protected void lazyStart(IWorkbench workbench) {
+	private void lazyStart() {
 		ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
 		cEditingMonitor = new CDTEditorMonitor();
 		MonitorUiPlugin.getDefault().getSelectionMonitors().add(cEditingMonitor);
-		installEditorTracker(workbench);
+		installEditorTracker(PlatformUI.getWorkbench());
 		CoreModel.getDefault().addElementChangedListener(cElementChangeListener);
 
 		getPreferenceStore().addPropertyChangeListener(problemListener);
@@ -102,11 +104,11 @@ public class CDTUIBridgePlugin extends AbstractContextUiPlugin {
 
 	private void initDefaultPrefs() {
 		getPreferenceStore().setDefault(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS, false);
-		getPreferenceStore().setDefault(RecommendedPreferencesWizard.MYLYN_FIRST_RUN, true);
+		getPreferenceStore().setDefault(MYLYN_FIRST_RUN, true);
 	}
 
-	@Override
-	protected void lazyStop() {
+
+	private void lazyStop() {
 //		ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
 		ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
 		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(cEditingMonitor);

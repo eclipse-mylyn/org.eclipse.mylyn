@@ -12,8 +12,6 @@
 package org.eclipse.cdt.mylyn.internal.ui;
 
 import org.eclipse.cdt.core.model.ICElement;
-import org.eclipse.cdt.core.model.IFunction;
-import org.eclipse.cdt.core.model.IMethod;
 import org.eclipse.cdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.cdt.internal.ui.viewsupport.CElementImageProvider;
 import org.eclipse.cdt.internal.ui.viewsupport.ProblemsLabelDecorator;
@@ -22,7 +20,6 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
-import org.eclipse.mylyn.internal.context.ui.views.DelegatingContextLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -60,14 +57,15 @@ public class CDTContextLabelProvider extends AppearanceAwareLabelProvider {
 	}
 
 	private String getTextForElement(ICElement element) {
-		if (DelegatingContextLabelProvider.isQualifyNamesMode()) {
-			if (element instanceof IMethod || element instanceof IFunction) {
-				String parentName = ((ICElement) element).getParent().getElementName();
-				if (parentName != null && parentName != "") {
-					return parentName + '.' + super.getText(element);
-				}
-			}
-		}
+		// FIXME: Removed due to missing interface in 3.0.  Should this test be done somehow?
+//		if (DelegatingContextLabelProvider.isQualifyNamesMode()) {
+//			if (element instanceof IMethod || element instanceof IFunction) {
+//				String parentName = ((ICElement) element).getParent().getElementName();
+//				if (parentName != null && parentName != "") {
+//					return parentName + '.' + super.getText(element);
+//				}
+//			}
+//		}
 		if (element.exists()) {
 			return super.getText(element);
 		} else {

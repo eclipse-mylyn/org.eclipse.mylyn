@@ -13,8 +13,8 @@ import java.util.List;
 import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.cdt.core.model.IStructureDeclaration;
 import org.eclipse.cdt.core.model.ITypeDef;
+import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.IInteractionContext;
-import org.eclipse.mylyn.context.core.IInteractionContextListener2;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 
 /**
@@ -22,7 +22,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
  * @author Shawn Minto
  * @author Jeff Johnston
  */
-public class TypeHistoryManager implements IInteractionContextListener2 {
+public class TypeHistoryManager extends AbstractContextListener {
 
 //	private TypeInfoFactory factory = new TypeInfoFactory();
 
