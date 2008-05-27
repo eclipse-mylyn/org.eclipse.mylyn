@@ -64,7 +64,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @param repository
 	 * @param queryToEdit
-	 * 		can be null
+	 *            can be null
 	 * @since 3.0
 	 */
 	public abstract IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery queryToEdit);
@@ -108,7 +108,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * @param repositoryTask
-	 * 		can be null
+	 *            can be null
 	 * @since 3.0
 	 */
 	public String getTaskKindLabel(ITask task) {
@@ -167,7 +167,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * Override to return a URL that provides the user with an account creation page for the repository
 	 * 
 	 * @param taskRepository
-	 * 		TODO
+	 *            TODO
 	 */
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
 		return null;
@@ -177,7 +177,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * Override to return a URL that provides the user with an account management page for the repository
 	 * 
 	 * @param taskRepository
-	 * 		TODO
+	 *            TODO
 	 */
 	public String getAccountManagementUrl(TaskRepository taskRepository) {
 		return null;
@@ -253,6 +253,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @since 3.0
 	 */
+	@Deprecated
 	public boolean supportsDueDates(ITask task) {
 		return false;
 	}
