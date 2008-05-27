@@ -48,32 +48,34 @@ public interface ITaskMapping {
 
 	public abstract String getTaskUrl();
 
-	public abstract void setCompletionDate(Date dateCompleted);
+	public void copyFrom(ITaskMapping source);
 
-	public abstract void setComponent(String component);
-
-	public abstract void setCreationDate(Date dateCreated);
-
-	public abstract void setDescription(String description);
-
-	public abstract void setDueDate(Date value);
-
-	public abstract void setModificationDate(Date dateModified);
-
-	// TODO use Person class?
-	public abstract void setOwner(String owner);
-
-	public abstract void setPriority(PriorityLevel priority);
-
-	public abstract void setProduct(String product);
-
-	// TODO use Person class?
-	public abstract void setReporter(String reporter);
-
-	public abstract void setSummary(String summary);
-
-	public abstract void setTaskKind(String taskKind);
-
-	public abstract void setTaskUrl(String taskUrl);
+	//	public abstract void setCompletionDate(Date dateCompleted);
+//
+//	public abstract void setComponent(String component);
+//
+//	public abstract void setCreationDate(Date dateCreated);
+//
+//	public abstract void setDescription(String description);
+//
+//	public abstract void setDueDate(Date value);
+//
+//	public abstract void setModificationDate(Date dateModified);
+//
+//	// TODO use Person class?
+//	public abstract void setOwner(String owner);
+//
+//	public abstract void setPriority(PriorityLevel priority);
+//
+//	public abstract void setProduct(String product);
+//
+//	// TODO use Person class?
+//	public abstract void setReporter(String reporter);
+//
+//	public abstract void setSummary(String summary);
+//
+//	public abstract void setTaskKind(String taskKind);
+//
+//	public abstract void setTaskUrl(String taskUrl);
 
 }

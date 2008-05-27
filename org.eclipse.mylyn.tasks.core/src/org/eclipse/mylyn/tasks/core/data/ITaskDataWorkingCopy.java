@@ -33,7 +33,7 @@ public interface ITaskDataWorkingCopy {
 
 	public abstract void refresh(IProgressMonitor monitor) throws CoreException;
 
-	public abstract void save(IProgressMonitor monitor, Set<TaskAttribute> edits) throws CoreException;
+	public abstract void save(Set<TaskAttribute> edits, IProgressMonitor monitor) throws CoreException;
 
 	public abstract String getConnectorKind();
 

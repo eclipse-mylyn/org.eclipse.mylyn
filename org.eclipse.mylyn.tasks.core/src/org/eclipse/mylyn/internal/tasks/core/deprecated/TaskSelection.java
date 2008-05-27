@@ -202,4 +202,9 @@ public class TaskSelection implements ITaskMapping {
 
 	}
 
+	public void copyFrom(ITaskMapping source) {
+		// ignore
+
+	}
+
 }

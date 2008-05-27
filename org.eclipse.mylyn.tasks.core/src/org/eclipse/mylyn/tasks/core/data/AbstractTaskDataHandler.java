@@ -13,7 +13,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -92,70 +91,5 @@ public abstract class AbstractTaskDataHandler {
 
 	public void migrateTaskData(TaskRepository taskRepository, TaskData taskData) {
 	}
-
-	/**
-	 * Sets attribute values from <code>sourceTaskData</code> on <code>targetTaskData</code>. Sets the following
-	 * attributes:
-	 * <ul>
-	 * <li>summary
-	 * <li>description
-	 * </ul>
-	 * Other attribute values are only set if they exist on <code>sourceTaskData</code> and <code>targetTaskData</code>.
-	 * 
-	 * @param sourceTaskData
-	 *            the source task data values are copied from, the connector kind of repository of
-	 *            <code>sourceTaskData</code> can be different from <code>targetTaskData</code>
-	 * @param targetTaskData
-	 *            the target task data values are copied to, the connector kind matches the one of this task data
-	 *            handler
-	 * @since 2.2
-	 */
-	public void cloneTaskData(ITaskMapping source, TaskData target) {
-//		targetTaskData.setSummary(sourceTaskData.getSummary());
-//		targetTaskData.setDescription(sourceTaskData.getDescription());
-//		if (sourceTaskData.getConnectorKind().equals(targetTaskData.getConnectorKind())
-//				&& sourceTaskData.getTaskKind().equals(targetTaskData.getTaskKind())) {
-//			// task data objects are from the same connector, copy all attributes
-//			for (RepositoryTaskAttribute sourceAttribute : sourceTaskData.getAttributes()) {
-//				copyAttributeValue(sourceAttribute, targetTaskData.getAttribute(sourceAttribute.getId()));
-//			}
-//		} else {
-//			// map attributes from common schema
-//			String[] commonAttributeKeys = new String[] { RepositoryTaskAttribute.KEYWORDS,
-//					RepositoryTaskAttribute.PRIORITY, RepositoryTaskAttribute.PRODUCT,
-//					RepositoryTaskAttribute.COMPONENT, RepositoryTaskAttribute.RESOLUTION,
-//					RepositoryTaskAttribute.USER_ASSIGNED, RepositoryTaskAttribute.USER_CC, };
-//			for (String key : commonAttributeKeys) {
-//				RepositoryTaskAttribute sourceAttribute = sourceTaskData.getAttribute(key);
-//				if (sourceAttribute != null) {
-//					copyAttributeValue(sourceAttribute, targetTaskData.getAttribute(key));
-//				}
-//			}
-//		}
-	}
-
-//	private void copyAttributeValue(RepositoryTaskAttribute sourceAttribute, RepositoryTaskAttribute targetAttribute) {
-//		if (targetAttribute == null) {
-//			return;
-//		}
-//
-//		if (!sourceAttribute.isReadOnly() && !sourceAttribute.isHidden() && !targetAttribute.isHidden()
-//				&& !targetAttribute.isReadOnly()) {
-//			targetAttribute.clearValues();
-//			if (targetAttribute.getOptions().size() > 0) {
-//				List<String> values = sourceAttribute.getValues();
-//				for (String value : values) {
-//					if (targetAttribute.getOptions().contains(value)) {
-//						targetAttribute.addValue(value);
-//					}
-//				}
-//			} else {
-//				List<String> values = sourceAttribute.getValues();
-//				for (String value : values) {
-//					targetAttribute.addValue(value);
-//				}
-//			}
-//		}
-//	}
 
 }

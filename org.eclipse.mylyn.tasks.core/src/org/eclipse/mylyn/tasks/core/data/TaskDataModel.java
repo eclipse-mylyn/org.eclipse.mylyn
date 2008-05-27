@@ -151,7 +151,7 @@ public class TaskDataModel {
 	}
 
 	public void save(IProgressMonitor monitor) throws CoreException {
-		workingCopy.save(monitor, unsavedChanedAttributes);
+		workingCopy.save(unsavedChanedAttributes, monitor);
 		unsavedChanedAttributes.clear();
 	}
 

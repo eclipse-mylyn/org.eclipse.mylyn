@@ -144,9 +144,11 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		}
 	}
 
-	public void save(IProgressMonitor monitor, Set<TaskAttribute> edits) throws CoreException {
-		for (TaskAttribute edit : edits) {
-			editsTaskData.getRoot().deepAddCopy(edit);
+	public void save(Set<TaskAttribute> edits, IProgressMonitor monitor) throws CoreException {
+		if (edits != null) {
+			for (TaskAttribute edit : edits) {
+				editsTaskData.getRoot().deepAddCopy(edit);
+			}
 		}
 		if (saved) {
 			taskDataManager.putEdits(task, editsTaskData);
