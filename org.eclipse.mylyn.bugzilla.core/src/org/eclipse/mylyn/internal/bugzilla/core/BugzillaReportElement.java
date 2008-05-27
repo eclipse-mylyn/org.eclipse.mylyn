@@ -21,7 +21,7 @@ public enum BugzillaReportElement {
 
 	ADD_COMMENT("Additional Comments:", "comment", TaskAttribute.TYPE_LONG_TEXT, true, false),
 
-	ASSIGNED_TO("Assigned to:", "assigned_to", TaskAttribute.TYPE_PERSON, false, true),
+	ASSIGNED_TO("Assigned to:", "assigned_to", TaskAttribute.TYPE_PERSON, true, true),
 
 	ASSIGNED_TO_NAME("Assigned to:", "assigned_to_name", TaskAttribute.TYPE_PERSON, true, true),
 
@@ -101,7 +101,7 @@ public enum BugzillaReportElement {
 
 	REP_PLATFORM("Platform:", "rep_platform", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
 
-	REPORTER("Reporter:", "reporter", TaskAttribute.TYPE_PERSON, false, true),
+	REPORTER("Reporter:", "reporter", TaskAttribute.TYPE_PERSON, true, true),
 
 	REPORTER_NAME("Reporter:", "reporter_name", TaskAttribute.TYPE_PERSON, true, true),
 

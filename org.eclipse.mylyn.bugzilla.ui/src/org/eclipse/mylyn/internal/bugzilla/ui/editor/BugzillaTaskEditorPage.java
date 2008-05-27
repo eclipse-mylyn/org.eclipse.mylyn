@@ -8,12 +8,17 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
+import java.util.Set;
+
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
 /**
  * @author Rob Elves
+ * @since 3.0
  */
 public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
@@ -21,18 +26,22 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		super(editor, BugzillaCorePlugin.CONNECTOR_KIND);
 	}
 
-//	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
-//		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
-//		
-//		descriptors.add(new TaskEditorPartDescriptor(ID_PART_ACTIONS) {
-//			@Override
-//			public AbstractTaskEditorPart createPart() {
-//				return new TaskEditorActionPart();
-//			}
-//		}.setPath(PATH_ACTIONS));
-//		
-//		
-//		return descriptors;
-//	}
+	@Override
+	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
+		Set<TaskEditorPartDescriptor> descriptors = super.createPartDescriptors();
+		for (TaskEditorPartDescriptor taskEditorPartDescriptor : descriptors) {
+			if (taskEditorPartDescriptor.getId().equals(ID_PART_PEOPLE)) {
+				descriptors.remove(taskEditorPartDescriptor);
+				break;
+			}
+		}
+		descriptors.add(new TaskEditorPartDescriptor(ID_PART_PEOPLE) {
+			@Override
+			public AbstractTaskEditorPart createPart() {
+				return new BugzillaPeoplePart();
+			}
+		}.setPath(PATH_PEOPLE));
 
+		return descriptors;
+	}
 }
