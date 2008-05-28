@@ -14,7 +14,7 @@ import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 /**
  * @author Steffen Pingel
  */
-public class RetrieveContextAttachmentHandler extends AbstractTaskAttachmentHandler {
+public class RetrieveContextAttachmentHandler extends AbstractTaskAttachmentCommandHandler {
 
 	@Override
 	protected void execute(ExecutionEvent event, ITaskAttachment attachment) {

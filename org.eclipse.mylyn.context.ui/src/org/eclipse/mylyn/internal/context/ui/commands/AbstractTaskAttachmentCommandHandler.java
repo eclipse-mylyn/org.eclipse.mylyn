@@ -19,9 +19,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 /**
  * @author Steffen Pingel
  */
-public abstract class AbstractTaskAttachmentHandler extends AbstractHandler {
+public abstract class AbstractTaskAttachmentCommandHandler extends AbstractHandler {
 
-	public AbstractTaskAttachmentHandler() {
+	public AbstractTaskAttachmentCommandHandler() {
 	}
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
