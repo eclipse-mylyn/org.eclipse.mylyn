@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -178,12 +177,12 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection) {
-		return new NewBugzillaTaskWizard(taskRepository, (TaskSelection) selection);
+		return new NewBugzillaTaskWizard(taskRepository, selection);
 	}
 
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
-		if (query.getSummary().length() == 0) {
+		if (query != null && query.getSummary().length() == 0) {
 			return new NewBugzillaQueryWizard(repository);
 		} else {
 			return new EditBugzillaQueryWizard(repository, query);
