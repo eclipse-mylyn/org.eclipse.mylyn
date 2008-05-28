@@ -33,6 +33,7 @@ import org.eclipse.mylyn.tasks.ui.LegendElement;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
 /**
  * @author Mik Kersten
@@ -156,11 +157,22 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
+		RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
 		if (query != null && query.getSummary().length() == 0) {
-			return new NewBugzillaQueryWizard(repository);
+			wizard.addPage(new BugzillaQueryTypeWizardPage(repository));
 		} else {
-			return new EditBugzillaQueryWizard(repository, query);
+			if (isCustomQuery(query)) {
+				wizard.addPage(new BugzillaCustomQueryWizardPage(repository, query));
+			} else {
+				wizard.addPage(new BugzillaSearchPage(repository, query));
+			}
 		}
+		return wizard;
+	}
+
+	private boolean isCustomQuery(IRepositoryQuery query2) {
+		String custom = query2.getAttribute(IBugzillaConstants.ATTRIBUTE_BUGZILLA_QUERY_CUSTOM);
+		return custom != null && custom.equals(Boolean.TRUE.toString());
 	}
 
 	@Override
