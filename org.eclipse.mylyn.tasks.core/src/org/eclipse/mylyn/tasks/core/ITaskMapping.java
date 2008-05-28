@@ -16,6 +16,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 /**
  * @author Steffen Pingel
  * @since 3.0
+ * @noimplement This interface is not intended to be implemented by clients. Extend {@link TaskMapping} instead.
  */
 public interface ITaskMapping {
 
