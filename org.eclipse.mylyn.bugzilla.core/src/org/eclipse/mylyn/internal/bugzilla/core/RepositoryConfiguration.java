@@ -559,7 +559,7 @@ public class RepositoryConfiguration implements Serializable {
 			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
 			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
 			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(opcode.getInputId());
-			attrResolvedInput.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+			attrResolvedInput.getMetaData().setType(opcode.getType());
 			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
 			for (String resolution : getResolutions()) {
 				// DUPLICATE and MOVED have special meanings so do not show as resolution
@@ -573,7 +573,7 @@ public class RepositoryConfiguration implements Serializable {
 			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
 			if (opcode.getInputId() != null) {
 				TaskAttribute attrInput = bugReport.getRoot().createAttribute(opcode.getInputId());
-				attrInput.getMetaData().defaults().setReadOnly(false).setType(TaskAttribute.TYPE_SHORT_TEXT);
+				attrInput.getMetaData().defaults().setReadOnly(false).setType(opcode.getType());
 				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
 			}
 			break;

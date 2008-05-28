@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+
 /**
  * @author Mik Kersten
  */
@@ -225,11 +227,11 @@ public interface IBugzillaConstants {
 
 		accept("Accept (change status to ASSIGNED)"),
 
-		resolve("Resolve as", "resolutionInput"),
+		resolve("Resolve as", "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT),
 
-		duplicate("Mark as duplicate of #", "dup_id"),
+		duplicate("Mark as duplicate of #", "dup_id", TaskAttribute.TYPE_SHORT_TEXT),
 
-		reassign("Reassign to", "reassignInput"),
+		reassign("Reassign to", "reassignInput", TaskAttribute.TYPE_PERSON),
 
 		reassignbycomponent("Reassign to default assignee"),
 
@@ -243,13 +245,16 @@ public interface IBugzillaConstants {
 
 		private final String inputId;
 
+		private final String type;
+
 		BUGZILLA_OPERATION(String label) {
-			this(label, null);
+			this(label, null, TaskAttribute.TYPE_SHORT_TEXT);
 		}
 
-		BUGZILLA_OPERATION(String label, String inputId) {
+		BUGZILLA_OPERATION(String label, String inputId, String type) {
 			this.label = label;
 			this.inputId = inputId;
+			this.type = type;
 		}
 
 		public String getLabel() {
@@ -258,6 +263,10 @@ public interface IBugzillaConstants {
 
 		public String getInputId() {
 			return inputId;
+		}
+
+		public String getType() {
+			return type;
 		}
 	}
 
@@ -305,6 +314,10 @@ public interface IBugzillaConstants {
 
 	public static final String DEFAULT_LANG = "en (default)";
 
+	// Bugzilla Task Attribute Editor Types 
+
 	public static final String EDITOR_TYPE_KEYWORDS = "bugzilla.editor.keywords";
+
+	public static final String EDITOR_TYPE_REMOVECC = "bugzilla.editor.removecc";
 
 }

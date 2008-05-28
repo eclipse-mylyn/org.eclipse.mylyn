@@ -45,9 +45,9 @@ public enum BugzillaReportElement {
 
 	BUGZILLA("bugzilla", "bugzilla", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
-	CC("CC:", "cc", TaskAttribute.TYPE_MULTI_SELECT, true, true),
+	CC("CC:", "cc", IBugzillaConstants.EDITOR_TYPE_REMOVECC, true, true),
 
-	REMOVECC("Remove CC", "removecc", TaskAttribute.TYPE_MULTI_SELECT, true, true),
+	REMOVECC("Remove CC", "removecc", IBugzillaConstants.EDITOR_TYPE_REMOVECC, true, true),
 
 	CCLIST_ACCESSIBLE("CC List", "cclist_accessible", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
@@ -91,7 +91,7 @@ public enum BugzillaReportElement {
 
 	LONGDESCLENGTH("Number of comments", "longdesclength", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
-	NEWCC("Add CC:", "newcc", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	NEWCC("Add CC:", "newcc", TaskAttribute.TYPE_PERSON, true, false),
 
 	OP_SYS("OS:", "op_sys", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
 
