@@ -15,17 +15,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.ui.ISearchQuery;
@@ -40,13 +38,13 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  * @since 2.0
  */
-public class SearchHitCollector extends LegacyTaskDataCollector implements ISearchQuery {
+public class SearchHitCollector extends TaskDataCollector implements ISearchQuery {
 
 	private static final String LABEL_MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
 	private static final String QUERYING_REPOSITORY = "Querying Repository...";
 
-	private final Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
+	private final Set<ITask> taskResults = new HashSet<ITask>();
 
 //	/** The string to display to the user when we have 1 match */
 //	private static final String MATCH = "1 match";
@@ -101,12 +99,10 @@ public class SearchHitCollector extends LegacyTaskDataCollector implements ISear
 //	}
 
 	@Override
-	public void accept(RepositoryTaskData taskData) {
-		AbstractTask task = (AbstractTask) taskList.getTask(repository.getRepositoryUrl(), taskData.getTaskId());
+	public void accept(TaskData taskData) {
+		ITask task = taskList.getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 		if (task == null) {
-			task = ((AbstractLegacyRepositoryConnector) connector).createTask(taskData.getRepositoryUrl(),
-					taskData.getTaskId(), "");
-			((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task, taskData);
+			task = TasksUi.getTasksModel().createTask(repository, taskData.getTaskId());
 		}
 		taskResults.add(task);
 		this.searchResult.addMatch(new Match(task, 0, 0));
@@ -170,7 +166,7 @@ public class SearchHitCollector extends LegacyTaskDataCollector implements ISear
 //		return MessageFormat.format(MATCHES, messageFormatArgs);
 //	}
 
-	public Set<AbstractTask> getTasks() {
+	public Set<ITask> getTasks() {
 		return taskResults;
 	}
 
