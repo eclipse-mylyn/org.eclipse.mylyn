@@ -16,6 +16,9 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 
+/**
+ * @author Steffen Pingel
+ */
 public abstract class AbstractReplyToCommentAction extends Action {
 
 	private static final String LABEL_REPLY = "Reply";
@@ -35,7 +38,7 @@ public abstract class AbstractReplyToCommentAction extends Action {
 
 	@Override
 	public void run() {
-		reply(editor, taskComment, getText());
+		reply(editor, taskComment, getReplyText());
 	}
 
 	public static void reply(AbstractTaskEditorPage editor, ITaskComment taskComment, String text) {
