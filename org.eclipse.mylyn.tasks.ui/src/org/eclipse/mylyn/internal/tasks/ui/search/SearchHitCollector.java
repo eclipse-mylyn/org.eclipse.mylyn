@@ -46,12 +46,6 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 
 	private final Set<ITask> taskResults = new HashSet<ITask>();
 
-//	/** The string to display to the user when we have 1 match */
-//	private static final String MATCH = "1 match";
-//
-//	/** The string to display to the user when we have multiple or no matches */
-//	private static final String MATCHES = "{0} matches";
-
 	private final ITaskList taskList;
 
 	private final TaskRepository repository;
@@ -60,8 +54,6 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 
 	private final RepositorySearchResult searchResult;
 
-	private final AbstractRepositoryConnector connector;
-
 	/**
 	 * @since 3.0
 	 */
@@ -69,7 +61,6 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 		this.taskList = tasklist;
 		this.repository = repository;
 		this.repositoryQuery = repositoryQuery;
-		this.connector = TasksUi.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 		this.searchResult = new RepositorySearchResult(this);
 	}
 
@@ -83,20 +74,6 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 			}
 		});
 	}
-
-//	public void accept(AbstractTask task) {
-//		if (task == null) {
-//			throw new IllegalArgumentException();
-//		}
-//
-//		AbstractTask hitTask = taskList.getTask(task.getHandleIdentifier());
-//		if (hitTask == null) {
-//			hitTask = task;
-//		}
-//
-//		taskResults.add(hitTask);
-//		this.searchResult.addMatch(new Match(hitTask, 0, 0));
-//	}
 
 	@Override
 	public void accept(TaskData taskData) {
@@ -133,7 +110,6 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 			monitor = new NullProgressMonitor();
 		}
 
-		//monitor.beginTask(QUERYING_REPOSITORY, IProgressMonitor.UNKNOWN);
 		aboutToStart();
 
 		if (monitor.isCanceled()) {
@@ -157,14 +133,6 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 
 		return Status.OK_STATUS;
 	}
-
-//	protected String getFormattedMatchesString(int count) {
-//		if (count == 1) {
-//			return MATCH;
-//		}
-//		Object[] messageFormatArgs = { new Integer(count) };
-//		return MessageFormat.format(MATCHES, messageFormatArgs);
-//	}
 
 	public Set<ITask> getTasks() {
 		return taskResults;
