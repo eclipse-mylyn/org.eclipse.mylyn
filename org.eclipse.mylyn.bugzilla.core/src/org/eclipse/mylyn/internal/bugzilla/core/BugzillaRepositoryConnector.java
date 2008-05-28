@@ -85,6 +85,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
 		if (taskData != null) {
+
 			TaskMapper scheme = new TaskMapper(taskData);
 			scheme.applyTo(task);
 
@@ -237,35 +238,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		}
 	}
-
-//	@Override
-//	public boolean updateTaskFromQueryHit(TaskRepository repository, ITask existingTask, AbstractTask newTask) {
-//		// these properties are not provided by Bugzilla queries
-//		newTask.setCompleted(existingTask.isCompleted());
-//		//	newTask.setCompletionDate(existingTask.getCompletionDate());
-//
-//		// Owner attribute not previously
-//		if (hasTaskPropertyChanged(existingTask.getOwner(), newTask.getOwner())) {
-//			existingTask.setOwner(newTask.getOwner());
-//		}
-//
-//		boolean changed = super.updateTaskFromQueryHit(repository, existingTask, newTask);
-//
-//		if (existingTask instanceof BugzillaTask && newTask instanceof BugzillaTask) {
-//			BugzillaTask existingBugzillaTask = (BugzillaTask) existingTask;
-//			BugzillaTask newBugzillaTask = (BugzillaTask) newTask;
-//
-//			if (hasTaskPropertyChanged(existingBugzillaTask.getSeverity(), newBugzillaTask.getSeverity())) {
-//				existingBugzillaTask.setSeverity(newBugzillaTask.getSeverity());
-//				changed = true;
-//			}
-//			if (hasTaskPropertyChanged(existingBugzillaTask.getProduct(), newBugzillaTask.getProduct())) {
-//				existingBugzillaTask.setProduct(newBugzillaTask.getProduct());
-//				changed = true;
-//			}
-//		}
-//		return false;
-//	}
 
 	@Override
 	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {

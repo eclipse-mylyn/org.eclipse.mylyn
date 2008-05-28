@@ -41,16 +41,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -65,7 +61,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
@@ -80,7 +75,7 @@ import org.eclipse.ui.progress.UIJob;
  * @author Eugene Kuleshov
  * @author Willian Mitsuda
  * 
- * 	Product selection page of new bug wizard
+ *         Product selection page of new bug wizard
  */
 public class BugzillaProductPage extends WizardPage {
 
@@ -99,9 +94,6 @@ public class BugzillaProductPage extends WizardPage {
 	 */
 	private final NewBugzillaTaskWizard bugWizard;
 
-	/** The instance of the workbench */
-	protected IWorkbench workbench;
-
 	/**
 	 * Handle product selection
 	 */
@@ -115,18 +107,17 @@ public class BugzillaProductPage extends WizardPage {
 	 * Constructor for BugzillaProductPage
 	 * 
 	 * @param workbench
-	 * 		The instance of the workbench
+	 *            The instance of the workbench
 	 * @param bugWiz
-	 * 		The bug wizard which created this page
+	 *            The bug wizard which created this page
 	 * @param repository
-	 * 		The repository the data is coming from
+	 *            The repository the data is coming from
 	 * @param selection
 	 */
-	public BugzillaProductPage(IWorkbench workbench, NewBugzillaTaskWizard bugWiz, TaskRepository repository) {
+	public BugzillaProductPage(NewBugzillaTaskWizard bugWiz, TaskRepository repository) {
 		super("Page1");
 		setTitle(IBugzillaConstants.TITLE_NEW_BUG);
 		setDescription(DESCRIPTION);
-		this.workbench = workbench;
 		this.bugWizard = bugWiz;
 		this.repository = repository;
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.bugzilla.ui",
@@ -388,7 +379,7 @@ public class BugzillaProductPage extends WizardPage {
 	 * Applies the status to the status line of a dialog page.
 	 * 
 	 * @param status
-	 * 		The status to apply to the status line
+	 *            The status to apply to the status line
 	 */
 	protected void applyToStatusLine(IStatus status) {
 		String message = status.getMessage();
@@ -415,34 +406,37 @@ public class BugzillaProductPage extends WizardPage {
 		}
 	}
 
-	/**
-	 * Save the currently selected product to the taskData when next is clicked
-	 */
-	public void saveDataToModel() throws CoreException {
-		RepositoryTaskData model = bugWizard.taskData;
-		model.setAttributeValue(BugzillaReportElement.PRODUCT.getKey(),
-				(String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement());
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(repository.getConnectorKind());
-		if (connector == null) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID,
-					"Error AbstractRepositoryConnector could not been retrieved.\n\n"));
-		}
-		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
-		if (taskDataHandler == null) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID,
-					"Error AbstractTaskDataHandler could not been retrieved.\n\n"));
-		}
-		taskDataHandler.initializeTaskData(repository, model, null);
+//	/**
+//	 * Save the currently selected product to the taskData when next is clicked
+//	 */
+//	public void saveDataToModel() throws CoreException {
+//		RepositoryTaskData model = bugWizard.taskData;
+//		model.setAttributeValue(BugzillaReportElement.PRODUCT.getKey(), getSelectedProduct());
+//		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
+//				.getRepositoryConnector(repository.getConnectorKind());
+//		if (connector == null) {
+//			throw new CoreException(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID,
+//					"Error AbstractRepositoryConnector could not been retrieved.\n\n"));
+//		}
+//		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
+//		if (taskDataHandler == null) {
+//			throw new CoreException(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID,
+//					"Error AbstractTaskDataHandler could not been retrieved.\n\n"));
+//		}
+//		taskDataHandler.initializeTaskData(repository, model, null);
+//
+//		// platform/os are now set to All/All
+//		BugzillaCorePlugin.getDefault().setPlatformDefaultsOrGuess(repository, model);
+//	}
 
-		// platform/os are now set to All/All
-		BugzillaCorePlugin.getDefault().setPlatformDefaultsOrGuess(repository, model);
+	public String getSelectedProduct() {
+		return (String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement();
 	}
 
 	@Override
 	public boolean isPageComplete() {
-		bugWizard.completed = !productList.getViewer().getSelection().isEmpty();
-		return bugWizard.completed;
+		return !productList.getViewer().getSelection().isEmpty();
+//		return bugWizard.completed;
 	}
 
 }
