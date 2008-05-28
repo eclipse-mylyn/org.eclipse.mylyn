@@ -327,4 +327,8 @@ public interface IBugzillaConstants {
 
 	public static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustomQuery";
 
+	public static final String KEY_LAST_MOD_DATE = "LastModified";
+
+	// Bugzilla Task attribute keys
+	public static final String ATTRIBUTE_LAST_READ_DATE = "bugzilla.task.read";
 }

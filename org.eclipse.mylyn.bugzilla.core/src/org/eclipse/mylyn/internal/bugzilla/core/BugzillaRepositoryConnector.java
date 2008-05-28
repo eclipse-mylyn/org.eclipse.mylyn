@@ -88,6 +88,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			TaskMapper scheme = new TaskMapper(taskData);
 			scheme.applyTo(task);
 
+			// This attribute is used to determine if local copy is stale
+			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+			if (attrModification != null) {
+				task.setAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE, attrModification.getValue());
+			}
+
 //			if (taskData.isPartial()) {
 //				
 //				bugzillaTask.setSummary(getAtaskData.getAttributeValue(RepositoryTaskAttribute.SUMMARY));
@@ -229,7 +235,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 				task.setDueDate(dueDate);
 			}
-
 		}
 	}
 
@@ -568,11 +573,16 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean hasChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
-		TaskMapper mapper = new TaskMapper(taskData);
-		Date localDate = task.getModificationDate();
-		Date repositoryDate = mapper.getModificationDate();
-		if (repositoryDate != null && repositoryDate.equals(localDate)) {
+		if (taskData.isPartial()) {
 			return false;
+		}
+		String lastKnownMod = task.getAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE);
+		if (lastKnownMod != null) {
+			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+			if (attrModification != null) {
+				return !lastKnownMod.equals(attrModification.getValue());
+			}
+
 		}
 		return true;
 	}

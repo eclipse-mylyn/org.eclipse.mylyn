@@ -73,7 +73,14 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			monitor.beginTask("Sending attachment", IProgressMonitor.UNKNOWN);
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
-			client.postAttachment(task.getTaskId(), comment, TaskAttachmentMapper.createFrom(attachmentAttribute),
+			String description = null;
+			boolean isPatch = false;
+			if (attachmentAttribute != null) {
+				TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
+				description = mapper.getDescription();
+				isPatch = mapper.isPatch();
+			}
+			client.postAttachment(task.getTaskId(), comment, description, source.getContentType(), isPatch,
 					new AttachmentPartSource(source), monitor);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,

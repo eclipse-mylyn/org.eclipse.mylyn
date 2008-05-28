@@ -210,8 +210,8 @@ public class TaskDataManager implements ITaskDataManager {
 							}
 							break;
 						}
+						task.setStale(false);
 					}
-					task.setStale(false);
 					task.setSynchronizing(false);
 				}
 			});

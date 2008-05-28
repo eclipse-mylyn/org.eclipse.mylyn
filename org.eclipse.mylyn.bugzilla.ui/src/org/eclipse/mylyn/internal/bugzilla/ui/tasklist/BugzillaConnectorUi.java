@@ -19,14 +19,10 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
@@ -41,6 +37,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 /**
  * @author Mik Kersten
  * @author Eugene Kuleshov
+ * @author Rob Elves
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
@@ -68,29 +65,6 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		} else {
 			return "(In reply to comment #" + taskComment.getNumber() + ")";
 		}
-	}
-
-	@Override
-	public List<ITask> getLegendItems() {
-		List<ITask> legendItems = new ArrayList<ITask>();
-
-		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical, Blocker");
-		blocker.setSeverity("critical");
-		legendItems.add(blocker);
-
-		BugzillaTask major = new BugzillaTask("", "major", "Major");
-		major.setSeverity("major");
-		legendItems.add(major);
-
-		BugzillaTask enhancement = new BugzillaTask("", "enhancement", "Enhancement");
-		enhancement.setSeverity("enhancement");
-		legendItems.add(enhancement);
-
-		BugzillaTask trivial = new BugzillaTask("", "trivial", "Trivial, Minor");
-		trivial.setSeverity("trivial");
-		legendItems.add(trivial);
-
-		return legendItems;
 	}
 
 	private static final int TASK_NUM_GROUP = 3;
@@ -199,42 +173,4 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		return BugzillaCorePlugin.CONNECTOR_KIND;
 	}
 
-	@SuppressWarnings("restriction")
-	@Override
-	public boolean supportsDueDates(ITask task) {
-		if (task instanceof BugzillaTask) {
-			// XXX This is only used in the planning editor, and if its input was set correctly as a RepositoryTaskEditorInput
-			// we wouldn't have to get the task data this way from here
-			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
-					task.getRepositoryUrl(), task.getTaskId());
-			if (taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKey()) != null) {
-				return true;
-			}
-		}
-		return super.supportsDueDates(task);
-	}
-
 }
-//@Override
-//public ImageDescriptor getTaskKindOverlay(ITask task) {
-//	if (task instanceof BugzillaTask) {
-//		BugzillaTask bugzillaTask = (BugzillaTask) task;
-//		String severity = bugzillaTask.getSeverity();
-//
-//		if (severity != null) {
-//			// XXX: refactor to use configuration
-//			if ("blocker".equals(severity) || "critical".equals(severity)) {
-//				return BugzillaImages.OVERLAY_CRITICAL;
-//			} else if ("major".equals(severity)) {
-//				return BugzillaImages.OVERLAY_MAJOR;
-//			} else if ("enhancement".equals(severity)) {
-//				return BugzillaImages.OVERLAY_ENHANCEMENT;
-//			} else if ("trivial".equals(severity) || "minor".equals(severity)) {
-//				return BugzillaImages.OVERLAY_MINOR;
-//			} else {
-//				return null;
-//			}
-//		}
-//	}
-//	return super.getTaskKindOverlay(task);
-//}

@@ -76,8 +76,8 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 				new FileTaskAttachmentSource(new File(filePath)));
 		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
 		try {
-			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachmentMapper, source,
-					new NullProgressMonitor());
+			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachmentMapper.getDescription(),
+					"application/octet-stream", false, source, new NullProgressMonitor());
 			fail();
 		} catch (Exception e) {
 		}

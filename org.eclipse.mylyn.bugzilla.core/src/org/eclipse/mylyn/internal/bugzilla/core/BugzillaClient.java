@@ -50,6 +50,7 @@ import org.apache.commons.httpclient.methods.multipart.PartSource;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.net.proxy.IProxyData;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -70,7 +71,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -640,12 +640,12 @@ public class BugzillaClient {
 		}
 	}
 
-	public void postAttachment(String bugReportID, String comment, TaskAttachmentMapper attachment, PartSource source,
-			IProgressMonitor monitor) throws HttpException, IOException, CoreException {
+	public void postAttachment(String bugReportID, String comment, String description, String contentType, boolean isPatch,
+			PartSource source, IProgressMonitor monitor) throws HttpException, IOException, CoreException {
 		monitor = Policy.monitorFor(monitor);
-		if (bugReportID == null || comment == null || attachment == null) {
-			throw new IllegalArgumentException("Must not pass in a null parameter");
-		}
+		Assert.isNotNull(bugReportID);
+		Assert.isNotNull(source);
+		Assert.isNotNull(contentType);
 
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 		if (!authenticated && hasAuthenticationCredentials()) {
@@ -668,20 +668,19 @@ public class BugzillaClient {
 				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password, characterEncoding));
 			}
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID, characterEncoding));
-			if (attachment.getDescription() != null) {
-				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, attachment.getDescription(),
-						characterEncoding));
+			if (description != null) {
+				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, description, characterEncoding));
 			}
 			if (comment != null) {
 				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, characterEncoding));
 			}
 			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, source));
 
-			if (attachment.isPatch()) {
+			if (isPatch) {
 				parts.add(new StringPart(ATTRIBUTE_ISPATCH, VALUE_ISPATCH));
 			} else {
 				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEMETHOD, VALUE_CONTENTTYPEMETHOD_MANUAL));
-				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEENTRY, attachment.getContentType()));
+				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEENTRY, contentType));
 			}
 
 			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));

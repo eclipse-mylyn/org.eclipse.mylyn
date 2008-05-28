@@ -203,14 +203,14 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					synchronizeQueries(monitor, event);
 
 					// for background synchronizations all changed tasks are synchronized including the ones that are not part of a query
-					if (!isUser()) {
-						for (ITask task : allTasks) {
-							if (task.isStale()) {
-								tasksToBeSynchronized.add(task);
-								((AbstractTask) task).setSynchronizing(true);
-							}
+					//if (!isUser()) {
+					for (ITask task : allTasks) {
+						if (task.isStale()) {
+							tasksToBeSynchronized.add(task);
+							((AbstractTask) task).setSynchronizing(true);
 						}
 					}
+					//}
 
 					// synchronize tasks that were marked by the connector
 					if (!tasksToBeSynchronized.isEmpty()) {
