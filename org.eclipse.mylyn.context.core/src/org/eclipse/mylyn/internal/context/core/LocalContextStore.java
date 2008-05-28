@@ -103,8 +103,7 @@ public class LocalContextStore implements IContextStore {
 //		}
 	}
 
-	private IInteractionContext loadContext(String handleIdentifier, File file,
-			IInteractionContextScaling contextScaling) {
+	public IInteractionContext loadContext(String handleIdentifier, File file, IInteractionContextScaling contextScaling) {
 		IInteractionContext loadedContext = externalizer.readContextFromXml(handleIdentifier, file, contextScaling);
 		if (loadedContext == null) {
 			return new InteractionContext(handleIdentifier, contextScaling);
