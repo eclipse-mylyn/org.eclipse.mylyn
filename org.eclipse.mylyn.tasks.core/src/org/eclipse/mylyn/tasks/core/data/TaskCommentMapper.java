@@ -153,9 +153,9 @@ public class TaskCommentMapper {
 		}
 		if (getText() != null) {
 			TaskAttribute child = taskAttribute.createMappedAttribute(TaskAttribute.COMMENT_TEXT);
-			child.getMetaData().defaults().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
+			child.getMetaData().defaults().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);//TYPE_LONG_RICH_TEXT
 			mapper.setValue(child, getText());
-			taskAttribute.putMetaDatum(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, TaskAttribute.COMMENT_TEXT);
+			taskAttribute.putMetaDatum(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, child.getId());
 		}
 	}
 
