@@ -219,7 +219,6 @@ public class TaskDataManager implements ITaskDataManager {
 		} else {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
-					task.setStale(false);
 					task.setSynchronizing(false);
 				}
 			});

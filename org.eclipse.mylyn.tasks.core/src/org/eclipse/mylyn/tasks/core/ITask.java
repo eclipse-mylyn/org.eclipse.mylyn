@@ -353,7 +353,9 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 
 	/**
 	 * @since 3.0
+	 * @deprecated
 	 */
+	@Deprecated
 	public abstract void setStale(boolean stale);
 
 	/**
