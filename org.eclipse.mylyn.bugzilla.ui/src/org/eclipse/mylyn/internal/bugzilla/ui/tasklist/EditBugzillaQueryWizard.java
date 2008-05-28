@@ -8,28 +8,40 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryQueryWizard;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
 /**
  * @author Rob Elves
  */
-public class EditBugzillaQueryWizard extends AbstractRepositoryQueryWizard {
+public class EditBugzillaQueryWizard extends RepositoryQueryWizard {
 
-	public EditBugzillaQueryWizard(TaskRepository repository, BugzillaRepositoryQuery query) {
-		super(repository, query);
+	private final IRepositoryQuery query;
+
+	private AbstractRepositoryQueryPage page;
+
+	public EditBugzillaQueryWizard(TaskRepository repository, IRepositoryQuery query) {
+		super(repository);
+		this.query = query;
 	}
 
 	@Override
 	public void addPages() {
-		if (((BugzillaRepositoryQuery) query).isCustomQuery()) {
-			page = new BugzillaCustomQueryWizardPage(repository, (BugzillaRepositoryQuery) query);
+		if (isCustomQuery(query)) {
+			page = new BugzillaCustomQueryWizardPage(getTaskRepository(), query);
 		} else {
-			page = new BugzillaSearchPage(repository, (BugzillaRepositoryQuery) query);
+			page = new BugzillaSearchPage(getTaskRepository(), query);
 		}
 		addPage(page);
+	}
+
+	private boolean isCustomQuery(IRepositoryQuery query2) {
+		String custom = query2.getAttribute(IBugzillaConstants.ATTRIBUTE_BUGZILLA_QUERY_CUSTOM);
+		return custom != null && custom.equals(Boolean.TRUE.toString());
 	}
 
 	@Override

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -21,7 +20,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
@@ -36,6 +34,7 @@ import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.LegendElement;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
@@ -98,27 +97,14 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	private static final int TASK_NUM_GROUP = 3;
 
 	@Override
-	public ImageDescriptor getTaskKindOverlay(ITask task) {
-		if (task instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask) task;
-			String severity = bugzillaTask.getSeverity();
-
-			if (severity != null) {
-				// XXX: refactor to use configuration
-				if ("blocker".equals(severity) || "critical".equals(severity)) {
-					return BugzillaImages.OVERLAY_CRITICAL;
-				} else if ("major".equals(severity)) {
-					return BugzillaImages.OVERLAY_MAJOR;
-				} else if ("enhancement".equals(severity)) {
-					return BugzillaImages.OVERLAY_ENHANCEMENT;
-				} else if ("trivial".equals(severity) || "minor".equals(severity)) {
-					return BugzillaImages.OVERLAY_MINOR;
-				} else {
-					return null;
-				}
-			}
-		}
-		return super.getTaskKindOverlay(task);
+	public List<LegendElement> getLegendElements() {
+		List<LegendElement> legendItems = new ArrayList<LegendElement>();
+		legendItems.add(LegendElement.createTask("blocker", BugzillaImages.OVERLAY_CRITICAL));
+		legendItems.add(LegendElement.createTask("critical", BugzillaImages.OVERLAY_CRITICAL));
+		legendItems.add(LegendElement.createTask("major", BugzillaImages.OVERLAY_MAJOR));
+		legendItems.add(LegendElement.createTask("enhancement", BugzillaImages.OVERLAY_ENHANCEMENT));
+		legendItems.add(LegendElement.createTask("trivial", BugzillaImages.OVERLAY_MINOR));
+		return legendItems;
 	}
 
 	private static final String regexp = "(duplicate of|bug|task)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+)";
@@ -197,10 +183,10 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
-		if (query instanceof BugzillaRepositoryQuery) {
-			return new EditBugzillaQueryWizard(repository, (BugzillaRepositoryQuery) query);
-		} else {
+		if (query.getSummary().length() == 0) {
 			return new NewBugzillaQueryWizard(repository);
+		} else {
+			return new EditBugzillaQueryWizard(repository, query);
 		}
 	}
 
@@ -230,3 +216,26 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 }
+//@Override
+//public ImageDescriptor getTaskKindOverlay(ITask task) {
+//	if (task instanceof BugzillaTask) {
+//		BugzillaTask bugzillaTask = (BugzillaTask) task;
+//		String severity = bugzillaTask.getSeverity();
+//
+//		if (severity != null) {
+//			// XXX: refactor to use configuration
+//			if ("blocker".equals(severity) || "critical".equals(severity)) {
+//				return BugzillaImages.OVERLAY_CRITICAL;
+//			} else if ("major".equals(severity)) {
+//				return BugzillaImages.OVERLAY_MAJOR;
+//			} else if ("enhancement".equals(severity)) {
+//				return BugzillaImages.OVERLAY_ENHANCEMENT;
+//			} else if ("trivial".equals(severity) || "minor".equals(severity)) {
+//				return BugzillaImages.OVERLAY_MINOR;
+//			} else {
+//				return null;
+//			}
+//		}
+//	}
+//	return super.getTaskKindOverlay(task);
+//}

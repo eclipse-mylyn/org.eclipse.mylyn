@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -22,14 +23,6 @@ import org.w3c.dom.Element;
  * @since 3.0
  */
 public class BugzillaTaskListMigrator extends AbstractTaskListMigrator {
-
-	private static final String KEY_QUERY = "Query";
-
-	private static final String TAG_BUGZILLA = "Bugzilla";
-
-	private static final String TAG_BUGZILLA_QUERY = TAG_BUGZILLA + KEY_QUERY;
-
-	private static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustom" + KEY_QUERY;
 
 	private static final String TAG_BUGZILLA_REPORT = "BugzillaReport";
 
@@ -45,8 +38,8 @@ public class BugzillaTaskListMigrator extends AbstractTaskListMigrator {
 	@Override
 	public Set<String> getQueryElementNames() {
 		Set<String> names = new HashSet<String>();
-		names.add(TAG_BUGZILLA_QUERY);
-		names.add(TAG_BUGZILLA_CUSTOM_QUERY);
+		names.add(IBugzillaConstants.TAG_BUGZILLA_QUERY);
+		names.add(IBugzillaConstants.TAG_BUGZILLA_CUSTOM_QUERY);
 		return names;
 	}
 
@@ -57,8 +50,8 @@ public class BugzillaTaskListMigrator extends AbstractTaskListMigrator {
 
 	@Override
 	public void migrateQuery(IRepositoryQuery query, Element element) {
-		if (element.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
-			query.setAttribute(TAG_BUGZILLA_CUSTOM_QUERY, "true");
+		if (element.getNodeName().equals(IBugzillaConstants.TAG_BUGZILLA_CUSTOM_QUERY)) {
+			query.setAttribute(IBugzillaConstants.ATTRIBUTE_BUGZILLA_QUERY_CUSTOM, Boolean.TRUE.toString());
 		}
 	}
 

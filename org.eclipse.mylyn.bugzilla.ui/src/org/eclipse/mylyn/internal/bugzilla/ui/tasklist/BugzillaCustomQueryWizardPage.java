@@ -9,6 +9,8 @@
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
@@ -38,11 +40,11 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
 	private Text queryText;
 
-	private BugzillaRepositoryQuery query;
+	private IRepositoryQuery query;
 
 	private Text queryTitle;
 
-	public BugzillaCustomQueryWizardPage(TaskRepository repository, BugzillaRepositoryQuery query) {
+	public BugzillaCustomQueryWizardPage(TaskRepository repository, IRepositoryQuery query) {
 		super(TITLE, repository);
 		this.query = query;
 		setTitle(TITLE);
@@ -110,16 +112,23 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	}
 
 	@Override
-	public BugzillaRepositoryQuery getQuery() {
+	public IRepositoryQuery getQuery() {
 		if (query == null) {
 			query = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), queryText.getText(),
 					this.getQueryTitle());
-			query.setCustomQuery(true);
+			setCustomQuery(true);
 		} else {
-			query.setHandleIdentifier(this.getQueryTitle());
+			query.setSummary(this.getQueryTitle());
 			query.setUrl(queryText.getText());
 		}
 		return query;
+	}
+
+	private void setCustomQuery(boolean b) {
+		if (query != null) {
+			query.setAttribute(IBugzillaConstants.ATTRIBUTE_BUGZILLA_QUERY_CUSTOM, Boolean.toString(b));
+		}
+
 	}
 
 }

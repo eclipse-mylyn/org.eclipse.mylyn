@@ -320,4 +320,11 @@ public interface IBugzillaConstants {
 
 	public static final String EDITOR_TYPE_REMOVECC = "bugzilla.editor.removecc";
 
+	public static final String ATTRIBUTE_BUGZILLA_QUERY_CUSTOM = "bugzilla.query.custom";
+
+	// Old Tags used for migration
+	public static final String TAG_BUGZILLA_QUERY = "BugzillaQuery";
+
+	public static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustomQuery";
+
 }

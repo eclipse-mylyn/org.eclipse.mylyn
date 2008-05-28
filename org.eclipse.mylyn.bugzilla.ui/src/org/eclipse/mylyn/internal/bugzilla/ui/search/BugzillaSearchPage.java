@@ -44,6 +44,7 @@ import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
@@ -124,7 +125,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2",
 			"emaillongdesc2" };
 
-	private BugzillaRepositoryQuery originalQuery = null;
+	private IRepositoryQuery originalQuery = null;
 
 	protected boolean restoring = false;
 
@@ -303,8 +304,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 //		}
 	}
 
-	public BugzillaSearchPage(TaskRepository repository, BugzillaRepositoryQuery origQuery) {
-		super(TITLE_BUGZILLA_QUERY, repository);
+	public BugzillaSearchPage(TaskRepository repository, IRepositoryQuery origQuery) {
+		super(TITLE_BUGZILLA_QUERY, repository, origQuery);
 		originalQuery = origQuery;
 		setDescription("Select the Bugzilla query parameters.  Use the Update Attributes button to retrieve "
 				+ "updated values from the repository.");
@@ -1163,20 +1164,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	public String getSearchURL(TaskRepository repository) {
-		try {
-			// if (rememberedQuery) {
-			// return getQueryURL(repository, new StringBuffer(input.getQueryParameters(selIndex)));
-			// } else {
-			return getQueryURL(repository, getQueryParameters());
-			// }
-		} catch (UnsupportedEncodingException e) {
-			// ignore
-		}
-		return "";
+		return getQueryURL(repository, getQueryParameters());
 	}
 
-	protected String getQueryURL(TaskRepository repository, StringBuffer params) {
-		StringBuffer url = new StringBuffer(getQueryURLStart(repository).toString());
+	protected String getQueryURL(TaskRepository repository, StringBuilder params) {
+		StringBuilder url = new StringBuilder(getQueryURLStart(repository).toString());
 		url.append(params);
 
 		// HACK make sure that the searches come back sorted by priority. This
@@ -1191,8 +1183,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * 
 	 * Example: https://bugs.eclipse.org/bugs/buglist.cgi?
 	 */
-	private StringBuffer getQueryURLStart(TaskRepository repository) {
-		StringBuffer sb = new StringBuffer(repository.getRepositoryUrl());
+	private StringBuilder getQueryURLStart(TaskRepository repository) {
+		StringBuilder sb = new StringBuilder(repository.getRepositoryUrl());
 
 		if (sb.charAt(sb.length() - 1) != '/') {
 			sb.append('/');
@@ -1209,78 +1201,65 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
-	protected StringBuffer getQueryParameters() throws UnsupportedEncodingException {
-		StringBuffer sb = new StringBuffer();
+	protected StringBuilder getQueryParameters() {
+		StringBuilder sb = new StringBuilder();
 
 		sb.append("short_desc_type=");
 		sb.append(patternOperationValues[summaryOperation.getSelectionIndex()]);
-
-		sb.append("&short_desc=");
-		sb.append(URLEncoder.encode(summaryPattern.getText(), getTaskRepository().getCharacterEncoding()));
+		appendToBuffer(sb, "&short_desc=", summaryPattern.getText());
 
 		int[] selected = product.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&product=");
-			sb.append(URLEncoder.encode(product.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&product=", product.getItem(element));
 		}
 
 		selected = component.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&component=");
-			sb.append(URLEncoder.encode(component.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&component=", component.getItem(element));
 		}
 
 		selected = version.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&version=");
-			sb.append(URLEncoder.encode(version.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&version=", version.getItem(element));
 		}
 
 		selected = target.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&target_milestone=");
-			sb.append(URLEncoder.encode(target.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&target_milestone=", target.getItem(element));
 		}
 
 		sb.append("&long_desc_type=");
 		sb.append(patternOperationValues[commentOperation.getSelectionIndex()]);
-		sb.append("&long_desc=");
-		sb.append(URLEncoder.encode(commentPattern.getText(), getTaskRepository().getCharacterEncoding()));
+		appendToBuffer(sb, "&long_desc=", commentPattern.getText());
 
 		selected = status.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&bug_status=");
-			sb.append(URLEncoder.encode(status.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&bug_status=", status.getItem(element));
 		}
 
 		selected = resolution.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&resolution=");
-			sb.append(URLEncoder.encode(resolution.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&resolution=", resolution.getItem(element));
 		}
 
 		selected = severity.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&bug_severity=");
-			sb.append(URLEncoder.encode(severity.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&bug_severity=", severity.getItem(element));
 		}
 
 		selected = priority.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&priority=");
-			sb.append(URLEncoder.encode(priority.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&priority=", priority.getItem(element));
 		}
 
 		selected = hardware.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&ref_platform=");
-			sb.append(URLEncoder.encode(hardware.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&ref_platform=", hardware.getItem(element));
 		}
 
 		selected = os.getSelectionIndices();
 		for (int element : selected) {
-			sb.append("&op_sys=");
-			sb.append(URLEncoder.encode(os.getItem(element), getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&op_sys=", os.getItem(element));
 		}
 
 		if (emailPattern.getText() != null && !emailPattern.getText().trim().equals("")) {
@@ -1301,8 +1280,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 				sb.append("&emailtype1=");
 				sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
-				sb.append("&email1=");
-				sb.append(URLEncoder.encode(emailPattern.getText(), getTaskRepository().getCharacterEncoding()));
+				appendToBuffer(sb, "&email1=", emailPattern.getText());
 			}
 		}
 
@@ -1324,16 +1302,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 				sb.append("&emailtype2=");
 				sb.append(emailOperationValues[emailOperation2.getSelectionIndex()]);
-				sb.append("&email2=");
-				sb.append(URLEncoder.encode(emailPattern2.getText(), getTaskRepository().getCharacterEncoding()));
+				appendToBuffer(sb, "&email2=", emailPattern2.getText());
 			}
 		}
 
 		if (daysText.getText() != null && !daysText.getText().equals("")) {
 			try {
 				Integer.parseInt(daysText.getText());
-				sb.append("&changedin=");
-				sb.append(URLEncoder.encode(daysText.getText(), getTaskRepository().getCharacterEncoding()));
+				appendToBuffer(sb, "&changedin=", daysText.getText());
 			} catch (NumberFormatException ignored) {
 				// this means that the days is not a number, so don't worry
 			}
@@ -1342,12 +1318,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		if (keywords.getText() != null && !keywords.getText().trim().equals("")) {
 			sb.append("&keywords_type=");
 			sb.append(keywordOperationValues[keywordsOperation.getSelectionIndex()]);
-			sb.append("&keywords=");
-			sb.append(URLEncoder.encode(keywords.getText().replace(',', ' '),
-					getTaskRepository().getCharacterEncoding()));
+			appendToBuffer(sb, "&keywords=", keywords.getText().replace(',', ' '));
 		}
 
 		return sb;
+	}
+
+	private void appendToBuffer(StringBuilder sb, String key, String value) {
+		sb.append(key);
+		try {
+			sb.append(URLEncoder.encode(value, getTaskRepository().getCharacterEncoding()));
+		} catch (UnsupportedEncodingException e) {
+			sb.append(value);
+		}
 	}
 
 	public IDialogSettings getDialogSettings() {
@@ -1679,23 +1662,14 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	@Override
-	public BugzillaRepositoryQuery getQuery() {
+	public IRepositoryQuery getQuery() {
 		if (originalQuery == null) {
-			try {
-				originalQuery = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), getQueryURL(
-						getTaskRepository(), getQueryParameters()), getQueryTitle());
-			} catch (UnsupportedEncodingException e) {
-				return null;
-			}
+			originalQuery = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), getQueryURL(
+					getTaskRepository(), getQueryParameters()), getQueryTitle());
 
 		} else {
-			try {
-				originalQuery.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
-				// originalQuery.setMaxHits(Integer.parseInt(getMaxHits()));
-				originalQuery.setHandleIdentifier(getQueryTitle());
-			} catch (UnsupportedEncodingException e) {
-				return null;
-			}
+			originalQuery.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
+			originalQuery.setSummary(getQueryTitle());
 		}
 		return originalQuery;
 	}
@@ -1804,9 +1778,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Adds content assist to the given text field.
 	 * 
 	 * @param text
-	 * 		text field to decorate.
+	 *            text field to decorate.
 	 * @param proposalProvider
-	 * 		instance providing content proposals
+	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit
@@ -1836,7 +1810,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
 	 * @param attribute
-	 * 		attribute for which to provide content assist.
+	 *            attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
 	// API 3.0 get this from the AttributeEditorToolkit?
@@ -1955,5 +1929,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			listControl.deselectAll();
 		}
 
+	}
+
+	@Override
+	public void applyTo(IRepositoryQuery query) {
+		query.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
+		query.setSummary(getQueryTitle());
 	}
 }
