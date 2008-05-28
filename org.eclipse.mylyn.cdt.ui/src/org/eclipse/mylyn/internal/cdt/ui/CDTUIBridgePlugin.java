@@ -19,6 +19,7 @@ import org.eclipse.cdt.internal.ui.editor.CEditor;
 import org.eclipse.cdt.mylyn.internal.ui.editor.ActiveFoldingListener;
 import org.eclipse.cdt.ui.CUIPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.context.ui.IContextUiStartup;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -36,11 +37,11 @@ import org.osgi.framework.BundleContext;
  */
 public class CDTUIBridgePlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.cdt.mylyn.ui"; // $NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.cdt.mylyn.ui"; //$NON-NLS-1$
 	
-	public static final String AUTO_FOLDING_ENABLED = "org.eclipse.mylyn.context.ui.editor.folding.enabled"; // $NON-NLS-1$
+	public static final String AUTO_FOLDING_ENABLED = "org.eclipse.mylyn.context.ui.editor.folding.enabled"; //$NON-NLS-1$
 
-	private static final String MYLYN_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9";
+	private static final String MYLYN_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9"; //$NON-NLS-1$
 
 	public static final int	START_ACTIVATION_POLICY	= 0x00000002;
 	
@@ -113,11 +114,12 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin {
 		ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
 		MonitorUiPlugin.getDefault().getSelectionMonitors().remove(cEditingMonitor);
 		CoreModel.getDefault().removeElementChangedListener(cElementChangeListener);
-		// TODO: uninstall editor tracker
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		lazyStop();
+
 		super.stop(context);
 		INSTANCE = null;
 		resourceBundle = null;
@@ -178,7 +180,7 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin {
 	public ResourceBundle getResourceBundle() {
 		try {
 			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.cdt.mylyn.internal.ui.PluginResources"); // $NON-NLS-1$
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.cdt.mylyn.internal.ui.PluginResources"); //$NON-NLS-1$
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
@@ -213,6 +215,18 @@ public class CDTUIBridgePlugin extends AbstractUIPlugin {
 	 */
 	public ActiveFoldingEditorTracker getEditorTracker() {
 		return editorTracker;
+	}
+
+
+	/**
+	 * Lazy startup. See extension point "org.eclipse.mylyn.context.ui.startup".
+	 */
+	public static class CDTUIBridgeStartup implements IContextUiStartup {
+
+		public void lazyStartup() {
+			CDTUIBridgePlugin.getDefault().lazyStart();
+		}
+
 	}
 
 }

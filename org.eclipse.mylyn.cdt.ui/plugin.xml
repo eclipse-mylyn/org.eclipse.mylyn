@@ -27,6 +27,12 @@
       </preservedFilters>
    </extension>
    <extension
+       point="org.eclipse.mylyn.context.ui.startup">
+      <startup
+          class="org.eclipse.cdt.mylyn.internal.ui.CDTUIBridgePlugin$CDTUIBridgeStartup">
+    </startup>
+   </extension>
+   <extension
          point="org.eclipse.ui.viewActions">
       <viewContribution
             id="org.eclipse.cdt.mylyn.ui.cview.contribution"
