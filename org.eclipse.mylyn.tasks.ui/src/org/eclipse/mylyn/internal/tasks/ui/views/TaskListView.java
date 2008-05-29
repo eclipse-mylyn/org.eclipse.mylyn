@@ -48,9 +48,13 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.commons.ui.TreeWalker;
+import org.eclipse.mylyn.internal.commons.ui.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DelayedRefreshJob;
@@ -185,7 +189,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		@Override
-		protected void refresh(Object[] items) {
+		protected void doRefresh(Object[] items) {
+			TreePath selection = preserveSelection();
+
 			if (items == null) {
 				viewer.refresh(true);
 			} else if (items.length > 0) {
@@ -216,6 +222,36 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			}
 
 			updateToolTip(false);
+			restoreSelection(selection);
+		}
+
+		private TreePath preserveSelection() {
+			if (viewer instanceof TreeViewer) {
+				TreeViewer treeViewer = (TreeViewer) viewer;
+				// in case the refresh removes the currently selected item, 
+				// remember the next item in the tree to restore the selection
+				// TODO: consider making this optional
+				TreeItem[] selection = treeViewer.getTree().getSelection();
+				if (selection.length > 0) {
+					TreeWalker treeWalker = new TreeWalker(treeViewer);
+					return treeWalker.walk(new TreeVisitor() {
+						@Override
+						public boolean visit(Object object) {
+							return true;
+						}
+					}, selection[selection.length - 1]);
+				}
+			}
+			return null;
+		}
+
+		private void restoreSelection(TreePath treePath) {
+			if (treePath != null) {
+				ISelection newSelection = viewer.getSelection();
+				if (newSelection == null || newSelection.isEmpty()) {
+					viewer.setSelection(new TreeSelection(treePath), true);
+				}
+			}
 		}
 
 		protected void updateExpansionState(Object item) {
@@ -1430,18 +1466,18 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (expandIfFocused && isFocusedMode()) {
 			try {
 				getViewer().getControl().setRedraw(false);
-				refreshJob.forceRefresh();
+				refreshJob.refreshNow();
 				getViewer().expandAll();
 			} finally {
 				getViewer().getControl().setRedraw(true);
 			}
 		} else {
-			refreshJob.forceRefresh();
+			refreshJob.refreshNow();
 		}
 	}
 
 	public void refresh() {
-		refreshJob.forceRefresh();
+		refreshJob.refreshNow();
 //		if (expand) {
 //			getViewer().expandAll();
 //		}
