@@ -127,6 +127,7 @@ public class TaskAttachmentPage extends WizardPage {
 					if ("".equals(descriptionText.getText().trim())) {
 						setErrorMessage("Description required");
 					} else {
+						taskAttachment.setDescription(descriptionText.getText().trim());
 						if (!"".equals(fileNameText.getText())) {
 							setPageComplete(true);
 							setErrorMessage(null);
@@ -315,10 +316,6 @@ public class TaskAttachmentPage extends WizardPage {
 		if (first) {
 			if (descriptionText != null) {
 				descriptionText.setFocus();
-				getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-					}
-				});
 			} else {
 				commentText.setFocus();
 			}

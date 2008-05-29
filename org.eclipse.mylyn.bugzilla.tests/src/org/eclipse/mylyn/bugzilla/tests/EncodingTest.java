@@ -13,9 +13,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 
 /**
  * @author Mik Kersten
@@ -61,25 +62,38 @@ public class EncodingTest extends AbstractBugzillaTest {
 	public void testProperEncodingUponPost() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
-				task.getTaskId());
+		ITask task = generateLocalTaskAndDownload("57");
 		assertNotNull(task);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));
 		String priority = null;
+		TaskDataModel model = createModel(task);
 		if (task.getPriority().equals("P1")) {
 			priority = "P2";
-			taskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKey(), priority);
+			TaskAttribute attrPriority = model.getTaskData().getRoot().getAttribute(
+					BugzillaReportElement.PRIORITY.getKey());
+			if (attrPriority != null) {
+				attrPriority.setValue(priority);
+				model.attributeChanged(attrPriority);
+			} else {
+				fail();
+			}
 		} else {
 			priority = "P1";
-			taskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKey(), priority);
+			TaskAttribute attrPriority = model.getTaskData().getRoot().getAttribute(
+					BugzillaReportElement.PRIORITY.getKey());
+			if (attrPriority != null) {
+				attrPriority.setValue(priority);
+				model.attributeChanged(attrPriority);
+			} else {
+				fail();
+			}
 		}
+		model.save(new NullProgressMonitor());
 
-		submit(task, taskData, null);
+		submit(model);
 		taskList.deleteTask(task);
-		task = (BugzillaTask) TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
+		task = TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
 		assertNotNull(task);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));
 	}
-
 }

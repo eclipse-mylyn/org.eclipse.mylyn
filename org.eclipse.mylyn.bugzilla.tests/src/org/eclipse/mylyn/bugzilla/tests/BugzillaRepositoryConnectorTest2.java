@@ -27,9 +27,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -40,7 +38,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
-import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
@@ -288,24 +285,6 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 //		// Comment lastComment = comments.get(comments.size() - 1);
 //		// assertEquals(newCommentText, lastComment.getText());
 
-	}
-
-	private void submit(TaskDataModel model) {
-		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
-				model.getTask(), model.getTaskData(), model.getChangedOldAttributes());
-		submitJob.schedule();
-		try {
-			submitJob.join();
-		} catch (InterruptedException e) {
-			fail(e.getMessage());
-		}
-	}
-
-	protected TaskDataModel createModel(ITask task) throws CoreException {
-		ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);
-		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
-				taskDataState.getRepositoryUrl());
-		return new TaskDataModel(taskRepository, task, taskDataState);
 	}
 
 //	public void testMissingHits() throws Exception {

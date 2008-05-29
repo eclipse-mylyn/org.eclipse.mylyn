@@ -78,7 +78,13 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			if (attachmentAttribute != null) {
 				TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
 				description = mapper.getDescription();
-				isPatch = mapper.isPatch();
+				if (description == null) {
+					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+							"A description is required when submitting attachments."));
+				}
+				if (mapper.isPatch() != null) {
+					isPatch = mapper.isPatch();
+				}
 			}
 			client.postAttachment(task.getTaskId(), comment, description, source.getContentType(), isPatch,
 					new AttachmentPartSource(source), monitor);

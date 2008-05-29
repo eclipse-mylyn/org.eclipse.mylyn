@@ -31,8 +31,11 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -61,7 +64,6 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		super.setUp();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
-		//TasksUiPlugin.getTaskDataManager().clear();
 		manager = TasksUiPlugin.getRepositoryManager();
 		TasksUiPlugin.getDefault().reloadDataDirectory();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -123,12 +125,28 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		task.setStale(true);
 		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiInternal.synchronizeTask(connector, task, true, null);
-//		ITask task = TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
 		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-//		assertNotNull(task);
-		//TasksUiPlugin.getTaskList().addTask(task, TasksUiPlugin.getTaskList().getDefaultCategory());
-
 		return task;
+	}
+
+	protected TaskDataModel createModel(ITask task) throws CoreException {
+		ITaskDataWorkingCopy taskDataState = getWorkingCopy(task);
+		return new TaskDataModel(repository, task, taskDataState);
+	}
+
+	protected ITaskDataWorkingCopy getWorkingCopy(ITask task) throws CoreException {
+		return TasksUiPlugin.getTaskDataManager().getWorkingCopy(task);
+	}
+
+	protected void submit(TaskDataModel model) {
+		SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskJob(connector, model.getTaskRepository(),
+				model.getTask(), model.getTaskData(), model.getChangedOldAttributes());
+		submitJob.schedule();
+		try {
+			submitJob.join();
+		} catch (InterruptedException e) {
+			fail(e.getMessage());
+		}
 	}
 
 	protected void submit(ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes) throws CoreException {
@@ -136,33 +154,10 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		((AbstractTask) task).setSubmitting(true);
 	}
 
-	// protected BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData
-	// taskData)
-	// throws UnsupportedEncodingException {
-	// return BugzillaReportSubmitForm.makeExistingBugPost(taskData,
-	// repository.getUrl(), repository.getUserName(),
-	// repository.getPassword(), repository.getCharacterEncoding());
-	// }
-
 	protected void synchAndAssertState(Set<AbstractTask> tasks, SynchronizationState state) {
 		for (AbstractTask task : tasks) {
 			TasksUiInternal.synchronizeTask(connector, task, true, null);
 			assertEquals(task.getSynchronizationState(), state);
 		}
 	}
-
-	// class MockBugzillaReportSubmitForm extends BugzillaReportSubmitForm {
-	//
-	// public MockBugzillaReportSubmitForm() {
-	// super();
-	// }
-	//
-	// @Override
-	// public String submitReportToRepository(BugzillaClient client) throws
-	// BugzillaException, LoginException,
-	// PossibleBugzillaFailureException {
-	// return "test-submit";
-	// }
-	//
-	// }
 }

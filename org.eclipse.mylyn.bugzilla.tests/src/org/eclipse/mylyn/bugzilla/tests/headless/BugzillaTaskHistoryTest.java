@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.history.AssignmentEvent;
 import org.eclipse.mylyn.internal.bugzilla.core.history.ResolutionEvent;
 import org.eclipse.mylyn.internal.bugzilla.core.history.StatusEvent;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
-import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
@@ -43,7 +42,6 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 	public void setUp() throws Exception {
 		super.setUp();
 		connector = new BugzillaRepositoryConnector();
-		connector.init(new TaskList());
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
 		Credentials credentials = TestUtil.readCredentials();
