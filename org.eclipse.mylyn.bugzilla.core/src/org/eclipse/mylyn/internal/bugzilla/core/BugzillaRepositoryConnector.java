@@ -89,20 +89,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			TaskMapper scheme = new TaskMapper(taskData);
 			scheme.applyTo(task);
 
-			// This attribute is used to determine if local copy is stale
-			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
-			if (attrModification != null) {
-				task.setAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE, attrModification.getValue());
-			}
-
-//			if (taskData.isPartial()) {
-//				
-//				bugzillaTask.setSummary(getAtaskData.getAttributeValue(RepositoryTaskAttribute.SUMMARY));
-//				bugzillaTask.setPriority(taskData.getAttributeValue(RepositoryTaskAttribute.PRIORITY));
-//				bugzillaTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_OWNER));
-//				return;
-//			}
-
 ////			// subtasks
 //			repositoryTask.dropSubTasks();
 //			Set<String> subTaskIds = taskDataHandler.getSubTaskIds(taskData);
@@ -121,26 +107,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 //					if (subTask != null) {
 //						bugzillaTask.addSubTask(subTask);
 //					}
-//				}
-//			}
-
-			// Summary
-//			String summary = taskData.getSummary();
-//			bugzillaTask.setSummary(summary);
-
-			// Owner
-//			String owner = taskData.getAssignedTo();
-//			if (owner != null && !owner.equals("")) {
-//				bugzillaTask.setOwner(owner);
-//			}
-
-			// Creation Date
-//			String createdString = taskData.getCreated();
-//			if (createdString != null && createdString.length() > 0) {
-//				Date dateCreated = taskData.getAttributeFactory().getDateForAttributeType(
-//						RepositoryTaskAttribute.DATE_CREATION, taskData.getCreated());
-//				if (dateCreated != null) {
-//					bugzillaTask.setCreationDate(dateCreated);
 //				}
 //			}
 
@@ -193,13 +159,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			}
 
-//			// Priority
-//			String priority = PriorityLevel.getDefault().toString();
-//			if (taskData.getAttribute(RepositoryTaskAttribute.PRIORITY) != null) {
-//				priority = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY).getValue();
-//			}
-//			bugzillaTask.setPriority(priority);
-
 			// Task Web Url
 			String url = getTaskUrl(repository.getRepositoryUrl(), taskData.getTaskId());
 			if (url != null) {
@@ -236,6 +195,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 				task.setDueDate(dueDate);
 			}
+
+			// This attribute is used to determine if local copy is stale
+			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+			if (attrModification != null) {
+				task.setAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE, attrModification.getValue());
+			}
 		}
 	}
 
@@ -267,19 +232,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			String urlQueryString = urlQueryBase + BUG_ID;
 
-			// Need to replace this with query that would return list of tasks since last sync
-			// the trouble is that bugzilla only have 1 hour granularity for "changed since" query
-			// so, we can't say that no tasks has changed in repository
-			// Retrieve all in one query
-//			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
-//			Iterator<AbstractTask> itr = tasks.iterator();
-//			while (itr.hasNext()) {
-//				AbstractTask task = itr.next();
-//				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
-//				urlQueryString += newurlQueryString;
-//			}
-//			queryForChanged(repository, changedTasks, urlQueryString);
-
 			Set<ITask> changedTasks = new HashSet<ITask>();
 			Iterator<ITask> itr = event.getTasks().iterator();
 			int queryCounter = 0;
@@ -309,8 +261,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 			}
 
-			// FIXME check if new tasks were added
-			//return changedTasks.isEmpty();
 			return;
 		} catch (UnsupportedEncodingException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,

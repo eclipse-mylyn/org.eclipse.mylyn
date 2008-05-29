@@ -42,6 +42,10 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
+	private static final String regexp = "(duplicate of|bug|task)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+)";
+
+	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
 		return taskRepository.getRepositoryUrl() + "/createaccount.cgi";
@@ -81,10 +85,6 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		return legendItems;
 	}
 
-	private static final String regexp = "(duplicate of|bug|task)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+)";
-
-	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-
 	@Override
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
 		ArrayList<IHyperlink> hyperlinksFound = new ArrayList<IHyperlink>();
@@ -103,36 +103,6 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			return hyperlinksFound.toArray(new IHyperlink[1]);
 		}
 		return null;
-	}
-
-	private static IHyperlink extractHyperlink(TaskRepository repository, int regionOffset, Matcher m) {
-
-		int start = -1;
-
-		if (m.group().startsWith("duplicate")) {
-			start = m.start() + m.group().indexOf(m.group(TASK_NUM_GROUP));
-		} else {
-			start = m.start();
-		}
-
-		int end = m.end();
-
-		if (end == -1) {
-			end = m.group().length();
-		}
-
-		try {
-
-			String bugId = m.group(TASK_NUM_GROUP).trim();
-			start += regionOffset;
-			end += regionOffset;
-
-			IRegion sregion = new Region(start, end - start);
-			return new TaskHyperlink(sregion, repository, bugId);
-
-		} catch (NumberFormatException e) {
-			return null;
-		}
 	}
 
 	@Override
@@ -170,11 +140,6 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		return wizard;
 	}
 
-	private boolean isCustomQuery(IRepositoryQuery query2) {
-		String custom = query2.getAttribute(IBugzillaConstants.ATTRIBUTE_BUGZILLA_QUERY_CUSTOM);
-		return custom != null && custom.equals(Boolean.TRUE.toString());
-	}
-
 	@Override
 	public boolean hasSearchPage() {
 		return true;
@@ -183,6 +148,41 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getConnectorKind() {
 		return BugzillaCorePlugin.CONNECTOR_KIND;
+	}
+
+	private boolean isCustomQuery(IRepositoryQuery query2) {
+		String custom = query2.getAttribute(IBugzillaConstants.ATTRIBUTE_BUGZILLA_QUERY_CUSTOM);
+		return custom != null && custom.equals(Boolean.TRUE.toString());
+	}
+
+	private static IHyperlink extractHyperlink(TaskRepository repository, int regionOffset, Matcher m) {
+
+		int start = -1;
+
+		if (m.group().startsWith("duplicate")) {
+			start = m.start() + m.group().indexOf(m.group(TASK_NUM_GROUP));
+		} else {
+			start = m.start();
+		}
+
+		int end = m.end();
+
+		if (end == -1) {
+			end = m.group().length();
+		}
+
+		try {
+
+			String bugId = m.group(TASK_NUM_GROUP).trim();
+			start += regionOffset;
+			end += regionOffset;
+
+			IRegion sregion = new Region(start, end - start);
+			return new TaskHyperlink(sregion, repository, bugId);
+
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 
 }

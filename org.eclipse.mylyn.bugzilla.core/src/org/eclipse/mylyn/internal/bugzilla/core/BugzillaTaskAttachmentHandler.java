@@ -73,20 +73,33 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			monitor.beginTask("Sending attachment", IProgressMonitor.UNKNOWN);
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
-			String description = null;
+			String description = source.getDescription();
+			String contentType = source.getContentType();
+
 			boolean isPatch = false;
+
 			if (attachmentAttribute != null) {
 				TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
-				description = mapper.getDescription();
-				if (description == null) {
-					throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-							"A description is required when submitting attachments."));
+
+				if (mapper.getDescription() != null) {
+					description = mapper.getDescription();
 				}
+
+				if (mapper.getContentType() != null) {
+					contentType = mapper.getContentType();
+				}
+
 				if (mapper.isPatch() != null) {
 					isPatch = mapper.isPatch();
 				}
 			}
-			client.postAttachment(task.getTaskId(), comment, description, source.getContentType(), isPatch,
+
+			if (description == null) {
+				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+						"A description is required when submitting attachments."));
+			}
+
+			client.postAttachment(task.getTaskId(), comment, description, contentType, isPatch,
 					new AttachmentPartSource(source), monitor);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,

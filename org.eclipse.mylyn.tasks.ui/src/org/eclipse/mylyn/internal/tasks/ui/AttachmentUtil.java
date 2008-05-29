@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -41,6 +40,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepository
 import org.eclipse.mylyn.internal.tasks.core.deprecated.FileAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -51,9 +51,8 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -66,6 +65,8 @@ public class AttachmentUtil {
 	private static final String CONTEXT_DESCRIPTION_LEGACY = "mylar/context/zip";
 
 	private static final String CONTEXT_FILENAME = "mylyn-context.zip";
+
+	private static final String CONTEXT_CONTENT_TYPE = "application/octet-stream";
 
 	private static final int BUFFER_SIZE = 1024;
 
@@ -251,46 +252,32 @@ public class AttachmentUtil {
 
 	public static boolean uploadContext(final TaskRepository repository, final ITask task, final String comment,
 			final IRunnableContext context) {
+
 		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
+
+		ContextCorePlugin.getContextStore().saveContext(task.getHandleIdentifier());
+		final File sourceContextFile = ContextCorePlugin.getContextStore()
+				.getFileForContext(task.getHandleIdentifier());
+
+		if (!sourceContextFile.exists()) {
+			return false;
+		}
+
+		FileTaskAttachmentSource source = new FileTaskAttachmentSource(sourceContextFile);
+		source.setDescription(CONTEXT_DESCRIPTION);
+		source.setContentType(CONTEXT_CONTENT_TYPE);
+		final SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskAttachmentJob(connector,
+				repository, task, source, comment, null);
 		try {
-			final boolean[] result = new boolean[1];
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				@SuppressWarnings( { "restriction", "deprecation" })
+			context.run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						result[0] = false;
-						if (connector instanceof AbstractLegacyRepositoryConnector) {
-							if (((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler() != null) {
-								result[0] = AttachmentUtil.attachContext(
-										((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler(),
-										repository, task, comment, monitor);
-							}
-						}
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
+					if (((SubmitTaskAttachmentJob) submitJob).run(monitor) == Status.CANCEL_STATUS) {
+						throw new InterruptedException();
 					}
 				}
-			};
-			context.run(true, true, runnable);
+			});
 
-			if (!result[0]) {
-				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
-			} else {
-				((AbstractTask) task).setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-				// FIXME check for null?
-				IWorkbenchSite site = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow()
-						.getActivePage()
-						.getActivePart()
-						.getSite();
-				if (site instanceof IViewSite) {
-					IStatusLineManager statusLineManager = ((IViewSite) site).getActionBars().getStatusLineManager();
-					statusLineManager.setMessage("Context attached to task: " + task.getSummary());
-					TasksUiInternal.synchronizeTask(connector, task, true, null);
-				}
-			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
 				TasksUiInternal.displayStatus(TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
