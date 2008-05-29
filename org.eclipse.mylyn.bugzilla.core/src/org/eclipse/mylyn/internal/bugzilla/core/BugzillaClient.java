@@ -640,8 +640,9 @@ public class BugzillaClient {
 		}
 	}
 
-	public void postAttachment(String bugReportID, String comment, String description, String contentType, boolean isPatch,
-			PartSource source, IProgressMonitor monitor) throws HttpException, IOException, CoreException {
+	public void postAttachment(String bugReportID, String comment, String description, String contentType,
+			boolean isPatch, PartSource source, IProgressMonitor monitor) throws HttpException, IOException,
+			CoreException {
 		monitor = Policy.monitorFor(monitor);
 		Assert.isNotNull(bugReportID);
 		Assert.isNotNull(source);
@@ -885,7 +886,7 @@ public class BugzillaClient {
 
 		// go through all of the attributes and add them to
 		// the bug post
-		Collection<TaskAttribute> attributes = taskData.getRoot().getAttributes().values();
+		Collection<TaskAttribute> attributes = new ArrayList<TaskAttribute>(taskData.getRoot().getAttributes().values());
 		Iterator<TaskAttribute> itr = attributes.iterator();
 		while (itr.hasNext()) {
 			TaskAttribute a = itr.next();

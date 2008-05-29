@@ -214,6 +214,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(data, BugzillaReportElement.NEWCC);
 //		a.setValue("");
 //		a.setReadOnly(false);
+
+		createAttribute(data, BugzillaReportElement.LONG_DESC);
+
 		return true;
 	}
 

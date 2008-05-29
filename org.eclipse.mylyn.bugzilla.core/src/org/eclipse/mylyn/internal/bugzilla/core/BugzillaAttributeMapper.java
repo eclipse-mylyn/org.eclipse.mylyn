@@ -81,15 +81,15 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			return BugzillaReportElement.THETEXT.getKey();
 		} else if (key.equals(TaskAttribute.DATE_CREATION)) {
 			return BugzillaReportElement.CREATION_TS.getKey();
-			/*} else if (key.equals(TaskAttribute.DESCRIPTION)) {
-				return BugzillaReportElement.DESC.getKey();// attachment description
-				*/
+		} else if (key.equals(TaskAttribute.DESCRIPTION)) {
+			return BugzillaReportElement.LONG_DESC.getKey();
 		} else if (key.equals(TaskAttribute.ATTACHMENT_ID)) {
 			return BugzillaReportElement.ATTACHID.getKey();
-			/*} else if (key.equals(TaskAttribute.ATTACHMENT_TYPE)) {
-				return BugzillaReportElement.TYPE.getKey();*/
+		} else if (key.equals(TaskAttribute.ATTACHMENT_DESCRIPTION)) {
+			return BugzillaReportElement.DESC.getKey();
 		} else if (key.equals(TaskAttribute.ATTACHMENT_CONTENT_TYPE)) {
 			return BugzillaReportElement.CTYPE.getKey();
+			//return BugzillaReportElement.TYPE.getKey();*/
 		} else if (key.equals(TaskAttribute.USER_ASSIGNED)) {
 			return BugzillaReportElement.ASSIGNED_TO.getKey();
 		} else if (key.equals(TaskAttribute.USER_ASSIGNED_NAME)) {
