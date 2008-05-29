@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.internal.tasks.core.ITaskList;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITaskList;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationContext;
@@ -178,8 +178,9 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 
 	/**
 	 * @since 2.0
-	 * @deprecated use {@link #performQuery(TaskRepository, RepositoryQuery, TaskDataCollector,
-	 * 	SynchronizationContext, IProgressMonitor)} instead
+	 * @deprecated use
+	 *             {@link #performQuery(TaskRepository, RepositoryQuery, TaskDataCollector, SynchronizationContext, IProgressMonitor)}
+	 *             instead
 	 */
 	@Deprecated
 	public IStatus performQuery(IRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
@@ -188,19 +189,19 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	}
 
 	/**
-	 * Updates the properties of <code>repositoryTask</code>. Invoked when on task synchronization if {@link
-	 * #getLegacyTaskDataHandler()} returns <code>null</code> or {@link
-	 * AbstractTaskDataHandler#getTaskData(TaskRepository, String)} returns <code>null</code>.
+	 * Updates the properties of <code>repositoryTask</code>. Invoked when on task synchronization if
+	 * {@link #getLegacyTaskDataHandler()} returns <code>null</code> or
+	 * {@link AbstractTaskDataHandler#getTaskData(TaskRepository, String)} returns <code>null</code>.
 	 * 
 	 * <p>
 	 * Connectors that provide {@link RepositoryTaskData} objects for all tasks do not need to implement this method.
 	 * 
 	 * @param repository
-	 * 		the repository
+	 *            the repository
 	 * @param repositoryTask
-	 * 		the task that is synchronized
+	 *            the task that is synchronized
 	 * @throws CoreException
-	 * 		thrown in case of error while synchronizing
+	 *             thrown in case of error while synchronizing
 	 * @see {@link #getLegacyTaskDataHandler()}
 	 */
 	@Deprecated
@@ -228,7 +229,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	public boolean updateTaskFromQueryHit(TaskRepository repository, ITask existingTask, AbstractTask queryHit) {
 		boolean changed = false;
 		if (existingTask.isCompleted() != queryHit.isCompleted()) {
-			existingTask.setCompleted(queryHit.isCompleted());
+			((AbstractTask) existingTask).setCompleted(queryHit.isCompleted());
 			changed = true;
 		}
 		if (hasTaskPropertyChanged(existingTask.getSummary(), queryHit.getSummary())) {
@@ -282,11 +283,11 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 * synchronizations fail silently when disconnected.
 	 * 
 	 * @return false if there was no tasks changed in the repository, otherwise collection of updated tasks (within
-	 * 	<code>tasks</code> collection), so empty collection means that there are some other tasks changed
+	 *         <code>tasks</code> collection), so empty collection means that there are some other tasks changed
 	 * 
 	 * @throws CoreException
 	 * @deprecated use {@link #preQuerySynchronization(TaskRepository, SynchronizationContext, IProgressMonitor)}
-	 * 	instead
+	 *             instead
 	 */
 	@Deprecated
 	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)

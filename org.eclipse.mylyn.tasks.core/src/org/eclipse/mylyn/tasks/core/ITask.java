@@ -69,6 +69,7 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
+	// API-3.0: implement comparable
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
 
@@ -188,29 +189,33 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	}
 
 	/**
+	 * Returns the date that the task was completed.
+	 * 
 	 * @since 3.0
 	 */
 	public abstract Date getCompletionDate();
 
 	/**
+	 * Returns the identifier that uniquely distinguishes the repository connector associated with this task.
+	 * 
 	 * @since 3.0
 	 */
 	public abstract String getConnectorKind();
 
 	/**
+	 * Returns the date that this task was created.
+	 * 
 	 * @since 3.0
 	 */
 	public abstract Date getCreationDate();
 
 	/**
+	 * Returns the date after which this task will become overdue.
+	 * 
 	 * @since 3.0
 	 */
+	@Deprecated
 	public abstract Date getDueDate();
-
-	/**
-	 * @since 3.0
-	 */
-	public abstract int getEstimatedTimeHours();
 
 	/**
 	 * Final to preserve the handle identifier format required by the framework.
@@ -219,10 +224,15 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	 */
 	public abstract String getHandleIdentifier();
 
+	/**
+	 * @return Connector-specific format for the last read date.
+	 */
 	@Deprecated
 	public abstract String getLastReadTimeStamp();
 
 	/**
+	 * Returns the date that the repository contents of this task were last modified.
+	 * 
 	 * @since 3.0
 	 */
 	public abstract Date getModificationDate();
@@ -309,13 +319,6 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	public abstract boolean isSynchronizing();
 
 	/**
-	 * @deprecated use {@link #setCompletionDate(Date)} instead
-	 * @since 3.0
-	 */
-	@Deprecated
-	public abstract void setCompleted(boolean completed);
-
-	/**
 	 * @since 3.0
 	 */
 	public abstract void setCompletionDate(Date completionDate);
@@ -328,13 +331,8 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
+	@Deprecated
 	public abstract void setDueDate(Date date);
-
-	/**
-	 * @since 3.0
-	 */
-	// API 3.0 why is the granularity limited to hours?
-	public abstract void setEstimatedTimeHours(int estimated);
 
 	/**
 	 * @since 3.0

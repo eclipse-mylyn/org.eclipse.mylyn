@@ -731,6 +731,18 @@ public class TaskActivityManager implements ITaskActivityManager {
 		return new HashSet<ITask>(allScheduledTasks);
 	}
 
+	public Set<AbstractTask> getAllScheduledTasksInternal() {
+		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
+		synchronized (scheduledTasks) {
+			for (ITask task : allScheduledTasks) {
+				if (task instanceof AbstractTask) {
+					tasks.add((AbstractTask) task);
+				}
+			}
+		}
+		return tasks;
+	}
+
 	public Set<ITask> getAllDueTasks() {
 		return new HashSet<ITask>(allDueTasks);
 	}

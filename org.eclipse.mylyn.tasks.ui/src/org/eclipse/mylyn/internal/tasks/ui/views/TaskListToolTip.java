@@ -34,10 +34,10 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.LegacyChangeManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -169,8 +169,11 @@ public class TaskListToolTip extends ToolTip {
 			int estimateTotal = 0;
 			long elapsedTotal = 0;
 			for (ITask child : container.getChildren()) {
-				estimateTotal += (child).getEstimatedTimeHours();
-				elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(child, container.getDateRange());
+				if (child instanceof AbstractTask) {
+					estimateTotal += ((AbstractTask) child).getEstimatedTimeHours();
+					elapsedTotal += TasksUiPlugin.getTaskActivityManager().getElapsedTime(child,
+							container.getDateRange());
+				}
 			}
 			StringBuilder sb = new StringBuilder();
 			sb.append("Estimate: ");
