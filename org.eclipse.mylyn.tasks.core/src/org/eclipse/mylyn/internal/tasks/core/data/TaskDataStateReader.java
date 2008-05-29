@@ -56,7 +56,16 @@ public class TaskDataStateReader extends DefaultHandler {
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_IS_PATCH));
 			child.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_BOOLEAN);
 
-			addElementHandler(new AttributeHandler10(this, attribute));
+			addElementHandler(new AttributeHandler10(this, attribute) {
+				@Override
+				protected String mapId(String value) {
+					// migrate key for description
+					if (TaskAttribute.DESCRIPTION.equals(value)) {
+						return TaskAttribute.ATTACHMENT_DESCRIPTION;
+					}
+					return super.mapId(value);
+				}
+			});
 		}
 
 	}
@@ -77,8 +86,8 @@ public class TaskDataStateReader extends DefaultHandler {
 			// detect type
 			if (attribute.getOptions().size() > 0) {
 				if (attribute.getValues().size() > 1) {
-					attribute.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE,
-							TaskAttribute.TYPE_MULTI_SELECT);
+					attribute.getMetaData()
+							.putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_MULTI_SELECT);
 				} else {
 					attribute.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE,
 							TaskAttribute.TYPE_SINGLE_SELECT);
@@ -88,7 +97,7 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
-			String id = getValue(attributes, ITaskDataConstants.ATTRIBUTE_ID);
+			String id = mapId(getValue(attributes, ITaskDataConstants.ATTRIBUTE_ID));
 			String label = getValue(attributes, ITaskDataConstants.ATTRIBUTE_NAME);
 			boolean hidden = Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_HIDDEN));
 			boolean readOnly = Boolean.parseBoolean(getValue(attributes, ITaskDataConstants.ATTRIBUTE_READONLY));
@@ -99,6 +108,10 @@ public class TaskDataStateReader extends DefaultHandler {
 			addElementHandler(new OptionHandler10(this, attribute));
 			addElementHandler(new ValueHandler10(this, attribute));
 			addElementHandler(new MetaDataHandler10(this, attribute));
+		}
+
+		protected String mapId(String value) {
+			return value;
 		}
 
 	}

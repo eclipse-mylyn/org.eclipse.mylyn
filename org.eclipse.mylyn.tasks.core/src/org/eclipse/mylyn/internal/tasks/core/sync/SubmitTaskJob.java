@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
@@ -90,7 +91,10 @@ public class SubmitTaskJob extends SubmitJob {
 		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
 		} catch (Exception e) {
-			errorStatus = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, e.getMessage(), e);
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Unexpected error during task submission", e));
+			errorStatus = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Unexpected error: "
+					+ e.getMessage(), e);
 		} finally {
 			monitor.done();
 		}

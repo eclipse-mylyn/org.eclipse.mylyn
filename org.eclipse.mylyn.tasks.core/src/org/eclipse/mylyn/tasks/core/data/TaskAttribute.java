@@ -36,8 +36,7 @@ public final class TaskAttribute {
 
 	public static final String ATTACHMENT_DATE = "task.common.attachment.date";
 
-	// NOTE: uses the same value as DESCRIPTION to support migration of legacy task data 
-	public static final String ATTACHMENT_DESCRIPTION = "task.common.description";
+	public static final String ATTACHMENT_DESCRIPTION = "task.common.attachment.description";
 
 	public static final String ATTACHMENT_FILENAME = "filename";
 
