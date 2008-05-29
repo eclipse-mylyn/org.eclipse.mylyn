@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,13 +19,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -32,11 +33,13 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class DownloadAttachmentJob extends Job {
 
-	private final RepositoryAttachment attachment;
+	private static final int BUFFER_SIZE = 1024;
+
+	private final ITaskAttachment attachment;
 
 	private final File targetFile;
 
-	public DownloadAttachmentJob(RepositoryAttachment attachment, File targetFile) {
+	public DownloadAttachmentJob(ITaskAttachment attachment, File targetFile) {
 		super("Downloading Attachment");
 
 		if (attachment == null) {
@@ -51,12 +54,12 @@ public class DownloadAttachmentJob extends Job {
 	}
 
 	@Override
-	protected IStatus run(IProgressMonitor monitor) {
-		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(attachment.getRepositoryKind(),
+	public IStatus run(IProgressMonitor monitor) {
+		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(attachment.getConnectorKind(),
 				this.attachment.getRepositoryUrl());
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(this.attachment.getRepositoryKind());
-		AbstractAttachmentHandler handler = connector.getAttachmentHandler();
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				this.attachment.getConnectorKind());
+		AbstractTaskAttachmentHandler handler = connector.getTaskAttachmentHandler();
 		if (handler == null) {
 			return new RepositoryStatus(repository, IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_INTERNAL, "The repository does not support attachments.");
@@ -65,13 +68,29 @@ public class DownloadAttachmentJob extends Job {
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(this.targetFile);
-			handler.downloadAttachment(repository, attachment, out, monitor);
+			try {
+				InputStream in = handler.getContent(repository, attachment.getTask(), attachment.getTaskAttribute(),
+						monitor);
+
+				try {
+					int len;
+					byte[] buffer = new byte[BUFFER_SIZE];
+					while ((len = in.read(buffer)) != -1) {
+						out.write(buffer, 0, len);
+					}
+				} finally {
+					in.close();
+				}
+			} finally {
+				out.close();
+			}
+
 		} catch (final CoreException e) {
 			TasksUiInternal.displayStatus("Download Attachment", e.getStatus());
 			return Status.OK_STATUS;
 		} catch (IOException e) {
 			return new RepositoryStatus(repository, IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_IO, "Error while writing to attachment file.", e);
+					RepositoryStatus.ERROR_IO, "Error while retrieving attachment file.", e);
 		} finally {
 			if (out != null) {
 				try {

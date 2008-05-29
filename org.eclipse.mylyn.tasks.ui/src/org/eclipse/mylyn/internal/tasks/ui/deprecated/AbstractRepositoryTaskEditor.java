@@ -119,6 +119,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAc
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -1594,10 +1595,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final Action saveAction = new Action(LABEL_SAVE) {
 				@Override
 				public void run() {
-					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer.getSelection()).getFirstElement());
+					ITaskAttachment attachment = (ITaskAttachment) (((StructuredSelection) attachmentsTableViewer.getSelection()).getFirstElement());
 					/* Launch Browser */
 					FileDialog fileChooser = new FileDialog(attachmentsTable.getShell(), SWT.SAVE);
-					String fname = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
+					String fname = attachment.getFileName();
 					// Default name if none is found
 					if (fname.equals("")) {
 						String ctype = attachment.getContentType();

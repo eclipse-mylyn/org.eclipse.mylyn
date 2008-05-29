@@ -40,7 +40,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private TaskComment taskComment;
 
-	private Map<String, TaskComment> attachIdToComment = new HashMap<String, TaskComment>();
+	private Map<String, TaskCommentMapper> attachIdToComment = new HashMap<String, TaskCommentMapper>();
 
 	private int commentNum = 0;
 
@@ -122,7 +122,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (attributes != null && (attributes.getValue("error") != null)) {
 				errorMessage = attributes.getValue("error");
 			}
-			attachIdToComment = new HashMap<String, TaskComment>();
+			attachIdToComment = new HashMap<String, TaskCommentMapper>();
 			commentNum = 0;
 			taskComment = null;
 			longDescs = new ArrayList<TaskComment>();
@@ -243,8 +243,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (taskComment != null) {
 				taskComment.commentText = parsedText;
 
-				// Check for attachment
-				parseAttachment(taskComment, parsedText);
+//				// Check for attachment
+//				parseAttachment(taskComment, parsedText);
 			}
 			break;
 		case LONG_DESC:
@@ -258,6 +258,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			attachmentAttribute = repositoryTaskData.getRoot().createAttribute(
 					TaskAttribute.PREFIX_ATTACHMENT + parsedText);
 			attachment = TaskAttachmentMapper.createFrom(attachmentAttribute);
+			attachment.setAttachmentId(parsedText);
 			attachment.setPatch(isPatch);
 			attachment.setDeprecated(isDeprecated);
 			break;
@@ -385,18 +386,14 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			// Set the creator name on all attachments
 			for (TaskAttribute attachment : taskAttachments) {
 				TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attachment);
-				TaskComment taskComment = attachIdToComment.get(attachment.getId());
+				TaskCommentMapper taskComment = attachIdToComment.get(attachmentMapper.getAttachmentId());
 				if (taskComment != null) {
-					String commentAuthor = taskComment.author;
-					attachmentMapper.setAuthor(repositoryTaskData.getAttributeMapper()
-							.getTaskRepository()
-							.createPerson(commentAuthor));
+					attachmentMapper.setAuthor(taskComment.getAuthor());
+					attachmentMapper.setCreationDate(taskComment.getCreationDate());
 				}
 				attachmentMapper.setUrl(repositoryTaskData.getRepositoryUrl()
-						+ IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachment.getId());
-//				attachment.setRepositoryKind(repositoryTaskData.getConnectorKind());
-//				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
-//				attachment.setTaskId(repositoryTaskData.getTaskId());
+						+ IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachmentMapper.getAttachmentId());
+				attachmentMapper.applyTo(attachment);
 			}
 			collector.accept(repositoryTaskData);
 			break;
@@ -461,25 +458,45 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		taskComment.setText(comment.commentText);
 		taskComment.applyTo(attribute);
 		commentNum++;
+
+		parseAttachment(taskComment);
+
 	}
 
 	/** determines attachment id from comment */
-	private void parseAttachment(TaskComment taskComment, String commentText) {
+	private void parseAttachment(TaskCommentMapper comment) {
 
 		String attachmentID = "";
-
+		String commentText = comment.getText();
 		if (commentText.startsWith(COMMENT_ATTACHMENT_STRING)) {
 			int endIndex = commentText.indexOf(")");
 			if (endIndex > 0 && endIndex < commentText.length()) {
 				attachmentID = commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex);
 				if (!attachmentID.equals("")) {
-					taskComment.hasAttachment = true;
-					taskComment.attachmentId = attachmentID;
-					attachIdToComment.put(attachmentID, taskComment);
+					attachIdToComment.put(attachmentID, comment);
 				}
 			}
 		}
 	}
+
+//
+//	/** determines attachment id from comment */
+//	private void parseAttachment(TaskComment taskComment, String commentText) {
+//
+//		String attachmentID = "";
+//
+//		if (commentText.startsWith(COMMENT_ATTACHMENT_STRING)) {
+//			int endIndex = commentText.indexOf(")");
+//			if (endIndex > 0 && endIndex < commentText.length()) {
+//				attachmentID = commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex);
+//				if (!attachmentID.equals("")) {
+//					taskComment.hasAttachment = true;
+//					taskComment.attachmentId = attachmentID;
+//					attachIdToComment.put(attachmentID, taskComment);
+//				}
+//			}
+//		}
+//	}
 
 	private class TaskComment {
 

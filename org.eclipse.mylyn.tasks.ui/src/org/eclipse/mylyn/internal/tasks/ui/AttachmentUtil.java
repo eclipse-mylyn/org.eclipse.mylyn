@@ -9,10 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,11 +37,11 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.FileAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
+import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
-import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
@@ -145,14 +141,14 @@ public class AttachmentUtil {
 		return contextAttachments;
 	}
 
-	public static ITaskAttachment[] getContextAttachments(TaskRepository repository, ITask task) {
+	public static List<ITaskAttachment> getContextAttachments(TaskRepository repository, ITask task) {
 		List<ITaskAttachment> contextAttachments = new ArrayList<ITaskAttachment>();
 		TaskData taskData;
 		try {
 			taskData = TasksUi.getTaskDataManager().getTaskData(task);
 		} catch (CoreException e) {
 			// ignore
-			return new ITaskAttachment[0];
+			return contextAttachments;
 		}
 		if (taskData != null) {
 			TaskAttribute[] taskAttachments = taskData.getAttributeMapper().getAttributesByType(taskData,
@@ -165,7 +161,7 @@ public class AttachmentUtil {
 				}
 			}
 		}
-		return contextAttachments.toArray(new ITaskAttachment[0]);
+		return contextAttachments;
 	}
 
 	public static boolean hasContext(TaskRepository repository, ITask task) {
@@ -187,8 +183,8 @@ public class AttachmentUtil {
 			Set<RepositoryAttachment> remoteContextAttachments = getLegacyContextAttachments(repository, task);
 			return (remoteContextAttachments != null && remoteContextAttachments.size() > 0);
 		} else {
-			ITaskAttachment[] contextAttachments = getContextAttachments(repository, task);
-			return contextAttachments.length > 0;
+			List<ITaskAttachment> contextAttachments = getContextAttachments(repository, task);
+			return contextAttachments.size() > 0;
 		}
 	}
 
@@ -196,56 +192,31 @@ public class AttachmentUtil {
 
 	private static final String TITLE_DIALOG = "Mylyn Information";
 
-	public static boolean downloadContext(final ITask task, final RepositoryAttachment attachment,
+	public static boolean downloadContext(final ITask task, final ITaskAttachment attachment,
 			final IRunnableContext context) {
 		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				task.getConnectorKind());
-		final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(attachment.getRepositoryKind(),
+		final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(attachment.getConnectorKind(),
 				attachment.getRepositoryUrl());
 		final String directory = TasksUiPlugin.getDefault().getDataDirectory();
-		try {
-			if (task.isActive()) {
-				TasksUi.getTaskActivityManager().deactivateTask(task);
-			}
+		if (task.isActive()) {
+			TasksUi.getTaskActivityManager().deactivateTask(task);
+		}
+		boolean result = false;
 
-			final boolean[] result = new boolean[1];
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				@SuppressWarnings( { "restriction", "deprecation" })
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						result[0] = false;
-						if (connector instanceof AbstractLegacyRepositoryConnector) {
-							if (((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler() != null) {
-								result[0] = AttachmentUtil.retrieveContext(
-										((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler(),
-										repository, task, attachment, directory, monitor);
-							}
-						}
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					}
-				}
-			};
-			context.run(true, true, runnable);
+		if (connector instanceof AbstractRepositoryConnector) {
+			if (connector.getTaskAttachmentHandler() != null) {
+				result = AttachmentUtil.retrieveContext(connector.getTaskAttachmentHandler(), repository, task,
+						attachment, directory, context);
+			}
+		}
 
-			if (!result[0]) {
-				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
-			} else {
-				TasksUiInternal.getTaskList().notifyElementChanged(task);
-				TasksUi.getTaskActivityManager().activateTask(task);
-			}
-		} catch (InvocationTargetException e) {
-			if (e.getCause() instanceof CoreException) {
-				TasksUiInternal.displayStatus(TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
-			} else {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Unexpected error while attaching context", e));
-			}
-			return false;
-		} catch (InterruptedException ignored) {
-			// canceled
-			return false;
+		if (!result) {
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
+		} else {
+			TasksUiInternal.getTaskList().notifyElementChanged(task);
+			TasksUi.getTaskActivityManager().activateTask(task);
 		}
 		return true;
 	}
@@ -315,66 +286,70 @@ public class AttachmentUtil {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
-	@SuppressWarnings("restriction")
-	@Deprecated
-	public static boolean retrieveContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
-			ITask task, RepositoryAttachment attachment, String destinationPath, IProgressMonitor monitor)
-			throws CoreException {
+	public static boolean retrieveContext(AbstractTaskAttachmentHandler attachmentHandler, TaskRepository repository,
+			ITask task, ITaskAttachment attachment, String destinationPath, IRunnableContext context) {
 
 		File destinationContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
-
 		// TODO: add functionality for not overwriting previous context
 		if (destinationContextFile.exists()) {
 			if (!destinationContextFile.delete()) {
 				return false;
 			}
 		}
-		FileOutputStream out;
+
+		final DownloadAttachmentJob downloadJob = new DownloadAttachmentJob(attachment, destinationContextFile);
+
 		try {
-			out = new FileOutputStream(destinationContextFile);
-			try {
-				attachmentHandler.downloadAttachment(repository, attachment, out, monitor);
-			} finally {
-				try {
-					out.close();
-				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error closing context file",
-							e));
+			context.run(true, true, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					if ((downloadJob).run(monitor) == Status.CANCEL_STATUS) {
+						throw new InterruptedException();
+					}
 				}
+			});
+
+		} catch (InvocationTargetException e) {
+			if (e.getCause() instanceof CoreException) {
+				TasksUiInternal.displayStatus(TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
+			} else {
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Unexpected error while retrieving context", e));
 			}
-		} catch (FileNotFoundException e) {
-			throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_INTERNAL, "Could not create context file", e));
+			return false;
+		} catch (InterruptedException ignored) {
+			// canceled
+			return false;
 		}
+
 		return true;
 	}
 
-	public static boolean getContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
-			TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
-		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-		File file = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
-		try {
-			FileOutputStream out = new FileOutputStream(file);
-			try {
-				InputStream in = attachmentHandler.getContent(repository, task, attribute, monitor);
-				try {
-					int len;
-					byte[] buffer = new byte[BUFFER_SIZE];
-					while ((len = in.read(buffer)) != -1) {
-						out.write(buffer, 0, len);
-					}
-				} finally {
-					in.close();
-				}
-			} finally {
-				out.close();
-			}
-		} catch (IOException e) {
-			throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_INTERNAL, "Could not create context file", e));
-		}
-		return true;
-	}
+//	public static boolean getContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
+//			TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
+//		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+//		File file = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+//		try {
+//			FileOutputStream out = new FileOutputStream(file);
+//			try {
+//				InputStream in = attachmentHandler.getContent(repository, task, attribute, monitor);
+//				try {
+//					int len;
+//					byte[] buffer = new byte[BUFFER_SIZE];
+//					while ((len = in.read(buffer)) != -1) {
+//						out.write(buffer, 0, len);
+//					}
+//				} finally {
+//					in.close();
+//				}
+//			} finally {
+//				out.close();
+//			}
+//		} catch (IOException e) {
+//			throw new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+//					RepositoryStatus.ERROR_INTERNAL, "Could not create context file", e));
+//		}
+//		return true;
+//	}
 
 	public static boolean canUploadAttachment(ITask task) {
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
