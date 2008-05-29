@@ -70,14 +70,14 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 * 	credentials
+	 *             credentials
 	 */
 	@Deprecated
 	public static final String AUTH_PASSWORD = AUTH_REPOSITORY + PASSWORD;
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 * 	credentials
+	 *             credentials
 	 */
 	@Deprecated
 	public static final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
@@ -88,14 +88,14 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 * 	credentials
+	 *             credentials
 	 */
 	@Deprecated
 	public static final String AUTH_HTTP_PASSWORD = AUTH_HTTP + PASSWORD;
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 * 	credentials
+	 *             credentials
 	 */
 	@Deprecated
 	public static final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
@@ -120,14 +120,14 @@ public final class TaskRepository extends PlatformObject {
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 * 	credentials
+	 *             credentials
 	 */
 	@Deprecated
 	public static final String PROXY_USERNAME = AUTH_PROXY + USERNAME;
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
-	 * 	credentials
+	 *             credentials
 	 */
 	@Deprecated
 	public static final String PROXY_PASSWORD = AUTH_PROXY + PASSWORD;
@@ -363,7 +363,7 @@ public final class TaskRepository extends PlatformObject {
 	 * Returns the credentials for an authentication type.
 	 * 
 	 * @param authType
-	 * 		the type of authentication
+	 *            the type of authentication
 	 * @return null, if no credentials are set for <code>authType</code>
 	 * @since 3.0
 	 */
@@ -624,7 +624,7 @@ public final class TaskRepository extends PlatformObject {
 	 * Set the Configuration date to the {@link Date} indicated.
 	 * 
 	 * @param configuration
-	 * 		date {@link {@link Date}
+	 *            date {@link {@link Date}
 	 */
 	final public void setConfigurationDate(final Date date) {
 		this.setProperty(PROPERTY_CONFIG_TIMESTAMP, String.valueOf(date.getTime()));
@@ -636,11 +636,12 @@ public final class TaskRepository extends PlatformObject {
 	 * Sets the credentials for <code>authType</code>.
 	 * 
 	 * @param authType
-	 * 		the type of authentication
+	 *            the type of authentication
 	 * @param credentials
-	 * 		the credentials, if null, the credentials for <code>authType</code> will be flushed
+	 *            the credentials, if null, the credentials for <code>authType</code> will be flushed
 	 * @param savePassword
-	 * 		if true, the password will be persisted in the platform key ring; otherwise it will be stored in memory only
+	 *            if true, the password will be persisted in the platform key ring; otherwise it will be stored in
+	 *            memory only
 	 * @since 3.0
 	 */
 	public synchronized void setCredentials(AuthenticationType authType, AuthenticationCredentials credentials,
@@ -793,14 +794,14 @@ public final class TaskRepository extends PlatformObject {
 	/**
 	 * @since 3.0
 	 */
-	public IStatus getErrorStatus() {
+	public IStatus getStatus() {
 		return errorStatus;
 	}
 
 	/**
 	 * @since 3.0
 	 */
-	public void setErrorStatus(IStatus errorStatus) {
+	public void setStatus(IStatus errorStatus) {
 		this.errorStatus = errorStatus;
 	}
 

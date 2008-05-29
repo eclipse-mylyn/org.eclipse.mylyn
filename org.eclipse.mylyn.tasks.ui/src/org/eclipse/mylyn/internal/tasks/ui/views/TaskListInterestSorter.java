@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -229,7 +230,8 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int comparePriorities(ITaskElement element1, ITaskElement element2) {
-		return element1.getPriority().compareTo(element2.getPriority());
+		return ((AbstractTaskContainer) element1).getPriority().compareTo(
+				((AbstractTaskContainer) element2).getPriority());
 	}
 
 }

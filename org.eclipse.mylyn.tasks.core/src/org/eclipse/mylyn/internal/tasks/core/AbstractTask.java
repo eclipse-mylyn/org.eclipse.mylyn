@@ -164,7 +164,10 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.owner = owner;
 	}
 
-	public IStatus getErrorStatus() {
+	/**
+	 * Return the status, such as an error or warning, associated with this task.
+	 */
+	public IStatus getStatus() {
 		return errorStatus;
 	}
 
@@ -221,7 +224,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.active = active;
 	}
 
-	@Deprecated
 	public boolean isActive() {
 		return active;
 	}

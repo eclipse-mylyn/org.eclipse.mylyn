@@ -241,7 +241,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 	private void synchronizeQueries(IProgressMonitor monitor, ISynchronizationContext event) {
 		for (RepositoryQuery repositoryQuery : queries) {
 			Policy.checkCanceled(monitor);
-			repositoryQuery.setSynchronizationStatus(null);
+			repositoryQuery.setStatus(null);
 
 			monitor.subTask("Synchronizing query " + repositoryQuery.getSummary());
 			synchronizeQuery(repositoryQuery, event, new SubProgressMonitor(monitor, 20));
@@ -310,7 +310,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 			repositoryQuery.setLastSynchronizedStamp(new SimpleDateFormat("MMM d, H:mm:ss").format(new Date()));
 		} else {
-			repositoryQuery.setSynchronizationStatus(result);
+			repositoryQuery.setStatus(result);
 		}
 	}
 
@@ -323,7 +323,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private void updateQueryStatus(final IStatus status) {
 		for (RepositoryQuery repositoryQuery : queries) {
-			repositoryQuery.setSynchronizationStatus(status);
+			repositoryQuery.setStatus(status);
 			repositoryQuery.setSynchronizing(false);
 			taskList.notifyElementChanged(repositoryQuery);
 		}

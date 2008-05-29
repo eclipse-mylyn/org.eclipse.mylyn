@@ -307,12 +307,12 @@ public class TaskListToolTip extends ToolTip {
 
 	private String getStatusText(ITaskElement element) {
 		IStatus status = null;
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
-			status = task.getErrorStatus();
+		if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
+			status = task.getStatus();
 		} else if (element instanceof IRepositoryQuery) {
 			RepositoryQuery query = (RepositoryQuery) element;
-			status = query.getSynchronizationStatus();
+			status = query.getStatus();
 		}
 
 		if (status != null) {

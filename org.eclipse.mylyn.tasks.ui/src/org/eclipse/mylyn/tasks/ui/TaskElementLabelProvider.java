@@ -242,8 +242,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		}
 		AbstractTask task = TasksUiInternal.getCorrespondingTask((ITaskElement) element);
 		if (task != null) {
-			ITask repositoryTask = task;
-			if (repositoryTask.isSynchronizing()) {
+			if (task.isSynchronizing()) {
 				return CommonFonts.ITALIC;
 			}
 		}

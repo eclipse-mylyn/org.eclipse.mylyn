@@ -78,10 +78,11 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 		return repositoryUrl;
 	}
 
-	public IStatus getSynchronizationStatus() {
+	public IStatus getStatus() {
 		return status;
 	}
 
+	// TODO: move higher up and merge with AbstractTask
 	public boolean isSynchronizing() {
 		return synchronizing;
 	}
@@ -99,7 +100,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 		this.repositoryUrl = newRepositoryUrl;
 	}
 
-	public void setSynchronizationStatus(IStatus status) {
+	public void setStatus(IStatus status) {
 		this.status = status;
 	}
 

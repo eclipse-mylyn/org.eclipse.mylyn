@@ -21,6 +21,6 @@ public abstract class TaskJob extends Job {
 		super(name);
 	}
 
-	public abstract IStatus getErrorStatus();
+	public abstract IStatus getStatus();
 
 }

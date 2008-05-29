@@ -138,7 +138,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 			}
 
 			@Override
-			public IStatus getErrorStatus() {
+			public IStatus getStatus() {
 				return error;
 			}
 		};

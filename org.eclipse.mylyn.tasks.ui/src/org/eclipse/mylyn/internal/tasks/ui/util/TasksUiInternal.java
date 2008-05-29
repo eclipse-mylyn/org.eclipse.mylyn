@@ -257,10 +257,10 @@ public class TasksUiInternal {
 				synchronized (taskRepository) {
 					taskRepository.setUpdating(false);
 				}
-				if (job.getErrorStatus() != null) {
+				if (job.getStatus() != null) {
 					Display display = PlatformUI.getWorkbench().getDisplay();
 					if (!display.isDisposed()) {
-						TasksUiInternal.displayStatus("Configuration Refresh Failed", job.getErrorStatus());
+						TasksUiInternal.displayStatus("Configuration Refresh Failed", job.getStatus());
 					}
 				}
 			}
@@ -301,9 +301,9 @@ public class TasksUiInternal {
 			job.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
-					if (query.getSynchronizationStatus() != null) {
+					if (query.getStatus() != null) {
 						TasksUiInternal.asyncDisplayStatus("Query Synchronization Failed",
-								query.getSynchronizationStatus());
+								query.getStatus());
 					}
 				}
 			});
@@ -374,8 +374,9 @@ public class TasksUiInternal {
 			job.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
-					if (task.getErrorStatus() != null) {
-						TasksUiInternal.asyncDisplayStatus("Task Synchronization Failed", task.getErrorStatus());
+					if (task instanceof AbstractTask && ((AbstractTask) task).getStatus() != null) {
+						TasksUiInternal.asyncDisplayStatus("Task Synchronization Failed",
+								((AbstractTask) task).getStatus());
 					}
 				}
 			});

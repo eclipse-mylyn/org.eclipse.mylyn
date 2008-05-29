@@ -158,7 +158,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 					}
 				} else if (element instanceof IRepositoryQuery) {
 					RepositoryQuery query = (RepositoryQuery) element;
-					if (query.getSynchronizationStatus() != null) {
+					if (query.getStatus() != null) {
 						image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_WARNING);
 						if (taskListView.synchronizationOverlaid) {
 							imageOffset = 11;
@@ -196,7 +196,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 			}
 		} else if (element instanceof IRepositoryQuery) {
 			RepositoryQuery query = (RepositoryQuery) element;
-			if (query.getSynchronizationStatus() != null) {
+			if (query.getStatus() != null) {
 				return true;
 			}
 		}
@@ -250,14 +250,15 @@ class CustomTaskListDecorationDrawer implements Listener {
 			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.CONFLICT) {
 				imageDescriptor = CommonImages.OVERLAY_SYNC_CONFLICT;
 			}
-			if (imageDescriptor == null && repositoryTask.getErrorStatus() != null) {
+			if (imageDescriptor == null && repositoryTask instanceof AbstractTask
+					&& ((AbstractTask) repositoryTask).getStatus() != null) {
 				return CommonImages.OVERLAY_SYNC_WARNING;
 			} else if (imageDescriptor != null) {
 				return imageDescriptor;
 			}
 		} else if (element instanceof IRepositoryQuery) {
 			RepositoryQuery query = (RepositoryQuery) element;
-			if (query.getSynchronizationStatus() != null) {
+			if (query.getStatus() != null) {
 				return CommonImages.OVERLAY_SYNC_WARNING;
 			}
 		}

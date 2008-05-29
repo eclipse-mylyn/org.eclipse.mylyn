@@ -112,7 +112,7 @@ public class SubmitTaskJob extends SubmitJob {
 	}
 
 	@Override
-	public IStatus getErrorStatus() {
+	public IStatus getStatus() {
 		return errorStatus;
 	}
 

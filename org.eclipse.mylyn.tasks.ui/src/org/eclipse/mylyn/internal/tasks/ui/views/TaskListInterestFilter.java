@@ -126,7 +126,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 //			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
 //				return false;
 //			}
-			if (TasksUiPlugin.getTaskActivityManager().isOverdue(task) || task.isPastReminder()) {
+			if (TasksUiPlugin.getTaskActivityManager().isOverdue(task) || ((AbstractTask) task).isPastReminder()) {
 				return true;
 			}
 

@@ -12,6 +12,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -197,7 +198,9 @@ public class TaskListTableSorter extends ViewerSorter {
 	 * @return sort order
 	 */
 	private int sortByPriority(ITaskElement element1, ITaskElement element2, int sortDirection) {
-		return sortDirection * element1.getPriority().compareTo(element2.getPriority());
+		return sortDirection
+				* ((AbstractTaskContainer) element1).getPriority().compareTo(
+						((AbstractTaskContainer) element2).getPriority());
 	}
 
 	/**

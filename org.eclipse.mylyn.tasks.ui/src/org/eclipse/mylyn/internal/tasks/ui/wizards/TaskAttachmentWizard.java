@@ -273,8 +273,8 @@ public class TaskAttachmentWizard extends Wizard {
 	}
 
 	private void handleDone(SubmitJob job) {
-		if (job.getErrorStatus() != null) {
-			TasksUiInternal.displayStatus(getShell(), "Attachment Failed", job.getErrorStatus());
+		if (job.getStatus() != null) {
+			TasksUiInternal.displayStatus(getShell(), "Attachment Failed", job.getStatus());
 		}
 	}
 
@@ -319,7 +319,7 @@ public class TaskAttachmentWizard extends Wizard {
 			public void done(IJobChangeEvent event) {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						if (job.getErrorStatus() != null) {
+						if (job.getStatus() != null) {
 							getContainer().getShell().setVisible(true);
 						}
 						handleDone(job);
@@ -340,7 +340,7 @@ public class TaskAttachmentWizard extends Wizard {
 				}
 			});
 			handleDone(job);
-			return job.getErrorStatus() == null;
+			return job.getStatus() == null;
 		} catch (InvocationTargetException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
 			return false;

@@ -10,8 +10,6 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
 
-import org.eclipse.core.runtime.IStatus;
-
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
@@ -245,14 +243,13 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
+	// API-3.0: change to PriorityLevel class?
 	public abstract String getPriority();
 
 	/**
 	 * @since 3.0
 	 */
 	public abstract String getRepositoryUrl();
-
-	//public abstract DateRange getScheduledForDate();
 
 	/**
 	 * @since 3.0
@@ -263,11 +260,6 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	 * @since 3.0
 	 */
 	public abstract SynchronizationState getSynchronizationState();
-
-	/**
-	 * @since 3.0
-	 */
-	public abstract IStatus getErrorStatus();
 
 	/**
 	 * @since 3.0
@@ -290,7 +282,6 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	@Deprecated
 	public abstract boolean isActive();
 
 	/**
@@ -301,22 +292,8 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean isPastReminder();
-
-	/**
-	 * @since 3.0
-	 */
+	@Deprecated
 	public abstract boolean isStale();
-
-	/**
-	 * @since 3.0
-	 */
-	public abstract boolean isSubmitting();
-
-	/**
-	 * @since 3.0
-	 */
-	public abstract boolean isSynchronizing();
 
 	/**
 	 * @since 3.0
@@ -369,6 +346,7 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
+	// API-3.0: accept null and update docs
 	public abstract void setUrl(String taskUrl);
 
 	/**

@@ -23,9 +23,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
  * Top-level Task List element that can contain other Task List elements.
  * 
  * @author Mik Kersten
- * @since 2.0
  */
-//API 3.0 move to internal package
 public abstract class AbstractTaskContainer extends PlatformObject implements ITaskElement {
 
 	private String handleIdentifier = "";

@@ -169,10 +169,10 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
 								getTaskEditorPage().showEditorBusy(false);
-								if (job.getErrorStatus() != null) {
+								if (job.getStatus() != null) {
 									getTaskEditorPage().getTaskEditor().setStatus(
 											"Updating of repository configuration failed", "Update Failed",
-											job.getErrorStatus());
+											job.getStatus());
 								} else {
 									getTaskEditorPage().refreshFormContent();
 								}
