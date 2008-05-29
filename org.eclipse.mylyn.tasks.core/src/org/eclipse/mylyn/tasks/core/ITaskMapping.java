@@ -20,6 +20,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public interface ITaskMapping {
 
+	public void copyFrom(ITaskMapping source);
+
+	public abstract String[] getCc();
+
 	public abstract Date getCompletionDate();
 
 	public abstract String getComponent();
@@ -30,6 +34,8 @@ public interface ITaskMapping {
 
 	public abstract Date getDueDate();
 
+	public abstract String[] getKeywords();
+
 	public abstract Date getModificationDate();
 
 	public abstract String getOwner();
@@ -38,16 +44,20 @@ public interface ITaskMapping {
 
 	public abstract String getProduct();
 
+	public abstract String getReporter();
+
+	public abstract String getResolution();
+
 	public abstract String getSummary();
 
-	public TaskData getTaskData();
+	public abstract TaskData getTaskData();
 
 	public abstract String getTaskKey();
 
 	public abstract String getTaskKind();
 
-	public abstract String getTaskUrl();
+	public abstract String getTaskStatus();
 
-	public void copyFrom(ITaskMapping source);
+	public abstract String getTaskUrl();
 
 }

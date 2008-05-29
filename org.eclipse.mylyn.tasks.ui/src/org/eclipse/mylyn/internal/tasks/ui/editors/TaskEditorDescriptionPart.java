@@ -115,6 +115,10 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
+		if (getAttribute() == null) {
+			return;
+		}
+
 		super.createControl(parent, toolkit);
 		addDuplicateDetection(getComposite(), toolkit);
 	}

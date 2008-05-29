@@ -128,7 +128,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 			}
 
 			// ensure parent is valid and does not contain task already
-			if (container == null || task.getParentContainers().contains(container)) {
+			if (container == null || task.equals(container) || task.getParentContainers().contains(container)) {
 				return false;
 			}
 

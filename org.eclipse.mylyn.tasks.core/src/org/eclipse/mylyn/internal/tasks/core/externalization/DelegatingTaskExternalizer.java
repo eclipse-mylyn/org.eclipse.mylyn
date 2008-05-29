@@ -175,6 +175,8 @@ public final class DelegatingTaskExternalizer {
 
 	private List<AbstractTaskListMigrator> migrators;
 
+	private boolean taskActivated;
+
 	public DelegatingTaskExternalizer(TasksModel tasksModel) {
 		Assert.isNotNull(tasksModel);
 		this.tasksModel = tasksModel;
@@ -475,8 +477,9 @@ public final class DelegatingTaskExternalizer {
 		if (element.hasAttribute(KEY_KIND)) {
 			task.setTaskKind(element.getAttribute(KEY_KIND));
 		}
-		if (element.getAttribute(KEY_ACTIVE).compareTo(VAL_TRUE) == 0) {
+		if (!taskActivated && element.getAttribute(KEY_ACTIVE).compareTo(VAL_TRUE) == 0) {
 			task.setActive(true);
+			taskActivated = true;
 		} else {
 			task.setActive(false);
 		}

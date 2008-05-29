@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 
 /**
  * @author Steffen Pingel
@@ -54,8 +53,11 @@ public class ReportErrorPage extends WizardPage {
 		Label label = new Label(errorGroup, SWT.NONE);
 		label.setText(status.getMessage());
 
-		Link link = new Link(composite, SWT.NONE);
-		link.setText("<a href=\"errorlog\">Show in error log</a>");
+		label = new Label(composite, SWT.NONE);
+		label.setText("Plug-in: " + status.getPlugin());
+
+//		Link link = new Link(composite, SWT.NONE);
+//		link.setText("<a href=\"errorlog\">Show in error log</a>");
 
 		// space
 		new Label(composite, SWT.NONE);

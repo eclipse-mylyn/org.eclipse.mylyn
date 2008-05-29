@@ -157,6 +157,14 @@ public class TaskMapper implements ITaskMapping {
 		return null;
 	}
 
+	public String[] getValues(String attributeKey) {
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
+		if (attribute != null) {
+			return taskData.getAttributeMapper().getValueLabels(attribute);
+		}
+		return null;
+	}
+
 	protected boolean hasTaskPropertyChanged(Object existingProperty, Object newProperty) {
 		// the query hit does not have this property
 		if (newProperty == null) {
@@ -331,6 +339,28 @@ public class TaskMapper implements ITaskMapping {
 				}
 			}
 		}
+	}
+
+	public String[] getCc() {
+		// ignore
+		return null;
+	}
+
+	public String[] getKeywords() {
+		// ignore
+		return null;
+	}
+
+	public String getReporter() {
+		return getValue(TaskAttribute.USER_REPORTER);
+	}
+
+	public String getResolution() {
+		return getValue(TaskAttribute.RESOLUTION);
+	}
+
+	public String getTaskStatus() {
+		return getValue(TaskAttribute.STATUS);
 	}
 
 }

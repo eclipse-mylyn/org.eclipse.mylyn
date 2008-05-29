@@ -207,4 +207,29 @@ public class TaskSelection implements ITaskMapping {
 
 	}
 
+	public String[] getCc() {
+		// ignore
+		return null;
+	}
+
+	public String[] getKeywords() {
+		// ignore
+		return null;
+	}
+
+	public String getReporter() {
+		// ignore
+		return null;
+	}
+
+	public String getResolution() {
+		// ignore
+		return null;
+	}
+
+	public String getTaskStatus() {
+		// ignore
+		return null;
+	}
+
 }

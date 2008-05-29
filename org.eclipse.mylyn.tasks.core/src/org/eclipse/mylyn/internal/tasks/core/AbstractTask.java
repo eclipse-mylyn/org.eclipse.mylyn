@@ -214,12 +214,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return summary;
 	}
 
-	/**
-	 * Package visible in order to prevent sets that don't update the index.
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
 	public void setActive(boolean active) {
 		this.active = active;
 	}

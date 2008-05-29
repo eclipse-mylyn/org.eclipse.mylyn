@@ -40,6 +40,16 @@ public class TaskListTest extends TestCase {
 		assertEquals(subTask, task.getChildren().iterator().next());
 	}
 
+	public void testLocalTaskAddToSelf() {
+		ITaskList taskList = new TaskList();
+		LocalTask task = new LocalTask("1", "summary");
+
+		taskList.addTask(task);
+		assertFalse(taskList.addTask(task, task));
+		assertEquals(0, task.getChildren().size());
+		assertEquals(1, task.getParentContainers().size());
+	}
+
 	public void testLocalSubTaskAddCycle() {
 		TaskList taskList = new TaskList();
 		LocalTask task = new LocalTask("1", "summary");

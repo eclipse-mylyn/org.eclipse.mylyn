@@ -446,7 +446,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(
 				TaskAttribute.PREFIX_COMMENT + commentNum);
 		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
-		taskComment.setCommentId(attribute.getId());
+		taskComment.setCommentId(commentNum + "");
 		taskComment.setNumber(commentNum);
 		IRepositoryPerson author = repositoryTaskData.getAttributeMapper().getTaskRepository().createPerson(
 				comment.author);
