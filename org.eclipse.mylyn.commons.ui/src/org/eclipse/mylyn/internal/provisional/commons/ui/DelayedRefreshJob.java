@@ -16,14 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TreePath;
-import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.internal.commons.ui.TreeWalker;
-import org.eclipse.mylyn.internal.commons.ui.TreeWalker.TreeVisitor;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
@@ -55,7 +48,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 	}
 
 	// XXX needs to be called from UI thread
-	public void forceRefresh() {
+	public void refreshNow() {
 		queue.add(null);
 		runInUIThread(new NullProgressMonitor());
 	}
@@ -107,42 +100,11 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 			scheduleTime = NOT_SCHEDULED;
 		}
 
-		// XXX this code is difficult to read
-		TreeViewer treeViewer = null;
-		TreePath treePath = null;
-		if (viewer instanceof TreeViewer) {
-			treeViewer = (TreeViewer) viewer;
-		}
-		if (treeViewer != null) {
-			// in case the refresh removes the currently selected item, 
-			// remember the next item in the tree to restore the selection
-			// TODO: consider making this optional
-			TreeItem[] selection = treeViewer.getTree().getSelection();
-			if (selection.length > 0) {
-				TreeWalker treeWalker = new TreeWalker(treeViewer);
-				treePath = treeWalker.walk(new TreeVisitor() {
-					@Override
-					public boolean visit(Object object) {
-						return true;
-					}
-				}, selection[selection.length - 1]);
-			}
-		}
-
-		refresh(items);
-
-		if (treeViewer != null && treePath != null) {
-			ISelection newSelection = viewer.getSelection();
-			if (newSelection == null || newSelection.isEmpty()) {
-				treeViewer.setSelection(new TreeSelection(treePath), true);
-			}
-		}
+		doRefresh(items);
 
 		return Status.OK_STATUS;
 	}
 
-	// API 3.0 rename to doRefresh() and pass viewer
-	// API 3.0 provide default implementation?
-	protected abstract void refresh(final Object[] items);
+	protected abstract void doRefresh(final Object[] items);
 
 }
