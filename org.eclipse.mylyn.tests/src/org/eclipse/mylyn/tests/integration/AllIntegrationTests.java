@@ -23,7 +23,6 @@ public class AllIntegrationTests {
 		// XXX: Put Back
 		//suite.addTestSuite(TaskListFilterTest.class);
 		suite.addTestSuite(DefaultPreferenceConfigTest.class);
-		suite.addTestSuite(ExtensionPointInitializationTest.class);
 		suite.addTestSuite(ChangeDataDirTest.class);
 		suite.addTest(RepositoryConnectorsTest.suite());
 		suite.addTestSuite(WebRepositoryConnectorTest.class);
