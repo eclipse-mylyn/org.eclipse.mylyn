@@ -108,7 +108,8 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
@@ -423,7 +424,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
 		public void handleEvent(Event event) {
-			if (event.item.getData() instanceof ITaskElement && !(event.item.getData() instanceof ITask)) {
+			if (event.item.getData() instanceof ITaskContainer && !(event.item.getData() instanceof ITask)) {
 				Scrollable scrollable = (Scrollable) event.widget;
 				GC gc = event.gc;
 
@@ -950,9 +951,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object selectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-				if (selectedObject instanceof ITaskElement) {
-					updateActionEnablement(renameAction, (ITaskElement) selectedObject);
-					updateActionEnablement(deleteAction, (ITaskElement) selectedObject);
+				if (selectedObject instanceof ITaskContainer) {
+					updateActionEnablement(renameAction, (ITaskContainer) selectedObject);
+					updateActionEnablement(deleteAction, (ITaskContainer) selectedObject);
 				}
 			}
 		});
@@ -1206,15 +1207,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	 */
 	private void fillContextMenu(final IMenuManager manager) {
 		updateDrillDownActions();
-		final ITaskElement element;
+		final ITaskContainer element;
 
 		final Object firstSelectedObject = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-		if (firstSelectedObject instanceof ITaskElement) {
-			element = (ITaskElement) firstSelectedObject;
+		if (firstSelectedObject instanceof ITaskContainer) {
+			element = (ITaskContainer) firstSelectedObject;
 		} else {
 			element = null;
 		}
-		final List<ITaskElement> selectedElements = getSelectedTaskContainers();
+		final List<IRepositoryElement> selectedElements = getSelectedTaskContainers();
 		AbstractTask task = null;
 		if (element instanceof ITask) {
 			task = (AbstractTask) element;
@@ -1315,24 +1316,24 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator(ID_SEPARATOR_PROPERTIES));
 	}
 
-	public List<ITaskElement> getSelectedTaskContainers() {
-		List<ITaskElement> selectedElements = new ArrayList<ITaskElement>();
+	public List<IRepositoryElement> getSelectedTaskContainers() {
+		List<IRepositoryElement> selectedElements = new ArrayList<IRepositoryElement>();
 		for (Iterator<?> i = ((IStructuredSelection) getViewer().getSelection()).iterator(); i.hasNext();) {
 			Object object = i.next();
-			if (object instanceof ITaskElement) {
-				selectedElements.add((ITaskElement) object);
+			if (object instanceof ITaskContainer) {
+				selectedElements.add((IRepositoryElement) object);
 			}
 		}
 		return selectedElements;
 	}
 
-	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskElement element) {
+	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskContainer element) {
 		if ((element instanceof ITask) || element instanceof IRepositoryQuery) {
 			manager.add(menuToAdd);
 		}
 	}
 
-	private void addAction(Action action, IMenuManager manager, ITaskElement element) {
+	private void addAction(Action action, IMenuManager manager, ITaskContainer element) {
 		manager.add(action);
 		if (element != null) {
 			updateActionEnablement(action, element);
@@ -1340,7 +1341,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	// FIXME move the enablement to the action classes
-	private void updateActionEnablement(Action action, ITaskElement element) {
+	private void updateActionEnablement(Action action, ITaskContainer element) {
 		if (element instanceof ITask) {
 			if (action instanceof OpenWithBrowserAction) {
 				if (TasksUiInternal.isValidUrl(((ITask) element).getUrl())) {
@@ -1542,7 +1543,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (selection instanceof StructuredSelection) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			Object element = structuredSelection.getFirstElement();
-			if (element instanceof ITaskElement) {
+			if (element instanceof ITaskContainer) {
 				drilledIntoCategory = (AbstractTaskContainer) element;
 				drillDownAdapter.goInto();
 				IActionBars bars = getViewSite().getActionBars();
@@ -1626,10 +1627,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private void saveSelection() {
 		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
 		if (!selection.isEmpty()) {
-			if (selection.getFirstElement() instanceof ITaskElement) {
+			if (selection.getFirstElement() instanceof ITaskContainer) {
 				// make sure the new selection is inserted at the end of the
 				// list
-				String handle = ((ITaskElement) selection.getFirstElement()).getHandleIdentifier();
+				String handle = ((IRepositoryElement) selection.getFirstElement()).getHandleIdentifier();
 				lastSelectionByTaskHandle.remove(handle);
 				lastSelectionByTaskHandle.put(handle, selection);
 
@@ -1642,7 +1643,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
-	private IStructuredSelection restoreSelection(ITaskElement task) {
+	private IStructuredSelection restoreSelection(IRepositoryElement task) {
 		IStructuredSelection selection = lastSelectionByTaskHandle.get(task.getHandleIdentifier());
 		if (selection != null) {
 			return selection;

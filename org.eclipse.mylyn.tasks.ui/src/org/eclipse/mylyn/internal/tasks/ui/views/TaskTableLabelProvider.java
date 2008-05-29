@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -41,7 +41,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public String getColumnText(Object obj, int columnIndex) {
-		if (obj instanceof ITaskElement) {
+		if (obj instanceof ITaskContainer) {
 			switch (columnIndex) {
 			case 0:
 //				if (obj instanceof ScheduledTaskContainer) {
@@ -58,7 +58,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (!(element instanceof ITaskElement)) {
+		if (!(element instanceof ITaskContainer)) {
 			return null;
 		}
 		if (columnIndex == 0) {
@@ -76,7 +76,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public Color getBackground(Object element, int columnIndex) {
-		if (element instanceof ITaskElement && !(element instanceof ITask)) {
+		if (element instanceof ITaskContainer && !(element instanceof ITask)) {
 			return categoryBackgroundColor;
 		} else if (element instanceof IRepositoryQuery) {
 			return categoryBackgroundColor;

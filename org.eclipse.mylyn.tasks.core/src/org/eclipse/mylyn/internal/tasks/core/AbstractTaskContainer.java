@@ -15,8 +15,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
@@ -24,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
  * 
  * @author Mik Kersten
  */
-public abstract class AbstractTaskContainer extends PlatformObject implements ITaskElement {
+public abstract class AbstractTaskContainer extends PlatformObject implements IRepositoryElement, ITaskContainer {
 
 	private String handleIdentifier = "";
 
@@ -76,19 +77,20 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 	 */
 	public boolean contains(String handle) {
 		Assert.isNotNull(handle);
-		return containsHelper(children, handle, new HashSet<ITaskElement>());
+		return containsHelper(children, handle, new HashSet<IRepositoryElement>());
 	}
 
-	private boolean containsHelper(Collection<ITask> children, String handle, Set<ITaskElement> visitedContainers) {
+	private boolean containsHelper(Collection<ITask> children, String handle, Set<IRepositoryElement> visitedContainers) {
 		for (ITask child : children) {
 			if (visitedContainers.contains(child)) {
 				continue;
 			}
 			visitedContainers.add(child);
-
-			if (handle.equals(child.getHandleIdentifier())
-					|| containsHelper(child.getChildren(), handle, visitedContainers)) {
-				return true;
+			if (child instanceof ITaskContainer) {
+				if (handle.equals(child.getHandleIdentifier())
+						|| containsHelper(((ITaskContainer) child).getChildren(), handle, visitedContainers)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -132,7 +134,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 			return false;
 		}
 		if (object instanceof AbstractTaskContainer) {
-			ITaskElement compare = (ITaskElement) object;
+			IRepositoryElement compare = (IRepositoryElement) object;
 			return this.getHandleIdentifier().equals(compare.getHandleIdentifier());
 		} else {
 			return false;
@@ -161,7 +163,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 	/**
 	 * The handle for most containers is their summary. Override to specify a different natural ordering.
 	 */
-	public int compareTo(ITaskElement taskListElement) {
+	public int compareTo(IRepositoryElement taskListElement) {
 		return getHandleIdentifier().compareTo(taskListElement.getHandleIdentifier());
 	}
 

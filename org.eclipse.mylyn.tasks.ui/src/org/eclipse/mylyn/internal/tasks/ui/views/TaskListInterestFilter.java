@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * Goal is to have this reuse as much of the super as possible.
@@ -50,8 +50,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 						return false;
 					}
 				}
-			} else if (child instanceof ITaskElement) {
-				Collection<ITask> children = ((ITaskElement) child).getChildren();
+			} else if (child instanceof ITaskContainer) {
+				Collection<ITask> children = ((ITaskContainer) child).getChildren();
 				// Always display empty containers
 				if (children.size() == 0) {
 					return false;
@@ -160,9 +160,11 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		} else if (task.getSynchronizationState().isIncoming()) {
 			return true;
 		}
-		for (ITask child : task.getChildren()) {
-			if (hasChangesHelper(parent, child)) {
-				return true;
+		if (task instanceof ITaskContainer) {
+			for (ITask child : ((ITaskContainer) task).getChildren()) {
+				if (hasChangesHelper(parent, child)) {
+					return true;
+				}
 			}
 		}
 		return false;

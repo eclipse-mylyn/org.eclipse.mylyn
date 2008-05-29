@@ -64,7 +64,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -659,7 +659,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		toolBarManager.add(synchronizeEditorAction);
 
 		if (taskRepository != null && !taskData.isNew()) {
-			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((ITaskElement) task));
+			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
 			if (clearOutgoingAction.isEnabled()) {
 				toolBarManager.add(clearOutgoingAction);
 			}

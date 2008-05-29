@@ -18,7 +18,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,7 +46,7 @@ public class ScheduleDatePicker extends Composite {
 
 	private final String initialText = DatePicker.LABEL_CHOOSE;
 
-	private final List<ITaskElement> tasks;
+	private final List<IRepositoryElement> tasks;
 
 	private final ScheduleTaskMenuContributor contributor;
 
@@ -81,7 +81,7 @@ public class ScheduleDatePicker extends Composite {
 				notifyPickerListeners();
 			}
 		};
-		tasks = new ArrayList<ITaskElement>();
+		tasks = new ArrayList<IRepositoryElement>();
 		tasks.add(task);
 	}
 

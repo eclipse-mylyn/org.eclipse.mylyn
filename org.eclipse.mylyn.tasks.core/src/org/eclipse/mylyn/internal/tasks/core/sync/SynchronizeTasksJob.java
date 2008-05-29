@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITasksModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -145,8 +146,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		updateRelations = false;
 		for (String taskId : relationsByTaskId.keySet()) {
 			ITask parentTask = taskList.getTask(taskRepository.getRepositoryUrl(), taskId);
-			if (parentTask != null) {
-				Set<ITask> removedChildTasks = new HashSet<ITask>(parentTask.getChildren());
+			if (parentTask instanceof ITaskContainer) {
+				Set<ITask> removedChildTasks = new HashSet<ITask>(((ITaskContainer) parentTask).getChildren());
 
 				TaskRelation[] relations = relationsByTaskId.get(taskId);
 				for (TaskRelation relation : relations) {

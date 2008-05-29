@@ -11,7 +11,7 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * NOTE: this class is likely to change or become API for 3.0
@@ -30,7 +30,7 @@ public final class TaskCategory extends AbstractTaskCategory {
 	public static AbstractTaskCategory getParentTaskCategory(ITask task) {
 		AbstractTaskCategory category = null;
 		if (task != null) {
-			for (ITaskElement container : ((AbstractTask) task).getParentContainers()) {
+			for (ITaskContainer container : ((AbstractTask) task).getParentContainers()) {
 				if (container instanceof AbstractTaskCategory) {
 					category = (AbstractTaskCategory) container;
 				}

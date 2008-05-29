@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -107,8 +107,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 				}
 			}
 
-		} else if (parent instanceof ITaskElement) {
-			for (ITask child : ((ITaskElement) parent).getChildren()) {
+		} else if (parent instanceof ITaskContainer) {
+			for (ITask child : ((ITaskContainer) parent).getChildren()) {
 				result.add(child);
 			}
 		}

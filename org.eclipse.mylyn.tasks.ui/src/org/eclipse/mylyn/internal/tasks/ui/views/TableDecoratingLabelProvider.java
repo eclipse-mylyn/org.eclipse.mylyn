@@ -15,10 +15,9 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -32,15 +31,15 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (!(element instanceof ITaskElement)) {
+		if (!(element instanceof ITaskContainer)) {
 			return null;
 		}
 		if (columnIndex == 0) {
-			if (element instanceof ITaskElement && !(element instanceof ITask)) {
+			if (element instanceof ITaskContainer && !(element instanceof ITask)) {
 				return super.getImage(element);
 			} else {
-				AbstractTask task = TasksUiInternal.getCorrespondingTask((ITaskElement) element);
-				if (task != null) {
+				if (element instanceof AbstractTask) {
+					AbstractTask task = (AbstractTask) element;
 					if (task.isActive()) {
 						return CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE);
 					} else {
@@ -55,7 +54,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 				}
 			}
 		} else if (columnIndex == 1) {
-			if (element instanceof ITaskElement || element instanceof IRepositoryQuery) {
+			if (element instanceof ITaskContainer || element instanceof IRepositoryQuery) {
 				return null;
 			}
 			return super.getImage(element);

@@ -30,10 +30,10 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -81,7 +81,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			}
 			return CommonImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind,
 					wideImages);
-		} else if (element instanceof ITaskElement) {
+		} else if (element instanceof ITaskContainer) {
 			return CommonImages.getCompositeTaskImage(compositeDescriptor.icon, CommonImages.OVERLAY_CLEAR, wideImages);
 		} else {
 			return CommonImages.getCompositeTaskImage(compositeDescriptor.icon, null, wideImages);
@@ -99,8 +99,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			compositeDescriptor.icon = CommonImages.GROUPING;
 		}
 
-		if (object instanceof ITaskElement) {
-			ITaskElement element = (ITaskElement) object;
+		if (object instanceof ITaskContainer) {
+			IRepositoryElement element = (IRepositoryElement) object;
 
 			AbstractRepositoryConnectorUi connectorUi = null;
 			if (element instanceof ITask) {
@@ -179,8 +179,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 			return result;
 
-		} else if (object instanceof ITaskElement) {
-			ITaskElement element = (ITaskElement) object;
+		} else if (object instanceof ITaskContainer) {
+			IRepositoryElement element = (IRepositoryElement) object;
 			return element.getSummary();
 		} else {
 			return super.getText(object);
@@ -188,8 +188,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	public Color getForeground(Object object) {
-		if (object instanceof ITaskElement && object instanceof ITask) {
-			AbstractTask task = TasksUiInternal.getCorrespondingTask((ITaskElement) object);
+		if (object instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) object;
 			if (task != null) {
 				if (TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED_TODAY);
@@ -212,9 +212,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 							.get(CommonThemes.COLOR_SCHEDULED_THIS_WEEK);
 				}
 			}
-		} else if (object instanceof ITaskElement) {
-			for (ITask child : ((ITaskElement) object).getChildren()) {
-				if (child.isActive() || showHasActiveChild(child)) {
+		} else if (object instanceof ITaskContainer) {
+			for (ITask child : ((ITaskContainer) object).getChildren()) {
+				if (child.isActive() || (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
 					return CommonColors.CONTEXT_ACTIVE;
 				} else if (TasksUiPlugin.getTaskActivityManager().isOverdue(child)) {
 //				} else if ((child.isPastReminder() && !child.isCompleted()) || showHasChildrenPastDue(child)) {
@@ -237,36 +237,34 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	public Font getFont(Object element) {
-		if (!(element instanceof ITaskElement)) {
-			return null;
-		}
-		AbstractTask task = TasksUiInternal.getCorrespondingTask((ITaskElement) element);
-		if (task != null) {
-			if (task.isSynchronizing()) {
+		if (element instanceof AbstractTask) {
+			if (((AbstractTask) element).isSynchronizing()) {
 				return CommonFonts.ITALIC;
 			}
 		}
-		if (element instanceof ITaskElement) {
-			if (element instanceof IRepositoryQuery) {
-				if (((RepositoryQuery) element).isSynchronizing()) {
-					return CommonFonts.ITALIC;
-				}
-			}
 
-			for (ITask child : ((ITaskElement) element).getChildren()) {
-				if (child.isActive() || showHasActiveChild(child)) {
+		if (element instanceof IRepositoryQuery) {
+			if (((RepositoryQuery) element).isSynchronizing()) {
+				return CommonFonts.ITALIC;
+			}
+		}
+
+		if (element instanceof ITaskContainer) {
+			for (ITask child : ((ITaskContainer) element).getChildren()) {
+				if (child.isActive() || (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
 					return CommonFonts.BOLD;
 				}
 			}
 		}
-		if (task != null) {
-			if (task.isActive()) {
+
+		if (element instanceof AbstractTask) {
+			if (((AbstractTask) element).isActive()) {
 				return CommonFonts.BOLD;
-			} else if (task.isCompleted()) {
+			} else if (((AbstractTask) element).isCompleted()) {
 				return CommonFonts.STRIKETHROUGH;
 			}
-			for (ITask child : ((ITaskElement) element).getChildren()) {
-				if (child.isActive() || showHasActiveChild(child)) {
+			for (ITask child : ((ITaskContainer) element).getChildren()) {
+				if (child.isActive() || (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
 					return CommonFonts.BOLD;
 				}
 			}
@@ -274,24 +272,24 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return null;
 	}
 
-	private boolean showHasActiveChild(ITaskElement container) {
+	private boolean showHasActiveChild(ITaskContainer container) {
 		if (!TasksUiPlugin.getDefault().groupSubtasks(container)) {
 			return false;
 		}
 
-		return showHasActiveChildHelper(container, new HashSet<ITaskElement>());
+		return showHasActiveChildHelper(container, new HashSet<IRepositoryElement>());
 	}
 
-	private boolean showHasActiveChildHelper(ITaskElement container, Set<ITaskElement> visitedContainers) {
-		for (ITaskElement child : container.getChildren()) {
+	private boolean showHasActiveChildHelper(ITaskContainer container, Set<IRepositoryElement> visitedContainers) {
+		for (IRepositoryElement child : container.getChildren()) {
 			if (visitedContainers.contains(child)) {
 				continue;
 			}
 			visitedContainers.add(child);
 			if (child instanceof ITask && ((AbstractTask) child).isActive()) {
 				return true;
-			} else {
-				if (showHasActiveChildHelper(child, visitedContainers)) {
+			} else if (child instanceof ITaskContainer) {
+				if (showHasActiveChildHelper((ITaskContainer) child, visitedContainers)) {
 					return true;
 				}
 			}

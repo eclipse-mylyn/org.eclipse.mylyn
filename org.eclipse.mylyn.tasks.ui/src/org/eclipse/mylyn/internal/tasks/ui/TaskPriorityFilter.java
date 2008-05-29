@@ -9,7 +9,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
@@ -32,7 +32,7 @@ public class TaskPriorityFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		if (element instanceof ITaskElement) {
+		if (element instanceof IRepositoryElement) {
 			String priority = ((AbstractTaskContainer) element).getPriority();
 			if (priority == null || !(priority.startsWith(PRIORITY_PREFIX))) {
 				return true;

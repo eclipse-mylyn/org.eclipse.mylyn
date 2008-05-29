@@ -11,23 +11,24 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * @author Rob Elves
  */
 public abstract class AbstractTaskAction extends Action {
 
-	protected List<ITaskElement> selectedElements;
+	protected List<IRepositoryElement> selectedElements;
 
 	@Override
 	public void run() {
-		for (ITaskElement element : selectedElements) {
+		for (IRepositoryElement element : selectedElements) {
 			if (element instanceof ITask) {
 				AbstractTask repositoryTask = (AbstractTask) element;
 				performActionOnTask(repositoryTask);
@@ -36,11 +37,11 @@ public abstract class AbstractTaskAction extends Action {
 				for (ITask queryHit : repositoryQuery.getChildren()) {
 					performActionOnTask(queryHit);
 				}
-			} else if (element != null) {
-				ITaskElement container = element;
-				for (ITask iTask : container.getChildren()) {
-					if (iTask != null) {
-						ITask repositoryTask = iTask;
+			} else if (element instanceof ITaskContainer) {
+				ITaskContainer container = (ITaskContainer) element;
+				for (ITask task : container.getChildren()) {
+					if (task != null) {
+						ITask repositoryTask = task;
 						performActionOnTask(repositoryTask);
 					}
 				}

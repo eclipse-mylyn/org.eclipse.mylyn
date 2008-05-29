@@ -45,7 +45,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -192,7 +191,7 @@ public final class DelegatingTaskExternalizer {
 		this.migrators = migrators;
 	}
 
-	public Element createCategoryElement(ITaskElement category, Document doc, Element parent) {
+	public Element createCategoryElement(AbstractTaskCategory category, Document doc, Element parent) {
 		Element node = doc.createElement(getCategoryTagName());
 		node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, category.getSummary());
 		parent.appendChild(node);

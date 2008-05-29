@@ -18,7 +18,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * This implementation of <code>SearchResultContentProvider</code> is used for the table view of a Bugzilla search
@@ -73,7 +73,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof TaskGroup || parent instanceof Person) {
-			return ((ITaskElement) parent).getChildren().toArray();
+			return ((ITaskContainer) parent).getChildren().toArray();
 		} else {
 			return EMPTY_ARR;
 		}

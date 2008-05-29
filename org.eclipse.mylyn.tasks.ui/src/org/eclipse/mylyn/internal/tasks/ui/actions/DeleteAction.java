@@ -21,9 +21,9 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -60,8 +60,8 @@ public class DeleteAction extends Action {
 			i++;
 			if (i < 20) {
 				// TODO this action should be based on the action enablement and check if the container is user managed or not
-				if (object instanceof ITaskElement) {
-					elements += "    " + ((ITaskElement) object).getSummary() + "\n";
+				if (object instanceof IRepositoryElement) {
+					elements += "    " + ((IRepositoryElement) object).getSummary() + "\n";
 				}
 			} else {
 				elements += "...";

@@ -52,7 +52,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertTrue(sourceZipFile.exists());
 
 		// make correct number of categories exist prior to import tests
-		assertEquals(1, manager.getTaskList().getTaskContainers().size());
+		assertEquals(1, manager.getTaskList().getTaskCategories().size());
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 	}
 

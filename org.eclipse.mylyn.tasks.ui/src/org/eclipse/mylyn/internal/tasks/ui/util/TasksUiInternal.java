@@ -63,9 +63,9 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -185,7 +185,7 @@ public class TasksUiInternal {
 		});
 	}
 
-	public static void refreshAndOpenTaskListElement(ITaskElement element) {
+	public static void refreshAndOpenTaskListElement(IRepositoryElement element) {
 		if (element instanceof ITask) {
 			final AbstractTask task = (AbstractTask) element;
 
@@ -302,8 +302,7 @@ public class TasksUiInternal {
 				@Override
 				public void done(IJobChangeEvent event) {
 					if (query.getStatus() != null) {
-						TasksUiInternal.asyncDisplayStatus("Query Synchronization Failed",
-								query.getStatus());
+						TasksUiInternal.asyncDisplayStatus("Query Synchronization Failed", query.getStatus());
 					}
 				}
 			});
@@ -508,7 +507,7 @@ public class TasksUiInternal {
 		for (IWorkingSet workingSet : containers) {
 			IAdaptable[] elements = workingSet.getElements();
 			for (IAdaptable adaptable : elements) {
-				if (adaptable instanceof ITaskElement) {
+				if (adaptable instanceof AbstractTaskContainer) {
 					allTaskContainersInWorkingSets.add(((AbstractTaskContainer) adaptable));
 				}
 			}
@@ -679,14 +678,6 @@ public class TasksUiInternal {
 			monitor.done();
 		}
 		return task;
-	}
-
-	public static AbstractTask getCorrespondingTask(ITaskElement element) {
-		if (element instanceof ITask) {
-			return (AbstractTask) element;
-		} else {
-			return null;
-		}
 	}
 
 	public static void importTasks(Collection<AbstractTask> tasks, Set<TaskRepository> repositories, File zipFile,

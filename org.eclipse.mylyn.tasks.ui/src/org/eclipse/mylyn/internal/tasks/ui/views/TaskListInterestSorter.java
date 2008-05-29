@@ -16,8 +16,9 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * @author Mik Kersten
@@ -29,9 +30,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
 
-		if (o1 instanceof ITaskElement && o2 instanceof UnmatchedTaskContainer) {
+		if (o1 instanceof ITaskContainer && o2 instanceof UnmatchedTaskContainer) {
 			return -1;
-		} else if (o2 instanceof ITaskElement && o1 instanceof UnmatchedTaskContainer) {
+		} else if (o2 instanceof ITaskContainer && o1 instanceof UnmatchedTaskContainer) {
 			return 1;
 		}
 //
@@ -53,15 +54,15 @@ public class TaskListInterestSorter extends ViewerSorter {
 //			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
 //				return -1;
 //			}
-		} else if (o1 instanceof ITaskElement && o2 instanceof ScheduledTaskContainer) {
+		} else if (o1 instanceof ITaskContainer && o2 instanceof ScheduledTaskContainer) {
 			return -1;
-		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ITaskElement) {
+		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ITaskContainer) {
 			return 1;
 		}
 
-		if (o1 instanceof UncategorizedTaskContainer && o2 instanceof ITaskElement) {
+		if (o1 instanceof UncategorizedTaskContainer && o2 instanceof ITaskContainer) {
 			return -1;
-		} else if (o1 instanceof ITaskElement && o2 instanceof UncategorizedTaskContainer) {
+		} else if (o1 instanceof ITaskContainer && o2 instanceof UncategorizedTaskContainer) {
 			return 1;
 		}
 
@@ -71,16 +72,17 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 		if (!(o1 instanceof ITask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
 			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
-				return ((ITaskElement) o1).getSummary().compareToIgnoreCase(((ITaskElement) o2).getSummary());
+				return ((IRepositoryElement) o1).getSummary().compareToIgnoreCase(
+						((IRepositoryElement) o2).getSummary());
 			} else {
 				return -1;
 			}
-		} else if (o1 instanceof ITaskElement) {
+		} else if (o1 instanceof ITaskContainer) {
 			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 				return -1;
-			} else if (o2 instanceof ITaskElement) {
-				ITaskElement element1 = (ITaskElement) o1;
-				ITaskElement element2 = (ITaskElement) o2;
+			} else if (o2 instanceof ITaskContainer) {
+				IRepositoryElement element1 = (IRepositoryElement) o1;
+				IRepositoryElement element2 = (IRepositoryElement) o2;
 
 				AbstractTask task1 = null;
 				AbstractTask task2 = null;
@@ -211,7 +213,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 	// }
 	// }
 
-	private int comparePrioritiesAndKeys(ITaskElement element1, ITaskElement element2) {
+	private int comparePrioritiesAndKeys(IRepositoryElement element1, IRepositoryElement element2) {
 		int priority = comparePriorities(element1, element2);
 		if (priority != 0) {
 			return priority;
@@ -224,14 +226,19 @@ public class TaskListInterestSorter extends ViewerSorter {
 		return 0;
 	}
 
-	private int compareKeys(ITaskElement element1, ITaskElement element2) {
+	private int compareKeys(IRepositoryElement element1, IRepositoryElement element2) {
 		return taskKeyComparator.compare(TaskListTableSorter.getSortableFromElement(element1),
 				TaskListTableSorter.getSortableFromElement(element2));
 	}
 
-	private int comparePriorities(ITaskElement element1, ITaskElement element2) {
-		return ((AbstractTaskContainer) element1).getPriority().compareTo(
-				((AbstractTaskContainer) element2).getPriority());
+	private int comparePriorities(IRepositoryElement element1, IRepositoryElement element2) {
+		if (element1 instanceof AbstractTaskContainer && element2 instanceof AbstractTaskContainer) {
+			return ((AbstractTaskContainer) element1).getPriority().compareTo(
+					((AbstractTaskContainer) element2).getPriority());
+		} else {
+			// TODO: consider implementing
+			return -1;
+		}
 	}
 
 }

@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.tasks.core;
 
 /**
- * Notified of change to task repositories.
+ * Notified of change to the lifecycle of task repositories.
  * 
  * @author Mik Kersten
  * @since 2.0

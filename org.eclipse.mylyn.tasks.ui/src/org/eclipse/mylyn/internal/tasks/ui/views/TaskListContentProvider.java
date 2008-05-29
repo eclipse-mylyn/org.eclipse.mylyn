@@ -23,8 +23,9 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress
@@ -120,7 +121,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return filterText == null || filterText.length() == 0;
 	}
 
-	private boolean selectContainer(ITaskElement container) {
+	private boolean selectContainer(ITaskContainer container) {
 //		if (container instanceof ScheduledTaskContainer) {
 //			ScheduledTaskContainer scheduleContainer = (ScheduledTaskContainer) container;
 //			if (TasksUiPlugin.getTaskActivityManager().isWeekDay(scheduleContainer)
@@ -137,9 +138,9 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 		return true;
 	}
 
-	private List<ITaskElement> getFilteredChildrenFor(Object parent) {
+	private List<IRepositoryElement> getFilteredChildrenFor(Object parent) {
 		if (containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText())) {
-			List<ITaskElement> children = new ArrayList<ITaskElement>();
+			List<IRepositoryElement> children = new ArrayList<IRepositoryElement>();
 			if (parent instanceof ITask) {
 				Collection<ITask> subTasks = ((AbstractTask) parent).getChildren();
 				for (ITask task : subTasks) {
@@ -148,13 +149,13 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 					}
 				}
 				return children;
-			} else if (parent instanceof ITaskElement) {
-				return getFilteredRootChildren((ITaskElement) parent);
+			} else if (parent instanceof ITaskContainer) {
+				return getFilteredRootChildren((ITaskContainer) parent);
 			}
 		} else {
-			List<ITaskElement> children = new ArrayList<ITaskElement>();
-			if (parent instanceof ITaskElement) {
-				children.addAll(((ITaskElement) parent).getChildren());
+			List<IRepositoryElement> children = new ArrayList<IRepositoryElement>();
+			if (parent instanceof ITaskContainer) {
+				children.addAll(((ITaskContainer) parent).getChildren());
 				return children;
 			}
 		}
@@ -164,16 +165,18 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	/**
 	 * @return all children who aren't already revealed as a sub task
 	 */
-	private List<ITaskElement> getFilteredRootChildren(ITaskElement parent) {
-		List<ITaskElement> result = new ArrayList<ITaskElement>();
+	private List<IRepositoryElement> getFilteredRootChildren(ITaskContainer parent) {
+		List<IRepositoryElement> result = new ArrayList<IRepositoryElement>();
 		if (TasksUiPlugin.getDefault().groupSubtasks(parent)) {
 			Collection<ITask> parentTasks = parent.getChildren();
-			Set<ITaskElement> parents = new HashSet<ITaskElement>();
+			Set<IRepositoryElement> parents = new HashSet<IRepositoryElement>();
 			Set<ITask> children = new HashSet<ITask>();
 			// get all children
 			for (ITask element : parentTasks) {
-				for (ITask abstractTask : element.getChildren()) {
-					children.add(abstractTask);
+				if (element instanceof ITaskContainer) {
+					for (ITask abstractTask : ((ITaskContainer) element).getChildren()) {
+						children.add(abstractTask);
+					}
 				}
 			}
 			for (ITask task : parentTasks) {
@@ -183,7 +186,7 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 			}
 			result.addAll(parents);
 		} else {
-			for (ITaskElement element : parent.getChildren()) {
+			for (IRepositoryElement element : parent.getChildren()) {
 				if (!filter(parent, element)) {
 					result.add(element);
 				}

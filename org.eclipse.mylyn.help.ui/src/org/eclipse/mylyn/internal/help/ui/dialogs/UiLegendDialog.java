@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.LegendElement;
@@ -484,7 +484,7 @@ public class UiLegendDialog extends PopupDialog {
 		connectorSection.setClient(connectorClient);
 
 		Label imageLabel;
-		for (ITaskElement taskListElement : elements) {
+		for (IRepositoryElement taskListElement : elements) {
 			imageLabel = toolkit.createLabel(connectorClient, "");
 			imageLabel.setImage(labelProvider.getImage(taskListElement));
 			toolkit.createLabel(connectorClient, taskListElement.getSummary());

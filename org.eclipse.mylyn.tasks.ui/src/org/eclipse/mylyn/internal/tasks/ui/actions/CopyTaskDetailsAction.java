@@ -16,9 +16,9 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -94,8 +94,8 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			RepositoryQuery query = (RepositoryQuery) object;
 			text += query.getSummary();
 			text += "\n" + query.getUrl();
-		} else if (object instanceof ITaskElement) {
-			ITaskElement element = (ITaskElement) object;
+		} else if (object instanceof IRepositoryElement) {
+			IRepositoryElement element = (IRepositoryElement) object;
 			text = element.getSummary();
 		} else if (object instanceof RepositoryTaskSelection) {
 			RepositoryTaskSelection selection = (RepositoryTaskSelection) object;

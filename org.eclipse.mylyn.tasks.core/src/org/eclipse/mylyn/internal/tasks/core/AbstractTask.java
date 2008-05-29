@@ -18,7 +18,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 
 /**
  * Encapsulates tasks that reside on a repository or local computer and participate in synchronization with the source
@@ -381,7 +381,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	@Override
-	public int compareTo(ITaskElement taskListElement) {
+	public int compareTo(IRepositoryElement taskListElement) {
 		return summary.compareTo(((AbstractTask) taskListElement).summary);
 	}
 

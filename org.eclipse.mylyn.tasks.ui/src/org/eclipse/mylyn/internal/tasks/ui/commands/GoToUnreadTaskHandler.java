@@ -17,8 +17,8 @@ import org.eclipse.mylyn.internal.commons.ui.TreeWalker;
 import org.eclipse.mylyn.internal.commons.ui.TreeWalker.Direction;
 import org.eclipse.mylyn.internal.commons.ui.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -62,7 +62,7 @@ public abstract class GoToUnreadTaskHandler extends AbstractTaskListViewHandler 
 	}
 
 	@Override
-	protected void execute(ExecutionEvent event, TaskListView taskListView, ITaskElement item) {
+	protected void execute(ExecutionEvent event, TaskListView taskListView, IRepositoryElement item) {
 		TreeViewer treeViewer = taskListView.getViewer();
 		Tree tree = treeViewer.getTree();
 

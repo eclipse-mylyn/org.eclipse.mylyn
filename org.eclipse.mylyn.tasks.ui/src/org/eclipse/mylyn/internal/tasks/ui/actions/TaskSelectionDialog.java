@@ -52,7 +52,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.WorkingSetLabelComparator;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.search.internal.ui.SearchDialog;
 import org.eclipse.swt.SWT;
@@ -346,7 +346,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 		private void populateTasksFromWorkingSets() {
 			allTasksFromWorkingSets = new HashSet<ITask>(1000);
-			for (ITaskElement container : elements) {
+			for (ITaskContainer container : elements) {
 				allTasksFromWorkingSets.addAll(container.getChildren());
 			}
 		}

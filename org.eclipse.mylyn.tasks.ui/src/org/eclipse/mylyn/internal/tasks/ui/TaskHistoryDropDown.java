@@ -26,7 +26,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -150,8 +150,8 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			for (IWorkingSet workingSet : sets) {
 				IAdaptable[] elements = workingSet.getElements();
 				for (IAdaptable adaptable : elements) {
-					if (adaptable instanceof ITaskElement) {
-						allWorkingSetTasks.addAll(((ITaskElement) adaptable).getChildren());
+					if (adaptable instanceof ITaskContainer) {
+						allWorkingSetTasks.addAll(((ITaskContainer) adaptable).getChildren());
 					}
 				}
 			}

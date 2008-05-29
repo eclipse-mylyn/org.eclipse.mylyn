@@ -21,8 +21,8 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**
@@ -33,12 +33,12 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 
 	private static final String LABEL = "Move to";
 
-	public MenuManager getSubMenuManager(final List<ITaskElement> selectedElements) {
+	public MenuManager getSubMenuManager(final List<IRepositoryElement> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
 
 		// Compute selected tasks
 		List<AbstractTask> selectedTasks = new ArrayList<AbstractTask>(selectedElements.size());
-		for (ITaskElement element : selectedElements) {
+		for (IRepositoryElement element : selectedElements) {
 			if (element instanceof ITask) {
 				selectedTasks.add((AbstractTask) element);
 			}
@@ -108,8 +108,8 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	 * @param selectedElements
 	 * @param category
 	 */
-	private void moveToCategory(final List<ITaskElement> selectedElements, AbstractTaskCategory category) {
-		for (ITaskElement element : selectedElements) {
+	private void moveToCategory(final List<IRepositoryElement> selectedElements, AbstractTaskCategory category) {
+		for (IRepositoryElement element : selectedElements) {
 			if (element instanceof ITask) {
 				TasksUiInternal.getTaskList().addTask((AbstractTask) element, category);
 			}

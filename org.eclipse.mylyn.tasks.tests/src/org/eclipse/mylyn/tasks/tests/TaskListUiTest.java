@@ -31,7 +31,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.web.tasks.WebTask;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -171,7 +171,7 @@ public class TaskListUiTest extends TestCase {
 		view.getViewer().refresh();
 		// Arrays.asList(view.getViewer().getVisibleExpandedElements());
 		assertFalse(webTask.isCompleted());
-		ArrayList<ITaskElement> tasks = new ArrayList<ITaskElement>();
+		ArrayList<IRepositoryElement> tasks = new ArrayList<IRepositoryElement>();
 		tasks.add(webTask);
 		new MarkTaskCompleteAction(tasks).run();
 		assertTrue(webTask.isCompleted());
@@ -232,7 +232,7 @@ public class TaskListUiTest extends TestCase {
 	public void testGetSubMenuManagerContainsAllCategoriesPlusNewCategory() {
 		// setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
-		List<ITaskElement> selectedElements = new Vector<ITaskElement>();
+		List<IRepositoryElement> selectedElements = new Vector<IRepositoryElement>();
 		selectedElements.add(cat1task1);
 		int numCategories = manager.getTaskList().getCategories().size();
 		int numSeparators = 1;
@@ -263,15 +263,15 @@ public class TaskListUiTest extends TestCase {
 		//setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
 		MenuManager menuManager = null;
-		List<ITaskElement> selectedElements = new Vector<ITaskElement>();
+		List<IRepositoryElement> selectedElements = new Vector<IRepositoryElement>();
 		selectedElements.add(cat1task1);
 
-		List<ITaskElement> emptySelection = new Vector<ITaskElement>();
+		List<IRepositoryElement> emptySelection = new Vector<IRepositoryElement>();
 
-		List<ITaskElement> categorySelection = new Vector<ITaskElement>();
+		List<IRepositoryElement> categorySelection = new Vector<IRepositoryElement>();
 		categorySelection.add(cat1);
 
-		List<ITaskElement> querySelection = new Vector<ITaskElement>();
+		List<IRepositoryElement> querySelection = new Vector<IRepositoryElement>();
 		querySelection.add(new MockRepositoryQuery("query", null));
 
 		//execute system under test & assert

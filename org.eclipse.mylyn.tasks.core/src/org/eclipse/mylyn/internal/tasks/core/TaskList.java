@@ -27,9 +27,9 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 
 /**
@@ -39,7 +39,7 @@ import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
  * @author Rob Elves
  * @since 3.0
  */
-public class TaskList implements ISchedulingRule, ITaskList {
+public class TaskList implements ITaskList {
 
 	private static ILock lock = Job.getJobManager().newLock();
 
@@ -164,10 +164,6 @@ public class TaskList implements ISchedulingRule, ITaskList {
 
 	public void addUnmatchedContainer(UnmatchedTaskContainer orphanedTasksContainer) {
 		repositoryOrphansMap.put(orphanedTasksContainer.getRepositoryUrl(), orphanedTasksContainer);
-	}
-
-	public boolean contains(ISchedulingRule rule) {
-		return isConflicting(rule);
 	}
 
 	public void deleteCategory(AbstractTaskCategory category) {
@@ -366,7 +362,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		return null;
 	}
 
-	public Set<AbstractTaskCategory> getTaskContainers() {
+	public Set<AbstractTaskCategory> getTaskCategories() {
 		Set<AbstractTaskCategory> containers = new HashSet<AbstractTaskCategory>();
 		for (AbstractTaskCategory container : categories.values()) {
 			if (container instanceof TaskCategory) {
@@ -415,7 +411,7 @@ public class TaskList implements ISchedulingRule, ITaskList {
 	 *             if null argument passed or element does not exist in task list
 	 * @return element as passed in or instance from task list with same handle if exists
 	 */
-	private AbstractTaskContainer getValidElement(ITaskElement taskListElement) {
+	private AbstractTaskContainer getValidElement(IRepositoryElement taskListElement) {
 		AbstractTaskContainer result = null;
 		if (taskListElement instanceof ITask) {
 			result = tasks.get(taskListElement.getHandleIdentifier());
@@ -437,16 +433,12 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		}
 	}
 
-	public boolean isConflicting(ISchedulingRule rule) {
-		return rule instanceof TaskList || rule instanceof ITaskElement;
-	}
-
-	public void notifyElementsChanged(Set<? extends ITaskElement> elements) {
+	public void notifyElementsChanged(Set<? extends IRepositoryElement> elements) {
 		HashSet<TaskContainerDelta> deltas = new HashSet<TaskContainerDelta>();
 		if (elements == null) {
 			deltas.add(new TaskContainerDelta(null, TaskContainerDelta.Kind.ROOT));
 		} else {
-			for (ITaskElement element : elements) {
+			for (IRepositoryElement element : elements) {
 				deltas.add(new TaskContainerDelta(element, TaskContainerDelta.Kind.CONTENT));
 			}
 		}
@@ -454,9 +446,9 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		fireDelta(deltas);
 	}
 
-	public void notifySynchronizationStateChanged(Set<? extends ITaskElement> elements) {
+	public void notifySynchronizationStateChanged(Set<? extends IRepositoryElement> elements) {
 		HashSet<TaskContainerDelta> taskChangeDeltas = new HashSet<TaskContainerDelta>();
-		for (ITaskElement abstractTaskContainer : elements) {
+		for (IRepositoryElement abstractTaskContainer : elements) {
 			TaskContainerDelta delta = new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CONTENT);
 			delta.setTransient(true);
 			taskChangeDeltas.add(delta);
@@ -465,11 +457,11 @@ public class TaskList implements ISchedulingRule, ITaskList {
 		fireDelta(taskChangeDeltas);
 	}
 
-	public void notifySynchronizationStateChanged(ITaskElement element) {
+	public void notifySynchronizationStateChanged(IRepositoryElement element) {
 		notifySynchronizationStateChanged(Collections.singleton(element));
 	}
 
-	public void notifyElementChanged(ITaskElement element) {
+	public void notifyElementChanged(IRepositoryElement element) {
 		notifyElementsChanged(Collections.singleton(element));
 	}
 

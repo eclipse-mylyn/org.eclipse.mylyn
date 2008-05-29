@@ -11,7 +11,7 @@ import java.util.Collection;
 
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 
 /**
@@ -29,15 +29,15 @@ public abstract class AbstractTaskListFilter {
 	 * 
 	 * TODO: Move to an internal utility class
 	 */
-	public static boolean hasDescendantIncoming(ITaskElement container) {
+	public static boolean hasDescendantIncoming(ITaskContainer container) {
 		return hasDescendantIncoming(container, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
 	}
 
-	public static boolean hasIncompleteDescendant(ITaskElement container) {
+	public static boolean hasIncompleteDescendant(ITaskContainer container) {
 		return hasIncompleteDescendant(container, ITasksCoreConstants.MAX_SUBTASK_DEPTH);
 	}
 
-	private static boolean hasDescendantIncoming(ITaskElement container, int depth) {
+	private static boolean hasDescendantIncoming(ITaskContainer container, int depth) {
 		Collection<ITask> children = container.getChildren();
 		if (children == null || depth <= 0) {
 			return false;
@@ -48,8 +48,8 @@ public abstract class AbstractTaskListFilter {
 				ITask containedRepositoryTask = task;
 				if (containedRepositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
 					return true;
-				} else if (TasksUiPlugin.getDefault().groupSubtasks(container)
-						&& hasDescendantIncoming(task, depth - 1)) {
+				} else if (TasksUiPlugin.getDefault().groupSubtasks(container) && task instanceof ITaskContainer
+						&& hasDescendantIncoming((ITaskContainer) task, depth - 1)) {
 					return true;
 				}
 			}
@@ -57,7 +57,7 @@ public abstract class AbstractTaskListFilter {
 		return false;
 	}
 
-	private static boolean hasIncompleteDescendant(ITaskElement container, int depth) {
+	private static boolean hasIncompleteDescendant(ITaskContainer container, int depth) {
 		Collection<ITask> children = container.getChildren();
 		if (children == null || depth <= 0) {
 			return false;
@@ -68,7 +68,7 @@ public abstract class AbstractTaskListFilter {
 				ITask containedRepositoryTask = task;
 				if (!containedRepositoryTask.isCompleted()) {
 					return true;
-				} else if (hasIncompleteDescendant(task, depth - 1)) {
+				} else if (task instanceof ITaskContainer && hasIncompleteDescendant((ITaskContainer) task, depth - 1)) {
 					return true;
 				}
 			}

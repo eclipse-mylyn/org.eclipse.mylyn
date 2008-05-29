@@ -47,7 +47,7 @@ import org.eclipse.mylyn.internal.tasks.ui.deprecated.TaskFormPage;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -236,7 +236,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 					for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
 							menuPath)) {
 						if (TaskListView.ID_SEPARATOR_TASKS.equals(menuPath)) {
-							List<ITaskElement> selectedElements = new ArrayList<ITaskElement>();
+							List<IRepositoryElement> selectedElements = new ArrayList<IRepositoryElement>();
 							selectedElements.add(task);
 							MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 							if (subMenuManager != null) {

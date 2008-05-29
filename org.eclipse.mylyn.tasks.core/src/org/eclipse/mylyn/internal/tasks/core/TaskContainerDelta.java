@@ -8,7 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 
 /**
  * Immutable. Defines changes to Task List elements.
@@ -40,9 +41,9 @@ public final class TaskContainerDelta {
 		ROOT
 	}
 
-	private final ITaskElement parent;
+	private final ITaskContainer parent;
 
-	private final ITaskElement element;
+	private final IRepositoryElement element;
 
 	private final Kind kind;
 
@@ -53,7 +54,7 @@ public final class TaskContainerDelta {
 	 *            - object being moved/added/removed, source assumed to be root
 	 * @since 3.0
 	 */
-	public TaskContainerDelta(ITaskElement element, Kind kind) {
+	public TaskContainerDelta(IRepositoryElement element, Kind kind) {
 		this.element = element;
 		this.parent = null;
 		this.kind = kind;
@@ -62,7 +63,7 @@ public final class TaskContainerDelta {
 	/**
 	 * @since 3.0
 	 */
-	public TaskContainerDelta(ITaskElement element, ITaskElement parent, Kind kind) {
+	public TaskContainerDelta(IRepositoryElement element, ITaskContainer parent, Kind kind) {
 		this.element = element;
 		this.parent = parent;
 		this.kind = kind;
@@ -73,7 +74,7 @@ public final class TaskContainerDelta {
 	 * 
 	 * @since 3.0
 	 */
-	public ITaskElement getParent() {
+	public ITaskContainer getParent() {
 		return parent;
 	}
 
@@ -82,7 +83,7 @@ public final class TaskContainerDelta {
 	 * 
 	 * @since 3.0
 	 */
-	public ITaskElement getElement() {
+	public IRepositoryElement getElement() {
 		return element;
 	}
 

@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.Collection;
-
 import org.eclipse.core.runtime.IAdaptable;
 
 /**
@@ -17,15 +15,7 @@ import org.eclipse.core.runtime.IAdaptable;
  * @since 3.0
  * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface ITaskElement extends Comparable<ITaskElement>, IAdaptable {
-
-	/**
-	 * Returns the children of this task, as defined by a containment hierarchy such as the Task List's categories,
-	 * queries and substasks. Never returns null.
-	 * 
-	 * @since 3.0
-	 */
-	public abstract Collection<ITask> getChildren();
+public interface IRepositoryElement extends Comparable<IRepositoryElement>, IAdaptable {
 
 	/**
 	 * Returns a readable description of the element.

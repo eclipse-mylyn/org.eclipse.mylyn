@@ -42,7 +42,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -533,7 +533,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
 						menuPath)) {
 					if (TaskListView.ID_SEPARATOR_TASKS.equals(menuPath)) {
-						List<ITaskElement> selectedElements = new ArrayList<ITaskElement>();
+						List<IRepositoryElement> selectedElements = new ArrayList<IRepositoryElement>();
 						selectedElements.add(activeTask);
 						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 						if (subMenuManager != null) {

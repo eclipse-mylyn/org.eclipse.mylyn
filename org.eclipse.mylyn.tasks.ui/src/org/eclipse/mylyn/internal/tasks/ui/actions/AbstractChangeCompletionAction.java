@@ -12,17 +12,17 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Mik Kersten
  */
 public class AbstractChangeCompletionAction extends Action {
 
-	protected boolean shouldEnable(List<ITaskElement> selectedElements) {
+	protected boolean shouldEnable(List<IRepositoryElement> selectedElements) {
 		boolean allLocalTasks = true;
-		for (ITaskElement abstractTaskContainer : selectedElements) {
+		for (IRepositoryElement abstractTaskContainer : selectedElements) {
 			if (!(abstractTaskContainer instanceof ITask)) {
 				allLocalTasks = false;
 				break;

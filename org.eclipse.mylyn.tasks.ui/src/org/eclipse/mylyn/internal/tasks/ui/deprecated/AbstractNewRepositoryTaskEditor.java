@@ -34,7 +34,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
@@ -379,7 +379,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 		});
 
-		for (ITaskElement category : categories) {
+		for (IRepositoryElement category : categories) {
 			categoryChooser.add(category.getSummary());
 		}
 

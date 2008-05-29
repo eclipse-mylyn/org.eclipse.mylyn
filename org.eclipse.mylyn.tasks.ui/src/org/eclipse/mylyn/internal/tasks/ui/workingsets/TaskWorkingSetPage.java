@@ -36,7 +36,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -226,7 +225,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		private final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
 
 		public Image getImage(Object element) {
-			if (element instanceof ITaskElement) {
+			if (element instanceof AbstractTaskContainer) {
 				return taskLabelProvider.getImage(element);
 			} else if (element instanceof TaskRepository) {
 				return taskRepositoryLabelProvider.getImage(element);
@@ -238,7 +237,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		}
 
 		public String getText(Object element) {
-			if (element instanceof ITaskElement) {
+			if (element instanceof AbstractTaskContainer) {
 				return taskLabelProvider.getText(element);
 			} else if (element instanceof TaskRepository) {
 				return taskRepositoryLabelProvider.getText(element);
@@ -292,7 +291,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		Object[] elements = treeViewer.getCheckedElements();
 		Set<IAdaptable> validElements = new HashSet<IAdaptable>();
 		for (Object element : elements) {
-			if (element instanceof ITaskElement || element instanceof IProject) {
+			if (element instanceof AbstractTaskContainer || element instanceof IProject) {
 				validElements.add((IAdaptable) element);
 			}
 		}
@@ -501,7 +500,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
 			public void run() {
 				IAdaptable element = (IAdaptable) event.getElement();
-				if (element instanceof ITaskElement || element instanceof IProject) {
+				if (element instanceof AbstractTaskContainer || element instanceof IProject) {
 					treeViewer.setGrayed(element, false);
 				} else if (element instanceof ElementCategory) {
 					for (Object child : ((ElementCategory) element).getChildren(null)) {

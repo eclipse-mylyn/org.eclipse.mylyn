@@ -15,7 +15,7 @@ import java.util.Date;
  * @author Steffen Pingel
  * @since 3.0
  */
-public interface ITask extends ITaskElement, IAttributeContainer {
+public interface ITask extends IRepositoryElement, IAttributeContainer {
 
 	/**
 	 * @since 3.0

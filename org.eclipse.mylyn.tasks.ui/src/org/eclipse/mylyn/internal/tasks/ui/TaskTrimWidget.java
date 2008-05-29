@@ -32,7 +32,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
@@ -283,7 +283,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
 				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
 						menuPath)) {
-					List<ITaskElement> selectedElements = new ArrayList<ITaskElement>();
+					List<IRepositoryElement> selectedElements = new ArrayList<IRepositoryElement>();
 					selectedElements.add(activeTask);
 					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 					if (subMenuManager != null) {

@@ -43,7 +43,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -201,7 +201,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 							ITask targetTask = (ITask) currentTarget;
 							AbstractTaskCategory targetCategory = null;
 							// TODO: TaskCategory only used what about AbstractTaskCategory descendants?
-							ITaskElement container = TaskCategory.getParentTaskCategory(targetTask);
+							ITaskContainer container = TaskCategory.getParentTaskCategory(targetTask);
 							if (container instanceof TaskCategory || container instanceof UncategorizedTaskContainer) {
 								targetCategory = (AbstractTaskCategory) container;
 							} else if (container instanceof UnmatchedTaskContainer) {
@@ -362,7 +362,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					|| getCurrentTarget() instanceof UnmatchedTaskContainer
 					|| getCurrentTarget() instanceof ScheduledTaskContainer) {
 				return true;
-			} else if (getCurrentTarget() instanceof ITaskElement
+			} else if (getCurrentTarget() instanceof ITaskContainer
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
 				return true;
 			} else if (getCurrentTarget() instanceof LocalTask

@@ -16,7 +16,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.ui.PlatformUI;
 
@@ -31,9 +31,9 @@ public class MarkTaskIncompleteAction extends AbstractChangeCompletionAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.incomplete";
 
-	private final List<ITaskElement> selectedElements;
+	private final List<IRepositoryElement> selectedElements;
 
-	public MarkTaskIncompleteAction(List<ITaskElement> selectedElements) {
+	public MarkTaskIncompleteAction(List<IRepositoryElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);

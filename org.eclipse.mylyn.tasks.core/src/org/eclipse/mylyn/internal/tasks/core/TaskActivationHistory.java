@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * @author Ken Sueda (original prototype)
@@ -78,7 +78,7 @@ public class TaskActivationHistory {
 			return getPreviousTasks();
 		}
 		Set<ITask> allWorkingSetTasks = new HashSet<ITask>();
-		for (ITaskElement container : containers) {
+		for (ITaskContainer container : containers) {
 			allWorkingSetTasks.addAll(container.getChildren());
 		}
 		List<AbstractTask> allScopedTasks = new ArrayList<AbstractTask>(getPreviousTasks());

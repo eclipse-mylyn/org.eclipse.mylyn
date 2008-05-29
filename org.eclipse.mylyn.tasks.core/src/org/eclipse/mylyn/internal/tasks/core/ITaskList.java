@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 
 /**
@@ -69,9 +69,9 @@ public interface ITaskList {
 	 * @param task
 	 * 		list element
 	 */
-	public abstract void notifyElementChanged(ITaskElement element);
+	public abstract void notifyElementChanged(IRepositoryElement element);
 
-	public abstract void notifySynchronizationStateChanged(ITaskElement element);
+	public abstract void notifySynchronizationStateChanged(IRepositoryElement element);
 
 	public abstract void removeChangeListener(ITaskListChangeListener listener);
 

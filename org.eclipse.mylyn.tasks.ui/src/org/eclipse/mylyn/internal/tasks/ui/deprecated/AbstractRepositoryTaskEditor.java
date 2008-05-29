@@ -118,9 +118,9 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -716,7 +716,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		if (taskData != null && !taskData.isNew()) {
 			if (repositoryTask != null) {
-				clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((ITaskElement) repositoryTask));
+				clearOutgoingAction = new ClearOutgoingAction(
+						Collections.singletonList((IRepositoryElement) repositoryTask));
 
 				if (clearOutgoingAction.isEnabled()) {
 					toolBarManager.add(clearOutgoingAction);

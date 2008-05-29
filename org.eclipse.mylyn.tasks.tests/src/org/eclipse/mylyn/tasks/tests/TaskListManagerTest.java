@@ -43,7 +43,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
@@ -293,14 +293,14 @@ public class TaskListManagerTest extends TestCase {
 
 		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(),
-						"origin", null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task1.getHandleIdentifier(), "origin",
+						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate.getTime(),
 						endDate.getTime()));
 
 		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(),
-						"origin", null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, task2.getHandleIdentifier(), "origin",
+						null, InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, startDate2.getTime(),
 						endDate2.getTime()));
 
 		assertEquals(2, metaContext.getInteractionHistory().size());
@@ -496,7 +496,7 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory category2 = new TaskCategory("cat");
 		manager.getTaskList().addCategory(category2);
 		assertEquals(2, manager.getTaskList().getCategories().size());
-		ITaskElement container = manager.getTaskList().getContainerForHandle("cat");
+		ITaskContainer container = manager.getTaskList().getContainerForHandle("cat");
 		assertEquals(container, category);
 	}
 
@@ -608,13 +608,13 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		// read once
-		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskContainers();
+		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskCategories();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
 		Iterator<AbstractTaskCategory> iterator = readCats.iterator();
 
 		boolean found = false;
 		while (iterator.hasNext()) {
-			ITaskElement readCat1 = iterator.next();
+			ITaskContainer readCat1 = iterator.next();
 			if (cat1.equals(readCat1)) {
 				found = true;
 				assertEquals(1, readCat1.getChildren().size());
@@ -630,13 +630,13 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		// read again
-		readCats = manager.getTaskList().getTaskContainers();
+		readCats = manager.getTaskList().getTaskCategories();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
 
 		iterator = readCats.iterator();
 		found = false;
 		while (iterator.hasNext()) {
-			ITaskElement readCat1 = iterator.next();
+			ITaskContainer readCat1 = iterator.next();
 			if (cat1.equals(readCat1)) {
 				found = true;
 				assertEquals(1, readCat1.getChildren().size());
@@ -673,7 +673,7 @@ public class TaskListManagerTest extends TestCase {
 		for (ITask task : readList) {
 			if (task.equals(task1)) {
 				assertEquals(task1.getSummary(), task.getSummary());
-				assertEquals(1, task.getChildren().size());
+				assertEquals(1, ((ITaskContainer) task).getChildren().size());
 			}
 		}
 	}
@@ -731,16 +731,16 @@ public class TaskListManagerTest extends TestCase {
 		for (ITask task : readList) {
 			if (task.equals(task1)) {
 				assertEquals(task1.getSummary(), task.getSummary());
-				assertEquals(1, task.getChildren().size());
+				assertEquals(1, ((AbstractTaskContainer) task).getChildren().size());
 			}
 		}
 
-		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskContainers();
+		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskCategories();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
 		Iterator<AbstractTaskCategory> iterator = readCats.iterator();
 		boolean found = false;
 		while (iterator.hasNext()) {
-			ITaskElement readCat1 = iterator.next();
+			ITaskContainer readCat1 = iterator.next();
 			if (cat1.equals(readCat1)) {
 				found = true;
 				for (ITask task : readCat1.getChildren()) {

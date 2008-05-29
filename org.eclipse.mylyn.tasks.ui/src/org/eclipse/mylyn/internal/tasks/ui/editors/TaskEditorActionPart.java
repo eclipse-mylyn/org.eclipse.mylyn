@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -159,7 +159,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			}
 
 		});
-		for (ITaskElement category : categories) {
+		for (IRepositoryElement category : categories) {
 			categoryChooser.add(category.getSummary());
 		}
 		categoryChooser.select(0);

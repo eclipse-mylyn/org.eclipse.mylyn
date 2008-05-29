@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
@@ -88,15 +88,15 @@ class CustomTaskListDecorationDrawer implements Listener {
 				activationImage = taskInactive;
 			}
 		}
-		if (data instanceof ITaskElement) {
+		if (data instanceof ITaskContainer) {
 			switch (event.type) {
 			case SWT.EraseItem: {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
 				if (!this.taskListView.synchronizationOverlaid) {
-					if (data instanceof ITaskElement) {
-						drawSyncronizationImage((ITaskElement) data, event);
+					if (data instanceof ITaskContainer) {
+						drawSyncronizationImage((ITaskContainer) data, event);
 					}
 				}
 
@@ -123,8 +123,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
-				if (data instanceof ITaskElement) {
-					drawSyncronizationImage((ITaskElement) data, event);
+				if (data instanceof ITaskContainer) {
+					drawSyncronizationImage((ITaskContainer) data, event);
 				}
 				if (tweakClipping) {
 					event.gc.setClipping(clipping);
@@ -135,7 +135,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private void drawSyncronizationImage(ITaskElement element, Event event) {
+	private void drawSyncronizationImage(ITaskContainer element, Event event) {
 		Image image = null;
 		int offsetX = 6;
 		int offsetY = (event.height / 2) - 5;
@@ -187,7 +187,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private boolean hideDecorationOnContainer(ITaskElement element, TreeItem treeItem) {
+	private boolean hideDecorationOnContainer(ITaskContainer element, TreeItem treeItem) {
 		if (element instanceof UnmatchedTaskContainer) {
 			if (!taskListView.isFocusedMode()) {
 				return false;

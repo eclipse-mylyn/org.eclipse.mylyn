@@ -12,8 +12,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 
 /**
  * @author Steffen Pingel
@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.ITaskElement;
 public class OpenTaskListElementPropertiesHandler extends AbstractTaskListViewHandler {
 
 	@Override
-	protected void execute(ExecutionEvent event, TaskListView taskListView, ITaskElement item) {
+	protected void execute(ExecutionEvent event, TaskListView taskListView, IRepositoryElement item) {
 		if (item instanceof TaskCategory || item instanceof IRepositoryQuery) {
 			TasksUiInternal.refreshAndOpenTaskListElement(item);
 		}

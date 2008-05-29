@@ -13,6 +13,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 /**
  * @since 3.0
  * @author Steffen Pingel
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface ITasksModel {
 

@@ -59,7 +59,6 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.DelegatingTaskExter
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -166,7 +165,7 @@ public class TaskListElementImporter {
 		}
 
 		// create the categorie nodes...
-		for (ITaskElement category : taskList.getCategories()) {
+		for (AbstractTaskCategory category : taskList.getCategories()) {
 			delagatingExternalizer.createCategoryElement(category, doc, root);
 		}
 

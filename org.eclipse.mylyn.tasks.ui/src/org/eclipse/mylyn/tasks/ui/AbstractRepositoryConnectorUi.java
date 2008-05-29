@@ -19,10 +19,10 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -123,7 +123,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 
 	 * @since 3.0
 	 */
-	public ImageDescriptor getTaskListElementIcon(ITaskElement element) {
+	public ImageDescriptor getTaskListElementIcon(IRepositoryElement element) {
 		if (element instanceof IRepositoryQuery) {
 			return TasksUiImages.QUERY;
 		} else if (element instanceof ITask) {

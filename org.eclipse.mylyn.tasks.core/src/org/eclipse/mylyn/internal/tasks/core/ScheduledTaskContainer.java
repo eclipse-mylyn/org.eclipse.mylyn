@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 
 /**
  * @author Rob Elves
@@ -176,7 +176,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	}
 
 	@Override
-	public int compareTo(ITaskElement element) {
+	public int compareTo(IRepositoryElement element) {
 		if (element instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer container = ((ScheduledTaskContainer) element);
 			return range.compareTo(container.getDateRange());

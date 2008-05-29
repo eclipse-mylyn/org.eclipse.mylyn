@@ -21,12 +21,13 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -99,9 +100,9 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	private void checkElementExistence(IWorkingSet workingSet) {
 		ArrayList<IAdaptable> list = new ArrayList<IAdaptable>();
 		for (IAdaptable adaptable : workingSet.getElements()) {
-			if (adaptable instanceof ITaskElement) {
-				String handle = ((ITaskElement) adaptable).getHandleIdentifier();
-				for (ITaskElement element : TasksUiPlugin.getTaskList().getRootElements()) {
+			if (adaptable instanceof AbstractTaskContainer) {
+				String handle = ((AbstractTaskContainer) adaptable).getHandleIdentifier();
+				for (IRepositoryElement element : TasksUiPlugin.getTaskList().getRootElements()) {
 					if (element != null && element.getHandleIdentifier().equals(handle)) {
 						list.add(adaptable);
 					}

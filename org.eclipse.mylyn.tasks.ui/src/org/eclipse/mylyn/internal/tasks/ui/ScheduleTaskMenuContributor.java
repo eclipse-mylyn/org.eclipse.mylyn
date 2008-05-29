@@ -24,8 +24,8 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -44,16 +44,16 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	private AbstractTask singleTaskSelection;
 
-	private final List<ITaskElement> taskListElementsToSchedule = new ArrayList<ITaskElement>();
+	private final List<IRepositoryElement> taskListElementsToSchedule = new ArrayList<IRepositoryElement>();
 
-	public MenuManager getSubMenuManager(final List<ITaskElement> selectedElements) {
+	public MenuManager getSubMenuManager(final List<IRepositoryElement> selectedElements) {
 
 		taskListElementsToSchedule.clear();
 
 		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
 
 		if (selectedElements.size() == 1) {
-			ITaskElement selectedElement = selectedElements.get(0);
+			IRepositoryElement selectedElement = selectedElements.get(0);
 			if (selectedElement instanceof ITask) {
 				singleTaskSelection = (AbstractTask) selectedElement;
 				if (singleTaskSelection.isCompleted()) {
@@ -71,7 +71,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		}
 
-		for (ITaskElement selectedElement : selectedElements) {
+		for (IRepositoryElement selectedElement : selectedElements) {
 			if (selectedElement instanceof ITask) {
 				taskListElementsToSchedule.add(selectedElement);
 			}
@@ -219,7 +219,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 //	}
 
 	protected void setScheduledDate(DateRange dateContainer) {
-		for (ITaskElement element : taskListElementsToSchedule) {
+		for (IRepositoryElement element : taskListElementsToSchedule) {
 			AbstractTask task = getTaskForElement(element, true);
 			if (dateContainer != null) {
 				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, dateContainer);
@@ -244,7 +244,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		return TasksUiPlugin.getTaskActivityManager().isPastReminder(task);
 	}
 
-	private AbstractTask getTaskForElement(ITaskElement element, boolean force) {
+	private AbstractTask getTaskForElement(IRepositoryElement element, boolean force) {
 		AbstractTask task = null;
 		if (element instanceof ITask) {
 			task = (AbstractTask) element;

@@ -47,7 +47,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TasksModel;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -121,7 +120,7 @@ public class TaskListExternalizer {
 		}
 
 		// create the category nodes...
-		for (ITaskElement category : taskList.getCategories()) {
+		for (AbstractTaskCategory category : taskList.getCategories()) {
 			delagatingExternalizer.createCategoryElement(category, doc, root);
 		}
 

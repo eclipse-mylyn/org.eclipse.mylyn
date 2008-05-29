@@ -83,7 +83,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -856,12 +856,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return INSTANCE;
 	}
 
-	public boolean groupSubtasks(ITaskElement container) {
+	public boolean groupSubtasks(ITaskContainer element) {
 		boolean groupSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.GROUP_SUBTASKS);
 
-		if (container instanceof ITask) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((ITask) container).getConnectorKind());
+		if (element instanceof ITask) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((ITask) element).getConnectorKind());
 			if (connectorUi != null) {
 				if (connectorUi.forceSubtaskHierarchy()) {
 					groupSubtasks = true;
@@ -869,8 +869,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		if (container instanceof IRepositoryQuery) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((IRepositoryQuery) container).getConnectorKind());
+		if (element instanceof IRepositoryQuery) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((IRepositoryQuery) element).getConnectorKind());
 			if (connectorUi != null) {
 				if (connectorUi.forceSubtaskHierarchy()) {
 					groupSubtasks = true;

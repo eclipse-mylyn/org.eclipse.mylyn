@@ -43,8 +43,8 @@ import org.eclipse.mylyn.internal.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -228,8 +228,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 			@Override
 			public String getText(Object element) {
-				if (element instanceof ITaskElement) {
-					return ((ITaskElement) element).getSummary();
+				if (element instanceof IRepositoryElement) {
+					return ((IRepositoryElement) element).getSummary();
 				}
 				return super.getText(element);
 			}
