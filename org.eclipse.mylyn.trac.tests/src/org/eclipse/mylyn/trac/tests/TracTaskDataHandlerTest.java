@@ -29,7 +29,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.DefaultTaskSchema;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationContext;
+import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
@@ -104,7 +104,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
-		SynchronizationContext event = new SynchronizationContext();
+		SynchronizationSession event = new SynchronizationSession();
 		event.setNeedsPerformQueries(true);
 		event.setTaskRepository(repository);
 		event.setFullSynchronization(true);
@@ -144,7 +144,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
-		SynchronizationContext event = new SynchronizationContext();
+		SynchronizationSession event = new SynchronizationSession();
 		event.setNeedsPerformQueries(true);
 		event.setTaskRepository(repository);
 		event.setFullSynchronization(true);
@@ -205,7 +205,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.offlineHandlerTicketId + "", null);
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
-		SynchronizationContext event = new SynchronizationContext();
+		SynchronizationSession event = new SynchronizationSession();
 		event.setNeedsPerformQueries(true);
 		event.setTaskRepository(repository);
 		event.setFullSynchronization(true);

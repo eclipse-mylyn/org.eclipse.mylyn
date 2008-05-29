@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
  * @author Rob Elves
@@ -75,7 +75,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector resultCollector,
-			ISynchronizationContext event, IProgressMonitor monitor) {
+			ISynchronizationSession event, IProgressMonitor monitor) {
 		// ignore
 		return null;
 	}

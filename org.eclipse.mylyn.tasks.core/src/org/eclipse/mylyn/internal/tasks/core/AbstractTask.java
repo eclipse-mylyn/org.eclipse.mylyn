@@ -399,10 +399,12 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.dueDate = date;
 	}
 
+	@Deprecated
 	public boolean isStale() {
 		return stale;
 	}
 
+	@Deprecated
 	public void setStale(boolean stale) {
 		this.stale = stale;
 	}

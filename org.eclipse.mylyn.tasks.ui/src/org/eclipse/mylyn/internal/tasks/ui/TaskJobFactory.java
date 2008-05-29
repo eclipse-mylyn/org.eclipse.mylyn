@@ -63,8 +63,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 	}
 
 	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector, Set<ITask> tasks) {
-		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, connector, repositoryManager,
-				tasks);
+		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
+				repositoryManager, tasks);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.LONG);
 		return job;
@@ -72,7 +72,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	public SynchronizationJob createSynchronizeTasksJob(AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, Set<ITask> tasks) {
-		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, connector, taskRepository, tasks);
+		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
+				taskRepository, tasks);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.LONG);
 		return job;

@@ -8,18 +8,21 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
-import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
  * @author Steffen Pingel
  * @since 3.0
  */
-public class SynchronizationContext implements ISynchronizationContext {
+public class SynchronizationSession implements ISynchronizationSession {
 
 	private boolean fullSynchronization;
 
@@ -29,17 +32,19 @@ public class SynchronizationContext implements ISynchronizationContext {
 
 	private Set<ITask> changedTasks;
 
+	private Set<ITask> staleTasks;
+
 	private TaskRepository taskRepository;
 
 	private Object data;
 
 	private ITaskDataManager taskDataManager;
 
-	public SynchronizationContext(ITaskDataManager taskDataManager) {
+	public SynchronizationSession(ITaskDataManager taskDataManager) {
 		this.taskDataManager = taskDataManager;
 	}
 
-	public SynchronizationContext() {
+	public SynchronizationSession() {
 	}
 
 	public void setFullSynchronization(boolean fullSynchronization) {
@@ -92,6 +97,23 @@ public class SynchronizationContext implements ISynchronizationContext {
 
 	public ITaskDataManager getTaskDataManager() {
 		return taskDataManager;
+	}
+
+	public void markStale(ITask task) {
+		if (staleTasks == null) {
+			staleTasks = new HashSet<ITask>();
+		}
+		staleTasks.add(task);
+	}
+
+	public Set<ITask> getStaleTasks() {
+		return staleTasks;
+	}
+
+	public void putUpdatedTaskData(ITask task, TaskData taskData) throws CoreException {
+		if (taskDataManager != null) {
+			taskDataManager.putUpdatedTaskData(task, taskData, false);
+		}
 	}
 
 }

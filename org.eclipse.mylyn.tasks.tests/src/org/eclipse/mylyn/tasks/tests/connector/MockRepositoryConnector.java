@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
  * @author Mik Kersten
@@ -183,7 +183,7 @@ public class MockRepositoryConnector extends AbstractLegacyRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
-			TaskDataCollector resultCollector, ISynchronizationContext event, IProgressMonitor monitor) {
+			TaskDataCollector resultCollector, ISynchronizationSession event, IProgressMonitor monitor) {
 		return Status.OK_STATUS;
 	}
 

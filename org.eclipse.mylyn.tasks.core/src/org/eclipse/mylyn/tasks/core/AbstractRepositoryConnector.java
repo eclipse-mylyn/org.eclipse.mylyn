@@ -18,7 +18,8 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
-import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
+import org.eclipse.mylyn.tasks.core.data.TaskRelation;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
@@ -152,7 +153,8 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getTaskUrl(String repositoryUrl, String taskId);
 
 	/**
-	 * @param taskRepository TODO
+	 * @param taskRepository
+	 *            TODO
 	 * @since 3.0
 	 */
 	public abstract boolean hasChanged(TaskRepository taskRepository, ITask task, TaskData taskData);
@@ -187,12 +189,12 @@ public abstract class AbstractRepositoryConnector {
 	 * @since 3.0
 	 */
 	public abstract IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
-			TaskDataCollector resultCollector, ISynchronizationContext event, IProgressMonitor monitor);
+			TaskDataCollector resultCollector, ISynchronizationSession event, IProgressMonitor monitor);
 
 	/**
 	 * @since 3.0
 	 */
-	public void postSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
 		} finally {
@@ -203,7 +205,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
-	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void preSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
 		} finally {
@@ -230,6 +232,14 @@ public abstract class AbstractRepositoryConnector {
 	public boolean hasCapability(Capability capability, TaskRepository taskRepository, ITask task,
 			ICapabilityContext context) {
 		return false;
+	}
+
+	/**
+	 * @return Task id for any sub tasks referenced by the provided task data
+	 * @since 3.0
+	 */
+	public TaskRelation[] getTaskRelations(TaskData taskData) {
+		return new TaskRelation[0];
 	}
 
 }

@@ -23,7 +23,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
-import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationContext;
+import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -178,9 +178,8 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 
 	/**
 	 * @since 2.0
-	 * @deprecated use
-	 *             {@link #performQuery(TaskRepository, RepositoryQuery, TaskDataCollector, SynchronizationContext, IProgressMonitor)}
-	 *             instead
+	 * @deprecated use {@link #performQuery(TaskRepository, RepositoryQuery, TaskDataCollector,
+	 * 	SynchronizationSession, IProgressMonitor)} instead
 	 */
 	@Deprecated
 	public IStatus performQuery(IRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
@@ -286,8 +285,8 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 *         <code>tasks</code> collection), so empty collection means that there are some other tasks changed
 	 * 
 	 * @throws CoreException
-	 * @deprecated use {@link #preQuerySynchronization(TaskRepository, SynchronizationContext, IProgressMonitor)}
-	 *             instead
+	 * @deprecated use {@link #preQuerySynchronization(TaskRepository, SynchronizationSession, IProgressMonitor)}
+	 * 	instead
 	 */
 	@Deprecated
 	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)

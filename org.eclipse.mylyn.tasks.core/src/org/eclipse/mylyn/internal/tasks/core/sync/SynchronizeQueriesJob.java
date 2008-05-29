@@ -11,7 +11,9 @@ package org.eclipse.mylyn.internal.tasks.core.sync;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -40,7 +42,8 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
+import org.eclipse.mylyn.tasks.core.data.TaskRelation;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
 /**
@@ -79,8 +82,11 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 		private int resultCount;
 
-		public TaskCollector(RepositoryQuery repositoryQuery) {
+		private final SynchronizationSession session;
+
+		public TaskCollector(RepositoryQuery repositoryQuery, SynchronizationSession session) {
 			this.repositoryQuery = repositoryQuery;
+			this.session = session;
 			this.removedQueryResults = new HashSet<ITask>(repositoryQuery.getChildren());
 		}
 
@@ -89,12 +95,14 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			ITask task = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 			if (task == null) {
 				task = tasksModel.createTask(repository, taskData.getTaskId());
-				task.setStale(true);
+				if (taskData.isPartial()) {
+					session.markStale(task);
+				}
 			} else {
 				removedQueryResults.remove(task);
 			}
 			try {
-				taskDataManager.putUpdatedTaskData(task, taskData, isUser());
+				session.putUpdatedTaskData(task, taskData);
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to save task", e));
 			}
@@ -127,8 +135,8 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				// set incoming marker for web tasks 
 				task.setSynchronizationState(SynchronizationState.INCOMING);
 			}
-			if (isChangedTasksSynchronization() && task.isStale()) {
-				tasksToBeSynchronized.add(task);
+			if (task.isStale()) {
+				session.markStale(task);
 				task.setSynchronizing(true);
 			}
 			resultCount++;
@@ -156,8 +164,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private final TaskList taskList;
 
-	private final HashSet<ITask> tasksToBeSynchronized = new HashSet<ITask>();
-
 	private final ITasksModel tasksModel;
 
 	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager taskDataManager, ITasksModel tasksModel,
@@ -183,50 +189,65 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					allTasks.addAll(query.getChildren());
 				}
 			} else {
-				allTasks = Collections.unmodifiableSet(taskList.getTasks(repository.getRepositoryUrl()));
+				allTasks = taskList.getTasks(repository.getRepositoryUrl());
 			}
 
 			MutexRule rule = new MutexRule(repository);
 			try {
 				Job.getJobManager().beginRule(rule, monitor);
 
-				SynchronizationContext event = new SynchronizationContext(taskDataManager);
-				event.setTaskRepository(repository);
-				event.setFullSynchronization(isFullSynchronization());
-				event.setTasks(allTasks);
-				event.setNeedsPerformQueries(true);
-
-//				try {
-				// hook into the connector for checking for changed tasks and have the connector mark tasks that need synchronization
-				if (firePreSynchronization(event, new SubProgressMonitor(monitor, 20))) {
-					// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
-					synchronizeQueries(monitor, event);
-
-					// for background synchronizations all changed tasks are synchronized including the ones that are not part of a query
-					//if (!isUser()) {
-					for (ITask task : allTasks) {
-						if (task.isStale()) {
-							tasksToBeSynchronized.add(task);
-							((AbstractTask) task).setSynchronizing(true);
+				final Map<String, TaskRelation[]> relationsByTaskId = new HashMap<String, TaskRelation[]>();
+				SynchronizationSession session = new SynchronizationSession(taskDataManager) {
+					@Override
+					public void putUpdatedTaskData(ITask task, TaskData taskData) throws CoreException {
+						taskDataManager.putUpdatedTaskData(task, taskData, isUser());
+						if (!taskData.isPartial()) {
+							TaskRelation[] relations = connector.getTaskRelations(taskData);
+							if (relations != null) {
+								relationsByTaskId.put(task.getTaskId(), relations);
+							}
 						}
 					}
-					//}
+				};
+				session.setTaskRepository(repository);
+				session.setFullSynchronization(isFullSynchronization());
+				session.setTasks(Collections.unmodifiableSet(allTasks));
+				session.setNeedsPerformQueries(true);
 
-					// synchronize tasks that were marked by the connector
-					if (!tasksToBeSynchronized.isEmpty()) {
-						Policy.checkCanceled(monitor);
-						monitor.subTask("Synchronizing " + tasksToBeSynchronized.size() + " changed tasks");
-						synchronizeTasks(new SubProgressMonitor(monitor, 40));
-					} else {
-						monitor.worked(40);
-					}
+				preSynchronization(session, new SubProgressMonitor(monitor, 20));
 
-					// hook into the connector for synchronization time stamp management
-					firePostSynchronization(event, new SubProgressMonitor(monitor, 10));
+				if (session.needsPerformQueries()) {
+					// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
+					synchronizeQueries(monitor, session);
+				} else {
+					monitor.worked(queries.size() * 20);
 				}
-//				} finally {
-//					taskList.notifyElementsChanged(null);
-//				}
+
+				Set<ITask> tasksToBeSynchronized = new HashSet<ITask>();
+				if (session.getStaleTasks() != null) {
+					for (ITask task : session.getStaleTasks()) {
+						tasksToBeSynchronized.add(task);
+						((AbstractTask) task).setSynchronizing(true);
+					}
+				}
+
+				SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
+						repository, tasksToBeSynchronized);
+				job.setUser(isUser());
+
+				// synchronize tasks that were marked by the connector
+				if (!tasksToBeSynchronized.isEmpty()) {
+					Policy.checkCanceled(monitor);
+					job.run(new SubProgressMonitor(monitor, 30));
+				}
+				monitor.subTask("Receiving related tasks");
+				job.synchronizedTaskRelations(monitor, relationsByTaskId);
+				monitor.worked(10);
+
+				session.setChangedTasks(tasksToBeSynchronized);
+
+				// hook into the connector for synchronization time stamp management
+				postSynchronization(session, new SubProgressMonitor(monitor, 10));
 			} finally {
 				Job.getJobManager().endRule(rule);
 			}
@@ -238,24 +259,23 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private void synchronizeQueries(IProgressMonitor monitor, ISynchronizationContext event) {
+	private void synchronizeQueries(IProgressMonitor monitor, SynchronizationSession session) {
 		for (RepositoryQuery repositoryQuery : queries) {
 			Policy.checkCanceled(monitor);
 			repositoryQuery.setStatus(null);
 
 			monitor.subTask("Synchronizing query " + repositoryQuery.getSummary());
-			synchronizeQuery(repositoryQuery, event, new SubProgressMonitor(monitor, 20));
+			synchronizeQuery(repositoryQuery, session, new SubProgressMonitor(monitor, 20));
 
 			repositoryQuery.setSynchronizing(false);
 			taskList.notifySynchronizationStateChanged(Collections.singleton(repositoryQuery));
 		}
 	}
 
-	private boolean firePostSynchronization(SynchronizationContext event, IProgressMonitor monitor) {
+	private boolean postSynchronization(SynchronizationSession event, IProgressMonitor monitor) {
 		try {
 			Policy.checkCanceled(monitor);
 			monitor.subTask("Updating repository state");
-			event.setChangedTasks(tasksToBeSynchronized);
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
@@ -267,7 +287,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private boolean firePreSynchronization(ISynchronizationContext event, IProgressMonitor monitor) {
+	private boolean preSynchronization(ISynchronizationSession event, IProgressMonitor monitor) {
 		try {
 			Policy.checkCanceled(monitor);
 			monitor.subTask("Querying repository");
@@ -287,9 +307,9 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	private void synchronizeQuery(RepositoryQuery repositoryQuery, ISynchronizationContext event,
+	private void synchronizeQuery(RepositoryQuery repositoryQuery, SynchronizationSession event,
 			IProgressMonitor monitor) {
-		TaskCollector collector = new TaskCollector(repositoryQuery);
+		TaskCollector collector = new TaskCollector(repositoryQuery, event);
 
 		if (!isUser()) {
 			monitor = Policy.backgroundMonitorFor(monitor);
@@ -312,13 +332,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		} else {
 			repositoryQuery.setStatus(result);
 		}
-	}
-
-	private void synchronizeTasks(IProgressMonitor monitor) {
-		SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, connector, repository,
-				tasksToBeSynchronized);
-		job.setUser(isUser());
-		job.run(monitor);
 	}
 
 	private void updateQueryStatus(final IStatus status) {

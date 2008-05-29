@@ -292,12 +292,6 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	@Deprecated
-	public abstract boolean isStale();
-
-	/**
-	 * @since 3.0
-	 */
 	public abstract void setCompletionDate(Date completionDate);
 
 	/**
@@ -325,13 +319,6 @@ public interface ITask extends ITaskElement, IAttributeContainer {
 	 * @since 3.0
 	 */
 	public abstract void setPriority(String priority);
-
-	/**
-	 * @since 3.0
-	 * @deprecated
-	 */
-	@Deprecated
-	public abstract void setStale(boolean stale);
 
 	/**
 	 * @since 3.0

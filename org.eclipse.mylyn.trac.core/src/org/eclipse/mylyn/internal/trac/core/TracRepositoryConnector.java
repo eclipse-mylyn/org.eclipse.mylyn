@@ -44,7 +44,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
-import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
  * @author Steffen Pingel
@@ -145,8 +145,8 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
-			TaskDataCollector resultCollector, ISynchronizationContext event, IProgressMonitor monitor) {
+	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector resultCollector,
+			ISynchronizationSession event, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Querying repository", IProgressMonitor.UNKNOWN);
 
@@ -176,21 +176,21 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void preSynchronization(ISynchronizationSession session, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);
 
-			if (!event.isFullSynchronization()) {
+			if (!session.isFullSynchronization()) {
 				return;
 			}
 
 			// there are no Trac tasks in the task list, skip contacting the repository
-			if (event.getTasks().isEmpty()) {
+			if (session.getTasks().isEmpty()) {
 				return;
 			}
 
-			TaskRepository repository = event.getTaskRepository();
+			TaskRepository repository = session.getTaskRepository();
 			if (!TracRepositoryConnector.hasChangedSince(repository)) {
 				// always run the queries for web mode
 				return;
@@ -198,8 +198,8 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 
 			if (repository.getSynchronizationTimeStamp() == null
 					|| repository.getSynchronizationTimeStamp().length() == 0) {
-				for (ITask task : event.getTasks()) {
-					task.setStale(true);
+				for (ITask task : session.getTasks()) {
+					session.markStale(task);
 				}
 				return;
 			}
@@ -215,7 +215,7 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 				Set<Integer> ids = client.getChangedTickets(since, monitor);
 				if (ids.isEmpty()) {
 					// repository is unchanged
-					event.setNeedsPerformQueries(false);
+					session.setNeedsPerformQueries(false);
 					return;
 				}
 
@@ -228,15 +228,15 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 					Date lastChanged = client.getTicketLastChanged(id, monitor);
 					if (since.equals(lastChanged)) {
 						// repository didn't actually change
-						event.setNeedsPerformQueries(false);
+						session.setNeedsPerformQueries(false);
 						return;
 					}
 				}
 
-				for (ITask task : event.getTasks()) {
+				for (ITask task : session.getTasks()) {
 					Integer id = getTicketId(task.getTaskId());
 					if (ids.contains(id)) {
-						task.setStale(true);
+						session.markStale(task);
 					}
 				}
 			} catch (OperationCanceledException e) {
@@ -427,12 +427,12 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public void postSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
 			if (event.isFullSynchronization()) {
-				event.getTaskRepository().setSynchronizationTimeStamp(getSynchronizationTimestamp(event.getTaskRepository(),
-						event.getChangedTasks()));
+				event.getTaskRepository().setSynchronizationTimeStamp(
+						getSynchronizationTimestamp(event.getTaskRepository(), event.getChangedTasks()));
 			}
 		} finally {
 			monitor.done();

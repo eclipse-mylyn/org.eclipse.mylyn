@@ -78,13 +78,6 @@ public abstract class AbstractTaskDataHandler {
 	public abstract TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository);
 
 	/**
-	 * @return Task id for any sub tasks referenced by the provided task data
-	 */
-	public TaskRelation[] getTaskRelations(TaskData taskData) {
-		return new TaskRelation[0];
-	}
-
-	/**
 	 * @param taskRepository
 	 *            TODO
 	 * @return true if connector support downloading multiple task data in single request, false otherwise. If true,

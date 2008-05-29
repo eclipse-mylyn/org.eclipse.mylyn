@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.tasks.core.data;
 
+import org.eclipse.core.runtime.Assert;
+
 /**
  * @author Steffen Pingel
  * @since 3.0
@@ -29,6 +31,9 @@ public class TaskRelation {
 	}
 
 	private TaskRelation(Kind kind, Direction direction, String taskId) {
+		Assert.isNotNull(kind);
+		Assert.isNotNull(direction);
+		Assert.isNotNull(taskId);
 		this.kind = kind;
 		this.direction = direction;
 		this.taskId = taskId;
@@ -55,7 +60,7 @@ public class TaskRelation {
 	}
 
 	public static TaskRelation dependency(String taskId, Direction direction) {
-		return new TaskRelation(Kind.CONTAINMENT, direction, taskId);
+		return new TaskRelation(Kind.DEPENDENCY, direction, taskId);
 	}
 
 }

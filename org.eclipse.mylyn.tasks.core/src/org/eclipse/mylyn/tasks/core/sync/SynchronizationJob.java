@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.jobs.Job;
  */
 public abstract class SynchronizationJob extends Job {
 
-	private boolean changedTasksSynchronization = true;
+//	private boolean changedTasksSynchronization = true;
 
 	private boolean fullSynchronization = false;
 
@@ -24,17 +24,17 @@ public abstract class SynchronizationJob extends Job {
 		super(name);
 	}
 
-	public boolean isChangedTasksSynchronization() {
-		return changedTasksSynchronization;
-	}
+//	public boolean isChangedTasksSynchronization() {
+//		return changedTasksSynchronization;
+//	}
 
 	public boolean isFullSynchronization() {
 		return fullSynchronization;
 	}
 
-	public void setChangedTasksSynchronization(boolean synchronizeChangedTasks) {
-		this.changedTasksSynchronization = synchronizeChangedTasks;
-	}
+//	public void setChangedTasksSynchronization(boolean synchronizeChangedTasks) {
+//		this.changedTasksSynchronization = synchronizeChangedTasks;
+//	}
 
 	public void setFullSynchronization(boolean fullSynchronization) {
 		this.fullSynchronization = fullSynchronization;

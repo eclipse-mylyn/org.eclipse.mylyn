@@ -10,15 +10,17 @@ package org.eclipse.mylyn.tasks.core.sync;
 
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @since 3.0
  * @author Steffen Pingel
  */
-public interface ISynchronizationContext {
+public interface ISynchronizationSession {
 
 	public abstract Set<ITask> getChangedTasks();
 
@@ -37,5 +39,9 @@ public interface ISynchronizationContext {
 	public abstract void setData(Object data);
 
 	public abstract void setNeedsPerformQueries(boolean performQueries);
+
+	public abstract void markStale(ITask task);
+
+	public abstract void putUpdatedTaskData(ITask task, TaskData taskData) throws CoreException;
 
 }

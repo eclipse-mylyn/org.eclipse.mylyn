@@ -39,7 +39,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
-import org.eclipse.mylyn.tasks.core.sync.ISynchronizationContext;
+import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
  * @author Mik Kersten
@@ -205,9 +205,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void preSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
-		TaskRepository repository = event.getTaskRepository();
-		if (event.getTasks().isEmpty()) {
+	public void preSynchronization(ISynchronizationSession session, IProgressMonitor monitor) throws CoreException {
+		TaskRepository repository = session.getTaskRepository();
+		if (session.getTasks().isEmpty()) {
 			return;
 		}
 
@@ -216,8 +216,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
 
 			if (repository.getSynchronizationTimeStamp() == null) {
-				for (ITask task : event.getTasks()) {
-					task.setStale(true);
+				for (ITask task : session.getTasks()) {
+					session.markStale(task);
 				}
 				return;
 			}
@@ -233,7 +233,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			String urlQueryString = urlQueryBase + BUG_ID;
 
 			Set<ITask> changedTasks = new HashSet<ITask>();
-			Iterator<ITask> itr = event.getTasks().iterator();
+			Iterator<ITask> itr = session.getTasks().iterator();
 			int queryCounter = 0;
 			Set<ITask> checking = new HashSet<ITask>();
 			while (itr.hasNext()) {
@@ -243,7 +243,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
 				urlQueryString += newurlQueryString;
 				if (queryCounter >= 1000) {
-					queryForChanged(repository, changedTasks, urlQueryString, event);
+					queryForChanged(repository, changedTasks, urlQueryString, session);
 
 					queryCounter = 0;
 					urlQueryString = urlQueryBase + BUG_ID;
@@ -251,13 +251,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 
 				if (!itr.hasNext() && queryCounter != 0) {
-					queryForChanged(repository, changedTasks, urlQueryString, event);
+					queryForChanged(repository, changedTasks, urlQueryString, session);
 				}
 			}
 
-			for (ITask task : event.getTasks()) {
+			for (ITask task : session.getTasks()) {
 				if (changedTasks.contains(task)) {
-					task.setStale(true);
+					session.markStale(task);
 				}
 			}
 
@@ -275,7 +275,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	 * TODO: clean up use of BugzillaTaskDataCollector
 	 */
 	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString,
-			ISynchronizationContext context) throws UnsupportedEncodingException, CoreException {
+			ISynchronizationSession context) throws UnsupportedEncodingException, CoreException {
 
 		HashMap<String, ITask> taskById = new HashMap<String, ITask>();
 		for (ITask task : context.getTasks()) {
@@ -314,7 +314,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(TaskRepository repository, final IRepositoryQuery query,
-			TaskDataCollector resultCollector, ISynchronizationContext event, IProgressMonitor monitor) {
+			TaskDataCollector resultCollector, ISynchronizationSession event, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Running query", IProgressMonitor.UNKNOWN);
 			BugzillaClient client = getClientManager().getClient(repository, monitor);
@@ -470,7 +470,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void postSynchronization(ISynchronizationContext event, IProgressMonitor monitor) throws CoreException {
+	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 //		try {
 //			monitor.beginTask("", 1);
 //			if (event.isFullSynchronization()) {
