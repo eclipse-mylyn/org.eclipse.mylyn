@@ -61,7 +61,7 @@ public class XmlStringConverter {
 
 	@Deprecated
 	public static String convertXmlToString(String string) {
-		StringBuffer result = new StringBuffer(string.length() + 10);
+		StringBuilder result = new StringBuilder(string.length() + 10);
 		for (int i = 0; i < string.length(); ++i) {
 			char xChar = string.charAt(i);
 			if (xChar == '&') {
