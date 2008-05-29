@@ -518,7 +518,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(BugzillaReportElement.DEPENDSON.getKey());
 		if (attribute != null) {
 			for (String taskId : attribute.getValue().split(",")) {
-				relations.add(TaskRelation.subtask(taskId));
+				relations.add(TaskRelation.subtask(taskId.trim()));
 			}
 		}
 		return relations.toArray(new TaskRelation[0]);

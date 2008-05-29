@@ -162,7 +162,10 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 						} else {
 							removedChildTasks.remove(task);
 						}
-						taskList.addTask(task, (AbstractTaskContainer) parentTask);
+
+						if (task != null) {
+							taskList.addTask(task, (AbstractTaskContainer) parentTask);
+						}
 					}
 				}
 
