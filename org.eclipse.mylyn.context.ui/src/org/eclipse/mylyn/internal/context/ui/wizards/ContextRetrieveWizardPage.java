@@ -8,24 +8,18 @@
 
 package org.eclipse.mylyn.internal.context.ui.wizards;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -62,7 +56,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
-	private RepositoryAttachment selectedContextAttachment;
+	private ITaskAttachment selectedContextAttachment;
 
 	protected ContextRetrieveWizardPage(TaskRepository repository, ITask task) {
 		super(WIZARD_TITLE);
@@ -90,8 +84,8 @@ public class ContextRetrieveWizardPage extends WizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				if (contextTable.getSelectionIndex() > -1) {
-					selectedContextAttachment = (RepositoryAttachment) contextTable.getItem(
-							contextTable.getSelectionIndex()).getData();
+					selectedContextAttachment = (ITaskAttachment) contextTable.getItem(contextTable.getSelectionIndex())
+							.getData();
 					getWizard().getContainer().updateButtons();
 				}
 			}
@@ -99,8 +93,8 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		contextTable.addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
-				selectedContextAttachment = (RepositoryAttachment) contextTable.getItem(
-						contextTable.getSelectionIndex()).getData();
+				selectedContextAttachment = (ITaskAttachment) contextTable.getItem(contextTable.getSelectionIndex())
+						.getData();
 				getWizard().getContainer().updateButtons();
 				getWizard().performFinish();
 				// TODO: is there a better way of closing?
@@ -115,35 +109,16 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 		});
 
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(repository.getConnectorKind());
+		List<ITaskAttachment> contextAttachments = AttachmentUtil.getContextAttachments(repository, task);
 
-		List<RepositoryAttachment> contextAttachments = new ArrayList<RepositoryAttachment>();
-		if (connector.getAttachmentHandler() != null) {
-			contextAttachments = new ArrayList<RepositoryAttachment>(AttachmentUtil.getLegacyContextAttachments(
-					repository, task));
-		}
+		Collections.sort(contextAttachments, new Comparator<ITaskAttachment>() {
 
-		Collections.sort(contextAttachments, new Comparator<RepositoryAttachment>() {
-
-			public int compare(RepositoryAttachment attachment1, RepositoryAttachment attachment2) {
-				RepositoryTaskData data = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
-						task.getRepositoryUrl(), task.getTaskId());
-
-				AbstractAttributeFactory factory = null;
+			public int compare(ITaskAttachment attachment1, ITaskAttachment attachment2) {
 
 				Date created1 = null;
 				Date created2 = null;
-				if (data != null) {
-					factory = data.getAttributeFactory();
-				}
-				if (factory != null) {
-					created1 = factory.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
-							attachment1.getDateCreated());
-					created2 = factory.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
-							attachment2.getDateCreated());
-				}
-
+				created1 = attachment1.getCreationDate();
+				created2 = attachment2.getCreationDate();
 				if (created1 != null && created2 != null) {
 					return (-1) * created1.compareTo(created2);
 				} else if (created1 == null && created2 != null) {
@@ -165,10 +140,10 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		columns[2] = new TableColumn(contextTable, SWT.CENTER);
 		columns[2].setText(COLUMN_COMMENT);
 
-		for (RepositoryAttachment attachment : contextAttachments) {
+		for (ITaskAttachment attachment : contextAttachments) {
 			TableItem item = new TableItem(contextTable, SWT.NONE);
-			item.setText(0, attachment.getDateCreated());
-			item.setText(1, attachment.getCreator());
+			item.setText(0, DateFormat.getInstance().format(attachment.getCreationDate()));
+			item.setText(1, attachment.getAuthor().getName());
 			item.setText(2, attachment.getDescription());
 			item.setData(attachment);
 		}
@@ -187,7 +162,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		contextTable.setFocus();
 	}
 
-	public RepositoryAttachment getSelectedContext() {
+	public ITaskAttachment getSelectedContext() {
 		return selectedContextAttachment;
 	}
 
