@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskElement;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -68,7 +68,7 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean acceptsObject(Object object) {
-		return object instanceof ITaskElement;
+		return object instanceof IRepositoryElement;
 	}
 
 	@Override
