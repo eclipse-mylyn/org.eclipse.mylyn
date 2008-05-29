@@ -54,8 +54,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private String errorMessage = null;
 
-	private final TaskAttributeMapper attributeMapper;
-
 	private final List<BugzillaCustomField> customFields;
 
 	private final TaskDataCollector collector;
@@ -70,8 +68,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	public SaxMultiBugReportContentHandler(TaskAttributeMapper mapper, TaskDataCollector collector,
 			Map<String, TaskData> taskDataMap, List<BugzillaCustomField> customFields) {
-
-		this.attributeMapper = mapper;
 		this.taskDataMap = taskDataMap;
 		this.customFields = customFields;
 		this.collector = collector;
@@ -242,9 +238,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		case THETEXT:
 			if (taskComment != null) {
 				taskComment.commentText = parsedText;
-
-//				// Check for attachment
-//				parseAttachment(taskComment, parsedText);
 			}
 			break;
 		case LONG_DESC:

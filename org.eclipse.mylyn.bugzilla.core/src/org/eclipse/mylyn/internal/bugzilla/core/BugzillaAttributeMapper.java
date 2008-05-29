@@ -16,6 +16,9 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 
+/**
+ * @author Rob Elves
+ */
 public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 	private static final String DATE_FORMAT_1 = "yyyy-MM-dd HH:mm";
@@ -43,25 +46,59 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 		if (attribute == null) {
 			return null;
 		}
+		String dateString = attribute.getValue();
+		String id = attribute.getId();
+		Date parsedDate = getDate(id, dateString);
+		if (parsedDate == null) {
+			parsedDate = super.getDateValue(attribute);
+		}
+		return parsedDate;
+	}
+
+	private Date getDate(String attributeId, String dateString) {
+		Date parsedDate = null;
 		try {
-			String dateString = attribute.getValue();
-			Date parsedDate = null;
-			if (attribute.getId().equals(BugzillaReportElement.DELTA_TS.getKey())) {
+			if (attributeId.equals(BugzillaReportElement.DELTA_TS.getKey())) {
 				parsedDate = new SimpleDateFormat(delta_ts_format).parse(dateString);
-			} else if (attribute.getId().equals(BugzillaReportElement.CREATION_TS.getKey())) {
+			} else if (attributeId.equals(BugzillaReportElement.CREATION_TS.getKey())) {
 				parsedDate = new SimpleDateFormat(creation_ts_format).parse(dateString);
-			} else if (attribute.getId().equals(BugzillaReportElement.BUG_WHEN.getKey())) {
+			} else if (attributeId.equals(BugzillaReportElement.BUG_WHEN.getKey())) {
 				parsedDate = new SimpleDateFormat(comment_creation_ts_format).parse(dateString);
-			} else if (attribute.getId().equals(BugzillaReportElement.DATE.getKey())) {
+			} else if (attributeId.equals(BugzillaReportElement.DATE.getKey())) {
 				parsedDate = new SimpleDateFormat(attachment_creation_ts_format).parse(dateString);
-			} else {
-				parsedDate = super.getDateValue(attribute);
 			}
-			return parsedDate;
-		} catch (NumberFormatException e) {
-			return null;
 		} catch (ParseException e) {
 			return null;
+		} catch (NumberFormatException e) {
+			return null;
+		}
+		return parsedDate;
+	}
+
+	@Override
+	public void setDateValue(TaskAttribute attribute, Date date) {
+		if (date != null) {
+			String dateString = null;
+			String attributeId = attribute.getId();
+
+			if (attributeId.equals(BugzillaReportElement.DELTA_TS.getKey())) {
+				dateString = new SimpleDateFormat(delta_ts_format).format(date);
+			} else if (attributeId.equals(BugzillaReportElement.CREATION_TS.getKey())) {
+				dateString = new SimpleDateFormat(creation_ts_format).format(date);
+			} else if (attributeId.equals(BugzillaReportElement.BUG_WHEN.getKey())) {
+				dateString = new SimpleDateFormat(comment_creation_ts_format).format(date);
+			} else if (attributeId.equals(BugzillaReportElement.DATE.getKey())) {
+				dateString = new SimpleDateFormat(attachment_creation_ts_format).format(date);
+			}
+
+			if (dateString == null) {
+				super.setDateValue(attribute, date);
+			} else {
+				attribute.setValue(Long.toString(date.getTime()));
+			}
+
+		} else {
+			attribute.clearValues();
 		}
 	}
 
