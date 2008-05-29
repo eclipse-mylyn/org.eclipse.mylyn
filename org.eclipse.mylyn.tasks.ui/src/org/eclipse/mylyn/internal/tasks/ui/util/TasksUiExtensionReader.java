@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
@@ -117,8 +116,6 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_TASK_EDITOR_PAGE_FACTORY = "pageFactory";
 
-	public static final String ELMNT_HYPERLINK_LISTENER = "hyperlinkListener";
-
 	public static final String ELMNT_HYPERLINK_DETECTOR = "hyperlinkDetector";
 
 	public static final String EXTENSION_DUPLICATE_DETECTORS = "org.eclipse.mylyn.tasks.ui.duplicateDetectors";
@@ -197,16 +194,6 @@ public class TasksUiExtensionReader {
 						readEditorFactory(element);
 					} else if (element.getName().equals(ELMNT_TASK_EDITOR_PAGE_FACTORY)) {
 						readTaskEditorPageFactory(element);
-					}
-				}
-			}
-
-			// NOTE: causes ..mylyn.java.ui to load
-			for (IExtension editor : editors) {
-				IConfigurationElement[] elements = editor.getConfigurationElements();
-				for (IConfigurationElement element : elements) {
-					if (element.getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
-						readHyperlinkDetector(element);
 					}
 				}
 			}
@@ -317,20 +304,6 @@ public class TasksUiExtensionReader {
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load repository link provider", e));
-		}
-	}
-
-	private static void readHyperlinkDetector(IConfigurationElement element) {
-		try {
-			Object hyperlinkDetector = element.createExecutableExtension(ATTR_CLASS);
-			if (hyperlinkDetector instanceof IHyperlinkDetector) {
-				TasksUiPlugin.getDefault().addTaskHyperlinkDetector((IHyperlinkDetector) hyperlinkDetector);
-			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load hyperlink detector " + hyperlinkDetector.getClass().getCanonicalName()));
-			}
-		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load hyperlink detector", e));
 		}
 	}
 

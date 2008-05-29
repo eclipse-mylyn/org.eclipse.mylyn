@@ -975,16 +975,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return overlayIcons.get(repositoryType);
 	}
 
-	public IHyperlinkDetector[] getTaskHyperlinkDetectors() {
-		return hyperlinkDetectors.toArray(new IHyperlinkDetector[1]);
-	}
-
-	public void addTaskHyperlinkDetector(IHyperlinkDetector listener) {
-		if (listener != null) {
-			this.hyperlinkDetectors.add(listener);
-		}
-	}
-
 	public void addRepositoryLinkProvider(AbstractTaskRepositoryLinkProvider repositoryLinkProvider) {
 		if (repositoryLinkProvider != null) {
 			this.repositoryLinkProviders.add(repositoryLinkProvider);
