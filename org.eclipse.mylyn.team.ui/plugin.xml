@@ -227,15 +227,15 @@
              description="Provides the URL of a task."
              recognizedKeyword="task.url"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$CommitTemplateDate$TaskCompletion"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskCompletion"
              description="Provides the completion date of a task."
              recognizedKeyword="task.completiondate"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$CommitTemplateDate$TaskCreation"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskCreation"
              description="Provides the creation date of a task."
              recognizedKeyword="task.creationdate"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$CommitTemplateDate$TaskReminder"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskReminder"
              description="Provides the reminder date of a task."
              recognizedKeyword="task.reminderdate"/>
     </extension>

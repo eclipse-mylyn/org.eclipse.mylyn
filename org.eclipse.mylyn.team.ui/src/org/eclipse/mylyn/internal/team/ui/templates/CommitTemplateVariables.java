@@ -10,27 +10,35 @@
  **************************************************************************/
 package org.eclipse.mylyn.internal.team.ui.templates;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Locale;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
 
 /**
  * @author Eike Stepper
  * @author Mik Kersten
- * 
- *         TODO refactor into extension point
+ * @author Steffen Pingel
  */
+// TODO refactor into extension point 
 public class CommitTemplateVariables {
 
-	public static String implode(List<String> list, String separator) {
+	// TODO refactor completion labels
+	private static final String LABEL_INCOMPLETE = "Incomplete";
+
+	private static final String LABEL_COMPLETE = "Complete";
+
+	private static String implode(String[] list, String separator) {
+		if (list == null) {
+			return null;
+		}
 		StringBuilder builder = new StringBuilder();
 		for (String cc : list) {
 			if (builder.length() != 0) {
@@ -83,10 +91,10 @@ public class CommitTemplateVariables {
 	public static class TaskProduct extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task != null) {
-				return getTaskData(task).getProduct();
+			ITaskMapping taskMapping = getTaskMapping(task);
+			if (taskMapping != null) {
+				return taskMapping.getProduct();
 			}
-
 			return null;
 		}
 	}
@@ -94,10 +102,10 @@ public class CommitTemplateVariables {
 	public static class TaskAssignee extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task != null) {
-				return getTaskData(task).getAssignedTo();
+			ITaskMapping taskMapping = getTaskMapping(task);
+			if (taskMapping != null) {
+				return taskMapping.getOwner();
 			}
-
 			return null;
 		}
 	}
@@ -105,10 +113,10 @@ public class CommitTemplateVariables {
 	public static class TaskReporter extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task != null) {
-				return getTaskData(task).getReporter();
+			ITaskMapping taskMapping = getTaskMapping(task);
+			if (taskMapping != null) {
+				return taskMapping.getReporter();
 			}
-
 			return null;
 		}
 	}
@@ -116,10 +124,10 @@ public class CommitTemplateVariables {
 	public static class TaskResolution extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task != null) {
-				return getTaskData(task).getResolution();
+			ITaskMapping taskMapping = getTaskMapping(task);
+			if (taskMapping != null) {
+				return taskMapping.getResolution();
 			}
-
 			return null;
 		}
 	}
@@ -127,27 +135,32 @@ public class CommitTemplateVariables {
 	public static class TaskStatus extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task != null && getTaskData(task) != null) {
-				return getTaskData(task).getStatus().toUpperCase(Locale.ENGLISH);
-			} else {
-				// TODO: refactor completion labels
-				if (task != null && task.isCompleted()) {
-					return TaskPlanningEditor.LABEL_COMPLETE;
-				} else {
-					return TaskPlanningEditor.LABEL_INCOMPLETE;
+			ITaskMapping taskMapping = getTaskMapping(task);
+			if (taskMapping != null) {
+				String status = taskMapping.getTaskStatus();
+				if (status != null) {
+					return status.toUpperCase(Locale.ENGLISH);
 				}
 			}
+			if (task != null) {
+				if (task.isCompleted()) {
+					return LABEL_COMPLETE;
+				} else {
+					return LABEL_INCOMPLETE;
+				}
+			}
+			return null;
 		}
 	}
 
 	public static class TaskCc extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task != null) {
-				List<String> list = getTaskData(task).getCc();
+			ITaskMapping taskMapping = getTaskMapping(task);
+			if (taskMapping != null) {
+				String[] list = taskMapping.getCc();
 				return implode(list, ", ");
 			}
-
 			return null;
 		}
 	}
@@ -155,22 +168,22 @@ public class CommitTemplateVariables {
 	public static class TaskKeywords extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task != null) {
-				List<String> list = getTaskData(task).getKeywords();
+			ITaskMapping taskMapping = getTaskMapping(task);
+			if (taskMapping != null) {
+				String[] list = getTaskMapping(task).getKeywords();
 				return implode(list, ", ");
 			}
-
 			return null;
 		}
 	}
 
-	public static class TaskLastModified extends AbstractCommitTemplateVariable {
+	public static class TaskLastModified extends CommitTemplateDate {
 		@Override
-		public String getValue(ITask task) {
-			if (task != null) {
-				return getTaskData(task).getLastModified();
+		protected Date getDate(ITask task) {
+			ITaskMapping taskMapping = getTaskMapping(task);
+			if (taskMapping != null) {
+				return taskMapping.getModificationDate();
 			}
-
 			return null;
 		}
 	}
@@ -178,18 +191,21 @@ public class CommitTemplateVariables {
 	public static class TaskSummary extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task != null) {
-				return getTaskData(task).getSummary();
-			} else {
-				return "";
+			ITaskMapping taskMapping = getTaskMapping(task);
+			if (taskMapping != null) {
+				return getTaskMapping(task).getSummary();
 			}
+			return "";
 		}
 	}
 
 	public static class TaskDescription extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			return task.getSummary();
+			if (task != null) {
+				return task.getSummary();
+			}
+			return "";
 		}
 	}
 
@@ -252,14 +268,59 @@ public class CommitTemplateVariables {
 		}
 	}
 
-	public static RepositoryTaskData getTaskData(ITask task) {
-		return TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+	public static ITaskMapping getTaskMapping(ITask task) {
+		if (task != null) {
+			TaskData taskData;
+			try {
+				taskData = TasksUi.getTaskDataManager().getTaskData(task);
+				if (taskData != null) {
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+							task.getConnectorKind());
+					return connector.getTaskMapping(taskData);
+				}
+			} catch (CoreException e) {
+				// ignore
+			}
+		}
+		return null;
 	}
 
 	/**
 	 * @author Eike Stepper
 	 */
-	protected static abstract class CommitTemplateDate extends AbstractCommitTemplateVariable {
+	public static class TaskCompletion extends CommitTemplateDate {
+		@Override
+		protected Date getDate(ITask task) {
+			return task.getCompletionDate();
+		}
+	}
+
+	/**
+	 * @author Eike Stepper
+	 */
+	public static class TaskCreation extends CommitTemplateDate {
+		@Override
+		protected Date getDate(ITask task) {
+			return task.getCreationDate();
+		}
+	}
+
+	/**
+	 * @author Eike Stepper
+	 */
+	public static class TaskReminder extends CommitTemplateDate {
+		@Override
+		protected Date getDate(ITask task) {
+//			 TODO: Hide this field?
+			return ((AbstractTask) task).getScheduledForDate().getStartDate().getTime();
+		}
+	}
+
+	/**
+	 * @author Eike Stepper
+	 */
+	private static abstract class CommitTemplateDate extends AbstractCommitTemplateVariable {
+
 		@Override
 		public String getValue(ITask task) {
 			java.util.Date date = getDate(task);
@@ -272,35 +333,6 @@ public class CommitTemplateVariables {
 
 		protected abstract java.util.Date getDate(ITask task);
 
-		/**
-		 * @author Eike Stepper
-		 */
-		public static class TaskCompletion extends CommitTemplateDate {
-			@Override
-			protected java.util.Date getDate(ITask task) {
-				return task.getCompletionDate();
-			}
-		}
-
-		/**
-		 * @author Eike Stepper
-		 */
-		public static class TaskCreation extends CommitTemplateDate {
-			@Override
-			protected java.util.Date getDate(ITask task) {
-				return task.getCreationDate();
-			}
-		}
-
-		/**
-		 * @author Eike Stepper
-		 */
-		public static class TaskReminder extends CommitTemplateDate {
-			@Override
-			protected java.util.Date getDate(ITask task) {
-//				 TODO: Hide this field?
-				return ((AbstractTask) task).getScheduledForDate().getStartDate().getTime();
-			}
-		}
 	}
+
 }
