@@ -122,7 +122,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected ITask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
 		ITask task = TasksUi.getTasksModel().createTask(repository, taskNumber);
-		task.setStale(true);
+		// FIXME task.setStale(true);
 		TasksUiPlugin.getTaskList().addTask(task);
 		TasksUiInternal.synchronizeTask(connector, task, true, null);
 		TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
