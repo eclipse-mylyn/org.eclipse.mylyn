@@ -474,15 +474,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
-//		try {
-//			monitor.beginTask("", 1);
-//			if (event.isFullSynchronization()) {
-//				event.getTaskRepository().setSynchronizationTimeStamp(
-//						getSynchronizationTimestamp(event.getTaskRepository(), event.getChangedTasks()));
-//			}
-//		} finally {
-//			monitor.done();
-//		}
+		try {
+			monitor.beginTask("", 1);
+			if (event.isFullSynchronization()) {
+				event.getTaskRepository().setSynchronizationTimeStamp(getSynchronizationTimestamp(event));
+			}
+		} finally {
+			monitor.done();
+		}
 	}
 
 	@Override
@@ -516,7 +515,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public TaskRelation[] getTaskRelations(TaskData taskData) {
 		List<TaskRelation> relations = new ArrayList<TaskRelation>();
 		TaskAttribute attribute = taskData.getRoot().getAttribute(BugzillaReportElement.DEPENDSON.getKey());
-		if (attribute != null) {
+		if (attribute != null && attribute.getValue().length() > 0) {
 			for (String taskId : attribute.getValue().split(",")) {
 				relations.add(TaskRelation.subtask(taskId.trim()));
 			}
@@ -524,4 +523,16 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return relations.toArray(new TaskRelation[0]);
 	}
 
+	private String getSynchronizationTimestamp(ISynchronizationSession event) {
+		Date mostRecent = new Date(0);
+		String mostRecentTimeStamp = event.getTaskRepository().getSynchronizationTimeStamp();
+		for (ITask task : event.getChangedTasks()) {
+			Date taskModifiedDate = task.getModificationDate();
+			if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
+				mostRecent = taskModifiedDate;
+				mostRecentTimeStamp = task.getAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE);
+			}
+		}
+		return mostRecentTimeStamp;
+	}
 }

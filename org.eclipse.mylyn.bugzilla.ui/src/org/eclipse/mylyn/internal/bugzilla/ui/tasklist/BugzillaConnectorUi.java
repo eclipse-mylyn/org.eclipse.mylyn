@@ -130,7 +130,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
 		if (query != null && query.getSummary().length() == 0) {
 			wizard.addPage(new BugzillaQueryTypeWizardPage(repository));
-		} else {
+		} else if (query != null) {
 			if (isCustomQuery(query)) {
 				wizard.addPage(new BugzillaCustomQueryWizardPage(repository, query));
 			} else {
