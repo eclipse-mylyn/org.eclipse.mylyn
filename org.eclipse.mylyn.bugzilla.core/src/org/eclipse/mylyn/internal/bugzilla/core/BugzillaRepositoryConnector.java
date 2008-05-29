@@ -14,11 +14,13 @@ import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -39,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 /**
@@ -507,6 +510,18 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		}
 		return true;
+	}
+
+	@Override
+	public TaskRelation[] getTaskRelations(TaskData taskData) {
+		List<TaskRelation> relations = new ArrayList<TaskRelation>();
+		TaskAttribute attribute = taskData.getRoot().getAttribute(BugzillaReportElement.DEPENDSON.getKey());
+		if (attribute != null) {
+			for (String taskId : attribute.getValue().split(",")) {
+				relations.add(TaskRelation.subtask(taskId));
+			}
+		}
+		return relations.toArray(new TaskRelation[0]);
 	}
 
 }
