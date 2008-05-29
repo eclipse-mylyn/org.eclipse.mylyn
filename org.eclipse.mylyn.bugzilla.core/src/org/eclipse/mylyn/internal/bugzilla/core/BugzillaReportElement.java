@@ -87,7 +87,7 @@ public enum BugzillaReportElement {
 
 	KEYWORDS("Keywords:", "keywords", IBugzillaConstants.EDITOR_TYPE_KEYWORDS, false, false),
 
-	LONG_DESC("Description:", "long_desc", TaskAttribute.TYPE_LONG_TEXT, false, false),
+	LONG_DESC("Description:", "long_desc", TaskAttribute.TYPE_LONG_TEXT, true, true),
 
 	LONGDESCLENGTH("Number of comments", "longdesclength", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 

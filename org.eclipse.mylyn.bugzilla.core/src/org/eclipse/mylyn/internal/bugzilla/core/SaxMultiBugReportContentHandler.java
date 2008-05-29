@@ -430,9 +430,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	}
 
 	private void addDescription(String commentText) {
-		TaskAttribute attrDescription = repositoryTaskData.getRoot().createAttribute(TaskAttribute.DESCRIPTION);
+		TaskAttribute attrDescription = BugzillaTaskDataHandler.createAttribute(repositoryTaskData,
+				BugzillaReportElement.LONG_DESC);
 		attrDescription.setValue(commentText);
-		attrDescription.getMetaData().defaults().setReadOnly(true);
+		//attrDescription.getMetaData().setReadOnly(true);
 	}
 
 	private void addComment(TaskComment comment) {

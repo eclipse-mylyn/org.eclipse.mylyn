@@ -10,14 +10,17 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
 /**
@@ -67,5 +70,17 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			}
 		};
 		return factory;
+	}
+
+	@Override
+	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
+		TaskDataModel model = super.createModel(input);
+		if (model.getTaskData().isNew()) {
+			TaskAttribute attrDescription = model.getTaskData().getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
+			if (attrDescription != null) {
+				attrDescription.getMetaData().setReadOnly(false);
+			}
+		}
+		return model;
 	}
 }
