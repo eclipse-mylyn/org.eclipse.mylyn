@@ -98,7 +98,7 @@ public class ContextEditorFormPage extends FormPage {
 		}
 
 		@Override
-		protected void refresh(Object[] items) {
+		protected void doRefresh(Object[] items) {
 			if (commonViewer != null && !commonViewer.getTree().isDisposed()) {
 				commonViewer.refresh();
 				if (items != null) {
@@ -357,7 +357,7 @@ public class ContextEditorFormPage extends FormPage {
 	private void refresh(List<IInteractionElement> elements) {
 		createRefreshJob();
 		if (refreshJob != null) {
-			refreshJob.refresh(elements.toArray());
+			refreshJob.doRefresh(elements.toArray());
 		}
 	}
 

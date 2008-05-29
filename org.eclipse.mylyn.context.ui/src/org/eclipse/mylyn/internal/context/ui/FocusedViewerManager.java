@@ -66,7 +66,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		}
 
 		@Override
-		protected void refresh(Object[] items) {
+		protected void doRefresh(Object[] items) {
 
 			if (viewer == null) {
 				return;
