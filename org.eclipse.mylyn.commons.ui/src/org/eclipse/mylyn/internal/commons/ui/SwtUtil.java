@@ -29,13 +29,7 @@ public class SwtUtil {
 
 	public static final int FADE_OUT_INCREMENT = -20;
 
-	/**
-	 * API-3.0: get rid of reflection on 3.4 branch
-	 * 
-	 * @param shell
-	 * @param value
-	 * @return boolean
-	 */
+	// TODO e3.4 get rid of reflection on 3.4 branch
 	public static boolean setAlpha(Shell shell, int value) {
 		Method method = null;
 		try {
@@ -50,12 +44,7 @@ public class SwtUtil {
 		}
 	}
 
-	/**
-	 * API-3.0: get rid of reflection on 3.4 branch
-	 * 
-	 * @param shell
-	 * @return int
-	 */
+	// TODO e3.4 get rid of reflection on 3.4 branch
 	public static int getAlpha(Shell shell) {
 		Method method = null;
 		try {
@@ -79,14 +68,7 @@ public class SwtUtil {
 		return new FadeJob(shell, FADE_OUT_INCREMENT, FADE_RESCHEDULE_DELAY, listener);
 	}
 
-	/**
-	 * API-3.0: get rid of reflection on 3.4 branch
-	 * 
-	 * @param shell
-	 * @param fadeIn
-	 * @param increment
-	 * @param speed
-	 */
+	// TODO e3.4 get rid of reflection on 3.4 branch
 	public static void fade(Shell shell, boolean fadeIn, int increment, int speed) {
 		try {
 			Method method = shell.getClass().getMethod("setAlpha", new Class[] { int.class });
