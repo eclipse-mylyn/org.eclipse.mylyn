@@ -33,8 +33,10 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 		Assert.isNotNull(context);
 		switch (context.getKind()) {
 		case SAVE:
-			ContextCorePlugin.getContextManager().saveActivityMetaContext();
-			setDirty(false);
+			if (ContextCorePlugin.getDefault() != null && ContextCorePlugin.getContextManager() != null) {
+				ContextCorePlugin.getContextManager().saveActivityMetaContext();
+				setDirty(false);
+			}
 			break;
 		case LOAD:
 			ContextCorePlugin.getContextManager().loadActivityMetaContext();

@@ -8,13 +8,17 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.Assert;
@@ -138,6 +142,8 @@ public final class TaskRepository extends PlatformObject {
 	// Platform.add/get/flushAuthorizationInfo()
 	private static final Object LOCK = new Object();
 
+	private final Set<PropertyChangeListener> propertyChangeListeners = new HashSet<PropertyChangeListener>();
+
 	// HACK: private credentials for headless operation
 	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
 
@@ -191,8 +197,8 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	@Deprecated
 	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
-		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
-		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);
+		setProperty(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
+		setProperty(IRepositoryConstants.PROPERTY_URL, serverUrl);
 		this.properties.putAll(properties);
 		// use platform proxy by default (headless will need to set this to false)
 		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
@@ -211,11 +217,11 @@ public final class TaskRepository extends PlatformObject {
 	public TaskRepository(String connectorKind, String repositoryUrl, String version, String encoding, String timeZoneId) {
 		Assert.isNotNull(connectorKind);
 		Assert.isNotNull(repositoryUrl);
-		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, connectorKind);
-		this.properties.put(IRepositoryConstants.PROPERTY_URL, repositoryUrl);
-		this.properties.put(IRepositoryConstants.PROPERTY_VERSION, version);
-		this.properties.put(IRepositoryConstants.PROPERTY_ENCODING, encoding);
-		this.properties.put(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId);
+		setProperty(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, connectorKind);
+		setProperty(IRepositoryConstants.PROPERTY_URL, repositoryUrl);
+		setProperty(IRepositoryConstants.PROPERTY_VERSION, version);
+		setProperty(IRepositoryConstants.PROPERTY_ENCODING, encoding);
+		setProperty(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId);
 		// use platform proxy by default (headless will need to set this to false)
 		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
 
@@ -716,10 +722,6 @@ public final class TaskRepository extends PlatformObject {
 		properties.put(OFFLINE, String.valueOf(offline));
 	}
 
-	public void setProperty(String name, String value) {
-		this.properties.put(name, value);
-	}
-
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} instead
 	 */
@@ -729,7 +731,7 @@ public final class TaskRepository extends PlatformObject {
 	}
 
 	public void setRepositoryLabel(String repositoryLabel) {
-		this.properties.put(IRepositoryConstants.PROPERTY_LABEL, repositoryLabel);
+		setProperty(IRepositoryConstants.PROPERTY_LABEL, repositoryLabel);
 	}
 
 	/**
@@ -737,11 +739,24 @@ public final class TaskRepository extends PlatformObject {
 	 * date);
 	 */
 	public void setSynchronizationTimeStamp(String syncTime) {
-		this.properties.put(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP, syncTime);
+		setProperty(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP, syncTime);
+	}
+
+	public void setProperty(String key, String value) {
+		String old = this.properties.get(key);
+		this.properties.put(key, value);
+		notifyChangeListeners(key, old, value);
+	}
+
+	private void notifyChangeListeners(String key, String old, String value) {
+		PropertyChangeEvent event = new PropertyChangeEvent(this, key, old, value);
+		for (PropertyChangeListener listener : propertyChangeListeners) {
+			listener.propertyChange(event);
+		}
 	}
 
 	public void setTimeZoneId(String timeZoneId) {
-		this.properties.put(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId == null ? TimeZone.getDefault().getID()
+		setProperty(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId == null ? TimeZone.getDefault().getID()
 				: timeZoneId);
 	}
 
@@ -805,4 +820,17 @@ public final class TaskRepository extends PlatformObject {
 		this.errorStatus = errorStatus;
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	public void addChangeListener(PropertyChangeListener listener) {
+		propertyChangeListeners.add(listener);
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public void removeChangeListener(PropertyChangeListener listener) {
+		propertyChangeListeners.remove(listener);
+	}
 }

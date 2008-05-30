@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,8 +26,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -55,6 +57,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 	public static final String MESSAGE_NO_REPOSITORY = "No repository available, please add one using the Task Repositories view.";
 
 	public static final String PREFIX_LOCAL = "local-";
+
+	private final PropertyChangeListener PROPERTY_CHANGE_LISTENER = new PropertyChangeListener() {
+
+		public void propertyChange(PropertyChangeEvent evt) {
+			TaskRepositoryManager.this.notifyRepositorySettingsChanged((TaskRepository) evt.getSource());
+		}
+	};
 
 	private final TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 
@@ -93,6 +102,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 			repositories = repositoryMap.get(repository.getConnectorKind());
 		}
 		repositories.add(repository);
+		repository.addChangeListener(PROPERTY_CHANGE_LISTENER);
 		for (IRepositoryListener listener : listeners) {
 			listener.repositoryAdded(repository);
 		}
@@ -104,6 +114,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 			repository.flushAuthenticationCredentials();
 			repositories.remove(repository);
 		}
+		repository.removeChangeListener(PROPERTY_CHANGE_LISTENER);
 		saveRepositories(repositoryFilePath);
 		for (IRepositoryListener listener : listeners) {
 			listener.repositoryRemoved(repository);
@@ -256,6 +267,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 
 					if (repositoryMap.containsKey(repository.getConnectorKind())) {
 						repositoryMap.get(repository.getConnectorKind()).add(repository);
+						repository.addChangeListener(PROPERTY_CHANGE_LISTENER);
 					} else {
 						orphanedRepositories.add(repository);
 					}
