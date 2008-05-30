@@ -73,8 +73,9 @@ class TaskListCellModifier implements ICellModifier {
 				return;
 			}
 			columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
-			if (((TreeItem) element).getData() instanceof AbstractTask) {
-				AbstractTask task = (AbstractTask) ((TreeItem) element).getData();
+			Object data = ((TreeItem) element).getData();
+			if (data instanceof AbstractTask) {
+				AbstractTask task = (AbstractTask) data;
 				switch (columnIndex) {
 				case 0:
 					if (task != null) {
@@ -88,9 +89,8 @@ class TaskListCellModifier implements ICellModifier {
 					toggleTaskActivation((TreeItem) element);
 					break;
 				}
-			} else if (((TreeItem) element).getData() instanceof AbstractTaskCategory
-					|| ((TreeItem) element).getData() instanceof IRepositoryQuery) {
-				AbstractTaskContainer container = (AbstractTaskContainer) ((TreeItem) element).getData();
+			} else if (data instanceof AbstractTaskCategory || data instanceof IRepositoryQuery) {
+				AbstractTaskContainer container = (AbstractTaskContainer) data;
 				switch (columnIndex) {
 				case 0:
 					TasksUiPlugin.getTaskListManager()

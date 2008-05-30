@@ -61,6 +61,8 @@ public class AttributeEditorFactory {
 			return new SingleSelectionAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
 			return new TaskDependendyAttributeEditor(model, taskAttribute, taskRepository);
+		} else if (TaskAttribute.TYPE_URL.equals(type)) {
+			return new RichTextAttributeEditor(model, taskRepository, taskAttribute, SWT.SINGLE);
 		}
 
 		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\"");

@@ -560,23 +560,14 @@ public class TaskList implements ITaskList {
 	public void renameContainer(AbstractTaskContainer container, String newDescription) {
 		Assert.isLegal(!(container instanceof ITask));
 		Assert.isLegal(!(container instanceof UnmatchedTaskContainer));
-
 		try {
 			lock();
-
-			if (queries.remove(container.getHandleIdentifier()) != null) {
-				if (container instanceof AbstractTaskCategory) {
-					((AbstractTaskCategory) container).setHandleIdentifier(newDescription);
-				} else if (container instanceof IRepositoryQuery) {
-					((RepositoryQuery) container).setHandleIdentifier(newDescription);
-					queries.put(((RepositoryQuery) container).getHandleIdentifier(), ((RepositoryQuery) container));
-				}
-			} else if (container instanceof TaskCategory && categories.remove(container.getHandleIdentifier()) != null) {
-				((TaskCategory) container).setHandleIdentifier(newDescription);
-				categories.put(((TaskCategory) container).getHandleIdentifier(), (TaskCategory) container);
+			if (container instanceof TaskCategory) {
+				((TaskCategory) container).setSummary(newDescription);
+			} else if (container instanceof RepositoryQuery) {
+				((RepositoryQuery) container).setSummary(newDescription);
 			}
-			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.REMOVED));
-			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.ADDED));
+			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CONTENT));
 		} finally {
 			unlock();
 		}

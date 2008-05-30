@@ -13,9 +13,7 @@ package org.eclipse.mylyn.internal.tasks.core;
  * in one category at a time).
  * 
  * @author Mik Kersten
- * @since 2.0
  */
-//API 3.0 move to internal package
 public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 
 	public AbstractTaskCategory(String handleAndDescription) {

@@ -14,14 +14,15 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
- * NOTE: this class is likely to change or become API for 3.0
- * 
  * @author Mik Kersten
  */
 public final class TaskCategory extends AbstractTaskCategory {
 
+	private String summary;
+
 	public TaskCategory(String handleAndDescription) {
 		super(handleAndDescription);
+		setSummary(handleAndDescription);
 	}
 
 	/**
@@ -37,6 +38,15 @@ public final class TaskCategory extends AbstractTaskCategory {
 			}
 		}
 		return category;
+	}
+
+	@Override
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 
 }
