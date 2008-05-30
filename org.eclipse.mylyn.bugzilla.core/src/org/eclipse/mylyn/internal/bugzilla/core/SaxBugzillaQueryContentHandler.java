@@ -62,6 +62,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			switch (tag) {
 			case ID:
 				taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, repositoryUrl, parsedText);
+				taskData.setPartial(true);
 				break;
 			case LI:
 				if (taskData != null) {
