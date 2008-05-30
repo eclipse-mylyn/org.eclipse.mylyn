@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
@@ -79,8 +80,7 @@ public class TaskListManager {
 		try {
 			TasksUiPlugin.getDefault().reloadDataDirectory();
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			StatusHandler.fail(e.getStatus());
 		}
 		return true;
 	}

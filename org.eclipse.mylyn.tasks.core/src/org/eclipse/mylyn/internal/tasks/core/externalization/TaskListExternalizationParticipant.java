@@ -13,10 +13,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -67,38 +64,10 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 	public void load(String rootPath, IProgressMonitor monitor) throws CoreException {
 		final File taskListFile = getFile(rootPath);
 		ITaskListRunnable loadRunnable = new ITaskListRunnable() {
-
 			public void execute(IProgressMonitor monitor) throws CoreException {
-				try {
-					resetAndLoad();
-				} catch (CoreException e) {
-					if (recover()) {
-						resetAndLoad();
-					} else {
-						throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-								"Unable to load Task List", e));
-					}
-				}
-			}
-
-			private void resetAndLoad() throws CoreException {
 				resetTaskList();
 				taskListWriter.readTaskList(taskList, taskListFile);
-
-				// TODO: fire ROOT event
 			}
-
-			private boolean recover() {
-				if (restoreSnapshot(taskListFile)) {
-					StatusHandler.log(new Status(IStatus.INFO, ITasksCoreConstants.ID_PLUGIN,
-							"Task List recovered from snapshot"));
-					return true;
-				} else {
-					return false;
-				}
-
-			}
-
 		};
 
 		taskList.run(loadRunnable, monitor);
@@ -124,11 +93,6 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 	@Override
 	public void save(String rootPath, IProgressMonitor monitor) throws CoreException {
 		final File taskListFile = getFile(rootPath);
-
-		if (!takeSnapshot(taskListFile)) {
-			StatusHandler.fail(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Task List snapshot failed"));
-		}
-
 		ITaskListRunnable saveRunnable = new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				taskListWriter.writeTaskList(taskList, taskListFile);

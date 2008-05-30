@@ -94,7 +94,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			if (dateString == null) {
 				super.setDateValue(attribute, date);
 			} else {
-				attribute.setValue(Long.toString(date.getTime()));
+				attribute.setValue(dateString);
 			}
 
 		} else {

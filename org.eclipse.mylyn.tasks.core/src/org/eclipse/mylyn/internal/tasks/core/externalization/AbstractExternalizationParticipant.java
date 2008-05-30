@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -17,8 +16,6 @@ import java.util.Locale;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -62,21 +59,33 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 	}
 
 	protected boolean takeSnapshot(File file) {
-		File originalFile = file.getAbsoluteFile();
-		File backup = new File(file.getParentFile(), SNAPSHOT_PREFIX + file.getName());
-		backup.delete();
-		return originalFile.renameTo(backup);
+		if (file.length() > 0) {
+			File originalFile = file.getAbsoluteFile();
+			File backup = new File(file.getParentFile(), SNAPSHOT_PREFIX + file.getName());
+			backup.delete();
+			return originalFile.renameTo(backup);
+		}
+		return false;
 	}
 
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
 		Assert.isNotNull(context);
 		monitor = Policy.monitorFor(monitor);
+		final File dataFile = getFile(context.getRootPath());
 		switch (context.getKind()) {
 		case SAVE:
+			if (dataFile != null) {
+				takeSnapshot(dataFile);
+			}
 			save(context.getRootPath(), monitor);
 			break;
 		case LOAD:
-			load(context.getRootPath(), monitor);
+			try {
+				load(context.getRootPath(), monitor);
+			} catch (CoreException e) {
+				restoreSnapshot(dataFile);
+				load(context.getRootPath(), monitor);
+			}
 			break;
 		case SNAPSHOT:
 			break;
@@ -85,23 +94,25 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 	}
 
 	public File getFile(String rootPath) throws CoreException {
-		String filePath = rootPath + File.separator + getFileName();
-
-		final File file = new File(filePath);
-
-		if (!file.exists()) {
-			try {
-				if (!file.createNewFile()) {
-					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, getDescription()
-							+ " file not found, error creating new file."));
-				}
-			} catch (IOException e) {
-				throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, getDescription()
-						+ " file not found, error creating new file.", e));
-			}
+		String fileName = getFileName();
+		if (fileName != null) {
+			String filePath = rootPath + File.separator + getFileName();
+			return new File(filePath);
 		}
 
-		return file;
+//		if (!file.exists()) {
+//			try {
+//				if (!file.createNewFile()) {
+//					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, getDescription()
+//							+ " file not found, error creating new file."));
+//				}
+//			} catch (IOException e) {
+//				throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, getDescription()
+//						+ " file not found, error creating new file.", e));
+//			}
+//		}
+
+		return null;
 	}
 
 }

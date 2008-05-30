@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
@@ -82,9 +81,6 @@ public class RepositoryExternalizationParticipant extends AbstractExternalizatio
 	@Override
 	public void save(String rootPath, IProgressMonitor monitor) throws CoreException {
 		File repositoriesFile = getFile(rootPath);
-		if (!takeSnapshot(repositoriesFile)) {
-			StatusHandler.fail(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Task List snapshot failed"));
-		}
 		repositoryManager.saveRepositories(repositoriesFile.getAbsolutePath());
 		synchronized (RepositoryExternalizationParticipant.this) {
 			dirty = false;

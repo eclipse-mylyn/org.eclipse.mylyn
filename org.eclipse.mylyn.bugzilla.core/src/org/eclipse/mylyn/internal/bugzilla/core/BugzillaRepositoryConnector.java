@@ -93,27 +93,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			TaskMapper scheme = new TaskMapper(taskData);
 			scheme.applyTo(task);
 
-////			// subtasks
-//			repositoryTask.dropSubTasks();
-//			Set<String> subTaskIds = taskDataHandler.getSubTaskIds(taskData);
-//			if (subTaskIds != null && !subTaskIds.isEmpty()) {
-//				for (String subId : subTaskIds) {
-//					ITask subTask = taskList.getTask(repository.getUrl(), subId);
-////					if (subTask == null && retrieveSubTasks) {
-////						if (!subId.trim().equals(taskData.getId()) && !subId.equals("")) {
-////							try {
-////								subTask = createTaskFromExistingId(repository, subId, false, new NullProgressMonitor());
-////							} catch (CoreException e) {
-////								// ignore
-////							}
-////						}
-////					}
-//					if (subTask != null) {
-//						bugzillaTask.addSubTask(subTask);
-//					}
-//				}
-//			}
-
 			// Completed
 			boolean isComplete = false;
 			// TODO: use repository configuration to determine what -completed-

@@ -291,6 +291,11 @@ public class TaskListExternalizer {
 					"Task list file not found \"" + inFile.getAbsolutePath() + "\""));
 		}
 
+		if (inFile.length() == 0) {
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Task list file contains no data \"" + inFile.getAbsolutePath() + "\""));
+		}
+
 		Document doc;
 		doc = openAsDOM(inFile);
 
