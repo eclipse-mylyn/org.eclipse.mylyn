@@ -16,6 +16,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -48,8 +51,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.ImageTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -71,12 +74,37 @@ public class TaskAttachmentWizard extends Wizard {
 			Clipboard clipboard = new Clipboard(display);
 			TransferData[] types = clipboard.getAvailableTypes();
 			for (TransferData transferData : types) {
-				if (ImageTransfer.getInstance().isSupportedType(transferData)
-						|| TextTransfer.getInstance().isSupportedType(transferData)) {
-					return true;
+				List<Transfer> transfers = getTransfers();
+				for (Transfer transfer : transfers) {
+					if (transfer.isSupportedType(transferData)) {
+						return true;
+					}
 				}
 			}
 			return false;
+		}
+
+		private static List<Transfer> transfers;
+
+		private static List<Transfer> getTransfers() {
+			if (transfers != null) {
+				return transfers;
+			}
+
+			transfers = new ArrayList<Transfer>();
+			try {
+				Class<?> clazz = Class.forName("org.eclipse.swt.dnd.ImageTransfer");
+				Method method = clazz.getMethod("getInstance");
+				if (method != null) {
+					transfers.add((Transfer) method.invoke(null));
+				}
+			} catch (Exception e) {
+				// ignore
+			} catch (LinkageError e) {
+				// ignore
+			}
+			transfers.add(TextTransfer.getInstance());
+			return transfers;
 		}
 
 		private Object contents;
@@ -85,9 +113,12 @@ public class TaskAttachmentWizard extends Wizard {
 			BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
 				public void run() {
 					Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-					contents = clipboard.getContents(ImageTransfer.getInstance());
-					if (contents == null) {
-						contents = clipboard.getContents(TextTransfer.getInstance());
+					List<Transfer> transfers = getTransfers();
+					for (Transfer transfer : transfers) {
+						contents = clipboard.getContents(transfer);
+						if (contents != null) {
+							break;
+						}
 					}
 					clipboard.dispose();
 				}

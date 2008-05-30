@@ -109,9 +109,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		return query;
 	}
 
-	public void applyTo(IRepositoryQuery query) {
-		throw new UnsupportedOperationException();
-	}
+	public abstract void applyTo(IRepositoryQuery query);
 
 	public void saveState() {
 		// empty

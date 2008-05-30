@@ -762,4 +762,9 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return (titleText != null) ? titleText.getText() : null;
 	}
 
+	@Override
+	public void applyTo(IRepositoryQuery query) {
+		throw new UnsupportedOperationException();
+	}
+
 }

@@ -564,6 +564,11 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			return null;
 		}
 
+		@Override
+		public void applyTo(IRepositoryQuery query) {
+			// ignore			
+		}
+
 	}
 
 	private class NoSearchPage extends AbstractRepositoryQueryPage {
@@ -599,6 +604,11 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		@Override
 		public String getQueryTitle() {
 			return null;
+		}
+
+		@Override
+		public void applyTo(IRepositoryQuery query) {
+			// ignore
 		}
 
 	}

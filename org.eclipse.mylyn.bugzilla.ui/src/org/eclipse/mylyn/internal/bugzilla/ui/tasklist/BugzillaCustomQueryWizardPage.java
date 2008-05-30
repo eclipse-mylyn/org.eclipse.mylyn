@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -40,7 +39,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
 	private Text queryText;
 
-	private IRepositoryQuery query;
+	private final IRepositoryQuery query;
 
 	private Text queryTitle;
 
@@ -112,23 +111,10 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	}
 
 	@Override
-	public IRepositoryQuery getQuery() {
-		if (query == null) {
-			query = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), queryText.getText(),
-					this.getQueryTitle());
-			setCustomQuery(true);
-		} else {
-			query.setSummary(this.getQueryTitle());
-			query.setUrl(queryText.getText());
-		}
-		return query;
-	}
-
-	private void setCustomQuery(boolean b) {
-		if (query != null) {
-			query.setAttribute(IBugzillaConstants.ATTRIBUTE_BUGZILLA_QUERY_CUSTOM, Boolean.toString(b));
-		}
-
+	public void applyTo(IRepositoryQuery query) {
+		query.setSummary(this.getQueryTitle());
+		query.setUrl(queryText.getText());
+		query.setAttribute(IBugzillaConstants.ATTRIBUTE_BUGZILLA_QUERY_CUSTOM, Boolean.TRUE.toString());
 	}
 
 }

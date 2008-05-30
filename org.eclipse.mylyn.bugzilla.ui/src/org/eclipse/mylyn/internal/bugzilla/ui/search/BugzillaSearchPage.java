@@ -34,7 +34,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
@@ -1659,19 +1658,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 			}
 		}
-	}
-
-	@Override
-	public IRepositoryQuery getQuery() {
-		if (originalQuery == null) {
-			originalQuery = new BugzillaRepositoryQuery(getTaskRepository().getRepositoryUrl(), getQueryURL(
-					getTaskRepository(), getQueryParameters()), getQueryTitle());
-
-		} else {
-			originalQuery.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
-			originalQuery.setSummary(getQueryTitle());
-		}
-		return originalQuery;
 	}
 
 	private String[] nonNullArray(IDialogSettings settings, String id) {
