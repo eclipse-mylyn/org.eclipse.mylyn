@@ -291,7 +291,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						repository.getConnectorKind());
 				if (connector instanceof AbstractLegacyRepositoryConnector) {
 					AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
-					if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
+					if (connectorUi != null && !connectorUi.hasCustomNotifications()) {
 						for (ITask itask : TasksUiPlugin.getTaskList().getTasks(repository.getRepositoryUrl())) {
 							if (itask instanceof AbstractTask) {
 								AbstractTask task = (AbstractTask) itask;
@@ -315,7 +315,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							repository.getConnectorKind());
 					if (connector instanceof AbstractLegacyRepositoryConnector) {
 						AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getConnectorKind());
-						if (!connectorUi.isCustomNotificationHandling()) {
+						if (!connectorUi.hasCustomNotifications()) {
 							for (ITask hit : query.getChildren()) {
 								if (((AbstractTask) hit).isNotified() == false) {
 									notifications.add(new TaskListNotificationQueryIncoming(hit));
@@ -881,7 +881,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		if (element instanceof ITask) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((ITask) element).getConnectorKind());
 			if (connectorUi != null) {
-				if (connectorUi.forceSubtaskHierarchy()) {
+				if (connectorUi.hasStrictSubtaskHierarchy()) {
 					groupSubtasks = true;
 				}
 			}
@@ -890,7 +890,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		if (element instanceof IRepositoryQuery) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(((IRepositoryQuery) element).getConnectorKind());
 			if (connectorUi != null) {
-				if (connectorUi.forceSubtaskHierarchy()) {
+				if (connectorUi.hasStrictSubtaskHierarchy()) {
 					groupSubtasks = true;
 				}
 			}

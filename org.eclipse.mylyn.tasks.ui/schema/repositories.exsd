@@ -147,33 +147,6 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="type" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute deprecated="true"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="userManaged" type="boolean">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute deprecated="true"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="kind" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
       </complexType>
    </element>
 
@@ -225,16 +198,6 @@
                </documentation>
                <appinfo>
                   <meta.attribute kind="resource"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="customNotifications" type="boolean">
-            <annotation>
-               <documentation>
-                  Allows a connector to turn off notifications for incoming and query hits for their task types.
-               </documentation>
-               <appinfo>
-                  <meta.attribute deprecated="true"/>
                </appinfo>
             </annotation>
          </attribute>

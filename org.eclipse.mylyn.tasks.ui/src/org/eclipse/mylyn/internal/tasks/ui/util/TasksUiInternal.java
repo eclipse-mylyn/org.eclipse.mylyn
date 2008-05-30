@@ -54,6 +54,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
@@ -64,6 +65,7 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -748,6 +750,39 @@ public class TasksUiInternal {
 		TaskEditorInput editorInput = new TaskEditorInput(localTaskRepository, task);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
+	}
+
+	/**
+	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
+	 * falling back to the web browser if not available.
+	 * 
+	 * @return true if the task was successfully opened
+	 */
+	// API 3.0 review, move to tasks ui
+	public static boolean openRepositoryTask(String connectorKind, String repositoryUrl, String id) {
+		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
+		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
+		String taskUrl = connector.getTaskUrl(repositoryUrl, id);
+		if (taskUrl == null) {
+			return false;
+		}
+
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window == null) {
+			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+			if (windows != null && windows.length > 0) {
+				window = windows[0];
+			}
+		}
+		if (window == null) {
+			return false;
+		}
+		IWorkbenchPage page = window.getActivePage();
+
+		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(connectorKind, repositoryUrl, id, taskUrl, page);
+		job.schedule();
+
+		return true;
 	}
 
 }

@@ -394,12 +394,12 @@ public class TasksUiUtil {
 		if (connector != null) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
 			if (repositoryUrl != null && taskId != null) {
-				opened = connectorUi.openRepositoryTask(repositoryUrl, taskId);
+				opened = TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(), repositoryUrl, taskId);
 			} else {
 				repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
 				taskId = connector.getTaskIdFromTaskUrl(fullUrl);
 				if (repositoryUrl != null && taskId != null) {
-					opened = connectorUi.openRepositoryTask(repositoryUrl, taskId);
+					opened = TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(), repositoryUrl, taskId);
 				}
 			}
 		}
@@ -445,7 +445,8 @@ public class TasksUiUtil {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 			if (connectorUi != null) {
 				try {
-					return connectorUi.openRepositoryTask(repository.getRepositoryUrl(), taskId);
+					return TasksUiInternal.openRepositoryTask(connectorUi.getConnectorKind(),
+							repository.getRepositoryUrl(), taskId);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 							"Internal error while opening repository task", e));

@@ -348,9 +348,8 @@ public class TasksUiExtensionReader {
 
 	private static void readRepositoryConnectorCore(IConfigurationElement element) {
 		try {
-			Object type = element.getAttribute(ELMNT_TYPE);
 			Object connectorCore = element.createExecutableExtension(ATTR_CLASS);
-			if (connectorCore instanceof AbstractRepositoryConnector && type != null) {
+			if (connectorCore instanceof AbstractRepositoryConnector) {
 				AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) connectorCore;
 				TasksUiPlugin.getRepositoryManager().addRepositoryConnector(repositoryConnector);
 				if (repositoryConnector instanceof AbstractLegacyRepositoryConnector) {

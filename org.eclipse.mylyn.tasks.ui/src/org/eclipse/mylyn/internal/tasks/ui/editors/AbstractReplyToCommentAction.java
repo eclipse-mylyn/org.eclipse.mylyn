@@ -43,7 +43,7 @@ public abstract class AbstractReplyToCommentAction extends Action {
 
 	public static void reply(AbstractTaskEditorPage editor, ITaskComment taskComment, String text) {
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(editor.getConnectorKind());
-		String reference = connectorUi.getReply(editor.getTaskRepository(), editor.getTask(), taskComment, false);
+		String reference = connectorUi.getReplyText(editor.getTaskRepository(), editor.getTask(), taskComment, false);
 		StringBuilder sb = new StringBuilder();
 		sb.append(reference);
 		sb.append("\n");

@@ -114,7 +114,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			}
 
 			if (connectorUi != null) {
-				compositeDescriptor.icon = connectorUi.getTaskListElementIcon(element);
+				compositeDescriptor.icon = connectorUi.getImageDescriptor(element);
 				return compositeDescriptor;
 			} else {
 				if (element instanceof UnmatchedTaskContainer) {

@@ -16,11 +16,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
@@ -32,9 +29,6 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * Extend to provide connector-specific UI extensions.
@@ -123,7 +117,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 
 	 * @since 3.0
 	 */
-	public ImageDescriptor getTaskListElementIcon(IRepositoryElement element) {
+	public ImageDescriptor getImageDescriptor(IRepositoryElement element) {
 		if (element instanceof IRepositoryQuery) {
 			return TasksUiImages.QUERY;
 		} else if (element instanceof ITask) {
@@ -184,7 +178,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Override to return a URL that provides the user with a history page for the task
+	 * Override to return a URL that provides the user with a history page for the task.
 	 * 
 	 * @return a url of a page for the history of the task; null, if no history url is available
 	 * @since 3.0
@@ -200,41 +194,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @return a reference to <code>comment</code>; null, if no reference is available
 	 * @since 3.0
 	 */
-	public String getReply(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
+	public String getReplyText(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
 		return null;
-	}
-
-	/**
-	 * Only override if task should be opened by a custom editor, default behavior is to open with a rich editor,
-	 * falling back to the web browser if not available.
-	 * 
-	 * @return true if the task was successfully opened
-	 */
-	// API 3.0 review, move to tasks ui
-	public boolean openRepositoryTask(String repositoryUrl, String id) {
-		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
-		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getConnectorKind());
-		String taskUrl = connector.getTaskUrl(repositoryUrl, id);
-		if (taskUrl == null) {
-			return false;
-		}
-
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window == null) {
-			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-			if (windows != null && windows.length > 0) {
-				window = windows[0];
-			}
-		}
-		if (window == null) {
-			return false;
-		}
-		IWorkbenchPage page = window.getActivePage();
-
-		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(getConnectorKind(), repositoryUrl, id, taskUrl, page);
-		job.schedule();
-
-		return true;
 	}
 
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
@@ -249,13 +210,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @since 3.0
 	 */
-	public boolean hasCustomNotificationHandling() {
-		return customNotificationHandling;
-	}
-
-	// API-3.0: delete
-	@Deprecated
-	public boolean isCustomNotificationHandling() {
+	public boolean hasCustomNotifications() {
 		return customNotificationHandling;
 	}
 
@@ -267,15 +222,11 @@ public abstract class AbstractRepositoryConnectorUi {
 		return false;
 	}
 
-	public String getKindLabel(String kindLabel) {
-		return null;
-	}
-
 	/**
-	 * @since 2.1
+	 * @since 3.0
 	 * @return true if connector doesn't support non-grouping (flattening) of subtasks
 	 */
-	public boolean forceSubtaskHierarchy() {
+	public boolean hasStrictSubtaskHierarchy() {
 		return false;
 	}
 

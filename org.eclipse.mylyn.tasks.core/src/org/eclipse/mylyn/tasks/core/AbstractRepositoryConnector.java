@@ -235,6 +235,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
+	@Deprecated
 	public boolean hasCapability(Capability capability, TaskRepository taskRepository, ITask task,
 			ICapabilityContext context) {
 		return false;

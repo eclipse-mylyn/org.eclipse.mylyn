@@ -10,8 +10,7 @@
       <connectorCore
             class="org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector"
             id="org.eclipse.mylyn.tasks.tests.repositories"
-            name="Mock Repository Client"
-            type="mock"/>
+            name="Mock Repository Client"/>
       
       <taskListFactory 
             class="org.eclipse.mylyn.tasks.tests.connector.MockTaskListFactory"

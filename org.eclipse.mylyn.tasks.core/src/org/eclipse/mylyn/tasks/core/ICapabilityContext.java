@@ -14,6 +14,7 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
  * @author Steffen Pingel
  * @since 3.0
  */
+@Deprecated
 public interface ICapabilityContext {
 
 	public abstract ITaskDataManager getTaskDataManager();

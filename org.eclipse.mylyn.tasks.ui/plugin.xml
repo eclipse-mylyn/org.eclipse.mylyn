@@ -1104,8 +1104,7 @@
       <connectorCore
             class="org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector"
             id="org.eclipse.mylyn.tasks.connector.local"
-            name="Local Repository Connector"
-            type="local"/>            
+            name="Local Repository Connector"/>            
       <connectorUi
             brandingIcon="icons/etool16/person.gif"
             class="org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryConnectorUi"
