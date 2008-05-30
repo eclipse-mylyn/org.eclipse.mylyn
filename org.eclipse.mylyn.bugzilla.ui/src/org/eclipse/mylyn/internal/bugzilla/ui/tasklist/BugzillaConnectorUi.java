@@ -128,9 +128,9 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
 		RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
-		if (query != null && query.getSummary().length() == 0) {
+		if (query == null) {
 			wizard.addPage(new BugzillaQueryTypeWizardPage(repository));
-		} else if (query != null) {
+		} else {
 			if (isCustomQuery(query)) {
 				wizard.addPage(new BugzillaCustomQueryWizardPage(repository, query));
 			} else {
