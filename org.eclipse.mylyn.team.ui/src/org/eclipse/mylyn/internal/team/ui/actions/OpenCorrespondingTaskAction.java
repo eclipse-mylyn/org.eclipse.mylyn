@@ -35,7 +35,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -322,7 +321,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					boolean openDialog = MessageDialog.openQuestion(window.getShell(), ITasksUiConstants.TITLE_DIALOG,
+					boolean openDialog = MessageDialog.openQuestion(window.getShell(), "Open Task",
 							"Unable to match task. Open Repository Task dialog?");
 					if (openDialog) {
 						new OpenRepositoryTask().run(null);

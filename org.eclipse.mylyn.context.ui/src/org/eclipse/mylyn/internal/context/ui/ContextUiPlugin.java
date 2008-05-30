@@ -192,8 +192,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 						&& org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil.hasContext(repository, task)) {
 					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
-							.getShell(), ITasksUiConstants.TITLE_DIALOG,
-							"No local task context exists.  Retrieve from repository?");
+							.getShell(), "Task Activation", "No local task context exists.  Retrieve from repository?");
 					if (getRemote) {
 						new org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction().run(task);
 					}

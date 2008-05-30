@@ -17,7 +17,6 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.ui.commands.AbstractTaskHandler;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.PlatformUI;
 
@@ -32,7 +31,7 @@ public class CopyContextHandler extends AbstractTaskHandler {
 	protected void execute(ExecutionEvent event, ITask sourceTask) throws ExecutionException {
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					ITasksUiConstants.TITLE_DIALOG, "No source task selected.");
+					TITLE_DIALOG, "No source task selected.");
 			return;
 		}
 
