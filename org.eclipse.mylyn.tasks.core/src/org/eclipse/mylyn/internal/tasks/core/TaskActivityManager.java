@@ -328,6 +328,9 @@ public class TaskActivityManager implements ITaskActivityManager {
 	}
 
 	public void addDueTask(ITask task) {
+		if (task.getDueDate() == null) {
+			return;
+		}
 		Calendar time = TaskActivityUtil.getCalendar();
 		time.setTime(task.getDueDate());
 		snapToStartOfHour(time);
