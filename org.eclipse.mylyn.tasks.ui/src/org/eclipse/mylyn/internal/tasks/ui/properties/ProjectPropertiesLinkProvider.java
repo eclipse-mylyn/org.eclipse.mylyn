@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.osgi.service.prefs.BackingStoreException;
@@ -36,7 +36,7 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 	private static final String PROJECT_REPOSITORY_URL = PROPERTY_PREFIX + ".url";
 
 	@Override
-	public TaskRepository getTaskRepository(IResource resource, ITaskRepositoryManager repositoryManager) {
+	public TaskRepository getTaskRepository(IResource resource, IRepositoryManager repositoryManager) {
 		IProject project = resource.getProject();
 		if (project == null || !project.isAccessible()) {
 			return null;

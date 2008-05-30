@@ -12,18 +12,29 @@ package org.eclipse.mylyn.tasks.core;
  * Notified of change to the lifecycle of task repositories.
  * 
  * @author Mik Kersten
- * @since 2.0
+ * @since 3.0
  */
-// API 3.0 rename to ITaskRepositoryManagerListener
-public interface ITaskRepositoryListener {
+public interface IRepositoryListener {
 
-	// API 3.0 remove?
-	public abstract void repositoriesRead();
-
+	/**
+	 * A task repository has been added.
+	 * 
+	 * @since 3.0
+	 */
 	public abstract void repositoryAdded(TaskRepository repository);
 
+	/**
+	 * A task repository has been removed.
+	 * 
+	 * @since 3.0
+	 */
 	public abstract void repositoryRemoved(TaskRepository repository);
 
+	/**
+	 * The settings of a repository have been updated.
+	 * 
+	 * @since 3.0
+	 */
 	public abstract void repositorySettingsChanged(TaskRepository repository);
 
 	/**

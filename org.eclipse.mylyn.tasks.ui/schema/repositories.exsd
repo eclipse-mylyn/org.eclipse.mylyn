@@ -152,6 +152,9 @@
                <documentation>
                   
                </documentation>
+               <appinfo>
+                  <meta.attribute deprecated="true"/>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="userManaged" type="boolean">
@@ -162,6 +165,13 @@
                <appinfo>
                   <meta.attribute deprecated="true"/>
                </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="kind" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

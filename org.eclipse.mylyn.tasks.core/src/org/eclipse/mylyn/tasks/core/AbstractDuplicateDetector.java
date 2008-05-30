@@ -21,9 +21,9 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public abstract class AbstractDuplicateDetector {
 
-	protected String name;
+	private String name;
 
-	protected String connectorKind;
+	private String connectorKind;
 
 	public abstract IRepositoryQuery getDuplicatesQuery(TaskRepository repository, TaskData taskData)
 			throws CoreException;

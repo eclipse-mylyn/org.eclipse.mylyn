@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
+import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -26,7 +26,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @since 3.0
  */
 public class RepositoryExternalizationParticipant extends AbstractExternalizationParticipant implements
-		ITaskRepositoryListener {
+		IRepositoryListener {
 
 	private static final String DESCRIPTION = "Task Repositories";
 

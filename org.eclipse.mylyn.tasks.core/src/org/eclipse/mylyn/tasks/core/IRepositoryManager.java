@@ -16,9 +16,9 @@ import java.util.Set;
  * @author Steffen Pingel
  * @since 3.0
  */
-public interface ITaskRepositoryManager {
+public interface IRepositoryManager {
 
-	public abstract void addListener(ITaskRepositoryListener listener);
+	public abstract void addListener(IRepositoryListener listener);
 
 	public abstract void addRepository(TaskRepository repository);
 
@@ -32,6 +32,6 @@ public interface ITaskRepositoryManager {
 
 	public abstract Collection<AbstractRepositoryConnector> getRepositoryConnectors();
 
-	public abstract void removeListener(ITaskRepositoryListener listener);
+	public abstract void removeListener(IRepositoryListener listener);
 
 }

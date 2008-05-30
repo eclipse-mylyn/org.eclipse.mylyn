@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
@@ -34,7 +34,7 @@ public class TaskDataStore {
 
 	private final TaskDataExternalizer externalizer;
 
-	public TaskDataStore(ITaskRepositoryManager taskRepositoryManager) {
+	public TaskDataStore(IRepositoryManager taskRepositoryManager) {
 		this.externalizer = new TaskDataExternalizer(taskRepositoryManager);
 	}
 

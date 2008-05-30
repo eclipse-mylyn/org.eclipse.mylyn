@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
@@ -24,6 +25,8 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 /**
  * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
  * API for accessing the repository.
+ * 
+ * Only methods that take a progress monitor can do network I/O.
  * 
  * @author Mik Kersten
  * @author Rob Elves
@@ -49,7 +52,6 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 2.0
 	 */
-	// API 3.0 rename to canCreateTaskFromId?
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
 
 	/**
@@ -70,9 +72,11 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 2.0
 	 */
-	// API 3.0: move to AbstractRepositoryConnectorUi?
 	public abstract String getLabel();
 
+	/**
+	 * Can return null if URLs are not used to identify tasks.
+	 */
 	public abstract String getRepositoryUrlFromTaskUrl(String taskFullUrl);
 
 	/**
@@ -127,7 +131,6 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Used for referring to the task in the UI.
 	 */
-	// API 3.0 move to RepositoryConnectorUi?
 	public String getTaskIdPrefix() {
 		return "task";
 	}
@@ -149,7 +152,6 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 2.0
 	 */
-	// API 3.0 change type of taskId to AbstractTask
 	public abstract String getTaskUrl(String repositoryUrl, String taskId);
 
 	/**
@@ -192,6 +194,8 @@ public abstract class AbstractRepositoryConnector {
 			TaskDataCollector resultCollector, ISynchronizationSession event, IProgressMonitor monitor);
 
 	/**
+	 * Hook into the synchronization process.
+	 * 
 	 * @since 3.0
 	 */
 	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
@@ -203,6 +207,8 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Hook into the synchronization process.
+	 * 
 	 * @since 3.0
 	 */
 	public void preSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
@@ -235,11 +241,12 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * @return Task id for any sub tasks referenced by the provided task data
+	 * Connectors can override to return other tasks associated with this task.
+	 * 
 	 * @since 3.0
 	 */
-	public TaskRelation[] getTaskRelations(TaskData taskData) {
-		return new TaskRelation[0];
+	public Collection<TaskRelation> getTaskRelations(TaskData taskData) {
+		return null;
 	}
 
 }

@@ -30,7 +30,6 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 
 /**
  * Stores and manages task list elements and their containment hierarchy.

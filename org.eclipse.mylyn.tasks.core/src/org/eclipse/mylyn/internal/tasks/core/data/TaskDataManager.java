@@ -29,7 +29,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -57,7 +57,7 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private String dataPath;
 
-	private final ITaskRepositoryManager repositoryManager;
+	private final IRepositoryManager repositoryManager;
 
 	@Deprecated
 	private final TaskDataStorageManager taskDataStorageManager;
@@ -67,7 +67,7 @@ public class TaskDataManager implements ITaskDataManager {
 	private final TaskList taskList;
 
 	public TaskDataManager(TaskDataStorageManager taskDataManager, TaskDataStore taskDataStore,
-			ITaskRepositoryManager repositoryManager, TaskList taskList) {
+			IRepositoryManager repositoryManager, TaskList taskList) {
 		this.taskDataStorageManager = taskDataManager;
 		this.taskDataStore = taskDataStore;
 		this.repositoryManager = repositoryManager;

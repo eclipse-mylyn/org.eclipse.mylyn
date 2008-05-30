@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,10 +35,10 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.ITasksModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -61,7 +62,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final Set<ITask> allTasks;
 
-	private final ITaskRepositoryManager repositoryManager;
+	private final IRepositoryManager repositoryManager;
 
 	private TaskRepository taskRepository;
 
@@ -69,10 +70,11 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private boolean updateRelations;
 
-	private final ITasksModel tasksModel;
+	private final IRepositoryModel tasksModel;
 
-	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager, ITasksModel tasksModel,
-			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<ITask> tasks) {
+	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager,
+			IRepositoryModel tasksModel, AbstractRepositoryConnector connector, TaskRepository taskRepository,
+			Set<ITask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
 		this.taskDataManager = synchronizationManager;
@@ -83,8 +85,9 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		this.repositoryManager = null;
 	}
 
-	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager, ITasksModel tasksModel,
-			AbstractRepositoryConnector connector, ITaskRepositoryManager repositoryManager, Set<ITask> tasks) {
+	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager,
+			IRepositoryModel tasksModel, AbstractRepositoryConnector connector, IRepositoryManager repositoryManager,
+			Set<ITask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
 		this.taskDataManager = synchronizationManager;
@@ -364,9 +367,9 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		try {
 			taskDataManager.putUpdatedTaskData(task, taskData, isUser());
 			if (updateRelations) {
-				TaskRelation[] relations = connector.getTaskRelations(taskData);
+				Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
 				if (relations != null) {
-					relationsByTaskId.put(task.getTaskId(), relations);
+					relationsByTaskId.put(task.getTaskId(), relations.toArray(new TaskRelation[0]));
 				}
 			}
 		} catch (CoreException e) {

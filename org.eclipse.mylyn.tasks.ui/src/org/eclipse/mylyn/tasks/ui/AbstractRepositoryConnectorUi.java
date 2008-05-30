@@ -20,11 +20,11 @@ import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
@@ -212,7 +212,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	// API 3.0 review, move to tasks ui
 	public boolean openRepositoryTask(String repositoryUrl, String id) {
-		ITaskRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
+		IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getConnectorKind());
 		String taskUrl = connector.getTaskUrl(repositoryUrl, id);
 		if (taskUrl == null) {
@@ -246,6 +246,15 @@ public abstract class AbstractRepositoryConnectorUi {
 		this.customNotificationHandling = customNotifications;
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	public boolean hasCustomNotificationHandling() {
+		return customNotificationHandling;
+	}
+
+	// API-3.0: delete
+	@Deprecated
 	public boolean isCustomNotificationHandling() {
 		return customNotificationHandling;
 	}

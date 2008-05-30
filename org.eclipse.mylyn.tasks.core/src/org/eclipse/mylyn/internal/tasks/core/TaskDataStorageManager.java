@@ -22,7 +22,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 
 /**
  * Manager for persisting RepositoryTaskData offline
@@ -31,13 +31,13 @@ import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
  */
 public class TaskDataStorageManager {
 
-	private final ITaskRepositoryManager taskRepositoryManager;
+	private final IRepositoryManager taskRepositoryManager;
 
 	private final ITaskDataStorage storage;
 
 	private int nextNewId = 1;
 
-	public TaskDataStorageManager(ITaskRepositoryManager taskRepositoryManager, ITaskDataStorage storage) {
+	public TaskDataStorageManager(IRepositoryManager taskRepositoryManager, ITaskDataStorage storage) {
 		this.taskRepositoryManager = taskRepositoryManager;
 		this.storage = storage;
 	}

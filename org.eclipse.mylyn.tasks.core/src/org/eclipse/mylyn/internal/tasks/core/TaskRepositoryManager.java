@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -36,7 +36,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Jevgeni Holodkov
  * @since 3.0
  */
-public class TaskRepositoryManager implements ITaskRepositoryManager {
+public class TaskRepositoryManager implements IRepositoryManager {
 
 	public static final String OLD_REPOSITORIES_FILE = "repositories.xml";
 
@@ -48,7 +48,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 
 	private final Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
 
-	private final Set<ITaskRepositoryListener> listeners = new HashSet<ITaskRepositoryListener>();
+	private final Set<IRepositoryListener> listeners = new HashSet<IRepositoryListener>();
 
 	private final Set<TaskRepository> orphanedRepositories = new HashSet<TaskRepository>();
 
@@ -93,7 +93,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 			repositories = repositoryMap.get(repository.getConnectorKind());
 		}
 		repositories.add(repository);
-		for (ITaskRepositoryListener listener : listeners) {
+		for (IRepositoryListener listener : listeners) {
 			listener.repositoryAdded(repository);
 		}
 	}
@@ -105,16 +105,16 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 			repositories.remove(repository);
 		}
 		saveRepositories(repositoryFilePath);
-		for (ITaskRepositoryListener listener : listeners) {
+		for (IRepositoryListener listener : listeners) {
 			listener.repositoryRemoved(repository);
 		}
 	}
 
-	public void addListener(ITaskRepositoryListener listener) {
+	public void addListener(IRepositoryListener listener) {
 		listeners.add(listener);
 	}
 
-	public void removeListener(ITaskRepositoryListener listener) {
+	public void removeListener(IRepositoryListener listener) {
 		listeners.remove(listener);
 	}
 
@@ -213,21 +213,21 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 		return null;
 	}
 
-	protected Map<String, Set<TaskRepository>> readRepositories(String repositoriesFilePath) {
+	Map<String, Set<TaskRepository>> readRepositories(String repositoriesFilePath) {
 
 		repositoryMap.clear();
 		orphanedRepositories.clear();
 
 		loadRepositories(repositoriesFilePath);
 
-		for (ITaskRepositoryListener listener : listeners) {
-			try {
-				listener.repositoriesRead();
-			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Repository listener failed", t));
-			}
-		}
+//		for (IRepositoryListener listener : listeners) {
+//			try {
+//				listener.repositoriesRead();
+//			} catch (Throwable t) {
+//				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+//						"Repository listener failed", t));
+//			}
+//		}
 		return repositoryMap;
 	}
 
@@ -335,7 +335,7 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 	}
 
 	public void notifyRepositorySettingsChanged(TaskRepository repository) {
-		for (ITaskRepositoryListener listener : listeners) {
+		for (IRepositoryListener listener : listeners) {
 			listener.repositorySettingsChanged(repository);
 		}
 	}
@@ -364,12 +364,12 @@ public class TaskRepositoryManager implements ITaskRepositoryManager {
 
 	/**
 	 * @param repository
-	 * 		with new url
+	 *            with new url
 	 * @param oldUrl
-	 * 		previous url for this repository
+	 *            previous url for this repository
 	 */
 	public void notifyRepositoryUrlChanged(TaskRepository repository, String oldUrl) {
-		for (ITaskRepositoryListener listener : listeners) {
+		for (IRepositoryListener listener : listeners) {
 			listener.repositoryUrlChanged(repository, oldUrl);
 		}
 	}

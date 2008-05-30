@@ -19,12 +19,14 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
+import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -58,24 +60,26 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private DisconnectRepositoryAction offlineAction;
 
-	private final ITaskRepositoryListener REPOSITORY_LISTENER = new TaskRepositoryAdapter() {
+	private void asyncExec(Runnable runnable) {
+		if (Display.getCurrent() != null) {
+			runnable.run();
+		} else {
+			Display.getDefault().asyncExec(runnable);
+		}
+	}
 
-		@Override
-		public void repositoriesRead() {
+	private final IRepositoryModelListener MODEL_LISTENER = new IRepositoryModelListener() {
+
+		public void loaded() {
 			asyncExec(new Runnable() {
 				public void run() {
 					refresh();
 				}
 			});
 		}
+	};
 
-		private void asyncExec(Runnable runnable) {
-			if (Display.getCurrent() != null) {
-				runnable.run();
-			} else {
-				Display.getDefault().asyncExec(runnable);
-			}
-		}
+	private final IRepositoryListener REPOSITORY_LISTENER = new TaskRepositoryAdapter() {
 
 		@Override
 		public void repositoryAdded(TaskRepository repository) {
@@ -119,6 +123,14 @@ public class TaskRepositoriesView extends ViewPart {
 
 	public TaskRepositoriesView() {
 		TasksUi.getRepositoryManager().addListener(REPOSITORY_LISTENER);
+		TasksUiPlugin.getDefault().addModelListener(MODEL_LISTENER);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		TasksUiPlugin.getRepositoryManager().removeListener(REPOSITORY_LISTENER);
+		TasksUiPlugin.getDefault().removeModelListener(MODEL_LISTENER);
 	}
 
 	public static TaskRepositoriesView getFromActivePerspective() {

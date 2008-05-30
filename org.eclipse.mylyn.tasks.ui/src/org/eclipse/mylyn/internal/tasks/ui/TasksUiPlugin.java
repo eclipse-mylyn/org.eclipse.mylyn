@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -54,6 +55,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.tasks.core.AbstractSearchHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryExternalizationParticipant;
@@ -368,6 +370,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private IProxyChangeListener proxyChangeListener;
 
 	private TaskListExternalizationParticipant taskListSaveParticipant;
+
+	private final Set<IRepositoryModelListener> listeners = new HashSet<IRepositoryModelListener>();
 
 	private static TaskList taskList;
 
@@ -801,6 +805,20 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		taskActivityMonitor.reloadActivityTime();
 		taskActivityManager.reloadPlanningData();
+
+		for (final IRepositoryModelListener listener : listeners) {
+			SafeRunner.run(new ISafeRunnable() {
+
+				public void handleException(Throwable exception) {
+					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Listener failed: "
+							+ listener.getClass(), exception));
+				}
+
+				public void run() throws Exception {
+					listener.loaded();
+				}
+			});
+		}
 	}
 
 	private File getContextStoreDir() {
@@ -1037,6 +1055,14 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return getDataDirectory() + File.separator + TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE;
 	}
 
+	public void addModelListener(IRepositoryModelListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeModelListener(IRepositoryModelListener listener) {
+		listeners.remove(listener);
+	}
+
 	public boolean canSetRepositoryForResource(IResource resource) {
 		if (resource == null) {
 			return false;
@@ -1150,7 +1176,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return taskList;
 	}
 
-	public static TasksModel getTasksModel() {
+	public static TasksModel getRepositoryModel() {
 		return tasksModel;
 	}
 

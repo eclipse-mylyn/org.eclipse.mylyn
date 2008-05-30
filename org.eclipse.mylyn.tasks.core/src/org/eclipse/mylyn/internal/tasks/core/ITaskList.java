@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
-import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 
 /**
  * @author Steffen Pingel

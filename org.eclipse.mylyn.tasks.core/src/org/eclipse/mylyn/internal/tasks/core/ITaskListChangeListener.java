@@ -6,16 +6,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 
-public class TaskListChangeAdapter implements ITaskListChangeListener {
+/**
+ * Listener for task list modifications and task content modifications.
+ * 
+ * @author Mik Kersten
+ * @since 2.0
+ */
+public interface ITaskListChangeListener {
 
-	public void containersChanged(Set<TaskContainerDelta> containers) {
-	}
+	public abstract void containersChanged(Set<TaskContainerDelta> containers);
 
 }

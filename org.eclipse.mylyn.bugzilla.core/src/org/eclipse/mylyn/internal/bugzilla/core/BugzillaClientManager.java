@@ -14,14 +14,14 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryAdapter;
 
 /**
  * @author Steffen Pingel
  * @author Robert Elves (adaption for Bugzilla)
  */
-public class BugzillaClientManager extends TaskRepositoryAdapter {
+public class BugzillaClientManager implements IRepositoryListener {
 
 	private final Map<String, BugzillaClient> clientByUrl = new HashMap<String, BugzillaClient>();
 
@@ -45,24 +45,20 @@ public class BugzillaClientManager extends TaskRepositoryAdapter {
 		return client;
 	}
 
-	@Override
-	public void repositoriesRead() {
-		// ignore
-	}
-
-	@Override
 	public synchronized void repositoryAdded(TaskRepository repository) {
 		// make sure there is no stale client still in the cache, bug #149939
 		clientByUrl.remove(repository.getRepositoryUrl());
 	}
 
-	@Override
 	public synchronized void repositoryRemoved(TaskRepository repository) {
 		clientByUrl.remove(repository.getRepositoryUrl());
 	}
 
-	@Override
 	public synchronized void repositorySettingsChanged(TaskRepository repository) {
 		clientByUrl.remove(repository.getRepositoryUrl());
+	}
+
+	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
+		// ignore
 	}
 }

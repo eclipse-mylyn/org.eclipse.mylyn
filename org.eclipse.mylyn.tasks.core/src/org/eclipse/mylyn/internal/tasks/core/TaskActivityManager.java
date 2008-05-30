@@ -30,7 +30,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
-import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 
 /**
  * Manages task elapsed time, scheduling, due dates, and the date ranges

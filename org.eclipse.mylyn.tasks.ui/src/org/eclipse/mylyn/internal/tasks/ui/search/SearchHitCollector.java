@@ -79,7 +79,7 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 	public void accept(TaskData taskData) {
 		ITask task = taskList.getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 		if (task == null) {
-			task = TasksUi.getTasksModel().createTask(repository, taskData.getTaskId());
+			task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 		}
 		taskResults.add(task);
 		this.searchResult.addMatch(new Match(task, 0, 0));

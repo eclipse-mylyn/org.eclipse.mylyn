@@ -15,27 +15,26 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.ITasksModel;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryAdapter;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
  * @author Steffen Pingel
  */
-public class TasksModel implements ITasksModel {
+public class TasksModel implements IRepositoryModel {
 
 	private int queryCount;
 
-	private final ITaskRepositoryManager repositoryManager;
+	private final IRepositoryManager repositoryManager;
 
 	private final Map<String, ITask> taskByHandle = new WeakHashMap<String, ITask>();
 
 	private final TaskList taskList;
 
-	public TasksModel(TaskList taskList, ITaskRepositoryManager repositoryManager) {
+	public TasksModel(TaskList taskList, IRepositoryManager repositoryManager) {
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
 		initialize();

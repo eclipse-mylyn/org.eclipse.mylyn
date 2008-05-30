@@ -15,7 +15,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  * @author Steffen Pingel
  * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface ITasksModel {
+public interface IRepositoryModel {
 
 	public abstract IRepositoryQuery createQuery(TaskRepository taskRepository);
 

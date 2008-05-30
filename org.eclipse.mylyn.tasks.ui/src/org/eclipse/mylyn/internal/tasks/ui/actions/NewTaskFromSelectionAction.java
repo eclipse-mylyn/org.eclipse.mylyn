@@ -17,7 +17,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -72,7 +72,7 @@ public class NewTaskFromSelectionAction extends Action {
 			}
 		} else if (selection instanceof RepositoryTaskSelection) {
 			RepositoryTaskSelection repositoryTaskSelection = (RepositoryTaskSelection) selection;
-			ITaskRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
+			IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
 			AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repositoryTaskSelection.getRepositoryKind());
 
 			TaskComment comment = repositoryTaskSelection.getComment();

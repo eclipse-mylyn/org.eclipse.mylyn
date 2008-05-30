@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.core.data;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -544,11 +544,11 @@ public class TaskDataStateReader extends DefaultHandler {
 
 	private TaskStateHandler handler;
 
-	private final ITaskRepositoryManager repositoryManager;
+	private final IRepositoryManager repositoryManager;
 
 	private TaskDataState result;
 
-	public TaskDataStateReader(ITaskRepositoryManager repositoryManager) {
+	public TaskDataStateReader(IRepositoryManager repositoryManager) {
 		this.repositoryManager = repositoryManager;
 	}
 

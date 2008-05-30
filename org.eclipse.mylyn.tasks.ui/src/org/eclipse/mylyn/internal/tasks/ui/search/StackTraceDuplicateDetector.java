@@ -51,7 +51,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 					"Unable to locate a stack trace in the description text."));
 		}
 
-		IRepositoryQuery query = TasksUi.getTasksModel().createQuery(taskRepository);
+		IRepositoryQuery query = TasksUi.getRepositoryModel().createQuery(taskRepository);
 		AbstractSearchHandler searchHandler = TasksUiPlugin.getDefault().getSearchHandler(
 				taskRepository.getConnectorKind());
 		if (searchHandler.queryForText(taskRepository, query, taskData, searchString)) {

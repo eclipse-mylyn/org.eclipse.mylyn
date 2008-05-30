@@ -6,17 +6,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
+
+import org.eclipse.mylyn.tasks.core.IRepositoryListener;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Rob Elves
  * @since 3.0
  */
-public class TaskRepositoryAdapter implements ITaskRepositoryListener {
-
-	public void repositoriesRead() {
-		// ignore
-	}
+public class TaskRepositoryAdapter implements IRepositoryListener {
 
 	public void repositoryAdded(TaskRepository repository) {
 		// ignore

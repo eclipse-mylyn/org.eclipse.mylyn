@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,8 +36,8 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepository
 import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITasksModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -164,9 +165,9 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private final TaskList taskList;
 
-	private final ITasksModel tasksModel;
+	private final IRepositoryModel tasksModel;
 
-	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager taskDataManager, ITasksModel tasksModel,
+	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<RepositoryQuery> queries) {
 		super("Synchronizing Queries (" + repository.getRepositoryLabel() + ")");
 		this.taskList = taskList;
@@ -202,9 +203,9 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					public void putUpdatedTaskData(ITask task, TaskData taskData) throws CoreException {
 						taskDataManager.putUpdatedTaskData(task, taskData, isUser());
 						if (!taskData.isPartial()) {
-							TaskRelation[] relations = connector.getTaskRelations(taskData);
+							Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
 							if (relations != null) {
-								relationsByTaskId.put(task.getTaskId(), relations);
+								relationsByTaskId.put(task.getTaskId(), relations.toArray(new TaskRelation[0]));
 							}
 						}
 					}

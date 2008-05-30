@@ -15,6 +15,7 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -512,7 +513,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public TaskRelation[] getTaskRelations(TaskData taskData) {
+	public Collection<TaskRelation> getTaskRelations(TaskData taskData) {
 		List<TaskRelation> relations = new ArrayList<TaskRelation>();
 		TaskAttribute attribute = taskData.getRoot().getAttribute(BugzillaReportElement.DEPENDSON.getKey());
 		if (attribute != null && attribute.getValue().length() > 0) {
@@ -520,7 +521,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				relations.add(TaskRelation.subtask(taskId.trim()));
 			}
 		}
-		return relations.toArray(new TaskRelation[0]);
+		return relations;
 	}
 
 	private String getSynchronizationTimestamp(ISynchronizationSession event) {
