@@ -56,6 +56,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 		return connectorKind;
 	}
 
+	// TODO: should be a date
 	public String getLastSynchronizedTimeStamp() {
 		return lastSynchronizedStamp;
 	}

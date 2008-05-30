@@ -10,9 +10,9 @@ package org.eclipse.mylyn.tasks.ui;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 
 /**
@@ -22,11 +22,11 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
  */
 public class TasksUi {
 
-	public static AbstractRepositoryConnector getConnector(String kind) {
-		return TasksUiPlugin.getConnector(kind);
+	public static AbstractRepositoryConnector getRepositoryConnector(String kind) {
+		return getRepositoryManager().getRepositoryConnector(kind);
 	}
 
-	public static AbstractRepositoryConnectorUi getConnectorUi(String kind) {
+	public static AbstractRepositoryConnectorUi getRepositoryConnectorUi(String kind) {
 		return TasksUiPlugin.getConnectorUi(kind);
 	}
 

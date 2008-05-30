@@ -406,7 +406,7 @@ public class UiLegendDialog extends PopupDialog {
 
 		Collection<AbstractRepositoryConnector> connectors = TasksUi.getRepositoryManager().getRepositoryConnectors();
 		for (AbstractRepositoryConnector connector : connectors) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUi.getConnectorUi(connector.getConnectorKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(connector.getConnectorKind());
 			if (connectorUi != null) {
 				List<LegendElement> elements = connectorUi.getLegendElements();
 				if (elements != null && elements.size() > 0) {
