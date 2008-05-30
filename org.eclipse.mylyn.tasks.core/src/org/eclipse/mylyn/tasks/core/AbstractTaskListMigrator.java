@@ -22,6 +22,8 @@ public abstract class AbstractTaskListMigrator {
 
 	public static final String KEY_TASK = "Task";
 
+	public static final String KEY_LAST_MOD_DATE = "LastModified";
+
 	public abstract String getTaskElementName();
 
 	public abstract Set<String> getQueryElementNames();

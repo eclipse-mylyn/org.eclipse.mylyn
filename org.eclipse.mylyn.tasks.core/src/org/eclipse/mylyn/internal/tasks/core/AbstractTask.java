@@ -120,6 +120,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return lastReadTimeStamp;
 	}
 
+	@Deprecated
 	public void setLastReadTimeStamp(String lastReadTimeStamp) {
 		this.lastReadTimeStamp = lastReadTimeStamp;
 	}

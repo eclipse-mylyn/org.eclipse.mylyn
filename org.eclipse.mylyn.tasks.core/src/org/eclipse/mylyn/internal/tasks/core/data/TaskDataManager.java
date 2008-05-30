@@ -28,8 +28,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -82,7 +82,7 @@ public class TaskDataManager implements ITaskDataManager {
 			return true;
 		}
 
-		String lastModified = repositoryTask.getLastReadTimeStamp();
+		String lastModified = ((AbstractTask) repositoryTask).getLastReadTimeStamp();
 		org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute.DATE_MODIFIED);
 		if (lastModified != null && modifiedDateAttribute != null && modifiedDateAttribute.getValue() != null) {
 			if (lastModified.trim().compareTo(modifiedDateAttribute.getValue().trim()) == 0) {

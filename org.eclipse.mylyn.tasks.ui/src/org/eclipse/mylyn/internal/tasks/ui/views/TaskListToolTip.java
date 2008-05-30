@@ -45,6 +45,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -471,7 +472,7 @@ public class TaskListToolTip extends ToolTip {
 			Image image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING);
 			if (currentTipElement instanceof ITask) {
 				ITask task = (ITask) currentTipElement;
-				if (task.getLastReadTimeStamp() == null) {
+				if (task.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
 					image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING_NEW);
 				}
 			}

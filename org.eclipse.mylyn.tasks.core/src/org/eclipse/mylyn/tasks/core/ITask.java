@@ -220,12 +220,6 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	public abstract String getHandleIdentifier();
 
 	/**
-	 * @return Connector-specific format for the last read date.
-	 */
-	@Deprecated
-	public abstract String getLastReadTimeStamp();
-
-	/**
 	 * Returns the date that the repository contents of this task were last modified.
 	 * 
 	 * @since 3.0

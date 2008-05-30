@@ -72,7 +72,6 @@ public class TaskMapper implements ITaskMapping {
 			task.setUrl(getTaskUrl());
 			changed = true;
 		}
-		// TODO task key
 		return changed;
 	}
 

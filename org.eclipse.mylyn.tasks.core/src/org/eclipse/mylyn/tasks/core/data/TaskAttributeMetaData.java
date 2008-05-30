@@ -26,7 +26,6 @@ public class TaskAttributeMetaData {
 		setLabel(null);
 		setKind(null);
 		setReadOnly(true);
-		setShowInToolTip(false);
 		setType(TaskAttribute.TYPE_SHORT_TEXT);
 		return this;
 	}
@@ -64,10 +63,6 @@ public class TaskAttributeMetaData {
 		return Boolean.parseBoolean(taskAttribute.getMetaDatum(TaskAttribute.META_READ_ONLY));
 	}
 
-	public boolean isShowInToolTip() {
-		return Boolean.parseBoolean(taskAttribute.getMetaDatum(TaskAttribute.META_SHOW_IN_TOOL_TIP));
-	}
-
 	public TaskAttributeMetaData putValue(String key, String value) {
 		taskAttribute.putMetaDatum(key, value);
 		return this;
@@ -102,13 +97,6 @@ public class TaskAttributeMetaData {
 
 	public TaskAttributeMetaData setReadOnly(boolean value) {
 		taskAttribute.putMetaDatum(TaskAttribute.META_READ_ONLY, Boolean.toString(value));
-		return this;
-	}
-
-	@Deprecated
-	// API-3.0: consider using something like: enum DetailLevel { LESS, MORE, ALL }
-	public TaskAttributeMetaData setShowInToolTip(boolean showInToolTip) {
-		taskAttribute.putMetaDatum(TaskAttribute.META_SHOW_IN_TOOL_TIP, Boolean.toString(showInToolTip));
 		return this;
 	}
 

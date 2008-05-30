@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.tests.connector.MockAttributeFactory;
@@ -117,7 +116,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		 */
 
 		// Test unforced
-		ITask task = primeTaskAndRepository(SynchronizationState.INCOMING, SynchronizationState.INCOMING);
+		AbstractTask task = primeTaskAndRepository(SynchronizationState.INCOMING, SynchronizationState.INCOMING);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
@@ -155,7 +154,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		// When not forced, tasks with incoming state should remain in incoming
 		// state if
 		// if new data has same date stamp as old data.
-		ITask task = primeTaskAndRepository(SynchronizationState.INCOMING, SynchronizationState.SYNCHRONIZED);
+		AbstractTask task = primeTaskAndRepository(SynchronizationState.INCOMING, SynchronizationState.SYNCHRONIZED);
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 		TasksUiPlugin.getTaskDataManager().saveIncoming(task, newData, false);
 		assertEquals(SynchronizationState.INCOMING, task.getSynchronizationState());
@@ -212,7 +211,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	 */
 
 	public void testSynchronizedToIncoming() {
-		ITask task = primeTaskAndRepository(SynchronizationState.SYNCHRONIZED, SynchronizationState.INCOMING);
+		AbstractTask task = primeTaskAndRepository(SynchronizationState.SYNCHRONIZED, SynchronizationState.INCOMING);
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 		TasksUiPlugin.getTaskDataManager().saveIncoming(task, newData, false);
 		assertEquals(SynchronizationState.INCOMING, task.getSynchronizationState());
@@ -223,7 +222,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	}
 
 	public void testSynchronizedToSynchronized() {
-		ITask task = primeTaskAndRepository(SynchronizationState.SYNCHRONIZED, SynchronizationState.SYNCHRONIZED);
+		AbstractTask task = primeTaskAndRepository(SynchronizationState.SYNCHRONIZED, SynchronizationState.SYNCHRONIZED);
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 		TasksUiPlugin.getTaskDataManager().saveIncoming(task, newData, false);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
@@ -251,7 +250,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	}
 
 	public void testConflictToConflict() {
-		ITask task = primeTaskAndRepository(SynchronizationState.CONFLICT, SynchronizationState.INCOMING);
+		AbstractTask task = primeTaskAndRepository(SynchronizationState.CONFLICT, SynchronizationState.INCOMING);
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 		TasksUiPlugin.getTaskDataManager().saveIncoming(task, newData, true);
 		assertEquals(SynchronizationState.CONFLICT, task.getSynchronizationState());
@@ -281,7 +280,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	// TODO: Test discard outgoing
 	public void testOutgoingToConflict() {
 		// Forced
-		ITask task = primeTaskAndRepository(SynchronizationState.OUTGOING, SynchronizationState.INCOMING);
+		AbstractTask task = primeTaskAndRepository(SynchronizationState.OUTGOING, SynchronizationState.INCOMING);
 		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 				task.getTaskId());
 
@@ -297,8 +296,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 
 	// Illegal state change, test it doesn't occur
 	public void testOutgoingToSynchronized() {
-
-		ITask task = primeTaskAndRepository(SynchronizationState.OUTGOING, SynchronizationState.SYNCHRONIZED);
+		AbstractTask task = primeTaskAndRepository(SynchronizationState.OUTGOING, SynchronizationState.SYNCHRONIZED);
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 
 		TasksUiPlugin.getTaskDataManager().saveIncoming(task, newData, true);
@@ -307,7 +305,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	}
 
 	public void testOutgoingToOutgoing() {
-		ITask task = primeTaskAndRepository(SynchronizationState.OUTGOING, SynchronizationState.SYNCHRONIZED);
+		AbstractTask task = primeTaskAndRepository(SynchronizationState.OUTGOING, SynchronizationState.SYNCHRONIZED);
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 		TasksUiPlugin.getTaskDataManager().saveIncoming(task, newData, false);
 		assertEquals(SynchronizationState.OUTGOING, task.getSynchronizationState());

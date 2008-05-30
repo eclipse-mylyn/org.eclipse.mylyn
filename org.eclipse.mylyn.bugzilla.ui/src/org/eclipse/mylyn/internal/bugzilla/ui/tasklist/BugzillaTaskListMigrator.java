@@ -63,9 +63,8 @@ public class BugzillaTaskListMigrator extends AbstractTaskListMigrator {
 		if (element.hasAttribute(KEY_PRODUCT)) {
 			task.setAttribute(KEY_PRODUCT, element.getAttribute(KEY_PRODUCT));
 		}
-		if (element.hasAttribute(IBugzillaConstants.KEY_LAST_MOD_DATE)) {
-			task.setAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE,
-					element.getAttribute(IBugzillaConstants.KEY_LAST_MOD_DATE));
+		if (element.hasAttribute(KEY_LAST_MOD_DATE)) {
+			task.setAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE, element.getAttribute(KEY_LAST_MOD_DATE));
 		}
 	}
 

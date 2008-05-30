@@ -226,7 +226,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 					return CommonImages.OVERLAY_SYNC_INCOMMING_NEW;
 				}
 			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
-					&& repositoryTask.getLastReadTimeStamp() == null) {
+					&& ((AbstractTask) repositoryTask).getLastReadTimeStamp() == null) {
 				if (synchViewStyle) {
 					return CommonImages.OVERLAY_SYNC_OLD_INCOMMING_NEW;
 				} else {

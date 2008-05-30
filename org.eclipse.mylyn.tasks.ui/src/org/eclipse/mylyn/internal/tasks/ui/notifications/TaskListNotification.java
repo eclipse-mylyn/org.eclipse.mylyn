@@ -10,12 +10,14 @@ package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
@@ -30,12 +32,13 @@ public class TaskListNotification extends AbstractNotification {
 
 	protected Date date;
 
-	private String description = null;
+	private String description;
 
 	private final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(
 			new TaskElementLabelProvider(true), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
 	public TaskListNotification(ITask task) {
+		Assert.isNotNull(task);
 		this.task = task;
 	}
 
@@ -55,7 +58,6 @@ public class TaskListNotification extends AbstractNotification {
 
 	@Override
 	public void open() {
-
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				TasksUiInternal.refreshAndOpenTaskListElement(task);
@@ -74,7 +76,7 @@ public class TaskListNotification extends AbstractNotification {
 
 	@Override
 	public Image getNotificationKindImage() {
-		if (task != null && task.getLastReadTimeStamp() == null) {
+		if (task.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
 			return CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING_NEW);
 		} else {
 			return CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING);

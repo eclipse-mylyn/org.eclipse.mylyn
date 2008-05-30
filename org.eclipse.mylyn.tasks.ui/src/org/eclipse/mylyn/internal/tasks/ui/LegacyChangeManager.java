@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
@@ -208,7 +209,7 @@ public class LegacyChangeManager {
 				task.getRepositoryUrl(), task.getTaskId());
 		try {
 			if (task.getSynchronizationState().equals(SynchronizationState.INCOMING)
-					&& task.getLastReadTimeStamp() == null) {
+					&& ((AbstractTask) task).getLastReadTimeStamp() == null) {
 				notification.setDescription("New unread task ");
 			} else if (newTaskData != null && oldTaskData != null) {
 				StringBuilder description = new StringBuilder();

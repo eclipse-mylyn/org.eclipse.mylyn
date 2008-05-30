@@ -115,8 +115,6 @@ public final class TaskAttribute {
 
 	public static final String META_READ_ONLY = "task.meta.readOnly";
 
-	public static final String META_SHOW_IN_TOOL_TIP = "task.meta.showInToolTip";
-
 	public static final String NEW_ATTACHMENT = "task.common.new.attachment";
 
 	// XXX merge with USER_CC
