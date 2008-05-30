@@ -88,18 +88,18 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
-		if (taskData != null) {
-
+		if (taskData.isPartial()) {
+			TaskMapper scheme = new TaskMapper(taskData);
+			task.setSummary(scheme.getSummary());
+			task.setPriority(scheme.getPriority().toString());
+			task.setOwner(scheme.getOwner());
+		} else {
 			TaskMapper scheme = new TaskMapper(taskData);
 			scheme.applyTo(task);
 
-			// Completed
 			boolean isComplete = false;
-			// TODO: use repository configuration to determine what -completed-
-			// states are
-
+			// TODO: use repository configuration to determine what -completed- states are
 			TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
-
 			if (attributeStatus != null) {
 				isComplete = attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
 						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
@@ -112,7 +112,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 				TaskAttribute[] taskComments = taskData.getAttributeMapper().getAttributesByType(taskData,
 						TaskAttribute.TYPE_COMMENT);
-
 				if (taskComments != null && taskComments.length > 0) {
 					TaskAttribute lastComment = taskComments[taskComments.length - 1];
 					if (lastComment != null) {
@@ -125,8 +124,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 							}
 						}
 					}
+				}
 
-				} else {
+				if (completionDate == null) {
 					// Use last modified date
 					TaskAttribute attributeLastModified = taskData.getRoot().getMappedAttribute(
 							TaskAttribute.DATE_MODIFICATION);
@@ -135,11 +135,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					}
 				}
 
-				if (task.getCompletionDate() != null && completionDate != null) {
-					// TODO: if changed notify via task list
+				if (completionDate == null) {
+					completionDate = new Date();
 				}
-				task.setCompletionDate(completionDate);
 
+				task.setCompletionDate(completionDate);
+			} else {
+				task.setCompletionDate(null);
 			}
 
 			// Task Web Url
