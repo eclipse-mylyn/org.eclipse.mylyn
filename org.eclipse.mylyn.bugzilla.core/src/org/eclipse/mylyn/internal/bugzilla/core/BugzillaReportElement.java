@@ -15,7 +15,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public enum BugzillaReportElement {
 
-	STATUS_WHITEBOARD("Status Whiteboard:", "status_whiteboard", TaskAttribute.TYPE_LONG_TEXT, false, false),
+	STATUS_WHITEBOARD("Status Whiteboard:", "status_whiteboard", TaskAttribute.TYPE_LONG_RICH_TEXT, false, false),
 
 	ACTUAL_TIME("Hours Worked:", "actual_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
@@ -29,11 +29,11 @@ public enum BugzillaReportElement {
 
 	ATTACHMENT("attachment", "attachment", TaskAttribute.TYPE_ATTACHMENT, false, false),
 
-	BLOCKED("Blocks:", "blocked", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	BLOCKED("Blocks:", "blocked", TaskAttribute.TYPE_TASK_DEPENDENCY, false, false),
 
 	BUG("bug", "bug", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
-	BUG_FILE_LOC("URL:", "bug_file_loc", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	BUG_FILE_LOC("URL:", "bug_file_loc", TaskAttribute.TYPE_URL, false, false),
 
 	BUG_ID("Bug:", "bug_id", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
@@ -41,7 +41,7 @@ public enum BugzillaReportElement {
 
 	BUG_STATUS("Status:", "bug_status", TaskAttribute.TYPE_SHORT_TEXT, true, true),
 
-	BUG_WHEN("bug_when", "bug_when", TaskAttribute.TYPE_SHORT_TEXT, true, true),
+	BUG_WHEN("bug_when", "bug_when", TaskAttribute.TYPE_DATE, true, true),
 
 	BUGZILLA("bugzilla", "bugzilla", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
@@ -49,7 +49,7 @@ public enum BugzillaReportElement {
 
 	REMOVECC("Remove CC", "removecc", IBugzillaConstants.EDITOR_TYPE_REMOVECC, true, true),
 
-	CCLIST_ACCESSIBLE("CC List", "cclist_accessible", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	CCLIST_ACCESSIBLE("CC List", "cclist_accessible", TaskAttribute.TYPE_BOOLEAN, true, false),
 
 	CLASSIFICATION("Classification:", "classification", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
@@ -57,19 +57,19 @@ public enum BugzillaReportElement {
 
 	COMPONENT("Component:", "component", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
 
-	CREATION_TS("Opened:", "creation_ts", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	CREATION_TS("Opened:", "creation_ts", TaskAttribute.TYPE_DATE, true, false),
 
 	CTYPE("Content Type", "ctype", TaskAttribute.TYPE_SHORT_TEXT, false, false),
 
 	DATA("data", "data", TaskAttribute.TYPE_SHORT_TEXT, false, false),
 
-	DATE("Date", "date", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	DATE("Date", "date", TaskAttribute.TYPE_DATE, false, false),
 
 	DEADLINE("Deadline:", "deadline", TaskAttribute.TYPE_SHORT_TEXT, true, true),
 
-	DELTA_TS("Modified:", "delta_ts", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	DELTA_TS("Modified:", "delta_ts", TaskAttribute.TYPE_DATE, true, false),
 
-	DEPENDSON("Depends on (Subtasks):", "dependson", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	DEPENDSON("Depends on (Subtasks):", "dependson", TaskAttribute.TYPE_TASK_DEPENDENCY, false, false),
 
 	DESC("desc", "desc", TaskAttribute.TYPE_LONG_TEXT, true, true),
 
@@ -130,7 +130,7 @@ public enum BugzillaReportElement {
 
 	INSTALL_VERSION("version of bugzilla installed", "install_version", null, true, false),
 
-	VOTES("Votes:", "votes", TaskAttribute.TYPE_SHORT_TEXT, true, true),
+	VOTES("Votes:", "votes", TaskAttribute.TYPE_SHORT_TEXT, false, true),
 
 	WORK_TIME("Add Time:", "work_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
