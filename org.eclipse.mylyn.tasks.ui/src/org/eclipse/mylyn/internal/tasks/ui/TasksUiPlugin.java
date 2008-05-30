@@ -554,7 +554,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
 
 			taskDataManager = new TaskDataManager(taskDataStorageManager, taskDataStore, repositoryManager,
-					taskListManager.getTaskList());
+					taskListManager.getTaskList(), taskActivityManager);
 			taskDataManager.setDataPath(getDataDirectory());
 
 			for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {

@@ -211,7 +211,6 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	 * 
 	 * @since 3.0
 	 */
-	@Deprecated
 	public abstract Date getDueDate();
 
 	/**
@@ -234,7 +233,6 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	// API-3.0: change to PriorityLevel class?
 	public abstract String getPriority();
 
 	/**
@@ -293,7 +291,6 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	@Deprecated
 	public abstract void setDueDate(Date date);
 
 	/**

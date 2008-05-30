@@ -24,6 +24,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
@@ -66,12 +67,15 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private final TaskList taskList;
 
+	private final TaskActivityManager taskActivityManager;
+
 	public TaskDataManager(TaskDataStorageManager taskDataManager, TaskDataStore taskDataStore,
-			IRepositoryManager repositoryManager, TaskList taskList) {
+			IRepositoryManager repositoryManager, TaskList taskList, TaskActivityManager taskActivityManager) {
 		this.taskDataStorageManager = taskDataManager;
 		this.taskDataStore = taskDataStore;
 		this.repositoryManager = repositoryManager;
 		this.taskList = taskList;
+		this.taskActivityManager = taskActivityManager;
 	}
 
 	/** public for testing purposes */
@@ -194,9 +198,8 @@ public class TaskDataManager implements ITaskDataManager {
 						task.setMarkReadPending(false);
 					}
 
-					task.setChanged(false);
-					connector.updateTaskFromTaskData(repository, task, taskData);
-					elementChanged[0] = changed || task.isChanged();
+					elementChanged[0] = changed;
+					elementChanged[0] |= updateTaskFromTaskData(taskData, task, connector, repository);
 
 					if (changed) {
 						switch (task.getSynchronizationState()) {
@@ -236,6 +239,20 @@ public class TaskDataManager implements ITaskDataManager {
 		} else if (synchronizationStateChanged[0]) {
 			taskList.notifySynchronizationStateChanged(task);
 		}
+	}
+
+	private boolean updateTaskFromTaskData(final TaskData taskData, final AbstractTask task,
+			final AbstractRepositoryConnector connector, final TaskRepository repository) {
+		task.setChanged(false);
+		Date oldDueDate = task.getDueDate();
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		// XXX move this to AbstractTask or use model listener to notify task activity 
+		// manager of due date changes
+		Date newDueDate = task.getDueDate();
+		if (oldDueDate != null && !oldDueDate.equals(newDueDate) || newDueDate != oldDueDate) {
+			taskActivityManager.setDueDate(task, newDueDate);
+		}
+		return task.isChanged();
 	}
 
 	private File ensurePathExists(File file) {
@@ -384,7 +401,7 @@ public class TaskDataManager implements ITaskDataManager {
 					task.setMarkReadPending(false);
 				}
 
-				connector.updateTaskFromTaskData(repository, task, taskData);
+				updateTaskFromTaskData(taskData, task, connector, repository);
 
 				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 				task.setSynchronizing(false);
