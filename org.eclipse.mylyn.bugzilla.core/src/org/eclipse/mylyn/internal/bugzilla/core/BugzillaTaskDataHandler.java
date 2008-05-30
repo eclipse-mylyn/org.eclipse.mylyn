@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +37,10 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  * @author Rob Elves
  */
 public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
+
+	private static final String TASK_DATA_VERSION_1_0 = "1.0";
+
+	private static final String TASK_DATA_VERSION_2_0 = "2.0";
 
 	private final BugzillaRepositoryConnector connector;
 
@@ -73,6 +78,25 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		} finally {
 			monitor.done();
+		}
+	}
+
+	@Override
+	public void migrateTaskData(TaskRepository taskRepository, TaskData taskData) {
+		if (TASK_DATA_VERSION_1_0.equals(taskData.getVersion())) {
+			for (TaskAttribute attribute : new ArrayList<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
+				if (attribute.getId().equals(BugzillaReportElement.DESC.getKey())) {
+					TaskAttribute attrLongDesc = createAttribute(taskData, BugzillaReportElement.LONG_DESC);
+					attrLongDesc.setValue(attribute.getValue());
+					taskData.getRoot().removeAttribute(BugzillaReportElement.DESC.getKey());
+				}
+			}
+
+			RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository.getRepositoryUrl());
+			if (configuration != null) {
+				configuration.addValidOperations(taskData);
+			}
+			taskData.setVersion(TASK_DATA_VERSION_2_0);
 		}
 	}
 

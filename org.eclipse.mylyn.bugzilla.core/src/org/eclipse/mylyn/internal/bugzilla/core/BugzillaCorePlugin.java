@@ -113,6 +113,10 @@ public class BugzillaCorePlugin extends Plugin {
 	 * @return cached repository configuration. If not already cached, null is returned.
 	 */
 	public static RepositoryConfiguration getRepositoryConfiguration(String repositoryUrl) {
+		if (!cacheFileRead) {
+			readRepositoryConfigurationFile();
+			cacheFileRead = true;
+		}
 		return repositoryConfigurations.get(repositoryUrl);
 	}
 
