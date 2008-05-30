@@ -105,6 +105,8 @@ public class TaskAttributeMetaData {
 		return this;
 	}
 
+	@Deprecated
+	// API-3.0: consider using something like: enum DetailLevel { LESS, MORE, ALL }
 	public TaskAttributeMetaData setShowInToolTip(boolean showInToolTip) {
 		taskAttribute.putMetaDatum(TaskAttribute.META_SHOW_IN_TOOL_TIP, Boolean.toString(showInToolTip));
 		return this;
