@@ -181,6 +181,8 @@ public class TaskDataManager implements ITaskDataManager {
 		final TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
 		final boolean changed = connector.hasChanged(repository, task, taskData);
+		final boolean elementChanged[] = new boolean[1];
+		final boolean synchronizationStateChanged[] = new boolean[1];
 		if (changed || user) {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
@@ -192,7 +194,9 @@ public class TaskDataManager implements ITaskDataManager {
 						task.setMarkReadPending(false);
 					}
 
+					task.setChanged(false);
 					connector.updateTaskFromTaskData(repository, task, taskData);
+					elementChanged[0] = changed || task.isChanged();
 
 					if (changed) {
 						switch (task.getSynchronizationState()) {
@@ -210,18 +214,26 @@ public class TaskDataManager implements ITaskDataManager {
 							}
 							break;
 						}
-						task.setStale(false);
 					}
-					task.setSynchronizing(false);
+					if (task.isSynchronizing()) {
+						task.setSynchronizing(false);
+						synchronizationStateChanged[0] = true;
+					}
 				}
 			});
-			taskList.notifyElementChanged(task);
 		} else {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
-					task.setSynchronizing(false);
+					if (task.isSynchronizing()) {
+						task.setSynchronizing(false);
+						synchronizationStateChanged[0] = true;
+					}
 				}
 			});
+		}
+		if (elementChanged[0]) {
+			taskList.notifyElementChanged(task);
+		} else if (synchronizationStateChanged[0]) {
 			taskList.notifySynchronizationStateChanged(task);
 		}
 	}
@@ -375,12 +387,11 @@ public class TaskDataManager implements ITaskDataManager {
 				connector.updateTaskFromTaskData(repository, task, taskData);
 
 				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-				task.setStale(false);
 				task.setSynchronizing(false);
 				task.setSubmitting(false);
 			}
 		});
-		taskList.notifySynchronizationStateChanged(task);
+		taskList.notifyElementChanged(task);
 	}
 
 	/**

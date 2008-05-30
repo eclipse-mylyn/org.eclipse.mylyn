@@ -89,6 +89,8 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private Map<String, String> attributes;
 
+	private boolean changed;
+
 	public AbstractTask(String repositoryUrl, String taskId, String summary) {
 		super(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 		this.repositoryUrl = repositoryUrl;
@@ -161,7 +163,11 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public void setOwner(String owner) {
-		this.owner = owner;
+		if (!areEqual(this.owner, owner)) {
+			String oldValue = this.owner;
+			this.owner = owner;
+			firePropertyChange("owner", oldValue, owner);
+		}
 	}
 
 	/**
@@ -258,7 +264,11 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public void setPriority(String priority) {
-		this.priority = priority;
+		if (!areEqual(this.priority, priority)) {
+			String oldValue = this.priority;
+			this.priority = priority;
+			firePropertyChange("priority", oldValue, priority);
+		}
 	}
 
 	public String getNotes() {
@@ -343,17 +353,49 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return creationDate;
 	}
 
-	public void setCreationDate(Date date) {
-		this.creationDate = date;
+	public void setCreationDate(Date creationDate) {
+		if (!areEqual(this.creationDate, creationDate)) {
+			Date oldValue = this.creationDate;
+			this.creationDate = creationDate;
+			firePropertyChange("creationDate", oldValue, creationDate);
+		}
 	}
 
 	public void setSummary(String summary) {
 		Assert.isNotNull(summary);
-		this.summary = summary;
+		if (!areEqual(this.summary, summary)) {
+			String oldValue = this.summary;
+			this.summary = summary;
+			firePropertyChange("summary", oldValue, summary);
+		}
 	}
 
 	public void setCompletionDate(Date completionDate) {
-		this.completionDate = completionDate;
+		if (!areEqual(this.completionDate, completionDate)) {
+			Date oldValue = this.completionDate;
+			this.completionDate = completionDate;
+			firePropertyChange("completionDate", oldValue, completionDate);
+		}
+	}
+
+	private boolean areEqual(Object oldValue, Object newValue) {
+		return (oldValue != null) ? oldValue.equals(newValue) : oldValue == newValue;
+	}
+
+	private void firePropertyChange(String key, Object oldValue, Object newValue) {
+//			PropertyChangeEvent event = new PropertyChangeEvent(this, key, oldValue, newValue);
+//			for (PropertyChangeListener listener : propertyChangeListeners) {
+//				listener.propertyChange(event);
+//			}
+		changed = true;
+	}
+
+	public boolean isChanged() {
+		return changed;
+	}
+
+	public void setChanged(boolean changed) {
+		this.changed = changed;
 	}
 
 	/**
@@ -377,8 +419,12 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return taskKind;
 	}
 
-	public void setTaskKind(String kind) {
-		this.taskKind = kind;
+	public void setTaskKind(String taskKind) {
+		if (!areEqual(this.taskKind, taskKind)) {
+			String oldValue = this.taskKind;
+			this.taskKind = taskKind;
+			firePropertyChange("taskKind", oldValue, taskKind);
+		}
 	}
 
 	@Override
@@ -391,7 +437,11 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public void setDueDate(Date date) {
-		this.dueDate = date;
+		if (!areEqual(this.dueDate, dueDate)) {
+			Date oldValue = this.dueDate;
+			this.dueDate = dueDate;
+			firePropertyChange("dueDate", oldValue, dueDate);
+		}
 	}
 
 	@Deprecated
@@ -415,7 +465,11 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	 * @since 3.0
 	 */
 	public void setModificationDate(Date modificationDate) {
-		this.modificationDate = modificationDate;
+		if (!areEqual(this.modificationDate, modificationDate)) {
+			Date oldValue = this.modificationDate;
+			this.modificationDate = modificationDate;
+			firePropertyChange("modificationDate", oldValue, modificationDate);
+		}
 	}
 
 	/**
@@ -433,7 +487,11 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public void setTaskKey(String taskKey) {
-		this.taskKey = taskKey;
+		if (!areEqual(this.taskKey, taskKey)) {
+			String oldValue = this.taskKey;
+			this.taskKey = taskKey;
+			firePropertyChange("taskKey", oldValue, taskKey);
+		}
 	}
 
 	public synchronized String getAttribute(String key) {
@@ -453,7 +511,20 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (attributes == null) {
 			attributes = new HashMap<String, String>();
 		}
-		attributes.put(key, value);
+		String oldValue = attributes.get(key);
+		if (!areEqual(oldValue, value)) {
+			attributes.put(key, value);
+			firePropertyChange(key, oldValue, value);
+		}
+	}
+
+	@Override
+	public void setUrl(String url) {
+		String oldValue = getUrl();
+		if (!areEqual(oldValue, url)) {
+			super.setUrl(url);
+			firePropertyChange("url", oldValue, url);
+		}
 	}
 
 }

@@ -89,7 +89,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
 		if (taskData.isPartial()) {
-			Thread.dumpStack();
 			TaskMapper scheme = new TaskMapper(taskData);
 			task.setSummary(scheme.getSummary());
 			task.setPriority(scheme.getPriority().toString());
