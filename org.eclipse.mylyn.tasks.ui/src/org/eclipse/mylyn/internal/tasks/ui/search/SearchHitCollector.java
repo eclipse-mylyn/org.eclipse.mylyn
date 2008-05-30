@@ -54,6 +54,8 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 
 	private final RepositorySearchResult searchResult;
 
+	private AbstractRepositoryConnector connector;
+
 	/**
 	 * @since 3.0
 	 */
@@ -80,6 +82,9 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 		ITask task = taskList.getTask(repository.getRepositoryUrl(), taskData.getTaskId());
 		if (task == null) {
 			task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+			if (connector != null) {
+				connector.updateTaskFromTaskData(repository, task, taskData);
+			}
 		}
 		taskResults.add(task);
 		this.searchResult.addMatch(new Match(task, 0, 0));
@@ -115,8 +120,7 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException("Search cancelled");
 		}
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repositoryQuery.getConnectorKind());
+		connector = TasksUi.getRepositoryManager().getRepositoryConnector(repositoryQuery.getConnectorKind());
 		if (connector != null) {
 			final IStatus status = connector.performQuery(repository, repositoryQuery, this, null, monitor);
 			if (!status.isOK()) {

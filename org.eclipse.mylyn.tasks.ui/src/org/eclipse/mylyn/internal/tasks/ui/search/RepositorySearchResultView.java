@@ -41,7 +41,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.ISearchResult;
@@ -307,7 +306,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	 * Sets the new sorting category, and reorders all of the tasks.
 	 * 
 	 * @param sortOrder
-	 * 		The new category to sort by
+	 *            The new category to sort by
 	 */
 	public void setSortOrder(int sortOrder) {
 		StructuredViewer viewer = getViewer();
@@ -349,8 +348,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	protected void showMatch(Match match, int currentOffset, int currentLength, boolean activate)
 			throws PartInitException {
 		AbstractTask repositoryHit = (AbstractTask) match.getElement();
-
-		TasksUiUtil.openTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit.getUrl());
+		TasksUiInternal.refreshAndOpenTaskListElement(repositoryHit);
 	}
 
 	@Override

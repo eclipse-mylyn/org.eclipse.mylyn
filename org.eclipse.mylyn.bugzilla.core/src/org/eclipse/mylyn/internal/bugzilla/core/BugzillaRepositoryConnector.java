@@ -93,9 +93,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			task.setSummary(scheme.getSummary());
 			task.setPriority(scheme.getPriority().toString());
 			task.setOwner(scheme.getOwner());
+			task.setUrl(BugzillaClient.getBugUrlWithoutLogin(repository.getRepositoryUrl(), taskData.getTaskId()));
 		} else {
 			TaskMapper scheme = new TaskMapper(taskData);
 			scheme.applyTo(task);
+
+			task.setUrl(BugzillaClient.getBugUrlWithoutLogin(repository.getRepositoryUrl(), taskData.getTaskId()));
 
 			boolean isComplete = false;
 			// TODO: use repository configuration to determine what -completed- states are
