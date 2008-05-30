@@ -42,6 +42,8 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	private AbstractTaskEditorPage taskEditorPage;
 
+	private boolean expandVertically;
+
 	public AbstractTaskEditorPart() {
 	}
 
@@ -143,6 +145,14 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 
 	protected boolean setSelection(ISelection selection) {
 		return false;
+	}
+
+	public boolean getExpandVertically() {
+		return expandVertically;
+	}
+
+	public void setExpandVertically(boolean expandVertically) {
+		this.expandVertically = expandVertically;
 	}
 
 }

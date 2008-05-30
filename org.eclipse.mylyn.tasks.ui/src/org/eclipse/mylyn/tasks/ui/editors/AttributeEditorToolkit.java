@@ -164,9 +164,9 @@ public class AttributeEditorToolkit {
 	 * Adds content assist to the given text field.
 	 * 
 	 * @param text
-	 * 		text field to decorate.
+	 *            text field to decorate.
 	 * @param proposalProvider
-	 * 		instance providing content proposals
+	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
 	private ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
@@ -208,7 +208,7 @@ public class AttributeEditorToolkit {
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
 	 * @param attribute
-	 * 		attribute for which to provide content assist.
+	 *            attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
 	private IContentProposalProvider createContentProposalProvider(TaskAttribute attribute) {
@@ -265,7 +265,7 @@ public class AttributeEditorToolkit {
 	 * Called to check if there's content assist available for the given attribute.
 	 * 
 	 * @param attribute
-	 * 		the attribute
+	 *            the attribute
 	 * @return true if content assist is available for the specified attribute.
 	 */
 	private boolean hasContentAssist(TaskAttribute taskAttribute) {
@@ -279,7 +279,10 @@ public class AttributeEditorToolkit {
 	}
 
 	private boolean hasSpellChecking(TaskAttribute taskAttribute) {
-		// TODO EDITOR
+		String type = taskAttribute.getTaskData().getAttributeMapper().getType(taskAttribute);
+		if (TaskAttribute.TYPE_LONG_RICH_TEXT.equals(type) || TaskAttribute.TYPE_SHORT_RICH_TEXT.equals(type)) {
+			return true;
+		}
 		return false;
 	}
 

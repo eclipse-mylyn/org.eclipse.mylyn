@@ -64,10 +64,11 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -212,19 +213,19 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			if (taskToRefresh != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-//						if (task.getSynchronizationState() == SynchronizationState.INCOMING
-//								|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
-						getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
-								new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										refreshFormContent();
-									}
-								});
-						setSubmitEnabled(false);
-//						} else {
-//							refreshFormContent();
-//						}
+						if (!isDirty() && task.getSynchronizationState() == SynchronizationState.INCOMING) {
+							// automatically refresh if the user has not made any changes
+							refreshFormContent();
+						} else {
+							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+									new HyperlinkAdapter() {
+										@Override
+										public void linkActivated(HyperlinkEvent e) {
+											refreshFormContent();
+										}
+									});
+							setSubmitEnabled(false);
+						}
 					}
 				});
 			}
@@ -420,7 +421,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		} finally {
 			setReflow(true);
 		}
-		reflow();
 	}
 
 	private void createFormContentInternal() {
@@ -486,7 +486,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_DESCRIPTION) {
 			@Override
 			public AbstractTaskEditorPart createPart() {
-				return new TaskEditorDescriptionPart();
+				TaskEditorDescriptionPart part = new TaskEditorDescriptionPart();
+				part.setExpandVertically(getModel().getTaskData().isNew());
+				return part;
 			}
 		}.setPath(PATH_COMMENTS));
 		if (!taskData.isNew()) {
@@ -841,7 +843,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		part.initialize(this);
 		part.createControl(parent, toolkit);
 		if (part.getControl() != null) {
-			if (ID_PART_NEW_COMMENT.equals(part.getPartId())) {
+			if (part.getExpandVertically()) {
 				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(part.getControl());
 			} else {
 				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(part.getControl());
@@ -874,6 +876,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		if (reflow) {
 			form.layout(true, true);
 			form.reflow(true);
+			System.err.println("refl");
+			Thread.dumpStack();
 		}
 	}
 

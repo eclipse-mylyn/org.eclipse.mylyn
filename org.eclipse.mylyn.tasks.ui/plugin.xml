@@ -1541,7 +1541,7 @@
                            value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
                      </instanceof>
                      <test
-                           property="org.eclipse.mylyn.task.isLocal"
+                           property="org.eclipse.mylyn.task.hasLocalCompletionState"
                            value="true">
                      </test>
                   </and>
@@ -1563,7 +1563,7 @@
                            value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
                      </instanceof>
                      <test
-                           property="org.eclipse.mylyn.task.isLocal"
+                           property="org.eclipse.mylyn.task.hasLocalCompletionState"
                            value="true">
                      </test>
                   </and>

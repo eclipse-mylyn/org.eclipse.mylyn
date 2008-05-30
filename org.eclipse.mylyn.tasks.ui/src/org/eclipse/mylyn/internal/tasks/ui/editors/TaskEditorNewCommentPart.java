@@ -20,6 +20,7 @@ public class TaskEditorNewCommentPart extends TaskEditorRichTextPart {
 	public TaskEditorNewCommentPart() {
 		setPartName("New Comment");
 		setSectionStyle(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
+		setExpandVertically(true);
 	}
 
 	@Override

@@ -71,7 +71,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
@@ -537,7 +536,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	 */
 	public void updateHeaderToolBar() {
 		Form form = getHeaderForm().getForm().getForm();
-		FormToolkit toolkit = getHeaderForm().getToolkit();
 		IToolBarManager toolBarManager = form.getToolBarManager();
 
 		toolBarManager.removeAll();
