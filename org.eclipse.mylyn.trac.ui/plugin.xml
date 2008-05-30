@@ -8,8 +8,7 @@
       <connectorCore
             class="org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector"
             id="org.eclipse.mylyn.trac.tasklist.repositories"
-            name="Trac Repository Connector"
-            type="trac"/>
+            name="Trac Repository Connector"/>
       <connectorUi
             brandingIcon="icons/eview16/trac-icon.gif"
             class="org.eclipse.mylyn.internal.trac.ui.TracConnectorUi"
