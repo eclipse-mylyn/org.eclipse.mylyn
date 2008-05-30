@@ -120,6 +120,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -487,7 +488,10 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			@Override
 			public AbstractTaskEditorPart createPart() {
 				TaskEditorDescriptionPart part = new TaskEditorDescriptionPart();
-				part.setExpandVertically(getModel().getTaskData().isNew());
+				if (getModel().getTaskData().isNew()) {
+					part.setExpandVertically(true);
+					part.setSectionStyle(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
+				}
 				return part;
 			}
 		}.setPath(PATH_COMMENTS));

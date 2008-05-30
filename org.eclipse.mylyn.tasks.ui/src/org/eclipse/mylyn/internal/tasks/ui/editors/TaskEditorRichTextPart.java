@@ -62,11 +62,11 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		editor.getViewer().getTextWidget().setCaretOffset(strBuilder.length());
 	}
 
-	protected int getSectionStyle() {
+	public int getSectionStyle() {
 		return sectionStyle;
 	}
 
-	protected void setSectionStyle(int sectionStyle) {
+	public void setSectionStyle(int sectionStyle) {
 		this.sectionStyle = sectionStyle;
 	}
 
