@@ -20,7 +20,7 @@ public class BugzillaRepositoryQuery extends RepositoryQuery {
 
 	public BugzillaRepositoryQuery(String repositoryUrl, String queryUrl, String description) {
 		super(description);
-		this.url = queryUrl;
+		setUrl(queryUrl);
 		this.repositoryUrl = repositoryUrl;
 	}
 

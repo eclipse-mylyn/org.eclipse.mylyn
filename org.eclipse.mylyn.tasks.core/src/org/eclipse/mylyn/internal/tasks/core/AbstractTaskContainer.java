@@ -34,7 +34,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 	/**
 	 * Optional URL corresponding to the web resource associated with this container.
 	 */
-	protected String url = null;
+	private String url;
 
 	public AbstractTaskContainer(String handleAndDescription) {
 		Assert.isNotNull(handleAndDescription);

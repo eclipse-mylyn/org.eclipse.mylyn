@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ICapabilityContext;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -109,12 +108,8 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean hasCapability(Capability capability, TaskRepository taskRepository, ITask task,
-			ICapabilityContext context) {
-		if (capability == Capability.LOCAL_COMPLETION_STATE) {
-			return true;
-		}
-		return false;
+	public boolean hasLocalCompletionState(TaskRepository taskRepository, ITask task) {
+		return true;
 	}
 
 }

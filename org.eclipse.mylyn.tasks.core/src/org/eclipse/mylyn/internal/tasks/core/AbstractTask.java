@@ -17,8 +17,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Encapsulates tasks that reside on a repository or local computer and participate in synchronization with the source
@@ -94,7 +94,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 		this.summary = summary;
-		this.url = "";
 	}
 
 	/**
@@ -348,6 +347,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public void setSummary(String summary) {
+		Assert.isNotNull(summary);
 		this.summary = summary;
 	}
 

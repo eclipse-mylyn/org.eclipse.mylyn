@@ -67,7 +67,6 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	// API-3.0: implement comparable
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
 
@@ -216,8 +215,6 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	public abstract Date getDueDate();
 
 	/**
-	 * Final to preserve the handle identifier format required by the framework.
-	 * 
 	 * @since 3.0
 	 */
 	public abstract String getHandleIdentifier();
@@ -333,7 +330,6 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 	/**
 	 * @since 3.0
 	 */
-	// API-3.0: accept null and update docs
 	public abstract void setUrl(String taskUrl);
 
 	/**

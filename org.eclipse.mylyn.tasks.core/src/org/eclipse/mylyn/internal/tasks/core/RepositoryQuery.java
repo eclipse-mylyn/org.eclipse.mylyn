@@ -92,10 +92,10 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 	}
 
 	public void setRepositoryUrl(String newRepositoryUrl) {
-		if (repositoryUrl != null && url != null) {
-			// the repository url has changed, so change corresponding part of
-			// query URL
-			this.url = newRepositoryUrl + url.substring(repositoryUrl.length());
+		String url = getUrl();
+		if (repositoryUrl != null && url != null && url.startsWith(repositoryUrl)) {
+			// change corresponding part of the query URL
+			setUrl(newRepositoryUrl + url.substring(repositoryUrl.length()));
 		}
 		this.repositoryUrl = newRepositoryUrl;
 	}
