@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,8 +18,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -223,22 +220,13 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		TaskAttribute attributeAssignedTo = createAttribute(data, BugzillaReportElement.ASSIGNED_TO);
 		attributeAssignedTo.setValue("");
-//		attributeAssignedTo.setReadOnly(false);
 
 		TaskAttribute attributeBugFileLoc = createAttribute(data, BugzillaReportElement.BUG_FILE_LOC);
 		attributeBugFileLoc.setValue("http://");
-		//a.setHidden(false);
 
 		createAttribute(data, BugzillaReportElement.DEPENDSON);
-//		a.setValue("");
-//		a.setReadOnly(false);
 		createAttribute(data, BugzillaReportElement.BLOCKED);
-//		a.setValue("");
-//		a.setReadOnly(false);
 		createAttribute(data, BugzillaReportElement.NEWCC);
-//		a.setValue("");
-//		a.setReadOnly(false);
-
 		createAttribute(data, BugzillaReportElement.LONG_DESC);
 
 		return true;
@@ -257,10 +245,6 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				.setLabel(key.toString())
 				.setType(key.getType());
 		return attribute;
-	}
-
-	private void addAttributeValue(TaskData data, BugzillaReportElement key, String value) {
-		data.getRoot().getAttribute(key.getKey()).addValue(value);
 	}
 
 	@Override
@@ -294,32 +278,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
-		//client = connector.getClientManager().getClient(taskRepository, new NullProgressMonitor());
 		return new BugzillaAttributeMapper(taskRepository);
 	}
-
-	//*************************** OLD API
-
-	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
-		Set<String> result = new HashSet<String>();
-		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKey());
-		if (attribute != null) {
-			String[] ids = attribute.getValue().split(",");
-			for (String id : ids) {
-				id = id.trim();
-				if (id.length() == 0) {
-					continue;
-				}
-				result.add(id);
-			}
-		}
-		return result;
-
-	}
-
-//	@Override
-//	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
-//		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getConnectorKind(), taskData.getTaskKind());
-//	}
 
 }

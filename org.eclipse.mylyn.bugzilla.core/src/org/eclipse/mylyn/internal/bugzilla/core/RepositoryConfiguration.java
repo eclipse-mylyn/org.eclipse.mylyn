@@ -477,7 +477,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	}
 
-	private void addValidOperations(TaskData bugReport) {
+	public void addValidOperations(TaskData bugReport) {
 		TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 
 		BUGZILLA_REPORT_STATUS status = BUGZILLA_REPORT_STATUS.NEW;
@@ -535,7 +535,7 @@ public class RepositoryConfiguration implements Serializable {
 		}
 	}
 
-	private void addOperation(TaskData bugReport, BUGZILLA_OPERATION opcode) {
+	public void addOperation(TaskData bugReport, BUGZILLA_OPERATION opcode) {
 		TaskAttribute attribute;
 		TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(TaskAttribute.OPERATION);
 		if (operationAttribute == null) {
