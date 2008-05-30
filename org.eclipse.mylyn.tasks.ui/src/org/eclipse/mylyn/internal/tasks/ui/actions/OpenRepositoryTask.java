@@ -19,7 +19,6 @@ import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.commands.RemoteTaskSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -96,7 +95,7 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 			}
 			if (!openSuccessful) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						ITasksUiConstants.TITLE_DIALOG, "Could not find matching repository task.");
+						"Open Task", "Could not find matching repository task.");
 			}
 		}
 	}

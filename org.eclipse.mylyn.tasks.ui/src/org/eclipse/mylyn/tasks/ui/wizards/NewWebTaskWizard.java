@@ -16,7 +16,6 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewWebTaskPage;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.Clipboard;
@@ -91,7 +90,7 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 
 		MessageDialog.openInformation(
 				getShell(),
-				ITasksUiConstants.TITLE_DIALOG,
+				"New Task",
 				"This connector does not provide a rich task editor for creating tasks.\n\n"
 						+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
 	}

@@ -83,7 +83,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -95,6 +94,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
@@ -495,7 +495,7 @@ public class TasksUiInternal {
 			taskList.addTask(newTask, view.getDrilledIntoCategory());
 		} else {
 			if (view != null && view.getDrilledIntoCategory() != null) {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Create Task",
 						"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
 			taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
@@ -783,6 +783,36 @@ public class TasksUiInternal {
 		job.schedule();
 
 		return true;
+	}
+
+	/**
+	 * @since 3.0
+	 */
+	public static boolean openTaskInBackground(ITask task, boolean bringToTop) {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			IEditorPart activeEditor = null;
+			IWorkbenchPart activePart = null;
+			IWorkbenchPage activePage = window.getActivePage();
+			if (activePage != null) {
+				activeEditor = activePage.getActiveEditor();
+				activePart = activePage.getActivePart();
+			}
+			boolean opened = TasksUiUtil.openTask(task);
+			if (opened && activePage != null) {
+				if (!bringToTop && activeEditor != null) {
+					activePage.bringToTop(activeEditor);
+				}
+				if (activePart != null) {
+					activePage.activate(activePart);
+				}
+			}
+			return opened;
+		} else {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \""
+					+ task.getSummary() + "\": no active workbench window"));
+		}
+		return false;
 	}
 
 }

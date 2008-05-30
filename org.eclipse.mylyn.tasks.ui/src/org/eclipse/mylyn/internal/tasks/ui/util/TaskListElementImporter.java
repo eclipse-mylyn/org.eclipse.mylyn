@@ -60,7 +60,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -119,6 +118,8 @@ public class TaskListElementImporter {
 	private boolean hasCaughtException = false;
 
 	private final TaskRepositoryManager repositoryManager;
+
+	private static final String MESSAGE_RESTORE = "Could not read task list.  Consider restoring via File -> Import -> Mylyn Task Data";
 
 	public TaskListElementImporter(TaskRepositoryManager repositoryManager, TasksModel tasksModel) {
 		this.repositoryManager = repositoryManager;
@@ -512,7 +513,7 @@ public class TaskListElementImporter {
 			inFile.renameTo(new File(name));
 		}
 		if (child == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, ITasksUiConstants.MESSAGE_RESTORE, e));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, MESSAGE_RESTORE, e));
 		} else {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Tasks may have been lost from "
 					+ child.getNodeName(), e));

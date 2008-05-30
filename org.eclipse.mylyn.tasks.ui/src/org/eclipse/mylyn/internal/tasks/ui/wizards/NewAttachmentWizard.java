@@ -43,7 +43,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -222,8 +221,8 @@ public class NewAttachmentWizard extends Wizard {
 						public void run() {
 							if (event.getResult().getException() != null) {
 
-								MessageDialog.openError(Display.getDefault().getActiveShell(),
-										ITasksUiConstants.TITLE_DIALOG, event.getResult().getMessage());
+								MessageDialog.openError(Display.getDefault().getActiveShell(), "Task Attachment",
+										event.getResult().getMessage());
 
 							}
 							forceRefreshInplace(task);

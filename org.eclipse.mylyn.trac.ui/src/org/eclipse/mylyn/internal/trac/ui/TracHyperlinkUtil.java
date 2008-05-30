@@ -23,7 +23,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
-import org.eclipse.mylyn.tasks.ui.WebHyperlink;
 
 /**
  * Utility class for detecting Trac hyperlinks.

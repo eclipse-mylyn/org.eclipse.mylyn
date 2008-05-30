@@ -11,16 +11,9 @@ package org.eclipse.mylyn.tasks.ui;
 /**
  * @author Mik Kersten
  * @since 3.0
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface ITasksUiConstants {
-
-	@Deprecated
-	public static final String TITLE_DIALOG = "Mylyn Information";
-
-	@Deprecated
-	public static final String MESSAGE_RESTORE = "Could not read task list.  Consider restoring via File -> Import -> Mylyn Task Data";
-
-	public static final String URL_HOMEPAGE = "http://eclipse.org/mylyn";
 
 	public static final String ID_COMMAND_MARK_TASK_UNREAD = "org.eclipse.mylyn.tasks.ui.command.markTaskUnread";
 
@@ -29,5 +22,7 @@ public interface ITasksUiConstants {
 	public static final String ID_PAGE_PLANNING = "org.eclipse.mylyn.tasks.ui.pageFactory.Planning";
 
 	public static final String ID_PERSPECTIVE_PLANNING = "org.eclipse.mylyn.tasks.ui.perspectives.planning";
+
+	public static final String ID_PREFERENCES_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
 }

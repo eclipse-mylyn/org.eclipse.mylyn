@@ -26,7 +26,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
@@ -107,7 +106,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			boolean openSuccessful = TasksUiUtil.openTask(repository, key);
 			if (!openSuccessful) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						ITasksUiConstants.TITLE_DIALOG, "No task found matching key: " + key);
+						"Task Search", "No task found matching key: " + key);
 			}
 			return openSuccessful;
 		} else {

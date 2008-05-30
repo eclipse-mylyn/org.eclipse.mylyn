@@ -52,7 +52,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -76,8 +75,6 @@ public class TasksUiUtil {
 	 * @see #openTask(String)
 	 */
 	public static final int FLAG_NO_RICH_EDITOR = 1 << 17;
-
-	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
 	private static final String ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND = "outgoingNewConnectorKind";
 
@@ -262,36 +259,6 @@ public class TasksUiUtil {
 	@Deprecated
 	public static boolean openRepositoryTask(TaskRepository repository, String taskId) {
 		return openTask(repository, taskId);
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public static boolean openTaskInBackground(ITask task, boolean bringToTop) {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window != null) {
-			IEditorPart activeEditor = null;
-			IWorkbenchPart activePart = null;
-			IWorkbenchPage activePage = window.getActivePage();
-			if (activePage != null) {
-				activeEditor = activePage.getActiveEditor();
-				activePart = activePage.getActivePart();
-			}
-			boolean opened = openTask(task);
-			if (opened && activePage != null) {
-				if (!bringToTop && activeEditor != null) {
-					activePage.bringToTop(activeEditor);
-				}
-				if (activePart != null) {
-					activePage.activate(activePart);
-				}
-			}
-			return opened;
-		} else {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \""
-					+ task.getSummary() + "\": no active workbench window"));
-		}
-		return false;
 	}
 
 	/**

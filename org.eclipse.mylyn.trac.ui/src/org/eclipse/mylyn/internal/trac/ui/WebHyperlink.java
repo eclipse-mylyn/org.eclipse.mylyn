@@ -5,10 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.trac.ui;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * Encapsulates link from text to a URL.
@@ -16,7 +17,6 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
  * @author Steffen Pingel
  * @since 2.0
  */
-//API 3.0 move to util package?
 public class WebHyperlink implements IHyperlink {
 
 	private final IRegion region;

@@ -14,7 +14,6 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
-import org.eclipse.mylyn.tasks.ui.WebHyperlink;
 
 public class TracHyperlinkUtilTest extends TestCase {
 

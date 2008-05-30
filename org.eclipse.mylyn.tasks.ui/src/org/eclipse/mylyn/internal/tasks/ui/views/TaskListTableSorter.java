@@ -20,7 +20,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -60,7 +59,7 @@ public class TaskListTableSorter extends ViewerSorter {
 	public void setColumn(String column) {
 		if (view.isFocusedMode()) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					ITasksUiConstants.TITLE_DIALOG,
+					"Task Sorting",
 					"Manual sorting is disabled in focused mode, sort order will not take effect until focused mode is disabled.");
 		}
 	}

@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 
@@ -48,7 +47,7 @@ public class OpenTaskListElementAction extends Action {
 		List<?> list = ((IStructuredSelection) selection).toList();
 		for (Object element : list) {
 			if (element instanceof ITask && event != null && (event.keyCode & SWT.MOD1) != 0) {
-				TasksUiUtil.openTaskInBackground((AbstractTask) element, true);
+				TasksUiInternal.openTaskInBackground((AbstractTask) element, true);
 			} else if (element instanceof ITask) {
 				TasksUiInternal.refreshAndOpenTaskListElement((ITask) element);
 			} else {

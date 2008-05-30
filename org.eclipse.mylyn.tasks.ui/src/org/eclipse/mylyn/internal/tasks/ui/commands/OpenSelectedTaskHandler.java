@@ -10,10 +10,10 @@ package org.eclipse.mylyn.internal.tasks.ui.commands;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Steffen Pingel
@@ -23,7 +23,7 @@ public class OpenSelectedTaskHandler extends AbstractTaskListViewHandler {
 	@Override
 	protected void execute(ExecutionEvent event, TaskListView taskListView, IRepositoryElement item) {
 		if (item instanceof ITask) {
-			TasksUiUtil.openTaskInBackground((AbstractTask) item, true);
+			TasksUiInternal.openTaskInBackground((AbstractTask) item, true);
 		}
 	}
 

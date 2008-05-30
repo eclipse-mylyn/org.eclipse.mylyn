@@ -74,6 +74,7 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationMana
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
+import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
@@ -94,7 +95,6 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;

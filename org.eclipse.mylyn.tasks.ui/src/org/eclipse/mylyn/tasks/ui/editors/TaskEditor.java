@@ -40,6 +40,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditorInput;
+import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;

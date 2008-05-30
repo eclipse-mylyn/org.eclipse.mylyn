@@ -72,7 +72,7 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor CATEGORY_NEW = create(TOOL, "category-new.gif");
 
-	public static final ImageDescriptor CATEGORY_ARCHIVE = create(TOOL, "category-archive.gif");
+	public static final ImageDescriptor CATEGORY_UNCATEGORIZED = create(TOOL, "category-archive.gif");
 
 	public static final ImageDescriptor QUERY = create(TOOL, "query.gif");
 

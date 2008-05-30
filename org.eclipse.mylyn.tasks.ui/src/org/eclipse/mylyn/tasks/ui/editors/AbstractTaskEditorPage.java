@@ -157,7 +157,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					TasksUiInternal.getTaskList().addTask(newTask, parent);
 					close();
 					TasksUiInternal.getTaskList().deleteTask(getTask());
-					TasksUiUtil.openTaskInBackground(newTask, false);
+					TasksUiInternal.openTaskInBackground(newTask, false);
 				}
 
 				public void run() {

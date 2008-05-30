@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -74,7 +73,7 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 	public void run(RepositoryQuery selectedQuery) {
 		if (selectedQuery == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					ITasksUiConstants.TITLE_DIALOG, "No query selected.");
+					"Clone Query", "No query selected.");
 			return;
 		}
 

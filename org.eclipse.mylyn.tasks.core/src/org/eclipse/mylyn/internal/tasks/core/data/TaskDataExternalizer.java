@@ -21,7 +21,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -35,9 +35,9 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class TaskDataExternalizer {
 
-	private final ITaskRepositoryManager taskRepositoryManager;
+	private final IRepositoryManager taskRepositoryManager;
 
-	public TaskDataExternalizer(ITaskRepositoryManager taskRepositoryManager) {
+	public TaskDataExternalizer(IRepositoryManager taskRepositoryManager) {
 		this.taskRepositoryManager = taskRepositoryManager;
 	}
 

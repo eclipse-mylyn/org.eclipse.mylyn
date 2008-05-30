@@ -19,10 +19,11 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.LegendElement;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -298,8 +299,8 @@ public class UiLegendDialog extends PopupDialog {
 			public void linkActivated(HyperlinkEvent e) {
 				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow()
-						.getShell(), TasksUiUtil.PREFS_PAGE_ID_COLORS_AND_FONTS,
-						new String[] { TasksUiUtil.PREFS_PAGE_ID_COLORS_AND_FONTS }, null);
+						.getShell(), ITasksUiConstants.ID_PREFERENCES_COLORS_AND_FONTS,
+						new String[] { ITasksUiConstants.ID_PREFERENCES_COLORS_AND_FONTS }, null);
 				dlg.open();
 			}
 
