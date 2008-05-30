@@ -146,7 +146,7 @@ public enum BugzillaReportElement {
 
 	STATUS_OPEN("open status values", "status_open", null, true, true),
 
-	NEW_COMMENT("new comment", "new_comment", TaskAttribute.TYPE_LONG_TEXT, true, false),
+	NEW_COMMENT("new comment", "new_comment", TaskAttribute.TYPE_LONG_RICH_TEXT, true, false),
 
 	// Used by search engine
 	LI("used by search engine", "li", null, true, false),

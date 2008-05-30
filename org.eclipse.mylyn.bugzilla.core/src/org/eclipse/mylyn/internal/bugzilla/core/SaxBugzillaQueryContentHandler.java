@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.util.Locale;
 
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -25,17 +24,6 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
-	/** The bug id */
-	private String id;
-
-	/** The summary of the bug */
-	private String description = "";
-
-	/** The priority of the bug */
-	private String priority = PriorityLevel.getDefault().toString();
-
-	private String owner = "";
-
 	private StringBuffer characters;
 
 	private final TaskDataCollector collector;
@@ -45,6 +33,8 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	private int resultCount;
 
 	private final TaskAttributeMapper mapper;
+
+	private TaskData taskData;
 
 	public SaxBugzillaQueryContentHandler(String repositoryUrl, TaskDataCollector collector, TaskAttributeMapper mapper) {
 		this.repositoryUrl = repositoryUrl;
@@ -60,23 +50,6 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		characters = new StringBuffer();
-		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
-		try {
-			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
-			switch (tag) {
-			case LI:
-// hit = new BugzillaQueryHit();
-// hit.setRepository(repositoryUrl);
-// break;
-			}
-		} catch (RuntimeException e) {
-			if (e instanceof IllegalArgumentException) {
-				// ignore unrecognized tags
-				return;
-			}
-			throw e;
-		}
-
 	}
 
 	@Override
@@ -88,42 +61,19 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 			switch (tag) {
 			case ID:
-				id = parsedText;
-				break;
-			// case BUG_SEVERITY:
-			// severity = parsedText;
-			// break;
-			case PRIORITY:
-				priority = parsedText;
-				break;
-			// case REP_PLATFORM:
-			// platform = parsedText;
-			// break;
-			case ASSIGNED_TO:
-				//hit.setOwner(parsedText);
-				owner = parsedText;
-				break;
-			case BUG_STATUS:
-				//	state = parsedText;
-				break;
-			// case RESOLUTION:
-			// resolution = parsedText;
-			// break;
-			case SHORT_DESC:
-				description = parsedText;
-				break;
-			case SHORT_SHORT_DESC:
-				description = parsedText;
+				taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, repositoryUrl, parsedText);
 				break;
 			case LI:
-				TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, repositoryUrl, id);
-				BugzillaTaskDataHandler.createAttribute(taskData, BugzillaReportElement.SHORT_DESC).setValue(
-						description);
-				BugzillaTaskDataHandler.createAttribute(taskData, BugzillaReportElement.PRIORITY).setValue(priority);
-				BugzillaTaskDataHandler.createAttribute(taskData, BugzillaReportElement.ASSIGNED_TO).setValue(owner);
-				taskData.setPartial(true);
-				collector.accept(taskData);
+				if (taskData != null) {
+					collector.accept(taskData);
+				}
 				resultCount++;
+				break;
+			default:
+				if (taskData != null) {
+					BugzillaTaskDataHandler.createAttribute(taskData, tag).setValue(parsedText);
+				}
+				break;
 			}
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
