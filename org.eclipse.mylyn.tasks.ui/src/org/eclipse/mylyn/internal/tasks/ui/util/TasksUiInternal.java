@@ -765,19 +765,19 @@ public class TasksUiInternal {
 			return false;
 		}
 
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window == null) {
-			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-			if (windows != null && windows.length > 0) {
-				window = windows[0];
-			}
-		}
-		if (window == null) {
-			return false;
-		}
-		IWorkbenchPage page = window.getActivePage();
+//		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//		if (window == null) {
+//			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+//			if (windows != null && windows.length > 0) {
+//				window = windows[0];
+//			}
+//		}
+//		if (window == null) {
+//			return Status.OK_STATUS;
+//		}
+//		IWorkbenchPage page = window.getActivePage();
 
-		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(connectorKind, repositoryUrl, id, taskUrl, page);
+		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(connectorKind, repositoryUrl, id, taskUrl);
 		job.schedule();
 
 		return true;
