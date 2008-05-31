@@ -20,11 +20,14 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -41,7 +44,7 @@ public class TaskDataExternalizer {
 		this.taskRepositoryManager = taskRepositoryManager;
 	}
 
-	private void migrate(TaskDataState taskDataState) throws IOException {
+	private void migrate(final TaskDataState taskDataState) throws IOException {
 		// for testing
 		if (taskRepositoryManager == null) {
 			return;
@@ -54,22 +57,33 @@ public class TaskDataExternalizer {
 		}
 
 		String repositoryUrl = taskDataState.getRepositoryUrl();
-		TaskRepository taskRepository = taskRepositoryManager.getRepository(connectorKind, repositoryUrl);
+		final TaskRepository taskRepository = taskRepositoryManager.getRepository(connectorKind, repositoryUrl);
 		if (taskRepository == null) {
 			throw new IOException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\"");
 		}
 
-		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		if (taskDataHandler != null) {
-			if (taskDataState.getLastReadData() != null) {
-				taskDataHandler.migrateTaskData(taskRepository, taskDataState.getLastReadData());
-			}
-			if (taskDataState.getRepositoryData() != null) {
-				taskDataHandler.migrateTaskData(taskRepository, taskDataState.getRepositoryData());
-			}
-			if (taskDataState.getEditsData() != null) {
-				taskDataHandler.migrateTaskData(taskRepository, taskDataState.getEditsData());
-			}
+			migrate(taskDataState.getLastReadData(), taskRepository, taskDataHandler);
+			migrate(taskDataState.getRepositoryData(), taskRepository, taskDataHandler);
+			migrate(taskDataState.getEditsData(), taskRepository, taskDataHandler);
+		}
+	}
+
+	private void migrate(final TaskData taskData, final TaskRepository taskRepository,
+			final AbstractTaskDataHandler taskDataHandler) {
+		if (taskData != null) {
+			SafeRunner.run(new ISafeRunnable() {
+
+				public void handleException(Throwable exception) {
+					// ignore
+				}
+
+				public void run() throws Exception {
+					taskDataHandler.migrateTaskData(taskRepository, taskData);
+				}
+
+			});
 		}
 	}
 

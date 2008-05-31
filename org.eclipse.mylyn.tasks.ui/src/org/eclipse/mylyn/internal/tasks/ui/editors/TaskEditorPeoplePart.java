@@ -12,6 +12,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -36,6 +37,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 					editor.getLabelControl());
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
+			GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(editor.getControl());
 		}
 	}
 

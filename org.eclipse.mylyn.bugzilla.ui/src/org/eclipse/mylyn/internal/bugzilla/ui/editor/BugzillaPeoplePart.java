@@ -15,6 +15,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -40,6 +41,11 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 					editor.getLabelControl());
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
+			if (attribute.getId().equals(BugzillaAttribute.CC.getKey())) {
+				GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(editor.getControl());
+			} else {
+				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(editor.getControl());
+			}
 		}
 	}
 
@@ -58,8 +64,8 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(
 				BugzillaAttribute.NEWCC.getKey()));
 		addSelfToCC(peopleComposite);
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(
-				BugzillaAttribute.CC.getKey()));
+		addAttribute(peopleComposite, toolkit, getTaskData().getRoot()
+				.getMappedAttribute(BugzillaAttribute.CC.getKey()));
 
 		toolkit.paintBordersFor(peopleComposite);
 		section.setClient(peopleComposite);
