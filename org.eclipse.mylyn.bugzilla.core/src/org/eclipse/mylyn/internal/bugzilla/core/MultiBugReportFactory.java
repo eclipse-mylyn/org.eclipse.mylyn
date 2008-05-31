@@ -45,10 +45,12 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 					|| errorResponse.equals(IBugzillaConstants.XML_ERROR_INVALIDBUGID)) {
 				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
-			}
-			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTPERMITTED)) {
+			} else if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTPERMITTED)) {
 				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_OP_NOT_PERMITTED));
+			} else {
+				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+						RepositoryStatus.ERROR_REPOSITORY, "", "Unexpected error occurred: " + errorResponse));
 			}
 		}
 	}
