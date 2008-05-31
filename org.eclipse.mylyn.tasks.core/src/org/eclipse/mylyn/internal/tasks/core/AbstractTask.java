@@ -437,10 +437,10 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public void setDueDate(Date date) {
-		if (!areEqual(this.dueDate, dueDate)) {
+		if (!areEqual(this.dueDate, date)) {
 			Date oldValue = this.dueDate;
-			this.dueDate = dueDate;
-			firePropertyChange("dueDate", oldValue, dueDate);
+			this.dueDate = date;
+			firePropertyChange("dueDate", oldValue, date);
 		}
 	}
 
