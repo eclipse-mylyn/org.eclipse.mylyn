@@ -14,8 +14,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractNewRepositoryTaskEditor;
@@ -99,7 +99,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 			descriptionTextViewer.getTextWidget().setFocus();
 			return;
 		}
-		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.COMPONENT.getKey());
+		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaAttribute.COMPONENT.getKey());
 		String componentValue = attribute.getValue();
 		if (componentValue.equals("")) {
 			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error",
@@ -113,7 +113,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
 
-		RepositoryTaskAttribute attribute = this.taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKey());
+		RepositoryTaskAttribute attribute = this.taskData.getAttribute(BugzillaAttribute.DEPENDSON.getKey());
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
@@ -132,7 +132,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 			getManagedForm().getToolkit().paintBordersFor(textFieldComposite);
 		}
 
-		attribute = this.taskData.getAttribute(BugzillaReportElement.BLOCKED.getKey());
+		attribute = this.taskData.getAttribute(BugzillaAttribute.BLOCKED.getKey());
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
@@ -153,7 +153,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 	@Override
 	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
-		return BugzillaReportElement.NEWCC.getKey().equals(attribute.getId());
+		return BugzillaAttribute.NEWCC.getKey().equals(attribute.getId());
 	}
 
 	/**
@@ -205,10 +205,10 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 			FormToolkit toolkit = getManagedForm().getToolkit();
 			Label dummylabel = toolkit.createLabel(peopleComposite, "");
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(dummylabel);
-			RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKey());
+			RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey());
 			if (attribute == null) {
-				taskData.setAttributeValue(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKey(), "0");
-				attribute = taskData.getAttribute(BugzillaReportElement.SET_DEFAULT_ASSIGNEE.getKey());
+				taskData.setAttributeValue(BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey(), "0");
+				attribute = taskData.getAttribute(BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey());
 			}
 			addButtonField(peopleComposite, attribute, SWT.CHECK);
 		}

@@ -20,7 +20,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -368,7 +367,7 @@ public class RepositoryConfiguration implements Serializable {
 	/*
 	 * Intermediate step until configuration is made generic.
 	 */
-	public List<String> getOptionValues(BugzillaReportElement element, String product) {
+	public List<String> getOptionValues(BugzillaAttribute element, String product) {
 		switch (element) {
 		case PRODUCT:
 			return getProducts();
@@ -418,7 +417,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	public void updateAttributeOptions(TaskData existingReport) {
 		TaskAttribute attributeProduct = existingReport.getRoot().getMappedAttribute(
-				BugzillaReportElement.PRODUCT.getKey());
+				BugzillaAttribute.PRODUCT.getKey());
 		if (attributeProduct == null) {
 			return;
 		}
@@ -438,9 +437,9 @@ public class RepositoryConfiguration implements Serializable {
 				}
 			} else {
 
-				BugzillaReportElement element;
+				BugzillaAttribute element;
 				try {
-					element = BugzillaReportElement.valueOf(attribute.getId().trim().toUpperCase(Locale.ENGLISH));
+					element = BugzillaAttribute.valueOf(attribute.getId().trim().toUpperCase(Locale.ENGLISH));
 				} catch (RuntimeException e) {
 					if (e instanceof IllegalArgumentException) {
 						// ignore unrecognized tags
@@ -450,13 +449,13 @@ public class RepositoryConfiguration implements Serializable {
 				}
 				attribute.clearOptions();
 				List<String> optionValues = getOptionValues(element, product);
-				if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
-						&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
+				if (element != BugzillaAttribute.OP_SYS && element != BugzillaAttribute.BUG_SEVERITY
+						&& element != BugzillaAttribute.PRIORITY && element != BugzillaAttribute.BUG_STATUS) {
 					Collections.sort(optionValues);
 				}
-				if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
+				if (element == BugzillaAttribute.TARGET_MILESTONE && optionValues.isEmpty()) {
 
-					existingReport.getRoot().removeAttribute(BugzillaReportElement.TARGET_MILESTONE.getKey());
+					existingReport.getRoot().removeAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey());
 					continue;
 				}
 				attribute.clearOptions();
@@ -497,30 +496,30 @@ public class RepositoryConfiguration implements Serializable {
 		case UNCONFIRMED:
 		case REOPENED:
 		case NEW:
-			addOperation(bugReport, BUGZILLA_OPERATION.none);
-			addOperation(bugReport, BUGZILLA_OPERATION.accept);
-			addOperation(bugReport, BUGZILLA_OPERATION.resolve);
-			addOperation(bugReport, BUGZILLA_OPERATION.duplicate);
+			addOperation(bugReport, BugzillaOperation.none);
+			addOperation(bugReport, BugzillaOperation.accept);
+			addOperation(bugReport, BugzillaOperation.resolve);
+			addOperation(bugReport, BugzillaOperation.duplicate);
 			break;
 		case ASSIGNED:
-			addOperation(bugReport, BUGZILLA_OPERATION.none);
-			addOperation(bugReport, BUGZILLA_OPERATION.resolve);
-			addOperation(bugReport, BUGZILLA_OPERATION.duplicate);
+			addOperation(bugReport, BugzillaOperation.none);
+			addOperation(bugReport, BugzillaOperation.resolve);
+			addOperation(bugReport, BugzillaOperation.duplicate);
 			break;
 		case RESOLVED:
-			addOperation(bugReport, BUGZILLA_OPERATION.none);
-			addOperation(bugReport, BUGZILLA_OPERATION.reopen);
-			addOperation(bugReport, BUGZILLA_OPERATION.verify);
-			addOperation(bugReport, BUGZILLA_OPERATION.close);
+			addOperation(bugReport, BugzillaOperation.none);
+			addOperation(bugReport, BugzillaOperation.reopen);
+			addOperation(bugReport, BugzillaOperation.verify);
+			addOperation(bugReport, BugzillaOperation.close);
 			break;
 		case CLOSED:
-			addOperation(bugReport, BUGZILLA_OPERATION.none);
-			addOperation(bugReport, BUGZILLA_OPERATION.reopen);
+			addOperation(bugReport, BugzillaOperation.none);
+			addOperation(bugReport, BugzillaOperation.reopen);
 			break;
 		case VERIFIED:
-			addOperation(bugReport, BUGZILLA_OPERATION.none);
-			addOperation(bugReport, BUGZILLA_OPERATION.reopen);
-			addOperation(bugReport, BUGZILLA_OPERATION.close);
+			addOperation(bugReport, BugzillaOperation.none);
+			addOperation(bugReport, BugzillaOperation.reopen);
+			addOperation(bugReport, BugzillaOperation.close);
 		}
 		String bugzillaVersion = getInstallVersion();
 		if (bugzillaVersion == null) {
@@ -530,12 +529,12 @@ public class RepositoryConfiguration implements Serializable {
 				&& (status == BUGZILLA_REPORT_STATUS.NEW || status == BUGZILLA_REPORT_STATUS.ASSIGNED
 						|| status == BUGZILLA_REPORT_STATUS.REOPENED || status == BUGZILLA_REPORT_STATUS.UNCONFIRMED)) {
 			// old bugzilla workflow is used
-			addOperation(bugReport, BUGZILLA_OPERATION.reassign);
-			addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent);
+			addOperation(bugReport, BugzillaOperation.reassign);
+			addOperation(bugReport, BugzillaOperation.reassignbycomponent);
 		}
 	}
 
-	public void addOperation(TaskData bugReport, BUGZILLA_OPERATION opcode) {
+	public void addOperation(TaskData bugReport, BugzillaOperation opcode) {
 		TaskAttribute attribute;
 		TaskAttribute operationAttribute = bugReport.getRoot().getAttribute(TaskAttribute.OPERATION);
 		if (operationAttribute == null) {
@@ -559,7 +558,7 @@ public class RepositoryConfiguration implements Serializable {
 			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
 			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
 			TaskAttribute attrResolvedInput = attribute.getTaskData().getRoot().createAttribute(opcode.getInputId());
-			attrResolvedInput.getMetaData().setType(opcode.getType());
+			attrResolvedInput.getMetaData().setType(opcode.getInputType());
 			attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
 			for (String resolution : getResolutions()) {
 				// DUPLICATE and MOVED have special meanings so do not show as resolution
@@ -573,7 +572,7 @@ public class RepositoryConfiguration implements Serializable {
 			TaskOperation.applyTo(attribute, opcode.toString(), opcode.getLabel());
 			if (opcode.getInputId() != null) {
 				TaskAttribute attrInput = bugReport.getRoot().createAttribute(opcode.getInputId());
-				attrInput.getMetaData().defaults().setReadOnly(false).setType(opcode.getType());
+				attrInput.getMetaData().defaults().setReadOnly(false).setType(opcode.getInputType());
 				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, opcode.getInputId());
 			}
 			break;

@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
@@ -59,22 +59,22 @@ public class BugzillaTaskTest extends TestCase {
 		String nowTimeStamp = new SimpleDateFormat(BugzillaAttributeFactory.comment_creation_ts_format).format(now);
 
 		TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), 1);
-		RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN.getKey());
+		RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());
 		attribute.setValue(nowTimeStamp);
-		taskComment.addAttribute(BugzillaReportElement.BUG_WHEN.getKey(), attribute);
+		taskComment.addAttribute(BugzillaAttribute.BUG_WHEN.getKey(), attribute);
 		taskData.addComment(taskComment);
 		assertNull(task.getCompletionDate());
 
-		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS.getKey());
+		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaAttribute.BUG_STATUS.getKey());
 		resolvedAttribute.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
-		taskData.addAttribute(BugzillaReportElement.BUG_STATUS.getKey(), resolvedAttribute);
+		taskData.addAttribute(BugzillaAttribute.BUG_STATUS.getKey(), resolvedAttribute);
 		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnector(BugzillaCorePlugin.CONNECTOR_KIND);
 		connector.updateTaskFromTaskData(new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://eclipse.org"),
 				task, taskData);
 		assertNotNull(task.getCompletionDate());
 		assertEquals(taskData.getAttributeFactory().getDateForAttributeType(
-				BugzillaReportElement.BUG_WHEN.getKey(), nowTimeStamp), task.getCompletionDate());
+				BugzillaAttribute.BUG_WHEN.getKey(), nowTimeStamp), task.getCompletionDate());
 
 	}
 

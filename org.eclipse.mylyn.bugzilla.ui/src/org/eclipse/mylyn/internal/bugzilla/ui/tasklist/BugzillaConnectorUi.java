@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
@@ -83,6 +85,26 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		legendItems.add(LegendElement.createTask("enhancement", BugzillaImages.OVERLAY_ENHANCEMENT));
 		legendItems.add(LegendElement.createTask("trivial", BugzillaImages.OVERLAY_MINOR));
 		return legendItems;
+	}
+
+	@Override
+	public ImageDescriptor getTaskKindOverlay(ITask task) {
+		String severity = task.getAttribute(BugzillaAttribute.BUG_SEVERITY.getKey());
+		if (severity != null) {
+			// XXX: refactor to use configuration
+			if ("blocker".equals(severity) || "critical".equals(severity)) {
+				return BugzillaImages.OVERLAY_CRITICAL;
+			} else if ("major".equals(severity)) {
+				return BugzillaImages.OVERLAY_MAJOR;
+			} else if ("enhancement".equals(severity)) {
+				return BugzillaImages.OVERLAY_ENHANCEMENT;
+			} else if ("trivial".equals(severity) || "minor".equals(severity)) {
+				return BugzillaImages.OVERLAY_MINOR;
+			} else {
+				return null;
+			}
+		}
+		return super.getTaskKindOverlay(task);
 	}
 
 	@Override

@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -54,12 +54,12 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(
-				BugzillaReportElement.QA_CONTACT.getKey()));
+				BugzillaAttribute.QA_CONTACT.getKey()));
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(
-				BugzillaReportElement.NEWCC.getKey()));
+				BugzillaAttribute.NEWCC.getKey()));
 		addSelfToCC(peopleComposite);
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(
-				BugzillaReportElement.CC.getKey()));
+				BugzillaAttribute.CC.getKey()));
 
 		toolkit.paintBordersFor(peopleComposite);
 		section.setClient(peopleComposite);
@@ -97,7 +97,7 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 		FormToolkit toolkit = getManagedForm().getToolkit();
 		TaskAttribute attrAddToCC = getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC);
 		if (attrAddToCC == null) {
-			attrAddToCC = BugzillaTaskDataHandler.createAttribute(getTaskData(), BugzillaReportElement.ADDSELFCC);
+			attrAddToCC = BugzillaTaskDataHandler.createAttribute(getTaskData(), BugzillaAttribute.ADDSELFCC);
 		}
 		addAttribute(composite, toolkit, attrAddToCC);
 	}

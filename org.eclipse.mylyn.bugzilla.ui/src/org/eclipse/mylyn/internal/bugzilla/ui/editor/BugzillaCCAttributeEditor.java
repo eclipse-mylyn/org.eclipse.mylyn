@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -56,11 +56,11 @@ public class BugzillaCCAttributeEditor extends AbstractAttributeEditor {
 			}
 		}
 
-		attrRemoveCC = getModel().getTaskData().getRoot().getMappedAttribute(BugzillaReportElement.REMOVECC.getKey());
+		attrRemoveCC = getModel().getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.REMOVECC.getKey());
 
 		if (attrRemoveCC == null) {
 			attrRemoveCC = BugzillaTaskDataHandler.createAttribute(getModel().getTaskData(),
-					BugzillaReportElement.REMOVECC);
+					BugzillaAttribute.REMOVECC);
 		}
 
 		for (String item : attrRemoveCC.getValues()) {

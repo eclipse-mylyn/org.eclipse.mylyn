@@ -291,6 +291,8 @@ public class TaskActivityManager implements ITaskActivityManager {
 			}
 			tasks.add(task);
 			allScheduledTasks.add(task);
+		} else {
+			removeScheduledTask(task);
 		}
 	}
 
@@ -329,6 +331,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 
 	public void addDueTask(ITask task) {
 		if (task.getDueDate() == null) {
+			removeDueTask(task);
 			return;
 		}
 		Calendar time = TaskActivityUtil.getCalendar();

@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -57,14 +58,17 @@ public class BugzillaTaskListMigrator extends AbstractTaskListMigrator {
 
 	@Override
 	public void migrateTask(ITask task, Element element) {
+
 		if (element.hasAttribute(KEY_SEVERITY)) {
-			task.setAttribute(KEY_SEVERITY, element.getAttribute(KEY_SEVERITY));
+			task.setAttribute(BugzillaAttribute.BUG_SEVERITY.getKey(),
+					element.getAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()));
 		}
 		if (element.hasAttribute(KEY_PRODUCT)) {
-			task.setAttribute(KEY_PRODUCT, element.getAttribute(KEY_PRODUCT));
+			task.setAttribute(BugzillaAttribute.PRODUCT.getKey(),
+					element.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
 		}
 		if (element.hasAttribute(KEY_LAST_MOD_DATE)) {
-			task.setAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE, element.getAttribute(KEY_LAST_MOD_DATE));
+			task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), element.getAttribute(KEY_LAST_MOD_DATE));
 		}
 	}
 

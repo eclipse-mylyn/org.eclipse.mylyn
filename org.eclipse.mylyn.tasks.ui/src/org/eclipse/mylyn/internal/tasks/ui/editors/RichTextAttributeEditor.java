@@ -56,7 +56,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	private RepositoryTextViewer viewer;
 
 	// TODO EDITOR
-	private boolean spellCheckingEnabled;
+	private boolean spellCheckingEnabled = true;
 
 	private final int style;
 

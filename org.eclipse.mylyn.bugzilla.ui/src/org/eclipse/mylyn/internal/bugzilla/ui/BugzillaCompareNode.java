@@ -16,7 +16,7 @@ import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
@@ -199,7 +199,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		for (TaskComment taskComment : bug.getComments()) {
 			String bodyString = "Comment from " + taskComment.getAuthorName() + ":\n\n" + taskComment.getText();
 			comments.addChild(new BugzillaCompareNode(
-					taskComment.getAttributeValue(BugzillaReportElement.BUG_WHEN.getKey()), bodyString,
+					taskComment.getAttributeValue(BugzillaAttribute.BUG_WHEN.getKey()), bodyString,
 					defaultImage));
 		}
 		topNode.addChild(comments);

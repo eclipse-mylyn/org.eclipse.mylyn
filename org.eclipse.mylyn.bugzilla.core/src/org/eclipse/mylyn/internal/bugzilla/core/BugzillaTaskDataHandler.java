@@ -82,10 +82,10 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	public void migrateTaskData(TaskRepository taskRepository, TaskData taskData) {
 		if (TASK_DATA_VERSION_1_0.equals(taskData.getVersion())) {
 			for (TaskAttribute attribute : new ArrayList<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
-				if (attribute.getId().equals(BugzillaReportElement.DESC.getKey())) {
-					TaskAttribute attrLongDesc = createAttribute(taskData, BugzillaReportElement.LONG_DESC);
+				if (attribute.getId().equals(BugzillaAttribute.DESC.getKey())) {
+					TaskAttribute attrLongDesc = createAttribute(taskData, BugzillaAttribute.LONG_DESC);
 					attrLongDesc.setValue(attribute.getValue());
-					taskData.getRoot().removeAttribute(BugzillaReportElement.DESC.getKey());
+					taskData.getRoot().removeAttribute(BugzillaAttribute.DESC.getKey());
 				}
 			}
 
@@ -139,7 +139,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
 				false, monitor);
 
-		TaskAttribute productAttribute = createAttribute(data, BugzillaReportElement.PRODUCT);
+		TaskAttribute productAttribute = createAttribute(data, BugzillaAttribute.PRODUCT);
 		productAttribute.setValue(product);
 
 		List<String> optionValues = repositoryConfiguration.getProducts();
@@ -148,7 +148,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			productAttribute.putOption(optionValue, optionValue);
 		}
 
-		TaskAttribute attributeStatus = createAttribute(data, BugzillaReportElement.BUG_STATUS);
+		TaskAttribute attributeStatus = createAttribute(data, BugzillaAttribute.BUG_STATUS);
 		optionValues = repositoryConfiguration.getStatusValues();
 		for (String option : optionValues) {
 			attributeStatus.putOption(option, option);
@@ -156,9 +156,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		attributeStatus.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
 
-		createAttribute(data, BugzillaReportElement.SHORT_DESC);
+		createAttribute(data, BugzillaAttribute.SHORT_DESC);
 
-		TaskAttribute attributeVersion = createAttribute(data, BugzillaReportElement.VERSION);
+		TaskAttribute attributeVersion = createAttribute(data, BugzillaAttribute.VERSION);
 		optionValues = repositoryConfiguration.getVersions(productAttribute.getValue());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -168,7 +168,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeVersion.setValue(optionValues.get(optionValues.size() - 1));
 		}
 
-		TaskAttribute attributeComponent = createAttribute(data, BugzillaReportElement.COMPONENT);
+		TaskAttribute attributeComponent = createAttribute(data, BugzillaAttribute.COMPONENT);
 		optionValues = repositoryConfiguration.getComponents(productAttribute.getValue());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -178,7 +178,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeComponent.setValue(optionValues.get(0));
 		}
 
-		TaskAttribute attributePlatform = createAttribute(data, BugzillaReportElement.REP_PLATFORM);
+		TaskAttribute attributePlatform = createAttribute(data, BugzillaAttribute.REP_PLATFORM);
 		optionValues = repositoryConfiguration.getPlatforms();
 		for (String option : optionValues) {
 			attributePlatform.putOption(option, option);
@@ -188,7 +188,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributePlatform.setValue(optionValues.get(0));
 		}
 
-		TaskAttribute attributeOPSYS = createAttribute(data, BugzillaReportElement.OP_SYS);
+		TaskAttribute attributeOPSYS = createAttribute(data, BugzillaAttribute.OP_SYS);
 		optionValues = repositoryConfiguration.getOSs();
 		for (String option : optionValues) {
 			attributeOPSYS.putOption(option, option);
@@ -198,7 +198,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeOPSYS.setValue(optionValues.get(0));
 		}
 
-		TaskAttribute attributePriority = createAttribute(data, BugzillaReportElement.PRIORITY);
+		TaskAttribute attributePriority = createAttribute(data, BugzillaAttribute.PRIORITY);
 		optionValues = repositoryConfiguration.getPriorities();
 		for (String option : optionValues) {
 			attributePriority.putOption(option, option);
@@ -208,7 +208,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributePriority.setValue(optionValues.get((optionValues.size() / 2)));
 		}
 
-		TaskAttribute attributeSeverity = createAttribute(data, BugzillaReportElement.BUG_SEVERITY);
+		TaskAttribute attributeSeverity = createAttribute(data, BugzillaAttribute.BUG_SEVERITY);
 		optionValues = repositoryConfiguration.getSeverities();
 		for (String option : optionValues) {
 			attributeSeverity.putOption(option, option);
@@ -218,25 +218,25 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeSeverity.setValue(optionValues.get((optionValues.size() / 2)));
 		}
 
-		TaskAttribute attributeAssignedTo = createAttribute(data, BugzillaReportElement.ASSIGNED_TO);
+		TaskAttribute attributeAssignedTo = createAttribute(data, BugzillaAttribute.ASSIGNED_TO);
 		attributeAssignedTo.setValue("");
 
-		TaskAttribute attributeBugFileLoc = createAttribute(data, BugzillaReportElement.BUG_FILE_LOC);
+		TaskAttribute attributeBugFileLoc = createAttribute(data, BugzillaAttribute.BUG_FILE_LOC);
 		attributeBugFileLoc.setValue("http://");
 
-		createAttribute(data, BugzillaReportElement.DEPENDSON);
-		createAttribute(data, BugzillaReportElement.BLOCKED);
-		createAttribute(data, BugzillaReportElement.NEWCC);
-		createAttribute(data, BugzillaReportElement.LONG_DESC);
+		createAttribute(data, BugzillaAttribute.DEPENDSON);
+		createAttribute(data, BugzillaAttribute.BLOCKED);
+		createAttribute(data, BugzillaAttribute.NEWCC);
+		createAttribute(data, BugzillaAttribute.LONG_DESC);
 
 		return true;
 	}
 
-	public static TaskAttribute createAttribute(TaskData data, BugzillaReportElement key) {
+	public static TaskAttribute createAttribute(TaskData data, BugzillaAttribute key) {
 		return createAttribute(data.getRoot(), key);
 	}
 
-	public static TaskAttribute createAttribute(TaskAttribute parent, BugzillaReportElement key) {
+	public static TaskAttribute createAttribute(TaskAttribute parent, BugzillaAttribute key) {
 		TaskAttribute attribute = parent.createAttribute(key.getKey());
 		attribute.getMetaData()
 				.defaults()
@@ -265,12 +265,12 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		initializeTaskData(repository, subTaskData, product, monitor);
 		// TODO:
 		//cloneTaskData(parentTaskData, subTaskData);
-		TaskAttribute attributeBlocked = createAttribute(subTaskData, BugzillaReportElement.BLOCKED);
+		TaskAttribute attributeBlocked = createAttribute(subTaskData, BugzillaAttribute.BLOCKED);
 		attributeBlocked.setValue(parentTaskData.getTaskId());
 
 		TaskAttribute parentAttributeAssigned = parentTaskData.getRoot()
 				.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
-		TaskAttribute attributeAssigned = createAttribute(subTaskData, BugzillaReportElement.ASSIGNED_TO);
+		TaskAttribute attributeAssigned = createAttribute(subTaskData, BugzillaAttribute.ASSIGNED_TO);
 		attributeAssigned.setValue(parentAttributeAssigned.getValue());
 
 		return true;

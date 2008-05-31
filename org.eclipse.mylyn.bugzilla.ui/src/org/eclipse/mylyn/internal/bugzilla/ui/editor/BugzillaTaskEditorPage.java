@@ -61,12 +61,19 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		AttributeEditorFactory factory = new AttributeEditorFactory(getModel(), getTaskRepository()) {
 			@Override
 			public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
+				AbstractAttributeEditor editor;
 				if (IBugzillaConstants.EDITOR_TYPE_KEYWORDS.equals(type)) {
-					return new BugzillaKeywordAttributeEditor(getModel(), taskAttribute);
+					editor = new BugzillaKeywordAttributeEditor(getModel(), taskAttribute);
 				} else if (IBugzillaConstants.EDITOR_TYPE_REMOVECC.equals(type)) {
-					return new BugzillaCCAttributeEditor(getModel(), taskAttribute);
+					editor = new BugzillaCCAttributeEditor(getModel(), taskAttribute);
+				} else {
+					editor = super.createEditor(type, taskAttribute);
+					if (TaskAttribute.TYPE_BOOLEAN.equals(type)) {
+						editor.setDecorationEnabled(false);
+					}
 				}
-				return super.createEditor(type, taskAttribute);
+
+				return editor;
 			}
 		};
 		return factory;
@@ -79,6 +86,14 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 			TaskAttribute attrDescription = model.getTaskData().getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
 			if (attrDescription != null) {
 				attrDescription.getMetaData().setReadOnly(false);
+			}
+			TaskAttribute attrOwner = model.getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+			if (attrOwner != null) {
+				attrOwner.getMetaData().setReadOnly(false);
+			}
+			TaskAttribute attrAddSelfToCc = model.getTaskData().getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC);
+			if (attrAddSelfToCc != null) {
+				attrAddSelfToCc.getMetaData().setKind(null);
 			}
 		}
 		return model;

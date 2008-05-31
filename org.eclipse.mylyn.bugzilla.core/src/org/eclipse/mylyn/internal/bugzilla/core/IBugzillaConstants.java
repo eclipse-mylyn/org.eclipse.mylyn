@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.bugzilla.core;
 
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @author Mik Kersten
@@ -222,54 +221,6 @@ public interface IBugzillaConstants {
 
 	public static final String VALUE_RESOLUTION_LATER = "LATER";
 
-	public static enum BUGZILLA_OPERATION {
-		none("Leave as %s %s"),
-
-		accept("Accept (change status to ASSIGNED)"),
-
-		resolve("Resolve as", "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT),
-
-		duplicate("Mark as duplicate of #", "dup_id", TaskAttribute.TYPE_SHORT_TEXT),
-
-		reassign("Reassign to", "reassignInput", TaskAttribute.TYPE_PERSON),
-
-		reassignbycomponent("Reassign to default assignee"),
-
-		reopen("Reopen bug"),
-
-		verify("Mark as VERIFIED"),
-
-		close("Mark as CLOSED");
-
-		private final String label;
-
-		private final String inputId;
-
-		private final String type;
-
-		BUGZILLA_OPERATION(String label) {
-			this(label, null, TaskAttribute.TYPE_SHORT_TEXT);
-		}
-
-		BUGZILLA_OPERATION(String label, String inputId, String type) {
-			this.label = label;
-			this.inputId = inputId;
-			this.type = type;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public String getInputId() {
-			return inputId;
-		}
-
-		public String getType() {
-			return type;
-		}
-	}
-
 	public static enum BUGZILLA_REPORT_STATUS {
 		UNCONFIRMED, NEW, ASSIGNED, REOPENED, RESOLVED, VERIFIED, CLOSED, SCHEDULED;
 	}
@@ -326,7 +277,4 @@ public interface IBugzillaConstants {
 	public static final String TAG_BUGZILLA_QUERY = "BugzillaQuery";
 
 	public static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustomQuery";
-
-	// Bugzilla Task attribute keys
-	public static final String ATTRIBUTE_LAST_READ_DATE = "bugzilla.task.read";
 }

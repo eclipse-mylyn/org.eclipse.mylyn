@@ -64,7 +64,6 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.commons.net.WebClientUtil;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -542,17 +541,17 @@ public class BugzillaClient {
 		// and additional elements that may not appear in the incoming xml
 		// stream but need to be present for bug submission / not always dirty
 		// state handling
-		BugzillaReportElement[] reportElements = { BugzillaReportElement.SHORT_DESC, BugzillaReportElement.BUG_STATUS,
-				BugzillaReportElement.RESOLUTION, BugzillaReportElement.BUG_ID, BugzillaReportElement.REP_PLATFORM,
-				BugzillaReportElement.PRODUCT, BugzillaReportElement.OP_SYS, BugzillaReportElement.COMPONENT,
-				BugzillaReportElement.VERSION, BugzillaReportElement.PRIORITY, BugzillaReportElement.BUG_SEVERITY,
-				BugzillaReportElement.ASSIGNED_TO, BugzillaReportElement.TARGET_MILESTONE,
-				BugzillaReportElement.REPORTER, BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED,
-				BugzillaReportElement.BUG_FILE_LOC, BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS,
-				BugzillaReportElement.CC, BugzillaReportElement.NEW_COMMENT, BugzillaReportElement.QA_CONTACT,
-				BugzillaReportElement.STATUS_WHITEBOARD, BugzillaReportElement.DEADLINE };
+		BugzillaAttribute[] reportElements = { BugzillaAttribute.SHORT_DESC, BugzillaAttribute.BUG_STATUS,
+				BugzillaAttribute.RESOLUTION, BugzillaAttribute.BUG_ID, BugzillaAttribute.REP_PLATFORM,
+				BugzillaAttribute.PRODUCT, BugzillaAttribute.OP_SYS, BugzillaAttribute.COMPONENT,
+				BugzillaAttribute.VERSION, BugzillaAttribute.PRIORITY, BugzillaAttribute.BUG_SEVERITY,
+				BugzillaAttribute.ASSIGNED_TO, BugzillaAttribute.TARGET_MILESTONE,
+				BugzillaAttribute.REPORTER, BugzillaAttribute.DEPENDSON, BugzillaAttribute.BLOCKED,
+				BugzillaAttribute.BUG_FILE_LOC, BugzillaAttribute.NEWCC, BugzillaAttribute.KEYWORDS,
+				BugzillaAttribute.CC, BugzillaAttribute.NEW_COMMENT, BugzillaAttribute.QA_CONTACT,
+				BugzillaAttribute.STATUS_WHITEBOARD, BugzillaAttribute.DEADLINE };
 
-		for (BugzillaReportElement element : reportElements) {
+		for (BugzillaAttribute element : reportElements) {
 			BugzillaTaskDataHandler.createAttribute(existingReport, element);
 		}
 	}
@@ -896,11 +895,11 @@ public class BugzillaClient {
 				if (value == null) {
 					continue;
 				}
-				if (a.getId().equals(BugzillaReportElement.NEWCC.getKey())) {
-					TaskAttribute b = taskData.getRoot().createAttribute(BugzillaReportElement.CC.getKey());
-					b.getMetaData().defaults().setReadOnly(BugzillaReportElement.CC.isReadOnly()).setKind(
-							BugzillaReportElement.CC.getKind()).setLabel(BugzillaReportElement.CC.toString()).setType(
-							BugzillaReportElement.CC.getType());
+				if (a.getId().equals(BugzillaAttribute.NEWCC.getKey())) {
+					TaskAttribute b = taskData.getRoot().createAttribute(BugzillaAttribute.CC.getKey());
+					b.getMetaData().defaults().setReadOnly(BugzillaAttribute.CC.isReadOnly()).setKind(
+							BugzillaAttribute.CC.getKind()).setLabel(BugzillaAttribute.CC.toString()).setType(
+							BugzillaAttribute.CC.getType());
 					for (String val : a.getValues()) {
 						if (val != null) {
 							b.addValue(val);
@@ -925,7 +924,7 @@ public class BugzillaClient {
 	}
 
 	private void cleanQAContact(TaskAttribute a) {
-		if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKey())) {
+		if (a.getId().equals(BugzillaAttribute.QA_CONTACT.getKey())) {
 			cleanIfShortLogin(a);
 		}
 	}
@@ -954,19 +953,19 @@ public class BugzillaClient {
 
 			if (a == null) {
 				continue;
-			} else if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKey())
-					|| a.getId().equals(BugzillaReportElement.ASSIGNED_TO.getKey())) {
+			} else if (a.getId().equals(BugzillaAttribute.QA_CONTACT.getKey())
+					|| a.getId().equals(BugzillaAttribute.ASSIGNED_TO.getKey())) {
 				cleanIfShortLogin(a);
-			} else if (a.getId().equals(BugzillaReportElement.REPORTER.getKey())
-					|| a.getId().equals(BugzillaReportElement.CC.getKey())
-					|| a.getId().equals(BugzillaReportElement.REMOVECC.getKey())
-					|| a.getId().equals(BugzillaReportElement.CREATION_TS.getKey())) {
+			} else if (a.getId().equals(BugzillaAttribute.REPORTER.getKey())
+					|| a.getId().equals(BugzillaAttribute.CC.getKey())
+					|| a.getId().equals(BugzillaAttribute.REMOVECC.getKey())
+					|| a.getId().equals(BugzillaAttribute.CREATION_TS.getKey())) {
 				continue;
 			}
 
 			if (a.getId() != null && a.getId().compareTo("") != 0) {
 				String value = a.getValue();
-				if (a.getId().equals(BugzillaReportElement.DELTA_TS.getKey())) {
+				if (a.getId().equals(BugzillaAttribute.DELTA_TS.getKey())) {
 					value = stripTimeZone(value);
 				}
 				fields.put(a.getId(), new NameValuePair(a.getId(), value != null ? value : ""));
@@ -974,7 +973,7 @@ public class BugzillaClient {
 		}
 
 		// when posting the bug id is encoded in a hidden field named 'id'
-		TaskAttribute attributeBugId = model.getRoot().getAttribute(BugzillaReportElement.BUG_ID.getKey());
+		TaskAttribute attributeBugId = model.getRoot().getAttribute(BugzillaAttribute.BUG_ID.getKey());
 		if (attributeBugId != null) {
 			fields.put(KEY_ID, new NameValuePair(KEY_ID, attributeBugId.getValue()));
 		}
@@ -1002,15 +1001,15 @@ public class BugzillaClient {
 					if (inputAttribute.getOptions().size() > 0) {
 						String sel = inputAttribute.getValue();
 						String knob = inputAttribute.getId();
-						if (knob.equals(BUGZILLA_OPERATION.resolve.getInputId())) {
-							knob = BugzillaReportElement.RESOLUTION.getKey();
+						if (knob.equals(BugzillaOperation.resolve.getInputId())) {
+							knob = BugzillaAttribute.RESOLUTION.getKey();
 						}
 						fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
 					} else {
 						String sel = inputAttribute.getValue();
 						String knob = attributeOperation.getValue();
-						if (knob.equals(BUGZILLA_OPERATION.reassign.toString())) {
-							knob = BugzillaReportElement.ASSIGNED_TO.getKey();
+						if (knob.equals(BugzillaOperation.reassign.toString())) {
+							knob = BugzillaAttribute.ASSIGNED_TO.getKey();
 						}
 						fields.put(knob, new NameValuePair(knob, sel));
 					}
@@ -1018,9 +1017,9 @@ public class BugzillaClient {
 			}
 		}
 
-		if (model.getRoot().getMappedAttribute(BugzillaReportElement.SHORT_DESC.getKey()) != null) {
+		if (model.getRoot().getMappedAttribute(BugzillaAttribute.SHORT_DESC.getKey()) != null) {
 			fields.put(KEY_SHORT_DESC, new NameValuePair(KEY_SHORT_DESC, model.getRoot().getMappedAttribute(
-					BugzillaReportElement.SHORT_DESC.getKey()).getValue()));
+					BugzillaAttribute.SHORT_DESC.getKey()).getValue()));
 		}
 
 		if (model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW) != null
@@ -1028,19 +1027,19 @@ public class BugzillaClient {
 			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getRoot().getMappedAttribute(
 					TaskAttribute.COMMENT_NEW).getValue()));
 		} else if (attributeOperation != null
-				&& attributeOperation.getValue().equals(IBugzillaConstants.BUGZILLA_OPERATION.duplicate.toString())) {
+				&& attributeOperation.getValue().equals(BugzillaOperation.duplicate.toString())) {
 			// fix for bug#198677
 			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, ""));
 		}
 
-		TaskAttribute attributeRemoveCC = model.getRoot().getMappedAttribute(BugzillaReportElement.REMOVECC.getKey());
+		TaskAttribute attributeRemoveCC = model.getRoot().getMappedAttribute(BugzillaAttribute.REMOVECC.getKey());
 		if (attributeRemoveCC != null) {
 			List<String> removeCC = attributeRemoveCC.getValues();
 			if (removeCC != null && removeCC.size() > 0) {
 				String[] s = new String[removeCC.size()];
 				fields.put(KEY_CC, new NameValuePair(KEY_CC, toCommaSeparatedList(removeCC.toArray(s))));
-				fields.put(BugzillaReportElement.REMOVECC.getKey(), new NameValuePair(
-						BugzillaReportElement.REMOVECC.getKey(), VAL_TRUE));
+				fields.put(BugzillaAttribute.REMOVECC.getKey(), new NameValuePair(
+						BugzillaAttribute.REMOVECC.getKey(), VAL_TRUE));
 			}
 		}
 

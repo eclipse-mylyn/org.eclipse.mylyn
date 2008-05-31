@@ -93,7 +93,19 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			task.setSummary(scheme.getSummary());
 			task.setPriority(scheme.getPriority().toString());
 			task.setOwner(scheme.getOwner());
-			task.setUrl(BugzillaClient.getBugUrlWithoutLogin(repository.getRepositoryUrl(), taskData.getTaskId()));
+			task.setUrl(getTaskUrl(repository.getRepositoryUrl(), task.getTaskId()));
+
+			boolean isComplete = false;
+			TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+			if (attributeStatus != null) {
+				isComplete = attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
+						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
+						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
+			}
+			if (isComplete) {
+				task.setCompletionDate(new Date());
+			}
+
 		} else {
 			TaskMapper scheme = new TaskMapper(taskData);
 			scheme.applyTo(task);
@@ -162,19 +174,19 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			// Severity
 			TaskAttribute attrSeverity = taskData.getRoot().getMappedAttribute(
-					BugzillaReportElement.BUG_SEVERITY.getKey());
+					BugzillaAttribute.BUG_SEVERITY.getKey());
 			if (attrSeverity != null && !attrSeverity.getValue().equals("")) {
-				task.setAttribute(BugzillaReportElement.BUG_SEVERITY.getKey(), attrSeverity.getValue());
+				task.setAttribute(BugzillaAttribute.BUG_SEVERITY.getKey(), attrSeverity.getValue());
 			}
 
 			// Due Date
-			if (taskData.getRoot().getMappedAttribute(BugzillaReportElement.ESTIMATED_TIME.getKey()) != null) {
+			if (taskData.getRoot().getMappedAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()) != null) {
 				Date dueDate = null;
 				// HACK: if estimated_time field exists, time tracking is
 				// enabled
 				try {
 					TaskAttribute attributeDeadline = taskData.getRoot().getMappedAttribute(
-							BugzillaReportElement.DEADLINE.getKey());
+							BugzillaAttribute.DEADLINE.getKey());
 					if (attributeDeadline != null) {
 						dueDate = new SimpleDateFormat(DEADLINE_FORMAT).parse(attributeDeadline.getValue());
 					}
@@ -183,11 +195,17 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 				task.setDueDate(dueDate);
 			}
+		}
 
-			// This attribute is used to determine if local copy is stale
-			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
-			if (attrModification != null) {
-				task.setAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE, attrModification.getValue());
+		updateExtendedAttributes(task, taskData);
+	}
+
+	private void updateExtendedAttributes(ITask task, TaskData taskData) {
+		// Set meta bugzilla task attribute values
+		for (BugzillaAttribute bugzillaReportElement : BugzillaAttribute.EXTENDED_ATTRIBUTES) {
+			TaskAttribute taskAttribute = taskData.getRoot().getAttribute(bugzillaReportElement.getKey());
+			if (taskAttribute != null) {
+				task.setAttribute(bugzillaReportElement.getKey(), taskAttribute.getValue());
 			}
 		}
 	}
@@ -485,7 +503,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (taskData.isPartial()) {
 			return false;
 		}
-		String lastKnownMod = task.getAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE);
+		String lastKnownMod = task.getAttribute(BugzillaAttribute.DELTA_TS.getKey());
 		if (lastKnownMod != null) {
 			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 			if (attrModification != null) {
@@ -499,7 +517,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public Collection<TaskRelation> getTaskRelations(TaskData taskData) {
 		List<TaskRelation> relations = new ArrayList<TaskRelation>();
-		TaskAttribute attribute = taskData.getRoot().getAttribute(BugzillaReportElement.DEPENDSON.getKey());
+		TaskAttribute attribute = taskData.getRoot().getAttribute(BugzillaAttribute.DEPENDSON.getKey());
 		if (attribute != null && attribute.getValue().length() > 0) {
 			for (String taskId : attribute.getValue().split(",")) {
 				relations.add(TaskRelation.subtask(taskId.trim()));
@@ -515,7 +533,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			Date taskModifiedDate = task.getModificationDate();
 			if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
 				mostRecent = taskModifiedDate;
-				mostRecentTimeStamp = task.getAttribute(IBugzillaConstants.ATTRIBUTE_LAST_READ_DATE);
+				mostRecentTimeStamp = task.getAttribute(BugzillaAttribute.DELTA_TS.getKey());
 			}
 		}
 		return mostRecentTimeStamp;

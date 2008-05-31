@@ -35,7 +35,8 @@ public class TaskDependendyAttributeEditor extends RichTextAttributeEditor {
 
 	@Override
 	public void setValue(String value) {
-		// TODO EDITOR
+		getAttributeMapper().setValue(getTaskAttribute(), value);
+		attributeChanged();
 	}
 
 }

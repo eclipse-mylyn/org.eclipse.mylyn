@@ -56,9 +56,9 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 
 		String parsedText = characters.toString();
-		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
+		BugzillaAttribute tag = BugzillaAttribute.UNKNOWN;
 		try {
-			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
+			tag = BugzillaAttribute.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 			switch (tag) {
 			case ID:
 				taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, repositoryUrl, parsedText);

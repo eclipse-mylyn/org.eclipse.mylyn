@@ -11,7 +11,7 @@ package org.eclipse.mylyn.bugzilla.tests;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -70,7 +70,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		if (task.getPriority().equals("P1")) {
 			priority = "P2";
 			TaskAttribute attrPriority = model.getTaskData().getRoot().getAttribute(
-					BugzillaReportElement.PRIORITY.getKey());
+					BugzillaAttribute.PRIORITY.getKey());
 			if (attrPriority != null) {
 				attrPriority.setValue(priority);
 				model.attributeChanged(attrPriority);
@@ -80,7 +80,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		} else {
 			priority = "P1";
 			TaskAttribute attrPriority = model.getTaskData().getRoot().getAttribute(
-					BugzillaReportElement.PRIORITY.getKey());
+					BugzillaAttribute.PRIORITY.getKey());
 			if (attrPriority != null) {
 				attrPriority.setValue(priority);
 				model.attributeChanged(attrPriority);

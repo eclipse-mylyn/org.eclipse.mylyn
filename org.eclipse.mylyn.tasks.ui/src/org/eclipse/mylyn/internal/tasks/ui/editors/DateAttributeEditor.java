@@ -52,7 +52,9 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			text.setFont(TEXT_FONT);
 			toolkit.adapt(text, true, true);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
-			text.setText(new SimpleDateFormat(DATE_FORMAT).format(getValue()));
+			if (getValue() != null) {
+				text.setText(new SimpleDateFormat(DATE_FORMAT).format(getValue()));
+			}
 			setControl(text);
 		} else {
 			Composite dateWithClearComposite = toolkit.createComposite(composite);

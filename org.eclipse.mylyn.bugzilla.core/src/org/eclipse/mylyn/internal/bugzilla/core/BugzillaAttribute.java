@@ -13,7 +13,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 /**
  * @author Rob Elves
  */
-public enum BugzillaReportElement {
+public enum BugzillaAttribute {
 
 	STATUS_WHITEBOARD("Status Whiteboard:", "status_whiteboard", TaskAttribute.TYPE_LONG_RICH_TEXT, false, false),
 
@@ -175,7 +175,9 @@ public enum BugzillaReportElement {
 
 	private final String type;
 
-	BugzillaReportElement(String prettyName, String idKey, String type, boolean hidden, boolean readonly) {
+	public static final BugzillaAttribute[] EXTENDED_ATTRIBUTES = { DELTA_TS, BUG_SEVERITY, PRODUCT };
+
+	BugzillaAttribute(String prettyName, String idKey, String type, boolean hidden, boolean readonly) {
 		this.prettyName = prettyName;
 		this.keyString = idKey;
 		this.type = type;
@@ -206,4 +208,5 @@ public enum BugzillaReportElement {
 	public String getType() {
 		return type;
 	}
+
 }
