@@ -880,8 +880,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		if (reflow) {
 			form.layout(true, true);
 			form.reflow(true);
-			System.err.println("refl");
-			Thread.dumpStack();
 		}
 	}
 

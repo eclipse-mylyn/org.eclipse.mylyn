@@ -111,6 +111,10 @@ public class TaskDataModel {
 		return taskRepository;
 	}
 
+	public boolean hasBeenRead() {
+		return workingCopy.getLastReadData() != null;
+	}
+
 	public boolean hasIncomingChanges(TaskAttribute taskAttribute) {
 		TaskData lastReadData = workingCopy.getLastReadData();
 		if (lastReadData == null) {

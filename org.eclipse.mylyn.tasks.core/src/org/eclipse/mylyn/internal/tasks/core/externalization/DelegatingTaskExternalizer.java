@@ -280,9 +280,9 @@ public final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
 		}
 		if (task.getSynchronizationState() != null) {
-			node.setAttribute(KEY_SYNC_STATE, task.getSynchronizationState().toString());
+			node.setAttribute(KEY_SYNC_STATE, task.getSynchronizationState().name());
 		} else {
-			node.setAttribute(KEY_SYNC_STATE, SynchronizationState.SYNCHRONIZED.toString());
+			node.setAttribute(KEY_SYNC_STATE, SynchronizationState.SYNCHRONIZED.name());
 		}
 		if (task.getOwner() != null) {
 			node.setAttribute(KEY_OWNER, task.getOwner());
@@ -584,15 +584,12 @@ public final class DelegatingTaskExternalizer {
 			task.setNotified(false);
 		}
 		if (element.hasAttribute(KEY_SYNC_STATE)) {
-			String syncState = element.getAttribute(KEY_SYNC_STATE);
-			if (syncState.compareTo(SynchronizationState.SYNCHRONIZED.toString()) == 0) {
-				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-			} else if (syncState.compareTo(SynchronizationState.INCOMING.toString()) == 0) {
-				task.setSynchronizationState(SynchronizationState.INCOMING);
-			} else if (syncState.compareTo(SynchronizationState.OUTGOING.toString()) == 0) {
-				task.setSynchronizationState(SynchronizationState.OUTGOING);
-			} else if (syncState.compareTo(SynchronizationState.CONFLICT.toString()) == 0) {
-				task.setSynchronizationState(SynchronizationState.CONFLICT);
+			try {
+				SynchronizationState state = SynchronizationState.valueOf(element.getAttribute(KEY_SYNC_STATE));
+				task.setSynchronizationState(state);
+			} catch (IllegalArgumentException e) {
+				// invalid sync state, ignore
+				// TODO log this to a multi-status
 			}
 		}
 		if (element.hasAttribute(KEY_KEY)) {

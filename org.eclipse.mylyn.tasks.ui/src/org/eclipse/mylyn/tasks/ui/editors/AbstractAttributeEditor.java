@@ -123,7 +123,7 @@ public abstract class AbstractAttributeEditor {
 
 	public void decorate(Color color) {
 		if (isDecorationEnabled()) {
-			if (manager.hasIncomingChanges(getTaskAttribute())) {
+			if (manager.hasBeenRead() && manager.hasIncomingChanges(getTaskAttribute())) {
 				decorateIncoming(color);
 			}
 			if (manager.hasOutgoingChanges(getTaskAttribute())) {
