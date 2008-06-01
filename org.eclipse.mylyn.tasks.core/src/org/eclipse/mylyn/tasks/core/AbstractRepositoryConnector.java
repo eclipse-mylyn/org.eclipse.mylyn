@@ -157,8 +157,6 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getTaskUrl(String repositoryUrl, String taskId);
 
 	/**
-	 * @param taskRepository
-	 *            TODO
 	 * @since 3.0
 	 */
 	public abstract boolean hasChanged(TaskRepository taskRepository, ITask task, TaskData taskData);

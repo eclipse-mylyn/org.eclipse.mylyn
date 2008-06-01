@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -93,12 +94,12 @@ public class TaskMapping implements ITaskMapping {
 		return null;
 	}
 
-	public String[] getCc() {
+	public List<String> getCc() {
 		// ignore
 		return null;
 	}
 
-	public String[] getKeywords() {
+	public List<String> getKeywords() {
 		// ignore
 		return null;
 	}

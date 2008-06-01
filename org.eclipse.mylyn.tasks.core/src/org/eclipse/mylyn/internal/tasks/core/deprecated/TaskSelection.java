@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -207,12 +208,12 @@ public class TaskSelection implements ITaskMapping {
 
 	}
 
-	public String[] getCc() {
+	public List<String> getCc() {
 		// ignore
 		return null;
 	}
 
-	public String[] getKeywords() {
+	public List<String> getKeywords() {
 		// ignore
 		return null;
 	}

@@ -125,10 +125,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (isComplete) {
 				Date completionDate = null;
 
-				TaskAttribute[] taskComments = taskData.getAttributeMapper().getAttributesByType(taskData,
+				List<TaskAttribute> taskComments = taskData.getAttributeMapper().getAttributesByType(taskData,
 						TaskAttribute.TYPE_COMMENT);
-				if (taskComments != null && taskComments.length > 0) {
-					TaskAttribute lastComment = taskComments[taskComments.length - 1];
+				if (taskComments != null && taskComments.size() > 0) {
+					TaskAttribute lastComment = taskComments.get(taskComments.size() - 1);
 					if (lastComment != null) {
 						TaskAttribute attributeCommentDate = lastComment.getMappedAttribute(TaskAttribute.COMMENT_DATE);
 						if (attributeCommentDate != null) {
@@ -173,8 +173,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 			// Severity
-			TaskAttribute attrSeverity = taskData.getRoot().getMappedAttribute(
-					BugzillaAttribute.BUG_SEVERITY.getKey());
+			TaskAttribute attrSeverity = taskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey());
 			if (attrSeverity != null && !attrSeverity.getValue().equals("")) {
 				task.setAttribute(BugzillaAttribute.BUG_SEVERITY.getKey(), attrSeverity.getValue());
 			}

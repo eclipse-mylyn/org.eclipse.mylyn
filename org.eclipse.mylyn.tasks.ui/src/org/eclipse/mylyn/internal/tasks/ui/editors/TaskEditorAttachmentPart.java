@@ -102,7 +102,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 //
 //	private TableViewer attachmentsTableViewer;
 
-	private TaskAttribute[] attachments;
+	private List<TaskAttribute> attachments;
 
 	private boolean hasIncoming;
 
@@ -153,7 +153,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			}
 		});
 
-		List<ITaskAttachment> attachmentList = new ArrayList<ITaskAttachment>(attachments.length);
+		List<ITaskAttachment> attachmentList = new ArrayList<ITaskAttachment>(attachments.size());
 		for (TaskAttribute attribute : attachments) {
 			TaskAttachment taskAttachment = new TaskAttachment(getModel().getTaskRepository(), getModel().getTask(),
 					attribute);
@@ -375,7 +375,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		initialize();
 
 		Section section = createSection(parent, toolkit, hasIncoming);
-		section.setText(getPartName() + " (" + attachments.length + ")");
+		section.setText(getPartName() + " (" + attachments.size() + ")");
 
 		final Composite attachmentsComposite = toolkit.createComposite(section);
 		attachmentsComposite.setLayout(new GridLayout(1, false));
@@ -384,7 +384,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		dropListener = new TaskAttachmentDropListener();
 		registerDropListener(section, dropListener);
 
-		if (attachments.length > 0) {
+		if (attachments.size() > 0) {
 			createAttachmentTable(toolkit, attachmentsComposite);
 		} else {
 			toolkit.createLabel(attachmentsComposite, "No attachments");

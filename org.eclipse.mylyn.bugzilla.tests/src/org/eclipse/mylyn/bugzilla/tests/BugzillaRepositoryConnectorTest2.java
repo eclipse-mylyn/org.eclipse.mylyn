@@ -13,14 +13,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskAttachmentHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -52,7 +53,9 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		assertNotNull(taskData);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 		assertEquals(taskNumber, taskData.getTaskId());
-		int numAttached = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).length;
+		int numAttached = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.size();
 		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
 
 		assertNotNull(repository.getUserName());
@@ -143,9 +146,16 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		assertEquals("TestComponent", mapper.getComponent());
 		assertEquals("nhapke@cs.ubc.ca", mapper.getOwner());
 		assertEquals("TestProduct", mapper.getProduct());
-		assertEquals("PC", mapper.getValue(BugzillaAttribute.REP_PLATFORM.getKey()));
-		assertEquals("Windows", mapper.getValue(BugzillaAttribute.OP_SYS.getKey()));
-		assertEquals("ASSIGNED", mapper.getValue(BugzillaAttribute.BUG_STATUS.getKey()));
+		assertEquals("PC", mapper.getTaskData()
+				.getRoot()
+				.getMappedAttribute(BugzillaAttribute.REP_PLATFORM.getKey())
+				.getValue());
+		assertEquals("Windows", mapper.getTaskData()
+				.getRoot()
+				.getMappedAttribute(BugzillaAttribute.OP_SYS.getKey())
+				.getValue());
+		assertEquals("ASSIGNED", mapper.getTaskData().getRoot().getMappedAttribute(
+				BugzillaAttribute.BUG_STATUS.getKey()).getValue());
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		assertEquals(format1.parse("2007-03-20 16:37"), mapper.getCreationDate());
@@ -156,12 +166,12 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		//assertEquals("", mapper.getTaskKey());
 
 		// test comments
-		TaskAttribute[] comments = data.getAttributeMapper().getAttributesByType(data, TaskAttribute.TYPE_COMMENT);
-		assertEquals(11, comments.length);
-		TaskCommentMapper commentMap = TaskCommentMapper.createFrom(comments[0]);
+		List<TaskAttribute> comments = data.getAttributeMapper().getAttributesByType(data, TaskAttribute.TYPE_COMMENT);
+		assertEquals(11, comments.size());
+		TaskCommentMapper commentMap = TaskCommentMapper.createFrom(comments.get(0));
 		assertEquals("Rob Elves", commentMap.getAuthor().getName());
 		assertEquals("Created an attachment (id=1)\ntest\n\ntest attachments", commentMap.getText());
-		commentMap = TaskCommentMapper.createFrom(comments[10]);
+		commentMap = TaskCommentMapper.createFrom(comments.get(10));
 		assertEquals("Tests", commentMap.getAuthor().getName());
 		assertEquals("test", commentMap.getText());
 	}
@@ -242,7 +252,9 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		TaskData taskData = model.getTaskData();
 		assertNotNull(taskData);
 
-		int numComments = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).length;
+		int numComments = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.size();
 
 		// Modify it
 		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();

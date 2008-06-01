@@ -22,65 +22,158 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
  */
 public class TaskMapper implements ITaskMapping {
 
+	private final boolean createNonExistingAttributes;
+
 	private final TaskData taskData;
 
 	public TaskMapper(TaskData taskData) {
+		this(taskData, false);
+	}
+
+	public TaskMapper(TaskData taskData, boolean createNonExistingAttributes) {
+		this.createNonExistingAttributes = createNonExistingAttributes;
 		Assert.isNotNull(taskData);
 		this.taskData = taskData;
 	}
 
 	public boolean applyTo(ITask task) {
 		boolean changed = false;
-		if ((task.getCompletionDate() != null && getCompletionDate() == null) //
-				|| hasTaskPropertyChanged(task.getCompletionDate(), getCompletionDate())) {
+		if (hasChanges(task.getCompletionDate(), TaskAttribute.DATE_COMPLETION)) {
 			task.setCompletionDate(getCompletionDate());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getCreationDate(), getCreationDate())) {
+		if (hasChanges(task.getCreationDate(), TaskAttribute.DATE_CREATION)) {
 			task.setCreationDate(getCreationDate());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getModificationDate(), getModificationDate())) {
+		if (hasChanges(task.getModificationDate(), TaskAttribute.DATE_MODIFICATION)) {
 			task.setModificationDate(getModificationDate());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getDueDate(), getDueDate())) {
+		if (hasChanges(task.getDueDate(), TaskAttribute.DATE_DUE)) {
 			task.setDueDate(getDueDate());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getOwner(), getOwner())) {
+		if (hasChanges(task.getOwner(), TaskAttribute.USER_ASSIGNED)) {
 			task.setOwner(getOwner());
 			changed = true;
 		}
-		if (getPriority() != null && hasTaskPropertyChanged(task.getPriority(), getPriority().toString())) {
-			task.setPriority(getPriority().toString());
+		if (hasChanges(task.getPriority(), TaskAttribute.PRIORITY)) {
+			if (getPriority() != null) {
+				task.setPriority(getPriority().toString());
+			} else {
+				task.setPriority(PriorityLevel.getDefault().toString());
+			}
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getSummary(), getSummary())) {
+		if (hasChanges(task.getSummary(), TaskAttribute.SUMMARY)) {
 			task.setSummary(getSummary());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getTaskKey(), getTaskKey())) {
+		if (hasChanges(task.getTaskKey(), TaskAttribute.TASK_KEY)) {
 			task.setTaskKey(getTaskKey());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getTaskKind(), getTaskKind())) {
+		if (hasChanges(task.getTaskKind(), TaskAttribute.TASK_KIND)) {
 			task.setTaskKind(getTaskKind());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(task.getUrl(), getTaskUrl())) {
+		if (hasChanges(task.getUrl(), TaskAttribute.TASK_URL)) {
 			task.setUrl(getTaskUrl());
 			changed = true;
 		}
 		return changed;
 	}
 
-	protected boolean getBooleanValue(String attributeKey) {
-		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
-		if (attribute != null) {
-			return taskData.getAttributeMapper().getBooleanValue(attribute);
+	private boolean areEquals(Object existingProperty, Object newProperty) {
+		return (existingProperty != null) ? !existingProperty.equals(newProperty) : newProperty != null;
+	}
+
+	private void copyAttributeValue(TaskAttribute sourceAttribute, TaskAttribute targetAttribute) {
+		if (targetAttribute == null) {
+			return;
 		}
-		return false;
+		if (!sourceAttribute.getMetaData().isReadOnly() && !targetAttribute.getMetaData().isReadOnly()) {
+			targetAttribute.clearValues();
+			if (targetAttribute.getOptions().size() > 0) {
+				List<String> values = sourceAttribute.getValues();
+				for (String value : values) {
+					if (targetAttribute.getOptions().containsValue(value)) {
+						targetAttribute.addValue(value);
+					}
+				}
+			} else {
+				List<String> values = sourceAttribute.getValues();
+				for (String value : values) {
+					targetAttribute.addValue(value);
+				}
+			}
+		}
+	}
+
+	/**
+	 * TODO update comment
+	 * 
+	 * Sets attribute values from <code>sourceTaskData</code> on <code>targetTaskData</code>. Sets the following
+	 * attributes:
+	 * <ul>
+	 * <li>summary
+	 * <li>description
+	 * </ul>
+	 * Other attribute values are only set if they exist on <code>sourceTaskData</code> and <code>targetTaskData</code>.
+	 * 
+	 * @param sourceTaskData
+	 *            the source task data values are copied from, the connector kind of repository of
+	 *            <code>sourceTaskData</code> can be different from <code>targetTaskData</code>
+	 * @param targetTaskData
+	 *            the target task data values are copied to, the connector kind matches the one of this task data
+	 *            handler
+	 * @since 2.2
+	 */
+	public void copyFrom(ITaskMapping source) {
+		if (source.getTaskData() != null && this.getTaskData() != null
+				&& source.getTaskData().equals(this.getTaskData().getConnectorKind())) {
+			// task data objects are from the same connector, copy all attributes
+			for (TaskAttribute sourceAttribute : source.getTaskData().getRoot().getAttributes().values()) {
+				copyAttributeValue(sourceAttribute, this.getTaskData().getRoot().getAttribute(sourceAttribute.getId()));
+			}
+		} else {
+			if (source.getCc() != null) {
+				setCc(source.getCc());
+			}
+			if (source.getDescription() != null) {
+				setDescription(source.getDescription());
+			}
+			if (source.getComponent() != null) {
+				setComponent(source.getComponent());
+			}
+			if (source.getKeywords() != null) {
+				setKeywords(source.getKeywords());
+			}
+			if (source.getOwner() != null) {
+				setOwner(source.getOwner());
+			}
+			if (source.getPriority() != null) {
+				setPriority(source.getPriority());
+			}
+			if (source.getProduct() != null) {
+				setProduct(source.getProduct());
+			}
+			if (source.getSummary() != null) {
+				setSummary(source.getSummary());
+			}
+
+		}
+	}
+
+	private TaskAttribute createAttribute(String attributeKey) {
+		attributeKey = taskData.getAttributeMapper().mapToRepositoryKey(taskData.getRoot(), attributeKey);
+		TaskAttribute attribute = taskData.getRoot().createAttribute(attributeKey);
+		return attribute;
+	}
+
+	public List<String> getCc() {
+		return getValues(TaskAttribute.USER_CC);
 	}
 
 	public Date getCompletionDate() {
@@ -95,7 +188,7 @@ public class TaskMapper implements ITaskMapping {
 		return getDateValue(TaskAttribute.DATE_CREATION);
 	}
 
-	protected Date getDateValue(String attributeKey) {
+	private Date getDateValue(String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getDateValue(attribute);
@@ -109,6 +202,18 @@ public class TaskMapper implements ITaskMapping {
 
 	public Date getDueDate() {
 		return getDateValue(TaskAttribute.DATE_DUE);
+	}
+
+	public List<String> getKeywords() {
+		return getValues(TaskAttribute.KEYWORDS);
+	}
+
+	private TaskAttribute getMappedAttribute(String attributeKey) {
+		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
+		if (createNonExistingAttributes && attribute == null) {
+			attribute = createAttribute(attributeKey);
+		}
+		return attribute;
 	}
 
 	public Date getModificationDate() {
@@ -128,6 +233,14 @@ public class TaskMapper implements ITaskMapping {
 		return getValue(TaskAttribute.PRODUCT);
 	}
 
+	public String getReporter() {
+		return getValue(TaskAttribute.USER_REPORTER);
+	}
+
+	public String getResolution() {
+		return getValue(TaskAttribute.RESOLUTION);
+	}
+
 	public String getSummary() {
 		return getValue(TaskAttribute.SUMMARY);
 	}
@@ -144,11 +257,15 @@ public class TaskMapper implements ITaskMapping {
 		return getValue(TaskAttribute.TASK_KIND);
 	}
 
+	public String getTaskStatus() {
+		return getValue(TaskAttribute.STATUS);
+	}
+
 	public String getTaskUrl() {
 		return getValue(TaskAttribute.TASK_URL);
 	}
 
-	public String getValue(String attributeKey) {
+	private String getValue(String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getValueLabel(attribute);
@@ -156,7 +273,7 @@ public class TaskMapper implements ITaskMapping {
 		return null;
 	}
 
-	public String[] getValues(String attributeKey) {
+	private List<String> getValues(String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getValueLabels(attribute);
@@ -164,27 +281,39 @@ public class TaskMapper implements ITaskMapping {
 		return null;
 	}
 
-	protected boolean hasTaskPropertyChanged(Object existingProperty, Object newProperty) {
-		// the query hit does not have this property
-		if (newProperty == null) {
-			return false;
-		}
-		return (existingProperty == null) ? true : !existingProperty.equals(newProperty);
+	public boolean hasChanges(ITask task) {
+		boolean changed = false;
+		changed |= hasChanges(task.getCompletionDate(), TaskAttribute.DATE_COMPLETION);
+		changed |= hasChanges(task.getCreationDate(), TaskAttribute.DATE_CREATION);
+		changed |= hasChanges(task.getModificationDate(), TaskAttribute.DATE_MODIFICATION);
+		changed |= hasChanges(task.getDueDate(), TaskAttribute.DATE_DUE);
+		changed |= hasChanges(task.getOwner(), TaskAttribute.USER_ASSIGNED);
+		changed |= hasChanges(task.getPriority(), TaskAttribute.PRIORITY);
+		changed |= hasChanges(task.getSummary(), TaskAttribute.SUMMARY);
+		changed |= hasChanges(task.getTaskKey(), TaskAttribute.TASK_KEY);
+		changed |= hasChanges(task.getTaskKind(), TaskAttribute.TASK_KIND);
+		changed |= hasChanges(task.getUrl(), TaskAttribute.TASK_URL);
+		return changed;
 	}
 
-	public TaskAttribute setBooleanValue(String attributeKey, boolean value) {
+	private boolean hasChanges(Object value, String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
-		if (attribute == null) {
-			attribute = createAttribute(attributeKey);
+		if (attribute != null) {
+			if (TaskAttribute.TYPE_BOOLEAN.equals(attribute.getMetaData().getType())) {
+				return areEquals(value, taskData.getAttributeMapper().getBooleanValue(attribute));
+			} else if (TaskAttribute.TYPE_DATE.equals(attribute.getMetaData().getType())) {
+				return areEquals(value, taskData.getAttributeMapper().getDateValue(attribute));
+			} else if (TaskAttribute.TYPE_INTEGER.equals(attribute.getMetaData().getType())) {
+				return areEquals(value, taskData.getAttributeMapper().getIntegerValue(attribute));
+			} else {
+				return areEquals(value, taskData.getAttributeMapper().getValue(attribute));
+			}
 		}
-		taskData.getAttributeMapper().setBooleanValue(attribute, value);
-		return attribute;
+		return false;
 	}
 
-	private TaskAttribute createAttribute(String attributeKey) {
-		attributeKey = taskData.getAttributeMapper().mapToRepositoryKey(taskData.getRoot(), attributeKey);
-		TaskAttribute attribute = taskData.getRoot().createAttribute(attributeKey);
-		return attribute;
+	public void setCc(List<String> cc) {
+		setValues(TaskAttribute.USER_CC, cc);
 	}
 
 	public void setCompletionDate(Date dateCompleted) {
@@ -199,12 +328,11 @@ public class TaskMapper implements ITaskMapping {
 		setDateValue(TaskAttribute.DATE_CREATION, dateCreated);
 	}
 
-	protected TaskAttribute setDateValue(String attributeKey, Date value) {
-		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
-		if (attribute == null) {
-			attribute = createAttribute(attributeKey);
+	private TaskAttribute setDateValue(String attributeKey, Date value) {
+		TaskAttribute attribute = getMappedAttribute(attributeKey);
+		if (attribute != null) {
+			taskData.getAttributeMapper().setDateValue(attribute, value);
 		}
-		taskData.getAttributeMapper().setDateValue(attribute, value);
 		return attribute;
 	}
 
@@ -214,6 +342,10 @@ public class TaskMapper implements ITaskMapping {
 
 	public void setDueDate(Date value) {
 		setDateValue(TaskAttribute.DATE_DUE, value);
+	}
+
+	public void setKeywords(List<String> keywords) {
+		setValues(TaskAttribute.KEYWORDS, keywords);
 	}
 
 	public void setModificationDate(Date dateModified) {
@@ -250,116 +382,21 @@ public class TaskMapper implements ITaskMapping {
 		setValue(TaskAttribute.TASK_URL, taskUrl);
 	}
 
-	protected TaskAttribute setValue(String attributeKey, String value) {
-		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
-		if (attribute == null) {
-			attribute = createAttribute(attributeKey);
+	private TaskAttribute setValue(String attributeKey, String value) {
+		TaskAttribute attribute = getMappedAttribute(attributeKey);
+		if (attribute != null) {
+			taskData.getAttributeMapper().setValue(attribute, value);
 		}
-		taskData.getAttributeMapper().setValue(attribute, value);
 		return attribute;
+
 	}
 
-	/**
-	 * TODO update comment
-	 * 
-	 * Sets attribute values from <code>sourceTaskData</code> on <code>targetTaskData</code>. Sets the following
-	 * attributes:
-	 * <ul>
-	 * <li>summary
-	 * <li>description
-	 * </ul>
-	 * Other attribute values are only set if they exist on <code>sourceTaskData</code> and <code>targetTaskData</code>.
-	 * 
-	 * @param sourceTaskData
-	 *            the source task data values are copied from, the connector kind of repository of
-	 *            <code>sourceTaskData</code> can be different from <code>targetTaskData</code>
-	 * @param targetTaskData
-	 *            the target task data values are copied to, the connector kind matches the one of this task data
-	 *            handler
-	 * @since 2.2
-	 */
-	public void copyFrom(ITaskMapping source) {
-		if (source.getTaskData() != null && this.getTaskData() != null
-				&& source.getTaskData().equals(this.getTaskData().getConnectorKind())) {
-			// task data objects are from the same connector, copy all attributes
-			for (TaskAttribute sourceAttribute : source.getTaskData().getRoot().getAttributes().values()) {
-				copyAttributeValue(sourceAttribute, this.getTaskData().getRoot().getAttribute(sourceAttribute.getId()));
-			}
-		} else {
-			if (source.getDescription() != null) {
-				setDescription(source.getDescription());
-			}
-			if (source.getSummary() != null) {
-				setSummary(source.getSummary());
-			}
-			if (source.getPriority() != null) {
-				setPriority(source.getPriority());
-			}
-			if (source.getProduct() != null) {
-				setProduct(source.getProduct());
-			}
+	private TaskAttribute setValues(String attributeKey, List<String> values) {
+		TaskAttribute attribute = getMappedAttribute(attributeKey);
+		if (attribute != null) {
+			taskData.getAttributeMapper().setValues(attribute, values);
 		}
-//		targetTaskData.setSummary(sourceTaskData.getSummary());
-//		targetTaskData.setDescription(sourceTaskData.getDescription());
-//		if (sourceTaskData.getConnectorKind().equals(targetTaskData.getConnectorKind())
-//				&& sourceTaskData.getTaskKind().equals(targetTaskData.getTaskKind())) {
-//		} else {
-//			// map attributes from common schema
-//			String[] commonAttributeKeys = new String[] { RepositoryTaskAttribute.KEYWORDS,
-//					RepositoryTaskAttribute.PRIORITY, RepositoryTaskAttribute.PRODUCT,
-//					RepositoryTaskAttribute.COMPONENT, RepositoryTaskAttribute.RESOLUTION,
-//					RepositoryTaskAttribute.USER_ASSIGNED, RepositoryTaskAttribute.USER_CC, };
-//			for (String key : commonAttributeKeys) {
-//				RepositoryTaskAttribute sourceAttribute = sourceTaskData.getAttribute(key);
-//				if (sourceAttribute != null) {
-//					copyAttributeValue(sourceAttribute, targetTaskData.getAttribute(key));
-//				}
-//			}
-//		}
-	}
-
-	private void copyAttributeValue(TaskAttribute sourceAttribute, TaskAttribute targetAttribute) {
-		if (targetAttribute == null) {
-			return;
-		}
-		if (!sourceAttribute.getMetaData().isReadOnly() && !targetAttribute.getMetaData().isReadOnly()) {
-			targetAttribute.clearValues();
-			if (targetAttribute.getOptions().size() > 0) {
-				List<String> values = sourceAttribute.getValues();
-				for (String value : values) {
-					if (targetAttribute.getOptions().containsValue(value)) {
-						targetAttribute.addValue(value);
-					}
-				}
-			} else {
-				List<String> values = sourceAttribute.getValues();
-				for (String value : values) {
-					targetAttribute.addValue(value);
-				}
-			}
-		}
-	}
-
-	public String[] getCc() {
-		// ignore
-		return null;
-	}
-
-	public String[] getKeywords() {
-		// ignore
-		return null;
-	}
-
-	public String getReporter() {
-		return getValue(TaskAttribute.USER_REPORTER);
-	}
-
-	public String getResolution() {
-		return getValue(TaskAttribute.RESOLUTION);
-	}
-
-	public String getTaskStatus() {
-		return getValue(TaskAttribute.STATUS);
+		return attribute;
 	}
 
 }

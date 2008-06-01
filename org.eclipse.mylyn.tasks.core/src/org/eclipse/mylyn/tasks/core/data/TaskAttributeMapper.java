@@ -8,7 +8,6 @@
 package org.eclipse.mylyn.tasks.core.data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +64,7 @@ public class TaskAttributeMapper {
 		return null;
 	}
 
-	public TaskAttribute[] getAttributesByType(TaskData taskData, String type) {
+	public List<TaskAttribute> getAttributesByType(TaskData taskData, String type) {
 		Assert.isNotNull(taskData);
 		Assert.isNotNull(type);
 		List<TaskAttribute> result = new ArrayList<TaskAttribute>();
@@ -74,7 +73,7 @@ public class TaskAttributeMapper {
 				result.add(taskAttribute);
 			}
 		}
-		return result.toArray(new TaskAttribute[0]);
+		return result;
 	}
 
 	public boolean getBooleanValue(TaskAttribute attribute) {
@@ -145,7 +144,7 @@ public class TaskAttributeMapper {
 		return person;
 	}
 
-	public TaskOperation[] getTaskOperations(TaskAttribute operationsAttribute) {
+	public List<TaskOperation> getTaskOperations(TaskAttribute operationsAttribute) {
 		Assert.isNotNull(operationsAttribute);
 		TaskData taskData = operationsAttribute.getTaskData();
 		List<TaskOperation> result = new ArrayList<TaskOperation>();
@@ -155,7 +154,7 @@ public class TaskAttributeMapper {
 				result.add(TaskOperation.createFrom(taskAttribute));
 			}
 		}
-		return result.toArray(new TaskOperation[0]);
+		return result;
 	}
 
 	public TaskOperation getTaskOperation(TaskAttribute taskAttribute) {
@@ -189,7 +188,7 @@ public class TaskAttributeMapper {
 		return sb.toString();
 	}
 
-	public String[] getValueLabels(TaskAttribute taskAttribute) {
+	public List<String> getValueLabels(TaskAttribute taskAttribute) {
 		List<String> values = taskAttribute.getValues();
 		List<String> result = new ArrayList<String>(values.size());
 		for (String value : values) {
@@ -199,11 +198,11 @@ public class TaskAttributeMapper {
 			}
 			result.add(value);
 		}
-		return result.toArray(new String[0]);
+		return result;
 	}
 
-	public String[] getValues(TaskAttribute attribute) {
-		return attribute.getValues().toArray(new String[0]);
+	public List<String> getValues(TaskAttribute attribute) {
+		return new ArrayList<String>(attribute.getValues());
 	}
 
 	public boolean hasValue(TaskAttribute attribute) {
@@ -260,8 +259,8 @@ public class TaskAttributeMapper {
 		attribute.setValue(value);
 	}
 
-	public void setValues(TaskAttribute attribute, String[] values) {
-		attribute.setValues(Arrays.asList(values));
+	public void setValues(TaskAttribute attribute, List<String> values) {
+		attribute.setValues(values);
 	}
 
 	public void updateTaskAttachment(ITaskAttachment taskAttachment, TaskAttribute taskAttribute) {

@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.bugs;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -160,12 +161,12 @@ public class AttributeTaskMapper {
 			return null;
 		}
 
-		public String[] getCc() {
+		public List<String> getCc() {
 			// ignore
 			return null;
 		}
 
-		public String[] getKeywords() {
+		public List<String> getKeywords() {
 			// ignore
 			return null;
 		}

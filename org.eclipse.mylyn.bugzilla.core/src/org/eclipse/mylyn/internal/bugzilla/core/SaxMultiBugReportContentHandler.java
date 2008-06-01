@@ -332,7 +332,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	}
 
 	private void updateAttachmentMetaData() {
-		TaskAttribute[] taskAttachments = repositoryTaskData.getAttributeMapper().getAttributesByType(
+		List<TaskAttribute> taskAttachments = repositoryTaskData.getAttributeMapper().getAttributesByType(
 				repositoryTaskData, TaskAttribute.TYPE_ATTACHMENT);
 		for (TaskAttribute attachment : taskAttachments) {
 			TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attachment);

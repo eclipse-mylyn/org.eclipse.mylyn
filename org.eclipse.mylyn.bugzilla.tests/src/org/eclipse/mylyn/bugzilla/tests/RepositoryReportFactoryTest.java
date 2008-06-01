@@ -14,10 +14,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -140,9 +140,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 //		assertEquals("search-match-test 1", report.getDescription());
 		assertEquals("TestProduct", report.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey()).getValue());
 //		assertEquals("TestProduct", report.getProduct());
-		assertEquals("TestComponent", report.getRoot()
-				.getAttribute(BugzillaAttribute.COMPONENT.getKey())
-				.getValue());
+		assertEquals("TestComponent", report.getRoot().getAttribute(BugzillaAttribute.COMPONENT.getKey()).getValue());
 		assertEquals("PC", report.getRoot().getAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).getValue());
 		assertEquals("Windows", report.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey()).getValue());
 		assertEquals("other", report.getRoot().getAttribute(BugzillaAttribute.VERSION.getKey()).getValue());
@@ -157,13 +155,11 @@ public class RepositoryReportFactoryTest extends TestCase {
 				.getAttribute(BugzillaAttribute.DELTA_TS.getKey())
 				.getValue());
 		assertEquals("---", report.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()).getValue());
-		assertEquals("relves@cs.ubc.ca", report.getRoot()
-				.getAttribute(BugzillaAttribute.REPORTER.getKey())
-				.getValue());
+		assertEquals("relves@cs.ubc.ca", report.getRoot().getAttribute(BugzillaAttribute.REPORTER.getKey()).getValue());
 		assertEquals("nhapke@cs.ubc.ca", report.getRoot()
 				.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
 				.getValue());
-		assertEquals(5, report.getAttributeMapper().getAttributesByType(report, TaskAttribute.TYPE_ATTACHMENT).length);
+		assertEquals(5, report.getAttributeMapper().getAttributesByType(report, TaskAttribute.TYPE_ATTACHMENT).size());
 		// assertEquals("relves@cs.ubc.ca",
 		// report.getComments().get(0).getAttribute(
 		// BugzillaReportElement.WHO.getKeyString()).getValue());
@@ -187,9 +183,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
 				.getValue());
 		assertEquals("TestProduct", report.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey()).getValue());
-		assertEquals("TestComponent", report.getRoot()
-				.getAttribute(BugzillaAttribute.COMPONENT.getKey())
-				.getValue());
+		assertEquals("TestComponent", report.getRoot().getAttribute(BugzillaAttribute.COMPONENT.getKey()).getValue());
 		assertEquals("PC", report.getRoot().getAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).getValue());
 		assertEquals("Windows", report.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey()).getValue());
 		assertEquals("other", report.getRoot().getAttribute(BugzillaAttribute.VERSION.getKey()).getValue());
@@ -209,9 +203,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals(2, attribute.getValues().size());
 		assertEquals("relves@cs.ubc.ca", attribute.getValues().get(0));
 		assertEquals("relves@gmail.com", attribute.getValues().get(1));
-		assertEquals("relves@cs.ubc.ca", report.getRoot()
-				.getAttribute(BugzillaAttribute.REPORTER.getKey())
-				.getValue());
+		assertEquals("relves@cs.ubc.ca", report.getRoot().getAttribute(BugzillaAttribute.REPORTER.getKey()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getRoot()
 				.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
 				.getValue());
@@ -364,9 +356,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
 				.getValue());
 		assertEquals("TestProduct", report.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey()).getValue());
-		assertEquals("TestComponent", report.getRoot()
-				.getAttribute(BugzillaAttribute.COMPONENT.getKey())
-				.getValue());
+		assertEquals("TestComponent", report.getRoot().getAttribute(BugzillaAttribute.COMPONENT.getKey()).getValue());
 		assertEquals("PC", report.getRoot().getAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).getValue());
 		assertEquals("Windows XP", report.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey()).getValue());
 		assertEquals("other", report.getRoot().getAttribute(BugzillaAttribute.VERSION.getKey()).getValue());
@@ -380,13 +370,11 @@ public class RepositoryReportFactoryTest extends TestCase {
 				.getAttribute(BugzillaAttribute.DELTA_TS.getKey())
 				.getValue());
 		assertEquals("---", report.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()).getValue());
-		assertEquals("relves@cs.ubc.ca", report.getRoot()
-				.getAttribute(BugzillaAttribute.REPORTER.getKey())
-				.getValue());
+		assertEquals("relves@cs.ubc.ca", report.getRoot().getAttribute(BugzillaAttribute.REPORTER.getKey()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getRoot()
 				.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
 				.getValue());
-		assertEquals(0, report.getAttributeMapper().getAttributesByType(report, TaskAttribute.TYPE_ATTACHMENT).length);
+		assertEquals(0, report.getAttributeMapper().getAttributesByType(report, TaskAttribute.TYPE_ATTACHMENT).size());
 	}
 
 	public void testTimeTracking222() throws Exception {

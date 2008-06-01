@@ -80,11 +80,11 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	public String[] getValues() {
-		return getAttributeMapper().getValues(getTaskAttribute());
+		return getAttributeMapper().getValues(getTaskAttribute()).toArray(new String[0]);
 	}
 
 	public String[] getValuesLabels() {
-		return getAttributeMapper().getValueLabels(getTaskAttribute());
+		return getAttributeMapper().getValueLabels(getTaskAttribute()).toArray(new String[0]);
 	}
 
 	private void select(String[] values, String[] labels) {
@@ -103,7 +103,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	public void setValues(String[] values) {
-		getAttributeMapper().setValues(getTaskAttribute(), values);
+		getAttributeMapper().setValues(getTaskAttribute(), Arrays.asList(values));
 		attributeChanged();
 	}
 

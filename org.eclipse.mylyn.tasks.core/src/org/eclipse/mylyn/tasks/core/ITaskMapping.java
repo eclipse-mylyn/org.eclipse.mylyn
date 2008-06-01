@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -22,7 +23,7 @@ public interface ITaskMapping {
 
 	public void copyFrom(ITaskMapping source);
 
-	public abstract String[] getCc();
+	public abstract List<String> getCc();
 
 	public abstract Date getCompletionDate();
 
@@ -34,7 +35,7 @@ public interface ITaskMapping {
 
 	public abstract Date getDueDate();
 
-	public abstract String[] getKeywords();
+	public abstract List<String> getKeywords();
 
 	public abstract Date getModificationDate();
 

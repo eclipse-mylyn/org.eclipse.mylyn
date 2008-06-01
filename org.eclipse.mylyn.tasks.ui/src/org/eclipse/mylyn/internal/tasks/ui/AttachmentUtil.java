@@ -151,7 +151,7 @@ public class AttachmentUtil {
 			return contextAttachments;
 		}
 		if (taskData != null) {
-			TaskAttribute[] taskAttachments = taskData.getAttributeMapper().getAttributesByType(taskData,
+			List<TaskAttribute> taskAttachments = taskData.getAttributeMapper().getAttributesByType(taskData,
 					TaskAttribute.TYPE_ATTACHMENT);
 			for (TaskAttribute attribute : taskAttachments) {
 				TaskAttachment taskAttachment = new TaskAttachment(repository, task, attribute);

@@ -243,8 +243,9 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	}
 
 	private void createRadioButtons(Composite buttonComposite, FormToolkit toolkit, TaskOperation selectedOperation) {
-		TaskOperation[] operations = getTaskData().getAttributeMapper().getTaskOperations(selectedOperationAttribute);
-		if (operations.length > 0) {
+		List<TaskOperation> operations = getTaskData().getAttributeMapper().getTaskOperations(
+				selectedOperationAttribute);
+		if (operations.size() > 0) {
 			operationButtons = new ArrayList<Button>();
 			Button selectedButton = null;
 			for (TaskOperation operation : operations) {
