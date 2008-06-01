@@ -269,17 +269,17 @@ public class AttributeEditorToolkit {
 	 * @return true if content assist is available for the specified attribute.
 	 */
 	private boolean hasContentAssist(TaskAttribute taskAttribute) {
-		if (TaskAttribute.TYPE_PERSON.equals(taskAttribute.getTaskData().getAttributeMapper().getType(taskAttribute))) {
+		String type = taskAttribute.getMetaData().getType();
+		if (TaskAttribute.TYPE_PERSON.equals(type)) {
 			return true;
-		} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(taskAttribute.getTaskData().getAttributeMapper().getType(
-				taskAttribute))) {
+		} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
 			return true;
 		}
 		return false;
 	}
 
-	private boolean hasSpellChecking(TaskAttribute taskAttribute) {
-		String type = taskAttribute.getTaskData().getAttributeMapper().getType(taskAttribute);
+	boolean hasSpellChecking(TaskAttribute taskAttribute) {
+		String type = taskAttribute.getMetaData().getType();
 		if (TaskAttribute.TYPE_LONG_RICH_TEXT.equals(type) || TaskAttribute.TYPE_SHORT_RICH_TEXT.equals(type)) {
 			return true;
 		}

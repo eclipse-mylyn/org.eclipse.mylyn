@@ -166,10 +166,6 @@ public class TaskAttributeMapper {
 		return taskRepository;
 	}
 
-	public String getType(TaskAttribute taskAttribute) {
-		return taskAttribute.getMetaData().getType();
-	}
-
 	public String getValue(TaskAttribute taskAttribute) {
 		return taskAttribute.getValue();
 	}

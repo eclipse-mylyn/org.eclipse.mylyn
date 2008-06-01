@@ -228,15 +228,11 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 				continue;
 			}
 
-			String type = attributeMapper.getType(attribute);
-			if (type != null) {
-				attributeEditorFactory.createEditor(type, attribute);
-				AbstractAttributeEditor attributeEditor = attributeEditorFactory.createEditor(type, attribute);
-				if (attributeEditor != null) {
-					attributeEditors.add(attributeEditor);
-					if (getModel().hasIncomingChanges(attribute)) {
-						hasIncoming = true;
-					}
+			AbstractAttributeEditor attributeEditor = createAttributeEditor(attribute);
+			if (attributeEditor != null) {
+				attributeEditors.add(attributeEditor);
+				if (getModel().hasIncomingChanges(attribute)) {
+					hasIncoming = true;
 				}
 			}
 		}

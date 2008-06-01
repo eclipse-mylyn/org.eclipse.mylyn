@@ -25,7 +25,6 @@ public class TaskDependendyAttributeEditor extends RichTextAttributeEditor {
 			TaskRepository taskRepository) {
 		super(manager, taskRepository, taskAttribute, SWT.SINGLE);
 		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
-		setSpellCheckingEnabled(false);
 	}
 
 	@Override

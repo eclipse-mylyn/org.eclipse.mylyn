@@ -11,8 +11,8 @@ package org.eclipse.mylyn.tasks.ui.editors;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.swt.SWT;
@@ -52,11 +52,14 @@ public abstract class AbstractTaskEditorPart extends AbstractFormPart {
 			return null;
 		}
 
-		TaskAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
-		String type = attributeMapper.getType(attribute);
+		String type = attribute.getMetaData().getType();
 		if (type != null) {
 			AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
 			AbstractAttributeEditor editor = attributeEditorFactory.createEditor(type, attribute);
+			if (editor instanceof RichTextAttributeEditor) {
+				boolean spellChecking = getTaskEditorPage().getAttributeEditorToolkit().hasSpellChecking(attribute);
+				((RichTextAttributeEditor) editor).setSpellCheckingEnabled(spellChecking);
+			}
 			return editor;
 		}
 		return null;

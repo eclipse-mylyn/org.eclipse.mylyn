@@ -55,8 +55,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	private RepositoryTextViewer viewer;
 
-	// TODO EDITOR
-	private boolean spellCheckingEnabled = true;
+	private boolean spellCheckingEnabled;
 
 	private final int style;
 
@@ -139,7 +138,11 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 			configureAsTextEditor(document);
 			viewer.addTextListener(new ITextListener() {
 				public void textChanged(TextEvent event) {
-					setValue(viewer.getTextWidget().getText());
+					// filter out events caused by text presentation changes, e.g. annotation drawing
+					String value = viewer.getTextWidget().getText();
+					if (!getValue().equals(value)) {
+						setValue(value);
+					}
 				}
 			});
 			viewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
