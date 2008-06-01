@@ -35,9 +35,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
-	private static final String TASK_DATA_VERSION_1_0 = "1.0";
-
-	private static final String TASK_DATA_VERSION_2_0 = "2.0";
+	private static final String TASK_DATA_VERSION_CURRENT = "2.0";
 
 	private final BugzillaRepositoryConnector connector;
 
@@ -80,7 +78,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public void migrateTaskData(TaskRepository taskRepository, TaskData taskData) {
-		if (TASK_DATA_VERSION_1_0.equals(taskData.getVersion())) {
+		if (taskData.getVersion() == null) {
 			for (TaskAttribute attribute : new ArrayList<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
 				if (attribute.getId().equals(BugzillaAttribute.DESC.getKey())) {
 					TaskAttribute attrLongDesc = createAttribute(taskData, BugzillaAttribute.LONG_DESC);
@@ -93,7 +91,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			if (configuration != null) {
 				configuration.addValidOperations(taskData);
 			}
-			taskData.setVersion(TASK_DATA_VERSION_2_0);
+			taskData.setVersion(TASK_DATA_VERSION_CURRENT);
 		}
 	}
 
@@ -136,6 +134,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	public boolean initializeTaskData(TaskRepository repository, TaskData data, String product, IProgressMonitor monitor)
 			throws CoreException {
+		data.setVersion(TASK_DATA_VERSION_CURRENT);
+
 		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
 				false, monitor);
 

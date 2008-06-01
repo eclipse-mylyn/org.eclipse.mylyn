@@ -9,6 +9,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextViewer;
@@ -22,8 +24,16 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
 
 public class EditorUtil {
+
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
+
+	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
+
+	static final String KEY_MARKER = "marker";
 
 	static final String KEY_TEXT_VIEWER = "textViewer";
 
@@ -125,6 +135,53 @@ public class EditorUtil {
 		return false;
 	}
 
+	private static Control findControl(Composite composite, String key) {
+		if (!composite.isDisposed()) {
+			for (Control child : composite.getChildren()) {
+				if (key.equals(getMarker(child))) {
+					return child;
+				}
+				if (child instanceof Composite) {
+					Control found = findControl((Composite) child, key);
+					if (found != null) {
+						return found;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Scroll to a specified piece of text
+	 * 
+	 * @param control
+	 *            The StyledText to scroll to
+	 */
+	private static void focusOn(ScrolledForm form, Control control) {
+		int pos = 0;
+		control.setEnabled(true);
+		control.setFocus();
+		control.forceFocus();
+		while (control != null && control != form.getBody()) {
+			pos += control.getLocation().y;
+			control = control.getParent();
+		}
+
+		pos = pos - 60; // form.getOrigin().y;
+		if (!form.getBody().isDisposed()) {
+			form.setOrigin(0, pos);
+		}
+	}
+
+	static String formatDate(Date date) {
+		return new SimpleDateFormat(DATE_FORMAT).format(date);
+	}
+
+	static String formatDateTime(Date date) {
+		return new SimpleDateFormat(DATE_TIME_FORMAT).format(date);
+	}
+
 	public static Control getFocusControl(IFormPage page) {
 		if (page == null) {
 			return null;
@@ -145,6 +202,10 @@ public class EditorUtil {
 		return focusControl;
 	}
 
+	public static String getMarker(Widget widget) {
+		return (String) widget.getData(KEY_MARKER);
+	}
+
 	public static TextViewer getTextViewer(Widget widget) {
 		if (widget instanceof StyledText) {
 			Object data = widget.getData(KEY_TEXT_VIEWER);
@@ -153,6 +214,53 @@ public class EditorUtil {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Selects the given object in the editor.
+	 * 
+	 * @param o
+	 *            The object to be selected.
+	 * @param highlight
+	 *            Whether or not the object should be highlighted.
+	 */
+	public static boolean reveal(ScrolledForm form, String key) {
+		Control control = findControl(form.getBody(), key);
+		if (control != null) {
+			// expand all children
+			if (control instanceof ExpandableComposite) {
+				ExpandableComposite ex = (ExpandableComposite) control;
+				if (!ex.isExpanded()) {
+					toggleExpandableComposite(true, ex);
+				}
+			}
+
+			// expand all parents of control
+			Composite comp = control.getParent();
+			while (comp != null) {
+				if (comp instanceof Section) {
+					if (!((Section) comp).isExpanded()) {
+						((Section) comp).setExpanded(true);
+					}
+				} else if (comp instanceof ExpandableComposite) {
+					ExpandableComposite ex = (ExpandableComposite) comp;
+					if (!ex.isExpanded()) {
+						toggleExpandableComposite(true, ex);
+					}
+
+					// HACK: This is necessary
+					// due to a bug in SWT's ExpandableComposite.
+					// 165803: Expandable bars should expand when clicking anywhere
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
+					if (ex.getData() != null && ex.getData() instanceof Composite) {
+						((Composite) ex.getData()).setVisible(true);
+					}
+				}
+				comp = comp.getParent();
+			}
+			focusOn(form, control);
+		}
+		return true;
 	}
 
 	public static void setEnabledState(Composite composite, boolean enabled) {
@@ -165,6 +273,10 @@ public class EditorUtil {
 				}
 			}
 		}
+	}
+
+	public static void setMarker(Widget widget, String text) {
+		widget.setData(KEY_MARKER, text);
 	}
 
 	public static void setTextViewer(Widget widget, TextViewer textViewer) {
@@ -189,5 +301,4 @@ public class EditorUtil {
 			}
 		}
 	}
-
 }

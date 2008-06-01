@@ -169,6 +169,13 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * @since 3.0
+	 */
+	public boolean hasRepositoryDueDate(TaskRepository taskRepository, ITask task, TaskData taskData) {
+		return false;
+	}
+
+	/**
 	 * Default implementation returns true every 24hrs.
 	 * 
 	 * @return true to indicate that the repository configuration is stale and requires update

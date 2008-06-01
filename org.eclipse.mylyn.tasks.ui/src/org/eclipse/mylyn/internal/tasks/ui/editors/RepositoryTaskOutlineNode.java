@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
  * 
  * @author Mik Kersten (hardening of prototype)
  */
+@Deprecated
 public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 	public static final String LABEL_DESCRIPTION = "Description";
@@ -115,8 +116,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	}
 
 	/**
-	 * @return <code>true</code> if the given object is another node representing the same piece of data in the
-	 *         editor.
+	 * @return <code>true</code> if the given object is another node representing the same piece of data in the editor.
 	 */
 	@Override
 	public boolean equals(Object arg0) {
@@ -157,8 +157,8 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	}
 
 	/**
-	 * Parses the given <code>IBugzillaBug</code> into a tree of <code>RepositoryTaskOutlineNode</code>'s suitable
-	 * for use in the <code>RepositoryTaskOutlinePage</code> view.
+	 * Parses the given <code>IBugzillaBug</code> into a tree of <code>RepositoryTaskOutlineNode</code>'s suitable for
+	 * use in the <code>RepositoryTaskOutlinePage</code> view.
 	 * 
 	 * @param bug
 	 *            The bug that needs parsing.
@@ -209,8 +209,8 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 //	}
 
 	/**
-	 * Parses the given <code>BugReport</code> into a tree of <code>RepositoryTaskOutlineNode</code>'s suitable for
-	 * use in the <code>RepositoryTaskOutlinePage</code> view.
+	 * Parses the given <code>BugReport</code> into a tree of <code>RepositoryTaskOutlineNode</code>'s suitable for use
+	 * in the <code>RepositoryTaskOutlinePage</code> view.
 	 * 
 	 * @param bug
 	 *            The <code>BugReport</code> that needs parsing.
@@ -248,8 +248,8 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		}
 
 		if (hasNewComment) {
-			topNode.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(),
-					LABEL_NEW_COMMENT, null, bug.getSummary()));
+			topNode.addChild(new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(), LABEL_NEW_COMMENT,
+					null, bug.getSummary()));
 		}
 
 		RepositoryTaskOutlineNode titleNode = new RepositoryTaskOutlineNode(bugId, bugServer, bug.getConnectorKind(),

@@ -398,8 +398,6 @@ public class TaskDataStateReader extends DefaultHandler {
 			String taskDataVersion = getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_VERSION);
 			if (taskDataVersion.length() > 0) {
 				taskData.setVersion(taskDataVersion);
-			} else {
-				taskData.setVersion(version);
 			}
 			return taskData;
 		}

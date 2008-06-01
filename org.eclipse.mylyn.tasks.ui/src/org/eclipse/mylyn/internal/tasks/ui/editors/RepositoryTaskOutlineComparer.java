@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.IElementComparer;
  * @see IElementComparer
  * @see IRepositoryTaskSelection
  */
+@Deprecated
 public class RepositoryTaskOutlineComparer implements IElementComparer {
 
 	public boolean equals(Object a, Object b) {

@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -40,12 +41,13 @@ import org.eclipse.mylyn.internal.tasks.ui.deprecated.TaskFormPage;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -679,11 +681,22 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
-		if (task != null && !(task instanceof LocalTask)) {
-			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
-			if (connector != null && connector.supportsDueDates(task)) {
-				dueDatePicker.setEnabled(false);
-				clearDueDate.setEnabled(false);
+		// disable due date picker if it's a repository due date
+		if (task != null) {
+			try {
+				TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
+				if (taskData != null) {
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+					TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(
+							taskData.getConnectorKind(), taskData.getRepositoryUrl());
+					if (connector != null && taskRepository != null
+							&& connector.hasRepositoryDueDate(taskRepository, task, taskData)) {
+						dueDatePicker.setEnabled(false);
+						clearDueDate.setEnabled(false);
+					}
+				}
+			} catch (CoreException e) {
+				// ignore
 			}
 		}
 

@@ -95,7 +95,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 		case 4:
 			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : "";
 		case 5:
-			return (attachment.getCreationDate() != null) ? attributeToolkit.formatDate(attachment.getCreationDate())
+			return (attachment.getCreationDate() != null) ? EditorUtil.formatDateTime(attachment.getCreationDate())
 					: "";
 		}
 		return "unrecognized column";

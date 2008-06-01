@@ -26,7 +26,7 @@ public interface IRepositoryManager {
 
 	public abstract Set<TaskRepository> getRepositories(String connectorKind);
 
-	public abstract TaskRepository getRepository(String connectorKind, String urlString);
+	public abstract TaskRepository getRepository(String connectorKind, String repositoryUrl);
 
 	public abstract AbstractRepositoryConnector getRepositoryConnector(String connectorKind);
 

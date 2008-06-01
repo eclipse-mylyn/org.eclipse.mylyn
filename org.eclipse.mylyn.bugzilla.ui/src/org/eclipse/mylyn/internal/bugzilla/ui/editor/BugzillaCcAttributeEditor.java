@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -19,7 +20,6 @@ import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -27,13 +27,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 /**
  * @author Rob Elves
  */
-public class BugzillaCCAttributeEditor extends AbstractAttributeEditor {
+public class BugzillaCcAttributeEditor extends AbstractAttributeEditor {
 
 	private List list;
 
-	private TaskAttribute attrRemoveCC;
+	private TaskAttribute attrRemoveCc;
 
-	public BugzillaCCAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
+	public BugzillaCcAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.SINGLE));
 	}
@@ -44,10 +44,7 @@ public class BugzillaCCAttributeEditor extends AbstractAttributeEditor {
 		toolkit.adapt(list, true, true);
 		list.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		list.setFont(TEXT_FONT);
-		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		gridData.widthHint = 100;
-		gridData.heightHint = 100;
-		list.setLayoutData(gridData);
+		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(list);
 
 		TaskAttribute attrUserCC = getTaskAttribute();
 		if (attrUserCC != null) {
@@ -56,14 +53,13 @@ public class BugzillaCCAttributeEditor extends AbstractAttributeEditor {
 			}
 		}
 
-		attrRemoveCC = getModel().getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.REMOVECC.getKey());
+		attrRemoveCc = getModel().getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.REMOVECC.getKey());
 
-		if (attrRemoveCC == null) {
-			attrRemoveCC = BugzillaTaskDataHandler.createAttribute(getModel().getTaskData(),
-					BugzillaAttribute.REMOVECC);
+		if (attrRemoveCc == null) {
+			attrRemoveCc = BugzillaTaskDataHandler.createAttribute(getModel().getTaskData(), BugzillaAttribute.REMOVECC);
 		}
 
-		for (String item : attrRemoveCC.getValues()) {
+		for (String item : attrRemoveCc.getValues()) {
 			int i = list.indexOf(item);
 			if (i != -1) {
 				list.select(i);
@@ -77,15 +73,15 @@ public class BugzillaCCAttributeEditor extends AbstractAttributeEditor {
 				for (String cc : list.getItems()) {
 					int index = list.indexOf(cc);
 					if (list.isSelected(index)) {
-						java.util.List<String> remove = attrRemoveCC.getValues();
+						java.util.List<String> remove = attrRemoveCc.getValues();
 						if (!remove.contains(cc)) {
-							attrRemoveCC.addValue(cc);
+							attrRemoveCc.addValue(cc);
 						}
 					} else {
-						attrRemoveCC.removeValue(cc);
+						attrRemoveCc.removeValue(cc);
 					}
 				}
-				getModel().attributeChanged(attrRemoveCC);
+				getModel().attributeChanged(attrRemoveCc);
 			}
 		});
 

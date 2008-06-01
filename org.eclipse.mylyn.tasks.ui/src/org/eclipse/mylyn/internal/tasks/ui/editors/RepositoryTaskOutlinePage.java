@@ -31,6 +31,7 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 /**
  * An outline page for a <code>BugEditor</code>.
  */
+@Deprecated
 public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 
 	private final RepositoryTaskOutlineNode topTreeNode;

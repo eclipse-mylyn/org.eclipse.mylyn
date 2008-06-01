@@ -14,8 +14,6 @@ import java.util.Date;
 
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -37,8 +35,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  */
 public class DateAttributeEditor extends AbstractAttributeEditor {
 
-	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
-
 	private DatePicker datePicker;
 
 	public DateAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
@@ -53,7 +49,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(text, true, true);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			if (getValue() != null) {
-				text.setText(new SimpleDateFormat(DATE_FORMAT).format(getValue()));
+				text.setText(new SimpleDateFormat(EditorUtil.DATE_TIME_FORMAT).format(getValue()));
 			}
 			setControl(text);
 		} else {
@@ -65,17 +61,14 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			String value = "";
 			Date date = getValue();
 			if (date != null) {
-				SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat f = new SimpleDateFormat(EditorUtil.DATE_FORMAT);
 				value = f.format(date);
 			}
 
-			datePicker = new DatePicker(dateWithClearComposite, /* SWT.NONE */SWT.BORDER, value, true,
-					TasksUiPlugin.getDefault()
-							.getPreferenceStore()
-							.getInt(ITasksUiPreferenceConstants.PLANNING_ENDHOUR));
+			datePicker = new DatePicker(dateWithClearComposite, SWT.BORDER | SWT.FLAT, value, false, 0);
 			datePicker.setEnabled(!isReadOnly());
 			datePicker.setFont(TEXT_FONT);
-			datePicker.setDatePattern("yyyy-MM-dd");
+			datePicker.setDatePattern(EditorUtil.DATE_FORMAT);
 			datePicker.addPickerSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {

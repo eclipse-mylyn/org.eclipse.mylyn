@@ -73,6 +73,7 @@ import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * @author Mik Kersten
@@ -304,16 +305,18 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter) {
-		return getAdapterDelgate(adapter);
-	}
-
-	private Object getAdapterDelgate(Class<?> adapter) {
-		// TODO: consider adding: IContentOutlinePage.class.equals(adapter) &&
 		if (contentOutlineProvider != null) {
 			return contentOutlineProvider.getAdapter(adapter);
-		} else {
-			return super.getAdapter(adapter);
+		} else if (IContentOutlinePage.class.equals(adapter)) {
+			IFormPage[] pages = getPages();
+			for (IFormPage page : pages) {
+				Object outlinePage = page.getAdapter(adapter);
+				if (outlinePage != null) {
+					return outlinePage;
+				}
+			}
 		}
+		return super.getAdapter(adapter);
 	}
 
 	/**

@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -25,9 +26,8 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Robert Elves
  */
 public class BugzillaPeoplePart extends AbstractTaskEditorPart {
-	private static final int COLUMN_MARGIN = 5;
 
-	private org.eclipse.swt.widgets.List ccList;
+	private static final int COLUMN_MARGIN = 5;
 
 	public BugzillaPeoplePart() {
 		setPartName("People");
@@ -42,7 +42,8 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 			if (attribute.getId().equals(BugzillaAttribute.CC.getKey())) {
-				GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(editor.getControl());
+				GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).hint(150, 95).applyTo(
+						editor.getControl());
 			} else {
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(editor.getControl());
 			}
@@ -64,8 +65,13 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(
 				BugzillaAttribute.NEWCC.getKey()));
 		addSelfToCC(peopleComposite);
-		addAttribute(peopleComposite, toolkit, getTaskData().getRoot()
-				.getMappedAttribute(BugzillaAttribute.CC.getKey()));
+		TaskAttribute cc = getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.CC.getKey());
+		if (cc != null) {
+			addAttribute(peopleComposite, toolkit, cc);
+			toolkit.createLabel(peopleComposite, "");
+			Label label = toolkit.createLabel(peopleComposite, "(Select to remove)");
+			GridDataFactory.fillDefaults().indent(0, 5).align(SWT.CENTER, SWT.CENTER).applyTo(label);
+		}
 
 		toolkit.paintBordersFor(peopleComposite);
 		section.setClient(peopleComposite);

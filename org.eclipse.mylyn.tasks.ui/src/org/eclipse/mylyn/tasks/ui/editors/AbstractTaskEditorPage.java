@@ -57,6 +57,8 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttributePart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorCommentPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorDescriptionPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorNewCommentPart;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlineNode;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorOutlinePage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPlanningPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
@@ -125,6 +127,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
  * Extend to provide a task editor page.
@@ -319,6 +322,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private FormToolkit toolkit;
 
+	private TaskEditorOutlinePage outlinePage;
+
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label");
 		Assert.isNotNull(connectorKind);
@@ -379,7 +384,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		return new AttributeEditorFactory(getModel(), getTaskRepository());
 	}
 
-	protected AttributeEditorToolkit createAttributeEditorToolkit() {
+	AttributeEditorToolkit createAttributeEditorToolkit() {
 		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
 		return new AttributeEditorToolkit(handlerService);
 	}
@@ -660,11 +665,11 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			toolBarManager.add(repositoryLabelControl);
 		}
 
-		synchronizeEditorAction = new SynchronizeEditorAction();
-		synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
-		toolBarManager.add(synchronizeEditorAction);
-
 		if (taskRepository != null && !taskData.isNew()) {
+			synchronizeEditorAction = new SynchronizeEditorAction();
+			synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
+			toolBarManager.add(synchronizeEditorAction);
+
 			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
 			if (clearOutgoingAction.isEnabled()) {
 				toolBarManager.add(clearOutgoingAction);
@@ -722,6 +727,44 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					l.selectionChanged(event);
 				}
 			});
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object getAdapter(Class adapter) {
+		if (adapter == IContentOutlinePage.class) {
+			updateOutlinePage();
+			return outlinePage;
+		}
+		return super.getAdapter(adapter);
+	}
+
+	private void updateOutlinePage() {
+		if (outlinePage == null) {
+			outlinePage = new TaskEditorOutlinePage();
+			outlinePage.addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					ISelection selection = event.getSelection();
+					if (selection instanceof StructuredSelection) {
+						Object select = ((StructuredSelection) selection).getFirstElement();
+						if (select instanceof TaskEditorOutlineNode) {
+							TaskEditorOutlineNode node = (TaskEditorOutlineNode) select;
+							if (node.getData() != null) {
+								EditorUtil.reveal(form, node.getData().getId());
+							} else {
+								EditorUtil.reveal(form, node.getLabel());
+							}
+						}
+					}
+				}
+			});
+		}
+		if (getModel() != null) {
+			TaskEditorOutlineNode node = TaskEditorOutlineNode.parse(getModel().getTaskData());
+			outlinePage.setInput(getTaskRepository(), node);
+		} else {
+			outlinePage.setInput(null, null);
 		}
 	}
 
@@ -852,6 +895,10 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			} else {
 				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(part.getControl());
 			}
+			// for outline
+			if (ID_PART_COMMENTS.equals(part.getPartId())) {
+				EditorUtil.setMarker(part.getControl(), TaskEditorOutlineNode.LABEL_COMMENTS);
+			}
 		}
 	}
 
@@ -926,6 +973,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				}
 			}
 
+			updateOutlinePage();
 			updateHeaderMessage();
 			getManagedForm().dirtyStateChanged();
 			getTaskEditor().updateHeaderToolBar();

@@ -70,7 +70,11 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		super(manager, taskAttribute);
 		this.taskRepository = taskRepository;
 		this.style = style;
-		setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));
+		if ((style & SWT.MULTI) != 0) {
+			setLayoutHint(new LayoutHint(RowSpan.MULTIPLE, ColumnSpan.MULTIPLE));
+		} else {
+			setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
+		}
 	}
 
 	private void configureAsTextEditor(Document document) {

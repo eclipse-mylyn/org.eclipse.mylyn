@@ -193,6 +193,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					commentComposite.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
 					expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, true);
 				}
+
+				// for outline
+				EditorUtil.setMarker(commentComposite, commentAttribute.getId());
 			}
 		}
 		setSection(toolkit, section);
@@ -225,7 +228,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 		if (taskComment.getCreationDate() != null) {
 			sb.append(", ");
-			sb.append(getTaskEditorPage().getAttributeEditorToolkit().formatDate(taskComment.getCreationDate()));
+			sb.append(EditorUtil.formatDateTime(taskComment.getCreationDate()));
 		}
 		formHyperlink.setText(sb.toString());
 		formHyperlink.setEnabled(true);

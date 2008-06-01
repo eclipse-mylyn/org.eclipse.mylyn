@@ -7,9 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.commands.ActionHandler;
@@ -100,7 +97,7 @@ public class AttributeEditorToolkit {
 
 	private ISelectionChangedListener selectionChangedListener;
 
-	public AttributeEditorToolkit(IHandlerService handlerService) {
+	AttributeEditorToolkit(IHandlerService handlerService) {
 		this.handlerService = handlerService;
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_INCOMING_BACKGROUND);
@@ -156,6 +153,9 @@ public class AttributeEditorToolkit {
 			}
 			EditorUtil.setTextViewer(editor.getControl(), viewer);
 		}
+
+		// for outline
+		EditorUtil.setMarker(editor.getControl(), editor.getTaskAttribute().getId());
 
 		editor.decorate(getColorIncoming());
 	}
@@ -230,19 +230,15 @@ public class AttributeEditorToolkit {
 		}
 	}
 
-	public void dispose() {
+	void dispose() {
 		deactivateHandlers();
-	}
-
-	public String formatDate(Date date) {
-		return DateFormat.getDateInstance().format(date);
 	}
 
 	public Color getColorIncoming() {
 		return colorIncoming;
 	}
 
-	public Menu getMenu() {
+	Menu getMenu() {
 		return menu;
 	}
 
@@ -257,7 +253,7 @@ public class AttributeEditorToolkit {
 		return null;
 	}
 
-	public ISelectionChangedListener getSelectionChangedListener() {
+	ISelectionChangedListener getSelectionChangedListener() {
 		return selectionChangedListener;
 	}
 
@@ -286,11 +282,11 @@ public class AttributeEditorToolkit {
 		return false;
 	}
 
-	public void setMenu(Menu menu) {
+	void setMenu(Menu menu) {
 		this.menu = menu;
 	}
 
-	public void setSelectionChangedListener(ISelectionChangedListener selectionListener) {
+	void setSelectionChangedListener(ISelectionChangedListener selectionListener) {
 		this.selectionChangedListener = selectionListener;
 	}
 

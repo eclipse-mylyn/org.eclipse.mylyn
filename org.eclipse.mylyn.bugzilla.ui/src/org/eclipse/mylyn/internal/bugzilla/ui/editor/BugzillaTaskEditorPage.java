@@ -65,7 +65,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				if (IBugzillaConstants.EDITOR_TYPE_KEYWORDS.equals(type)) {
 					editor = new BugzillaKeywordAttributeEditor(getModel(), taskAttribute);
 				} else if (IBugzillaConstants.EDITOR_TYPE_REMOVECC.equals(type)) {
-					editor = new BugzillaCCAttributeEditor(getModel(), taskAttribute);
+					editor = new BugzillaCcAttributeEditor(getModel(), taskAttribute);
 				} else {
 					editor = super.createEditor(type, taskAttribute);
 					if (TaskAttribute.TYPE_BOOLEAN.equals(type)) {

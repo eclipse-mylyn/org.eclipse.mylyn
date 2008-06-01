@@ -537,4 +537,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 		return mostRecentTimeStamp;
 	}
+
+	@Override
+	public boolean hasRepositoryDueDate(TaskRepository taskRepository, ITask task, TaskData taskData) {
+		return taskData.getRoot().getAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey()) != null;
+	}
+
 }

@@ -11,12 +11,12 @@ package org.eclipse.mylyn.internal.tasks.core;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
+import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
-import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -93,7 +93,7 @@ public class TasksModel implements IRepositoryModel {
 		return taskComment;
 	}
 
-	public ITask getTask(String handleIdentifier) {
+	public synchronized ITask getTask(String handleIdentifier) {
 		ITask task = taskByHandle.get(handleIdentifier);
 		if (task == null) {
 			task = taskList.getTask(handleIdentifier);
@@ -102,11 +102,11 @@ public class TasksModel implements IRepositoryModel {
 	}
 
 	public synchronized ITask getTask(TaskRepository taskRepository, String taskId) {
-		return taskByHandle.get(getTaskHandle(taskRepository, taskId));
+		return getTask(getTaskHandle(taskRepository, taskId));
 	}
 
 	private String getTaskHandle(TaskRepository taskRepository, String taskId) {
-		return taskRepository.getConnectorKind() + "-" + taskRepository.getRepositoryUrl() + "-" + taskId;
+		return RepositoryTaskHandleUtil.getHandle(taskRepository.getRepositoryUrl(), taskId);
 	}
 
 	public TaskRepository getTaskRepository(String connectorKind, String repositoryUrl) {

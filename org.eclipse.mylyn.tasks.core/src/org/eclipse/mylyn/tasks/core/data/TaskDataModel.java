@@ -66,7 +66,6 @@ public class TaskDataModel {
 	 *            changed attribute
 	 */
 	public void attributeChanged(TaskAttribute attribute) {
-		Thread.dumpStack();
 		if (attribute.getParentAttribute() != getTaskData().getRoot()) {
 			throw new RuntimeException(
 					"Editing is only supported for attributes that are attached to the root of task data");

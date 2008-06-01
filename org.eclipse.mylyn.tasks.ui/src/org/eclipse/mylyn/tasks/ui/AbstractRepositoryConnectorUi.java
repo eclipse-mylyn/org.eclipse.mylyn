@@ -216,14 +216,6 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * @since 3.0
-	 */
-	@Deprecated
-	public boolean supportsDueDates(ITask task) {
-		return false;
-	}
-
-	/**
-	 * @since 3.0
 	 * @return true if connector doesn't support non-grouping (flattening) of subtasks
 	 */
 	public boolean hasStrictSubtaskHierarchy() {
