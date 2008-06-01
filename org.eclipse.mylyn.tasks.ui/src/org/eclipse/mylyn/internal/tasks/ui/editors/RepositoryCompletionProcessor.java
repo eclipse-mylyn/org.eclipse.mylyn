@@ -102,6 +102,10 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 				return;
 			}
 
+			if (getNeverIncludePrefix() && !task.getRepositoryUrl().equals(taskRepository.getRepositoryUrl())) {
+				return;
+			}
+
 			String taskKey = task.getTaskKey();
 			if (prefix.length() == 0) {
 				addProposal(task, taskKey, !getNeverIncludePrefix());
