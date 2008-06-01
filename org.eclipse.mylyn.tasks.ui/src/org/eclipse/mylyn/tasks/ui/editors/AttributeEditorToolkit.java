@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -36,6 +37,7 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ActiveShellExpression;
@@ -148,6 +150,9 @@ public class AttributeEditorToolkit {
 					}
 				});
 			}
+			if (richTextEditor.getMode() == Mode.TASK_RELATION) {
+				applyContentAssist(viewer.getControl(), null);
+			}
 			if (menu != null) {
 				viewer.getControl().setMenu(menu);
 			}
@@ -169,26 +174,25 @@ public class AttributeEditorToolkit {
 	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
-	private ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
-		ControlDecoration controlDecoration = new ControlDecoration(text, (SWT.TOP | SWT.LEFT));
+	private ContentAssistCommandAdapter applyContentAssist(Control control, IContentProposalProvider proposalProvider) {
+		ControlDecoration controlDecoration = new ControlDecoration(control, (SWT.TOP | SWT.LEFT));
 		controlDecoration.setMarginWidth(0);
 		controlDecoration.setShowHover(true);
 		controlDecoration.setShowOnlyOnFocus(true);
-
 		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault().getFieldDecoration(
 				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 		controlDecoration.setImage(contentProposalImage.getImage());
-
-		TextContentAdapter textContentAdapter = new TextContentAdapter();
-
-		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, textContentAdapter,
-				proposalProvider, "org.eclipse.ui.edit.text.contentAssist.proposals", new char[0]);
-
 		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
 		controlDecoration.setDescriptionText(NLS.bind("Content Assist Available ({0})",
-				bindingService.getBestActiveBindingFormattedFor(adapter.getCommandId())));
+				bindingService.getBestActiveBindingFormattedFor(ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND)));
 
-		return adapter;
+		if (proposalProvider != null) {
+			TextContentAdapter textContentAdapter = new TextContentAdapter();
+			ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(control, textContentAdapter,
+					proposalProvider, ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND, new char[0]);
+			return adapter;
+		}
+		return null;
 	}
 
 	private IHandler createActionHandler(final SourceViewer viewer, final int operation, String actionDefinitionId) {

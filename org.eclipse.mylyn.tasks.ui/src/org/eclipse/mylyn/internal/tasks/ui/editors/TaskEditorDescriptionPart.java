@@ -76,7 +76,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 			duplicateDetectorLabel.setText("Detector:");
 
 			final CCombo duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY);
-			toolkit.adapt(duplicateDetectorChooser, true, true);
+			toolkit.adapt(duplicateDetectorChooser, true, false);
 			duplicateDetectorChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			duplicateDetectorChooser.setFont(TEXT_FONT);
 			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());

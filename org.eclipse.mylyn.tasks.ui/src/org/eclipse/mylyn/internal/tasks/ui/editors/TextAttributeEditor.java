@@ -37,7 +37,7 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 		if (isReadOnly()) {
 			text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
 			text.setFont(TEXT_FONT);
-			toolkit.adapt(text, true, true);
+			toolkit.adapt(text, true, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getValue());
 		} else {

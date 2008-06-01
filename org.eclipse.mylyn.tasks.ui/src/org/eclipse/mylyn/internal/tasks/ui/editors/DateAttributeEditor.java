@@ -46,7 +46,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 		if (isReadOnly()) {
 			Text text = new Text(composite, SWT.FLAT | SWT.READ_ONLY);
 			text.setFont(TEXT_FONT);
-			toolkit.adapt(text, true, true);
+			toolkit.adapt(text, true, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			if (getValue() != null) {
 				text.setText(new SimpleDateFormat(EditorUtil.DATE_TIME_FORMAT).format(getValue()));

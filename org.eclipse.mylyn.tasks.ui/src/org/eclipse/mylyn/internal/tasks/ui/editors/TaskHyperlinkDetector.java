@@ -63,7 +63,7 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 
-		TaskRepository selectedRepository = getRepository(textViewer);
+		TaskRepository selectedRepository = getTaskRepository(textViewer);
 		if (selectedRepository != null) {
 			repositories.add(selectedRepository);
 		} else {
@@ -71,26 +71,30 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 		}
 
 		List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();
-		for (TaskRepository repository : repositories) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-			if (connectorUi == null) {
-				continue;
-			}
-			IHyperlink[] links = (connectorUi.findHyperlinks(repository, line, //
-					region.getOffset() - lineInfo.getOffset(), lineInfo.getOffset()));
-			if (links == null) {
-				continue;
-			}
-			hyperlinks.addAll(Arrays.asList(links));
-		}
-
+		detectHyperlinks(line, region.getOffset() - lineInfo.getOffset(), lineInfo.getOffset(), repositories,
+				hyperlinks);
 		if (hyperlinks.isEmpty()) {
 			return null;
 		}
 		return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
 	}
 
-	private TaskRepository getRepository(ITextViewer textViewer) {
+	protected void detectHyperlinks(String line, int lineOffset, int regionOffset, List<TaskRepository> repositories,
+			List<IHyperlink> hyperlinks) {
+		for (TaskRepository repository : repositories) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+			if (connectorUi == null) {
+				continue;
+			}
+			IHyperlink[] links = connectorUi.findHyperlinks(repository, line, lineOffset, regionOffset);
+			if (links == null) {
+				continue;
+			}
+			hyperlinks.addAll(Arrays.asList(links));
+		}
+	}
+
+	protected TaskRepository getTaskRepository(ITextViewer textViewer) {
 		TaskRepository repository = (TaskRepository) getAdapter(TaskRepository.class);
 		if (repository != null) {
 			return repository;

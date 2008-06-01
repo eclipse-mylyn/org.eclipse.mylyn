@@ -345,7 +345,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		Text text;
 		if ((SWT.READ_ONLY & style) == SWT.READ_ONLY) {
 			text = new Text(nameValueComp, style);
-			toolkit.adapt(text, true, true);
+			toolkit.adapt(text, true, false);
 			text.setText(value);
 		} else {
 			text = toolkit.createText(nameValueComp, value, style);
@@ -404,7 +404,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		nameValueComp.setLayout(nameValueLayout);
 		toolkit.createLabel(nameValueComp, "Priority:").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		priorityCombo = new CCombo(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
-		toolkit.adapt(priorityCombo, true, true);
+		toolkit.adapt(priorityCombo, true, false);
 		priorityCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		toolkit.paintBordersFor(nameValueComp);
 
@@ -616,7 +616,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		scheduleDatePicker = new ScheduleDatePicker(nameValueComp, task, SWT.FLAT);
 		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.adapt(scheduleDatePicker, true, true);
+		toolkit.adapt(scheduleDatePicker, true, false);
 		toolkit.paintBordersFor(nameValueComp);
 
 		scheduleDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
@@ -666,7 +666,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		});
 
 		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.adapt(dueDatePicker, true, true);
+		toolkit.adapt(dueDatePicker, true, false);
 		toolkit.paintBordersFor(nameValueComp);
 
 		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
@@ -706,7 +706,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		estimated = new Spinner(nameValueComp, SWT.FLAT);
-		toolkit.adapt(estimated, true, true);
+		toolkit.adapt(estimated, true, false);
 		estimated.setSelection(task.getEstimatedTimeHours());
 		estimated.setDigits(0);
 		estimated.setMaximum(100);

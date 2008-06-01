@@ -16,8 +16,8 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.MultiSelectionAttributeEditor
 import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.SingleSelectionAttributeEditor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskDependendyAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TextAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -60,9 +60,15 @@ public class AttributeEditorFactory {
 		} else if (TaskAttribute.TYPE_SINGLE_SELECT.equals(type)) {
 			return new SingleSelectionAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
-			return new TaskDependendyAttributeEditor(model, taskAttribute, taskRepository);
+			RichTextAttributeEditor editor = new RichTextAttributeEditor(model, taskRepository, taskAttribute,
+					SWT.SINGLE);
+			editor.setMode(Mode.TASK_RELATION);
+			return editor;
 		} else if (TaskAttribute.TYPE_URL.equals(type)) {
-			return new RichTextAttributeEditor(model, taskRepository, taskAttribute, SWT.SINGLE);
+			RichTextAttributeEditor editor = new RichTextAttributeEditor(model, taskRepository, taskAttribute,
+					SWT.SINGLE);
+			editor.setMode(Mode.URL);
+			return editor;
 		}
 
 		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\"");

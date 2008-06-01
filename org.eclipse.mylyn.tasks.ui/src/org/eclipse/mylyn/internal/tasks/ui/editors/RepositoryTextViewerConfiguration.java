@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
@@ -23,6 +24,7 @@ import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
@@ -56,6 +58,10 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
  */
 public class RepositoryTextViewerConfiguration extends TextSourceViewerConfiguration {
 
+	public enum Mode {
+		URL, TASK_RELATION, DEFAULT
+	}
+
 	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor";
 
 	private static final String ID_CONTEXT_EDITOR_TEXT = "org.eclipse.ui.DefaultTextEditor";
@@ -66,29 +72,52 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	private final TaskRepository taskRepository;
 
+	private Mode mode;
+
 	public RepositoryTextViewerConfiguration(TaskRepository taskRepository, boolean spellCheck) {
 		super(EditorsUI.getPreferenceStore());
 		this.taskRepository = taskRepository;
 		this.spellCheck = spellCheck;
+		this.mode = Mode.DEFAULT;
+	}
+
+	public Mode getMode() {
+		return mode;
+	}
+
+	public void setMode(Mode mode) {
+		Assert.isNotNull(mode);
+		this.mode = mode;
 	}
 
 	@Override
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
-		PresentationReconciler reconciler = new PresentationReconciler();
-		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-
-		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getDefaultScanner());
-		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
-		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
-
-		return reconciler;
+		if (getMode() == Mode.DEFAULT) {
+			PresentationReconciler reconciler = new PresentationReconciler();
+			reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+			DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getDefaultScanner());
+			reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
+			reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
+			return reconciler;
+		}
+		return super.getPresentationReconciler(sourceViewer);
 	}
 
 	private RepositoryTextScanner getDefaultScanner() {
 		if (scanner == null) {
-			scanner = new RepositoryTextScanner();
+			scanner = new RepositoryTextScanner(getMode());
 		}
 		return scanner;
+	}
+
+	@Override
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		if (mode == Mode.URL) {
+			return new IHyperlinkDetector[] { new TaskUrlHyperlinkDetector() };
+		} else if (mode == Mode.TASK_RELATION) {
+			return new IHyperlinkDetector[] { new TaskRelationHyperlinkDetector() };
+		}
+		return super.getHyperlinkDetectors(sourceViewer);
 	}
 
 	@Override
@@ -215,7 +244,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	private static class RepositoryTextScanner extends RuleBasedScanner {
 
-		public RepositoryTextScanner() {
+		public RepositoryTextScanner(Mode mode) {
 			IToken bugToken = new Token(new TextAttribute(JFaceResources.getColorRegistry().get(
 					JFacePreferences.ACTIVE_HYPERLINK_COLOR)));
 			IToken quoteToken = new Token(new TextAttribute(CommonColors.TEXT_QUOTED));
@@ -245,8 +274,14 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		if (mode == Mode.URL) {
+			return null;
+		}
 		ContentAssistant assistant = new ContentAssistant();
 		RepositoryCompletionProcessor processor = new RepositoryCompletionProcessor(taskRepository);
+		if (mode == Mode.TASK_RELATION) {
+			processor.setNeverIncludePrefix(true);
+		}
 		assistant.setContentAssistProcessor(processor, IDocument.DEFAULT_CONTENT_TYPE);
 		return assistant;
 	}

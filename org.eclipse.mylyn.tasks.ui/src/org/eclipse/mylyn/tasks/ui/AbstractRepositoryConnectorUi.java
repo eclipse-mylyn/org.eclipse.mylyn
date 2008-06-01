@@ -198,7 +198,21 @@ public abstract class AbstractRepositoryConnectorUi {
 		return null;
 	}
 
-	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
+	/**
+	 * Returns an array of hyperlinks that link to tasks within <code>text</code>.
+	 * 
+	 * @param repository
+	 *            the task repository, never <code>null</code>
+	 * @param text
+	 *            the line of text
+	 * @param textOffset
+	 *            the offset within <code>text</code>
+	 * @param lineOffset
+	 *            the offset of <code>text</code>
+	 * @return an array of hyperlinks
+	 * @since 2.0
+	 */
+	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int textOffset, int lineOffset) {
 		return null;
 	}
 

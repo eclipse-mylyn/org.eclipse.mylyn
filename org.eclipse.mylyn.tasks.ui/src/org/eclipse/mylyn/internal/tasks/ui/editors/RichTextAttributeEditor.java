@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
@@ -17,6 +18,7 @@ import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -31,7 +33,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
@@ -61,6 +62,8 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	private final TaskRepository taskRepository;
 
+	private Mode mode;
+
 	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository, TaskAttribute taskAttribute) {
 		this(manager, taskRepository, taskAttribute, SWT.MULTI);
 	}
@@ -75,6 +78,16 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		} else {
 			setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.MULTIPLE));
 		}
+		setMode(Mode.DEFAULT);
+	}
+
+	public Mode getMode() {
+		return mode;
+	}
+
+	public void setMode(Mode mode) {
+		Assert.isNotNull(mode);
+		this.mode = mode;
 	}
 
 	private void configureAsTextEditor(Document document) {
@@ -129,8 +142,9 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 		// NOTE: configuration must be applied before the document is set in order for
 		// hyper link coloring to work, the Presenter requires the document object up front
-		TextSourceViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(taskRepository,
+		RepositoryTextViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(taskRepository,
 				spellCheckingEnabled);
+		viewerConfig.setMode(getMode());
 		viewer.configure(viewerConfig);
 
 		Document document = new Document(getValue());
@@ -155,7 +169,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
 		viewer.getTextWidget().setFont(font);
-		toolkit.adapt(viewer.getTextWidget(), true, true);
+		toolkit.adapt(viewer.getTextWidget(), true, false);
 
 		setControl(viewer.getTextWidget());
 	}

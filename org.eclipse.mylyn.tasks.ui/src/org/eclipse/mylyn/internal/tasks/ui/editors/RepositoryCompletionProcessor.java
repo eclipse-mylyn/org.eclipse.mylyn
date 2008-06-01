@@ -104,11 +104,11 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 			String taskKey = task.getTaskKey();
 			if (prefix.length() == 0) {
-				addProposal(task, taskKey, true);
+				addProposal(task, taskKey, !getNeverIncludePrefix());
 			} else if (taskKey != null && taskKey.startsWith(prefix)) {
 				addProposal(task, taskKey, false);
 			} else if (containsPrefix(task)) {
-				addProposal(task, taskKey, true);
+				addProposal(task, taskKey, !getNeverIncludePrefix());
 			}
 		}
 
@@ -196,8 +196,19 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 	private final TaskRepository taskRepository;
 
+	private boolean neverIncludePrefix;
+
 	public RepositoryCompletionProcessor(TaskRepository taskRepository) {
 		this.taskRepository = taskRepository;
+		this.neverIncludePrefix = false;
+	}
+
+	public boolean getNeverIncludePrefix() {
+		return neverIncludePrefix;
+	}
+
+	public void setNeverIncludePrefix(boolean includePrefix) {
+		this.neverIncludePrefix = includePrefix;
 	}
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
