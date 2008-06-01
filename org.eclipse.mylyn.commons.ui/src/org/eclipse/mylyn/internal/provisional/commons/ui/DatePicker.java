@@ -64,7 +64,7 @@ public class DatePicker extends Composite {
 
 	private String initialText = LABEL_CHOOSE;
 
-	private boolean includeTimeOfday = true;
+	private final boolean includeTimeOfday;
 
 	private final int hourOfDay = 0;
 
@@ -73,9 +73,9 @@ public class DatePicker extends Composite {
 	public DatePicker(Composite parent, int style, String initialText, boolean includeHours, int selectedHourOfDay) {
 		super(parent, style);
 		this.initialText = initialText;
-		this.includeTimeOfday = true;
+		this.includeTimeOfday = includeHours;
 		this.selectedHourOfDay = selectedHourOfDay;
-		initialize((style & SWT.FLAT) > 0 ? SWT.FLAT : 0);
+		initialize((style & SWT.FLAT) != 0 ? SWT.FLAT : 0);
 	}
 
 	public void setDatePattern(String pattern) {
@@ -83,7 +83,6 @@ public class DatePicker extends Composite {
 	}
 
 	private void initialize(int style) {
-
 		GridLayout gridLayout = new GridLayout(2, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.verticalSpacing = 0;
@@ -93,7 +92,8 @@ public class DatePicker extends Composite {
 
 		dateText = new Text(this, style);
 		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
-		dateTextGridData.widthHint = 135;
+		dateTextGridData.grabExcessHorizontalSpace = true;
+		dateTextGridData.verticalAlignment = SWT.FILL;
 		dateTextGridData.verticalIndent = 0;
 
 		dateText.setLayoutData(dateTextGridData);
