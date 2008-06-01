@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.team.ui.templates;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
@@ -35,7 +36,7 @@ public class CommitTemplateVariables {
 
 	private static final String LABEL_COMPLETE = "Complete";
 
-	private static String implode(String[] list, String separator) {
+	private static String implode(List<String> list, String separator) {
 		if (list == null) {
 			return null;
 		}
@@ -158,7 +159,7 @@ public class CommitTemplateVariables {
 		public String getValue(ITask task) {
 			ITaskMapping taskMapping = getTaskMapping(task);
 			if (taskMapping != null) {
-				String[] list = taskMapping.getCc();
+				List<String> list = taskMapping.getCc();
 				return implode(list, ", ");
 			}
 			return null;
@@ -170,7 +171,7 @@ public class CommitTemplateVariables {
 		public String getValue(ITask task) {
 			ITaskMapping taskMapping = getTaskMapping(task);
 			if (taskMapping != null) {
-				String[] list = getTaskMapping(task).getKeywords();
+				List<String> list = getTaskMapping(task).getKeywords();
 				return implode(list, ", ");
 			}
 			return null;
