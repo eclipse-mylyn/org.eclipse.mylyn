@@ -68,9 +68,11 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 		ITaskDataWorkingCopy workingCopy;
 		try {
 			workingCopy = taskDataManager.getTaskDataState(task);
-			TaskDataDiff diff = new TaskDataDiff(repositoryModel, workingCopy.getRepositoryData(),
-					workingCopy.getLastReadData());
-			return diff;
+			if (workingCopy != null) {
+				TaskDataDiff diff = new TaskDataDiff(repositoryModel, workingCopy.getRepositoryData(),
+						workingCopy.getLastReadData());
+				return diff;
+			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to get task data for task: \""
 					+ task + "\"", e));
