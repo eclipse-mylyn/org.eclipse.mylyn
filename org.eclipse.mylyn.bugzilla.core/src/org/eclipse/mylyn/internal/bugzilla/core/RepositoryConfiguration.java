@@ -416,8 +416,8 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public void updateAttributeOptions(TaskData existingReport) {
-		TaskAttribute attributeProduct = existingReport.getRoot().getMappedAttribute(
-				BugzillaAttribute.PRODUCT.getKey());
+		TaskAttribute attributeProduct = existingReport.getRoot()
+				.getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
 		if (attributeProduct == null) {
 			return;
 		}
@@ -544,11 +544,12 @@ public class RepositoryConfiguration implements Serializable {
 		switch (opcode) {
 		case none:
 			attribute = bugReport.getRoot().createAttribute(TaskAttribute.PREFIX_OPERATION + opcode.toString());
-
+			String label = "Leave";
 			TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
 			TaskAttribute attributeResolution = bugReport.getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
-
-			String label = String.format(opcode.getLabel(), attributeStatus.getValue(), attributeResolution.getValue());
+			if (attributeStatus != null && attributeResolution != null) {
+				label = String.format(opcode.getLabel(), attributeStatus.getValue(), attributeResolution.getValue());
+			}
 
 			TaskOperation.applyTo(attribute, opcode.toString(), label);
 			// set as default
