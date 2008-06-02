@@ -143,6 +143,7 @@ public class TaskDataDiff {
 				if (++n == MAX_CHANGED_ATTRIBUTES) {
 					break;
 				}
+				sep = "\n";
 			}
 		}
 		return sb.toString();
