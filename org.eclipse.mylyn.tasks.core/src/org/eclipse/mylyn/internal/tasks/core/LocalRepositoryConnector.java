@@ -97,7 +97,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean hasChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
+	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		// ignore
 		return false;
 	}
