@@ -102,10 +102,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
 						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
 			}
-			if (isComplete) {
-				task.setCompletionDate(new Date());
+			if (isComplete && task.getCompletionDate() == null) {
+				task.setCompletionDate(new Date(0));
 			}
-
 		} else {
 			TaskMapper scheme = new TaskMapper(taskData);
 			scheme.applyTo(task);
