@@ -8,7 +8,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
@@ -77,6 +81,14 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		}
 		AbstractAttributeEditor attributEditor = createAttributeEditor(attribute);
 		if (!(attributEditor instanceof RichTextAttributeEditor)) {
+			String clazz;
+			if (attributEditor != null) {
+				clazz = attributEditor.getClass().getName();
+			} else {
+				clazz = "<null>";
+			}
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					"Expected an instance of RichTextAttributeEditor, got \"" + clazz + "\""));
 			return;
 		}
 
