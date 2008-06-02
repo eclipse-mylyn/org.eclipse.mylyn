@@ -24,18 +24,17 @@ public abstract class AbstractActiveChangeSetProvider {
 	 * capability. A <code>null</code> is returned if active change sets are not supported. The default is to return
 	 * <code>null</code>. This method must be overridden by subclasses that support active change sets.
 	 * 
+	 * Note that {@link ActiveChangeSetManager} is an internal class of <code>org.eclipse.team.core</code>, but is
+	 * required for change set support (bug 116084). The current implementation will only work if a subtype of
+	 * {@link ActiveChangeSetManager} is returned. In the future, if a change set API becomes available, an additional
+	 * extensibility mechanism will be provided.
+	 * 
 	 * @return the change set collector that manages the active change set for the participant associated with this
 	 *         capability or <code>null</code> if active change sets are not supported.
+	 * @since 3.0
 	 */
 	public ActiveChangeSetManager getActiveChangeSetManager() {
 		return null;
 	}
-
-//	/**
-//	 * @since 3.0
-//	 */
-//	public ActiveChangeSet createChangeSet(AbstractTask task, ActiveChangeSetManager manager) {
-//		return new ContextChangeSet(task, manager);
-//	}
 
 }

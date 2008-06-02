@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * @author Mik Kersten
  * @since 1.0
  */
+@SuppressWarnings("restriction")
 public abstract class AbstractContextChangeSetManager extends AbstractContextListener {
 
 	protected boolean isEnabled = false;
@@ -33,7 +34,7 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 	public void enable() {
 		if (!isEnabled) {
 			isEnabled = true;
-			TasksUiInternal.getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
+			TasksUiInternal.getTaskList().addChangeListener(WORKING_SET_LABEL_UPDATE_LISTENER);
 			if (!isInitialized) {
 				initContextChangeSets(); // otherwise listener will do it
 			}
@@ -47,7 +48,7 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 
 	public void disable() {
 		ContextCore.getContextManager().removeListener(this);
-		TasksUiInternal.getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
+		TasksUiInternal.getTaskList().removeChangeListener(WORKING_SET_LABEL_UPDATE_LISTENER);
 		isEnabled = false;
 	}
 
@@ -58,7 +59,7 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 	 */
 	protected abstract void updateChangeSetLabel(ITask task);
 
-	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new TaskListChangeAdapter() {
+	private final ITaskListChangeListener WORKING_SET_LABEL_UPDATE_LISTENER = new TaskListChangeAdapter() {
 
 		@Override
 		public void containersChanged(Set<TaskContainerDelta> containers) {
@@ -77,6 +78,5 @@ public abstract class AbstractContextChangeSetManager extends AbstractContextLis
 				}
 			}
 		}
-
 	};
 }
