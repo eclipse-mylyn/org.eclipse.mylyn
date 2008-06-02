@@ -437,6 +437,10 @@ public final class DelegatingTaskExternalizer {
 			readTaskInfo(task, element, parent, legacyCategory);
 			readAttributes(task, element);
 			if (taskMigrator != null) {
+				if (task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED
+						&& task.getLastReadTimeStamp() == null) {
+					task.setSynchronizationState(SynchronizationState.INCOMING_NEW);
+				}
 				taskMigrator.migrateTask(task, element);
 			}
 		}
