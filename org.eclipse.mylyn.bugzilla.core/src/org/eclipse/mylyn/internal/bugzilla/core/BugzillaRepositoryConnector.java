@@ -88,38 +88,24 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData) {
-		if (taskData.isPartial()) {
-			TaskMapper scheme = new TaskMapper(taskData);
-			task.setSummary(scheme.getSummary());
-			task.setPriority(scheme.getPriority().toString());
-			task.setOwner(scheme.getOwner());
-			task.setUrl(getTaskUrl(repository.getRepositoryUrl(), task.getTaskId()));
+		TaskMapper scheme = new TaskMapper(taskData);
+		scheme.applyTo(task);
 
-			boolean isComplete = false;
-			TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
-			if (attributeStatus != null) {
-				isComplete = attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
-						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
-						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
-			}
+		task.setUrl(BugzillaClient.getBugUrlWithoutLogin(repository.getRepositoryUrl(), taskData.getTaskId()));
+
+		boolean isComplete = false;
+		TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+		if (attributeStatus != null) {
+			isComplete = attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
+					|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
+					|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
+		}
+
+		if (taskData.isPartial()) {
 			if (isComplete && task.getCompletionDate() == null) {
 				task.setCompletionDate(new Date(0));
 			}
 		} else {
-			TaskMapper scheme = new TaskMapper(taskData);
-			scheme.applyTo(task);
-
-			task.setUrl(BugzillaClient.getBugUrlWithoutLogin(repository.getRepositoryUrl(), taskData.getTaskId()));
-
-			boolean isComplete = false;
-			// TODO: use repository configuration to determine what -completed- states are
-			TaskAttribute attributeStatus = taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS);
-			if (attributeStatus != null) {
-				isComplete = attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
-						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
-						|| attributeStatus.getValue().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
-			}
-
 			// Completion Date
 			if (isComplete) {
 				Date completionDate = null;
@@ -156,12 +142,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				task.setCompletionDate(completionDate);
 			} else {
 				task.setCompletionDate(null);
-			}
-
-			// Task Web Url
-			String url = getTaskUrl(repository.getRepositoryUrl(), taskData.getTaskId());
-			if (url != null) {
-				task.setUrl(url);
 			}
 
 			// Bugzilla Specific Attributes
