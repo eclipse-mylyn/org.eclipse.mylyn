@@ -23,7 +23,9 @@ import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
+import org.eclipse.jdt.internal.ui.text.java.CompletionProposalComputerRegistry;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.jdt.ui.JavaElementImageDescriptor;
 import org.eclipse.jdt.ui.PreferenceConstants;
@@ -61,13 +63,13 @@ public class JavaUiUtil {
 
 	public static final String ASSIST_MYLYN_TEMPLATE = "org.eclipse.mylyn.java.templateProposalCategory";
 
+	public static boolean isDefaultAssistActive(String computerId) {
+		Set<String> disabledIds = getDisabledIds(JavaPlugin.getDefault().getPreferenceStore());
+		return !disabledIds.contains(computerId);
+	}
+
 	public static void installContentAssist(IPreferenceStore javaPrefs, boolean mylynContentAssist) {
-		String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
-		StringTokenizer tokenizer = new StringTokenizer(oldValue, SEPARATOR_CODEASSIST);
-		Set<String> disabledIds = new HashSet<String>();
-		while (tokenizer.hasMoreTokens()) {
-			disabledIds.add((String) tokenizer.nextElement());
-		}
+		Set<String> disabledIds = getDisabledIds(javaPrefs);
 		if (!mylynContentAssist) {
 			disabledIds.remove(ASSIST_JDT_TYPE);
 			disabledIds.remove(ASSIST_JDT_NOTYPE);
@@ -88,6 +90,18 @@ public class JavaUiUtil {
 			newValue += id + SEPARATOR_CODEASSIST;
 		}
 		javaPrefs.setValue(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, newValue);
+
+		CompletionProposalComputerRegistry.getDefault().reload();
+	}
+
+	private static Set<String> getDisabledIds(IPreferenceStore javaPrefs) {
+		String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
+		StringTokenizer tokenizer = new StringTokenizer(oldValue, SEPARATOR_CODEASSIST);
+		Set<String> disabledIds = new HashSet<String>();
+		while (tokenizer.hasMoreTokens()) {
+			disabledIds.add((String) tokenizer.nextElement());
+		}
+		return disabledIds;
 	}
 
 	public static ImageDescriptor decorate(ImageDescriptor base, int decorations) {

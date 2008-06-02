@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.java.ui;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
@@ -25,6 +26,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.UIJob;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -67,7 +69,15 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		// NOTE: moved out of wizard and first task activation to avoid bug 194766
 		if (getPreferenceStore().getBoolean(MYLYN_FIRST_RUN)) {
 			getPreferenceStore().setValue(MYLYN_FIRST_RUN, false);
-			JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
+
+			new UIJob("Initialize Content Assist") {
+
+				@Override
+				public IStatus runInUIThread(IProgressMonitor monitor) {
+					JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
+					return Status.OK_STATUS;
+				}
+			}.schedule();
 		}
 	}
 
@@ -161,7 +171,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	 * Returns an image descriptor for the image file at the given plug-in relative path.
 	 * 
 	 * @param path
-	 * 		the path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {

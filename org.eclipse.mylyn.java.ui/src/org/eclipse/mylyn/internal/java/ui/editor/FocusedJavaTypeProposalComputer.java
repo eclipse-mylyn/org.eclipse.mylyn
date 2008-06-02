@@ -8,11 +8,13 @@
 
 package org.eclipse.mylyn.internal.java.ui.editor;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.internal.ui.text.java.JavaTypeCompletionProposalComputer;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
+import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
 
 /**
  * @author Mik Kersten
@@ -26,7 +28,11 @@ public class FocusedJavaTypeProposalComputer extends JavaTypeCompletionProposalC
 	@SuppressWarnings("unchecked")
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
-		List proposals = super.computeCompletionProposals(context, monitor);
-		return FocusedJavaProposalProcessor.getDefault().projectInterestModel(this, proposals);
+		if (!JavaUiUtil.isDefaultAssistActive(JavaUiUtil.ASSIST_JDT_NOTYPE)) {
+			List proposals = super.computeCompletionProposals(context, monitor);
+			return FocusedJavaProposalProcessor.getDefault().projectInterestModel(this, proposals);
+		} else {
+			return Collections.emptyList();
+		}
 	}
 }
