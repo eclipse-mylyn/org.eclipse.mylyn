@@ -40,9 +40,6 @@ public class InterestFilter extends ViewerFilter {
 
 	private Object temporarilyUnfiltered = null;
 
-	public InterestFilter() {
-	}
-
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object object) {
 		try {
@@ -114,19 +111,6 @@ public class InterestFilter extends ViewerFilter {
 			parent = treePath.getLastSegment();
 		}
 		return temporarilyUnfiltered != null && temporarilyUnfiltered.equals(parent);
-	}
-
-	/**
-	 * API-3.0: change name to containsInterestFilter(..)
-	 */
-	@Deprecated
-	protected boolean containsMylarInterestFilter(StructuredViewer viewer) {
-		for (ViewerFilter filter : viewer.getFilters()) {
-			if (filter instanceof InterestFilter) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public void setTemporarilyUnfiltered(Object temprarilyUnfiltered) {

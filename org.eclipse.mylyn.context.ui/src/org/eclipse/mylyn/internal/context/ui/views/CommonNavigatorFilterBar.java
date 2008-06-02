@@ -54,11 +54,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
- * Based on
- * 
- * API-3.0: remove? Not used.
- * 
- * @see{FilteredTree}
+ * @see{FilteredTree
  * 
  * @author Mik Kersten
  */
@@ -84,7 +80,6 @@ public class CommonNavigatorFilterBar extends Composite {
 		if (filterText == null) {
 			return;
 		}
-// defaultTextChanged();
 
 		int textLength = filterText.getText().length();
 		InterestFilter interestFilter = getInterestFilters();
@@ -101,9 +96,6 @@ public class CommonNavigatorFilterBar extends Composite {
 			suppressedFilter = null;
 		}
 
-// narrowingDown = previousFilterText==null ||
-// getFilterString().startsWith(previousFilterText);
-// previousFilterText = getFilterString();
 		if (refreshPolicy != null) {
 			refreshPolicy.textChanged(filterText.getText());
 		} else {
@@ -186,8 +178,8 @@ public class CommonNavigatorFilterBar extends Composite {
 	// ----------------- below based on FilteredTree ---------------
 
 	/**
-	 * The filter text widget to be used by this tree. This value may be <code>null</code> if there is no filter
-	 * widget, or if the controls have not yet been created.
+	 * The filter text widget to be used by this tree. This value may be <code>null</code> if there is no filter widget,
+	 * or if the controls have not yet been created.
 	 */
 	protected Text filterText;
 
@@ -198,8 +190,8 @@ public class CommonNavigatorFilterBar extends Composite {
 	protected ToolBarManager filterToolBar;
 
 	/**
-	 * The viewer for the filtered tree. This value should never be <code>null</code> after the widget creation
-	 * methods are complete.
+	 * The viewer for the filtered tree. This value should never be <code>null</code> after the widget creation methods
+	 * are complete.
 	 */
 	protected TreeViewer treeViewer;
 
