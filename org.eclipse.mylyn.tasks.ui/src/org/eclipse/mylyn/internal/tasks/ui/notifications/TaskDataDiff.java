@@ -61,7 +61,7 @@ public class TaskDataDiff {
 			if (oldTaskData != null) {
 				oldAttribute = oldTaskData.getRoot().getMappedAttribute(attributeId);
 			}
-			addChangedAttribute(oldAttribute, newAttribute);
+			addChangedAttribute(oldAttribute, newAttribute, true);
 		}
 
 		// other attributes that have changed on newTaskData
@@ -70,20 +70,20 @@ public class TaskDataDiff {
 			if (oldTaskData != null) {
 				oldAttribute = oldTaskData.getRoot().getMappedAttribute(newAttribute.getPath());
 			}
-			addChangedAttribute(oldAttribute, newAttribute);
+			addChangedAttribute(oldAttribute, newAttribute, false);
 		}
 		// other attributes that have been removed from newTaskData
 		if (oldTaskData != null) {
 			for (TaskAttribute oldAttribute : oldTaskData.getRoot().getAttributes().values()) {
 				TaskAttribute newAttribute = newTaskData.getRoot().getMappedAttribute(oldAttribute.getPath());
 				if (newAttribute == null) {
-					addChangedAttribute(oldAttribute, newAttribute);
+					addChangedAttribute(oldAttribute, newAttribute, false);
 				}
 			}
 		}
 	}
 
-	private void addChangedAttribute(TaskAttribute oldAttribute, TaskAttribute newAttribute) {
+	private void addChangedAttribute(TaskAttribute oldAttribute, TaskAttribute newAttribute, boolean ignoreKind) {
 		TaskAttribute attribute;
 		if (newAttribute != null) {
 			attribute = newAttribute;
@@ -95,7 +95,7 @@ public class TaskDataDiff {
 			addChangedComment(oldAttribute, newAttribute);
 		} else if (TaskAttribute.TYPE_OPERATION.equals(type)) {
 			// ignore
-		} else if (attribute.getMetaData().getKind() != null) {
+		} else if (ignoreKind || attribute.getMetaData().getKind() != null) {
 			TaskAttributeDiff diff = new TaskAttributeDiff(oldAttribute, newAttribute);
 			if (diff.hasChanges()) {
 				changedAttributes.add(diff);
