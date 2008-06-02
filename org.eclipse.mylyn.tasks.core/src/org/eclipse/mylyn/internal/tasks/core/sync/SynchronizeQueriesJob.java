@@ -252,12 +252,14 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			} finally {
 				Job.getJobManager().endRule(rule);
 			}
-			return Status.OK_STATUS;
 		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
+		} catch (Exception e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e));
 		} finally {
 			monitor.done();
 		}
+		return Status.OK_STATUS;
 	}
 
 	private void synchronizeQueries(IProgressMonitor monitor, SynchronizationSession session) {
