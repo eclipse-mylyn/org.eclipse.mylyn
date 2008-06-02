@@ -73,18 +73,12 @@ public class TaskDataDiff {
 			if (oldTaskData != null) {
 				oldAttribute = oldTaskData.getRoot().getMappedAttribute(newAttribute.getPath());
 			}
-			if (oldAttribute == null && newAttribute == null) {
-				continue;
-			}
 			addChangedAttribute(oldAttribute, newAttribute, false);
 		}
 		// other attributes that have been removed from newTaskData
 		if (oldTaskData != null) {
 			for (TaskAttribute oldAttribute : oldTaskData.getRoot().getAttributes().values()) {
 				TaskAttribute newAttribute = newTaskData.getRoot().getMappedAttribute(oldAttribute.getPath());
-				if (oldAttribute == null && newAttribute == null) {
-					continue;
-				}
 				if (newAttribute == null) {
 					addChangedAttribute(oldAttribute, newAttribute, false);
 				}
