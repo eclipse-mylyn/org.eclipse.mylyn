@@ -478,12 +478,8 @@ public class RepositoryConfiguration implements Serializable {
 
 	public void addValidOperations(TaskData bugReport) {
 		TaskAttribute attributeStatus = bugReport.getRoot().getMappedAttribute(TaskAttribute.STATUS);
-
 		BUGZILLA_REPORT_STATUS status = BUGZILLA_REPORT_STATUS.NEW;
-		if (attributeStatus == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-					"Status not found for task.  Synchronize task to correct."));
-		} else {
+		if (attributeStatus != null) {
 			try {
 				status = BUGZILLA_REPORT_STATUS.valueOf(attributeStatus.getValue());
 			} catch (RuntimeException e) {
