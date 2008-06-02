@@ -39,7 +39,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	private static final String TASK_DATA_VERSION_2_0 = "2";
 
-	private static final String TASK_DATA_VERSION_CURRENT = "3";
+	private static final String TASK_DATA_VERSION_3_0 = "3";
+
+	private static final String TASK_DATA_VERSION_CURRENT = "4";
 
 	private final BugzillaRepositoryConnector connector;
 
@@ -107,6 +109,15 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			TaskAttribute attrDescription = taskData.getRoot().getMappedAttribute(BugzillaAttribute.LONG_DESC.getKey());
 			if (attrDescription != null) {
 				attrDescription.getMetaData().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
+			}
+		}
+
+		// 3: the comment type was wrong
+		if (taskDataVersion.compareTo(TASK_DATA_VERSION_3_0) <= 0) {
+			TaskAttribute attrNewComment = taskData.getRoot()
+					.getMappedAttribute(BugzillaAttribute.NEW_COMMENT.getKey());
+			if (attrNewComment != null) {
+				attrNewComment.getMetaData().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
 			}
 		}
 
