@@ -11,8 +11,8 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -58,7 +58,6 @@ public class BugzillaTaskListMigrator extends AbstractTaskListMigrator {
 
 	@Override
 	public void migrateTask(ITask task, Element element) {
-
 		if (element.hasAttribute(KEY_SEVERITY)) {
 			task.setAttribute(BugzillaAttribute.BUG_SEVERITY.getKey(),
 					element.getAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()));
