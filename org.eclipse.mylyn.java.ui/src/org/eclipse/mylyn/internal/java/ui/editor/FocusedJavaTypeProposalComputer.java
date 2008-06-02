@@ -28,7 +28,7 @@ public class FocusedJavaTypeProposalComputer extends JavaTypeCompletionProposalC
 	@SuppressWarnings("unchecked")
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
-		if (!JavaUiUtil.isDefaultAssistActive(JavaUiUtil.ASSIST_JDT_NOTYPE)) {
+		if (!JavaUiUtil.isDefaultAssistActive(JavaUiUtil.ASSIST_JDT_TYPE)) {
 			List proposals = super.computeCompletionProposals(context, monitor);
 			return FocusedJavaProposalProcessor.getDefault().projectInterestModel(this, proposals);
 		} else {
