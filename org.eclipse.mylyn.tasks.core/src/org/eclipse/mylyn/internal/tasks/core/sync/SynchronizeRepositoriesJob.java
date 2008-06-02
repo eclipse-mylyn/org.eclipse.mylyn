@@ -22,11 +22,11 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
 /**
@@ -36,7 +36,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	private final TaskList taskList;
 
-	private final ITaskDataManager synchronizationManager;
+	private final TaskDataManager taskDataManager;
 
 	private final IRepositoryManager repositoryManager;
 
@@ -46,11 +46,11 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	private final IRepositoryModel tasksModel;
 
-	public SynchronizeRepositoriesJob(TaskList taskList, ITaskDataManager synchronizationManager,
-			IRepositoryModel tasksModel, IRepositoryManager repositoryManager, Set<TaskRepository> repositories) {
+	public SynchronizeRepositoriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
+			IRepositoryManager repositoryManager, Set<TaskRepository> repositories) {
 		super("Synchronizing Task List");
 		this.taskList = taskList;
-		this.synchronizationManager = synchronizationManager;
+		this.taskDataManager = taskDataManager;
 		this.tasksModel = tasksModel;
 		this.repositoryManager = repositoryManager;
 		this.repositories = repositories;
@@ -83,8 +83,8 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 					updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
 				}
 
-				SynchronizeQueriesJob job = new SynchronizeQueriesJob(taskList, synchronizationManager, tasksModel,
-						connector, repository, queries) {
+				SynchronizeQueriesJob job = new SynchronizeQueriesJob(taskList, taskDataManager, tasksModel, connector,
+						repository, queries) {
 					@Override
 					public boolean belongsTo(Object family) {
 						return SynchronizeRepositoriesJob.this.family == family;

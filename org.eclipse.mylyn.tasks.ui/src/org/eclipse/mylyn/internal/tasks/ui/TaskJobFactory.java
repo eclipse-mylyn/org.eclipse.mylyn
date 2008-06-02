@@ -21,18 +21,18 @@ import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeQueriesJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeRepositoriesJob;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizeTasksJob;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
@@ -48,14 +48,14 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	private final TaskList taskList;
 
-	private final ITaskDataManager taskDataManager;
+	private final TaskDataManager taskDataManager;
 
 	private final IRepositoryManager repositoryManager;
 
 	private final IRepositoryModel tasksModel;
 
-	public TaskJobFactory(TaskList taskList, ITaskDataManager taskDataManager,
-			IRepositoryManager repositoryManager, IRepositoryModel tasksModel) {
+	public TaskJobFactory(TaskList taskList, TaskDataManager taskDataManager, IRepositoryManager repositoryManager,
+			IRepositoryModel tasksModel) {
 		this.taskList = taskList;
 		this.taskDataManager = taskDataManager;
 		this.repositoryManager = repositoryManager;

@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.DateUtil;
-import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -32,12 +31,13 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.LegacyChangeManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDataDiff;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -75,6 +75,8 @@ import org.eclipse.swt.widgets.Widget;
  * @author Steffen Pingel
  */
 public class TaskListToolTip extends ToolTip {
+
+	private final static int MAX_TEXT_WIDTH = 300;
 
 	private final static int X_SHIFT;
 
@@ -277,30 +279,28 @@ public class TaskListToolTip extends ToolTip {
 		return null;
 	}
 
+	@SuppressWarnings( { "deprecation", "restriction" })
 	private String getIncommingText(IRepositoryElement element) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			if (task.getSynchronizationState().isIncoming()) {
+				String text = null;
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						task.getConnectorKind());
-				if (connector instanceof AbstractLegacyRepositoryConnector) {
-					AbstractNotification notification = LegacyChangeManager.getIncommingNotification(connector, task);
+				if (connector instanceof org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector) {
+					TaskListNotification notification = org.eclipse.mylyn.internal.tasks.ui.LegacyChangeManager.getIncommingNotification(
+							connector, task);
 					if (notification != null) {
-						String res = null;
-						if (notification.getDescription() != null) {
-							String descriptionText = notification.getDescription();
-							if (descriptionText != null && descriptionText.length() > 0) {
-								res = descriptionText;
-							}
-						}
-//						if (notification.getDetails() != null) {
-//							String details = notification.getDetails();
-//							if (details != null && details.length() > 0) {
-//								res = res == null ? details : res + "\n" + details;
-//							}
-//						}
-						return res;
+						text = notification.getDescription();
 					}
+				} else {
+					TaskListNotifier notifier = new TaskListNotifier(TasksUiPlugin.getRepositoryModel(),
+							TasksUiPlugin.getTaskDataManager());
+					TaskDataDiff diff = notifier.getDiff(task);
+					text = diff.toString(MAX_TEXT_WIDTH);
+				}
+				if (text != null && text.length() > 0) {
+					return text;
 				}
 			}
 		}

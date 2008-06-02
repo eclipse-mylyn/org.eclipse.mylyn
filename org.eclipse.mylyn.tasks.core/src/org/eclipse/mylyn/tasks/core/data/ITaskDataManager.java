@@ -31,8 +31,4 @@ public interface ITaskDataManager {
 
 	public abstract boolean hasTaskData(ITask task);
 
-	public abstract void putUpdatedTaskData(ITask task, TaskData taskData, boolean user) throws CoreException;
-
-	public abstract void putSubmittedTaskData(ITask task, TaskData taskData) throws CoreException;
-
 }

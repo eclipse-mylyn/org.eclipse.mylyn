@@ -16,6 +16,15 @@ import java.util.Map;
  */
 public class TaskAttributeMetaData {
 
+//	public enum DetailLevel {
+//		/** A little bit of detail, e.g. a task showing in the Task List. */
+//		LOW,
+//		/** More detail, e.g. a task showing in a tool tip. */
+//		MEDIUM,
+//		/** A lot of detail, e.g. a task showing in an editor. */
+//		//HIGH
+//	};
+
 	private final TaskAttribute taskAttribute;
 
 	TaskAttributeMetaData(TaskAttribute taskAttribute) {
@@ -38,6 +47,14 @@ public class TaskAttributeMetaData {
 	public String getDefaultOption() {
 		return taskAttribute.getMetaDatum(TaskAttribute.META_DEFAULT_OPTION);
 	}
+
+//	public DetailLevel getDetailLevel() {
+//		try {
+//			return DetailLevel.valueOf(taskAttribute.getMetaDatum(TaskAttribute.META_DEFAULT_OPTION));
+//		} catch (IllegalArgumentException e) {
+//			return null;
+//		}
+//	}
 
 	public String getKind() {
 		return taskAttribute.getMetaDatum(TaskAttribute.META_ATTRIBUTE_KIND);
@@ -76,6 +93,15 @@ public class TaskAttributeMetaData {
 		}
 		return this;
 	}
+
+//	public TaskAttributeMetaData setDetailLevel(DetailLevel detailLevel) {
+//		if (detailLevel != null) {
+//			taskAttribute.putMetaDatum(TaskAttribute.META_DETAIL_LEVEL, detailLevel.name());
+//		} else {
+//			taskAttribute.removeMetaDatum(TaskAttribute.META_DETAIL_LEVEL);
+//		}
+//		return this;
+//	}	
 
 	public TaskAttributeMetaData setKind(String value) {
 		if (value != null) {

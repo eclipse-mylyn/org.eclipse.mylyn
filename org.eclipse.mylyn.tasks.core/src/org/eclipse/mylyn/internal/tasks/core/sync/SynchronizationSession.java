@@ -12,9 +12,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
@@ -24,79 +24,61 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  */
 public class SynchronizationSession implements ISynchronizationSession {
 
+	private Set<ITask> changedTasks;
+
+	private Object data;
+
 	private boolean fullSynchronization;
 
 	private boolean performQueries;
 
-	private Set<ITask> tasks;
-
-	private Set<ITask> changedTasks;
-
 	private Set<ITask> staleTasks;
+
+	private TaskDataManager taskDataManager;
 
 	private TaskRepository taskRepository;
 
-	private Object data;
+	private Set<ITask> tasks;
 
-	private ITaskDataManager taskDataManager;
-
-	public SynchronizationSession(ITaskDataManager taskDataManager) {
-		this.taskDataManager = taskDataManager;
-	}
+	private boolean user;
 
 	public SynchronizationSession() {
 	}
 
-	public void setFullSynchronization(boolean fullSynchronization) {
-		this.fullSynchronization = fullSynchronization;
-	}
-
-	public boolean isFullSynchronization() {
-		return fullSynchronization;
-	}
-
-	public void setNeedsPerformQueries(boolean performQueries) {
-		this.performQueries = performQueries;
-	}
-
-	public boolean needsPerformQueries() {
-		return performQueries;
-	}
-
-	public void setTasks(Set<ITask> tasks) {
-		this.tasks = tasks;
-	}
-
-	public Set<ITask> getTasks() {
-		return tasks;
-	}
-
-	public void setChangedTasks(Set<ITask> changedTasks) {
-		this.changedTasks = changedTasks;
+	public SynchronizationSession(TaskDataManager taskDataManager) {
+		this.taskDataManager = taskDataManager;
 	}
 
 	public Set<ITask> getChangedTasks() {
 		return changedTasks;
 	}
 
-	public void setTaskRepository(TaskRepository taskRepository) {
-		this.taskRepository = taskRepository;
+	public Object getData() {
+		return data;
+	}
+
+	public Set<ITask> getStaleTasks() {
+		return staleTasks;
+	}
+
+	public TaskDataManager getTaskDataManager() {
+		return taskDataManager;
 	}
 
 	public TaskRepository getTaskRepository() {
 		return taskRepository;
 	}
 
-	public void setData(Object data) {
-		this.data = data;
+	public Set<ITask> getTasks() {
+		return tasks;
 	}
 
-	public Object getData() {
-		return data;
+	public boolean isFullSynchronization() {
+		return fullSynchronization;
 	}
 
-	public ITaskDataManager getTaskDataManager() {
-		return taskDataManager;
+	public boolean isUser() {
+		return user;
 	}
 
 	public void markStale(ITask task) {
@@ -106,14 +88,42 @@ public class SynchronizationSession implements ISynchronizationSession {
 		staleTasks.add(task);
 	}
 
-	public Set<ITask> getStaleTasks() {
-		return staleTasks;
+	public boolean needsPerformQueries() {
+		return performQueries;
 	}
 
-	public void putUpdatedTaskData(ITask task, TaskData taskData) throws CoreException {
+	public void putTaskData(ITask task, TaskData taskData) throws CoreException {
 		if (taskDataManager != null) {
 			taskDataManager.putUpdatedTaskData(task, taskData, false);
 		}
+	}
+
+	public void setChangedTasks(Set<ITask> changedTasks) {
+		this.changedTasks = changedTasks;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
+
+	public void setFullSynchronization(boolean fullSynchronization) {
+		this.fullSynchronization = fullSynchronization;
+	}
+
+	public void setNeedsPerformQueries(boolean performQueries) {
+		this.performQueries = performQueries;
+	}
+
+	public void setTaskRepository(TaskRepository taskRepository) {
+		this.taskRepository = taskRepository;
+	}
+
+	public void setTasks(Set<ITask> tasks) {
+		this.tasks = tasks;
+	}
+
+	public void setUser(boolean user) {
+		this.user = user;
 	}
 
 }

@@ -75,7 +75,7 @@ public class AllTasksTests {
 
 		suite.addTestSuite(TaskActivityListenerTest.class);
 		suite.addTestSuite(TaskRepositoryFilterTests.class);
-
+		suite.addTestSuite(TaskDiffUtilTest.class);
 		return suite;
 	}
 }

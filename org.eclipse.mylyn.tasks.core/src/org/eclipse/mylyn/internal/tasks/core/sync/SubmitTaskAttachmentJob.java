@@ -15,12 +15,12 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
@@ -44,9 +44,9 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 
 	private final TaskRepository taskRepository;
 
-	private final ITaskDataManager taskDataManager;
+	private final TaskDataManager taskDataManager;
 
-	public SubmitTaskAttachmentJob(ITaskDataManager taskDataManager, AbstractRepositoryConnector connector,
+	public SubmitTaskAttachmentJob(TaskDataManager taskDataManager, AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, ITask task, AbstractTaskAttachmentSource source, String comment,
 			TaskAttribute attachmentAttribute) {
 		super("Submitting Attachment");

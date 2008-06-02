@@ -34,6 +34,8 @@ public interface ISynchronizationSession {
 
 	public abstract boolean isFullSynchronization();
 
+	public abstract boolean isUser();
+
 	public abstract boolean needsPerformQueries();
 
 	public abstract void setData(Object data);
@@ -42,6 +44,6 @@ public interface ISynchronizationSession {
 
 	public abstract void markStale(ITask task);
 
-	public abstract void putUpdatedTaskData(ITask task, TaskData taskData) throws CoreException;
+	public abstract void putTaskData(ITask task, TaskData taskData) throws CoreException;
 
 }

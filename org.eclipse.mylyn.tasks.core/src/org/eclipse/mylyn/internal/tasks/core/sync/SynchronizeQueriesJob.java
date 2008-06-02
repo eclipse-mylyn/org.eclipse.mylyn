@@ -40,7 +40,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
@@ -103,7 +102,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				removedQueryResults.remove(task);
 			}
 			try {
-				session.putUpdatedTaskData(task, taskData);
+				session.putTaskData(task, taskData);
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to save task", e));
 			}
@@ -129,7 +128,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			}
 			taskList.addTask(task, repositoryQuery);
 			if (!taskData.isPartial()) {
-				((TaskDataManager) taskDataManager).saveIncoming(task, taskData, isUser());
+				(taskDataManager).saveIncoming(task, taskData, isUser());
 			} else if (changed && !task.isStale()
 					&& task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
 				// TODO move to synchronizationManager
@@ -161,13 +160,13 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private final TaskRepository repository;
 
-	private final ITaskDataManager taskDataManager;
+	private final TaskDataManager taskDataManager;
 
 	private final TaskList taskList;
 
 	private final IRepositoryModel tasksModel;
 
-	public SynchronizeQueriesJob(TaskList taskList, ITaskDataManager taskDataManager, IRepositoryModel tasksModel,
+	public SynchronizeQueriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<RepositoryQuery> queries) {
 		super("Synchronizing Queries (" + repository.getRepositoryLabel() + ")");
 		this.taskList = taskList;
@@ -200,8 +199,8 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				final Map<String, TaskRelation[]> relationsByTaskId = new HashMap<String, TaskRelation[]>();
 				SynchronizationSession session = new SynchronizationSession(taskDataManager) {
 					@Override
-					public void putUpdatedTaskData(ITask task, TaskData taskData) throws CoreException {
-						taskDataManager.putUpdatedTaskData(task, taskData, isUser());
+					public void putTaskData(ITask task, TaskData taskData) throws CoreException {
+						taskDataManager.putUpdatedTaskData(task, taskData, isUser(), this);
 						if (!taskData.isPartial()) {
 							Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
 							if (relations != null) {
@@ -214,6 +213,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				session.setFullSynchronization(isFullSynchronization());
 				session.setTasks(Collections.unmodifiableSet(allTasks));
 				session.setNeedsPerformQueries(true);
+				session.setUser(isUser());
 
 				preSynchronization(session, new SubProgressMonitor(monitor, 20));
 
@@ -232,11 +232,11 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					}
 				}
 
+				// synchronize tasks that were marked by the connector
 				SynchronizeTasksJob job = new SynchronizeTasksJob(taskList, taskDataManager, tasksModel, connector,
 						repository, tasksToBeSynchronized);
 				job.setUser(isUser());
-
-				// synchronize tasks that were marked by the connector
+				job.setSession(session);
 				if (!tasksToBeSynchronized.isEmpty()) {
 					Policy.checkCanceled(monitor);
 					job.run(new SubProgressMonitor(monitor, 30));

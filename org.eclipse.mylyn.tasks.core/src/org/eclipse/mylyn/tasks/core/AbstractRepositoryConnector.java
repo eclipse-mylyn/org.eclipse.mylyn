@@ -159,7 +159,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @since 3.0
 	 */
-	public abstract boolean hasChanged(TaskRepository taskRepository, ITask task, TaskData taskData);
+	public abstract boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData);
 
 	/**
 	 * @since 3.0

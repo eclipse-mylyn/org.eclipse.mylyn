@@ -498,7 +498,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public boolean hasChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
+	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		if (taskData.isPartial()) {
 			return false;
 		}

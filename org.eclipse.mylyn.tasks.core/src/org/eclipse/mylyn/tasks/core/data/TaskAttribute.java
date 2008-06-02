@@ -111,6 +111,8 @@ public final class TaskAttribute {
 
 	public static final String META_DEFAULT_OPTION = "task.meta.defaultOption";
 
+//	public static final String META_DETAIL_LEVEL = "task.meta.detailLevel";
+
 	public static final String META_LABEL = "task.meta.label";
 
 	public static final String META_READ_ONLY = "task.meta.readOnly";

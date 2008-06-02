@@ -78,6 +78,7 @@ import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
@@ -416,6 +417,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				taskListNotificationManager = new TaskListNotificationManager();
 				taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
 				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
+				taskListNotificationManager.addNotificationProvider(new TaskListNotifier(getRepositoryModel(),
+						getTaskDataManager()));
 				taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
 				getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
 			} catch (Throwable t) {

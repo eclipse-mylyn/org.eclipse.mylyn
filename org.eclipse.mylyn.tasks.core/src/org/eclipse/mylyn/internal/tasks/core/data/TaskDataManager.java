@@ -13,12 +13,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -69,6 +73,8 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private final TaskActivityManager taskActivityManager;
 
+	private final List<ITaskDataManagerListener> listeners = new CopyOnWriteArrayList<ITaskDataManagerListener>();
+
 	public TaskDataManager(TaskDataStorageManager taskDataManager, TaskDataStore taskDataStore,
 			IRepositoryManager repositoryManager, TaskList taskList, TaskActivityManager taskActivityManager) {
 		this.taskDataStorageManager = taskDataManager;
@@ -76,6 +82,14 @@ public class TaskDataManager implements ITaskDataManager {
 		this.repositoryManager = repositoryManager;
 		this.taskList = taskList;
 		this.taskActivityManager = taskActivityManager;
+	}
+
+	public void addListener(ITaskDataManagerListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeListener(ITaskDataManagerListener listener) {
+		listeners.remove(listener);
 	}
 
 	/** public for testing purposes */
@@ -178,16 +192,21 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, final boolean user) throws CoreException {
+		putUpdatedTaskData(itask, taskData, user, null);
+	}
+
+	public void putUpdatedTaskData(final ITask itask, final TaskData taskData, final boolean user, Object token)
+			throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		Assert.isNotNull(taskData);
 		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
 		final TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
-		final boolean changed = connector.hasChanged(repository, task, taskData);
-		final boolean elementChanged[] = new boolean[1];
+		final boolean taskDataChanged = connector.hasTaskChanged(repository, task, taskData);
+		final boolean taskChanged[] = new boolean[1];
 		final boolean synchronizationStateChanged[] = new boolean[1];
-		if (changed || user) {
+		if (taskDataChanged || user) {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
 					boolean newTask = false;
@@ -198,10 +217,9 @@ public class TaskDataManager implements ITaskDataManager {
 						task.setMarkReadPending(false);
 					}
 
-					elementChanged[0] = changed;
-					elementChanged[0] |= updateTaskFromTaskData(taskData, task, connector, repository);
+					taskChanged[0] = updateTaskFromTaskData(taskData, task, connector, repository);
 
-					if (changed) {
+					if (taskDataChanged) {
 						switch (task.getSynchronizationState()) {
 						case OUTGOING:
 							task.setSynchronizationState(SynchronizationState.CONFLICT);
@@ -234,8 +252,9 @@ public class TaskDataManager implements ITaskDataManager {
 				}
 			});
 		}
-		if (elementChanged[0]) {
+		if (taskChanged[0] || taskDataChanged) {
 			taskList.notifyElementChanged(task);
+			fireTaskDataUpdated(task, taskChanged[0], taskData, taskDataChanged, token);
 		} else if (synchronizationStateChanged[0]) {
 			taskList.notifySynchronizationStateChanged(task);
 		}
@@ -367,6 +386,12 @@ public class TaskDataManager implements ITaskDataManager {
 			return null;
 		}
 		return state.getRepositoryData();
+	}
+
+	public TaskDataState getTaskDataState(ITask task) throws CoreException {
+		Assert.isNotNull(task);
+		final String kind = task.getConnectorKind();
+		return taskDataStore.getTaskDataState(findFile(task, kind));
 	}
 
 	public TaskData getTaskData(TaskRepository taskRepository, String taskId) throws CoreException {
@@ -631,6 +656,29 @@ public class TaskDataManager implements ITaskDataManager {
 	@Deprecated
 	public TaskDataStorageManager getTaskDataStorageManager() {
 		return taskDataStorageManager;
+	}
+
+	private void fireTaskDataUpdated(ITask task, boolean taskChanged, TaskData taskData, boolean taskDataChanged,
+			Object token) {
+		ITaskDataManagerListener[] array = listeners.toArray(new ITaskDataManagerListener[0]);
+		if (array.length > 0) {
+			final TaskDataManagerEvent event = new TaskDataManagerEvent(this, task, taskChanged, taskData,
+					taskDataChanged, token);
+			for (final ITaskDataManagerListener listener : array) {
+				SafeRunner.run(new ISafeRunnable() {
+
+					public void handleException(Throwable exception) {
+						// ignore
+
+					}
+
+					public void run() throws Exception {
+						listener.taskDataUpdated(event);
+					}
+
+				});
+			}
+		}
 	}
 
 }

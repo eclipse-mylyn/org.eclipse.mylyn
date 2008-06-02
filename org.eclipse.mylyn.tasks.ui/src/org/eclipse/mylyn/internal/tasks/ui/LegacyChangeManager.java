@@ -196,9 +196,6 @@ public class LegacyChangeManager {
 		return change;
 	}
 
-	/**
-	 * TODO 3.0: move, uses and exposes internal class.
-	 */
 	@SuppressWarnings("restriction")
 	@Deprecated
 	public static TaskListNotification getIncommingNotification(AbstractRepositoryConnector connector, ITask task) {

@@ -40,7 +40,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation.Direction;
@@ -56,7 +55,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final AbstractRepositoryConnector connector;
 
-	private final ITaskDataManager taskDataManager;
+	private final TaskDataManager taskDataManager;
 
 	private final ITaskList taskList;
 
@@ -72,9 +71,10 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private final IRepositoryModel tasksModel;
 
-	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager,
-			IRepositoryModel tasksModel, AbstractRepositoryConnector connector, TaskRepository taskRepository,
-			Set<ITask> tasks) {
+	private SynchronizationSession session;
+
+	public SynchronizeTasksJob(ITaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
+			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<ITask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
 		this.taskDataManager = synchronizationManager;
@@ -85,9 +85,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		this.repositoryManager = null;
 	}
 
-	public SynchronizeTasksJob(ITaskList taskList, ITaskDataManager synchronizationManager,
-			IRepositoryModel tasksModel, AbstractRepositoryConnector connector, IRepositoryManager repositoryManager,
-			Set<ITask> tasks) {
+	public SynchronizeTasksJob(ITaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
+			AbstractRepositoryConnector connector, IRepositoryManager repositoryManager, Set<ITask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
 		this.taskList = taskList;
 		this.taskDataManager = synchronizationManager;
@@ -344,7 +343,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 //		}
 
 		TaskFactory factory = new TaskFactory(repository, true, isUser(),
-				(AbstractLegacyRepositoryConnector) connector, (TaskDataManager) taskDataManager, taskList);
+				(AbstractLegacyRepositoryConnector) connector, taskDataManager, taskList);
 		task = factory.createTask(taskData, new NullProgressMonitor());
 
 		// HACK: Remove once connectors can get access to
@@ -365,7 +364,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private void updateFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		try {
-			taskDataManager.putUpdatedTaskData(task, taskData, isUser());
+			taskDataManager.putUpdatedTaskData(task, taskData, isUser(), getSession());
 			if (updateRelations) {
 				Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
 				if (relations != null) {
@@ -380,7 +379,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	private ITask createFromTaskData(TaskRepository taskRepository, String taskId, TaskData taskData)
 			throws CoreException {
 		ITask task = tasksModel.createTask(taskRepository, taskData.getTaskId());
-		taskDataManager.putUpdatedTaskData(task, taskData, isUser());
+		taskDataManager.putUpdatedTaskData(task, taskData, isUser(), getSession());
 		return task;
 	}
 
@@ -390,6 +389,14 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			((AbstractTask) task).setSynchronizing(false);
 		}
 		taskList.notifyElementChanged(task);
+	}
+
+	public SynchronizationSession getSession() {
+		return session;
+	}
+
+	public void setSession(SynchronizationSession session) {
+		this.session = session;
 	}
 
 }

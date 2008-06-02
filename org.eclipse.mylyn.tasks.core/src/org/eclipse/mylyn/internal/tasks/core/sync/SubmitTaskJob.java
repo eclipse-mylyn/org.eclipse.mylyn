@@ -18,6 +18,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -25,7 +26,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
@@ -47,11 +47,11 @@ public class SubmitTaskJob extends SubmitJob {
 
 	private final Set<TaskAttribute> oldAttributes;
 
-	private final ITaskDataManager taskDataManager;
+	private final TaskDataManager taskDataManager;
 
 	private RepositoryResponse response;
 
-	public SubmitTaskJob(ITaskDataManager taskDataManager, AbstractRepositoryConnector connector,
+	public SubmitTaskJob(TaskDataManager taskDataManager, AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, ITask task, TaskData taskData, Set<TaskAttribute> oldAttributes) {
 		super("Submitting Task");
 		this.taskDataManager = taskDataManager;
