@@ -189,9 +189,9 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 		if (id != null) {
 			// operation associated input attributes are stored on the root attribute
 			if (TaskAttribute.TYPE_OPERATION.equals(taskAttribute.getMetaData().getType())) {
-				return taskAttribute.getTaskData().getRoot().getAttribute(id);
+				return taskAttribute.getTaskData().getRoot().getMappedAttribute(id);
 			}
-			return taskAttribute.getAttribute(id);
+			return taskAttribute.getMappedAttribute(id);
 		}
 		return null;
 	}
