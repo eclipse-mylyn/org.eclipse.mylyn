@@ -72,7 +72,11 @@ public class TaskListExternalizer {
 
 	public static final String ELEMENT_TASK_LIST = "TaskList";
 
-	private static final String VALUE_VERSION = "1.0.1";
+	// Mylyn 3.0
+	private static final String VALUE_VERSION = "2.0";
+
+	// Mylyn 2.3.2
+	//private static final String VALUE_VERSION_1_0_1 = "1.0.1";
 
 	private static final String VALUE_VERSION_1_0_0 = "1.0.0";
 
