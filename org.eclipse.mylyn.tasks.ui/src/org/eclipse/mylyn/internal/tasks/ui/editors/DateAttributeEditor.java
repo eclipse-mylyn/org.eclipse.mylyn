@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -74,7 +75,6 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 				public void widgetSelected(SelectionEvent e) {
 					Calendar cal = datePicker.getDate();
 					if (cal != null) {
-						// TODO goes dirty even if user presses cancel
 						setValue(cal.getTime());
 					} else {
 						setValue(null);
@@ -82,6 +82,8 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 					}
 				}
 			});
+
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(datePicker);
 
 			ImageHyperlink clearDeadlineDate = toolkit.createImageHyperlink(dateWithClearComposite, SWT.NONE);
 			clearDeadlineDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
