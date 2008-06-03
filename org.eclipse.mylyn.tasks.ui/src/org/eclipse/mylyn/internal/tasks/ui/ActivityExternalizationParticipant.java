@@ -92,26 +92,6 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	}
 
-	public void preTaskActivated(ITask task) {
-		// ignore
-
-	}
-
-	public void preTaskDeactivated(ITask task) {
-		// ignore
-
-	}
-
-	public void taskActivated(ITask task) {
-		// ignore
-
-	}
-
-	public void taskDeactivated(ITask task) {
-		// ignore
-
-	}
-
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 		setDirty(true);
 	}

@@ -517,6 +517,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskList.addChangeListener(taskListSaveParticipant);
 
 			taskActivityManager = new TaskActivityManager(repositoryManager, taskList);
+			taskActivityManager.addActivationListener(taskListSaveParticipant);
 
 			taskListManager = new TaskListManager(taskList, taskListSaveParticipant, taskListImporter);
 
