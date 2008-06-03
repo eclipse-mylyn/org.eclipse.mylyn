@@ -123,7 +123,7 @@ public class TaskListElementImporter {
 
 	public TaskListElementImporter(TaskRepositoryManager repositoryManager, TasksModel tasksModel) {
 		this.repositoryManager = repositoryManager;
-		this.delagatingExternalizer = new DelegatingTaskExternalizer(tasksModel);
+		this.delagatingExternalizer = new DelegatingTaskExternalizer(tasksModel, repositoryManager);
 		this.repositoriesExternalizer = new TaskRepositoriesExternalizer();
 		this.contextExternalizer = new InteractionContextExternalizer();
 	}

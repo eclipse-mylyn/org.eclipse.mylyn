@@ -70,7 +70,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -217,19 +216,19 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			if (taskToRefresh != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (!isDirty() && task.getSynchronizationState() == SynchronizationState.INCOMING) {
-							// automatically refresh if the user has not made any changes
-							refreshFormContent();
-						} else {
-							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
-									new HyperlinkAdapter() {
-										@Override
-										public void linkActivated(HyperlinkEvent e) {
-											refreshFormContent();
-										}
-									});
-							setSubmitEnabled(false);
-						}
+//						if (!isDirty() && task.getSynchronizationState() == SynchronizationState.INCOMING) {
+//							// automatically refresh if the user has not made any changes
+//							refreshFormContent();
+//						} else {
+						getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+								new HyperlinkAdapter() {
+									@Override
+									public void linkActivated(HyperlinkEvent e) {
+										refreshFormContent();
+									}
+								});
+						setSubmitEnabled(false);
+//						}
 					}
 				});
 			}

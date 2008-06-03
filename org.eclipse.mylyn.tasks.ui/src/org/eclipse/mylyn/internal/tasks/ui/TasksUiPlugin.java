@@ -507,7 +507,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			taskList = new TaskList();
 			tasksModel = new TasksModel(taskList, repositoryManager);
-			taskListExternalizer = new TaskListExternalizer(tasksModel);
+			taskListExternalizer = new TaskListExternalizer(tasksModel, repositoryManager);
 			TaskListElementImporter taskListImporter = new TaskListElementImporter(repositoryManager, tasksModel);
 
 			taskListSaveParticipant = new TaskListExternalizationParticipant(taskList, taskListExternalizer,

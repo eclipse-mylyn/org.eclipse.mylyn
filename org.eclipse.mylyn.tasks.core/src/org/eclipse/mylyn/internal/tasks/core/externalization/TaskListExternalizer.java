@@ -46,6 +46,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TasksModel;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
+import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -79,20 +80,18 @@ public class TaskListExternalizer {
 
 	private static final String VALUE_VERSION_1_0_0 = "1.0.0";
 
-	private final DelegatingTaskExternalizer delagatingExternalizer;
+	private final DelegatingTaskExternalizer delegatingExternalizer;
 
-	private final List<Node> orphanedTaskNodes = new ArrayList<Node>();
-
-	private final List<Node> orphanedQueryNodes = new ArrayList<Node>();
+	private final List<Node> orphanedNodes = new ArrayList<Node>();
 
 	private String readVersion = "";
 
-	public TaskListExternalizer(TasksModel tasksModel) {
-		this.delagatingExternalizer = new DelegatingTaskExternalizer(tasksModel);
+	public TaskListExternalizer(TasksModel tasksModel, IRepositoryManager repositoryManager) {
+		this.delegatingExternalizer = new DelegatingTaskExternalizer(tasksModel, repositoryManager);
 	}
 
 	public void initialize(List<AbstractTaskListFactory> externalizers, List<AbstractTaskListMigrator> migrators) {
-		this.delagatingExternalizer.initialize(externalizers, migrators);
+		this.delegatingExternalizer.initialize(externalizers, migrators);
 	}
 
 	public void writeTaskList(TaskList taskList, File outFile) throws CoreException {
@@ -119,18 +118,18 @@ public class TaskListExternalizer {
 
 		// create task nodes...
 		for (AbstractTask task : taskList.getAllTasks()) {
-			delagatingExternalizer.createTaskElement(task, doc, root);
+			delegatingExternalizer.createTaskElement(task, doc, root);
 		}
 
 		// create the category nodes...
 		for (AbstractTaskCategory category : taskList.getCategories()) {
-			delagatingExternalizer.createCategoryElement(category, doc, root);
+			delegatingExternalizer.createCategoryElement(category, doc, root);
 		}
 
 		// create query nodes...
 		for (RepositoryQuery query : taskList.getQueries()) {
 			try {
-				delagatingExternalizer.createQueryElement(query, doc, root);
+				delegatingExternalizer.createQueryElement(query, doc, root);
 			} catch (Throwable t) {
 				// FIXME use log?
 				StatusHandler.fail(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Did not externalize: "
@@ -139,16 +138,8 @@ public class TaskListExternalizer {
 		}
 
 		// Persist orphaned tasks...
-		for (Node orphanedTaskNode : orphanedTaskNodes) {
-			Node tempNode = doc.importNode(orphanedTaskNode, true);
-			if (tempNode != null) {
-				root.appendChild(tempNode);
-			}
-		}
-
-		// Persist orphaned queries....
-		for (Node orphanedQueryNode : orphanedQueryNodes) {
-			Node tempNode = doc.importNode(orphanedQueryNode, true);
+		for (Node node : orphanedNodes) {
+			Node tempNode = doc.importNode(node, true);
 			if (tempNode != null) {
 				root.appendChild(tempNode);
 			}
@@ -287,91 +278,88 @@ public class TaskListExternalizer {
 //	}
 
 	public void readTaskList(TaskList taskList, File inFile) throws CoreException {
-		delagatingExternalizer.reset();
-		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();
 		if (!inFile.exists()) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Task list file not found \"" + inFile.getAbsolutePath() + "\""));
 		}
-
 		if (inFile.length() == 0) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Task list file contains no data \"" + inFile.getAbsolutePath() + "\""));
 		}
 
-		Document doc;
-		doc = openAsDOM(inFile);
+		delegatingExternalizer.reset();
+		orphanedNodes.clear();
 
-		if (doc == null) {
-			//StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Empty TaskList"));
-			return;
-		}
-
+		Document doc = openAsDOM(inFile);
 		Element root = doc.getDocumentElement();
 		readVersion = root.getAttribute(ATTRIBUTE_VERSION);
-
 		if (readVersion.equals(VALUE_VERSION_1_0_0)) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task list version \""
 					+ readVersion + "\" not supported"));
-		} else {
-			NodeList list = root.getChildNodes();
+		}
 
-			// Read Tasks
-			for (int i = 0; i < list.getLength(); i++) {
-				Node child = list.item(i);
-				if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
-						&& !child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
-					AbstractTask task = delagatingExternalizer.readTask(child, null, null);
-					if (task != null) {
-						taskList.addTask(task);
-						if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
-							tasksWithSubtasks.put(task, child.getChildNodes());
-						}
-					} else {
-						orphanedTaskNodes.add(child);
+		NodeList list = root.getChildNodes();
+
+		// read tasks
+		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();
+		for (int i = 0; i < list.getLength(); i++) {
+			Node child = list.item(i);
+			if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
+					&& !child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+				AbstractTask task = delegatingExternalizer.readTask(child, null, null);
+				if (task != null) {
+					taskList.addTask(task);
+					if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
+						tasksWithSubtasks.put(task, child.getChildNodes());
 					}
+				} else {
+					orphanedNodes.add(child);
 				}
 			}
+		}
+		// create subtask hierarchy
+		for (AbstractTask task : tasksWithSubtasks.keySet()) {
+			NodeList nodes = tasksWithSubtasks.get(task);
+			delegatingExternalizer.readTaskReferences(task, nodes, taskList);
+		}
 
-			for (AbstractTask task : tasksWithSubtasks.keySet()) {
-				NodeList nodes = tasksWithSubtasks.get(task);
-				delagatingExternalizer.readTaskReferences(task, nodes, taskList);
-			}
-
-			// Read Queries
-			for (int i = 0; i < list.getLength(); i++) {
-				Node child = list.item(i);
-				if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
-					RepositoryQuery query = delagatingExternalizer.readQuery(child, taskList);
-					if (query != null) {
-						taskList.addQuery(query);
-						if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
-							delagatingExternalizer.readTaskReferences(query, child.getChildNodes(), taskList);
-						}
-					} else {
-						orphanedTaskNodes.add(child);
+		// read queries
+		for (int i = 0; i < list.getLength(); i++) {
+			Node child = list.item(i);
+			if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+				RepositoryQuery query = delegatingExternalizer.readQuery(child, taskList);
+				if (query != null) {
+					taskList.addQuery(query);
+					if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
+						delegatingExternalizer.readTaskReferences(query, child.getChildNodes(), taskList);
 					}
+				} else {
+					orphanedNodes.add(child);
 				}
 			}
+		}
 
-			// Read Categories
-			for (int i = 0; i < list.getLength(); i++) {
-				Node child = list.item(i);
-				if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
-					delagatingExternalizer.readCategory(child, taskList);
-				}
+		// Read Categories
+		for (int i = 0; i < list.getLength(); i++) {
+			Node child = list.item(i);
+			if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)) {
+				delegatingExternalizer.readCategory(child, taskList);
 			}
+		}
 
-			// Legacy migration for task nodes that have the old Category handle on the element
-			Map<AbstractTask, String> legacyParentCategoryMap = delagatingExternalizer.getLegacyParentCategoryMap();
-			if (legacyParentCategoryMap.size() > 0) {
-				for (AbstractTask task : legacyParentCategoryMap.keySet()) {
-					AbstractTaskCategory category = taskList.getContainerForHandle(legacyParentCategoryMap.get(task));
-					if (category != null) {
-						taskList.addTask(task, category);
-					}
+		// Legacy migration for task nodes that have the old Category handle on the element
+		Map<AbstractTask, String> legacyParentCategoryMap = delegatingExternalizer.getLegacyParentCategoryMap();
+		if (legacyParentCategoryMap.size() > 0) {
+			for (AbstractTask task : legacyParentCategoryMap.keySet()) {
+				AbstractTaskCategory category = taskList.getContainerForHandle(legacyParentCategoryMap.get(task));
+				if (category != null) {
+					taskList.addTask(task, category);
 				}
 			}
+		}
+
+		if (delegatingExternalizer.getErrorStatus() != null) {
+			StatusHandler.log(delegatingExternalizer.getErrorStatus());
 		}
 	}
 
@@ -385,10 +373,8 @@ public class TaskListExternalizer {
 	 * 
 	 */
 	private Document openAsDOM(File inputFile) throws CoreException {
-
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
-		Document document = null;
 		try {
 			builder = factory.newDocumentBuilder();
 			InputStream inputStream = null;
@@ -402,16 +388,16 @@ public class TaskListExternalizer {
 					entry = ((ZipInputStream) inputStream).getNextEntry();
 				}
 				if (entry == null) {
-					return null;
+					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							ERROR_TASKLIST_READ + ": missing valid entry for the task list"));
 				}
 			} else {
 				inputStream = new FileInputStream(inputFile);
 			}
-			document = builder.parse(inputStream);
-		} catch (Exception se) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, ERROR_TASKLIST_READ, se));
+			return builder.parse(inputStream);
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, ERROR_TASKLIST_READ, e));
 		}
-		return document;
 	}
 
 }
