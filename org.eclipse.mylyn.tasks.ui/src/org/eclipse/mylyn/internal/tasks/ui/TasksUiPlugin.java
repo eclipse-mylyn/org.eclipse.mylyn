@@ -181,7 +181,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskEditorBloatMonitor taskEditorBloatManager;
 
-	private TaskJobFactory tasksJobFactory;
+	private TaskJobFactory taskJobFactory;
 
 	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<AbstractSearchHandler>();
 
@@ -431,7 +431,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				taskListBackupManager = new TaskListBackupManager(getBackupFolderPath());
 				getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
 
-				synchronizationScheduler = new TaskListSynchronizationScheduler(tasksJobFactory);
+				synchronizationScheduler = new TaskListSynchronizationScheduler(taskJobFactory);
 				updateSynchronizationScheduler(true);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
@@ -567,7 +567,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				}
 			}
 
-			tasksJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager,
+			taskJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager,
 					repositoryModel);
 
 			taskActivityManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
@@ -1042,8 +1042,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	/**
 	 * @since 3.0
 	 */
-	public static TaskJobFactory getTasksJobFactory() {
-		return INSTANCE.tasksJobFactory;
+	public static TaskJobFactory getTaskJobFactory() {
+		return INSTANCE.taskJobFactory;
 	}
 
 	public void addDuplicateDetector(AbstractDuplicateDetector duplicateDetector) {

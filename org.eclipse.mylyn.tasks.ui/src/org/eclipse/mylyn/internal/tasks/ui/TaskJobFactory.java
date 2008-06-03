@@ -103,13 +103,13 @@ public class TaskJobFactory implements ITaskJobFactory {
 		try {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
-					((AbstractTask) task).setSubmitting(true);
+					((AbstractTask) task).setSynchronizing(true);
 				}
 			});
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
 		}
-		taskList.notifyElementChanged(task);
+		taskList.notifySynchronizationStateChanged(task);
 		return job;
 	}
 
@@ -156,13 +156,13 @@ public class TaskJobFactory implements ITaskJobFactory {
 		try {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
-					((AbstractTask) task).setSubmitting(true);
+					((AbstractTask) task).setSynchronizing(true);
 				}
 			});
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
 		}
-		taskList.notifyElementChanged(task);
+		taskList.notifySynchronizationStateChanged(task);
 		job.setUser(true);
 		return job;
 	}

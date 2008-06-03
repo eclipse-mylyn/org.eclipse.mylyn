@@ -207,10 +207,12 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return (taskKey == null) ? taskId : taskKey;
 	}
 
+	@Deprecated
 	public boolean isSubmitting() {
 		return submitting;
 	}
 
+	@Deprecated
 	public void setSubmitting(boolean submitting) {
 		this.submitting = submitting;
 	}

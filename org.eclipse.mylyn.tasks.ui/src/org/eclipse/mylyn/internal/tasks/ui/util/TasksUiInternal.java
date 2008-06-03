@@ -291,7 +291,7 @@ public class TasksUiInternal {
 		}
 		taskList.notifySynchronizationStateChanged(queries);
 
-		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeQueriesJob(connector, repository,
+		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeQueriesJob(connector, repository,
 				queries);
 		job.setUser(force);
 		if (listener != null) {
@@ -327,7 +327,7 @@ public class TasksUiInternal {
 	public static SynchronizationJob synchronizeAllRepositories(boolean force) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUi.getRepositoryManager()
 				.getAllRepositories());
-		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeRepositoriesJob(repositories);
+		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeRepositoriesJob(repositories);
 		job.setUser(force);
 		job.schedule();
 		joinIfInTestMode(job);
@@ -363,7 +363,7 @@ public class TasksUiInternal {
 		((TaskList) taskList).notifySynchronizationStateChanged(tasks);
 		// TODO notify task list?
 
-		SynchronizationJob job = TasksUiPlugin.getTasksJobFactory().createSynchronizeTasksJob(connector, tasks);
+		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeTasksJob(connector, tasks);
 		job.setUser(force);
 		job.setPriority(Job.DECORATE);
 		if (listener != null) {
@@ -387,7 +387,7 @@ public class TasksUiInternal {
 	}
 
 	public static ITaskJobFactory getJobFactory() {
-		return TasksUiPlugin.getTasksJobFactory();
+		return TasksUiPlugin.getTaskJobFactory();
 	}
 
 	public static NewAttachmentWizardDialog openNewAttachmentWizard(Shell shell, TaskRepository taskRepository,

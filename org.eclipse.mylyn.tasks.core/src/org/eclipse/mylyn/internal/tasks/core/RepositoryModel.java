@@ -26,8 +26,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class RepositoryModel implements IRepositoryModel {
 
-	private int handleCount;
-
 	private final IRepositoryManager repositoryManager;
 
 	private final Map<String, ITask> taskByHandle = new WeakHashMap<String, ITask>();
@@ -78,6 +76,9 @@ public class RepositoryModel implements IRepositoryModel {
 		TaskRepository taskRepository = repositoryManager.getRepository(taskData.getConnectorKind(),
 				taskData.getRepositoryUrl());
 		ITask task = getTask(taskRepository, taskData.getTaskId());
+		if (task == null) {
+			return null;
+		}
 		TaskAttachment taskAttachment = new TaskAttachment(taskRepository, task, taskAttribute);
 		taskData.getAttributeMapper().updateTaskAttachment(taskAttachment, taskAttribute);
 		return taskAttachment;
@@ -88,6 +89,9 @@ public class RepositoryModel implements IRepositoryModel {
 		TaskRepository taskRepository = repositoryManager.getRepository(taskData.getConnectorKind(),
 				taskData.getRepositoryUrl());
 		ITask task = getTask(taskRepository, taskData.getTaskId());
+		if (task == null) {
+			return null;
+		}
 		TaskComment taskComment = new TaskComment(taskRepository, task, taskAttribute);
 		taskData.getAttributeMapper().updateTaskComment(taskComment, taskAttribute);
 		return taskComment;

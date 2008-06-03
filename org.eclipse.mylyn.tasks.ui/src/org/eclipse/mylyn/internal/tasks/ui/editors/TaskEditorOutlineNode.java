@@ -46,27 +46,30 @@ public class TaskEditorOutlineNode {
 		String type = taskAttribute.getMetaData().getType();
 		if (TaskAttribute.TYPE_COMMENT.equals(type)) {
 			ITaskComment taskComment = TasksUi.getRepositoryModel().createTaskComment(taskAttribute);
-			taskAttribute.getTaskData().getAttributeMapper().updateTaskComment(taskComment, taskAttribute);
-			StringBuilder sb = new StringBuilder();
-			sb.append(taskComment.getNumber());
-			sb.append(": ");
-			IRepositoryPerson author = taskComment.getAuthor();
-			if (author != null) {
-				sb.append(author.toString());
+			if (taskComment != null) {
+				taskAttribute.getTaskData().getAttributeMapper().updateTaskComment(taskComment, taskAttribute);
+				StringBuilder sb = new StringBuilder();
+				sb.append(taskComment.getNumber());
+				sb.append(": ");
+				IRepositoryPerson author = taskComment.getAuthor();
+				if (author != null) {
+					sb.append(author.toString());
+				}
+				Date creationDate = taskComment.getCreationDate();
+				if (creationDate != null) {
+					sb.append(" (");
+					sb.append(EditorUtil.formatDateTime(creationDate));
+					sb.append(")");
+				}
+				TaskEditorOutlineNode node = new TaskEditorOutlineNode(sb.toString(), taskAttribute);
+				node.setTaskComment(taskComment);
+				return node;
 			}
-			Date creationDate = taskComment.getCreationDate();
-			if (creationDate != null) {
-				sb.append(" (");
-				sb.append(EditorUtil.formatDateTime(creationDate));
-				sb.append(")");
-			}
-			TaskEditorOutlineNode node = new TaskEditorOutlineNode(sb.toString(), taskAttribute);
-			node.setTaskComment(taskComment);
-			return node;
 		} else {
 			String label = taskAttribute.getTaskData().getAttributeMapper().getValueLabel(taskAttribute);
 			return new TaskEditorOutlineNode(label, taskAttribute);
 		}
+		return null;
 	}
 
 	public static TaskEditorOutlineNode parse(TaskData taskData) {
@@ -81,7 +84,10 @@ public class TaskEditorOutlineNode {
 			TaskEditorOutlineNode commentsNode = new TaskEditorOutlineNode(LABEL_COMMENTS);
 			rootNode.addChild(commentsNode);
 			for (TaskAttribute commentAttribute : comments) {
-				commentsNode.addChild(createNode(commentAttribute));
+				TaskEditorOutlineNode node = createNode(commentAttribute);
+				if (node != null) {
+					commentsNode.addChild(node);
+				}
 			}
 		}
 		addNode(rootNode, taskData, TaskAttribute.COMMENT_NEW, LABEL_NEW_COMMENT);

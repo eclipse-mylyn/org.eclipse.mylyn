@@ -108,7 +108,10 @@ public class TaskDataDiff {
 
 	private void addChangedComment(TaskAttribute oldAttribute, TaskAttribute newAttribute) {
 		if (oldAttribute == null) {
-			newComments.add(repositoryModel.createTaskComment(newAttribute));
+			ITaskComment comment = repositoryModel.createTaskComment(newAttribute);
+			if (comment != null) {
+				newComments.add(comment);
+			}
 		}
 	}
 
