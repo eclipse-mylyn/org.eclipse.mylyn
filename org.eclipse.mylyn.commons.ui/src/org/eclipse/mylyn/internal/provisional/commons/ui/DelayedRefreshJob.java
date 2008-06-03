@@ -59,7 +59,6 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 
 	public synchronized void refreshElements(Object[] elements) {
 		queue.addAll(Arrays.asList(elements));
-		// FIXME this is a copy of refreshElement(Object)
 		if (scheduleTime == NOT_SCHEDULED) {
 			scheduleTime = System.currentTimeMillis();
 			schedule(REFRESH_DELAY_DEFAULT);
@@ -71,16 +70,7 @@ public abstract class DelayedRefreshJob extends WorkbenchJob {
 	}
 
 	public synchronized void refreshElement(Object element) {
-		queue.add(element);
-
-		if (scheduleTime == NOT_SCHEDULED) {
-			scheduleTime = System.currentTimeMillis();
-			schedule(REFRESH_DELAY_DEFAULT);
-		} else if (System.currentTimeMillis() - scheduleTime < REFRESH_DELAY_MAX - REFRESH_DELAY_DEFAULT) {
-			// reschedule to aggregate more refreshes
-			cancel();
-			schedule(REFRESH_DELAY_DEFAULT);
-		}
+		refreshElements(new Object[] { element });
 	}
 
 	@Override
