@@ -22,13 +22,15 @@ import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Rob Elves
  */
 public class TaskListExternalizationParticipant extends AbstractExternalizationParticipant implements
-		IExternalizationParticipant, ITaskListChangeListener {
+		IExternalizationParticipant, ITaskListChangeListener, ITaskActivationListener {
 
 	private static final String DESCRIPTION = "Task List";
 
@@ -125,5 +127,31 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 				return;
 			}
 		}
+	}
+
+	public void preTaskActivated(ITask task) {
+		// ignore
+
+	}
+
+	public void preTaskDeactivated(ITask task) {
+		// ignore
+
+	}
+
+	public void taskActivated(ITask task) {
+		synchronized (TaskListExternalizationParticipant.this) {
+			dirty = true;
+		}
+		manager.requestSave();
+		return;
+	}
+
+	public void taskDeactivated(ITask task) {
+		synchronized (TaskListExternalizationParticipant.this) {
+			dirty = true;
+		}
+		manager.requestSave();
+		return;
 	}
 }
