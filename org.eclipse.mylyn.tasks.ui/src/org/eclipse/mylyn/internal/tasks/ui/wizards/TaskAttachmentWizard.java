@@ -325,8 +325,8 @@ public class TaskAttachmentWizard extends Wizard {
 			public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
 				if (attachContext) {
 					monitor.subTask("Attaching context");
-					AttachmentUtil.postContext(connector, model.getTaskRepository(), model.getTask(), null,
-							model.getAttribute(), monitor);
+					AttachmentUtil.postContext(connector, model.getTaskRepository(), model.getTask(), null, null,
+							monitor);
 				}
 			}
 

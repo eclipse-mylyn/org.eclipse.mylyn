@@ -70,9 +70,8 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
@@ -184,12 +183,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 		@Override
 		public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
-			// attach context if required
 			if (attachContext) {
-				// TODO: review
-				TaskAttributeMapper mapper = getModel().getTaskData().getAttributeMapper();
-				TaskAttribute attribute = mapper.createTaskAttachment(getModel().getTaskData());
-				AttachmentUtil.postContext(connector, getModel().getTaskRepository(), task, "", attribute, monitor);
+				AttachmentUtil.postContext(connector, getModel().getTaskRepository(), task, "", null, monitor);
 			}
 		}
 
@@ -218,19 +213,19 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			if (taskToRefresh != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-//						if (!isDirty() && task.getSynchronizationState() == SynchronizationState.INCOMING) {
-//							// automatically refresh if the user has not made any changes
-//							refreshFormContent();
-//						} else {
-						getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
-								new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										refreshFormContent();
-									}
-								});
-						setSubmitEnabled(false);
-//						}
+						if (!isDirty() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
+							// automatically refresh if the user has not made any changes and there is no chance of missing incomings
+							refreshFormContent();
+						} else {
+							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+									new HyperlinkAdapter() {
+										@Override
+										public void linkActivated(HyperlinkEvent e) {
+											refreshFormContent();
+										}
+									});
+							setSubmitEnabled(false);
+						}
 					}
 				});
 			}
@@ -771,7 +766,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private boolean getAttachContext() {
 		AbstractTaskEditorPart actionPart = getPart(ID_PART_ACTIONS);
-		if (actionPart instanceof TaskEditorAttributePart) {
+		if (actionPart instanceof TaskEditorActionPart) {
 			return ((TaskEditorActionPart) actionPart).getAttachContext();
 		}
 		return false;
@@ -953,12 +948,16 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					Menu menu = editorComposite.getMenu();
 					setMenu(editorComposite, null);
 
-					// clear old controls
+					// clear old controls and parts
 					for (Control control : editorComposite.getChildren()) {
 						control.dispose();
 					}
 					lastFocusControl = null;
 					lastSelection = null;
+					for (IFormPart part : getManagedForm().getParts()) {
+						part.dispose();
+						getManagedForm().removePart(part);
+					}
 
 					// restore menu
 					editorComposite.setMenu(menu);
