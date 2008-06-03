@@ -384,9 +384,9 @@ public final class DelegatingTaskExternalizer {
 			if (category == null) {
 				category = new TaskCategory(element.getAttribute(KEY_NAME));
 				taskList.addCategory((TaskCategory) category);
-			} else {
-				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category \"" + handle
-						+ "\" already exists in task list"));
+			} else if (!UncategorizedTaskContainer.HANDLE.equals(handle)) {
+				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category with handle \""
+						+ handle + "\" already exists in task list"));
 			}
 		} else {
 			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category is missing name attribute"));
