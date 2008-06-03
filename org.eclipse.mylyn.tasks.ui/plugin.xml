@@ -1419,11 +1419,7 @@
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="popup:org.eclipse.mylyn.tasks.ui.editor.menu.attachments">
-         <separator
-               name="group.open"
-               visible="false">
-         </separator>
+            locationURI="popup:org.eclipse.mylyn.tasks.ui.editor.menu.attachments?after=group.open">
          <command
                commandId="org.eclipse.mylyn.tasks.ui.command.attachment.openInBrowser"
                label="Open With Browser"
@@ -1440,13 +1436,6 @@
                   style="push">
             </command>
          </menu>
-         <separator
-               name="group.save">
-         </separator>
-         <separator
-               name="additions"
-               visible="false">
-         </separator>
       </menuContribution>
       <menuContribution
             locationURI="popup:org.eclipse.ui.popup.any?before=navigate">
@@ -1623,6 +1612,13 @@
             namespace="org.eclipse.mylyn.task"
             properties="canGetAttachment,canPostAttachment,connectorKind,hasLocalContext,hasLocalCompletionState,hasRepositoryContext,isCompleted,isLocal,"
             type="org.eclipse.mylyn.tasks.core.ITask">
+      </propertyTester>
+      <propertyTester
+            class="org.eclipse.mylyn.internal.tasks.ui.util.TaskAttachmentPropertyTester"
+            id="org.eclipse.mylyn.tasks.ui.propertyTester.task.attachment"
+            namespace="org.eclipse.mylyn.task.attachment"
+            properties="isContext"
+            type="org.eclipse.mylyn.tasks.core.ITaskAttachment">
       </propertyTester>
    </extension>
      

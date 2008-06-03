@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -30,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.core.data.TextTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiMenus;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -177,6 +180,11 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				TasksUiMenus.fillTaskAttachmentMenu(manager);
+			}
+		});
 		getTaskEditorPage().getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, attachmentsViewer, false);
 		Menu menu = menuManager.createContextMenu(attachmentsTable);
 		attachmentsTable.setMenu(menu);
