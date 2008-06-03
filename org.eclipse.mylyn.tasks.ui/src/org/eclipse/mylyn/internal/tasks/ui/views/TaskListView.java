@@ -198,7 +198,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else if (items.length > 0) {
 				try {
 					if (TaskListView.this.isFocusedMode()) {
-						Set<Object> children = new HashSet<Object>();
+						Set<Object> children = new HashSet<Object>(Arrays.asList(items));
 						Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
 						for (Object item : items) {
 							if (item instanceof AbstractTask) {
@@ -526,7 +526,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						updateDescription();
-						refreshJob.refreshElement(task);
+						refresh(task);
 						selectedAndFocusTask(task);
 						filteredTree.indicateActiveTask(task);
 					}
@@ -538,11 +538,19 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		public void taskDeactivated(final ITask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					refreshJob.refreshElement(task);
+					refresh(task);
 					updateDescription();
 					filteredTree.indicateNoActiveTask();
 				}
 			});
+		}
+
+		private void refresh(final ITask task) {
+			if (TaskListView.this.isScheduledPresentation()) {
+				refreshJob.refresh();
+			} else {
+				refreshJob.refreshElement(task);
+			}
 		}
 
 	};
@@ -1704,6 +1712,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filterOnPriorityAction.setEnabled(enabled);
 		filterCompleteTask.setEnabled(enabled);
 		//filterArchiveCategory.setEnabled(enabled);
+	}
+
+	public boolean isScheduledPresentation() {
+		return currentPresentation != null && ScheduledPresentation.ID.equals(currentPresentation.getId());
 	}
 
 	public boolean isFocusedMode() {
