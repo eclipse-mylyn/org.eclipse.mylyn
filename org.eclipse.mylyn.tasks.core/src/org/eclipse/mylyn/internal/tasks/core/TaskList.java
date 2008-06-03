@@ -251,7 +251,6 @@ public class TaskList implements ITaskList {
 
 	public AbstractTaskCategory getContainerForHandle(String categoryHandle) {
 		Assert.isNotNull(categoryHandle);
-
 		for (AbstractTaskCategory cat : categories.values()) {
 			if (cat.getHandleIdentifier().equals(categoryHandle)) {
 				return cat;

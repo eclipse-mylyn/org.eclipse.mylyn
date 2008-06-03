@@ -176,9 +176,13 @@ public final class DelegatingTaskExternalizer {
 
 	private boolean taskActivated;
 
+//	private final IRepositoryManager repositoryManager;
+
 	public DelegatingTaskExternalizer(TasksModel tasksModel) {
 		Assert.isNotNull(tasksModel);
+		//Assert.isNotNull(repositoryManager);
 		this.tasksModel = tasksModel;
+		//this.repositoryManager = repositoryManager;
 		this.parentCategoryMap = new HashMap<AbstractTask, String>();
 		this.factories = Collections.emptyList();
 		this.migrators = Collections.emptyList();
@@ -434,6 +438,10 @@ public final class DelegatingTaskExternalizer {
 		}
 		// populate common attributes
 		if (task != null) {
+//			if (repositoryManager.getRepositoryConnector(task.getConnectorKind()) == null) {
+//
+//			}
+
 			readTaskInfo(task, element, parent, legacyCategory);
 			readAttributes(task, element);
 			if (taskMigrator != null) {
@@ -752,6 +760,10 @@ public final class DelegatingTaskExternalizer {
 		ITask task = tasksModel.createTask(taskRepository, taskId);
 		task.setSummary(summary);
 		return (AbstractTask) task;
+	}
+
+	public void reset() {
+		parentCategoryMap.clear();
 	}
 
 }

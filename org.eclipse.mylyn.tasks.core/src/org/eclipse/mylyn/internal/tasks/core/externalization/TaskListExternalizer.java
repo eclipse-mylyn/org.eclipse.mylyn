@@ -41,7 +41,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TasksModel;
@@ -288,7 +287,7 @@ public class TaskListExternalizer {
 //	}
 
 	public void readTaskList(TaskList taskList, File inFile) throws CoreException {
-		delagatingExternalizer.getLegacyParentCategoryMap().clear();
+		delagatingExternalizer.reset();
 		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();
 		if (!inFile.exists()) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
@@ -364,14 +363,11 @@ public class TaskListExternalizer {
 			}
 
 			// Legacy migration for task nodes that have the old Category handle on the element
-			if (delagatingExternalizer.getLegacyParentCategoryMap().size() > 0) {
-				for (AbstractTask task : delagatingExternalizer.getLegacyParentCategoryMap().keySet()) {
-					AbstractTaskCategory category = taskList.getContainerForHandle(delagatingExternalizer.getLegacyParentCategoryMap()
-							.get(task));
+			Map<AbstractTask, String> legacyParentCategoryMap = delagatingExternalizer.getLegacyParentCategoryMap();
+			if (legacyParentCategoryMap.size() > 0) {
+				for (AbstractTask task : legacyParentCategoryMap.keySet()) {
+					AbstractTaskCategory category = taskList.getContainerForHandle(legacyParentCategoryMap.get(task));
 					if (category != null) {
-						if (task instanceof LocalTask && !task.getParentContainers().isEmpty()) {
-							continue;
-						}
 						taskList.addTask(task, category);
 					}
 				}
