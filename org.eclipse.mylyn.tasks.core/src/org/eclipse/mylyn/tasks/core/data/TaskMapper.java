@@ -85,7 +85,7 @@ public class TaskMapper implements ITaskMapping {
 		return changed;
 	}
 
-	private boolean areEquals(Object existingProperty, Object newProperty) {
+	private boolean areNotEquals(Object existingProperty, Object newProperty) {
 		return (existingProperty != null) ? !existingProperty.equals(newProperty) : newProperty != null;
 	}
 
@@ -300,13 +300,13 @@ public class TaskMapper implements ITaskMapping {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			if (TaskAttribute.TYPE_BOOLEAN.equals(attribute.getMetaData().getType())) {
-				return areEquals(value, taskData.getAttributeMapper().getBooleanValue(attribute));
+				return areNotEquals(value, taskData.getAttributeMapper().getBooleanValue(attribute));
 			} else if (TaskAttribute.TYPE_DATE.equals(attribute.getMetaData().getType())) {
-				return areEquals(value, taskData.getAttributeMapper().getDateValue(attribute));
+				return areNotEquals(value, taskData.getAttributeMapper().getDateValue(attribute));
 			} else if (TaskAttribute.TYPE_INTEGER.equals(attribute.getMetaData().getType())) {
-				return areEquals(value, taskData.getAttributeMapper().getIntegerValue(attribute));
+				return areNotEquals(value, taskData.getAttributeMapper().getIntegerValue(attribute));
 			} else {
-				return areEquals(value, taskData.getAttributeMapper().getValue(attribute));
+				return areNotEquals(value, taskData.getAttributeMapper().getValue(attribute));
 			}
 		}
 		return false;

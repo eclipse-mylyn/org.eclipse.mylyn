@@ -26,7 +26,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class RepositoryModel implements IRepositoryModel {
 
-	private int queryCount;
+	private int handleCount;
 
 	private final IRepositoryManager repositoryManager;
 
@@ -57,7 +57,7 @@ public class RepositoryModel implements IRepositoryModel {
 	}
 
 	public IRepositoryQuery createQuery(TaskRepository taskRepository) {
-		String handle = "query-" + ++queryCount;
+		String handle = taskList.getUniqueHandleIdentifier();
 		RepositoryQuery query = new RepositoryQuery(taskRepository.getConnectorKind(), handle);
 		query.setRepositoryUrl(taskRepository.getRepositoryUrl());
 		return query;

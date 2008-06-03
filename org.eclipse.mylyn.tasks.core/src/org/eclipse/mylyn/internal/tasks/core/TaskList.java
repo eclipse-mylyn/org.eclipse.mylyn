@@ -40,6 +40,8 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class TaskList implements ITaskList {
 
+	private static String DEFAULT_HANDLE_PREFIX = "handle-";
+
 	private static ILock lock = Job.getJobManager().newLock();
 
 	private Map<String, AbstractTaskCategory> categories;
@@ -57,6 +59,8 @@ public class TaskList implements ITaskList {
 	private Map<String, AbstractTask> tasks;
 
 	private Set<TaskContainerDelta> delta;
+
+	private int nextHandle = 1;
 
 	public TaskList() {
 		reset();
@@ -655,6 +659,23 @@ public class TaskList implements ITaskList {
 
 	public static ISchedulingRule getSchedulingRule() {
 		return ITasksCoreConstants.TASKLIST_SCHEDULING_RULE;
+	}
+
+	public String getUniqueHandleIdentifier() {
+		try {
+			lock();
+			while (nextHandle < Integer.MAX_VALUE) {
+				String handle = DEFAULT_HANDLE_PREFIX + nextHandle;
+				nextHandle++;
+				if (!categories.containsKey(handle) && !queries.containsKey(handle)
+						&& !repositoryOrphansMap.containsKey(handle) && !tasks.containsKey(handle)) {
+					return handle;
+				}
+			}
+			throw new RuntimeException("No more unique handles for task list");
+		} finally {
+			unlock();
+		}
 	}
 
 }
