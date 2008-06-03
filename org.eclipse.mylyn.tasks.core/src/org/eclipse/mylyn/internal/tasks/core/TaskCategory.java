@@ -20,9 +20,13 @@ public final class TaskCategory extends AbstractTaskCategory {
 
 	private String summary;
 
+	public TaskCategory(String handle, String summary) {
+		super(handle);
+		setSummary(summary);
+	}
+
 	public TaskCategory(String handleAndDescription) {
-		super(handleAndDescription);
-		setSummary(handleAndDescription);
+		this(handleAndDescription, handleAndDescription);
 	}
 
 	/**

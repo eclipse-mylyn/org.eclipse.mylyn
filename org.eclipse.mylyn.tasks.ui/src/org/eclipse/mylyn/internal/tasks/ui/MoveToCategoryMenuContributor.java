@@ -18,6 +18,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -71,9 +72,9 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		Action action = new NewCategoryAction() {
 			@Override
 			public void run() {
-				super.run();
-				if (super.cat != null) {
-					moveToCategory(selectedElements, super.cat);
+				TaskCategory category = createCategory();
+				if (category != null) {
+					moveToCategory(selectedElements, category);
 				}
 			}
 		};

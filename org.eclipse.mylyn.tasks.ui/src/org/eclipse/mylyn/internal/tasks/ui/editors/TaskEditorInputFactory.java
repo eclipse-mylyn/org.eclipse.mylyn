@@ -42,8 +42,9 @@ public class TaskEditorInputFactory implements IElementFactory {
 						+ task.getConnectorKind() + " with url " + task.getRepositoryUrl() + " cannont be found."));
 			}
 		} else {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Task with handle \"" + handle
-					+ "\" could not be found in task list."));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					"Failed to restore task editor: Task with handle \"" + handle
+							+ "\" could not be found in task list."));
 		}
 		return null;
 	}

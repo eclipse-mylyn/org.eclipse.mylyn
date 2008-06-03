@@ -56,7 +56,7 @@ public class RepositoryModel implements IRepositoryModel {
 		});
 	}
 
-	public IRepositoryQuery createQuery(TaskRepository taskRepository) {
+	public IRepositoryQuery createRepositoryQuery(TaskRepository taskRepository) {
 		String handle = taskList.getUniqueHandleIdentifier();
 		RepositoryQuery query = new RepositoryQuery(taskRepository.getConnectorKind(), handle);
 		query.setRepositoryUrl(taskRepository.getRepositoryUrl());

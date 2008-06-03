@@ -16,8 +16,8 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -32,10 +32,6 @@ import org.eclipse.ui.PlatformUI;
 public class NewCategoryAction extends Action implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.create.category";
-
-//	private final TaskListView view;
-
-	protected TaskCategory cat = null;
 
 	public NewCategoryAction() {
 		setText("New Category...");
@@ -53,6 +49,10 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 
 	@Override
 	public void run() {
+		createCategory();
+	}
+
+	public TaskCategory createCategory() {
 		InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 				"Enter name", "Enter a name for the Category: ", "", null);
 		int dialogResult = dialog.open();
@@ -65,21 +65,22 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 				if (name != null && name.equals(category.getSummary())) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"New Category", "A category with this name already exists, please choose another name.");
-					return;
+					return null;
 				}
 			}
 			for (RepositoryQuery query : queries) {
 				if (name != null && name.equals(query.getSummary())) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"New Category", "A query with this name already exists, please choose another name.");
-					return;
+					return null;
 				}
 			}
 
-			this.cat = new TaskCategory(name);
-			TasksUiPlugin.getTaskList().addCategory(cat);
-//			this.view.getViewer().refresh();
+			TaskCategory category = new TaskCategory(TasksUiPlugin.getTaskList().getUniqueHandleIdentifier(), name);
+			TasksUiPlugin.getTaskList().addCategory(category);
+			return category;
 		}
+		return null;
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

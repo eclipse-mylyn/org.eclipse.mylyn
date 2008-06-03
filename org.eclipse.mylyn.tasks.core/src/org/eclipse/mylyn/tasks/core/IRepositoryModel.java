@@ -17,7 +17,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public interface IRepositoryModel {
 
-	public abstract IRepositoryQuery createQuery(TaskRepository taskRepository);
+	public abstract IRepositoryQuery createRepositoryQuery(TaskRepository taskRepository);
 
 	public abstract ITask createTask(TaskRepository taskRepository, String taskId);
 

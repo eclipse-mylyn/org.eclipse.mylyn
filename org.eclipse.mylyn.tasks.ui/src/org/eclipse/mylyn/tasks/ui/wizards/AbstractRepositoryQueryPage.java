@@ -104,7 +104,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 	}
 
 	public IRepositoryQuery createQuery() {
-		IRepositoryQuery query = TasksUi.getRepositoryModel().createQuery(getTaskRepository());
+		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(getTaskRepository());
 		applyTo(query);
 		return query;
 	}

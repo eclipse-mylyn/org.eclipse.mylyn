@@ -204,6 +204,7 @@ public final class DelegatingTaskExternalizer {
 
 	public Element createCategoryElement(AbstractTaskCategory category, Document doc, Element parent) {
 		Element node = doc.createElement(getCategoryTagName());
+		node.setAttribute(DelegatingTaskExternalizer.KEY_HANDLE, category.getHandleIdentifier());
 		node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, category.getSummary());
 		parent.appendChild(node);
 		for (ITask task : category.getChildren()) {
@@ -392,14 +393,18 @@ public final class DelegatingTaskExternalizer {
 		Element element = (Element) node;
 		AbstractTaskCategory category = null;
 		if (element.hasAttribute(KEY_NAME)) {
-			String handle = element.getAttribute(KEY_NAME);
+			String name = element.getAttribute(KEY_NAME);
+			String handle = name;
+			if (element.hasAttribute(KEY_HANDLE)) {
+				handle = element.getAttribute(KEY_HANDLE);
+			}
 			category = taskList.getContainerForHandle(handle);
 			if (category == null) {
-				category = new TaskCategory(element.getAttribute(KEY_NAME));
+				category = new TaskCategory(handle, name);
 				taskList.addCategory((TaskCategory) category);
 			} else if (!UncategorizedTaskContainer.HANDLE.equals(handle)) {
-				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category with handle \""
-						+ handle + "\" already exists in task list"));
+				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category with handle \"" + name
+						+ "\" already exists in task list"));
 			}
 		} else {
 			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category is missing name attribute"));
@@ -826,7 +831,7 @@ public final class DelegatingTaskExternalizer {
 	private RepositoryQuery readDefaultQuery(String connectorKind, String repositoryUrl, String queryString,
 			String label, Element childElement) {
 		TaskRepository taskRepository = repositoryModel.getTaskRepository(connectorKind, repositoryUrl);
-		IRepositoryQuery query = repositoryModel.createQuery(taskRepository);
+		IRepositoryQuery query = repositoryModel.createRepositoryQuery(taskRepository);
 		query.setSummary(label);
 		query.setUrl(queryString);
 		return (RepositoryQuery) query;
