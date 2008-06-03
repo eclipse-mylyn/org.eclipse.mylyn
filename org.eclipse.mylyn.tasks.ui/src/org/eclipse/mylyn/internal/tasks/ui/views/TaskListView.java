@@ -197,24 +197,43 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				viewer.refresh(true);
 			} else if (items.length > 0) {
 				try {
-					for (Object item : items) {
-						if (item instanceof ITask) {
-							ITask task = (ITask) item;
-							if (TaskListView.this.isFocusedMode()) {
-								viewer.refresh(task, true);
-								if (item instanceof AbstractTask) {
-									Set<AbstractTaskContainer> parents = ((AbstractTask) item).getParentContainers();
-									for (AbstractTaskContainer parent : parents) {
-										viewer.refresh(parent, false);
-									}
-								}
-							} else {
-								viewer.refresh(task, true);
+					if (TaskListView.this.isFocusedMode()) {
+						Set<Object> children = new HashSet<Object>();
+						Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
+						for (Object item : items) {
+							if (item instanceof AbstractTask) {
+								parents.addAll(((AbstractTask) item).getParentContainers());
 							}
-						} else {
+						}
+						// 1. refresh parents
+						children.removeAll(parents);
+						for (AbstractTaskContainer parent : parents) {
+							viewer.refresh(parent, false);
+							// only refresh label of parent
+							viewer.update(parent, null);
+						}
+						// 2. refresh children
+						for (Object item : children) {
 							viewer.refresh(item, true);
 						}
-						updateExpansionState(item);
+						// 3. update states of all changed items
+						for (Object item : items) {
+							updateExpansionState(item);
+						}
+					} else {
+						Set<AbstractTaskContainer> parents = new HashSet<AbstractTaskContainer>();
+						for (Object item : items) {
+							if (item instanceof AbstractTask) {
+								parents.addAll(((AbstractTask) item).getParentContainers());
+							}
+							viewer.refresh(item, true);
+							updateExpansionState(item);
+						}
+						// refresh labels of parents for task activation or incoming indicators
+						for (AbstractTaskContainer parent : parents) {
+							// only refresh label
+							viewer.update(parent, null);
+						}
 					}
 				} catch (SWTException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to refresh viewer: "
@@ -507,9 +526,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						updateDescription();
+						refreshJob.refreshElement(task);
 						selectedAndFocusTask(task);
 						filteredTree.indicateActiveTask(task);
-						refresh();
 					}
 				});
 			}
