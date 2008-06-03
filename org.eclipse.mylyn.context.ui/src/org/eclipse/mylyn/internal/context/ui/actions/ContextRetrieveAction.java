@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -73,8 +72,8 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 			run(task);
 		} else {
 			// TODO: consider refactoring to be based on object contributions
-			if (selection.getFirstElement() instanceof ITaskAttachment) {
-				ITaskAttachment attachment = (ITaskAttachment) selection.getFirstElement();
+			if (selection.getFirstElement() instanceof RepositoryAttachment) {
+				RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
 
 				// HACK: need better way of getting task
 				IEditorPart activeEditor = PlatformUI.getWorkbench()
@@ -87,8 +86,9 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 				}
 
 				if (currentTask != null) {
-					AttachmentUtil.downloadContext(currentTask, attachment, PlatformUI.getWorkbench()
-							.getProgressService());
+					// legacy
+//					AttachmentUtil.downloadContext(currentTask, attachment, PlatformUI.getWorkbench()
+//							.getProgressService());
 				} else {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"Retrieve Context", "Can not retrieve contenxt for local tasks.");

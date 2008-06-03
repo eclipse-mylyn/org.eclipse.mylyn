@@ -115,6 +115,20 @@
                enablesFor="1">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.ide.team.ui.contribution.attachment.patch"
+            objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
+         <action
+               class="org.eclipse.mylyn.internal.team.ui.actions.ApplyPatchAction"
+               enablesFor="1"
+               icon="icons/elcl16/apply-patch.gif"
+               id="org.eclipse.mylyn.team.ui.ui.patch.apply"
+               label="Apply Patch..."
+               menubarPath="actions"
+               tooltip="Apply from Task Attachment">
+         </action>
+      </objectContribution>
    </extension>
 	
   <extension point="org.eclipse.ui.preferencePages">

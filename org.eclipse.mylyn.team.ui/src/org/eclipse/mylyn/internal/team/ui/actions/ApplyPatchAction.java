@@ -22,7 +22,10 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskAttachmentStorage;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -85,6 +88,20 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 					}
 
 				};
+				ApplyPatchOperation op = new ApplyPatchOperation(PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
+						.getActivePart(), storage, null, new CompareConfiguration());
+				BusyIndicator.showWhile(Display.getDefault(), op);
+			} else if (object instanceof ITaskAttachment) {
+				final ITaskAttachment attachment = (ITaskAttachment) object;
+				IStorage storage;
+				try {
+					storage = TaskAttachmentStorage.create(attachment);
+				} catch (CoreException e) {
+					TasksUiInternal.displayStatus("Error Retrieving Context", e.getStatus());
+					return;
+				}
 				ApplyPatchOperation op = new ApplyPatchOperation(PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow()
 						.getActivePage()

@@ -53,11 +53,11 @@
             objectClass="org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment">
          <action
                class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
+               enablesFor="1"
                icon="icons/etool16/context-retrieve.gif"
                id="org.eclipse.mylyn.context.ui.repository.task.retrieve"
                label="Retrieve Context"
-               menubarPath="actions"
-               enablesFor="1"/>
+               menubarPath="actions"/>
       </objectContribution>
 	 <!--
 	 <objectContribution
@@ -278,6 +278,11 @@
             id="org.eclipse.mylyn.context.ui.commands.task.clearContext"
             name="Clear Context">
       </command>
+      <command
+            categoryId="org.eclipse.mylyn.context.ui.commands"
+            id="org.eclipse.mylyn.context.ui.commands.attachment.retrieveContext"
+            name="Retrieve Context Attachment">
+      </command>
    </extension>
      
    <extension point="org.eclipse.ui.bindings">     
@@ -409,6 +414,28 @@
           </separator>
        </menu>
     </menuContribution>
+    <menuContribution
+          locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+       <command
+             commandId="org.eclipse.mylyn.context.ui.commands.attachment.retrieveContext"
+             icon="icons/etool16/context-retrieve.gif"
+             label="Retrieve Context"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <and>
+                <count
+                      value="1">
+                </count>
+                <iterate>
+                   <adapt
+                         type="org.eclipse.mylyn.tasks.core.ITaskAttachment">
+                   </adapt>
+                </iterate>
+             </and>
+          </visibleWhen>
+       </command>
+    </menuContribution>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -486,6 +513,25 @@
                 </instanceof>
                 <test
                       property="org.eclipse.mylyn.task.hasLocalContext"
+                      value="true">
+                </test>
+             </and>
+          </iterate>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextAttachmentHandler"
+          commandId="org.eclipse.mylyn.context.ui.commands.attachment.retrieveContext">
+       <enabledWhen>
+          <iterate
+                ifEmpty="false"
+                operator="and">
+             <and>
+                <instanceof
+                      value="org.eclipse.mylyn.tasks.core.ITaskAttachment">
+                </instanceof>
+                <test
+                      property="org.eclipse.mylyn.task.attachment.isContext"
                       value="true">
                 </test>
              </and>
