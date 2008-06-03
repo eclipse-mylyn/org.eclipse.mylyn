@@ -327,11 +327,24 @@
                menubarPath="repository"
                tooltip="Synchronize with Repository">
             <enablement>
-               <or>
-					<objectClass name="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery"/>
-               		<objectClass name="org.eclipse.mylyn.internal.tasks.core.AbstractTask"/>
-                 <objectClass name="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer"/>
-               </or>
+               <and>
+                  <not>
+                     <objectClass
+                           name="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                     </objectClass>
+                  </not>
+                  <or>
+                     <objectClass
+                           name="org.eclipse.mylyn.internal.tasks.core.RepositoryQuery">
+                     </objectClass>
+                     <objectClass
+                           name="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                     </objectClass>
+                     <objectClass
+                           name="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
+                     </objectClass>
+                  </or>
+               </and>
             </enablement>
          </action>
          
