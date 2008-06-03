@@ -64,6 +64,12 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 				taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, repositoryUrl, parsedText);
 				taskData.setPartial(true);
 				break;
+			case SHORT_SHORT_DESC:
+				if (taskData != null) {
+					BugzillaTaskDataHandler.createAttribute(taskData, BugzillaAttribute.SHORT_DESC)
+							.setValue(parsedText);
+				}
+				break;
 			case LI:
 				if (taskData != null) {
 					collector.accept(taskData);
