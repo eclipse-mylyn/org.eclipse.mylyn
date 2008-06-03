@@ -35,13 +35,76 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
-	private static final String TASK_DATA_VERSION_1_0 = "1";
+	private enum TaskDataVersion {
 
-	private static final String TASK_DATA_VERSION_2_0 = "2";
+		VERSION_0(0f) {
+			@Override
+			void migrate(TaskRepository repository, TaskData data) {
+				// ignore
+			}
+		},
 
-	private static final String TASK_DATA_VERSION_3_0 = "3";
+		VERSION_1_0(1.0f) {
+			@Override
+			void migrate(TaskRepository repository, TaskData data) {
+				// 1: the value was stored in the attribute rather than the key
+				for (TaskAttribute attribute : new ArrayList<TaskAttribute>(data.getRoot().getAttributes().values())) {
+					if (attribute.getId().equals(BugzillaAttribute.DESC.getKey())) {
+						TaskAttribute attrLongDesc = createAttribute(data, BugzillaAttribute.LONG_DESC);
+						attrLongDesc.setValue(attribute.getValue());
+						data.getRoot().removeAttribute(BugzillaAttribute.DESC.getKey());
+					}
+				}
+				// Old actions not saved so recreate them upon migration
+				RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
+				if (configuration != null) {
+					configuration.addValidOperations(data);
+				}
+			}
+		},
+		VERSION_2_0(2.0f) {
+			@Override
+			void migrate(TaskRepository repository, TaskData data) {
+				TaskAttribute attrDescription = data.getRoot().getMappedAttribute(BugzillaAttribute.LONG_DESC.getKey());
+				if (attrDescription != null) {
+					attrDescription.getMetaData().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
+				}
+			}
+		},
+		VERSION_3_0(3.0f) {
+			@Override
+			void migrate(TaskRepository repository, TaskData data) {
+				TaskAttribute attrNewComment = data.getRoot()
+						.getMappedAttribute(BugzillaAttribute.NEW_COMMENT.getKey());
+				if (attrNewComment != null) {
+					attrNewComment.getMetaData().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
+				}
+			}
+		},
+		VERSION_CURRENT(4.0f) {
+			@Override
+			void migrate(TaskRepository repository, TaskData data) {
+				data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
+			}
+		};
 
-	private static final String TASK_DATA_VERSION_CURRENT = "4";
+		private float versionNumber = 0;
+
+		TaskDataVersion(float verNum) {
+			versionNumber = verNum;
+		}
+
+		public float getVersionNum() {
+			return versionNumber;
+		}
+
+		abstract void migrate(TaskRepository repository, TaskData data);
+
+		@Override
+		public String toString() {
+			return "" + getVersionNum();
+		}
+	}
 
 	private final BugzillaRepositoryConnector connector;
 
@@ -84,45 +147,23 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	@Override
 	public void migrateTaskData(TaskRepository taskRepository, TaskData taskData) {
-		String taskDataVersion = taskData.getVersion();
-		if (taskDataVersion == null) {
-			taskDataVersion = "0";
-		}
-		// 1: the value was stored in the attribute rather than the key
-		if (taskDataVersion.compareTo(TASK_DATA_VERSION_1_0) <= 0) {
-			for (TaskAttribute attribute : new ArrayList<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
-				if (attribute.getId().equals(BugzillaAttribute.DESC.getKey())) {
-					TaskAttribute attrLongDesc = createAttribute(taskData, BugzillaAttribute.LONG_DESC);
-					attrLongDesc.setValue(attribute.getValue());
-					taskData.getRoot().removeAttribute(BugzillaAttribute.DESC.getKey());
+
+		float bugzillaTaskDataVersion = 0;
+		{
+			String taskDataVersion = taskData.getVersion();
+			if (taskDataVersion != null) {
+				try {
+					bugzillaTaskDataVersion = Float.parseFloat(taskDataVersion);
+				} catch (NumberFormatException e) {
+					bugzillaTaskDataVersion = 0;
 				}
 			}
-			// Old actions not saved so recreate them upon migration
-			RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository.getRepositoryUrl());
-			if (configuration != null) {
-				configuration.addValidOperations(taskData);
-			}
 		}
 
-		// 2: the description type was wrong
-		if (taskDataVersion.compareTo(TASK_DATA_VERSION_2_0) <= 0) {
-			TaskAttribute attrDescription = taskData.getRoot().getMappedAttribute(BugzillaAttribute.LONG_DESC.getKey());
-			if (attrDescription != null) {
-				attrDescription.getMetaData().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
+		for (TaskDataVersion version : TaskDataVersion.values()) {
+			if (bugzillaTaskDataVersion <= version.getVersionNum()) {
+				version.migrate(taskRepository, taskData);
 			}
-		}
-
-		// 3: the comment type was wrong
-		if (taskDataVersion.compareTo(TASK_DATA_VERSION_3_0) <= 0) {
-			TaskAttribute attrNewComment = taskData.getRoot()
-					.getMappedAttribute(BugzillaAttribute.NEW_COMMENT.getKey());
-			if (attrNewComment != null) {
-				attrNewComment.getMetaData().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
-			}
-		}
-
-		if (taskDataVersion.compareTo(TASK_DATA_VERSION_CURRENT) < 0) {
-			taskData.setVersion(TASK_DATA_VERSION_CURRENT);
 		}
 	}
 
@@ -166,7 +207,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	public boolean initializeTaskData(TaskRepository repository, TaskData data, String product, IProgressMonitor monitor)
 			throws CoreException {
 
-		data.setVersion(TASK_DATA_VERSION_CURRENT.toString());
+		data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
 
 		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
 				false, monitor);
