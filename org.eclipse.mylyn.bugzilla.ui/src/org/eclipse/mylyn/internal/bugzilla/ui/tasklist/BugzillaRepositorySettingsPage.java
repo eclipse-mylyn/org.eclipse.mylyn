@@ -30,7 +30,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -427,35 +426,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	public class BugzillaValidator extends Validator {
 
-//		final String serverUrl;
-//
-//		final String newUserId;
-//
-//		final String newPassword;
-//
-//		final boolean isAnonymous;
-//
-//		final String newEncoding;
-//
-//		final String httpAuthUser;
-//
-//		final String httpAuthPass;
-//
-//		final Proxy proxy;
-
 		final TaskRepository repository;
 
 		private final String[] versions = new String[1];;
 
 		public BugzillaValidator(TaskRepository repository, String version) {
-//			serverUrl = getServerUrl();
-//			newUserId = getUserName();
-//			newPassword = getPassword();
-//			isAnonymous = isAnonymousAccess();
-//			newEncoding = getCharacterEncoding();
-//			httpAuthUser = getHttpAuthUserId();
-//			httpAuthPass = getHttpAuthPassword();
-//			proxy = repository.getProxy();
 			versions[0] = version;
 			this.repository = repository;
 		}
@@ -483,7 +458,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
 						RepositoryStatus.ERROR_NETWORK, serverUrl, e.getMessage());
 			}
-			TasksUiInternal.displayStatus("Validation failed", status);
 			setStatus(status);
 		}
 
@@ -496,21 +470,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 				BugzillaClient client = null;
 
-//				Proxy tempProxy = Proxy.NO_PROXY;
-//
-//				if (getUseDefaultProxy()) {
-//					tempProxy = TaskRepository.getSystemProxy();
-//				} else {
-//					tempProxy = WebClientUtil.getProxy(getProxyHostname(), getProxyPort(), getProxyUsername(),
-//							getProxyPassword());
-//				}
 				boolean checkVersion = versions[0] == null;
 
-//				if (isAnonymous) {
-//					client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword, httpAuthUser,
-//							httpAuthPass, proxy, newEncoding);
-//					client.logout();
-//				} else
 				if (versions != null) {
 					client = BugzillaClientFactory.createClient(repository);
 					client.validate(monitor);
