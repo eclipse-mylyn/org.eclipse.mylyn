@@ -97,27 +97,30 @@ public class ExternalizationManager {
 	}
 
 	public void stop() {
-//		requestSave();
-//
-//		if (saveJob != null) {
-//			try {
-//				saveJob.join();
-//				saveJob = null;
-//			} catch (InterruptedException e) {
-//				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-//						"Task List save on shutdown canceled."));
-//			}
-//		}
+		if (saveJob != null) {
+			try {
+				// save job was running so will save dirty participants
+				saveJob.join();
+				return;
+			} catch (InterruptedException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Task List save on shutdown canceled."));
+			}
+		} else {
+			// save job wasn't running, save all dirty participants now
+			saveNow(false, new NullProgressMonitor());
+		}
+
 	}
 
-	public synchronized void saveNow(IProgressMonitor monitor) {
+	public synchronized void saveNow(boolean force, IProgressMonitor monitor) {
 		monitor = Policy.monitorFor(monitor);
 		if (saveJob != null) {
 			saveJob.cancel();
 			saveJob = null;
 		}
 		try {
-			forceSave = true;
+			forceSave = force;
 			ExternalizationJob job = createJob("Save Now", new ExternalizationContext(KIND.SAVE, rootFolderPath));
 			job.run(monitor);
 		} finally {

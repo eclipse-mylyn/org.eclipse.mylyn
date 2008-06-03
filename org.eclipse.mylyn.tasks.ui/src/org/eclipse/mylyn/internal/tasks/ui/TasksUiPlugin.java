@@ -734,7 +734,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	@SuppressWarnings("restriction")
 	public void setDataDirectory(final String newPath, IProgressMonitor monitor) throws CoreException {
-		externalizationManager.saveNow(monitor);
+		externalizationManager.saveNow(false, monitor);
 		loadDataDirectory(newPath);
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, newPath);
 		File newFile = new File(newPath, ITasksCoreConstants.CONTEXTS_DIRECTORY);
