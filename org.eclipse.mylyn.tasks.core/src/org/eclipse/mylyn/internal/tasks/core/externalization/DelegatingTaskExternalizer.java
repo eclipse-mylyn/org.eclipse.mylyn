@@ -22,10 +22,11 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -40,7 +41,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
-import org.eclipse.mylyn.internal.tasks.core.TasksModel;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
@@ -173,7 +174,7 @@ public final class DelegatingTaskExternalizer {
 	// 2.0 -> 3.0 migration holds tasks to category handles 
 	private final Map<AbstractTask, String> parentCategoryMap;
 
-	private final TasksModel tasksModel;
+	private final RepositoryModel repositoryModel;
 
 	private List<AbstractTaskListMigrator> migrators;
 
@@ -183,10 +184,10 @@ public final class DelegatingTaskExternalizer {
 
 	private final List<IStatus> errors;
 
-	public DelegatingTaskExternalizer(TasksModel tasksModel, IRepositoryManager repositoryManager) {
-		Assert.isNotNull(tasksModel);
+	public DelegatingTaskExternalizer(RepositoryModel repositoryModel, IRepositoryManager repositoryManager) {
+		Assert.isNotNull(repositoryModel);
 		Assert.isNotNull(repositoryManager);
-		this.tasksModel = tasksModel;
+		this.repositoryModel = repositoryModel;
 		this.repositoryManager = repositoryManager;
 		this.parentCategoryMap = new HashMap<AbstractTask, String>();
 		this.errors = new ArrayList<IStatus>();
@@ -194,10 +195,10 @@ public final class DelegatingTaskExternalizer {
 		this.migrators = Collections.emptyList();
 	}
 
-	public void initialize(List<AbstractTaskListFactory> externalizers, List<AbstractTaskListMigrator> migrators) {
-		Assert.isNotNull(externalizers);
+	public void initialize(List<AbstractTaskListFactory> factories, List<AbstractTaskListMigrator> migrators) {
+		Assert.isNotNull(factories);
 		Assert.isNotNull(migrators);
-		this.factories = externalizers;
+		this.factories = factories;
 		this.migrators = migrators;
 	}
 
@@ -211,8 +212,8 @@ public final class DelegatingTaskExternalizer {
 		return node;
 	}
 
-	public Element createTaskElement(AbstractTask task, Document doc, Element parent) {
-		Element node;
+	public Element createTaskElement(final AbstractTask task, Document doc, Element parent) {
+		final Element node;
 		if (task.getClass() == TaskTask.class || task instanceof LocalTask) {
 			node = doc.createElement(NODE_TASK);
 		} else {
@@ -227,12 +228,24 @@ public final class DelegatingTaskExternalizer {
 			if (factory != null) {
 				taskTagName = factory.getTaskElementName();
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-						"No externalizer for task: " + task));
+				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "No externalizer for task: "
+						+ task));
 				return null;
 			}
 			node = doc.createElement(taskTagName);
-			factory.setAdditionalAttributes(task, node);
+			final AbstractTaskListFactory finalFactory = factory;
+			SafeRunner.run(new ISafeRunnable() {
+
+				public void handleException(Throwable e) {
+					errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+							"Reading of task attributes failed for \"" + task + "\"", e));
+				}
+
+				public void run() throws Exception {
+					finalFactory.setAdditionalAttributes(task, node);
+				}
+
+			});
 		}
 
 		node.setAttribute(KEY_CONNECTOR_KIND, task.getConnectorKind());
@@ -399,13 +412,14 @@ public final class DelegatingTaskExternalizer {
 		readTaskReferences(category, list, taskList);
 	}
 
+	@SuppressWarnings("deprecation")
 	public final AbstractTask readTask(Node node, AbstractTaskCategory legacyCategory, ITask parent)
 			throws CoreException {
 		String handle;
 		String taskId;
 		String repositoryUrl;
 		String summary = "";
-		Element element = (Element) node;
+		final Element element = (Element) node;
 		if (element.hasAttribute(KEY_REPOSITORY_URL) && element.hasAttribute(KEY_TASK_ID)
 				&& element.hasAttribute(KEY_HANDLE)) {
 			handle = element.getAttribute(KEY_HANDLE);
@@ -464,7 +478,20 @@ public final class DelegatingTaskExternalizer {
 					task.setSynchronizationState(SynchronizationState.INCOMING_NEW);
 				}
 				task.setTaskKey(task.getTaskId());
-				taskMigrator.migrateTask(task, element);
+				final AbstractTaskListMigrator finalTaskMigrator = taskMigrator;
+				final AbstractTask finalTask = task;
+				SafeRunner.run(new ISafeRunnable() {
+
+					public void handleException(Throwable e) {
+						errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+								"Task migration failed for task \"" + finalTask + "\"", e));
+					}
+
+					public void run() throws Exception {
+						finalTaskMigrator.migrateTask(finalTask, element);
+					}
+
+				});
 			}
 			return task;
 		} else {
@@ -650,8 +677,8 @@ public final class DelegatingTaskExternalizer {
 		return KEY_TASK_CATEGORY;
 	}
 
-	public Element createQueryElement(RepositoryQuery query, Document doc, Element parent) {
-		Element node;
+	public Element createQueryElement(final RepositoryQuery query, Document doc, Element parent) {
+		final Element node;
 		if (query.getClass() == RepositoryQuery.class) {
 			node = doc.createElement(NODE_QUERY);
 		} else {
@@ -670,7 +697,19 @@ public final class DelegatingTaskExternalizer {
 				return null;
 			}
 			node = doc.createElement(queryTagName);
-			factory.setAdditionalAttributes(query, node);
+			final AbstractTaskListFactory finalFactory = factory;
+			SafeRunner.run(new ISafeRunnable() {
+
+				public void handleException(Throwable e) {
+					errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+							"Reading of query attributes failed for \"" + query + "\"", e));
+				}
+
+				public void run() throws Exception {
+					finalFactory.setAdditionalAttributes(query, node);
+				}
+
+			});
 		}
 
 		node.setAttribute(KEY_HANDLE, query.getHandleIdentifier());
@@ -704,7 +743,7 @@ public final class DelegatingTaskExternalizer {
 	 * @throws TaskExternalizationException
 	 */
 	public RepositoryQuery readQuery(Node node, TaskList taskList) {
-		Element element = (Element) node;
+		final Element element = (Element) node;
 		String repositoryUrl = element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
 		String queryString = element.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);
 		if (queryString.length() == 0) { // fallback for legacy
@@ -760,7 +799,20 @@ public final class DelegatingTaskExternalizer {
 			}
 			readAttributes(query, element);
 			if (queryMigrator != null) {
-				queryMigrator.migrateQuery(query, element);
+				final AbstractTaskListMigrator finalQueryMigrator = queryMigrator;
+				final RepositoryQuery finalQuery = query;
+				SafeRunner.run(new ISafeRunnable() {
+
+					public void handleException(Throwable e) {
+						errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+								"Query migration failed for query \"" + finalQuery + "\"", e));
+					}
+
+					public void run() throws Exception {
+						finalQueryMigrator.migrateQuery(finalQuery, element);
+					}
+
+				});
 			}
 			return query;
 		} else {
@@ -772,8 +824,8 @@ public final class DelegatingTaskExternalizer {
 
 	private RepositoryQuery readDefaultQuery(String connectorKind, String repositoryUrl, String queryString,
 			String label, Element childElement) {
-		TaskRepository taskRepository = tasksModel.getTaskRepository(connectorKind, repositoryUrl);
-		IRepositoryQuery query = tasksModel.createQuery(taskRepository);
+		TaskRepository taskRepository = repositoryModel.getTaskRepository(connectorKind, repositoryUrl);
+		IRepositoryQuery query = repositoryModel.createQuery(taskRepository);
 		query.setSummary(label);
 		query.setUrl(queryString);
 		return (RepositoryQuery) query;
@@ -781,12 +833,12 @@ public final class DelegatingTaskExternalizer {
 
 	private AbstractTask readDefaultTask(String connectorKind, String repositoryUrl, String taskId, String summary,
 			Element element) {
-		TaskRepository taskRepository = tasksModel.getTaskRepository(connectorKind, repositoryUrl);
+		TaskRepository taskRepository = repositoryModel.getTaskRepository(connectorKind, repositoryUrl);
 		if (repositoryUrl.equals(LocalRepositoryConnector.REPOSITORY_URL)) {
 			LocalTask task = new LocalTask(taskId, summary);
 			return task;
 		}
-		ITask task = tasksModel.createTask(taskRepository, taskId);
+		ITask task = repositoryModel.createTask(taskRepository, taskId);
 		task.setSummary(summary);
 		return (AbstractTask) task;
 	}
@@ -796,10 +848,14 @@ public final class DelegatingTaskExternalizer {
 		errors.clear();
 	}
 
+	public void clearErrorStatus() {
+		errors.clear();
+	}
+
 	public Status getErrorStatus() {
 		if (errors.size() > 0) {
 			return new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, errors.toArray(new IStatus[0]),
-					"Problems encounted while reading task list", null);
+					"Problems encounted while externalizing task list", null);
 		}
 		return null;
 	}

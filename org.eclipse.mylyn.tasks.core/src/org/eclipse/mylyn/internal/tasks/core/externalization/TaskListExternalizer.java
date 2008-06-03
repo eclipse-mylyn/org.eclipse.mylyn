@@ -27,10 +27,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -43,7 +41,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.TasksModel;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
@@ -86,8 +84,8 @@ public class TaskListExternalizer {
 
 	private String readVersion = "";
 
-	public TaskListExternalizer(TasksModel tasksModel, IRepositoryManager repositoryManager) {
-		this.delegatingExternalizer = new DelegatingTaskExternalizer(tasksModel, repositoryManager);
+	public TaskListExternalizer(RepositoryModel repositoryModel, IRepositoryManager repositoryManager) {
+		this.delegatingExternalizer = new DelegatingTaskExternalizer(repositoryModel, repositoryManager);
 	}
 
 	public void initialize(List<AbstractTaskListFactory> externalizers, List<AbstractTaskListMigrator> migrators) {
@@ -98,23 +96,36 @@ public class TaskListExternalizer {
 		try {
 			FileOutputStream outStream = new FileOutputStream(outFile);
 			try {
-				writeTaskList(taskList, outStream);
+				Document doc = createTaskListDocument(taskList);
+
+				ZipOutputStream zipOutStream = new ZipOutputStream(outStream);
+
+				ZipEntry zipEntry = new ZipEntry(ITasksCoreConstants.OLD_TASK_LIST_FILE);
+				zipOutStream.putNextEntry(zipEntry);
+				zipOutStream.setMethod(ZipOutputStream.DEFLATED);
+
+				writeDocument(doc, zipOutStream);
+
+				zipOutStream.flush();
+				zipOutStream.closeEntry();
+				zipOutStream.finish();
 			} finally {
 				outStream.close();
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Saving Task List failed",
 					e));
 		}
 	}
 
-	private void writeTaskList(TaskList taskList, OutputStream outputStream) throws IOException {
-		Document doc = createTaskListDocument();
-		if (doc == null) {
-			return;
-		}
+	private Document createTaskListDocument(TaskList taskList) throws CoreException {
+		Document doc = createDocument();
 
-		Element root = createTaskListRoot(doc);
+		delegatingExternalizer.clearErrorStatus();
+
+		Element root = doc.createElement(ELEMENT_TASK_LIST);
+		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
+		doc.appendChild(root);
 
 		// create task nodes...
 		for (AbstractTask task : taskList.getAllTasks()) {
@@ -128,13 +139,7 @@ public class TaskListExternalizer {
 
 		// create query nodes...
 		for (RepositoryQuery query : taskList.getQueries()) {
-			try {
-				delegatingExternalizer.createQueryElement(query, doc, root);
-			} catch (Throwable t) {
-				// FIXME use log?
-				StatusHandler.fail(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Did not externalize: "
-						+ query.getSummary(), t));
-			}
+			delegatingExternalizer.createQueryElement(query, doc, root);
 		}
 
 		// Persist orphaned tasks...
@@ -145,137 +150,37 @@ public class TaskListExternalizer {
 			}
 		}
 
-		ZipOutputStream zipOutStream = new ZipOutputStream(outputStream);
-		writeTaskList(doc, zipOutStream);
-		zipOutStream.finish();
-	}
-
-	/**
-	 * @param doc
-	 * @param outputStream
-	 * @throws IOException
-	 */
-	private void writeTaskList(Document doc, ZipOutputStream outputStream) throws IOException {
-		ZipEntry zipEntry = new ZipEntry(ITasksCoreConstants.OLD_TASK_LIST_FILE);
-		outputStream.putNextEntry(zipEntry);
-		outputStream.setMethod(ZipOutputStream.DEFLATED);
-		writeDOMtoStream(doc, outputStream);
-		outputStream.flush();
-		outputStream.closeEntry();
-	}
-
-	/**
-	 * Writes the provided XML document out to the specified output stream.
-	 * 
-	 * doc - the document to be written outputStream - the stream to which the document is to be written
-	 */
-	private void writeDOMtoStream(Document doc, OutputStream outputStream) {
-		// Prepare the DOM document for writing
-		// DOMSource - Acts as a holder for a transformation Source tree in the
-		// form of a Document Object Model (DOM) tree
-		Source source = new DOMSource(doc);
-
-		// StreamResult - Acts as an holder for a XML transformation result
-		// Prepare the output stream
-		Result result = new StreamResult(outputStream);
-
-		// An instance of this class can be obtained with the
-		// TransformerFactory.newTransformer method. This instance may
-		// then be used to process XML from a variety of sources and write
-		// the transformation output to a variety of sinks
-
-		Transformer xformer = null;
-		try {
-			xformer = TransformerFactory.newInstance().newTransformer();
-			xformer.setOutputProperty(TRANSFORM_PROPERTY_VERSION, XML_VERSION);
-			xformer.transform(source, result);
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-		} catch (TransformerFactoryConfigurationError e) {
-			e.printStackTrace();
-		} catch (TransformerException e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	private Document createTaskListDocument() {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db;
-		Document doc = null;
-
-		try {
-			db = dbf.newDocumentBuilder();
-			doc = db.newDocument();
-		} catch (ParserConfigurationException e) {
-			// FIXME propagate exception?
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not create document", e));
-			return doc;
+		if (delegatingExternalizer.getErrorStatus() != null) {
+			StatusHandler.log(delegatingExternalizer.getErrorStatus());
 		}
 
 		return doc;
 	}
 
-	private Element createTaskListRoot(Document doc) {
-		Element root = doc.createElement(ELEMENT_TASK_LIST);
-		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
-		doc.appendChild(root);
-		return root;
+	private void writeDocument(Document doc, OutputStream outputStream) throws CoreException {
+		Source source = new DOMSource(doc);
+		Result result = new StreamResult(outputStream);
+		try {
+			Transformer xformer = TransformerFactory.newInstance().newTransformer();
+			xformer.setOutputProperty(TRANSFORM_PROPERTY_VERSION, XML_VERSION);
+			xformer.transform(source, result);
+		} catch (TransformerException e) {
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed write task list",
+					e));
+		}
 	}
 
-//	/**
-//	 * Reads the Query from the specified Node. If taskList is not null, then also adds this query to the TaskList
-//	 * 
-//	 * @throws TaskExternalizationException
-//	 */
-//	private IRepositoryQuery readQuery(TaskList taskList, Node child) {
-//		RepositoryQuery query = null;
-//		for (AbstractTaskListFactory externalizer : externalizers) {
-//			Set<String> queryTagNames = externalizer.getQueryElementNames();
-//			if (queryTagNames != null && queryTagNames.contains(child.getNodeName())) {
-//				Element childElement = (Element) child;
-//				// TODO: move this stuff into externalizer
-//				String repositoryUrl = childElement.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
-//				String queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);
-//				if (queryString.length() == 0) { // fallback for legacy
-//					queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY);
-//				}
-//				String label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_NAME);
-//				if (label.length() == 0) { // fallback for legacy
-//					label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
-//				}
-//
-//				query = externalizer.createQuery(repositoryUrl, queryString, label, childElement);
-//				if (query != null) {
-//					if (childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null
-//							&& !childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
-//						query.setLastSynchronizedStamp(childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
-//					}
-//
-//					String handle = childElement.getAttribute(DelegatingTaskExternalizer.KEY_HANDLE);
-//					if (handle.length() > 0) {
-//						query.setHandleIdentifier(handle);
-//					}
-//				}
-//
-//				// add created Query to the TaskList and read QueryHits (Tasks related to the Query)
-//				if (taskList != null) {
-//					if (query != null) {
-//						taskList.addQuery(query);
-//					}
-//
-//					NodeList queryChildren = child.getChildNodes();
-//					delagatingExternalizer.readTaskReferences(query, queryChildren, taskList);
-//				}
-//
-//				break;
-//			}
-//		}
-//		if (query == null) {
-//			orphanedQueryNodes.add(child);
-//		}
-//
-//		return query;
-//	}
+	private Document createDocument() throws CoreException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;
+		try {
+			db = dbf.newDocumentBuilder();
+			return db.newDocument();
+		} catch (ParserConfigurationException e) {
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Failed to create document", e));
+		}
+	}
 
 	public void readTaskList(TaskList taskList, File inFile) throws CoreException {
 		if (!inFile.exists()) {
@@ -290,7 +195,7 @@ public class TaskListExternalizer {
 		delegatingExternalizer.reset();
 		orphanedNodes.clear();
 
-		Document doc = openAsDOM(inFile);
+		Document doc = openTaskList(inFile);
 		Element root = doc.getDocumentElement();
 		readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 		if (readVersion.equals(VALUE_VERSION_1_0_0)) {
@@ -372,31 +277,40 @@ public class TaskListExternalizer {
 	 * @throws CoreException
 	 * 
 	 */
-	private Document openAsDOM(File inputFile) throws CoreException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = null;
+	private Document openTaskList(File inputFile) throws CoreException {
+		InputStream in = null;
 		try {
-			builder = factory.newDocumentBuilder();
-			InputStream inputStream = null;
 			if (inputFile.getName().endsWith(ITasksCoreConstants.FILE_EXTENSION)) {
-				inputStream = new ZipInputStream(new FileInputStream(inputFile));
-				ZipEntry entry = ((ZipInputStream) inputStream).getNextEntry();
+				in = new ZipInputStream(new FileInputStream(inputFile));
+				ZipEntry entry = ((ZipInputStream) in).getNextEntry();
 				while (entry != null) {
 					if (ITasksCoreConstants.OLD_TASK_LIST_FILE.equals(entry.getName())) {
 						break;
 					}
-					entry = ((ZipInputStream) inputStream).getNextEntry();
+					entry = ((ZipInputStream) in).getNextEntry();
 				}
 				if (entry == null) {
 					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							ERROR_TASKLIST_READ + ": missing valid entry for the task list"));
+							"Task list file contains no entry for the task list"));
 				}
 			} else {
-				inputStream = new FileInputStream(inputFile);
+				in = new FileInputStream(inputFile);
 			}
-			return builder.parse(inputStream);
+
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			return builder.parse(in);
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, ERROR_TASKLIST_READ, e));
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Failed to close task list", e));
+				}
+			}
 		}
 	}
 

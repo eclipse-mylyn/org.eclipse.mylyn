@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 /**
  * @author Steffen Pingel
  */
-public class TasksModel implements IRepositoryModel {
+public class RepositoryModel implements IRepositoryModel {
 
 	private int queryCount;
 
@@ -34,7 +34,7 @@ public class TasksModel implements IRepositoryModel {
 
 	private final TaskList taskList;
 
-	public TasksModel(TaskList taskList, IRepositoryManager repositoryManager) {
+	public RepositoryModel(TaskList taskList, IRepositoryManager repositoryManager) {
 		this.taskList = taskList;
 		this.repositoryManager = repositoryManager;
 		initialize();
@@ -116,6 +116,10 @@ public class TasksModel implements IRepositoryModel {
 			repositoryManager.addRepository(taskRepository);
 		}
 		return taskRepository;
+	}
+
+	public synchronized void clear() {
+		taskByHandle.clear();
 	}
 
 }

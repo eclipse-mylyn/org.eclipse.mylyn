@@ -53,7 +53,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.TasksModel;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.externalization.DelegatingTaskExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -121,9 +121,9 @@ public class TaskListElementImporter {
 
 	private static final String MESSAGE_RESTORE = "Could not read task list.  Consider restoring via File -> Import -> Mylyn Task Data";
 
-	public TaskListElementImporter(TaskRepositoryManager repositoryManager, TasksModel tasksModel) {
+	public TaskListElementImporter(TaskRepositoryManager repositoryManager, RepositoryModel repositoryModel) {
 		this.repositoryManager = repositoryManager;
-		this.delagatingExternalizer = new DelegatingTaskExternalizer(tasksModel, repositoryManager);
+		this.delagatingExternalizer = new DelegatingTaskExternalizer(repositoryModel, repositoryManager);
 		this.repositoriesExternalizer = new TaskRepositoriesExternalizer();
 		this.contextExternalizer = new InteractionContextExternalizer();
 	}

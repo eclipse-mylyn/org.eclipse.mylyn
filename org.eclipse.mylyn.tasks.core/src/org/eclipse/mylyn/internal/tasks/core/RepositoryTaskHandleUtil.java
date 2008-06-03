@@ -25,7 +25,7 @@ public class RepositoryTaskHandleUtil {
 		if (repositoryUrl == null) {
 			return MISSING_REPOSITORY + HANDLE_DELIM + taskId;
 		} else {
-			return repositoryUrl + HANDLE_DELIM + taskId;
+			return (repositoryUrl + HANDLE_DELIM + taskId).intern();
 		}
 	}
 

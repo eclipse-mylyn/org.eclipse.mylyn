@@ -59,6 +59,7 @@ import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryExternalizationParticipant;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
@@ -66,7 +67,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.TasksModel;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
@@ -376,7 +376,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TaskList taskList;
 
-	private static TasksModel tasksModel;
+	private static RepositoryModel repositoryModel;
 
 	private class TasksUiInitializationJob extends UIJob {
 
@@ -506,12 +506,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			externalizationManager.addParticipant(repositoryParticipant);
 
 			taskList = new TaskList();
-			tasksModel = new TasksModel(taskList, repositoryManager);
-			taskListExternalizer = new TaskListExternalizer(tasksModel, repositoryManager);
-			TaskListElementImporter taskListImporter = new TaskListElementImporter(repositoryManager, tasksModel);
+			repositoryModel = new RepositoryModel(taskList, repositoryManager);
+			taskListExternalizer = new TaskListExternalizer(repositoryModel, repositoryManager);
+			TaskListElementImporter taskListImporter = new TaskListElementImporter(repositoryManager, repositoryModel);
 
-			taskListSaveParticipant = new TaskListExternalizationParticipant(taskList, taskListExternalizer,
-					externalizationManager, repositoryManager);
+			taskListSaveParticipant = new TaskListExternalizationParticipant(repositoryModel, taskList,
+					taskListExternalizer, externalizationManager, repositoryManager);
 			//externalizationManager.load(taskListSaveParticipant);
 			externalizationManager.addParticipant(taskListSaveParticipant);
 			taskList.addChangeListener(taskListSaveParticipant);
@@ -568,7 +568,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 
 			tasksJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager,
-					tasksModel);
+					repositoryModel);
 
 			taskActivityManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
 
@@ -1180,8 +1180,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return taskList;
 	}
 
-	public static TasksModel getRepositoryModel() {
-		return tasksModel;
+	public static RepositoryModel getRepositoryModel() {
+		return repositoryModel;
 	}
 
 	public void addSearchHandler(AbstractSearchHandler searchHandler) {

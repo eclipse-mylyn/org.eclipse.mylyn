@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
@@ -44,8 +45,12 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 
 	private final TaskRepositoryManager taskRepositoryManager;
 
-	public TaskListExternalizationParticipant(TaskList taskList, TaskListExternalizer taskListExternalizer,
-			ExternalizationManager manager, TaskRepositoryManager repositoryManager) {
+	private final RepositoryModel repositoryModel;
+
+	public TaskListExternalizationParticipant(RepositoryModel repositoryModel, TaskList taskList,
+			TaskListExternalizer taskListExternalizer, ExternalizationManager manager,
+			TaskRepositoryManager repositoryManager) {
+		this.repositoryModel = repositoryModel;
 		this.manager = manager;
 		this.taskList = taskList;
 		this.taskListWriter = taskListExternalizer;
@@ -79,6 +84,7 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 	 * public for tests
 	 */
 	public void resetTaskList() {
+		repositoryModel.clear();
 		taskList.reset();
 		prepareOrphanContainers();
 	}
