@@ -165,17 +165,19 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				}
 
 				public void run() {
-					if (job.getStatus() == null) {
-						if (job.getTask().equals(getTask())) {
-							refreshFormContent();
+					try {
+						if (job.getStatus() == null) {
+							if (job.getTask().equals(getTask())) {
+								refreshFormContent();
+							} else {
+								openNewTask(job.getTask());
+							}
 						} else {
-							openNewTask(job.getTask());
+							handleSubmitError(job);
 						}
-					} else {
-						handleSubmitError(job);
+					} finally {
+						showEditorBusy(false);
 					}
-
-					showEditorBusy(false);
 				}
 			});
 		}
