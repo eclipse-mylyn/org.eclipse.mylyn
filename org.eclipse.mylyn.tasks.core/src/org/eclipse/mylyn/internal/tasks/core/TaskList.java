@@ -62,10 +62,14 @@ public class TaskList implements ITaskList {
 		reset();
 	}
 
-	public void addCategory(TaskCategory category) throws IllegalArgumentException {
+	public void addCategory(TaskCategory category) {
 		Assert.isNotNull(category);
 		try {
 			lock();
+			if (categories.containsKey(category.getHandleIdentifier())) {
+				throw new IllegalArgumentException("Handle " + category.getHandleIdentifier()
+						+ " already exists in task list");
+			}
 			categories.put(category.getHandleIdentifier(), category);
 			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.ADDED));
 		} finally {
@@ -98,6 +102,10 @@ public class TaskList implements ITaskList {
 		Assert.isNotNull(query);
 		try {
 			lock();
+			if (queries.containsKey(query.getHandleIdentifier())) {
+				throw new IllegalArgumentException("Handle " + query.getHandleIdentifier()
+						+ " already exists in task list");
+			}
 			queries.put(query.getHandleIdentifier(), query);
 			delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.ADDED));
 		} finally {
