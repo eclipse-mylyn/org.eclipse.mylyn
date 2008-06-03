@@ -50,6 +50,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskAttachmentDropListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorAttachmentPart;
@@ -320,6 +321,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private TaskEditorOutlinePage outlinePage;
 
+	private TaskAttachmentDropListener defaultDropListener;
+
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label");
 		Assert.isNotNull(connectorKind);
@@ -389,7 +392,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	protected void createFormContent(final IManagedForm managedForm) {
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
-		registerDropListener(form);
+		registerDefaultDropListener(form);
 
 		try {
 			setReflow(false);
@@ -998,17 +1001,16 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		setTaskData(model.getTaskData());
 	}
 
-	private void registerDropListener(final Control control) {
+	public void registerDefaultDropListener(final Control control) {
 		DropTarget target = new DropTarget(control, DND.DROP_COPY | DND.DROP_DEFAULT);
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		final FileTransfer fileTransfer = FileTransfer.getInstance();
 		Transfer[] types = new Transfer[] { textTransfer, fileTransfer };
 		target.setTransfer(types);
-
-		// Adapted from eclipse.org DND Article by Veronika Irvine, IBM OTI Labs
-		// http://www.eclipse.org/articles/Article-SWT-DND/DND-in-SWT.html#_dt10D
-		// TODO EDITOR
-		//target.addDropListener(new RepositoryTaskEditorDropListener(this, fileTransfer, textTransfer, control));
+		if (defaultDropListener == null) {
+			defaultDropListener = new TaskAttachmentDropListener(this);
+		}
+		target.addDropListener(defaultDropListener);
 	}
 
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {

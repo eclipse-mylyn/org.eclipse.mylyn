@@ -14,6 +14,13 @@ import java.util.Date;
 
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -301,4 +308,13 @@ public class EditorUtil {
 			}
 		}
 	}
+
+	public static NewAttachmentWizardDialog openNewAttachmentWizard(AbstractTaskEditorPage page, Mode mode,
+			AbstractTaskAttachmentSource source) {
+		TaskAttributeMapper mapper = page.getModel().getTaskData().getAttributeMapper();
+		TaskAttribute attribute = mapper.createTaskAttachment(page.getModel().getTaskData());
+		return TasksUiInternal.openNewAttachmentWizard(page.getSite().getShell(), page.getTaskRepository(),
+				page.getTask(), attribute, mode, source);
+	}
+
 }
