@@ -38,7 +38,7 @@ public class TaskDataStore {
 		this.externalizer = new TaskDataExternalizer(taskRepositoryManager);
 	}
 
-	public void discardEdits(File file) throws CoreException {
+	public synchronized void discardEdits(File file) throws CoreException {
 		TaskDataState state = readState(file);
 		if (state != null) {
 			state.setEditsData(null);
@@ -46,7 +46,7 @@ public class TaskDataStore {
 		writeState(file, state);
 	}
 
-	public TaskDataState getTaskDataState(File file) throws CoreException {
+	public synchronized TaskDataState getTaskDataState(File file) throws CoreException {
 		return readState(file);
 	}
 
@@ -150,7 +150,7 @@ public class TaskDataStore {
 //		writeState(file, state);
 //	}
 
-	public void putTaskData(File file, TaskDataState state) throws CoreException {
+	public synchronized void putTaskData(File file, TaskDataState state) throws CoreException {
 		writeState(file, state);
 	}
 

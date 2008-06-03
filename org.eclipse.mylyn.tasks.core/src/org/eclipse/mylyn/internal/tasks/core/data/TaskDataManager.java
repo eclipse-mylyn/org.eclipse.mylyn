@@ -534,7 +534,7 @@ public class TaskDataManager implements ITaskDataManager {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		// legacy support
-		if (!getFile(task, task.getConnectorKind()).exists()) {
+		if (task.getClass() != TaskTask.class) {
 			setTaskReadDeprecated(task, read);
 			return;
 		}
