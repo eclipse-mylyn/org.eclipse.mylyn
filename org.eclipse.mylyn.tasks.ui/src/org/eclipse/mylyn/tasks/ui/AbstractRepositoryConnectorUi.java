@@ -43,7 +43,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	private static final String LABEL_TASK_DEFAULT = "Task";
 
-	private boolean customNotificationHandling = false;
+	private final boolean customNotificationHandling = false;
 
 	/**
 	 * @return the unique type of the repository, e.g. "bugzilla"
@@ -214,11 +214,6 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int textOffset, int lineOffset) {
 		return null;
-	}
-
-	@Deprecated
-	public void setCustomNotificationHandling(boolean customNotifications) {
-		this.customNotificationHandling = customNotifications;
 	}
 
 	/**

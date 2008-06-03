@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
@@ -77,10 +76,6 @@ public class TasksUiExtensionReader {
 	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically";
 
 	public static final String ELMNT_REPOSITORY_CONNECTOR = "connectorCore";
-
-	public static final String ATTR_USER_MANAGED = "userManaged";
-
-	public static final String ATTR_CUSTOM_NOTIFICATIONS = "customNotifications";
 
 	public static final String ELMNT_REPOSITORY_LINK_PROVIDER = "linkProvider";
 
@@ -352,14 +347,6 @@ public class TasksUiExtensionReader {
 			if (connectorCore instanceof AbstractRepositoryConnector) {
 				AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) connectorCore;
 				TasksUiPlugin.getRepositoryManager().addRepositoryConnector(repositoryConnector);
-				if (repositoryConnector instanceof AbstractLegacyRepositoryConnector) {
-					((AbstractLegacyRepositoryConnector) repositoryConnector).init(TasksUiInternal.getTaskList());
-					String userManagedString = element.getAttribute(ATTR_USER_MANAGED);
-					if (userManagedString != null) {
-						boolean userManaged = Boolean.parseBoolean(userManagedString);
-						((AbstractLegacyRepositoryConnector) repositoryConnector).setUserManaged(userManaged);
-					}
-				}
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core "
 						+ connectorCore.getClass().getCanonicalName()));
@@ -375,12 +362,6 @@ public class TasksUiExtensionReader {
 			if (connectorUiObject instanceof AbstractRepositoryConnectorUi) {
 				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi) connectorUiObject;
 				TasksUiPlugin.getDefault().addRepositoryConnectorUi(connectorUi);
-
-				String customNotificationsString = element.getAttribute(ATTR_CUSTOM_NOTIFICATIONS);
-				if (customNotificationsString != null) {
-					boolean customNotifications = Boolean.parseBoolean(customNotificationsString);
-					connectorUi.setCustomNotificationHandling(customNotifications);
-				}
 
 				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
 				if (iconPath != null) {

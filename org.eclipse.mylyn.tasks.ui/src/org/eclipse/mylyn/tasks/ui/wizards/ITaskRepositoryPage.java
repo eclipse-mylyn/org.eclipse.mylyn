@@ -17,8 +17,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public interface ITaskRepositoryPage extends IWizardPage {
 
-	public abstract TaskRepository createTaskRepository();
-
 	public abstract void applyTo(TaskRepository repository);
 
 	public abstract String getRepositoryUrl();
