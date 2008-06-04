@@ -299,7 +299,12 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			numCommentsAttribute.setValue("" + commentNum);
 
 			updateAttachmentMetaData();
-			collector.accept(repositoryTaskData);
+			TaskAttribute attrCreation = repositoryTaskData.getRoot().getAttribute(
+					BugzillaAttribute.CREATION_TS.getKey());
+			// Guard against empty data sets
+			if (attrCreation != null && !attrCreation.equals("")) {
+				collector.accept(repositoryTaskData);
+			}
 			break;
 		case BLOCKED:
 			// handled similarly to DEPENDSON

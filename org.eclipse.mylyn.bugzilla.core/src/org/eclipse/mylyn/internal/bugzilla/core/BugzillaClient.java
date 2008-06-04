@@ -461,17 +461,18 @@ public class BugzillaClient {
 		final String idString = String.valueOf(id);
 		Set<String> data = new HashSet<String>();
 		data.add(idString);
-
+		final TaskData[] retrievedData = new TaskData[1];
 		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
 				getRepositoryConfiguration().configureTaskData(taskData);
+				retrievedData[0] = taskData;
 			}
 		};
 
-		Map<String, TaskData> returnedData = getTaskData(data, collector, mapper, monitor);
+		getTaskData(data, collector, mapper, monitor);
 
-		return returnedData.get(idString);
+		return retrievedData[0];
 
 	}
 
@@ -545,11 +546,11 @@ public class BugzillaClient {
 				BugzillaAttribute.RESOLUTION, BugzillaAttribute.BUG_ID, BugzillaAttribute.REP_PLATFORM,
 				BugzillaAttribute.PRODUCT, BugzillaAttribute.OP_SYS, BugzillaAttribute.COMPONENT,
 				BugzillaAttribute.VERSION, BugzillaAttribute.PRIORITY, BugzillaAttribute.BUG_SEVERITY,
-				BugzillaAttribute.ASSIGNED_TO, BugzillaAttribute.TARGET_MILESTONE,
-				BugzillaAttribute.REPORTER, BugzillaAttribute.DEPENDSON, BugzillaAttribute.BLOCKED,
-				BugzillaAttribute.BUG_FILE_LOC, BugzillaAttribute.NEWCC, BugzillaAttribute.KEYWORDS,
-				BugzillaAttribute.CC, BugzillaAttribute.NEW_COMMENT, BugzillaAttribute.QA_CONTACT,
-				BugzillaAttribute.STATUS_WHITEBOARD, BugzillaAttribute.DEADLINE };
+				BugzillaAttribute.ASSIGNED_TO, BugzillaAttribute.TARGET_MILESTONE, BugzillaAttribute.REPORTER,
+				BugzillaAttribute.DEPENDSON, BugzillaAttribute.BLOCKED, BugzillaAttribute.BUG_FILE_LOC,
+				BugzillaAttribute.NEWCC, BugzillaAttribute.KEYWORDS, BugzillaAttribute.CC,
+				BugzillaAttribute.NEW_COMMENT, BugzillaAttribute.QA_CONTACT, BugzillaAttribute.STATUS_WHITEBOARD,
+				BugzillaAttribute.DEADLINE };
 
 		for (BugzillaAttribute element : reportElements) {
 			BugzillaTaskDataHandler.createAttribute(existingReport, element);
@@ -1038,8 +1039,8 @@ public class BugzillaClient {
 			if (removeCC != null && removeCC.size() > 0) {
 				String[] s = new String[removeCC.size()];
 				fields.put(KEY_CC, new NameValuePair(KEY_CC, toCommaSeparatedList(removeCC.toArray(s))));
-				fields.put(BugzillaAttribute.REMOVECC.getKey(), new NameValuePair(
-						BugzillaAttribute.REMOVECC.getKey(), VAL_TRUE));
+				fields.put(BugzillaAttribute.REMOVECC.getKey(), new NameValuePair(BugzillaAttribute.REMOVECC.getKey(),
+						VAL_TRUE));
 			}
 		}
 
@@ -1218,8 +1219,8 @@ public class BugzillaClient {
 		return null;
 	}
 
-	public Map<String, TaskData> getTaskData(Set<String> taskIds, final TaskDataCollector collector,
-			final TaskAttributeMapper mapper, final IProgressMonitor monitor) throws IOException, CoreException {
+	public void getTaskData(Set<String> taskIds, final TaskDataCollector collector, final TaskAttributeMapper mapper,
+			final IProgressMonitor monitor) throws IOException, CoreException {
 		GzipPostMethod method = null;
 		HashMap<String, TaskData> taskDataMap = new HashMap<String, TaskData>();
 		// make a copy to modify set
@@ -1237,7 +1238,7 @@ public class BugzillaClient {
 				NameValuePair[] formData = new NameValuePair[idsToRetrieve.size() + 2];
 
 				if (idsToRetrieve.size() == 0) {
-					return taskDataMap;
+					return;
 				}
 
 				itr = idsToRetrieve.iterator();
@@ -1272,7 +1273,7 @@ public class BugzillaClient {
 									@Override
 									public void accept(TaskData taskData) {
 										getRepositoryConfiguration().configureTaskData(taskData);
-										((TaskDataCollector) collector).accept(taskData);
+										collector.accept(taskData);
 										monitor.worked(1);
 									}
 								};
@@ -1299,8 +1300,6 @@ public class BugzillaClient {
 				}
 			}
 		}
-
-		return taskDataMap;
 	}
 
 	public String getConfigurationTimestamp(IProgressMonitor monitor) throws CoreException {

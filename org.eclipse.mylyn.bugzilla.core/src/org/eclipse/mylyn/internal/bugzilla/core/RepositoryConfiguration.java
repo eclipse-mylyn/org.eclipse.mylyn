@@ -17,9 +17,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -483,8 +480,8 @@ public class RepositoryConfiguration implements Serializable {
 			try {
 				status = BUGZILLA_REPORT_STATUS.valueOf(attributeStatus.getValue());
 			} catch (RuntimeException e) {
-				StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Unrecognized status: "
-						+ attributeStatus.getValue(), e));
+//				StatusHandler.log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, "Unrecognized status: "
+//						+ attributeStatus.getValue(), e));
 				status = BUGZILLA_REPORT_STATUS.NEW;
 			}
 		}

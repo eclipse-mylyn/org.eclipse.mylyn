@@ -17,6 +17,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -120,6 +121,10 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			int bugId = BugzillaRepositoryConnector.getBugId(taskId);
 			TaskData taskData;
 			taskData = client.getTaskData(bugId, getAttributeMapper(repository), monitor);
+			if (taskData == null) {
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						"Task data could not be retrieved. Please re-synchronize task"));
+			}
 			return taskData;
 
 		} catch (IOException e) {
