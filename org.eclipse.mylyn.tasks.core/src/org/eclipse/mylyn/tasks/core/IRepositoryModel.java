@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-
 /**
  * @since 3.0
  * @author Steffen Pingel
@@ -20,10 +18,6 @@ public interface IRepositoryModel {
 	public abstract IRepositoryQuery createRepositoryQuery(TaskRepository taskRepository);
 
 	public abstract ITask createTask(TaskRepository taskRepository, String taskId);
-
-	public abstract ITaskAttachment createTaskAttachment(TaskAttribute taskAttribute);
-
-	public abstract ITaskComment createTaskComment(TaskAttribute taskAttribute);
 
 	public abstract ITask getTask(TaskRepository taskRepository, String taskId);
 

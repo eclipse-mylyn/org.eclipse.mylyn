@@ -19,12 +19,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -40,9 +40,9 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 
 	private final List<TaskListNotification> notificationQueue = new ArrayList<TaskListNotification>();
 
-	private final IRepositoryModel repositoryModel;
+	private final RepositoryModel repositoryModel;
 
-	public TaskListNotifier(IRepositoryModel repositoryModel, TaskDataManager taskDataManager) {
+	public TaskListNotifier(RepositoryModel repositoryModel, TaskDataManager taskDataManager) {
 		this.repositoryModel = repositoryModel;
 		this.taskDataManager = taskDataManager;
 		this.taskDataManager.addListener(this);

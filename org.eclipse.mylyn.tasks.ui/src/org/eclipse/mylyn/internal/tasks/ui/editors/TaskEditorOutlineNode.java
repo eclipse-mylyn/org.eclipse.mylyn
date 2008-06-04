@@ -12,11 +12,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.util.Assert;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * A node for the tree in {@link TaskEditorOutlinePage}.
@@ -45,7 +45,7 @@ public class TaskEditorOutlineNode {
 	private static TaskEditorOutlineNode createNode(TaskAttribute taskAttribute) {
 		String type = taskAttribute.getMetaData().getType();
 		if (TaskAttribute.TYPE_COMMENT.equals(type)) {
-			ITaskComment taskComment = TasksUi.getRepositoryModel().createTaskComment(taskAttribute);
+			ITaskComment taskComment = TasksUiPlugin.getRepositoryModel().createTaskComment(taskAttribute);
 			if (taskComment != null) {
 				taskAttribute.getTaskData().getAttributeMapper().updateTaskComment(taskComment, taskAttribute);
 				StringBuilder sb = new StringBuilder();

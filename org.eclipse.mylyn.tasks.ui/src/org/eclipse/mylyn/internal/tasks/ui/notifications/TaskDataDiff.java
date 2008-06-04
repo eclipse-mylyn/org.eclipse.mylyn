@@ -12,7 +12,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.tasks.core.IRepositoryModel;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -35,9 +35,9 @@ public class TaskDataDiff {
 
 	private final Set<TaskAttributeDiff> changedAttributes = new LinkedHashSet<TaskAttributeDiff>();
 
-	private final IRepositoryModel repositoryModel;
+	private final RepositoryModel repositoryModel;
 
-	public TaskDataDiff(IRepositoryModel repositoryModel, TaskData newTaskData, TaskData oldTaskData) {
+	public TaskDataDiff(RepositoryModel repositoryModel, TaskData newTaskData, TaskData oldTaskData) {
 		Assert.isNotNull(repositoryModel);
 		Assert.isNotNull(newTaskData);
 		this.repositoryModel = repositoryModel;
