@@ -44,33 +44,48 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 		return getSelectedBundleGroup() != null;
 	}
 
-	public IBundleGroup getSelectedBundleGroup() {
+	public IBundleGroup[] getSelectedBundleGroup() {
 		IWizardPage page = getContainer().getCurrentPage();
 		if (page instanceof SelectProductPage) {
-			if (page.isPageComplete() && !((SelectProductPage)page).canFlipToNextPage()) {
-				return ((SelectProductPage)page).getSelectedBundleGroup();
+			if (page.isPageComplete() && !((SelectProductPage) page).canFlipToNextPage()) {
+				return ((SelectProductPage) page).getSelectedBundleGroups();
 			}
 		} else if (page instanceof SelectFeaturePage) {
 			if (page.isPageComplete()) {
-				return ((SelectFeaturePage)page).getSelectedBundleGroup();
-			}			
+				return ((SelectFeaturePage) page).getSelectedBundleGroups();
+			}
 		}
 		return null;
 	}
-	
+
 	@Override
 	public boolean performFinish() {
-		final IBundleGroup bundle = getSelectedBundleGroup();
-		Assert.isNotNull(bundle);
-		
+		final IBundleGroup[] bundles = getSelectedBundleGroup();
+		Assert.isNotNull(bundles);
+
 		// delay run this until after the dialog has been closed
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				TasksBugsPlugin.getTaskErrorReporter().handle(new FeatureStatus(bundle));
-			}			
+				String prefix = bundles[0].getIdentifier();
+				for (int i = 1; i < bundles.length; i++) {
+					prefix = getCommonPrefix(prefix, bundles[i].getIdentifier());
+				}
+				TasksBugsPlugin.getTaskErrorReporter().handle(new FeatureStatus(prefix, bundles));
+			}
 		});
-		
+
 		return true;
+	}
+
+	private static String getCommonPrefix(String s1, String s2) {
+		int len = Math.min(s1.length(), s2.length());
+		StringBuffer prefix = new StringBuffer(len);
+		for (int i = 0; i < len; i++) {
+			if (s1.charAt(i) == s2.charAt(i)) {
+				prefix.append(s1.charAt(i));
+			}
+		}
+		return prefix.toString();
 	}
 
 }

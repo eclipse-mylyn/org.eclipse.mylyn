@@ -23,7 +23,7 @@
    <extension
          point="org.eclipse.mylyn.commons.core.errorReporters">
       <errorReporter
-            class="org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin$Reporter"
+            class="org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin$DialogReporter"
             id="org.eclipse.mylyn.tasks.bugs.errorReporter"
             label="Report Error as Bug">
       </errorReporter>

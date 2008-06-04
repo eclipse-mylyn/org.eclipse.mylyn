@@ -12,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IBundleGroup;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -28,7 +27,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
@@ -40,7 +39,7 @@ import org.eclipse.ui.branding.IBundleGroupConstants;
  */
 public class SelectFeaturePage extends WizardPage {
 
-	private static final int TABLE_HEIGHT = IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH;
+	private static final int TABLE_HEIGHT = 200;
 
 	private IBundleGroup selectedBundleGroup;
 
@@ -74,7 +73,11 @@ public class SelectFeaturePage extends WizardPage {
 		}
 
 		TableViewer viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).hint(SWT.DEFAULT, TABLE_HEIGHT).applyTo(viewer.getControl());
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.FILL)
+				.grab(true, true)
+				.hint(SWT.DEFAULT, TABLE_HEIGHT)
+				.applyTo(viewer.getControl());
 		viewer.setContentProvider(new IStructuredContentProvider() {
 
 			public Object[] getElements(Object inputElement) {
@@ -98,7 +101,7 @@ public class SelectFeaturePage extends WizardPage {
 				}
 				return null;
 			}
-			
+
 			@Override
 			public String getText(Object element) {
 				if (element instanceof IBundleGroup) {
@@ -109,7 +112,7 @@ public class SelectFeaturePage extends WizardPage {
 			}
 
 		});
-		viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());
+		viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -150,8 +153,8 @@ public class SelectFeaturePage extends WizardPage {
 		super.dispose();
 	}
 
-	public IBundleGroup getSelectedBundleGroup() {
-		return selectedBundleGroup;
+	public IBundleGroup[] getSelectedBundleGroups() {
+		return new IBundleGroup[] { selectedBundleGroup };
 	}
 
 }

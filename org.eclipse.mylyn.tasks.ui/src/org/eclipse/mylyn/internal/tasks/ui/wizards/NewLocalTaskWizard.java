@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -54,17 +53,16 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		LocalTask task = TasksUiInternal.createNewLocalTask(null);
-		if (taskSelection instanceof TaskSelection) {
-			task.setSummary(((TaskSelection) taskSelection).getLegacyTaskData().getSummary());
-			task.setNotes(((TaskSelection) taskSelection).getLegacyTaskData().getDescription());
+		if (taskSelection != null) {
+			if (taskSelection.getSummary() != null) {
+				task.setSummary(taskSelection.getSummary());
+			}
+			if (taskSelection.getDescription() != null) {
+				task.setNotes(taskSelection.getDescription());
+			}
 		}
-		// FIXME 3.0 TaskData support
-		if (task != null) {
-			TasksUiUtil.openTask(task);
-			return true;
-		} else {
-			return false;
-		}
+		TasksUiUtil.openTask(task);
+		return true;
 	}
 
 }

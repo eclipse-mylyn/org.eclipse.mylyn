@@ -19,8 +19,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Steffen Pingel
@@ -37,27 +37,25 @@ public class ReportErrorPage extends WizardPage {
 		super("reportError");
 		this.mapper = mapper;
 		this.status = status;
-		setTitle("Unexpected Error");
-		setMessage("An unexcpeted error has occured");
+		setTitle("Report as Bug");
+		setMessage("An unexpected error has occured in plug-in " + status.getPlugin() + "");
 	}
 
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, true));
 
-		Group errorGroup = new Group(composite, SWT.NONE);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(errorGroup);
-		errorGroup.setText("Error");
-		errorGroup.setLayout(new GridLayout(1, true));
+//		Group errorGroup = new Group(composite, SWT.NONE);
+//		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(errorGroup);
+//		errorGroup.setText("Details");
+//		errorGroup.setLayout(new GridLayout(1, true));
 
-		Label label = new Label(errorGroup, SWT.NONE);
-		label.setText(status.getMessage());
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("Details:");
 
-		label = new Label(composite, SWT.NONE);
-		label.setText("Plug-in: " + status.getPlugin());
-
-//		Link link = new Link(composite, SWT.NONE);
-//		link.setText("<a href=\"errorlog\">Show in error log</a>");
+		Text text = new Text(composite, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+		text.setText(status.getMessage());
+		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(text);
 
 		// space
 		new Label(composite, SWT.NONE);

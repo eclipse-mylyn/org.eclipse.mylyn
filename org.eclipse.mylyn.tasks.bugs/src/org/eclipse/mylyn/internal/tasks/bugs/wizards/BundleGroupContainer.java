@@ -5,27 +5,39 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-
 package org.eclipse.mylyn.internal.tasks.bugs.wizards;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IBundleGroup;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 
 /**
+ * A container for features that map to the same name.
+ * 
  * @author Steffen Pingel
  */
-public class FeatureStatus extends Status {
+public class BundleGroupContainer {
 
-	private final IBundleGroup[] bundleGroups;
+	private final List<IBundleGroup> groups;
 
-	public FeatureStatus(String id, IBundleGroup[] bundleGroups) {
-		super(IStatus.INFO, id, "");
-		this.bundleGroups = bundleGroups;
+	private final String name;
+
+	public BundleGroupContainer(String name) {
+		this.name = name;
+		this.groups = new ArrayList<IBundleGroup>();
 	}
 
-	public IBundleGroup[] getBundleGroup() {
-		return bundleGroups;
+	public void addBundleGroup(IBundleGroup bundleGroup) {
+		groups.add(bundleGroup);
+	}
+
+	public List<IBundleGroup> getGroups() {
+		return groups;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

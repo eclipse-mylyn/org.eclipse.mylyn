@@ -10,15 +10,12 @@ package org.eclipse.mylyn.internal.tasks.bugs.wizards;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -38,7 +35,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.bugs.AttributeTaskMapper;
 import org.eclipse.mylyn.internal.tasks.bugs.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.bugs.PluginRepositoryMappingManager;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,58 +47,15 @@ import org.eclipse.ui.branding.IBundleGroupConstants;
  */
 public class SelectProductPage extends WizardPage {
 
-	private static final int TABLE_HEIGHT = IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH;
+	private static final int TABLE_HEIGHT = 200;
 
-	/**
-	 * A container for bundles that map to the same name.
-	 */
-	private class BundleGroupContainer {
-
-		private final IBundleGroup displayGroup;
-
-		private final List<IBundleGroup> groups;
-
-		private final String name;
-
-		public BundleGroupContainer(String name, IBundleGroup displayGroup) {
-			this.name = name;
-			this.displayGroup = displayGroup;
-			this.groups = new ArrayList<IBundleGroup>();
-			this.groups.add(displayGroup);
-		}
-
-		public IBundleGroup getDisplayGroup() {
-			return displayGroup;
-		}
-
-		public void addBundleGroup(IBundleGroup bundleGroup) {
-			for (IBundleGroup group : groups) {
-				if (group.getName().equals(bundleGroup.getName())) {
-					return;
-				}
-			}
-			groups.add(bundleGroup);
-		}
-		
-		public List<IBundleGroup> getGroups() {
-			return groups;
-		}
-
-		private String getName() {
-			return name;
-		}
-
-		public boolean requiresSelection() {
-			return groups.size() > 1;
-		}
-		
-	}
+	private static final String DEFAULT_CATEGORY = "Other";
 
 	private ImageRegistry imageRegistry;
 
 	private final PluginRepositoryMappingManager manager;
 
-	private BundleGroupContainer selectedBundleGroupContainer;
+	private FeatureGroup selectedFeatureGroup;
 
 	public SelectProductPage(String pageName, PluginRepositoryMappingManager manager) {
 		super(pageName);
@@ -111,7 +65,7 @@ public class SelectProductPage extends WizardPage {
 
 	@Override
 	public boolean canFlipToNextPage() {
-		return selectedBundleGroupContainer != null && selectedBundleGroupContainer.requiresSelection();
+		return selectedFeatureGroup != null && selectedFeatureGroup.requiresSelection();
 	}
 
 	public void createControl(Composite parent) {
@@ -121,10 +75,14 @@ public class SelectProductPage extends WizardPage {
 
 		imageRegistry = new ImageRegistry(getShell().getDisplay());
 
-		final Map<String, BundleGroupContainer> containerByName = getProducts();
+		final Map<String, FeatureGroup> containerByName = getProducts();
 
 		TableViewer viewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).hint(SWT.DEFAULT, TABLE_HEIGHT).applyTo(viewer.getControl());
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.FILL)
+				.grab(true, true)
+				.hint(SWT.DEFAULT, TABLE_HEIGHT)
+				.applyTo(viewer.getControl());
 		viewer.setContentProvider(new IStructuredContentProvider() {
 
 			public void dispose() {
@@ -142,8 +100,8 @@ public class SelectProductPage extends WizardPage {
 
 			@Override
 			public Image getImage(Object element) {
-				if (element instanceof BundleGroupContainer) {
-					BundleGroupContainer product = (BundleGroupContainer) element;
+				if (element instanceof FeatureGroup) {
+					FeatureGroup product = (FeatureGroup) element;
 					return imageRegistry.get(product.getName());
 				}
 				return null;
@@ -151,25 +109,28 @@ public class SelectProductPage extends WizardPage {
 
 			@Override
 			public String getText(Object element) {
-				if (element instanceof BundleGroupContainer) {
-					BundleGroupContainer product = (BundleGroupContainer) element;
+				if (element instanceof FeatureGroup) {
+					FeatureGroup product = (FeatureGroup) element;
+					if (product.getTitle() != null) {
+						return product.getName() + "\n  " + product.getTitle();
+					}
 					return product.getName();
 				}
 				return "";
 			}
 
 		});
-		viewer.setInput(TasksUi.getRepositoryManager().getRepositoryConnectors());
+		viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection.getFirstElement() instanceof BundleGroupContainer) {
-					selectedBundleGroupContainer = (BundleGroupContainer) selection.getFirstElement();
-					if (selectedBundleGroupContainer.requiresSelection()) {
+				if (selection.getFirstElement() instanceof FeatureGroup) {
+					selectedFeatureGroup = (FeatureGroup) selection.getFirstElement();
+					if (selectedFeatureGroup.requiresSelection()) {
 						setMessage(null);
 					} else {
-						setMessage(selectedBundleGroupContainer.getDisplayGroup().getDescription());
+						setMessage(selectedFeatureGroup.getDescription());
 					}
 					setPageComplete(true);
 				} else {
@@ -195,7 +156,18 @@ public class SelectProductPage extends WizardPage {
 		viewer.getTable().showSelection();
 		viewer.getTable().setFocus();
 
-		viewer.setSorter(new ViewerSorter());
+		viewer.setSorter(new ViewerSorter() {
+			@Override
+			public int compare(Viewer viewer, Object o1, Object o2) {
+				FeatureGroup g1 = (FeatureGroup) o1;
+				FeatureGroup g2 = (FeatureGroup) o2;
+				int i = g1.getCategory().compareTo(g2.getCategory());
+				if (i != 0) {
+					return i;
+				}
+				return g1.getName().compareTo(g2.getName());
+			}
+		});
 
 		setControl(composite);
 	}
@@ -218,8 +190,8 @@ public class SelectProductPage extends WizardPage {
 		return null;
 	}
 
-	private Map<String, BundleGroupContainer> getProducts() {
-		final Map<String, BundleGroupContainer> containerByName = new HashMap<String, BundleGroupContainer>();
+	private Map<String, FeatureGroup> getProducts() {
+		final Map<String, FeatureGroup> containerByName = new HashMap<String, FeatureGroup>();
 		IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();
 		if (providers != null) {
 			for (IBundleGroupProvider provider : providers) {
@@ -231,7 +203,7 @@ public class SelectProductPage extends WizardPage {
 		return containerByName;
 	}
 
-	private void addProduct(Map<String, BundleGroupContainer> containerByName, IBundleGroup bundleGroup) {
+	private void addProduct(Map<String, FeatureGroup> featureGroupByName, IBundleGroup bundleGroup) {
 		Map<String, String> attributes = manager.getAllAttributes(bundleGroup.getIdentifier());
 
 		AttributeTaskMapper mapper = new AttributeTaskMapper(attributes);
@@ -244,9 +216,26 @@ public class SelectProductPage extends WizardPage {
 			return;
 		}
 
-		String productName = attributes.get(IRepositoryConstants.BRANDING);
+		String productDescription = attributes.get(IRepositoryConstants.PRODUCT_DESCRIPTION);
+		if (productDescription == null) {
+			productDescription = bundleGroup.getDescription();
+		}
+
+		String productName = attributes.get(IRepositoryConstants.PRODUCT_NAME);
 		if (productName == null) {
 			productName = bundleGroup.getName();
+		}
+
+		String productTitle = attributes.get(IRepositoryConstants.PRODUCT_TITLE);
+
+		String productCategory = attributes.get(IRepositoryConstants.PRODUCT_CATEGORY);
+		if (productCategory == null) {
+			productCategory = DEFAULT_CATEGORY;
+		}
+
+		String branding = attributes.get(IRepositoryConstants.BRANDING);
+		if (branding == null) {
+			branding = bundleGroup.getName();
 		}
 
 		try {
@@ -257,25 +246,19 @@ public class SelectProductPage extends WizardPage {
 			return;
 		}
 
-		BundleGroupContainer container = containerByName.get(productName);
+		FeatureGroup container = featureGroupByName.get(productName);
 		if (container == null) {
-			container = new BundleGroupContainer(productName, bundleGroup);
-			containerByName.put(productName, container);
+			container = new FeatureGroup(productName, productDescription, productTitle, productCategory);
+			container.addBundleGroup(bundleGroup, branding);
+			featureGroupByName.put(productName, container);
 		} else {
-			container.addBundleGroup(bundleGroup);
+			container.addBundleGroup(bundleGroup, branding);
 		}
-	}
-	
-	public IBundleGroup getSelectedBundleGroup() {
-		if (selectedBundleGroupContainer != null) {
-			return selectedBundleGroupContainer.getGroups().get(0);
-		}
-		return null;
 	}
 
 	public IBundleGroup[] getSelectedBundleGroups() {
-		if (selectedBundleGroupContainer != null) {
-			return selectedBundleGroupContainer.getGroups().toArray(new IBundleGroup[0]);
+		if (selectedFeatureGroup != null) {
+			return selectedFeatureGroup.getBundleGroups().toArray(new IBundleGroup[0]);
 		}
 		return null;
 	}

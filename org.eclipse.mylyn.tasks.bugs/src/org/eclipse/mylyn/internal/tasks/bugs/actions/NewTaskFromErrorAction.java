@@ -11,16 +11,13 @@
 
 package org.eclipse.mylyn.internal.tasks.bugs.actions;
 
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.mylyn.internal.tasks.bugs.wizards.ErrorLogStatus;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.views.log.LogEntry;
 
 /**
@@ -71,18 +68,14 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 	}
 
 	private void createTask(LogEntry entry) {
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		boolean includeChildren = false;
-
-		if (entry.hasChildren()
-				&& MessageDialog.openQuestion(shell, "Report Bug", "Include children of this entry in the report?")) {
-			includeChildren = true;
-		}
-
 		StringBuilder sb = new StringBuilder();
-		buildDescriptionFromLogEntry(entry, sb, includeChildren);
+		buildDescriptionFromLogEntry(entry, sb, true);
 
-		Status status = new Status(entry.getSeverity(), entry.getPluginId(), entry.getMessage());
+		ErrorLogStatus status = new ErrorLogStatus(entry.getSeverity(), entry.getPluginId(), entry.getCode(),
+				entry.getMessage());
+		status.setDate(entry.getDate());
+		status.setStack(entry.getStack());
+		status.setLogSessionData(entry.getSession().getSessionData());
 		TasksBugsPlugin.getTaskErrorReporter().handle(status);
 	}
 
