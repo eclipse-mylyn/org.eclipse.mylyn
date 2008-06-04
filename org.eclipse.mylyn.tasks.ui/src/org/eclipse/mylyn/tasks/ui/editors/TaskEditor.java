@@ -499,13 +499,16 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	@Override
 	public void showBusy(boolean busy) {
-		if (busy) {
-			if (TasksUiInternal.isAnimationsEnabled()) {
-				editorBusyIndicator.start();
+		if (editorBusyIndicator != null) {
+			if (busy) {
+				if (TasksUiInternal.isAnimationsEnabled()) {
+					editorBusyIndicator.start();
+				}
+			} else {
+				editorBusyIndicator.stop();
 			}
-		} else {
-			editorBusyIndicator.stop();
 		}
+
 		if (getHeaderForm() != null && getHeaderForm().getForm() != null && !getHeaderForm().getForm().isDisposed()) {
 			Form form = getHeaderForm().getForm().getForm();
 			if (form != null && !form.isDisposed()) {
