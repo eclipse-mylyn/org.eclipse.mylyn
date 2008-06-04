@@ -83,7 +83,9 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 			try {
 				load(context.getRootPath(), monitor);
 			} catch (CoreException e) {
-				restoreSnapshot(dataFile);
+				if (dataFile != null) {
+					restoreSnapshot(dataFile);
+				}
 				load(context.getRootPath(), monitor);
 			}
 			break;
