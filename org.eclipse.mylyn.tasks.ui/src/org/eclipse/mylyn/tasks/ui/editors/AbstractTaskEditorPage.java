@@ -440,7 +440,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(getConnectorKind());
 			if (connectorUi == null) {
-				getTaskEditor().setMessage("The editor may not be fully loaded", IMessageProvider.INFORMATION,
+				getTaskEditor().setMessage("Synchronize to update editor contents", IMessageProvider.INFORMATION,
 						new HyperlinkAdapter() {
 							@Override
 							public void linkActivated(HyperlinkEvent e) {
