@@ -59,7 +59,10 @@ public interface ITaskActivityManager {
 	/** total elapsed time based on activation history */
 	public abstract long getElapsedTime(ITask task);
 
-	/** total elapsed time based on activation history between <code>start</code> and <code>end</code> */
+	/**
+	 * return the total elapsed time based on activation history between <code>start</code> and <code>end</code> If task
+	 * is null, the elapsed time for the range with no task active is returned
+	 */
 	public abstract long getElapsedTime(ITask task, Calendar start, Calendar end);
 
 	public abstract void addActivityListener(ITaskActivityListener listener);
