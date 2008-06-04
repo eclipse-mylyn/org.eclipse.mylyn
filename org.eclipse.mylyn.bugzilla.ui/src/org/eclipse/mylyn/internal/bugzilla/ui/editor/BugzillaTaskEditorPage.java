@@ -11,10 +11,13 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -28,6 +31,8 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
  * @since 3.0
  */
 public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
+
+	public static final String ID_PART_BUGZILLA_PLANNING = "org.eclipse.mylyn.bugzilla.ui.editors.part.planning";
 
 	public BugzillaTaskEditorPage(TaskEditor editor) {
 		super(editor, BugzillaCorePlugin.CONNECTOR_KIND);
@@ -43,6 +48,25 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				descriptors.remove(taskEditorPartDescriptor);
 				break;
 			}
+		}
+
+		// Add Bugzilla Planning part
+		try {
+			TaskData data = TasksUi.getTaskDataManager().getTaskData(getTask());
+			if (data != null) {
+				TaskAttribute attrEstimatedTime = data.getRoot().getMappedAttribute(
+						BugzillaAttribute.ESTIMATED_TIME.getKey());
+				if (attrEstimatedTime != null) {
+					descriptors.add(new TaskEditorPartDescriptor(ID_PART_BUGZILLA_PLANNING) {
+						@Override
+						public AbstractTaskEditorPart createPart() {
+							return new BugzillaPlanningEditorPart();
+						}
+					}.setPath(PATH_ATTRIBUTES));
+				}
+			}
+		} catch (CoreException e) {
+			// ignore
 		}
 
 		// Add the updated Bugzilla people part

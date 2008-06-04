@@ -17,7 +17,7 @@ public enum BugzillaAttribute {
 
 	STATUS_WHITEBOARD("Status Whiteboard:", "status_whiteboard", TaskAttribute.TYPE_LONG_RICH_TEXT, false, false),
 
-	ACTUAL_TIME("Hours Worked:", "actual_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	ACTUAL_TIME("Hours Worked:", "actual_time", TaskAttribute.TYPE_SHORT_TEXT, true, true),
 
 	ADD_COMMENT("Additional Comments:", "comment", TaskAttribute.TYPE_LONG_TEXT, true, false),
 
@@ -65,7 +65,7 @@ public enum BugzillaAttribute {
 
 	DATE("Date", "date", TaskAttribute.TYPE_DATE, false, false),
 
-	DEADLINE("Deadline:", "deadline", TaskAttribute.TYPE_SHORT_TEXT, true, true),
+	DEADLINE("Deadline:", "deadline", TaskAttribute.TYPE_DATE, true, false),
 
 	DELTA_TS("Modified:", "delta_ts", TaskAttribute.TYPE_DATE, true, false),
 

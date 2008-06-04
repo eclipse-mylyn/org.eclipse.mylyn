@@ -25,9 +25,13 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 	private static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
 
+	private static final String DATE_FORMAT_3 = "yyyy-MM-dd";
+
 	private static final String delta_ts_format = DATE_FORMAT_2;
 
 	private static final String creation_ts_format = DATE_FORMAT_1;
+
+	private static final String deadline_format = DATE_FORMAT_3;
 
 	/**
 	 * public for testing Bugzilla 2.18 uses DATE_FORMAT_1 but later versions use DATE_FORMAT_2 Using lowest common
@@ -86,6 +90,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 				parsedDate = new SimpleDateFormat(comment_creation_ts_format).parse(dateString);
 			} else if (attributeId.equals(BugzillaAttribute.DATE.getKey())) {
 				parsedDate = new SimpleDateFormat(attachment_creation_ts_format).parse(dateString);
+			} else if (attributeId.equals(BugzillaAttribute.DEADLINE.getKey())) {
+				parsedDate = new SimpleDateFormat(deadline_format).parse(dateString);
 			}
 		} catch (ParseException e) {
 			return null;
@@ -109,6 +115,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 				dateString = new SimpleDateFormat(comment_creation_ts_format).format(date);
 			} else if (attributeId.equals(BugzillaAttribute.DATE.getKey())) {
 				dateString = new SimpleDateFormat(attachment_creation_ts_format).format(date);
+			} else if (attributeId.equals(BugzillaAttribute.DEADLINE.getKey())) {
+				dateString = new SimpleDateFormat(deadline_format).format(date);
 			}
 
 			if (dateString == null) {
