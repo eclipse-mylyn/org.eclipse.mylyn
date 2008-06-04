@@ -742,10 +742,12 @@ public final class TaskRepository extends PlatformObject {
 		setProperty(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP, syncTime);
 	}
 
-	public void setProperty(String key, String value) {
-		String old = this.properties.get(key);
-		this.properties.put(key, value);
-		notifyChangeListeners(key, old, value);
+	public void setProperty(String key, String newValue) {
+		String oldValue = this.properties.get(key);
+		if ((oldValue != null && !oldValue.equals(newValue)) || (oldValue == null && newValue != null)) {
+			this.properties.put(key, newValue);
+			notifyChangeListeners(key, oldValue, newValue);
+		}
 	}
 
 	private void notifyChangeListeners(String key, String old, String value) {

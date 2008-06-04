@@ -629,6 +629,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private void loadTemplateRepositories() {
 		// Add standard local task repository
 		TaskRepository localRepository = getLocalTaskRepository();
+		// FIXME what does this line do?
 		localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
 
 		// Add the automatically created templates
@@ -734,7 +735,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	@SuppressWarnings("restriction")
 	public void setDataDirectory(final String newPath, IProgressMonitor monitor) throws CoreException {
-		externalizationManager.saveNow(false, monitor);
+		try {
+			externalizationManager.requestSaveAndWait(false);
+		} catch (InterruptedException e) {
+			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected exception", e));
+		}
+
 		loadDataDirectory(newPath);
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, newPath);
 		File newFile = new File(newPath, ITasksCoreConstants.CONTEXTS_DIRECTORY);
@@ -801,7 +807,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		File storeFile = getContextStoreDir();
 		ContextCorePlugin.getContextStore().setContextDirectory(storeFile);
 
-		externalizationManager.reLoad();
+		externalizationManager.load();
 		// TODO: Move management of template repositories to TaskRepositoryManager
 		loadTemplateRepositories();
 

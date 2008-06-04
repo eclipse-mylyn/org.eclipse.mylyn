@@ -13,11 +13,11 @@ package org.eclipse.mylyn.internal.tasks.core.externalization;
  */
 public interface IExternalizationContext {
 
-	public enum KIND {
+	public enum Kind {
 		SAVE, SNAPSHOT, LOAD;
 	}
 
-	public abstract KIND getKind();
+	public abstract Kind getKind();
 
 	public abstract String getRootPath();
 }

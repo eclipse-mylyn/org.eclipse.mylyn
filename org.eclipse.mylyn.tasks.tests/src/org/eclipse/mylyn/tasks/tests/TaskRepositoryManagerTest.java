@@ -131,7 +131,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		manager.addRepository(repository1);
 		manager.addRepository(repository2);
 		TasksUiPlugin.getDefault();
-		TasksUiPlugin.getExternalizationManager().reLoad();
+		TasksUiPlugin.getExternalizationManager().load();
 		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		if (manager.getRepositoryConnector("bugzilla") != null) {
@@ -160,7 +160,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repository1.setSynchronizationTimeStamp(dateString);
 		manager.addRepository(repository1);
 		TasksUiPlugin.getDefault();
-		TasksUiPlugin.getExternalizationManager().reLoad();
+		TasksUiPlugin.getExternalizationManager().load();
 		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TaskRepository temp = manager.getRepository(repository1.getConnectorKind(), repository1.getRepositoryUrl());
 		assertNotNull(temp);
@@ -211,7 +211,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repository.setProperty("owner", "euxx");
 		manager.addRepository(repository);
 		TasksUiPlugin.getDefault();
-		TasksUiPlugin.getExternalizationManager().reLoad();
+		TasksUiPlugin.getExternalizationManager().load();
 		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		TaskRepository temp = manager.getRepository(repository.getConnectorKind(), repository.getRepositoryUrl());
@@ -231,7 +231,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository1);
 		//manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TasksUiPlugin.getDefault();
-		TasksUiPlugin.getExternalizationManager().reLoad();
+		TasksUiPlugin.getExternalizationManager().load();
 		assertEquals("got: " + manager.getAllRepositories(), 2, manager.getAllRepositories().size());
 	}
 

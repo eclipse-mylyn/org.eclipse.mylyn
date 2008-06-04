@@ -10,12 +10,16 @@ package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -24,7 +28,7 @@ import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
-import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationContext.KIND;
+import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationContext.Kind;
 
 /**
  * @author Rob Elves
@@ -32,137 +36,142 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationCon
  */
 public class ExternalizationManager {
 
-	private ExternalizationJob saveJob;
+	private static final int SAVE_DELAY = 3000;
+
+	private final ExternalizationJob saveJob;
 
 	private IStatus loadStatus;
 
 	private String rootFolderPath;
 
-	private static boolean saveDisabled = false;
+	private static volatile boolean saveDisabled = false;
 
-	private final List<IExternalizationParticipant> externalizationParticipants = new ArrayList<IExternalizationParticipant>();
+	private final List<IExternalizationParticipant> externalizationParticipants;
 
 	private boolean forceSave = false;
 
 	public ExternalizationManager(String rootFolderPath) {
-		this.rootFolderPath = rootFolderPath;
+		Assert.isNotNull(rootFolderPath);
+		this.externalizationParticipants = new CopyOnWriteArrayList<IExternalizationParticipant>();
+		this.forceSave = false;
+		this.saveJob = createJob();
+		setRootFolderPath(rootFolderPath);
 	}
 
-	private ExternalizationJob createJob(String jobName, IExternalizationContext context) {
-		//create save job
-		ExternalizationJob job = new ExternalizationJob(jobName, context);
+	private ExternalizationJob createJob() {
+		ExternalizationJob job = new ExternalizationJob("Task List Save Job");
 		job.setUser(false);
 		job.setSystem(true);
 		return job;
 	}
 
 	public void addParticipant(IExternalizationParticipant participant) {
+		Assert.isNotNull(participant);
 		externalizationParticipants.add(participant);
 	}
 
-	public void reLoad() {
-		reset();
-		for (IExternalizationParticipant participant : externalizationParticipants) {
-			load(participant);
-		}
-	}
-
-	private void load(IExternalizationParticipant participant) {
+	public IStatus load() {
 		try {
 			saveDisabled = true;
-			IExternalizationContext loadContext = new LoadContext(rootFolderPath, participant);
-			ExternalizationJob job = createJob("Loading participant " + participant.getDescription(), loadContext);
-			job.setContext(loadContext);
-			// TODO: run async
-			job.run(new NullProgressMonitor());
-			//reschedule(job, loadContext);
+			loadStatus = null;
+
+			List<IStatus> statusList = new ArrayList<IStatus>();
+			IProgressMonitor monitor = Policy.monitorFor(null);
+			for (IExternalizationParticipant participant : externalizationParticipants) {
+				IStatus status = load(participant, monitor);
+				if (status != null) {
+					statusList.add(status);
+				}
+			}
+
+			if (statusList.size() > 0) {
+				loadStatus = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, IStatus.ERROR,
+						statusList.toArray(new IStatus[0]), "Failed to load Task List", null);
+			}
+			return loadStatus;
 		} finally {
 			saveDisabled = false;
 		}
 	}
 
-	public void setRootFolderPath(String rootFolderPath) {
-		this.rootFolderPath = rootFolderPath;
+	private IStatus load(final IExternalizationParticipant participant, final IProgressMonitor monitor) {
+		final IStatus[] result = new IStatus[1];
+		final ExternalizationContext context = new ExternalizationContext(Kind.LOAD, rootFolderPath);
+		ISchedulingRule rule = participant.getSchedulingRule();
+		try {
+			Job.getJobManager().beginRule(rule, monitor);
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					if (e instanceof CoreException) {
+						result[0] = ((CoreException) e).getStatus();
+					} else {
+						result[0] = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Load participant failed",
+								e);
+					}
+				}
+
+				public void run() throws Exception {
+					participant.execute(context, monitor);
+				}
+			});
+		} finally {
+			Job.getJobManager().endRule(rule);
+		}
+		return result[0];
 	}
 
-	public synchronized void requestSave() {
+	public void setRootFolderPath(String rootFolderPath) {
+		Assert.isNotNull(rootFolderPath);
+		this.rootFolderPath = rootFolderPath;
+		saveJob.setContext(new ExternalizationContext(Kind.SAVE, rootFolderPath));
+	}
 
-		ExternalizationContext saveContext = new ExternalizationContext(KIND.SAVE, rootFolderPath);
-
-		if (saveJob == null) {
-			saveJob = createJob("Saving participants", saveContext);
+	public void requestSave() {
+		if (!saveDisabled) {
+			if (!CoreUtil.TEST_MODE) {
+				saveJob.schedule(SAVE_DELAY);
+			} else {
+				saveJob.run(new NullProgressMonitor());
+			}
 		}
-
-		reschedule(saveJob, saveContext);
 	}
 
 	public void stop() {
-		if (saveJob != null) {
-			try {
-				// save job was running so will save dirty participants
-				saveJob.join();
-				return;
-			} catch (InterruptedException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Task List save on shutdown canceled."));
-			}
-		} else {
-			// save job wasn't running, save all dirty participants now
-			saveNow(false, new NullProgressMonitor());
+		try {
+			// run save job as early as possible
+			saveJob.wakeUp();
+			saveJob.join();
+		} catch (InterruptedException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+					"Task List save on shutdown canceled.", e));
 		}
-
 	}
 
-	public synchronized void saveNow(boolean force, IProgressMonitor monitor) {
-		monitor = Policy.monitorFor(monitor);
-		if (saveJob != null) {
-			saveJob.cancel();
-			saveJob = null;
-		}
+	public void requestSaveAndWait(boolean force) throws InterruptedException {
 		try {
 			forceSave = force;
-			ExternalizationJob job = createJob("Save Now", new ExternalizationContext(KIND.SAVE, rootFolderPath));
-			job.run(monitor);
+
+			saveJob.schedule();
+			saveJob.join();
 		} finally {
 			forceSave = false;
 		}
-	}
-
-	private void reschedule(ExternalizationJob job, IExternalizationContext context) {
-		if (!saveDisabled) {
-			if (!CoreUtil.TEST_MODE) {
-				job.setContext(context);
-				job.schedule(3000);
-			} else {
-				job.run(new NullProgressMonitor());
-			}
-		}
-	}
-
-	protected void setStatus(MultiStatus status) {
-		this.loadStatus = status;
 	}
 
 	public IStatus getLoadStatus() {
 		return loadStatus;
 	}
 
-	private void reset() {
-		saveDisabled = false;
-		loadStatus = null;
-		if (saveJob != null) {
-			saveJob.cancel();
-			saveJob = null;
-		}
-	}
+	private class ExternalizationJob extends Job {
 
-	class ExternalizationJob extends Job {
+		private volatile IExternalizationContext context;
 
-		IExternalizationContext context;
-
-		public ExternalizationJob(String jobTitle, IExternalizationContext context) {
+		public ExternalizationJob(String jobTitle) {
 			super(jobTitle);
-			this.context = context;
+		}
+
+		public IExternalizationContext getContext() {
+			return context;
 		}
 
 		public void setContext(IExternalizationContext saveContext) {
@@ -171,6 +180,7 @@ public class ExternalizationManager {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
+			IExternalizationContext context = this.context;
 			switch (context.getKind()) {
 			case SAVE:
 				try {
@@ -195,66 +205,26 @@ public class ExternalizationManager {
 					monitor.done();
 				}
 				break;
-			case SNAPSHOT:
-
-				break;
-			case LOAD:
-				if (context instanceof LoadContext) {
-					LoadContext loadContext = ((LoadContext) context);
-					IExternalizationParticipant participant = loadContext.getParticipant();
-					ISchedulingRule rule = participant.getSchedulingRule();
-					try {
-						Job.getJobManager().beginRule(rule, monitor);
-						try {
-							participant.execute(context, monitor);
-						} catch (CoreException e) {
-							if (loadStatus == null) {
-								loadStatus = e.getStatus();
-							} else {
-								IStatus[] stati = { loadStatus, e.getStatus() };
-								loadStatus = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, IStatus.ERROR, stati,
-										"Externalization Failure", null);
-							}
-							saveDisabled = true;
-						}
-					} finally {
-						Job.getJobManager().endRule(rule);
-					}
-				}
-
-				break;
+			default:
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+						"Unsupported externalization kind: " + context.getKind()));
 			}
 			return Status.OK_STATUS;
 		}
 	}
 
-	class LoadContext extends ExternalizationContext {
+	private class ExternalizationContext implements IExternalizationContext {
 
-		private final IExternalizationParticipant participant;
-
-		public LoadContext(String rootPath, IExternalizationParticipant participant) {
-			super(IExternalizationContext.KIND.LOAD, rootPath);
-			this.participant = participant;
-		}
-
-		public IExternalizationParticipant getParticipant() {
-			return participant;
-		}
-
-	}
-
-	class ExternalizationContext implements IExternalizationContext {
-
-		private final KIND kind;
+		private final Kind kind;
 
 		private final String rootPath;
 
-		public ExternalizationContext(IExternalizationContext.KIND kind, String rootPath) {
+		public ExternalizationContext(IExternalizationContext.Kind kind, String rootPath) {
 			this.kind = kind;
 			this.rootPath = rootPath;
 		}
 
-		public KIND getKind() {
+		public Kind getKind() {
 			return kind;
 		}
 
