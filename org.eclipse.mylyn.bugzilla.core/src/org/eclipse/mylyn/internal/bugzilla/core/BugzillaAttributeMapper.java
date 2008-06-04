@@ -187,6 +187,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			return BugzillaAttribute.NEW_COMMENT.getKey();
 		} else if (key.equals(TaskAttribute.COMPONENT)) {
 			return BugzillaAttribute.COMPONENT.getKey();
+		} else if (key.equals(TaskAttribute.TASK_KEY)) {
+			return BugzillaAttribute.BUG_ID.getKey();
 		}
 		return super.mapToRepositoryKey(parent, key);
 	}
