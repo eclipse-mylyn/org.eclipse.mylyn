@@ -13,24 +13,60 @@
              class="org.eclipse.mylyn.internal.team.ccvs.CvsLinkedTaskInfoAdapterFactory">
        <adapter type="org.eclipse.mylyn.team.ui.AbstractTaskReference"/>
     </factory>
-
+    
 	<!--
 	<factory adaptableType="org.eclipse.mylyn.internal.team.ui.ContextChangeSet"
              class="org.eclipse.mylyn.internal.team.ccvs.CvsChangeSetResourceMappingAdapterFactory">
        <adapter type="org.eclipse.core.resources.mapping.ResourceMapping"/>
     </factory>
     -->
-  </extension>
+    </extension>
  
- 
+  
     <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.eclipse.mylyn.internal.team.ui.ContextChangeSet"
+            adaptableType="org.eclipse.mylyn.internal.team.ccvs.CvsContextChangeSet"
             class="org.eclipse.mylyn.internal.team.ccvs.CvsChangeSetAdapterFactory">
          <adapter type="org.eclipse.core.resources.mapping.ResourceMapping"/>
       </factory>
+    </extension>
+ 
+    <!-- ================= NAVIGATOR CONTENT =================== 
+ 
+    NOTE: the approach below could be used if we created our own change set model,
+    but the current implementation below discards the CVS implementaion that we still rely on.
+ 
+ 	<extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.eclipse.team.internal.ccvs.ui.mappings.ChangeSetContentProvider"
+            id="org.eclipse.mylyn.team.cvs.changeSetContent"
+            labelProvider="org.eclipse.team.internal.ccvs.ui.mappings.ChangeSetLabelProvider"
+            name="Task Context Change Sets"
+            priority="normal">
+         <enablement>
+           <or>         
+           		<instanceof value="org.eclipse.mylyn.internal.team.ui.ContextChangeSet"/>
+           </or>
+         </enablement>
+         <commonSorter
+               class="org.eclipse.team.internal.ccvs.ui.mappings.ChangeSetSorter"
+               id="org.eclipse.team.cvs.ui.changeSetSorter"/>
+         <actionProvider
+               class="org.eclipse.team.internal.ccvs.ui.mappings.ChangeSetActionProvider"
+               id="org.eclipse.team.cvs.ui.changeSetActions"/>
+       </navigatorContent>
+   </extension>
+   
+   <extension
+         point="org.eclipse.team.ui.teamContentProviders">
+      <teamContentProvider
+            contentExtensionId="org.eclipse.mylyn.team.cvs.changeSetContent"
+            modelProviderId="org.eclipse.team.cvs.core.changeSetModel"/>
    </extension>
  
+   -->
  
 </plugin>

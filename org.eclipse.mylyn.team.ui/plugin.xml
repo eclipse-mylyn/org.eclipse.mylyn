@@ -90,6 +90,8 @@
 		</objectContribution>
 	</extension>
     
+    <!-- ================= NAVIGATOR CONTENT =================== -->
+    
     <extension point="org.eclipse.ui.navigator.navigatorContent">
 	   <actionProvider           
 	   	 class="org.eclipse.mylyn.internal.team.ui.actions.TaskResourceMappingActionProvider"
@@ -99,6 +101,8 @@
 	     </enablement>
 	   </actionProvider>
 	</extension>
+	
+	<!-- =================  =================== -->
 	
 	<extension point = "org.eclipse.ui.popupMenus">
       <objectContribution
@@ -147,7 +151,7 @@
             label="mylyn team"
             id="org.eclipse.mylyn.team.ui.keywords"/>
    </extension>
-  
+      
    	<extension point="org.eclipse.ui.navigator.viewer">
 	   <viewerActionBinding
 	      viewerId="org.eclipse.team.cvs.ui.workspaceSynchronization">

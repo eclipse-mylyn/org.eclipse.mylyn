@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.team.ui;
+package org.eclipse.mylyn.internal.team.ccvs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +25,9 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.team.ui.ContextChangeSet;
+import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
+import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.internal.team.ui.properties.TeamPropertiesLinkProvider;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ui.ResourcesUi;
@@ -36,16 +39,18 @@ import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
-import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
+import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
 
 /**
+ * Copied from {@link ContextChangeSet}
+ * 
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/implements IAdaptable, IContextChangeSet {
+public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptable, IContextChangeSet {
 
 	// HACK: copied from super
 	private static final String CTX_TITLE = "title";
@@ -56,7 +61,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 
 	private final ITask task;
 
-	public ContextChangeSet(ITask task, ActiveChangeSetManager manager) {
+	public CvsContextChangeSet(ITask task, ActiveChangeSetManager manager) {
 		super(manager, task.getSummary());
 		this.task = task;
 		updateLabel();
@@ -236,8 +241,8 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof ContextChangeSet && task != null) {
-			ContextChangeSet changeSet = (ContextChangeSet) object;
+		if (object instanceof CvsContextChangeSet && task != null) {
+			CvsContextChangeSet changeSet = (CvsContextChangeSet) object;
 			return task.equals(changeSet.getTask());
 		} else {
 			return super.equals(object);

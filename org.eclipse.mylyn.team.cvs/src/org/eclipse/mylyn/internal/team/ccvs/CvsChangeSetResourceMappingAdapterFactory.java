@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.team.ccvs;
 
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.mylyn.internal.team.ui.ContextChangeSet;
 import org.eclipse.team.internal.ccvs.core.mapping.ChangeSetResourceMapping;
 import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
 
@@ -30,7 +29,7 @@ public class CvsChangeSetResourceMappingAdapterFactory implements IAdapterFactor
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object object, Class adapterType) {
 		// used to bind popup menu actions in Synchronize view 
-		if (ResourceMapping.class.equals(adapterType) && object instanceof ContextChangeSet) {
+		if (ResourceMapping.class.equals(adapterType) && object instanceof CvsContextChangeSet) {
 			return new ChangeSetResourceMapping((DiffChangeSet) object);
 		}
 

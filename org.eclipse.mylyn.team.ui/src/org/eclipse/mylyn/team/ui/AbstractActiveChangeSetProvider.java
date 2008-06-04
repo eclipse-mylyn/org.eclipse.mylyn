@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.team.ui;
 
+import org.eclipse.mylyn.internal.team.ui.ContextChangeSet;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 
 /**
@@ -35,6 +37,16 @@ public abstract class AbstractActiveChangeSetProvider {
 	 */
 	public ActiveChangeSetManager getActiveChangeSetManager() {
 		return null;
+	}
+
+	/**
+	 * Override if a custom change set class is needed, e.g. in order to support custom action and model mappings as is
+	 * the case with the CVS change set implementation used by org.eclipse.mylyn.team.cvs.
+	 * 
+	 * @since 3.0
+	 */
+	public IContextChangeSet createChangeSet(ITask task) {
+		return new ContextChangeSet(task, getActiveChangeSetManager());
 	}
 
 }

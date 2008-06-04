@@ -4,16 +4,20 @@ Bundle-Name: Mylyn CVS Extensions
 Bundle-SymbolicName: org.eclipse.mylyn.team.cvs;singleton:=true
 Bundle-Version: 3.0.0.qualifier
 Bundle-Vendor: Eclipse.org
-Require-Bundle: org.eclipse.team.core,
+Require-Bundle: org.eclipse.team.ui,
+ org.eclipse.team.core,
  org.eclipse.team.cvs.ui,
  org.eclipse.team.cvs.core,
  org.eclipse.jface,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.ui.workbench,
+ org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)",
- org.eclipse.mylyn.team.ui;bundle-version="[3.0.0,4.0.0)"
+ org.eclipse.mylyn.team.ui;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.resources.ui;bundle-version="[3.0.0,4.0.0)",
+ org.eclipse.mylyn.context.core;bundle-version="[3.0.0,4.0.0)"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.internal.team.ccvs;x-internal:=true

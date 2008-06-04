@@ -9,10 +9,10 @@
 package org.eclipse.mylyn.internal.team.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -29,6 +29,8 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
+import org.eclipse.mylyn.team.ui.IContextChangeSet;
+import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
@@ -42,19 +44,20 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	private final List<ActiveChangeSetManager> changeSetManagers = new ArrayList<ActiveChangeSetManager>();
 
-	private final Map<String, ContextChangeSet> activeChangeSets = new HashMap<String, ContextChangeSet>();
+	private final Map<String, IContextChangeSet> activeChangeSets = new HashMap<String, IContextChangeSet>();
 
 	/**
 	 * Used to restore change sets managed with task context when platform deletes them, bug 168129
 	 */
 	private final IChangeSetChangeListener CHANGE_SET_LISTENER = new IChangeSetChangeListener() {
+
 		public void setRemoved(ChangeSet set) {
-			if (set instanceof ContextChangeSet) {
-				ContextChangeSet contextChangeSet = (ContextChangeSet) set;
+			if (set instanceof IContextChangeSet) {
+				IContextChangeSet contextChangeSet = (IContextChangeSet) set;
 				if (contextChangeSet.getTask() != null && contextChangeSet.getTask().isActive()) {
 					for (ActiveChangeSetManager collector : changeSetManagers) {
 						// put it back
-						collector.add(contextChangeSet);
+						collector.add((ActiveChangeSet) contextChangeSet);
 					}
 				}
 			}
@@ -78,7 +81,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	};
 
 	public ContextActiveChangeSetManager() {
-		Set<AbstractActiveChangeSetProvider> providerList = FocusedTeamUiPlugin.getDefault()
+		Collection<AbstractActiveChangeSetProvider> providerList = FocusedTeamUiPlugin.getDefault()
 				.getActiveChangeSetProviders();
 		for (AbstractActiveChangeSetProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
@@ -94,10 +97,10 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (ChangeSet set : sets) {
-				if (set instanceof ContextChangeSet) {
-					ContextChangeSet contextChangeSet = (ContextChangeSet) set;
+				if (set instanceof IContextChangeSet) {
+					IContextChangeSet contextChangeSet = (IContextChangeSet) set;
 					if (contextChangeSet.getTask().equals(task)) {
-						contextChangeSet.initTitle();
+						contextChangeSet.updateLabel();
 					}
 				}
 			}
@@ -124,20 +127,25 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	@Override
 	protected void initContextChangeSets() {
-		for (ActiveChangeSetManager collector : changeSetManagers) {
-			ChangeSet[] sets = collector.getSets();
+		for (ActiveChangeSetManager manager : changeSetManagers) {
+			ChangeSet[] sets = manager.getSets();
 			for (ChangeSet restoredSet : sets) {
-				if (!(restoredSet instanceof ContextChangeSet)) {
+				if (!(restoredSet instanceof IContextChangeSet)) {
 					String encodedTitle = restoredSet.getName();
 					String taskHandle = ContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
 					ITask task = TasksUiPlugin.getTaskList().getTask(taskHandle);
 					if (task != null) {
 						try {
-							ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
-							contextChangeSet.restoreResources(restoredSet.getResources());
-							collector.remove(restoredSet);
+							AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
+									.getActiveChangeSetProvider(manager);
+							IContextChangeSet contextChangeSet = changeSetProvider.createChangeSet(task);
 
-							collector.add(contextChangeSet);
+							if (contextChangeSet instanceof ActiveChangeSet) {
+//							IContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
+								contextChangeSet.restoreResources(restoredSet.getResources());
+								manager.remove(restoredSet);
+								manager.add((ActiveChangeSet) contextChangeSet);
+							}
 						} catch (Exception e) {
 							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
 									"Could not restore change set", e));
@@ -159,10 +167,10 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (ChangeSet set : sets) {
-				if (set instanceof ContextChangeSet) {
-					ContextChangeSet contextChangeSet = (ContextChangeSet) set;
-					if (contextChangeSet.getTask().equals(task)) {
-						return contextChangeSet.getResources();
+				if (set instanceof IContextChangeSet) {
+					IContextChangeSet contextChangeSet = (IContextChangeSet) set;
+					if (contextChangeSet.getTask().equals(task) && contextChangeSet instanceof ActiveChangeSet) {
+						return ((ActiveChangeSet) contextChangeSet).getResources();
 					}
 				}
 			}
@@ -175,16 +183,24 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		try {
 			ITask task = getTask(context);
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
-				for (ActiveChangeSetManager collector : changeSetManagers) {
-					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
-					List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
-							.getInterestingResources(context);
-					contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
+				for (ActiveChangeSetManager manager : changeSetManagers) {
 
-					activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
+					AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
+							.getActiveChangeSetProvider(manager);
+					IContextChangeSet contextChangeSet = changeSetProvider.createChangeSet(task);
 
-					if (!collector.contains(contextChangeSet)) {
-						collector.add(contextChangeSet);
+//					ContextChangeSet contextChangeSet = new ContextChangeSet(task, manager);
+					if (contextChangeSet instanceof ActiveChangeSet) {
+						ActiveChangeSet activeChangeSet = (ActiveChangeSet) contextChangeSet;
+						List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
+								.getInterestingResources(context);
+						activeChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
+
+						activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
+
+						if (!manager.contains(activeChangeSet)) {
+							manager.add(activeChangeSet);
+						}
 					}
 				}
 			}
@@ -198,7 +214,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (ChangeSet set : sets) {
-				if (set instanceof ContextChangeSet) {
+				if (set instanceof ActiveChangeSet) {
 					IResource[] resources = set.getResources();
 					if (resources == null || resources.length == 0) {
 						collector.remove(set);
@@ -217,10 +233,12 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				if (bridge.isDocument(element.getHandleIdentifier())) {
 					IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(element, false);
 					if (resource != null && resource.exists()) {
-						for (ContextChangeSet activeContextChangeSet : getActiveChangeSets()) {
-							if (!activeContextChangeSet.contains(resource)) {
-								if (element.getInterest().isInteresting()) {
-									activeContextChangeSet.add(new IResource[] { resource });
+						for (IContextChangeSet activeContextChangeSet : getActiveChangeSets()) {
+							if (activeContextChangeSet instanceof ActiveChangeSet) {
+								if (!((ActiveChangeSet) activeContextChangeSet).contains(resource)) {
+									if (element.getInterest().isInteresting()) {
+										((ActiveChangeSet) activeContextChangeSet).add(new IResource[] { resource });
+									}
 								}
 							}
 						}
@@ -228,7 +246,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 							for (ActiveChangeSetManager collector : changeSetManagers) {
 								ChangeSet[] sets = collector.getSets();
 								for (ChangeSet set : sets) {
-									if (set instanceof ContextChangeSet) {
+									if (set instanceof ActiveChangeSet) {
 										set.remove(resource);
 									}
 								}
@@ -243,8 +261,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		}
 	}
 
-	public List<ContextChangeSet> getActiveChangeSets() {
-		return new ArrayList<ContextChangeSet>(activeChangeSets.values());
+	public List<IContextChangeSet> getActiveChangeSets() {
+		return new ArrayList<IContextChangeSet>(activeChangeSets.values());
 	}
 
 	private ITask getTask(IInteractionContext context) {

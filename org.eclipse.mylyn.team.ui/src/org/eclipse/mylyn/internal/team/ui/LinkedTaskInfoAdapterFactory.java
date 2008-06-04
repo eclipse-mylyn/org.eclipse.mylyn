@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.team.ui.AbstractTaskReference;
+import org.eclipse.mylyn.team.ui.IContextChangeSet;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
@@ -88,8 +89,8 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 	}
 
 	private static String getCommentForElement(Object element) {
-		if (element instanceof ContextChangeSet) {
-			return ((ContextChangeSet) element).getComment(false);
+		if (element instanceof IContextChangeSet) {
+			return ((IContextChangeSet) element).getComment(false);
 		} else if (element instanceof DiffChangeSet) {
 			return ((DiffChangeSet) element).getComment();
 		} else if (element instanceof ChangeSetDiffNode) {

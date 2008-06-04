@@ -7,8 +7,11 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.team.ui;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
@@ -17,6 +20,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
+import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -35,7 +39,7 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
 	private final Set<AbstractContextChangeSetManager> changeSetManagers = new HashSet<AbstractContextChangeSetManager>();
 
-	private final Set<AbstractActiveChangeSetProvider> activeChangeSetProviders = new HashSet<AbstractActiveChangeSetProvider>();
+	private final Map<ActiveChangeSetManager, AbstractActiveChangeSetProvider> activeChangeSetProviders = new HashMap<ActiveChangeSetManager, AbstractActiveChangeSetProvider>();
 
 	private CommitTemplateManager commitTemplateManager;
 
@@ -117,11 +121,18 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 	}
 
 	public void addActiveChangeSetProvider(AbstractActiveChangeSetProvider provider) {
-		activeChangeSetProviders.add(provider);
+		ActiveChangeSetManager manager = provider.getActiveChangeSetManager();
+		if (manager != null) {
+			activeChangeSetProviders.put(manager, provider);
+		}
 	}
 
-	public Set<AbstractActiveChangeSetProvider> getActiveChangeSetProviders() {
-		return Collections.unmodifiableSet(activeChangeSetProviders);
+	public Collection<AbstractActiveChangeSetProvider> getActiveChangeSetProviders() {
+		return activeChangeSetProviders.values();
+	}
+
+	public AbstractActiveChangeSetProvider getActiveChangeSetProvider(ActiveChangeSetManager manager) {
+		return activeChangeSetProviders.get(manager);
 	}
 
 	public Set<AbstractContextChangeSetManager> getContextChangeSetManagers() {

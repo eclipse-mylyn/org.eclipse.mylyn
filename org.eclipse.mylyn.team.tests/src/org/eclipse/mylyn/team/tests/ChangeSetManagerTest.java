@@ -22,10 +22,11 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
-import org.eclipse.mylyn.internal.team.ui.ContextChangeSet;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.resources.tests.AbstractResourceContextTest;
+import org.eclipse.mylyn.team.ui.IContextChangeSet;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
+import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 
@@ -116,10 +117,10 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 				structureBridge.getHandleIdentifier(file));
 		assertTrue(fileElement.getInterest().isInteresting());
 
-		List<ContextChangeSet> changeSets = changeSetManager.getActiveChangeSets();
+		List<IContextChangeSet> changeSets = changeSetManager.getActiveChangeSets();
 		assertEquals(1, changeSets.size());
-		ContextChangeSet set = changeSets.get(0);
-		IResource[] resources = set.getResources();
+		IContextChangeSet set = changeSets.get(0);
+		IResource[] resources = ((ActiveChangeSet) set).getResources();
 		// can have .project file in there
 		assertTrue("length: " + resources.length, resources.length <= 2);
 
