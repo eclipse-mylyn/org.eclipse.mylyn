@@ -258,8 +258,13 @@ public class TaskDataManager implements ITaskDataManager {
 		if (event.getTaskChanged() || event.getTaskDataChanged()) {
 			taskList.notifyElementChanged(task);
 			fireTaskDataUpdated(event);
-		} else if (synchronizationStateChanged[0]) {
-			taskList.notifySynchronizationStateChanged(task);
+		} else {
+			if (synchronizationStateChanged[0]) {
+				taskList.notifySynchronizationStateChanged(task);
+			}
+			if (event.getTaskDataUpdated()) {
+				fireTaskDataUpdated(event);
+			}
 		}
 	}
 
