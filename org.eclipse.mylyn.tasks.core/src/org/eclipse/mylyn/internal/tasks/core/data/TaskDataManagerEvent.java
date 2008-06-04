@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.core.data;
 
 import java.util.EventObject;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -23,21 +24,22 @@ public class TaskDataManagerEvent extends EventObject {
 
 	private final ITask task;
 
-	private final boolean taskChanged;
+	private boolean taskChanged;
 
 	private final TaskData taskData;
 
-	private final boolean taskDataChanged;
+	private boolean taskDataChanged;
+
+	private boolean taskDataUpdated;
 
 	private final Object token;
 
-	public TaskDataManagerEvent(ITaskDataManager source, ITask task, boolean taskChanged, TaskData taskData,
-			boolean taskDataChanged, Object token) {
+	public TaskDataManagerEvent(ITaskDataManager source, ITask task, TaskData taskData, Object token) {
 		super(source);
+		Assert.isNotNull(task);
+		Assert.isNotNull(taskData);
 		this.task = task;
-		this.taskChanged = taskChanged;
 		this.taskData = taskData;
-		this.taskDataChanged = taskDataChanged;
 		this.token = token;
 	}
 
@@ -57,8 +59,24 @@ public class TaskDataManagerEvent extends EventObject {
 		return taskDataChanged;
 	}
 
+	public boolean getTaskDataUpdated() {
+		return taskDataUpdated;
+	}
+
 	public Object getToken() {
 		return token;
+	}
+
+	public void setTaskChanged(boolean taskChanged) {
+		this.taskChanged = taskChanged;
+	}
+
+	public void setTaskDataChanged(boolean taskDataChanged) {
+		this.taskDataChanged = taskDataChanged;
+	}
+
+	public void setTaskDataUpdated(boolean taskDataUpdated) {
+		this.taskDataUpdated = taskDataUpdated;
 	}
 
 }

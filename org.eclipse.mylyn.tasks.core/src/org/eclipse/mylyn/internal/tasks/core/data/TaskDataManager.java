@@ -204,8 +204,9 @@ public class TaskDataManager implements ITaskDataManager {
 		final TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
 		final boolean taskDataChanged = connector.hasTaskChanged(repository, task, taskData);
-		final boolean taskChanged[] = new boolean[1];
-		final boolean synchronizationStateChanged[] = new boolean[1];
+		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask, taskData, null);
+		event.setTaskDataChanged(taskDataChanged);
+		final boolean[] synchronizationStateChanged = new boolean[1];
 		if (taskDataChanged || user) {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
@@ -215,9 +216,11 @@ public class TaskDataManager implements ITaskDataManager {
 						newTask = !file.exists();
 						taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending(), user);
 						task.setMarkReadPending(false);
+						event.setTaskDataUpdated(true);
 					}
 
-					taskChanged[0] = updateTaskFromTaskData(taskData, task, connector, repository);
+					boolean taskChanged = updateTaskFromTaskData(taskData, task, connector, repository);
+					event.setTaskChanged(taskChanged);
 
 					if (taskDataChanged) {
 						switch (task.getSynchronizationState()) {
@@ -252,9 +255,9 @@ public class TaskDataManager implements ITaskDataManager {
 				}
 			});
 		}
-		if (taskChanged[0] || taskDataChanged) {
+		if (event.getTaskChanged() || event.getTaskDataChanged()) {
 			taskList.notifyElementChanged(task);
-			fireTaskDataUpdated(task, taskChanged[0], taskData, taskDataChanged, token);
+			fireTaskDataUpdated(event);
 		} else if (synchronizationStateChanged[0]) {
 			taskList.notifySynchronizationStateChanged(task);
 		}
@@ -418,22 +421,26 @@ public class TaskDataManager implements ITaskDataManager {
 		final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(task.getConnectorKind());
 		final TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
+		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask, taskData, null);
+		event.setTaskDataChanged(true);
 		taskList.run(new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				if (!taskData.isPartial()) {
 					File file = getMigratedFile(task, task.getConnectorKind());
 					taskDataStore.setTaskData(ensurePathExists(file), taskData);
 					task.setMarkReadPending(false);
+					event.setTaskDataUpdated(true);
 				}
 
-				updateTaskFromTaskData(taskData, task, connector, repository);
+				boolean taskChanged = updateTaskFromTaskData(taskData, task, connector, repository);
+				event.setTaskChanged(taskChanged);
 
 				task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
 				task.setSynchronizing(false);
-				task.setSubmitting(false);
 			}
 		});
 		taskList.notifyElementChanged(task);
+		fireTaskDataUpdated(event);
 	}
 
 	/**
@@ -658,18 +665,14 @@ public class TaskDataManager implements ITaskDataManager {
 		return taskDataStorageManager;
 	}
 
-	private void fireTaskDataUpdated(ITask task, boolean taskChanged, TaskData taskData, boolean taskDataChanged,
-			Object token) {
+	private void fireTaskDataUpdated(final TaskDataManagerEvent event) {
 		ITaskDataManagerListener[] array = listeners.toArray(new ITaskDataManagerListener[0]);
 		if (array.length > 0) {
-			final TaskDataManagerEvent event = new TaskDataManagerEvent(this, task, taskChanged, taskData,
-					taskDataChanged, token);
 			for (final ITaskDataManagerListener listener : array) {
 				SafeRunner.run(new ISafeRunnable() {
 
 					public void handleException(Throwable exception) {
 						// ignore
-
 					}
 
 					public void run() throws Exception {

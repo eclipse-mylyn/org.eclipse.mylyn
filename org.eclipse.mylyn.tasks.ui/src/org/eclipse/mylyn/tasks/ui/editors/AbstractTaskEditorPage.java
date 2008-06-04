@@ -42,8 +42,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
+import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
@@ -64,7 +64,6 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPeoplePart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorPlanningPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorRichTextPart;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorSummaryPart;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -195,25 +194,55 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	}
 
-	private class TaskListChangeListener extends TaskListChangeAdapter {
-		@Override
-		public void containersChanged(Set<TaskContainerDelta> containers) {
-			if (refreshDisabled) {
-				return;
-			}
-			ITask taskToRefresh = null;
-			for (TaskContainerDelta taskContainerDelta : containers) {
-				if (task.equals(taskContainerDelta.getElement())) {
-					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)
-							&& !taskContainerDelta.isTransient()) {
-						taskToRefresh = (ITask) taskContainerDelta.getElement();
-						break;
-					}
-				}
-			}
-			if (taskToRefresh != null) {
+//	private class TaskListChangeListener extends TaskListChangeAdapter {
+//		@Override
+//		public void containersChanged(Set<TaskContainerDelta> containers) {
+//			if (refreshDisabled) {
+//				return;
+//			}
+//			ITask taskToRefresh = null;
+//			for (TaskContainerDelta taskContainerDelta : containers) {
+//				if (task.equals(taskContainerDelta.getElement())) {
+//					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)
+//							&& !taskContainerDelta.isTransient()) {
+//						taskToRefresh = (ITask) taskContainerDelta.getElement();
+//						break;
+//					}
+//				}
+//			}
+//			if (taskToRefresh != null) {
+//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//					public void run() {
+//						if (!isDirty() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
+//							// automatically refresh if the user has not made any changes and there is no chance of missing incomings
+//							refreshFormContent();
+//						} else {
+//							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+//									new HyperlinkAdapter() {
+//										@Override
+//										public void linkActivated(HyperlinkEvent e) {
+//											refreshFormContent();
+//										}
+//									});
+//							setSubmitEnabled(false);
+//						}
+//					}
+//				});
+//			}
+//		}
+//	}
+
+	private final ITaskDataManagerListener TASK_DATA_LISTENER = new ITaskDataManagerListener() {
+
+		public void taskDataUpdated(final TaskDataManagerEvent event) {
+			final ITask task = event.getTask();
+			if (task.equals(AbstractTaskEditorPage.this.getTask())) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						if (refreshDisabled || !event.getTaskDataUpdated()) {
+							return;
+						}
+
 						if (!isDirty() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
 							// automatically refresh if the user has not made any changes and there is no chance of missing incomings
 							refreshFormContent();
@@ -231,7 +260,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				});
 			}
 		}
-	}
+	};
 
 	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
 
@@ -315,7 +344,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private TaskData taskData;
 
-	private ITaskListChangeListener taskListChangeListener;
+//	private ITaskListChangeListener taskListChangeListener;
 
 	private FormToolkit toolkit;
 
@@ -579,7 +608,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		if (attributeEditorToolkit != null) {
 			attributeEditorToolkit.dispose();
 		}
-		TasksUiInternal.getTaskList().removeChangeListener(taskListChangeListener);
+		TasksUiPlugin.getTaskDataManager().removeListener(TASK_DATA_LISTENER);
 		super.dispose();
 	}
 
@@ -880,8 +909,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			getTaskEditor().setStatus("Error opening task", "Open failed", e.getStatus());
 		}
 
-		taskListChangeListener = new TaskListChangeListener();
-		TasksUiInternal.getTaskList().addChangeListener(taskListChangeListener);
+		TasksUiPlugin.getTaskDataManager().addListener(TASK_DATA_LISTENER);
 	}
 
 	private void initializePart(Composite parent, AbstractTaskEditorPart part) {
@@ -1101,7 +1129,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	// TODO EDITOR this needs to be tracked somewhere else
 	private void setSubmitEnabled(boolean enabled) {
 		AbstractTaskEditorPart actionPart = getPart(ID_PART_ACTIONS);
-		if (actionPart instanceof TaskEditorAttributePart) {
+		if (actionPart instanceof TaskEditorActionPart) {
 			((TaskEditorActionPart) actionPart).setSubmitEnabled(enabled);
 		}
 	}
