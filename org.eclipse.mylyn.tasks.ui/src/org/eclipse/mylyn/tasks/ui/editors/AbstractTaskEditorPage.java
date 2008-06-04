@@ -42,6 +42,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
@@ -634,6 +635,22 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					TasksUiInternal.displayStatus("Save failed", e.getStatus());
 				}
 			});
+		}
+
+		// update the summary of unsubmitted repository tasks
+		if (getTask().getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
+			final String summary = connector.getTaskMapping(model.getTaskData()).getSummary();
+			try {
+				TasksUiPlugin.getTaskList().run(new ITaskListRunnable() {
+					public void execute(IProgressMonitor monitor) throws CoreException {
+						task.setSummary(summary);
+					}
+				});
+				TasksUiPlugin.getTaskList().notifyElementChanged(task);
+			} catch (CoreException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Failed to set summary for task \"" + task + "\"", e));
+			}
 		}
 
 		updateHeaderMessage();
