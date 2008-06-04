@@ -18,6 +18,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
@@ -28,6 +30,7 @@ import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -41,6 +44,8 @@ import org.eclipse.ui.PlatformUI;
 public class ActivityContextManager implements IActivityContextManager {
 
 	private static final char WORKINGSET_DELIMETER = '\u200B'; // unicode zero width space
+
+	private static final char WORKINGSET_ID_DELIMITER = '\u202F'; // unicode narrow no-break space
 
 	private final int TICK = 30 * 1000;
 
@@ -68,15 +73,54 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	public static final String ACTIVITY_TIMEOUT_ENABLED = "org.eclipse.mylyn.monitor.ui.activity.timeout.enabled";
 
+	private static String selectedWorkingSets = "";
+
+	private final IPropertyChangeListener WORKING_SET_CHANGE_LISTENER = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(event.getProperty())) {
+				updateWorkingSetSelection();
+			}
+		}
+	};
+
 	public ActivityContextManager(int timeout, ArrayList<AbstractUserActivityMonitor> monitors) {
 		this.activityMonitors = monitors;
 		this.timeout = timeout;
+
+	}
+
+	protected void updateWorkingSetSelection() {
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (window != null) {
+					StringBuilder builder = new StringBuilder();
+					IWorkbenchPage page = window.getActivePage();
+					IWorkingSet[] workingSets;
+					if (page != null) {
+						workingSets = page.getWorkingSets();
+						for (IWorkingSet workingSet : workingSets) {
+							String workingSetId = workingSet.getId();
+							if (workingSetId == null) {
+								workingSetId = "";
+							}
+							builder.append(workingSetId + WORKINGSET_ID_DELIMITER + workingSet.getName()
+									+ WORKINGSET_DELIMETER);
+						}
+					}
+					selectedWorkingSets = builder.toString();
+				}
+				selectedWorkingSets = "";
+			}
+		});
 	}
 
 	public void start() {
 		for (AbstractUserActivityMonitor monitor : activityMonitors) {
 			monitor.start();
 		}
+		updateWorkingSetSelection();
+		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
 		checkJob = new CheckActivityJob();
 		checkJob.setSystem(true);
 		checkJob.setPriority(Job.DECORATE);
@@ -87,6 +131,9 @@ public class ActivityContextManager implements IActivityContextManager {
 		for (AbstractUserActivityMonitor monitor : activityMonitors) {
 			monitor.stop();
 		}
+
+		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
+
 		if (checkJob != null) {
 			checkJob.cancel();
 		}
@@ -219,31 +266,8 @@ public class ActivityContextManager implements IActivityContextManager {
 		if (ContextCore.getContextManager().getActiveContext().getHandleIdentifier() != null) {
 			return ContextCore.getContextManager().getActiveContext().getHandleIdentifier();
 		} else {
-			final String[] handle = new String[1];
-			handle[0] = "";
-			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-
-				public void run() {
-					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					if (window != null) {
-						IWorkbenchPage page = window.getActivePage();
-						IWorkingSet[] workingSets;
-						if (page != null) {
-							workingSets = page.getWorkingSets();
-							for (IWorkingSet workingSet : workingSets) {
-								String workingSetId = workingSet.getId();
-								if (workingSetId == null) {
-									workingSetId = "";
-								}
-								handle[0] += workingSetId + "." + workingSet.getName() + WORKINGSET_DELIMETER;
-							}
-						}
-					}
-				}
-			});
-
-			if (handle[0].length() > 0) {
-				return handle[0];
+			if (selectedWorkingSets != null && selectedWorkingSets.length() > 0) {
+				return selectedWorkingSets;
 			}
 		}
 		return InteractionContextManager.ACTIVITY_HANDLE_NONE;

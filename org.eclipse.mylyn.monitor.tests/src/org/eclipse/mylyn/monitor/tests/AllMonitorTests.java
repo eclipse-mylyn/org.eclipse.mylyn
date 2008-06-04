@@ -24,7 +24,6 @@ public class AllMonitorTests {
 		suite.addTest(AllMonitorUsageTests.suite());
 		suite.addTest(AllMonitorReportTests.suite());
 		suite.addTestSuite(InteractionLoggerTest.class);
-		suite.addTestSuite(ActiveTimerTest.class);
 		suite.addTestSuite(StatisticsLoggingTest.class);
 		suite.addTestSuite(MonitorTest.class);
 		suite.addTestSuite(InteractionEventExternalizationTest.class);
