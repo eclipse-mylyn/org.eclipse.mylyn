@@ -8,8 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
  * Immutable. Defines changes to Task List elements.
@@ -34,6 +34,11 @@ public final class TaskContainerDelta {
 		 * The internal state of the container (target) has changed, e.g. attributes, summary, priority, etc
 		 */
 		CONTENT,
+
+		/**
+		 * The element has been deleted from the tasklist
+		 */
+		DELETED,
 
 		/**
 		 * The root of the data structure has changed.
