@@ -315,7 +315,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
 							repository.getConnectorKind());
 					if (connector instanceof AbstractLegacyRepositoryConnector) {
-						AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getConnectorKind());
+						AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
 						if (!connectorUi.hasCustomNotifications()) {
 							for (ITask hit : query.getChildren()) {
 								if (((AbstractTask) hit).isNotified() == false) {
