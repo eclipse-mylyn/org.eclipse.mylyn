@@ -506,12 +506,16 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		} else {
 			editorBusyIndicator.stop();
 		}
-		Form form = getHeaderForm().getForm().getForm();
-		EditorUtil.setEnabledState(form.getBody(), !busy);
-		for (IFormPage page : getPages()) {
-			if (page instanceof WorkbenchPart) {
-				WorkbenchPart part = (WorkbenchPart) page;
-				part.showBusy(busy);
+		if (getHeaderForm() != null && getHeaderForm().getForm() != null && !getHeaderForm().getForm().isDisposed()) {
+			Form form = getHeaderForm().getForm().getForm();
+			if (form != null && !form.isDisposed()) {
+				EditorUtil.setEnabledState(form.getBody(), !busy);
+				for (IFormPage page : getPages()) {
+					if (page instanceof WorkbenchPart) {
+						WorkbenchPart part = (WorkbenchPart) page;
+						part.showBusy(busy);
+					}
+				}
 			}
 		}
 	}
