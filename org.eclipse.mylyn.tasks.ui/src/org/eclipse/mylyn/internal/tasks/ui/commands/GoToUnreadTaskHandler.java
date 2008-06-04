@@ -19,7 +19,6 @@ import org.eclipse.mylyn.internal.commons.ui.TreeWalker.TreeVisitor;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -47,7 +46,7 @@ public abstract class GoToUnreadTaskHandler extends AbstractTaskListViewHandler 
 			public boolean visit(Object object) {
 				if (object instanceof ITask) {
 					ITask task = (ITask) object;
-					if (task.getSynchronizationState() == SynchronizationState.INCOMING) {
+					if (task.getSynchronizationState().isIncoming()) {
 						return true;
 					}
 				}
