@@ -13,7 +13,9 @@ package org.eclipse.mylyn.monitor.core;
  * 
  * @author Mik Kersten
  * @since 2.0
+ * @deprecated
  */
+@Deprecated
 public interface IActivityTimerListener {
 
 	/**
