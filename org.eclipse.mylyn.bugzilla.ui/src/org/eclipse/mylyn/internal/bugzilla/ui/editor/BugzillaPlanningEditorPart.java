@@ -65,6 +65,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 		AbstractAttributeEditor attributeEditor = createAttributeEditor(attribute);
 		attributeEditor.createLabelControl(timeComposite, toolkit);
 		attributeEditor.createControl(timeComposite, toolkit);
+		getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
 
 		Label label = toolkit.createLabel(timeComposite, "Current Estimate:");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
@@ -98,6 +99,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 			attributeEditor = createAttributeEditor(attribute);
 			attributeEditor.createLabelControl(timeComposite, toolkit);
 			attributeEditor.createControl(timeComposite, toolkit);
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
 		}
 
 		// Add Time
@@ -108,6 +110,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 			attributeEditor = createAttributeEditor(addTimeAttribute);
 			attributeEditor.createLabelControl(timeComposite, toolkit);
 			attributeEditor.createControl(timeComposite, toolkit);
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
 		}
 
 		attribute = getTaskData().getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey());
@@ -115,6 +118,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 			attributeEditor = createAttributeEditor(attribute);
 			attributeEditor.createLabelControl(timeComposite, toolkit);
 			attributeEditor.createControl(timeComposite, toolkit);
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
 		}
 
 		attribute = getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.DEADLINE.getKey());
@@ -122,6 +126,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 			attributeEditor = createAttributeEditor(attribute);
 			attributeEditor.createLabelControl(timeComposite, toolkit);
 			attributeEditor.createControl(timeComposite, toolkit);
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
 		}
 
 		timeSection.setClient(timeComposite);
