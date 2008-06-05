@@ -121,18 +121,10 @@ public class TaskAttachmentPage extends WizardPage {
 			new Label(composite, SWT.NONE).setText("Description");
 			descriptionText = new Text(composite, SWT.BORDER);
 			descriptionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
-
 			descriptionText.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
-					if ("".equals(descriptionText.getText().trim())) {
-						setErrorMessage("Description required");
-					} else {
-						taskAttachment.setDescription(descriptionText.getText().trim());
-						if (!"".equals(fileNameText.getText())) {
-							setPageComplete(true);
-							setErrorMessage(null);
-						}
-					}
+					validate();
+					taskAttachment.setDescription(descriptionText.getText().trim());
 				}
 
 			});
@@ -194,7 +186,9 @@ public class TaskAttachmentPage extends WizardPage {
 		 */
 		fileNameText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				// Determine type by extension
+				validate();
+
+				// determine type by extension
 				int index = fileNameText.getText().lastIndexOf(".");
 				if (index > 0 && index < fileNameText.getText().length()) {
 					String ext = fileNameText.getText().substring(index + 1);
@@ -202,16 +196,6 @@ public class TaskAttachmentPage extends WizardPage {
 					if (type != null) {
 						contentTypeList.select(contentTypeIndices.get(type));
 						taskAttachment.setContentType(type);
-					}
-				}
-
-				// check page completenes
-				if (descriptionText != null && "".equals(descriptionText.getText())) {
-					setErrorMessage("Description required");
-				} else {
-					if (!"".equals(fileNameText.getText())) {
-						setPageComplete(true);
-						setErrorMessage(null);
 					}
 				}
 			}
@@ -243,12 +227,26 @@ public class TaskAttachmentPage extends WizardPage {
 			}
 		});
 
+		validate();
 		setErrorMessage(null);
 
 		if (descriptionText != null) {
 			descriptionText.setFocus();
 		} else {
 			commentText.setFocus();
+		}
+	}
+
+	private void validate() {
+		if (fileNameText != null && "".equals(fileNameText.getText().trim())) {
+			setErrorMessage("File name is empty");
+			setPageComplete(false);
+		} else if (descriptionText != null && "".equals(descriptionText.getText().trim())) {
+			setErrorMessage("Description is empty");
+			setPageComplete(false);
+		} else {
+			setErrorMessage(null);
+			setPageComplete(true);
 		}
 	}
 
@@ -263,12 +261,6 @@ public class TaskAttachmentPage extends WizardPage {
 		model.setAttachContext(attachContextButton.getSelection());
 		model.setContentType(taskAttachment.getContentType());
 		return super.getNextPage();
-	}
-
-	@Override
-	public boolean isPageComplete() {
-		return !"".equals(fileNameText.getText().trim())
-				&& (descriptionText == null || !"".equals(descriptionText.getText().trim()));
 	}
 
 	private void setContentType(String contentType) {

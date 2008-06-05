@@ -752,7 +752,7 @@ public class TasksUiInternal {
 	 * 
 	 * @return Shell or <code>null</code>
 	 */
-	private static Shell getShell() {
+	public static Shell getShell() {
 		Shell modal = getModalShellExcluding(null);
 		if (modal != null) {
 			return modal;
