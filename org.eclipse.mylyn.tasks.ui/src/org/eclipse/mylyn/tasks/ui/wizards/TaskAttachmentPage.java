@@ -45,6 +45,10 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TaskAttachmentPage extends WizardPage {
 
+	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+
+	private static final String DEFAULT_CONTENT_TYPE = APPLICATION_OCTET_STREAM;
+
 	private static List<String> contentTypes;
 
 	private static Map<String, String> extensions2Types;
@@ -58,7 +62,7 @@ public class TaskAttachmentPage extends WizardPage {
 		contentTypes.add("image/gif");
 		contentTypes.add("image/jpeg");
 		contentTypes.add("image/png");
-		contentTypes.add("application/octet-stream");
+		contentTypes.add(APPLICATION_OCTET_STREAM);
 
 		/* For auto-detect */
 		extensions2Types = new HashMap<String, String>();
@@ -70,9 +74,9 @@ public class TaskAttachmentPage extends WizardPage {
 		extensions2Types.put("gif", "image/gif");
 		extensions2Types.put("png", "image/png");
 		extensions2Types.put("xml", "application/xml");
-		extensions2Types.put("zip", "application/octet-stream");
-		extensions2Types.put("tar", "application/octet-stream");
-		extensions2Types.put("gz", "application/octet-stream");
+		extensions2Types.put("zip", APPLICATION_OCTET_STREAM);
+		extensions2Types.put("tar", APPLICATION_OCTET_STREAM);
+		extensions2Types.put("gz", APPLICATION_OCTET_STREAM);
 	}
 
 	private Button attachContextButton;
@@ -140,13 +144,11 @@ public class TaskAttachmentPage extends WizardPage {
 
 		contentTypeList = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		contentTypeList.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
-		final HashMap<String, Integer> contentTypeIndices = new HashMap<String, Integer>();
 		Iterator<String> iter = contentTypes.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
 			String next = iter.next();
 			contentTypeList.add(next);
-			contentTypeIndices.put(next, new Integer(i));
 			i++;
 		}
 
@@ -189,15 +191,7 @@ public class TaskAttachmentPage extends WizardPage {
 				validate();
 
 				// determine type by extension
-				int index = fileNameText.getText().lastIndexOf(".");
-				if (index > 0 && index < fileNameText.getText().length()) {
-					String ext = fileNameText.getText().substring(index + 1);
-					String type = extensions2Types.get(ext.toLowerCase(Locale.ENGLISH));
-					if (type != null) {
-						contentTypeList.select(contentTypeIndices.get(type));
-						taskAttachment.setContentType(type);
-					}
-				}
+				setContentTypeFromFilename(fileNameText.getText());
 			}
 		});
 
@@ -268,9 +262,23 @@ public class TaskAttachmentPage extends WizardPage {
 		for (int i = 0; i < typeList.length; i++) {
 			if (typeList[i].equals(contentType)) {
 				contentTypeList.select(i);
+				taskAttachment.setContentType(contentType);
 				break;
 			}
 		}
+	}
+
+	private void setContentTypeFromFilename(String fileName) {
+		int index = fileName.lastIndexOf(".");
+		if (index > 0 && index < fileName.length()) {
+			String ext = fileNameText.getText().substring(index + 1);
+			String type = extensions2Types.get(ext.toLowerCase(Locale.ENGLISH));
+			if (type != null) {
+				setContentType(type);
+				return;
+			}
+		}
+		setContentType(DEFAULT_CONTENT_TYPE);
 	}
 
 	private void setFilePath(String path) {
