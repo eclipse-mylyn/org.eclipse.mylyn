@@ -13,8 +13,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Rob Elves
@@ -116,7 +116,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	@Override
 	public Collection<ITask> getChildren() {
 
-		// TODO: Cache this information until the next modificaiton to pertinent data
+		// TODO: Cache this information until the next modification to pertinent data
 
 		Set<ITask> children = new HashSet<ITask>();
 
@@ -138,15 +138,25 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 		// All over due/scheduled tasks are present in the Today folder
 		if (isToday()) {
-			children.addAll(activityManager.getOverScheduledTasks());
+			for (ITask task : activityManager.getOverScheduledTasks()) {
+				if (task instanceof AbstractTask && !((AbstractTask) task).getScheduledForDate().isWeek()) {
+					children.add(task);
+				}
+			}
 			children.addAll(activityManager.getOverDueTasks());
-
 			// if not scheduled or due in future, and is active, place in today bin
 			ITask activeTask = activityManager.getActiveTask();
 			if (activeTask != null && !children.contains(activeTask)) {
 				children.add(activeTask);
 			}
+		}
 
+		if (range.isThisWeek()) {
+			for (ITask task : activityManager.getOverScheduledTasks()) {
+				if (task instanceof AbstractTask && ((AbstractTask) task).getScheduledForDate().isWeek()) {
+					children.add(task);
+				}
+			}
 		}
 
 		return children;
