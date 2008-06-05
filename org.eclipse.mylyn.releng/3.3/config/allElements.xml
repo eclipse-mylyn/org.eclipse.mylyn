@@ -43,11 +43,11 @@
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.web.tasks_feature" />
+			<property name="id" value="org.eclipse.mylyn.jira_feature" />
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.jira_feature" />
+			<property name="id" value="org.eclipse.mylyn.web.tasks_feature" />
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
@@ -69,6 +69,22 @@
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.trac.wiki_feature" />
 		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.mylyn.test_feature" />
+		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.mylyn.sdk_feature" />
+		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.mylyn.experimental_sdk_feature" />
+		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.mylyn.extras_sdk_feature" />
+		</ant>
 	</target>
 
 	<target name="experimentalDelegator">
@@ -78,11 +94,15 @@
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.sandbox.dev_feature" />
+			<property name="id" value="org.eclipse.mylyn.monitor_feature" />
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.trac.wiki_feature" />
+			<property name="id" value="org.eclipse.mylyn.xplanner_feature" />
+		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="org.eclipse.mylyn.experimental_sdk_feature" />
 		</ant>
 	</target>
 	
@@ -97,11 +117,11 @@
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.xplanner_feature" />
+			<property name="id" value="org.eclipse.mylyn.trac_feature" />
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.monitor_feature" />
+			<property name="id" value="org.eclipse.mylyn.extras_sdk_feature" />
 		</ant>
 	</target>
 
@@ -136,7 +156,7 @@
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.trac_feature" />
+			<property name="id" value="org.eclipse.mylyn.sdk_feature" />
 		</ant>
 	</target>
 
@@ -192,4 +212,17 @@
 	<target name="assemble.org.eclipse.mylyn.trac.wiki_feature">
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
 	</target>
+	<target name="assemble.org.eclipse.mylyn.test_feature">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
+	</target>
+	<target name="assemble.org.eclipse.mylyn.sdk_feature">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
+	</target>
+	<target name="assemble.org.eclipse.mylyn.extras_sdk_feature">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
+	</target>
+	<target name="assemble.org.eclipse.mylyn.experimental_sdk_feature">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
+	</target>
+	
 </project>

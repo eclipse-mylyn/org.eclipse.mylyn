@@ -24,10 +24,11 @@
    <feature url="features/org.eclipse.mylyn.bugzilla_feature_@core@.jar" id="org.eclipse.mylyn.bugzilla_feature" version="@core@">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.trac_feature_@core@.jar" id="org.eclipse.mylyn.trac_feature" version="@core@">
-      <category name="Integration"/>
+   <feature url="features/org.eclipse.mylyn.sdk_feature_@core@.jar" id="org.eclipse.mylyn.sdk_feature" version="@core@">
+      <category name="SDK"/>
    </feature>
    <category-def name="Features" label="Mylyn Features"/>
    <category-def name="Integration" label="Mylyn Integration"/>
+   <category-def name="SDK" label="Mylyn Plug-in Development"/>
 </site>
 

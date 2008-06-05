@@ -5,18 +5,18 @@ feature@org.eclipse.mylyn.bugzilla_feature=HEAD,:pserver:anonymous@dev.eclipse.o
 feature@org.eclipse.mylyn.java_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.java-feature
 feature@org.eclipse.mylyn.team_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.team-feature
 feature@org.eclipse.mylyn.ide_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.ide-feature
-feature@org.eclipse.mylyn.trac_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.trac-feature
 feature@org.eclipse.mylyn.pde_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.pde-feature
 feature@org.eclipse.mylyn.sdk_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.sdk-feature
 
 !******* EXTRAS ***********
+feature@org.eclipse.mylyn.trac_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.trac-feature
 feature@org.eclipse.mylyn.jira_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.jira-feature
-feature@org.eclipse.mylyn.xplanner_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.xplanner-feature
 feature@org.eclipse.mylyn.web.tasks_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.web.tasks-feature
-feature@org.eclipse.mylyn.monitor_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.monitor-feature
 feature@org.eclipse.mylyn.extras_sdk_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.extras-sdk-feature
 
 !******* EXPERIMENTAL *******
+feature@org.eclipse.mylyn.monitor_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.monitor-feature
+feature@org.eclipse.mylyn.xplanner_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.xplanner-feature
 feature@org.eclipse.mylyn.sandbox.ui_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.sandbox.ui-feature
 feature@org.eclipse.mylyn.sandbox.dev_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.sandbox.dev-feature
 feature@org.eclipse.mylyn.trac.wiki_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.trac.wiki-feature
