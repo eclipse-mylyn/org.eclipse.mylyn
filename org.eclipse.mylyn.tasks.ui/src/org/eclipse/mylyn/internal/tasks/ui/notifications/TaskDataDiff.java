@@ -25,7 +25,7 @@ public class TaskDataDiff {
 	private static final int MAX_CHANGED_ATTRIBUTES = 2;
 
 	private final String[] ATTRIBUTES_IDS = new String[] { TaskAttribute.SUMMARY, TaskAttribute.DESCRIPTION,
-			TaskAttribute.PRODUCT, TaskAttribute.PRIORITY, TaskAttribute.USER_ASSIGNED, };
+			TaskAttribute.PRODUCT, TaskAttribute.PRIORITY, TaskAttribute.USER_ASSIGNED, TaskAttribute.STATUS, };
 
 	private final TaskData newTaskData;
 
