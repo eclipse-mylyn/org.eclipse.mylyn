@@ -4,17 +4,17 @@
       Mylyn Extras for Eclipse 3.3 and 3.4
    </description>
    <feature url="features/org.eclipse.mylyn.jira_feature_@core@.jar" id="org.eclipse.mylyn.jira_feature" version="@core@">
-      <category name="IntegrationExtras"/>
-   </feature>
-   <feature url="features/org.eclipse.mylyn.xplanner_feature_@core@.jar" id="org.eclipse.mylyn.xplanner_feature" version="@core@">
-      <category name="IntegrationExtras"/>
+      <category name="Integration"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.web.tasks_feature_@core@.jar" id="org.eclipse.mylyn.web.tasks_feature" version="@core@">
-      <category name="IntegrationExtras"/>
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.trac_feature_@core@.jar" id="org.eclipse.mylyn.trac_feature" version="@core@">
+      <category name="Integration"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.extras_sdk_feature_@core@.jar" id="org.eclipse.mylyn.extras_sdk_feature" version="@core@">
       <category name="SDK"/>
    </feature>
-   <category-def name="IntegrationExtras" label="Mylyn Integration Extras"/>
+   <category-def name="Integration" label="Mylyn Integration"/>
    <category-def name="SDK" label="Mylyn Plug-in Development"/>
 </site>
