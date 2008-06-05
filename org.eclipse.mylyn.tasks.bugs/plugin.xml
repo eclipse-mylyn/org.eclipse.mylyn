@@ -36,4 +36,84 @@
     	</actionSet>
    </extension>
   
+     <extension
+         point="org.eclipse.ui.handlers">
+       <handler
+            class="org.eclipse.mylyn.internal.tasks.bugs.actions.NewTaskFromMarkerHandler"
+            commandId="org.eclipse.mylyn.tasks.bug.newFromMarker">
+            <activeWhen>
+				<with variable="activePart">
+                    <or>
+                       <test
+                             args="org.eclipse.ui.ide.allMarkersGenerator"
+                             property="org.eclipse.ui.ide.contentGenerator">
+                       </test>
+                       <test
+                             args="org.eclipse.ui.ide.tasksGenerator"
+                             property="org.eclipse.ui.ide.contentGenerator">
+                       </test>                       
+                       <test
+                             args="org.eclipse.ui.ide.bookmarksGenerator"
+                             property="org.eclipse.ui.ide.contentGenerator">
+                       </test>   
+                       <test
+                             args="org.eclipse.ui.ide.problemsGenerator"
+                             property="org.eclipse.ui.ide.contentGenerator">
+                       </test>   
+                    </or>
+                 </with>
+			</activeWhen>
+			<enabledWhen>
+				<count
+					value="1">
+				</count>
+			</enabledWhen>       
+      </handler>
+   </extension>
+ 
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Report as Bug from Marker"
+            id="org.eclipse.mylyn.tasks.bug.newFromMarker"
+            name="New Task from Marker...">
+      </command>
+    </extension>
+ 
+    <extension
+         point="org.eclipse.ui.menus">
+       <menuContribution
+            locationURI="popup:org.eclipse.ui.ide.MarkersView?after=org.eclipse.ui.ide.markCompleted">
+            <command
+                  commandId="org.eclipse.mylyn.tasks.bug.newFromMarker"
+                  icon="icons/etool16/task-new.gif"
+                  mnemonic="New Task from Marker"
+                  style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <with variable="activePart">
+                    <or>
+                       <test
+                             args="org.eclipse.ui.ide.allMarkersGenerator"
+                             property="org.eclipse.ui.ide.contentGenerator">
+                       </test>
+                       <test
+                             args="org.eclipse.ui.ide.tasksGenerator"
+                             property="org.eclipse.ui.ide.contentGenerator">
+                       </test>                       
+                       <test
+                             args="org.eclipse.ui.ide.bookmarksGenerator"
+                             property="org.eclipse.ui.ide.contentGenerator">
+                       </test>   
+                       <test
+                             args="org.eclipse.ui.ide.problemsGenerator"
+                             property="org.eclipse.ui.ide.contentGenerator">
+                       </test>   
+                    </or>
+                 </with>
+              </visibleWhen>
+           </command>
+      </menuContribution>
+     </extension>
+  
 </plugin>
