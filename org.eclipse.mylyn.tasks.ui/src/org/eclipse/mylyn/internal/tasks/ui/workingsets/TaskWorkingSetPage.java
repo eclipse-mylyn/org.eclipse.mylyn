@@ -401,7 +401,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		containers.addAll(Arrays.asList(ResourcesPlugin.getWorkspace().getRoot().getProjects()));
 
 		treeViewer.setInput(containers);
-		treeViewer.expandAll();
+		treeViewer.expandToLevel(2);
 
 		// tree.setComparator(new ResourceComparator(ResourceComparator.NAME));
 
@@ -500,19 +500,25 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
 			public void run() {
 				IAdaptable element = (IAdaptable) event.getElement();
+				handleCheckStateChangeHelper(event, element);
+				validateInput();
+			}
+
+			private void handleCheckStateChangeHelper(final CheckStateChangedEvent event, IAdaptable element) {
 				if (element instanceof AbstractTaskContainer || element instanceof IProject) {
 					treeViewer.setGrayed(element, false);
 				} else if (element instanceof ElementCategory) {
 					for (Object child : ((ElementCategory) element).getChildren(null)) {
 						treeViewer.setChecked(child, event.getChecked());
+						if (child instanceof IAdaptable) {
+							handleCheckStateChangeHelper(event, (IAdaptable) child);
+						}
 					}
 				} else if (element instanceof TaskRepository || element instanceof TaskRepositoryProjectMapping) {
 					for (Object child : workingSetPageContentProvider.getChildren(element)) {
 						treeViewer.setChecked(child, event.getChecked());
 					}
 				}
-
-				validateInput();
 			}
 		});
 	}
