@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -45,9 +45,13 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class TaskListBackupManager implements IPropertyChangeListener {
 
-	public static final String BACKUP_FILE_PREFIX = "mylyndata-";
+	private static final String OLD_MYLYN_2_BACKUP_FILE_PREFIX = "mylyndata-";
 
-	public static final Pattern MYLYN_BACKUP_REGEXP = Pattern.compile("^" + BACKUP_FILE_PREFIX + ".*");
+	// Mylyn 3.0 Backup file name
+	private static final String BACKUP_FILE_PREFIX = "mylyn-v3-data-";
+
+	private static final Pattern MYLYN_BACKUP_REGEXP = Pattern.compile("^(" + BACKUP_FILE_PREFIX + ")?("
+			+ OLD_MYLYN_2_BACKUP_FILE_PREFIX + ")?");
 
 	private static final String TITLE_TASKLIST_BACKUP = "Tasklist Backup";
 
@@ -58,10 +62,6 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	private static final long SECOND = 1000;
 
 	private static final long MINUTE = 60 * SECOND;
-
-//	private static final long HOUR = 60 * MINUTE;
-
-	//private static final long DAY = 24 * HOUR;
 
 	private Timer timer;
 
@@ -142,42 +142,27 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			return filesMap;
 		}
 
-		ArrayList<File> backupFiles = new ArrayList<File>();
 		for (File file : files) {
 			Matcher matcher = MYLYN_BACKUP_REGEXP.matcher(file.getName());
-			if (matcher.find()
-					&& file.getName().length() == BACKUP_FILE_PREFIX.length()
-							+ ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT.length() + 4) {
-				backupFiles.add(file);
-			}
-		}
-
-		File[] backupFileArray = backupFiles.toArray(new File[backupFiles.size()]);
-
-		if (backupFileArray != null && backupFileArray.length > 0) {
-//			Arrays.sort(backupFileArray, new Comparator<File>() {
-//				public int compare(File file1, File file2) {
-//					return new Long((file1).lastModified()).compareTo(new Long((file2).lastModified()));
-//				}
-//			});
-
-			for (File backupFile : backupFileArray) {
-				String name = backupFile.getName();
-				if (name.startsWith(BACKUP_FILE_PREFIX)) {
-					try {
-						String dateString = name.substring(BACKUP_FILE_PREFIX.length(), BACKUP_FILE_PREFIX.length()
-								+ ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT.length());
-						SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
-								Locale.ENGLISH);
-						Date date = format.parse(dateString);
-						if (date.getTime() < 0) {
-							continue;
-						}
-						filesMap.put(new Long(date.getTime()), backupFile);
-					} catch (Throwable e) {
+			if (matcher.find()) {
+				int end = matcher.group().length();
+				Date date = null;
+				try {
+					String dateString = file.getName().substring(end,
+							end + ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT.length());
+					SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
+							Locale.ENGLISH);
+					date = format.parse(dateString);
+					if (date == null || date.getTime() < 0) {
 						continue;
 					}
+				} catch (IndexOutOfBoundsException e) {
+					continue;
+				} catch (ParseException e) {
+					continue;
 				}
+
+				filesMap.put(new Long(date.getTime()), file);
 			}
 		}
 

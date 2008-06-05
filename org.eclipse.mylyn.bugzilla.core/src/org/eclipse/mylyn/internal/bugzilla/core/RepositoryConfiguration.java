@@ -408,8 +408,10 @@ public class RepositoryConfiguration implements Serializable {
 	}
 
 	public void configureTaskData(TaskData taskData) {
-		updateAttributeOptions(taskData);
-		addValidOperations(taskData);
+		if (taskData != null) {
+			updateAttributeOptions(taskData);
+			addValidOperations(taskData);
+		}
 	}
 
 	public void updateAttributeOptions(TaskData existingReport) {
