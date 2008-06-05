@@ -29,6 +29,8 @@ public interface ITasksCoreConstants {
 
 	public static final String FILE_EXTENSION = ".xml.zip";
 
+	public static final String OLD_FILENAME_TIMESTAMP_FORMAT = "yyyy-MM-dd";
+
 	public static final String FILENAME_TIMESTAMP_FORMAT = "yyyy-MM-dd-HHmmss";
 
 	public static final String DEFAULT_TASK_LIST_FILE = PREFIX_TASKLIST + FILE_EXTENSION;

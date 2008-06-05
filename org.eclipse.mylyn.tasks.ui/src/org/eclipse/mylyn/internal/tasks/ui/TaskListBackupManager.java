@@ -53,6 +53,10 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	private static final Pattern MYLYN_BACKUP_REGEXP = Pattern.compile("^(" + BACKUP_FILE_PREFIX + ")?("
 			+ OLD_MYLYN_2_BACKUP_FILE_PREFIX + ")?");
 
+	private static final Pattern DATE_FORMAT_OLD = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+
+	private static final Pattern DATE_FORMAT = Pattern.compile("\\d{4}-\\d{2}-\\d{2}-\\d{6}");
+
 	private static final String TITLE_TASKLIST_BACKUP = "Tasklist Backup";
 
 	private static final String BACKUP_JOB_NAME = "Scheduled task data backup";
@@ -145,15 +149,25 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		for (File file : files) {
 			Matcher matcher = MYLYN_BACKUP_REGEXP.matcher(file.getName());
 			if (matcher.find()) {
-				int end = matcher.group().length();
 				Date date = null;
 				try {
-					String dateString = file.getName().substring(end,
-							end + ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT.length());
-					SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
-							Locale.ENGLISH);
-					date = format.parse(dateString);
-					if (date == null || date.getTime() < 0) {
+					SimpleDateFormat format = null;
+					String dateText = null;
+					Matcher dateFormatMatcher = DATE_FORMAT.matcher(file.getName());
+					if (dateFormatMatcher.find()) {
+						format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT, Locale.ENGLISH);
+						dateText = dateFormatMatcher.group();
+					} else {
+						dateFormatMatcher = DATE_FORMAT_OLD.matcher(file.getName());
+						if (dateFormatMatcher.find()) {
+							format = new SimpleDateFormat(ITasksCoreConstants.OLD_FILENAME_TIMESTAMP_FORMAT,
+									Locale.ENGLISH);
+							dateText = dateFormatMatcher.group();
+						}
+					}
+					if (format != null && dateText != null && dateText.length() > 0) {
+						date = format.parse(dateText);
+					} else {
 						continue;
 					}
 				} catch (IndexOutOfBoundsException e) {
@@ -161,8 +175,9 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				} catch (ParseException e) {
 					continue;
 				}
-
-				filesMap.put(new Long(date.getTime()), file);
+				if (date != null && date.getTime() > 0) {
+					filesMap.put(new Long(date.getTime()), file);
+				}
 			}
 		}
 
