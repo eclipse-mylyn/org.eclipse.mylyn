@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylyn.tasks.bugs;singleton:=true
 Bundle-Version: 3.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
- org.eclipse.ui.views.log,
+ org.eclipse.ui.views.log;resolution:=optional,
  org.eclipse.mylyn.commons.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)",
