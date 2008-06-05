@@ -305,7 +305,7 @@ public class TaskAttachmentWizard extends Wizard {
 
 	private void handleDone(SubmitJob job) {
 		if (job.getStatus() != null) {
-			TasksUiInternal.displayStatus(getShell(), "Attachment Failed", job.getStatus());
+			TasksUiInternal.displayStatus("Attachment Failed", job.getStatus());
 		}
 	}
 
