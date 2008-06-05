@@ -55,7 +55,10 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 					+ originalFile.getName());
 			originalFile.renameTo(failed);
 		}
-		return backup.renameTo(originalFile);
+		if (backup.exists()) {
+			return backup.renameTo(originalFile);
+		}
+		return false;
 	}
 
 	protected boolean takeSnapshot(File file) {
@@ -84,9 +87,10 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 				load(context.getRootPath(), monitor);
 			} catch (CoreException e) {
 				if (dataFile != null) {
-					restoreSnapshot(dataFile);
+					if (restoreSnapshot(dataFile)) {
+						load(context.getRootPath(), monitor);
+					}
 				}
-				load(context.getRootPath(), monitor);
 			}
 			break;
 		case SNAPSHOT:
