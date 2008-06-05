@@ -125,7 +125,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 	@Override
 	protected void fillToolBar(ToolBarManager toolBar) {
-		if (getControl() != null && !getTaskData().isNew()) {
+		if (!getTaskData().isNew()) {
 			AbstractReplyToCommentAction replyAction = new AbstractReplyToCommentAction(getTaskEditorPage(), null) {
 				@Override
 				protected String getReplyText() {
