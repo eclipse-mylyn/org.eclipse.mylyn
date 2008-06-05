@@ -60,7 +60,7 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
    </license>
 
    <url>
-      <update label="Mylyn for Eclipse 3.4" url="http://download.eclipse.org/tools/mylyn/update/e3.4"/>
+      <update label="Mylyn Extras for Eclipse 3.3 and 3.4" url="http://download.eclipse.org/tools/mylyn/update/extras"/>
    </url>
 
    <requires>
