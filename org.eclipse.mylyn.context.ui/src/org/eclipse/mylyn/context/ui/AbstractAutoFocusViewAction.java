@@ -31,7 +31,6 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 
 	private boolean initialized = false;
 
-	// TODO: make final?
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
 		@Override

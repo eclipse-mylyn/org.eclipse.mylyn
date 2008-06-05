@@ -16,8 +16,8 @@ import java.io.File;
  * 
  * @author Mik Kersten
  * @author Steffen Pingel
- * @noimplement
  * @since 3.0
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface IContextStore {
 

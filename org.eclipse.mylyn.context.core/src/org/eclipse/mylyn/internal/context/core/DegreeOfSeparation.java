@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.context.core;
 
-import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
 
 /**
  * @author Shawn Minto

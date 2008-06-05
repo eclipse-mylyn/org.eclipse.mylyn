@@ -22,8 +22,6 @@ import org.eclipse.ui.IEditorPart;
  */
 public final class ContextUi {
 
-	public static String ID_CONTEXT_PAGE = "org.eclipse.mylyn.context.ui.editor.context";
-
 	/**
 	 * @return the corresponding adapter if found, or an adapter with no behavior otherwise (so null is never returned)
 	 */
@@ -38,7 +36,6 @@ public final class ContextUi {
 		return ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 	}
 
-	// API-3.0: move?
 	public static Color getForeground(IInteractionElement node) {
 		if (node == null) {
 			return null;

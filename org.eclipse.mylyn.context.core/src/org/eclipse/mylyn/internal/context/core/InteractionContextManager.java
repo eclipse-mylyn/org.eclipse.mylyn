@@ -194,12 +194,13 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	@SuppressWarnings("deprecation")
 	public void addErrorPredictedInterest(String handle, String kind, boolean notify) {
-		if (numInterestingErrors > ContextCore.getCommonContextScaling().getMaxNumInterestingErrors()
+		if (numInterestingErrors > ((InteractionContextScaling) ContextCore.getCommonContextScaling()).getMaxNumInterestingErrors()
 				|| activeContext.getContextMap().isEmpty()) {
 			return;
 		}
 		InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, kind, handle,
-				SOURCE_ID_MODEL_ERROR, ContextCore.getCommonContextScaling().getErrorInterest());
+				SOURCE_ID_MODEL_ERROR,
+				((InteractionContextScaling) ContextCore.getCommonContextScaling()).getErrorInterest());
 		processInteractionEvent(errorEvent, true);
 		errorElementHandles.add(handle);
 		numInterestingErrors++;
@@ -1039,7 +1040,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 		IInteractionElement element = activeContext.get(handle);
 		if (element != null && element.getInterest().isInteresting() && errorElementHandles.contains(handle)) {
 			InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle,
-					SOURCE_ID_MODEL_ERROR, ContextCore.getCommonContextScaling().getErrorInterest());
+					SOURCE_ID_MODEL_ERROR,
+					((InteractionContextScaling) ContextCore.getCommonContextScaling()).getErrorInterest());
 			processInteractionEvent(errorEvent, true);
 			numInterestingErrors--;
 			errorElementHandles.remove(handle);

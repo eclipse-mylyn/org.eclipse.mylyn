@@ -19,6 +19,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -57,6 +58,7 @@ public class ResourceInterestUpdater {
 		}
 	}
 
+	@SuppressWarnings("restriction")
 	private void internalAddResourceToContext(Set<IResource> resources, InteractionEvent.Kind interactionKind) {
 		List<InteractionEvent> interactionEvents = new ArrayList<InteractionEvent>();
 		for (IResource resource : resources) {
@@ -74,9 +76,9 @@ public class ResourceInterestUpdater {
 			}
 		}
 		if (InteractionEvent.Kind.SELECTION.equals(interactionKind)) {
-			ContextCore.getContextManager().processInteractionEvents(interactionEvents, true);
+			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, true);
 		} else {
-			ContextCore.getContextManager().processInteractionEvents(interactionEvents, false);
+			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, false);
 		}
 	}
 

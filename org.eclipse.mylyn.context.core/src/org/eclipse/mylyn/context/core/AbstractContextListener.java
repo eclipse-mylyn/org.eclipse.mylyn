@@ -11,10 +11,7 @@ package org.eclipse.mylyn.context.core;
 import java.util.List;
 
 /**
- * Notified of changes to the context model activity.
- * 
- * API-3.0: rename to InteractionContextListener, consider breaking out interest listener, consider removing relations
- * stuff
+ * Override methods in this class in order to be notified of the corresponding events.
  * 
  * @author Mik Kersten
  * @author Shawn Minto
@@ -23,53 +20,65 @@ import java.util.List;
 public abstract class AbstractContextListener {
 
 	/**
-	 * @param context
-	 *            can be null
+	 * Invoked before the context is activated.
+	 * 
 	 * @since 3.0
 	 */
 	public void contextPreActivated(IInteractionContext context) {
 	}
 
 	/**
-	 * The context is now active, e.g. as a result of a task activation.
+	 * Invoked after the context is activated.
+	 * 
+	 * @since 3.0
 	 */
 	public void contextActivated(IInteractionContext context) {
 	}
 
 	/**
-	 * The context has been deactivated, e.g. as a result of a task deactivation.
+	 * Invoked after the context is deactivated.
+	 * 
+	 * @since 3.0
 	 */
 	public void contextDeactivated(IInteractionContext context) {
 	}
 
 	/**
 	 * The context has been cleared, typically done by the user.
+	 * 
+	 * @since 3.0
 	 */
 	public void contextCleared(IInteractionContext context) {
 	}
 
 	/**
-	 * Called when the interest level for multiple elements changes, sorted according to the containment hierarchy. The
-	 * last element is the element invoking the change.
+	 * The interest level of one or more elements has changed. The last element in the list is the element invoking the
+	 * change.
+	 * 
+	 * @since 3.0
 	 */
 	public void interestChanged(List<IInteractionElement> elements) {
 	}
 
 	/**
-	 * @param newLandmarks
-	 *            list of IJavaElement(s)
+	 * An element with landmark interest has been added to the context.
+	 * 
+	 * @since 3.0
 	 */
 	public void landmarkAdded(IInteractionElement element) {
 	}
 
 	/**
-	 * @param newLandmarks
-	 *            list of IJavaElement(s)
+	 * An element with landmark interest has been removed from the task context.
+	 * 
+	 * @since 3.0
 	 */
 	public void landmarkRemoved(IInteractionElement element) {
 	}
 
 	/**
+	 * One or more elements have been deleted from the task context.
+	 * 
 	 * @since 3.0
 	 */
 	public void elementsDeleted(List<IInteractionElement> elements) {

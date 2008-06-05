@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.context.core;
 
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -48,10 +47,6 @@ public interface IInteractionContextManager {
 	public IInteractionElement getActiveElement();
 
 	public IInteractionElement processInteractionEvent(InteractionEvent event);
-
-	// API-3.0: merge with above
-	@Deprecated
-	public void processInteractionEvents(List<InteractionEvent> events, boolean propagateToParents);
 
 	public boolean isContextActive();
 

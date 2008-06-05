@@ -13,6 +13,8 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 /**
  * @author Mik Kersten
  * @since 3.0
+ * 
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface IInteractionContextScaling {
 
@@ -25,11 +27,5 @@ public interface IInteractionContextScaling {
 	public abstract float getLandmark();
 
 	public abstract float getForcedLandmark();
-
-	@Deprecated
-	public abstract int getMaxNumInterestingErrors();
-
-	@Deprecated
-	public abstract float getErrorInterest();
 
 }

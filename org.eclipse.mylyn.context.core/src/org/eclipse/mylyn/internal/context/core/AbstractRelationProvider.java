@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 

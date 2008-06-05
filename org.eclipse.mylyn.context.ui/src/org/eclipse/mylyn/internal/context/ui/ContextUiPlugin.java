@@ -205,6 +205,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private ContextEditorManager editorManager;
 
+	public static String ID_CONTEXT_PAGE = "org.eclipse.mylyn.context.ui.editor.context";
+
 	public ContextUiPlugin() {
 		INSTANCE = this;
 	}

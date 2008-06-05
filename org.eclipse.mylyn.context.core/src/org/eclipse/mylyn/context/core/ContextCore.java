@@ -18,7 +18,6 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
  */
 public final class ContextCore {
 
-	// API-3.0: move?
 	public static final String CONTENT_TYPE_RESOURCE = "resource";
 
 	/**
