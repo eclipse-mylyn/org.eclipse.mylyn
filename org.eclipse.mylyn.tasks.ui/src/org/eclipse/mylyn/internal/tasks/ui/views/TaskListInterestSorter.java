@@ -35,25 +35,10 @@ public class TaskListInterestSorter extends ViewerSorter {
 		} else if (o2 instanceof ITaskContainer && o1 instanceof UnmatchedTaskContainer) {
 			return 1;
 		}
-//
-//		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
-//			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
-//			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
-//			if (dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange())getisCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
-//				return 1;
-//			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
-//				return -1;
-//			}
-//			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
 		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
 			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
 			return dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange());
-//			if (dateRangeTaskContainer1.isCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
-//				return 1;
-//			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
-//				return -1;
-//			}
 		} else if (o1 instanceof ITaskContainer && o2 instanceof ScheduledTaskContainer) {
 			return -1;
 		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ITaskContainer) {
@@ -134,16 +119,6 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareScheduledDate(AbstractTask task1, AbstractTask task2) {
-//		if (task1.internalIsFloatingScheduledDate() && !task2.internalIsFloatingScheduledDate()) {
-//			return 1;
-//		} else if (!task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
-//			return -1;
-//		} else if (task1.internalIsFloatingScheduledDate() && task2.internalIsFloatingScheduledDate()) {
-//			if (task1.getScheduledForDate() != null && task2.getScheduledForDate() != null) {
-//				return 0;
-//			}
-//		}
-
 		if (isToday(task1) && !isToday(task2)) {
 			return -1;
 		} else if (!isToday(task1) && isToday(task2)) {
@@ -154,20 +129,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private boolean isToday(AbstractTask task) {
-		return task.isPastReminder() || TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task);
+		return TasksUiPlugin.getTaskActivityManager().isPastReminder(task)
+				|| TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task);
 	}
-
-//	private int compareThisWeek(AbstractTask task1, AbstractTask task2) {
-//		if (TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task1)
-//				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task2)) {
-//			return 1;
-//		} else if (!TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task1)
-//				&& TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task2)) {
-//			return -1;
-//		} else {
-//			return 0;
-//		}
-//	}
 
 	private int compareCompleted(ITask task1, ITask task2) {
 		if (task1.isCompleted() && !task2.isCompleted()) {
@@ -178,40 +142,6 @@ public class TaskListInterestSorter extends ViewerSorter {
 			return 0;
 		}
 	}
-
-//	private int compareOverScheduled(AbstractTask task1, AbstractTask task2) {
-//		if (task1.isPastReminder() && !task2.isPastReminder()) {
-//			return -1;
-//		} else if (!task1.isPastReminder() && task2.isPastReminder()) {
-//			return 1;
-//		} else {
-//			return 0;
-//		}
-//	}
-//
-//	private int compareScheduledToday(AbstractTask task1, AbstractTask task2) {
-//		if (TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task1)
-//				&& !TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task2)) {
-//			return -1;
-//		} else if (!TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task1)
-//				&& TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task2)) {
-//			return 1;
-//		} else {
-//			return 0;
-//		}
-//	}
-
-	// private int compareChanges(ITask task1, ITask task2) {
-	// if (TaskListInterestFilter.hasChanges(task1) &&
-	// !TaskListInterestFilter.hasChanges(task2)) {
-	// return 1;
-	// } else if (!TaskListInterestFilter.hasChanges(task1) &&
-	// TaskListInterestFilter.hasChanges(task2)) {
-	// return -1;
-	// } else {
-	// return 0;
-	// }
-	// }
 
 	private int comparePrioritiesAndKeys(IRepositoryElement element1, IRepositoryElement element2) {
 		int priority = comparePriorities(element1, element2);

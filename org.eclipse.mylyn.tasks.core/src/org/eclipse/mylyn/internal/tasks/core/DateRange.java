@@ -142,7 +142,7 @@ public class DateRange implements Comparable<DateRange> {
 		return TaskActivityUtil.getCurrentWeek().next().compareTo(this) == 0;
 	}
 
-	private boolean isThisWeek() {
+	public boolean isThisWeek() {
 		if (isWeek()) {
 			return this.includes(Calendar.getInstance());
 		}
@@ -168,6 +168,10 @@ public class DateRange implements Comparable<DateRange> {
 
 	public boolean isPast() {
 		return getEndDate().compareTo(Calendar.getInstance()) < 0;
+	}
+
+	public boolean isBefore(DateRange scheduledDate) {
+		return this.getEndDate().compareTo(scheduledDate.getStartDate()) < 0;
 	}
 
 	@Override

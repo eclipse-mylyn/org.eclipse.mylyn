@@ -8,12 +8,19 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.util.Calendar;
+
 import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -67,6 +74,29 @@ public class TableSorterTest extends TestCase {
 		@Override
 		public void setSelection(ISelection selection, boolean reveal) {
 		}
+	}
+
+	public void testScheduledTaskSorting() {
+		final TaskListInterestSorter sorter = new TaskListInterestSorter();
+		MockTask task1 = new MockTask("local", "MYLN:1", "1");
+		MockTask task2 = new MockTask("local", "MYLN:2", "2");
+
+		Calendar start1 = TaskActivityUtil.getCalendar();
+		start1.add(Calendar.WEEK_OF_YEAR, -1);
+		TaskActivityUtil.snapStartOfWorkWeek(start1);
+		Calendar end1 = TaskActivityUtil.getCalendar();
+		end1.setTimeInMillis(start1.getTimeInMillis());
+		TaskActivityUtil.snapEndOfWeek(end1);
+		WeekDateRange range1 = new WeekDateRange(start1, end1);
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(task1, range1);
+
+		Calendar start2 = TaskActivityUtil.getCalendar();
+		start2.add(Calendar.HOUR_OF_DAY, -1);
+		Calendar end2 = TaskActivityUtil.getCalendar();
+		DateRange range2 = new DateRange(start2, end2);
+		TasksUiPlugin.getTaskActivityManager().setScheduledFor(task2, range2);
+
+		assertTrue(sorter.compare(new EmptyViewer(), task1, task2) < 0);
 	}
 
 	public void testSummaryOrderSorting() {

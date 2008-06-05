@@ -86,8 +86,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				Action action = createDateSelectionAction(day, CommonImages.SCHEDULE_DAY);
 				subMenuManager.add(action);
 				// Special case: Over scheduled tasks always 'scheduled' for today
-				if (singleTaskSelection != null && day.equals(singleTaskSelection.getScheduledForDate())
-						&& isPastReminder(singleTaskSelection)) {
+				if (singleTaskSelection != null && isPastReminder(singleTaskSelection)) {
 					action.setChecked(true);
 				}
 			} else if (day.after(TaskActivityUtil.getCalendar())) {
@@ -112,6 +111,12 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		// This Week
 		Action action = createDateSelectionAction(week, CommonImages.SCHEDULE_WEEK);
 		subMenuManager.add(action);
+		// Special case: This Week holds previous weeks' scheduled tasks
+		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate().isWeek()
+				&& singleTaskSelection.getScheduledForDate().isBefore(week)) {
+			// Tasks scheduled for 'someday' float into this week
+			action.setChecked(true);
+		}
 
 		// Next Week
 		action = createDateSelectionAction(week.next(), null);

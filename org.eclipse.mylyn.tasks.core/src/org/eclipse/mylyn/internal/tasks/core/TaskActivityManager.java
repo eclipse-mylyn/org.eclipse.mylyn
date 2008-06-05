@@ -591,7 +591,8 @@ public class TaskActivityManager implements ITaskActivityManager {
 	}
 
 	public boolean isPastReminder(AbstractTask task) {
-		if (task == null || task.isCompleted() || task.getScheduledForDate() == null) {
+		if (task == null || task.isCompleted() || task.getScheduledForDate() == null
+				|| !task.getScheduledForDate().isDay()) {
 			return false;
 		} else {
 			return isPastReminder(task.getScheduledForDate(), task.isCompleted());
