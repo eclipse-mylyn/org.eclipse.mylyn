@@ -125,13 +125,15 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
 	@Override
 	protected void fillToolBar(ToolBarManager toolBar) {
-		AbstractReplyToCommentAction replyAction = new AbstractReplyToCommentAction(getTaskEditorPage(), null) {
-			@Override
-			protected String getReplyText() {
-				return getEditor().getValue();
-			}
-		};
-		toolBar.add(replyAction);
+		if (getControl() != null && !getTaskData().isNew()) {
+			AbstractReplyToCommentAction replyAction = new AbstractReplyToCommentAction(getTaskEditorPage(), null) {
+				@Override
+				protected String getReplyText() {
+					return getEditor().getValue();
+				}
+			};
+			toolBar.add(replyAction);
+		}
 	}
 
 	protected IRepositoryQuery getDuplicateQuery(String name) throws CoreException {
