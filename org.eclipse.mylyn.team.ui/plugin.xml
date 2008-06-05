@@ -112,7 +112,7 @@
          <action
                class="org.eclipse.mylyn.internal.team.ui.actions.ApplyPatchAction"
                icon="icons/elcl16/apply-patch.gif"
-               id="org.eclipse.mylyn.team.ui.ui.patch.apply"
+               id="org.eclipse.mylyn.team.ui.ui.patch.apply.legacy"
                label="Apply Patch..."
                menubarPath="actions"
                tooltip="Apply from Repository Task Attachment"
