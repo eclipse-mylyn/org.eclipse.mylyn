@@ -1634,5 +1634,14 @@
             type="org.eclipse.mylyn.tasks.core.ITaskAttachment">
       </propertyTester>
    </extension>
+   
+   <extension
+         point="org.eclipse.mylyn.commons.core.errorReporters">
+      <errorReporter
+            class="org.eclipse.mylyn.internal.tasks.ui.DialogErrorReporter"
+            id="org.eclipse.mylyn.tasks.bugs.errorReporter"
+            label="Report Error as Bug">
+      </errorReporter>
+   </extension>    
      
 </plugin>

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.bugs;
+package org.eclipse.mylyn.internal.provisional.tasks.bugs;
 
 import java.util.Map;
 

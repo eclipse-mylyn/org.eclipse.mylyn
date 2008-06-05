@@ -51,7 +51,6 @@ public class AttributeTaskMapper {
 		return taskRepository;
 	}
 
-	@SuppressWarnings("restriction")
 	public TaskData createTaskData(IProgressMonitor monitor) throws CoreException {
 		ITaskMapping taskMapping = getTaskMapping();
 		return TasksUiInternal.createTaskData(getTaskRepository(), taskMapping, taskMapping, monitor);

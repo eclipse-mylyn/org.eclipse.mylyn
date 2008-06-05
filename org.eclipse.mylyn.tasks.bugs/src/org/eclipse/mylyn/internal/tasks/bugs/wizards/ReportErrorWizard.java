@@ -37,7 +37,6 @@ public class ReportErrorWizard extends Wizard {
 		setWindowTitle("Report as Bug");
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void addPages() {
 		reportErrorPage = new ReportErrorPage(mapper, status);

@@ -16,9 +16,9 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.internal.provisional.tasks.bugs.AbstractTaskContributor;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ErrorLogStatus;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.FeatureStatus;
-import org.eclipse.mylyn.tasks.bugs.AbstractTaskContributor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.osgi.framework.Bundle;
 
