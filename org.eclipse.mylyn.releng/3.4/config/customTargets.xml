@@ -200,7 +200,7 @@
 			<param name="target" value="updateSiteExport" />
 		</antcall>
 
-		<zip destfile="${UpdateSiteLocation}/mylyn-${org.eclipse.mylyn_feature}-${SiteName}.zip" basedir="${UpdateSiteLocation}" />
+		<zip destfile="${UpdateSiteLocation}/../mylyn-${org.eclipse.mylyn_feature}-${SiteName}.zip" basedir="${UpdateSiteLocation}" />
 		<!--<exec dir="${UpdateSiteLocation}" executable="scp" failonerror="true">
 			<arg value="${UpdateSiteLocation}/update-${org.eclipse.mylyn_feature}.zip"/>
 		    <arg value="username@host:/destination/folder/"/>

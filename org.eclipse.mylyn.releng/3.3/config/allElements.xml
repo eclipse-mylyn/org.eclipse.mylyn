@@ -73,18 +73,6 @@
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.test_feature" />
 		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.sdk_feature" />
-		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.experimental_sdk_feature" />
-		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.extras_sdk_feature" />
-		</ant>
 	</target>
 
 	<target name="experimentalDelegator">
@@ -100,10 +88,6 @@
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.xplanner_feature" />
 		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.experimental_sdk_feature" />
-		</ant>
 	</target>
 	
 	<target name="extrasDelegator">
@@ -118,10 +102,6 @@
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.trac_feature" />
-		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.extras_sdk_feature" />
 		</ant>
 	</target>
 
@@ -153,10 +133,6 @@
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
 			<property name="id" value="org.eclipse.mylyn.pde_feature" />
-		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.mylyn.sdk_feature" />
 		</ant>
 	</target>
 
@@ -213,15 +189,6 @@
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
 	</target>
 	<target name="assemble.org.eclipse.mylyn.test_feature">
-		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
-	</target>
-	<target name="assemble.org.eclipse.mylyn.sdk_feature">
-		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
-	</target>
-	<target name="assemble.org.eclipse.mylyn.extras_sdk_feature">
-		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
-	</target>
-	<target name="assemble.org.eclipse.mylyn.experimental_sdk_feature">
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}" />
 	</target>
 	
