@@ -112,7 +112,8 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		Action action = createDateSelectionAction(week, CommonImages.SCHEDULE_WEEK);
 		subMenuManager.add(action);
 		// Special case: This Week holds previous weeks' scheduled tasks
-		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate().isWeek()
+		if (singleTaskSelection != null && singleTaskSelection.getScheduledForDate() != null
+				&& singleTaskSelection.getScheduledForDate().isWeek()
 				&& singleTaskSelection.getScheduledForDate().isBefore(week)) {
 			// Tasks scheduled for 'someday' float into this week
 			action.setChecked(true);
