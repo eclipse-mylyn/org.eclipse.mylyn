@@ -23,7 +23,9 @@ public interface ITasksCoreConstants {
 
 	public static final String FILENAME_ENCODING = "UTF-8";
 
-	public static final String PREFIX_TASKLIST = "tasklist";
+	public static final String OLD_PREFIX_TASKLIST = "tasklist";
+
+	public static final String PREFIX_TASKS = "tasks";
 
 	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
 
@@ -33,7 +35,9 @@ public interface ITasksCoreConstants {
 
 	public static final String FILENAME_TIMESTAMP_FORMAT = "yyyy-MM-dd-HHmmss";
 
-	public static final String DEFAULT_TASK_LIST_FILE = PREFIX_TASKLIST + FILE_EXTENSION;
+	public static final String OLD_M_2_TASKLIST_FILENAME = OLD_PREFIX_TASKLIST + FILE_EXTENSION;
+
+	public static final String DEFAULT_TASK_LIST_FILE = PREFIX_TASKS + FILE_EXTENSION;
 
 	public static final String CONTEXTS_DIRECTORY = "contexts";
 

@@ -12,8 +12,6 @@ import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
@@ -64,24 +62,13 @@ public class RepositoryExternalizationParticipant extends AbstractExternalizatio
 	}
 
 	@Override
-	public void load(String rootPath, IProgressMonitor monitor) throws CoreException {
-		File repositoriesFile = getFile(rootPath);
-		try {
-			repositoryManager.readRepositories(repositoriesFile.getAbsolutePath());
-		} catch (Exception e) {
-			if (restoreSnapshot(repositoriesFile)) {
-				repositoryManager.readRepositories(repositoriesFile.getAbsolutePath());
-			} else {
-				throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Failed to load repositories", e));
-			}
-		}
+	public void load(File sourceFile, IProgressMonitor monitor) throws CoreException {
+		repositoryManager.readRepositories(sourceFile.getAbsolutePath());
 	}
 
 	@Override
-	public void save(String rootPath, IProgressMonitor monitor) throws CoreException {
-		File repositoriesFile = getFile(rootPath);
-		repositoryManager.saveRepositories(repositoriesFile.getAbsolutePath());
+	public void save(File targetFile, IProgressMonitor monitor) throws CoreException {
+		repositoryManager.saveRepositories(targetFile.getAbsolutePath());
 		synchronized (RepositoryExternalizationParticipant.this) {
 			dirty = false;
 		}

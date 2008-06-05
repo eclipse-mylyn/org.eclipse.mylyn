@@ -68,16 +68,34 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 	}
 
 	@Override
-	public void load(String rootPath, IProgressMonitor monitor) throws CoreException {
-		final File taskListFile = getFile(rootPath);
+	public void load(final File sourceFile, IProgressMonitor monitor) throws CoreException {
 		ITaskListRunnable loadRunnable = new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				resetTaskList();
-				taskListWriter.readTaskList(taskList, taskListFile);
+				taskListWriter.readTaskList(taskList, sourceFile);
 			}
 		};
 
 		taskList.run(loadRunnable, monitor);
+	}
+
+	@Override
+	protected boolean performLoad(File dataFile, IProgressMonitor monitor) throws CoreException {
+		if (super.performLoad(dataFile, monitor)) {
+			return true;
+		} else {
+			try {
+				// attempt restore of old Mylyn tasklist.xml.zip
+				File oldTasklist = new File(dataFile.getParent(), ITasksCoreConstants.OLD_M_2_TASKLIST_FILENAME);
+				if (oldTasklist.exists()) {
+					load(oldTasklist, monitor);
+					return true;
+				}
+			} catch (CoreException e) {
+				// ignore
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -99,11 +117,10 @@ public class TaskListExternalizationParticipant extends AbstractExternalizationP
 	}
 
 	@Override
-	public void save(String rootPath, IProgressMonitor monitor) throws CoreException {
-		final File taskListFile = getFile(rootPath);
+	public void save(final File targetFile, IProgressMonitor monitor) throws CoreException {
 		ITaskListRunnable saveRunnable = new ITaskListRunnable() {
 			public void execute(IProgressMonitor monitor) throws CoreException {
-				taskListWriter.writeTaskList(taskList, taskListFile);
+				taskListWriter.writeTaskList(taskList, targetFile);
 				synchronized (TaskListExternalizationParticipant.this) {
 					dirty = false;
 				}

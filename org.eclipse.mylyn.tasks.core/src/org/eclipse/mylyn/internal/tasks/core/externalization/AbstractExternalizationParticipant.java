@@ -9,16 +9,12 @@
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 
 /**
  * File based externalization participant
@@ -29,9 +25,9 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 
 	static final String SNAPSHOT_PREFIX = ".";
 
-	public abstract void load(String rootPath, IProgressMonitor monitor) throws CoreException;
+	public abstract void load(File sourceFile, IProgressMonitor monitor) throws CoreException;
 
-	public abstract void save(String rootPath, IProgressMonitor monitor) throws CoreException;
+	public abstract void save(File targetFile, IProgressMonitor monitor) throws CoreException;
 
 	public abstract String getDescription();
 
@@ -43,22 +39,6 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 
 	public AbstractExternalizationParticipant() {
 		super();
-	}
-
-	protected boolean restoreSnapshot(File file) {
-		File backup = new File(file.getParentFile(), SNAPSHOT_PREFIX + file.getName());
-		File originalFile = file.getAbsoluteFile();
-		if (originalFile.exists()) {
-			SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
-					Locale.ENGLISH);
-			File failed = new File(file.getParentFile(), "failed-" + format.format(new Date()) + "-"
-					+ originalFile.getName());
-			originalFile.renameTo(failed);
-		}
-		if (backup.exists()) {
-			return backup.renameTo(originalFile);
-		}
-		return false;
 	}
 
 	protected boolean takeSnapshot(File file) {
@@ -80,23 +60,31 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 			if (dataFile != null) {
 				takeSnapshot(dataFile);
 			}
-			save(context.getRootPath(), monitor);
+			save(dataFile, monitor);
 			break;
 		case LOAD:
-			try {
-				load(context.getRootPath(), monitor);
-			} catch (CoreException e) {
-				if (dataFile != null) {
-					if (restoreSnapshot(dataFile)) {
-						load(context.getRootPath(), monitor);
-					}
-				}
-			}
+			performLoad(dataFile, monitor);
 			break;
 		case SNAPSHOT:
 			break;
 		}
 
+	}
+
+	protected boolean performLoad(final File dataFile, IProgressMonitor monitor) throws CoreException {
+		try {
+			load(dataFile, monitor);
+			return true;
+		} catch (CoreException e) {
+			if (dataFile != null) {
+				File backup = new File(dataFile.getParentFile(), SNAPSHOT_PREFIX + dataFile.getName());
+				if (backup.exists()) {
+					load(backup, monitor);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public File getFile(String rootPath) throws CoreException {
@@ -105,18 +93,6 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 			String filePath = rootPath + File.separator + getFileName();
 			return new File(filePath);
 		}
-
-//		if (!file.exists()) {
-//			try {
-//				if (!file.createNewFile()) {
-//					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, getDescription()
-//							+ " file not found, error creating new file."));
-//				}
-//			} catch (IOException e) {
-//				throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, getDescription()
-//						+ " file not found, error creating new file.", e));
-//			}
-//		}
 
 		return null;
 	}

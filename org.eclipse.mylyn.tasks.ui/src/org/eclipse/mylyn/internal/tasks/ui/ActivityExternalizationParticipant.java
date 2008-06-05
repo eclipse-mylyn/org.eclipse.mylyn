@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -76,13 +78,13 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 	}
 
 	@Override
-	public void load(String rootPath, IProgressMonitor monitor) throws CoreException {
+	public void load(File sourceFile, IProgressMonitor monitor) throws CoreException {
 		// ignore
 
 	}
 
 	@Override
-	public void save(String rootPath, IProgressMonitor monitor) throws CoreException {
+	public void save(File targetFile, IProgressMonitor monitor) throws CoreException {
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		setDirty(false);
 	}

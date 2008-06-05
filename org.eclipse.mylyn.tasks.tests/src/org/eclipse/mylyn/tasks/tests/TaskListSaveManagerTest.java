@@ -93,8 +93,8 @@ public class TaskListSaveManagerTest extends TestCase {
 
 	private File createFile(File backupFolder, Calendar time) {
 		SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT, Locale.ENGLISH);
-		File newFile = new File(backupFolder, ITasksCoreConstants.PREFIX_TASKLIST + "-" + format.format(time.getTime())
-				+ ITasksCoreConstants.FILE_EXTENSION);
+		File newFile = new File(backupFolder, ITasksCoreConstants.OLD_PREFIX_TASKLIST + "-"
+				+ format.format(time.getTime()) + ITasksCoreConstants.FILE_EXTENSION);
 		try {
 			newFile.createNewFile();
 		} catch (IOException e) {
