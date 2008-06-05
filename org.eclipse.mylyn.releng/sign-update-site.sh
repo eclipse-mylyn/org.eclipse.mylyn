@@ -19,7 +19,7 @@ ECLIPSE_HOME=/shared/tools/mylyn/eclipse
 unzip() {
  /bin/rm -R $TMP/$1 || true
  /bin/mkdir -p $TMP/$1
- /usr/bin/unzip -d $TMP/$1 $SRC/$1/mylyn-$MAJOR.$BUILD-$1.zip
+ /usr/bin/unzip -d $TMP/$1 $SRC/mylyn-$MAJOR.$BUILD-$1.zip
 }
 
 rezip() {
@@ -44,9 +44,10 @@ then
  # extract site
 
  /bin/rm $TMP || true
+ unzip e3.3
  unzip e3.4
  unzip extras
- unzip experimental
+ unzip incubator
 
  /bin/rm $DST/mylyn.zip || true
  cd $TMP
@@ -76,13 +77,15 @@ fi
 # repack site
 
 /usr/bin/unzip -o -d $TMP $OUT/mylyn.zip
+rezip e3.3
 rezip e3.4
 rezip extras
-rezip experimental
+rezip incubator
 
+pack e3.3
 pack e3.4
 pack extras
-pack experimental
+pack incubator
 
 # republish
 

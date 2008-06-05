@@ -13,7 +13,7 @@ BUILD_ROOT=$(cd $(dirname $0); pwd)
 rm -R $BUILD_ROOT/3.3/build || true
 rm -R $BUILD_ROOT/3.4/build || true
 
-#$BUILD_ROOT/build-3.3.sh $*
+$BUILD_ROOT/build-3.3.sh $*
 $BUILD_ROOT/build-3.4.sh $*
 
 source $BUILD_ROOT/local.sh
@@ -27,7 +27,7 @@ $JAVA_HOME/bin/java \
  -outputDir $1 $1  
 }
 
-#pack $BUILD_ROOT/3.3/build/standardUpdateSite
+pack $BUILD_ROOT/3.3/build/standardUpdateSite
 pack $BUILD_ROOT/3.4/build/standardUpdateSite
 pack $BUILD_ROOT/3.4/build/extrasUpdateSite
-pack $BUILD_ROOT/3.4/build/experimentalUpdateSite
+pack $BUILD_ROOT/3.4/build/incubatorUpdateSite

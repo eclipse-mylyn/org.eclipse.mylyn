@@ -15,8 +15,8 @@
 	<target name="extrasElements">
 		<antcall target="extrasDelegator" />
 	</target>
-	<target name="experimentalElements">
-		<antcall target="experimentalDelegator" />
+	<target name="incubatorElements">
+		<antcall target="incubatorDelegator" />
 	</target>
 
 	<!-- ===================================================================== -->
@@ -169,10 +169,10 @@
 			<param name="SiteName" value="extras" />
 		</antcall>
 		<antcall target="generateUpdateSite">
-			<param name="UpdateSiteLocation" value="${buildDirectory}/experimentalUpdateSite" />
-			<param name="SiteXmlFile" value="experimental-site.xml" />
-			<param name="ElementsTarget" value="experimentalElements" />
-			<param name="SiteName" value="experimental" />
+			<param name="UpdateSiteLocation" value="${buildDirectory}/incubatorUpdateSite" />
+			<param name="SiteXmlFile" value="incubator-site.xml" />
+			<param name="ElementsTarget" value="incubatorElements" />
+			<param name="SiteName" value="incubator" />
 		</antcall>
 		<antcall target="generateUpdateSite">
 			<param name="UpdateSiteLocation" value="${buildDirectory}/allUpdateSite" />

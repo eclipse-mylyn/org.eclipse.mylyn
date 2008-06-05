@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site pack200="true">
    <description url="http://download.eclipse.org/tools/mylyn/update/weekly/incubator">
-      Mylyn Experimental Features
+      Mylyn Incubator Features
    </description>
    <feature url="features/org.eclipse.mylyn.xplanner_feature_@core@.jar" id="org.eclipse.mylyn.xplanner_feature" version="@core@">
       <category name="Integration"/>

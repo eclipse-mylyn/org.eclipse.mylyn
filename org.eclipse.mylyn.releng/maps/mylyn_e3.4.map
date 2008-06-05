@@ -14,7 +14,7 @@ feature@org.eclipse.mylyn.jira_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/
 feature@org.eclipse.mylyn.web.tasks_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.web.tasks-feature
 feature@org.eclipse.mylyn.extras_sdk_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.extras-sdk-feature
 
-!******* EXPERIMENTAL *******
+!******* INCUBATOR *******
 feature@org.eclipse.mylyn.monitor_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/org.eclipse.mylyn.monitor-feature
 feature@org.eclipse.mylyn.xplanner_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.xplanner-feature
 feature@org.eclipse.mylyn.sandbox.ui_feature=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.mylyn/sandbox/org.eclipse.mylyn.sandbox.ui-feature
