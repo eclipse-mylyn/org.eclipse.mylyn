@@ -70,7 +70,7 @@ public class AttributeTaskMapper {
 		}
 
 		@Override
-		public void copyFrom(ITaskMapping source) {
+		public void merge(ITaskMapping source) {
 		}
 
 		@Override

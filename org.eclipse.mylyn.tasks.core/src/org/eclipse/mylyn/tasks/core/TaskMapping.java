@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class TaskMapping implements ITaskMapping {
 
-	public void copyFrom(ITaskMapping source) {
+	public void merge(ITaskMapping source) {
 		// ignore
 	}
 

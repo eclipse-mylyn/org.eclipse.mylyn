@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public interface ITaskMapping {
 
-	public void copyFrom(ITaskMapping source);
+	public void merge(ITaskMapping source);
 
 	public abstract List<String> getCc();
 

@@ -733,7 +733,7 @@ public class TasksUiInternal {
 				"");
 		taskDataHandler.initializeTaskData(taskRepository, taskData, initializationData, monitor);
 		if (selectionData != null) {
-			connector.getTaskMapping(taskData).copyFrom(selectionData);
+			connector.getTaskMapping(taskData).merge(selectionData);
 		}
 		return taskData;
 	}

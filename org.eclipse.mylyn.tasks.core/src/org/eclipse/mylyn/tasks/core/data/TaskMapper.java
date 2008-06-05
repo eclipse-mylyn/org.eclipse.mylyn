@@ -130,7 +130,7 @@ public class TaskMapper implements ITaskMapping {
 	 *            handler
 	 * @since 2.2
 	 */
-	public void copyFrom(ITaskMapping source) {
+	public void merge(ITaskMapping source) {
 		if (source.getTaskData() != null && this.getTaskData() != null
 				&& source.getTaskData().equals(this.getTaskData().getConnectorKind())) {
 			// task data objects are from the same connector, copy all attributes
