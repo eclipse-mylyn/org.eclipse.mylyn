@@ -30,7 +30,7 @@
             state="true">
          <enablement>
             <objectClass
-                  name="org.eclipse.mylyn.internal.team.ui.ContextChangeSet">
+                  name="org.eclipse.mylyn.team.ui.IContextChangeSet">
             </objectClass>
          </enablement>
       </decorator>
