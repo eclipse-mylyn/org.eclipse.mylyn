@@ -44,6 +44,8 @@ import org.eclipse.ui.menus.CommandContributionItem;
  */
 public class TaskHistoryDropDown extends CompoundContributionItem {
 
+	private final static int MAX_ITEMS_TO_DISPLAY = 16;
+
 	private class ActivateDialogAction extends Action {
 
 		private final ActivateTaskDialogAction dialogAction;
@@ -118,8 +120,6 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			new TaskActivateAction().run(targetTask);
 		}
 	}
-
-	private final static int MAX_ITEMS_TO_DISPLAY = 12;
 
 	private final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
