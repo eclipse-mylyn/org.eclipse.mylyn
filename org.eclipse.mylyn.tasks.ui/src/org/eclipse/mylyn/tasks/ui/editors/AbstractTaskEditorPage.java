@@ -1093,9 +1093,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	 */
 	private void setMenu(Composite comp, Menu menu) {
 		if (!comp.isDisposed()) {
-			comp.setMenu(null);
+			comp.setMenu(menu);
 			for (Control child : comp.getChildren()) {
-				child.setMenu(null);
+				child.setMenu(menu);
 				if (child instanceof Composite) {
 					setMenu((Composite) child, menu);
 				}

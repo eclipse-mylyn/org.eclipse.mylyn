@@ -123,16 +123,16 @@ public class AttributeEditorToolkit {
 	}
 
 	public void adapt(AbstractAttributeEditor editor) {
-		if (editor.getControl() instanceof Text && hasContentAssist(editor.getTaskAttribute())) {
+		if (editor.getControl() instanceof Text) {
 			Text text = (Text) editor.getControl();
-
-			IContentProposalProvider contentProposalProvider = createContentProposalProvider(editor.getTaskAttribute());
-			ILabelProvider labelPropsalProvider = createLabelProposalProvider(editor.getTaskAttribute());
-
-			if (contentProposalProvider != null && labelPropsalProvider != null) {
-				ContentAssistCommandAdapter adapter = applyContentAssist(text, contentProposalProvider);
-				adapter.setLabelProvider(labelPropsalProvider);
-				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+			if (!editor.isReadOnly() && hasContentAssist(editor.getTaskAttribute())) {
+				IContentProposalProvider contentProposalProvider = createContentProposalProvider(editor.getTaskAttribute());
+				ILabelProvider labelPropsalProvider = createLabelProposalProvider(editor.getTaskAttribute());
+				if (contentProposalProvider != null && labelPropsalProvider != null) {
+					ContentAssistCommandAdapter adapter = applyContentAssist(text, contentProposalProvider);
+					adapter.setLabelProvider(labelPropsalProvider);
+					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+				}
 			}
 		} else if (editor instanceof RichTextAttributeEditor) {
 			RichTextAttributeEditor richTextEditor = (RichTextAttributeEditor) editor;
@@ -150,7 +150,7 @@ public class AttributeEditorToolkit {
 					}
 				});
 			}
-			if (richTextEditor.getMode() == Mode.TASK_RELATION) {
+			if (!editor.isReadOnly() && richTextEditor.getMode() == Mode.TASK_RELATION) {
 				applyContentAssist(viewer.getControl(), null);
 			}
 			if (menu != null) {
