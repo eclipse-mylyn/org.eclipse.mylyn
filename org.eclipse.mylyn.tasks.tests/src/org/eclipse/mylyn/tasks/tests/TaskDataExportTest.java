@@ -18,6 +18,7 @@ import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -105,7 +106,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		wizard.performFinish();
 
 		// Check that the task list file was exported
-		File destZipFile = new File(destinationDir + File.separator + TaskDataExportWizard.getZipFileName());
+		File destZipFile = new File(destinationDir + File.separator + TaskListBackupManager.getBackupFileName());
 		assertTrue(destZipFile.exists());
 		ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(destZipFile));
 		ArrayList<String> entries = new ArrayList<String>();
