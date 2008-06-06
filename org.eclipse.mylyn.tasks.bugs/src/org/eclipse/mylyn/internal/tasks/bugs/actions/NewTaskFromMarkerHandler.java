@@ -72,7 +72,7 @@ public class NewTaskFromMarkerHandler extends MarkerViewHandler {
 				sb.append("\nLocation: line " + lineNumber);
 			}
 		} catch (Exception e) {
-			// ignore
+			// FIXME which exception is ignored here?
 		}
 
 		return sb.toString();

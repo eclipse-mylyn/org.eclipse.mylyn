@@ -16,10 +16,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
@@ -68,11 +69,14 @@ public class ClearOutgoingAction extends Action {
 			boolean confirm = MessageDialog.openConfirm(null, "Confirm discard", "Discard all outgoing changes?\n\n"
 					+ task.getSummary());
 			if (confirm) {
-				TasksUiPlugin.getTaskDataManager().discardOutgoing(task);
-				try {
-					TasksUi.getTaskDataManager().discardEdits(task);
-				} catch (CoreException e) {
-					TasksUiInternal.displayStatus("Clear outgoing failed", e.getStatus());
+				if (task.getClass() != TaskTask.class) {
+					TasksUiPlugin.getTaskDataManager().discardOutgoing(task);
+				} else {
+					try {
+						TasksUi.getTaskDataManager().discardEdits(task);
+					} catch (CoreException e) {
+						TasksUiInternal.displayStatus("Clear outgoing failed", e.getStatus());
+					}
 				}
 			}
 		}

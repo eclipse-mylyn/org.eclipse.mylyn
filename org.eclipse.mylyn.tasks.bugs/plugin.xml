@@ -36,11 +36,11 @@
     	</actionSet>
    </extension>
   
-     <extension
+   <extension
          point="org.eclipse.ui.handlers">
        <handler
             class="org.eclipse.mylyn.internal.tasks.bugs.actions.NewTaskFromMarkerHandler"
-            commandId="org.eclipse.mylyn.tasks.bug.newFromMarker">
+            commandId="org.eclipse.mylyn.tasks.bugs.commands.newTaskFromMarker">
             <activeWhen>
 				<with variable="activePart">
                     <or>
@@ -75,17 +75,17 @@
          point="org.eclipse.ui.commands">
       <command
             description="Report as Bug from Marker"
-            id="org.eclipse.mylyn.tasks.bug.newFromMarker"
+            id="org.eclipse.mylyn.tasks.bugs.commands.newTaskFromMarker"
             name="New Task from Marker...">
       </command>
-    </extension>
+   </extension>
  
-    <extension
+   <extension
          point="org.eclipse.ui.menus">
        <menuContribution
             locationURI="popup:org.eclipse.ui.ide.MarkersView?after=org.eclipse.ui.ide.markCompleted">
             <command
-                  commandId="org.eclipse.mylyn.tasks.bug.newFromMarker"
+                  commandId="org.eclipse.mylyn.tasks.bugs.commands.newTaskFromMarker"
                   icon="icons/etool16/task-new.gif"
                   mnemonic="New Task from Marker"
                   style="push">
