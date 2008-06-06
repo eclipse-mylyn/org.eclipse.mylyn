@@ -124,7 +124,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		initialize();
 
-		Section section = createSection(parent, toolkit, getTaskEditorPage().isExpandAttributesSection() || hasIncoming);
+		Section section = createSection(parent, toolkit, getTaskData().isNew() || hasIncoming);
 
 		// Attributes Composite- this holds all the combo fields and text fields
 		Composite attributesComposite = toolkit.createComposite(section);
