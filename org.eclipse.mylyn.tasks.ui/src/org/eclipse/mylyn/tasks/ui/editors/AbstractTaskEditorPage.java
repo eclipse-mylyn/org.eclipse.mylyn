@@ -951,10 +951,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		return (getModel() != null && getModel().isDirty()) || (getManagedForm() != null && getManagedForm().isDirty());
 	}
 
-	public boolean isExpandAttributesSection() {
-		return expandAttributesSection;
-	}
-
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
@@ -1076,15 +1072,13 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		if (selection.isEmpty()) {
 			// something was unselected, reset to default selection
 			selection = defaultSelection;
+			// XXX a styled text widget has lost focus, re-enable all edit actions
+			((TaskEditorActionContributor) getEditorSite().getActionBarContributor()).forceActionsEnabled();
 		}
 		if (!selection.equals(lastSelection)) {
 			this.lastSelection = selection;
 			fireSelectionChanged(lastSelection);
 		}
-	}
-
-	public void setExpandAttributeSection(boolean expandAttributeSection) {
-		this.expandAttributesSection = expandAttributeSection;
 	}
 
 	@Override
