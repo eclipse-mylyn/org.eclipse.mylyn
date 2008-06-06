@@ -123,6 +123,10 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		action = createDateSelectionAction(week.next(), null);
 		subMenuManager.add(action);
 
+		// Two Weeks
+		action = createDateSelectionAction(week.next().next(), null);
+		subMenuManager.add(action);
+
 		// Future
 		if (singleTaskSelection != null && getScheduledForDate(singleTaskSelection) != null) {
 			if (getScheduledForDate(singleTaskSelection).after(week.next().getEndDate())) {

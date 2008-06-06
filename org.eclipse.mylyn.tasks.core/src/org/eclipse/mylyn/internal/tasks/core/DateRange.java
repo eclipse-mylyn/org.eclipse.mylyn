@@ -27,6 +27,8 @@ public class DateRange implements Comparable<DateRange> {
 
 	private static final String DESCRIPTION_NEXT_WEEK = "Next Week";
 
+	private static final String DESCRIPTION_WEEK_AFTER_NEXT = "Two Weeks";
+
 	private final Calendar startDate;
 
 	private final Calendar endDate;
@@ -105,11 +107,17 @@ public class DateRange implements Comparable<DateRange> {
 			return DESCRIPTION_THIS_WEEK;
 		} else if (isNextWeek()) {
 			return DESCRIPTION_NEXT_WEEK;
+		} else if (isWeekAfterNext()) {
+			return DESCRIPTION_WEEK_AFTER_NEXT;
 		} else if (isPreviousWeek()) {
 			return DESCRIPTION_PREVIOUS_WEEK;
 		}
 		return DateFormat.getDateInstance(DateFormat.MEDIUM).format(startDate.getTime());
 		/* + " to "+ DateFormat.getDateInstance(DateFormat.MEDIUM).format(endDate.getTime());*/
+	}
+
+	private boolean isWeekAfterNext() {
+		return TaskActivityUtil.getCurrentWeek().next().next().compareTo(this) == 0;
 	}
 
 	public DateRange next() {
