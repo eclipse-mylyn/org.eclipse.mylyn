@@ -31,7 +31,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -39,14 +38,14 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class TaskActivityTimingTest extends TestCase {
 
-	private ITaskActivityManager activityManager;
+	private TaskActivityManager activityManager;
 
 	private ITaskList taskList;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		activityManager = TasksUi.getTaskActivityManager();
+		activityManager = (TaskActivityManager) TasksUi.getTaskActivityManager();
 		taskList = TasksUiInternal.getTaskList();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
@@ -73,22 +72,50 @@ public class TaskActivityTimingTest extends TestCase {
 		end2.setTime(start2.getTime());
 		end2.add(Calendar.HOUR_OF_DAY, 2);
 
-		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind", "none",
-				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(),
-				end.getTime());
-		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION, "structureKind", "none",
-				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start2.getTime(),
-				end2.getTime());
+		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET, "none", "originId", "navigatedRelation",
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(), end.getTime());
+		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET, "none", "originId", "navigatedRelation",
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start2.getTime(), end2.getTime());
 
 		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event1, false);
 		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event2, false);
 
 		long expectedTotalTime = end.getTime().getTime() - start.getTime().getTime();
-		assertEquals(2 * expectedTotalTime, ((TaskActivityManager) activityManager).getElapsedNoTaskActive(start, end2));
-		assertEquals(end.getTimeInMillis() - start.getTimeInMillis(), TasksUiPlugin.getTaskActivityManager()
-				.getElapsedNoTaskActive(start, end));
-		assertEquals(end.getTimeInMillis() - start.getTimeInMillis(), TasksUiPlugin.getTaskActivityManager()
-				.getElapsedNoTaskActive(start2, end2));
+		assertEquals(2 * expectedTotalTime, activityManager.getElapsedForWorkingSet("none", start, end2));
+
+	}
+
+	public void testActivityWithNoTaskActive2() {
+		Calendar start = Calendar.getInstance();
+		Calendar end = Calendar.getInstance();
+		end.setTimeInMillis(start.getTimeInMillis());
+		end.add(Calendar.HOUR_OF_DAY, 2);
+
+		Calendar start2 = Calendar.getInstance();
+		start2.add(Calendar.DAY_OF_MONTH, 1);
+		Calendar end2 = Calendar.getInstance();
+		end2.setTime(start2.getTime());
+		end2.add(Calendar.HOUR_OF_DAY, 2);
+
+		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET, "set 1", "originId", "navigatedRelation",
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start.getTime(), end.getTime());
+		InteractionEvent event2 = new InteractionEvent(InteractionEvent.Kind.ATTENTION,
+				InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET, "set 2", "originId", "navigatedRelation",
+				InteractionContextManager.ACTIVITY_DELTA_ADDED, 2f, start2.getTime(), end2.getTime());
+
+		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event1, false);
+		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(event2, false);
+
+		long expectedTotalTime = end.getTime().getTime() - start.getTime().getTime();
+		assertEquals(0, activityManager.getElapsedForWorkingSet("bogus", start, end2));
+		assertEquals(0, activityManager.getElapsedForWorkingSet("none", start, end2));
+		assertEquals(expectedTotalTime, activityManager.getElapsedForWorkingSet("set 1", start, end2));
+		assertEquals(expectedTotalTime, activityManager.getElapsedForWorkingSet("set 2", start, end2));
+		assertTrue(activityManager.getWorkingSets().contains("set 1"));
+		assertTrue(activityManager.getWorkingSets().contains("set 2"));
 	}
 
 	public void testActivityCaptured() {
@@ -900,8 +927,7 @@ public class TaskActivityTimingTest extends TestCase {
 		InteractionEvent event5 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", "attention",
 				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 2f, time5, time6);
 		InteractionEvent event7 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1handle,
-				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time7,
-				time7);
+				"originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED, 2f, time7, time7);
 
 		LegacyActivityAdaptor legacyAdaptor = new LegacyActivityAdaptor();
 		TasksUiPlugin.getTaskActivityMonitor()

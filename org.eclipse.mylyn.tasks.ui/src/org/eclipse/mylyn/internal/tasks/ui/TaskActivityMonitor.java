@@ -67,7 +67,6 @@ public class TaskActivityMonitor {
 		try {
 			if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
 				if ((event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED))) {
-					//addActivationHistory
 					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
 					if (activatedTask != null) {
 						taskActivityManager.getTaskActivationHistory().addTask(activatedTask);
@@ -77,15 +76,17 @@ public class TaskActivityMonitor {
 			} else if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
 				boolean changed = false;
 				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) {
-					AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
-					if (activatedTask != null) {
-						taskActivityManager.addElapsedTime(activatedTask, event.getDate(), event.getEndDate());
-						changed = true;
-					} else {
-						taskActivityManager.addElapsedNoTaskActive(event.getStructureHandle(), event.getDate(),
+					if (event.getStructureKind().equals(InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET)) {
+						taskActivityManager.addWorkingSetElapsedTime(event.getStructureHandle(), event.getDate(),
 								event.getEndDate());
 						externalizationParticipant.setDirty(true);
 						changed = true;
+					} else {
+						AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
+						if (activatedTask != null) {
+							taskActivityManager.addElapsedTime(activatedTask, event.getDate(), event.getEndDate());
+							changed = true;
+						}
 					}
 				} else if (event.getDelta().equals("removed")) {
 					ITask task = taskList.getTask(event.getStructureHandle());

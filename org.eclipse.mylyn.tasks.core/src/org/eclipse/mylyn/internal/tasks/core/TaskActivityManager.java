@@ -39,9 +39,6 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
  */
 public class TaskActivityManager implements ITaskActivityManager {
 
-	// From ActivityContextManager (not visible)
-	private static final char WORKINGSET_DELIMETER = '\u200B'; // unicode zero width space
-
 	private final TaskActivationHistory taskActivationHistory = new TaskActivationHistory();
 
 	private final List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
@@ -62,7 +59,9 @@ public class TaskActivityManager implements ITaskActivityManager {
 	// For a given task maps Calendar Hour to duration of time spent (milliseconds) with task active 
 	private final Map<AbstractTask, SortedMap<Calendar, Long>> taskElapsedTimeMap = new ConcurrentHashMap<AbstractTask, SortedMap<Calendar, Long>>();
 
-	private final SortedMap<Calendar, Long> noTaskActiveMap = Collections.synchronizedSortedMap(new TreeMap<Calendar, Long>());
+	private final Map<String, SortedMap<Calendar, Long>> workingSetElapsedTimeMap = new ConcurrentHashMap<String, SortedMap<Calendar, Long>>();
+
+	//private final SortedMap<Calendar, Long> noTaskActiveMap = Collections.synchronizedSortedMap(new TreeMap<Calendar, Long>());
 
 	private final TaskList taskList;
 
@@ -143,7 +142,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		activeTasks.clear();
 		taskActivationHistory.clear();
 		taskElapsedTimeMap.clear();
-		noTaskActiveMap.clear();
+		workingSetElapsedTimeMap.clear();
 	}
 
 	public void reloadPlanningData() {
@@ -182,12 +181,14 @@ public class TaskActivityManager implements ITaskActivityManager {
 
 	}
 
-	public void addElapsedNoTaskActive(String handle, Date startDate, Date endDate) {
-
-		// 3.0 TODO: break out working set ids and store time per working set
-//		if (handle != null && !handle.equals("none")) {
-//			String[] parts = handle.split("" + WORKINGSET_DELIMETER);
-//		}
+	/**
+	 * @param workingSetIds
+	 *            working set ids
+	 */
+	public void addWorkingSetElapsedTime(String workingSetName, Date startDate, Date endDate) {
+		Assert.isNotNull(workingSetName);
+		Assert.isNotNull(startDate);
+		Assert.isNotNull(endDate);
 
 		long attentionSpan = endDate.getTime() - startDate.getTime();
 
@@ -200,6 +201,11 @@ public class TaskActivityManager implements ITaskActivityManager {
 		Calendar hourOfDay = TaskActivityUtil.getCalendar();
 		hourOfDay.setTime(startDate);
 		snapToStartOfHour(hourOfDay);
+		SortedMap<Calendar, Long> noTaskActiveMap = workingSetElapsedTimeMap.get(workingSetName);
+		if (noTaskActiveMap == null) {
+			noTaskActiveMap = Collections.synchronizedSortedMap(new TreeMap<Calendar, Long>());
+			workingSetElapsedTimeMap.put(workingSetName, noTaskActiveMap);
+		}
 		Long daysActivity = noTaskActiveMap.get(hourOfDay);
 		if (daysActivity == null) {
 			daysActivity = new Long(0);
@@ -210,19 +216,29 @@ public class TaskActivityManager implements ITaskActivityManager {
 		noTaskActiveMap.put(hourOfDay, daysActivity);
 	}
 
-	public long getElapsedNoTaskActive(Calendar startDate, Calendar endDate) {
+	public long getElapsedForWorkingSet(String workingSetId, Calendar startDate, Calendar endDate) {
 
 		Calendar startRange = snapToStartOfHour(getNewInstance(startDate));
 
 		Calendar endRange = snapToEndOfHour(getNewInstance(endDate));
+
 		long result = 0;
-		Map<Calendar, Long> subMap = noTaskActiveMap.subMap(startRange, endRange);
-		for (Long time : subMap.values()) {
-			if (time != null && time > 0) {
-				result += time.longValue();
+
+		SortedMap<Calendar, Long> noTaskActiveMap = workingSetElapsedTimeMap.get(workingSetId);
+		if (noTaskActiveMap != null) {
+
+			Map<Calendar, Long> subMap = noTaskActiveMap.subMap(startRange, endRange);
+			for (Long time : subMap.values()) {
+				if (time != null && time > 0) {
+					result += time.longValue();
+				}
 			}
 		}
 		return result;
+	}
+
+	public Set<String> getWorkingSets() {
+		return workingSetElapsedTimeMap.keySet();
 	}
 
 	public void addElapsedTime(AbstractTask task, Date startDate, Date endDate) {
@@ -475,13 +491,13 @@ public class TaskActivityManager implements ITaskActivityManager {
 	}
 
 	/**
-	 * total elapsed time based on activation history passing null for the task will return all active time with no task
-	 * active
+	 * total elapsed time based on activation history
 	 */
 	public long getElapsedTime(ITask task, Calendar start, Calendar end) {
 
 		if (task == null) {
-			return getElapsedNoTaskActive(start, end);
+			// TODO: return total elapsed with no task active
+			return 0;
 		}
 
 		long result = 0;

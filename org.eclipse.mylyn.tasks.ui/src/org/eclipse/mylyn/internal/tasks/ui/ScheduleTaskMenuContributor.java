@@ -246,10 +246,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		return null;
 	}
 
-//	protected boolean isFloating(AbstractTask task) {
-//		return task.internalIsFloatingScheduledDate();
-//	}
-
 	private boolean isPastReminder(AbstractTask task) {
 		return TasksUiPlugin.getTaskActivityManager().isPastReminder(task);
 	}
