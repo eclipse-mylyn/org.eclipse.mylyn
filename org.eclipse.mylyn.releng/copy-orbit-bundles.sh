@@ -41,7 +41,7 @@ cp -v org.apache.axis*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.commons.discovery*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.commons.logging*.jar $DEST/extrasUpdateSite/plugins
 # xml-rpc (trac)
-cp -v javax.xml.bind*.jar $DEST/standardUpdateSite/plugins
+cp -v javax.xml.bind*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.xmlrpc*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.ws.commons.util*.jar $DEST/extrasUpdateSite/plugins
 
@@ -57,8 +57,8 @@ cp -v org.apache.axis*.jar $DEST/incubatorUpdateSite/plugins
 cp -v org.apache.commons.discovery*.jar $DEST/incubatorUpdateSite/plugins
 cp -v org.apache.commons.logging*.jar $DEST/incubatorUpdateSite/plugins
 # rome (web templates)
-cp -v com.sun.syndication*.jar $DEST/extrasUpdateSite/plugins
-cp -v org.jdom*.jar $DEST/extrasUpdateSite/plugins
+cp -v com.sun.syndication*.jar $DEST/incubatorUpdateSite/plugins
+cp -v org.jdom*.jar $DEST/incubatorUpdateSite/plugins
 
 mkdir -p $DEST/allUpdateSite/plugins
 cp -v javax.xml.bind*.jar $DEST/allUpdateSite/plugins

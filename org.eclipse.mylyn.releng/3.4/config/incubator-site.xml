@@ -4,7 +4,7 @@
       Mylyn Incubator Features
    </description>
    <feature url="features/org.eclipse.mylyn.sandbox.ui_feature_@core@.jar" id="org.eclipse.mylyn.sandbox.ui_feature" version="@core@">
-      <category name="Incubator""/>
+      <category name="Incubator"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.monitor_feature_@core@.jar" id="org.eclipse.mylyn.monitor_feature" version="@core@">
       <category name="Incubator"/>
