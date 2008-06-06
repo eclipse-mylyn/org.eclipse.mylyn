@@ -11,9 +11,12 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -32,6 +35,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.commons.core.ZipFileUtil;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -86,11 +90,6 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		return importPage.isPageComplete();
 	}
 
-	/**
-	 * Called when the user clicks finish. Saves the task data. Waits until all overwrite decisions have been made
-	 * before starting to save files. If any overwrite is canceled, no files are saved and the user must adjust the
-	 * dialog.
-	 */
 	@Override
 	public boolean performFinish() {
 
@@ -117,6 +116,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		Enumeration<? extends ZipEntry> entries;
 		ZipFile zipFile;
+		boolean restoreM2Tasklist = false;
 
 		try {
 			zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
@@ -128,7 +128,16 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 					// ignore directories (shouldn't be any)
 					continue;
 				}
-				if (!importPage.importTaskList() && entry.getName().endsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
+				if (!importPage.importTaskList() && entry.getName().startsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
+					continue;
+				}
+
+				if (importPage.importTaskList() && entry.getName().startsWith(ITasksCoreConstants.OLD_TASK_LIST_FILE)) {
+					restoreM2Tasklist = true;
+				}
+
+				if (!importPage.importTaskList()
+						&& entry.getName().startsWith(ITasksCoreConstants.DEFAULT_TASK_LIST_FILE)) {
 					continue;
 				}
 
@@ -166,7 +175,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile, sourceRepositoriesFile,
 				sourceActivationHistoryFile, contextFiles, zipFilesToExtract);
-
+		job.setRestoreM2Tasklist(restoreM2Tasklist);
 		try {
 			if (getContainer() != null) {
 				getContainer().run(true, true, job);
@@ -189,11 +198,15 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	/** Job that performs the file copying and zipping */
 	class FileCopyJob implements IRunnableWithProgress {
 
+		private static final String PREFIX_BACKUP = ".backup-";
+
 		private static final String JOB_LABEL = "Importing Data";
 
 		private File sourceZipFile = null;
 
 		private final List<ZipEntry> zipEntriesToExtract;
+
+		private boolean restoreM2Tasklist = false;
 
 		public FileCopyJob(File sourceFolder, File sourceZipFile, File sourceTaskListFile, File sourceRepositoriesFile,
 				File sourceActivationHistoryFile, List<File> contextFiles, List<ZipEntry> zipEntries) {
@@ -218,6 +231,29 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 				ZipFileUtil.extactEntries(sourceZipFile, zipEntriesToExtract, TasksUiPlugin.getDefault()
 						.getDataDirectory());
+
+				if (restoreM2Tasklist) {
+
+					SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT,
+							Locale.ENGLISH);
+					String date = format.format(new Date());
+
+					File taskListFile = new File(TasksUiPlugin.getDefault().getDataDirectory(),
+							ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
+					if (taskListFile.exists()) {
+						taskListFile.renameTo(new File(taskListFile.getParentFile(), taskListFile.getName()
+								+ PREFIX_BACKUP + date));
+					}
+
+					File taskListFileSnapshot = new File(TasksUiPlugin.getDefault().getDataDirectory(),
+							AbstractExternalizationParticipant.SNAPSHOT_PREFIX
+									+ ITasksCoreConstants.DEFAULT_TASK_LIST_FILE);
+					if (taskListFileSnapshot.exists()) {
+						taskListFileSnapshot.renameTo(new File(taskListFile.getParentFile(),
+								taskListFileSnapshot.getName() + PREFIX_BACKUP + date));
+					}
+
+				}
 				readTaskListData();
 			} catch (IOException e) {
 				throw new InvocationTargetException(e);
@@ -228,6 +264,11 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			return;
 
 		}
+
+		public void setRestoreM2Tasklist(boolean restoreM2Tasklist) {
+			this.restoreM2Tasklist = restoreM2Tasklist;
+		}
+
 	}
 
 	private void readTaskListData() {

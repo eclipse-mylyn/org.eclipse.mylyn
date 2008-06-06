@@ -23,7 +23,7 @@ import org.eclipse.mylyn.commons.net.Policy;
  */
 public abstract class AbstractExternalizationParticipant implements IExternalizationParticipant {
 
-	static final String SNAPSHOT_PREFIX = ".";
+	public static final String SNAPSHOT_PREFIX = ".";
 
 	public abstract void load(File sourceFile, IProgressMonitor monitor) throws CoreException;
 

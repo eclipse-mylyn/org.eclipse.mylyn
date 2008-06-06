@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -137,7 +138,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 		destDirGroup.setText("Export destination folder");
 		destDirGroup.setLayout(new GridLayout(2, false));
 		destDirGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		new Label(destDirGroup, SWT.NONE).setText("Export file: " + TaskDataExportWizard.getZipFileName());
+		new Label(destDirGroup, SWT.NONE).setText("Export file: " + TaskListBackupManager.getBackupFileName());
 		new Label(destDirGroup, SWT.NONE);
 
 		destDirText = new Text(destDirGroup, SWT.BORDER);

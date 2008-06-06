@@ -9,10 +9,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Locale;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -25,6 +22,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportOperation;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -46,20 +44,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	 */
 	private final static String SETTINGS_SECTION = "org.eclipse.mylyn.tasklist.ui.exportWizard";
 
-	public final static String ZIP_FILE_PREFIX = "mylyndata";
-
-	private final static String ZIP_FILE_EXTENSION = ".zip";
-
 	private final static String WINDOW_TITLE = "Export";
 
 	private TaskDataExportWizardPage exportPage = null;
-
-	public static String getZipFileName() {
-		String fomratString = "yyyy-MM-dd";
-		SimpleDateFormat format = new SimpleDateFormat(fomratString, Locale.ENGLISH);
-		String date = format.format(new Date());
-		return ZIP_FILE_PREFIX + "-" + date + ZIP_FILE_EXTENSION;
-	}
 
 	public TaskDataExportWizard() {
 		IDialogSettings masterSettings = TasksUiPlugin.getDefault().getDialogSettings();
@@ -122,7 +109,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		final File destActivationHistoryFile = new File(destDir + File.separator
 				+ InteractionContextManager.CONTEXT_HISTORY_FILE_NAME
 				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
-		final File destZipFile = new File(destDir + File.separator + getZipFileName());
+		final File destZipFile = new File(destDir + File.separator + TaskListBackupManager.getBackupFileName());
 
 		// Prompt the user to confirm if ANY of the save repositoryOperations will cause
 		// an overwrite

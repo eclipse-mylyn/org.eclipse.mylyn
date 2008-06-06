@@ -87,7 +87,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		timer.cancel();
 	}
 
-	private String getBackupFileName() {
+	public static String getBackupFileName() {
 		SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT, Locale.ENGLISH);
 		String date = format.format(new Date());
 		String backupFileName = BACKUP_FILE_PREFIX + date + ".zip";
