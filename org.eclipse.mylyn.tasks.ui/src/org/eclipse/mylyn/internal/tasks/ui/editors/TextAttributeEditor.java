@@ -36,13 +36,13 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		if (isReadOnly()) {
 			text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
-			text.setFont(TEXT_FONT);
+			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, true, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getValue());
 		} else {
 			text = toolkit.createText(parent, getValue(), SWT.FLAT);
-			text.setFont(TEXT_FONT);
+			text.setFont(EditorUtil.TEXT_FONT);
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					setValue(text.getText());

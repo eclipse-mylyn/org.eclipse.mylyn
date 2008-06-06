@@ -112,7 +112,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		} else {
 			editor.createControl(composite, toolkit);
 			if (editor.isReadOnly()) {
-				GridDataFactory.fillDefaults().hint(AbstractAttributeEditor.MAXIMUM_WIDTH, SWT.DEFAULT).applyTo(
+				GridDataFactory.fillDefaults().hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT).applyTo(
 						editor.getControl());
 			} else {
 				final GridData gd = new GridData();
@@ -121,14 +121,14 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 				// the goal is to make the text viewer as big as the text so it does not require scrolling when first drawn 
 				// on screen
 				Point size = editor.getViewer().getTextWidget().computeSize(width, SWT.DEFAULT, true);
-				gd.widthHint = AbstractAttributeEditor.MAXIMUM_WIDTH;
+				gd.widthHint = EditorUtil.MAXIMUM_WIDTH;
 				gd.horizontalAlignment = SWT.FILL;
 				gd.grabExcessHorizontalSpace = true;
 				// limit height to be avoid dynamic resizing of the text widget: 
 				// MAXIMUM_HEIGHT < height < MAXIMUM_HEIGHT * 4  
 				//gd.minimumHeight = AbstractAttributeEditor.MAXIMUM_HEIGHT;
-				gd.heightHint = Math.min(Math.max(AbstractAttributeEditor.MAXIMUM_HEIGHT, size.y),
-						AbstractAttributeEditor.MAXIMUM_HEIGHT * 4);
+				gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y),
+						EditorUtil.MAXIMUM_HEIGHT * 4);
 				if (getExpandVertically()) {
 					gd.verticalAlignment = SWT.FILL;
 					gd.grabExcessVerticalSpace = true;
@@ -172,7 +172,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			}
 		}
 		if (widthHint <= 0) {
-			widthHint = AbstractAttributeEditor.MAXIMUM_WIDTH;
+			widthHint = EditorUtil.MAXIMUM_WIDTH;
 		}
 		return widthHint;
 	}

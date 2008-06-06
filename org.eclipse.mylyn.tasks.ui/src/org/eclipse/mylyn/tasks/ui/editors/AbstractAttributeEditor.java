@@ -9,12 +9,10 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -26,13 +24,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @since 3.0
  */
 public abstract class AbstractAttributeEditor {
-
-	public static final int MAXIMUM_HEIGHT = 140;
-
-	public static final int MAXIMUM_WIDTH = 500;
-
-	// XXX why is this required?
-	protected static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
 	private Control control;
 

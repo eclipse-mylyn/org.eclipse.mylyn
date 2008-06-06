@@ -46,7 +46,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 	public void createControl(Composite composite, FormToolkit toolkit) {
 		if (isReadOnly()) {
 			Text text = new Text(composite, SWT.FLAT | SWT.READ_ONLY);
-			text.setFont(TEXT_FONT);
+			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, true, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			if (getValue() != null) {
@@ -68,7 +68,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 			datePicker = new DatePicker(dateWithClearComposite, SWT.BORDER | SWT.FLAT, value, false, 0);
 			datePicker.setEnabled(!isReadOnly());
-			datePicker.setFont(TEXT_FONT);
+			datePicker.setFont(EditorUtil.TEXT_FONT);
 			datePicker.setDatePattern(EditorUtil.DATE_FORMAT);
 			datePicker.addPickerSelectionListener(new SelectionAdapter() {
 				@Override

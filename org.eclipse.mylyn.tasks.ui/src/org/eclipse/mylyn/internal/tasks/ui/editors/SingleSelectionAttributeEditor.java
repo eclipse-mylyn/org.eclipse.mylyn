@@ -39,7 +39,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		if (isReadOnly()) {
 			Text text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
-			text.setFont(TEXT_FONT);
+			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, true, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getValueLabel());
@@ -47,7 +47,7 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 		} else {
 			combo = new CCombo(parent, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(combo, true, false);
-			combo.setFont(TEXT_FONT);
+			combo.setFont(EditorUtil.TEXT_FONT);
 			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 
 			Map<String, String> labelByValue = getAttributeMapper().getOptions(getTaskAttribute());

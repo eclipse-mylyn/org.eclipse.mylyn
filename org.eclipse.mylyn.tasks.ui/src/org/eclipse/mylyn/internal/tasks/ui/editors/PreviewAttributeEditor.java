@@ -94,8 +94,8 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 		Composite editorComposite = toolkit.createComposite(sectionComposite);
 		editorComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.widthHint = MAXIMUM_WIDTH;
-		gd.minimumHeight = MAXIMUM_HEIGHT;
+		gd.widthHint = EditorUtil.MAXIMUM_WIDTH;
+		gd.minimumHeight = EditorUtil.MAXIMUM_HEIGHT;
 		gd.grabExcessHorizontalSpace = true;
 		editorComposite.setLayoutData(gd);
 		final StackLayout descriptionLayout = new StackLayout();

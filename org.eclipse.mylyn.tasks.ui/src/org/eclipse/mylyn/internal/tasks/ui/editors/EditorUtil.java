@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -22,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -43,6 +45,13 @@ public class EditorUtil {
 	static final String KEY_MARKER = "marker";
 
 	static final String KEY_TEXT_VIEWER = "textViewer";
+
+	public static final int MAXIMUM_HEIGHT = 140;
+
+	public static final int MAXIMUM_WIDTH = 500;
+
+	// XXX why is this required?
+	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
 	static boolean canDoGlobalAction(String actionId, TextViewer textViewer) {
 		if (actionId.equals(ActionFactory.CUT.getId())) {
@@ -223,6 +232,14 @@ public class EditorUtil {
 		return null;
 	}
 
+	public static NewAttachmentWizardDialog openNewAttachmentWizard(AbstractTaskEditorPage page, Mode mode,
+			AbstractTaskAttachmentSource source) {
+		TaskAttributeMapper mapper = page.getModel().getTaskData().getAttributeMapper();
+		TaskAttribute attribute = mapper.createTaskAttachment(page.getModel().getTaskData());
+		return TasksUiInternal.openNewAttachmentWizard(page.getSite().getShell(), page.getTaskRepository(),
+				page.getTask(), attribute, mode, source);
+	}
+
 	/**
 	 * Selects the given object in the editor.
 	 * 
@@ -307,14 +324,6 @@ public class EditorUtil {
 				// ignore
 			}
 		}
-	}
-
-	public static NewAttachmentWizardDialog openNewAttachmentWizard(AbstractTaskEditorPage page, Mode mode,
-			AbstractTaskAttachmentSource source) {
-		TaskAttributeMapper mapper = page.getModel().getTaskData().getAttributeMapper();
-		TaskAttribute attribute = mapper.createTaskAttachment(page.getModel().getTaskData());
-		return TasksUiInternal.openNewAttachmentWizard(page.getSite().getShell(), page.getTaskRepository(),
-				page.getTask(), attribute, mode, source);
 	}
 
 }
