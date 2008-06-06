@@ -27,7 +27,7 @@ public class DateRange implements Comparable<DateRange> {
 
 	private static final String DESCRIPTION_NEXT_WEEK = "Next Week";
 
-	private static final String DESCRIPTION_WEEK_AFTER_NEXT = "Two Weeks";
+	private static final String DESCRIPTION_WEEK_AFTER_NEXT = "In Two Weeks";
 
 	private final Calendar startDate;
 
