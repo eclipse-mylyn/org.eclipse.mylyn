@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -54,10 +55,10 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 		timeSection.setLayoutData(gd);
 
 		Composite timeComposite = toolkit.createComposite(timeSection);
-		gl = new GridLayout(4, false);
+		gl = new GridLayout(12, false);
 		timeComposite.setLayout(gl);
 		gd = new GridData();
-		gd.horizontalSpan = 5;
+		gd.horizontalSpan = 4;
 		timeComposite.setLayoutData(gd);
 
 		TaskAttribute attribute = getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey());
@@ -102,8 +103,12 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 		}
 
 		// Add Time
-		final TaskAttribute addTimeAttribute = getTaskData().getRoot().getMappedAttribute(
+		TaskAttribute addTimeAttribute = getTaskData().getRoot().getMappedAttribute(
 				BugzillaAttribute.WORK_TIME.getKey());
+		if (addTimeAttribute == null) {
+			addTimeAttribute = BugzillaTaskDataHandler.createAttribute(getTaskData(), BugzillaAttribute.WORK_TIME);
+
+		}
 		if (addTimeAttribute != null) {
 			addTimeAttribute.setValue("0");
 			attributeEditor = createAttributeEditor(addTimeAttribute);
