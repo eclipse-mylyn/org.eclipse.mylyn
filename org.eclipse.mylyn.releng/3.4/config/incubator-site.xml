@@ -3,19 +3,21 @@
    <description url="http://download.eclipse.org/tools/mylyn/update/weekly/incubator">
       Mylyn Incubator Features
    </description>
-   <feature url="features/org.eclipse.mylyn.xplanner_feature_@core@.jar" id="org.eclipse.mylyn.xplanner_feature" version="@core@">
-      <category name="Integration"/>
-   </feature>
    <feature url="features/org.eclipse.mylyn.sandbox.ui_feature_@core@.jar" id="org.eclipse.mylyn.sandbox.ui_feature" version="@core@">
-      <category name="Features"/>
+      <category name="Incubator""/>
    </feature>
    <feature url="features/org.eclipse.mylyn.monitor_feature_@core@.jar" id="org.eclipse.mylyn.monitor_feature" version="@core@">
-      <category name="Features"/>
+      <category name="Incubator"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.xplanner_feature_@core@.jar" id="org.eclipse.mylyn.xplanner_feature" version="@core@">
+      <category name="Incubator"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.web.tasks_feature_@core@.jar" id="org.eclipse.mylyn.web.tasks_feature" version="@core@">
+      <category name="Incubator"/>
    </feature>
    <feature url="features/org.eclipse.mylyn.experimental_sdk_feature_@core@.jar" id="org.eclipse.mylyn.experimental_sdk_feature" version="@core@">
       <category name="SDK"/>
    </feature>
-   <category-def name="Features" label="Mylyn Features"/>
-   <category-def name="Integration" label="Mylyn Integration"/>   
+   <category-def name="Incubator" label="Mylyn Incubator"/>   
    <category-def name="SDK" label="Mylyn Plug-in Development"/>
 </site>

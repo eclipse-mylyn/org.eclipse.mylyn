@@ -6,9 +6,6 @@
    <feature url="features/org.eclipse.mylyn.jira_feature_@core@.jar" id="org.eclipse.mylyn.jira_feature" version="@core@">
       <category name="Integration"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.web.tasks_feature_@core@.jar" id="org.eclipse.mylyn.web.tasks_feature" version="@core@">
-      <category name="Integration"/>
-   </feature>
    <feature url="features/org.eclipse.mylyn.trac_feature_@core@.jar" id="org.eclipse.mylyn.trac_feature" version="@core@">
       <category name="Integration"/>
    </feature>
