@@ -14,7 +14,7 @@ import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.eclipse.mylyn.commons.net.WebClientUtil;
+import org.eclipse.mylyn.internal.commons.net.WebClientUtil;
 
 /**
  * Use <code>GzipPostMethod</code> instead of {@link PostMethod} to make Mylyn well-behaved when accessing repositories
