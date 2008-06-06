@@ -252,7 +252,7 @@ public class TaskDataStateReader extends DefaultHandler {
 		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_OPERATION + ++id);
-			attribute.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_CONTAINER);
+			attribute.getMetaData().putValue(TaskAttribute.META_ATTRIBUTE_TYPE, TaskAttribute.TYPE_OPERATION);
 			attribute.getMetaData().putValue(TaskAttribute.META_LABEL,
 					getValue(attributes, ITaskDataConstants.ATTRIBUTE_OPERATION_NAME));
 			String operationId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_KNOB_NAME);
@@ -268,7 +268,7 @@ public class TaskDataStateReader extends DefaultHandler {
 				attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, value);
 				child = createAttribute(attribute, value);
 				child.setValue(getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_OPTION_SELECTION));
-				attribute.getMetaData().defaults().setReadOnly(false).setType(TaskAttribute.TYPE_SINGLE_SELECT);
+				child.getMetaData().defaults().setReadOnly(false).setType(TaskAttribute.TYPE_SINGLE_SELECT);
 				addElementHandler(new NameHandler(this, child));
 			} else {
 				value = getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_INPUT_NAME);
@@ -276,7 +276,7 @@ public class TaskDataStateReader extends DefaultHandler {
 					attribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, value);
 					child = createAttribute(attribute, value);
 					child.setValue(getOptionalValue(attributes, ITaskDataConstants.ATTRIBUTE_INPUT_VALUE));
-					attribute.getMetaData().defaults().setReadOnly(false).setType(TaskAttribute.TYPE_SHORT_TEXT);
+					child.getMetaData().defaults().setReadOnly(false).setType(TaskAttribute.TYPE_SHORT_TEXT);
 				}
 			}
 		}

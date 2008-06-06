@@ -26,7 +26,7 @@ public class TaskOperation {
 	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskAttribute);
 		TaskData taskData = taskAttribute.getTaskData();
-		TaskOperation operation = new TaskOperation(taskData.getRepositoryUrl(), taskData.getConnectorKind(),
+		TaskOperation operation = new TaskOperation(taskData.getConnectorKind(), taskData.getRepositoryUrl(),
 				taskData.getTaskId(), taskAttribute.getValue());
 		operation.setLabel(taskAttribute.getMetaData().getLabel());
 		operation.setTaskAttribute(taskAttribute);
