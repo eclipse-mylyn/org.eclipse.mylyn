@@ -13,6 +13,10 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
+ * Note: This is provisional API that is used by connectors.
+ * <p>
+ * DO NOT CHANGE.
+ * 
  * @author Steffen Pingel
  */
 public abstract class AbstractSearchHandler {

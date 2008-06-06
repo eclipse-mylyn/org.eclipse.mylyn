@@ -1190,10 +1190,20 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return repositoryModel;
 	}
 
+	/**
+	 * Note: This is provisional API that is used by connectors.
+	 * <p>
+	 * DO NOT CHANGE.
+	 */
 	public void addSearchHandler(AbstractSearchHandler searchHandler) {
 		searchHandlers.add(searchHandler);
 	}
 
+	/**
+	 * Note: This is provisional API that is used by connectors.
+	 * <p>
+	 * DO NOT CHANGE.
+	 */
 	public void removeSearchHandler(AbstractSearchHandler searchHandler) {
 		searchHandlers.remove(searchHandler);
 	}
