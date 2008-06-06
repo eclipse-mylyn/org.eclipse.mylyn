@@ -67,6 +67,8 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public static final String ACTIVITY_STRUCTUREKIND_TIMING = "timing";
 
+	public static final String ACTIVITY_STRUCTUREKIND_WORKINGSET = "workingset";
+
 	public static final String ACTIVITY_STRUCTUREKIND_LIFECYCLE = "lifecycle";
 
 	public static final String ACTIVITY_ORIGINID_USER = "user";
