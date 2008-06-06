@@ -45,8 +45,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		initialize();
-		Section timeSection = createSection(parent, toolkit, getTaskEditorPage().isExpandAttributesSection()
-				|| hasIncoming);
+		Section timeSection = createSection(parent, toolkit, hasIncoming);
 
 		GridLayout gl = new GridLayout();
 		GridData gd = new GridData(SWT.FILL, SWT.NONE, false, false);

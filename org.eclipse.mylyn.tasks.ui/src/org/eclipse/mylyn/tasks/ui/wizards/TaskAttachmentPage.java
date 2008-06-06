@@ -189,8 +189,8 @@ public class TaskAttachmentPage extends WizardPage {
 		fileNameText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				validate();
-
 				// determine type by extension
+				taskAttachment.setFileName(fileNameText.getText());
 				setContentTypeFromFilename(fileNameText.getText());
 			}
 		});
@@ -283,6 +283,7 @@ public class TaskAttachmentPage extends WizardPage {
 
 	private void setFilePath(String path) {
 		fileNameText.setText(path);
+		taskAttachment.setFileName(path);
 		if (path.endsWith(".patch")) {
 			isPatchButton.setSelection(true);
 			if (attachContextButton.isEnabled()) {

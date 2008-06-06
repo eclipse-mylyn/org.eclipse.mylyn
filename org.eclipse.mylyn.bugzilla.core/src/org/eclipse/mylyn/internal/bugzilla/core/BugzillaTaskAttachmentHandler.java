@@ -75,7 +75,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 			String description = source.getDescription();
 			String contentType = source.getContentType();
-
+			String filename = source.getName();
 			boolean isPatch = false;
 
 			if (attachmentAttribute != null) {
@@ -89,6 +89,10 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 					contentType = mapper.getContentType();
 				}
 
+				if (mapper.getFileName() != null) {
+					filename = mapper.getFileName();
+				}
+
 				if (mapper.isPatch() != null) {
 					isPatch = mapper.isPatch();
 				}
@@ -100,7 +104,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			}
 
 			client.postAttachment(task.getTaskId(), comment, description, contentType, isPatch,
-					new AttachmentPartSource(source), monitor);
+					new AttachmentPartSource(source, filename), monitor);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					"Unable to submit attachment", e));
@@ -127,8 +131,15 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 
 		private final AbstractTaskAttachmentSource attachment;
 
-		public AttachmentPartSource(AbstractTaskAttachmentSource attachment) {
+		private final String filename;
+
+		public AttachmentPartSource(AbstractTaskAttachmentSource attachment, String filename) {
 			this.attachment = attachment;
+			this.filename = filename;
+		}
+
+		public AttachmentPartSource(AbstractTaskAttachmentSource attachment) {
+			this(attachment, attachment.getName());
 		}
 
 		public InputStream createInputStream() throws IOException {
@@ -142,7 +153,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 		}
 
 		public String getFileName() {
-			return attachment.getName();
+			return filename;
 		}
 
 		public long getLength() {
