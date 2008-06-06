@@ -20,18 +20,16 @@ import junit.framework.TestCase;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NTCredentials;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
+import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
 import org.eclipse.mylyn.tests.TestProxy.Message;
 
@@ -483,22 +481,6 @@ public class WebUtilTest extends TestCase {
 		assertEquals(
 				"/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=11093&resolution=-1&sorter/field=updated&sorter/order=DESC&tempMax=1000",
 				WebUtil.getRequestPath(url));
-	}
-
-	public void testCredentials() {
-		AuthenticatedProxy proxy = new AuthenticatedProxy(Type.HTTP, new InetSocketAddress(4567), "user", "password");
-		UsernamePasswordCredentials credentials = (UsernamePasswordCredentials) WebUtil.getCredentials(proxy,
-				new InetSocketAddress(1234));
-		assertEquals("user", credentials.getUserName());
-		assertEquals("password", credentials.getPassword());
-
-		proxy = new AuthenticatedProxy(Type.HTTP, new InetSocketAddress(4567), "domain\\user", "password");
-		InetSocketAddress testAddress = new InetSocketAddress("mylyn.eclipse.org", 1234);
-		NTCredentials ntCredentials = (NTCredentials) WebUtil.getCredentials(proxy, testAddress);
-		assertEquals("user", ntCredentials.getUserName());
-		assertEquals("password", ntCredentials.getPassword());
-		assertEquals("domain", ntCredentials.getDomain());
-		assertEquals("mylyn.eclipse.org", ntCredentials.getHost());
 	}
 
 	private class StubProgressMonitor implements IProgressMonitor {
