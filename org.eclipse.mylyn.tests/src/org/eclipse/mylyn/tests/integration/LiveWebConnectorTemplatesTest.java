@@ -12,18 +12,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import junit.extensions.ActiveTestSuite;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskFactory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.QueryHitCollector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
@@ -32,7 +33,6 @@ import org.eclipse.mylyn.internal.web.tasks.WebQuery;
 import org.eclipse.mylyn.internal.web.tasks.WebRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Eugene Kuleshov
@@ -123,10 +123,12 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 
 	public static TestSuite suite() {
 		TestSuite suite = new ActiveTestSuite(LiveWebConnectorTemplatesTest.class.getName());
-
-		AbstractLegacyRepositoryConnector repositoryConnector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(WebRepositoryConnector.REPOSITORY_TYPE);
-		for (RepositoryTemplate template : repositoryConnector.getTemplates()) {
+		Set<RepositoryTemplate> templates = TasksUiPlugin.getRepositoryTemplateManager().getTemplates(
+				WebRepositoryConnector.REPOSITORY_TYPE);
+		if (templates.isEmpty()) {
+			throw new AssertionFailedException("No temlates found");
+		}
+		for (RepositoryTemplate template : templates) {
 			if (excluded.indexOf(template.repositoryUrl + ",") == -1) {
 				suite.addTest(new LiveWebConnectorTemplatesTest(template));
 			}
