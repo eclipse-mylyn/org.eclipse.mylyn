@@ -32,7 +32,7 @@
          class="org.eclipse.mylyn.internal.tasks.ui.views.TaskListView"
          icon="icons/eview16/task-list.gif"
          id="org.eclipse.mylyn.tasks.ui.views.tasks"
-         name="Tasks"/> 
+         name="Task List"/> 
       <view
             id="org.eclipse.mylyn.tasks.ui.views.repositories"
             allowMultiple="false"
