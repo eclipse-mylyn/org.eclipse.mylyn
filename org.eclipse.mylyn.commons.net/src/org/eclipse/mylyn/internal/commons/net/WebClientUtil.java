@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.net;
+package org.eclipse.mylyn.internal.commons.net;
 
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -29,8 +29,10 @@ import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
-import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
+import org.eclipse.mylyn.commons.net.AbstractWebLocation;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
+import org.eclipse.mylyn.commons.net.WebUtil;
 
 /**
  * @author Mik Kersten

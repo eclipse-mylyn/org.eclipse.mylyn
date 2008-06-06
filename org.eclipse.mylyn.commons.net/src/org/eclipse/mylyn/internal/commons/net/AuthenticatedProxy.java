@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.net;
+package org.eclipse.mylyn.internal.commons.net;
 
 import java.net.Proxy;
 import java.net.SocketAddress;

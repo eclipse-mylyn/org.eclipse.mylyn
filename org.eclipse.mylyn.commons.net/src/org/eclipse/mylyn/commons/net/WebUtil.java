@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.commons.net.CloneableHostConfiguration;
 import org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin;
 import org.eclipse.mylyn.internal.commons.net.PollingInputStream;
@@ -337,13 +338,6 @@ public class WebUtil {
 	 */
 	public static int getConnectionTimeout() {
 		return CONNNECT_TIMEOUT;
-	}
-
-	/**
-	 * @since 2.0
-	 */
-	public static Credentials getCredentials(AuthenticatedProxy authProxy, InetSocketAddress address) {
-		return getCredentials(authProxy.getUserName(), authProxy.getPassword(), address.getAddress());
 	}
 
 	static Credentials getCredentials(final String username, final String password, final InetAddress address) {
