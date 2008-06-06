@@ -43,10 +43,6 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("restriction")
 public class ActivityContextManager implements IActivityContextManager {
 
-	private static final char WORKINGSET_DELIMETER = '\u200B'; // unicode zero width space
-
-	private static final char WORKINGSET_ID_DELIMITER = '\u202F'; // unicode narrow no-break space
-
 	private final int TICK = 30 * 1000;
 
 	private final int SHORT_TICK = 5 * 1000;
@@ -67,13 +63,13 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	private CheckActivityJob checkJob;
 
+	private IWorkingSet[] workingSets;
+
 	private final ArrayList<AbstractUserActivityMonitor> activityMonitors;
 
 	public static final String ACTIVITY_TIMEOUT = "org.eclipse.mylyn.monitor.ui.activity.timeout";
 
 	public static final String ACTIVITY_TIMEOUT_ENABLED = "org.eclipse.mylyn.monitor.ui.activity.timeout.enabled";
-
-	private static String selectedWorkingSets = "";
 
 	private final IPropertyChangeListener WORKING_SET_CHANGE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -94,23 +90,9 @@ public class ActivityContextManager implements IActivityContextManager {
 			public void run() {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (window != null) {
-					StringBuilder builder = new StringBuilder();
 					IWorkbenchPage page = window.getActivePage();
-					IWorkingSet[] workingSets;
-					if (page != null) {
-						workingSets = page.getWorkingSets();
-						for (IWorkingSet workingSet : workingSets) {
-							String workingSetId = workingSet.getId();
-							if (workingSetId == null) {
-								workingSetId = "";
-							}
-							builder.append(workingSetId + WORKINGSET_ID_DELIMITER + workingSet.getName()
-									+ WORKINGSET_DELIMETER);
-						}
-					}
-					selectedWorkingSets = builder.toString();
+					workingSets = page.getWorkingSets();
 				}
-				selectedWorkingSets = "";
 			}
 		});
 	}
@@ -149,15 +131,33 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	private void addMonitoredActivityTime(long start, long end) {
 		if (end > start) {
-			ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
-					new InteractionEvent(InteractionEvent.Kind.ATTENTION,
-							InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, getStructureHandle(),
-							InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-							InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
+			String handle = getStructureHandle();
+			if (handle == null) {
+				if (workingSets != null && workingSets.length > 0) {
+					for (IWorkingSet workingSet : workingSets) {
+						String workingSetName = workingSet.getName();
+						processWorkbenchEvent(InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
+								InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET, workingSetName, start, end);
+					}
+				} else {
+					processWorkbenchEvent(InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
+							InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET,
+							InteractionContextManager.ACTIVITY_HANDLE_NONE, start, end);
+				}
+			} else {
+				processWorkbenchEvent(InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
+						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle, start, end);
+			}
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionGained();
 			}
 		}
+	}
+
+	private void processWorkbenchEvent(String origin, String structureKind, String handle, long start, long end) {
+		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+				new InteractionEvent(InteractionEvent.Kind.ATTENTION, structureKind, handle, origin, null,
+						InteractionContextManager.ACTIVITY_DELTA_ADDED, 1f, new Date(start), new Date(end)));
 	}
 
 	public void addActivityTime(String handle, long start, long end) {
@@ -262,14 +262,13 @@ public class ActivityContextManager implements IActivityContextManager {
 		return timeout;
 	}
 
+	/**
+	 * @return null when no task is active
+	 */
 	public String getStructureHandle() {
 		if (ContextCore.getContextManager().getActiveContext().getHandleIdentifier() != null) {
 			return ContextCore.getContextManager().getActiveContext().getHandleIdentifier();
-		} else {
-			if (selectedWorkingSets != null && selectedWorkingSets.length() > 0) {
-				return selectedWorkingSets;
-			}
 		}
-		return InteractionContextManager.ACTIVITY_HANDLE_NONE;
+		return null;
 	}
 }
