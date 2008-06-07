@@ -8,17 +8,15 @@
 
 package org.eclipse.mylyn.tasks.ui.wizards;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -45,16 +43,9 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TaskAttachmentPage extends WizardPage {
 
-	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
-
-	private static final String DEFAULT_CONTENT_TYPE = APPLICATION_OCTET_STREAM;
-
 	private static List<String> contentTypes;
 
-	private static Map<String, String> extensions2Types;
-
 	static {
-		/* For UI */
 		contentTypes = new LinkedList<String>();
 		contentTypes.add("text/plain");
 		contentTypes.add("text/html");
@@ -62,21 +53,7 @@ public class TaskAttachmentPage extends WizardPage {
 		contentTypes.add("image/gif");
 		contentTypes.add("image/jpeg");
 		contentTypes.add("image/png");
-		contentTypes.add(APPLICATION_OCTET_STREAM);
-
-		/* For auto-detect */
-		extensions2Types = new HashMap<String, String>();
-		extensions2Types.put("txt", "text/plain");
-		extensions2Types.put("html", "text/html");
-		extensions2Types.put("htm", "text/html");
-		extensions2Types.put("jpg", "image/jpeg");
-		extensions2Types.put("jpeg", "image/jpeg");
-		extensions2Types.put("gif", "image/gif");
-		extensions2Types.put("png", "image/png");
-		extensions2Types.put("xml", "application/xml");
-		extensions2Types.put("zip", APPLICATION_OCTET_STREAM);
-		extensions2Types.put("tar", APPLICATION_OCTET_STREAM);
-		extensions2Types.put("gz", APPLICATION_OCTET_STREAM);
+		contentTypes.add(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
 	}
 
 	private Button attachContextButton;
@@ -269,16 +246,7 @@ public class TaskAttachmentPage extends WizardPage {
 	}
 
 	private void setContentTypeFromFilename(String fileName) {
-		int index = fileName.lastIndexOf(".");
-		if (index > 0 && index < fileName.length()) {
-			String ext = fileNameText.getText().substring(index + 1);
-			String type = extensions2Types.get(ext.toLowerCase(Locale.ENGLISH));
-			if (type != null) {
-				setContentType(type);
-				return;
-			}
-		}
-		setContentType(DEFAULT_CONTENT_TYPE);
+		setContentType(FileTaskAttachmentSource.getContentTypeFromFilename(fileName));
 	}
 
 	private void setFilePath(String path) {

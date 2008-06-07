@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,9 +28,38 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
  */
 public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 
-	private static final String CONTENT_TYPE_BINARY = "application/octet-stream";
+	public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
 
-	private String contentType = CONTENT_TYPE_BINARY;
+	private static Map<String, String> extensions2Types;
+
+	static {
+		extensions2Types = new HashMap<String, String>();
+		extensions2Types.put("txt", "text/plain");
+		extensions2Types.put("html", "text/html");
+		extensions2Types.put("htm", "text/html");
+		extensions2Types.put("jpg", "image/jpeg");
+		extensions2Types.put("jpeg", "image/jpeg");
+		extensions2Types.put("gif", "image/gif");
+		extensions2Types.put("png", "image/png");
+		extensions2Types.put("xml", "application/xml");
+		extensions2Types.put("zip", APPLICATION_OCTET_STREAM);
+		extensions2Types.put("tar", APPLICATION_OCTET_STREAM);
+		extensions2Types.put("gz", APPLICATION_OCTET_STREAM);
+	}
+
+	public static String getContentTypeFromFilename(String fileName) {
+		int index = fileName.lastIndexOf(".");
+		if (index > 0 && index < fileName.length()) {
+			String ext = fileName.substring(index + 1);
+			String type = extensions2Types.get(ext.toLowerCase(Locale.ENGLISH));
+			if (type != null) {
+				return type;
+			}
+		}
+		return APPLICATION_OCTET_STREAM;
+	}
+
+	private String contentType;
 
 	private String description;
 
@@ -38,6 +70,7 @@ public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 	public FileTaskAttachmentSource(File file) {
 		this.file = file;
 		this.name = file.getName();
+		this.contentType = getContentTypeFromFilename(name);
 	}
 
 	@Override

@@ -64,8 +64,6 @@ public class AttachmentUtil {
 
 	private static final String CONTEXT_CONTENT_TYPE = "application/octet-stream";
 
-	private static final int BUFFER_SIZE = 1024;
-
 	/**
 	 * Attaches the associated context to <code>task</code>.
 	 * 
@@ -388,5 +386,4 @@ public class AttachmentUtil {
 		}
 		return false;
 	}
-
 }
