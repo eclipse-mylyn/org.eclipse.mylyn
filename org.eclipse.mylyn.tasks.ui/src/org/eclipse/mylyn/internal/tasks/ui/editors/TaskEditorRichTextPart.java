@@ -112,8 +112,8 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		} else {
 			editor.createControl(composite, toolkit);
 			if (editor.isReadOnly()) {
-				GridDataFactory.fillDefaults().hint(EditorUtil.MAXIMUM_WIDTH, SWT.DEFAULT).applyTo(
-						editor.getControl());
+				GridDataFactory.fillDefaults().minSize(EditorUtil.MAXIMUM_WIDTH, 0).hint(EditorUtil.MAXIMUM_WIDTH,
+						SWT.DEFAULT).applyTo(editor.getControl());
 			} else {
 				final GridData gd = new GridData();
 				// wrap text at this margin, see comment below
@@ -122,13 +122,13 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 				// on screen
 				Point size = editor.getViewer().getTextWidget().computeSize(width, SWT.DEFAULT, true);
 				gd.widthHint = EditorUtil.MAXIMUM_WIDTH;
+				gd.minimumWidth = EditorUtil.MAXIMUM_WIDTH;
 				gd.horizontalAlignment = SWT.FILL;
 				gd.grabExcessHorizontalSpace = true;
 				// limit height to be avoid dynamic resizing of the text widget: 
 				// MAXIMUM_HEIGHT < height < MAXIMUM_HEIGHT * 4  
 				//gd.minimumHeight = AbstractAttributeEditor.MAXIMUM_HEIGHT;
-				gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y),
-						EditorUtil.MAXIMUM_HEIGHT * 4);
+				gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y), EditorUtil.MAXIMUM_HEIGHT * 4);
 				if (getExpandVertically()) {
 					gd.verticalAlignment = SWT.FILL;
 					gd.grabExcessVerticalSpace = true;

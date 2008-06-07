@@ -317,7 +317,7 @@ public class EditorUtil {
 		if (comp.isExpanded() != expanded) {
 			Method method = null;
 			try {
-				method = comp.getClass().getDeclaredMethod("programmaticToggleState");
+				method = ExpandableComposite.class.getDeclaredMethod("programmaticToggleState");
 				method.setAccessible(true);
 				method.invoke(comp);
 			} catch (Exception e) {

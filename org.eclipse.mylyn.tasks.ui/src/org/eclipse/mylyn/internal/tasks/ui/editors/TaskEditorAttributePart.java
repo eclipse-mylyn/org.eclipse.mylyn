@@ -43,6 +43,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -60,6 +62,8 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 	private List<AbstractAttributeEditor> attributeEditors;
 
 	private boolean hasIncoming;
+
+	private Composite attributesComposite;
 
 	public TaskEditorAttributePart() {
 		setPartName("Attributes");
@@ -121,13 +125,29 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 	}
 
 	@Override
-	public void createControl(Composite parent, FormToolkit toolkit) {
+	public void createControl(Composite parent, final FormToolkit toolkit) {
 		initialize();
 
-		Section section = createSection(parent, toolkit, getTaskData().isNew() || hasIncoming);
+		boolean expand = getTaskData().isNew() || hasIncoming;
+		final Section section = createSection(parent, toolkit, expand);
+		if (expand) {
+			expandSection(toolkit, section);
+		} else {
+			section.addExpansionListener(new ExpansionAdapter() {
+				@Override
+				public void expansionStateChanged(ExpansionEvent event) {
+					if (attributesComposite == null) {
+						expandSection(toolkit, section);
+						getTaskEditorPage().reflow();
+					}
+				}
+			});
+		}
+		setSection(toolkit, section);
+	}
 
-		// Attributes Composite- this holds all the combo fields and text fields
-		Composite attributesComposite = toolkit.createComposite(section);
+	private void expandSection(FormToolkit toolkit, Section section) {
+		attributesComposite = toolkit.createComposite(section);
 		attributesComposite.addListener(SWT.MouseDown, new Listener() {
 			public void handleEvent(Event event) {
 				Control focus = event.display.getFocusControl();
@@ -152,7 +172,6 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		toolkit.paintBordersFor(attributesComposite);
 
 		section.setClient(attributesComposite);
-		setSection(toolkit, section);
 	}
 
 	@Override

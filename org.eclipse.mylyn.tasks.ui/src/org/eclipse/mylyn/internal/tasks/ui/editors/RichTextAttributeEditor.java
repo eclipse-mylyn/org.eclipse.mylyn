@@ -109,26 +109,6 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 			}
 		});
 		viewer.getTextWidget().setIndent(2);
-
-		// !Do Not Delete! hover manager that shows text when we hover
-		// AnnotationBarHoverManager fAnnotationHoverManager = new AnnotationBarHoverManager(fCompositeRuler,
-		//     commentViewer, new AnnotationHover(fAnnotationModel), new AnnotationConfiguration());
-		// fAnnotationHoverManager.install(annotationRuler.getControl());
-
-		// !Do Not Delete! Sample debugging code
-		// document.set("Here's some texst so that we have somewhere to show an error");
-		//
-		// // // add an annotation
-		// ErrorAnnotation errorAnnotation = new ErrorAnnotation(1, "");
-		// // lets underline the word "texst"
-		// fAnnotationModel.addAnnotation(errorAnnotation, new Position(12, 5));
-
-		// CoreSpellingProblem iProblem = new CoreSpellingProblem(12, 5, 1, 
-		//    "problem message", "theword", false, false, document, "task editor");
-		// editorInput.getName()
-		//
-		// fAnnotationModel.addAnnotation(new ProblemAnnotation(iProblem, null), new Position(12, 5));
-
 		viewer.setDocument(document, annotationModel);
 	}
 

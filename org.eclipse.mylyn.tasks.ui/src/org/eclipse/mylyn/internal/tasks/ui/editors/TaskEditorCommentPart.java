@@ -47,8 +47,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private static final String KEY_EDITOR = "viewer";
 
-	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
-
 	private static final String LABEL_REPLY = "Reply";
 
 	private Section section;
@@ -82,7 +80,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				});
 				composite.setData(KEY_EDITOR, editor);
 
-				GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(editor.getControl());
+				GridDataFactory.fillDefaults().minSize(EditorUtil.MAXIMUM_WIDTH, 0).hint(EditorUtil.MAXIMUM_WIDTH,
+						SWT.DEFAULT).applyTo(editor.getControl());
 
 				getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 				getTaskEditorPage().reflow();
@@ -117,88 +116,102 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		section = createSection(parent, toolkit, hasIncoming);
 		section.setText(section.getText() + " (" + comments.size() + ")");
 
+		if (comments.isEmpty()) {
+			section.setEnabled(false);
+		} else {
+			if (hasIncoming) {
+				expandSection(toolkit, section);
+			} else {
+				section.addExpansionListener(new ExpansionAdapter() {
+					@Override
+					public void expansionStateChanged(ExpansionEvent event) {
+						if (commentComposites == null) {
+							expandSection(toolkit, section);
+							getTaskEditorPage().reflow();
+						}
+					}
+				});
+			}
+		}
+		setSection(toolkit, section);
+	}
+
+	private void expandSection(final FormToolkit toolkit, final Section section) {
 		final Composite composite = toolkit.createComposite(section);
 		section.setClient(composite);
 		composite.setLayout(new GridLayout(1, false));
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
 
-		if (comments.isEmpty()) {
-			section.setEnabled(false);
-		} else {
-			commentComposites = new ArrayList<ExpandableComposite>();
-			for (final TaskAttribute commentAttribute : comments) {
-				boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
-				final TaskComment taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(),
-						commentAttribute);
-				getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
-				int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
-				if (hasIncomingChanges) {
-					style |= ExpandableComposite.EXPANDED;
-				}
-				final ExpandableComposite commentComposite = toolkit.createExpandableComposite(composite, style);
-				commentComposite.setLayout(new GridLayout());
-				commentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-				commentComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-				commentComposites.add(commentComposite);
-
-				// always visible
-				Composite titleComposite = toolkit.createComposite(commentComposite);
-				commentComposite.setTextClient(titleComposite);
-				RowLayout rowLayout = new RowLayout();
-				rowLayout.pack = true;
-				rowLayout.marginLeft = 0;
-				rowLayout.marginBottom = 0;
-				rowLayout.marginTop = 0;
-				titleComposite.setLayout(rowLayout);
-				titleComposite.setBackground(null);
-
-				ImageHyperlink expandCommentHyperlink = createTitleHyperLink(toolkit, titleComposite, taskComment);
-				expandCommentHyperlink.setFont(commentComposite.getFont());
-				expandCommentHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-					@Override
-					public void linkActivated(HyperlinkEvent e) {
-						EditorUtil.toggleExpandableComposite(!commentComposite.isExpanded(), commentComposite);
-					}
-				});
-
-				// only visible when section is expanded
-				final Composite buttonComposite = toolkit.createComposite(titleComposite);
-				RowLayout buttonCompLayout = new RowLayout();
-				buttonCompLayout.marginBottom = 0;
-				buttonCompLayout.marginTop = 0;
-				buttonComposite.setLayout(buttonCompLayout);
-				buttonComposite.setBackground(null);
-				buttonComposite.setVisible(commentComposite.isExpanded());
-
-				createReplyHyperlink(buttonComposite, toolkit, taskComment);
-
-				final Composite commentTextComposite = toolkit.createComposite(commentComposite);
-				commentComposite.setClient(commentTextComposite);
-				GridLayout ecLayout = new GridLayout();
-				ecLayout.marginHeight = 0;
-				ecLayout.marginBottom = 3;
-				ecLayout.marginLeft = 15;
-				commentTextComposite.setLayout(ecLayout);
-				commentTextComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-				// TODO code for outline
-				//getTaskEditorPage().addSelectableControl(taskComment, expandableComposite);
-				commentComposite.addExpansionListener(new ExpansionAdapter() {
-					@Override
-					public void expansionStateChanged(ExpansionEvent event) {
-						expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, event.getState());
-					}
-				});
-
-				if (hasIncomingChanges) {
-					commentComposite.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
-					expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, true);
-				}
-
-				// for outline
-				EditorUtil.setMarker(commentComposite, commentAttribute.getId());
+		commentComposites = new ArrayList<ExpandableComposite>();
+		for (final TaskAttribute commentAttribute : comments) {
+			boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
+			final TaskComment taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(),
+					commentAttribute);
+			getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
+			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
+			if (hasIncomingChanges) {
+				style |= ExpandableComposite.EXPANDED;
 			}
+			final ExpandableComposite commentComposite = toolkit.createExpandableComposite(composite, style);
+			commentComposite.setLayout(new GridLayout());
+			commentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			commentComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+			commentComposites.add(commentComposite);
+
+			// always visible
+			Composite titleComposite = toolkit.createComposite(commentComposite);
+			commentComposite.setTextClient(titleComposite);
+			RowLayout rowLayout = new RowLayout();
+			rowLayout.pack = true;
+			rowLayout.marginLeft = 0;
+			rowLayout.marginBottom = 0;
+			rowLayout.marginTop = 0;
+			titleComposite.setLayout(rowLayout);
+			titleComposite.setBackground(null);
+
+			ImageHyperlink expandCommentHyperlink = createTitleHyperLink(toolkit, titleComposite, taskComment);
+			expandCommentHyperlink.setFont(commentComposite.getFont());
+			expandCommentHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					EditorUtil.toggleExpandableComposite(!commentComposite.isExpanded(), commentComposite);
+				}
+			});
+
+			// only visible when section is expanded
+			final Composite buttonComposite = toolkit.createComposite(titleComposite);
+			RowLayout buttonCompLayout = new RowLayout();
+			buttonCompLayout.marginBottom = 0;
+			buttonCompLayout.marginTop = 0;
+			buttonComposite.setLayout(buttonCompLayout);
+			buttonComposite.setBackground(null);
+			buttonComposite.setVisible(commentComposite.isExpanded());
+
+			createReplyHyperlink(buttonComposite, toolkit, taskComment);
+
+			final Composite commentTextComposite = toolkit.createComposite(commentComposite);
+			commentComposite.setClient(commentTextComposite);
+			GridLayout ecLayout = new GridLayout();
+			ecLayout.marginHeight = 0;
+			ecLayout.marginBottom = 3;
+			ecLayout.marginLeft = 15;
+			commentTextComposite.setLayout(ecLayout);
+			commentTextComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			commentComposite.addExpansionListener(new ExpansionAdapter() {
+				@Override
+				public void expansionStateChanged(ExpansionEvent event) {
+					expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, event.getState());
+				}
+			});
+
+			if (hasIncomingChanges) {
+				commentComposite.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
+				expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, true);
+			}
+
+			// for outline
+			EditorUtil.setMarker(commentComposite, commentAttribute.getId());
 		}
-		setSection(toolkit, section);
 	}
 
 	private ImageHyperlink createTitleHyperLink(final FormToolkit toolkit, final Composite toolbarComp,
@@ -316,7 +329,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			getTaskEditorPage().setReflow(false);
 
 			if (section != null) {
-				section.setExpanded(true);
+				EditorUtil.toggleExpandableComposite(true, section);
 			}
 			for (ExpandableComposite composite : commentComposites) {
 				if (composite.isDisposed()) {
