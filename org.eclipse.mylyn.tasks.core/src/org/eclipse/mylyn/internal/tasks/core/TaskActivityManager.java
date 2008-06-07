@@ -61,8 +61,6 @@ public class TaskActivityManager implements ITaskActivityManager {
 
 	private final Map<String, SortedMap<Calendar, Long>> workingSetElapsedTimeMap = new ConcurrentHashMap<String, SortedMap<Calendar, Long>>();
 
-	//private final SortedMap<Calendar, Long> noTaskActiveMap = Collections.synchronizedSortedMap(new TreeMap<Calendar, Long>());
-
 	private final TaskList taskList;
 
 	private final TaskRepositoryManager repositoryManager;
@@ -444,6 +442,8 @@ public class TaskActivityManager implements ITaskActivityManager {
 							"Notification failed for: " + listener, t));
 				}
 			}
+		} else {
+			((AbstractTask) task).setActive(false);
 		}
 	}
 
