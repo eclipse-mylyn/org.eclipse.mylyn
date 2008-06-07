@@ -43,6 +43,14 @@ public class TaskDataManagerEvent extends EventObject {
 		this.token = token;
 	}
 
+	public TaskDataManagerEvent(ITaskDataManager source, ITask task) {
+		super(source);
+		Assert.isNotNull(task);
+		this.task = task;
+		this.taskData = null;
+		this.token = null;
+	}
+
 	public ITask getTask() {
 		return task;
 	}

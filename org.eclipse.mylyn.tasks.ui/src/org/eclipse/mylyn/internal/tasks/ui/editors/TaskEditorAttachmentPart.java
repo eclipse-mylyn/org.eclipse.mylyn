@@ -64,7 +64,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private final String[] attachmentsColumns = { "Name", "Description", /*"Type", */"Size", "Creator", "Created" };
 
-	private final int[] attachmentsColumnWidths = { 130, 160, /*100,*/70, 100, 100 };
+	private final int[] attachmentsColumnWidths = { 130, 150, /*100,*/70, 100, 100 };
 
 	private List<TaskAttribute> attachments;
 

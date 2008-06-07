@@ -236,29 +236,39 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	private final ITaskDataManagerListener TASK_DATA_LISTENER = new ITaskDataManagerListener() {
 
 		public void taskDataUpdated(final TaskDataManagerEvent event) {
-			final ITask task = event.getTask();
-			if (task.equals(AbstractTaskEditorPage.this.getTask())) {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (refreshDisabled || !event.getTaskDataUpdated()) {
-							return;
-						}
+			ITask task = event.getTask();
+			if (task.equals(AbstractTaskEditorPage.this.getTask()) && event.getTaskDataUpdated()) {
+				refresh(task);
+			}
+		}
 
-						if (!isDirty() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
-							// automatically refresh if the user has not made any changes and there is no chance of missing incomings
-							refreshFormContent();
-						} else {
-							getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
-									new HyperlinkAdapter() {
-										@Override
-										public void linkActivated(HyperlinkEvent e) {
-											refreshFormContent();
-										}
-									});
-							setSubmitEnabled(false);
-						}
+		private void refresh(final ITask task) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (refreshDisabled) {
+						return;
 					}
-				});
+
+					if (!isDirty() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
+						// automatically refresh if the user has not made any changes and there is no chance of missing incomings
+						refreshFormContent();
+					} else {
+						getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+								new HyperlinkAdapter() {
+									@Override
+									public void linkActivated(HyperlinkEvent e) {
+										refreshFormContent();
+									}
+								});
+						setSubmitEnabled(false);
+					}
+				}
+			});
+		}
+
+		public void editsDiscarded(TaskDataManagerEvent event) {
+			if (event.getTask().equals(AbstractTaskEditorPage.this.getTask())) {
+				refresh(event.getTask());
 			}
 		}
 	};

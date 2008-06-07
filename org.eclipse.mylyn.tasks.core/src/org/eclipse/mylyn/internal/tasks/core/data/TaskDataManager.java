@@ -325,6 +325,8 @@ public class TaskDataManager implements ITaskDataManager {
 			}
 		});
 		taskList.notifyElementChanged(task);
+		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask);
+		fireEditsDiscarded(event);
 	}
 
 	@Deprecated
@@ -682,6 +684,25 @@ public class TaskDataManager implements ITaskDataManager {
 
 					public void run() throws Exception {
 						listener.taskDataUpdated(event);
+					}
+
+				});
+			}
+		}
+	}
+
+	private void fireEditsDiscarded(final TaskDataManagerEvent event) {
+		ITaskDataManagerListener[] array = listeners.toArray(new ITaskDataManagerListener[0]);
+		if (array.length > 0) {
+			for (final ITaskDataManagerListener listener : array) {
+				SafeRunner.run(new ISafeRunnable() {
+
+					public void handleException(Throwable exception) {
+						// ignore
+					}
+
+					public void run() throws Exception {
+						listener.editsDiscarded(event);
 					}
 
 				});

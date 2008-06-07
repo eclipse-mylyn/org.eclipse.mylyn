@@ -42,7 +42,7 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 			if (attribute.getId().equals(BugzillaAttribute.CC.getKey())) {
-				GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).hint(150, 95).applyTo(
+				GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).hint(130, 95).applyTo(
 						editor.getControl());
 			} else {
 				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(editor.getControl());

@@ -106,4 +106,8 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 		}
 	}
 
+	public void editsDiscarded(TaskDataManagerEvent event) {
+		// ignore		
+	}
+
 }

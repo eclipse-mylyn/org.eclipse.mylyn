@@ -15,4 +15,6 @@ public interface ITaskDataManagerListener {
 
 	public abstract void taskDataUpdated(TaskDataManagerEvent event);
 
+	public abstract void editsDiscarded(TaskDataManagerEvent event);
+
 }
