@@ -84,17 +84,13 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 			}
 		case 1:
 			return attachment.getDescription();
+//		case 2:
+//			return attachment.getContentType();
 		case 2:
-//			if (attachment.isPatch()) {
-//				return "patch";
-//			} else {
-			return attachment.getContentType();
-//			}
-		case 3:
 			return sizeFormatter.format(attachment.getLength());
-		case 4:
+		case 3:
 			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : "";
-		case 5:
+		case 4:
 			return (attachment.getCreationDate() != null) ? EditorUtil.formatDateTime(attachment.getCreationDate())
 					: "";
 		}
@@ -141,7 +137,15 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 	@Override
 	public String getToolTipText(Object element) {
 		ITaskAttachment attachment = (ITaskAttachment) element;
-		return "File: " + attachment.getFileName();
+		StringBuilder sb = new StringBuilder();
+		sb.append("File: ");
+		sb.append(attachment.getFileName());
+		if (attachment.getContentType() != null) {
+			sb.append("\n");
+			sb.append("Type: ");
+			sb.append(attachment.getContentType());
+		}
+		return sb.toString();
 		/*"\nFilename\t\t"  + attachment.getAttributeValue("filename")
 			  +"ID\t\t\t"        + attachment.getAttributeValue("attachid")
 		      + "\nDate\t\t\t"    + attachment.getAttributeValue("date")

@@ -20,16 +20,15 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDiffUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.UpdateRepositoryConfigurationAction;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.sync.TaskJob;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
-import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
@@ -53,9 +52,13 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 
-	private static final int COLUMN_WIDTH = 140;
+	private static final int LABEL_WIDTH = 95;
 
-	private static final int MULTI_COLUMN_WIDTH = 380;
+	private static final int COLUMN_WIDTH = 160;
+
+	private static final int COLUMN_GAP = 5;
+
+	private static final int MULTI_COLUMN_WIDTH = COLUMN_WIDTH + 5 + COLUMN_GAP + LABEL_WIDTH + 5 + COLUMN_WIDTH;
 
 	private static final int MULTI_ROW_HEIGHT = 55;
 
@@ -69,10 +72,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		setPartName("Attributes");
 	}
 
-	private void createAttributeControls(Composite attributesComposite, FormToolkit toolkit) {
-		int columnCount = ((GridLayout) attributesComposite.getLayout()).numColumns;
-		((GridLayout) attributesComposite.getLayout()).verticalSpacing = 6;
-
+	private void createAttributeControls(Composite attributesComposite, FormToolkit toolkit, int columnCount) {
 		int currentColumn = 1;
 		int currentPriority = 0;
 		for (AbstractAttributeEditor attributeEditor : attributeEditors) {
@@ -92,7 +92,16 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 			if (attributeEditor.hasLabel()) {
 				attributeEditor.createLabelControl(attributesComposite, toolkit);
 				Label label = attributeEditor.getLabelControl();
-				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+				label.setText(TaskDiffUtil.shortenText(label, label.getText(), LABEL_WIDTH));
+				GridData gd = GridDataFactory.fillDefaults()
+						.align(SWT.RIGHT, SWT.CENTER)
+						.hint(LABEL_WIDTH, SWT.DEFAULT)
+						.create();
+				if (currentColumn > 1) {
+					gd.horizontalIndent = COLUMN_GAP;
+					gd.widthHint = LABEL_WIDTH + COLUMN_GAP;
+				}
+				label.setLayoutData(gd);
 				currentColumn++;
 			}
 
@@ -168,7 +177,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		attributesData.grabExcessVerticalSpace = false;
 		attributesComposite.setLayoutData(attributesData);
 
-		createAttributeControls(attributesComposite, toolkit);
+		createAttributeControls(attributesComposite, toolkit, attributesLayout.numColumns);
 		toolkit.paintBordersFor(attributesComposite);
 
 		section.setClient(attributesComposite);
@@ -238,8 +247,6 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		attributeEditors = new ArrayList<AbstractAttributeEditor>();
 		hasIncoming = false;
 
-		AttributeEditorFactory attributeEditorFactory = getTaskEditorPage().getAttributeEditorFactory();
-		TaskAttributeMapper attributeMapper = getTaskData().getAttributeMapper();
 		Map<String, TaskAttribute> attributes = getTaskData().getRoot().getAttributes();
 		for (TaskAttribute attribute : attributes.values()) {
 			TaskAttributeMetaData properties = attribute.getMetaData();

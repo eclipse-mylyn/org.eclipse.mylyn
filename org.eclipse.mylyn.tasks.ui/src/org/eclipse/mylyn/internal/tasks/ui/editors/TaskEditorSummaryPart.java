@@ -113,8 +113,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 
 		// TODO show resolution
 
-		TaskAttribute priorityAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
-		addAttribute(headerComposite, toolkit, priorityAttribute);
+//		TaskAttribute priorityAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
+//		addAttribute(headerComposite, toolkit, priorityAttribute);
 
 		TaskAttribute keyAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.TASK_KEY);
 		addAttribute(headerComposite, toolkit, keyAttribute);

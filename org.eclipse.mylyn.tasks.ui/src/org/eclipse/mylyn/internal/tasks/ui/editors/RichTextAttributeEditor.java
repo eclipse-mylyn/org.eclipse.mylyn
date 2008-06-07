@@ -115,7 +115,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		int style = this.style;
-		if (!isReadOnly()) {
+		if (!isReadOnly() && (style & SWT.NO_SCROLL) == 0) {
 			style |= SWT.V_SCROLL;
 		}
 		viewer = new RepositoryTextViewer(taskRepository, parent, SWT.FLAT | SWT.WRAP | style);

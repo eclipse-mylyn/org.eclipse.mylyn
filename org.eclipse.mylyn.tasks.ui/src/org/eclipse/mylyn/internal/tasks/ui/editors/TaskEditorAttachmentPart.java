@@ -62,9 +62,9 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments";
 
-	private final String[] attachmentsColumns = { "Name", "Description", "Type", "Size", "Creator", "Created" };
+	private final String[] attachmentsColumns = { "Name", "Description", /*"Type", */"Size", "Creator", "Created" };
 
-	private final int[] attachmentsColumnWidths = { 140, 160, 100, 70, 100, 100 };
+	private final int[] attachmentsColumnWidths = { 130, 160, /*100,*/70, 100, 100 };
 
 	private List<TaskAttribute> attachments;
 
@@ -91,7 +91,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			column.setText(attachmentsColumns[i]);
 			column.setWidth(attachmentsColumnWidths[i]);
 		}
-		attachmentsTable.getColumn(3).setAlignment(SWT.RIGHT);
+		// size column
+		attachmentsTable.getColumn(2).setAlignment(SWT.RIGHT);
 
 		TableViewer attachmentsViewer = new TableViewer(attachmentsTable);
 		attachmentsViewer.setUseHashlookup(true);
@@ -184,15 +185,19 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 		final Section section = createSection(parent, toolkit, hasIncoming);
 		section.setText(getPartName() + " (" + attachments.size() + ")");
-		section.addExpansionListener(new ExpansionAdapter() {
-			@Override
-			public void expansionStateChanged(ExpansionEvent event) {
-				if (attachmentsComposite == null) {
-					expandSection(toolkit, section);
-					getTaskEditorPage().reflow();
+		if (hasIncoming) {
+			expandSection(toolkit, section);
+		} else {
+			section.addExpansionListener(new ExpansionAdapter() {
+				@Override
+				public void expansionStateChanged(ExpansionEvent event) {
+					if (attachmentsComposite == null) {
+						expandSection(toolkit, section);
+						getTaskEditorPage().reflow();
+					}
 				}
-			}
-		});
+			});
+		}
 		setSection(toolkit, section);
 	}
 
@@ -226,6 +231,12 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private void initialize() {
 		attachments = getTaskData().getAttributeMapper().getAttributesByType(getTaskData(),
 				TaskAttribute.TYPE_ATTACHMENT);
+		for (TaskAttribute attachmentAttribute : attachments) {
+			if (getModel().hasIncomingChanges(attachmentAttribute)) {
+				hasIncoming = true;
+				break;
+			}
+		}
 	}
 
 }

@@ -126,9 +126,9 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 				gd.horizontalAlignment = SWT.FILL;
 				gd.grabExcessHorizontalSpace = true;
 				// limit height to be avoid dynamic resizing of the text widget: 
-				// MAXIMUM_HEIGHT < height < MAXIMUM_HEIGHT * 4  
+				// MAXIMUM_HEIGHT < height < MAXIMUM_HEIGHT * 3
 				//gd.minimumHeight = AbstractAttributeEditor.MAXIMUM_HEIGHT;
-				gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y), EditorUtil.MAXIMUM_HEIGHT * 4);
+				gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y), EditorUtil.MAXIMUM_HEIGHT * 3);
 				if (getExpandVertically()) {
 					gd.verticalAlignment = SWT.FILL;
 					gd.grabExcessVerticalSpace = true;
