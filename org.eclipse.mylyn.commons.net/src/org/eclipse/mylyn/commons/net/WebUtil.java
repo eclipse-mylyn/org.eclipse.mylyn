@@ -477,7 +477,10 @@ public class WebUtil {
 								if (token.getType() == Token.TAG) {
 									HtmlTag tag = (HtmlTag) token.getValue();
 									if (tag.getTagType() == Tag.TITLE) {
-										return getText(tokenizer);
+										String text = getText(tokenizer);
+										text = text.replaceAll("\n", "");
+										text = text.replaceAll("\\s+", " ");
+										return text.trim();
 									}
 								}
 							}
