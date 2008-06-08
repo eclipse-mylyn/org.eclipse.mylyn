@@ -111,8 +111,6 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_TASK_EDITOR_PAGE_FACTORY = "pageFactory";
 
-	public static final String ELMNT_HYPERLINK_DETECTOR = "hyperlinkDetector";
-
 	public static final String EXTENSION_DUPLICATE_DETECTORS = "org.eclipse.mylyn.tasks.ui.duplicateDetectors";
 
 	public static final String ELMNT_DUPLICATE_DETECTOR = "detector";
