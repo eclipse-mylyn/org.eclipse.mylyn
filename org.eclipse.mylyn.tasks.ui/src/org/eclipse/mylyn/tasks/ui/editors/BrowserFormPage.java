@@ -17,6 +17,7 @@ import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -82,6 +83,14 @@ public class BrowserFormPage extends FormPage {
 			return ((TaskEditorInput) input).getTask().getUrl();
 		}
 		return null;
+	}
+
+	@Override
+	public void init(IEditorSite site, IEditorInput input) {
+		super.init(site, input);
+		if (input instanceof TaskEditorInput) {
+			TasksUiPlugin.getTaskDataManager().setTaskRead(((TaskEditorInput) input).getTask(), true);
+		}
 	}
 
 }

@@ -265,7 +265,7 @@ public class TaskMapper implements ITaskMapping {
 		return getValue(TaskAttribute.TASK_URL);
 	}
 
-	private String getValue(String attributeKey) {
+	public String getValue(String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			return taskData.getAttributeMapper().getValueLabel(attribute);
@@ -382,13 +382,12 @@ public class TaskMapper implements ITaskMapping {
 		setValue(TaskAttribute.TASK_URL, taskUrl);
 	}
 
-	private TaskAttribute setValue(String attributeKey, String value) {
+	public TaskAttribute setValue(String attributeKey, String value) {
 		TaskAttribute attribute = getMappedAttribute(attributeKey);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValue(attribute, value);
 		}
 		return attribute;
-
 	}
 
 	private TaskAttribute setValues(String attributeKey, List<String> values) {

@@ -183,13 +183,11 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public boolean isRepositoryConfigurationStale(TaskRepository repository, IProgressMonitor monitor)
 			throws CoreException {
-		boolean isStale = true;
 		Date configDate = repository.getConfigurationDate();
 		if (configDate != null) {
-			isStale = (new Date().getTime() - configDate.getTime()) > REPOSITORY_CONFIGURATION_UPDATE_INTERVAL;
+			return (new Date().getTime() - configDate.getTime()) > REPOSITORY_CONFIGURATION_UPDATE_INTERVAL;
 		}
-
-		return isStale;
+		return true;
 	}
 
 	/**

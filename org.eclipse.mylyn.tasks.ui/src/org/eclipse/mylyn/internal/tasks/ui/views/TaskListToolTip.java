@@ -299,7 +299,9 @@ public class TaskListToolTip extends ToolTip {
 					TaskListNotifier notifier = new TaskListNotifier(TasksUiPlugin.getRepositoryModel(),
 							TasksUiPlugin.getTaskDataManager());
 					TaskDataDiff diff = notifier.getDiff(task);
-					text = diff.toString(MAX_TEXT_WIDTH);
+					if (diff != null) {
+						text = diff.toString(MAX_TEXT_WIDTH);
+					}
 				}
 				if (text != null && text.length() > 0) {
 					return text;

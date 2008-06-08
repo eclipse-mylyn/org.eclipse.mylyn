@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.MoveToCategoryMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
@@ -30,9 +31,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.internal.web.tasks.WebTask;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -166,7 +166,7 @@ public class TaskListUiTest extends TestCase {
 	public void testMarkWebTaskCompleted() {
 		TaskListView view = TaskListView.getFromActivePerspective();
 		assertNotNull(view);
-		WebTask webTask = new WebTask("1", "1", "", "", "web");
+		TaskTask webTask = new TaskTask("1", "1", "");
 		TasksUiPlugin.getTaskList().addTask(webTask);
 		view.getViewer().refresh();
 		// Arrays.asList(view.getViewer().getVisibleExpandedElements());

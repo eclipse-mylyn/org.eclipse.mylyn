@@ -178,8 +178,9 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 
 	/**
 	 * @since 2.0
-	 * @deprecated use {@link #performQuery(TaskRepository, RepositoryQuery, TaskDataCollector,
-	 * 	SynchronizationSession, IProgressMonitor)} instead
+	 * @deprecated use
+	 *             {@link #performQuery(TaskRepository, RepositoryQuery, TaskDataCollector, SynchronizationSession, IProgressMonitor)}
+	 *             instead
 	 */
 	@Deprecated
 	public IStatus performQuery(IRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
@@ -286,7 +287,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 * 
 	 * @throws CoreException
 	 * @deprecated use {@link #preQuerySynchronization(TaskRepository, SynchronizationSession, IProgressMonitor)}
-	 * 	instead
+	 *             instead
 	 */
 	@Deprecated
 	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
@@ -348,7 +349,6 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 * 
 	 * @deprecated
 	 */
-	// API 3.0 move to utility class
 	@Deprecated
 	public String getSynchronizationTimestamp(TaskRepository repository, Set<ITask> changedTasks) {
 		Date mostRecent = new Date(0);
