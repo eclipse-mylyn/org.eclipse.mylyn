@@ -19,6 +19,7 @@ import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -115,7 +116,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		int style = this.style;
-		if (!isReadOnly() && (style & SWT.NO_SCROLL) == 0) {
+		if (!isReadOnly() && (style & TasksUiInternal.SWT_NO_SCROLL) == 0) {
 			style |= SWT.V_SCROLL;
 		}
 		viewer = new RepositoryTextViewer(taskRepository, parent, SWT.FLAT | SWT.WRAP | style);

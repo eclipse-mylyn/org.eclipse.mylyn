@@ -18,6 +18,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.SingleSelectionAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -63,7 +64,7 @@ public class AttributeEditorFactory {
 			return new SingleSelectionAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
 			RichTextAttributeEditor editor = new RichTextAttributeEditor(model, taskRepository, taskAttribute,
-					SWT.MULTI | SWT.NO_SCROLL);
+					SWT.MULTI | TasksUiInternal.SWT_NO_SCROLL);
 			editor.setMode(Mode.TASK_RELATION);
 			editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE) {
 				@Override

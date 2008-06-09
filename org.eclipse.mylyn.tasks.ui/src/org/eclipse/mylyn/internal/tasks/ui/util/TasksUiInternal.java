@@ -106,6 +106,9 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TasksUiInternal {
 
+	// TODO e3.4 replace with SWT.NO_SCROLL constant
+	public static final int SWT_NO_SCROLL = 1 << 4;
+
 	public static MultiRepositoryAwareWizard createNewTaskWizard(ITaskMapping taskSelection) {
 		return new NewTaskWizard(taskSelection);
 	}
