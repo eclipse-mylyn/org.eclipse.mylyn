@@ -417,7 +417,11 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		TaskAttribute attrTimestamp = attribute.createAttribute(BugzillaAttribute.BUG_WHEN.getKey());
 		attrTimestamp.setValue(comment.createdTimeStamp);
 		taskComment.setCreationDate(repositoryTaskData.getAttributeMapper().getDateValue(attrTimestamp));
-		taskComment.setText(comment.commentText);
+		if (comment.commentText != null) {
+			String commentText = comment.commentText.trim() + "\n";
+			taskComment.setText(commentText);
+
+		}
 		taskComment.applyTo(attribute);
 		commentNum++;
 
