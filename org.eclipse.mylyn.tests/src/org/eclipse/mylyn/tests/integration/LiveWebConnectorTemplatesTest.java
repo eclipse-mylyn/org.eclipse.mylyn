@@ -19,20 +19,20 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.AssertionFailedException;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskFactory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.QueryHitCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.web.tasks.WebQuery;
 import org.eclipse.mylyn.internal.web.tasks.WebRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Eugene Kuleshov
@@ -49,16 +49,10 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 	public void testRepositoryTemplate() throws Throwable {
 		IProgressMonitor monitor = new NullProgressMonitor();
 		MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.ID_PLUGIN, IStatus.OK, "Query result", null);
-		final List<RepositoryTaskData> hits = new ArrayList<RepositoryTaskData>();
-		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
-
-			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
-				// ignore
-				return null;
-			}
-		}) {
+		final List<TaskData> hits = new ArrayList<TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
-			public void accept(RepositoryTaskData hit) {
+			public void accept(TaskData hit) {
 				hits.add(hit);
 			}
 		};
@@ -74,9 +68,11 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 		String url = repository.getRepositoryUrl();
 		// HACK: repositories that require auth
 		if ("http://demo.otrs.org".equals(url)) {
-			repository.setAuthenticationCredentials("skywalker", "skywalker");
+			repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("skywalker",
+					"skywalker"), false);
 		} else if ("http://changelogic.araneaframework.org".equals(url)) {
-			repository.setAuthenticationCredentials("mylar2", "mylar123");
+			repository.setCredentials(AuthenticationType.REPOSITORY,
+					new AuthenticationCredentials("mylar2", "mylar123"), false);
 		}
 
 		String queryUrlTemplate = template.taskQueryUrl;
@@ -87,8 +83,15 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 
 		String taskPrefix = template.taskPrefixUrl;
 
-		WebQuery query = new WebQuery(template.label, queryUrl, queryUrlTemplate, queryPattern, taskPrefix,
-				repositoryUrl, params);
+		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+		query.setSummary(template.label);
+		query.setUrl(queryUrl);
+		query.setAttribute(WebRepositoryConnector.KEY_QUERY_PATTERN, queryPattern);
+		query.setAttribute(WebRepositoryConnector.KEY_QUERY_TEMPLATE, queryUrlTemplate);
+		query.setAttribute(WebRepositoryConnector.KEY_TASK_PREFIX, taskPrefix);
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			query.setAttribute(entry.getKey(), entry.getValue());
+		}
 
 		WebRepositoryConnector connector = new WebRepositoryConnector();
 		IStatus status = connector.performQuery(repository, query, collector, null, monitor);
