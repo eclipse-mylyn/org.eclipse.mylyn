@@ -13,11 +13,11 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.mylyn.internal.commons.ui.CompositeContainerImageDescriptor;
 import org.eclipse.mylyn.internal.commons.ui.CompositeElementImageDescriptor;
 import org.eclipse.mylyn.internal.commons.ui.CompositeSyncImageDescriptor;
 import org.eclipse.mylyn.internal.commons.ui.TaskListImageDescriptor;
-import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -89,6 +89,8 @@ public class CommonImages {
 	public static final ImageDescriptor OVERLAY_SYNC_INCOMMING_NEW = create(T_EVIEW, "overlay-incoming-new.gif");
 
 	public static final ImageDescriptor OVERLAY_SYNC_OUTGOING = create(T_EVIEW, "overlay-outgoing.gif");
+
+	public static final ImageDescriptor OVERLAY_SYNC_OUTGOING_NEW = create(T_EVIEW, "overlay-outgoing-new.gif");
 
 	public static final ImageDescriptor OVERLAY_SYNC_CONFLICT = create(T_EVIEW, "overlay-conflict.gif");
 
