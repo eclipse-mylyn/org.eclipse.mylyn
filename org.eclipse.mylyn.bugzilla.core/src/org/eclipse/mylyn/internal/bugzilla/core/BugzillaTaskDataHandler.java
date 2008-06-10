@@ -322,6 +322,21 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		createAttribute(data, BugzillaAttribute.NEWCC);
 		createAttribute(data, BugzillaAttribute.LONG_DESC);
 
+		if (data.isNew()) {
+			TaskAttribute attrDescription = data.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
+			if (attrDescription != null) {
+				attrDescription.getMetaData().setReadOnly(false);
+			}
+			TaskAttribute attrOwner = data.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+			if (attrOwner != null) {
+				attrOwner.getMetaData().setReadOnly(false);
+			}
+			TaskAttribute attrAddSelfToCc = data.getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC);
+			if (attrAddSelfToCc != null) {
+				attrAddSelfToCc.getMetaData().setKind(null);
+			}
+		}
+
 		return true;
 	}
 
