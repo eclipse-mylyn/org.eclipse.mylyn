@@ -572,7 +572,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		// TODO EDITOR remove check
 		if (task != null) {
 			if (activateAction == null) {
-				activateAction = new ToggleTaskActivationAction(task, toolBarManager);
+				activateAction = new ToggleTaskActivationAction(task);
 			}
 			toolBarManager.add(new Separator("activation"));
 			toolBarManager.add(activateAction);

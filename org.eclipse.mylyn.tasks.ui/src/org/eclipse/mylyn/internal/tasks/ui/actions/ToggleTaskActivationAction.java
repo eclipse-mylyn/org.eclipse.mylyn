@@ -8,17 +8,17 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskActivationListener;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**
  * @author Mik Kersten
  */
-public class ToggleTaskActivationAction extends Action implements ITaskActivityListener {
+public class ToggleTaskActivationAction extends Action implements ITaskActivationListener {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.task.activation.toggle";
 
@@ -28,25 +28,23 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 
 	private final ITask task;
 
-	private final IToolBarManager toolBarManager;
-
 	/**
 	 * @param task
-	 * 		cannot be null
+	 *            cannot be null
 	 * @param toolBarManager
-	 * 		cannot be null
+	 *            cannot be null
 	 */
-	public ToggleTaskActivationAction(ITask task, IToolBarManager toolBarManager) {
+	public ToggleTaskActivationAction(ITask task) {
+		Assert.isNotNull(task);
 		this.task = task;
-		this.toolBarManager = toolBarManager;
 		setId(ID);
 		setImageDescriptor(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
 		update();
-		TasksUi.getTaskActivityManager().addActivityListener(this);
+		TasksUi.getTaskActivityManager().addActivationListener(this);
 	}
 
 	public void dispose() {
-		TasksUi.getTaskActivityManager().removeActivityListener(this);
+		TasksUi.getTaskActivityManager().removeActivationListener(this);
 	}
 
 	private void update() {
@@ -68,17 +66,14 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 			TasksUi.getTaskActivityManager().deactivateTask(task);
 		}
 		update();
-//		toolBarManager.add(this);
 	}
 
 	public void taskActivated(ITask task) {
 		update();
-		toolBarManager.update(true);
 	}
 
 	public void taskDeactivated(ITask task) {
 		update();
-		toolBarManager.update(true);
 	}
 
 	public void preTaskActivated(ITask task) {
@@ -87,14 +82,6 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivityL
 
 	public void preTaskDeactivated(ITask task) {
 		// ignore		
-	}
-
-	public void activityReset() {
-		// ignore
-	}
-
-	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-		// ignore
 	}
 
 }
