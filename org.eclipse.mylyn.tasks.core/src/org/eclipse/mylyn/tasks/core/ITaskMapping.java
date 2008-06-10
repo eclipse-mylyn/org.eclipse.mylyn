@@ -41,7 +41,9 @@ public interface ITaskMapping {
 
 	public abstract String getOwner();
 
-	public abstract PriorityLevel getPriority();
+	public abstract String getPriority();
+
+	public abstract PriorityLevel getPriorityLevel();
 
 	public abstract String getProduct();
 
@@ -50,6 +52,8 @@ public interface ITaskMapping {
 	public abstract String getResolution();
 
 	public abstract String getSummary();
+
+	public abstract String getStatus();
 
 	public abstract TaskData getTaskData();
 

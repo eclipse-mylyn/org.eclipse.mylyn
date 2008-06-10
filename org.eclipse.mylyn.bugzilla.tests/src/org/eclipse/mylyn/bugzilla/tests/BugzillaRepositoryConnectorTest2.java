@@ -142,7 +142,7 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		assertEquals("2", data.getTaskId());
 		assertEquals("New bug submit", mapper.getSummary());
 		assertEquals("Test new bug submission", mapper.getDescription());
-		assertEquals(PriorityLevel.P2, mapper.getPriority());
+		assertEquals(PriorityLevel.P2, mapper.getPriorityLevel());
 		assertEquals("TestComponent", mapper.getComponent());
 		assertEquals("nhapke@cs.ubc.ca", mapper.getOwner());
 		assertEquals("TestProduct", mapper.getProduct());

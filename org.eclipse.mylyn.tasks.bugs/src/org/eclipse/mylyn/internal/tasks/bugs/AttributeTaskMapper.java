@@ -114,7 +114,7 @@ public class AttributeTaskMapper {
 		}
 
 		@Override
-		public PriorityLevel getPriority() {
+		public PriorityLevel getPriorityLevel() {
 			// ignore
 			return null;
 		}

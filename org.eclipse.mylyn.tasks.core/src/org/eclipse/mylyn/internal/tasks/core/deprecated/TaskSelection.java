@@ -103,7 +103,7 @@ public class TaskSelection implements ITaskMapping {
 		return null;
 	}
 
-	public PriorityLevel getPriority() {
+	public PriorityLevel getPriorityLevel() {
 		// ignore
 		return null;
 	}
@@ -229,6 +229,16 @@ public class TaskSelection implements ITaskMapping {
 	}
 
 	public String getTaskStatus() {
+		// ignore
+		return null;
+	}
+
+	public String getPriority() {
+		// ignore
+		return null;
+	}
+
+	public String getStatus() {
 		// ignore
 		return null;
 	}

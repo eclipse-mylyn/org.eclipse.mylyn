@@ -59,8 +59,8 @@ public class TaskMapper implements ITaskMapping {
 			changed = true;
 		}
 		if (hasChanges(task.getPriority(), TaskAttribute.PRIORITY)) {
-			if (getPriority() != null) {
-				task.setPriority(getPriority().toString());
+			if (getPriorityLevel() != null) {
+				task.setPriority(getPriorityLevel().toString());
 			} else {
 				task.setPriority(PriorityLevel.getDefault().toString());
 			}
@@ -153,8 +153,8 @@ public class TaskMapper implements ITaskMapping {
 			if (source.getOwner() != null) {
 				setOwner(source.getOwner());
 			}
-			if (source.getPriority() != null) {
-				setPriority(source.getPriority());
+			if (source.getPriorityLevel() != null) {
+				setPriorityLevel(source.getPriorityLevel());
 			}
 			if (source.getProduct() != null) {
 				setProduct(source.getProduct());
@@ -224,8 +224,12 @@ public class TaskMapper implements ITaskMapping {
 		return getValue(TaskAttribute.USER_ASSIGNED);
 	}
 
-	public PriorityLevel getPriority() {
-		String value = getValue(TaskAttribute.PRIORITY);
+	public String getPriority() {
+		return getValue(TaskAttribute.PRIORITY);
+	}
+
+	public PriorityLevel getPriorityLevel() {
+		String value = getPriority();
 		return (value != null) ? PriorityLevel.fromString(value) : null;
 	}
 
@@ -243,6 +247,10 @@ public class TaskMapper implements ITaskMapping {
 
 	public String getSummary() {
 		return getValue(TaskAttribute.SUMMARY);
+	}
+
+	public String getStatus() {
+		return getValue(TaskAttribute.STATUS);
 	}
 
 	public TaskData getTaskData() {
@@ -357,8 +365,12 @@ public class TaskMapper implements ITaskMapping {
 		setValue(TaskAttribute.USER_ASSIGNED, owner);
 	}
 
-	public void setPriority(PriorityLevel priority) {
-		setValue(TaskAttribute.PRIORITY, priority.toString());
+	public void setPriority(String priority) {
+		setValue(TaskAttribute.PRIORITY, priority);
+	}
+
+	public void setPriorityLevel(PriorityLevel priority) {
+		setPriority(priority.toString());
 	}
 
 	public void setProduct(String product) {
@@ -372,6 +384,10 @@ public class TaskMapper implements ITaskMapping {
 
 	public void setSummary(String summary) {
 		setValue(TaskAttribute.SUMMARY, summary);
+	}
+
+	public void setStatus(String status) {
+		setValue(TaskAttribute.STATUS, status);
 	}
 
 	public void setTaskKind(String taskKind) {
