@@ -113,7 +113,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 		Matcher m = PATTERN.matcher(text);
 		while (m.find()) {
-			if (lineOffset >= m.start() && lineOffset <= m.end()) {
+			if (lineOffset >= m.start() && lineOffset < m.end()) {
 				IHyperlink link = extractHyperlink(repository, regionOffset, m);
 				if (link != null) {
 					hyperlinksFound.add(link);
