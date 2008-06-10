@@ -73,6 +73,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModelEvent;
@@ -805,8 +806,16 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						Object select = ((StructuredSelection) selection).getFirstElement();
 						if (select instanceof TaskEditorOutlineNode) {
 							TaskEditorOutlineNode node = (TaskEditorOutlineNode) select;
-							if (node.getData() != null) {
-								EditorUtil.reveal(form, node.getData().getId());
+							TaskAttribute attribute = node.getData();
+							if (attribute != null) {
+								if (TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
+									AbstractTaskEditorPart actionPart = getPart(ID_PART_COMMENTS);
+									if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
+										EditorUtil.toggleExpandableComposite(true,
+												(ExpandableComposite) actionPart.getControl());
+									}
+								}
+								EditorUtil.reveal(form, attribute.getId());
 							} else {
 								EditorUtil.reveal(form, node.getLabel());
 							}
