@@ -446,7 +446,7 @@ public class TasksUiUtil {
 				}
 			} else {
 				IWebBrowser browser = null;
-				int flags = 0;
+				int flags = customFlags;
 				if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
 					flags = IWorkbenchBrowserSupport.AS_EDITOR | IWorkbenchBrowserSupport.LOCATION_BAR
 							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
