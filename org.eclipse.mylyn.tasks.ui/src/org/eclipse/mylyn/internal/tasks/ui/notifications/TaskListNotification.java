@@ -78,6 +78,8 @@ public class TaskListNotification extends AbstractNotification {
 	public Image getNotificationKindImage() {
 		if (task.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
 			return CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING_NEW);
+		} else if (task.getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
+			return CommonImages.getImage(CommonImages.OVERLAY_SYNC_OUTGOING_NEW);
 		} else {
 			return CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING);
 		}
