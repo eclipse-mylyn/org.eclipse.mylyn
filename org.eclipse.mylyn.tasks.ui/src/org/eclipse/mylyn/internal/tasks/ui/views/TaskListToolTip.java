@@ -478,6 +478,8 @@ public class TaskListToolTip extends ToolTip {
 				ITask task = (ITask) currentTipElement;
 				if (task.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
 					image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING_NEW);
+				} else if (task.getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
+					image = CommonImages.getImage(CommonImages.OVERLAY_SYNC_OUTGOING_NEW);
 				}
 			}
 			addIconAndLabel(composite, image, incommingText);

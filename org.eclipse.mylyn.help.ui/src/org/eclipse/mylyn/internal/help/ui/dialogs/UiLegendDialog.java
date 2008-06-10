@@ -382,6 +382,10 @@ public class UiLegendDialog extends PopupDialog {
 		toolkit.createLabel(synchroClient, "Outgoing changes");
 
 		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_OUTGOING_NEW));
+		toolkit.createLabel(synchroClient, "Unsubmitted outgoing changes");
+
+		imageLabel = toolkit.createLabel(synchroClient, "");
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_WARNING));
 		toolkit.createLabel(synchroClient, "Synchronization failed, mouse over for details");
 
