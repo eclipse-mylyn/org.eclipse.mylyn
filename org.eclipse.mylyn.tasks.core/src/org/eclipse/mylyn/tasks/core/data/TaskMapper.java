@@ -208,10 +208,14 @@ public class TaskMapper implements ITaskMapping {
 		return getValues(TaskAttribute.KEYWORDS);
 	}
 
-	private TaskAttribute getMappedAttribute(String attributeKey) {
+	private TaskAttribute getWriteableAttribute(String attributeKey) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
-		if (createNonExistingAttributes && attribute == null) {
-			attribute = createAttribute(attributeKey);
+		if (createNonExistingAttributes) {
+			if (attribute == null) {
+				attribute = createAttribute(attributeKey);
+			}
+		} else if (attribute.getMetaData().isReadOnly()) {
+			return null;
 		}
 		return attribute;
 	}
@@ -337,7 +341,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	private TaskAttribute setDateValue(String attributeKey, Date value) {
-		TaskAttribute attribute = getMappedAttribute(attributeKey);
+		TaskAttribute attribute = getWriteableAttribute(attributeKey);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setDateValue(attribute, value);
 		}
@@ -399,7 +403,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	public TaskAttribute setValue(String attributeKey, String value) {
-		TaskAttribute attribute = getMappedAttribute(attributeKey);
+		TaskAttribute attribute = getWriteableAttribute(attributeKey);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValue(attribute, value);
 		}
@@ -407,7 +411,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	private TaskAttribute setValues(String attributeKey, List<String> values) {
-		TaskAttribute attribute = getMappedAttribute(attributeKey);
+		TaskAttribute attribute = getWriteableAttribute(attributeKey);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValues(attribute, values);
 		}
