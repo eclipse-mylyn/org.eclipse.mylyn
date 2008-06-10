@@ -12,6 +12,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.PlatformUI;
@@ -31,9 +32,9 @@ public class NewTaskFromMarkerHandler extends MarkerViewHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IMarker[] markers = getSelectedMarkers(event);
 		if (markers.length == 0 || markers[0] == null) {
+			MessageDialog.openInformation(null, "New Task from Marker", "No marker selected.");
 			return null;
 		}
-
 		final IMarker marker = markers[0];
 		TaskMapping mapping = new TaskMapping() {
 
@@ -62,19 +63,13 @@ public class NewTaskFromMarkerHandler extends MarkerViewHandler {
 	}
 
 	private String buildDescriptionFromMarkerItem(IMarker marker) {
-
 		StringBuilder sb = new StringBuilder();
-		try {
-			sb.append("Resource: " + marker.getResource().getFullPath().removeLastSegments(1).toString().substring(1)
-					+ "/" + marker.getResource().getName());
-			int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, -1);
-			if (lineNumber != -1) {
-				sb.append("\nLocation: line " + lineNumber);
-			}
-		} catch (Exception e) {
-			// FIXME which exception is ignored here?
+		sb.append("Resource: " + marker.getResource().getFullPath().removeLastSegments(1).toString().substring(1) + "/"
+				+ marker.getResource().getName());
+		int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, -1);
+		if (lineNumber != -1) {
+			sb.append("\nLocation: line " + lineNumber);
 		}
-
 		return sb.toString();
 	}
 

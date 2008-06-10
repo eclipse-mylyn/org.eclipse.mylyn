@@ -42,32 +42,27 @@
             class="org.eclipse.mylyn.internal.tasks.bugs.actions.NewTaskFromMarkerHandler"
             commandId="org.eclipse.mylyn.tasks.bugs.commands.newTaskFromMarker">
             <activeWhen>
-				<with variable="activePart">
-                    <or>
-                       <test
-                             args="org.eclipse.ui.ide.allMarkersGenerator"
-                             property="org.eclipse.ui.ide.contentGenerator">
-                       </test>
-                       <test
-                             args="org.eclipse.ui.ide.tasksGenerator"
-                             property="org.eclipse.ui.ide.contentGenerator">
-                       </test>                       
-                       <test
-                             args="org.eclipse.ui.ide.bookmarksGenerator"
-                             property="org.eclipse.ui.ide.contentGenerator">
-                       </test>   
-                       <test
-                             args="org.eclipse.ui.ide.problemsGenerator"
-                             property="org.eclipse.ui.ide.contentGenerator">
-                       </test>   
-                    </or>
-                 </with>
-			</activeWhen>
-			<enabledWhen>
-				<count
-					value="1">
-				</count>
-			</enabledWhen>       
+                <with variable="activePart">
+                    <test
+                         args="any"
+                         property="org.eclipse.ui.ide.contentGenerator">
+                    </test>
+                </with>
+            </activeWhen>
+            <enabledWhen>
+                  <and>
+                     <count
+                           value="1">
+                     </count>
+                     <iterate
+                           ifEmpty="false"
+                           operator="and">
+                        <instanceof
+                              value="org.eclipse.ui.internal.views.markers.MarkerEntry">
+                        </instanceof>
+                     </iterate>
+                  </and>
+            </enabledWhen>       
       </handler>
    </extension>
  
@@ -90,27 +85,7 @@
                   mnemonic="New Task from Marker"
                   style="push">
               <visibleWhen
-                    checkEnabled="false">
-                 <with variable="activePart">
-                    <or>
-                       <test
-                             args="org.eclipse.ui.ide.allMarkersGenerator"
-                             property="org.eclipse.ui.ide.contentGenerator">
-                       </test>
-                       <test
-                             args="org.eclipse.ui.ide.tasksGenerator"
-                             property="org.eclipse.ui.ide.contentGenerator">
-                       </test>                       
-                       <test
-                             args="org.eclipse.ui.ide.bookmarksGenerator"
-                             property="org.eclipse.ui.ide.contentGenerator">
-                       </test>   
-                       <test
-                             args="org.eclipse.ui.ide.problemsGenerator"
-                             property="org.eclipse.ui.ide.contentGenerator">
-                       </test>   
-                    </or>
-                 </with>
+                    checkEnabled="true">
               </visibleWhen>
            </command>
       </menuContribution>
