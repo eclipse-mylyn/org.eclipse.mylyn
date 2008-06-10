@@ -324,8 +324,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private Composite editorComposite;
 
-	private boolean expandAttributesSection;
-
 	private ScrolledForm form;
 
 	private boolean formBusy;
