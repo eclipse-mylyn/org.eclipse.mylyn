@@ -57,13 +57,13 @@ public class CommonsNetPlugin extends Plugin {
 	 * 
 	 * @return the {@link IProxyService} or <code>null</code>
 	 */
-	public static IProxyService getProxyService() {
+	public synchronized static IProxyService getProxyService() {
 		if (proxyService == null) {
-			if (INSTANCE != null) {
+			if (INSTANCE != null && INSTANCE.tracker != null) {
 				return (IProxyService) INSTANCE.tracker.getService();
 			}
 		}
-		return null;
+		return proxyService;
 	}
 
 	public static void log(int error, String message, Throwable e) {
@@ -72,7 +72,7 @@ public class CommonsNetPlugin extends Plugin {
 		}
 	}
 
-	public static void setProxyService(IProxyService proxyService) {
+	public synchronized static void setProxyService(IProxyService proxyService) {
 		CommonsNetPlugin.proxyService = proxyService;
 	}
 
