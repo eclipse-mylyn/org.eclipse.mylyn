@@ -254,6 +254,7 @@ public class TaskAttachmentPage extends WizardPage {
 		taskAttachment.setFileName(path);
 		if (path.endsWith(".patch")) {
 			isPatchButton.setSelection(true);
+			taskAttachment.setPatch(true);
 			if (attachContextButton.isEnabled()) {
 				attachContextButton.setSelection(true);
 			}

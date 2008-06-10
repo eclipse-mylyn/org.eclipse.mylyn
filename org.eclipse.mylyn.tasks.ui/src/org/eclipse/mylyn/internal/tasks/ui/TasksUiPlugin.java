@@ -98,8 +98,10 @@ import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.progress.UIJob;
@@ -182,6 +184,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private TaskEditorBloatMonitor taskEditorBloatManager;
 
 	private TaskJobFactory taskJobFactory;
+
+	// shared colors for all forms
+	private FormColors formColors;
 
 	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<AbstractSearchHandler>();
 
@@ -681,6 +686,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		try {
+			if (formColors != null) {
+				formColors.dispose();
+				formColors = null;
+			}
 			if (taskActivityMonitor != null) {
 				taskActivityMonitor.stop();
 			}
@@ -1216,6 +1225,14 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		}
 		return null;
+	}
+
+	public FormColors getFormColors(Display display) {
+		if (formColors == null) {
+			formColors = new FormColors(display);
+			formColors.markShared();
+		}
+		return formColors;
 	}
 
 }

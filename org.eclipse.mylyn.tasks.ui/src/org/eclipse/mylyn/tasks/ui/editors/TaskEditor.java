@@ -58,6 +58,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -71,6 +72,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -262,6 +264,12 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (contributor != null) {
 			contributor.contextMenuAboutToShow(manager);
 		}
+	}
+
+	@Override
+	protected FormToolkit createToolkit(Display display) {
+		// create a toolkit that shares colors between editors.
+		return new FormToolkit(TasksUiPlugin.getDefault().getFormColors(display));
 	}
 
 	@Override
@@ -652,4 +660,48 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
+	@Override
+	protected void pageChange(int newPageIndex) {
+		// fix for windows handles
+		int oldPageIndex = getCurrentPage();
+		if (oldPageIndex != -1 && pages.size() > oldPageIndex && pages.get(oldPageIndex) instanceof IFormPage
+				&& oldPageIndex != newPageIndex) {
+			// Check the old page
+			IFormPage oldFormPage = (IFormPage) pages.get(oldPageIndex);
+			if (oldFormPage.canLeaveThePage() == false) {
+				setActivePage(oldPageIndex);
+				return;
+			}
+		}
+		// Now is the absolute last moment to create the page control.
+		Object page = pages.get(newPageIndex);
+		if (page instanceof IFormPage) {
+			IFormPage fpage = (IFormPage) page;
+			if (fpage.getPartControl() == null) {
+				fpage.createPartControl(getContainer());
+				setControl(newPageIndex, fpage.getPartControl());
+				fpage.getPartControl().setMenu(getContainer().getMenu());
+			}
+		}
+		if (oldPageIndex != -1 && pages.size() > oldPageIndex && pages.get(oldPageIndex) instanceof IFormPage) {
+			// Commit old page before activating the new one
+			IFormPage oldFormPage = (IFormPage) pages.get(oldPageIndex);
+			IManagedForm mform = oldFormPage.getManagedForm();
+			if (mform != null) {
+				mform.commit(false);
+			}
+		}
+		if (pages.size() > newPageIndex && pages.get(newPageIndex) instanceof IFormPage) {
+			((IFormPage) pages.get(newPageIndex)).setActive(true);
+		}
+		if (oldPageIndex != -1 && pages.size() > oldPageIndex && newPageIndex != oldPageIndex
+				&& pages.get(oldPageIndex) instanceof IFormPage) {
+			((IFormPage) pages.get(oldPageIndex)).setActive(false);
+		}
+		// Call super - this will cause pages to switch
+		//setActivePage(newPageIndex);
+//		IFormPage newPage = getActivePageInstance();
+//		if (newPage != null)
+//			firePageChanged(new PageChangedEvent(this, newPage));
+	}
 }
