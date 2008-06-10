@@ -35,8 +35,6 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 		IDocument document = textViewer.getDocument();
 
 		int offset = region.getOffset();
-
-		String urlString = null;
 		if (document == null) {
 			return null;
 		}
@@ -52,6 +50,13 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		int offsetInLine = offset - lineInfo.getOffset();
 
+		return findHyperlinks(line, offsetInLine, lineInfo.getOffset());
+	}
+
+	public IHyperlink[] findHyperlinks(String line, int offsetInLine, int offset) {
+		char doubleChar = ' ';
+
+		String urlString = null;
 		boolean startDoubleQuote = false;
 		int urlOffsetInLine = 0;
 		int urlLength = 0;
@@ -68,9 +73,31 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 				if (urlOffsetInLine > -1) {
 					ch = line.charAt(urlOffsetInLine);
 				}
-				startDoubleQuote = ch == '"';
 			} while (Character.isUnicodeIdentifierStart(ch));
 			urlOffsetInLine++;
+
+			switch (ch) {
+			case '"':
+				doubleChar = '"';
+				break;
+			case '\'':
+				doubleChar = '\'';
+				break;
+			case '[':
+				doubleChar = ']';
+				break;
+			case '(':
+				doubleChar = ')';
+				break;
+			case '{':
+				doubleChar = '}';
+				break;
+
+			default:
+				doubleChar = ' ';
+				break;
+			}
+			startDoubleQuote = doubleChar != ' ';
 
 			// Right to "://"
 			StringTokenizer tokenizer = new StringTokenizer(line.substring(urlSeparatorOffset + 3),
@@ -93,7 +120,7 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		if (startDoubleQuote) {
 			int endOffset = -1;
-			int nextDoubleQuote = line.indexOf('"', urlOffsetInLine);
+			int nextDoubleQuote = line.indexOf(doubleChar, urlOffsetInLine);
 			int nextWhitespace = line.indexOf(' ', urlOffsetInLine);
 			if (nextDoubleQuote != -1 && nextWhitespace != -1) {
 				endOffset = Math.min(nextDoubleQuote, nextWhitespace);
@@ -109,6 +136,10 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		// Set and validate URL string
 		try {
+			char lastChar = line.charAt(urlOffsetInLine + urlLength - 1);
+			if (lastChar == ',' || lastChar == '.') {
+				urlLength--;
+			}
 			urlString = line.substring(urlOffsetInLine, urlOffsetInLine + urlLength);
 			new URL(urlString);
 		} catch (MalformedURLException ex) {
@@ -116,7 +147,7 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 			return null;
 		}
 
-		IRegion urlRegion = new Region(lineInfo.getOffset() + urlOffsetInLine, urlLength);
+		IRegion urlRegion = new Region(offset + urlOffsetInLine, urlLength);
 		return new IHyperlink[] { new TaskUrlHyperlink(urlRegion, urlString) };
 	}
 }
