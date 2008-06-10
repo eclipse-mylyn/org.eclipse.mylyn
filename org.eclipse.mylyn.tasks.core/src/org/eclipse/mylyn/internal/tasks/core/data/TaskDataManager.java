@@ -418,7 +418,7 @@ public class TaskDataManager implements ITaskDataManager {
 	public boolean hasTaskData(ITask task) {
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
-		return getFile(task, kind).exists();
+		return findFile(task, kind).exists();
 	}
 
 	public void putSubmittedTaskData(final ITask itask, final TaskData taskData) throws CoreException {
