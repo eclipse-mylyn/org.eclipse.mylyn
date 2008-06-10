@@ -179,7 +179,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 		groupingActions = new ArrayList<GroupingAction>();
 		new GroupingAction("Group By Owner", GroupBy.OWNER);
-		new GroupingAction("Group By Complete", GroupBy.COMPLETION);
+		//new GroupingAction("Group By Complete", GroupBy.COMPLETION);
 
 		filterActions = new ArrayList<FilteringAction>();
 		new FilteringAction("Filter Completed Tasks", new ViewerFilter() {
