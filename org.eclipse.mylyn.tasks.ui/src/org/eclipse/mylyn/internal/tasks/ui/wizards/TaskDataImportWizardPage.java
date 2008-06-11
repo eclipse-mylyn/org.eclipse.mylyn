@@ -14,6 +14,7 @@ import java.util.SortedMap;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -47,11 +48,11 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 	private static final String LABEL_IMPORT_ZIP = "From zip file";
 
-	private static final String LABEL_IMPORT_BACKUP = "From auto backup";
+	private static final String LABEL_IMPORT_BACKUP = "From snapshot";
 
-	private final static String PAGE_TITLE = "Import Mylyn Task Data";
+	private final static String PAGE_TITLE = "Import Task Data";
 
-	private static final String DESCRIPTION = "WARNING: importing overwrites current task list and repositories, use with caution.";
+	private static final String MESSAGE_WARNING = "Importing overwrites current tasks and repositories.  Consider exporting first.";
 
 	public final static String PAGE_NAME = PAGE_TITLE;
 
@@ -94,7 +95,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 		super("org.eclipse.mylyn.tasklist.importPage", PAGE_TITLE, AbstractUIPlugin.imageDescriptorFromPlugin(
 				TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-import.gif"));
 		setPageComplete(false);
-		setDescription(DESCRIPTION);
+		setMessage(MESSAGE_WARNING, IMessageProvider.WARNING);
 		setImageDescriptor(CommonImages.BANNER_IMPORT);
 	}
 
@@ -153,10 +154,10 @@ public class TaskDataImportWizardPage extends WizardPage {
 		GridDataFactory.fillDefaults().grab(true, false).span(3, SWT.DEFAULT).applyTo(group);
 		group.setText("Select data to import:");
 
-		taskListCheckBox = createCheckBox(group, "Task List");
-		taskActivationHistoryCheckBox = createCheckBox(group, "Task Activation History");
+		taskListCheckBox = createCheckBox(group, "Task List and Repositories");
+		taskActivationHistoryCheckBox = createCheckBox(group, "Task Activity History");
 		taskContextsCheckBox = createCheckBox(group, "Task Contexts");
-		overwriteCheckBox = createCheckBox(group, "OVERWRITE existing files without warning");
+		overwriteCheckBox = createCheckBox(group, "Overwrite existing files without warning");
 	}
 
 	/**

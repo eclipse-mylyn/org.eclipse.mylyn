@@ -91,7 +91,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
@@ -4036,7 +4036,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	protected Hyperlink createTaskListHyperlink(Composite parent, final String taskId, final String taskUrl,
 			final AbstractTask task) {
-		TaskListHyperlink hyperlink = new TaskListHyperlink(parent, SWT.SHORT
+		TaskHyperlink hyperlink = new TaskHyperlink(parent, SWT.SHORT
 				| getManagedForm().getToolkit().getOrientation());
 		getManagedForm().getToolkit().adapt(hyperlink, true, true);
 		getManagedForm().getToolkit().getHyperlinkGroup().add(hyperlink);

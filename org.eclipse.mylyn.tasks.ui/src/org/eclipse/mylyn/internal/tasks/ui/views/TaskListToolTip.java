@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.ScalingHyperlink;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
@@ -33,7 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
@@ -129,8 +130,8 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	private IRepositoryElement getTaskListElement(Object hoverObject) {
-		if (hoverObject instanceof TaskListHyperlink) {
-			TaskListHyperlink hyperlink = (TaskListHyperlink) hoverObject;
+		if (hoverObject instanceof ScalingHyperlink) {
+			TaskHyperlink hyperlink = (TaskHyperlink) hoverObject;
 			return hyperlink.getTask();
 		} else if (hoverObject instanceof Widget) {
 			Object data = ((Widget) hoverObject).getData();
@@ -432,7 +433,7 @@ public class TaskListToolTip extends ToolTip {
 			Widget tipWidget = getTipWidget(event);
 			if (tipWidget != null) {
 				Rectangle bounds = getBounds(tipWidget);
-				if (tipWidget instanceof TaskListHyperlink) {
+				if (tipWidget instanceof ScalingHyperlink) {
 					currentTipElement = getTaskListElement(tipWidget);
 				} else if (bounds != null && control.getBounds().contains(bounds.x, bounds.y)) {
 					currentTipElement = getTaskListElement(tipWidget);

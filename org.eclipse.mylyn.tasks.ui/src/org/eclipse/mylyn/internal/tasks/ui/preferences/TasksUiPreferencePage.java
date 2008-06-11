@@ -19,8 +19,10 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
@@ -46,8 +48,11 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -65,10 +70,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private static final String LABEL_ACTIVITY_TIMEOUT = "Stop time accumulation after";
 
 	private static final String LABEL_ACTIVITY_TIMEOUT2 = "minutes of inactivity.";
-
-	private static final String END_HOUR_LABEL = "Work day end (24hr): ";
-
-	private static final String START_HOUR_LABEL = "Work day start (24hr): ";
 
 	private static final String GROUP_WORK_WEEK_LABEL = "Scheduling";
 
@@ -93,16 +94,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private Button browse = null;
 
 	private Button notificationEnabledButton = null;
-
-//	private final Button backupNow = null;
-
-//	private Text backupScheduleTimeText;
-
-//	private Text backupFolderText;
-
-//	private Spinner hourDayStart;
-
-//	private Spinner hourDayEnd;
 
 	private int taskDataDirectoryAction = -1;
 
@@ -141,9 +132,33 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		Composite advanced = createAdvancedSection(container);
 		createTaskActivityGroup(advanced);
 		createTaskDataControl(advanced);
+		createLinks(container);
 
 		updateRefreshGroupEnablements();
 		return container;
+	}
+
+	private void createLinks(Composite container) {
+		Hyperlink link = new Hyperlink(container, SWT.NULL);
+		link.setForeground(CommonColors.HYPERLINK_WIDGET);
+		link.setUnderlined(true);
+		link.setText("Use the Restore dialog to recover missing tasks");
+		link.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(HyperlinkEvent e) {
+				getShell().close();
+				new RestoreTaskListAction().run();
+			}
+
+			public void linkEntered(HyperlinkEvent e) {
+				// ignore
+			}
+
+			public void linkExited(HyperlinkEvent e) {
+				// ignore
+			}
+
+		});
 	}
 
 	private Composite createAdvancedSection(Composite container) {

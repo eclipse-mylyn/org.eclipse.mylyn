@@ -14,7 +14,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotificationPopup;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -81,7 +81,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 					}
 				}
 
-				final TaskListHyperlink itemLink = new TaskListHyperlink(notificationComposite, SWT.BEGINNING
+				final TaskHyperlink itemLink = new TaskHyperlink(notificationComposite, SWT.BEGINNING
 						| SWT.WRAP | SWT.NO_FOCUS);
 				itemLink.setText(notification.getLabel());
 				itemLink.setImage(notification.getNotificationImage());
@@ -117,7 +117,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				}
 			} else {
 				int numNotificationsRemain = notifications.size() - count;
-				TaskListHyperlink remainingHyperlink = new TaskListHyperlink(notificationComposite, SWT.NO_FOCUS);
+				TaskHyperlink remainingHyperlink = new TaskHyperlink(notificationComposite, SWT.NO_FOCUS);
 				remainingHyperlink.setBackground(parent.getBackground());
 
 				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN);

@@ -24,14 +24,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractFilteredTree;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHistoryDropDown;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
@@ -42,8 +41,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.search.internal.ui.SearchDialog;
@@ -52,7 +51,6 @@ import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -80,9 +78,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	public static final String LABEL_SEARCH = "Search repository for key or summary...";
 
-	private TaskListHyperlink workingSetLink;
+	private TaskHyperlink workingSetLink;
 
-	private TaskListHyperlink activeTaskLink;
+	private TaskHyperlink activeTaskLink;
 
 	private WorkweekProgressBar taskProgressBar;
 
@@ -196,9 +194,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		searchComposite.setLayout(searchLayout);
 		searchComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
 
-		final TaskListHyperlink searchLink = new TaskListHyperlink(searchComposite, SWT.LEFT);
+		final TaskHyperlink searchLink = new TaskHyperlink(searchComposite, SWT.LEFT);
 		searchLink.setText(LABEL_SEARCH);
-		searchLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 
 		searchLink.addHyperlinkListener(new IHyperlinkListener() {
 
@@ -268,10 +265,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 		workingSetButton.setToolTipText("Select Working Set");
 
-		workingSetLink = new TaskListHyperlink(container, SWT.LEFT);
+		workingSetLink = new TaskHyperlink(container, SWT.LEFT);
 		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
-		workingSetLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 
 		final TaskWorkingSetAction workingSetAction = new TaskWorkingSetAction();
 		workingSetButton.addHyperlinkListener(new IHyperlinkListener() {
@@ -288,21 +284,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 			}
 		});
-
-		workingSetLink.addMouseTrackListener(new MouseTrackListener() {
-
-			public void mouseEnter(MouseEvent e) {
-				workingSetLink.setUnderlined(true);
-			}
-
-			public void mouseExit(MouseEvent e) {
-				workingSetLink.setUnderlined(false);
-			}
-
-			public void mouseHover(MouseEvent e) {
-			}
-		});
-
 		indicateActiveTaskWorkingSet();
 
 		workingSetLink.addMouseListener(new MouseAdapter() {
@@ -325,7 +306,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		activeTaskButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
 		activeTaskButton.setToolTipText("Select Active Task");
 
-		activeTaskLink = new TaskListHyperlink(container, SWT.LEFT);
+		activeTaskLink = new TaskHyperlink(container, SWT.LEFT);
 
 		changeListener = new TaskListChangeAdapter() {
 			@Override
@@ -354,7 +335,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		TasksUiInternal.getTaskList().addChangeListener(changeListener);
 
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
-		activeTaskLink.setForeground(CommonColors.HYPERLINK_WIDGET);
 		// avoid having the Hyperlink class show a native tooltip when it shortens the text which would overlap with the task list tooltip 
 		activeTaskLink.setToolTipText("");
 

@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
@@ -28,19 +29,24 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class RestoreTaskListAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
+public class RestoreTaskListAction extends Action implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
 
 	public void init(IViewPart view) {
 	}
 
 	public void run(IAction action) {
+		run();
+	}
+
+	@Override
+	public void run() {
 		try {
 			IWizard wizard = new TaskDataImportWizard();
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
-				dialog.setTitle("Restore Task List from History");
+				dialog.setTitle("Restore Tasks from History");
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Window.CANCEL) {
 					dialog.close();
