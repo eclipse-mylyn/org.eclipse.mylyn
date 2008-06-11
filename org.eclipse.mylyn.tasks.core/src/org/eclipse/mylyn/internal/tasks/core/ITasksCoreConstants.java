@@ -47,6 +47,10 @@ public interface ITasksCoreConstants {
 
 	public static final ISchedulingRule ROOT_SCHEDULING_RULE = new RootSchedulingRule();
 
+	public static final String ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL = "outgoingNewRepositoryUrl";
+
+	public static final String ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND = "outgoingNewConnectorKind";
+
 	static class ActivityContextSchedulingRule extends RootSchedulingRule {
 		@Override
 		public boolean contains(ISchedulingRule rule) {
@@ -82,5 +86,4 @@ public interface ITasksCoreConstants {
 			return rule instanceof RootSchedulingRule;
 		}
 	}
-
 }
