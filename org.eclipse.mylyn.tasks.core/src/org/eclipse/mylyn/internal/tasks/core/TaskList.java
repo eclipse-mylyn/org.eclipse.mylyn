@@ -30,6 +30,7 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 
 /**
  * Stores and manages task list elements and their containment hierarchy.
@@ -55,6 +56,8 @@ public class TaskList implements ITaskList {
 	private Map<String, RepositoryQuery> queries;
 
 	private Map<String, UnmatchedTaskContainer> repositoryOrphansMap;
+
+	private Map<String, UnsubmittedTaskContainer> unsubmittedTasksMap;
 
 	private Map<String, AbstractTask> tasks;
 
@@ -133,7 +136,15 @@ public class TaskList implements ITaskList {
 			lock();
 			task = getOrCreateTask(task);
 			if (container == null) {
-				container = getUnmatchedContainer(task.getRepositoryUrl());
+				if (task.getSynchronizationState().equals(SynchronizationState.OUTGOING_NEW)) {
+					String repositoryUrl = itask.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL);
+					if (repositoryUrl != null) {
+						container = getUnsubmittedContainer(repositoryUrl);
+					}
+				}
+				if (container == null) {
+					container = getUnmatchedContainer(task.getRepositoryUrl());
+				}
 			} else {
 				container = getValidElement(container);
 			}
@@ -175,6 +186,8 @@ public class TaskList implements ITaskList {
 
 	public void addUnmatchedContainer(UnmatchedTaskContainer orphanedTasksContainer) {
 		repositoryOrphansMap.put(orphanedTasksContainer.getRepositoryUrl(), orphanedTasksContainer);
+		unsubmittedTasksMap.put(orphanedTasksContainer.getRepositoryUrl(), new UnsubmittedTaskContainer(
+				orphanedTasksContainer.getConnectorKind(), orphanedTasksContainer.getRepositoryUrl()));
 	}
 
 	public void deleteCategory(AbstractTaskCategory category) {
@@ -339,6 +352,9 @@ public class TaskList implements ITaskList {
 		for (UnmatchedTaskContainer orphanContainer : repositoryOrphansMap.values()) {
 			roots.add(orphanContainer);
 		}
+		for (UnsubmittedTaskContainer unsubmitedTaskContainer : unsubmittedTasksMap.values()) {
+			roots.add(unsubmitedTaskContainer);
+		}
 		return roots;
 	}
 
@@ -432,6 +448,8 @@ public class TaskList implements ITaskList {
 			result = defaultCategory;
 		} else if (taskListElement instanceof UnmatchedTaskContainer) {
 			result = repositoryOrphansMap.get(((UnmatchedTaskContainer) taskListElement).getRepositoryUrl());
+		} else if (taskListElement instanceof UnsubmittedTaskContainer) {
+			result = unsubmittedTasksMap.get(((UnsubmittedTaskContainer) taskListElement).getRepositoryUrl());
 		} else if (taskListElement instanceof TaskCategory) {
 			result = categories.get(taskListElement.getHandleIdentifier());
 		} else if (taskListElement instanceof IRepositoryQuery) {
@@ -511,6 +529,14 @@ public class TaskList implements ITaskList {
 					repositoryOrphansMap.put(newRepositoryUrl, orphans);
 					//categories.put(orphans.getHandleIdentifier(), orphans);
 					delta.add(new TaskContainerDelta(orphans, TaskContainerDelta.Kind.CONTENT));
+				}
+			}
+			for (UnsubmittedTaskContainer unsubmitted : unsubmittedTasksMap.values()) {
+				if (unsubmitted.getRepositoryUrl().equals(oldRepositoryUrl)) {
+					unsubmittedTasksMap.remove(oldRepositoryUrl);
+					unsubmitted.setRepositoryUrl(newRepositoryUrl);
+					unsubmittedTasksMap.put(newRepositoryUrl, unsubmitted);
+					delta.add(new TaskContainerDelta(unsubmitted, TaskContainerDelta.Kind.CONTENT));
 				}
 			}
 		} finally {
@@ -596,7 +622,7 @@ public class TaskList implements ITaskList {
 			tasks = new ConcurrentHashMap<String, AbstractTask>();
 
 			repositoryOrphansMap = new ConcurrentHashMap<String, UnmatchedTaskContainer>();
-
+			unsubmittedTasksMap = new ConcurrentHashMap<String, UnsubmittedTaskContainer>();
 			categories = new ConcurrentHashMap<String, AbstractTaskCategory>();
 			queries = new ConcurrentHashMap<String, RepositoryQuery>();
 
@@ -679,6 +705,10 @@ public class TaskList implements ITaskList {
 		} finally {
 			unlock();
 		}
+	}
+
+	public UnsubmittedTaskContainer getUnsubmittedContainer(String repositoryUrl) {
+		return unsubmittedTasksMap.get(repositoryUrl);
 	}
 
 }
