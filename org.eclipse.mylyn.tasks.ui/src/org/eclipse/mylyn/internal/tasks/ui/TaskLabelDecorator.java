@@ -16,13 +16,12 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 
 /**
  * @author Mik Kersten
@@ -97,8 +96,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			}
 		}
 		if (element instanceof ITask) {
-			ITask task = (ITask) element;
-			return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
+			return TasksUiInternal.getPriorityImage((ITask) element);
 		}
 		return null;
 	}

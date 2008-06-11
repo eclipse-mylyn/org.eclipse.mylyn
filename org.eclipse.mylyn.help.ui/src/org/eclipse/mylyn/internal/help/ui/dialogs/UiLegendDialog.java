@@ -228,6 +228,10 @@ public class UiLegendDialog extends PopupDialog {
 		imageLabel = toolkit.createLabel(prioritiesClient, "");
 		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_5));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P5.getDescription());
+
+		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel.setImage(CommonImages.getImage(CommonImages.COMPLETE));
+		toolkit.createLabel(prioritiesClient, "Complete");
 	}
 
 	private void createActivitySection(Composite parent) {

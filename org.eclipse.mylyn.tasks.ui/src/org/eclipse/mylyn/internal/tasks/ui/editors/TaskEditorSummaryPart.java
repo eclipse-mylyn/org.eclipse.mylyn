@@ -9,10 +9,11 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
@@ -85,7 +86,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 				if (mapping != null) {
 					PriorityLevel priorityLevel = mapping.getPriorityLevel();
 					if (priorityLevel != null) {
-						Image image = TasksUiImages.getImageForPriority(priorityLevel);
+						Image image = CommonImages.getImage(TasksUiInternal.getPriorityImage(getTaskEditorPage().getTask()));
 						if (image != null) {
 							Label label = toolkit.createLabel(headerComposite, null);
 							label.setImage(image);

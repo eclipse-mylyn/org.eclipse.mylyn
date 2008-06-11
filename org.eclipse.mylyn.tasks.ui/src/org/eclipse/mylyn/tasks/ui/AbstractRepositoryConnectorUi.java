@@ -16,6 +16,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -23,7 +24,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
@@ -143,7 +143,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @since 3.0
 	 */
 	public ImageDescriptor getTaskPriorityOverlay(ITask task) {
-		return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
+		return TasksUiInternal.getPriorityImage(task);
 	}
 
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
