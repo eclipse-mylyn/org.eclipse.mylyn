@@ -172,7 +172,11 @@ public class CommonImages {
 
 	public static final ImageDescriptor COLLAPSE_ALL = create(T_ELCL, "collapseall.png");
 
+	public static final ImageDescriptor COLLAPSE_ALL_SMALL = create(T_ELCL, "collapseall-small.png");
+
 	public static final ImageDescriptor EXPAND_ALL = create(T_ELCL, "expandall.gif");
+
+	public static final ImageDescriptor EXPAND_ALL_SMALL = create(T_ELCL, "expandall-small.png");
 
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 
@@ -185,6 +189,8 @@ public class CommonImages {
 	public static final ImageDescriptor QUESTION = create(T_OBJ, "question.gif");
 
 	public static final ImageDescriptor SEPARATOR_LIST = create(T_TOOL, "content-assist-separator.gif");
+
+	public static final ImageDescriptor PART_MAXIMIZE = create(T_TOOL, "maximize.png");
 
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
