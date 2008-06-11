@@ -173,12 +173,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 				task.setDueDate(dueDate);
 			}
-
-			// time stamp
-			TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
-			if (attrModification != null) {
-				task.setAttribute(BugzillaAttribute.DELTA_TS.getKey(), attrModification.getValue());
-			}
 		}
 
 		updateExtendedAttributes(task, taskData);
