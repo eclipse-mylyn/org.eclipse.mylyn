@@ -290,7 +290,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				hideAllComments();
 			}
 		};
-		collapseAllAction.setImageDescriptor(CommonImages.COLLAPSE_ALL);
+		collapseAllAction.setImageDescriptor(CommonImages.COLLAPSE_ALL_SMALL);
 		collapseAllAction.setToolTipText("Collapse All Comments");
 		barManager.add(collapseAllAction);
 
@@ -300,7 +300,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				expandAllComments();
 			}
 		};
-		expandAllAction.setImageDescriptor(CommonImages.EXPAND_ALL);
+		expandAllAction.setImageDescriptor(CommonImages.EXPAND_ALL_SMALL);
 		expandAllAction.setToolTipText("Expand All Comments");
 		barManager.add(expandAllAction);
 	}

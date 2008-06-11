@@ -237,9 +237,9 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 //				}
 //			}
 		};
-		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE);
+		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL);
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(getTaskEditorPage().getTaskRepository()));
-		repositoryConfigRefresh.setToolTipText("Refresh attributes");
+		repositoryConfigRefresh.setToolTipText("Refresh Attributes");
 		toolBar.add(repositoryConfigRefresh);
 	}
 

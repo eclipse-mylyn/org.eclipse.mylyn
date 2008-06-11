@@ -1020,9 +1020,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			}
 		};
-		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE);
+		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL);
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(repository));
-		repositoryConfigRefresh.setToolTipText("Refresh attributes");
+		repositoryConfigRefresh.setToolTipText("Refresh Attributes");
 
 		ToolBarManager barManager = new ToolBarManager(SWT.FLAT);
 		barManager.add(repositoryConfigRefresh);
@@ -2217,7 +2217,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			collapseAllHyperlink.setToolTipText("Collapse All Comments");
 			toolkit.adapt(collapseAllHyperlink, true, true);
 			collapseAllHyperlink.setBackground(null);
-			collapseAllHyperlink.setImage(CommonImages.getImage(CommonImages.COLLAPSE_ALL));
+			collapseAllHyperlink.setImage(CommonImages.getImage(CommonImages.COLLAPSE_ALL_SMALL));
 			collapseAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
@@ -2229,7 +2229,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			expandAllHyperlink.setToolTipText("Expand All Comments");
 			toolkit.adapt(expandAllHyperlink, true, true);
 			expandAllHyperlink.setBackground(null);
-			expandAllHyperlink.setImage(CommonImages.getImage(CommonImages.EXPAND_ALL));
+			expandAllHyperlink.setImage(CommonImages.getImage(CommonImages.EXPAND_ALL_SMALL));
 			expandAllHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
@@ -4036,8 +4036,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	protected Hyperlink createTaskListHyperlink(Composite parent, final String taskId, final String taskUrl,
 			final AbstractTask task) {
-		TaskHyperlink hyperlink = new TaskHyperlink(parent, SWT.SHORT
-				| getManagedForm().getToolkit().getOrientation());
+		TaskHyperlink hyperlink = new TaskHyperlink(parent, SWT.SHORT | getManagedForm().getToolkit().getOrientation());
 		getManagedForm().getToolkit().adapt(hyperlink, true, true);
 		getManagedForm().getToolkit().getHyperlinkGroup().add(hyperlink);
 		hyperlink.setTask(task);

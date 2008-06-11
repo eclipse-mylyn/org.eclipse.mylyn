@@ -85,6 +85,8 @@ public class TasksUiImages {
 	public static final ImageDescriptor REPOSITORY_OFFLINE = ImageDescriptor.createWithFlags(TasksUiImages.REPOSITORY,
 			SWT.IMAGE_GRAY);
 
+	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE_SMALL = create(TOOL, "repository-synchronize-small.png");
+
 	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(TOOL, "repository-synchronize.gif");
 
 	public static final ImageDescriptor REPOSITORY_SUBMIT = create(TOOL, "repository-submit.gif");
