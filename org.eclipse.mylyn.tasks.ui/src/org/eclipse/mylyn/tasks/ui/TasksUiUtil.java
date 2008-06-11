@@ -450,10 +450,10 @@ public class TasksUiUtil {
 				IWebBrowser browser = null;
 				int flags = customFlags;
 				if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
-					flags = IWorkbenchBrowserSupport.AS_EDITOR | IWorkbenchBrowserSupport.LOCATION_BAR
+					flags |= IWorkbenchBrowserSupport.AS_EDITOR | IWorkbenchBrowserSupport.LOCATION_BAR
 							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
 				} else {
-					flags = IWorkbenchBrowserSupport.AS_EXTERNAL | IWorkbenchBrowserSupport.LOCATION_BAR
+					flags |= IWorkbenchBrowserSupport.AS_EXTERNAL | IWorkbenchBrowserSupport.LOCATION_BAR
 							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
 				}
 
