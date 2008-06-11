@@ -13,7 +13,6 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -53,13 +52,17 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 
 	@SuppressWarnings( { "deprecation" })
 	private void runWithSelection(final Object selectedObject) {
-		ITask task = null;
+		final TaskEditor editor;
+		final ITask task;
 		if (selectedObject instanceof TaskEditor) {
-			TaskEditor editor = (TaskEditor) selectedObject;
+			editor = (TaskEditor) selectedObject;
 			task = editor.getTaskEditorInput().getTask();
-		} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
-			AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) selectedObject;
-			task = editor.getRepositoryTask();
+		} else if (selectedObject instanceof org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor) {
+			org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor page = (org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor) selectedObject;
+			editor = page.getParentEditor();
+			task = page.getRepositoryTask();
+		} else {
+			return;
 		}
 
 		if (task != null) {
@@ -71,17 +74,25 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 					public void done(IJobChangeEvent event) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								if (selectedObject instanceof TaskEditor) {
-									TaskEditor editor = (TaskEditor) selectedObject;
-									editor.refreshEditorContents();
-								} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
-									((AbstractRepositoryTaskEditor) selectedObject).refreshEditor();
+								try {
+									if (selectedObject instanceof TaskEditor) {
+										TaskEditor editor = (TaskEditor) selectedObject;
+										editor.refreshPages();
+									} else if (selectedObject instanceof org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor) {
+										((org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor) selectedObject).refreshEditor();
+									}
+								} finally {
+									if (editor != null) {
+										editor.showBusy(false);
+									}
 								}
 							}
 						});
-
 					}
 				});
+			}
+			if (editor != null) {
+				editor.showBusy(true);
 			}
 		}
 

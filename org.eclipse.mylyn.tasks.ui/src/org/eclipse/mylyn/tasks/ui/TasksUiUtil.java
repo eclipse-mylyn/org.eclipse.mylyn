@@ -482,7 +482,7 @@ public class TasksUiUtil {
 					|| task.getSynchronizationState() == SynchronizationState.CONFLICT) {
 				for (TaskEditor editor : TasksUiInternal.getActiveRepositoryTaskEditors()) {
 					if (editor.getEditorInput().equals(editorInput)) {
-						editor.refreshEditorContents();
+						editor.refreshPages();
 						editor.getEditorSite().getPage().activate(editor);
 						return true;
 					}

@@ -354,6 +354,9 @@ public class TaskAttachmentWizard extends Wizard {
 							getContainer().getShell().setVisible(true);
 						}
 						handleDone(job);
+						if (job.getStatus() == null) {
+							getContainer().getShell().close();
+						}
 					}
 				});
 			}

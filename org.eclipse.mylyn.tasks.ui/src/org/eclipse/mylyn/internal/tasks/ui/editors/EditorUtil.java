@@ -15,6 +15,7 @@ import java.util.Date;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
@@ -23,6 +24,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -232,12 +235,22 @@ public class EditorUtil {
 		return null;
 	}
 
-	public static NewAttachmentWizardDialog openNewAttachmentWizard(AbstractTaskEditorPage page, Mode mode,
+	public static NewAttachmentWizardDialog openNewAttachmentWizard(final AbstractTaskEditorPage page, Mode mode,
 			AbstractTaskAttachmentSource source) {
 		TaskAttributeMapper mapper = page.getModel().getTaskData().getAttributeMapper();
 		TaskAttribute attribute = mapper.createTaskAttachment(page.getModel().getTaskData());
-		return TasksUiInternal.openNewAttachmentWizard(page.getSite().getShell(), page.getTaskRepository(),
-				page.getTask(), attribute, mode, source);
+		final NewAttachmentWizardDialog dialog = TasksUiInternal.openNewAttachmentWizard(page.getSite().getShell(),
+				page.getTaskRepository(), page.getTask(), attribute, mode, source);
+		dialog.getShell().addDisposeListener(new DisposeListener() {
+
+			public void widgetDisposed(DisposeEvent e) {
+				if (dialog.getReturnCode() == Window.OK) {
+					page.getTaskEditor().refreshPages();
+				}
+			}
+
+		});
+		return dialog;
 	}
 
 	/**

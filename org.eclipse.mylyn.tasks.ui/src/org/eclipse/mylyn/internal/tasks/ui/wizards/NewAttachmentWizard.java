@@ -261,7 +261,7 @@ public class NewAttachmentWizard extends Wizard {
 						String handle = RepositoryTaskHandleUtil.getHandle(input.getTaskData().getRepositoryUrl(),
 								input.getTaskData().getTaskId());
 						if (handle.equals(handleTarget)) {
-							editor.refreshEditorContents();
+							editor.refreshPages();
 							editor.getEditorSite().getPage().activate(editor);
 							return true;
 						}
@@ -269,7 +269,7 @@ public class NewAttachmentWizard extends Wizard {
 				} else if (editor.getEditorInput() instanceof TaskEditorInput) {
 					TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
 					if (input.getTask().getHandleIdentifier().equals(handleTarget)) {
-						editor.refreshEditorContents();
+						editor.refreshPages();
 						editor.getEditorSite().getPage().activate(editor);
 						return true;
 					}

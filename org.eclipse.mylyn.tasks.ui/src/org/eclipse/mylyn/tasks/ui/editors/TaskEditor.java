@@ -25,6 +25,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
@@ -60,6 +61,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -439,11 +441,14 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	/**
 	 * Refresh editor with new contents (if any)
+	 * 
+	 * @since 3.0
 	 */
-	@Deprecated
-	public void refreshEditorContents() {
+	public void refreshPages() {
 		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractRepositoryTaskEditor) {
+			if (page instanceof AbstractTaskEditorPage) {
+				((AbstractTaskEditorPage) page).refreshFormContent();
+			} else if (page instanceof AbstractRepositoryTaskEditor) {
 				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
 				editor.refreshEditor();
 			}
@@ -520,6 +525,15 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (getHeaderForm() != null && getHeaderForm().getForm() != null && !getHeaderForm().getForm().isDisposed()) {
 			Form form = getHeaderForm().getForm().getForm();
 			if (form != null && !form.isDisposed()) {
+				// TODO consider only disabling certain actions 
+				IToolBarManager toolBarManager = form.getToolBarManager();
+				if (toolBarManager instanceof ToolBarManager) {
+					ToolBar control = ((ToolBarManager) toolBarManager).getControl();
+					if (control != null) {
+						control.setEnabled(!busy);
+					}
+				}
+
 				EditorUtil.setEnabledState(form.getBody(), !busy);
 				for (IFormPage page : getPages()) {
 					if (page instanceof WorkbenchPart) {
