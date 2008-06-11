@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Mylyn" topic="doc/overview.html">
+<toc label="Task-Focused Interface" topic="doc/overview.html">
 	<topic label="Overview" href="doc/overview.html" />
 	<!--
 	<topic label="What's new" href="doc/new.html" />

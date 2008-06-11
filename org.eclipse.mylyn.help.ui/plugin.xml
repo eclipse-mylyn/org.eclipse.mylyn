@@ -4,7 +4,7 @@
 <plugin>
 	<extension
          id="org.eclipse.mylyn.helpDocs"
-         name="Mylyn"
+         name="Tasks"
          point="org.eclipse.help.toc">
       <toc
             file="doc/toc.xml"
@@ -15,22 +15,14 @@
    <extension point="org.eclipse.ui.commands">
    <category
          id="org.eclipse.mylyn.help.ui.commands"
-         name="Mylyn Help">
+         name="Tasks Help">
    </category>
 	  <command
          categoryId="org.eclipse.mylyn.help.ui.commands"
-         description="Show Mylyn UI Legend"
+         description="Show Tasks UI Legend"
          id="org.eclipse.mylyn.doc.legend.show"
-         name="Show Mylyn UI Legend">
+         name="Show Tasks UI Legend">
       </command>
-   </extension>
-  
-   <extension point="org.eclipse.ui.bindings">   
-      <key
-            sequence="M1+M2+M3+?"
-            commandId="org.eclipse.mylyn.doc.legend.show"
-            schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key>
    </extension>
    
    <extension
@@ -52,7 +44,7 @@
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
             id="org.eclipse.mylyn.cheatsheet"
-            name="Mylyn">
+            name="Tasks">
       </category>
       <cheatsheet
             category="org.eclipse.mylyn.cheatsheet"

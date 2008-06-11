@@ -23,7 +23,7 @@
    <extension point="org.eclipse.ui.actionSets">
 		<actionSet
             id="org.eclipse.mylyn.doc.actionSet"
-            label="Mylyn Help"
+            label="Tasks Help"
             visible="true"> 
         <action
               class="org.eclipse.mylyn.internal.tasks.bugs.actions.ReportBugAction"
