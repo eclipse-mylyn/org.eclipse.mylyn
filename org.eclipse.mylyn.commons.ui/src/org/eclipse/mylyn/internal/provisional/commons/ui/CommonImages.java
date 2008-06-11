@@ -116,6 +116,8 @@ public class CommonImages {
 	// Miscellaneous
 	// TODO: some of the common images below come from the workbench
 
+	public static final ImageDescriptor COMPLETE = create(T_OBJ, "complete.gif");
+
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif");
 
 	public static final ImageDescriptor DELETE = create(T_ELCL, "delete.gif");
