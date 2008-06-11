@@ -55,6 +55,13 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * @since 3.0
+	 */
+	public boolean canSynchronizeTask(TaskRepository taskRepository, ITask task) {
+		return true;
+	}
+
+	/**
 	 * @return the unique kind of the repository, e.g. "bugzilla"
 	 * @since 2.0
 	 */

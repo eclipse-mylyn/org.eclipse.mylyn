@@ -224,17 +224,21 @@ public class TasksUiInternal {
 					}
 
 					if (!opened) {
-						// TODO consider moving this into the editor, i.e. have the editor refresh the task if task data is missing
-						TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
-							@Override
-							public void done(IJobChangeEvent event) {
-								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-									public void run() {
-										TasksUiUtil.openTask(task);
-									}
-								});
-							}
-						});
+						if (connector.canSynchronizeTask(repository, task)) {
+							// TODO consider moving this into the editor, i.e. have the editor refresh the task if task data is missing
+							TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
+								@Override
+								public void done(IJobChangeEvent event) {
+									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+										public void run() {
+											TasksUiUtil.openTask(task);
+										}
+									});
+								}
+							});
+						} else {
+							TasksUiUtil.openTask(task);
+						}
 					}
 				}
 			}

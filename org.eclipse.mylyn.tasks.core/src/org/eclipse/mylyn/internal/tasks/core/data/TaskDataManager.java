@@ -557,6 +557,7 @@ public class TaskDataManager implements ITaskDataManager {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
 					if (read) {
+						task.setLastReadTimeStamp(new Date().toString());
 						switch (task.getSynchronizationState()) {
 						case INCOMING:
 						case INCOMING_NEW:
