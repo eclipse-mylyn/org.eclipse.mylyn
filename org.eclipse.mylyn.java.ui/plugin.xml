@@ -79,21 +79,21 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaNoTypeProposalCategory"
-		name="Other Java Proposals (Mylyn)">
+		name="Other Java Proposals (Focused)">
 		<proposalCategory
 			icon="icons/elcl16/proposals-other.gif"/>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeProposalCategory"
-		name="Type Proposals (Mylyn)">
+		name="Type Proposals (Focused)">
 		<proposalCategory
 			icon="icons/elcl16/proposals-type.gif"/>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="templateProposalCategory"
-		name="Template Proposals (Mylyn)">
+		name="Template Proposals (Focused)">
 		<proposalCategory
 			icon="/icons/elcl16/templateprop_co.gif"/>
 	</extension>
@@ -373,7 +373,7 @@
   <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.java.actionSet"
-            label="Mylyn Java"
+            label="Java Task Context"
             visible="false">
   		<action
           class="org.eclipse.mylyn.internal.java.ui.actions.ToggleActiveFoldingAction"
@@ -412,7 +412,7 @@
    <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.java.actionSet.browsing"
-            label="Mylyn Java Browsing"
+            label="Java Browsing Task Context"
             visible="false"> 
 	    <action
            class="org.eclipse.mylyn.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
@@ -470,8 +470,8 @@
 
    <extension point="org.eclipse.ui.commands">
       <category
-            name="Mylyn Java"
-            description="Mylyn Java Commands"
+            name="Java Context"
+            description="Java Task-Focused Interface Commands"
             id="org.eclipse.mylyn.java.ui.commands">
       </category>
 	  <command

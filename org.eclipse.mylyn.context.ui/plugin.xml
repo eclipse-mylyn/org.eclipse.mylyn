@@ -126,7 +126,7 @@
             name="Context"
             class="org.eclipse.mylyn.internal.context.ui.preferences.ContextUiPreferencePage"
             id="org.eclipse.mylyn.context.ui.preferences"
-            category="org.eclipse.mylyn.ui.preferences">
+            category="org.eclipse.mylyn.tasks.ui.preferences">
          <keywordReference id="org.eclipse.mylyn.context.ui.keywords"/>
       </page> 
    </extension>
@@ -192,8 +192,8 @@
    <extension
        	 point="org.eclipse.ui.actionSets">
    	  <actionSet
-            label="Mylyn Task Context"
-            description="Mylyn Focus"
+            label="Task Context"
+            description="Task Context"
             visible="true"
             id="org.eclipse.mylyn.context.ui.actionSet">
          <!--
@@ -227,7 +227,7 @@
    <extension point="org.eclipse.ui.commands">
       <category
             name="Focused UI"
-            description="Mylyn Task-Focused UI"
+            description="Task-Focused Interface"
             id="org.eclipse.mylyn.context.ui.commands">
       </category>
       <command

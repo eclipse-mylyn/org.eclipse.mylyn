@@ -9,7 +9,7 @@
          name="Resources"
          class="org.eclipse.mylyn.internal.resources.ui.preferences.FocusedResourcesPreferencePage"
          id="org.eclipse.mylyn.resources.ui.preferences.resources"
-         category="org.eclipse.mylyn.ui.preferences">
+         category="org.eclipse.mylyn.tasks.ui.preferences">
          <keywordReference id="org.eclipse.mylyn.resources.ui.keywords"/>
       </page> 
    </extension>

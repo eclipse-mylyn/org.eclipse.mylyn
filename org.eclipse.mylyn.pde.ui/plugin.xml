@@ -26,7 +26,7 @@
 	
     <extension
          id="apitools_javadoc_proposals"
-         name="PDE API Tools Proposals (Mylyn)"
+         name="PDE API Tools Proposals (Focused)"
          point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
       <javaCompletionProposalComputer
             activate="true"

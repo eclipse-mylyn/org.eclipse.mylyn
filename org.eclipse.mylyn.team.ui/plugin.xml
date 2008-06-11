@@ -6,7 +6,7 @@
     
     <!-- needed to update change sets -->
     <extension
-         name="Mylyn Change Set Management"
+         name="Task Change Set Management"
          point="org.eclipse.ui.startup">
        <startup
              class="org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin$FocusedTeamUiStartup">
@@ -140,7 +140,7 @@
          name="Team"
          class="org.eclipse.mylyn.internal.team.ui.preferences.FocusedTeamPreferencePage"
          id="org.eclipse.mylyn.team.ui.ui.preferences"
-         category="org.eclipse.mylyn.ui.preferences">
+         category="org.eclipse.mylyn.tasks.ui.preferences">
          <keywordReference id="org.eclipse.mylyn.team.ui.keywords"/>
       </page> 
    </extension>
