@@ -192,7 +192,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			// create pages
 			for (AbstractTaskEditorPageFactory factory : pageFactories) {
 				try {
-					FormPage page = factory.createPage(this);
+					IFormPage page = factory.createPage(this);
 					int index = addPage(page);
 					setPageImage(index, factory.getPageImage());
 					setPageText(index, factory.getPageText());

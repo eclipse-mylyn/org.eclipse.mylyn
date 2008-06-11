@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.forms.editor.FormPage;
+import org.eclipse.ui.forms.editor.IFormPage;
 
 /**
  * @since 3.0
@@ -29,7 +29,7 @@ public abstract class AbstractTaskEditorPageFactory {
 
 	public abstract boolean canCreatePageFor(TaskEditorInput input);
 
-	public abstract FormPage createPage(TaskEditor parentEditor);
+	public abstract IFormPage createPage(TaskEditor parentEditor);
 
 	public String[] getConflictingIds(TaskEditorInput input) {
 		return null;

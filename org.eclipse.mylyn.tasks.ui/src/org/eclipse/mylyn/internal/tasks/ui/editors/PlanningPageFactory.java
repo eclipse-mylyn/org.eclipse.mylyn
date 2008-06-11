@@ -13,7 +13,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.forms.editor.FormPage;
+import org.eclipse.ui.forms.editor.IFormPage;
 
 public class PlanningPageFactory extends AbstractTaskEditorPageFactory {
 
@@ -23,7 +23,7 @@ public class PlanningPageFactory extends AbstractTaskEditorPageFactory {
 	}
 
 	@Override
-	public FormPage createPage(TaskEditor parentEditor) {
+	public IFormPage createPage(TaskEditor parentEditor) {
 		return new TaskPlanningEditor(parentEditor);
 	}
 
