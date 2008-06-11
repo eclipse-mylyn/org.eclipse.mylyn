@@ -22,7 +22,7 @@ public enum BugzillaOperation {
 
 	resolve("Resolve as", "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT),
 
-	duplicate("Mark as duplicate of #", "dup_id", TaskAttribute.TYPE_TASK_DEPENDENCY),
+	duplicate("Duplicate of", "dup_id", TaskAttribute.TYPE_TASK_DEPENDENCY),
 
 	reassign("Reassign to", "reassignInput", TaskAttribute.TYPE_PERSON),
 

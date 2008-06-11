@@ -70,15 +70,17 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 			editor.setReadOnly(true);
 			editor.setDecorationEnabled(false);
 
-			if (showLabel) {
+			boolean isPriority = attribute.getId().equals(
+					attribute.getTaskData().getAttributeMapper().mapToRepositoryKey(attribute.getParentAttribute(),
+							TaskAttribute.PRIORITY));
+
+			if (showLabel && !isPriority) {
 				editor.createLabelControl(composite, toolkit);
 				GridDataFactory.defaultsFor(editor.getLabelControl()).indent(indent, 0).applyTo(
 						editor.getLabelControl());
 			}
 
-			if (attribute.getId().equals(
-					attribute.getTaskData().getAttributeMapper().mapToRepositoryKey(attribute.getParentAttribute(),
-							TaskAttribute.PRIORITY))) {
+			if (isPriority) {
 				ITaskMapping mapping = getTaskEditorPage().getConnector().getTaskMapping(getTaskData());
 				if (mapping != null) {
 					PriorityLevel priorityLevel = mapping.getPriorityLevel();
@@ -87,7 +89,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 						if (image != null) {
 							Label label = toolkit.createLabel(headerComposite, null);
 							label.setImage(image);
-							GridDataFactory.defaultsFor(label).applyTo(label);
+							GridDataFactory.defaultsFor(label).indent(5, -2).applyTo(label);
 						}
 					}
 				}
@@ -161,6 +163,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 //				toolkit.createLabel(headerComposite, priority);
 //			}
 //		}
+		TaskAttribute priorityAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
+		addAttribute(headerComposite, toolkit, priorityAttribute);
 
 		TaskAttribute statusAtribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.STATUS);
 		addAttribute(headerComposite, toolkit, statusAtribute, 0);
@@ -170,9 +174,6 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 			TaskAttribute resolutionAtribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.RESOLUTION);
 			addAttribute(headerComposite, toolkit, resolutionAtribute, 0, false);
 		}
-
-		TaskAttribute priorityAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.PRIORITY);
-		addAttribute(headerComposite, toolkit, priorityAttribute);
 
 		TaskAttribute keyAttribute = getTaskData().getRoot().getMappedAttribute(TaskAttribute.TASK_KEY);
 		addAttribute(headerComposite, toolkit, keyAttribute);
