@@ -61,6 +61,11 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		return true;
 	}
 
+	@Override
+	public boolean applyToFilteredText() {
+		return true;
+	}
+
 	private boolean isContainedInWorkingSet(IRepositoryElement container) {
 		if (elements == null) {
 			return true;

@@ -122,10 +122,8 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	private boolean selectContainer(ITaskContainer container) {
-		if (containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText())) {
-			if (filter(null, container)) {
-				return false;
-			}
+		if (filter(null, container)) {
+			return false;
 		}
 		return true;
 	}
@@ -188,9 +186,18 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	protected boolean filter(Object parent, Object object) {
+		boolean emptyFilterText = containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText());
 		for (AbstractTaskListFilter filter : this.taskListView.getFilters()) {
-			if (!filter.select(parent, object)) {
-				return true;
+			if (emptyFilterText) {
+				if (!filter.select(parent, object)) {
+					return true;
+				}
+			} else {
+				if (filter.applyToFilteredText()) {
+					if (!filter.select(parent, object)) {
+						return true;
+					}
+				}
 			}
 		}
 		return false;

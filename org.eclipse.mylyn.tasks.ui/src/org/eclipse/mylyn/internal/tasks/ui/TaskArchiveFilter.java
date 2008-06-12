@@ -17,6 +17,7 @@ public class TaskArchiveFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
+
 		if (element instanceof UnmatchedTaskContainer) {
 			if (((UnmatchedTaskContainer) element).isEmpty()) {
 				return false;

@@ -24,6 +24,13 @@ public abstract class AbstractTaskListFilter {
 	public abstract boolean select(Object parent, Object element);
 
 	/**
+	 * @return true if this filter should be applied even with filter text is present
+	 */
+	public boolean applyToFilteredText() {
+		return false;
+	}
+
+	/**
 	 * NOTE: performance implication of looking down children
 	 * 
 	 * TODO: Move to an internal utility class
