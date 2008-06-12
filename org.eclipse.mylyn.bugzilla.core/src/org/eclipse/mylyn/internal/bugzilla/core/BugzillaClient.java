@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -767,7 +768,7 @@ public class BugzillaClient {
 			postfix = IBugzillaConstants.FORM_POSTFIX_216;
 			postfix2 = IBugzillaConstants.FORM_POSTFIX_218;
 		} else {
-			formData = getPairsForExisting(taskData);
+			formData = getPairsForExisting(taskData, new SubProgressMonitor(monitor, 1));
 		}
 
 		String result = null;
@@ -942,8 +943,8 @@ public class BugzillaClient {
 		}
 	}
 
-	private NameValuePair[] getPairsForExisting(TaskData model) {
-
+	private NameValuePair[] getPairsForExisting(TaskData model, IProgressMonitor monitor) throws CoreException {
+		boolean groupSecurityEnabled = false;
 		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
 		fields.put(KEY_FORM_NAME, new NameValuePair(KEY_FORM_NAME, VAL_PROCESS_BUG));
 		// go through all of the attributes and add them to the bug post
@@ -962,6 +963,10 @@ public class BugzillaClient {
 					|| a.getId().equals(BugzillaAttribute.REMOVECC.getKey())
 					|| a.getId().equals(BugzillaAttribute.CREATION_TS.getKey())) {
 				continue;
+			}
+
+			if (a.getId().equals(BugzillaAttribute.GROUP.getKey()) && a.getValue().length() > 0) {
+				groupSecurityEnabled = true;
 			}
 
 			if (a.getId() != null && a.getId().compareTo("") != 0) {
@@ -1044,8 +1049,64 @@ public class BugzillaClient {
 			}
 		}
 
+		if (groupSecurityEnabled) {
+			// get security info from html and include in post
+			Map<String, String> groupIds = getGroupSecurityInformation(model, monitor);
+			for (String key : groupIds.keySet()) {
+				fields.put(key, new NameValuePair(key, groupIds.get(key)));
+			}
+
+		}
 		return fields.values().toArray(new NameValuePair[fields.size()]);
 
+	}
+
+	private Map<String, String> getGroupSecurityInformation(TaskData taskData, IProgressMonitor monitor)
+			throws CoreException {
+		Map<String, String> groupSecurityInformation = new HashMap<String, String>();
+		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
+
+		String bugUrl = taskData.getRepositoryUrl() + IBugzillaConstants.URL_GET_SHOW_BUG + taskData.getTaskId();
+		GzipGetMethod getMethod = new GzipGetMethod(WebUtil.getRequestPath(bugUrl), false);
+		getMethod.setRequestHeader("Content-Type", "text/xml; charset=" + characterEncoding);
+		httpClient.getParams().setParameter("http.protocol.single-cookie-header", true);
+		getMethod.setDoAuthentication(true);
+
+		int code;
+		InputStream inStream = null;
+		try {
+			code = WebUtil.execute(httpClient, hostConfiguration, getMethod, monitor);
+			if (code == HttpURLConnection.HTTP_OK) {
+				inStream = getResponseStream(getMethod, monitor);
+				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(new BufferedReader(new InputStreamReader(
+						inStream, characterEncoding)), null);
+				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+					if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.INPUT
+							&& !((HtmlTag) (token.getValue())).isEndTag()) {
+						HtmlTag tag = (HtmlTag) token.getValue();
+						//	String name = tag.getAttribute("name");
+						String id = tag.getAttribute("id");
+						String checkedValue = tag.getAttribute("checked");
+						String type = tag.getAttribute("type");
+						if (type != null && type.equalsIgnoreCase("checkbox") && id != null && id.startsWith("bit-")) {
+							groupSecurityInformation.put(id, checkedValue);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+					"Unable to retrieve group security information", e));
+		} finally {
+			if (inStream != null) {
+				try {
+					inStream.close();
+				} catch (IOException e) {
+					//ignore
+				}
+			}
+		}
+		return groupSecurityInformation;
 	}
 
 	public static String stripTimeZone(String longTime) {
