@@ -281,6 +281,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
+	// TODO e3.4 replace with SWT.NO_SCROLL constant
+	public static final int SWT_NO_SCROLL = 1 << 4;
+
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.tasks";
 
 	public static final String LABEL_VIEW = "Task List";
@@ -859,7 +862,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
 		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
-				| TasksUiInternal.SWT_NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new SubstringPatternFilter());
+				| SWT_NO_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new SubstringPatternFilter());
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html

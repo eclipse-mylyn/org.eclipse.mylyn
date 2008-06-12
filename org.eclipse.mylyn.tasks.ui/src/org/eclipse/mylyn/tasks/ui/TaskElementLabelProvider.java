@@ -28,6 +28,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -91,6 +92,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	private CompositeImageDescriptor getImageDescriptor(Object object) {
 		CompositeImageDescriptor compositeDescriptor = new CompositeImageDescriptor();
 		if (object instanceof UncategorizedTaskContainer) {
+			compositeDescriptor.icon = TasksUiImages.CATEGORY_UNCATEGORIZED;
+			return compositeDescriptor;
+		} else if (object instanceof UnsubmittedTaskContainer) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_UNCATEGORIZED;
 			return compositeDescriptor;
 		} else if (object instanceof TaskCategory) {

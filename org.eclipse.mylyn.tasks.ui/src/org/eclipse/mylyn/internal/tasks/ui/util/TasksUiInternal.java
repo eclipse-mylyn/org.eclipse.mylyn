@@ -54,6 +54,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
@@ -815,10 +816,13 @@ public class TasksUiInternal {
 	}
 
 	public static void createAndOpenNewTask(TaskData taskData) throws CoreException {
-		ITask task = TasksUiUtil.createOutgoingNewTask(taskData.getConnectorKind());
+		ITask task = TasksUiUtil.createOutgoingNewTask(taskData.getConnectorKind(), taskData.getRepositoryUrl());
+		UnsubmittedTaskContainer unsubmitted = ((TaskList) getTaskList()).getUnsubmittedContainer(taskData.getRepositoryUrl());
+		if (unsubmitted != null) {
+			TasksUiInternal.getTaskList().addTask(task, unsubmitted);
+		}
 		ITaskDataWorkingCopy workingCopy = TasksUi.getTaskDataManager().createWorkingCopy(task, taskData);
 		workingCopy.save(null, null);
-
 		TaskRepository localTaskRepository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
 		TaskEditorInput editorInput = new TaskEditorInput(localTaskRepository, task);

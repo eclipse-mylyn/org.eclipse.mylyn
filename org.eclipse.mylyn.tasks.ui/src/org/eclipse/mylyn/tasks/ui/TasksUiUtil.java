@@ -28,6 +28,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
@@ -76,15 +77,14 @@ public class TasksUiUtil {
 	 */
 	public static final int FLAG_NO_RICH_EDITOR = 1 << 17;
 
-	private static final String ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND = "outgoingNewConnectorKind";
-
 	/**
 	 * @since 3.0
 	 */
-	public static ITask createOutgoingNewTask(String connectorKind) {
+	public static ITask createOutgoingNewTask(String connectorKind, String repositoryUrl) {
 		Assert.isNotNull(connectorKind);
 		LocalTask task = TasksUiInternal.createNewLocalTask(null);
-		task.setAttribute(ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND, connectorKind);
+		task.setAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND, connectorKind);
+		task.setAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL, repositoryUrl);
 		task.setSynchronizationState(SynchronizationState.OUTGOING_NEW);
 		return task;
 	}
@@ -95,7 +95,7 @@ public class TasksUiUtil {
 	public static boolean isOutgoingNewTask(ITask task, String connectorKind) {
 		Assert.isNotNull(task);
 		Assert.isNotNull(connectorKind);
-		return connectorKind.equals(task.getAttribute(ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND));
+		return connectorKind.equals(task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND));
 	}
 
 	public static TaskRepository getSelectedRepository() {

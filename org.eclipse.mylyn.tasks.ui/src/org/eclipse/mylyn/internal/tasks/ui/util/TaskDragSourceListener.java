@@ -22,8 +22,10 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -47,7 +49,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 
 	static final String DELIM = ", ";
 
-	private IStructuredSelection selection;
+	private IStructuredSelection structuredSelection;
 
 	private final ISelectionProvider selectionProvider;
 
@@ -59,9 +61,23 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 	public void dragStart(DragSourceEvent event) {
 		ISelection selection = selectionProvider.getSelection();
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			this.selection = (IStructuredSelection) selection;
+			this.structuredSelection = (IStructuredSelection) selection;
+			Iterator<?> itr = structuredSelection.iterator();
+			while (itr.hasNext()) {
+				Object o = itr.next();
+				if (o instanceof AbstractTask) {
+					AbstractTask task = ((AbstractTask) o);
+					for (AbstractTaskContainer container : task.getParentContainers()) {
+						if (container instanceof UnsubmittedTaskContainer) {
+							event.doit = false;
+							return;
+						}
+
+					}
+				}
+			}
 		} else {
-			this.selection = null;
+			this.structuredSelection = null;
 			event.doit = false;
 		}
 	}
@@ -118,13 +134,13 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
-		if (selection == null || selection.isEmpty()) {
+		if (structuredSelection == null || structuredSelection.isEmpty()) {
 			return;
 		}
 
 		if (TaskTransfer.getInstance().isSupportedType(event.dataType)) {
 			List<AbstractTask> tasks = new ArrayList<AbstractTask>();
-			for (Iterator<?> it = selection.iterator(); it.hasNext();) {
+			for (Iterator<?> it = structuredSelection.iterator(); it.hasNext();) {
 				Object element = it.next();
 				if (element instanceof AbstractTask) {
 					tasks.add((AbstractTask) element);
@@ -132,7 +148,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 			}
 			event.data = tasks.toArray(new AbstractTask[0]);
 		} else if (FileTransfer.getInstance().isSupportedType(event.dataType)) {
-			List<File> files = createTaskFiles(selection);
+			List<File> files = createTaskFiles(structuredSelection);
 			if (files != null && !files.isEmpty()) {
 				String[] paths = new String[files.size()];
 				int i = 0;
@@ -142,8 +158,8 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 				event.data = paths;
 			}
 		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-			if (selection.getFirstElement() instanceof RepositoryTaskData) {
-				RepositoryTaskData taskData = (RepositoryTaskData) selection.getFirstElement();
+			if (structuredSelection.getFirstElement() instanceof RepositoryTaskData) {
+				RepositoryTaskData taskData = (RepositoryTaskData) structuredSelection.getFirstElement();
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						taskData.getConnectorKind());
 				if (connector != null) {
@@ -152,7 +168,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 					event.data = taskData.getSummary();
 				}
 			} else {
-				event.data = CopyTaskDetailsAction.getTextForTask(selection.getFirstElement());
+				event.data = CopyTaskDetailsAction.getTextForTask(structuredSelection.getFirstElement());
 			}
 		}
 	}
