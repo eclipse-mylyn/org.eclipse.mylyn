@@ -180,33 +180,6 @@ public class RepositoryConfiguration implements Serializable {
 		entry.addComponent(component);
 	}
 
-	// /**
-	// * Adds a list of components to the given product.
-	// */
-	// public void addComponents(String product, List<String> components) {
-	// ProductEntry entry = products.get(product);
-	// if (entry == null) {
-	// entry = new ProductEntry(product);
-	// products.put(product, entry);
-	// }
-	// for (String component : components) {
-	// entry.addComponent(component);
-	// }
-	// }
-	// /**
-	// * Adds a list of components to the given product.
-	// */
-	// public void addComponents(String product, List<String> components) {
-	// ProductEntry entry = products.get(product);
-	// if (entry == null) {
-	// entry = new ProductEntry(product);
-	// products.put(product, entry);
-	// }
-	// for (String component : components) {
-	// entry.addComponent(component);
-	// }
-	// }
-
 	public void addVersion(String product, String version) {
 		if (!versions.contains(version)) {
 			versions.add(version);
@@ -218,20 +191,6 @@ public class RepositoryConfiguration implements Serializable {
 		}
 		entry.addVersion(version);
 	}
-
-	// /**
-	// * Adds a list of components to the given product.
-	// */
-	// public void addVersions(String product, List<String> versions) {
-	// ProductEntry entry = products.get(product);
-	// if (entry == null) {
-	// entry = new ProductEntry(product);
-	// products.put(product, entry);
-	// }
-	// for (String version : versions) {
-	// entry.addVersion(version);
-	// }
-	// }
 
 	public void addKeyword(String keyword) {
 		keywords.add(keyword);
@@ -369,15 +328,12 @@ public class RepositoryConfiguration implements Serializable {
 		case PRODUCT:
 			return getProducts();
 		case TARGET_MILESTONE:
-			// return getTargetMilestones();
 			return getTargetMilestones(product);
 		case BUG_STATUS:
 			return getStatusValues();
 		case VERSION:
-			// return getVersions();
 			return getVersions(product);
 		case COMPONENT:
-			// return getComponents();
 			return getComponents(product);
 		case REP_PLATFORM:
 			return getPlatforms();
@@ -448,12 +404,14 @@ public class RepositoryConfiguration implements Serializable {
 				}
 				attribute.clearOptions();
 				List<String> optionValues = getOptionValues(element, product);
-				if (element != BugzillaAttribute.OP_SYS && element != BugzillaAttribute.BUG_SEVERITY
-						&& element != BugzillaAttribute.PRIORITY && element != BugzillaAttribute.BUG_STATUS) {
+
+				if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
+						&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
+						&& element != BugzillaAttribute.BUG_STATUS) {
 					Collections.sort(optionValues);
 				}
-				if (element == BugzillaAttribute.TARGET_MILESTONE && optionValues.isEmpty()) {
 
+				if (element == BugzillaAttribute.TARGET_MILESTONE && optionValues.isEmpty()) {
 					existingReport.getRoot().removeAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey());
 					continue;
 				}
@@ -461,15 +419,6 @@ public class RepositoryConfiguration implements Serializable {
 				for (String option : optionValues) {
 					attribute.putOption(option, option);
 				}
-
-				// TODO: bug#162428, bug#150680 - something along the lines of...
-				// but must think about the case of multiple values selected etc.
-				// if(attribute.hasOptions()) {
-				// if(!attribute.getOptionValues().containsKey(attribute.getValue()))
-				// {
-				// // updateAttributes()
-				// }
-				// }
 			}
 		}
 
@@ -561,6 +510,9 @@ public class RepositoryConfiguration implements Serializable {
 				if (resolution.compareTo("DUPLICATE") != 0 && resolution.compareTo("MOVED") != 0) {
 					attrResolvedInput.putOption(resolution, resolution);
 				}
+			}
+			if (getResolutions().size() > 0) {
+				attrResolvedInput.setValue(getResolutions().get(0));
 			}
 			break;
 		default:
