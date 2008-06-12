@@ -40,7 +40,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 			BugzillaAttribute.DEADLINE);
 
 	public BugzillaPlanningEditorPart() {
-		setPartName("Planning");
+		setPartName("Team Planning");
 	}
 
 	@Override

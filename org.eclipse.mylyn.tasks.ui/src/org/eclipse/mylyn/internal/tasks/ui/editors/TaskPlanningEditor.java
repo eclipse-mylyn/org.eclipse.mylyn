@@ -615,6 +615,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		scheduleDatePicker = new ScheduleDatePicker(nameValueComp, task, SWT.FLAT);
+		GridData gd = new GridData();
+		gd.widthHint = 135;
+		scheduleDatePicker.setLayoutData(gd);
 		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		toolkit.adapt(scheduleDatePicker, true, false);
 		toolkit.paintBordersFor(nameValueComp);
