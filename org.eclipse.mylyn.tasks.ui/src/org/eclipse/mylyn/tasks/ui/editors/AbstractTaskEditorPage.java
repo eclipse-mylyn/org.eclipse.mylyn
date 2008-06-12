@@ -505,6 +505,11 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		return new TaskDataModel(taskRepository, input.getTask(), taskDataState);
 	}
 
+	/**
+	 * To suppress a section, just remove its descriptor from the list. To add your own section in a specific order on
+	 * the page, use the path value for where you want it to appear (your descriptor will appear after previously added
+	 * descriptors with the same path), and add it to the descriptors list in your override of this method.
+	 */
 	protected Set<TaskEditorPartDescriptor> createPartDescriptors() {
 		Set<TaskEditorPartDescriptor> descriptors = new LinkedHashSet<TaskEditorPartDescriptor>();
 		descriptors.add(new TaskEditorPartDescriptor(ID_PART_SUMMARY) {
@@ -575,7 +580,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		return descriptors;
 	}
 
-	private void createParts() {
+	protected void createParts() {
 		List<TaskEditorPartDescriptor> descriptors = new LinkedList<TaskEditorPartDescriptor>(createPartDescriptors());
 		// single column
 		createParts(PATH_HEADER, editorComposite, descriptors);

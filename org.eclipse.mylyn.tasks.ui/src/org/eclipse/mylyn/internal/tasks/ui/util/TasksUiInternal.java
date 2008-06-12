@@ -610,9 +610,11 @@ public class TasksUiInternal {
 	}
 
 	/**
-	 * @since 3.0
+	 * Use TasksUi.getRepositoryModel().createTask(). This method currently only accounts for legacy connectors. Task
+	 * creation, however, is pretty much handled by Mylyn core code now, and should really only be used by connectors if
+	 * necessary for testing purposes.
 	 */
-	// API 3.0 consider moving this somewhere else and renaming to addToTaskList
+	// API 3.0 move to tests
 	public static ITask createTask(TaskRepository repository, String id, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		ITaskList taskList = getTaskList();

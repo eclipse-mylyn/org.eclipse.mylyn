@@ -99,6 +99,8 @@ public class AttributeEditorToolkit {
 
 	private ISelectionChangedListener selectionChangedListener;
 
+	private AbstractRenderingEngine renderingEngine;
+
 	AttributeEditorToolkit(IHandlerService handlerService) {
 		this.handlerService = handlerService;
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
@@ -254,7 +256,7 @@ public class AttributeEditorToolkit {
 	 * @since 2.1
 	 */
 	public AbstractRenderingEngine getRenderingEngine(TaskAttribute attribute) {
-		return null;
+		return renderingEngine;
 	}
 
 	ISelectionChangedListener getSelectionChangedListener() {
@@ -292,6 +294,10 @@ public class AttributeEditorToolkit {
 
 	void setSelectionChangedListener(ISelectionChangedListener selectionListener) {
 		this.selectionChangedListener = selectionListener;
+	}
+
+	public void setRenderingEngine(AbstractRenderingEngine renderingEngine) {
+		this.renderingEngine = renderingEngine;
 	}
 
 }

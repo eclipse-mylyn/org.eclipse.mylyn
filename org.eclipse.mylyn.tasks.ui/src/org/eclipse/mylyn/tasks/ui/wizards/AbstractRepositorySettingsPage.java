@@ -1210,7 +1210,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		this.repository = repository;
 	}
 
-	@Deprecated
 	public void setVersion(String previousVersion) {
 		if (previousVersion == null) {
 			serverVersion = TaskRepository.NO_VERSION_SPECIFIED;
