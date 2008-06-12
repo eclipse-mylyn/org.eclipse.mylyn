@@ -136,6 +136,15 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				}
 			}
 			break;
+		case QA_CONTACT:
+			if (attributes != null && attributes.getLength() > 0) {
+				String name = attributes.getValue(ATTRIBUTE_NAME);
+				if (name != null) {
+					BugzillaTaskDataHandler.createAttribute(repositoryTaskData, BugzillaAttribute.QA_CONTACT_NAME)
+							.setValue(name);
+				}
+			}
+			break;
 		case ASSIGNED_TO:
 			if (attributes != null && attributes.getLength() > 0) {
 				String name = attributes.getValue(ATTRIBUTE_NAME);

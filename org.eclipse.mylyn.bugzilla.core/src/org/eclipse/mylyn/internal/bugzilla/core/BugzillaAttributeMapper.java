@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -204,5 +205,33 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			return taskAttribute.getMappedAttribute(id);
 		}
 		return null;
+	}
+
+	@Override
+	public IRepositoryPerson getRepositoryPerson(TaskAttribute taskAttribute) {
+
+		IRepositoryPerson person = super.getRepositoryPerson(taskAttribute);
+		if (person.getName() == null) {
+			if (taskAttribute.getId().equals(BugzillaAttribute.ASSIGNED_TO.getKey())) {
+				TaskAttribute attrAssigned = taskAttribute.getTaskData().getRoot().getAttribute(
+						BugzillaAttribute.ASSIGNED_TO_NAME.getKey());
+				if (attrAssigned != null) {
+					person.setName(attrAssigned.getValue());
+				}
+			} else if (taskAttribute.getId().equals(BugzillaAttribute.REPORTER.getKey())) {
+				TaskAttribute attrReporter = taskAttribute.getTaskData().getRoot().getAttribute(
+						BugzillaAttribute.REPORTER_NAME.getKey());
+				if (attrReporter != null) {
+					person.setName(attrReporter.getValue());
+				}
+			} else if (taskAttribute.getId().equals(BugzillaAttribute.QA_CONTACT.getKey())) {
+				TaskAttribute attrReporter = taskAttribute.getTaskData().getRoot().getAttribute(
+						BugzillaAttribute.QA_CONTACT_NAME.getKey());
+				if (attrReporter != null) {
+					person.setName(attrReporter.getValue());
+				}
+			}
+		}
+		return person;
 	}
 }
