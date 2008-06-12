@@ -119,28 +119,30 @@ public class InteractionContextExternalizer {
 		outputStream.closeEntry();
 	}
 
-	public IInteractionContext readContextFromXml(String handleIdentifier, File file, IInteractionContextScaling scaling) {
-		return readContextFromXml(handleIdentifier, file, new SaxContextReader(), scaling);
+	public IInteractionContext readContextFromXml(String handleIdentifier, File fromFile,
+			IInteractionContextScaling scaling) {
+		return readContextFromXml(handleIdentifier, fromFile, new SaxContextReader(), scaling);
 	}
 
 	/**
 	 * Public for testing
 	 */
-	public IInteractionContext readContextFromXml(String handleIdentifier, File file, IInteractionContextReader reader,
-			IInteractionContextScaling scaling) {
+	public IInteractionContext readContextFromXml(String handleIdentifier, File fromFile,
+			IInteractionContextReader reader, IInteractionContextScaling scaling) {
 		try {
-			if (!file.exists()) {
+			if (!fromFile.exists()) {
 				return null;
 			} else {
 				if (reader instanceof SaxContextReader) {
 					((SaxContextReader) reader).setContextScaling(scaling);
 				}
-				return reader.readContext(handleIdentifier, file);
+
+				return reader.readContext(handleIdentifier, fromFile);
 			}
 		} catch (Exception e) {
 			// TODO: propagate exception instead?
 			StatusHandler.fail(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not read: "
-					+ file.getAbsolutePath(), e));
+					+ fromFile.getAbsolutePath(), e));
 		}
 		return null;
 	}

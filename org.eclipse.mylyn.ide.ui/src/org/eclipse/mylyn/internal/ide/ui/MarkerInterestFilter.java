@@ -36,7 +36,6 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 					Method method = clazz.getDeclaredMethod("getChildren", new Class[] {});
 					method.setAccessible(true);
 					Object result = method.invoke(element, new Object[] {});
-//					System.err.println(">>>>>> " + result.getClass());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

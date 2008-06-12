@@ -16,6 +16,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
@@ -53,6 +54,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		TestUtil.triggerContextUiLazyStart();
 		assertNotNull(JavaPlugin.getDefault());
 		assertNotNull(JavaUiBridgePlugin.getDefault());
 		project = new TestJavaProject(this.getClass().getSimpleName());

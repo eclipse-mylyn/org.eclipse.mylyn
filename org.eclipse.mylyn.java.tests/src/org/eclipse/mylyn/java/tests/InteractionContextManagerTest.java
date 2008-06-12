@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
@@ -126,25 +127,25 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertTrue(changed.getInterest().isInteresting());
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testCopyContext() {
 		File sourceFile = contextStore.getFileForContext(context.getHandleIdentifier());
 		context.parseEvent(mockSelection("1"));
+		assertFalse(context.getInteractionHistory().isEmpty());
 		contextStore.saveContext(context);
 		assertTrue(sourceFile.exists());
 
-		InteractionContext toContext = new InteractionContext("toContext", scaling);
-		File toFile = contextStore.getFileForContext(toContext.getHandleIdentifier());
+		File toFile = contextStore.getFileForContext("toContext");
 		assertFalse(toFile.exists());
 
-		contextStore.cloneContext(context.getHandleIdentifier(), toContext.getHandleIdentifier());
-//		contextStore.saveContext(toContext);
-		manager.activateContext(toContext.getHandleIdentifier());
-		assertEquals(((CompositeInteractionContext) manager.getActiveContext()).get("toContext").getHandleIdentifier(),
-				toContext.getHandleIdentifier());
-
-		contextStore.saveContext(toContext);
+		contextStore.cloneContext(context.getHandleIdentifier(), "toContext");
 		assertTrue(toFile.exists());
+
+		manager.activateContext("toContext");
+		IInteractionContext toContext = manager.getActiveContext();
+		assertFalse(toContext.getInteractionHistory().isEmpty());
+//		assertEquals(((CompositeInteractionContext) manager.getActiveContext()).get("toContext").getHandleIdentifier(),
+//				toContext.getHandleIdentifier());
+
 		toFile.delete();
 		assertFalse(toFile.delete());
 		manager.deactivateAllContexts();

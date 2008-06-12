@@ -15,14 +15,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -75,36 +80,46 @@ public class LocalContextStore implements IContextStore {
 	 * @return false if the map could not be read for any reason
 	 */
 	public IInteractionContext loadContext(String handleIdentifier) {
-		return importContext(handleIdentifier, getFileForContext(handleIdentifier));
+		return loadContext(handleIdentifier, getFileForContext(handleIdentifier), commonContextScaling);
+//		return importContext(handleIdentifier, getFileForContext(handleIdentifier));
 	}
 
-	public IInteractionContext importContext(String handleIdentifier, File file) {
-		return loadContext(handleIdentifier, file, commonContextScaling);
+	public IInteractionContext importContext(String handleIdentifier, File fromFile) throws CoreException {
+		InteractionContext context;
+		String handleToImportFrom;
+		handleToImportFrom = getFirstContextHandle(fromFile);
+		context = (InteractionContext) loadContext(handleToImportFrom, fromFile, commonContextScaling);
+		context.setHandleIdentifier(handleIdentifier);
+		saveContext(context);
+		return context;
 	}
 
-	/**
-	 * Creates a file for specified context and activates it
-	 */
-
-	public boolean importContext(IInteractionContext context) {
-		if (context instanceof InteractionContext) {
-			externalizer.writeContextToXml(context, getFileForContext(context.getHandleIdentifier()));
-			return true;
-		} else {
-			return false;
+	private String getFirstContextHandle(File sourceFile) throws CoreException {
+		try {
+			ZipFile zipFile = new ZipFile(sourceFile);
+			try {
+				for (Enumeration<?> e = zipFile.entries(); e.hasMoreElements();) {
+					ZipEntry entry = (ZipEntry) e.nextElement();
+					String name = entry.getName();
+					String decodedName = URLDecoder.decode(name, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+					if (decodedName.length() > InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD.length()) {
+						return decodedName.substring(0, decodedName.length()
+								- InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD.length());
+					}
+				}
+				return null;
+			} finally {
+				zipFile.close();
+			}
+		} catch (IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
+					"Could not get context handle from " + sourceFile, e));
 		}
-//		contextFiles.add(getFileForContext(context.getHandleIdentifier()));
-//		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
-//		if (!activationHistorySuppressed) {
-//			processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-//					IInteractionContextManager.ACTIVITY_STRUCTUREKIND_ACTIVATION, context.getHandleIdentifier(),
-//					IInteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
-//					IInteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
-//		}
 	}
 
-	public IInteractionContext loadContext(String handleIdentifier, File file, IInteractionContextScaling contextScaling) {
-		IInteractionContext loadedContext = externalizer.readContextFromXml(handleIdentifier, file, contextScaling);
+	public IInteractionContext loadContext(String handleIdentifier, File fromFile,
+			IInteractionContextScaling contextScaling) {
+		IInteractionContext loadedContext = externalizer.readContextFromXml(handleIdentifier, fromFile, contextScaling);
 		if (loadedContext == null) {
 			return new InteractionContext(handleIdentifier, contextScaling);
 		} else {
@@ -129,8 +144,7 @@ public class LocalContextStore implements IContextStore {
 		// FIXME this should not reference the context manager
 		boolean wasPaused = ContextCore.getContextManager().isContextCapturePaused();
 		try {
-			// XXX: make this asynchronous by creating a copy
-
+			// TODO: make this asynchronous by creating a copy
 			if (!wasPaused) {
 				// FIXME this should not reference the context manager
 				ContextCore.getContextManager().setContextCapturePaused(true);
@@ -180,15 +194,25 @@ public class LocalContextStore implements IContextStore {
 	}
 
 	public IInteractionContext cloneContext(String sourceContextHandle, String destinationContextHandle) {
-		IInteractionContext context = importContext(destinationContextHandle, getFileForContext(sourceContextHandle));
-		if (context != null) {
-//			source.setHandleIdentifier(destinationContextHandle);
-			saveContext(context);
+
+		InteractionContext readContext = (InteractionContext) externalizer.readContextFromXml(sourceContextHandle,
+				getFileForContext(sourceContextHandle), commonContextScaling);
+
+		if (readContext == null) {
+			return new InteractionContext(destinationContextHandle, commonContextScaling);
 		} else {
-			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not copy context from: "
-					+ sourceContextHandle));
+			readContext.setHandleIdentifier(destinationContextHandle);
+			saveContext(readContext);
 		}
-		return context;
+
+//		IInteractionContext context = importContext(destinationContextHandle, getFileForContext(sourceContextHandle));
+//		if (context != null) {
+//			saveContext(context);
+//		} else {
+//			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not copy context from: "
+//					+ sourceContextHandle));
+//		}
+		return readContext;
 	}
 
 	public boolean hasContext(String handleIdentifier) {
