@@ -112,15 +112,11 @@ public class LocalContextStore implements IContextStore {
 		}
 	}
 
-	/**
-	 * Only saves if active.
-	 */
-
-	public void saveContext(String handleIdentifier) {
+	// TODO: interaction activity capture should be locked or queued for the duration of this and other saves
+	public void saveActiveContext() {
 		// FIXME this should not reference the context manager
 		IInteractionContext context = ContextCore.getContextManager().getActiveContext();
-		if (context != null && context.getHandleIdentifier() != null
-				&& context.getHandleIdentifier().equals(handleIdentifier)) {
+		if (context != null) {
 			saveContext(context);
 		}
 	}

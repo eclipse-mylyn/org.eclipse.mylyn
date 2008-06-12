@@ -130,7 +130,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 	public void testCopyContext() {
 		File sourceFile = contextStore.getFileForContext(context.getHandleIdentifier());
 		context.parseEvent(mockSelection("1"));
-		contextStore.saveContext(context.getHandleIdentifier());
+		contextStore.saveContext(context);
 		assertTrue(sourceFile.exists());
 
 		InteractionContext toContext = new InteractionContext("toContext", scaling);
@@ -138,7 +138,7 @@ public class InteractionContextManagerTest extends AbstractJavaContextTest {
 		assertFalse(toFile.exists());
 
 		contextStore.copyContext(sourceFile, toContext.getHandleIdentifier());
-		contextStore.saveContext(toContext.getHandleIdentifier());
+		contextStore.saveContext(toContext);
 		manager.activateContext(toContext.getHandleIdentifier());
 		assertEquals(((CompositeInteractionContext) manager.getActiveContext()).get("toContext").getHandleIdentifier(),
 				toContext.getHandleIdentifier());

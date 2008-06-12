@@ -241,7 +241,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				ContextCore.getContextManager().setContextCapturePaused(true);
 			}
 			setChecked(on);
-			action.setChecked(on);
+			if (action != null) {
+				action.setChecked(on);
+			}
 			if (store && ContextCorePlugin.getDefault() != null) {
 				ContextUiPlugin.getDefault().getPreferenceStore().setValue(globalPrefId, on);
 			}
@@ -270,7 +272,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	protected void updateEnablement(IAction action) {
 		if (updateEnablementWithContextActivation()) {
-			action.setEnabled(ContextCore.getContextManager().isContextActivePropertySet());
+			if (action != null) {
+				action.setEnabled(ContextCore.getContextManager().isContextActivePropertySet());
+			}
 		}
 	}
 

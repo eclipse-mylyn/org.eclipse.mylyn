@@ -361,7 +361,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 			IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
-				contextStore.saveContext(handleIdentifier);
+				contextStore.saveContext(context);
 				activeContext.getContextMap().remove(handleIdentifier);
 
 				setContextCapturePaused(true);
