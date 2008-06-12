@@ -89,7 +89,7 @@ public class BugzillaUiExtensionReader {
 			}
 			connector.addLanguageSetting(bugzillaLanguageSettings);
 		} else {
-			StatusHandler.log(new Status(IStatus.WARNING, BugzillaUiPlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
 					"Could not load language template extension " + element.getName()));
 		}
 	}

@@ -417,7 +417,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			operation = BugzillaOperation.valueOf(repositoryOperation.getKnobName());
 		} catch (RuntimeException e) {
 			// FIXME: ?
-			StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID, "Unrecognized operation: "
+			StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.ID_PLUGIN, "Unrecognized operation: "
 					+ repositoryOperation.getKnobName(), e));
 			operation = null;
 		}

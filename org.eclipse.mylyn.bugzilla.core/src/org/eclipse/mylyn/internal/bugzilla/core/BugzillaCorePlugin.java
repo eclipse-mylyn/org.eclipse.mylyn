@@ -43,7 +43,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 	public static final String CONNECTOR_KIND = "bugzilla";
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.bugzilla";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.bugzilla";
 
 	private static BugzillaCorePlugin INSTANCE;
 
@@ -141,7 +141,7 @@ public class BugzillaCorePlugin extends Plugin {
 			}
 			return repositoryConfigurations.get(repository.getRepositoryUrl());
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 1,
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
 					"Error updating attributes.\n\n" + e.getMessage(), e));
 		}
 	}
@@ -184,7 +184,7 @@ public class BugzillaCorePlugin extends Plugin {
 				}
 			}
 		} catch (Exception e) {
-			log(new Status(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_INCOMPATIBLE_CONFIGURATION, e));
+			log(new Status(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN, 0, ERROR_INCOMPATIBLE_CONFIGURATION, e));
 			try {
 				if (in != null) {
 					in.close();
@@ -193,12 +193,12 @@ public class BugzillaCorePlugin extends Plugin {
 					if (repositoryConfigurationFile.delete()) {
 						// successfully deleted
 					} else {
-						log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+						log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, ERROR_DELETING_CONFIGURATION, e));
 					}
 				}
 
 			} catch (Exception ex) {
-				log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, ERROR_DELETING_CONFIGURATION, e));
+				log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, ERROR_DELETING_CONFIGURATION, e));
 			}
 		} finally {
 			if (in != null) {
@@ -260,7 +260,7 @@ public class BugzillaCorePlugin extends Plugin {
 		if (e.getMessage() == null) {
 			message = e.getClass().toString();
 		}
-		log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, message, e));
+		log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, message, e));
 	}
 
 	/**
@@ -372,7 +372,7 @@ public class BugzillaCorePlugin extends Plugin {
 			}
 
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, "could not set platform options",
+			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "could not set platform options",
 					e));
 		}
 	}

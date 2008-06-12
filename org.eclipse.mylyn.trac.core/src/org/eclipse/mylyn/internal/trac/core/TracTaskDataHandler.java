@@ -396,7 +396,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		initializeTaskData(repository, taskData, monitor);
 		RepositoryTaskAttribute attribute = taskData.getAttribute(ATTRIBUTE_BLOCKING);
 		if (attribute == null) {
-			throw new CoreException(new RepositoryStatus(repository, IStatus.ERROR, TracCorePlugin.PLUGIN_ID,
+			throw new CoreException(new RepositoryStatus(repository, IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_REPOSITORY, "The repository does not support subtasks"));
 		}
 		cloneTaskData(parentTaskData, taskData);

@@ -344,7 +344,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					}
 				}
 				if (i == -1) {
-					StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.PLUGIN_ID,
+					StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.ID_PLUGIN,
 							"Could not resolve repository version: " + version));
 					i = repositoryVersionCombo.indexOf(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
 					if (i != -1) {
@@ -447,15 +447,15 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		private void displayError(final String serverUrl, Throwable e) {
 			IStatus status;
 			if (e instanceof MalformedURLException) {
-				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, "Server URL is invalid.");
 			} else if (e instanceof CoreException) {
 				status = ((CoreException) e).getStatus();
 			} else if (e instanceof IOException) {
-				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_IO,
+				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO,
 						serverUrl, e.getMessage());
 			} else {
-				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, serverUrl, e.getMessage());
 			}
 			setStatus(status);

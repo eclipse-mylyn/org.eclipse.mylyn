@@ -176,20 +176,20 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 				validate(monitor);
 			} catch (MalformedURLException e) {
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
-						TracUiPlugin.PLUGIN_ID, INVALID_REPOSITORY_URL));
+						TracUiPlugin.ID_PLUGIN, INVALID_REPOSITORY_URL));
 			} catch (TracLoginException e) {
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
-						TracUiPlugin.PLUGIN_ID, INVALID_LOGIN));
+						TracUiPlugin.ID_PLUGIN, INVALID_LOGIN));
 			} catch (TracPermissionDeniedException e) {
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
-						TracUiPlugin.PLUGIN_ID, "Insufficient permissions for selected access type."));
+						TracUiPlugin.ID_PLUGIN, "Insufficient permissions for selected access type."));
 			} catch (TracException e) {
 				String message = "No Trac repository found at url";
 				if (e.getMessage() != null) {
 					message += ": " + e.getMessage();
 				}
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
-						TracUiPlugin.PLUGIN_ID, message));
+						TracUiPlugin.ID_PLUGIN, message));
 			}
 		}
 
@@ -214,7 +214,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 						if (e instanceof TracPermissionDeniedException) {
 							setStatus(RepositoryStatus.createStatus(repositoryUrl, IStatus.INFO,
-									TracUiPlugin.PLUGIN_ID,
+									TracUiPlugin.ID_PLUGIN,
 									"Authentication credentials are valid. Note: Insufficient permissions for XML-RPC access, falling back to web access."));
 						}
 					} catch (TracLoginException e2) {

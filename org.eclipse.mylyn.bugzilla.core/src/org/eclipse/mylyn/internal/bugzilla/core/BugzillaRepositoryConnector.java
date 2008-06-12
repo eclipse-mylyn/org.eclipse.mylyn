@@ -247,7 +247,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			return;
 		} catch (UnsupportedEncodingException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Repository configured with unsupported encoding: " + repository.getCharacterEncoding()
 							+ "\n\n Unable to determine changed tasks.", e));
 		} finally {
@@ -313,10 +313,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			return Status.OK_STATUS;
 		} catch (UnrecognizedReponseException e) {
-			return new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.INFO,
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, IStatus.INFO,
 					"Unrecognized response from server", e);
 		} catch (IOException e) {
-			return new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.ERROR,
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, IStatus.ERROR,
 					"Check repository configuration: " + e.getMessage(), e);
 		} catch (CoreException e) {
 			return e.getStatus();
@@ -354,7 +354,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, taskId);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Error constructing task url for " + repositoryUrl + "  id:" + taskId, e));
 		}
 		return null;
@@ -416,7 +416,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					}
 				}
 			} catch (MalformedURLException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						"Error retrieving configuration timestamp for " + repository.getRepositoryUrl(), e));
 			}
 			return result;
@@ -428,7 +428,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			return Integer.parseInt(taskId);
 		} catch (NumberFormatException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Invalid bug id: "
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, "Invalid bug id: "
 					+ taskId, e));
 		}
 	}

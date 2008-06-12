@@ -19,11 +19,11 @@ import org.osgi.framework.BundleContext;
  */
 public class TracUiPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.trac.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.trac.ui";
 
 	public final static String TITLE_MESSAGE_DIALOG = "Mylyn Trac Client";
 
-	public static final String NEW_BUG_EDITOR_ID = PLUGIN_ID + ".newBugEditor";
+	public static final String NEW_BUG_EDITOR_ID = ID_PLUGIN + ".newBugEditor";
 
 	private static TracUiPlugin plugin;
 

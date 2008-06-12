@@ -17,7 +17,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 public class TracStatus {
 
 	public static IStatus createPermissionDeniedError(String repositoryUrl, String pluginId) {
-		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, TracCorePlugin.PLUGIN_ID,
+		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
 				RepositoryStatus.ERROR_PERMISSION_DENIED, "Permission denied.");
 	}
 

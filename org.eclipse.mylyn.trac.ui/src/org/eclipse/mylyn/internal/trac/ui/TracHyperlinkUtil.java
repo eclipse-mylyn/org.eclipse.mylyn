@@ -227,7 +227,7 @@ public class TracHyperlinkUtil {
 					url += "?new_path=" + URLEncoder.encode(new_path, "UTF-8");
 					url += "&old_path=" + URLEncoder.encode(old_path, "UTF-8");
 				} catch (UnsupportedEncodingException e) {
-					StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.PLUGIN_ID, "Unexcpected exception", e));
+					StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.ID_PLUGIN, "Unexcpected exception", e));
 					continue;
 				}
 				if (new_rev != null) {

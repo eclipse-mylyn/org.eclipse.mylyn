@@ -288,7 +288,7 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 		try {
 			return Integer.parseInt(taskId);
 		} catch (NumberFormatException e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
+			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.ID_PLUGIN, IStatus.OK,
 					"Invalid ticket id: " + taskId, e));
 		}
 	}
@@ -329,7 +329,7 @@ public class TracRepositoryConnector extends AbstractLegacyRepositoryConnector {
 			client.updateAttributes(monitor, true);
 		} catch (Exception e) {
 			throw new CoreException(RepositoryStatus.createStatus(repository.getRepositoryUrl(), IStatus.WARNING,
-					TracCorePlugin.PLUGIN_ID, "Could not update attributes"));
+					TracCorePlugin.ID_PLUGIN, "Could not update attributes"));
 		}
 	}
 

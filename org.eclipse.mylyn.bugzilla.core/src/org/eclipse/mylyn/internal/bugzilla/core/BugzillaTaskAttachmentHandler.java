@@ -99,14 +99,14 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			}
 
 			if (description == null) {
-				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						"A description is required when submitting attachments."));
 			}
 
 			client.postAttachment(task.getTaskId(), comment, description, contentType, isPatch,
 					new AttachmentPartSource(source, filename), monitor);
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Unable to submit attachment", e));
 		} finally {
 			monitor.done();
@@ -122,7 +122,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 			client.getAttachmentData(attachmentId, out, monitor);
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Unable to retrieve attachment", e));
 		}
 	}
@@ -146,7 +146,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			try {
 				return attachment.createInputStream(null);
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						"Error submitting attachment", e));
 				throw new IOException("Failed to create source stream");
 			}

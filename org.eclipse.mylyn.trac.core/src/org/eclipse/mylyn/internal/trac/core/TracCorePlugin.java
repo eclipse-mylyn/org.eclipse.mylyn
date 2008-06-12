@@ -24,7 +24,7 @@ import org.osgi.framework.BundleContext;
  */
 public class TracCorePlugin extends Plugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.trac.core";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.trac.core";
 
 	public static final String ENCODING_UTF_8 = "UTF-8";
 
@@ -77,27 +77,27 @@ public class TracCorePlugin extends Plugin {
 
 	public static IStatus toStatus(Throwable e, TaskRepository repository) {
 		if (e instanceof TracLoginException) {
-			return RepositoryStatus.createLoginError(repository.getRepositoryUrl(), PLUGIN_ID);
+			return RepositoryStatus.createLoginError(repository.getRepositoryUrl(), ID_PLUGIN);
 		} else if (e instanceof TracPermissionDeniedException) {
-			return TracStatus.createPermissionDeniedError(repository.getRepositoryUrl(), PLUGIN_ID);
+			return TracStatus.createPermissionDeniedError(repository.getRepositoryUrl(), ID_PLUGIN);
 		} else if (e instanceof InvalidTicketException) {
-			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_IO,
 					"The server returned an unexpected response", e);
 		} else if (e instanceof TracException) {
 			String message = e.getMessage();
 			if (message == null) {
 				message = "I/O error has occured";
 			}
-			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_IO,
 					message, e);
 		} else if (e instanceof ClassCastException) {
-			return new RepositoryStatus(IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_IO,
 					"Unexpected server response: " + e.getMessage(), e);
 		} else if (e instanceof MalformedURLException) {
-			return new RepositoryStatus(IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_IO,
 					"Repository URL is invalid", e);
 		} else {
-			return new RepositoryStatus(IStatus.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL, "Unexpected error",
+			return new RepositoryStatus(IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL, "Unexpected error",
 					e);
 		}
 	}

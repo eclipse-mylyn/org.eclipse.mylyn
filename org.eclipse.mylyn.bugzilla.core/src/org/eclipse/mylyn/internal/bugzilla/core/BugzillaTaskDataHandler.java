@@ -137,13 +137,13 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			TaskData taskData;
 			taskData = client.getTaskData(bugId, getAttributeMapper(repository), monitor);
 			if (taskData == null) {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						"Task data could not be retrieved. Please re-synchronize task"));
 			}
 			return taskData;
 
 		} catch (IOException e) {
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		}
 	}
@@ -158,7 +158,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 			client.getTaskData(taskIds, collector, getAttributeMapper(repository), monitor);
 		} catch (IOException e) {
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		} finally {
 			monitor.done();
@@ -206,7 +206,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			}
 
 		} catch (IOException e) {
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
 		}
 	}

@@ -182,9 +182,9 @@ public class BugzillaProductPage extends WizardPage {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 				// Initialize a variable with the no error status
-				Status status = new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, 0, "", null);
+				Status status = new Status(IStatus.OK, BugzillaUiPlugin.ID_PLUGIN, 0, "", null);
 				if (productViewer.getSelection().isEmpty()) {
-					status = new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, 0, "You must select a product", null);
+					status = new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, 0, "You must select a product", null);
 				}
 
 				// Show the most serious error
@@ -236,18 +236,18 @@ public class BugzillaProductPage extends WizardPage {
 								// TODO: remove exceptions from communication of connectivity errors to the user
 								if (e.getStatus().getException() instanceof GeneralSecurityException) {
 									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING,
-											BugzillaUiPlugin.PLUGIN_ID,
+											BugzillaUiPlugin.ID_PLUGIN,
 											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
 													+ "Please ensure proper configuration in "
 													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", e));
 								} else if (e.getStatus().getException() instanceof IOException) {
 									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING,
-											BugzillaUiPlugin.PLUGIN_ID,
+											BugzillaUiPlugin.ID_PLUGIN,
 											"Connection Error, please ensure proper configuration in "
 													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", e));
 								} else {
 									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING,
-											BugzillaUiPlugin.PLUGIN_ID, "Error updating repository attributes for "
+											BugzillaUiPlugin.ID_PLUGIN, "Error updating repository attributes for "
 													+ repository.getRepositoryUrl(), e));
 								}
 								return;

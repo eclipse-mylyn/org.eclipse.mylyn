@@ -170,7 +170,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			if (field != null) {
 				field.setFilter(filter);
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.ID_PLUGIN,
 						"Ignoring invalid search filter: " + filter));
 			}
 		}

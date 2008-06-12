@@ -636,10 +636,10 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				}
 				attributes.add(attribute);
 			} catch (ClassCastException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
 						"Invalid response from Trac repository for attribute type: '" + attributeType + "'", e));
 			} catch (NumberFormatException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
 						"Invalid response from Trac repository for attribute type: '" + attributeType + "'", e));
 			}
 		}
@@ -684,7 +684,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			try {
 				in.close();
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
 						"Error closing attachment stream", e));
 			}
 		}

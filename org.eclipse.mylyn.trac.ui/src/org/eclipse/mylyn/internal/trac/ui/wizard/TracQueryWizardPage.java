@@ -113,7 +113,7 @@ public class TracQueryWizardPage extends WizardPage {
 			if (field != null) {
 				showSearchField(field, filter);
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.ID_PLUGIN,
 						"Ignoring invalid search filter: " + filter));
 			}
 		}

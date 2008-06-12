@@ -150,7 +150,6 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 		} catch (Exception e) {
 			return null;
 			// throw new CoreException(new Status(IStatus.ERROR,
-			// BugzillaPlugin.PLUGIN_ID, 0,
 			// "Error parsing date string: " + dateString, e));
 		}
 	}

@@ -1875,7 +1875,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 //									this.setPageComplete(this.isPageComplete());
 //									this.setControlsEnabled(true);
 					} else {
-						StatusHandler.log(new Status(IStatus.ERROR, BugzillaUiPlugin.PLUGIN_ID, cause.getMessage(),
+						StatusHandler.log(new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, cause.getMessage(),
 								cause));
 					}
 				}

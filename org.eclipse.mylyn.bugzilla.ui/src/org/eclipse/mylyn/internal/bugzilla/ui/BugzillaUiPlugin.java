@@ -28,13 +28,13 @@ import org.osgi.framework.BundleContext;
  */
 public class BugzillaUiPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.bugzilla.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.bugzilla.ui";
 
-	public static final String SEARCH_PAGE_ID = BugzillaUiPlugin.PLUGIN_ID + ".search.bugzillaSearchPage";
+	public static final String SEARCH_PAGE_ID = BugzillaUiPlugin.ID_PLUGIN + ".search.bugzillaSearchPage";
 
-	public static final String SEARCH_PAGE_CONTEXT = BugzillaUiPlugin.PLUGIN_ID + ".bugzillaSearchContext";
+	public static final String SEARCH_PAGE_CONTEXT = BugzillaUiPlugin.ID_PLUGIN + ".bugzillaSearchContext";
 
-	public static final String EDITOR_PAGE_CONTEXT = BugzillaUiPlugin.PLUGIN_ID + ".bugzillaEditorContext";
+	public static final String EDITOR_PAGE_CONTEXT = BugzillaUiPlugin.ID_PLUGIN + ".bugzillaEditorContext";
 
 	// The is's for hit markers used in the label provider and sorters
 	public static final String HIT_MARKER_ATTR_ID = "taskId";
@@ -64,7 +64,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	/**
 	 * XXX: remove?
 	 */
-	public static final String HIT_MARKER_ID = BugzillaUiPlugin.PLUGIN_ID + ".searchHit";
+	public static final String HIT_MARKER_ID = BugzillaUiPlugin.ID_PLUGIN + ".searchHit";
 
 	private static BugzillaUiPlugin plugin;
 
@@ -135,11 +135,11 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 * Returns an image descriptor for the image file at the given plug-in relative path.
 	 * 
 	 * @param path
-	 * 		the path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin(ID_PLUGIN, path);
 	}
 
 	public static String[] getQueryOptions(String prefId, String[] selectedProducts,

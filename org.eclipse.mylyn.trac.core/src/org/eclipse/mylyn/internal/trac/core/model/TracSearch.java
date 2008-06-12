@@ -142,7 +142,7 @@ public class TracSearch {
 					sb.append(URLEncoder.encode(filter.getOperator().getQueryValue(), ITracClient.CHARSET));
 					sb.append(URLEncoder.encode(value, ITracClient.CHARSET));
 				} catch (UnsupportedEncodingException e) {
-					StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+					StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
 							"Unexpected exception while decoding URL", e));
 				}
 			}
@@ -170,7 +170,7 @@ public class TracSearch {
 						addFilter(key, value);
 					}
 				} catch (UnsupportedEncodingException e) {
-					StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+					StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
 							"Unexpected exception while decoding URL", e));
 				}
 			}

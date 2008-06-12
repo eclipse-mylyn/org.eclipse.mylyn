@@ -339,7 +339,7 @@ public class TracWebClient extends AbstractTracClient {
 									ticket.putBuiltinValue(fields[i], parseTicketValue(t.nextToken()));
 								}
 							} catch (NumberFormatException e) {
-								StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.PLUGIN_ID,
+								StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
 										"Error parsing response: '" + line + "'", e));
 							}
 						}
