@@ -1179,13 +1179,15 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 	}
 
 	private String credentialsComplete() {
-		if ((needsAnonymousLogin() && !anonymousButton.getSelection())
-				&& (repositoryUserNameEditor.getStringValue().trim().equals("") || (repositoryPasswordEditor.getStringValue()
-						.trim().equals("")))) {
+		if ((!needsAnonymousLogin() || !anonymousButton.getSelection()) && isMissingCredentials()) {
 			return "Repository user name and password must not be blank";
 		}
 		return null;
+	}
 
+	private boolean isMissingCredentials() {
+		return repositoryUserNameEditor.getStringValue().trim().equals("")
+				|| repositoryPasswordEditor.getStringValue().trim().equals("");
 	}
 
 	protected String isUniqueUrl(String urlString) {
