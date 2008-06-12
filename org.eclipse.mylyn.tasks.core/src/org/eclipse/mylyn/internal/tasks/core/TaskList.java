@@ -149,6 +149,10 @@ public class TaskList implements ITaskList {
 				container = getValidElement(container);
 			}
 
+			if (container instanceof UnsubmittedTaskContainer && container.isEmpty()) {
+				delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.ROOT));
+			}
+
 			// ensure parent is valid and does not contain task already
 			if (container == null || task.equals(container) || task.getParentContainers().contains(container)) {
 				return false;
