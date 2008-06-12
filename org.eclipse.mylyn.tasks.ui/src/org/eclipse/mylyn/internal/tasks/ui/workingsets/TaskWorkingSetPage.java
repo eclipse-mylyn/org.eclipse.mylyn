@@ -10,8 +10,10 @@ package org.eclipse.mylyn.internal.tasks.ui.workingsets;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -31,6 +33,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -71,6 +74,8 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  */
 public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
+	private static final String LABEL_RESOURCES = "Resources";
+
 	private static final String LABEL_TASKS = "Tasks";
 
 	private final static int SIZING_SELECTION_WIDGET_WIDTH = 50;
@@ -88,6 +93,14 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	private boolean firstCheck = false;
 
 	private final class WorkingSetPageContentProvider implements ITreeContentProvider {
+
+		private ElementCategory tasksContainer;
+
+		private ElementCategory resourcesContainer;
+
+		private final Map<IRepositoryQuery, TaskRepository> queryMap = new HashMap<IRepositoryQuery, TaskRepository>();
+
+		private final Map<IProject, TaskRepositoryProjectMapping> projectMap = new HashMap<IProject, TaskRepositoryProjectMapping>();
 
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof List) {
@@ -120,14 +133,19 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 							}
 						}
 						if (!mappedProjects.isEmpty()) {
-							resourcesRepositoriesContainers.add(new TaskRepositoryProjectMapping(
-									(TaskRepository) container, mappedProjects));
+							TaskRepositoryProjectMapping projectMapping = new TaskRepositoryProjectMapping(
+									(TaskRepository) container, mappedProjects);
+							resourcesRepositoriesContainers.add(projectMapping);
+							for (IProject mappedProject : mappedProjects) {
+								projectMap.put(mappedProject, projectMapping);
+							}
 						}
 					}
 				}
 				resourcesRepositoriesContainers.addAll(unmappedProjects);
-				return new Object[] { new ElementCategory(LABEL_TASKS, taskRepositoriesContainers),
-						new ElementCategory("Resources", resourcesRepositoriesContainers) };
+				tasksContainer = new ElementCategory(LABEL_TASKS, taskRepositoriesContainers);
+				resourcesContainer = new ElementCategory(LABEL_RESOURCES, resourcesRepositoriesContainers);
+				return new Object[] { tasksContainer, resourcesContainer };
 			} else if (parentElement instanceof TaskRepository) {
 				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
 				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager()
@@ -135,6 +153,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						.getRepositoryQueries(((TaskRepository) parentElement).getRepositoryUrl())) {
 					if (element instanceof IRepositoryQuery) {
 						taskContainers.add(element);
+						queryMap.put((IRepositoryQuery) element, (TaskRepository) parentElement);
 					}
 				}
 
@@ -157,7 +176,22 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		}
 
 		public Object getParent(Object element) {
-			return null;
+			if (element instanceof AbstractTaskCategory || element instanceof TaskRepository) {
+				return tasksContainer;
+			} else if (element instanceof IRepositoryQuery) {
+				return queryMap.get(element);
+			} else if (element instanceof TaskRepositoryProjectMapping) {
+				return resourcesContainer;
+			} else if (element instanceof IProject) {
+				Object repository = projectMap.get(element);
+				if (repository != null) {
+					return repository;
+				} else {
+					return resourcesContainer;
+				}
+			} else {
+				return null;
+			}
 		}
 
 		public void dispose() {
@@ -384,8 +418,6 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		treeViewer.setLabelProvider(new DecoratingLabelProvider(new AggregateLabelProvider(), PlatformUI.getWorkbench()
 				.getDecoratorManager()
 				.getLabelDecorator()));
-
-//        tree.setLabelProvider(new TaskElementLabelProvider());
 		treeViewer.setSorter(new CustomSorter());
 
 		ArrayList<Object> containers = new ArrayList<Object>();
@@ -393,15 +425,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			containers.add(repository);
 		}
 
-//		for (AbstractTaskContainer element : TasksUiPlugin.getTaskList().getRootElements()) {
-//			if (!(element instanceof TaskArchive)) {
-//				containers.add(element);
-//			}
-//		}
 		containers.addAll(Arrays.asList(ResourcesPlugin.getWorkspace().getRoot().getProjects()));
 
 		treeViewer.setInput(containers);
-		treeViewer.expandToLevel(2);
 
 		// tree.setComparator(new ResourceComparator(ResourceComparator.NAME));
 
@@ -415,24 +441,6 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				handleCheckStateChange(event);
 			}
 		});
-
-//        tree.addTreeListener(new ITreeViewerListener() {
-//            public void treeCollapsed(TreeExpansionEvent event) {
-//            }
-//
-//            public void treeExpanded(TreeExpansionEvent event) {
-//                final Object element = event.getElement();
-//                if (tree.getGrayed(element) == false) {
-//					BusyIndicator.showWhile(getShell().getDisplay(),
-//                            new Runnable() {
-//                                public void run() {
-//                                    setSubtreeChecked((IContainer) element,
-//                                            tree.getChecked(element), false);
-//                                }
-//                            });
-//				}
-//            }
-//        });
 
 		// Add select / deselect all buttons for bug 46669
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
@@ -467,12 +475,16 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		});
 		setButtonLayoutData(deselectAllButton);
 
+		for (Object object : workingSet.getElements()) {
+			treeViewer.expandToLevel(object, 1);
+		}
 		initializeCheckedState();
+
 		if (workingSet != null) {
 			text.setText(workingSet.getName());
 		}
-		setPageComplete(false);
 
+		setPageComplete(false);
 		Dialog.applyDialogFont(composite);
 	}
 
