@@ -71,9 +71,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 			editor.setReadOnly(true);
 			editor.setDecorationEnabled(false);
 
-			boolean isPriority = attribute.getId().equals(
-					attribute.getTaskData().getAttributeMapper().mapToRepositoryKey(attribute.getParentAttribute(),
-							TaskAttribute.PRIORITY));
+			boolean isPriority = isAttribute(attribute, TaskAttribute.PRIORITY);
 
 			if (showLabel && !isPriority) {
 				editor.createLabelControl(composite, toolkit);
@@ -90,15 +88,24 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 						if (image != null) {
 							Label label = toolkit.createLabel(headerComposite, null);
 							label.setImage(image);
-							GridDataFactory.defaultsFor(label).indent(5, -2).applyTo(label);
+							GridDataFactory.defaultsFor(label).indent(5, -3).applyTo(label);
 						}
 					}
 				}
 			}
 
+			if (isAttribute(attribute, TaskAttribute.DATE_MODIFICATION) && editor instanceof DateAttributeEditor) {
+				((DateAttributeEditor) editor).setShowTime(true);
+			}
+
 			editor.createControl(composite, toolkit);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 		}
+	}
+
+	private boolean isAttribute(TaskAttribute attribute, String id) {
+		return attribute.getId().equals(
+				attribute.getTaskData().getAttributeMapper().mapToRepositoryKey(attribute.getParentAttribute(), id));
 	}
 
 	private void addSummaryText(Composite composite, FormToolkit toolkit) {
@@ -182,8 +189,8 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 		TaskAttribute dateCreation = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_CREATION);
 		addAttribute(headerComposite, toolkit, dateCreation);
 
-//		TaskAttribute dateModified = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
-//		addAttribute(headerComposite, toolkit, dateModified);
+		TaskAttribute dateModified = getTaskData().getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+		addAttribute(headerComposite, toolkit, dateModified);
 	}
 
 	public boolean needsHeader() {

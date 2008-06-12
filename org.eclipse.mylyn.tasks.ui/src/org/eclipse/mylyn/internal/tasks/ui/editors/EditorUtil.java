@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 
 import org.eclipse.jface.resource.JFaceResources;
@@ -41,8 +41,14 @@ import org.eclipse.ui.forms.widgets.Section;
 
 public class EditorUtil {
 
+//	public static final String DATE_FORMAT = "yyyy-MM-dd";
+//
+//	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
+
+	@Deprecated
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 
+	@Deprecated
 	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
 
 	static final String KEY_MARKER = "marker";
@@ -194,11 +200,11 @@ public class EditorUtil {
 	}
 
 	static String formatDate(Date date) {
-		return new SimpleDateFormat(DATE_FORMAT).format(date);
+		return DateFormat.getDateInstance(DateFormat.SHORT).format(date);
 	}
 
 	static String formatDateTime(Date date) {
-		return new SimpleDateFormat(DATE_TIME_FORMAT).format(date);
+		return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date);
 	}
 
 	public static Control getFocusControl(IFormPage page) {

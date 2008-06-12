@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,6 +37,8 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 	private DatePicker datePicker;
 
+	private boolean showTime;
+
 	public DateAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
 	}
@@ -49,9 +50,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, true, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
-			if (getValue() != null) {
-				text.setText(new SimpleDateFormat(EditorUtil.DATE_TIME_FORMAT).format(getValue()));
-			}
+			text.setText(getTextValue());
 			setControl(text);
 		} else {
 			Composite dateWithClearComposite = toolkit.createComposite(composite);
@@ -59,17 +58,10 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			layout.marginWidth = 1;
 			dateWithClearComposite.setLayout(layout);
 
-			String value = "";
-			Date date = getValue();
-			if (date != null) {
-				SimpleDateFormat f = new SimpleDateFormat(EditorUtil.DATE_FORMAT);
-				value = f.format(date);
-			}
-
-			datePicker = new DatePicker(dateWithClearComposite, SWT.BORDER | SWT.FLAT, value, false, 0);
+			datePicker = new DatePicker(dateWithClearComposite, SWT.BORDER | SWT.FLAT, getTextValue(), false, 0);
 			datePicker.setEnabled(!isReadOnly());
 			datePicker.setFont(EditorUtil.TEXT_FONT);
-			datePicker.setDatePattern(EditorUtil.DATE_FORMAT);
+			//datePicker.setDatePattern(EditorUtil.DATE_FORMAT);
 			datePicker.addPickerSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -101,20 +93,41 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 		}
 	}
 
-	public Date getValue() {
-		return getAttributeMapper().getDateValue(getTaskAttribute());
-	}
-
-	public void setValue(Date date) {
-		getAttributeMapper().setDateValue(getTaskAttribute(), date);
-		attributeChanged();
-	}
-
 	@Override
 	protected void decorateIncoming(Color color) {
 		if (datePicker != null) {
 			datePicker.setBackground(color);
 		}
+	}
+
+	public boolean getShowTime() {
+		return showTime;
+	}
+
+	private String getTextValue() {
+		Date date = getValue();
+		if (date != null) {
+			if (getShowTime()) {
+				return EditorUtil.formatDateTime(date);
+			} else {
+				return EditorUtil.formatDate(date);
+			}
+		} else {
+			return "";
+		}
+	}
+
+	public Date getValue() {
+		return getAttributeMapper().getDateValue(getTaskAttribute());
+	}
+
+	public void setShowTime(boolean showTime) {
+		this.showTime = showTime;
+	}
+
+	public void setValue(Date date) {
+		getAttributeMapper().setDateValue(getTaskAttribute(), date);
+		attributeChanged();
 	}
 
 }
