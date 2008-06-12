@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -33,6 +34,8 @@ public class SynchronizationSession implements ISynchronizationSession {
 	private boolean performQueries;
 
 	private Set<ITask> staleTasks;
+
+	private IStatus status;
 
 	private TaskDataManager taskDataManager;
 
@@ -59,6 +62,10 @@ public class SynchronizationSession implements ISynchronizationSession {
 
 	public Set<ITask> getStaleTasks() {
 		return staleTasks;
+	}
+
+	public IStatus getStatus() {
+		return status;
 	}
 
 	public TaskDataManager getTaskDataManager() {
@@ -112,6 +119,10 @@ public class SynchronizationSession implements ISynchronizationSession {
 
 	public void setNeedsPerformQueries(boolean performQueries) {
 		this.performQueries = performQueries;
+	}
+
+	public void setStatus(IStatus status) {
+		this.status = status;
 	}
 
 	public void setTaskRepository(TaskRepository taskRepository) {

@@ -9,17 +9,20 @@
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -166,6 +169,8 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	private final IRepositoryModel tasksModel;
 
+	private final List<IStatus> statuses;
+
 	public SynchronizeQueriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<RepositoryQuery> queries) {
 		super("Synchronizing Queries (" + repository.getRepositoryLabel() + ")");
@@ -175,6 +180,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		this.connector = connector;
 		this.repository = repository;
 		this.queries = queries;
+		this.statuses = new ArrayList<IStatus>();
 	}
 
 	@Override
@@ -217,7 +223,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 				preSynchronization(session, new SubProgressMonitor(monitor, 20));
 
-				if (session.needsPerformQueries()) {
+				if (session.needsPerformQueries() || isUser()) {
 					// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
 					synchronizeQueries(monitor, session);
 				} else {
@@ -239,13 +245,22 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				job.setSession(session);
 				if (!tasksToBeSynchronized.isEmpty()) {
 					Policy.checkCanceled(monitor);
-					job.run(new SubProgressMonitor(monitor, 30));
+					IStatus result = job.run(new SubProgressMonitor(monitor, 30));
+					if (result == Status.CANCEL_STATUS) {
+						throw new OperationCanceledException();
+					}
+					statuses.addAll(job.getStatuses());
 				}
 				monitor.subTask("Receiving related tasks");
 				job.synchronizedTaskRelations(monitor, relationsByTaskId);
 				monitor.worked(10);
 
 				session.setChangedTasks(tasksToBeSynchronized);
+				if (statuses.size() > 0) {
+					Status status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, statuses.toArray(new IStatus[0]),
+							"Query synchronization failed", null);
+					session.setStatus(status);
+				}
 
 				// hook into the connector for synchronization time stamp management
 				postSynchronization(session, new SubProgressMonitor(monitor, 10));
@@ -298,14 +313,12 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
 			connector.preSynchronization(event, monitor);
-			if (!event.needsPerformQueries() && !isUser()) {
-				updateQueryStatus(null);
-				return false;
-			}
+			updateQueryStatus(null);
 			return true;
 		} catch (CoreException e) {
 			// synchronization is unlikely to succeed, inform user and exit
 			updateQueryStatus(e.getStatus());
+			statuses.add(e.getStatus());
 			return false;
 		}
 	}
@@ -319,7 +332,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 		IStatus result = connector.performQuery(repository, repositoryQuery, collector, event, monitor);
 		if (result.getSeverity() == IStatus.CANCEL) {
-			// do nothing
+			throw new OperationCanceledException();
 		} else if (result.isOK()) {
 			if (collector.getResultCount() >= TaskDataCollector.MAX_HITS) {
 				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, MAX_HITS_REACHED + "\n"
@@ -334,6 +347,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			repositoryQuery.setLastSynchronizedStamp(new SimpleDateFormat("MMM d, H:mm:ss").format(new Date()));
 		} else {
 			repositoryQuery.setStatus(result);
+			statuses.add(result);
 		}
 	}
 
@@ -343,6 +357,10 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			repositoryQuery.setSynchronizing(false);
 			taskList.notifyElementChanged(repositoryQuery);
 		}
+	}
+
+	public Collection<IStatus> getStatuses() {
+		return Collections.unmodifiableCollection(statuses);
 	}
 
 }

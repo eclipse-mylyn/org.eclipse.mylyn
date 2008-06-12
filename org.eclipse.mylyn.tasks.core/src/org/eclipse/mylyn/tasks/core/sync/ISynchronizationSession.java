@@ -11,6 +11,7 @@ package org.eclipse.mylyn.tasks.core.sync;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
@@ -25,6 +26,8 @@ public interface ISynchronizationSession {
 	public abstract Set<ITask> getChangedTasks();
 
 	public abstract Object getData();
+
+	public abstract IStatus getStatus();
 
 	public abstract ITaskDataManager getTaskDataManager();
 

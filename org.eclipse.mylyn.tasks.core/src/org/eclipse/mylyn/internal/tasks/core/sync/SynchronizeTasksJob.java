@@ -8,10 +8,12 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -73,6 +75,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private SynchronizationSession session;
 
+	private final List<IStatus> statuses;
+
 	public SynchronizeTasksJob(ITaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<ITask> tasks) {
 		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
@@ -83,6 +87,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		this.taskRepository = taskRepository;
 		this.allTasks = tasks;
 		this.repositoryManager = null;
+		this.statuses = new ArrayList<IStatus>();
 	}
 
 	public SynchronizeTasksJob(ITaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
@@ -94,6 +99,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		this.connector = connector;
 		this.repositoryManager = repositoryManager;
 		this.allTasks = tasks;
+		this.statuses = new ArrayList<IStatus>();
 	}
 
 	@Override
@@ -276,7 +282,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	private void resetStatus(ITask task) {
-		((AbstractTask) task).setErrorStatus(null);
+		((AbstractTask) task).setStatus(null);
 		taskList.notifySynchronizationStateChanged(task);
 	}
 
@@ -384,7 +390,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	private void updateStatus(TaskRepository repository, ITask task, IStatus status) {
-		((AbstractTask) task).setErrorStatus(status);
+		statuses.add(status);
+		((AbstractTask) task).setStatus(status);
 		if (!isUser()) {
 			((AbstractTask) task).setSynchronizing(false);
 		}
@@ -397,6 +404,10 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	public void setSession(SynchronizationSession session) {
 		this.session = session;
+	}
+
+	public Collection<IStatus> getStatuses() {
+		return Collections.unmodifiableCollection(statuses);
 	}
 
 }

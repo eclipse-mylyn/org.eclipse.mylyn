@@ -64,7 +64,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	private SynchronizationState synchronizationState = SynchronizationState.SYNCHRONIZED;
 
 	// transient
-	private IStatus errorStatus = null;
+	private IStatus status = null;
 
 	private boolean stale = false;
 
@@ -174,11 +174,11 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	 * Return the status, such as an error or warning, associated with this task.
 	 */
 	public IStatus getStatus() {
-		return errorStatus;
+		return status;
 	}
 
-	public void setErrorStatus(IStatus status) {
-		this.errorStatus = status;
+	public void setStatus(IStatus status) {
+		this.status = status;
 	}
 
 	public final String getTaskId() {
