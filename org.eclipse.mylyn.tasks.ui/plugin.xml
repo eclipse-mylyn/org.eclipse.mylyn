@@ -257,14 +257,14 @@
           toolbarPath="new"
           tooltip="Synchronize Changed">
          </action>
-    <action
-          class="org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction"
-          icon="icons/etool16/import.gif"
-          id="org.eclipse.mylyn.tasks.ui.tasks.restore"
-          label="Restore Tasks from History..."
-          menubarPath="tasks"
-          style="push">
-    </action>
+	    <action
+	          class="org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction"
+	          icon="icons/etool16/import.gif"
+	          id="org.eclipse.mylyn.tasks.ui.tasks.restore"
+	          label="Restore Tasks from History..."
+	          menubarPath="tasks"
+	          style="push">
+	    </action>
 
   		<action
           class="org.eclipse.mylyn.internal.tasks.ui.actions.ShowTaskRepositoriesViewAction"
@@ -354,7 +354,7 @@
                icon="icons/etool16/query-new.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.clone.query"
                label="Clone Query..."
-               menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/clone"
+               menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/afterRepository"
                tooltip="Clone Repository Query">
          </action>
   <action
@@ -363,7 +363,7 @@
         icon="icons/etool16/task-new.gif"
         id="org.eclipse.mylyn.tasks.ui.actions.task.query"
         label="Clone Task..."
-        menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/clone"
+        menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/afterRepository"
         tooltip="Clone Task">
      <enablement>
 <!--        <and> -->
@@ -380,6 +380,15 @@
 -->
      </enablement>
   </action>
+         
+         <action
+          	class="org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction"
+          	icon="icons/etool16/import.gif"
+          	id="org.eclipse.mylyn.tasks.ui.tasks.restore"
+          	label="Restore Tasks from History..."
+          	menubarPath="org.eclipse.mylyn.tasks.ui.menu.operations/restore"
+          	style="push">
+    	</action>
          
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.QueryExportAction"
@@ -485,7 +494,7 @@
 
   <menu
         id="org.eclipse.mylyn.tasks.ui.menu.operations"
-        label="Operations"
+        label="Import/Export"
         path="operations">
     <separator
            name="clone">
