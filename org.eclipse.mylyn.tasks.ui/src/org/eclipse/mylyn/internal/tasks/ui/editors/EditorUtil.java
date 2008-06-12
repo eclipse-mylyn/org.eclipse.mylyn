@@ -200,11 +200,11 @@ public class EditorUtil {
 	}
 
 	static String formatDate(Date date) {
-		return DateFormat.getDateInstance(DateFormat.SHORT).format(date);
+		return DateFormat.getDateInstance(DateFormat.MEDIUM).format(date);
 	}
 
 	static String formatDateTime(Date date) {
-		return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(date);
+		return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(date);
 	}
 
 	public static Control getFocusControl(IFormPage page) {
