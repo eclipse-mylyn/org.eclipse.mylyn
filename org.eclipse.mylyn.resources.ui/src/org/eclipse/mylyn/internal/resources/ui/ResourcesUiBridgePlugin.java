@@ -49,7 +49,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	}
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.resources.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.resources.ui";
 
 	private static ResourcesUiBridgePlugin INSTANCE;
 
@@ -127,8 +127,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	public List<IResource> getInterestingResources(IInteractionContext context) {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		Collection<IInteractionElement> resourceElements = ContextCore.getContextManager().getActiveDocuments(
-				context);
+		Collection<IInteractionElement> resourceElements = ContextCore.getContextManager().getActiveDocuments(context);
 		for (IInteractionElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);
 			if (resource != null) {

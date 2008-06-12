@@ -147,7 +147,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 								manager.add((ActiveChangeSet) contextChangeSet);
 							}
 						} catch (Exception e) {
-							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 									"Could not restore change set", e));
 						}
 					}
@@ -205,7 +205,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, "Could not update change set", e));
+			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Could not update change set", e));
 		}
 	}
 
@@ -255,7 +255,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 						"Could not manipulate change set resources", e));
 			}
 		}

@@ -33,7 +33,7 @@ import org.osgi.framework.BundleContext;
  */
 public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.team.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.team.ui";
 
 	private static FocusedTeamUiPlugin INSTANCE;
 
@@ -82,7 +82,7 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 						}
 					}
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+					StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 							"Mylyn Team start failed", e));
 				}
 			}

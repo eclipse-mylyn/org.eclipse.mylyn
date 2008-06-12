@@ -81,7 +81,7 @@ public class InteractionContextExternalizer {
 
 		} catch (IOException e) {
 			// TODO: propagate exception?
-			StatusHandler.fail(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not write: "
+			StatusHandler.fail(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not write: "
 					+ file.getAbsolutePath(), e));
 		} finally {
 			try {
@@ -92,7 +92,7 @@ public class InteractionContextExternalizer {
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Unable to write context "
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Unable to write context "
 						+ context.getHandleIdentifier(), e));
 			}
 		}
@@ -139,7 +139,7 @@ public class InteractionContextExternalizer {
 			}
 		} catch (Exception e) {
 			// TODO: propagate exception instead?
-			StatusHandler.fail(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not read: "
+			StatusHandler.fail(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not read: "
 					+ file.getAbsolutePath(), e));
 		}
 		return null;

@@ -77,7 +77,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN,
 						"Could not get problems view viewer", e));
 			}
 		}

@@ -17,7 +17,7 @@ import org.osgi.framework.BundleContext;
  */
 public class IdeUiBridgePlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.ide";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.ide";
 
 	private static IdeUiBridgePlugin INSTANCE;
 

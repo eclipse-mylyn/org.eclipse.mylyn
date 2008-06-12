@@ -125,7 +125,7 @@ public class XmlNodeHelper {
 				contents += s;
 			}
 		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.PLUGIN_ID, "Could not get contents", e));
+			StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN, "Could not get contents", e));
 		}
 		return contents;
 	}

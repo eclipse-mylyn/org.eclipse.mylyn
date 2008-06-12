@@ -43,7 +43,7 @@ public class TeamPropertiesLinkProvider {
 		}
 
 		IScopeContext projectScope = new ProjectScope(resource.getProject());
-		IEclipsePreferences projectNode = projectScope.getNode(FocusedTeamUiPlugin.PLUGIN_ID);
+		IEclipsePreferences projectNode = projectScope.getNode(FocusedTeamUiPlugin.ID_PLUGIN);
 		if (projectNode != null) {
 			return projectNode.get(PROJECT_COMMIT_COMMENT_TEMPLATE, null);
 		}
@@ -56,7 +56,7 @@ public class TeamPropertiesLinkProvider {
 		}
 
 		IScopeContext projectScope = new ProjectScope(resource.getProject());
-		IEclipsePreferences projectNode = projectScope.getNode(FocusedTeamUiPlugin.PLUGIN_ID);
+		IEclipsePreferences projectNode = projectScope.getNode(FocusedTeamUiPlugin.ID_PLUGIN);
 		if (projectNode != null) {
 			if (commitCommentTemplate != null) {
 				projectNode.put(PROJECT_COMMIT_COMMENT_TEMPLATE, commitCommentTemplate);
@@ -67,7 +67,7 @@ public class TeamPropertiesLinkProvider {
 				projectNode.flush();
 				return true;
 			} catch (BackingStoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 						"Failed to save commit comment template for project", e));
 			}
 		}

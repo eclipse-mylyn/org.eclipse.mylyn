@@ -152,13 +152,13 @@ public class InteractionContextManager implements IInteractionContextManager {
 				suppressListenerNotification = true;
 				internalActivateContext(context);
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, "Could not load context"));
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not load context"));
 			}
 			suppressListenerNotification = false;
 			contextListeners.addAll(waitingContextListeners);
 			waitingContextListeners.clear();
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not activate context", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not activate context", t));
 		}
 	}
 
@@ -189,7 +189,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				activityEvents.clear();
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
 					"Error during meta activity collapse", e));
 		}
 	}
@@ -369,7 +369,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 					try {
 						listener.contextDeactivated(context);
 					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
+						StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
 								"Context listener failed: " + listener.getClass().getCanonicalName(), e));
 					}
 				}
@@ -383,7 +383,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 //			saveActivityMetaContext();
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not deactivate context", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not deactivate context", t));
 		}
 	}
 
@@ -582,7 +582,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			try {
 				listener.contextActivated(context);
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: "
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Context listener failed: "
 						+ listener.getClass().getCanonicalName(), e));
 			}
 		}
@@ -693,7 +693,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 		} else {
 			resetActivityMetaContext();
-			StatusHandler.log(new Status(IStatus.INFO, ContextCorePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.INFO, ContextCorePlugin.ID_PLUGIN,
 					"No context store installed, not restoring activity context."));
 		}
 	}
@@ -714,7 +714,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			contextStore.saveContext(collapseActivityMetaContext(context),
 					InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not save activity history",
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not save activity history",
 					t));
 		} finally {
 			metaContextLock.release();
@@ -869,7 +869,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				changed.add(element);
 				listener.interestChanged(changed);
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Context listener failed: "
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Context listener failed: "
 						+ listener.getClass().getCanonicalName(), t));
 			}
 		}

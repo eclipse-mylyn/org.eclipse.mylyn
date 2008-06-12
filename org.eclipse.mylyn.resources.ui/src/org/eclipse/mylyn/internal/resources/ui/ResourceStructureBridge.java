@@ -85,7 +85,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 					}
 					return childHandles;
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, ""
+					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN, ""
 							+ "Could not get child", e));
 				}
 			} else if (resource instanceof IFile) {
@@ -204,7 +204,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 			}
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
 					"Could not find element for: \"" + object + "\"", t));
 			return null;
 		}

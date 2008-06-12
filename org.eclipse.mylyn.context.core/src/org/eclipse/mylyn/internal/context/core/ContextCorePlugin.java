@@ -39,7 +39,7 @@ import org.osgi.framework.BundleContext;
  */
 public class ContextCorePlugin extends Plugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.core";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.core";
 
 	private final Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
 
@@ -140,7 +140,7 @@ public class ContextCorePlugin extends Plugin {
 				provider.stopAllRunningJobs();
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Mylyn Core stop failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Mylyn Core stop failed", e));
 		}
 	}
 
@@ -345,7 +345,7 @@ public class ContextCorePlugin extends Plugin {
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (!(object instanceof AbstractContextStructureBridge)) {
-					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 							"Could not load bridge: " + object.getClass().getCanonicalName() + " must implement "
 									+ AbstractContextStructureBridge.class.getCanonicalName()));
 					return;
@@ -360,7 +360,7 @@ public class ContextCorePlugin extends Plugin {
 				}
 				ContextCorePlugin.getDefault().addStructureBridge(bridge);
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 						"Could not load bridge extension", e));
 			}
 		}
@@ -373,7 +373,7 @@ public class ContextCorePlugin extends Plugin {
 					ContextCorePlugin.getDefault().addRelationProvider(contentType, relationProvider);
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 						"Could not load relation provider", e));
 			}
 		}

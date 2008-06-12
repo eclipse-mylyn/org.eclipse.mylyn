@@ -119,7 +119,7 @@ public class CompositeContextElement implements IInteractionElement {
 		if (edges.size() == 0) {
 			return null;
 		} else if (edges.size() > 1) {
-			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 					"Multiple edges found in composite, not supported"));
 		}
 		return edges.iterator().next();

@@ -37,7 +37,7 @@ public class FocusedTeamExtensionPointReader {
 	private static final String EXT_POINT_TEAM_REPOSITORY_PROVIDER = "changeSets";
 
 	public void readExtensions() {
-		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamUiPlugin.PLUGIN_ID,
+		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamUiPlugin.ID_PLUGIN,
 				EXT_POINT_TEAM_REPOSITORY_PROVIDER);
 		IExtension[] extensions = teamProvider.getExtensions();
 		for (IExtension extension : extensions) {
@@ -49,7 +49,7 @@ public class FocusedTeamExtensionPointReader {
 						AbstractActiveChangeSetProvider provider = (AbstractActiveChangeSetProvider) element.createExecutableExtension(ATTR_CLASS);
 						FocusedTeamUiPlugin.getDefault().addActiveChangeSetProvider(provider);
 					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 								MessageFormat.format(
 										"Error while initializing repository contribution {0} from plugin {1}.",
 										element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));
@@ -66,7 +66,7 @@ public class FocusedTeamExtensionPointReader {
 						AbstractContextChangeSetManager manager = (AbstractContextChangeSetManager) element.createExecutableExtension(ATTR_CLASS);
 						FocusedTeamUiPlugin.getDefault().addContextChangeSetManager(manager);
 					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 								MessageFormat.format(
 										"Error while initializing repository contribution {0} from plugin {1}.",
 										element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));

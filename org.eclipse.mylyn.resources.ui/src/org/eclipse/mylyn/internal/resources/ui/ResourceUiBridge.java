@@ -60,7 +60,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 				IDE.openEditor(activePage, file, activate);
 			}
 		} catch (PartInitException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
 					"Failed to open editor for: \"" + file + "\"", e));
 		}
 	}

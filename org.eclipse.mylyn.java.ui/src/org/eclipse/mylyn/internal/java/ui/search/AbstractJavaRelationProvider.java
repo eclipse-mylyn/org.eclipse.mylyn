@@ -355,7 +355,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Java search failed", t));
 			}
 
-			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, IStatus.OK,
+			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, IStatus.OK,
 					"could not run Java search", null);
 			notifySearchCompleted(null);
 			return status;

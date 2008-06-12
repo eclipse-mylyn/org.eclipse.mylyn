@@ -354,7 +354,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 				}
 				return Status.OK_STATUS;
 			} catch (Throwable t) {
-				return new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, 0, "Skipped XML search", null);
+				return new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, 0, "Skipped XML search", null);
 			}
 		}
 

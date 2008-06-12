@@ -59,7 +59,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 			transformer.transform(new SAXSource(new SaxWriter(), new InteractionContextInputSource(context)),
 					new StreamResult(outputStream));
 		} catch (TransformerException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Could not write context", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not write context", e));
 			throw new IOException(e.getMessage());
 		}
 	}

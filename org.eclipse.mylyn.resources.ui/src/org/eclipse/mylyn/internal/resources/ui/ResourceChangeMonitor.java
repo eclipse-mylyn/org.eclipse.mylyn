@@ -74,7 +74,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 			ResourcesUi.addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
 			ResourcesUi.addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
 					"Could not accept marker visitor", e));
 		}
 	}

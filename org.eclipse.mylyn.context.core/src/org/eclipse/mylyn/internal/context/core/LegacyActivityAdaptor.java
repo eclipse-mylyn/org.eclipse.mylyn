@@ -57,7 +57,7 @@ public class LegacyActivityAdaptor {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Error parsing interaction event",
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Error parsing interaction event",
 					t));
 		}
 		return event;

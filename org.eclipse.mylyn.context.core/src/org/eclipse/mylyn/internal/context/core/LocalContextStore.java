@@ -147,7 +147,7 @@ public class LocalContextStore implements IContextStore {
 				addToCache(context);
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "could not save context", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "could not save context", t));
 		} finally {
 			if (!wasPaused) {
 				// FIXME this should not reference the context manager
@@ -179,44 +179,14 @@ public class LocalContextStore implements IContextStore {
 		}
 	}
 
-	/**
-	 * Consider deleting
-	 * 
-	 * @param sourceContextFile
-	 * @param targetcontextHandle
-	 * @return
-	 */
-	@Deprecated
-	public boolean copyContext(File sourceContextFile, String targetcontextHandle) {
-		if (sourceContextFile.exists()
-				&& sourceContextFile.getName().endsWith(InteractionContextManager.CONTEXT_FILE_EXTENSION)) {
-			// FIXME this should not reference the ContextCore
-			IInteractionContext context = externalizer.readContextFromXml("temp", sourceContextFile,
-					ContextCore.getCommonContextScaling());
-			if (context == null) {
-				return false;
-			}
-		}
-
-		File targetContextFile = getFileForContext(targetcontextHandle);
-		targetContextFile.delete();
-		try {
-			// FIXME this implementation is broken: it does not refactor the context handle
-			copy(sourceContextFile, targetContextFile);
-			contextFiles.add(targetContextFile);
-		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID, "Cold not transfer context: "
-					+ targetcontextHandle, e));
-			return false;
-		}
-		return true;
-	}
-
 	public IInteractionContext cloneContext(String sourceContextHandle, String destinationContextHandle) {
 		IInteractionContext context = importContext(destinationContextHandle, getFileForContext(sourceContextHandle));
 		if (context != null) {
 //			source.setHandleIdentifier(destinationContextHandle);
 			saveContext(context);
+		} else {
+			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not copy context from: "
+					+ sourceContextHandle));
 		}
 		return context;
 	}
@@ -236,7 +206,7 @@ public class LocalContextStore implements IContextStore {
 			File contextFile = new File(contextDirectory, encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION);
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
 					"Could not determine path for context", e));
 		}
 		return null;
@@ -253,7 +223,7 @@ public class LocalContextStore implements IContextStore {
 				contextFiles.remove(getFileForContext(handleIdentifier));
 			}
 		} catch (SecurityException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
 					"Could not delete context file, insufficient permissions.", e));
 		}
 	}

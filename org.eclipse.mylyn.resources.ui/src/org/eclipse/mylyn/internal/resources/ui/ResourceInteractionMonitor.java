@@ -56,7 +56,7 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 						}
 					}
 				} catch (Throwable t) {
-					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID,
+					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
 							"Failed to resolve resource edit", t));
 				}
 			}

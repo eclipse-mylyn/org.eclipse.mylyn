@@ -83,7 +83,7 @@ public class SaxContextReader implements IInteractionContextReader {
 			try {
 				closeable.close();
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
 						"Failed to close context input", e));
 			}
 		}

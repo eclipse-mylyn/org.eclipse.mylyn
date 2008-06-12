@@ -77,7 +77,7 @@ public class CommitTemplateManager {
 				return matcher.group(1);
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 					"Problem while parsing task id from comment", e));
 		}
 
@@ -208,7 +208,7 @@ public class CommitTemplateManager {
 				return handler.getValue(task);
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID,
+			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 					"Problem while dispatching to template handler for: " + keyword, e));
 		}
 
@@ -220,7 +220,7 @@ public class CommitTemplateManager {
 	 */
 	private static class ExtensionProcessor {
 		public Object run() {
-			IExtensionPoint extPoint = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamUiPlugin.PLUGIN_ID,
+			IExtensionPoint extPoint = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamUiPlugin.ID_PLUGIN,
 					EXT_POINT_TEMPLATE_HANDLERS);
 			IExtension[] extensions = extPoint.getExtensions();
 			for (IExtension extension : extensions) {
@@ -236,7 +236,7 @@ public class CommitTemplateManager {
 							String msg = MessageFormat.format(
 									"Error while processing template handler contribution {0} from plugin {1}.",
 									element.getAttribute(ATTR_CLASS), element.getContributor().getName());
-							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.PLUGIN_ID, msg, e));
+							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, msg, e));
 						}
 					}
 				}

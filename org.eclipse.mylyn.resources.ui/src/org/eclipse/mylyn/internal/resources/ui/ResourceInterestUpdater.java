@@ -53,7 +53,7 @@ public class ResourceInterestUpdater {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.PLUGIN_ID, ""
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN, ""
 					+ "Could not add resource to context: \"" + resources + "\"", t));
 		}
 	}

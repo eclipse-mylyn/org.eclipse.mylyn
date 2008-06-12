@@ -69,7 +69,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 				InteractionEvent ie = createEventFromAttributes(attributes);
 				context.parseEvent(ie);
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 						"Ignored unexpected activity event", e));
 			}
 			break;
