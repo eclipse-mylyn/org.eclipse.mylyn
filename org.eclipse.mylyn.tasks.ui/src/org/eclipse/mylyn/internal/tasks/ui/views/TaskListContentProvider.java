@@ -122,18 +122,10 @@ public class TaskListContentProvider extends AbstractTaskListContentProvider {
 	}
 
 	private boolean selectContainer(ITaskContainer container) {
-//		if (container instanceof ScheduledTaskContainer) {
-//			ScheduledTaskContainer scheduleContainer = (ScheduledTaskContainer) container;
-//			if (TasksUiPlugin.getTaskActivityManager().isWeekDay(scheduleContainer)
-//					&& (scheduleContainer.isPresent() || scheduleContainer.isFuture())) {
-//				return true;
-//			} else if (taskListView.isFocusedMode()) {
-//				return false;
-//			}
-//		}
-
-		if (filter(null, container)) {
-			return false;
+		if (containsNoFilterText((this.taskListView.getFilteredTree().getFilterControl()).getText())) {
+			if (filter(null, container)) {
+				return false;
+			}
 		}
 		return true;
 	}
