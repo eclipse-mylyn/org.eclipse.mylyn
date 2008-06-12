@@ -81,7 +81,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		ContextCore.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
 
 		assertTrue(ContextCorePlugin.getContextStore().getContextDirectory().exists());
-		ContextCorePlugin.getContextStore().saveContext(mockContext.getHandleIdentifier());
+		ContextCorePlugin.getContextStore().saveContext(mockContext);
 		assertTrue(ContextCore.getContextManager().hasContext(task.getHandleIdentifier()));
 
 		File outFile = new File(dest + File.separator + "local-task.xml.zip");

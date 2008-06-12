@@ -80,7 +80,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		// Save the context file and check that it exists
 		assertTrue(ContextCorePlugin.getContextStore().getContextDirectory().exists());
-		ContextCorePlugin.getContextStore().saveContext(mockContext.getHandleIdentifier());
+		ContextCorePlugin.getContextStore().saveContext(mockContext);
 		File taskFile = ContextCorePlugin.getContextStore().getFileForContext(task1.getHandleIdentifier());
 		assertTrue(ContextCore.getContextManager().hasContext(task1.getHandleIdentifier()));
 		assertTrue(taskFile.exists());
