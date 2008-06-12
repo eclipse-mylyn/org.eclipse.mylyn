@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
@@ -65,7 +66,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		super.tearDown();
 	}
 
-	public void testTaskContextExport() throws IOException {
+	public void testTaskContextExport() throws IOException, CoreException {
 
 		LocalTask task = TasksUiInternal.createNewLocalTask("Test local task");
 		TaskList taskList = TasksUiPlugin.getTaskList();
@@ -125,7 +126,8 @@ public class TaskExportImportTest extends AbstractContextTest {
 		for (AbstractTask loadedTask : tasks) {
 			taskList.addTask(loadedTask);
 		}
-		ContextCorePlugin.getContextStore().importContext(loadedContext);
+		ContextCore.getContextStore().importContext(task.getHandleIdentifier(), outFile);
+//		ContextCorePlugin.getContextStore().importContext(loadedContext);
 
 		// check that context was imported and is the same as original one
 		IInteractionContext savedContext = ContextCorePlugin.getContextStore().loadContext(task.getHandleIdentifier());

@@ -709,17 +709,22 @@ public class TasksUiInternal {
 			loadedTask.setActive(false);
 
 			TaskList taskList = TasksUiPlugin.getTaskList();
-			if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
-				boolean confirmed = MessageDialog.openConfirm(shell, "Import Task", "Task '" + loadedTask.getSummary()
-						+ "' already exists. Do you want to override it's context with the source?");
-				if (confirmed) {
-					//					ContextCore.getContextStore().importContext(taskContexts.get(loadedTask));
+
+			try {
+				if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
+					boolean confirmed = MessageDialog.openConfirm(shell, "Import Task", "Task '"
+							+ loadedTask.getSummary()
+							+ "' already exists. Do you want to override it's context with the source?");
+					if (confirmed) {
+						ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
+					}
+				} else {
 					ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
+					getTaskList().addTask(loadedTask);
 				}
-			} else {
-				//				ContextCore.getContextStore().importContext(taskContexts.get(loadedTask));
-				ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
-				getTaskList().addTask(loadedTask);
+			} catch (CoreException e) {
+				StatusHandler.log(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
+						"Task context not found for import", e));
 			}
 		}
 
