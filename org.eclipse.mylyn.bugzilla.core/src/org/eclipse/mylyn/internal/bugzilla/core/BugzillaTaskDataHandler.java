@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,6 +58,15 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 					}
 				}
 				// Old actions not saved so recreate them upon migration
+				// delete legacy operations:
+				Set<TaskAttribute> operationsToRemove = new HashSet<TaskAttribute>();
+				for (TaskAttribute attribute : data.getAttributeMapper().getAttributesByType(data,
+						TaskAttribute.TYPE_OPERATION)) {
+					operationsToRemove.add(attribute);
+				}
+				for (TaskAttribute taskAttribute : operationsToRemove) {
+					data.getRoot().removeAttribute(taskAttribute.getId());
+				}
 				RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
 				if (configuration != null) {
 					configuration.addValidOperations(data);
