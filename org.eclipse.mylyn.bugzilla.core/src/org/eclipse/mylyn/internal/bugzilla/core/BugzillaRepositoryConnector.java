@@ -457,7 +457,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
-			if (event.isFullSynchronization()) {
+			if (event.isFullSynchronization() && event.getStatus() == null) {
 				event.getTaskRepository().setSynchronizationTimeStamp(getSynchronizationTimestamp(event));
 			}
 		} finally {
