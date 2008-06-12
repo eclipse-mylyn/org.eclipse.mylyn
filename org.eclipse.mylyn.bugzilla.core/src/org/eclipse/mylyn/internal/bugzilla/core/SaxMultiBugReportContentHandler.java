@@ -234,6 +234,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			attachmentAttribute = repositoryTaskData.getRoot().createAttribute(
 					TaskAttribute.PREFIX_ATTACHMENT + parsedText);
 			attachment = TaskAttachmentMapper.createFrom(attachmentAttribute);
+			attachment.setLength(new Long(-1));
 			attachment.setAttachmentId(parsedText);
 			attachment.setPatch(isPatch);
 			attachment.setDeprecated(isDeprecated);

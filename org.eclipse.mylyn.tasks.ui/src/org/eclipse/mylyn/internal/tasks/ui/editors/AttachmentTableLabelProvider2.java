@@ -87,7 +87,11 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 //		case 2:
 //			return attachment.getContentType();
 		case 2:
-			return sizeFormatter.format(attachment.getLength());
+			Long length = attachment.getLength();
+			if (length < 0) {
+				return "-";
+			}
+			return sizeFormatter.format(length);
 		case 3:
 			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : "";
 		case 4:
