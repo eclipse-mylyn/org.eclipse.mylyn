@@ -11,7 +11,6 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.bugzilla.tests.TaskListStandaloneTest;
 import org.eclipse.mylyn.context.tests.ContextTest;
 import org.eclipse.mylyn.context.tests.DegreeOfInterestTest;
 
@@ -27,7 +26,8 @@ public class AllStandaloneTests {
 		// suite.addTestSuite(ContextExternalizerTest.class);
 		suite.addTestSuite(DegreeOfInterestTest.class);
 		suite.addTestSuite(ContextTest.class);
-		suite.addTestSuite(TaskListStandaloneTest.class);
+		// XXX: refactor
+		// suite.addTestSuite(TaskListStandaloneTest.class);
 		// $JUnit-END$
 		return suite;
 	}
