@@ -168,6 +168,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				public void run() {
 					try {
 						if (job.getStatus() == null) {
+							TasksUiInternal.synchronizeRepository(getTaskRepository(), false);
 							if (job.getTask().equals(getTask())) {
 								refreshFormContent();
 							} else {
