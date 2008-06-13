@@ -185,7 +185,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		if (viewPart == null) {
 			if (this instanceof IWorkbenchWindowActionDelegate) {
 				if (!PlatformUI.getWorkbench().isClosing()) {
-					throw new RuntimeException("not supported on IWorkbenchWindowActionDelegate");
+					// ignore, could be called from the Configure Perspective dialog, see bug 2308532
 				}
 			} else {
 				throw new RuntimeException("error: viewPart is null");
