@@ -475,8 +475,12 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		});
 		setButtonLayoutData(deselectAllButton);
 
-		for (Object object : workingSet.getElements()) {
-			treeViewer.expandToLevel(object, 1);
+		if (workingSet != null) {
+			for (Object object : workingSet.getElements()) {
+				treeViewer.expandToLevel(object, 1);
+			}
+		} else {
+			treeViewer.expandToLevel(2);
 		}
 		initializeCheckedState();
 
