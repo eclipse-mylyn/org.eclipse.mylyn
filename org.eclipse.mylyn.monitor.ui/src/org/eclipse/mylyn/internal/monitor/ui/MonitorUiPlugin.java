@@ -81,6 +81,8 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public static final String OBFUSCATED_LABEL = "[obfuscated]";
 
+	public static final String PREF_USER_ACTIVITY_ENABLED = "org.eclipse.mylyn.monitor.user.activity.enabled";
+
 	private IWorkbenchWindow launchingWorkbenchWindow = null;
 
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
@@ -95,6 +97,13 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 							ActivityContextManager.ACTIVITY_TIMEOUT));
 				} else {
 					activityContextManager.setInactivityTimeout(0);
+				}
+
+			} else if (event.getProperty().equals(PREF_USER_ACTIVITY_ENABLED)) {
+				if (getPreferenceStore().getBoolean(PREF_USER_ACTIVITY_ENABLED)) {
+					activityContextManager.start();
+				} else {
+					activityContextManager.stop();
 				}
 
 			}
@@ -409,7 +418,10 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
 			activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
 					ActivityContextManager.ACTIVITY_TIMEOUT));
-			activityContextManager.start();
+
+			if (getPreferenceStore().getBoolean(PREF_USER_ACTIVITY_ENABLED)) {
+				activityContextManager.start();
+			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e));
 		}
