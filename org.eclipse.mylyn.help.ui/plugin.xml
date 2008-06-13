@@ -12,19 +12,6 @@
       </toc>
    </extension>
   
-   <extension point="org.eclipse.ui.commands">
-   <category
-         id="org.eclipse.mylyn.help.ui.commands"
-         name="Tasks Help">
-   </category>
-	  <command
-         categoryId="org.eclipse.mylyn.help.ui.commands"
-         description="Show Tasks UI Legend"
-         id="org.eclipse.mylyn.doc.legend.show"
-         name="Show Tasks UI Legend">
-      </command>
-   </extension>
-   
    <extension
          point="org.eclipse.ui.intro.configExtension">
       <configExtension
@@ -65,21 +52,5 @@
          </description>
       </cheatsheet>
    </extension>
-   <extension
-         point="org.eclipse.ui.viewActions">
-      <viewContribution
-            id="org.eclipse.mylyn.tasks.ui.views.tasks.help.contribution"
-            targetID="org.eclipse.mylyn.tasks.ui.views.tasks">
-         <action
-               class="org.eclipse.mylyn.internal.help.ui.actions.ShowMylynLegendAction"
-               icon="icons/etool16/icons-legend.gif"
-               id="org.eclipse.mylyn.doc.legend.show.action"
-               label="Show UI Legend"
-               menubarPath="additions"
-               style="push"
-               tooltip="Show UI Legend">
-         </action>
-      </viewContribution>
-   </extension> 
   
 </plugin>

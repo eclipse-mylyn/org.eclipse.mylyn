@@ -3,8 +3,8 @@
 	<extensionContent id="org.eclipse.mylyn" name="Mylyn"
 		style="css/whatsnew.css" path="whatsnew/@">
 		<group id="content-group" style-id="content-group">
-			<link label="Task-focused interface"
-				url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.mylyn.help.ui/doc/new.html"
+			<link label="Mylyn"
+				url="http://www.eclipse.org/mylyn/new/"
 				id="mylyn-noteworthy" style-id="content-link">
 				<text>
 					Find out the significant changes made to Mylyn
@@ -13,3 +13,7 @@
 		</group>
 	</extensionContent>
 </introContent>
+
+<!-- 
+	url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.mylyn.help.ui/doc/new.html"
+-->

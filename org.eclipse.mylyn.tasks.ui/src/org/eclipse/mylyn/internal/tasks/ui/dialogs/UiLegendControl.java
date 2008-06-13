@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.help.ui.dialogs;
+package org.eclipse.mylyn.internal.tasks.ui.dialogs;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,7 +51,7 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class UiLegendControl extends Composite {
 
-	public static final String TITLE = "Mylyn UI Overview";
+	public static final String TITLE = "Tasks UI Legend";
 
 	private final FormToolkit toolkit;
 
