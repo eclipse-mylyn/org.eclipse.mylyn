@@ -23,7 +23,6 @@
          <sequence>
             <element ref="connectorCore"/>
             <element ref="connectorUi" minOccurs="0" maxOccurs="1"/>
-            <element ref="taskListFactory" minOccurs="0" maxOccurs="1"/>
             <element ref="taskListMigrator" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
@@ -31,46 +30,6 @@
                <documentation>
                   
                </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="id" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="name" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute translatable="true"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <element name="taskListFactory">
-      <annotation>
-         <appinfo>
-            <meta.element labelAttribute="name" deprecated="true"/>
-         </appinfo>
-         <documentation>
-            (no description available)
-         </documentation>
-      </annotation>
-      <complexType>
-         <attribute name="class" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.core.AbstractTaskListFactory:"/>
-               </appinfo>
             </annotation>
          </attribute>
          <attribute name="id" type="string">

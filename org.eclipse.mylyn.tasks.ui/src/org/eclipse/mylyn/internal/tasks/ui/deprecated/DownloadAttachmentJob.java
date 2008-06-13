@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 /**
  * @author Steffen Pingel
  */
+@Deprecated
 public class DownloadAttachmentJob extends Job {
 
 	private static final int BUFFER_SIZE = 1024;

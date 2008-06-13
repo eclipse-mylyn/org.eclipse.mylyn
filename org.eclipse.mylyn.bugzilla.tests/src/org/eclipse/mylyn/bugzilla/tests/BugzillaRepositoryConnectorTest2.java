@@ -53,10 +53,10 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		assertNotNull(taskData);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 		assertEquals(taskNumber, taskData.getTaskId());
-		int numAttached = taskData.getAttributeMapper()
-				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
-				.size();
-		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
+//		int numAttached = taskData.getAttributeMapper()
+//				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+//				.size();
+//		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
 
 		assertNotNull(repository.getUserName());
 		assertNotNull(repository.getPassword());
@@ -252,9 +252,9 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		TaskData taskData = model.getTaskData();
 		assertNotNull(taskData);
 
-		int numComments = taskData.getAttributeMapper()
-				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
-				.size();
+//		int numComments = taskData.getAttributeMapper()
+//				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+//				.size();
 
 		// Modify it
 		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();

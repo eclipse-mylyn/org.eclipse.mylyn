@@ -43,7 +43,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -161,11 +160,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private RepositoryTemplateManager repositoryTemplateManager;
 
+	@Deprecated
 	private final Set<AbstractTaskEditorFactory> taskEditorFactories = new HashSet<AbstractTaskEditorFactory>();
 
 	private final Set<AbstractTaskEditorPageFactory> taskEditorPageFactories = new HashSet<AbstractTaskEditorPageFactory>();
-
-	private final Set<IHyperlinkDetector> hyperlinkDetectors = new HashSet<IHyperlinkDetector>();
 
 	private final TreeSet<AbstractTaskRepositoryLinkProvider> repositoryLinkProviders = new TreeSet<AbstractTaskRepositoryLinkProvider>(
 			new OrderComparator());

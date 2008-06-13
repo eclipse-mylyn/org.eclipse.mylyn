@@ -31,6 +31,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Steffen Pingel
  */
+@Deprecated
 public class CopyAttachmentToClipboardJob extends Job {
 
 	private final RepositoryAttachment attachment;

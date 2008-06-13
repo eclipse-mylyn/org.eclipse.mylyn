@@ -29,9 +29,9 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
@@ -86,8 +86,6 @@ import org.eclipse.ui.forms.widgets.Section;
 public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
-
-	private static final String LABEL_CUSTOM_FIELD = "Custom Fields";
 
 	protected Text keywordsText;
 
@@ -317,12 +315,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (taskData == null) {
 			return false;
 		}
-		String customAttributeKeys[] = { BugzillaAttribute.BUG_FILE_LOC.getKey(),
-				BugzillaAttribute.DEPENDSON.getKey(), BugzillaAttribute.BLOCKED.getKey(),
-				BugzillaAttribute.KEYWORDS.getKey(), BugzillaAttribute.VOTES.getKey(),
-				BugzillaAttribute.REPORTER_ACCESSIBLE.getKey(),
-				BugzillaAttribute.CCLIST_ACCESSIBLE.getKey(),
-				BugzillaAttribute.ESTIMATED_TIME.getKey(),
+		String customAttributeKeys[] = { BugzillaAttribute.BUG_FILE_LOC.getKey(), BugzillaAttribute.DEPENDSON.getKey(),
+				BugzillaAttribute.BLOCKED.getKey(), BugzillaAttribute.KEYWORDS.getKey(),
+				BugzillaAttribute.VOTES.getKey(), BugzillaAttribute.REPORTER_ACCESSIBLE.getKey(),
+				BugzillaAttribute.CCLIST_ACCESSIBLE.getKey(), BugzillaAttribute.ESTIMATED_TIME.getKey(),
 				BugzillaAttribute.REMAINING_TIME.getKey(), BugzillaAttribute.ACTUAL_TIME.getKey(),
 				BugzillaAttribute.DEADLINE.getKey(), BugzillaAttribute.STATUS_WHITEBOARD.getKey() };
 		for (String key : customAttributeKeys) {

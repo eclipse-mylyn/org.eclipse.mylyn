@@ -10,12 +10,8 @@
  */
 package org.eclipse.mylyn.bugzilla.deprecated;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.ui.IPersistableElement;
 
 /**
@@ -69,15 +65,15 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 		return bugTask;
 	}
 
-	private void updateOptions(TaskData taskData) {
-		try {
-			if (taskData != null) {
-				RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false,
-						new NullProgressMonitor());
-				config.updateAttributeOptions(taskData);
-			}
-		} catch (Exception e) {
-			// ignore
-		}
-	}
+//	private void updateOptions(TaskData taskData) {
+//		try {
+//			if (taskData != null) {
+//				RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false,
+//						new NullProgressMonitor());
+//				config.updateAttributeOptions(taskData);
+//			}
+//		} catch (Exception e) {
+//			// ignore
+//		}
+//	}
 }

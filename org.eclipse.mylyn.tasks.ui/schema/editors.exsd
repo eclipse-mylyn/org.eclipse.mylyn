@@ -18,7 +18,6 @@
       </annotation>
       <complexType>
          <sequence>
-            <element ref="editorFactory" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="pageFactory" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
@@ -42,33 +41,6 @@
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <element name="editorFactory">
-      <annotation>
-         <appinfo>
-            <meta.element deprecated="true"/>
-         </appinfo>
-      </annotation>
-      <complexType>
-         <attribute name="id" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="class" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory:"/>
                </appinfo>
             </annotation>
          </attribute>
