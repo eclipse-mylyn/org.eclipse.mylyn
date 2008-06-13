@@ -99,7 +99,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	private class EmptyContextDrawer implements Listener {
 
-		private static final String LABEL = "Unfocus or Alt+click";
+		private final String LABEL = getEmptyViewMessage();
 
 		private final Image IMAGE = CommonImages.getImage(TasksUiImages.CONTEXT_FOCUS);
 
@@ -394,9 +394,25 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	public void updateInterestFilter(final boolean on, StructuredViewer viewer) {
 		if (viewer != null) {
 			if (on) {
+				if (viewer instanceof TreeViewer) {
+					Tree tree = ((TreeViewer) viewer).getTree();
+					Listener drawingListener = viewerToDrawerMap.get(viewer);
+					if (drawingListener == null) {
+						EmptyContextDrawer drawer = new EmptyContextDrawer(tree);
+						viewerToDrawerMap.put(viewer, drawer);
+						tree.addListener(SWT.Paint, drawer);
+					}
+				}
 				installInterestFilter(viewer);
 				ContextUiPlugin.getViewerManager().addFilteredViewer(viewer);
 			} else {
+				if (viewer instanceof TreeViewer) {
+					Tree tree = ((TreeViewer) viewer).getTree();
+					EmptyContextDrawer drawer = viewerToDrawerMap.remove(viewer);
+					if (drawer != null) {
+						tree.removeListener(SWT.Paint, drawer);
+					}
+				}
 				ContextUiPlugin.getViewerManager().removeFilteredViewer(viewer);
 				uninstallInterestFilter(viewer);
 			}
@@ -438,16 +454,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		try {
 			viewer.getControl().setRedraw(false);
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
-
-			if (viewer instanceof TreeViewer) {
-				Tree tree = ((TreeViewer) viewer).getTree();
-				Listener drawingListener = viewerToDrawerMap.get(viewer);
-				if (drawingListener == null) {
-					EmptyContextDrawer drawer = new EmptyContextDrawer(tree);
-					viewerToDrawerMap.put(viewer, drawer);
-					tree.addListener(SWT.Paint, drawer);
-				}
-			}
 
 			if (viewPart != null && manageFilters) {
 				Set<ViewerFilter> toAdd = new HashSet<ViewerFilter>();
@@ -493,14 +499,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		try {
 			viewer.getControl().setRedraw(false);
 
-			if (viewer instanceof TreeViewer) {
-				Tree tree = ((TreeViewer) viewer).getTree();
-				EmptyContextDrawer drawer = viewerToDrawerMap.remove(viewer);
-				if (drawer != null) {
-					tree.removeListener(SWT.Paint, drawer);
-				}
-			}
-
 			if (viewPart != null && manageFilters) {
 				if (previousFilters.containsKey(viewer)) {
 					Set<ViewerFilter> filters = new HashSet<ViewerFilter>(previousFilters.get(viewer));
@@ -535,4 +533,11 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		return interestFilter;
 	}
 
+	/**
+	 * @since 3.0
+	 */
+	protected String getEmptyViewMessage() {
+//		return "Unfocus or Alt+click to access elements";
+		return "Empty task context, unfocus or Alt+click";
+	}
 }

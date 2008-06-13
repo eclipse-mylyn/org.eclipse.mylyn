@@ -157,4 +157,8 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 		}
 	}
 
+	@Override
+	protected String getEmptyViewMessage() {
+		return "No tasks scheduled for this week";
+	}
 }

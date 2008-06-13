@@ -27,6 +27,7 @@ import org.eclipse.mylyn.context.core.IImplicitlyIntersting;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.internal.WorkingSet;
 
 /**
  * A generic degree-of-interest viewer filter that can be applied to any StructuredViewer. It figures out whether an
@@ -93,7 +94,7 @@ public class InterestFilter extends ViewerFilter {
 	}
 
 	protected boolean isRootElement(Object object) {
-		return object instanceof IProjectNature || object instanceof IProject;
+		return object instanceof IProjectNature || object instanceof IProject || object instanceof WorkingSet;
 	}
 
 	protected boolean isInteresting(IInteractionElement element) {
