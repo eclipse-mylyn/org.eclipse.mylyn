@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -28,6 +29,12 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Rob Elves
  */
 public class BugzillaVotesEditor extends AbstractAttributeEditor {
+
+	// Copy from <code>TaskEditorAttributePart</code>
+	private static final int LABEL_WIDTH = 100;
+
+	// Copy from TaskEditorAttributePart
+	private static final int COLUMN_GAP = 5;
 
 	public BugzillaVotesEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
@@ -67,6 +74,16 @@ public class BugzillaVotesEditor extends AbstractAttributeEditor {
 						+ getTaskAttribute().getTaskData().getTaskId());
 			}
 		});
+
+		GridData gd = GridDataFactory.fillDefaults()
+				.align(SWT.RIGHT, SWT.CENTER)
+				.hint(LABEL_WIDTH, SWT.DEFAULT)
+				.create();
+
+		gd.horizontalIndent = COLUMN_GAP;
+		gd.widthHint = LABEL_WIDTH + COLUMN_GAP;
+
+		voteControl.setLayoutData(gd);
 
 		hiddenLabel = toolkit.createLabel(composite, "");
 		GridData data = new GridData();
