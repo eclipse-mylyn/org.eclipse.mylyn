@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.trac.core.model;
 /**
  * @author Steffen Pingel
  */
-public class TracComponent extends TracAttribute {
+public class TracComponent extends TracRepositoryAttribute {
 
 	private static final long serialVersionUID = -6181067219323677076L;
 

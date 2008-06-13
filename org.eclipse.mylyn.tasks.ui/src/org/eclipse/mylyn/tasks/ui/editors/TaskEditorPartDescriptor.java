@@ -58,14 +58,7 @@ public abstract class TaskEditorPartDescriptor {
 			return false;
 		}
 		TaskEditorPartDescriptor other = (TaskEditorPartDescriptor) obj;
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
-			return false;
-		}
-		return true;
+		return id.equals(other.id);
 	}
 
 	public String getId() {
@@ -80,7 +73,7 @@ public abstract class TaskEditorPartDescriptor {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + id.hashCode();
 		return result;
 	}
 

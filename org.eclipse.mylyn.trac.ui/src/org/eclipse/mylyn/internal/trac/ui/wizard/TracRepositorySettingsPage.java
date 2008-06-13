@@ -239,7 +239,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	@Override
 	public String getConnectorKind() {
-		return TracCorePlugin.REPOSITORY_KIND;
+		return TracCorePlugin.CONNECTOR_KIND;
 	}
 
 }

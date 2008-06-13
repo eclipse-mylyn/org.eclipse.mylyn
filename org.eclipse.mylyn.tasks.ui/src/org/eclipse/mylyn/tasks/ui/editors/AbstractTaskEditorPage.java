@@ -30,6 +30,7 @@ import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.SafeRunnable;
@@ -285,15 +286,15 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	public static final String ID_PART_COMMENTS = "org.eclipse.mylyn.tasks.ui.editors.parts.comments";
 
-	public static final String ID_PART_DESCRIPTION = "org.eclipse.mylyn.tasks.ui.editors.part.descriptions";
+	public static final String ID_PART_DESCRIPTION = "org.eclipse.mylyn.tasks.ui.editors.parts.descriptions";
 
-	public static final String ID_PART_NEW_COMMENT = "org.eclipse.mylyn.tasks.ui.editors.part.newComment";
+	public static final String ID_PART_NEW_COMMENT = "org.eclipse.mylyn.tasks.ui.editors.parts.newComment";
 
-	public static final String ID_PART_PEOPLE = "org.eclipse.mylyn.tasks.ui.editors.part.people";
+	public static final String ID_PART_PEOPLE = "org.eclipse.mylyn.tasks.ui.editors.parts.people";
 
-	public static final String ID_PART_PLANNING = "org.eclipse.mylyn.tasks.ui.editors.part.planning";
+	public static final String ID_PART_PLANNING = "org.eclipse.mylyn.tasks.ui.editors.parts.planning";
 
-	public static final String ID_PART_SUMMARY = "org.eclipse.mylyn.tasks.ui.editors.part.summary";
+	public static final String ID_PART_SUMMARY = "org.eclipse.mylyn.tasks.ui.editors.parts.summary";
 
 	public static final String PATH_ACTIONS = "actions";
 
@@ -594,7 +595,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		createParts(PATH_PLANNING, editorComposite, descriptors);
 		// two column
 		Composite bottomComposite = toolkit.createComposite(editorComposite);
-		bottomComposite.setLayout(new GridLayout(2, false));
+		bottomComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(bottomComposite);
 		createParts(PATH_ACTIONS, bottomComposite, descriptors);
 		createParts(PATH_PEOPLE, bottomComposite, descriptors);

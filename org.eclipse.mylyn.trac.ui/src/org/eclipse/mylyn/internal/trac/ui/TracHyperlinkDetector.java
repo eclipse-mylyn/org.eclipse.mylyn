@@ -27,7 +27,7 @@ public class TracHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		TaskRepository taskRepository = (TaskRepository) getAdapter(TaskRepository.class);
-		if (taskRepository != null && TracCorePlugin.REPOSITORY_KIND.equals(taskRepository.getConnectorKind())) {
+		if (taskRepository != null && TracCorePlugin.CONNECTOR_KIND.equals(taskRepository.getConnectorKind())) {
 			IDocument document = textViewer.getDocument();
 			if (document == null) {
 				return null;

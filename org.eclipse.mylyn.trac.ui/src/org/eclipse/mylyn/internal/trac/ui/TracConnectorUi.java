@@ -18,28 +18,31 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
-import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
-import org.eclipse.mylyn.internal.trac.core.TracTask;
-import org.eclipse.mylyn.internal.trac.core.TracTask.Kind;
-import org.eclipse.mylyn.internal.trac.ui.wizard.EditTracQueryWizard;
-import org.eclipse.mylyn.internal.trac.ui.wizard.NewTracQueryWizard;
-import org.eclipse.mylyn.internal.trac.ui.wizard.TracCustomQueryPage;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector.TaskKind;
+import org.eclipse.mylyn.internal.trac.ui.wizard.TracQueryPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.LegendElement;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.NewWebTaskWizard;
+import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
  */
 public class TracConnectorUi extends AbstractRepositoryConnectorUi {
+
+	@SuppressWarnings("restriction")
+	public TracConnectorUi() {
+		org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin.getDefault().addSearchHandler(new TracSearchHandler());
+	}
 
 	@Override
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
@@ -58,7 +61,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public ITaskSearchPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
-		return new TracCustomQueryPage(repository);
+		return new TracQueryPage(repository);
 	}
 
 	@Override
@@ -78,47 +81,35 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
-		if (query instanceof TracRepositoryQuery) {
-			return new EditTracQueryWizard(repository, query);
-		} else {
-			return new NewTracQueryWizard(repository);
-		}
+		RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
+		wizard.addPage(new TracQueryPage(repository, query));
+		return wizard;
 	}
 
 	@Override
 	public String getConnectorKind() {
-		return TracCorePlugin.REPOSITORY_KIND;
+		return TracCorePlugin.CONNECTOR_KIND;
 	}
 
 	@Override
 	public ImageDescriptor getTaskKindOverlay(ITask task) {
-		Kind kind = Kind.fromString(task.getTaskKind());
-		if (kind == Kind.DEFECT) {
+		TaskKind taskKind = TaskKind.fromString(task.getTaskKind());
+		if (taskKind == TaskKind.DEFECT) {
 			return TracImages.OVERLAY_DEFECT;
-		} else if (kind == Kind.ENHANCEMENT) {
+		} else if (taskKind == TaskKind.ENHANCEMENT) {
 			return TracImages.OVERLAY_ENHANCEMENT;
-		} else if (kind == Kind.TASK) {
+		} else if (taskKind == TaskKind.TASK) {
 			return null;
 		}
 		return super.getTaskKindOverlay(task);
 	}
 
 	@Override
-	public List<ITask> getLegendItems() {
-		List<ITask> legendItems = new ArrayList<ITask>();
-
-		TracTask defect = new TracTask("", Kind.DEFECT.name(), Kind.DEFECT.toString());
-		defect.setTaskKind(Kind.DEFECT.toString());
-		legendItems.add(defect);
-
-		TracTask enhancement = new TracTask("", Kind.ENHANCEMENT.name(), Kind.ENHANCEMENT.toString());
-		enhancement.setTaskKind(Kind.ENHANCEMENT.toString());
-		legendItems.add(enhancement);
-
-		TracTask task = new TracTask("", Kind.TASK.name(), Kind.TASK.toString());
-		task.setTaskKind(Kind.TASK.toString());
-		legendItems.add(task);
-
+	public List<LegendElement> getLegendElements() {
+		List<LegendElement> legendItems = new ArrayList<LegendElement>();
+		legendItems.add(LegendElement.createTask(TaskKind.DEFECT.toString(), TracImages.OVERLAY_DEFECT));
+		legendItems.add(LegendElement.createTask(TaskKind.ENHANCEMENT.toString(), TracImages.OVERLAY_ENHANCEMENT));
+		legendItems.add(LegendElement.createTask(TaskKind.TASK.toString(), null));
 		return legendItems;
 	}
 

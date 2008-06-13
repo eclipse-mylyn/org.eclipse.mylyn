@@ -6,41 +6,45 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.trac.ui.editor;
+package org.eclipse.mylyn.internal.trac.ui;
 
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.AbstractSearchHandler;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 
-public class TracDuplicateDetector extends AbstractLegacyDuplicateDetector {
+@SuppressWarnings("restriction")
+public class TracSearchHandler extends AbstractSearchHandler {
 
 	@Override
-	public RepositoryQuery getDuplicatesQuery(TaskRepository repository, RepositoryTaskData taskData) {
+	public String getConnectorKind() {
+		return TracCorePlugin.CONNECTOR_KIND;
+	}
+
+	@Override
+	public boolean queryForText(TaskRepository taskRepository, IRepositoryQuery query, TaskData taskData,
+			String searchString) {
 		TracSearchFilter filter = new TracSearchFilter("description");
 		filter.setOperator(CompareOperator.CONTAINS);
-
-		String searchString = AbstractLegacyDuplicateDetector.getStackTraceFromDescription(taskData.getDescription());
-
 		filter.addValue(searchString);
 
 		TracSearch search = new TracSearch();
 		search.addFilter(filter);
 
-		// TODO copied from TracCustomQueryPage.getQueryUrl()
+		// TODO copied from TracQueryPage.getQueryUrl()
 		StringBuilder sb = new StringBuilder();
-		sb.append(repository.getRepositoryUrl());
+		sb.append(taskRepository.getRepositoryUrl());
 		sb.append(ITracClient.QUERY_URL);
 		sb.append(search.toUrl());
 
-		TracRepositoryQuery query = new TracRepositoryQuery(repository.getRepositoryUrl(), sb.toString(),
-				"<Duplicate Search>");
-		return query;
+		query.setUrl(sb.toString());
+
+		return true;
 	}
 
 }

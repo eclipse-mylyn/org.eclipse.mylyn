@@ -6,14 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.trac.core;
+package org.eclipse.mylyn.trac.tests;
 
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 
 /**
  * @author Steffen Pingel
  */
+@Deprecated
 public class TracRepositoryQuery extends RepositoryQuery {
 
 	public TracRepositoryQuery(String repositoryUrl, String queryUrl, String description) {
@@ -27,7 +30,7 @@ public class TracRepositoryQuery extends RepositoryQuery {
 
 	@Override
 	public String getConnectorKind() {
-		return TracCorePlugin.REPOSITORY_KIND;
+		return TracCorePlugin.CONNECTOR_KIND;
 	}
 
 	public String getQueryParameter() {

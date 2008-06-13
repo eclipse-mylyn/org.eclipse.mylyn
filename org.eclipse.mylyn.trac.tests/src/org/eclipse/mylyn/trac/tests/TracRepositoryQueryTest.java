@@ -19,8 +19,6 @@ import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
-import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -34,7 +32,7 @@ public class TracRepositoryQueryTest extends TestCase {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		TaskRepository repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND,
+		TaskRepository repository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
 				TracTestConstants.TEST_TRAC_096_URL);
 		manager.addRepository(repository);
 

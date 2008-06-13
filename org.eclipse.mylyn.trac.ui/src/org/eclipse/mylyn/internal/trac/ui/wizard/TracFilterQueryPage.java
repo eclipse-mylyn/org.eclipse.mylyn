@@ -15,16 +15,16 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyEvent;
@@ -44,17 +44,13 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Steffen Pingel
  */
-public class TracQueryWizardPage extends WizardPage {
+public class TracFilterQueryPage extends AbstractRepositoryQueryPage {
 
 	private static final String TITLE = "New Trac Query";
 
 	private static final String DESCRIPTION = "Add search filters to define query.";
 
 	private static final String TITLE_QUERY_TITLE = "Query Title";
-
-	private final TaskRepository repository;
-
-	private final TracRepositoryQuery query;
 
 	private Text titleText;
 
@@ -65,18 +61,16 @@ public class TracQueryWizardPage extends WizardPage {
 
 	private List<SearchField> searchFields;
 
-	public TracQueryWizardPage(TaskRepository repository, IRepositoryQuery query) {
-		super(TITLE);
-
-		this.repository = repository;
-		this.query = (TracRepositoryQuery) query;
-
+	public TracFilterQueryPage(TaskRepository repository, IRepositoryQuery query) {
+		super(TITLE, repository, query);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 	}
 
-	public TracQueryWizardPage(TaskRepository repository) {
-		this(repository, null);
+	@Override
+	public void applyTo(IRepositoryQuery query) {
+		query.setUrl(getQueryUrl(getTaskRepository().getRepositoryUrl()));
+		query.setSummary(getQueryTitle());
 	}
 
 	public void createControl(Composite parent) {
@@ -97,16 +91,23 @@ public class TracQueryWizardPage extends WizardPage {
 
 		createAddFilterGroup(composite);
 
-		if (query != null) {
-			titleText.setText(query.getSummary());
-			restoreSearchFilterFromQuery(query);
+		if (getQuery() != null) {
+			titleText.setText(getQuery().getSummary());
+			TracSearch search = TracUtils.toTracSearch(getQuery());
+			if (search != null) {
+				restoreWidgetValues(search);
+			}
 		}
 
 		setControl(composite);
 	}
 
-	private void restoreSearchFilterFromQuery(TracRepositoryQuery query) {
-		TracSearch search = query.getTracSearch();
+	@Override
+	public String getQueryTitle() {
+		return (titleText != null) ? titleText.getText() : null;
+	}
+
+	private void restoreWidgetValues(TracSearch search) {
 		List<TracSearchFilter> filters = search.getFilters();
 		for (TracSearchFilter filter : filters) {
 			SearchField field = getSearchField(filter.getFieldName());
@@ -228,10 +229,6 @@ public class TracQueryWizardPage extends WizardPage {
 		sb.append(ITracClient.QUERY_URL);
 		sb.append(search.toUrl());
 		return sb.toString();
-	}
-
-	public TracRepositoryQuery getQuery() {
-		return new TracRepositoryQuery(repository.getRepositoryUrl(), getQueryUrl(repository.getRepositoryUrl()), titleText.getText());
 	}
 
 	private void hideSearchField(SearchField field) {

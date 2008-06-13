@@ -32,7 +32,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
-import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -69,7 +68,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 	}
 
 	protected void init(String url, Version version) {
-		String kind = TracCorePlugin.REPOSITORY_KIND;
+		String kind = TracCorePlugin.CONNECTOR_KIND;
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 
 		repository = new TaskRepository(kind, url);
@@ -84,7 +83,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		AbstractRepositoryConnector abstractConnector = manager.getRepositoryConnector(kind);
 		connector = (TracRepositoryConnector) abstractConnector;
 
-		attachmentHandler = connector.getAttachmentHandler();
+		// FIXME attachmentHandler = connector.getAttachmentHandler();
 	}
 
 	public void testDownloadAttachmentXmlRpc010() throws Exception {

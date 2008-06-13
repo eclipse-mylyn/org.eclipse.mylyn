@@ -7,17 +7,17 @@
          point="org.eclipse.mylyn.tasks.ui.repositories">
       <connectorCore
             class="org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector"
-            id="org.eclipse.mylyn.trac.tasklist.repositories"
-            name="Trac Repository Connector"/>
+            id="trac"
+            name="Trac Connector Core"/>
       <connectorUi
             brandingIcon="icons/eview16/trac-icon.gif"
             class="org.eclipse.mylyn.internal.trac.ui.TracConnectorUi"
-            id="Trac Repository UI"
+            id="trac"
+            name="Trac Connector UI"
             overlayIcon="icons/eview16/overlay-trac.gif"/>
-      <taskListFactory
-            class="org.eclipse.mylyn.internal.trac.ui.TracTaskListFactory"
-            id="org.eclipse.mylyn.trac.tasklist.taskListFactory"
-            name="Trac Externalizer"/>
+      <taskListMigrator
+            class="org.eclipse.mylyn.internal.trac.ui.TracTaskListMigrator">
+      </taskListMigrator>
    </extension>
    <extension
          point="org.eclipse.mylyn.tasks.core.templates">
@@ -31,7 +31,10 @@
    </extension> 
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
-      <editorFactory class="org.eclipse.mylyn.internal.trac.ui.editor.TracTaskEditorFactory"/>
+      <pageFactory
+            class="org.eclipse.mylyn.internal.trac.ui.editor.TracTaskEditorPageFactory"
+            id="org.eclipse.mylyn.trac.ui.pageFactory">
+      </pageFactory>
    </extension>
    <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">

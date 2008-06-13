@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
@@ -30,7 +31,7 @@ public class TracCorePlugin extends Plugin {
 
 	private static TracCorePlugin plugin;
 
-	public final static String REPOSITORY_KIND = "trac";
+	public final static String CONNECTOR_KIND = "trac";
 
 	private TracRepositoryConnector connector;
 
@@ -79,17 +80,17 @@ public class TracCorePlugin extends Plugin {
 		if (e instanceof TracLoginException) {
 			return RepositoryStatus.createLoginError(repository.getRepositoryUrl(), ID_PLUGIN);
 		} else if (e instanceof TracPermissionDeniedException) {
-			return TracStatus.createPermissionDeniedError(repository.getRepositoryUrl(), ID_PLUGIN);
+			return TracUtils.createPermissionDeniedError(repository.getRepositoryUrl(), ID_PLUGIN);
 		} else if (e instanceof InvalidTicketException) {
-			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_IO,
-					"The server returned an unexpected response", e);
+			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, ID_PLUGIN,
+					RepositoryStatus.ERROR_IO, "The server returned an unexpected response", e);
 		} else if (e instanceof TracException) {
 			String message = e.getMessage();
 			if (message == null) {
 				message = "I/O error has occured";
 			}
-			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_IO,
-					message, e);
+			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, ID_PLUGIN,
+					RepositoryStatus.ERROR_IO, message, e);
 		} else if (e instanceof ClassCastException) {
 			return new RepositoryStatus(IStatus.ERROR, ID_PLUGIN, RepositoryStatus.ERROR_IO,
 					"Unexpected server response: " + e.getMessage(), e);

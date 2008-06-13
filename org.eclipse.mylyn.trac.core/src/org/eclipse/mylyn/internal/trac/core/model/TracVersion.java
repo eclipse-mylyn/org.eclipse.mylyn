@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * @author Steffen Pingel
  */
-public class TracVersion extends TracAttribute {
+public class TracVersion extends TracRepositoryAttribute {
 
 	private static final long serialVersionUID = 9018237956062697410L;
 

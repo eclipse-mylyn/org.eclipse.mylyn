@@ -21,10 +21,6 @@ public class TracUiPlugin extends AbstractUIPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.trac.ui";
 
-	public final static String TITLE_MESSAGE_DIALOG = "Mylyn Trac Client";
-
-	public static final String NEW_BUG_EDITOR_ID = ID_PLUGIN + ".newBugEditor";
-
 	private static TracUiPlugin plugin;
 
 	public TracUiPlugin() {
@@ -42,8 +38,7 @@ public class TracUiPlugin extends AbstractUIPlugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		TasksUi.getRepositoryManager().removeListener(
-				TracCorePlugin.getDefault().getConnector().getClientManager());
+		TasksUi.getRepositoryManager().removeListener(TracCorePlugin.getDefault().getConnector().getClientManager());
 
 		plugin = null;
 		super.stop(context);

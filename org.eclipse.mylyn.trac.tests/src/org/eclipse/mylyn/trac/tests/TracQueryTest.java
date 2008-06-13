@@ -11,7 +11,6 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 
 /**

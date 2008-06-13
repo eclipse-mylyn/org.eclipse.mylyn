@@ -40,6 +40,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+/**
+ * @author Steffen Pingel
+ * @author Xiaoyang Guan
+ */
 public class PreviewAttributeEditor extends AbstractAttributeEditor {
 
 	private final RichTextAttributeEditor editor;
@@ -87,26 +91,30 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
-		final Composite sectionComposite = toolkit.createComposite(parent);
-		sectionComposite.setLayout(new GridLayout(1, false));
+		final Composite composite = toolkit.createComposite(parent);
+		composite.setLayout(new GridLayout(1, false));
 
 		// composite with StackLayout to hold text editor and preview widget
-		Composite editorComposite = toolkit.createComposite(sectionComposite);
+		Composite editorComposite = toolkit.createComposite(composite);
 		editorComposite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.widthHint = EditorUtil.MAXIMUM_WIDTH;
 		gd.minimumHeight = EditorUtil.MAXIMUM_HEIGHT;
 		gd.grabExcessHorizontalSpace = true;
 		editorComposite.setLayoutData(gd);
-		final StackLayout descriptionLayout = new StackLayout();
+		StackLayout descriptionLayout = new StackLayout();
 		editorComposite.setLayout(descriptionLayout);
 
 		editor.createControl(editorComposite, toolkit);
 
 		// composite for edit/preview button
-		Composite buttonComposite = toolkit.createComposite(sectionComposite);
+		Composite buttonComposite = toolkit.createComposite(composite);
 		buttonComposite.setLayout(new GridLayout());
 		createPreviewButton(buttonComposite, editor.getViewer(), editorComposite, descriptionLayout, toolkit);
+		descriptionLayout.topControl = editor.getControl();
+
+		toolkit.paintBordersFor(composite);
+		setControl(composite);
 	}
 
 	/**
@@ -157,7 +165,6 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 
 						buttonState = ++buttonState % 2;
 						if (buttonState == 1) {
-
 							setText(previewBrowser, "Loading preview...");
 							previewWiki(previewBrowser, editor.getTextWidget().getText());
 						}

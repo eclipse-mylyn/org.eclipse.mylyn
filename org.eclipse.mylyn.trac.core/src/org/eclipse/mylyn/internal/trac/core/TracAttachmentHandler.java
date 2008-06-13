@@ -13,19 +13,19 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
  * @author Steffen Pingel
  */
-public class TracAttachmentHandler extends AbstractAttachmentHandler {
+public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 
 	private final TracRepositoryConnector connector;
 
@@ -34,18 +34,19 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 	}
 
 	@Override
-	public InputStream getAttachmentAsStream(TaskRepository repository, RepositoryAttachment attachment,
+	public InputStream getContent(TaskRepository repository, ITask task, TaskAttribute attachmentAttribute,
 			IProgressMonitor monitor) throws CoreException {
-		String filename = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
-		if (filename == null) {
-			throw new CoreException(new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_REPOSITORY, "Attachment download from " + repository.getRepositoryUrl()
-							+ " failed, missing attachment filename."));
+		TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
+		String filename = mapper.getFileName();
+		if (filename == null || filename.length() == 0) {
+			throw new CoreException(new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR,
+					TracCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, "Attachment download from "
+							+ repository.getRepositoryUrl() + " failed, missing attachment filename."));
 		}
 
 		try {
 			ITracClient client = connector.getClientManager().getTracClient(repository);
-			int id = Integer.parseInt(attachment.getTaskId());
+			int id = Integer.parseInt(task.getTaskId());
 			return client.getAttachmentData(id, filename, monitor);
 		} catch (Exception e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
@@ -53,11 +54,24 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 	}
 
 	@Override
-	public void uploadAttachment(TaskRepository repository, ITask task, ITaskAttachment attachment,
-			String comment, IProgressMonitor monitor) throws CoreException {
+	public void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source, String comment,
+			TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
 		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
-			throw new CoreException(new RepositoryStatus(repository.getRepositoryUrl(), IStatus.INFO, TracCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_REPOSITORY, "Attachments are not supported by this repository access type"));
+			throw new CoreException(new RepositoryStatus(repository.getRepositoryUrl(), IStatus.INFO,
+					TracCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY,
+					"Attachments are not supported by this repository access type"));
+		}
+
+		String filename = source.getName();
+		String description = source.getDescription();
+		if (attachmentAttribute != null) {
+			TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
+			if (mapper.getFileName() != null) {
+				filename = mapper.getFileName();
+			}
+			if (mapper.getDescription() != null) {
+				description = mapper.getDescription();
+			}
 		}
 
 		monitor.beginTask("Uploading attachment", IProgressMonitor.UNKNOWN);
@@ -65,8 +79,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 			try {
 				ITracClient client = connector.getClientManager().getTracClient(repository);
 				int id = Integer.parseInt(task.getTaskId());
-				client.putAttachmentData(id, attachment.getFilename(), attachment.getDescription(),
-						attachment.createInputStream(), monitor);
+				client.putAttachmentData(id, filename, description, source.createInputStream(monitor), monitor);
 				if (comment != null && comment.length() > 0) {
 					TracTicket ticket = new TracTicket(id);
 					client.updateTicket(ticket, comment, monitor);
@@ -80,29 +93,13 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 	}
 
 	@Override
-	public boolean canDownloadAttachment(TaskRepository repository, ITask task) {
-		if (repository == null) {
-			return false;
-		}
+	public boolean canGetContent(TaskRepository repository, ITask task) {
 		return TracRepositoryConnector.hasAttachmentSupport(repository, task);
 	}
 
 	@Override
-	public boolean canUploadAttachment(TaskRepository repository, ITask task) {
-		if (repository == null) {
-			return false;
-		}
+	public boolean canPostContent(TaskRepository repository, ITask task) {
 		return TracRepositoryConnector.hasAttachmentSupport(repository, task);
-	}
-
-	@Override
-	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment) {
-		return false;
-	}
-
-	@Override
-	public void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
-		throw new UnsupportedOperationException();
 	}
 
 }

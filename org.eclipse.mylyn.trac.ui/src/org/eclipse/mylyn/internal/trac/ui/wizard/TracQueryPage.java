@@ -18,16 +18,14 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracException;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
-import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -57,15 +55,13 @@ import org.eclipse.ui.progress.IProgressService;
  * 
  * @author Steffen Pingel
  */
-public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
+public class TracQueryPage extends AbstractRepositoryQueryPage {
 
 	private static final String TITLE = "Enter query parameters";
 
 	private static final String DESCRIPTION = "If attributes are blank or stale press the Update button.";
 
 	private static final String TITLE_QUERY_TITLE = "Query Title:";
-
-	private final TracRepositoryQuery query;
 
 	private Text titleText;
 
@@ -113,14 +109,13 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	//
 	// private UserSearchField ccField;
 
-	public TracCustomQueryPage(TaskRepository repository, IRepositoryQuery query) {
-		super(TITLE, repository);
-		this.query = (TracRepositoryQuery) query;
+	public TracQueryPage(TaskRepository repository, IRepositoryQuery query) {
+		super(TITLE, repository, query);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 	}
 
-	public TracCustomQueryPage(TaskRepository repository) {
+	public TracQueryPage(TaskRepository repository) {
 		this(repository, null);
 	}
 
@@ -150,9 +145,12 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		createUserGroup(control);
 
-		if (query != null) {
-			titleText.setText(query.getSummary());
-			restoreWidgetValues(query.getTracSearch());
+		if (getQuery() != null) {
+			titleText.setText(getQuery().getSummary());
+			TracSearch search = TracUtils.toTracSearch(getQuery());
+			if (search != null) {
+				restoreWidgetValues(search);
+			}
 		}
 
 		setControl(control);
@@ -308,8 +306,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 				if (getTaskRepository() != null) {
 					updateAttributesFromRepository(true);
 				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-							TracUiPlugin.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Update Attributes Failed",
+							"No repository available, please add one using the Task Repositories view.");
 				}
 			}
 		});
@@ -348,7 +346,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private void initializePage() {
 		updateAttributesFromRepository(false);
-		boolean restored = (query != null);
+		boolean restored = (getQuery() != null);
 		if (inSearchContainer()) {
 			restored |= restoreWidgetValues();
 		}
@@ -359,14 +357,14 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private boolean hasAttributes() {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
+				.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
 		ITracClient client = connector.getClientManager().getTracClient(getTaskRepository());
 		return client.hasAttributes();
 	}
 
 	private void updateAttributesFromRepository(final boolean force) {
 		TracRepositoryConnector connector = (TracRepositoryConnector) TasksUi.getRepositoryManager()
-				.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
+				.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
 		final ITracClient client = connector.getClientManager().getTracClient(getTaskRepository());
 
 		if (!client.hasAttributes() || force) {
@@ -390,8 +388,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 					service.busyCursorWhile(runnable);
 				}
 			} catch (InvocationTargetException e) {
-				TasksUiInternal.displayStatus("Error updating attributes", TracCorePlugin.toStatus(e.getCause(),
-						getTaskRepository()));
+				setErrorMessage(TracCorePlugin.toStatus(e.getCause(), getTaskRepository()).getMessage());
 				return;
 			} catch (InterruptedException e) {
 				return;
@@ -435,16 +432,6 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			}
 		}
 		return search;
-	}
-
-	@Override
-	public TracRepositoryQuery getQuery() {
-		return new TracRepositoryQuery(getTaskRepository().getRepositoryUrl(),
-				getQueryUrl(getTaskRepository().getRepositoryUrl()), getTitleText());
-	}
-
-	private String getTitleText() {
-		return (titleText != null) ? titleText.getText() : "<search>";
 	}
 
 	// public boolean performAction() {
@@ -764,7 +751,8 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public void applyTo(IRepositoryQuery query) {
-		throw new UnsupportedOperationException();
+		query.setUrl(getQueryUrl(getTaskRepository().getRepositoryUrl()));
+		query.setSummary(getQueryTitle());
 	}
 
 }

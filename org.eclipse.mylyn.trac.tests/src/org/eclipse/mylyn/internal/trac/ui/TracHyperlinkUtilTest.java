@@ -23,7 +23,7 @@ public class TracHyperlinkUtilTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, "http://localhost");
+		repository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND, "http://localhost");
 	}
 
 	public void testFindHyperlinksComment() {

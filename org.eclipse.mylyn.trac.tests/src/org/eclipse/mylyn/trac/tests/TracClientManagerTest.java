@@ -29,7 +29,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 public class TracClientManagerTest extends TestCase {
 
 	public void testNullCache() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND,
+		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
 				TracTestConstants.TEST_TRAC_096_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 
@@ -42,7 +42,7 @@ public class TracClientManagerTest extends TestCase {
 	}
 
 	public void testReadCache() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND,
+		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
 				TracTestConstants.TEST_TRAC_096_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 
@@ -55,7 +55,7 @@ public class TracClientManagerTest extends TestCase {
 	}
 
 	public void testWriteCache() throws Exception {
-		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND,
+		TaskRepository taskRepository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
 				TracTestConstants.TEST_TRAC_096_URL);
 		taskRepository.setVersion(Version.TRAC_0_9.name());
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, null, false);

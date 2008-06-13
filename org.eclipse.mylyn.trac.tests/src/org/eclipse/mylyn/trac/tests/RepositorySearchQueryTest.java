@@ -21,7 +21,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -59,7 +58,7 @@ public class RepositorySearchQueryTest extends TestCase {
 	protected void init(String url, Version version) {
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 
-		repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, url);
+		repository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND, url);
 		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
 				credentials.password), false);
 		repository.setTimeZoneId(ITracClient.TIME_ZONE);

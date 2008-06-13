@@ -99,7 +99,7 @@ public final class TaskAttribute {
 
 	public static final String KIND_OPERATION = "task.common.kind.operation";
 
-	public static final String KIND_PEOPLE = "task.common.kind.default";
+	public static final String KIND_PEOPLE = "task.common.kind.people";
 
 	//public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";
 

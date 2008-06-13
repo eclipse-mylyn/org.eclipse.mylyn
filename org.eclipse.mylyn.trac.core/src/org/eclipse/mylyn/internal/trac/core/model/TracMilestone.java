@@ -14,7 +14,7 @@ import java.util.Date;
 /**
  * @author Steffen Pingel
  */
-public class TracMilestone extends TracAttribute implements Serializable {
+public class TracMilestone extends TracRepositoryAttribute implements Serializable {
 
 	private static final long serialVersionUID = 6648558552508886484L;
 
