@@ -27,6 +27,7 @@ import org.w3c.dom.Element;
  * @author Ken Sueda
  * @since 2.0
  */
+@Deprecated
 public abstract class AbstractTaskListFactory {
 
 	public static final String KEY_QUERY = "Query";
@@ -42,7 +43,7 @@ public abstract class AbstractTaskListFactory {
 	 * can be stored in {@link #setAdditionalAttributes(AbstractTask, Element)} method.
 	 * 
 	 * @param task
-	 * 		a task instance to create XML element for
+	 *            a task instance to create XML element for
 	 * 
 	 * @return true if factory can create XML element to store given {@link AbstractTask}.
 	 * 
@@ -59,7 +60,7 @@ public abstract class AbstractTaskListFactory {
 	 * query attributes can be stored in {@link #setAdditionalAttributes(RepositoryQuery, Element)}.
 	 * 
 	 * @param query
-	 * 		a query instance to create an XML element for
+	 *            a query instance to create an XML element for
 	 * 
 	 * @return true if factory can create XML element to store given {@link AbstractTask}.
 	 * 
@@ -72,20 +73,20 @@ public abstract class AbstractTaskListFactory {
 	}
 
 	/**
-	 * Creates an {@link RepositoryQuery} instance from given XML element matching one of the names returned by {@link
-	 * #getQueryElementNames()}.
+	 * Creates an {@link RepositoryQuery} instance from given XML element matching one of the names returned by
+	 * {@link #getQueryElementNames()}.
 	 * <p>
 	 * Concrete implementation should populate required query configuration using method parameters and content of the
 	 * passed XML element. Children tasks for this query instance will be created by the caller of this method.
 	 * 
 	 * @param repositoryUrl
-	 * 		an url for the corresponding task repository
+	 *            an url for the corresponding task repository
 	 * @param queryString
-	 * 		a query string, e.g. connector-specific url used for query request
+	 *            a query string, e.g. connector-specific url used for query request
 	 * @param label
-	 * 		a query label or name
+	 *            a query label or name
 	 * @param element
-	 * 		an XML element containing query data
+	 *            an XML element containing query data
 	 * @return instance of the {@link RepositoryQuery}
 	 * 
 	 * @see #getQueryElementNames()
@@ -96,20 +97,20 @@ public abstract class AbstractTaskListFactory {
 	}
 
 	/**
-	 * Creates an {@link AbstractTask} instance from given XML element matching name returned by {@link
-	 * #getTaskElementName()}.
+	 * Creates an {@link AbstractTask} instance from given XML element matching name returned by
+	 * {@link #getTaskElementName()}.
 	 * <p>
 	 * Concrete implementation should populate required task data using method parameters and content of the passed XML
 	 * element. Children tasks of this task instance will be created by the caller of this method.
 	 * 
 	 * @param repositoryUrl
-	 * 		an url for the corresponding task repository
+	 *            an url for the corresponding task repository
 	 * @param queryString
-	 * 		a query string, e.g. connector-specific url used for query request
+	 *            a query string, e.g. connector-specific url used for query request
 	 * @param label
-	 * 		a query label or name
+	 *            a query label or name
 	 * @param element
-	 * 		an XML element containing query data
+	 *            an XML element containing query data
 	 * @return instance of the {@link RepositoryQuery}
 	 * 
 	 * @see #getTaskElementName()
@@ -122,10 +123,10 @@ public abstract class AbstractTaskListFactory {
 	 * true for given query instance.
 	 * 
 	 * @param query
-	 * 		a query instance to get the name for
+	 *            a query instance to get the name for
 	 * 
-	 * @return name for the XML element to store given query instance or null if factory doesn't support given {@link
-	 * 	RepositoryQuery} instance.
+	 * @return name for the XML element to store given query instance or null if factory doesn't support given
+	 *         {@link RepositoryQuery} instance.
 	 * 
 	 * @see #canCreate(RepositoryQuery)
 	 * @since 3.0
@@ -163,9 +164,9 @@ public abstract class AbstractTaskListFactory {
 	 * Adds additional attributes to an XML element used to store given {@link RepositoryQuery}.
 	 * 
 	 * @param query
-	 * 		a query instance being stored
+	 *            a query instance being stored
 	 * @param node
-	 * 		an XML element used to store given query instance
+	 *            an XML element used to store given query instance
 	 * @since 3.0
 	 */
 	public void setAdditionalAttributes(IRepositoryQuery query, Element node) {
@@ -176,9 +177,9 @@ public abstract class AbstractTaskListFactory {
 	 * Adds additional attributes to an XML element used to store given {@link AbstractTask}
 	 * 
 	 * @param task
-	 * 		a task instance being stored
+	 *            a task instance being stored
 	 * @param node
-	 * 		an XML element used to store given task instance
+	 *            an XML element used to store given task instance
 	 * @since 3.0
 	 */
 	public void setAdditionalAttributes(ITask task, Element element) {
