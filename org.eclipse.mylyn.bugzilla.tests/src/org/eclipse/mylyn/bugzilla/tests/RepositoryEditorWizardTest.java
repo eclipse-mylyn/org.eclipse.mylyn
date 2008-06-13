@@ -46,8 +46,8 @@ public class RepositoryEditorWizardTest extends TestCase {
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();
-		repository.setAuthenticationCredentials(credentials.username, credentials.password);
-		repository.setAnonymous(false);
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
+				credentials.password), false);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 	}
 

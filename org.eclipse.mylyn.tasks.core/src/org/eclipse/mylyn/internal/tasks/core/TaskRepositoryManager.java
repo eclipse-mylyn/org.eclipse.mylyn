@@ -256,15 +256,9 @@ public class TaskRepositoryManager implements IRepositoryManager {
 			Set<TaskRepository> repositories = externalizer.readRepositoriesFromXML(repositoriesFile);
 			if (repositories != null && repositories.size() > 0) {
 				for (TaskRepository repository : repositories) {
-
 					if (removeHttpAuthMigration(repository)) {
 						migration = true;
 					}
-
-					if (migrateAnonymousRepository(repository)) {
-						migration = true;
-					}
-
 					if (repositoryMap.containsKey(repository.getConnectorKind())) {
 						repositoryMap.get(repository.getConnectorKind()).add(repository);
 						repository.addChangeListener(PROPERTY_CHANGE_LISTENER);
@@ -288,20 +282,6 @@ public class TaskRepositoryManager implements IRepositoryManager {
 			repository.removeProperty(TaskRepository.AUTH_HTTP_PASSWORD);
 			if (httpusername.length() > 0 && httppassword.length() > 0) {
 				repository.setHttpAuthenticationCredentials(httpusername, httppassword);
-			}
-			return true;
-		}
-		return false;
-	}
-
-	// Migration 2.0M1 - 2.0M2
-	private boolean migrateAnonymousRepository(TaskRepository repository) {
-		if (repository.getProperty(TaskRepository.ANONYMOUS_LOGIN) == null) {
-			if ((repository.getUserName() == null || repository.getPassword() == null)
-					|| ("".equals(repository.getUserName()) && "".equals(repository.getPassword()))) {
-				repository.setAnonymous(true);
-			} else {
-				repository.setAnonymous(false);
 			}
 			return true;
 		}

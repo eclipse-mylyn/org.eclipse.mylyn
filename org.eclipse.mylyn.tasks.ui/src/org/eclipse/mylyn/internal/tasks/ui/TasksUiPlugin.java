@@ -47,6 +47,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.commons.net.WebClientLog;
@@ -650,7 +651,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							taskRepository.setVersion(template.version);
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setCharacterEncoding(template.characterEncoding);
-							taskRepository.setAnonymous(template.anonymous);
+							if (template.anonymous) {
+								taskRepository.setCredentials(AuthenticationType.REPOSITORY, null, true);
+							}
 							repositoryManager.addRepository(taskRepository);
 						}
 					} catch (Throwable t) {
@@ -677,7 +680,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					LocalRepositoryConnector.REPOSITORY_URL);
 			localRepository.setVersion(LocalRepositoryConnector.REPOSITORY_VERSION);
 			localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
-			localRepository.setAnonymous(true);
 			repositoryManager.addRepository(localRepository);
 		}
 		return localRepository;
