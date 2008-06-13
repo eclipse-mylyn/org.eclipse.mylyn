@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
@@ -23,6 +24,8 @@ public class TaskPropertyTester extends PropertyTester {
 	private static final String PROPERTY_CAN_POST_ATTACHMENT = "canPostAttachment";
 
 	private static final String PROPERTY_CONNECTOR_KIND = "connectorKind";
+
+	private static final String PROPERTY_HAS_EDITS = "hasEdits";
 
 	private static final String PROPERTY_HAS_LOCAL_CONTEXT = "hasLocalContext";
 
@@ -48,6 +51,8 @@ public class TaskPropertyTester extends PropertyTester {
 				return equals(AttachmentUtil.canDownloadAttachment(task), expectedValue);
 			} else if (PROPERTY_CAN_GET_ATTACHEMNT.equals(property)) {
 				return equals(AttachmentUtil.canUploadAttachment(task), expectedValue);
+			} else if (PROPERTY_HAS_EDITS.equals(property)) {
+				return equals(ClearOutgoingAction.hasOutgoingChanges(task), expectedValue);
 			} else if (PROPERTY_HAS_LOCAL_CONTEXT.equals(property)) {
 				return equals(AttachmentUtil.hasLocalContext(task), expectedValue);
 			} else if (PROPERTY_HAS_REPOSITORY_CONTEXT.equals(property)) {

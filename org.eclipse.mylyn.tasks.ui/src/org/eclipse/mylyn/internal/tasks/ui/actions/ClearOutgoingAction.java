@@ -51,7 +51,7 @@ public class ClearOutgoingAction extends Action {
 		}
 	}
 
-	private boolean hasOutgoingChanges(ITask task) {
+	public static boolean hasOutgoingChanges(ITask task) {
 		return task.getSynchronizationState().equals(SynchronizationState.OUTGOING)
 				|| task.getSynchronizationState().equals(SynchronizationState.CONFLICT);
 	}

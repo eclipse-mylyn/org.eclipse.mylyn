@@ -8,12 +8,13 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
 
+import java.util.Collections;
 import java.util.Date;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.mylyn.internal.commons.ui.TreeWalker.Direction;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -23,6 +24,16 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * @author Steffen Pingel
  */
 public abstract class MarkTaskHandler extends AbstractTaskHandler {
+
+	public static class ClearOutgoingHandler extends AbstractTaskHandler {
+		@Override
+		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
+			ClearOutgoingAction action = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
+			if (action.isEnabled()) {
+				action.run();
+			}
+		}
+	}
 
 	public static class MarkTaskCompleteHandler extends AbstractTaskHandler {
 		@Override
@@ -59,25 +70,27 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	}
 
 	public static class MarkTaskReadGoToNextUnreadTaskHandler extends AbstractTaskListViewHandler {
+		@SuppressWarnings("restriction")
 		@Override
 		protected void execute(ExecutionEvent event, TaskListView taskListView, IRepositoryElement item)
 				throws ExecutionException {
 			if (item instanceof ITask) {
 				ITask task = (ITask) item;
 				TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-				GoToUnreadTaskHandler.execute(event, Direction.DOWN);
+				GoToUnreadTaskHandler.execute(event, org.eclipse.mylyn.internal.commons.ui.TreeWalker.Direction.DOWN);
 			}
 		}
 	}
 
 	public static class MarkTaskReadGoToPreviousUnreadTaskHandler extends AbstractTaskListViewHandler {
+		@SuppressWarnings("restriction")
 		@Override
 		protected void execute(ExecutionEvent event, TaskListView taskListView, IRepositoryElement item)
 				throws ExecutionException {
 			if (item instanceof ITask) {
 				ITask task = (ITask) item;
 				TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-				GoToUnreadTaskHandler.execute(event, Direction.UP);
+				GoToUnreadTaskHandler.execute(event, org.eclipse.mylyn.internal.commons.ui.TreeWalker.Direction.UP);
 			}
 		}
 	}

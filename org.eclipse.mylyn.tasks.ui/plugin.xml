@@ -494,7 +494,7 @@
 
   <menu
         id="org.eclipse.mylyn.tasks.ui.menu.operations"
-        label="Import/Export"
+        label="Import and Export"
         path="operations">
     <separator
            name="clone">
@@ -1410,6 +1410,24 @@
             </iterate>
          </enabledWhen>
       </handler>
+      <handler
+            class="org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler$ClearOutgoingHandler"
+            commandId="org.eclipse.mylyn.tasks.ui.command.task.clearOutgoing">
+         <enabledWhen>
+            <iterate
+                  operator="or">
+               <and>
+                  <instanceof
+                        value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                  </instanceof>
+                  <test
+                        property="org.eclipse.mylyn.task.hasEdits"
+                        value="true">
+                  </test>
+               </and>
+            </iterate>
+         </enabledWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1615,7 +1633,7 @@
             class="org.eclipse.mylyn.internal.tasks.ui.util.TaskPropertyTester"
             id="org.eclipse.mylyn.tasks.ui.propertyTester.task"
             namespace="org.eclipse.mylyn.task"
-            properties="canGetAttachment,canPostAttachment,connectorKind,hasLocalContext,hasLocalCompletionState,hasRepositoryContext,isCompleted,isLocal,"
+            properties="canGetAttachment,canPostAttachment,connectorKind,hasEdits,hasLocalContext,hasLocalCompletionState,hasRepositoryContext,isCompleted,isLocal,"
             type="org.eclipse.mylyn.tasks.core.ITask">
       </propertyTester>
       <propertyTester
