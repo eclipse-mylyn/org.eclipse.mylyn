@@ -433,6 +433,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
 		registerDefaultDropListener(form);
+		EditorUtil.disableScrollingOnFocus(form);
 
 		try {
 			setReflow(false);

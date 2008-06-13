@@ -35,7 +35,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.internal.forms.widgets.FormUtil;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
 import org.eclipse.ui.texteditor.MarkerAnnotationPreferences;
@@ -142,7 +141,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 					String value = viewer.getTextWidget().getText();
 					if (!getValue().equals(value)) {
 						setValue(value);
-						FormUtil.ensureVisible(viewer.getTextWidget());
+						EditorUtil.ensureVisible(viewer.getTextWidget());
 					}
 				}
 			});

@@ -23,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -38,6 +39,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 public class EditorUtil {
 
@@ -342,6 +344,17 @@ public class EditorUtil {
 			} catch (Exception e) {
 				// ignore
 			}
+		}
+	}
+
+	public static void disableScrollingOnFocus(ScrolledForm form) {
+		form.setData(FormUtil.FOCUS_SCROLLING, Boolean.FALSE);
+	}
+
+	public static void ensureVisible(Control control) {
+		ScrolledComposite form = FormUtil.getScrolledComposite(control);
+		if (form != null) {
+			FormUtil.ensureVisible(form, control);
 		}
 	}
 

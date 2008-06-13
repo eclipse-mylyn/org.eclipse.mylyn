@@ -16,7 +16,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 /**
  * @author Steffen Pingel
@@ -46,7 +45,7 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					setValue(text.getText());
-					FormUtil.ensureVisible(text);
+					EditorUtil.ensureVisible(text);
 				}
 			});
 		}

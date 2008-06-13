@@ -53,6 +53,7 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 			text.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					setValue(text.getText());
+					EditorUtil.ensureVisible(text);
 				}
 			});
 		}
