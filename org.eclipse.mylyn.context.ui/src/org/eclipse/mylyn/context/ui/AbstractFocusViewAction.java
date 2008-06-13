@@ -218,6 +218,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				ContextUiPlugin.getViewerManager().removeManagedViewer(viewer, viewPart);
 			}
 		}
+
 		MonitorUi.removeWindowPostSelectionListener(this);
 		ContextCore.getContextManager().removeListener(CONTEXT_LISTENER);
 		PlatformUI.getWorkbench().removeWorkbenchListener(WORKBENCH_LISTENER);
@@ -443,16 +444,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 			if (viewer instanceof TreeViewer) {
 				Tree tree = ((TreeViewer) viewer).getTree();
-				EmptyContextDrawer drawer = new EmptyContextDrawer(tree);
-
-				boolean alreadyAddedDrawingListener = false;
-				for (Listener listener : Arrays.asList(tree.getListeners(SWT.Paint))) {
-					if (listener instanceof EmptyContextDrawer) {
-						alreadyAddedDrawingListener = true;
-						break;
-					}
-				}
-				if (!alreadyAddedDrawingListener) {
+				Listener drawingListener = viewerToDrawerMap.get(viewer);
+				if (drawingListener == null) {
+					EmptyContextDrawer drawer = new EmptyContextDrawer(tree);
 					viewerToDrawerMap.put(viewer, drawer);
 					tree.addListener(SWT.Paint, drawer);
 				}
@@ -504,7 +498,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 			if (viewer instanceof TreeViewer) {
 				Tree tree = ((TreeViewer) viewer).getTree();
-				EmptyContextDrawer drawer = viewerToDrawerMap.get(viewer);
+				EmptyContextDrawer drawer = viewerToDrawerMap.remove(viewer);
 				if (drawer != null) {
 					tree.removeListener(SWT.Paint, drawer);
 				}
