@@ -29,6 +29,8 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	private boolean isDirty = false;
 
+	private long lastUpdate = 0;
+
 	@SuppressWarnings("restriction")
 	@Override
 	public void execute(IExternalizationContext context, IProgressMonitor monitor) throws CoreException {
@@ -95,7 +97,10 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 	}
 
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-		setDirty(true);
+		if (System.currentTimeMillis() - lastUpdate > 1000 * 60) {
+			setDirty(true);
+			lastUpdate = System.currentTimeMillis();
+		}
 	}
 
 }
