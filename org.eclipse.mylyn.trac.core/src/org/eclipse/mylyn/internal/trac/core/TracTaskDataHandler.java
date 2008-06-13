@@ -144,6 +144,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				mapper.setAuthor(repository.createPerson(comments[i].getAuthor()));
 				mapper.setCreationDate(comments[i].getCreated());
 				mapper.setText(comments[i].getNewValue());
+				// TODO mapper.setUrl();
 				mapper.setNumber(count);
 
 				TaskAttribute attribute = data.getRoot().createAttribute(TaskAttribute.PREFIX_COMMENT + count);

@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.trac.ui.wizard.TracQueryPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -111,6 +112,19 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 		legendItems.add(LegendElement.createTask(TaskKind.ENHANCEMENT.toString(), TracImages.OVERLAY_ENHANCEMENT));
 		legendItems.add(LegendElement.createTask(TaskKind.TASK.toString(), null));
 		return legendItems;
+	}
+
+	@Override
+	public String getReplyText(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
+		if (taskComment == null) {
+			return "Replying to [ticket:" + task.getTaskKey() + " " + task.getOwner() + "]:";
+		} else if (includeTask) {
+			return "Replying to [comment:ticket:" + task.getTaskKey() + ":" + taskComment.getNumber() + " "
+					+ taskComment.getAuthor().getPersonId() + "]:";
+		} else {
+			return "Replying to [comment:" + taskComment.getNumber() + " " + taskComment.getAuthor().getPersonId()
+					+ "]:";
+		}
 	}
 
 }
