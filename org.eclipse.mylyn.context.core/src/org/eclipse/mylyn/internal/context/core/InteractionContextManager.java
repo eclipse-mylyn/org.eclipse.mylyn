@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.context.core;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -18,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -670,10 +673,21 @@ public class InteractionContextManager implements IInteractionContextManager {
 				}
 			}
 
-			try {
-				metaContextLock.acquire();
+			metaContextLock.acquire();
 
-				activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+			File contextHistory = contextStore.getFileForContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+			try {
+				if (!contextHistory.exists()) {
+					if (restoreSnapshot(contextHistory)) {
+						activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+					}
+				} else {
+					activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+				}
+
+				if (activityMetaContext == null && restoreSnapshot(contextHistory)) {
+					activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+				}
 
 				if (activityMetaContext == null) {
 					resetActivityMetaContext();
@@ -710,7 +724,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 
 			InteractionContext context = getActivityMetaContext();
-
+			takeSnapshot(contextStore.getFileForContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME));
 			contextStore.saveContext(collapseActivityMetaContext(context),
 					InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 		} catch (Throwable t) {
@@ -722,6 +736,34 @@ public class InteractionContextManager implements IInteractionContextManager {
 				setContextCapturePaused(false);
 			}
 		}
+	}
+
+	/**
+	 * COPY: from AbstractExternalizationParticipant
+	 */
+	protected boolean takeSnapshot(File file) {
+		if (file.length() > 0) {
+			File originalFile = file.getAbsoluteFile();
+			File backup = new File(file.getParentFile(), "." + file.getName());
+			backup.delete();
+			return originalFile.renameTo(backup);
+		}
+		return false;
+	}
+
+	protected boolean restoreSnapshot(File file) {
+		File backup = new File(file.getParentFile(), "." + file.getName());
+		File originalFile = file.getAbsoluteFile();
+		if (originalFile.exists()) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.ENGLISH);
+			File failed = new File(file.getParentFile(), "failed-" + format.format(new Date()) + "-"
+					+ originalFile.getName());
+			originalFile.renameTo(failed);
+		}
+		if (backup.exists()) {
+			return backup.renameTo(originalFile);
+		}
+		return false;
 	}
 
 	/**
