@@ -11,8 +11,6 @@ package com.eclipse.mylyn.bugzilla.deprecated;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;

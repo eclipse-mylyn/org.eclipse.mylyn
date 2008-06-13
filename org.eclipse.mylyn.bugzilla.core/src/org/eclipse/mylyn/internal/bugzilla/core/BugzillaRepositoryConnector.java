@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -274,7 +275,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		};
 
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getRepositoryUrl(), urlQueryString, "");
+		IRepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "");
 		performQuery(repository, query, collector, context, new NullProgressMonitor());
 
 		for (TaskData data : changedTaskData) {

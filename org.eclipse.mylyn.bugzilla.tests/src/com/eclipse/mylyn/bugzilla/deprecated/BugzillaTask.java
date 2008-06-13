@@ -8,8 +8,11 @@
 /*
  * Created on 14-Jan-2005
  */
-package org.eclipse.mylyn.internal.bugzilla.core;
+package com.eclipse.mylyn.bugzilla.deprecated;
 
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 
 /**
