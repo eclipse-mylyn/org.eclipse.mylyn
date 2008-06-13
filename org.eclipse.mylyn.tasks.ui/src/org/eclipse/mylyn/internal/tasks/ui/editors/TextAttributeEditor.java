@@ -50,7 +50,7 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 				}
 			});
 		}
-		toolkit.adapt(text, true, false);
+		toolkit.adapt(text, false, false);
 		setControl(text);
 	}
 
