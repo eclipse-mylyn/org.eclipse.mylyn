@@ -605,14 +605,6 @@ public final class TaskRepository extends PlatformObject {
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} instead
 	 */
 	@Deprecated
-	public void setAnonymous(boolean b) {
-		properties.put(ANONYMOUS_LOGIN, String.valueOf(b));
-	}
-
-	/**
-	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} instead
-	 */
-	@Deprecated
 	public void setAuthenticationCredentials(String username, String password) {
 		setCredentials(AuthenticationType.REPOSITORY, username, password);
 	}
