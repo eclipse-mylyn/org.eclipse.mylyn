@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.bugzilla.core;
 
-
 /**
  * @author Mik Kersten
  */
@@ -270,6 +269,8 @@ public interface IBugzillaConstants {
 	public static final String EDITOR_TYPE_KEYWORDS = "bugzilla.editor.keywords";
 
 	public static final String EDITOR_TYPE_REMOVECC = "bugzilla.editor.removecc";
+
+	public static final String EDITOR_TYPE_VOTES = "bugzilla.editor.votes";
 
 	public static final String ATTRIBUTE_BUGZILLA_QUERY_CUSTOM = "bugzilla.query.custom";
 

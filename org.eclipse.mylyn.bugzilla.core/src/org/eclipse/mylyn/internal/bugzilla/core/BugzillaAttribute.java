@@ -130,7 +130,7 @@ public enum BugzillaAttribute {
 
 	INSTALL_VERSION("version of bugzilla installed", "install_version", null, true, false),
 
-	VOTES("Votes:", "votes", TaskAttribute.TYPE_SHORT_TEXT, false, true),
+	VOTES("Votes:", "votes", IBugzillaConstants.EDITOR_TYPE_VOTES, false, true),
 
 	WORK_TIME("Add Time:", "work_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
