@@ -51,9 +51,12 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 	 * @param viewer
 	 */
 	protected void updateMarkerViewLabelProvider(StructuredViewer viewer) {
-		IBaseLabelProvider currentProvider = viewer.getLabelProvider();
-		if (currentProvider instanceof TableViewLabelProvider && !(currentProvider instanceof MarkerViewLabelProvider)) {
-			viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
+		if (viewer != null) {
+			IBaseLabelProvider currentProvider = viewer.getLabelProvider();
+			if (currentProvider instanceof TableViewLabelProvider
+					&& !(currentProvider instanceof MarkerViewLabelProvider)) {
+				viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
+			}
 		}
 	}
 
@@ -72,7 +75,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 					Field field = clazz.getDeclaredField("viewer");
 					field.setAccessible(true);
 					cachedViewer = (MarkersTreeViewer) field.get(viewPart);
-					if (!cachedViewer.getControl().isDisposed()) {
+					if (cachedViewer != null && !cachedViewer.getControl().isDisposed()) {
 						updateMarkerViewLabelProvider(cachedViewer);
 					}
 				}
