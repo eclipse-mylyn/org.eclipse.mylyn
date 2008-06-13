@@ -10,8 +10,6 @@
  */
 package org.eclipse.mylyn.internal.ide.ui;
 
-import java.lang.reflect.Method;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
@@ -28,17 +26,15 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 
 		if (element instanceof MarkerItem) {
 			if (element.getClass().getSimpleName().equals("MarkerCategory")) {
-
-				// HACK: using reflection to gain accessibily
-				Class<?> clazz;
-				try {
-					clazz = Class.forName("org.eclipse.ui.internal.views.markers.MarkerCategory");
-					Method method = clazz.getDeclaredMethod("getChildren", new Class[] {});
-					method.setAccessible(true);
-					Object result = method.invoke(element, new Object[] {});
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+//				Class<?> clazz;
+//				try {
+//					clazz = Class.forName("org.eclipse.ui.internal.views.markers.MarkerCategory");
+//					Method method = clazz.getDeclaredMethod("getChildren", new Class[] {});
+//					method.setAccessible(true);
+//					Object result = method.invoke(element, new Object[] {});
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 
 				return true;
 			} else if (element.getClass().getSimpleName().equals("MarkerEntry")) {
@@ -47,24 +43,6 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 		}
 
 		return false;
-//			return true;
-		// NOTE: code commented out below did a look-down the children, which may be too expensive
-//			if (element instanceof MarkerNode) {
-//				MarkerNode markerNode = (MarkerNode) element;
-//				MarkerNode[] children = markerNode.getChildren();
-//				for (int i = 0; i < children.length; i++) {
-//					MarkerNode node = children[i];
-//					if (node instanceof ConcreteMarker) {
-//						return isInteresting((ConcreteMarker) node, viewer, parent);
-//					} else {
-//						return true;
-//					}
-//				}
-//			}
-//		} else {
-//			ConcreteMarker marker = (ConcreteMarker) element;
-//			return isInteresting((ConcreteMarker) element, viewer, parent);
-//		}
 	}
 
 	@Override
