@@ -43,7 +43,7 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 		viewer.setDocument(new Document(getValue()));
 
 		final StyledText text = viewer.getTextWidget();
-		toolkit.adapt(text, true, false);
+		toolkit.adapt(text, false, false);
 
 		if (isReadOnly()) {
 			viewer.setEditable(false);

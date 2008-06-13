@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.internal.forms.widgets.FormUtil;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
 import org.eclipse.ui.texteditor.MarkerAnnotationPreferences;
@@ -141,6 +142,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 					String value = viewer.getTextWidget().getText();
 					if (!getValue().equals(value)) {
 						setValue(value);
+						FormUtil.ensureVisible(viewer.getTextWidget());
 					}
 				}
 			});
@@ -150,7 +152,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
 		viewer.getTextWidget().setFont(font);
-		toolkit.adapt(viewer.getTextWidget(), true, false);
+		toolkit.adapt(viewer.getTextWidget(), false, false);
 
 		setControl(viewer.getTextWidget());
 	}

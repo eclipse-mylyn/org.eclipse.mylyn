@@ -44,7 +44,7 @@ public class MultiSelectionAttributeEditor extends AbstractAttributeEditor {
 	@Override
 	public void createControl(Composite parent, FormToolkit toolkit) {
 		list = new List(parent, SWT.FLAT | SWT.MULTI | SWT.V_SCROLL);
-		toolkit.adapt(list, true, false);
+		toolkit.adapt(list, false, false);
 		list.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		list.setFont(EditorUtil.TEXT_FONT);
 

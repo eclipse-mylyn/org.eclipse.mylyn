@@ -90,7 +90,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 
 		Text currentEstimate = toolkit.createText(timeComposite, "" + total, SWT.FLAT | SWT.READ_ONLY);
 		currentEstimate.setFont(TEXT_FONT);
-		toolkit.adapt(currentEstimate, true, false);
+		toolkit.adapt(currentEstimate, false, false);
 		currentEstimate.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 		currentEstimate.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 

@@ -48,7 +48,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 		if (isReadOnly()) {
 			Text text = new Text(composite, SWT.FLAT | SWT.READ_ONLY);
 			text.setFont(EditorUtil.TEXT_FONT);
-			toolkit.adapt(text, true, false);
+			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getTextValue());
 			setControl(text);

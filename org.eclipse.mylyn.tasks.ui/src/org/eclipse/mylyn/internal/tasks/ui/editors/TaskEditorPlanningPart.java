@@ -245,7 +245,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 				markDirty();
 			}
 		});
-		toolkit.adapt(dueDatePicker, true, false);
+		toolkit.adapt(dueDatePicker, false, false);
 		toolkit.paintBordersFor(composite);
 
 		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(composite, SWT.NONE);
@@ -296,7 +296,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		scheduleDatePicker = new ScheduleDatePicker(composite, task, SWT.FLAT);
 		GridDataFactory.fillDefaults().hint(CONTROL_WIDTH, SWT.DEFAULT).applyTo(scheduleDatePicker);
 		scheduleDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.adapt(scheduleDatePicker, true, false);
+		toolkit.adapt(scheduleDatePicker, false, false);
 		toolkit.paintBordersFor(composite);
 
 		scheduleDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));

@@ -40,13 +40,13 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 		if (isReadOnly()) {
 			Text text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
 			text.setFont(EditorUtil.TEXT_FONT);
-			toolkit.adapt(text, true, false);
+			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getValueLabel());
 			setControl(text);
 		} else {
 			combo = new CCombo(parent, SWT.FLAT | SWT.READ_ONLY);
-			toolkit.adapt(combo, true, false);
+			toolkit.adapt(combo, false, false);
 			combo.setFont(EditorUtil.TEXT_FONT);
 			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 

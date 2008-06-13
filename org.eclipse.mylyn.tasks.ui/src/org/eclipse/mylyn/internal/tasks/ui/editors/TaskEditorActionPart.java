@@ -142,7 +142,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 		categoryChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
-		toolkit.adapt(categoryChooser, true, false);
+		toolkit.adapt(categoryChooser, false, false);
 		categoryChooser.setFont(TEXT_FONT);
 		ITaskList taskList = TasksUiInternal.getTaskList();
 		final List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());

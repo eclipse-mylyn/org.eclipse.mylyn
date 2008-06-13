@@ -251,7 +251,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private ImageHyperlink createReplyHyperlink(Composite composite, FormToolkit toolkit, final ITaskComment taskComment) {
 		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
-		toolkit.adapt(replyLink, true, false);
+		toolkit.adapt(replyLink, false, false);
 		replyLink.setImage(CommonImages.getImage(TasksUiImages.COMMENT_REPLY));
 		replyLink.setToolTipText(LABEL_REPLY);
 		// no need for the background - transparency will take care of it

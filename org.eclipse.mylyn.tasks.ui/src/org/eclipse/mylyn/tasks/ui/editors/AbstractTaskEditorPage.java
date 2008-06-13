@@ -94,6 +94,8 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -328,7 +330,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private Action historyAction;
 
-	//protected Control lastFocusControl;
+	private Control lastFocusControl;
 
 	private ISelection lastSelection;
 
@@ -439,6 +441,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			editorComposite.setLayout(editorLayout);
 			editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+			//form.setData("focusScrolling", Boolean.FALSE);
+
 //			menuManager = new MenuManager();
 //			menuManager.setRemoveAllWhenShown(true);
 //			getEditorSite().registerContextMenu(ID_POPUP_MENU, menuManager, this, true);
@@ -483,17 +487,17 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 		createParts();
 
-//		FocusListener listener = new FocusAdapter() {
-//			@Override
-//			public void focusGained(FocusEvent e) {
-//				lastFocusControl = (Control) e.widget;
-//			}
-//		};
-//		addFocusListener(editorComposite, listener);
-//		AbstractTaskEditorPart summaryPart = getPart(ID_PART_SUMMARY);
-//		if (summaryPart != null) {
-//			lastFocusControl = summaryPart.getControl();
-//		}
+		FocusListener listener = new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				lastFocusControl = (Control) e.widget;
+			}
+		};
+		addFocusListener(editorComposite, listener);
+		AbstractTaskEditorPart summaryPart = getPart(ID_PART_SUMMARY);
+		if (summaryPart != null) {
+			lastFocusControl = summaryPart.getControl();
+		}
 	}
 
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
@@ -1016,7 +1020,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					for (Control control : editorComposite.getChildren()) {
 						control.dispose();
 					}
-//					lastFocusControl = null;
+					lastFocusControl = null;
 					lastSelection = null;
 					for (IFormPart part : getManagedForm().getParts()) {
 						part.dispose();
@@ -1101,14 +1105,12 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		}
 	}
 
-	// FormToolkit will do the focus tracking
-//	@Override
-//	public void setFocus() {
-//		if (lastFocusControl != null && !lastFocusControl.isDisposed()) {
-//			//if (getManagedForm().getForm().getShowFocusedControl())
-//			lastFocusControl.setFocus();
-//		}
-//	}
+	@Override
+	public void setFocus() {
+		if (lastFocusControl != null && !lastFocusControl.isDisposed()) {
+			lastFocusControl.setFocus();
+		}
+	}
 
 	/**
 	 * Used to prevent form menu from being disposed when disposing elements on the form during refresh
