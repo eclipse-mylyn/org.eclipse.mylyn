@@ -33,7 +33,7 @@ public class NewBugzillaTaskWizard extends NewTaskWizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		projectPage = new BugzillaProductPage(this, getTaskRepository());
+		projectPage = new BugzillaProductPage(getTaskRepository());
 		addPage(projectPage);
 	}
 

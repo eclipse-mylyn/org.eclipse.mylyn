@@ -40,16 +40,14 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -90,11 +88,6 @@ public class BugzillaProductPage extends WizardPage {
 	private List<String> products = null;
 
 	/**
-	 * Reference to the bug wizard which created this page so we can create the second page
-	 */
-	private final NewBugzillaTaskWizard bugWizard;
-
-	/**
 	 * Handle product selection
 	 */
 	private FilteredTree productList;
@@ -105,20 +98,16 @@ public class BugzillaProductPage extends WizardPage {
 
 	/**
 	 * Constructor for BugzillaProductPage
-	 * 
-	 * @param workbench
-	 *            The instance of the workbench
-	 * @param bugWiz
-	 *            The bug wizard which created this page
 	 * @param repository
 	 *            The repository the data is coming from
+	 * @param workbench
+	 *            The instance of the workbench
 	 * @param selection
 	 */
-	public BugzillaProductPage(NewBugzillaTaskWizard bugWiz, TaskRepository repository) {
+	public BugzillaProductPage(TaskRepository repository) {
 		super("Page1");
 		setTitle(IBugzillaConstants.TITLE_NEW_BUG);
 		setDescription(DESCRIPTION);
-		this.bugWizard = bugWiz;
 		this.repository = repository;
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.bugzilla.ui",
 				"icons/wizban/bug-wizard.gif"));
@@ -235,20 +224,21 @@ public class BugzillaProductPage extends WizardPage {
 							} catch (CoreException e) {
 								// TODO: remove exceptions from communication of connectivity errors to the user
 								if (e.getStatus().getException() instanceof GeneralSecurityException) {
-									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING,
-											BugzillaUiPlugin.ID_PLUGIN,
+									StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
 											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
-													+ "Please ensure proper configuration in "
-													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", e));
+													+ "Please ensure your task repository is properly configured.", e));
 								} else if (e.getStatus().getException() instanceof IOException) {
-									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING,
+									StatusHandler.fail(new Status(
+											IStatus.WARNING,
 											BugzillaUiPlugin.ID_PLUGIN,
-											"Connection Error, please ensure proper configuration in "
-													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", e));
+											"Connection Error, please ensure your task repository is properly configured.",
+											e));
 								} else {
-									TasksUiInternal.displayStatus("Error", new Status(IStatus.WARNING,
-											BugzillaUiPlugin.ID_PLUGIN, "Error updating repository attributes for "
-													+ repository.getRepositoryUrl(), e));
+									StatusHandler.fail(new Status(
+											IStatus.WARNING,
+											BugzillaUiPlugin.ID_PLUGIN,
+											"Error updating repository attributes for " + repository.getRepositoryUrl(),
+											e));
 								}
 								return;
 							}
@@ -316,16 +306,15 @@ public class BugzillaProductPage extends WizardPage {
 		ArrayList<String> products = new ArrayList<String>();
 
 		Object element = selection.getFirstElement();
-		if (element instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask) element;
-			if (bugzillaTask.getProduct() != null) {
-				products.add(bugzillaTask.getProduct());
+		if (element instanceof ITask) {
+			ITask bugzillaTask = (ITask) element;
+			if (bugzillaTask.getAttribute(BugzillaAttribute.PRODUCT.getKey()) != null) {
+				products.add(bugzillaTask.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
 			}
 		} else {
-			BugzillaRepositoryQuery query = null;
-			if (element instanceof BugzillaRepositoryQuery) {
-				query = (BugzillaRepositoryQuery) element;
-
+			IRepositoryQuery query = null;
+			if (element instanceof IRepositoryQuery) {
+				query = (IRepositoryQuery) element;
 			}
 
 			if (query != null) {
@@ -350,11 +339,11 @@ public class BugzillaProductPage extends WizardPage {
 			} else {
 				if (element instanceof IAdaptable) {
 					IAdaptable adaptable = (IAdaptable) element;
-					ITask task = (ITask) adaptable.getAdapter(AbstractTask.class);
-					if (task instanceof BugzillaTask) {
-						BugzillaTask bugzillaTask = (BugzillaTask) task;
-						if (bugzillaTask.getProduct() != null) {
-							products.add(bugzillaTask.getProduct());
+					ITask task = (ITask) adaptable.getAdapter(ITask.class);
+					if (task != null) {
+						ITask bugzillaTask = (ITask) element;
+						if (bugzillaTask.getAttribute(BugzillaAttribute.PRODUCT.getKey()) != null) {
+							products.add(bugzillaTask.getAttribute(BugzillaAttribute.PRODUCT.getKey()));
 						}
 					}
 				}

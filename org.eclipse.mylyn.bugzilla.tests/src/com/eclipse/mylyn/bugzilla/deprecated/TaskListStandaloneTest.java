@@ -17,7 +17,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
