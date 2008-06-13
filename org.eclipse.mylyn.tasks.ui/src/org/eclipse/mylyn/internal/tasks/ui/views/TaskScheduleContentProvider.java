@@ -41,14 +41,16 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	private final Unscheduled unscheduled;
 
+	private final Calendar END_OF_TIME;
+
 	public TaskScheduleContentProvider(TaskListView taskListView) {
 		super(taskListView);
 		this.taskActivityManager = TasksUiPlugin.getTaskActivityManager();
 		taskActivityManager.addActivityListener(this);
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, 5000);
-		cal.getTime();
-		unscheduled = new Unscheduled(taskActivityManager, new DateRange(cal));
+		END_OF_TIME = TaskActivityUtil.getCalendar();
+		END_OF_TIME.add(Calendar.YEAR, 5000);
+		END_OF_TIME.getTime();
+		unscheduled = new Unscheduled(taskActivityManager, new DateRange(END_OF_TIME));
 		timer = new Timer();
 	}
 
@@ -70,7 +72,20 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		ScheduledTaskContainer nextWeekContainer = new ScheduledTaskContainer(taskActivityManager, week.next());
 		containers.add(nextWeekContainer);
 
+		ScheduledTaskContainer twoWeeksContainer = new ScheduledTaskContainer(taskActivityManager, week.next().next(),
+				"Two Weeks");
+		containers.add(twoWeeksContainer);
+
 		containers.add(unscheduled);
+		Calendar startDate = TaskActivityUtil.getCalendar();
+		startDate.setTimeInMillis(twoWeeksContainer.getEnd().getTimeInMillis());
+		TaskActivityUtil.snapNextDay(startDate);
+		Calendar endDate = TaskActivityUtil.getCalendar();
+		endDate.add(Calendar.YEAR, 4999);
+		DateRange future = new DateRange(startDate, endDate);
+
+		ScheduledTaskContainer futureContainer = new ScheduledTaskContainer(taskActivityManager, future, "Future");
+		containers.add(futureContainer);
 
 		if (parent != null && parent.equals(this.taskListView.getViewSite())) {
 			return applyFilter(containers).toArray();

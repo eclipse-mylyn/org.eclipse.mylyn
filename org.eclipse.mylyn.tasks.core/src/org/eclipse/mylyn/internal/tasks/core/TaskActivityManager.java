@@ -325,6 +325,8 @@ public class TaskActivityManager implements ITaskActivityManager {
 			Set<ITask> result = scheduledTasks.get(range);
 			if (result != null && !result.isEmpty()) {
 				resultingTasks.addAll(result);
+			} else {
+				return getScheduledTasks(range.getStartDate(), range.getEndDate());
 			}
 		}
 		return resultingTasks;
