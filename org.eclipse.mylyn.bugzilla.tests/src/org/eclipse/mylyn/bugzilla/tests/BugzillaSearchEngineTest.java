@@ -13,6 +13,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.bugzilla.deprecated.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -22,7 +23,6 @@ import org.eclipse.mylyn.internal.tasks.ui.deprecated.TaskFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
-import com.eclipse.mylyn.bugzilla.deprecated.BugzillaRepositoryQuery;
 
 /**
  * @author Rob Elves

@@ -8,7 +8,7 @@
 /*
  * Created on 14-Jan-2005
  */
-package com.eclipse.mylyn.bugzilla.deprecated;
+package org.eclipse.mylyn.bugzilla.deprecated;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;

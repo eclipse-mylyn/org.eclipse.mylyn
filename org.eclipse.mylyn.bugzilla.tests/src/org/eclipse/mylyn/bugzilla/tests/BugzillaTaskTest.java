@@ -13,6 +13,8 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.bugzilla.deprecated.BugzillaAttributeFactory;
+import org.eclipse.mylyn.bugzilla.deprecated.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -25,8 +27,6 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
-import com.eclipse.mylyn.bugzilla.deprecated.BugzillaAttributeFactory;
-import com.eclipse.mylyn.bugzilla.deprecated.BugzillaTask;
 
 /**
  * @author Mik Kersten

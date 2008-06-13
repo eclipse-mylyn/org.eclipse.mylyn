@@ -30,7 +30,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-test.jar
-Export-Package: com.eclipse.mylyn.bugzilla.deprecated,
+Export-Package: org.eclipse.mylyn.bugzilla.deprecated,
  org.eclipse.mylyn.bugzilla.tests;x-internal:=true,
  org.eclipse.mylyn.bugzilla.tests.headless;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

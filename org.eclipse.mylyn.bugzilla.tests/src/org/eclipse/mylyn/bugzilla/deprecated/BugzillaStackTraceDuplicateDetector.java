@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package com.eclipse.mylyn.bugzilla.deprecated;
+package org.eclipse.mylyn.bugzilla.deprecated;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
