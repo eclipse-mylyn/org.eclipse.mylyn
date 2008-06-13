@@ -39,9 +39,9 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
@@ -232,7 +232,7 @@ public class TaskListExternalizer {
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
 			if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
-				RepositoryQuery query = delegatingExternalizer.readQuery(child, taskList);
+				RepositoryQuery query = delegatingExternalizer.readQuery(child);
 				if (query != null) {
 					taskList.addQuery(query);
 					if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {

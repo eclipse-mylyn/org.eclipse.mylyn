@@ -747,7 +747,7 @@ public final class DelegatingTaskExternalizer {
 	 * 
 	 * @throws TaskExternalizationException
 	 */
-	public RepositoryQuery readQuery(Node node, TaskList taskList) {
+	public RepositoryQuery readQuery(Node node) {
 		final Element element = (Element) node;
 		String repositoryUrl = element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
 		String queryString = element.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);

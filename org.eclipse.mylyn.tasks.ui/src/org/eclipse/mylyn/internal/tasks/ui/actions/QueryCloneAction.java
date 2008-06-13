@@ -18,7 +18,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -86,15 +85,15 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 
 		if (clonedQueries.size() > 0) {
 			for (RepositoryQuery query : clonedQueries) {
-				String handle = QueryImportAction.resolveIdentifiersConflict(query);
-				query.setHandleIdentifier(handle);
+				query.setHandleIdentifier(TasksUiPlugin.getTaskList().getUniqueHandleIdentifier());
+				TasksUiPlugin.getTaskList().addQuery(query);
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getConnectorKind());
 				TasksUiInternal.openEditQueryDialog(connectorUi, query);
 			}
 		} else {
 			// cannot happen
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Query cloning did not succeeded.",
-					new IllegalStateException(selectedQuery.toString())));
+			TasksUiInternal.displayStatus("Clone Query Failes", new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Query cloning did not succeeded."));
 		}
 	}
 
