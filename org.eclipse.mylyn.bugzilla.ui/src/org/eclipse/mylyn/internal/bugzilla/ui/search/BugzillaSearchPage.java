@@ -38,10 +38,8 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.KeywordsDialog;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -83,6 +81,10 @@ import org.eclipse.ui.progress.IProgressService;
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
 	private static final int LABEL_WIDTH = 58;
+
+	private static final String LABEL_VIEW_REPOSITORIES = "Task Repositories";
+
+	private static final String MESSAGE_NO_REPOSITORY = "No repository available, please add one using the Task Repositories view.";
 
 	private static final String NUM_DAYS_POSITIVE = "Number of days must be a positive integer. ";
 
@@ -851,7 +853,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 //					}
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-							IBugzillaConstants.TITLE_MESSAGE_DIALOG, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+							IBugzillaConstants.TITLE_MESSAGE_DIALOG, MESSAGE_NO_REPOSITORY);
 				}
 			}
 		});
@@ -1039,7 +1041,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 									MessageDialog.openError(Display.getDefault().getActiveShell(),
 											"Bugzilla Search Page",
 											"Unable to get configuration. Ensure proper repository configuration in "
-													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+													+ LABEL_VIEW_REPOSITORIES + ".\n\n");
 								}
 							});
 						}
@@ -1863,6 +1865,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						if (shell != null) {
 							shell.setEnabled(false);
 						}
+						// TODO: eliminate use of internal api
 						WebBrowserDialog dialog = new WebBrowserDialog(shell, "Error updating search options", null,
 								cause.getStatus().getMessage(), NONE, new String[] { IDialogConstants.OK_LABEL }, 0,
 								((RepositoryStatus) cause.getStatus()).getHtmlMessage());

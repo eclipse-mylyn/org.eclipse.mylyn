@@ -275,7 +275,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		};
 
+		// TODO: Decouple from internals
 		IRepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "");
+		query.setUrl(urlQueryString);
 		performQuery(repository, query, collector, context, new NullProgressMonitor());
 
 		for (TaskData data : changedTaskData) {

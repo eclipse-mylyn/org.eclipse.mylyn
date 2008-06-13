@@ -278,4 +278,6 @@ public interface IBugzillaConstants {
 	public static final String TAG_BUGZILLA_QUERY = "BugzillaQuery";
 
 	public static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustomQuery";
+
+	public static final String CONTENT_ENCODING_GZIP = "gzip";
 }

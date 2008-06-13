@@ -15,6 +15,8 @@ import java.io.Serializable;
  */
 public class BugzillaFlag implements Serializable {
 
+	private static final long serialVersionUID = 4920551884607344418L;
+
 	private final String name;
 
 	private final String description;

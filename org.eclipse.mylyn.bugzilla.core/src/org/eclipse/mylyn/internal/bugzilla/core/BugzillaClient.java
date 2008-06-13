@@ -66,7 +66,6 @@ import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
-import org.eclipse.mylyn.internal.commons.net.WebClientUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -352,7 +351,7 @@ public class BugzillaClient {
 	private boolean isZippedReply(HttpMethodBase method) {
 		// content-encoding:gzip can be set by a dedicated perl script or mod_gzip
 		boolean zipped = (null != method.getResponseHeader("Content-encoding") && method.getResponseHeader(
-				"Content-encoding").getValue().equals(WebClientUtil.CONTENT_ENCODING_GZIP))
+				"Content-encoding").getValue().equals(IBugzillaConstants.CONTENT_ENCODING_GZIP))
 				||
 				// content-type: application/x-gzip can be set by any apache after 302 redirect, based on .gz suffix
 				(null != method.getResponseHeader("Content-Type") && method.getResponseHeader("Content-Type")

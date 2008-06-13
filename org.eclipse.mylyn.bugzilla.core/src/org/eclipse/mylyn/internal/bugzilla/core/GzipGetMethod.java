@@ -14,7 +14,6 @@ import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.eclipse.mylyn.internal.commons.net.WebClientUtil;
 
 /**
  * Use <code>GzipGetMethod</code> instead of {@link GetMethod} to make Mylyn well-behaved when accessing repositories
@@ -34,9 +33,9 @@ public class GzipGetMethod extends GetMethod {
 
 	/**
 	 * @param requestPath
-	 * 		the URI to request
+	 *            the URI to request
 	 * @param gzipWanted
-	 * 		is compression desired (for debugging or optionalizing)
+	 *            is compression desired (for debugging or optionalizing)
 	 */
 	public GzipGetMethod(String requestPath, boolean gzipWanted) {
 		super(requestPath);
@@ -47,7 +46,7 @@ public class GzipGetMethod extends GetMethod {
 	public int execute(HttpState state, HttpConnection conn) throws HttpException, IOException {
 		// Insert accept-encoding header
 		if (gzipWanted) {
-			this.setRequestHeader("Accept-encoding", WebClientUtil.CONTENT_ENCODING_GZIP);
+			this.setRequestHeader("Accept-encoding", IBugzillaConstants.CONTENT_ENCODING_GZIP);
 		}
 		int result = super.execute(state, conn);
 		return result;
