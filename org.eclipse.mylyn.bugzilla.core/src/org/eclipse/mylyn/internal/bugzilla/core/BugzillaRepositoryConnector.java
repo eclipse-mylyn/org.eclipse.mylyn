@@ -277,6 +277,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		// TODO: Decouple from internals
 		IRepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "");
+		query.setSummary("Query for changed tasks");
 		query.setUrl(urlQueryString);
 		performQuery(repository, query, collector, context, new NullProgressMonitor());
 
