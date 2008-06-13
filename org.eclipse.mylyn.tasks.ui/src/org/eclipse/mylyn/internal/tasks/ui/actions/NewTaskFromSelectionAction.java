@@ -13,11 +13,13 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
+import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -110,8 +112,27 @@ public class NewTaskFromSelectionAction extends Action {
 
 				taskSelection = new TaskSelection("", sb.toString());
 			}
-		}
+		} else if (selection instanceof StructuredSelection) {
+			Object element = ((StructuredSelection) selection).getFirstElement();
+			if (element instanceof ITaskComment) {
+				ITaskComment comment = (ITaskComment) element;
+				StringBuilder sb = new StringBuilder();
+				sb.append("\n-- Created from Comment --");
+				if (comment.getUrl() == null) {
+					sb.append("\nURL: ");
+					sb.append(comment.getTask().getUrl());
+					sb.append("\nComment: ");
+					sb.append(comment.getNumber());
+				} else {
+					sb.append("\nURL: ");
+					sb.append(comment.getUrl());
+				}
 
+				sb.append("\n\n");
+				sb.append(comment.getText());
+				taskSelection = new TaskSelection("", sb.toString());
+			}
+		}
 		setEnabled(taskSelection != null);
 	}
 

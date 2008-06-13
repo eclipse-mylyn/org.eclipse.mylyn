@@ -84,8 +84,7 @@ public class TaskSelection implements ITaskMapping {
 	}
 
 	public String getDescription() {
-		// ignore
-		return null;
+		return taskData.getDescription();
 	}
 
 	public Date getDueDate() {
@@ -114,8 +113,7 @@ public class TaskSelection implements ITaskMapping {
 	}
 
 	public String getSummary() {
-		// ignore
-		return null;
+		return taskData.getSummary();
 	}
 
 	public TaskData getTaskData() {
