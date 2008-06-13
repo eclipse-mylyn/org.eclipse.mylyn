@@ -6,22 +6,30 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core.client;
 
 /**
- * Indicates insufficient permissions to execute an operation.
+ * Indicates an error during repository access.
  * 
  * @author Steffen Pingel
  */
-public class TracPermissionDeniedException extends TracException {
+public class TracException extends Exception {
 
-	private static final long serialVersionUID = -6128773690643367414L;
+	private static final long serialVersionUID = 1929614326467463462L;
 
-	public TracPermissionDeniedException() {
+	public TracException() {
 	}
 
-	public TracPermissionDeniedException(String message) {
+	public TracException(String message) {
 		super(message);
+	}
+
+	public TracException(Throwable cause) {
+		super(cause.getMessage(), cause);
+	}
+
+	public TracException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

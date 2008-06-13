@@ -11,9 +11,9 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 
-import org.eclipse.mylyn.internal.trac.core.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.TracException;
-import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.client.TracException;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 
 public class TracClientProxyTest extends AbstractTracClientTest {
 

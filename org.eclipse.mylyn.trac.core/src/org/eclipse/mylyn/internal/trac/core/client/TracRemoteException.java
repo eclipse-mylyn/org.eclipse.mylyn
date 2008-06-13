@@ -6,22 +6,30 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core.client;
 
 /**
- * Indicates an error while parsing a ticket retrieved from a repository.
+ * Indicates that an exception on the repository side has been encountered while processing the request.
  * 
  * @author Steffen Pingel
  */
-public class InvalidTicketException extends TracException {
+public class TracRemoteException extends TracException {
 
-	private static final long serialVersionUID = 7716941243394876876L;
+	private static final long serialVersionUID = -6761365344287289624L;
 
-	public InvalidTicketException(String message) {
+	public TracRemoteException() {
+	}
+
+	public TracRemoteException(String message) {
 		super(message);
 	}
 
-	public InvalidTicketException() {
+	public TracRemoteException(Throwable cause) {
+		super(cause);
+	}
+
+	public TracRemoteException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

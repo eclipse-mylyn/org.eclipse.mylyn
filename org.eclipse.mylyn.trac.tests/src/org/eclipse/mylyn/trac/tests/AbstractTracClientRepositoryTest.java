@@ -15,10 +15,10 @@ import java.net.Proxy.Type;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
-import org.eclipse.mylyn.internal.trac.core.ITracClient;
-import org.eclipse.mylyn.internal.trac.core.TracException;
-import org.eclipse.mylyn.internal.trac.core.TracLoginException;
-import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.client.TracException;
+import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 
 /**
  * Test cases for classes that implement {@link ITracClient}.

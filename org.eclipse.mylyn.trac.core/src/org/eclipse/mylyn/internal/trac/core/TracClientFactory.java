@@ -12,7 +12,12 @@ import java.net.MalformedURLException;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
-import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.client.TracException;
+import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
+import org.eclipse.mylyn.internal.trac.core.client.TracWebClient;
+import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 
 /**
  * @author Steffen Pingel

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core.client;
 
 /**
  * Indicates an error while parsing the page info retrieved from a repository. If the requested page name or version

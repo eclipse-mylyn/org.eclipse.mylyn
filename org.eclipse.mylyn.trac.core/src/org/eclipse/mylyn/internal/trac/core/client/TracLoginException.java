@@ -6,16 +6,22 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core.client;
 
-import org.apache.xmlrpc.XmlRpcException;
+/**
+ * Indicates an authentication error during login.
+ * 
+ * @author Steffen Pingel
+ */
+public class TracLoginException extends TracException {
 
-public class TracNoSuchMethodException extends TracException {
+	private static final long serialVersionUID = -6128773690643367414L;
 
-	private static final long serialVersionUID = 9075003728286406705L;
+	public TracLoginException() {
+	}
 
-	public TracNoSuchMethodException(XmlRpcException e) {
-		super(e);
+	public TracLoginException(String message) {
+		super(message);
 	}
 
 }

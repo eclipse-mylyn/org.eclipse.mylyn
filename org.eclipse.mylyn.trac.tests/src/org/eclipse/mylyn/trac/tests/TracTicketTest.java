@@ -14,7 +14,7 @@ import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.trac.core.InvalidTicketException;
+import org.eclipse.mylyn.internal.trac.core.client.InvalidTicketException;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;

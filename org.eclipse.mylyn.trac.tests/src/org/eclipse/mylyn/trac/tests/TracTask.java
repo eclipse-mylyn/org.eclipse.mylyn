@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.trac.tests;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 
 /**
  * @author Steffen Pingel

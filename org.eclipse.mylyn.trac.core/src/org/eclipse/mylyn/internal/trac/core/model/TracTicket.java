@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylyn.internal.trac.core.InvalidTicketException;
+import org.eclipse.mylyn.internal.trac.core.client.InvalidTicketException;
 
 /**
  * Represents a Trac ticket as it is retrieved from a Trac repository.

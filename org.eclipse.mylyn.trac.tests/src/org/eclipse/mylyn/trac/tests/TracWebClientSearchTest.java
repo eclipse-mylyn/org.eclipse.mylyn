@@ -11,7 +11,7 @@ package org.eclipse.mylyn.trac.tests;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 

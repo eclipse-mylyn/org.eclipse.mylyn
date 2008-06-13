@@ -14,10 +14,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.trac.core.TracPermissionDeniedException;
-import org.eclipse.mylyn.internal.trac.core.TracRemoteException;
-import org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient;
-import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
+import org.eclipse.mylyn.internal.trac.core.client.TracRemoteException;
+import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
