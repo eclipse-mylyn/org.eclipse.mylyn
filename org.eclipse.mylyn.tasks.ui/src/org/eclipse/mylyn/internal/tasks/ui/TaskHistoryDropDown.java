@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,12 +28,10 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CompoundContributionItem;
-import org.eclipse.ui.menus.CommandContributionItem;
 
 /**
  * @author Wesley Coelho
@@ -184,17 +181,6 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 
 		ITask active = TasksUi.getTaskActivityManager().getActiveTask();
 		if (active != null) {
-			IContributionItem pauseContributionItem = new CommandContributionItem(PlatformUI.getWorkbench(),
-					"org.eclipse.mylyn.ui.context.capture.pause", // id 
-					"org.eclipse.mylyn.ui.context.capture.pause.command", // commandId 
-					Collections.EMPTY_MAP, // params 
-					TasksUiImages.CONTEXT_CAPTURE_PAUSE, // icon 
-					null, null, "Pause Capturing Context", // label 
-					null, // mnemonic 
-					"Pause Capturing Context", // tooltip
-					CommandContributionItem.STYLE_CHECK);
-			items.add(pauseContributionItem);
-
 			Action deactivateAction = new DeactivateTaskAction();
 			ActionContributionItem item = new ActionContributionItem(deactivateAction);
 			items.add(item);
