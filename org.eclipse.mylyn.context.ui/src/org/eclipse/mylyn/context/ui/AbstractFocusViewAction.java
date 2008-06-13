@@ -10,6 +10,7 @@ package org.eclipse.mylyn.context.ui;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +33,14 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
@@ -88,6 +94,37 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	 * Will be remove for 3.0
 	 */
 	protected boolean internalSuppressExpandAll = false;
+
+	private final Map<StructuredViewer, EmptyContextDrawer> viewerToDrawerMap = new HashMap<StructuredViewer, EmptyContextDrawer>();
+
+	private class EmptyContextDrawer implements Listener {
+
+		private static final String LABEL = "Unfocus or Alt+click";
+
+		private final Image IMAGE = CommonImages.getImage(TasksUiImages.CONTEXT_FOCUS);
+
+		private final Tree tree;
+
+		boolean drawn = false;
+
+		EmptyContextDrawer(Tree tree) {
+			this.tree = tree;
+		}
+
+		public void handleEvent(Event event) {
+			if (tree != null && tree.getItemCount() == 0) {
+				switch (event.type) {
+				case SWT.Paint: {
+					int offset = 7;
+					event.gc.drawImage(IMAGE, offset, offset);
+					event.gc.drawText(LABEL, offset + IMAGE.getBounds().width + 5, offset);
+					drawn = true;
+					break;
+				}
+				}
+			}
+		}
+	}
 
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
@@ -404,6 +441,23 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			viewer.getControl().setRedraw(false);
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
 
+			if (viewer instanceof TreeViewer) {
+				Tree tree = ((TreeViewer) viewer).getTree();
+				EmptyContextDrawer drawer = new EmptyContextDrawer(tree);
+
+				boolean alreadyAddedDrawingListener = false;
+				for (Listener listener : Arrays.asList(tree.getListeners(SWT.Paint))) {
+					if (listener instanceof EmptyContextDrawer) {
+						alreadyAddedDrawingListener = true;
+						break;
+					}
+				}
+				if (!alreadyAddedDrawingListener) {
+					viewerToDrawerMap.put(viewer, drawer);
+					tree.addListener(SWT.Paint, drawer);
+				}
+			}
+
 			if (viewPart != null && manageFilters) {
 				Set<ViewerFilter> toAdd = new HashSet<ViewerFilter>();
 				Set<Class<?>> excludedFilters = getPreservedFilterClasses();
@@ -447,6 +501,15 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 		try {
 			viewer.getControl().setRedraw(false);
+
+			if (viewer instanceof TreeViewer) {
+				Tree tree = ((TreeViewer) viewer).getTree();
+				EmptyContextDrawer drawer = viewerToDrawerMap.get(viewer);
+				if (drawer != null) {
+					tree.removeListener(SWT.Paint, drawer);
+				}
+			}
+
 			if (viewPart != null && manageFilters) {
 				if (previousFilters.containsKey(viewer)) {
 					Set<ViewerFilter> filters = new HashSet<ViewerFilter>(previousFilters.get(viewer));
