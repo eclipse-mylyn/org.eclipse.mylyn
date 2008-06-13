@@ -68,9 +68,9 @@ public class WebUtil {
 	 */
 	private static final String USER_AGENT;
 
-	private static final int CONNNECT_TIMEOUT = 60000;
+	private static final int CONNNECT_TIMEOUT = 60 * 1000;
 
-	private static final int SOCKET_TIMEOUT = 60000;
+	private static final int SOCKET_TIMEOUT = 3 * 60 * 1000;
 
 	private static final int POLL_TIMEOUT = 1000;
 
