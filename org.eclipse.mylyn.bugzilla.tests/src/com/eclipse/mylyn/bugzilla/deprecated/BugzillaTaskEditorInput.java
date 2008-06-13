@@ -8,7 +8,7 @@
 /*
  * Created on 1-Feb-2005
  */
-package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
+package com.eclipse.mylyn.bugzilla.deprecated;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;

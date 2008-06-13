@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.internal.bugzilla.ui.editor;
+package com.eclipse.mylyn.bugzilla.deprecated;
 
 import java.io.IOException;
 import java.text.DateFormat;

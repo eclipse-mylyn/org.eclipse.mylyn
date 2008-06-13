@@ -26,9 +26,9 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -272,15 +272,16 @@ public class BugzillaCorePlugin extends Plugin {
 		return bugFile;
 	}
 
-	public void setPlatformDefaultsOrGuess(TaskRepository repository, RepositoryTaskData newBugModel) {
+	public void setPlatformDefaultsOrGuess(TaskRepository repository, TaskData newBugModel) {
 
 		String platform = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
 		String os = repository.getProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
 
 		// set both or none
 		if (null != os && null != platform) {
-			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaAttribute.OP_SYS.getKey());
-			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaAttribute.REP_PLATFORM.getKey());
+			TaskAttribute opSysAttribute = newBugModel.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey());
+			TaskAttribute platformAttribute = newBugModel.getRoot().getAttribute(
+					BugzillaAttribute.REP_PLATFORM.getKey());
 
 			// TODO something can still go wrong when the allowed values on the repository change...
 			opSysAttribute.setValue(os);
@@ -291,14 +292,15 @@ public class BugzillaCorePlugin extends Plugin {
 		setPlatformOptions(newBugModel);
 	}
 
-	public void setPlatformOptions(RepositoryTaskData newBugModel) {
+	public void setPlatformOptions(TaskData newBugModel) {
 		try {
 
 			// Get OS Lookup Map
 			// Check that the result is in Values, if it is not, set it to other
 			// Defaults to the first of each (sorted) list All, All
-			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaAttribute.OP_SYS.getKey());
-			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaAttribute.REP_PLATFORM.getKey());
+			TaskAttribute opSysAttribute = newBugModel.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey());
+			TaskAttribute platformAttribute = newBugModel.getRoot().getAttribute(
+					BugzillaAttribute.REP_PLATFORM.getKey());
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();
@@ -320,7 +322,7 @@ public class BugzillaCorePlugin extends Plugin {
 			//
 			// The search in casesensitive.
 			if (opSysAttribute != null) {
-				while (bugzillaOS != null && opSysAttribute.getOptionParameter(bugzillaOS) == null) {
+				while (bugzillaOS != null && opSysAttribute.getOption(bugzillaOS) == null) {
 					int dotindex = bugzillaOS.lastIndexOf('.');
 					if (dotindex > 0) {
 						bugzillaOS = bugzillaOS.substring(0, dotindex);
@@ -350,7 +352,7 @@ public class BugzillaCorePlugin extends Plugin {
 						&& OS != null && OS.compareTo("macosx") == 0) {
 					// TODO: this may not even be a legal value in another repository!
 					bugzillaPlatform = "Macintosh";
-				} else if (platformAttribute != null && platformAttribute.getOptionParameter(bugzillaPlatform) == null) {
+				} else if (platformAttribute != null && platformAttribute.getOption(bugzillaPlatform) == null) {
 					// If the platform we found is not int the list of available
 					// optinos, set the
 					// Bugzilla Platform to null, and juse use "other"
@@ -360,14 +362,14 @@ public class BugzillaCorePlugin extends Plugin {
 			// Set the OS and the Platform in the taskData
 			if (bugzillaOS != null && opSysAttribute != null) {
 				opSysAttribute.setValue(bugzillaOS);
-			} else if (opSysAttribute != null && opSysAttribute.getOptionParameter(OPTION_ALL) != null) {
+			} else if (opSysAttribute != null && opSysAttribute.getOption(OPTION_ALL) != null) {
 				opSysAttribute.setValue(OPTION_ALL);
 			}
 
 			if (bugzillaPlatform != null && platformAttribute != null) {
 				platformAttribute.setValue(bugzillaPlatform);
 			} else if (opSysAttribute != null && platformAttribute != null
-					&& platformAttribute.getOptionParameter(OPTION_ALL) != null) {
+					&& platformAttribute.getOption(OPTION_ALL) != null) {
 				opSysAttribute.setValue(OPTION_ALL);
 			}
 

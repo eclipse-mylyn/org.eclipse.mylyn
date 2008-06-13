@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
+package com.eclipse.mylyn.bugzilla.deprecated;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.bugzilla.tests;
+package com.eclipse.mylyn.bugzilla.deprecated;
 
 import java.util.ArrayList;
 import java.util.Calendar;

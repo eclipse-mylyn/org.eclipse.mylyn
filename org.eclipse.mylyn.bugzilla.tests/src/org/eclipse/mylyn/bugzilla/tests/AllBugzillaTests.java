@@ -13,6 +13,9 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaQueryTest;
 import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaTaskHistoryTest;
 
+import com.eclipse.mylyn.bugzilla.deprecated.DuplicateDetetionTest;
+import com.eclipse.mylyn.bugzilla.deprecated.TaskListStandaloneTest;
+
 /**
  * @author Mik Kersten
  */

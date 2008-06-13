@@ -2,12 +2,12 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension-point id="languages" name="languages" schema="schema/languages.exsd"/>
-<extension
+<!--<extension
    		point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
             <detector
                   class="org.eclipse.mylyn.internal.bugzilla.core.BugzillaStackTraceDuplicateDetector"
                   kind="bugzilla"
                   name="Stack Trace">
             </detector>       
-   </extension>
+   </extension>-->
 </plugin>
