@@ -93,9 +93,11 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 				}
 			}
 			for (RepositoryQuery repositoryQuery : queries) {
-				if (queryTitle.equals(repositoryQuery.getSummary()) && query != null && !query.equals(repositoryQuery)) {
-					setErrorMessage("A query with this name already exists, please choose another name.");
-					return false;
+				if (query == null || !query.equals(repositoryQuery)) {
+					if (queryTitle.equals(repositoryQuery.getSummary())) {
+						setErrorMessage("A query with this name already exists, please choose another name.");
+						return false;
+					}
 				}
 			}
 		}
