@@ -201,7 +201,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		boolean hasDueDate = !getTaskEditorPage().getConnector().hasRepositoryDueDate(
 				getTaskEditorPage().getTaskRepository(), task, getTaskData());
 
-		Section section = createSection(parent, toolkit, false);
+		Section section = createSection(parent, toolkit, true);
 		Composite composite = getManagedForm().getToolkit().createComposite(section);
 		composite.setLayout(new GridLayout((hasDueDate) ? 4 : 6, false));
 
