@@ -187,6 +187,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					.getPreferenceStore()
 					.setValue(MonitorUiPlugin.PREF_USER_ACTIVITY_ENABLED, true);
 
+			MonitorUiPlugin.getDefault().savePluginPreferences();
+
 			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
