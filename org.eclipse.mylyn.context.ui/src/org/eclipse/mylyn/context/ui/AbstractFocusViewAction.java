@@ -105,8 +105,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 		private final Tree tree;
 
-		boolean drawn = false;
-
 		EmptyContextDrawer(Tree tree) {
 			this.tree = tree;
 		}
@@ -118,7 +116,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 					int offset = 7;
 					event.gc.drawImage(IMAGE, offset, offset);
 					event.gc.drawText(LABEL, offset + IMAGE.getBounds().width + 5, offset);
-					drawn = true;
 					break;
 				}
 				}
