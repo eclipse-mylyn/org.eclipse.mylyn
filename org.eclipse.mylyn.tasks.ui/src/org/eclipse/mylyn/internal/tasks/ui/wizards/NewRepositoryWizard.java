@@ -93,8 +93,7 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		if (canFinish()) {
-			TaskRepository taskRepository = new TaskRepository(connector.getConnectorKind(),
-					settingsPage.getRepositoryUrl());
+			taskRepository = new TaskRepository(connector.getConnectorKind(), settingsPage.getRepositoryUrl());
 			settingsPage.applyTo(taskRepository);
 			TasksUi.getRepositoryManager().addRepository(taskRepository);
 			return true;
