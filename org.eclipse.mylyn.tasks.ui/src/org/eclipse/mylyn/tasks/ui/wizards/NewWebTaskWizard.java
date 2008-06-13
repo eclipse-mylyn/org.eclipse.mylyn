@@ -11,8 +11,6 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewWebTaskPage;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -77,16 +75,12 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 			return;
 		}
 
-		if (taskSelection instanceof TaskSelection) {
-			RepositoryTaskData taskData = ((TaskSelection) taskSelection).getLegacyTaskData();
-			String summary = taskData.getSummary();
-			String description = taskData.getDescription();
+		String summary = taskSelection.getSummary();
+		String description = taskSelection.getDescription();
 
-			Clipboard clipboard = new Clipboard(getShell().getDisplay());
-			clipboard.setContents(new Object[] { summary + "\n" + description },
-					new Transfer[] { TextTransfer.getInstance() });
-		}
-		// FIXME 3.0 implement TaskData support
+		Clipboard clipboard = new Clipboard(getShell().getDisplay());
+		clipboard.setContents(new Object[] { summary + "\n" + description },
+				new Transfer[] { TextTransfer.getInstance() });
 
 		MessageDialog.openInformation(
 				getShell(),
