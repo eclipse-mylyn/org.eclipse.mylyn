@@ -262,8 +262,7 @@ public class BugzillaProductPage extends WizardPage {
 									public void run() {
 										MessageDialog.openError(Display.getDefault().getActiveShell(),
 												"Bugzilla Search Page",
-												"Unable to get configuration. Ensure proper repository configuration in "
-														+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+												"Unable to get configuration. Ensure proper repository configuration in Task Repositories");
 									}
 								});
 							}
@@ -302,8 +301,7 @@ public class BugzillaProductPage extends WizardPage {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE,
-							"Unable to get products. Ensure proper repository configuration in "
-									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
+							"Unable to get products. Ensure proper repository configuration in task Repositories.");
 				}
 			});
 		}

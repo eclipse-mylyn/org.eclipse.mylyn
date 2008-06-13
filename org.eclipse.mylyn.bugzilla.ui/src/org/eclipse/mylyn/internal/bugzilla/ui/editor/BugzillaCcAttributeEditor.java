@@ -9,9 +9,9 @@
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -44,7 +44,7 @@ public class BugzillaCcAttributeEditor extends AbstractAttributeEditor {
 		list = new List(parent, SWT.FLAT | SWT.MULTI | SWT.V_SCROLL);
 		toolkit.adapt(list, true, true);
 		list.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		list.setFont(EditorUtil.TEXT_FONT);
+		list.setFont(JFaceResources.getDefaultFont());
 		GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(list);
 
 		TaskAttribute attrUserCC = getTaskAttribute();

@@ -14,6 +14,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
  * @author Shawn Minto
  * @author Mik Kersten
  */
+@Deprecated
 public class BugzillaRepositoryQuery extends RepositoryQuery {
 
 	private boolean customQuery = false;
