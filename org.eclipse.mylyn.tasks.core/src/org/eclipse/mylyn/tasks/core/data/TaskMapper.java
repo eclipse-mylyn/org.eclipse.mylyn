@@ -214,7 +214,7 @@ public class TaskMapper implements ITaskMapping {
 			if (attribute == null) {
 				attribute = createAttribute(attributeKey);
 			}
-		} else if (attribute.getMetaData().isReadOnly()) {
+		} else if (attribute != null && attribute.getMetaData().isReadOnly()) {
 			return null;
 		}
 		return attribute;
