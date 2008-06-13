@@ -89,11 +89,17 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	private boolean wasRun = false;
 
 	/**
-	 * API-3.0: Work-around for suppressing expansion without breaking API.
+	 * Work-around for suppressing expansion without breaking API.
 	 * 
-	 * Will be remove for 3.0
+	 * Will be remove post 3.0
 	 */
+	@Deprecated
 	protected boolean internalSuppressExpandAll = false;
+
+	/**
+	 * @since 3.0
+	 */
+	protected boolean showEmptyViewMessage = false;
 
 	private final Map<StructuredViewer, EmptyContextDrawer> viewerToDrawerMap = new HashMap<StructuredViewer, EmptyContextDrawer>();
 
@@ -394,7 +400,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	public void updateInterestFilter(final boolean on, StructuredViewer viewer) {
 		if (viewer != null) {
 			if (on) {
-				if (viewer instanceof TreeViewer) {
+				if (showEmptyViewMessage && viewer instanceof TreeViewer) {
 					Tree tree = ((TreeViewer) viewer).getTree();
 					Listener drawingListener = viewerToDrawerMap.get(viewer);
 					if (drawingListener == null) {
@@ -406,7 +412,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				installInterestFilter(viewer);
 				ContextUiPlugin.getViewerManager().addFilteredViewer(viewer);
 			} else {
-				if (viewer instanceof TreeViewer) {
+				if (showEmptyViewMessage && viewer instanceof TreeViewer) {
 					Tree tree = ((TreeViewer) viewer).getTree();
 					EmptyContextDrawer drawer = viewerToDrawerMap.remove(viewer);
 					if (drawer != null) {

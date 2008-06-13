@@ -33,6 +33,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 
 	private final AbstractContextListener CONTEXT_LISTENER = new AbstractContextListener() {
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void contextActivated(IInteractionContext context) {
 			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -49,6 +50,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
 			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
+		super.showEmptyViewMessage = true;
 		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
 	}
 
@@ -78,6 +80,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 
 		// can not run this until the view has been initialized
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			@SuppressWarnings("deprecation")
 			public void run() {
 				try {
 					if (ContextCore.getContextManager().isContextActive()
