@@ -25,8 +25,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.commons.net,
  org.eclipse.mylyn.bugzilla.ide,
  org.eclipse.mylyn.commons.ui,
- org.eclipse.compare;bundle-version="3.4.0",
- org.eclipse.mylyn.commons.core;bundle-version="3.0.0"
+ org.eclipse.compare,
+ org.eclipse.mylyn.commons.core
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-test.jar
