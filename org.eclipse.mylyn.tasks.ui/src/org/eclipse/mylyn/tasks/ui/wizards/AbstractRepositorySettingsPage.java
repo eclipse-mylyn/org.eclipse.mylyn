@@ -410,7 +410,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 
 		if (needsAnonymousLogin()) {
 			if (repository != null) {
-				setAnonymous(repository.getCredentials(AuthenticationType.REPOSITORY) != null);
+				setAnonymous(repository.getCredentials(AuthenticationType.REPOSITORY) == null);
 			} else {
 				setAnonymous(true);
 			}
@@ -1038,9 +1038,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 
 	protected abstract boolean isValidUrl(String name);
 
-	void updateHyperlinks() {
+	private void updateHyperlinks() {
 		if (getRepositoryUrl() != null && getRepositoryUrl().length() > 0) {
-			TaskRepository repository = createTaskRepository();
+			TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getRepositoryUrl());
+
 			String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 					.getAccountCreationUrl(repository);
 			createAccountHyperlink.setEnabled(accountCreationUrl != null);
