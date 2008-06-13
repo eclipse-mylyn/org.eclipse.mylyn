@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.context.ui.commands;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
+import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.ui.PlatformUI;
 
