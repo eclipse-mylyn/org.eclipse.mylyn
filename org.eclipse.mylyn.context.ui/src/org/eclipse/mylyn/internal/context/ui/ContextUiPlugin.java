@@ -43,6 +43,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.IContextUiStartup;
+import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -181,6 +182,11 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		@SuppressWarnings( { "deprecation", "restriction" })
 		@Override
 		public void taskActivated(ITask task) {
+
+			MonitorUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(MonitorUiPlugin.PREF_USER_ACTIVITY_ENABLED, true);
+
 			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
