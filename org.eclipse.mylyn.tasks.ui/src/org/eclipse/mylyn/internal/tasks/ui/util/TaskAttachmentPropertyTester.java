@@ -9,7 +9,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.mylyn.internal.tasks.ui.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 
 /**

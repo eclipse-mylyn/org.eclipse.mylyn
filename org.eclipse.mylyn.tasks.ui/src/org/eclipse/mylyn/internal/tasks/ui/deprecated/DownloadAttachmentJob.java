@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.deprecated;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -6,9 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,9 +28,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
@@ -37,11 +42,12 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.FileAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
-import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.deprecated.DownloadAttachmentJob;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
@@ -55,6 +61,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Steffen Pingel
  */
 public class AttachmentUtil {
+
+	protected static final int BUFFER_SIZE = 1024;
 
 	private static final String CONTEXT_DESCRIPTION = "mylyn/context/zip";
 
@@ -387,4 +395,47 @@ public class AttachmentUtil {
 		}
 		return false;
 	}
+
+	public static void downloadAttachment(ITaskAttachment attachment, OutputStream out, IProgressMonitor monitor)
+			throws CoreException {
+		try {
+			monitor.beginTask("Downloading attachment", IProgressMonitor.UNKNOWN);
+
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+					attachment.getConnectorKind());
+			AbstractTaskAttachmentHandler handler = connector.getTaskAttachmentHandler();
+			if (handler == null) {
+				throw new CoreException(new RepositoryStatus(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_INTERNAL, "The repository does not support attachments."));
+			}
+
+			InputStream in = handler.getContent(attachment.getTaskRepository(), attachment.getTask(),
+					attachment.getTaskAttribute(), monitor);
+			try {
+				byte[] buffer = new byte[BUFFER_SIZE];
+				while (true) {
+					Policy.checkCanceled(monitor);
+					int count = in.read(buffer);
+					if (count == -1) {
+						return;
+					}
+					out.write(buffer, 0, count);
+				}
+			} catch (IOException e) {
+				throw new CoreException(new RepositoryStatus(attachment.getTaskRepository(), IStatus.ERROR,
+						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error reading attachment: "
+								+ e.getMessage(), e));
+			} finally {
+				try {
+					in.close();
+				} catch (IOException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+							"Error closing attachment stream", e));
+				}
+			}
+		} finally {
+			monitor.done();
+		}
+	}
+
 }
