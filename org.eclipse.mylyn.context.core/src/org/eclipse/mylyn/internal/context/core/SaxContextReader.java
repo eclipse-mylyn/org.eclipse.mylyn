@@ -54,7 +54,6 @@ public class SaxContextReader implements IInteractionContextReader {
 			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 			String contextFileName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
 			ZipEntry entry = zipInputStream.getNextEntry();
-			ZipEntry firstEntry = entry;
 			while (entry != null) {
 				if (contextFileName.equals(entry.getName())) {
 					break;

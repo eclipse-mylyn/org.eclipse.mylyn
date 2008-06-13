@@ -9,11 +9,7 @@
 package org.eclipse.mylyn.internal.context.core;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -249,25 +245,6 @@ public class LocalContextStore implements IContextStore {
 		} catch (SecurityException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
 					"Could not delete context file, insufficient permissions.", e));
-		}
-	}
-
-	@Deprecated
-	private void copy(File src, File dest) throws IOException {
-		InputStream in = new FileInputStream(src);
-		try {
-			OutputStream out = new FileOutputStream(dest);
-			try {
-				byte[] buf = new byte[1024];
-				int len;
-				while ((len = in.read(buf)) == -1) {
-					out.write(buf, 0, len);
-				}
-			} finally {
-				out.close();
-			}
-		} finally {
-			in.close();
 		}
 	}
 
