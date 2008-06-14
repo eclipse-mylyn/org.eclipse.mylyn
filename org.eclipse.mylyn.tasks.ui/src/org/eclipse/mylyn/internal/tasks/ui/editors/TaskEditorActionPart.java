@@ -49,10 +49,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		@Override
 		public void widgetSelected(SelectionEvent event) {
-			setSelectedRadionButton((Button) event.widget);
-			TaskOperation taskOperation = (TaskOperation) event.widget.getData(KEY_OPERATION);
-			getTaskData().getAttributeMapper().setTaskOperation(selectedOperationAttribute, taskOperation);
-			getModel().attributeChanged(selectedOperationAttribute);
+			setSelectedRadionButton((Button) event.widget, true);
 		}
 
 	}
@@ -67,7 +64,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		@Override
 		public void focusGained(FocusEvent event) {
-			setSelectedRadionButton(button);
+			setSelectedRadionButton(button, true);
 		}
 
 	}
@@ -272,7 +269,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			if (selectedButton == null && !operationButtons.isEmpty()) {
 				selectedButton = operationButtons.get(0);
 			}
-			setSelectedRadionButton(selectedButton);
+			setSelectedRadionButton(selectedButton, false);
 		}
 	}
 
@@ -301,12 +298,18 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	private void setSelectedRadionButton(Button selectedButton) {
+	private void setSelectedRadionButton(Button selectedButton, boolean updateModel) {
 		selectedButton.setSelection(true);
 		for (Button button : operationButtons) {
 			if (button != selectedButton) {
 				button.setSelection(false);
 			}
+		}
+
+		if (updateModel) {
+			TaskOperation taskOperation = (TaskOperation) selectedButton.getData(KEY_OPERATION);
+			getTaskData().getAttributeMapper().setTaskOperation(selectedOperationAttribute, taskOperation);
+			getModel().attributeChanged(selectedOperationAttribute);
 		}
 	}
 
