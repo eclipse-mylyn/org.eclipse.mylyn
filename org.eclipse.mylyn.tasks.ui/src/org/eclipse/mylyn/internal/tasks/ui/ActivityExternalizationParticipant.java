@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.externalization.AbstractExternalizationParticipant;
+import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationContext;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -29,7 +30,11 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	private boolean isDirty = false;
 
-	private long lastUpdate = 0;
+	private final ExternalizationManager manager;
+
+	public ActivityExternalizationParticipant(ExternalizationManager manager) {
+		this.manager = manager;
+	}
 
 	@SuppressWarnings("restriction")
 	@Override
@@ -81,26 +86,21 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	@Override
 	public void load(File sourceFile, IProgressMonitor monitor) throws CoreException {
-		// ignore
-
+		// ignore see execute method
 	}
 
 	@Override
 	public void save(File targetFile, IProgressMonitor monitor) throws CoreException {
-		ContextCorePlugin.getContextManager().saveActivityMetaContext();
-		setDirty(false);
+		// ignore see execute method
 	}
 
 	public void activityReset() {
-		// ignore
-
+		// ignore see execute method
 	}
 
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-		if (System.currentTimeMillis() - lastUpdate > 1000 * 60) {
-			setDirty(true);
-			lastUpdate = System.currentTimeMillis();
-		}
+		setDirty(true);
+		manager.requestLazySave();
 	}
 
 }

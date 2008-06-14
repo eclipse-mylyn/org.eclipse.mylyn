@@ -74,29 +74,26 @@ public class TaskActivityMonitor {
 					}
 				}
 			} else if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
-				boolean changed = false;
 				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) {
 					if (event.getStructureKind().equals(InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET)) {
 						taskActivityManager.addWorkingSetElapsedTime(event.getStructureHandle(), event.getDate(),
 								event.getEndDate());
-						externalizationParticipant.setDirty(true);
-						changed = true;
+						if (!isReloading) {
+							externalizationParticipant.setDirty(true);
+							// save not requested for working set time updates so...
+							externalizationParticipant.elapsedTimeUpdated(null, 0);
+						}
 					} else {
 						AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
 						if (activatedTask != null) {
 							taskActivityManager.addElapsedTime(activatedTask, event.getDate(), event.getEndDate());
-							changed = true;
 						}
 					}
 				} else if (event.getDelta().equals("removed")) {
 					ITask task = taskList.getTask(event.getStructureHandle());
 					if (task != null) {
 						taskActivityManager.removeElapsedTime(task, event.getDate(), event.getEndDate());
-						changed = true;
 					}
-				}
-				if (!isReloading && changed == true) {
-					TasksUiPlugin.getExternalizationManager().requestSave();
 				}
 			}
 		} catch (Throwable t) {

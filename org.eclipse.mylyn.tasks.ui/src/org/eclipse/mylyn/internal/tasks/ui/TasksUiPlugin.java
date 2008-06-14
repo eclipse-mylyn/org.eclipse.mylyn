@@ -599,7 +599,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			};
 			ResourcesPlugin.getWorkspace().addSaveParticipant(this, saveParticipant);
 
-			ActivityExternalizationParticipant ACTIVITY_EXTERNALIZTAION_PARTICIPANT = new ActivityExternalizationParticipant();
+			ActivityExternalizationParticipant ACTIVITY_EXTERNALIZTAION_PARTICIPANT = new ActivityExternalizationParticipant(
+					externalizationManager);
 			externalizationManager.addParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 			taskActivityManager.addActivityListener(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 			taskActivityMonitor.setExternalizationParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
