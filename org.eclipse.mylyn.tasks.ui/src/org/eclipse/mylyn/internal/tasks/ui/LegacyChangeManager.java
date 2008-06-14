@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 /**
  * @author Steffen Pingel
  */
+@SuppressWarnings( { "restriction", "deprecation" })
 @Deprecated
 public class LegacyChangeManager {
 

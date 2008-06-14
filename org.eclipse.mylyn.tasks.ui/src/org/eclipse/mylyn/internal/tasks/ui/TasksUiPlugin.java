@@ -60,7 +60,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
@@ -75,8 +74,6 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationPar
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractTaskEditorFactory;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationQueryIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
@@ -92,7 +89,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -285,55 +281,55 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	private static ITaskListNotificationProvider INCOMING_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
-
-		@SuppressWarnings( { "deprecation", "restriction" })
-		public Set<AbstractNotification> getNotifications() {
-			Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
-			// Incoming Changes
-			for (TaskRepository repository : getRepositoryManager().getAllRepositories()) {
-				AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
-						repository.getConnectorKind());
-				if (connector instanceof AbstractLegacyRepositoryConnector) {
-					AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
-					if (connectorUi != null && !connectorUi.hasCustomNotifications()) {
-						for (ITask itask : TasksUiPlugin.getTaskList().getTasks(repository.getRepositoryUrl())) {
-							if (itask instanceof AbstractTask) {
-								AbstractTask task = (AbstractTask) itask;
-								if ((task.getLastReadTimeStamp() == null || task.getSynchronizationState() == SynchronizationState.INCOMING)
-										&& task.isNotified() == false) {
-									TaskListNotification notification = LegacyChangeManager.getIncommingNotification(
-											connector, task);
-									notifications.add(notification);
-									task.setNotified(true);
-								}
-							}
-						}
-					}
-				}
-			}
-			// New query hits
-			for (RepositoryQuery query : TasksUiPlugin.getTaskList().getQueries()) {
-				TaskRepository repository = getRepositoryManager().getRepository(query.getRepositoryUrl());
-				if (repository != null) {
-					AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
-							repository.getConnectorKind());
-					if (connector instanceof AbstractLegacyRepositoryConnector) {
-						AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
-						if (!connectorUi.hasCustomNotifications()) {
-							for (ITask hit : query.getChildren()) {
-								if (((AbstractTask) hit).isNotified() == false) {
-									notifications.add(new TaskListNotificationQueryIncoming(hit));
-									((AbstractTask) hit).setNotified(true);
-								}
-							}
-						}
-					}
-				}
-			}
-			return notifications;
-		}
-	};
+//	private static ITaskListNotificationProvider INCOMING_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
+//
+//		@SuppressWarnings( { "deprecation", "restriction" })
+//		public Set<AbstractNotification> getNotifications() {
+//			Set<AbstractNotification> notifications = new HashSet<AbstractNotification>();
+//			// Incoming Changes
+//			for (TaskRepository repository : getRepositoryManager().getAllRepositories()) {
+//				AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
+//						repository.getConnectorKind());
+//				if (connector instanceof AbstractLegacyRepositoryConnector) {
+//					AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
+//					if (connectorUi != null && !connectorUi.hasCustomNotifications()) {
+//						for (ITask itask : TasksUiPlugin.getTaskList().getTasks(repository.getRepositoryUrl())) {
+//							if (itask instanceof AbstractTask) {
+//								AbstractTask task = (AbstractTask) itask;
+//								if ((task.getLastReadTimeStamp() == null || task.getSynchronizationState() == SynchronizationState.INCOMING)
+//										&& task.isNotified() == false) {
+//									TaskListNotification notification = LegacyChangeManager.getIncommingNotification(
+//											connector, task);
+//									notifications.add(notification);
+//									task.setNotified(true);
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//			// New query hits
+//			for (RepositoryQuery query : TasksUiPlugin.getTaskList().getQueries()) {
+//				TaskRepository repository = getRepositoryManager().getRepository(query.getRepositoryUrl());
+//				if (repository != null) {
+//					AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
+//							repository.getConnectorKind());
+//					if (connector instanceof AbstractLegacyRepositoryConnector) {
+//						AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
+//						if (!connectorUi.hasCustomNotifications()) {
+//							for (ITask hit : query.getChildren()) {
+//								if (((AbstractTask) hit).isNotified() == false) {
+//									notifications.add(new TaskListNotificationQueryIncoming(hit));
+//									((AbstractTask) hit).setNotified(true);
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//			return notifications;
+//		}
+//	};
 
 //	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 //
@@ -420,7 +416,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			try {
 				taskListNotificationManager = new TaskListNotificationManager();
 				taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
-				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
+//				taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
 				taskListNotificationManager.addNotificationProvider(new TaskListNotifier(getRepositoryModel(),
 						getTaskDataManager()));
 				taskListNotificationManager.startNotification(NOTIFICATION_DELAY);

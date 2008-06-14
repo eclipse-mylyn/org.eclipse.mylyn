@@ -44,6 +44,8 @@ import org.eclipse.ui.XMLMemento;
 /**
  * @author Rob Elves
  */
+@SuppressWarnings( { "restriction", "deprecation" })
+@Deprecated
 public class OfflineFileStorage implements ITaskDataStorage {
 
 	private static final String ATTRIBUTE_TASK_KIND = "taskKind";
