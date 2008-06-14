@@ -331,9 +331,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			monitor = Policy.backgroundMonitorFor(monitor);
 		}
 		IStatus result = connector.performQuery(repository, repositoryQuery, collector, event, monitor);
-		if (result.getSeverity() == IStatus.CANCEL) {
-			throw new OperationCanceledException();
-		} else if (result.isOK()) {
+		if (result == null || result.isOK()) {
 			if (collector.getResultCount() >= TaskDataCollector.MAX_HITS) {
 				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, MAX_HITS_REACHED + "\n"
 						+ repositoryQuery.getSummary()));
@@ -345,6 +343,8 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			}
 
 			repositoryQuery.setLastSynchronizedStamp(new SimpleDateFormat("MMM d, H:mm:ss").format(new Date()));
+		} else if (result.getSeverity() == IStatus.CANCEL) {
+			throw new OperationCanceledException();
 		} else {
 			repositoryQuery.setStatus(result);
 			statuses.add(result);
