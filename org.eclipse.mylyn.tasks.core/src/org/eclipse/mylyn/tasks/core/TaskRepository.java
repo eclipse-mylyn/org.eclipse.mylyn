@@ -11,7 +11,6 @@ package org.eclipse.mylyn.tasks.core;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,11 +29,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.commons.net.WebClientUtil;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using Date objects led to the following
@@ -446,28 +443,28 @@ public final class TaskRepository extends PlatformObject {
 		return this.properties.get(name);
 	}
 
-	/**
-	 * @deprecated use {@link TaskRepositoryLocation#getProxyForHost(String, String)} instead
-	 */
-	@Deprecated
-	public Proxy getProxy() {
-		Proxy proxy = Proxy.NO_PROXY;
-		if (isDefaultProxyEnabled()) {
-			proxy = WebClientUtil.getPlatformProxy(getRepositoryUrl());
-		} else {
-
-			String proxyHost = getProperty(PROXY_HOSTNAME);
-			String proxyPort = getProperty(PROXY_PORT);
-			String proxyUsername = "";
-			String proxyPassword = "";
-			if (proxyHost != null && proxyHost.length() > 0) {
-				proxyUsername = getProxyUsername();
-				proxyPassword = getProxyPassword();
-			}
-			proxy = WebClientUtil.getProxy(proxyHost, proxyPort, proxyUsername, proxyPassword);
-		}
-		return proxy;
-	}
+//	/**
+//	 * @deprecated use {@link TaskRepositoryLocation#getProxyForHost(String, String)} instead
+//	 */
+//	@Deprecated
+//	public Proxy getProxy() {
+//		Proxy proxy = Proxy.NO_PROXY;
+//		if (isDefaultProxyEnabled()) {
+//			proxy = WebClientUtil.getPlatformProxy(getRepositoryUrl());
+//		} else {
+//
+//			String proxyHost = getProperty(PROXY_HOSTNAME);
+//			String proxyPort = getProperty(PROXY_PORT);
+//			String proxyUsername = "";
+//			String proxyPassword = "";
+//			if (proxyHost != null && proxyHost.length() > 0) {
+//				proxyUsername = getProxyUsername();
+//				proxyPassword = getProxyPassword();
+//			}
+//			proxy = WebClientUtil.getProxy(proxyHost, proxyPort, proxyUsername, proxyPassword);
+//		}
+//		return proxy;
+//	}
 
 	/**
 	 * @deprecated use {@link #getCredentials(AuthenticationType)} instead

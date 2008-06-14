@@ -37,7 +37,16 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 	@Override
 	public Proxy getProxyForHost(String host, String proxyType) {
 		if (!taskRepository.isDefaultProxyEnabled()) {
-			return taskRepository.getProxy();
+			String proxyHost = taskRepository.getProperty(TaskRepository.PROXY_HOSTNAME);
+			String proxyPort = taskRepository.getProperty(TaskRepository.PROXY_PORT);
+			String proxyUsername = "";
+			String proxyPassword = "";
+			AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.PROXY);
+			if (proxyHost != null && proxyHost.length() > 0 && credentials != null) {
+				proxyUsername = credentials.getUserName();
+				proxyPassword = credentials.getPassword();
+			}
+			return getProxy(proxyHost, proxyPort, proxyUsername, proxyPassword);
 		}
 
 		IProxyService service = CommonsNetPlugin.getProxyService();
@@ -61,6 +70,20 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 			}
 		}
 		return null;
+	}
+
+	private static Proxy getProxy(String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) {
+		boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword.length() > 0);
+		if (proxyHost != null && proxyHost.length() > 0 && proxyPort != null && proxyPort.length() > 0) {
+			int proxyPortNum = Integer.parseInt(proxyPort);
+			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPortNum);
+			if (authenticated) {
+				return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
+			} else {
+				return new Proxy(Type.HTTP, sockAddr);
+			}
+		}
+		return Proxy.NO_PROXY;
 	}
 
 	private Type getJavaProxyType(String type) {
