@@ -32,6 +32,8 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	private final ExternalizationManager manager;
 
+	private long lastUpdate;
+
 	public ActivityExternalizationParticipant(ExternalizationManager manager) {
 		this.manager = manager;
 	}
@@ -43,6 +45,7 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 		switch (context.getKind()) {
 		case SAVE:
 			if (ContextCorePlugin.getDefault() != null && ContextCorePlugin.getContextManager() != null) {
+				System.err.println(">>> save activity");
 				ContextCorePlugin.getContextManager().saveActivityMetaContext();
 				setDirty(false);
 			}
@@ -99,8 +102,11 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 	}
 
 	public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
-		setDirty(true);
-		manager.requestLazySave();
+		if (System.currentTimeMillis() - lastUpdate > 1000 * 60) {
+			setDirty(true);
+			manager.requestSave();
+			lastUpdate = System.currentTimeMillis();
+		}
 	}
 
 }

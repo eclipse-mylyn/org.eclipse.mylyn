@@ -138,16 +138,6 @@ public class ExternalizationManager {
 		}
 	}
 
-	public void requestLazySave() {
-		if (!saveDisabled) {
-			if (!CoreUtil.TEST_MODE) {
-				saveJob.schedule(LAZY_SAVE_DELAY);
-			} else {
-				saveJob.run(new NullProgressMonitor());
-			}
-		}
-	}
-
 	public void stop() {
 		try {
 			// run save job as early as possible
@@ -162,7 +152,6 @@ public class ExternalizationManager {
 	public void requestSaveAndWait(boolean force) throws InterruptedException {
 		try {
 			forceSave = force;
-
 			saveJob.schedule();
 			saveJob.join();
 		} finally {
