@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -42,8 +43,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
@@ -160,12 +164,20 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					if (actionPart instanceof TaskEditorAttributePart) {
 						parent = ((TaskEditorActionPart) actionPart).getCategory();
 					}
-					// TODO copy scheduling
-					ContextCore.getContextStore().cloneContext(getTask().getHandleIdentifier(),
-							newTask.getHandleIdentifier());
 					TasksUiInternal.getTaskList().addTask(newTask, parent);
+					ITask oldTask = getTask();
+					if (oldTask instanceof AbstractTask && newTask instanceof AbstractTask) {
+						((AbstractTask) newTask).setNotes(((AbstractTask) oldTask).getNotes());
+						DateRange scheduledDate = ((AbstractTask) oldTask).getScheduledForDate();
+						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) newTask, scheduledDate);
+						Date dueDate = ((AbstractTask) oldTask).getDueDate();
+						TasksUiPlugin.getTaskActivityManager().setDueDate(newTask, dueDate);
+					}
+					ContextCorePlugin.getContextStore().saveActiveContext();
+					ContextCore.getContextStore().cloneContext(oldTask.getHandleIdentifier(),
+							newTask.getHandleIdentifier());
 					close();
-					TasksUiInternal.getTaskList().deleteTask(getTask());
+					TasksUiInternal.getTaskList().deleteTask(oldTask);
 					TasksUiInternal.openTaskInBackground(newTask, false);
 				}
 
