@@ -45,7 +45,6 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 		switch (context.getKind()) {
 		case SAVE:
 			if (ContextCorePlugin.getDefault() != null && ContextCorePlugin.getContextManager() != null) {
-				System.err.println(">>> save activity");
 				ContextCorePlugin.getContextManager().saveActivityMetaContext();
 				setDirty(false);
 			}
