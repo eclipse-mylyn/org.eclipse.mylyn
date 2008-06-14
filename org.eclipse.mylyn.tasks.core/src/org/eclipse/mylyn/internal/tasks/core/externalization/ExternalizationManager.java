@@ -140,6 +140,8 @@ public class ExternalizationManager {
 
 	public void stop() {
 		try {
+			saveDisabled = true;
+
 			// run save job as early as possible
 			saveJob.wakeUp();
 			saveJob.join();
