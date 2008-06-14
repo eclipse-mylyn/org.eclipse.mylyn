@@ -241,11 +241,9 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		@Override
 		public void run() {
-//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-//				public void run() {
-			backupNow(false);
-//				}
-//			});
+			if (TasksUiPlugin.getTaskList().getAllTasks().size() > 0) {
+				backupNow(false);
+			}
 		}
 	}
 
