@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -44,7 +44,7 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 			return;
 		}
 
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("\n-- Error Log from JUnit --\nClass: ");
 		sb.append(testCaseElement.getTestClassName());
 		sb.append("\nMethod: ");
@@ -57,8 +57,13 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 		sb.append(traceString);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		TaskSelection taskSelection = new TaskSelection("", sb.toString());
-		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
+		TaskMapping taskMapping = new TaskMapping() {
+			@Override
+			public String getDescription() {
+				return sb.toString();
+			}
+		};
+		TasksUiUtil.openNewTaskEditor(shell, taskMapping, null);
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {
