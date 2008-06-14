@@ -330,7 +330,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			}
 		}
 
-		addUnmatchedCategories(validElements);
+		addSpecialContainers(validElements);
 
 		if (workingSet == null) {
 			IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
@@ -342,22 +342,29 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		}
 	}
 
-	private void addUnmatchedCategories(Set<IAdaptable> validElements) {
-		HashSet<AbstractTaskContainer> orphanContainers = new HashSet<AbstractTaskContainer>();
+	private void addSpecialContainers(Set<IAdaptable> validElements) {
+		HashSet<AbstractTaskContainer> specialContainers = new HashSet<AbstractTaskContainer>();
 		for (IAdaptable element : validElements) {
 			if (element instanceof IRepositoryQuery) {
 				IRepositoryQuery query = (IRepositoryQuery) element;
 				if (query.getRepositoryUrl() != null) {
-					AbstractTaskContainer orphansContainer = TasksUiPlugin.getTaskListManager()
-							.getTaskList()
-							.getUnmatchedContainer(query.getRepositoryUrl());
+					// Add Unmatched
+					AbstractTaskContainer orphansContainer = TasksUiPlugin.getTaskList().getUnmatchedContainer(
+							query.getRepositoryUrl());
 					if (orphansContainer != null) {
-						orphanContainers.add(orphansContainer);
+						specialContainers.add(orphansContainer);
+					}
+
+					// Add Unsubmitted
+					AbstractTaskContainer unsubmittedContainer = TasksUiPlugin.getTaskList().getUnsubmittedContainer(
+							query.getRepositoryUrl());
+					if (unsubmittedContainer != null) {
+						specialContainers.add(unsubmittedContainer);
 					}
 				}
 			}
 		}
-		validElements.addAll(orphanContainers);
+		validElements.addAll(specialContainers);
 	}
 
 	public IWorkingSet getSelection() {
