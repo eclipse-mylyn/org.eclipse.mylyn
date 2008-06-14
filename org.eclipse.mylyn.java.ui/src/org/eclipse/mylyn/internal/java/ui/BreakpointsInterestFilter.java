@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.java.ui;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.jdt.debug.core.IJavaLineBreakpoint;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.ide.ui.AbstractMarkerInterestFilter;
 
@@ -20,18 +21,13 @@ public class BreakpointsInterestFilter extends AbstractMarkerInterestFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parent, Object element) {
-//		if (element instanceof IJavaLineBreakpoint) {
-//			IJavaLineBreakpoint breakpoint = (IJavaLineBreakpoint)element;
-//		}
+		if (element instanceof IJavaLineBreakpoint) {
+			IJavaLineBreakpoint breakpoint = (IJavaLineBreakpoint) element;
+			return isInteresting(breakpoint.getMarker(), viewer, parent);
+		}
 		if (element instanceof IBreakpoint) {
-//			try {
-//				System.err.println(">>> " + ((IBreakpoint) element).getMarker().getAttributes().keySet());
-//				System.err.println(">>>> " + ((IBreakpoint) element).getMarker().getAttributes().values());
-//			} catch (CoreException e) {
-//				// XXX
-//			}
 			IBreakpoint breakpoint = (IBreakpoint) element;
-			// TODO: could use breakpoint.isEnabled()
+			// TODO: could consider use breakpoint.isEnabled() to make enabled breakpoints implicitly interesting	
 			return isInteresting(breakpoint.getMarker(), viewer, parent);
 		}
 		return false;

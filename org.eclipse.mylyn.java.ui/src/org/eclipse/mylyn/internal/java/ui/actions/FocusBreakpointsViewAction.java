@@ -37,4 +37,5 @@ public class FocusBreakpointsViewAction extends AbstractFocusMarkerViewAction {
 		}
 		return viewers;
 	}
+
 }

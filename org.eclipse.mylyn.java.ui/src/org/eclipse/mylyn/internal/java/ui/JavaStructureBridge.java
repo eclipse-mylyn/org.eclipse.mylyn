@@ -265,18 +265,12 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public String getHandleForOffsetInObject(Object object, int offset) {
 		IMarker marker;
-		int charStart = 0;
 		if (object instanceof ConcreteMarker) {
 			marker = ((ConcreteMarker) object).getMarker();
 		} else if (object instanceof Marker) {
 			marker = (Marker) object;
 		} else {
 			return null;
-		}
-
-		Object attribute = marker.getAttribute(IMarker.CHAR_START, 0);
-		if (attribute instanceof Integer) {
-			charStart = ((Integer) attribute).intValue();
 		}
 
 		try {
@@ -292,7 +286,30 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				}
 			}
 			if (compilationUnit != null) {
-				IJavaElement javaElement = compilationUnit.getElementAt(charStart);
+				// first try to resolve the character start, then the line number if not present
+				int charStart = 0;
+				Object attribute = marker.getAttribute(IMarker.CHAR_START, 0);
+				if (attribute instanceof Integer) {
+					charStart = ((Integer) attribute).intValue();
+				}
+				IJavaElement javaElement = null;
+				if (charStart != -1) {
+					javaElement = compilationUnit.getElementAt(charStart);
+				} else {
+					int lineNumber = 0;
+					Object lineNumberAttribute = marker.getAttribute(IMarker.LINE_NUMBER, 0);
+					if (lineNumberAttribute instanceof Integer) {
+						lineNumber = ((Integer) lineNumberAttribute).intValue();
+					}
+					if (lineNumber != -1) {
+						// could do finer granularity by uncommenting what's below, see bug 132092
+//						Document document = new Document(compilationUnit.getSource());
+//						IRegion region = document.getLineInformation(lineNumber);
+//						javaElement = compilationUnit.getElementAt(region.getOffset());
+						javaElement = compilationUnit;
+					}
+				}
+
 				if (javaElement != null) {
 					if (javaElement instanceof IImportDeclaration) {
 						javaElement = javaElement.getParent().getParent();
