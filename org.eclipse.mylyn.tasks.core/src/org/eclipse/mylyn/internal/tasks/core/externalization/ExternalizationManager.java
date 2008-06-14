@@ -36,6 +36,8 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationCon
  */
 public class ExternalizationManager {
 
+	private static final int LAZY_SAVE_DELAY = 1000 * 60;
+
 	private static final int SAVE_DELAY = 3000;
 
 	private final ExternalizationJob saveJob;
@@ -130,6 +132,16 @@ public class ExternalizationManager {
 		if (!saveDisabled) {
 			if (!CoreUtil.TEST_MODE) {
 				saveJob.schedule(SAVE_DELAY);
+			} else {
+				saveJob.run(new NullProgressMonitor());
+			}
+		}
+	}
+
+	public void requestLazySave() {
+		if (!saveDisabled) {
+			if (!CoreUtil.TEST_MODE) {
+				saveJob.schedule(LAZY_SAVE_DELAY);
 			} else {
 				saveJob.run(new NullProgressMonitor());
 			}
