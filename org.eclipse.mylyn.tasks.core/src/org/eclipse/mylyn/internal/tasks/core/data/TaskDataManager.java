@@ -204,7 +204,7 @@ public class TaskDataManager implements ITaskDataManager {
 		final TaskRepository repository = repositoryManager.getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
 		final boolean taskDataChanged = connector.hasTaskChanged(repository, task, taskData);
-		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask, taskData, null);
+		final TaskDataManagerEvent event = new TaskDataManagerEvent(this, itask, taskData, token);
 		event.setTaskDataChanged(taskDataChanged);
 		final boolean[] synchronizationStateChanged = new boolean[1];
 		if (taskDataChanged || user) {
