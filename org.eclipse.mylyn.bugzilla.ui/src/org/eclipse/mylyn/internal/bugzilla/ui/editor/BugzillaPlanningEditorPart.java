@@ -55,13 +55,21 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 		timeSection.setLayoutData(gd);
 
 		Composite timeComposite = toolkit.createComposite(timeSection);
-		gl = new GridLayout(12, false);
+		gl = new GridLayout(6, false);
 		timeComposite.setLayout(gl);
 		gd = new GridData();
 		gd.horizontalSpan = 4;
 		timeComposite.setLayoutData(gd);
 
-		TaskAttribute attribute = getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey());
+		TaskAttribute attribute = getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.DEADLINE.getKey());
+		if (attribute != null) {
+			AbstractAttributeEditor attributeEditor = createAttributeEditor(attribute);
+			attributeEditor.createLabelControl(timeComposite, toolkit);
+			attributeEditor.createControl(timeComposite, toolkit);
+			getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
+		}
+
+		attribute = getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.ESTIMATED_TIME.getKey());
 		AbstractAttributeEditor attributeEditor = createAttributeEditor(attribute);
 		attributeEditor.createLabelControl(timeComposite, toolkit);
 		attributeEditor.createControl(timeComposite, toolkit);
@@ -118,14 +126,6 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 		}
 
 		attribute = getTaskData().getRoot().getAttribute(BugzillaAttribute.REMAINING_TIME.getKey());
-		if (attribute != null) {
-			attributeEditor = createAttributeEditor(attribute);
-			attributeEditor.createLabelControl(timeComposite, toolkit);
-			attributeEditor.createControl(timeComposite, toolkit);
-			getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
-		}
-
-		attribute = getTaskData().getRoot().getMappedAttribute(BugzillaAttribute.DEADLINE.getKey());
 		if (attribute != null) {
 			attributeEditor = createAttributeEditor(attribute);
 			attributeEditor.createLabelControl(timeComposite, toolkit);

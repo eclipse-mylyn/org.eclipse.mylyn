@@ -17,7 +17,7 @@ public enum BugzillaAttribute {
 
 	STATUS_WHITEBOARD("Status Whiteboard:", "status_whiteboard", TaskAttribute.TYPE_LONG_RICH_TEXT, false, false),
 
-	ACTUAL_TIME("Hours Worked:", "actual_time", TaskAttribute.TYPE_SHORT_TEXT, true, true),
+	ACTUAL_TIME("Worked:", "actual_time", TaskAttribute.TYPE_SHORT_TEXT, true, true),
 
 	ADD_COMMENT("Additional Comments:", "comment", TaskAttribute.TYPE_LONG_TEXT, true, false),
 
@@ -65,7 +65,7 @@ public enum BugzillaAttribute {
 
 	DATE("Date", "date", TaskAttribute.TYPE_DATE, false, false),
 
-	DEADLINE("Deadline:", "deadline", TaskAttribute.TYPE_DATE, true, false),
+	DEADLINE("Due:", "deadline", TaskAttribute.TYPE_DATE, true, false),
 
 	DELTA_TS("Modified:", "delta_ts", TaskAttribute.TYPE_DATE, true, false),
 
@@ -109,7 +109,7 @@ public enum BugzillaAttribute {
 
 	RESOLUTION("Resolution:", "resolution", TaskAttribute.TYPE_SHORT_TEXT, false, true),
 
-	REMAINING_TIME("Hours Left:", "remaining_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	REMAINING_TIME("Remaining:", "remaining_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
 	SET_DEFAULT_ASSIGNEE("Reassign to default assignee", "set_default_assignee", TaskAttribute.TYPE_OPERATION, false,
 			false),
@@ -132,7 +132,7 @@ public enum BugzillaAttribute {
 
 	VOTES("Votes:", "votes", IBugzillaConstants.EDITOR_TYPE_VOTES, false, true),
 
-	WORK_TIME("Add Time:", "work_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	WORK_TIME("Add:", "work_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
 	WHO("who", "who", TaskAttribute.TYPE_PERSON, false, false),
 
