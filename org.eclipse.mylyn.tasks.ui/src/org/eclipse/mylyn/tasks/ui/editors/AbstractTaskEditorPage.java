@@ -41,6 +41,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
@@ -159,7 +160,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					if (actionPart instanceof TaskEditorAttributePart) {
 						parent = ((TaskEditorActionPart) actionPart).getCategory();
 					}
-					// TODO copy context and scheduling
+					// TODO copy scheduling
+					ContextCore.getContextStore().cloneContext(getTask().getHandleIdentifier(),
+							newTask.getHandleIdentifier());
 					TasksUiInternal.getTaskList().addTask(newTask, parent);
 					close();
 					TasksUiInternal.getTaskList().deleteTask(getTask());
