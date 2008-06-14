@@ -72,7 +72,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 //		manager.readExistingOrCreateNewList();
-		TasksUiPlugin.getExternalizationManager().requestSaveAndWait(true);
+		TasksUiPlugin.getExternalizationManager().save(true);
 		TasksUiPlugin.getDefault().reloadDataDirectory();
 
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
@@ -87,7 +87,7 @@ public class TaskListManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager.resetTaskList();
-		TasksUiPlugin.getExternalizationManager().requestSaveAndWait(true);
+		TasksUiPlugin.getExternalizationManager().save(true);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 

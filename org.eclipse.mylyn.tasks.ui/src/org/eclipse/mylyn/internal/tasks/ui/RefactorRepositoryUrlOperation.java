@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -23,9 +22,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.ITask;
 
@@ -57,7 +54,6 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 			getTaskList().refactorRepositoryUrl(oldUrl, newUrl);
 			refactorMetaContextHandles(oldUrl, newUrl);
 			refactorContextFileNames();
-			TasksUiPlugin.getExternalizationManager().requestSaveAndWait(false);
 			TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 		} finally {
 			monitor.done();
@@ -98,35 +94,33 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 		}
 	}
 
-	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) {
-		TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
+	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) throws CoreException {
+		TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
 		for (ITask task : getTaskList().getAllTasks()) {
-			if (task != null) {
-				ITask repositoryTask = task;
-				if (repositoryTask.getRepositoryUrl().equals(oldRepositoryUrl)) {
-					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
-							repositoryTask.getTaskId());
-					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getRepositoryUrl(),
-							repositoryTask.getTaskId());
-					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getRepositoryUrl(),
-							repositoryTask.getTaskId());
-					taskDataManager.remove(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
-
-					if (newTaskData != null) {
-						newTaskData.setRepositoryURL(newRepositoryUrl);
-						taskDataManager.setNewTaskData(newTaskData);
-					}
-					if (oldTaskData != null) {
-						oldTaskData.setRepositoryURL(newRepositoryUrl);
-						taskDataManager.setOldTaskData(oldTaskData);
-					}
-					if (!edits.isEmpty()) {
-						taskDataManager.saveEdits(newRepositoryUrl, repositoryTask.getTaskId(), edits);
-					}
-				}
+			if (task.getRepositoryUrl().equals(oldRepositoryUrl)) {
+				taskDataManager.refactorRepositoryUrl(task, newRepositoryUrl);
+//					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(),
+//							repositoryTask.getTaskId());
+//					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getRepositoryUrl(),
+//							repositoryTask.getTaskId());
+//					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getRepositoryUrl(),
+//							repositoryTask.getTaskId());
+//					taskDataManager.remove(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
+//
+//					if (newTaskData != null) {
+//						newTaskData.setRepositoryURL(newRepositoryUrl);
+//						taskDataManager.setNewTaskData(newTaskData);
+//					}
+//					if (oldTaskData != null) {
+//						oldTaskData.setRepositoryURL(newRepositoryUrl);
+//						taskDataManager.setOldTaskData(oldTaskData);
+//					}
+//					if (!edits.isEmpty()) {
+//						taskDataManager.saveEdits(newRepositoryUrl, repositoryTask.getTaskId(), edits);
+//					}
 			}
 		}
-		TasksUiPlugin.getTaskDataStorageManager().saveNow();
+//		TasksUiPlugin.getTaskDataStorageManager().saveNow();
 	}
 
 	@SuppressWarnings("restriction")

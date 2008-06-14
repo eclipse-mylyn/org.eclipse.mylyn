@@ -349,11 +349,15 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	private File getFile(ITask task, String kind) {
+		return getFile(task.getRepositoryUrl(), task, kind);
+	}
+
+	private File getFile(String repositoryUrl, ITask task, String kind) {
 		try {
 //			String pathName = task.getConnectorKind() + "-"
 //					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
 //			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
-			String repositoryPath = task.getConnectorKind() + "-" + encode(task.getRepositoryUrl());
+			String repositoryPath = task.getConnectorKind() + "-" + encode(repositoryUrl);
 			String fileName = encode(task.getTaskId()) + EXTENSION;
 			File path = new File(dataPath + File.separator + FOLDER_TASKS + File.separator + repositoryPath
 					+ File.separator + FOLDER_DATA);
@@ -401,6 +405,7 @@ public class TaskDataManager implements ITaskDataManager {
 	public TaskDataState getTaskDataState(ITask task) throws CoreException {
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
+		// TODO check that repository task data != null for returned task data state
 		return taskDataStore.getTaskDataState(findFile(task, kind));
 	}
 
@@ -711,4 +716,24 @@ public class TaskDataManager implements ITaskDataManager {
 		}
 	}
 
+	public void refactorRepositoryUrl(final ITask itask, final String newRepositoryUrl) throws CoreException {
+		Assert.isTrue(itask instanceof AbstractTask);
+		final AbstractTask task = (AbstractTask) itask;
+		final String kind = task.getConnectorKind();
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				File file = getMigratedFile(task, kind);
+				if (file.exists()) {
+					TaskDataState oldState = taskDataStore.getTaskDataState(file);
+					if (oldState != null) {
+						File newFile = getFile(newRepositoryUrl, task, kind);
+						TaskDataState newState = new TaskDataState(oldState.getConnectorKind(), newRepositoryUrl,
+								oldState.getTaskId());
+						newState.merge(oldState);
+						taskDataStore.putTaskData(ensurePathExists(newFile), newState);
+					}
+				}
+			}
+		});
+	}
 }

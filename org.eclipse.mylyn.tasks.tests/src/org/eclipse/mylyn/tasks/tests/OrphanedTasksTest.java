@@ -186,7 +186,7 @@ public class OrphanedTasksTest extends TestCase {
 		assertEquals(1, taskList.getCategories().size());
 		assertFalse(taskList.getDefaultCategory().isEmpty());
 		// save tasklist, restore tasklist
-		TasksUiPlugin.getExternalizationManager().requestSaveAndWait(true);
+		TasksUiPlugin.getExternalizationManager().save(true);
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
 		assertEquals(1, taskList.getCategories().size());

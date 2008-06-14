@@ -180,4 +180,23 @@ public class TaskDataState implements ITaskDataWorkingCopy {
 		this.repositoryTaskData = newTaskData;
 	}
 
+	public void merge(TaskDataState oldState) {
+		setEditsData(createCopy(oldState.getEditsData()));
+		setLocalTaskData(createCopy(oldState.getLocalData()));
+		setRepositoryData(createCopy(oldState.getRepositoryData()));
+	}
+
+	private TaskData createCopy(TaskData oldData) {
+		if (oldData == null) {
+			return null;
+		}
+		TaskData newData = new TaskData(oldData.getAttributeMapper(), getConnectorKind(), getRepositoryUrl(),
+				getTaskId());
+		newData.setVersion(oldData.getVersion());
+		for (TaskAttribute child : oldData.getRoot().getAttributes().values()) {
+			newData.getRoot().deepAddCopy(child);
+		}
+		return newData;
+	}
+
 }

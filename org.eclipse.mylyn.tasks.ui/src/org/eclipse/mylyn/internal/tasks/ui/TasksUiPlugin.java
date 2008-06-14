@@ -741,13 +741,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	@SuppressWarnings("restriction")
 	public void setDataDirectory(final String newPath, IProgressMonitor monitor) throws CoreException {
-		try {
-			externalizationManager.requestSaveAndWait(false);
-		} catch (InterruptedException e) {
-			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected exception", e));
-		}
-
-		loadDataDirectory(newPath);
+		loadDataDirectory(newPath, true);
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, newPath);
 		File newFile = new File(newPath, ITasksCoreConstants.CONTEXTS_DIRECTORY);
 		if (!newFile.exists()) {
@@ -758,20 +752,22 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public void reloadDataDirectory() throws CoreException {
 		// no save just load what is there
-		loadDataDirectory(getDataDirectory());
+		loadDataDirectory(getDataDirectory(), false);
 	}
 
 	/**
 	 * Load's data sources from <code>newPath</code> and executes with progress
 	 */
-	private synchronized void loadDataDirectory(final String newPath) throws CoreException {
+	private synchronized void loadDataDirectory(final String newPath, final boolean save) throws CoreException {
 
 		IRunnableWithProgress setDirectoryRunnable = new IRunnableWithProgress() {
 
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-
 				try {
 					monitor.beginTask("Load Data Directory", IProgressMonitor.UNKNOWN);
+					if (save) {
+						externalizationManager.save(false);
+					}
 					Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE,
 							new SubProgressMonitor(monitor, 1));
 					if (monitor.isCanceled()) {

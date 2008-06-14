@@ -744,7 +744,11 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			toolBarManager.add(repositoryLabelControl);
 		}
 
-		if (taskRepository != null && !taskData.isNew()) {
+		if (taskData == null) {
+			synchronizeEditorAction = new SynchronizeEditorAction();
+			synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
+			toolBarManager.add(synchronizeEditorAction);
+		} else if (taskRepository != null && !taskData.isNew()) {
 			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
 			if (clearOutgoingAction.isEnabled()) {
 				toolBarManager.add(clearOutgoingAction);
@@ -916,6 +920,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	public TaskRepository getTaskRepository() {
+		// FIXME model can be null
 		return getModel().getTaskRepository();
 	}
 
@@ -961,14 +966,29 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		this.task = taskEditorInput.getTask();
 		this.defaultSelection = new StructuredSelection(task);
 		this.lastSelection = defaultSelection;
+
+		initModel(taskEditorInput);
+
+		TasksUiPlugin.getTaskDataManager().addListener(TASK_DATA_LISTENER);
+	}
+
+	private void initModel(TaskEditorInput input) {
+		Assert.isTrue(model == null);
 		try {
-			setModel(createModel(taskEditorInput));
+			this.model = createModel(input);
+			this.connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
+			setTaskData(model.getTaskData());
+			model.addModelListener(new TaskDataModelListener() {
+				@Override
+				public void attributeChanged(TaskDataModelEvent event) {
+					getManagedForm().dirtyStateChanged();
+				}
+			});
+
 		} catch (final CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error opening task", e));
 			getTaskEditor().setStatus("Error opening task", "Open failed", e.getStatus());
 		}
-
-		TasksUiPlugin.getTaskDataManager().addListener(TASK_DATA_LISTENER);
 	}
 
 	private void initializePart(Composite parent, AbstractTaskEditorPart part) {
@@ -1024,8 +1044,12 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		try {
 			showEditorBusy(true);
 
-			doSave(new NullProgressMonitor());
-			refreshInput();
+			if (model != null) {
+				doSave(new NullProgressMonitor());
+				refreshInput();
+			} else {
+				initModel(getTaskEditor().getTaskEditorInput());
+			}
 
 			if (taskData != null) {
 				try {
@@ -1145,19 +1169,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		}
 	}
 
-	private void setModel(TaskDataModel model) {
-		Assert.isNotNull(model);
-		this.model = model;
-		this.connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
-		setTaskData(model.getTaskData());
-		model.addModelListener(new TaskDataModelListener() {
-			@Override
-			public void attributeChanged(TaskDataModelEvent event) {
-				getManagedForm().dirtyStateChanged();
-			}
-		});
-	}
-
 	public void setNeedsAddToCategory(boolean needsAddToCategory) {
 		this.needsAddToCategory = needsAddToCategory;
 	}
@@ -1232,9 +1243,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private void updateHeaderMessage() {
 		if (taskData == null) {
-			getTaskEditor().setMessage(
-					"Task data not available. Press synchronize button (right) to retrieve latest data.",
-					IMessageProvider.WARNING, new HyperlinkAdapter() {
+			getTaskEditor().setMessage("Synchronize to retrieve task data", IMessageProvider.WARNING,
+					new HyperlinkAdapter() {
 						@Override
 						public void linkActivated(HyperlinkEvent e) {
 							if (synchronizeEditorAction != null) {

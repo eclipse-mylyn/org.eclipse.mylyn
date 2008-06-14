@@ -151,11 +151,13 @@ public class ExternalizationManager {
 		}
 	}
 
-	public void requestSaveAndWait(boolean force) throws InterruptedException {
+	/**
+	 * Clients invoking this method must hold all necessary scheduling rules.
+	 */
+	public void save(boolean force) {
 		try {
 			forceSave = force;
-			saveJob.schedule();
-			saveJob.join();
+			saveJob.run(new NullProgressMonitor());
 		} finally {
 			forceSave = false;
 		}
