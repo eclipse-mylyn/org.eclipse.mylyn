@@ -127,7 +127,7 @@ public class LocalContextStore implements IContextStore {
 	public void saveActiveContext() {
 		// FIXME this should not reference the context manager
 		IInteractionContext context = ContextCore.getContextManager().getActiveContext();
-		if (context != null) {
+		if (context != null && context.getHandleIdentifier() != null) {
 			saveContext(context);
 		}
 	}
