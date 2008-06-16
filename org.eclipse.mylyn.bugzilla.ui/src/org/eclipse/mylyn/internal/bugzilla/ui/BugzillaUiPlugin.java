@@ -72,8 +72,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	private static final int WRAP_LENGTH = 90;
 
+	@SuppressWarnings("restriction")
 	public BugzillaUiPlugin() {
 		plugin = this;
+		org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin.getDefault().addSearchHandler(new BugzillaSearchHandler());
 	}
 
 	@Override
