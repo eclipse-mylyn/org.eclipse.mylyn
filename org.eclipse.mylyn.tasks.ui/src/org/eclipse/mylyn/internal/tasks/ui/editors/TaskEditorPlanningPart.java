@@ -30,6 +30,8 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskActivityAdapter;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -272,8 +274,13 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		estimatedTime.setMaximum(100);
 		estimatedTime.setMinimum(0);
 		estimatedTime.setIncrement(1);
-		estimatedTime.setSelection(DEFAULT_ESTIMATED_TIME);
+		estimatedTime.setSelection(task.getEstimatedTimeHours());
 		estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		estimatedTime.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				markDirty();
+			}
+		});
 
 		ImageHyperlink clearEstimated = toolkit.createImageHyperlink(composite, SWT.NONE);
 		clearEstimated.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
@@ -282,6 +289,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				estimatedTime.setSelection(0);
+				markDirty();
 			}
 		});
 		toolkit.paintBordersFor(composite);
@@ -337,6 +345,10 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 			} else {
 				scheduleDatePicker.setScheduledDate(null);
 			}
+		}
+
+		if (estimatedTime != null && !estimatedTime.isDisposed()) {
+			estimatedTime.setSelection(updateTask.getEstimatedTimeHours());
 		}
 	}
 

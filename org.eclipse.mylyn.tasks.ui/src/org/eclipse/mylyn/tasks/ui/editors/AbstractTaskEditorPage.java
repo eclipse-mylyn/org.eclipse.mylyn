@@ -172,6 +172,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) newTask, scheduledDate);
 						Date dueDate = ((AbstractTask) oldTask).getDueDate();
 						TasksUiPlugin.getTaskActivityManager().setDueDate(newTask, dueDate);
+						((AbstractTask) newTask).setEstimatedTimeHours(((AbstractTask) oldTask).getEstimatedTimeHours());
 					}
 					ContextCorePlugin.getContextStore().saveActiveContext();
 					ContextCore.getContextStore().cloneContext(oldTask.getHandleIdentifier(),
