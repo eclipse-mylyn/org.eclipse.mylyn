@@ -346,11 +346,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
 
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-//			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
-//				if (event.getOldValue() instanceof String) {
-//					reloadDataDirectory();
-//				}
-//			}
+			if (event.getProperty().equals(ITasksUiPreferenceConstants.PREF_DATA_DIR)) {
+				if (event.getOldValue() instanceof String) {
+					try {
+						setDataDirectory((String) event.getNewValue(), new NullProgressMonitor(), false);
+					} catch (CoreException e) {
+						StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Unable to load from task data folder",
+								e));
+					}
+				}
+			}
 
 			if (event.getProperty().equals(ITasksUiPreferenceConstants.PLANNING_ENDHOUR)
 					|| event.getProperty().equals(ITasksUiPreferenceConstants.WEEK_START_DAY)) {
@@ -373,6 +378,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private TaskListExternalizationParticipant taskListSaveParticipant;
 
 	private final Set<IRepositoryModelListener> listeners = new HashSet<IRepositoryModelListener>();
+
+	private boolean settingDataDirectory = false;
 
 	private static TaskList taskList;
 
@@ -739,15 +746,32 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 * 
 	 * @throws CoreException
 	 */
-	@SuppressWarnings("restriction")
 	public void setDataDirectory(final String newPath, IProgressMonitor monitor) throws CoreException {
-		loadDataDirectory(newPath, true);
-		getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, newPath);
-		File newFile = new File(newPath, ITasksCoreConstants.CONTEXTS_DIRECTORY);
-		if (!newFile.exists()) {
-			newFile.mkdirs();
+		setDataDirectory(newPath, monitor, true);
+	}
+
+	@SuppressWarnings("restriction")
+	private void setDataDirectory(final String newPath, IProgressMonitor monitor, boolean setPreference)
+			throws CoreException {
+		// guard against updates from preference listeners that are triggered by the setValue() call below
+		if (settingDataDirectory) {
+			return;
 		}
-		ContextCorePlugin.getContextStore().setContextDirectory(newFile);
+		// FIXME reset the preference in case switching to the new location fails? 
+		try {
+			settingDataDirectory = true;
+			loadDataDirectory(newPath, !setPreference);
+			if (setPreference) {
+				getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, newPath);
+			}
+			File newFile = new File(newPath, ITasksCoreConstants.CONTEXTS_DIRECTORY);
+			if (!newFile.exists()) {
+				newFile.mkdirs();
+			}
+			ContextCorePlugin.getContextStore().setContextDirectory(newFile);
+		} finally {
+			settingDataDirectory = false;
+		}
 	}
 
 	public void reloadDataDirectory() throws CoreException {
