@@ -92,7 +92,12 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 			if (attributeEditor.hasLabel()) {
 				attributeEditor.createLabelControl(attributesComposite, toolkit);
 				Label label = attributeEditor.getLabelControl();
-				label.setText(TaskDiffUtil.shortenText(label, label.getText(), LABEL_WIDTH));
+				String text = label.getText();
+				String shortenText = TaskDiffUtil.shortenText(label, text, LABEL_WIDTH);
+				label.setText(shortenText);
+				if (!text.equals(shortenText)) {
+					label.setToolTipText(text);
+				}
 				GridData gd = GridDataFactory.fillDefaults()
 						.align(SWT.RIGHT, SWT.CENTER)
 						.hint(LABEL_WIDTH, SWT.DEFAULT)
