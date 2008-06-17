@@ -47,7 +47,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 	private final List<IRepositoryElement> taskListElementsToSchedule = new ArrayList<IRepositoryElement>();
 
 	public MenuManager getSubMenuManager(final List<IRepositoryElement> selectedElements) {
-
+		singleTaskSelection = null;
 		taskListElementsToSchedule.clear();
 
 		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
@@ -56,18 +56,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			IRepositoryElement selectedElement = selectedElements.get(0);
 			if (selectedElement instanceof ITask) {
 				singleTaskSelection = (AbstractTask) selectedElement;
-				if (singleTaskSelection.isCompleted()) {
-					Action action = new Action() {
-						@Override
-						public void run() {
-							// ignore
-						}
-					};
-					action.setText("Cannot schedule completed tasks");
-					action.setEnabled(false);
-					subMenuManager.add(action);
-					return subMenuManager;
-				}
 			}
 		}
 
@@ -75,6 +63,19 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			if (selectedElement instanceof ITask) {
 				taskListElementsToSchedule.add(selectedElement);
 			}
+		}
+
+		if (selectionIncludesCompletedTasks()) {
+			Action action = new Action() {
+				@Override
+				public void run() {
+					// ignore
+				}
+			};
+			action.setText("Cannot schedule completed tasks");
+			action.setEnabled(false);
+			subMenuManager.add(action);
+			return subMenuManager;
 		}
 
 		WeekDateRange week = TaskActivityUtil.getCurrentWeek();
@@ -169,8 +170,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_CALENDAR);
-//		action.setImageDescriptor(TasksUiImages.CALENDAR);
-//		action.setImageDescriptor(TasksUiImages.SCHEDULE_DAY);
 		action.setEnabled(canSchedule());
 		subMenuManager.add(action);
 
@@ -181,12 +180,31 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_NOT_SCHEDULED);
-//		action.setImageDescriptor(TasksUiImages.REMOVE);
 		if (getScheduledForDate(singleTaskSelection) == null) {
 			action.setChecked(true);
 		}
 		subMenuManager.add(action);
 		return subMenuManager;
+	}
+
+	private boolean selectionIncludesCompletedTasks() {
+		if (singleTaskSelection instanceof AbstractTask) {
+			if ((singleTaskSelection).isCompleted()) {
+				return true;
+			}
+		}
+
+		if (taskListElementsToSchedule.size() > 0) {
+			for (IRepositoryElement task : taskListElementsToSchedule) {
+				if (task instanceof AbstractTask) {
+					if (((AbstractTask) task).isCompleted()) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	private Action createDateSelectionAction(final DateRange dateContainer, ImageDescriptor imageDescriptor) {
@@ -217,24 +235,15 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		}
 	}
 
-//	protected void setScheduledDate(Calendar scheduledDate, boolean floating) {
-//		for (AbstractTaskContainer element : taskListElementsToSchedule) {
-//			AbstractTask task = getTaskForElement(element, true);
-//			if (scheduledDate != null) {
-//				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduledDate.getTime(), floating);
-//			} else {
-//				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null, floating);
-//			}
-//		}
-//	}
-
 	protected void setScheduledDate(DateRange dateContainer) {
 		for (IRepositoryElement element : taskListElementsToSchedule) {
-			AbstractTask task = getTaskForElement(element, true);
-			if (dateContainer != null) {
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, dateContainer);
-			} else {
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
+			if (element instanceof AbstractTask) {
+				AbstractTask task = (AbstractTask) element;
+				if (dateContainer != null) {
+					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, dateContainer);
+				} else {
+					TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, null);
+				}
 			}
 		}
 	}
@@ -248,14 +257,6 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 	private boolean isPastReminder(AbstractTask task) {
 		return TasksUiPlugin.getTaskActivityManager().isPastReminder(task);
-	}
-
-	private AbstractTask getTaskForElement(IRepositoryElement element, boolean force) {
-		AbstractTask task = null;
-		if (element instanceof ITask) {
-			task = (AbstractTask) element;
-		}
-		return task;
 	}
 
 }
