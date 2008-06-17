@@ -314,18 +314,20 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				for (TaskContainerDelta taskContainerDelta : containers) {
 					if (taskContainerDelta.getElement() instanceof ITask) {
 						final AbstractTask changedTask = (AbstractTask) (taskContainerDelta.getElement());
-						if (Platform.isRunning() && PlatformUI.getWorkbench() != null && Display.getCurrent() == null) {
-							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-								public void run() {
-									if (changedTask.isActive()) {
-										indicateActiveTask(changedTask);
+						if (changedTask.isActive()) {
+							if (Platform.isRunning() && PlatformUI.getWorkbench() != null) {
+								if (Display.getCurrent() == null) {
+									if (PlatformUI.getWorkbench().getDisplay() != null
+											&& !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+										PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+											public void run() {
+												indicateActiveTask(changedTask);
+											}
+										});
 									}
+								} else {
+									indicateActiveTask(changedTask);
 								}
-							});
-						} else if (Display.getCurrent() != null) {
-							if (changedTask.isActive()) {
-								indicateActiveTask(changedTask);
 							}
 						}
 					}
