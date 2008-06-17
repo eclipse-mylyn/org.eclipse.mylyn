@@ -10,8 +10,7 @@ package org.eclipse.mylyn.internal.tasks.bugs.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.internal.tasks.bugs.wizards.ReportBugOrEnhancementWizard;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
@@ -30,8 +29,9 @@ public class ReportBugAction implements IWorkbenchWindowActionDelegate {
 	}
 
 	public void run(IAction action) {
-		WizardDialog dialog = new WizardDialog(window.getShell(), new ReportBugOrEnhancementWizard());
-		dialog.open();
+//		WizardDialog dialog = new WizardDialog(window.getShell(), new ReportBugOrEnhancementWizard());
+//		dialog.open();
+		new NewTaskAction().run(action);
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
