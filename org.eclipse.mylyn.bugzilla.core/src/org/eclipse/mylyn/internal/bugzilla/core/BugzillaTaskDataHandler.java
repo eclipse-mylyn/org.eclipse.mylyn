@@ -76,47 +76,46 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		VERSION_2_0(2.0f) {
 			@Override
 			void migrate(TaskRepository repository, TaskData data) {
-				TaskAttribute attrDescription = data.getRoot().getMappedAttribute(BugzillaAttribute.LONG_DESC.getKey());
-				if (attrDescription != null) {
-					attrDescription.getMetaData().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
-				}
+				updateAttribute(data, BugzillaAttribute.LONG_DESC);
 			}
 		},
 		VERSION_3_0(3.0f) {
 			@Override
 			void migrate(TaskRepository repository, TaskData data) {
-				TaskAttribute attrNewComment = data.getRoot()
-						.getMappedAttribute(BugzillaAttribute.NEW_COMMENT.getKey());
-				if (attrNewComment != null) {
-					attrNewComment.getMetaData().setType(TaskAttribute.TYPE_LONG_RICH_TEXT);
-				}
+				updateAttribute(data, BugzillaAttribute.NEW_COMMENT);
 			}
 		},
 		VERSION_4_0(4.0f) {
 			@Override
 			void migrate(TaskRepository repository, TaskData data) {
-				TaskAttribute attrDeadline = data.getRoot().getMappedAttribute(BugzillaAttribute.DEADLINE.getKey());
-				if (attrDeadline != null) {
-					attrDeadline.getMetaData().setReadOnly(false);
-					attrDeadline.getMetaData().setType(TaskAttribute.TYPE_DATE);
-				}
-				TaskAttribute attrActualTime = data.getRoot()
-						.getMappedAttribute(BugzillaAttribute.ACTUAL_TIME.getKey());
-				if (attrActualTime != null) {
-					attrActualTime.getMetaData().setReadOnly(true);
-				}
+				updateAttribute(data, BugzillaAttribute.DEADLINE);
+				updateAttribute(data, BugzillaAttribute.ACTUAL_TIME);
 			}
 		},
 		VERSION_4_1(4.1f) {
 			@Override
 			void migrate(TaskRepository repository, TaskData data) {
+				updateAttribute(data, BugzillaAttribute.VOTES);
 				TaskAttribute attrDeadline = data.getRoot().getMappedAttribute(BugzillaAttribute.VOTES.getKey());
 				if (attrDeadline != null) {
 					attrDeadline.getMetaData().setType(BugzillaAttribute.VOTES.getType());
 				}
 			}
 		},
-		VERSION_CURRENT(4.2f) {
+		VERSION_4_2(4.2f) {
+			@Override
+			void migrate(TaskRepository repository, TaskData data) {
+				updateAttribute(data, BugzillaAttribute.CC);
+				updateAttribute(data, BugzillaAttribute.DEPENDSON);
+				updateAttribute(data, BugzillaAttribute.BLOCKED);
+				updateAttribute(data, BugzillaAttribute.BUG_FILE_LOC);
+				updateAttribute(data, BugzillaAttribute.KEYWORDS);
+				updateAttribute(data, BugzillaAttribute.STATUS_WHITEBOARD);
+				updateAttribute(data, BugzillaAttribute.QA_CONTACT);
+				updateAttribute(data, BugzillaAttribute.NEWCC);
+			}
+		},
+		VERSION_CURRENT(4.3f) {
 			@Override
 			void migrate(TaskRepository repository, TaskData data) {
 				data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
@@ -138,6 +137,15 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		@Override
 		public String toString() {
 			return "" + getVersionNum();
+		}
+
+		private static void updateAttribute(TaskData data, BugzillaAttribute bugAttribute) {
+			TaskAttribute attribute = data.getRoot().getMappedAttribute(bugAttribute.getKey());
+			if (attribute != null) {
+				attribute.getMetaData().setType(bugAttribute.getType());
+				attribute.getMetaData().setReadOnly(bugAttribute.isReadOnly());
+				attribute.getMetaData().setKind(bugAttribute.getKind());
+			}
 		}
 	}
 
