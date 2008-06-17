@@ -182,13 +182,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		@SuppressWarnings( { "deprecation", "restriction" })
 		@Override
 		public void taskActivated(ITask task) {
-
-			MonitorUiPlugin.getDefault()
-					.getPreferenceStore()
-					.setValue(MonitorUiPlugin.PREF_USER_ACTIVITY_ENABLED, true);
-
-			MonitorUiPlugin.getDefault().savePluginPreferences();
-
 			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
@@ -248,11 +241,15 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
+	@SuppressWarnings("restriction")
 	private void lazyStart(IWorkbench workbench) {
 		try {
+			MonitorUiPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue(MonitorUiPlugin.PREF_USER_ACTIVITY_ENABLED, true);
+			MonitorUiPlugin.getDefault().savePluginPreferences();
 			ContextCore.getContextManager().addListener(viewerManager);
 			MonitorUi.addWindowPartListener(contentOutlineManager);
-
 			perspectiveManager.addManagedPerspective(ITasksUiConstants.ID_PERSPECTIVE_PLANNING);
 			TasksUi.getTaskActivityManager().addActivationListener(perspectiveManager);
 			MonitorUi.addWindowPerspectiveListener(perspectiveManager);
