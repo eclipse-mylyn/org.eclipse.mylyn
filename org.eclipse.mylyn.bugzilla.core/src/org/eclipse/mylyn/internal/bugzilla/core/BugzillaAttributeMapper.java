@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -249,7 +249,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 				if (options.size() == 0 && attribute.getId().equals(BugzillaOperation.resolve.getInputId())) {
 					options = configuration.getOptionValues(BugzillaAttribute.RESOLUTION, attributeProduct.getValue());
 				}
-				Map<String, String> newOptions = new HashMap<String, String>();
+				Map<String, String> newOptions = new LinkedHashMap<String, String>();
 				for (String option : options) {
 					newOptions.put(option, option);
 				}
