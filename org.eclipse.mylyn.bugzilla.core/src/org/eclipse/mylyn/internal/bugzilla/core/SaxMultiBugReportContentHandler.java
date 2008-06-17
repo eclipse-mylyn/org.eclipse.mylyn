@@ -428,7 +428,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		attrTimestamp.setValue(comment.createdTimeStamp);
 		taskComment.setCreationDate(repositoryTaskData.getAttributeMapper().getDateValue(attrTimestamp));
 		if (comment.commentText != null) {
-			String commentText = comment.commentText.trim() + "\n";
+			String commentText = comment.commentText.trim();
 			taskComment.setText(commentText);
 
 		}
