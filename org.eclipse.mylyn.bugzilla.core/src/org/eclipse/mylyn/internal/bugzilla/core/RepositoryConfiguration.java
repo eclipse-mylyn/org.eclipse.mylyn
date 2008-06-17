@@ -392,29 +392,13 @@ public class RepositoryConfiguration implements Serializable {
 				}
 			} else {
 
-				BugzillaAttribute element;
-				try {
-					element = BugzillaAttribute.valueOf(attribute.getId().trim().toUpperCase(Locale.ENGLISH));
-				} catch (RuntimeException e) {
-					if (e instanceof IllegalArgumentException) {
-						// ignore unrecognized tags
-						continue;
-					}
-					throw e;
-				}
-				attribute.clearOptions();
-				List<String> optionValues = getOptionValues(element, product);
+				List<String> optionValues = getAttributeOptions(product, attribute);
 
-				if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
-						&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
-						&& element != BugzillaAttribute.BUG_STATUS) {
-					Collections.sort(optionValues);
-				}
-
-				if (element == BugzillaAttribute.TARGET_MILESTONE && optionValues.isEmpty()) {
+				if (attribute.getId().equals(BugzillaAttribute.TARGET_MILESTONE.getKey()) && optionValues.isEmpty()) {
 					existingReport.getRoot().removeAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey());
 					continue;
 				}
+
 				attribute.clearOptions();
 				for (String option : optionValues) {
 					attribute.putOption(option, option);
@@ -422,6 +406,29 @@ public class RepositoryConfiguration implements Serializable {
 			}
 		}
 
+	}
+
+	public List<String> getAttributeOptions(String product, TaskAttribute attribute) {
+		List<String> options = new ArrayList<String>();
+		BugzillaAttribute element;
+		try {
+			element = BugzillaAttribute.valueOf(attribute.getId().trim().toUpperCase(Locale.ENGLISH));
+		} catch (RuntimeException e) {
+			if (e instanceof IllegalArgumentException) {
+				// ignore unrecognized tags
+				return options;
+			}
+			throw e;
+		}
+
+		options = getOptionValues(element, product);
+
+		if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
+				&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
+				&& element != BugzillaAttribute.BUG_STATUS) {
+			Collections.sort(options);
+		}
+		return options;
 	}
 
 	public void addValidOperations(TaskData bugReport) {

@@ -11,6 +11,9 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -233,5 +236,26 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			}
 		}
 		return person;
+	}
+
+	@Override
+	public Map<String, String> getOptions(TaskAttribute attribute) {
+		RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository().getRepositoryUrl());
+		if (configuration != null) {
+			TaskAttribute attributeProduct = attribute.getTaskData().getRoot().getMappedAttribute(
+					BugzillaAttribute.PRODUCT.getKey());
+			if (attributeProduct != null && attributeProduct.getValue().length() > 0) {
+				List<String> options = configuration.getAttributeOptions(attributeProduct.getValue(), attribute);
+				if (options.size() == 0 && attribute.getId().equals(BugzillaOperation.resolve.getInputId())) {
+					options = configuration.getOptionValues(BugzillaAttribute.RESOLUTION, attributeProduct.getValue());
+				}
+				Map<String, String> newOptions = new HashMap<String, String>();
+				for (String option : options) {
+					newOptions.put(option, option);
+				}
+				return newOptions;
+			}
+		}
+		return super.getOptions(attribute);
 	}
 }
