@@ -25,6 +25,20 @@ $JAVA_HOME/bin/java \
  -application org.eclipse.update.core.siteOptimizer \
  -jarProcessor -verbose -processAll -repack -pack \
  -outputDir $1 $1  
+
+$JAVA_HOME/bin/java \
+ -Xmx512m \
+ -jar $ECLIPSE_HOME_3_4/plugins/org.eclipse.equinox.launcher_*.jar \
+ -application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator \
+ -updateSite $1 \
+ -site file:$1/site.xml \
+ -metadataRepository file:$1 \
+ -metadataRepositoryName "Mylyn Update Site" \
+ -artifactRepository file:$1 \
+ -artifactRepositoryName "Mylyn Artifacts" \
+ -compress \
+ -reusePack200Files \
+ -noDefaultIUs
 }
 
 pack $BUILD_ROOT/3.3/build/standardUpdateSite
