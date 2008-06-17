@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -50,7 +51,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 
 	private final Map<String, Set<TaskRepository>> repositoryMap = new HashMap<String, Set<TaskRepository>>();
 
-	private final Set<IRepositoryListener> listeners = new HashSet<IRepositoryListener>();
+	private final Set<IRepositoryListener> listeners = new CopyOnWriteArraySet<IRepositoryListener>();
 
 	private final Set<TaskRepository> orphanedRepositories = new HashSet<TaskRepository>();
 
