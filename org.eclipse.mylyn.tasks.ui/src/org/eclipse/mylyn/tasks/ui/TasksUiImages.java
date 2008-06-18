@@ -19,8 +19,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * API-3.0: consider removing images not used by clients
- * 
+ * @noextend This class is not intended to be subclassed by clients.
+ * @noinstantiate This class is not intended to be instantiated by clients.
  * @author Mik Kersten
  * @since 3.0
  */

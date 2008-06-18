@@ -17,6 +17,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * 
  * @author Eugene Kuleshov
  * @author Steffen Pingel
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public final class TaskHyperlink implements IHyperlink {
 

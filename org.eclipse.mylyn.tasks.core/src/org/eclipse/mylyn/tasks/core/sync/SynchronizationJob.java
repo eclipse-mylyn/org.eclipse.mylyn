@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.jobs.Job;
 /**
  * @author Steffen Pingel
  * @since 3.0
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class SynchronizationJob extends Job {
 
@@ -20,6 +21,9 @@ public abstract class SynchronizationJob extends Job {
 
 	private boolean fullSynchronization = false;
 
+	/**
+	 * @since 3.0
+	 */
 	public SynchronizationJob(String name) {
 		super(name);
 	}
@@ -28,6 +32,9 @@ public abstract class SynchronizationJob extends Job {
 //		return changedTasksSynchronization;
 //	}
 
+	/**
+	 * @since 3.0
+	 */
 	public boolean isFullSynchronization() {
 		return fullSynchronization;
 	}
@@ -36,6 +43,9 @@ public abstract class SynchronizationJob extends Job {
 //		this.changedTasksSynchronization = synchronizeChangedTasks;
 //	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setFullSynchronization(boolean fullSynchronization) {
 		this.fullSynchronization = fullSynchronization;
 	}

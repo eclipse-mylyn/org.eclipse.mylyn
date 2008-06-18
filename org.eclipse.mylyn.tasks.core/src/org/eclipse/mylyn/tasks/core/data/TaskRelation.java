@@ -22,10 +22,16 @@ public class TaskRelation {
 
 	private final Direction direction;
 
+	/**
+	 * @since 3.0
+	 */
 	public enum Direction {
 		INWARD, OUTWARD
 	};
 
+	/**
+	 * @since 3.0
+	 */
 	public enum Kind {
 		CONTAINMENT, DEPENDENCY, DUPLICATE
 	}
@@ -39,26 +45,44 @@ public class TaskRelation {
 		this.taskId = taskId;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public String getTaskId() {
 		return taskId;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public Kind getKind() {
 		return kind;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public Direction getDirection() {
 		return direction;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public static TaskRelation parentTask(String taskId) {
 		return new TaskRelation(Kind.CONTAINMENT, Direction.INWARD, taskId);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public static TaskRelation subtask(String taskId) {
 		return new TaskRelation(Kind.CONTAINMENT, Direction.OUTWARD, taskId);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public static TaskRelation dependency(String taskId, Direction direction) {
 		return new TaskRelation(Kind.DEPENDENCY, direction, taskId);
 	}

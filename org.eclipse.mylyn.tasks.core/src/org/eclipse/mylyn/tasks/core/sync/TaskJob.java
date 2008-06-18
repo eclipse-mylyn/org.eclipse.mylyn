@@ -14,13 +14,20 @@ import org.eclipse.core.runtime.jobs.Job;
 /**
  * @author Steffen Pingel
  * @since 3.0
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class TaskJob extends Job {
 
+	/**
+	 * @since 3.0
+	 */
 	public TaskJob(String name) {
 		super(name);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract IStatus getStatus();
 
 }

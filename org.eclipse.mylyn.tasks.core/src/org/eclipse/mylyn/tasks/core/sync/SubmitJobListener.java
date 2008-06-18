@@ -17,10 +17,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public abstract class SubmitJobListener {
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException;
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void taskSynchronized(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException;
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void done(SubmitJobEvent event);
 
 }

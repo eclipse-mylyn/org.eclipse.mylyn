@@ -15,9 +15,13 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Steffen Pingel
  * @since 3.0
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public class LegendElement {
 
+	/**
+	 * @since 3.0
+	 */
 	public static LegendElement createTask(String label, ImageDescriptor overlay) {
 		return new LegendElement(label, CommonImages.getCompositeTaskImage(TasksUiImages.TASK, overlay, false));
 	}
@@ -31,13 +35,22 @@ public class LegendElement {
 		this.image = image;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void dispose() {
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public Image getImage() {
 		return image;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public String getLabel() {
 		return label;
 	}

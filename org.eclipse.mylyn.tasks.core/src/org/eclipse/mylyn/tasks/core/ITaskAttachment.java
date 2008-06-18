@@ -15,6 +15,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 /**
  * @author Steffen Pingel
  * @since 3.0
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface ITaskAttachment {
 
@@ -88,6 +89,9 @@ public interface ITaskAttachment {
 	 */
 	public abstract boolean isDeprecated();
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract boolean isPatch();
 
 	/**

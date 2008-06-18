@@ -19,6 +19,8 @@ import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
  * @author Steffen Pingel
  * @author Mik Kersten
  * @since 3.0
+ * @noextend This class is not intended to be subclassed by clients.
+ * @noinstantiate This class is not intended to be instantiated by clients.
  */
 public class TasksUi {
 

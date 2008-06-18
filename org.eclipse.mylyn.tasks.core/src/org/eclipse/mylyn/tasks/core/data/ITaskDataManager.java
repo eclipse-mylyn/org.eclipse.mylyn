@@ -15,20 +15,38 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 /**
  * @author Steffen Pingel
  * @since 3.0
- * @noimplement
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface ITaskDataManager {
 
+	/**
+	 * @since 3.0
+	 */
 	public ITaskDataWorkingCopy createWorkingCopy(ITask task, TaskData taskData);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract ITaskDataWorkingCopy getWorkingCopy(ITask task) throws CoreException;
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void discardEdits(ITask task) throws CoreException;
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract TaskData getTaskData(ITask task) throws CoreException;
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract TaskData getTaskData(TaskRepository task, String taskId) throws CoreException;
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract boolean hasTaskData(ITask task);
 
 }

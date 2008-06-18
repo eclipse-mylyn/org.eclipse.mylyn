@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.Assert;
 /**
  * @author Steffen Pingel
  * @since 3.0
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public final class TaskData {
 

@@ -15,8 +15,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 
 /**
- * A comment posted by a user on a task.
- * 
  * @author Rob Elves
  * @author Steffen Pingel
  * @since 3.0

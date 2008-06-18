@@ -9,6 +9,8 @@
 package org.eclipse.mylyn.tasks.core;
 
 /**
+ * Clients may subclass.
+ * 
  * @author Steffen Pingel
  * @since 3.0
  */

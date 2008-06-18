@@ -45,6 +45,7 @@ import org.eclipse.ui.themes.IThemeManager;
 /**
  * @author Mik Kersten
  * @since 3.0
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public class TaskElementLabelProvider extends LabelProvider implements IColorProvider, IFontProvider {
 

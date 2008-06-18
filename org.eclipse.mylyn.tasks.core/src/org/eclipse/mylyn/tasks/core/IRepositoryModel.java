@@ -15,12 +15,24 @@ package org.eclipse.mylyn.tasks.core;
  */
 public interface IRepositoryModel {
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract IRepositoryQuery createRepositoryQuery(TaskRepository taskRepository);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract ITask createTask(TaskRepository taskRepository, String taskId);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract ITask getTask(TaskRepository taskRepository, String taskId);
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract ITask getTask(String handle);
 
 }

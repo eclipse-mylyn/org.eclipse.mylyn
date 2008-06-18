@@ -17,12 +17,18 @@ import org.eclipse.core.runtime.Assert;
  */
 public class TaskOperation {
 
+	/**
+	 * @since 3.0
+	 */
 	public static void applyTo(TaskAttribute taskAttribute, String operationId, String label) {
 		TaskData taskData = taskAttribute.getTaskData();
 		taskData.getAttributeMapper().setValue(taskAttribute, operationId);
 		taskAttribute.getMetaData().defaults().setType(TaskAttribute.TYPE_OPERATION).setLabel(label);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public static TaskOperation createFrom(TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskAttribute);
 		TaskData taskData = taskAttribute.getTaskData();
@@ -45,6 +51,9 @@ public class TaskOperation {
 
 	private final String taskId;
 
+	/**
+	 * @since 3.0
+	 */
 	public TaskOperation(String connectorKind, String repositoryUrl, String taskId, String operationId) {
 		Assert.isNotNull(connectorKind);
 		Assert.isNotNull(repositoryUrl);
@@ -83,14 +92,23 @@ public class TaskOperation {
 		return true;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public String getConnectorKind() {
 		return connectorKind;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public String getLabel() {
 		return label;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public String getOperationId() {
 		return operationId;
 	}
@@ -99,10 +117,16 @@ public class TaskOperation {
 		return repositoryUrl;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public TaskAttribute getTaskAttribute() {
 		return taskAttribute;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public String getTaskId() {
 		return taskId;
 	}
@@ -118,10 +142,16 @@ public class TaskOperation {
 		return result;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setTaskAttribute(TaskAttribute taskAttribute) {
 		this.taskAttribute = taskAttribute;
 	}

@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
- * Responsible for retrieving and posting task data to a repository.
+ * Responsible for retrieving and posting task data to a repository. Clients may subclass.
  * 
  * @author Mik Kersten
  * @author Rob Elves

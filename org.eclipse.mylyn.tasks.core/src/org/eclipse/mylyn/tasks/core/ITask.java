@@ -14,6 +14,7 @@ import java.util.Date;
  * @author Mik Kersten
  * @author Steffen Pingel
  * @since 3.0
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface ITask extends IRepositoryElement, IAttributeContainer {
 

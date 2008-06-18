@@ -62,6 +62,8 @@ import org.eclipse.ui.internal.browser.WebBrowserPreference;
 import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 
 /**
+ * @noextend This class is not intended to be subclassed by clients.
+ * @noinstantiate This class is not intended to be instantiated by clients.
  * @since 2.0
  * @author Mik Kersten
  * @author Steffen Pingel

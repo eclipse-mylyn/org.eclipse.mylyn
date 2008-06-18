@@ -14,6 +14,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
+ * Clients may subclass.
+ * 
  * @author Steffen Pingel
  * @since 3.0
  */

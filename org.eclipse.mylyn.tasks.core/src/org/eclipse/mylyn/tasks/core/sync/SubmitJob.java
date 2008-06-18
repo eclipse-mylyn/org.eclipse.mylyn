@@ -26,27 +26,43 @@ import org.eclipse.mylyn.tasks.core.ITask;
 /**
  * @author Steffen Pingel
  * @since 3.0
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class SubmitJob extends TaskJob {
 
 	private final List<SubmitJobListener> submitJobListeners = Collections.synchronizedList(new ArrayList<SubmitJobListener>());
 
+	/**
+	 * @since 3.0
+	 */
 	public SubmitJob(String name) {
 		super(name);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void addSubmitJobListener(SubmitJobListener listener) {
 		submitJobListeners.add(listener);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void removeSubmitJobListener(SubmitJobListener listener) {
 		submitJobListeners.remove(listener);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected SubmitJobListener[] getSubmitJobListeners() {
 		return submitJobListeners.toArray(new SubmitJobListener[0]);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected void fireTaskSubmitted(final IProgressMonitor monitor) throws CoreException {
 		SubmitJobListener[] listeners = submitJobListeners.toArray(new SubmitJobListener[0]);
 		if (listeners.length > 0) {
@@ -57,6 +73,9 @@ public abstract class SubmitJob extends TaskJob {
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected void fireTaskSynchronized(final IProgressMonitor monitor) throws CoreException {
 		SubmitJobListener[] listeners = submitJobListeners.toArray(new SubmitJobListener[0]);
 		if (listeners.length > 0) {
@@ -67,6 +86,9 @@ public abstract class SubmitJob extends TaskJob {
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected void fireDone() {
 		SubmitJobListener[] listeners = submitJobListeners.toArray(new SubmitJobListener[0]);
 		if (listeners.length > 0) {
@@ -85,6 +107,9 @@ public abstract class SubmitJob extends TaskJob {
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract ITask getTask();
 
 }

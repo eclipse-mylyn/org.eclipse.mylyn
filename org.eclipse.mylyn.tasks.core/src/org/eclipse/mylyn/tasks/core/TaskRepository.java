@@ -50,6 +50,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  * @since 2.0
+ * @noextend This class is not intended to be subclassed by clients.
  */
 @SuppressWarnings("deprecation")
 public final class TaskRepository extends PlatformObject {
