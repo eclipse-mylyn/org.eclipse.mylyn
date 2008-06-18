@@ -115,7 +115,24 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				updateAttribute(data, BugzillaAttribute.NEWCC);
 			}
 		},
-		VERSION_CURRENT(4.3f) {
+		VERSION_4_3(4.3f) {
+			@Override
+			void migrate(TaskRepository repository, TaskData data) {
+				// migrate custom attributes
+				for (TaskAttribute attribute : data.getRoot().getAttributes().values()) {
+					if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+						attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+						attribute.getMetaData().setReadOnly(false);
+						if (attribute.getOptions().size() > 0) {
+							attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+						} else {
+							attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+						}
+					}
+				}
+			}
+		},
+		VERSION_CURRENT(4.4f) {
 			@Override
 			void migrate(TaskRepository repository, TaskData data) {
 				data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
