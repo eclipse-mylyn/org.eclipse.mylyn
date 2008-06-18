@@ -1319,7 +1319,6 @@ public class BugzillaClient {
 				}
 
 				boolean parseable = false;
-				List<BugzillaCustomField> customFields = repositoryConfiguration.getCustomFields();
 				if (method.getResponseHeader("Content-Type") != null) {
 					Header responseTypeHeader = method.getResponseHeader("Content-Type");
 					for (String type : VALID_CONFIG_CONTENT_TYPES) {
@@ -1337,7 +1336,10 @@ public class BugzillaClient {
 										monitor.worked(1);
 									}
 								};
-
+								List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
+								if (repositoryConfiguration != null) {
+									customFields = repositoryConfiguration.getCustomFields();
+								}
 								factory.populateReport(taskDataMap, collector2, mapper, customFields);
 								taskIds.removeAll(idsToRetrieve);
 								parseable = true;
