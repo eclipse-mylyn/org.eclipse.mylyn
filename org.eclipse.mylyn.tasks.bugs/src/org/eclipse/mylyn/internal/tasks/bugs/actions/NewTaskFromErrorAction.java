@@ -14,11 +14,12 @@ package org.eclipse.mylyn.internal.tasks.bugs.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.bugs.wizards.ErrorLogStatus;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.views.log.LogEntry;
+import org.eclipse.ui.internal.views.log.LogSession;
 
 /**
  * Creates a new task from the selected error log entry.
@@ -75,8 +76,11 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 				entry.getMessage());
 		status.setDate(entry.getDate());
 		status.setStack(entry.getStack());
-		status.setLogSessionData(entry.getSession().getSessionData());
-		TasksBugsPlugin.getTaskErrorReporter().handle(status);
+		LogSession session = entry.getSession();
+		if (session != null) {
+			status.setLogSessionData(session.getSessionData());
+		}
+		StatusHandler.fail(status);
 	}
 
 	public void run() {

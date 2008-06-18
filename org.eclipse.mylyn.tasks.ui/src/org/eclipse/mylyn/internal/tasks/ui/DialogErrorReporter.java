@@ -22,7 +22,7 @@ public class DialogErrorReporter extends AbstractErrorReporter {
 
 	@Override
 	public int getPriority(IStatus status) {
-		return AbstractErrorReporter.PRIORITY_DEFAULT;
+		return AbstractErrorReporter.PRIORITY_LOW;
 	}
 
 	@Override

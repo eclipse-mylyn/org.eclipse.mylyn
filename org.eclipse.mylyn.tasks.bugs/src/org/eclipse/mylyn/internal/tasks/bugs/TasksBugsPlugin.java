@@ -10,6 +10,7 @@ package org.eclipse.mylyn.internal.tasks.bugs;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.commons.core.AbstractErrorReporter;
+import org.eclipse.mylyn.internal.tasks.bugs.wizards.ErrorLogStatus;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -25,7 +26,11 @@ public class TasksBugsPlugin extends AbstractUIPlugin {
 
 		@Override
 		public int getPriority(IStatus status) {
-			return getTaskErrorReporter().getPriority(status);
+			if (status instanceof ErrorLogStatus) {
+				return PRIORITY_DEFAULT;
+			}
+			return PRIORITY_NONE;
+			//return getTaskErrorReporter().getPriority(status);
 		}
 
 		@Override
