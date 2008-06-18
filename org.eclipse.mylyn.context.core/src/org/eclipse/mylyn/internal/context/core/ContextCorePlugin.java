@@ -32,7 +32,7 @@ import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.osgi.framework.BundleContext;
 
 /**
- * Main entry point for the Context Core API.
+ * Activator for the Context Core plug-in.
  * 
  * @author Mik Kersten
  * @since 3.0
