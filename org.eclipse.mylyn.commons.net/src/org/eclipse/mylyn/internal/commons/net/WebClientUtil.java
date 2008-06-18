@@ -35,12 +35,7 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
 
 /**
- * @author Mik Kersten
- * @author Steffen Pingel
- * @author Leo Dos Santos - getFaviconForUrl
- * @author Rob Elves
- * @since 2.0
- * @deprecated use {@link WebUtil} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class WebClientUtil {

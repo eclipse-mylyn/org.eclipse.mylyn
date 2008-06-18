@@ -14,8 +14,7 @@ import java.io.PrintStream;
 import org.apache.commons.logging.impl.SimpleLog;
 
 /**
- * @author Rob Elves
- * @since 2.0
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class WebClientLog extends SimpleLog {
