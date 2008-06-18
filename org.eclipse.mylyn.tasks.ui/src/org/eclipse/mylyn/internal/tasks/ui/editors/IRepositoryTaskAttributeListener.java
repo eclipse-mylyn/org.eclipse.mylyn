@@ -9,8 +9,9 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 /**
- * @author Ken Sueda
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public interface IRepositoryTaskAttributeListener {
 	public abstract void attributeChanged(String attribute, String value);
 }

@@ -39,6 +39,10 @@ import org.eclipse.ui.texteditor.spelling.SpellingProblem;
  * @author Jeff Pound
  * @author Rob Elves
  */
+/**
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
+ */
+@Deprecated
 public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IReconcilingStrategy {
 
 	/**

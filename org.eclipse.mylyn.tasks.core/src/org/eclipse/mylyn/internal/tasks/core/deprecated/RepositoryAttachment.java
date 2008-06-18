@@ -10,15 +10,8 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
 import java.io.Serializable;
 
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
-
 /**
- * Encapsulates a file or other resource attached to a task.
- * 
- * @author Rob Elves
- * @author Mik Kersten
- * @since 2.0
- * @use {@link TaskAttachmentMapper} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public final class RepositoryAttachment extends AttributeContainer implements Serializable {

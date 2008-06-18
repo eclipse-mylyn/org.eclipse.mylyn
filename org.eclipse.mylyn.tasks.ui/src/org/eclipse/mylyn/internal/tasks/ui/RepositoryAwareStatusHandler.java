@@ -15,8 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * @author Mik Kersten
- * @author Rob Elves
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class RepositoryAwareStatusHandler {

@@ -15,8 +15,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 
 /**
- * @author Steffen Pingel
- * @since 3.0
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class DefaultTaskSchema {

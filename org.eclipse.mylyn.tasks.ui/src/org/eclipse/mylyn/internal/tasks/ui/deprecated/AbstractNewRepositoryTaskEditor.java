@@ -36,7 +36,6 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.VerifyKeyListener;
@@ -66,11 +65,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
- * An editor used to view a locally created bug that does not yet exist on a server.
- * 
- * @author Rob Elves (modifications)
- * @since 2.0
- * @deprecated use {@link TaskEditorInput} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
@@ -407,7 +402,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	 * Returns the {@link AbstractTaskContainer category} the new task belongs to
 	 * 
 	 * @return {@link AbstractTaskContainer category} where the new task must be added to, or null if it must not be
-	 * 	added to the task list
+	 *         added to the task list
 	 */
 	@Override
 	@SuppressWarnings("unchecked")

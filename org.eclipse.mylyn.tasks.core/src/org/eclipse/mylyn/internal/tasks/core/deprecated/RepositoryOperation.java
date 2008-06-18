@@ -14,16 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylyn.tasks.core.data.TaskOperation;
-
 /**
- * A representation of an operation that can be done to the bug when it is submitted
- * 
- * NOTE: likely to change for 3.0
- * 
- * @author Shawn Minto
- * @since 2.0
- * @deprecated use {@link TaskOperation} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class RepositoryOperation implements Serializable {
@@ -66,9 +58,9 @@ public class RepositoryOperation implements Serializable {
 	 * Constructor
 	 * 
 	 * @param knobName
-	 * 		The name of the value for the knob attribute
+	 *            The name of the value for the knob attribute
 	 * @param operationName
-	 * 		The display text for the operation
+	 *            The display text for the operation
 	 */
 	public RepositoryOperation(String knobName, String operationName) {
 		knob_name = knobName;
@@ -106,7 +98,7 @@ public class RepositoryOperation implements Serializable {
 	 * Set up this operation to have options
 	 * 
 	 * @param optionName
-	 * 		The name for the option attribute
+	 *            The name for the option attribute
 	 */
 	public void setUpOptions(String optionName) {
 		hasOptions = true;
@@ -119,9 +111,9 @@ public class RepositoryOperation implements Serializable {
 	 * Add an option value to the operation
 	 * 
 	 * @param name
-	 * 		The name of the option
+	 *            The name of the option
 	 * @param value
-	 * 		The value of the option
+	 *            The value of the option
 	 */
 	public void addOption(String name, String value) {
 		options.put(name, value);
@@ -153,7 +145,7 @@ public class RepositoryOperation implements Serializable {
 	 * Set the selected option
 	 * 
 	 * @param string
-	 * 		The name of the selected option
+	 *            The name of the selected option
 	 */
 	public void setOptionSelection(String string) {
 		op_sel = string;
@@ -172,7 +164,7 @@ public class RepositoryOperation implements Serializable {
 	 * Set whether this option is to be checked or not
 	 * 
 	 * @param b
-	 * 		True if it is to be checked
+	 *            True if it is to be checked
 	 */
 	public void setChecked(boolean b) {
 		isChecked = b;
@@ -191,7 +183,7 @@ public class RepositoryOperation implements Serializable {
 	 * Get the value for an option from its name
 	 * 
 	 * @param option
-	 * 		The name of the option
+	 *            The name of the option
 	 * @return The value of the option
 	 */
 	public String getOptionValue(String option) {

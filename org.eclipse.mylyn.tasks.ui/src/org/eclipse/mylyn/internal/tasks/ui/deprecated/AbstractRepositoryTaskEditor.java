@@ -128,7 +128,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.ui.NewSearchUI;
@@ -219,15 +218,7 @@ import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
- * Extend to provide customized task editing.
- * 
- * @author Mik Kersten
- * @author Rob Elves
- * @author Jeff Pound (Attachment work)
- * @author Steffen Pingel
- * @author Xiaoyang Guan (Wiki HTML preview)
- * @since 2.0
- * @deprecated use {@link AbstractTaskEditorPage} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {

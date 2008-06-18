@@ -14,14 +14,9 @@ import java.util.Set;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 
 /**
- * Provides input to editors with unsubmitted tasks (i.e., those that do not yet exist on the repository).
- * 
- * @author Rob Elves
- * @since 2.0
- * @deprecated use {@link TaskEditorInput} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class NewTaskEditorInput extends RepositoryTaskEditorInput {

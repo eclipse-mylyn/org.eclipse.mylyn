@@ -11,14 +11,8 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
-
 /**
- * Encapsualtes resources that can be attached to a task.
- * 
- * @author Steffen Pingel
- * @since 2.0
- * @deprecated use {@link TaskAttachmentMapper} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public interface ITaskAttachment {

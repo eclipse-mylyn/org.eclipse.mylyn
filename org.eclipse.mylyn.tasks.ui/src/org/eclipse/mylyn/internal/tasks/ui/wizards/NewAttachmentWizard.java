@@ -56,6 +56,10 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Jeff Pound
  */
+/**
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
+ */
+@Deprecated
 public class NewAttachmentWizard extends Wizard {
 
 	private static final String DIALOG_SETTINGS_KEY = "AttachmentWizard";

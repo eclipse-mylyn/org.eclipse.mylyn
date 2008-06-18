@@ -26,10 +26,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
- * Extend to provide facility for downloading files from the task repository.
- * 
- * @author Steffen Pingel
- * @since 2.0
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public abstract class AbstractAttachmentHandler {

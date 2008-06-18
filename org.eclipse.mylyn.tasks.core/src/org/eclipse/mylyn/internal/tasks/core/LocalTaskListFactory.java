@@ -13,8 +13,9 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 
 /**
- * @author Rob Elves
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public class LocalTaskListFactory extends AbstractTaskListFactory {
 
 	@Override

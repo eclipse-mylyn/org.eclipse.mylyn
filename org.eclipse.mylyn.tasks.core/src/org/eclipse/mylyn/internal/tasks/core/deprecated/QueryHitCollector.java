@@ -16,13 +16,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
- * Collects QueryHits resulting from repository search.
- * 
- * @author Shawn Minto
- * @author Rob Elves (generalized from bugzilla)
- * @author Steffen Pingel
- * @since 2.0
- * @deprecated
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class QueryHitCollector extends LegacyTaskDataCollector {

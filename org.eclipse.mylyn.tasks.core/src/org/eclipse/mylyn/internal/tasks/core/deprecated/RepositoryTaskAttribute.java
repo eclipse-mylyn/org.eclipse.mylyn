@@ -16,10 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Encapsulates common task attributes.
- * 
- * @author Rob Elves
- * @since 2.0
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public final class RepositoryTaskAttribute implements Serializable {
@@ -287,9 +284,9 @@ public final class RepositoryTaskAttribute implements Serializable {
 	 * Adds an attribute option value
 	 * 
 	 * @param readableValue
-	 * 		The value displayed on the screen
+	 *            The value displayed on the screen
 	 * @param parameterValue
-	 * 		The option value used when sending the form to the server
+	 *            The option value used when sending the form to the server
 	 */
 	public void addOption(String readableValue, String parameterValue) {
 		options.add(readableValue);
@@ -318,7 +315,7 @@ public final class RepositoryTaskAttribute implements Serializable {
 	 * Set whether the field was hidden in the bug
 	 * 
 	 * @param b
-	 * 		Whether the field was hidden or not
+	 *            Whether the field was hidden or not
 	 */
 	public void setHidden(boolean b) {
 		hidden = b;

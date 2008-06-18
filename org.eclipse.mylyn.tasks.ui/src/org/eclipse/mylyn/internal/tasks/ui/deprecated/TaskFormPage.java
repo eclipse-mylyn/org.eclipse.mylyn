@@ -83,13 +83,10 @@ import org.eclipse.ui.themes.IThemeManager;
 /**
  * Used by the task editor. Not recommended to extend.
  * 
- * NOTE: likely to change for 3.0.
- * 
  * @author Rob Elves
  * @author Eugene Kuleshov (spelling correction)
  * 
- * ref: PDEFormPage.class ref:
- * ref: http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg19676.html
+ *         ref: PDEFormPage.class ref: ref: http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg19676.html
  * @deprecated use {@link AbstractTaskEditorPage} instead
  */
 @Deprecated

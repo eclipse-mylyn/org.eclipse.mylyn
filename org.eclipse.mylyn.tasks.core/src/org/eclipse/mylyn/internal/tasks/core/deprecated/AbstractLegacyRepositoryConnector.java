@@ -35,13 +35,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
- * Encapsulates common operations that can be performed on a task repository. Extend to connect with a Java API or WS
- * API for accessing the repository.
- * 
- * @author Mik Kersten
- * @author Rob Elves
- * @author Shawn Minto
- * @since 2.0
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public abstract class AbstractLegacyRepositoryConnector extends AbstractRepositoryConnector {

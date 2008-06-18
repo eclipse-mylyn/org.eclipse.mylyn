@@ -19,9 +19,9 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
- * @author Robert Elves
- * @author Steffen Pingel
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public class ControlSelectionService {
 
 	private final Map<Object, Control> controlBySelectableObject = new HashMap<Object, Control>();

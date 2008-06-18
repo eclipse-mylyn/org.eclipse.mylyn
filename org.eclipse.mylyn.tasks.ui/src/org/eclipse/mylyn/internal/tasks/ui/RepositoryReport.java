@@ -7,3 +7,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
+/**
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
+ */

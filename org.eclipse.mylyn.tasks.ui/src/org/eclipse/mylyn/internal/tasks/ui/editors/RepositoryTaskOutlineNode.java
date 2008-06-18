@@ -14,9 +14,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 
 /**
- * A node for the tree in the <code>RepositoryTaskOutlinePage</code>.
- * 
- * @author Mik Kersten (hardening of prototype)
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {

@@ -16,18 +16,11 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 /**
- * Input for task editors.
- * 
- * NOTE: likely to change for 3.0
- * 
- * @author Rob Elves (modifications)
- * @since 2.0
- * @deprecated use {@link TaskEditorInput} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput {
@@ -54,7 +47,7 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	 * Sets the tool tip text for this editor input.
 	 * 
 	 * @param str
-	 * 		The new tool tip text.
+	 *            The new tool tip text.
 	 */
 	protected void setToolTipText(String str) {
 		// 03-20-03 Allows editor to store title (once it is known)

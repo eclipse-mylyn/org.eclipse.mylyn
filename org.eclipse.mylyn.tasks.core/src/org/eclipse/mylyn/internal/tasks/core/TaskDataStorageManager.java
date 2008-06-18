@@ -25,10 +25,9 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 
 /**
- * Manager for persisting RepositoryTaskData offline
- * 
- * @author Rob Elves
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public class TaskDataStorageManager {
 
 	private final IRepositoryManager taskRepositoryManager;
@@ -120,7 +119,7 @@ public class TaskDataStorageManager {
 
 	/**
 	 * @return Get the next available temporary taskId. This taskId is given to new unsubmitted repository tasks.
-	 * 	Incremented each time this method is called.
+	 *         Incremented each time this method is called.
 	 */
 	public synchronized String getNewRepositoryTaskId() {
 		// TODO: generate based on values of unsubmitted offline report ids

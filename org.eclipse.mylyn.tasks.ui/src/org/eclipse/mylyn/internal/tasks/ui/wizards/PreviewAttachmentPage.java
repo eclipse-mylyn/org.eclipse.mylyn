@@ -46,6 +46,10 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author Jeff Pound
  */
+/**
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
+ */
+@Deprecated
 public class PreviewAttachmentPage extends WizardPage {
 
 	private static final String PAGE_NAME = "PreviewAttachmentPage";

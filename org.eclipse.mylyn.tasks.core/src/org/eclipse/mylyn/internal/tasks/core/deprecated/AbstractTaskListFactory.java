@@ -18,14 +18,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.w3c.dom.Element;
 
 /**
- * Responsible for storing and creating task list elements.
- * 
- * When overriding these methods be sure not to perform network access since the Task List is read and written
- * frequently.
- * 
- * @author Mik Kersten
- * @author Ken Sueda
- * @since 2.0
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public abstract class AbstractTaskListFactory {

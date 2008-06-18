@@ -29,7 +29,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
- * @author Steffen Pingel
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class DownloadAttachmentJob extends Job {

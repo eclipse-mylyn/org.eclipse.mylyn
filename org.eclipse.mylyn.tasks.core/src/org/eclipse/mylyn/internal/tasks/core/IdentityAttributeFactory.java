@@ -13,8 +13,7 @@ import java.util.Date;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
 
 /**
- * @since 3.0
- * @author Steffen Pingel
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class IdentityAttributeFactory extends AbstractAttributeFactory {

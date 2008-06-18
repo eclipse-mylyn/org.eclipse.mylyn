@@ -23,12 +23,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 
 /**
- * Used for creating tasks from repository task data.
- * 
- * NOTE: likely to change for 3.0.
- * 
- * @author Rob Elves
- * @deprecated
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class TaskFactory implements ITaskFactory {

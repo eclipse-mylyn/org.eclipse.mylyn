@@ -19,13 +19,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
- * Responsible for retrieving and posting task data to a repository.
- * 
- * @author Mik Kersten
- * @author Rob Elves
- * @author Steffen Pingel
- * @author Frank Becker
- * @since 2.0
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public abstract class AbstractTaskDataHandler {
@@ -61,7 +55,7 @@ public abstract class AbstractTaskDataHandler {
 	 * @param repositoryUrl
 	 * @param repositoryKind
 	 * @param taskKind
-	 * 		AbstractTask.DEFAULT_KIND or connector specific task kind string
+	 *            AbstractTask.DEFAULT_KIND or connector specific task kind string
 	 * @return
 	 */
 	public abstract AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind,
@@ -84,9 +78,9 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * @param task
-	 * 		the parent task, may be null
+	 *            the parent task, may be null
 	 * @param task
-	 * 		the parent task data, may be null
+	 *            the parent task data, may be null
 	 * @since 2.2
 	 */
 	public boolean canInitializeSubTaskData(ITask task, RepositoryTaskData parentTaskData) {
@@ -104,7 +98,7 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * @return true if connector support downloading multiple task data in single request, false otherwise. If true,
-	 * 	override and implement getMultiTaskData
+	 *         override and implement getMultiTaskData
 	 */
 	public boolean canGetMultiTaskData() {
 		return false;
@@ -120,10 +114,11 @@ public abstract class AbstractTaskDataHandler {
 	 * Other attribute values are only set if they exist on <code>sourceTaskData</code> and <code>targetTaskData</code>.
 	 * 
 	 * @param sourceTaskData
-	 * 		the source task data values are copied from, the connector kind of repository of <code>sourceTaskData</code>
-	 * 		can be different from <code>targetTaskData</code>
+	 *            the source task data values are copied from, the connector kind of repository of
+	 *            <code>sourceTaskData</code> can be different from <code>targetTaskData</code>
 	 * @param targetTaskData
-	 * 		the target task data values are copied to, the connector kind matches the one of this task data handler
+	 *            the target task data values are copied to, the connector kind matches the one of this task data
+	 *            handler
 	 * @since 2.2
 	 */
 	public void cloneTaskData(RepositoryTaskData sourceTaskData, RepositoryTaskData targetTaskData) {

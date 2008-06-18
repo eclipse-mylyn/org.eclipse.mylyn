@@ -19,10 +19,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.ITaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 
 /**
- * A class representing a local attachment.
- * 
- * @author Jeff Pound
- * @since 2.0
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class LocalAttachment implements Serializable, ITaskAttachment {

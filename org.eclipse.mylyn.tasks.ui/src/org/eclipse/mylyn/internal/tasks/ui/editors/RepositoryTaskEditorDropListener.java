@@ -28,11 +28,9 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * Not API.
- * 
- * @author Mik Kersten
- * @author Maarten Meijer
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public class RepositoryTaskEditorDropListener implements DropTargetListener {
 
 	private final AbstractRepositoryTaskEditor editor;
@@ -146,9 +144,9 @@ public class RepositoryTaskEditorDropListener implements DropTargetListener {
 
 	/**
 	 * @param naw
-	 * 		wizard to attach dialog to.
+	 *            wizard to attach dialog to.
 	 * @param message
-	 * 		error to display or none if <code>null</code>
+	 *            error to display or none if <code>null</code>
 	 */
 	private void openDialog(NewAttachmentWizard naw, String message) {
 		editor.setGlobalBusy(true);

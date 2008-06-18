@@ -11,6 +11,10 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 
+/**
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
+ */
+@Deprecated
 public interface IRepositoryTaskSelection extends ISelection {
 
 	/**
@@ -19,8 +23,7 @@ public interface IRepositoryTaskSelection extends ISelection {
 	public boolean hasComment();
 
 	/**
-	 * @return the <code>Comment</code> object for this selection, or <code>null</code> if a comment was not
-	 *         selected.
+	 * @return the <code>Comment</code> object for this selection, or <code>null</code> if a comment was not selected.
 	 */
 	public TaskComment getComment();
 

@@ -15,8 +15,9 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 
 /**
- * @author Mik Kersten
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public class AttachmentsTableContentProvider implements IStructuredContentProvider {
 
 	private final List<RepositoryAttachment> attachments;

@@ -11,10 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.jface.viewers.IElementComparer;
 
 /**
- * This class is used to compare two <code>IRepositoryTaskSelection</code> objects.
- * 
- * @see IElementComparer
- * @see IRepositoryTaskSelection
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class RepositoryTaskOutlineComparer implements IElementComparer {

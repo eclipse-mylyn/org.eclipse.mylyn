@@ -16,8 +16,9 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 
 /**
- * @author Rob Elves
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public class TaskDataState {
 
 	private RepositoryTaskData newTaskData;

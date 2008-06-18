@@ -22,6 +22,7 @@ import org.eclipse.swt.dnd.TransferData;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
+// TODO replace by LocalSelectionTransfer?
 public class TaskTransfer extends ByteArrayTransfer {
 
 	private static final TaskTransfer INSTANCE = new TaskTransfer();

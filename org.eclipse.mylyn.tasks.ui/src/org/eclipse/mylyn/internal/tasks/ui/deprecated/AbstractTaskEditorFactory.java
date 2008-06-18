@@ -9,17 +9,12 @@
 package org.eclipse.mylyn.internal.tasks.ui.deprecated;
 
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * Extend to add tabs to task editors.
- * 
- * @author Mik Kersten
- * @since 2.0
- * @deprecated use {@link AbstractTaskEditorPageFactory} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public abstract class AbstractTaskEditorFactory {
@@ -46,7 +41,7 @@ public abstract class AbstractTaskEditorFactory {
 
 	/**
 	 * @return A higher integer for high priority, low integer for low priority. Higher priority editors will be placed
-	 * 	earlier in the tab list.
+	 *         earlier in the tab list.
 	 */
 	public int getTabOrderPriority() {
 		return 1;

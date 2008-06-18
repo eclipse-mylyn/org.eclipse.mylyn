@@ -25,14 +25,9 @@ import org.eclipse.mylyn.internal.tasks.core.ITaskDataStorage;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataState;
 
 /**
- * Least Recently Used (LRU) cache
- * 
- * TODO: Use meta context to make cache more efficient
- * 
- * API-3.0: review for race-conditions
- * 
- * @author Rob Elves
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public class OfflineCachingStorage implements ITaskDataStorage {
 
 	private static final int DEFAULT_FLUSH_INTERVAL = 60 * 1000;

@@ -70,6 +70,10 @@ import org.eclipse.ui.views.navigator.ResourceComparator;
  * @author Jeff Pound - modified for attachment input
  * @author Chris Aniszczyk <caniszczyk@gmail.com> - bug 209572
  */
+/**
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
+ */
+@Deprecated
 public class InputAttachmentSourcePage extends WizardPage {
 
 	// constants

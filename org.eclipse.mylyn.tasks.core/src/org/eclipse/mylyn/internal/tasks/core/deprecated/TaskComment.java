@@ -10,13 +10,8 @@ package org.eclipse.mylyn.internal.tasks.core.deprecated;
 
 import java.io.Serializable;
 
-
 /**
- * A comment posted by a user on a task.
- * 
- * @author Rob Elves
- * @since 2.0
- * @deprecated use {@link org.eclipse.mylyn.tasks.core.data.TaskCommentMapper} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public final class TaskComment extends AttributeContainer implements Serializable {
@@ -48,7 +43,7 @@ public final class TaskComment extends AttributeContainer implements Serializabl
 	 * Set the comment number
 	 * 
 	 * @param number
-	 * 		the number of the comment
+	 *            the number of the comment
 	 */
 	public void setNumber(int number) {
 		this.number = number;

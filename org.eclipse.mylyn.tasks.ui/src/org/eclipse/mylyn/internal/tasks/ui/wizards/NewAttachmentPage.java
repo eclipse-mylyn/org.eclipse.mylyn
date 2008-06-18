@@ -39,6 +39,10 @@ import org.eclipse.swt.widgets.Text;
  * @author Jeff Pound
  * @author Mik Kersten
  */
+/**
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
+ */
+@Deprecated
 public class NewAttachmentPage extends WizardPage {
 
 	private final LocalAttachment attachment;

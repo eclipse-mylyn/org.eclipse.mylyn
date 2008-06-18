@@ -19,11 +19,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 
 /**
- * Extend to provide a custom edit query dialog, typically invoked by the user requesting properties on a query node in
- * the Task List.
- * 
- * @author Mik Kersten
- * @since 3.0
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public abstract class AbstractRepositoryQueryWizard extends Wizard {

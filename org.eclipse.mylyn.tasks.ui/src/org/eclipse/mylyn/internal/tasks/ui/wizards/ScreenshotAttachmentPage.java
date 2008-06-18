@@ -14,6 +14,9 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.ScreenshotCreationPage;
 /**
  * @author Mik Kersten
  */
+/**
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
+ */
 @Deprecated
 public class ScreenshotAttachmentPage extends ScreenshotCreationPage {
 

@@ -13,14 +13,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
-
 /**
- * Proxy for a file attachment.
- * 
- * @author Steffen Pingel
- * @since 2.0
- * @deprecated use {@link TaskAttachmentMapper} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class FileAttachment implements ITaskAttachment {

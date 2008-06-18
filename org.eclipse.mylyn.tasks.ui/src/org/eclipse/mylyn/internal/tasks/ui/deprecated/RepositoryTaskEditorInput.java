@@ -10,15 +10,9 @@ package org.eclipse.mylyn.internal.tasks.ui.deprecated;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 
 /**
- * Input to editors for existing tasks (i.e., those that exist present in the repository).
- * 
- * @author Mik Kersten
- * @author Rob Elves
- * @since 2.0
- * @deprecated use {@link TaskEditorInput} instead
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput {

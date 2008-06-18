@@ -8,9 +8,9 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 /**
- * @author Rob Elves
- * @author Mik Kersten
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public class ContentOutlineTools {
 
 	/** The default string used for locally created bugs. */

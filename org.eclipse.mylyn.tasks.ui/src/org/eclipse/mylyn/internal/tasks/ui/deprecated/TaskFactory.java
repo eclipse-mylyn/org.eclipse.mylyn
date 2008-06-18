@@ -30,12 +30,7 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
- * Used for creating tasks from repository task data.
- * 
- * NOTE: likely to change for 3.0.
- * 
- * @author Rob Elves
- * @deprecated
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class TaskFactory implements ITaskFactory {
@@ -73,9 +68,9 @@ public class TaskFactory implements ITaskFactory {
 
 	/**
 	 * @param updateTasklist
-	 * 		- synchronize task with the provided taskData
+	 *            - synchronize task with the provided taskData
 	 * @param forced
-	 * 		- user requested synchronization
+	 *            - user requested synchronization
 	 * @throws CoreException
 	 */
 	public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {

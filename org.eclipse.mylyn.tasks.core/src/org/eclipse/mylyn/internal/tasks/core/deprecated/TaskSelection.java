@@ -24,8 +24,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
- * @author Steffen Pingel
- * @since 2.2
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class TaskSelection implements ITaskMapping {

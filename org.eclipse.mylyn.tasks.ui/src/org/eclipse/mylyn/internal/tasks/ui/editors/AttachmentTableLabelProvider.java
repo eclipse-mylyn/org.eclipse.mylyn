@@ -29,8 +29,9 @@ import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
- * @author Mik Kersten
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
+@Deprecated
 public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final AbstractRepositoryTaskEditor AbstractTaskEditor;

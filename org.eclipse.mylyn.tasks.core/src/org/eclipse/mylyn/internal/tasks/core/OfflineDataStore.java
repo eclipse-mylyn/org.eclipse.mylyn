@@ -17,9 +17,7 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 
 /**
- * This object holds RepositoryTaskData and is serialized to disk for offline storage.
- * 
- * @author Rob Elves
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 class OfflineDataStore implements Serializable {

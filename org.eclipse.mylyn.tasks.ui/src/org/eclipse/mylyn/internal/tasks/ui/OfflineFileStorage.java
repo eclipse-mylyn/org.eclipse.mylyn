@@ -42,7 +42,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
 
 /**
- * @author Rob Elves
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @SuppressWarnings( { "restriction", "deprecation" })
 @Deprecated

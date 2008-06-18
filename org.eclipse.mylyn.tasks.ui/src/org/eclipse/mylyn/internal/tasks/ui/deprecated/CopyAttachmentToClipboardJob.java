@@ -29,7 +29,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * @author Steffen Pingel
+ * @deprecated Do not use. This class is pending for removal: see bug 237552.
  */
 @Deprecated
 public class CopyAttachmentToClipboardJob extends Job {
