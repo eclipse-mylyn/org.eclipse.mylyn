@@ -173,14 +173,22 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			TaskAttribute endAttribute = repositoryTaskData.getRoot().getAttribute(localName);
 			if (endAttribute == null) {
 				String desc = "???";
+				BugzillaCustomField customField = null;
 				for (BugzillaCustomField bugzillaCustomField : customFields) {
 					if (localName.equals(bugzillaCustomField.getName())) {
-						desc = bugzillaCustomField.getDescription();
+						customField = bugzillaCustomField;
+						break;
 					}
 				}
-				TaskAttribute atr = repositoryTaskData.getRoot().createAttribute(localName);
-				atr.getMetaData().defaults().setLabel(desc).setReadOnly(true);
-				atr.setValue(parsedText);
+				if (customField != null) {
+					TaskAttribute atr = repositoryTaskData.getRoot().createAttribute(localName);
+					desc = customField.getDescription();
+					atr.getMetaData().defaults().setLabel(desc).setReadOnly(false);
+					atr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+					atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+					atr.getMetaData().setReadOnly(true);
+					atr.setValue(parsedText);
+				}
 			} else {
 				endAttribute.addValue(parsedText);
 			}
@@ -311,6 +319,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			updateAttachmentMetaData();
 			TaskAttribute attrCreation = repositoryTaskData.getRoot().getAttribute(
 					BugzillaAttribute.CREATION_TS.getKey());
+
+			updateCustomFields(repositoryTaskData);
+
 			// Guard against empty data sets
 			if (attrCreation != null && !attrCreation.equals("")) {
 				collector.accept(repositoryTaskData);
@@ -342,6 +353,33 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				defaultAttribute.addValue(parsedText);
 			}
 			break;
+		}
+
+	}
+
+	private void updateCustomFields(TaskData taskData) {
+		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repositoryTaskData.getRepositoryUrl());
+		if (config != null) {
+			for (BugzillaCustomField bugzillaCustomField : config.getCustomFields()) {
+
+				TaskAttribute atr = taskData.getRoot().getAttribute(bugzillaCustomField.getName());
+				if (atr == null) {
+					atr = taskData.getRoot().createAttribute(bugzillaCustomField.getName());
+				}
+
+				if (atr != null) {
+					atr.getMetaData().defaults().setLabel(bugzillaCustomField.getDescription());
+					atr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+
+					List<String> options = bugzillaCustomField.getOptions();
+					if (options.size() > 0) {
+						atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+					} else {
+						atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+					}
+					atr.getMetaData().setReadOnly(false);
+				}
+			}
 		}
 
 	}

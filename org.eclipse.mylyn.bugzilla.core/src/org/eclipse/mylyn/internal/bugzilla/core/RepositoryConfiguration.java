@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	private final List<String> milestones = new ArrayList<String>();
 
-	private final List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
+	private final List<BugzillaCustomField> customFields = new LinkedList<BugzillaCustomField>();
 
 	private final List<BugzillaFlag> flags = new ArrayList<BugzillaFlag>();
 
@@ -378,31 +379,17 @@ public class RepositoryConfiguration implements Serializable {
 		}
 		String product = attributeProduct.getValue();
 		for (TaskAttribute attribute : new HashSet<TaskAttribute>(existingReport.getRoot().getAttributes().values())) {
-			if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
-				attribute.clearOptions();
-				List<BugzillaCustomField> customFields = getCustomFields();
 
-				for (BugzillaCustomField bugzillaCustomField : customFields) {
-					if (bugzillaCustomField.getName().equals(attribute.getId())) {
-						List<String> optionList = bugzillaCustomField.getOptions();
-						for (String option : optionList) {
-							attribute.putOption(option, option);
-						}
-					}
-				}
-			} else {
+			List<String> optionValues = getAttributeOptions(product, attribute);
 
-				List<String> optionValues = getAttributeOptions(product, attribute);
+			if (attribute.getId().equals(BugzillaAttribute.TARGET_MILESTONE.getKey()) && optionValues.isEmpty()) {
+				existingReport.getRoot().removeAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey());
+				continue;
+			}
 
-				if (attribute.getId().equals(BugzillaAttribute.TARGET_MILESTONE.getKey()) && optionValues.isEmpty()) {
-					existingReport.getRoot().removeAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey());
-					continue;
-				}
-
-				attribute.clearOptions();
-				for (String option : optionValues) {
-					attribute.putOption(option, option);
-				}
+			attribute.clearOptions();
+			for (String option : optionValues) {
+				attribute.putOption(option, option);
 			}
 		}
 
@@ -410,23 +397,35 @@ public class RepositoryConfiguration implements Serializable {
 
 	public List<String> getAttributeOptions(String product, TaskAttribute attribute) {
 		List<String> options = new ArrayList<String>();
-		BugzillaAttribute element;
-		try {
-			element = BugzillaAttribute.valueOf(attribute.getId().trim().toUpperCase(Locale.ENGLISH));
-		} catch (RuntimeException e) {
-			if (e instanceof IllegalArgumentException) {
-				// ignore unrecognized tags
-				return options;
+
+		if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+			for (BugzillaCustomField bugzillaCustomField : customFields) {
+				if (bugzillaCustomField.getName().equals(attribute.getId())) {
+					options = bugzillaCustomField.getOptions();
+					break;
+				}
 			}
-			throw e;
-		}
 
-		options = getOptionValues(element, product);
+		} else {
 
-		if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
-				&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
-				&& element != BugzillaAttribute.BUG_STATUS) {
-			Collections.sort(options);
+			BugzillaAttribute element;
+			try {
+				element = BugzillaAttribute.valueOf(attribute.getId().trim().toUpperCase(Locale.ENGLISH));
+			} catch (RuntimeException e) {
+				if (e instanceof IllegalArgumentException) {
+					// ignore unrecognized tags
+					return options;
+				}
+				throw e;
+			}
+
+			options = getOptionValues(element, product);
+
+			if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
+					&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
+					&& element != BugzillaAttribute.BUG_STATUS) {
+				Collections.sort(options);
+			}
 		}
 		return options;
 	}
