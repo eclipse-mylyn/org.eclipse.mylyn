@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -126,10 +125,9 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			if (connector.isRepositoryConfigurationStale(repository, monitor)) {
 				connector.updateRepositoryConfiguration(repository, monitor);
 				repository.setConfigurationDate(new Date());
-				// FIXME save repositories
 			}
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
+			repository.setStatus(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 					"Updating of repository configuration failed", e));
 		} finally {
 			monitor.done();
