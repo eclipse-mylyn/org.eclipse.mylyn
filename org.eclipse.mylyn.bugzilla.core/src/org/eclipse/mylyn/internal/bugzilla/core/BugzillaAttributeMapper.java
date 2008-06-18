@@ -248,6 +248,12 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 				List<String> options = configuration.getAttributeOptions(attributeProduct.getValue(), attribute);
 				if (options.size() == 0 && attribute.getId().equals(BugzillaOperation.resolve.getInputId())) {
 					options = configuration.getOptionValues(BugzillaAttribute.RESOLUTION, attributeProduct.getValue());
+					// DUPLICATE and MOVED have special meanings so do not show as resolution
+					// TODO: COPIED FUNCTIONALITY from RepositoryConfiguration.addOperation() refactor.
+					if (options != null) {
+						options.remove("DUPLICATE");
+						options.remove("MOVED");
+					}
 				}
 				Map<String, String> newOptions = new LinkedHashMap<String, String>();
 				for (String option : options) {
