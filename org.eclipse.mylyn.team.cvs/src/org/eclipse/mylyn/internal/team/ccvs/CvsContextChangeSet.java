@@ -211,8 +211,9 @@ public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptabl
 
 	@Override
 	public IResource[] getResources() {
-		List<IResource> allResources = getAllResourcesInChangeContext();
-		return allResources.toArray(new IResource[allResources.size()]);
+		return super.getResources();
+//		List<IResource> allResources = getAllResourcesInChangeContext();
+//		return allResources.toArray(new IResource[allResources.size()]);
 	}
 
 	public IResource[] getChangedResources() {

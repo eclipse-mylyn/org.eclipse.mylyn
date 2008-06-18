@@ -24,6 +24,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -45,6 +46,12 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	private final List<ActiveChangeSetManager> changeSetManagers = new ArrayList<ActiveChangeSetManager>();
 
 	private final Map<String, IContextChangeSet> activeChangeSets = new HashMap<String, IContextChangeSet>();
+
+	private static final String LABEL_NO_TASK = "<No Active Task>";
+
+	private static final String HANDLE_NO_TASK = "org.eclipse.mylyn.team.ui.inactive.proxy";
+
+	private final ITask noTaskActiveProxy = new LocalTask(HANDLE_NO_TASK, LABEL_NO_TASK);
 
 	/**
 	 * Used to restore change sets managed with task context when platform deletes them, bug 168129
@@ -220,6 +227,13 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 						collector.remove(set);
 					}
 				}
+
+				AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
+						.getActiveChangeSetProvider(collector);
+				ActiveChangeSet contextChangeSet = (ActiveChangeSet) changeSetProvider.createChangeSet(noTaskActiveProxy);
+				collector.add(contextChangeSet);
+				collector.makeDefault(contextChangeSet);
+				collector.remove(contextChangeSet);
 			}
 		}
 		activeChangeSets.clear();
