@@ -11,9 +11,13 @@ package org.eclipse.mylyn.commons.core;
 /**
  * @since 3.0
  * @author Steffen Pingel
+ * @noinstantiate This class is not intended to be instantiated by clients.
  */
 public class CoreUtil {
 
+	/**
+	 * @since 3.0
+	 */
 	public static final boolean TEST_MODE;
 
 	static {

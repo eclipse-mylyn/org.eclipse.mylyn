@@ -15,6 +15,7 @@ import java.util.Calendar;
  * 
  * @author Mik Kersten
  * @since 3.0
+ * @noinstantiate This class is not intended to be instantiated by clients.
  */
 public class DateUtil {
 

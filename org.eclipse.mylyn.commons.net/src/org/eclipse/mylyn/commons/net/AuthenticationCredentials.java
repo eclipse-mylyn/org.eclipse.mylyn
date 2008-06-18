@@ -12,6 +12,7 @@ package org.eclipse.mylyn.commons.net;
  * 
  * @author Steffen Pingel
  * @since 2.2
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public class AuthenticationCredentials {
 

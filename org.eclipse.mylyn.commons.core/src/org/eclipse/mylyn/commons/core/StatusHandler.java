@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.commons.core.ErrorReporterManager;
  * @author Shawn Minto
  * @author Steffen Pingel
  * @since 3.0
+ * @noinstantiate This class is not intended to be instantiated by clients.
  */
 public class StatusHandler {
 
@@ -34,6 +35,7 @@ public class StatusHandler {
 	 * 
 	 * @param status
 	 *            status to log
+	 * @since 3.0
 	 */
 	public static void log(IStatus status) {
 		if (InternalPlatform.getDefault() != null && PlatformActivator.getContext() != null) {
@@ -55,7 +57,7 @@ public class StatusHandler {
 	 * </p>
 	 * 
 	 * @see #log(IStatus)
-	 * @since 2.3
+	 * @since 3.0
 	 */
 	public static void fail(IStatus status) {
 		log(status);
