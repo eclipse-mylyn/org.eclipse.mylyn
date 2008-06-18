@@ -69,8 +69,16 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 	}
 
 	private void createTask(LogEntry entry) {
-		StringBuilder sb = new StringBuilder();
-		buildDescriptionFromLogEntry(entry, sb, true);
+		// FIXME reenable
+//		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+//		boolean includeChildren = false;
+//
+//		if (entry.hasChildren()
+//				&& MessageDialog.openQuestion(shell, "Report Bug", "Include children of this entry in the report?")) {
+//			includeChildren = true;
+//		}
+//		StringBuilder sb = new StringBuilder();
+//		buildDescriptionFromLogEntry(entry, sb, true);
 
 		ErrorLogStatus status = new ErrorLogStatus(entry.getSeverity(), entry.getPluginId(), entry.getCode(),
 				entry.getMessage());
