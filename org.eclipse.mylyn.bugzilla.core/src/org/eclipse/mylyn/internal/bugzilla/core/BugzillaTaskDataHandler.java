@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 
 /**
  * @author Mik Kersten
@@ -415,16 +416,14 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute attributeProject = parentTaskData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
 		String product = attributeProject.getValue();
 		initializeTaskData(repository, subTaskData, product, monitor);
-		// TODO:
-		//cloneTaskData(parentTaskData, subTaskData);
-		TaskAttribute attributeBlocked = createAttribute(subTaskData, BugzillaAttribute.BLOCKED);
-		attributeBlocked.setValue(parentTaskData.getTaskId());
-
+		new TaskMapper(subTaskData).merge(new TaskMapper(parentTaskData));
+		subTaskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue("");
+		subTaskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("");
+		subTaskData.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey()).setValue(parentTaskData.getTaskId());
 		TaskAttribute parentAttributeAssigned = parentTaskData.getRoot()
 				.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
-		TaskAttribute attributeAssigned = createAttribute(subTaskData, BugzillaAttribute.ASSIGNED_TO);
-		attributeAssigned.setValue(parentAttributeAssigned.getValue());
-
+		subTaskData.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey()).setValue(
+				parentAttributeAssigned.getValue());
 		return true;
 	}
 
