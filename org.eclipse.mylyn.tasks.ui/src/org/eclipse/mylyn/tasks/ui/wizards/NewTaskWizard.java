@@ -76,11 +76,6 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 	public void addPages() {
 	}
 
-	@Override
-	public boolean canFinish() {
-		return true;
-	}
-
 	/**
 	 * @since 3.0
 	 */

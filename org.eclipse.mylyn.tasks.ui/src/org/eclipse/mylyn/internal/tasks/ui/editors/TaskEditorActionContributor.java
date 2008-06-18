@@ -227,10 +227,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 					});
 				}
 				manager.add(showInTaskListAction);
-
 				manager.add(new Separator());
-				manager.add(new GroupMarker(TaskListView.ID_SEPARATOR_OPERATIONS));
-				manager.add(new GroupMarker(TaskListView.ID_SEPARATOR_CONTEXT));
 
 				for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
 					for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
@@ -247,6 +244,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 						}
 					}
 				}
+				manager.add(new GroupMarker(TaskListView.ID_SEPARATOR_NAVIGATE));
+				manager.add(new Separator());
+				manager.add(new GroupMarker(TaskListView.ID_SEPARATOR_OPERATIONS));
+				manager.add(new GroupMarker(TaskListView.ID_SEPARATOR_CONTEXT));
 				manager.add(new Separator());
 				if (getActivePage() instanceof AbstractRepositoryTaskEditor) {
 					attachAction.selectionChanged(selection);
