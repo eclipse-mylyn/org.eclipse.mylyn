@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * Manages changes sets along with task context and activation.
  * 
  * @author Mik Kersten
- * @since 1.0
+ * @since 2.0
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractContextChangeSetManager extends AbstractContextListener {

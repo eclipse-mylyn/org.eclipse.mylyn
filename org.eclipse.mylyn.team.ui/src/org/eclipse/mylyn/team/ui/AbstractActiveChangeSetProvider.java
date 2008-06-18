@@ -17,7 +17,7 @@ import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
  * 
  * @author Gunnar Wagenknecht
  * @author Mik Kersten
- * @since 1.0
+ * @since 2.0
  */
 public abstract class AbstractActiveChangeSetProvider {
 
