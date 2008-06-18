@@ -180,8 +180,11 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			}
 		};
 		action.setText(LABEL_NOT_SCHEDULED);
-		if (getScheduledForDate(singleTaskSelection) == null) {
-			action.setChecked(true);
+		action.setChecked(false);
+		if (singleTaskSelection != null) {
+			if (getScheduledForDate(singleTaskSelection) == null) {
+				action.setChecked(true);
+			}
 		}
 		subMenuManager.add(action);
 		return subMenuManager;
@@ -248,9 +251,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		}
 	}
 
-	protected DateRange getScheduledForDate(final AbstractTask singleTaskSelection) {
-		if (singleTaskSelection != null) {
-			return singleTaskSelection.getScheduledForDate();
+	protected DateRange getScheduledForDate(final AbstractTask selectedTask) {
+		if (selectedTask != null) {
+			return selectedTask.getScheduledForDate();
 		}
 		return null;
 	}
