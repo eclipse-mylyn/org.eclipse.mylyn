@@ -38,6 +38,9 @@ public class ErrorReporterManager {
 
 	private static final String ELEMENT_CLASS = "class";
 
+	public ErrorReporterManager() {
+	}
+
 	public void addErrorReporter(AbstractErrorReporter errorReporter) {
 		errorReporters.add(errorReporter);
 	}
