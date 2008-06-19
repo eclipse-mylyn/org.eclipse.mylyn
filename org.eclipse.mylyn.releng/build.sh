@@ -33,15 +33,15 @@ $JAVA_HOME/bin/java \
  -updateSite $1 \
  -site file:$1/site.xml \
  -metadataRepository file:$1 \
- -metadataRepositoryName "Mylyn Update Site" \
+ -metadataRepositoryName $2 \
  -artifactRepository file:$1 \
- -artifactRepositoryName "Mylyn Artifacts" \
+ -artifactRepositoryName $2 \
  -compress \
  -reusePack200Files \
  -noDefaultIUs
 }
 
-pack $BUILD_ROOT/3.3/build/standardUpdateSite
-pack $BUILD_ROOT/3.4/build/standardUpdateSite
-pack $BUILD_ROOT/3.4/build/extrasUpdateSite
-pack $BUILD_ROOT/3.4/build/incubatorUpdateSite
+pack $BUILD_ROOT/3.3/build/standardUpdateSite "Mylyn"
+pack $BUILD_ROOT/3.4/build/standardUpdateSite "Mylyn"
+pack $BUILD_ROOT/3.4/build/extrasUpdateSite "Mylyn Extras"
+pack $BUILD_ROOT/3.4/build/incubatorUpdateSite "Mylyn Incubator"

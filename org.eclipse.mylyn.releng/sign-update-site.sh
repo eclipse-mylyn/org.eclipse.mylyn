@@ -28,14 +28,28 @@ rezip() {
 }
 
 pack() {
- DIR=$TMP/$1
- $JAVA_HOME/bin/java \
-  -Xmx512m \
-  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
-  -application org.eclipse.update.core.siteOptimizer \
-  -jarProcessor -verbose -processAll -repack -pack \
-  -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml \
-  -outputDir $DIR $DIR
+DIR=$TMP/$1
+$JAVA_HOME/bin/java \
+ -Xmx512m \
+ -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
+ -application org.eclipse.update.core.siteOptimizer \
+ -jarProcessor -verbose -processAll -repack -pack \
+ -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml \
+ -outputDir $DIR $DIR
+
+$JAVA_HOME/bin/java \
+ -Xmx512m \
+ -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
+ -application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator \
+ -updateSite $DIR \
+ -site file:$DIR/site.xml \
+ -metadataRepository file:$DIR \
+ -metadataRepositoryName $2 \
+ -artifactRepository file:$DIR \
+ -artifactRepositoryName $2 \
+ -compress \
+ -reusePack200Files \
+ -noDefaultIUs
 }
 
 if [ ! -e $TMP ]
@@ -82,10 +96,10 @@ rezip e3.4
 rezip extras
 rezip incubator
 
-pack e3.3
-pack e3.4
-pack extras
-pack incubator
+pack e3.3 "Mylyn"
+pack e3.4 "Mylyn"
+pack extras "Mylyn Extras"
+pack incubator "Mylyn Incubator"
 
 # republish
 
