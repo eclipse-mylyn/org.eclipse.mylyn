@@ -429,6 +429,8 @@ public class TasksUiUtil {
 
 	/**
 	 * @since 3.0
+	 * 
+	 *        TODO: move to commons
 	 */
 	public static void openUrl(String location) {
 		openUrl(location, FLAG_NO_RICH_EDITOR);
