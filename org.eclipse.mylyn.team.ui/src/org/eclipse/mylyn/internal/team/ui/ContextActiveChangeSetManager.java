@@ -51,6 +51,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	private static final String HANDLE_NO_TASK = "org.eclipse.mylyn.team.ui.inactive.proxy";
 
+	private final Map<ActiveChangeSetManager, ActiveChangeSet> noTaskSetMap = new HashMap<ActiveChangeSetManager, ActiveChangeSet>();;
+
 	private final ITask noTaskActiveProxy = new LocalTask(HANDLE_NO_TASK, LABEL_NO_TASK);
 
 	/**
@@ -229,14 +231,23 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 					}
 				}
 
-				AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
-						.getActiveChangeSetProvider(collector);
-				ActiveChangeSet contextChangeSet = (ActiveChangeSet) changeSetProvider.createChangeSet(noTaskActiveProxy);
-				collector.add(contextChangeSet);
-				collector.makeDefault(contextChangeSet);
-				collector.remove(contextChangeSet);
+				// First look for it in the collector, then in our cache
+				ActiveChangeSet noTaskSet = collector.getSet(LABEL_NO_TASK);
+				if (noTaskSet == null) {
+					noTaskSet = noTaskSetMap.get(collector);
+				}
+
+				if (noTaskSet == null) {
+					AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
+							.getActiveChangeSetProvider(collector);
+					noTaskSet = (ActiveChangeSet) changeSetProvider.createChangeSet(noTaskActiveProxy);
+					collector.add(noTaskSet);
+					noTaskSetMap.put(collector, noTaskSet);
+				}
+				// TODO: not great to do the lookup based on a String value in case the user created this set
+				collector.makeDefault(noTaskSet);
+				collector.remove(noTaskSet);
 			}
-			// XXX: change default set?  See bug 237367
 		}
 		activeChangeSets.clear();
 	}
