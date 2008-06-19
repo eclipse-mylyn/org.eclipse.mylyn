@@ -263,9 +263,9 @@ public class TaskListExternalizer {
 			}
 		}
 
-		if (delegatingExternalizer.getErrorStatus() != null) {
-			StatusHandler.log(delegatingExternalizer.getErrorStatus());
-		}
+//		if (delegatingExternalizer.getErrorStatus() != null) {
+//			StatusHandler.log(delegatingExternalizer.getErrorStatus());
+//		}
 	}
 
 	/**
