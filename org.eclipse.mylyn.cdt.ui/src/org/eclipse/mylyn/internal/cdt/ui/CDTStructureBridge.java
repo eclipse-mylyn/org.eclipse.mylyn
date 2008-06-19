@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.eclipse.cdt.core.model.CModelException;
 import org.eclipse.cdt.core.model.CoreModel;
+import org.eclipse.cdt.core.model.IBinary;
 import org.eclipse.cdt.core.model.ICElement;
 import org.eclipse.cdt.core.model.IFunction;
 import org.eclipse.cdt.core.model.IInclude;
@@ -30,7 +31,7 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
-import org.eclipse.ui.internal.WorkingSet;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
@@ -170,11 +171,11 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public boolean acceptsObject(Object object) {
 		if (object instanceof IResource) {
-			Object adapter = ((IResource) object).getAdapter(ICElement.class);
-			return adapter instanceof ICElement;
+			object = ((IResource) object).getAdapter(ICElement.class);
 		}
 
-		boolean accepts = object instanceof ICElement || object instanceof WorkingSet;
+		boolean accepts = (object instanceof ICElement && !(object instanceof IBinary))
+				|| object instanceof IWorkingSet;
 
 		return accepts;
 	}
@@ -182,9 +183,9 @@ public class CDTStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public boolean canFilter(Object object) {
 		// FIXME: Removed some logic from JavaStructureBridge...is it necessary?
-		if (object instanceof WorkingSet) {
+		if (object instanceof IWorkingSet) {
 			try {
-				WorkingSet workingSet = (WorkingSet) object;
+				IWorkingSet workingSet = (IWorkingSet) object;
 				IAdaptable[] elements = workingSet.getElements();
 				for (int i = 0; i < elements.length; i++) {
 					IAdaptable adaptable = elements[i];
