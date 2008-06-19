@@ -60,6 +60,7 @@ public class ErrorReporterManager {
 				if (newPriority > priority) {
 					interestedReporters.clear();
 					interestedReporters.add(reporter);
+					priority = newPriority;
 				} else if (newPriority == priority) {
 					interestedReporters.add(reporter);
 				}
