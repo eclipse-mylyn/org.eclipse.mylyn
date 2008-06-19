@@ -44,9 +44,9 @@ $JAVA_HOME/bin/java \
  -updateSite $DIR \
  -site file:$DIR/site.xml \
  -metadataRepository file:$DIR \
- -metadataRepositoryName $2 \
+ -metadataRepositoryName "$2 "\
  -artifactRepository file:$DIR \
- -artifactRepositoryName $2 \
+ -artifactRepositoryName "$2" \
  -compress \
  -reusePack200Files \
  -noDefaultIUs
