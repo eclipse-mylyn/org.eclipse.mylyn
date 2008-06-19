@@ -161,6 +161,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 		if (CoreUtil.TEST_MODE) {
 			init();
 		} else {
+			// FIXME: use UIJob
 			// delay initialization until workbench is realized
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
