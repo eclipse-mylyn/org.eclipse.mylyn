@@ -153,10 +153,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT, DEFAULT_ACTIVITY_TIMEOUT);
 		getPreferenceStore().setDefault(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED, true);
-		getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
-
-		activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
-		activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(ActivityContextManager.ACTIVITY_TIMEOUT));
 
 		if (CoreUtil.TEST_MODE) {
 			init();
@@ -419,9 +415,14 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			monitors.add(new WorkbenchUserActivityMonitor());
 			new MonitorUiExtensionPointReader().initExtensions();
 
+			activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
+			activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
+					ActivityContextManager.ACTIVITY_TIMEOUT));
 			if (getPreferenceStore().getBoolean(PREF_USER_ACTIVITY_ENABLED)) {
 				activityContextManager.start();
 			}
+			getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
+
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e));
 		}
