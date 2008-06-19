@@ -208,6 +208,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 						if (!manager.contains(activeChangeSet)) {
 							manager.add(activeChangeSet);
 						}
+						manager.makeDefault(activeChangeSet);
 					}
 				}
 			}
@@ -235,6 +236,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				collector.makeDefault(contextChangeSet);
 				collector.remove(contextChangeSet);
 			}
+			// XXX: change default set?  See bug 237367
 		}
 		activeChangeSets.clear();
 	}
