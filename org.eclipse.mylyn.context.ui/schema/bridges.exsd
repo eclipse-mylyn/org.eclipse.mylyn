@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.mylyn.context.ui.bridges" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.mylyn.context.ui.bridges" id="bridges" name="bridges"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          UI Bridges connect the UI of domain-specific tool, such as the JDT, to the generic context model UI.  For more information please see: http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Context_API
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -41,9 +41,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -63,9 +63,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
@@ -73,9 +73,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.ui.AbstractContextUiBridge"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="contentType" type="string" use="required">
@@ -90,9 +90,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="resource"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="activeSearchLabel" type="string">
@@ -107,9 +107,9 @@
 
    <element name="labelProvider">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element deprecated="true"/>
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <attribute name="id" type="string">
@@ -124,9 +124,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
@@ -134,9 +134,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.jface.viewers.ILabelProvider"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="contentType" type="string" use="required">
@@ -171,9 +171,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.jface.viewers.ViewerFilter"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="id" type="string">
@@ -187,9 +187,9 @@
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          1.0
       </documentation>

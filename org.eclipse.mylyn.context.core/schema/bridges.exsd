@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.mylyn.context.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.mylyn.context.core" id="bridges" name="bridges"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          Structure Bridges connect the interaction context model to domain-specific artifacts, such as the Java classes and methods being worked on by a programmer.  For more information please see: http://wiki.eclipse.org/index.php/Mylyn_Integrator_Reference#Context_API
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -39,9 +39,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -54,9 +54,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="id" type="string">
@@ -71,9 +71,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylyn.context.core.AbstractContextStructureBridge"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="parentContentType" type="string">
@@ -87,9 +87,9 @@
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          1.0
       </documentation>
