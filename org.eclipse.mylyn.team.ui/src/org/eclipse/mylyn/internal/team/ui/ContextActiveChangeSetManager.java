@@ -230,24 +230,23 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 						collector.remove(set);
 					}
 				}
-
-				// First look for it in the collector, then in our cache
-				ActiveChangeSet noTaskSet = collector.getSet(LABEL_NO_TASK);
-				if (noTaskSet == null) {
-					noTaskSet = noTaskSetMap.get(collector);
-				}
-
-				if (noTaskSet == null) {
-					AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
-							.getActiveChangeSetProvider(collector);
-					noTaskSet = (ActiveChangeSet) changeSetProvider.createChangeSet(noTaskActiveProxy);
-					collector.add(noTaskSet);
-					noTaskSetMap.put(collector, noTaskSet);
-				}
-				// TODO: not great to do the lookup based on a String value in case the user created this set
-				collector.makeDefault(noTaskSet);
-				collector.remove(noTaskSet);
 			}
+			// First look for it in the collector, then in our cache
+			ActiveChangeSet noTaskSet = collector.getSet(LABEL_NO_TASK);
+			if (noTaskSet == null) {
+				noTaskSet = noTaskSetMap.get(collector);
+			}
+
+			if (noTaskSet == null) {
+				AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
+						.getActiveChangeSetProvider(collector);
+				noTaskSet = (ActiveChangeSet) changeSetProvider.createChangeSet(noTaskActiveProxy);
+				collector.add(noTaskSet);
+				noTaskSetMap.put(collector, noTaskSet);
+			}
+			// TODO: not great to do the lookup based on a String value in case the user created this set
+			collector.makeDefault(noTaskSet);
+			collector.remove(noTaskSet);
 		}
 		activeChangeSets.clear();
 	}
