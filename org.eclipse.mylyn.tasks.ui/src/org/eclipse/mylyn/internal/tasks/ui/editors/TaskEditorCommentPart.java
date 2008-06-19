@@ -306,22 +306,24 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	}
 
 	private void hideAllComments() {
-		try {
-			getTaskEditorPage().setReflow(false);
+		if (commentComposites != null) {
+			try {
+				getTaskEditorPage().setReflow(false);
 
-			for (ExpandableComposite composite : commentComposites) {
-				if (composite.isDisposed()) {
-					continue;
-				}
+				for (ExpandableComposite composite : commentComposites) {
+					if (composite.isDisposed()) {
+						continue;
+					}
 
-				if (composite.isExpanded()) {
-					EditorUtil.toggleExpandableComposite(false, composite);
+					if (composite.isExpanded()) {
+						EditorUtil.toggleExpandableComposite(false, composite);
+					}
 				}
+			} finally {
+				getTaskEditorPage().setReflow(true);
 			}
-		} finally {
-			getTaskEditorPage().setReflow(true);
+			getTaskEditorPage().reflow();
 		}
-		getTaskEditorPage().reflow();
 	}
 
 	private void expandAllComments() {
