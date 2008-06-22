@@ -34,40 +34,15 @@ public class TracAttributeMapper extends TaskAttributeMapper {
 	public static final EnumSet<Flag> NO_FLAGS = EnumSet.noneOf(Flag.class);
 
 	public static boolean isInternalAttribute(TaskAttribute attribute) {
-		if (TaskAttribute.TYPE_ATTACHMENT.equals(attribute.getMetaData().getType())
-				|| TaskAttribute.TYPE_OPERATION.equals(attribute.getMetaData().getType())
-				|| TaskAttribute.TYPE_COMMENT.equals(attribute.getMetaData().getType())) {
+		String type = attribute.getMetaData().getType();
+		if (TaskAttribute.TYPE_ATTACHMENT.equals(type) || TaskAttribute.TYPE_OPERATION.equals(type)
+				|| TaskAttribute.TYPE_COMMENT.equals(type)) {
 			return true;
 		}
 		String id = attribute.getId();
 		return TaskAttribute.COMMENT_NEW.equals(id) || TaskAttribute.ADD_SELF_CC.equals(id) || REMOVE_CC.equals(id)
 				|| NEW_CC.equals(id);
 	}
-
-//
-//	@Override
-//	public boolean isHidden(String key) {
-//		if (isInternalAttribute(key)) {
-//			return true;
-//		}
-//
-//		TracAttribute tracAttribute = attributeByTracKey.get(key);
-//		return (tracAttribute != null) ? tracAttribute.isHidden() : false;
-//	}
-//
-//	@Override
-//	public String getName(String key) {
-//		TracAttribute tracAttribute = attributeByTracKey.get(key);
-//		// TODO if attribute == null it is probably a custom field: need 
-//		// to query custom field information from repoository
-//		return (tracAttribute != null) ? tracAttribute.toString() : key;
-//	}
-//
-//	@Override
-//	public boolean isReadOnly(String key) {
-//		TracAttribute tracAttribute = attributeByTracKey.get(key);
-//		return (tracAttribute != null) ? tracAttribute.isReadOnly() : false;
-//	}
 
 	public TracAttributeMapper(TaskRepository taskRepository) {
 		super(taskRepository);

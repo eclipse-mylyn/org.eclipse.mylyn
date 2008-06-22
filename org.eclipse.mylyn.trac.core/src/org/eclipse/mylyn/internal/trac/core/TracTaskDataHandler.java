@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -96,8 +97,16 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		try {
 			if (!TracRepositoryConnector.hasRichEditor(repository)) {
 				createDefaultAttributes(taskData, client, true);
-				updateTaskData(repository, taskData, ticket);
-				//updateTaskDataFromTicket(taskData, ticket, client);
+				Set<TaskAttribute> changedAttributes = updateTaskData(repository, taskData, ticket);
+				// remove attributes that were not set, i.e. were not received from the server
+				List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(taskData.getRoot()
+						.getAttributes()
+						.values());
+				for (TaskAttribute attribute : attributes) {
+					if (!changedAttributes.contains(attribute) && !TracAttributeMapper.isInternalAttribute(attribute)) {
+						taskData.getRoot().removeAttribute(attribute.getId());
+					}
+				}
 				taskData.setPartial(true);
 			} else {
 				createDefaultAttributes(taskData, client, true);
@@ -112,24 +121,34 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
-	public static void updateTaskData(TaskRepository repository, TaskData data, TracTicket ticket) {
-		if (ticket.getCreated() != null) {
-			data.getRoot().getAttribute(TracAttribute.TIME.getTracKey()).setValue(
-					TracUtil.toTracTime(ticket.getCreated()) + "");
-		}
+	public static Set<TaskAttribute> updateTaskData(TaskRepository repository, TaskData data, TracTicket ticket) {
+		Set<TaskAttribute> changedAttributes = new HashSet<TaskAttribute>();
 
 		Date lastChanged = ticket.getLastChanged();
+		if (lastChanged != null) {
+			TaskAttribute taskAttribute = data.getRoot().getAttribute(TracAttribute.CHANGE_TIME.getTracKey());
+			taskAttribute.setValue(TracUtil.toTracTime(lastChanged) + "");
+			changedAttributes.add(taskAttribute);
+		}
+
+		if (ticket.getCreated() != null) {
+			TaskAttribute taskAttribute = data.getRoot().getAttribute(TracAttribute.TIME.getTracKey());
+			taskAttribute.setValue(TracUtil.toTracTime(ticket.getCreated()) + "");
+			changedAttributes.add(taskAttribute);
+		}
 
 		Map<String, String> valueByKey = ticket.getValues();
 		for (String key : valueByKey.keySet()) {
+			TaskAttribute taskAttribute = data.getRoot().getAttribute(key);
 			if (Key.CC.getKey().equals(key)) {
 				StringTokenizer t = new StringTokenizer(valueByKey.get(key), CC_DELIMETER);
 				while (t.hasMoreTokens()) {
-					data.getRoot().getAttribute(key).addValue(t.nextToken());
+					taskAttribute.addValue(t.nextToken());
 				}
 			} else {
-				data.getRoot().getAttribute(key).setValue(valueByKey.get(key));
+				taskAttribute.setValue(valueByKey.get(key));
 			}
+			changedAttributes.add(taskAttribute);
 		}
 
 		TracComment[] comments = ticket.getComments();
@@ -186,13 +205,9 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			addOperation(repository, data, ticket, actionList, "reopen");
 		}
 
-		if (lastChanged != null) {
-			data.getRoot().getAttribute(TracAttribute.CHANGE_TIME.getTracKey()).setValue(
-					TracUtil.toTracTime(lastChanged) + "");
-		}
+		return changedAttributes;
 	}
 
-	// TODO Reuse Labels from BugzillaServerFacade
 	private static void addOperation(TaskRepository repository, TaskData data, TracTicket ticket, List<String> actions,
 			String action) {
 		if (!actions.remove(action)) {
@@ -201,7 +216,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 		String label = null;
 		if ("leave".equals(action)) {
-			// TODO
+			// TODO provide better label for Leave action
 			//label = "Leave as " + data.getStatus() + " " + data.getResolution();
 			label = "Leave";
 		} else if ("accept".equals(action)) {
@@ -513,16 +528,22 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public void migrateTaskData(TaskRepository taskRepository, TaskData taskData) {
 		int version = 0;
-		try {
-			version = Integer.parseInt(taskData.getVersion());
-		} catch (NumberFormatException e) {
-			// ignore
+		if (taskData.getVersion() != null) {
+			try {
+				version = Integer.parseInt(taskData.getVersion());
+			} catch (NumberFormatException e) {
+				// ignore
+			}
 		}
 
 		if (version < 1) {
-			Map<String, TaskAttribute> attributes = taskData.getRoot().getAttributes();
-			for (TaskAttribute attribute : attributes.values()) {
-				if (TaskAttribute.OPERATION.equals(attribute.getId())) {
+			TaskAttribute root = taskData.getRoot();
+			List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(root.getAttributes().values());
+			for (TaskAttribute attribute : attributes) {
+				if (TaskAttribute.TYPE_OPERATION.equals(attribute.getMetaData().getType())
+						&& "reassign".equals(attribute.getValue())) {
+					root.removeAttribute(attribute.getId());
+				} else if (TaskAttribute.OPERATION.equals(attribute.getId())) {
 					attribute.getMetaData().setType(TaskAttribute.TYPE_OPERATION);
 				} else if (TracAttributeMapper.NEW_CC.equals(attribute.getId())) {
 					attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT).setReadOnly(false);
@@ -535,9 +556,12 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 					}
 				}
 			}
-		}
+			if (root.getAttribute(TracAttributeMapper.REMOVE_CC) == null) {
+				root.createAttribute(TracAttributeMapper.REMOVE_CC);
+			}
 
-		taskData.setVersion("1");
+			taskData.setVersion("1");
+		}
 	}
 
 }

@@ -37,13 +37,10 @@ import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -345,7 +342,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
+	public boolean canSynchronizeTask(TaskRepository taskRepository, ITask task) {
+		return hasRichEditor(taskRepository, task);
+	}
+
+	@Override
+	public TracAttachmentHandler getTaskAttachmentHandler() {
 		return attachmentHandler;
 	}
 
@@ -373,7 +375,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractTaskDataHandler getTaskDataHandler() {
+	public TracTaskDataHandler getTaskDataHandler() {
 		return taskDataHandler;
 	}
 
@@ -459,7 +461,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
-			if (event.isFullSynchronization()) {
+			if (event.isFullSynchronization() && event.getStatus() != null) {
 				Date date = getSynchronizationTimestamp(event);
 				if (date != null) {
 					event.getTaskRepository().setSynchronizationTimeStamp(TracUtil.toTracTime(date) + "");
@@ -585,7 +587,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
-		TaskMapper mapper = getTaskMapper(taskRepository, taskData);
+		TaskMapper mapper = getTaskMapping(taskData);
 		mapper.applyTo(task);
 		if (isCompleted(mapper.getStatus())) {
 			task.setCompletionDate(mapper.getModificationDate());
@@ -598,7 +600,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
-		TaskMapper mapper = getTaskMapper(taskRepository, taskData);
+		TaskMapper mapper = getTaskMapping(taskData);
 		if (taskData.isPartial()) {
 			return mapper.hasChanges(task);
 		} else {
@@ -626,12 +628,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public ITaskMapping getTaskMapping(TaskData taskData) {
-		return getTaskMapper(null, taskData);
-	}
-
-	public TaskMapper getTaskMapper(TaskRepository taskRepository, TaskData taskData) {
-		final ITracClient client = (taskRepository != null) ? getClientManager().getTracClient(taskRepository) : null;
+	public TracTaskMapper getTaskMapping(TaskData taskData) {
+		TaskRepository taskRepository = taskData.getAttributeMapper().getTaskRepository();
+		ITracClient client = (taskRepository != null) ? getClientManager().getTracClient(taskRepository) : null;
 		return new TracTaskMapper(taskData, client);
 	}
 
