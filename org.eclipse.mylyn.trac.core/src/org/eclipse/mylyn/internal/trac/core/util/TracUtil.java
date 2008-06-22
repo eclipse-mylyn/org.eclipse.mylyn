@@ -22,12 +22,12 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
  * 
  * @author Steffen Pingel
  */
-public class TracUtils {
+public class TracUtil {
 
 	public static Date parseDate(String time) {
 		if (time != null) {
 			try {
-				return TracUtils.parseDate(Long.valueOf(time));
+				return TracUtil.parseDate(Long.valueOf(time));
 			} catch (NumberFormatException e) {
 			}
 		}

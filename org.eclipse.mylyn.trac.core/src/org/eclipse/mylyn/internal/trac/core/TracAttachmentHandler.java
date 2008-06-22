@@ -13,6 +13,7 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -74,9 +75,13 @@ public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 				description = mapper.getDescription();
 			}
 		}
+		if (description == null) {
+			description = "";
+		}
 
-		monitor.beginTask("Uploading attachment", IProgressMonitor.UNKNOWN);
+		monitor = Policy.monitorFor(monitor);
 		try {
+			monitor.beginTask("Uploading attachment", IProgressMonitor.UNKNOWN);
 			try {
 				ITracClient client = connector.getClientManager().getTracClient(repository);
 				int id = Integer.parseInt(task.getTaskId());

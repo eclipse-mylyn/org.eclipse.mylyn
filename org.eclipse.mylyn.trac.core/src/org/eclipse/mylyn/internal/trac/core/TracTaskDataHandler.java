@@ -29,7 +29,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -115,7 +115,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	public static void updateTaskData(TaskRepository repository, TaskData data, TracTicket ticket) {
 		if (ticket.getCreated() != null) {
 			data.getRoot().getAttribute(TracAttribute.TIME.getTracKey()).setValue(
-					TracUtils.toTracTime(ticket.getCreated()) + "");
+					TracUtil.toTracTime(ticket.getCreated()) + "");
 		}
 
 		Date lastChanged = ticket.getLastChanged();
@@ -188,7 +188,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 		if (lastChanged != null) {
 			data.getRoot().getAttribute(TracAttribute.CHANGE_TIME.getTracKey()).setValue(
-					TracUtils.toTracTime(lastChanged) + "");
+					TracUtil.toTracTime(lastChanged) + "");
 		}
 	}
 
@@ -442,7 +442,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	public boolean supportsSubtasks(TaskData taskData) {
-		return taskData.getRoot().getAttribute(ATTRIBUTE_BLOCKING) != null;
+		return taskData.getRoot().getAttribute(ATTRIBUTE_BLOCKED_BY) != null;
 	}
 
 	public static TracTicket getTracTicket(TaskRepository repository, TaskData data) throws InvalidTicketException,

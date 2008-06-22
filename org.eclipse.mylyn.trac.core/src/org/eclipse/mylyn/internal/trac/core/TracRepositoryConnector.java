@@ -33,7 +33,7 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
-import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -326,13 +326,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		if (TracCorePlugin.getDefault() != null) {
 			TracCorePlugin.getDefault().setConnector(this);
 			IPath path = TracCorePlugin.getDefault().getRepostioryAttributeCachePath();
-			repositoryConfigurationCacheFile = path.toFile();
+			this.repositoryConfigurationCacheFile = path.toFile();
 		}
 	}
 
 	public TracRepositoryConnector(File repositoryConfigurationCacheFile) {
 		this.repositoryConfigurationCacheFile = repositoryConfigurationCacheFile;
-
 	}
 
 	@Override
@@ -429,7 +428,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			monitor.beginTask("Querying repository", IProgressMonitor.UNKNOWN);
 
-			TracSearch search = TracUtils.toTracSearch(query);
+			TracSearch search = TracUtil.toTracSearch(query);
 			if (search == null) {
 				return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY, "The query is invalid: \"" + query.getUrl() + "\"");
@@ -463,7 +462,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (event.isFullSynchronization()) {
 				Date date = getSynchronizationTimestamp(event);
 				if (date != null) {
-					event.getTaskRepository().setSynchronizationTimeStamp(TracUtils.toTracTime(date) + "");
+					event.getTaskRepository().setSynchronizationTimeStamp(TracUtil.toTracTime(date) + "");
 				}
 			}
 		} finally {
@@ -473,7 +472,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	private Date getSynchronizationTimestamp(ISynchronizationSession event) {
 		Date mostRecent = new Date(0);
-		Date mostRecentTimeStamp = TracUtils.parseDate(event.getTaskRepository().getSynchronizationTimeStamp());
+		Date mostRecentTimeStamp = TracUtil.parseDate(event.getTaskRepository().getSynchronizationTimeStamp());
 		for (ITask task : event.getChangedTasks()) {
 			Date taskModifiedDate = task.getModificationDate();
 			if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
@@ -515,7 +514,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 			Date since = new Date(0);
 			try {
-				since = TracUtils.parseDate(Integer.parseInt(repository.getSynchronizationTimeStamp()));
+				since = TracUtil.parseDate(Integer.parseInt(repository.getSynchronizationTimeStamp()));
 			} catch (NumberFormatException e) {
 			}
 
@@ -633,24 +632,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	public TaskMapper getTaskMapper(TaskRepository taskRepository, TaskData taskData) {
 		final ITracClient client = (taskRepository != null) ? getClientManager().getTracClient(taskRepository) : null;
-		return new TaskMapper(taskData) {
-			@Override
-			public PriorityLevel getPriorityLevel() {
-				if (client != null) {
-					String priority = getPriority();
-					TracPriority[] tracPriorities = client.getPriorities();
-					return getTaskPriority(priority, tracPriorities);
-				}
-				return null;
-			}
-
-			@Override
-			public String getTaskKind() {
-				TaskKind taskKind = TaskKind.fromType(super.getTaskKind());
-				return (taskKind != null) ? taskKind.toString() : null;
-			}
-
-		};
+		return new TracTaskMapper(taskData, client);
 	}
 
 }

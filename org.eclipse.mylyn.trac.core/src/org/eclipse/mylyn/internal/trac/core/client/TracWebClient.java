@@ -62,7 +62,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 
 /**
@@ -333,9 +333,9 @@ public class TracWebClient extends AbstractTracClient {
 								if (fields[i] == Key.ID) {
 									ticket.setId(Integer.parseInt(t.nextToken()));
 								} else if (fields[i] == Key.TIME) {
-									ticket.setCreated(TracUtils.parseDate(Integer.parseInt(t.nextToken())));
+									ticket.setCreated(TracUtil.parseDate(Integer.parseInt(t.nextToken())));
 								} else if (fields[i] == Key.CHANGE_TIME) {
-									ticket.setLastChanged(TracUtils.parseDate(Integer.parseInt(t.nextToken())));
+									ticket.setLastChanged(TracUtil.parseDate(Integer.parseInt(t.nextToken())));
 								} else {
 									ticket.putBuiltinValue(fields[i], parseTicketValue(t.nextToken()));
 								}

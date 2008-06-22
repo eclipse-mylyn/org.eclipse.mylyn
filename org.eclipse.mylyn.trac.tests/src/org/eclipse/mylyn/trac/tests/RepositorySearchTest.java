@@ -23,8 +23,10 @@ import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
@@ -32,17 +34,15 @@ import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 /**
  * @author Steffen Pingel
  */
-public class RepositorySearchQueryTest extends TestCase {
+public class RepositorySearchTest extends TestCase {
 
 	private TestData data;
 
 	private TaskRepositoryManager manager;
 
-//	private TracRepositoryConnector connector;
-
 	private TaskRepository repository;
 
-	public RepositorySearchQueryTest() {
+	public RepositorySearchTest() {
 	}
 
 	@Override
@@ -52,8 +52,6 @@ public class RepositorySearchQueryTest extends TestCase {
 		data = TestFixture.init010();
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-//		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracUiPlugin.REPOSITORY_KIND);
 	}
 
 	protected void init(String url, Version version) {
@@ -74,15 +72,14 @@ public class RepositorySearchQueryTest extends TestCase {
 
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getRepositoryUrl() + ITracClient.QUERY_URL + search.toUrl();
-		TracRepositoryQuery query = new TracRepositoryQuery(repository.getRepositoryUrl(), queryUrl, "description");
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskList(),
-				repository, query);
-
+		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+		query.setUrl(queryUrl);
+		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskList(), repository, query);
 		collector.run(new NullProgressMonitor());
+		assertEquals(data.tickets.size(), collector.getTasks().size());
 		for (ITask task : collector.getTasks()) {
 			assertEquals(TracTestConstants.TEST_TRAC_096_URL, task.getRepositoryUrl());
 		}
-		assertEquals(data.tickets.size(), collector.getTasks().size());
 	}
 
 }

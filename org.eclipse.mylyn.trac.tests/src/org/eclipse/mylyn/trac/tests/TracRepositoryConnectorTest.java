@@ -21,31 +21,33 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
-import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.context.tests.support.TestUtil;
-import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
-import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
+import org.eclipse.mylyn.internal.trac.core.TracTaskDataHandler;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
+import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -59,52 +61,20 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	private TaskRepository repository;
 
-	private TaskRepositoryManager manager;
-
 	private TracRepositoryConnector connector;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-
-		TracCorePlugin.getDefault()
-				.getConnector()
-				.setTaskRepositoryLocationFactory(new TaskRepositoryLocationFactory());
-
-		manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
 		data = TestFixture.init010();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-
-		// TestFixture.cleanupRepository1();
+		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
 	}
 
 	protected void init(String url, Version version) {
-		String kind = TracCorePlugin.CONNECTOR_KIND;
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-
-		repository = new TaskRepository(kind, url);
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), false);
-		repository.setTimeZoneId(ITracClient.TIME_ZONE);
-		repository.setCharacterEncoding(ITracClient.CHARSET);
-		repository.setVersion(version.name());
-
-		manager.addRepository(repository);
-
-		AbstractRepositoryConnector abstractConnector = manager.getRepositoryConnector(kind);
-		assertEquals(abstractConnector.getConnectorKind(), kind);
-
-		connector = (TracRepositoryConnector) abstractConnector;
+		repository = TracTestUtil.init(url, version);
 	}
 
 	public void testGetRepositoryUrlFromTaskUrl() {
-		TracRepositoryConnector connector = new TracRepositoryConnector();
 		assertEquals("http://host/repo", connector.getRepositoryUrlFromTaskUrl("http://host/repo/ticket/1"));
 		assertEquals("http://host", connector.getRepositoryUrlFromTaskUrl("http://host/ticket/2342"));
 		assertEquals(null, connector.getRepositoryUrlFromTaskUrl("http://host/repo/2342"));
@@ -137,26 +107,14 @@ public class TracRepositoryConnectorTest extends TestCase {
 	}
 
 	protected void createTaskFromExistingKey() throws CoreException {
-		String id = data.tickets.get(0).getId() + "";
-		AbstractTask task = (AbstractTask) TasksUiInternal.createTask(repository, id, null);
+		String taskId = data.tickets.get(0).getId() + "";
+		TaskData taskData = connector.getTaskData(repository, taskId, null);
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 		assertNotNull(task);
-		assertEquals(TracTask.class, task.getClass());
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		assertEquals(TaskTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
-		assertEquals(repository.getRepositoryUrl() + ITracClient.TICKET_URL + id, task.getUrl());
-
-		try {
-			task = (AbstractTask) TasksUiInternal.createTask(repository, "does not exist", null);
-			fail("Expected CoreException");
-		} catch (CoreException e) {
-		}
-
-		// No longer parsing as an integer
-		// try {
-		// task = connector.createTaskFromExistingId(repository,
-		// Integer.MAX_VALUE + "");
-		// fail("Expected CoreException");
-		// } catch (CoreException e) {
-		//		}
+		assertEquals(repository.getRepositoryUrl() + ITracClient.TICKET_URL + taskId, task.getUrl());
 	}
 
 	public void testClientManagerChangeTaskRepositorySettings() throws MalformedURLException {
@@ -207,20 +165,17 @@ public class TracRepositoryConnectorTest extends TestCase {
 		search.addFilter("milestone", "milestone1");
 		search.addFilter("milestone", "milestone2");
 		search.setOrderBy("id");
+		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+		query.setUrl(url + ITracClient.QUERY_URL + search.toUrl());
 
-		String queryUrl = url + ITracClient.QUERY_URL + search.toUrl();
-		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "description");
-
-		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
-		final List<RepositoryTaskData> result = new ArrayList<RepositoryTaskData>();
-		LegacyTaskDataCollector hitCollector = new LegacyTaskDataCollector() {
+		final List<TaskData> result = new ArrayList<TaskData>();
+		TaskDataCollector hitCollector = new TaskDataCollector() {
 			@Override
-			public void accept(RepositoryTaskData hit) {
+			public void accept(TaskData hit) {
 				result.add(hit);
 			}
 		};
 		IStatus queryStatus = connector.performQuery(repository, query, hitCollector, null, new NullProgressMonitor());
-
 		assertTrue(queryStatus.isOK());
 		assertEquals(3, result.size());
 		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getTaskId());
@@ -268,44 +223,135 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals("2.0", versions[1].getName());
 	}
 
-	// FIXME
-//	public void testContextXmlRpc010() throws Exception {
-//		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-//		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.attachmentTicketId + "", null);
-//		TasksUiInternal.synchronizeTask(connector, task, true, null);
-//
-//		//int size = task.getTaskData().getAttachments().size();
-//
-//		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
-//		sourceContextFile.createNewFile();
-//		sourceContextFile.deleteOnExit();
-//
-//		assertTrue(AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "",
-//				new NullProgressMonitor()));
-//
-//		TasksUiInternal.synchronizeTask(connector, task, true, null);
-//		// TODO attachment may have been overridden therefore size may not have changed
-//		//assertEquals(size + 1, task.getTaskData().getAttachments().size());
-//
-//		//RepositoryAttachment attachment = task.getTaskData().getAttachments().get(size);
-//		//assertTrue(connector.retrieveContext(repository, task, attachment, TasksUiPlugin.getDefault().getProxySettings(), TasksUiPlugin.getDefault().getDataDirectory()));
-//	}
-
-	public void testContextWeb096() throws Exception {
-		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.attachmentTicketId + "", null);
-
+	public void testContextXmlRpc010() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		String taskId = data.attachmentTicketId + "";
+		ITask task = TracTestUtil.createTask(repository, taskId);
 		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 
-//		try {
-		// FIXME
-//			AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "",
-//					new NullProgressMonitor());
-		fail("expected CoreException"); // operation should not be supported
-//		} catch (CoreException e) {
-//		}
+		boolean result = AttachmentUtil.postContext(connector, repository, task, "", null, null);
+		assertTrue(result);
+
+		task = TracTestUtil.createTask(repository, taskId);
+		List<ITaskAttachment> attachments = TracTestUtil.getTaskAttachments(task);
+		// TODO attachment may have been overridden therefore size may not have changed
+		//assertEquals(size + 1, task.getTaskData().getAttachments().size());
+		ITaskAttachment attachment = attachments.get(attachments.size() - 1);
+		result = AttachmentUtil.retrieveContext(connector.getTaskAttachmentHandler(), repository, task, attachment,
+				TasksUiPlugin.getDefault().getDataDirectory(), PlatformUI.getWorkbench().getProgressService());
+		assertTrue(result);
+	}
+
+	public void testContextWeb096() throws Exception {
+		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
+		String taskId = data.attachmentTicketId + "";
+		ITask task = TracTestUtil.createTask(repository, taskId);
+		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+		sourceContextFile.createNewFile();
+		sourceContextFile.deleteOnExit();
+
+		try {
+			AttachmentUtil.postContext(connector, repository, task, "", null, null);
+			fail("expected CoreException"); // operation should not be supported
+		} catch (CoreException e) {
+		}
+	}
+
+	public void testIsCompleted() {
+		assertTrue(TracRepositoryConnector.isCompleted("closed"));
+		assertFalse(TracRepositoryConnector.isCompleted("Closed"));
+		assertFalse(TracRepositoryConnector.isCompleted("new"));
+		assertFalse(TracRepositoryConnector.isCompleted("assigned"));
+		assertFalse(TracRepositoryConnector.isCompleted("reopened"));
+		assertFalse(TracRepositoryConnector.isCompleted("foobar"));
+		assertFalse(TracRepositoryConnector.isCompleted(""));
+		assertFalse(TracRepositoryConnector.isCompleted(null));
+	}
+
+	public void testGetTaskPriority() {
+		assertEquals("P1", TracRepositoryConnector.getTaskPriority("blocker").toString());
+		assertEquals("P2", TracRepositoryConnector.getTaskPriority("critical").toString());
+		assertEquals("P3", TracRepositoryConnector.getTaskPriority("major").toString());
+		assertEquals("P3", TracRepositoryConnector.getTaskPriority(null).toString());
+		assertEquals("P3", TracRepositoryConnector.getTaskPriority("").toString());
+		assertEquals("P3", TracRepositoryConnector.getTaskPriority("foo bar").toString());
+		assertEquals("P4", TracRepositoryConnector.getTaskPriority("minor").toString());
+		assertEquals("P5", TracRepositoryConnector.getTaskPriority("trivial").toString());
+	}
+
+	public void testGetTaskPriorityFromTracPriorities() {
+		TracPriority p1 = new TracPriority("a", 1);
+		TracPriority p2 = new TracPriority("b", 2);
+		TracPriority p3 = new TracPriority("c", 3);
+		TracPriority[] priorities = new TracPriority[] { p1, p2, p3 };
+		assertEquals("P1", TracRepositoryConnector.getTaskPriority("a", priorities).toString());
+		assertEquals("P3", TracRepositoryConnector.getTaskPriority("b", priorities).toString());
+		assertEquals("P5", TracRepositoryConnector.getTaskPriority("c", priorities).toString());
+		assertEquals("P3", TracRepositoryConnector.getTaskPriority("foo", priorities).toString());
+		assertEquals("P3", TracRepositoryConnector.getTaskPriority(null, priorities).toString());
+
+		p1 = new TracPriority("a", 10);
+		priorities = new TracPriority[] { p1 };
+		assertEquals("P1", TracRepositoryConnector.getTaskPriority("a", priorities).toString());
+		assertEquals("P3", TracRepositoryConnector.getTaskPriority("b", priorities).toString());
+		assertEquals("P3", TracRepositoryConnector.getTaskPriority(null, priorities).toString());
+
+		p1 = new TracPriority("1", 10);
+		p2 = new TracPriority("2", 20);
+		p3 = new TracPriority("3", 30);
+		TracPriority p4 = new TracPriority("4", 40);
+		TracPriority p5 = new TracPriority("5", 70);
+		TracPriority p6 = new TracPriority("6", 100);
+		priorities = new TracPriority[] { p1, p2, p3, p4, p5, p6 };
+		assertEquals("P1", TracRepositoryConnector.getTaskPriority("1", priorities).toString());
+		assertEquals("P1", TracRepositoryConnector.getTaskPriority("2", priorities).toString());
+		assertEquals("P2", TracRepositoryConnector.getTaskPriority("3", priorities).toString());
+		assertEquals("P2", TracRepositoryConnector.getTaskPriority("4", priorities).toString());
+		assertEquals("P4", TracRepositoryConnector.getTaskPriority("5", priorities).toString());
+		assertEquals("P5", TracRepositoryConnector.getTaskPriority("6", priorities).toString());
+	}
+
+	public void testUpdateTaskFromTaskData() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+
+		TracTicket ticket = new TracTicket(123);
+		ticket.putBuiltinValue(Key.DESCRIPTION, "mydescription");
+		ticket.putBuiltinValue(Key.PRIORITY, "mypriority");
+		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
+		ticket.putBuiltinValue(Key.TYPE, "mytype");
+
+		TracTaskDataHandler taskDataHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
+		ITracClient client = connector.getClientManager().getTracClient(repository);
+		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
+		assertEquals("123", task.getTaskKey());
+		assertEquals("mysummary", task.getSummary());
+		assertEquals("P3", task.getPriority());
+		assertEquals("mytype", task.getTaskKind());
+	}
+
+	public void testUpdateTaskFromTaskDataSummaryOnly() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+
+		TracTicket ticket = new TracTicket(456);
+		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
+
+		TracTaskDataHandler taskDataHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
+		ITracClient client = connector.getClientManager().getTracClient(repository);
+		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getUrl());
+		assertEquals("456", task.getTaskKey());
+		assertEquals("mysummary", task.getSummary());
+		assertEquals("P3", task.getPriority());
+		assertEquals(AbstractTask.DEFAULT_TASK_KIND, task.getTaskKind());
 	}
 
 }

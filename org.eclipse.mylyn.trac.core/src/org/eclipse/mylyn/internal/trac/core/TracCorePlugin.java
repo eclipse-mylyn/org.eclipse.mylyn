@@ -17,7 +17,7 @@ import org.eclipse.mylyn.internal.trac.core.client.InvalidTicketException;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracPermissionDeniedException;
-import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
@@ -84,7 +84,7 @@ public class TracCorePlugin extends Plugin {
 		if (e instanceof TracLoginException) {
 			return RepositoryStatus.createLoginError(repository.getRepositoryUrl(), ID_PLUGIN);
 		} else if (e instanceof TracPermissionDeniedException) {
-			return TracUtils.createPermissionDeniedError(repository.getRepositoryUrl(), ID_PLUGIN);
+			return TracUtil.createPermissionDeniedError(repository.getRepositoryUrl(), ID_PLUGIN);
 		} else if (e instanceof InvalidTicketException) {
 			return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, ID_PLUGIN,
 					RepositoryStatus.ERROR_IO, "The server returned an unexpected response", e);

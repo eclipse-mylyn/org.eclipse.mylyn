@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
-import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -93,7 +93,7 @@ public class TracFilterQueryPage extends AbstractRepositoryQueryPage {
 
 		if (getQuery() != null) {
 			titleText.setText(getQuery().getSummary());
-			TracSearch search = TracUtils.toTracSearch(getQuery());
+			TracSearch search = TracUtil.toTracSearch(getQuery());
 			if (search != null) {
 				restoreWidgetValues(search);
 			}

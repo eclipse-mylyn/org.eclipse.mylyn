@@ -60,7 +60,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
-import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.internal.trac.core.util.TracXmlRpcClientRequest;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 
@@ -451,7 +451,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		if (object instanceof Date) {
 			return (Date) object;
 		} else if (object instanceof Integer) {
-			return TracUtils.parseDate((Integer) object);
+			return TracUtil.parseDate((Integer) object);
 		}
 		throw new ClassCastException("Unexpected object type for date: " + object.getClass());
 	}

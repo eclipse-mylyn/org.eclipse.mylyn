@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.trac.core;
 import java.util.Date;
 import java.util.EnumSet;
 
-import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
@@ -75,7 +75,7 @@ public class TracAttributeMapper extends TaskAttributeMapper {
 
 	@Override
 	public Date getDateValue(TaskAttribute attribute) {
-		return TracUtils.parseDate(Integer.valueOf(attribute.getValue()));
+		return TracUtil.parseDate(attribute.getValue());
 	}
 
 	@Override
@@ -86,7 +86,11 @@ public class TracAttributeMapper extends TaskAttributeMapper {
 
 	@Override
 	public void setDateValue(TaskAttribute attribute, Date date) {
-		attribute.setValue(TracUtils.toTracTime(date) + "");
+		if (date == null) {
+			attribute.clearValues();
+		} else {
+			attribute.setValue(TracUtil.toTracTime(date) + "");
+		}
 	}
 
 }

@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
-import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -56,7 +56,7 @@ public class TracTaskListMigrator extends AbstractTaskListMigrator {
 
 	@Override
 	public void migrateTask(ITask task, Element element) {
-		task.setModificationDate(TracUtils.parseDate(element.getAttribute(KEY_LAST_MOD_DATE)));
+		task.setModificationDate(TracUtil.parseDate(element.getAttribute(KEY_LAST_MOD_DATE)));
 		if (element.hasAttribute(KEY_SUPPORTS_SUBTASKS)) {
 			task.setAttribute(TracRepositoryConnector.TASK_KEY_SUPPORTS_SUBTASKS, Boolean.valueOf(
 					element.getAttribute(KEY_SUPPORTS_SUBTASKS)).toString());

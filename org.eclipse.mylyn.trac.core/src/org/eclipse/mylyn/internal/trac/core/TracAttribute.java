@@ -56,7 +56,7 @@ public enum TracAttribute {
 
 	TIME(Key.TIME, "Created:", TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATE, EnumSet.of(Flag.READ_ONLY)),
 
-	TYPE(Key.TYPE, "Type:", null, TaskAttribute.TYPE_SINGLE_SELECT, EnumSet.of(Flag.ATTRIBUTE)),
+	TYPE(Key.TYPE, "Type:", TaskAttribute.TASK_KIND, TaskAttribute.TYPE_SINGLE_SELECT, EnumSet.of(Flag.ATTRIBUTE)),
 
 	VERSION(Key.VERSION, "Version:", null, TaskAttribute.TYPE_SINGLE_SELECT, EnumSet.of(Flag.ATTRIBUTE));
 

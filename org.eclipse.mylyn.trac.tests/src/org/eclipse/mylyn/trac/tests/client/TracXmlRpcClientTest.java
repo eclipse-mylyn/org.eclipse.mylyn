@@ -155,7 +155,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 		assertEquals("TestGetPage", page.getPageInfo().getPageName());
 		assertEquals("tests@mylyn.eclipse.org", page.getPageInfo().getAuthor());
 		assertEquals(2, page.getPageInfo().getVersion());
-		// XXX: The Date returned from Wiki API seems to have a problem with the Time Zone
+		// XXX The Date returned from Wiki API seems to have a problem with the Time Zone
 		//String date = "Sat Nov 11 18:10:56 EST 2006";
 		//assertEquals(date, page.getPageVersion().getLastModified().toString());
 		assertEquals("Version 2", page.getContent());
@@ -334,6 +334,6 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	private void putWikiPage() throws Exception {
-		// TODO: testing wiki.putPage()
+		// TODO testing wiki.putPage()
 	}
 }

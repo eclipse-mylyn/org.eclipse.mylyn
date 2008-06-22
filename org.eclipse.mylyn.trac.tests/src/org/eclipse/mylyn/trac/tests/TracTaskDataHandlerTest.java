@@ -8,30 +8,44 @@
 
 package org.eclipse.mylyn.trac.tests;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.context.tests.support.TestUtil;
-import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
-import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.core.data.TextTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.trac.core.TracAttribute;
+import org.eclipse.mylyn.internal.trac.core.TracAttributeMapper;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTaskDataHandler;
+import org.eclipse.mylyn.internal.trac.core.TracTaskMapper;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskRelation;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
@@ -46,8 +60,6 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	private TaskRepository repository;
 
-	private TaskRepositoryManager manager;
-
 	private TestData data;
 
 	private TracTaskDataHandler taskDataHandler;
@@ -60,55 +72,47 @@ public class TracTaskDataHandlerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-
 		data = TestFixture.init010();
-
-		manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
-		// FIXME
-//		taskDataHandler = (TracTaskDataHandler) connector.getLegacyTaskDataHandler();
+		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
+		taskDataHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
 	}
 
 	protected void init(String url, Version version) {
-		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-
-		repository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND, url);
-		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials(credentials.username,
-				credentials.password), false);
-		repository.setTimeZoneId(ITracClient.TIME_ZONE);
-		repository.setCharacterEncoding(ITracClient.CHARSET);
-		repository.setVersion(version.name());
-
-		manager.addRepository(repository);
-
+		repository = TracTestUtil.init(url, version);
 		client = connector.getClientManager().getTracClient(repository);
 	}
 
-	public void testGetChangedSinceLastSyncWeb096() throws Exception {
+	private SynchronizationSession createSession(ITask... tasks) {
+		SynchronizationSession session = new SynchronizationSession();
+		session.setNeedsPerformQueries(true);
+		session.setTaskRepository(repository);
+		session.setFullSynchronization(true);
+		session.setTasks(new HashSet<ITask>(Arrays.asList(tasks)));
+		return session;
+	}
+
+	public void testPreSynchronizationWeb096() throws Exception {
 		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.offlineHandlerTicketId + "", null);
+		ITask task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
 
 		Set<ITask> tasks = new HashSet<ITask>();
 		tasks.add(task);
-		SynchronizationSession event = new SynchronizationSession();
-		event.setNeedsPerformQueries(true);
-		event.setTaskRepository(repository);
-		event.setFullSynchronization(true);
-		event.setTasks(tasks);
+		SynchronizationSession session = createSession();
+		session.setTasks(tasks);
 
 		assertEquals(null, repository.getSynchronizationTimeStamp());
-		connector.preSynchronization(event, null);
-		assertTrue(event.needsPerformQueries());
+		connector.preSynchronization(session, null);
+		assertTrue(session.needsPerformQueries());
 		assertEquals(null, repository.getSynchronizationTimeStamp());
-		assertFalse(task.isStale());
+		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
+		assertEquals(null, session.getStaleTasks());
 
 		int time = (int) (System.currentTimeMillis() / 1000) + 1;
 		repository.setSynchronizationTimeStamp(time + "");
-		connector.preSynchronization(event, null);
-		assertTrue(event.needsPerformQueries());
-		assertFalse(task.isStale());
+		connector.preSynchronization(session, null);
+		assertTrue(session.needsPerformQueries());
+		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
+		assertEquals(null, session.getStaleTasks());
 	}
 
 	public void testMarkStaleTasksXmlRpc010() throws Exception {
@@ -122,61 +126,51 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	private void markStaleTasks() throws Exception {
+		SynchronizationSession session;
 		TracTicket ticket = TracTestUtil.createTicket(client, "markStaleTasks");
-		TracTask task = (TracTask) TasksUiInternal.createTask(repository, ticket.getId() + "", null);
-		TasksUiInternal.synchronizeTask(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
-				task.getTaskId());
-
-		int lastModified = Integer.parseInt(taskData.getLastModified());
-
-		Set<ITask> tasks = new HashSet<ITask>();
-		tasks.add(task);
-		SynchronizationSession event = new SynchronizationSession();
-		event.setNeedsPerformQueries(true);
-		event.setTaskRepository(repository);
-		event.setFullSynchronization(true);
+		ITask task = TracTestUtil.createTask(repository, ticket.getId() + "");
+		long lastModified = TracUtil.toTracTime(task.getModificationDate());
 
 		// an empty set should not cause contact to the repository
 		repository.setSynchronizationTimeStamp(null);
-		event.setTasks(new HashSet<ITask>());
-		connector.preSynchronization(event, null);
-		assertTrue(event.needsPerformQueries());
+		session = createSession(task);
+		connector.preSynchronization(session, null);
+		assertTrue(session.needsPerformQueries());
 		assertNull(repository.getSynchronizationTimeStamp());
 
 		repository.setSynchronizationTimeStamp(null);
-		event.setTasks(tasks);
-		connector.preSynchronization(event, null);
-		assertTrue(event.needsPerformQueries());
-		assertTrue(task.isStale());
+		session = createSession(task);
+		connector.preSynchronization(session, null);
+		assertTrue(session.needsPerformQueries());
+		assertEquals(Collections.singleton(task), session.getStaleTasks());
 
 		// always returns the ticket because time comparison mode is >=
-		task.setStale(false);
 		repository.setSynchronizationTimeStamp(lastModified + "");
-		connector.preSynchronization(event, null);
+		session = createSession(task);
+		connector.preSynchronization(session, null);
 		// TODO this was fixed so it returns false now but only if the 
 		// query returns a single task
-		assertFalse(event.needsPerformQueries());
-		assertFalse(task.isStale());
+		assertFalse(session.needsPerformQueries());
+		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
+		assertEquals(null, session.getStaleTasks());
 
-		task.setStale(false);
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
-		event.setNeedsPerformQueries(true);
-		connector.preSynchronization(event, null);
-		assertFalse(event.needsPerformQueries());
-		assertFalse(task.isStale());
+		session = createSession(task);
+		connector.preSynchronization(session, null);
+		assertFalse(session.needsPerformQueries());
+		// bug 238043: assertEquals(Collections.emptySet(), session.getStaleTasks());
+		assertEquals(null, session.getStaleTasks());
 
 		// change ticket making sure it gets a new change time
 		Thread.sleep(1000);
 		ticket.putBuiltinValue(Key.DESCRIPTION, lastModified + "");
 		client.updateTicket(ticket, "comment", null);
 
-		task.setStale(false);
 		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
-		event.setNeedsPerformQueries(true);
-		connector.preSynchronization(event, null);
-		assertTrue(event.needsPerformQueries());
-		assertTrue(task.isStale());
+		session = createSession(task);
+		connector.preSynchronization(session, null);
+		assertTrue(session.needsPerformQueries());
+		assertEquals(Collections.singleton(task), session.getStaleTasks());
 	}
 
 	public void testMarkStaleTasksNoTimeStampXmlRpc010() throws Exception {
@@ -190,233 +184,190 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	private void markStaleTasksNoTimeStamp() throws Exception {
-		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.offlineHandlerTicketId + "", null);
-		Set<ITask> tasks = new HashSet<ITask>();
-		tasks.add(task);
-		SynchronizationSession event = new SynchronizationSession();
-		event.setNeedsPerformQueries(true);
-		event.setTaskRepository(repository);
-		event.setFullSynchronization(true);
-		event.setTasks(tasks);
+		SynchronizationSession session;
+		ITask task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
 
-		task.setStale(false);
+		session = createSession(task);
 		repository.setSynchronizationTimeStamp(null);
-		connector.preSynchronization(event, null);
-		assertTrue(event.needsPerformQueries());
-		assertTrue(task.isStale());
+		connector.preSynchronization(session, null);
+		assertTrue(session.needsPerformQueries());
+		assertEquals(Collections.singleton(task), session.getStaleTasks());
 
-		task.setStale(false);
+		session = createSession(task);
 		repository.setSynchronizationTimeStamp("");
-		connector.preSynchronization(event, null);
-		assertTrue(event.needsPerformQueries());
-		assertTrue(task.isStale());
+		connector.preSynchronization(session, null);
+		assertTrue(session.needsPerformQueries());
+		assertEquals(Collections.singleton(task), session.getStaleTasks());
 
-		task.setStale(false);
+		session = createSession(task);
 		repository.setSynchronizationTimeStamp("0");
-		connector.preSynchronization(event, null);
-		assertTrue(event.needsPerformQueries());
-		assertTrue(task.isStale());
+		connector.preSynchronization(session, null);
+		assertTrue(session.needsPerformQueries());
+		assertEquals(Collections.singleton(task), session.getStaleTasks());
 
-		task.setStale(false);
+		session = createSession(task);
 		repository.setSynchronizationTimeStamp("abc");
-		connector.preSynchronization(event, null);
-		assertTrue(event.needsPerformQueries());
-		assertTrue(task.isStale());
+		connector.preSynchronization(session, null);
+		assertTrue(session.needsPerformQueries());
+		assertEquals(Collections.singleton(task), session.getStaleTasks());
 	}
 
-	// FIXME
-//	public void testNonNumericTaskId() {
-//		try {
-//			connector.getLegacyTaskDataHandler().getTaskData(repository, "abc", new NullProgressMonitor());
-//			fail("Expected CoreException");
-//		} catch (CoreException e) {
-//		}
-//	}
+	public void testNonNumericTaskId() {
+		try {
+			connector.getTaskData(repository, "abc", null);
+			fail("Expected CoreException");
+		} catch (CoreException e) {
+		}
+	}
 
-//	public void testAttachmentChangesLastModifiedDate010() throws Exception {
-//		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-//		attachmentChangesLastModifiedDate();
-//	}
-//
-//	public void testAttachmentChangesLastModifiedDate011() throws Exception {
-//		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-//		attachmentChangesLastModifiedDate();
-//	}
+	public void testAttachmentChangesLastModifiedDate010() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		attachmentChangesLastModifiedDate();
+	}
 
-//	private void attachmentChangesLastModifiedDate() throws Exception {
-//		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, data.attachmentTicketId + "",
-//				new NullProgressMonitor());
-//		TracTask task = new TracTask(repository.getRepositoryUrl(), data.attachmentTicketId + "", "");
-//		connector.updateTaskFromTaskData(repository, task, taskData);
-//		Date lastModified = taskDataHandler.getAttributeFactory(taskData).getDateForAttributeType(
-//				RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
-//
-//		AbstractAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
-//		ITaskAttachment attachment = new MockAttachment("abc".getBytes());
-//		attachmentHandler.uploadAttachment(repository, task, attachment, null, new NullProgressMonitor());
-//
-//		taskData = taskDataHandler.getTaskData(repository, data.attachmentTicketId + "", new NullProgressMonitor());
-//		Date newLastModified = taskDataHandler.getAttributeFactory(taskData).getDateForAttributeType(
-//				RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
-//		assertTrue("Expected " + newLastModified + " to be more recent than " + lastModified,
-//				newLastModified.after(lastModified));
-//	}
-//
-//	public void testPostTaskDataInvalidCredentials010() throws Exception {
-//		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-//		postTaskDataInvalidCredentials();
-//	}
-//
-//	public void testPostTaskDataInvalidCredentials011() throws Exception {
-//		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
-//		postTaskDataInvalidCredentials();
-//	}
-//
-//	private void postTaskDataInvalidCredentials() throws Exception {
-//		TracTask task = (TracTask) TasksUiInternal.createTask(repository, data.offlineHandlerTicketId + "", null);
-//		TasksUiInternal.synchronizeTask(connector, task, true, null);
-//		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
-//				task.getTaskId());
-//
-//		taskData.setNewComment("new comment");
-//		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("foo", "bar"), false);
-//		try {
-//			taskDataHandler.postTaskData(repository, taskData, new NullProgressMonitor());
-//		} catch (CoreException expected) {
-//			assertEquals(RepositoryStatus.ERROR_REPOSITORY_LOGIN, expected.getStatus().getCode());
-//		}
-//		assertEquals("new comment", taskData.getNewComment());
-//	}
-//
-//	public void testCanInitializeTaskData() throws Exception {
-//		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-//
-//		TracTask task = new TracTask("", "", "");
-//		assertFalse(taskDataHandler.canInitializeSubTaskData(task, null));
-//		task.setSupportsSubtasks(true);
-//		assertTrue(taskDataHandler.canInitializeSubTaskData(task, null));
-//
-//		RepositoryTaskData taskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "",
-//				new NullProgressMonitor());
-//		assertFalse(taskDataHandler.canInitializeSubTaskData(null, taskData));
-//		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "");
-//		assertTrue(taskDataHandler.canInitializeSubTaskData(null, taskData));
-//
-//		task.setSupportsSubtasks(false);
-//		connector.updateTaskFromTaskData(repository, task, taskData);
-//		assertTrue(taskDataHandler.canInitializeSubTaskData(task, null));
-//	}
-//
-//	public void testInitializeSubTaskData() throws Exception {
-//		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
-//
-//		RepositoryTaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "",
-//				new NullProgressMonitor());
-//		try {
-//			taskDataHandler.initializeSubTaskData(repository, parentTaskData, parentTaskData, new NullProgressMonitor());
-//			fail("expected CoreException");
-//		} catch (CoreException expected) {
-//		}
-//
-//		parentTaskData.setSummary("abc");
-//		parentTaskData.setDescription("def");
-//		String component = parentTaskData.getAttribute(TracAttribute.COMPONENT.getTracKey()).getOptions().get(0);
-//		parentTaskData.setAttributeValue(TracAttribute.COMPONENT.getTracKey(), component);
-//		parentTaskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "");
-//		RepositoryTaskData subTaskData = new RepositoryTaskData(parentTaskData.getAttributeFactory(),
-//				TracCorePlugin.CONNECTOR_KIND, "", "");
-//		subTaskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING, "");
-//		taskDataHandler.initializeSubTaskData(repository, subTaskData, parentTaskData, new NullProgressMonitor());
-//		assertEquals("", subTaskData.getSummary());
-//		assertEquals("", subTaskData.getDescription());
-//		assertEquals(component, subTaskData.getAttributeValue(TracAttribute.COMPONENT.getTracKey()));
-//		assertEquals(parentTaskData.getTaskId(), subTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKING));
-//		assertEquals("", parentTaskData.getAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY));
-//	}
-//
-//	public void testGetSubTaskIds() throws Exception {
-//		RepositoryTaskData taskData = new RepositoryTaskData(new TracAttributeMapper(), TracCorePlugin.CONNECTOR_KIND,
-//				"", "");
-//		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "123 456");
-//		Set<String> subTaskIds = taskDataHandler.getSubTaskIds(taskData);
-//		assertEquals(2, subTaskIds.size());
-//		assertTrue(subTaskIds.contains("123"));
-//		assertTrue(subTaskIds.contains("456"));
-//
-//		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "7,8");
-//		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
-//		assertEquals(2, subTaskIds.size());
-//		assertTrue(subTaskIds.contains("7"));
-//		assertTrue(subTaskIds.contains("8"));
-//
-//		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "  7 ,   8,  ");
-//		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
-//		assertEquals(2, subTaskIds.size());
-//		assertTrue(subTaskIds.contains("7"));
-//		assertTrue(subTaskIds.contains("8"));
-//
-//		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "7");
-//		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
-//		assertEquals(1, subTaskIds.size());
-//		assertTrue(subTaskIds.contains("7"));
-//
-//		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "");
-//		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
-//		assertEquals(0, subTaskIds.size());
-//
-//		taskData.setAttributeValue(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY, "  ");
-//		subTaskIds = taskDataHandler.getSubTaskIds(taskData);
-//		assertEquals(0, subTaskIds.size());
-//	}
-//
-//	public void testUpdateTaskDetails() throws Exception {
-//		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
-//
-//		TracTicket ticket = new TracTicket(123);
-//		ticket.putBuiltinValue(Key.DESCRIPTION, "mydescription");
-//		ticket.putBuiltinValue(Key.PRIORITY, "mypriority");
-//		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
-//		ticket.putBuiltinValue(Key.TYPE, "mytype");
-//
-//		ITracClient client = connector.getClientManager().getTracClient(repository);
-//		RepositoryTaskData taskData = new RepositoryTaskData(IdentityAttributeFactory.getInstance(),
-//				TracCorePlugin.CONNECTOR_KIND, repository.getRepositoryUrl(), ticket.getId() + "");
-//		taskDataHandler.updateTaskDataFromTicket(taskData, ticket, client);
-//
-//		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, "" + 123, "desc");
-//		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
-//		assertEquals("desc", task.getSummary());
-//
-//		DefaultTaskSchema schema = new DefaultTaskSchema(taskData);
-//		schema.applyTo(task);
-//
-//		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
-//		assertEquals("123", task.getTaskKey());
-//		assertEquals("mysummary", task.getSummary());
-//		assertEquals("P3", task.getPriority());
-//		assertEquals("mytype", task.getTaskKind());
-//	}
-//
-//	public void testUpdateTaskDetailsSummaryOnly() throws InvalidTicketException {
-//		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
-//
-//		TracTicket ticket = new TracTicket(456);
-//		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
-//
-//		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, "" + 456, "desc");
-//
-//		ITracClient client = connector.getClientManager().getTracClient(repository);
-//		RepositoryTaskData taskData = new RepositoryTaskData(IdentityAttributeFactory.getInstance(),
-//				TracCorePlugin.CONNECTOR_KIND, repository.getRepositoryUrl(), ticket.getId() + "");
-//		taskDataHandler.updateTaskDataFromTicket(taskData, ticket, client);
-//		DefaultTaskSchema schema = new DefaultTaskSchema(taskData);
-//		schema.applyTo(task);
-//
-//		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getUrl());
-//		assertEquals("456", task.getTaskKey());
-//		assertEquals("mysummary", task.getSummary());
-//		assertEquals("P3", task.getPriority());
-//		assertEquals(AbstractTask.DEFAULT_TASK_KIND, task.getTaskKind());
-//	}
+	public void testAttachmentChangesLastModifiedDate011() throws Exception {
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
+		attachmentChangesLastModifiedDate();
+	}
+
+	private void attachmentChangesLastModifiedDate() throws Exception {
+		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
+		Date lastModified = task.getModificationDate();
+		attachmentHandler.postContent(repository, task, new TextTaskAttachmentSource("abc"), null, null, null);
+
+		task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
+		Date newLastModified = task.getModificationDate();
+		assertTrue("Expected " + newLastModified + " to be more recent than " + lastModified,
+				newLastModified.after(lastModified));
+	}
+
+	public void testPostTaskDataInvalidCredentials010() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		postTaskDataInvalidCredentials();
+	}
+
+	public void testPostTaskDataInvalidCredentials011() throws Exception {
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
+		postTaskDataInvalidCredentials();
+	}
+
+	private void postTaskDataInvalidCredentials() throws Exception {
+		ITask task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
+		TaskData taskData = TasksUi.getTaskDataManager().getTaskData(task);
+		taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).setValue("new comment");
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("foo", "bar"), false);
+		try {
+			taskDataHandler.postTaskData(repository, taskData, null, null);
+		} catch (CoreException expected) {
+			assertEquals(RepositoryStatus.ERROR_REPOSITORY_LOGIN, expected.getStatus().getCode());
+		}
+		assertEquals("new comment", taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).getValue());
+	}
+
+	public void testCanInitializeTaskData() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+
+		ITask task = new TaskTask(TracCorePlugin.CONNECTOR_KIND, "", "");
+		assertFalse(taskDataHandler.canInitializeSubTaskData(repository, task));
+		task.setAttribute(TracRepositoryConnector.TASK_KEY_SUPPORTS_SUBTASKS, Boolean.TRUE.toString());
+		assertTrue(taskDataHandler.canInitializeSubTaskData(repository, task));
+
+		task = TracTestUtil.createTask(repository, data.offlineHandlerTicketId + "");
+		TaskData taskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "", null);
+		assertFalse(taskDataHandler.canInitializeSubTaskData(repository, task));
+
+		taskData.getRoot().createAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY);
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		assertTrue(taskDataHandler.canInitializeSubTaskData(repository, task));
+
+		task.setAttribute(TracRepositoryConnector.TASK_KEY_SUPPORTS_SUBTASKS, Boolean.FALSE.toString());
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		assertTrue(taskDataHandler.canInitializeSubTaskData(repository, task));
+	}
+
+	public void testInitializeSubTaskDataInvalidParent() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		TaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "",
+				new NullProgressMonitor());
+		try {
+			taskDataHandler.initializeSubTaskData(repository, parentTaskData, parentTaskData, null);
+			fail("expected CoreException");
+		} catch (CoreException expected) {
+		}
+	}
+
+	public void testInitializeSubTaskData() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		TaskData parentTaskData = taskDataHandler.getTaskData(repository, data.offlineHandlerTicketId + "", null);
+		TaskMapper parentTaskMapper = new TracTaskMapper(parentTaskData, null);
+		parentTaskMapper.setSummary("abc");
+		parentTaskMapper.setDescription("def");
+		String component = parentTaskData.getRoot()
+				.getMappedAttribute(TracAttribute.COMPONENT.getTracKey())
+				.getOptions()
+				.get(0);
+		parentTaskMapper.setComponent(component);
+		parentTaskData.getRoot().createAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY);
+		TaskData subTaskData = new TaskData(parentTaskData.getAttributeMapper(), TracCorePlugin.CONNECTOR_KIND, "", "");
+		subTaskData.getRoot().createAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKING);
+		taskDataHandler.initializeSubTaskData(repository, subTaskData, parentTaskData, new NullProgressMonitor());
+		TaskMapper subTaskMapper = new TracTaskMapper(subTaskData, null);
+		assertEquals("", subTaskMapper.getSummary());
+		assertEquals("", subTaskMapper.getDescription());
+		assertEquals(component, subTaskMapper.getComponent());
+		assertEquals(parentTaskData.getTaskId(), subTaskData.getRoot().getMappedAttribute(
+				TracTaskDataHandler.ATTRIBUTE_BLOCKING).getValue());
+		assertEquals("", parentTaskData.getRoot()
+				.getMappedAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY)
+				.getValue());
+	}
+
+	public void testGetSubTaskIds() throws Exception {
+		TaskData taskData = new TaskData(new TracAttributeMapper(new TaskRepository("", "")),
+				TracCorePlugin.CONNECTOR_KIND, "", "");
+		TaskAttribute blockedBy = taskData.getRoot().createAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY);
+		Collection<String> subTaskIds;
+
+		blockedBy.setValue("123 456");
+		subTaskIds = getSubTaskIds(taskData);
+		assertEquals(2, subTaskIds.size());
+		assertTrue(subTaskIds.contains("123"));
+		assertTrue(subTaskIds.contains("456"));
+
+		blockedBy.setValue("7,8");
+		subTaskIds = getSubTaskIds(taskData);
+		assertEquals(2, subTaskIds.size());
+		assertTrue(subTaskIds.contains("7"));
+		assertTrue(subTaskIds.contains("8"));
+
+		blockedBy.setValue("  7 ,   8,  ");
+		subTaskIds = getSubTaskIds(taskData);
+		assertEquals(2, subTaskIds.size());
+		assertTrue(subTaskIds.contains("7"));
+		assertTrue(subTaskIds.contains("8"));
+
+		blockedBy.setValue("7");
+		subTaskIds = getSubTaskIds(taskData);
+		assertEquals(1, subTaskIds.size());
+		assertTrue(subTaskIds.contains("7"));
+
+		blockedBy.setValue("");
+		subTaskIds = getSubTaskIds(taskData);
+		assertEquals(0, subTaskIds.size());
+
+		blockedBy.setValue("  ");
+		subTaskIds = getSubTaskIds(taskData);
+		assertEquals(0, subTaskIds.size());
+	}
+
+	private Collection<String> getSubTaskIds(TaskData taskData) {
+		List<String> subTaskIds = new ArrayList<String>();
+		Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
+		for (TaskRelation taskRelation : relations) {
+			subTaskIds.add(taskRelation.getTaskId());
+		}
+		return subTaskIds;
+	}
 
 }

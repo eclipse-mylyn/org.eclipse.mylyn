@@ -30,8 +30,8 @@ import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
- * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC Plugin</a> API. Revision 1188 or
- * higher is required.
+ * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC Plugin</a> (revision 1188 or higher is
+ * required).
  * 
  * <p>
  * This class does not depend on any Mylar (connector) classes except for TracHttpClientTransportFactory which is needed

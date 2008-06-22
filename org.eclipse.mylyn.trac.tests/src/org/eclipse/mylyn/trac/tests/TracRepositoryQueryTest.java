@@ -8,21 +8,21 @@
 
 package org.eclipse.mylyn.trac.tests;
 
-import java.util.Arrays;
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
-import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
+import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
 
 /**
  * @author Steffen Pingel
@@ -30,19 +30,17 @@ import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 public class TracRepositoryQueryTest extends TestCase {
 
 	public void testChangeRepositoryUrl() throws Exception {
-		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
-		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		TaskRepository repository = new TaskRepository(TracCorePlugin.CONNECTOR_KIND,
-				TracTestConstants.TEST_TRAC_096_URL);
-		manager.addRepository(repository);
+		TaskRepository repository = TracTestUtil.init(TracTestConstants.TEST_TRAC_096_URL, Version.XML_RPC);
 
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getRepositoryUrl() + ITracClient.QUERY_URL + search.toUrl();
-		TracRepositoryQuery query = new TracRepositoryQuery(repository.getRepositoryUrl(), queryUrl, "description");
-		TasksUiPlugin.getTaskList().addQuery(query);
+		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+		query.setUrl(queryUrl);
+		TasksUiPlugin.getTaskList().addQuery((RepositoryQuery) query);
 
-		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_096_URL, "" + 123, "desc");
+		String taskId = "123";
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskId);
+		task.setUrl(repository.getRepositoryUrl() + ITracClient.TICKET_URL + taskId);
 		TasksUiPlugin.getTaskList().addTask(task);
 
 		String oldUrl = repository.getRepositoryUrl();
@@ -52,27 +50,6 @@ public class TracRepositoryQueryTest extends TestCase {
 
 		assertEquals(newUrl, query.getRepositoryUrl());
 		assertEquals(newUrl + ITracClient.QUERY_URL + search.toUrl(), query.getUrl());
-		assertEquals(newUrl + ITracClient.TICKET_URL + 123, task.getUrl());
+		assertEquals(newUrl + ITracClient.TICKET_URL + taskId, task.getUrl());
 	}
-
-	public void testGetFilterList() {
-		String repositoryUrl = "https://foo.bar/repo";
-		String parameterUrl = "&status=new&status=assigned&status=reopened&milestone=0.1";
-		String queryUrl = repositoryUrl + ITracClient.QUERY_URL + parameterUrl;
-		TracRepositoryQuery query = new TracRepositoryQuery(repositoryUrl, queryUrl, "description");
-
-		TracSearch filterList = query.getTracSearch();
-
-		assertEquals(parameterUrl, filterList.toUrl());
-		assertEquals("&status=new|assigned|reopened&milestone=0.1", filterList.toQuery());
-
-		List<TracSearchFilter> list = filterList.getFilters();
-		TracSearchFilter filter = list.get(0);
-		assertEquals("status", filter.getFieldName());
-		assertEquals(Arrays.asList("new", "assigned", "reopened"), filter.getValues());
-		filter = list.get(1);
-		assertEquals("milestone", filter.getFieldName());
-		assertEquals(Arrays.asList("0.1"), filter.getValues());
-	}
-
 }
