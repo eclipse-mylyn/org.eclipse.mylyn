@@ -559,7 +559,12 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			if (root.getAttribute(TracAttributeMapper.REMOVE_CC) == null) {
 				root.createAttribute(TracAttributeMapper.REMOVE_CC);
 			}
-
+			if (root.getAttribute(TaskAttribute.COMMENT_NEW) == null) {
+				root.createAttribute(TaskAttribute.COMMENT_NEW)
+						.getMetaData()
+						.setType(TaskAttribute.TYPE_LONG_RICH_TEXT)
+						.setReadOnly(false);
+			}
 			taskData.setVersion("1");
 		}
 	}
