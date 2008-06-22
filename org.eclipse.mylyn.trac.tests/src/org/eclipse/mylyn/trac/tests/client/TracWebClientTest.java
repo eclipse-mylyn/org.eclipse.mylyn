@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.trac.tests;
+package org.eclipse.mylyn.trac.tests.client;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
  * @author Steffen Pingel

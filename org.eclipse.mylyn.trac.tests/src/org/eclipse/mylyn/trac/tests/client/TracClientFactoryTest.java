@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.trac.tests;
+package org.eclipse.mylyn.trac.tests.client;
 
 import junit.framework.TestCase;
 
@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.TracWebClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracXmlRpcClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
  * @author Steffen Pingel

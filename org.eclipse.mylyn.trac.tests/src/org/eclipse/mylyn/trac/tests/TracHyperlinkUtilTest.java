@@ -5,13 +5,15 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.internal.trac.ui;
+package org.eclipse.mylyn.trac.tests;
 
 import junit.framework.TestCase;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.ui.TracHyperlinkUtil;
+import org.eclipse.mylyn.internal.trac.ui.WebHyperlink;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 

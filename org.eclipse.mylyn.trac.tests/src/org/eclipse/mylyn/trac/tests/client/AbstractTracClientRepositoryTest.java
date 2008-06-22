@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.trac.tests;
+package org.eclipse.mylyn.trac.tests.client;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.TracLoginException;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
  * Test cases for classes that implement {@link ITracClient}.

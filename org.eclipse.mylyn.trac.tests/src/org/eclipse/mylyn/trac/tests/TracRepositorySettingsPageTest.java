@@ -18,6 +18,8 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.ui.TracConnectorUi;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage.TracValidator;
+import org.eclipse.mylyn.trac.tests.client.AbstractTracClientTest;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 

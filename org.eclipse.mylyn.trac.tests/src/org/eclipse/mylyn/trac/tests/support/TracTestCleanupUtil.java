@@ -12,7 +12,7 @@ import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
-import org.eclipse.mylyn.trac.tests.AbstractTracClientTest;
+import org.eclipse.mylyn.trac.tests.client.AbstractTracClientTest;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**

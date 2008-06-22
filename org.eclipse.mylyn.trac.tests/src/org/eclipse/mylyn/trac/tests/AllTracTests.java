@@ -8,10 +8,18 @@
 
 package org.eclipse.mylyn.trac.tests;
 
+import org.eclipse.mylyn.trac.tests.client.TracClientFactoryTest;
+import org.eclipse.mylyn.trac.tests.client.TracClientProxyTest;
+import org.eclipse.mylyn.trac.tests.client.TracSearchTest;
+import org.eclipse.mylyn.trac.tests.client.TracTicketTest;
+import org.eclipse.mylyn.trac.tests.client.TracWebClientSearchTest;
+import org.eclipse.mylyn.trac.tests.client.TracWebClientTest;
+import org.eclipse.mylyn.trac.tests.client.TracXmlRpcClientSearchTest;
+import org.eclipse.mylyn.trac.tests.client.TracXmlRpcClientTest;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.internal.trac.ui.TracHyperlinkUtilTest;
 
 /**
  * @author Mik Kersten

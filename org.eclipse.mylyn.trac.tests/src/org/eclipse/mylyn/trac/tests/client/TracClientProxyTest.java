@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.trac.tests;
+package org.eclipse.mylyn.trac.tests.client;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -14,6 +14,8 @@ import java.net.Proxy.Type;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.TracException;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.trac.tests.support.TestProxy;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 public class TracClientProxyTest extends AbstractTracClientTest {
 

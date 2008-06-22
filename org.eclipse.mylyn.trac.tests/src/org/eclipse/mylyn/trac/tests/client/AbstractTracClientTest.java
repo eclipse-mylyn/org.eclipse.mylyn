@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.trac.tests;
+package org.eclipse.mylyn.trac.tests.client;
 
 import java.net.Proxy;
 
@@ -22,6 +22,7 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
  * Provides a base implementation for test cases that access trac repositories.

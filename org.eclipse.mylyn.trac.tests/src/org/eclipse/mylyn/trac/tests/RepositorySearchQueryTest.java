@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**

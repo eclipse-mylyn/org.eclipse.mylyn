@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.mylyn.trac.tests;
+package org.eclipse.mylyn.trac.tests.support;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

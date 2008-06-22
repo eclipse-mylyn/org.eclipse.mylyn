@@ -36,6 +36,7 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**

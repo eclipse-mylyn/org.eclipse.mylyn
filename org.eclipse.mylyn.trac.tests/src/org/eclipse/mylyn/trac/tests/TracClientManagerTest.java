@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
  * @author Steffen Pingel

@@ -11,7 +11,6 @@ package org.eclipse.mylyn.trac.tests.support;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
-import org.eclipse.mylyn.trac.tests.TracTestConstants;
 
 /**
  * Initializes Trac repositories to a defined state. This is done once per test run, since cleaning and initializing the

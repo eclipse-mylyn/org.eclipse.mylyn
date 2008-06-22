@@ -45,6 +45,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 import org.eclipse.mylyn.trac.tests.support.TestFixture;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;

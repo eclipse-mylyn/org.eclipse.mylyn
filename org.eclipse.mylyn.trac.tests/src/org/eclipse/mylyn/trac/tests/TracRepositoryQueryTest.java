@@ -22,6 +22,7 @@ import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 
 /**
  * @author Steffen Pingel
