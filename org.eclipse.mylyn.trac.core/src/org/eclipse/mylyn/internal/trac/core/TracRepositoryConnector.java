@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -226,6 +228,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String TASK_KEY_SUPPORTS_SUBTASKS = "SupportsSubtasks";
 
+	public static final String TASK_KEY_UPDATE_DATE = "UpdateDate";
+
 	public static String getDisplayUsername(TaskRepository repository) {
 		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
 		if (credentials != null && credentials.getUserName().length() > 0) {
@@ -426,7 +430,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector resultCollector,
-			ISynchronizationSession event, IProgressMonitor monitor) {
+			ISynchronizationSession session, IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Querying repository", IProgressMonitor.UNKNOWN);
 
@@ -439,12 +443,26 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			ITracClient client;
 			try {
 				client = getClientManager().getTracClient(repository);
-				final List<TracTicket> tickets = new ArrayList<TracTicket>();
+				List<TracTicket> tickets = new ArrayList<TracTicket>();
 				client.search(search, tickets, monitor);
 
+				Map<String, ITask> taskById = null;
 				client.updateAttributes(monitor, false);
 				for (TracTicket ticket : tickets) {
 					TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, monitor);
+					taskData.setPartial(true);
+					if (session != null && !session.isFullSynchronization() && hasRichEditor(repository)) {
+						if (taskById == null) {
+							taskById = new HashMap<String, ITask>();
+							for (ITask task : session.getTasks()) {
+								taskById.put(task.getTaskId(), task);
+							}
+						}
+						ITask task = taskById.get(ticket.getId() + "");
+						if (task != null && hasTaskChanged(repository, task, taskData)) {
+							session.markStale(task);
+						}
+					}
 					resultCollector.accept(taskData);
 				}
 			} catch (Throwable e) {
@@ -596,6 +614,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 		task.setUrl(taskRepository.getRepositoryUrl() + ITracClient.TICKET_URL + taskData.getTaskId());
 		task.setAttribute(TASK_KEY_SUPPORTS_SUBTASKS, Boolean.toString(taskDataHandler.supportsSubtasks(taskData)));
+		if (!taskData.isPartial()) {
+			Date date = task.getModificationDate();
+			task.setAttribute(TASK_KEY_UPDATE_DATE, (date != null) ? TracUtil.toTracTime(date) + "" : null);
+		}
 	}
 
 	@Override
@@ -605,7 +627,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			return mapper.hasChanges(task);
 		} else {
 			Date repositoryDate = mapper.getModificationDate();
-			Date localDate = task.getModificationDate();
+			Date localDate = TracUtil.parseDate(task.getAttribute(TASK_KEY_UPDATE_DATE));
 			if (repositoryDate != null && repositoryDate.equals(localDate)) {
 				return false;
 			}

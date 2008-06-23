@@ -56,7 +56,9 @@ public class TracTaskListMigrator extends AbstractTaskListMigrator {
 
 	@Override
 	public void migrateTask(ITask task, Element element) {
-		task.setModificationDate(TracUtil.parseDate(element.getAttribute(KEY_LAST_MOD_DATE)));
+		String lastModDate = element.getAttribute(KEY_LAST_MOD_DATE);
+		task.setModificationDate(TracUtil.parseDate(lastModDate));
+		task.setAttribute(TracRepositoryConnector.TASK_KEY_UPDATE_DATE, lastModDate);
 		if (element.hasAttribute(KEY_SUPPORTS_SUBTASKS)) {
 			task.setAttribute(TracRepositoryConnector.TASK_KEY_SUPPORTS_SUBTASKS, Boolean.valueOf(
 					element.getAttribute(KEY_SUPPORTS_SUBTASKS)).toString());
