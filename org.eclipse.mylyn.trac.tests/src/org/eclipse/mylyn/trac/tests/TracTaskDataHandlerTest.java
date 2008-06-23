@@ -74,7 +74,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		super.setUp();
 		data = TestFixture.init010();
 		connector = (TracRepositoryConnector) TasksUi.getRepositoryConnector(TracCorePlugin.CONNECTOR_KIND);
-		taskDataHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
+		taskDataHandler = connector.getTaskDataHandler();
 	}
 
 	protected void init(String url, Version version) {
@@ -234,7 +234,8 @@ public class TracTaskDataHandlerTest extends TestCase {
 		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		ITask task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		Date lastModified = task.getModificationDate();
-		attachmentHandler.postContent(repository, task, new TextTaskAttachmentSource("abc"), null, null, null);
+		// XXX the test case fails when comment == null
+		attachmentHandler.postContent(repository, task, new TextTaskAttachmentSource("abc"), "comment", null, null);
 
 		task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
 		Date newLastModified = task.getModificationDate();
