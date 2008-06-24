@@ -30,6 +30,56 @@ public class TracTaskMapper extends TaskMapper {
 	}
 
 	@Override
+	public boolean applyTo(ITask task) {
+		boolean changed = false;
+		if (hasChanges(task.getCompletionDate(), TaskAttribute.DATE_COMPLETION)) {
+			task.setCompletionDate(getCompletionDate());
+			changed = true;
+		}
+		if (hasChanges(task.getCreationDate(), TaskAttribute.DATE_CREATION)) {
+			task.setCreationDate(getCreationDate());
+			changed = true;
+		}
+		if (hasChanges(task.getModificationDate(), TaskAttribute.DATE_MODIFICATION)) {
+			task.setModificationDate(getModificationDate());
+			changed = true;
+		}
+		if (hasChanges(task.getDueDate(), TaskAttribute.DATE_DUE)) {
+			task.setDueDate(getDueDate());
+			changed = true;
+		}
+		if (hasChanges(task.getOwner(), TaskAttribute.USER_ASSIGNED)) {
+			task.setOwner(getOwner());
+			changed = true;
+		}
+		if (hasChanges(task.getPriority(), TaskAttribute.PRIORITY)) {
+			if (getPriorityLevel() != null) {
+				task.setPriority(getPriorityLevel().toString());
+			} else {
+				task.setPriority(PriorityLevel.getDefault().toString());
+			}
+			changed = true;
+		}
+		if (hasChanges(task.getSummary(), TaskAttribute.SUMMARY)) {
+			task.setSummary(getSummary());
+			changed = true;
+		}
+		if (hasChanges(task.getTaskKey(), TaskAttribute.TASK_KEY)) {
+			task.setTaskKey(getTaskKey());
+			changed = true;
+		}
+		if (hasChanges(task.getTaskKind(), TaskAttribute.TASK_KIND)) {
+			task.setTaskKind(getTaskKind());
+			changed = true;
+		}
+		if (hasChanges(task.getUrl(), TaskAttribute.TASK_URL)) {
+			task.setUrl(getTaskUrl());
+			changed = true;
+		}
+		return changed;
+	}
+
+	@Override
 	public boolean hasChanges(ITask task) {
 		boolean changed = false;
 		changed |= hasChanges(task.getCompletionDate(), TaskAttribute.DATE_COMPLETION);
