@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.sdk_feature"
       label="Mylyn SDK"
-      version="3.0.0.qualifier"
+      version="3.0.1.qualifier"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -12,7 +12,7 @@ features.
    </description>
 
    <copyright>
-      Copyright (c) 2004 - 2007 Mylyn project committers and others.
+      Copyright (c) 2004, 2008 Mylyn project committers and others.
    </copyright>
 
    <license url="license.html">
