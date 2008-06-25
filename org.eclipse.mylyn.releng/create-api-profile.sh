@@ -14,6 +14,8 @@ OUT=/home/data/httpd/download.eclipse.org/tools/mylyn/update-archive/$MAJOR/myly
 TMP=/shared/tools/mylyn/tmp/profile
 
 rm -rf $TMP || true
-mkdir $TMP
+mkdir -p $TMP
 
-/usr/bin/find $SRC -name "org.eclipse.mylyn*.jar" | zip $DST/mylyn.zip -D -@
+rm $OUT || true
+/usr/bin/find $SRC -path "*plugins*" -not -path "*e3.3*" -name "org.eclipse.mylyn*.jar" -not -name "*source*" | xargs -i cp {} $TMP
+zip $OUT -j $TMP/*
