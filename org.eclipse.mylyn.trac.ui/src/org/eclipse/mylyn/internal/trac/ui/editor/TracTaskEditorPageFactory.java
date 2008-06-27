@@ -58,7 +58,7 @@ public class TracTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public Image getPageImage() {
-		return CommonImages.getImage(TasksUiImages.REPOSITORY);
+		return CommonImages.getImage(TasksUiImages.REPOSITORY_SMALL);
 	}
 
 	@Override
