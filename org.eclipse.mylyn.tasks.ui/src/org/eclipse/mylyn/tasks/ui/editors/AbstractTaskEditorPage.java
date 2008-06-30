@@ -997,10 +997,21 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		part.initialize(this);
 		part.createControl(parent, toolkit);
 		if (part.getControl() != null) {
-			if (part.getExpandVertically()) {
-				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(part.getControl());
+			if (ID_PART_ACTIONS.equals(part.getPartId())) {
+				// do not expand horizontally
+				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(false, false).applyTo(part.getControl());
 			} else {
-				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(part.getControl());
+				if (part.getExpandVertically()) {
+					GridDataFactory.fillDefaults()
+							.align(SWT.FILL, SWT.FILL)
+							.grab(true, true)
+							.applyTo(part.getControl());
+				} else {
+					GridDataFactory.fillDefaults()
+							.align(SWT.FILL, SWT.TOP)
+							.grab(true, false)
+							.applyTo(part.getControl());
+				}
 			}
 			// for outline
 			if (ID_PART_COMMENTS.equals(part.getPartId())) {

@@ -45,7 +45,11 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 				GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).hint(130, 95).applyTo(
 						editor.getControl());
 			} else {
-				GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.TOP).applyTo(editor.getControl());
+				GridDataFactory.fillDefaults()
+						.grab(true, false)
+						.align(SWT.FILL, SWT.TOP)
+						.hint(130, SWT.DEFAULT)
+						.applyTo(editor.getControl());
 			}
 		}
 	}
