@@ -79,7 +79,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	}
 
 	private void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
-		Table attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
+		Table attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
 		attachmentsTable.setLinesVisible(true);
 		attachmentsTable.setHeaderVisible(true);
 		attachmentsTable.setLayout(new GridLayout());

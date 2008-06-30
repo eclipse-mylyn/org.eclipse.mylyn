@@ -8,8 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
@@ -21,15 +19,21 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.graphics.Image;
@@ -62,67 +66,50 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 		if (currentSelection instanceof IStructuredSelection) {
 			IStructuredSelection selection = (IStructuredSelection) currentSelection;
 			Object[] elements = selection.toArray();
+			if (elements.length >= 2) {
+				final ITaskAttachment attachment1 = (ITaskAttachment) elements[0];
+				final ITaskAttachment attachment2 = (ITaskAttachment) elements[1];
 
-			final RepositoryAttachment attachment1 = (RepositoryAttachment) elements[0];
-			final RepositoryAttachment attachment2 = (RepositoryAttachment) elements[1];
+				CompareConfiguration cc = new CompareConfiguration();
 
-			CompareConfiguration cc = new CompareConfiguration();
+				cc.setLeftEditable(false);
+				cc.setLeftLabel(attachment1.getFileName());
+				cc.setLeftImage(getImage(attachment1));
 
-			cc.setLeftEditable(false);
-			cc.setLeftLabel(attachment1.getFilename());
-			cc.setLeftImage(getImage(attachment1));
+				cc.setRightEditable(false);
+				cc.setRightLabel(attachment2.getFileName());
+				cc.setRightImage(getImage(attachment2));
 
-			cc.setRightEditable(false);
-			cc.setRightLabel(attachment2.getFilename());
-			cc.setRightImage(getImage(attachment2));
+				CompareEditorInput editorInput = new CompareEditorInput(cc) {
 
-			CompareEditorInput editorInput = new CompareEditorInput(cc) {
-
-				@Override
-				public String getTitle() {
-					return "Compare (" + attachment1.getFilename() + " - " + attachment2.getFilename() + ")";
-				}
-
-				@Override
-				protected Object prepareInput(IProgressMonitor pm) throws InvocationTargetException {
-					byte[] data1 = downloadAttachment(attachment1, pm);
-					byte[] data2 = downloadAttachment(attachment2, pm);
-					CompareItem left = new CompareItem(attachment1.getFilename(), data1);
-					CompareItem right = new CompareItem(attachment2.getFilename(), data2);
-					return new DiffNode(left, right);
-				}
-
-				private byte[] downloadAttachment(RepositoryAttachment attachment, IProgressMonitor pm)
-						throws InvocationTargetException {
-					try {
-						TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-								attachment.getRepositoryKind(), attachment.getRepositoryUrl());
-						AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
-								.getRepositoryConnector(attachment.getRepositoryKind());
-						AbstractAttachmentHandler handler = connector.getAttachmentHandler();
-
-						ByteArrayOutputStream os = new ByteArrayOutputStream();
-						handler.downloadAttachment(repository, attachment, os, pm);
-						return os.toByteArray();
-					} catch (CoreException ex) {
-						throw new InvocationTargetException(ex);
+					@Override
+					public String getTitle() {
+						return "Compare (" + attachment1.getFileName() + " - " + attachment2.getFileName() + ")";
 					}
-				}
-			};
 
-			CompareUI.openCompareEditor(editorInput);
+					@Override
+					protected Object prepareInput(IProgressMonitor pm) throws InvocationTargetException {
+						CompareItem left = new CompareItem(attachment1);
+						CompareItem right = new CompareItem(attachment2);
+						return new DiffNode(left, right);
+					}
+
+				};
+
+				CompareUI.openCompareEditor(editorInput);
+			}
 		}
 	}
 
 	private static final String[] IMAGE_EXTENSIONS = { ".jpg", ".gif", ".png", ".tiff", ".tif", ".bmp" };
 
-	private Image getImage(RepositoryAttachment attachment) {
+	private Image getImage(ITaskAttachment attachment) {
 		if (AttachmentUtil.isContext(attachment)) {
 			return CommonImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 		} else if (attachment.isPatch()) {
 			return CommonImages.getImage(TasksUiImages.TASK_ATTACHMENT_PATCH);
 		} else {
-			String filename = attachment.getFilename();
+			String filename = attachment.getFileName();
 			if (filename != null) {
 				filename = filename.toLowerCase();
 				for (String extension : IMAGE_EXTENSIONS) {
@@ -139,19 +126,26 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 		this.currentSelection = selection;
 	}
 
-	class CompareItem implements IStreamContentAccessor, ITypedElement {
+	private class CompareItem implements IStreamContentAccessor, ITypedElement {
 
-		private final String filename;
+		private final ITaskAttachment attachment;
 
-		private final byte[] data;
-
-		public CompareItem(String filename, byte[] data) {
-			this.filename = filename;
-			this.data = data;
+		public CompareItem(ITaskAttachment attachment) {
+			this.attachment = attachment;
 		}
 
 		public InputStream getContents() throws CoreException {
-			return new ByteArrayInputStream(data);
+			TaskAttribute attachmentAttribute = attachment.getTaskAttribute();
+			if (attachmentAttribute == null) {
+				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Failed to find attachment: " + attachment.getUrl()));
+			}
+			TaskRepository taskRepository = attachment.getTaskRepository();
+			ITask task = attachment.getTask();
+			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+					taskRepository.getConnectorKind());
+			AbstractTaskAttachmentHandler handler = connector.getTaskAttachmentHandler();
+			return handler.getContent(taskRepository, task, attachmentAttribute, new NullProgressMonitor());
 		}
 
 		public Image getImage() {
@@ -159,7 +153,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 		}
 
 		public String getName() {
-			return filename;
+			return attachment.getFileName();
 		}
 
 		public String getType() {
@@ -170,11 +164,11 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 			// JavaContentViewerCreator - java,java2"
 			// RefactoringDescriptorCompareViewerCreator - refactoring_descriptor
 			// 
+			String filename = attachment.getFileName();
 			int n = filename.lastIndexOf('.');
 			if (n > -1) {
 				return filename.substring(n + 1);
 			}
-
 			return ITypedElement.TEXT_TYPE;
 		}
 	}

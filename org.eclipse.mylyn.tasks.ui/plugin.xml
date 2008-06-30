@@ -608,7 +608,7 @@
       <objectContribution
             adaptable="false"
             id="org.eclipse.mylyn.tasks.ui.contribution.attachment.compare"
-            objectClass="org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment">
+            objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
          <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.CompareAttachmentsAction"
                enablesFor="2"
