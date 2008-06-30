@@ -57,8 +57,6 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 	private static final String CLEAR = "Clear";
 
-	private static final int DEFAULT_ESTIMATED_TIME = 1;
-
 	private static final String NO_TIME_ELAPSED = "0 seconds";
 
 	private static final String RESET = "Reset";
@@ -278,7 +276,9 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		estimatedTime.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				markDirty();
+				if (task.getEstimatedTimeHours() != estimatedTime.getSelection()) {
+					markDirty();
+				}
 			}
 		});
 
