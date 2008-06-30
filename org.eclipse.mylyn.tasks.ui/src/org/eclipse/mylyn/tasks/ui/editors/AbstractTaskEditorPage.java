@@ -1109,7 +1109,21 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		setTaskData(model.getTaskData());
 	}
 
+	/**
+	 * Registers a drop listener for <code>control</code>. The default implementation registers a listener for attaching
+	 * files. Does nothing if the editor is showing a new task.
+	 * <p>
+	 * Clients may override.
+	 * </p>
+	 * 
+	 * @param control
+	 *            the control to register the listener for
+	 */
 	public void registerDefaultDropListener(final Control control) {
+		if (getModel() == null || getModel().getTaskData().isNew()) {
+			return;
+		}
+
 		DropTarget target = new DropTarget(control, DND.DROP_COPY | DND.DROP_DEFAULT);
 		final TextTransfer textTransfer = TextTransfer.getInstance();
 		final FileTransfer fileTransfer = FileTransfer.getInstance();
