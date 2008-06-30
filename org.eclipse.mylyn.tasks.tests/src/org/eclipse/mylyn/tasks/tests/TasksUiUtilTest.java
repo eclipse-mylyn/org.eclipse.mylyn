@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.lang.reflect.Field;
 import java.util.Date;
 
 import junit.framework.TestCase;
@@ -109,5 +110,54 @@ public class TasksUiUtilTest extends TestCase {
 		assertTrue(editor2 instanceof WebBrowserEditor);
 		assertNotNull(((WebBrowserEditorInput) editor2.getEditorInput()).getURL());
 		assertEquals("http://eclipse.org/mylyn", ((WebBrowserEditorInput) editor2.getEditorInput()).getURL().toString());
+	}
+
+	public void testFlagNoRichEditor() throws SecurityException, NoSuchFieldException, IllegalArgumentException,
+			IllegalAccessException {
+		TasksUiUtil.openUrl(null);
+		assertEquals(1, activePage.getEditorReferences().length);
+		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
+		assertTrue(editor instanceof WebBrowserEditor);
+		assertTrue(editor.getEditorInput() instanceof WebBrowserEditorInput);
+		assertEquals(null, ((WebBrowserEditorInput) editor.getEditorInput()).getURL());
+		WebBrowserEditorInput input = ((WebBrowserEditorInput) editor.getEditorInput());
+		Field f = input.getClass().getDeclaredField("style");
+		f.setAccessible(true);
+		int style = (Integer) f.get(input);
+		assertFalse((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
+
+		TasksUiUtil.openUrl("http://eclipse.org/mylyn");
+		assertEquals(2, activePage.getEditorReferences().length);
+		editor = activePage.getEditorReferences()[0].getEditor(true);
+		assertTrue(editor instanceof WebBrowserEditor);
+		assertEquals(null, ((WebBrowserEditorInput) editor.getEditorInput()).getURL());
+		input = ((WebBrowserEditorInput) editor.getEditorInput());
+		f = input.getClass().getDeclaredField("style");
+		f.setAccessible(true);
+		style = (Integer) f.get(input);
+		assertFalse((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
+
+		IEditorPart editor2 = activePage.getEditorReferences()[1].getEditor(true);
+		assertTrue(editor2 instanceof WebBrowserEditor);
+		assertNotNull(((WebBrowserEditorInput) editor2.getEditorInput()).getURL());
+		assertEquals("http://eclipse.org/mylyn", ((WebBrowserEditorInput) editor2.getEditorInput()).getURL().toString());
+		input = ((WebBrowserEditorInput) editor.getEditorInput());
+		f = input.getClass().getDeclaredField("style");
+		f.setAccessible(true);
+		style = (Integer) f.get(input);
+		assertFalse((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
+
+		// open task should not set FLAG_NO_RICH_EDITOR
+		TasksUiUtil.openTask("http://eclipse.org/mylyn/test");
+		assertEquals(3, activePage.getEditorReferences().length);
+		editor = activePage.getEditorReferences()[2].getEditor(true);
+		assertTrue(editor instanceof WebBrowserEditor);
+		assertEquals("http://eclipse.org/mylyn/test", ((WebBrowserEditorInput) editor.getEditorInput()).getURL()
+				.toString());
+		input = ((WebBrowserEditorInput) editor.getEditorInput());
+		f = input.getClass().getDeclaredField("style");
+		f.setAccessible(true);
+		style = (Integer) f.get(input);
+		assertTrue((style & TasksUiUtil.FLAG_NO_RICH_EDITOR) == 0);
 	}
 }
