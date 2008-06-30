@@ -38,11 +38,20 @@ public class TaskDataStateReader extends DefaultHandler {
 		}
 
 		@Override
+		protected void end(String uri, String localName, String name) {
+			TaskAttribute child = attribute.getAttribute(TaskAttribute.ATTACHMENT_ID);
+			if (child != null) {
+				attribute.setValue(child.getValue());
+			}
+		}
+
+		@Override
 		public void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
 			// create a unique id for each attachment since the actual id is in a child attribute
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_ATTACHMENT + ++id);
 			attribute.getMetaData().defaults().setReadOnly(true).setType(TaskAttribute.TYPE_ATTACHMENT);
-			attribute.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_ID) + "");
+			// the actual attachment id is stored in a child node an correctly set in end() 
+			attribute.setValue(id + "");
 
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_CREATOR));
