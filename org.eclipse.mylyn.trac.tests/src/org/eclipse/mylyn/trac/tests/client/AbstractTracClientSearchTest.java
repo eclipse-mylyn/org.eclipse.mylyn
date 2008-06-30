@@ -246,4 +246,25 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		assertEquals("summary1", result.get(0).getValue(Key.SUMMARY));
 	}
 
+	public void testStatusClosed096() throws Exception {
+		connect096();
+		statusClosed();
+	}
+
+	public void testStatusClosed010() throws Exception {
+		connect010();
+		statusClosed();
+	}
+
+	public void testStatusClosed011() throws Exception {
+		connect011();
+		statusClosed();
+	}
+
+	private void statusClosed() throws Exception {
+		TracTicket ticket = repository.getTicket(data.offlineHandlerTicketId, null);
+		assertEquals("closed", ticket.getValue(Key.STATUS));
+		assertEquals("fixed", ticket.getValue(Key.RESOLUTION));
+	}
+
 }

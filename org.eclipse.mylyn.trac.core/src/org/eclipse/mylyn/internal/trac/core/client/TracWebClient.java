@@ -248,7 +248,8 @@ public class TracWebClient extends AbstractTracClient {
 								ticket.putBuiltinValue(Key.REPORTER, getText(tokenizer));
 							}
 							// TODO handle custom fields
-						} else if (tag.getTagType() == Tag.H2 && "summary".equals(tag.getAttribute("class"))) {
+						} else if (tag.getTagType() == Tag.H2
+								&& ("summary".equals(tag.getAttribute("class")) || "summary searchable".equals(tag.getAttribute("class")))) {
 							ticket.putBuiltinValue(Key.SUMMARY, getText(tokenizer));
 						} else if (tag.getTagType() == Tag.H3 && "status".equals(tag.getAttribute("class"))) {
 							String text = getStrongText(tokenizer);
@@ -719,14 +720,15 @@ public class TracWebClient extends AbstractTracClient {
 		StringBuilder sb = new StringBuilder();
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 			if (token.getType() == Token.TEXT) {
-				sb.append(token.toString());
+				sb.append(token.toString().trim());
+				sb.append(" ");
 			} else if (token.getType() == Token.COMMENT) {
 				// ignore
 			} else {
 				break;
 			}
 		}
-		return StringEscapeUtils.unescapeHtml(sb.toString());
+		return StringEscapeUtils.unescapeHtml(sb.toString().trim());
 	}
 
 	/**

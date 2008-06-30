@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -322,7 +323,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 		ticket.putBuiltinValue(Key.TYPE, "mytype");
 
-		TracTaskDataHandler taskDataHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
+		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		ITracClient client = connector.getClientManager().getTracClient(repository);
 		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
@@ -341,7 +342,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		TracTicket ticket = new TracTicket(456);
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 
-		TracTaskDataHandler taskDataHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
+		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		ITracClient client = connector.getClientManager().getTracClient(repository);
 		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
@@ -352,6 +353,30 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
 		assertEquals(AbstractTask.DEFAULT_TASK_KIND, task.getTaskKind());
+	}
+
+	public void testUpdateTaskFromTaskDataClosed() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+		TracTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		ITracClient client = connector.getClientManager().getTracClient(repository);
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, "1");
+
+		TracTicket ticket = new TracTicket(123);
+		ticket.putBuiltinValue(Key.STATUS, "resolved");
+		TaskData taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		assertEquals(null, task.getCompletionDate());
+
+		ticket.putBuiltinValue(Key.STATUS, "closed");
+		taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		assertEquals(new Date(0), task.getCompletionDate());
+
+		ticket.putBuiltinValue(Key.STATUS, "closed");
+		ticket.putBuiltinValue(Key.CHANGE_TIME, "123");
+		taskData = taskDataHandler.createTaskDataFromTicket(client, repository, ticket, null);
+		connector.updateTaskFromTaskData(repository, task, taskData);
+		assertEquals(new Date(123 * 1000), task.getCompletionDate());
 	}
 
 }

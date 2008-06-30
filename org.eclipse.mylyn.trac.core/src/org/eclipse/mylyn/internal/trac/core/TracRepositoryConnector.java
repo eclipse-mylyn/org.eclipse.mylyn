@@ -224,6 +224,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	private final static String CLIENT_LABEL = "Trac (supports 0.9 or 0.10 through Web and XML-RPC)";
 
+	private final static Date DEFAULT_COMPLETION_DATE = new Date(0);
+
 	private static int TASK_PRIORITY_LEVELS = 5;
 
 	public static final String TASK_KEY_SUPPORTS_SUBTASKS = "SupportsSubtasks";
@@ -608,7 +610,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		TaskMapper mapper = getTaskMapping(taskData);
 		mapper.applyTo(task);
 		if (isCompleted(mapper.getStatus())) {
-			task.setCompletionDate(mapper.getModificationDate());
+			Date modificationDate = mapper.getModificationDate();
+			if (modificationDate == null) {
+				// web mode does not set a date
+				modificationDate = DEFAULT_COMPLETION_DATE;
+			}
+			task.setCompletionDate(modificationDate);
 		} else {
 			task.setCompletionDate(null);
 		}
