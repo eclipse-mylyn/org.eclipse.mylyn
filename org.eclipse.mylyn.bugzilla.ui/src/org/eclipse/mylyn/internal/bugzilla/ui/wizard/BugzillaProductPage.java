@@ -98,6 +98,7 @@ public class BugzillaProductPage extends WizardPage {
 
 	/**
 	 * Constructor for BugzillaProductPage
+	 * 
 	 * @param repository
 	 *            The repository the data is coming from
 	 * @param workbench
@@ -211,66 +212,8 @@ public class BugzillaProductPage extends WizardPage {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
-							.getRepositoryConnector(repository.getConnectorKind());
-
-					getContainer().run(true, false, new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor) throws InvocationTargetException,
-								InterruptedException {
-							monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
-							try {
-								connector.updateRepositoryConfiguration(repository, monitor);
-							} catch (CoreException e) {
-								// TODO: remove exceptions from communication of connectivity errors to the user
-								if (e.getStatus().getException() instanceof GeneralSecurityException) {
-									StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
-											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
-													+ "Please ensure your task repository is properly configured.", e));
-								} else if (e.getStatus().getException() instanceof IOException) {
-									StatusHandler.fail(new Status(
-											IStatus.WARNING,
-											BugzillaUiPlugin.ID_PLUGIN,
-											"Connection Error, please ensure your task repository is properly configured.",
-											e));
-								} else {
-									StatusHandler.fail(new Status(
-											IStatus.WARNING,
-											BugzillaUiPlugin.ID_PLUGIN,
-											"Error updating repository attributes for " + repository.getRepositoryUrl(),
-											e));
-								}
-								return;
-							}
-
-							RepositoryConfiguration repositoryConfiguration = null;
-							try {
-								repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
-										false, monitor);
-							} catch (final CoreException e) {
-								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-									public void run() {
-										MessageDialog.openError(Display.getDefault().getActiveShell(),
-												"Bugzilla Search Page",
-												"Unable to get configuration. Ensure proper repository configuration in Task Repositories");
-									}
-								});
-							}
-							products = new ArrayList<String>();
-							if (repositoryConfiguration != null) {
-								for (String product : repositoryConfiguration.getProducts()) {
-									products.add(product);
-								}
-							}
-						}
-					});
-					productViewer.setInput(products);
-				} catch (InvocationTargetException ex) {
-					MessageDialog.openError(null, "Error updating product list", "Error reported:\n"
-							+ ex.getCause().getMessage());
-				} catch (InterruptedException ex) {
-					// Was cancelled...
-				}
+				updateProdcts();
+				productViewer.setInput(products);
 			}
 		});
 
@@ -286,6 +229,10 @@ public class BugzillaProductPage extends WizardPage {
 		try {
 			products = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, new NullProgressMonitor())
 					.getProducts();
+
+			if (products.isEmpty()) {
+				updateProdcts();
+			}
 
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -424,6 +371,60 @@ public class BugzillaProductPage extends WizardPage {
 	public boolean isPageComplete() {
 		return !productList.getViewer().getSelection().isEmpty();
 //		return bugWizard.completed;
+	}
+
+	private void updateProdcts() {
+		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		try {
+			getContainer().run(true, true, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
+					try {
+						connector.updateRepositoryConfiguration(repository, monitor);
+					} catch (CoreException e) {
+						// TODO: remove exceptions from communication of connectivity errors to the user
+						if (e.getStatus().getException() instanceof GeneralSecurityException) {
+							StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
+									"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
+											+ "Please ensure your task repository is properly configured.", e));
+						} else if (e.getStatus().getException() instanceof IOException) {
+							StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
+									"Connection Error, please ensure your task repository is properly configured.", e));
+						} else {
+							StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
+									"Error updating repository attributes for " + repository.getRepositoryUrl(), e));
+						}
+						return;
+					}
+
+					RepositoryConfiguration repositoryConfiguration = null;
+					try {
+						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository, false,
+								monitor);
+					} catch (final CoreException e) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Search Page",
+										"Unable to get configuration. Ensure proper repository configuration in Task Repositories");
+							}
+						});
+					}
+					products = new ArrayList<String>();
+					if (repositoryConfiguration != null) {
+						for (String product : repositoryConfiguration.getProducts()) {
+							products.add(product);
+						}
+					}
+				}
+			});
+
+		} catch (InvocationTargetException ex) {
+			MessageDialog.openError(null, "Error updating product list", "Error reported:\n"
+					+ ex.getCause().getMessage());
+		} catch (InterruptedException ex) {
+			// canceled
+		}
 	}
 
 }
