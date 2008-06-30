@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.context.ui.wizards;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -35,8 +34,6 @@ public class ContextAttachWizardPage extends WizardPage {
 	private final ITask task;
 
 	private Text commentText;
-
-	private boolean complete = true;
 
 	protected ContextAttachWizardPage(TaskRepository repository, ITask task) {
 		super(WIZARD_TITLE);
@@ -71,25 +68,11 @@ public class ContextAttachWizardPage extends WizardPage {
 		});
 
 		setControl(composite);
-
-		if (task.getSynchronizationState() != SynchronizationState.SYNCHRONIZED) {
-			setErrorMessage("Task must be synchronized before attaching context");
-			complete = false;
-			getWizard().getContainer().updateButtons();
-		}
 		commentText.setFocus();
 	}
 
 	public String getComment() {
 		return commentText.getText();
-	}
-
-	@Override
-	public boolean isPageComplete() {
-		return complete;
-//		if (commentText.getText().equals(""))
-//			return false;
-//		return super.isPageComplete();
 	}
 
 }

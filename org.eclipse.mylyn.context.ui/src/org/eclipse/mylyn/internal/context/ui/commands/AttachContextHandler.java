@@ -10,16 +10,11 @@ package org.eclipse.mylyn.internal.context.ui.commands;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextAttachWizard;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.commands.AbstractTaskHandler;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -30,16 +25,6 @@ public class AttachContextHandler extends AbstractTaskHandler {
 
 	@Override
 	protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				task.getConnectorKind());
-		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			if (task.getSynchronizationState() != SynchronizationState.SYNCHRONIZED) {
-				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						"Context Attachment", "Task must be synchronized before attaching context");
-				return;
-			}
-		}
-
 		ContextAttachWizard wizard = new ContextAttachWizard(task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (shell != null && !shell.isDisposed()) {
