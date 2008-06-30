@@ -98,7 +98,7 @@ public class TaskMapper implements ITaskMapping {
 			if (targetAttribute.getOptions().size() > 0) {
 				List<String> values = sourceAttribute.getValues();
 				for (String value : values) {
-					if (targetAttribute.getOptions().containsValue(value)) {
+					if (targetAttribute.getOptions().containsKey(value)) {
 						targetAttribute.addValue(value);
 					}
 				}
