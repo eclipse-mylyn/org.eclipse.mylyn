@@ -42,7 +42,13 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
-			text.setText(getValueLabel());
+			String label = getValueLabel();
+			if ("".equals(label)) {
+				// if set to the empty string the label will use 64px on GTK 
+				text.setText(" ");
+			} else {
+				text.setText(label);
+			}
 			setControl(text);
 		} else {
 			combo = new CCombo(parent, SWT.FLAT | SWT.READ_ONLY);
