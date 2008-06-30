@@ -8,17 +8,18 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.DefaultTaskMapping;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -58,48 +59,48 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 		run();
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
 	@Override
 	public void run() {
-		try {
-			for (Object selectedObject : getStructuredSelection().toList()) {
-				if (selectedObject instanceof AbstractTask) {
-					AbstractTask task = (AbstractTask) selectedObject;
+		for (Object selectedObject : getStructuredSelection().toList()) {
+			if (selectedObject instanceof AbstractTask) {
+				AbstractTask task = (AbstractTask) selectedObject;
 
-					String description = "Cloned from: " + CopyTaskDetailsAction.getTextForTask(task);
-
-					final TaskSelection taskSelection;
-					RepositoryTaskData taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
-							task.getRepositoryUrl(), task.getTaskId());
-					if (taskData != null) {
-						taskSelection = new TaskSelection(taskData);
-						taskSelection.getLegacyTaskData().setDescription(
-								description + "\n\n> " + taskData.getDescription());
-					} else {
-						taskSelection = new TaskSelection(task);
-						if (task instanceof LocalTask) {
-							String notes = task.getNotes();
-							if (!"".equals(notes)) {
-								taskSelection.getLegacyTaskData().setDescription(description + "\n\n" + notes);
-							} else {
-								taskSelection.getLegacyTaskData().setDescription(description);
-							}
-						} else {
-							taskSelection.getLegacyTaskData().setDescription(description);
-						}
-					}
-
-					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-					if (!TasksUiUtil.openNewTaskEditor(shell, taskSelection, null)) {
-						// do not process other tasks if canceled
-						return;
+				String description = "Cloned from: " + CopyTaskDetailsAction.getTextForTask(task);
+				if (task instanceof LocalTask) {
+					String notes = task.getNotes();
+					if (!"".equals(notes)) {
+						description += "\n\n" + notes;
 					}
 				}
+
+				ITaskMapping taskSelection = new DefaultTaskMapping();
+				((DefaultTaskMapping) taskSelection).setDescription(description);
+
+				TaskData taskData;
+				try {
+					taskData = TasksUi.getTaskDataManager().getTaskData(task);
+				} catch (CoreException e) {
+					TasksUiInternal.displayStatus("Clone Task Failed", e.getStatus());
+					continue;
+				}
+
+				if (taskData != null) {
+					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
+					ITaskMapping mapping = connector.getTaskMapping(taskData);
+					if (mapping.getDescription() != null) {
+						((DefaultTaskMapping) taskSelection).setDescription(description + "\n\n"
+								+ mapping.getDescription());
+					}
+					mapping.merge(taskSelection);
+					taskSelection = mapping;
+				}
+
+				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+				if (!TasksUiUtil.openNewTaskEditor(shell, taskSelection, null)) {
+					// do not process other tasks if canceled
+					return;
+				}
 			}
-		} catch (NullPointerException e) {
-			// FIXME check for null instead?
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not remove task from category, it may still be refreshing.", e));
 		}
 	}
 
