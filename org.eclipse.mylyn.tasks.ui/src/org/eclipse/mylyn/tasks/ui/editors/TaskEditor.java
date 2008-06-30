@@ -560,6 +560,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				updateHeaderLabel(taskData);
 			}
 		}
+		setTitleToolTip(input.getToolTipText());
+		setPartName(input.getName());
 		installTitleDrag(getHeaderForm().getForm().getForm());
 	}
 
@@ -593,6 +595,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 
 		toolBarManager.update(true);
+
+		// XXX move this call
+		updateHeader();
 	}
 
 	private void updateHeaderImage(String connectorKind) {
