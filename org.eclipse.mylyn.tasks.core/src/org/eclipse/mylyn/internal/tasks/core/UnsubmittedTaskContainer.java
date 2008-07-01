@@ -10,44 +10,25 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
-public class UnsubmittedTaskContainer extends AbstractTaskCategory {
+public class UnsubmittedTaskContainer extends AutomaticRepositoryTaskContainer {
+
+	private static final String LABEL = "Unsubmitted";
 
 	private static final String HANDLE = "unsubmitted";
 
-	private String repositoryUrl;
-
-	private final String connectorKind;
-
 	public UnsubmittedTaskContainer(String connectorKind, String repositoryUrl) {
-		super(repositoryUrl + "-" + HANDLE);
-		this.repositoryUrl = repositoryUrl;
-		this.connectorKind = connectorKind;
-	}
-
-	/**
-	 * setting will also refactor handle
-	 */
-	public void setRepositoryUrl(String repositoryUrl) {
-		this.repositoryUrl = repositoryUrl;
-		this.setHandleIdentifier(repositoryUrl + "-" + HANDLE);
+		super(repositoryUrl + "-" + HANDLE, connectorKind, repositoryUrl);
 	}
 
 	@Override
-	public String getSummary() {
-		return "Unsubmitted [" + getRepositoryUrl() + "]";
+	public String getSummaryLabel() {
+		return LABEL;
 	}
 
 	@Override
-	public boolean isUserManaged() {
-		return false;
-	}
-
-	public String getRepositoryUrl() {
-		return repositoryUrl;
-	}
-
-	public String getConnectorKind() {
-		return connectorKind;
+	protected String getHandleSuffix() {
+		return HANDLE;
 	}
 }

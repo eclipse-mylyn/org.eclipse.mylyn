@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AutomaticRepositoryTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -170,15 +171,14 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (object instanceof TaskGroup) {
 			TaskGroup element = (TaskGroup) object;
 			return element.getSummary();// + " / " + element.getChildren().size();
-		} else if (object instanceof UnmatchedTaskContainer) {
-
-			UnmatchedTaskContainer container = (UnmatchedTaskContainer) object;
+		} else if (object instanceof AutomaticRepositoryTaskContainer) {
+			AutomaticRepositoryTaskContainer container = (AutomaticRepositoryTaskContainer) object;
 
 			String result = container.getSummary();
 			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(container.getConnectorKind(),
 					container.getRepositoryUrl());
 			if (repository != null) {
-				result = "Unmatched [" + repository.getRepositoryLabel() + "]";
+				result = container.getSummaryLabel() + " [" + repository.getRepositoryLabel() + "]";
 			}
 
 			return result;

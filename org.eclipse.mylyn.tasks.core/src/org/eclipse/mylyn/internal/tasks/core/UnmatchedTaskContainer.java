@@ -8,58 +8,30 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
-
 /**
  * Holds orphaned or uncategorized tasks for a given repository
  * 
  * @author Rob Elves
+ * @author Mik Kersten
  */
-public class UnmatchedTaskContainer extends AbstractTaskCategory {
+public class UnmatchedTaskContainer extends AutomaticRepositoryTaskContainer {
 
-	public static final String LABEL = "Uncategorized";
+	public static final String LABEL = "Unmatched";
 
 	public static final String HANDLE = "orphans";
 
-	private String repositoryUrl;
-
-	private final String connectorKind;
-
 	public UnmatchedTaskContainer(String connectorKind, String repositoryUrl) {
-		super(repositoryUrl + "-" + HANDLE);
-		this.repositoryUrl = repositoryUrl;
-		this.connectorKind = connectorKind;
+		super(repositoryUrl + "-" + HANDLE, connectorKind, repositoryUrl);
 	}
 
 	@Override
-	public String getPriority() {
-		return PriorityLevel.P1.toString();
+	public String getSummaryLabel() {
+		return LABEL;
 	}
 
 	@Override
-	public String getSummary() {
-		return "Unmatched [" + getRepositoryUrl() + "]";
-	}
-
-	@Override
-	public boolean isUserManaged() {
-		return false;
-	}
-
-	public String getRepositoryUrl() {
-		return repositoryUrl;
-	}
-
-	public String getConnectorKind() {
-		return connectorKind;
-	}
-
-	/**
-	 * setting will also refactor handle
-	 */
-	public void setRepositoryUrl(String repositoryUrl) {
-		this.repositoryUrl = repositoryUrl;
-		this.setHandleIdentifier(repositoryUrl + "-" + HANDLE);
+	protected String getHandleSuffix() {
+		return HANDLE;
 	}
 
 }
