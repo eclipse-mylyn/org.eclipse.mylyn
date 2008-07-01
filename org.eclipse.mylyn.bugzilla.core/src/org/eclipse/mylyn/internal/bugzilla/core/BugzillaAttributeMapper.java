@@ -193,6 +193,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			return BugzillaAttribute.COMPONENT.getKey();
 		} else if (key.equals(TaskAttribute.TASK_KEY)) {
 			return BugzillaAttribute.BUG_ID.getKey();
+		} else if (key.equals(TaskAttribute.DATE_DUE)) {
+			return BugzillaAttribute.DEADLINE.getKey();
 		}
 		return super.mapToRepositoryKey(parent, key);
 	}
