@@ -194,6 +194,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor PART_MAXIMIZE = create(T_TOOL, "maximize.png");
 
+	public static final ImageDescriptor PREVIEW_WEB = create(T_TOOL, "preview-web.png");
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
