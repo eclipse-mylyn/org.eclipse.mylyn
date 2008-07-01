@@ -94,7 +94,7 @@ public class ExternalizationManager {
 		}
 	}
 
-	private IStatus load(final IExternalizationParticipant participant, final IProgressMonitor monitor) {
+	public IStatus load(final IExternalizationParticipant participant, final IProgressMonitor monitor) {
 		final IStatus[] result = new IStatus[1];
 		final ExternalizationContext context = new ExternalizationContext(Kind.LOAD, rootFolderPath);
 		ISchedulingRule rule = participant.getSchedulingRule();
