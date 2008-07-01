@@ -19,6 +19,7 @@ public class AllTeamTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.team.tests");
 		//$JUnit-BEGIN$
+		suite.addTestSuite(TestSyncViewRefresh.class);
 		suite.addTestSuite(ChangeSetManagerTest.class);
 		suite.addTestSuite(CommitTemplateTest.class);
 		suite.addTestSuite(TeamPropertiesLinkProviderTest.class);
