@@ -104,8 +104,8 @@ public class TaskAttachmentPage extends WizardPage {
 			descriptionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 			descriptionText.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
-					validate();
 					taskAttachment.setDescription(descriptionText.getText().trim());
+					validate();
 				}
 
 			});
@@ -165,10 +165,10 @@ public class TaskAttachmentPage extends WizardPage {
 		 */
 		fileNameText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				validate();
 				// determine type by extension
 				taskAttachment.setFileName(fileNameText.getText());
 				setContentTypeFromFilename(fileNameText.getText());
+				validate();
 			}
 		});
 
