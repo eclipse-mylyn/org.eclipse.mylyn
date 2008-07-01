@@ -41,6 +41,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
@@ -51,11 +52,15 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
  */
 public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
+	private static final String TASK_DATA_VERSION = "2";
+
 	public static final String ATTRIBUTE_BLOCKED_BY = "blockedby";
 
 	public static final String ATTRIBUTE_BLOCKING = "blocking";
 
 	private static final String CC_DELIMETER = ", ";
+
+	private static final String TRAC_KEY = "tracKey";
 
 	private final TracRepositoryConnector connector;
 
@@ -94,6 +99,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 			IProgressMonitor monitor) throws CoreException {
 		TaskData taskData = new TaskData(getAttributeMapper(repository), TracCorePlugin.CONNECTOR_KIND,
 				repository.getRepositoryUrl(), ticket.getId() + "");
+		taskData.setVersion(TASK_DATA_VERSION);
 		try {
 			if (!TracRepositoryConnector.hasRichEditor(repository)) {
 				createDefaultAttributes(taskData, client, true);
@@ -280,19 +286,23 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 	private static void createAttribute(TaskData data, TracTicketField field) {
 		TaskAttribute attr = data.getRoot().createAttribute(field.getName());
-		attr.getMetaData().setLabel(field.getLabel());
-		attr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+		TaskAttributeMetaData metaData = attr.getMetaData();
+		metaData.defaults();
+		metaData.setLabel(field.getLabel());
+		metaData.setKind(TaskAttribute.KIND_DEFAULT);
+		metaData.setReadOnly(false);
+		metaData.putValue(TRAC_KEY, field.getName());
 		if (field.getType() == TracTicketField.Type.CHECKBOX) {
 			// attr.addOption("True", "1");
 			// attr.addOption("False", "0");
-			attr.getMetaData().setType(TaskAttribute.TYPE_BOOLEAN);
+			metaData.setType(TaskAttribute.TYPE_BOOLEAN);
 			attr.putOption("1", "1");
 			attr.putOption("0", "0");
 			if (field.getDefaultValue() != null) {
 				attr.setValue(field.getDefaultValue());
 			}
 		} else if (field.getType() == TracTicketField.Type.SELECT || field.getType() == TracTicketField.Type.RADIO) {
-			attr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+			metaData.setType(TaskAttribute.TYPE_SINGLE_SELECT);
 			String[] values = field.getOptions();
 			if (values != null && values.length > 0) {
 				if (field.isOptional()) {
@@ -317,7 +327,13 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 					}
 				}
 			}
+		} else if (field.getType() == TracTicketField.Type.TEXTAREA) {
+			metaData.setType(TaskAttribute.TYPE_LONG_TEXT);
+			if (field.getDefaultValue() != null) {
+				attr.setValue(field.getDefaultValue());
+			}
 		} else {
+			metaData.setType(TaskAttribute.TYPE_SHORT_TEXT);
 			if (field.getDefaultValue() != null) {
 				attr.setValue(field.getDefaultValue());
 			}
@@ -326,10 +342,12 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 
 	private static TaskAttribute createAttribute(TaskData data, TracAttribute tracAttribute) {
 		TaskAttribute attr = data.getRoot().createAttribute(tracAttribute.getTracKey());
-		attr.getMetaData().setType(tracAttribute.getType());
-		attr.getMetaData().setKind(tracAttribute.getKind());
-		attr.getMetaData().setLabel(tracAttribute.toString());
-		attr.getMetaData().setReadOnly(tracAttribute.isReadOnly());
+		TaskAttributeMetaData metaData = attr.getMetaData();
+		metaData.setType(tracAttribute.getType());
+		metaData.setKind(tracAttribute.getKind());
+		metaData.setLabel(tracAttribute.toString());
+		metaData.setReadOnly(tracAttribute.isReadOnly());
+		metaData.putValue(TRAC_KEY, tracAttribute.getTracKey());
 		return attr;
 	}
 
@@ -399,8 +417,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	public boolean initializeSubTaskData(TaskRepository repository, TaskData taskData, TaskData parentTaskData,
 			IProgressMonitor monitor) throws CoreException {
 		initializeTaskData(repository, taskData, null, monitor);
-		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(ATTRIBUTE_BLOCKING);
-		if (attribute == null) {
+		TaskAttribute blockingAttribute = taskData.getRoot().getMappedAttribute(ATTRIBUTE_BLOCKING);
+		if (blockingAttribute == null) {
 			throw new CoreException(new RepositoryStatus(repository, IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_REPOSITORY, "The repository does not support subtasks"));
 		}
@@ -409,7 +427,11 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		mapper.merge(new TaskMapper(parentTaskData));
 		mapper.setDescription("");
 		mapper.setSummary("");
-		attribute.setValue(parentTaskData.getTaskId());
+		blockingAttribute.setValue(parentTaskData.getTaskId());
+		TaskAttribute blockedByAttribute = taskData.getRoot().getMappedAttribute(ATTRIBUTE_BLOCKED_BY);
+		if (blockedByAttribute != null) {
+			blockedByAttribute.clearValues();
+		}
 		return true;
 	}
 
@@ -565,7 +587,19 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 						.setType(TaskAttribute.TYPE_LONG_RICH_TEXT)
 						.setReadOnly(false);
 			}
-			taskData.setVersion("1");
+		}
+		if (version < 2) {
+			List<TaskAttribute> attributes = new ArrayList<TaskAttribute>(taskData.getRoot().getAttributes().values());
+			for (TaskAttribute attribute : attributes) {
+				if (!TracAttributeMapper.isInternalAttribute(attribute)) {
+					TaskAttributeMetaData metaData = attribute.getMetaData();
+					metaData.putValue(TRAC_KEY, attribute.getId());
+					if (metaData.getType() == null) {
+						metaData.setType(TaskAttribute.TYPE_SHORT_TEXT);
+					}
+				}
+			}
+			taskData.setVersion(TASK_DATA_VERSION);
 		}
 	}
 
