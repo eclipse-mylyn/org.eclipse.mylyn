@@ -264,22 +264,25 @@ public class BugzillaProductPage extends WizardPage {
 				query = (IRepositoryQuery) element;
 			}
 
-			if (query != null) {
+			if (query != null && query.getConnectorKind().equals(BugzillaCorePlugin.CONNECTOR_KIND)) {
 				String queryUrl = query.getUrl();
 				queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1);
 				String[] options = queryUrl.split("&");
 
 				for (String option : options) {
-					String key = option.substring(0, option.indexOf("="));
-					if ("product".equals(key)) {
-						try {
-							products.add(URLDecoder.decode(option.substring(option.indexOf("=") + 1),
-									repository.getCharacterEncoding()));
-							// TODO: list box only accepts a single selection so
-							// we break on first found
-							break;
-						} catch (UnsupportedEncodingException ex) {
-							// ignore
+					int index = option.indexOf("=");
+					if (index != -1) {
+						String key = option.substring(0, index);
+						if ("product".equals(key)) {
+							try {
+								products.add(URLDecoder.decode(option.substring(index + 1),
+										repository.getCharacterEncoding()));
+								// TODO: list box only accepts a single selection so
+								// we break on first found
+								break;
+							} catch (UnsupportedEncodingException ex) {
+								// ignore
+							}
 						}
 					}
 				}
