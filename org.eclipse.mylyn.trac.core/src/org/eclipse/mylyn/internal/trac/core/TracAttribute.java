@@ -21,44 +21,40 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public enum TracAttribute {
 
-	CC(Key.CC, "CC:", TaskAttribute.USER_CC, TaskAttribute.TYPE_SHORT_TEXT, EnumSet.of(Flag.PEOPLE)),
+	CC(Key.CC, "CC:", TaskAttribute.USER_CC, TaskAttribute.TYPE_SHORT_TEXT, Flag.PEOPLE),
 
 	CHANGE_TIME(Key.CHANGE_TIME, "Last Modification:", TaskAttribute.DATE_MODIFICATION, TaskAttribute.TYPE_DATE,
-			EnumSet.of(Flag.READ_ONLY)),
+			Flag.READ_ONLY),
 
-	COMPONENT(Key.COMPONENT, "Component:", TaskAttribute.PRODUCT, TaskAttribute.TYPE_SINGLE_SELECT,
-			EnumSet.of(Flag.ATTRIBUTE)),
+	COMPONENT(Key.COMPONENT, "Component:", TaskAttribute.PRODUCT, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
 	DESCRIPTION(Key.DESCRIPTION, "Description:", TaskAttribute.DESCRIPTION, TaskAttribute.TYPE_LONG_RICH_TEXT),
 
-	ID(Key.ID, "ID:", TaskAttribute.TASK_KEY, TaskAttribute.TYPE_SHORT_TEXT, EnumSet.of(Flag.PEOPLE)),
+	ID(Key.ID, "ID:", TaskAttribute.TASK_KEY, TaskAttribute.TYPE_SHORT_TEXT, Flag.PEOPLE),
 
-	KEYWORDS(Key.KEYWORDS, "Keywords:", TaskAttribute.KEYWORDS, TaskAttribute.TYPE_SHORT_TEXT,
-			EnumSet.of(Flag.ATTRIBUTE)),
+	KEYWORDS(Key.KEYWORDS, "Keywords:", TaskAttribute.KEYWORDS, TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE),
 
-	MILESTONE(Key.MILESTONE, "Milestone:", null, TaskAttribute.TYPE_SINGLE_SELECT, EnumSet.of(Flag.ATTRIBUTE)),
+	MILESTONE(Key.MILESTONE, "Milestone:", null, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
-	OWNER(Key.OWNER, "Assigned to:", TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, EnumSet.of(Flag.PEOPLE)),
+	OWNER(Key.OWNER, "Assigned to:", TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, Flag.PEOPLE),
 
-	PRIORITY(Key.PRIORITY, "Priority:", TaskAttribute.PRIORITY, TaskAttribute.TYPE_SINGLE_SELECT,
-			EnumSet.of(Flag.ATTRIBUTE)),
+	PRIORITY(Key.PRIORITY, "Priority:", TaskAttribute.PRIORITY, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
-	REPORTER(Key.REPORTER, "Reporter:", TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON,
-			EnumSet.of(Flag.READ_ONLY)),
+	REPORTER(Key.REPORTER, "Reporter:", TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, Flag.READ_ONLY),
 
 	RESOLUTION(Key.RESOLUTION, "Resolution:", TaskAttribute.RESOLUTION, TaskAttribute.TYPE_SINGLE_SELECT),
 
-	SEVERITY(Key.SEVERITY, "Severity:", null, TaskAttribute.TYPE_SINGLE_SELECT, EnumSet.of(Flag.ATTRIBUTE)),
+	SEVERITY(Key.SEVERITY, "Severity:", null, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
 	STATUS(Key.STATUS, "Status:", TaskAttribute.STATUS, TaskAttribute.TYPE_SHORT_TEXT),
 
 	SUMMARY(Key.SUMMARY, "Summary:", TaskAttribute.SUMMARY, TaskAttribute.TYPE_SHORT_RICH_TEXT),
 
-	TIME(Key.TIME, "Created:", TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATE, EnumSet.of(Flag.READ_ONLY)),
+	TIME(Key.TIME, "Created:", TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATE, Flag.READ_ONLY),
 
-	TYPE(Key.TYPE, "Type:", TaskAttribute.TASK_KIND, TaskAttribute.TYPE_SINGLE_SELECT, EnumSet.of(Flag.ATTRIBUTE)),
+	TYPE(Key.TYPE, "Type:", TaskAttribute.TASK_KIND, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
-	VERSION(Key.VERSION, "Version:", null, TaskAttribute.TYPE_SINGLE_SELECT, EnumSet.of(Flag.ATTRIBUTE));
+	VERSION(Key.VERSION, "Version:", null, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
 	static Map<String, TracAttribute> attributeByTracKey = new HashMap<String, TracAttribute>();
 
@@ -92,16 +88,20 @@ public enum TracAttribute {
 		return null;
 	}
 
-	TracAttribute(Key tracKey, String prettyName, String taskKey, String type, EnumSet<Flag> flags) {
+	TracAttribute(Key tracKey, String prettyName, String taskKey, String type, Flag firstFlag, Flag... moreFlags) {
 		this.tracKey = tracKey.getKey();
 		this.taskKey = taskKey;
 		this.prettyName = prettyName;
 		this.type = type;
-		this.flags = flags;
+		if (firstFlag == null) {
+			this.flags = TracAttributeMapper.NO_FLAGS;
+		} else {
+			this.flags = EnumSet.of(firstFlag, moreFlags);
+		}
 	}
 
 	TracAttribute(Key tracKey, String prettyName, String taskKey, String type) {
-		this(tracKey, prettyName, taskKey, type, TracAttributeMapper.NO_FLAGS);
+		this(tracKey, prettyName, taskKey, type, null);
 	}
 
 	public String getTaskKey() {
