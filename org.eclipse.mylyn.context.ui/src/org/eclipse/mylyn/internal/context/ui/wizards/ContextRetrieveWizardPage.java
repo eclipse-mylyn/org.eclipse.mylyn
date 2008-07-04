@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -143,7 +144,10 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		for (ITaskAttachment attachment : contextAttachments) {
 			TableItem item = new TableItem(contextTable, SWT.NONE);
 			item.setText(0, DateFormat.getInstance().format(attachment.getCreationDate()));
-			item.setText(1, attachment.getAuthor().getName());
+			IRepositoryPerson author = attachment.getAuthor();
+			if (author != null) {
+				item.setText(1, author.toString());
+			}
 			item.setText(2, attachment.getDescription());
 			item.setData(attachment);
 		}
