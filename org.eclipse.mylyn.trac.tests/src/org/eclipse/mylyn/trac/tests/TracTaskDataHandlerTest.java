@@ -38,6 +38,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
@@ -241,6 +242,34 @@ public class TracTaskDataHandlerTest extends TestCase {
 		Date newLastModified = task.getModificationDate();
 		assertTrue("Expected " + newLastModified + " to be more recent than " + lastModified,
 				newLastModified.after(lastModified));
+	}
+
+	public void testAttachmentUrlEncoding010() throws Exception {
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
+		attachmentUrlEncoding();
+	}
+
+	public void testAttachmentUrlEncoding011() throws Exception {
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
+		attachmentUrlEncoding();
+	}
+
+	private void attachmentUrlEncoding() throws Exception {
+		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+		TracTicket ticket = TracTestUtil.createTicket(client, "attachment url test");
+		ITask task = TracTestUtil.createTask(repository, ticket.getId() + "");
+		attachmentHandler.postContent(repository, task, new TextTaskAttachmentSource("abc") {
+			@Override
+			public String getName() {
+				return "https%3A%2F%2Fbugs.eclipse.org%2Fbugs.xml.zip";
+			}
+		}, "comment", null, null);
+
+		task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
+		List<ITaskAttachment> attachments = TracTestUtil.getTaskAttachments(task);
+		assertEquals(1, attachments.size());
+		assertEquals(repository.getUrl() + "/attachment/ticket/" + ticket.getId()
+				+ "/https%253A%252F%252Fbugs.eclipse.org%252Fbugs.xml.zip", attachments.get(0).getUrl());
 	}
 
 	public void testPostTaskDataInvalidCredentials010() throws Exception {

@@ -8,6 +8,8 @@
 
 package org.eclipse.mylyn.internal.trac.core.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IStatus;
@@ -75,6 +77,14 @@ public class TracUtil {
 	public static IStatus createPermissionDeniedError(String repositoryUrl, String pluginId) {
 		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
 				RepositoryStatus.ERROR_PERMISSION_DENIED, "Permission denied.");
+	}
+
+	public static String encode(String string) {
+		try {
+			return URLEncoder.encode(string, ITracClient.CHARSET);
+		} catch (UnsupportedEncodingException e) {
+			return string;
+		}
 	}
 
 }

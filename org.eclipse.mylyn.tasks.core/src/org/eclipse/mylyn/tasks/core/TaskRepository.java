@@ -512,10 +512,6 @@ public final class TaskRepository extends PlatformObject {
 		return timeZoneId == null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
 	}
 
-	/**
-	 * @deprecated Use {@link #getRepositoryUrl()} instead
-	 */
-	@Deprecated
 	public String getUrl() {
 		return getRepositoryUrl();
 	}
