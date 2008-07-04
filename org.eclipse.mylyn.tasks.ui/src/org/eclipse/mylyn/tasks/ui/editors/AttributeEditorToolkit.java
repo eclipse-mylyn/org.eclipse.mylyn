@@ -18,6 +18,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -159,6 +160,24 @@ public class AttributeEditorToolkit {
 				viewer.getControl().setMenu(menu);
 			}
 			EditorUtil.setTextViewer(editor.getControl(), viewer);
+		} else {
+			final TextViewer viewer = EditorUtil.getTextViewer(editor.getControl());
+			if (viewer != null) {
+				if (selectionChangedListener != null) {
+					viewer.addSelectionChangedListener(selectionChangedListener);
+					viewer.addTextListener(new ITextListener() {
+						public void textChanged(TextEvent event) {
+							if (selectionChangedListener != null) {
+								selectionChangedListener.selectionChanged(new SelectionChangedEvent(viewer,
+										viewer.getSelection()));
+							}
+						}
+					});
+				}
+				if (menu != null) {
+					viewer.getControl().setMenu(menu);
+				}
+			}
 		}
 
 		// for outline

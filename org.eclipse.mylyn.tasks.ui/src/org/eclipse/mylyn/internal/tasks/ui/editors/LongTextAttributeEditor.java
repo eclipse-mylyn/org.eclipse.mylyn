@@ -45,6 +45,9 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 		final StyledText text = viewer.getTextWidget();
 		toolkit.adapt(text, false, false);
 
+		// enable cut/copy/paste
+		EditorUtil.setTextViewer(text, viewer);
+
 		if (isReadOnly()) {
 			viewer.setEditable(false);
 		} else {
