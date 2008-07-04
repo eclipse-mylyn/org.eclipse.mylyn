@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -49,6 +50,10 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 		this.notifications = notifications;
 	}
 
+	public List<AbstractNotification> getNotifications() {
+		return new ArrayList<AbstractNotification>(notifications);
+	}
+
 	@Override
 	protected void createTitleArea(Composite parent) {
 		super.createTitleArea(parent);
@@ -81,8 +86,8 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 					}
 				}
 
-				final TaskHyperlink itemLink = new TaskHyperlink(notificationComposite, SWT.BEGINNING
-						| SWT.WRAP | SWT.NO_FOCUS);
+				final TaskHyperlink itemLink = new TaskHyperlink(notificationComposite, SWT.BEGINNING | SWT.WRAP
+						| SWT.NO_FOCUS);
 				itemLink.setText(notification.getLabel());
 				itemLink.setImage(notification.getNotificationImage());
 				itemLink.setBackground(parent.getBackground());

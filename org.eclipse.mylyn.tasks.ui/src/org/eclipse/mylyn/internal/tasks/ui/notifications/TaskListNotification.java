@@ -37,9 +37,16 @@ public class TaskListNotification extends AbstractNotification {
 	private final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(
 			new TaskElementLabelProvider(true), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
+	private final Object token;
+
 	public TaskListNotification(ITask task) {
+		this(task, null);
+	}
+
+	public TaskListNotification(ITask task, Object token) {
 		Assert.isNotNull(task);
 		this.task = task;
+		this.token = token;
 	}
 
 	@Override
@@ -162,4 +169,10 @@ public class TaskListNotification extends AbstractNotification {
 		}
 		return null;
 	}
+
+	@Override
+	public Object getToken() {
+		return token;
+	}
+
 }

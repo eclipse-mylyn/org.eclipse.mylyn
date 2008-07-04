@@ -48,15 +48,15 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 		this.taskDataManager.addListener(this);
 	}
 
-	public TaskListNotification getNotification(ITask task) {
+	public TaskListNotification getNotification(ITask task, Object token) {
 		if (task.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
-			TaskListNotification notification = new TaskListNotification(task);
+			TaskListNotification notification = new TaskListNotification(task, token);
 			notification.setDescription("New unread task");
 			return notification;
 		} else if (task.getSynchronizationState() == SynchronizationState.INCOMING) {
 			TaskDataDiff diff = getDiff(task);
 			if (diff != null) {
-				TaskListNotification notification = new TaskListNotification(task);
+				TaskListNotification notification = new TaskListNotification(task, token);
 				notification.setDescription(diff.toString());
 				return notification;
 			}
@@ -81,11 +81,11 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 	}
 
 	public void taskDataUpdated(TaskDataManagerEvent event) {
-		if (event.getToken() != null) {
+		if (event.getToken() != null && event.getTaskDataChanged()) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUi.getRepositoryConnectorUi(event.getTaskData()
 					.getConnectorKind());
 			if (!connectorUi.hasCustomNotifications()) {
-				TaskListNotification notification = getNotification(event.getTask());
+				TaskListNotification notification = getNotification(event.getTask(), event.getToken());
 				if (notification != null) {
 					synchronized (notificationQueue) {
 						notificationQueue.add(notification);

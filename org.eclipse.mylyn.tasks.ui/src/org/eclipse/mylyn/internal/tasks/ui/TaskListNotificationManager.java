@@ -11,8 +11,10 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -21,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationPopup;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -46,6 +49,8 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private final List<ITaskListNotificationProvider> notificationProviders = new ArrayList<ITaskListNotificationProvider>();
 
+	private final WeakHashMap<Object, Object> cancelledTokens = new WeakHashMap<Object, Object>();
+
 	private final Job openJob = new Job(OPEN_NOTIFICATION_JOB) {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
@@ -58,6 +63,24 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 						public void run() {
 							collectNotifications();
+
+							if (popup != null && popup.getReturnCode() == Window.CANCEL) {
+								List<AbstractNotification> notifications = popup.getNotifications();
+								for (AbstractNotification notification : notifications) {
+									if (notification.getToken() != null) {
+										cancelledTokens.put(notification.getToken(), null);
+									}
+								}
+							}
+
+							for (Iterator<AbstractNotification> it = currentlyNotifying.iterator(); it.hasNext();) {
+								AbstractNotification notification = it.next();
+								if (notification.getToken() != null
+										&& cancelledTokens.containsKey(notification.getToken())) {
+									it.remove();
+								}
+							}
+
 							synchronized (TaskListNotificationManager.class) {
 								if (currentlyNotifying.size() > 0) {
 //										popup.close();
@@ -112,9 +135,8 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 	}
 
 	public void startNotification(long initialStartupTime) {
-		if (TasksUiPlugin.getDefault()
-				.getPreferenceStore()
-				.getBoolean(ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
+		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED)) {
 			if (!openJob.cancel()) {
 				try {
 					openJob.join();
