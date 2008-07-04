@@ -82,21 +82,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 					updateRepositoryConfiguration(repository, connector, new SubProgressMonitor(monitor, 20));
 				}
 
-				SynchronizeQueriesJob job = new SynchronizeQueriesJob(taskList, taskDataManager, tasksModel, connector,
-						repository, queries) {
-					@Override
-					public boolean belongsTo(Object family) {
-						return SynchronizeRepositoriesJob.this.family == family;
-					}
-				};
-				job.setUser(isUser());
-				job.setFullSynchronization(true);
-				job.setPriority(Job.DECORATE);
-				if (isUser()) {
-					job.schedule();
-				} else {
-					job.run(new SubProgressMonitor(monitor, 80));
-				}
+				updateQueries(repository, connector, queries, monitor);
 			}
 
 			// it's better to remove the job from the progress view instead of having it blocked until all child jobs finish
@@ -109,6 +95,32 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			monitor.done();
 		}
 		return Status.OK_STATUS;
+	}
+
+	private void updateQueries(TaskRepository repository, final AbstractRepositoryConnector connector,
+			Set<RepositoryQuery> queries, IProgressMonitor monitor) {
+		if (isUser()) {
+			for (RepositoryQuery query : queries) {
+				query.setSynchronizing(true);
+			}
+			taskList.notifySynchronizationStateChanged(queries);
+		}
+
+		SynchronizeQueriesJob job = new SynchronizeQueriesJob(taskList, taskDataManager, tasksModel, connector,
+				repository, queries) {
+			@Override
+			public boolean belongsTo(Object family) {
+				return SynchronizeRepositoriesJob.this.family == family;
+			}
+		};
+		job.setUser(isUser());
+		job.setFullSynchronization(true);
+		job.setPriority(Job.DECORATE);
+		if (isUser()) {
+			job.schedule();
+		} else {
+			job.run(new SubProgressMonitor(monitor, 80));
+		}
 	}
 
 	public Object getFamily() {

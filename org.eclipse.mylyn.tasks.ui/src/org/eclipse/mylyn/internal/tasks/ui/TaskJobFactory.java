@@ -96,7 +96,6 @@ public class TaskJobFactory implements ITaskJobFactory {
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.DECORATE);
 		job.addJobChangeListener(new JobChangeAdapter() {
-
 			@Override
 			public void done(IJobChangeEvent event) {
 				// XXX: since the Task List does not properly refresh parent
