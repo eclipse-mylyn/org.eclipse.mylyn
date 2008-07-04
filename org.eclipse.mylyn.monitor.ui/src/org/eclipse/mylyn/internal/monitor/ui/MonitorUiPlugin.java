@@ -416,11 +416,18 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			new MonitorUiExtensionPointReader().initExtensions();
 
 			activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
-			activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
-					ActivityContextManager.ACTIVITY_TIMEOUT));
+
+			if (getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
+				activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
+						ActivityContextManager.ACTIVITY_TIMEOUT));
+			} else {
+				activityContextManager.setInactivityTimeout(0);
+			}
+
 			if (getPreferenceStore().getBoolean(PREF_USER_ACTIVITY_ENABLED)) {
 				activityContextManager.start();
 			}
+
 			getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 
 		} catch (Exception e) {
