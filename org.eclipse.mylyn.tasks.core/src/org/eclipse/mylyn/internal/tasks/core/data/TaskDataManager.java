@@ -137,6 +137,10 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	public ITaskDataWorkingCopy getWorkingCopy(final ITask itask) throws CoreException {
+		return getWorkingCopy(itask, true);
+	}
+
+	public ITaskDataWorkingCopy getWorkingCopy(final ITask itask, final boolean markRead) throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
 		final String kind = task.getConnectorKind();
@@ -154,18 +158,20 @@ public class TaskDataManager implements ITaskDataManager {
 				}
 				state.init(TaskDataManager.this, task);
 				state.revert();
-				switch (task.getSynchronizationState()) {
-				case INCOMING:
-				case INCOMING_NEW:
-					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-					// XXX legacy support for showing correct synchronization decoration in task list
-					task.setLastReadTimeStamp(new Date().toString());
-					break;
-				case CONFLICT:
-					task.setSynchronizationState(SynchronizationState.OUTGOING);
-					break;
+				if (markRead) {
+					switch (task.getSynchronizationState()) {
+					case INCOMING:
+					case INCOMING_NEW:
+						task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+						// XXX legacy support for showing correct synchronization decoration in task list
+						task.setLastReadTimeStamp(new Date().toString());
+						break;
+					case CONFLICT:
+						task.setSynchronizationState(SynchronizationState.OUTGOING);
+						break;
+					}
+					task.setMarkReadPending(true);
 				}
-				task.setMarkReadPending(true);
 				result[0] = state;
 			}
 		});
