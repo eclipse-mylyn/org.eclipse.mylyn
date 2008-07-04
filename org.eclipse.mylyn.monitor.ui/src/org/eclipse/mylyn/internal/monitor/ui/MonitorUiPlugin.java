@@ -88,17 +88,9 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
 
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-			if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT)) {
-				activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
-						ActivityContextManager.ACTIVITY_TIMEOUT));
-			} else if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
-				if (getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
-					activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
-							ActivityContextManager.ACTIVITY_TIMEOUT));
-				} else {
-					activityContextManager.setInactivityTimeout(0);
-				}
-
+			if (event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT)
+					|| event.getProperty().equals(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
+				updateActivityTimout();
 			} else if (event.getProperty().equals(PREF_USER_ACTIVITY_ENABLED)) {
 				if (getPreferenceStore().getBoolean(PREF_USER_ACTIVITY_ENABLED)) {
 					activityContextManager.start();
@@ -417,12 +409,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 			activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
 
-			if (getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
-				activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
-						ActivityContextManager.ACTIVITY_TIMEOUT));
-			} else {
-				activityContextManager.setInactivityTimeout(0);
-			}
+			updateActivityTimout();
 
 			if (getPreferenceStore().getBoolean(PREF_USER_ACTIVITY_ENABLED)) {
 				activityContextManager.start();
@@ -432,6 +419,15 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e));
+		}
+	}
+
+	private void updateActivityTimout() {
+		if (getPreferenceStore().getBoolean(ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED)) {
+			activityContextManager.setInactivityTimeout(getPreferenceStore().getInt(
+					ActivityContextManager.ACTIVITY_TIMEOUT));
+		} else {
+			activityContextManager.setInactivityTimeout(0);
 		}
 	}
 }
