@@ -59,8 +59,7 @@ public class DatePicker extends Composite {
 
 	private final List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 
-	private final SimpleDateFormat simpleDateFormat = (SimpleDateFormat) DateFormat.getDateTimeInstance(
-			DateFormat.MEDIUM, DateFormat.SHORT);
+	private DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 
 	private String initialText = LABEL_CHOOSE;
 
@@ -78,8 +77,16 @@ public class DatePicker extends Composite {
 		initialize((style & SWT.FLAT) != 0 ? SWT.FLAT : 0);
 	}
 
+	public DateFormat getDateFormat() {
+		return dateFormat;
+	}
+
 	public void setDatePattern(String pattern) {
-		simpleDateFormat.applyPattern(pattern);
+		this.dateFormat = new SimpleDateFormat(pattern);
+	}
+
+	public void setDateFormat(DateFormat dateFormat) {
+		this.dateFormat = dateFormat;
 	}
 
 	private void initialize(int style) {
@@ -115,7 +122,7 @@ public class DatePicker extends Composite {
 			public void focusLost(FocusEvent e) {
 				Date reminderDate;
 				try {
-					reminderDate = simpleDateFormat.parse(dateText.getText());
+					reminderDate = dateFormat.parse(dateText.getText());
 					calendar.setTime(reminderDate);
 					date = calendar;
 					updateDateText();
@@ -268,7 +275,7 @@ public class DatePicker extends Composite {
 	private void updateDateText() {
 		if (date != null) {
 			Date currentDate = new Date(date.getTimeInMillis());
-			dateText.setText(simpleDateFormat.format(currentDate));
+			dateText.setText(dateFormat.format(currentDate));
 		} else {
 			dateText.setEnabled(false);
 			dateText.setText(LABEL_CHOOSE);
