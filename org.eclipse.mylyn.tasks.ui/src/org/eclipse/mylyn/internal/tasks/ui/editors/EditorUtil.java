@@ -201,12 +201,20 @@ public class EditorUtil {
 		}
 	}
 
+	static DateFormat getDateFormat() {
+		return DateFormat.getDateInstance(DateFormat.MEDIUM);
+	}
+
 	static String formatDate(Date date) {
-		return DateFormat.getDateInstance(DateFormat.MEDIUM).format(date);
+		return getDateFormat().format(date);
 	}
 
 	static String formatDateTime(Date date) {
-		return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(date);
+		return getDateTimeFormat().format(date);
+	}
+
+	static DateFormat getDateTimeFormat() {
+		return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 	}
 
 	public static Control getFocusControl(IFormPage page) {

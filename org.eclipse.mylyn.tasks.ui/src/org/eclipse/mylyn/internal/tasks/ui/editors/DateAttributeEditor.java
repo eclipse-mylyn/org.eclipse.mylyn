@@ -59,9 +59,13 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			dateWithClearComposite.setLayout(layout);
 
 			datePicker = new DatePicker(dateWithClearComposite, SWT.BORDER | SWT.FLAT, getTextValue(), false, 0);
-			datePicker.setEnabled(!isReadOnly());
 			datePicker.setFont(EditorUtil.TEXT_FONT);
-			//datePicker.setDatePattern(EditorUtil.DATE_FORMAT);
+			datePicker.setDateFormat(EditorUtil.getDateFormat());
+			if (getValue() != null) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(getValue());
+				datePicker.setDate(cal);
+			}
 			datePicker.addPickerSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
