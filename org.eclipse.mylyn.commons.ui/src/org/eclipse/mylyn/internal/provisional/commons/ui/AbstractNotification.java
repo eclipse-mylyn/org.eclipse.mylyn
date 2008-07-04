@@ -33,4 +33,8 @@ public abstract class AbstractNotification implements Comparable<AbstractNotific
 
 	public abstract void setDate(Date date);
 
+	public Object getToken() {
+		return null;
+	}
+
 }

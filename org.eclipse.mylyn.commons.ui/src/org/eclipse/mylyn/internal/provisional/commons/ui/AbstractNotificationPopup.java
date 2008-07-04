@@ -236,6 +236,7 @@ public abstract class AbstractNotificationPopup extends Window {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				close();
+				setReturnCode(CANCEL);
 			}
 
 		});
