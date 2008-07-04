@@ -265,7 +265,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 			}
 		}, "comment", null, null);
 
-		task = TracTestUtil.createTask(repository, data.attachmentTicketId + "");
+		task = TracTestUtil.createTask(repository, ticket.getId() + "");
 		List<ITaskAttachment> attachments = TracTestUtil.getTaskAttachments(task);
 		assertEquals(1, attachments.size());
 		assertEquals(repository.getUrl() + "/attachment/ticket/" + ticket.getId()
