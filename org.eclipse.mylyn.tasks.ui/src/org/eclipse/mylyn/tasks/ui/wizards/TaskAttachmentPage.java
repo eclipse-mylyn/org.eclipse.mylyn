@@ -279,8 +279,8 @@ public class TaskAttachmentPage extends WizardPage {
 		if (visible) {
 			if (fileNameText.getText().length() == 0) {
 				setFilePath(getModel().getSource().getName());
+				setContentType(getModel().getSource().getContentType());
 			}
-			setContentType(getModel().getSource().getContentType());
 		}
 		super.setVisible(visible);
 		if (first) {

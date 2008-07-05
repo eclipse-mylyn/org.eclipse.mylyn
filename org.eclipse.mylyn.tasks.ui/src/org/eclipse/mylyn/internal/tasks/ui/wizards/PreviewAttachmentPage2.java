@@ -26,6 +26,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -55,6 +56,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Jeff Pound
  * @author Steffen Pingel
  */
+// TODO 3.1 rename to PreviewAttachmentPage
 public class PreviewAttachmentPage2 extends WizardPage {
 
 	private static final String DESCRIPTION = "Review the attachment before submitting";
@@ -155,8 +157,14 @@ public class PreviewAttachmentPage2 extends WizardPage {
 	private void createGenericPreview(Composite composite) {
 		Label label = new Label(composite, SWT.NONE);
 		label.setLayoutData(new GridData(GridData.FILL_BOTH));
-		label.setText("Attaching File '" + model.getSource().getName() + "'\nA preview the type '"
-				+ model.getContentType() + "' is currently not available");
+		// TODO 3.1 put filename on model
+		String name = model.getSource().getName();
+		TaskAttachmentMapper taskAttachment = TaskAttachmentMapper.createFrom(model.getAttribute());
+		if (taskAttachment.getFileName() != null) {
+			name = taskAttachment.getFileName();
+		}
+		label.setText("Attaching File '" + name + "'\nA preview the type '" + model.getContentType()
+				+ "' is currently not available");
 	}
 
 	private void createImagePreview(Composite composite, final Image bufferedImage) {
