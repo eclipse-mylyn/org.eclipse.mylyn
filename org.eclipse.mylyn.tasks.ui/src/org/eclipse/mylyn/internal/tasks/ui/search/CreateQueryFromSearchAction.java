@@ -14,9 +14,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -40,9 +40,9 @@ public class CreateQueryFromSearchAction extends Action {
 	 * Constructor
 	 * 
 	 * @param text
-	 * 		The text for this action
+	 *            The text for this action
 	 * @param resultView
-	 * 		The <code>RepositorySearchResultView</code> this action works on
+	 *            The <code>RepositorySearchResultView</code> this action works on
 	 */
 	public CreateQueryFromSearchAction(String text, RepositorySearchResultView resultView) {
 		setText(text);
@@ -61,8 +61,8 @@ public class CreateQueryFromSearchAction extends Action {
 			if (structuredSelection.getFirstElement() instanceof ITask) {
 				ISearchQuery[] queries = NewSearchUI.getQueries();
 				ITask task = (ITask) structuredSelection.getFirstElement();
-				AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUi.getRepositoryManager()
-						.getRepositoryConnector(task.getConnectorKind());
+				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+						task.getConnectorKind());
 				if (queries.length != 0 && connector != null) {
 					SearchHitCollector searchHitCollector = (SearchHitCollector) queries[0];
 					IRepositoryQuery query = searchHitCollector.getRepositoryQuery();
