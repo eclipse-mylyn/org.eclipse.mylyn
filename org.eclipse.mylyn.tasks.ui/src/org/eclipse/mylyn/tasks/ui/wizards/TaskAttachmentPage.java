@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -116,6 +115,12 @@ public class TaskAttachmentPage extends WizardPage {
 		label.setText("Comment");
 		commentText = new Text(composite, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		commentText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		commentText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				apply();
+			}
+
+		});
 
 		new Label(composite, SWT.NONE).setText("Content Type");// .setBackground(parent.getBackground());
 
@@ -137,6 +142,7 @@ public class TaskAttachmentPage extends WizardPage {
 
 			public void widgetSelected(SelectionEvent e) {
 				taskAttachment.setContentType(contentTypeList.getItem(contentTypeList.getSelectionIndex()));
+				validate();
 			}
 		});
 		contentTypeList.select(0);
@@ -195,6 +201,7 @@ public class TaskAttachmentPage extends WizardPage {
 					contentTypeList.setEnabled(true);
 					contentTypeList.select(lastSelected);
 				}
+				validate();
 			}
 		});
 
@@ -209,14 +216,15 @@ public class TaskAttachmentPage extends WizardPage {
 	}
 
 	private void validate() {
+		apply();
 		if (fileNameText != null && "".equals(fileNameText.getText().trim())) {
-			setErrorMessage("File name is empty");
+			setMessage("Enter a file name");
 			setPageComplete(false);
 		} else if (descriptionText != null && "".equals(descriptionText.getText().trim())) {
-			setErrorMessage("Description is empty");
+			setMessage("Enter a description");
 			setPageComplete(false);
 		} else {
-			setErrorMessage(null);
+			setMessage("Verify the content type of the attachment");
 			setPageComplete(true);
 		}
 	}
@@ -225,13 +233,11 @@ public class TaskAttachmentPage extends WizardPage {
 		return model;
 	}
 
-	@Override
-	public IWizardPage getNextPage() {
+	private void apply() {
 		taskAttachment.applyTo(model.getAttribute());
 		model.setComment(commentText.getText());
 		model.setAttachContext(attachContextButton.getSelection());
 		model.setContentType(taskAttachment.getContentType());
-		return super.getNextPage();
 	}
 
 	private void setContentType(String contentType) {
@@ -240,6 +246,7 @@ public class TaskAttachmentPage extends WizardPage {
 			if (typeList[i].equals(contentType)) {
 				contentTypeList.select(i);
 				taskAttachment.setContentType(contentType);
+				validate();
 				break;
 			}
 		}
@@ -259,15 +266,11 @@ public class TaskAttachmentPage extends WizardPage {
 				attachContextButton.setSelection(true);
 			}
 		}
+		validate();
 	}
 
 	public void setNeedsDescription(boolean supportsDescription) {
 		this.needsDescription = supportsDescription;
-		if (supportsDescription) {
-			setMessage("Enter a description and verify the content type of the attachment");
-		} else {
-			setMessage("Verify the content type of the attachment");
-		}
 	}
 
 	public boolean supportsDescription() {
