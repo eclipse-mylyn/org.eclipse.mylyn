@@ -5,6 +5,7 @@ BUILD_ROOT=$(cd $(dirname $0); pwd)
 
 source $BUILD_ROOT/local.sh
 
+POSTFIX=e33
 BUILD_HOME=$BUILD_ROOT/3.3/build
 
 mkdir -p $BUILD_HOME/maps
@@ -18,7 +19,10 @@ $JAVA_HOME/bin/java \
  -Dbase=$BUILD_ROOT/3.3 \
  -DbaseLocation=$ECLIPSE_HOME_3_3 \
  -Dbuilder=$BUILD_ROOT/3.3/config \
- -DforceContextQualifier=$QUALIFIER \
+ -DforceContextQualifier=$QUALIFIER-$POSTFIX \
  -DmajorVersion=$MAJOR_VERSION \
  $*
+mv $BUILD_ROOT/3.3/build/mylyn-$MAJOR_VERSION.$QUALIFIER-$POSTFIX-e3.3.zip $BUILD_ROOT/3.3/build/mylyn-$MAJOR_VERSION.$QUALIFIER-e3.3.zip
+#mv $BUILD_ROOT/3.3/build/mylyn-$MAJOR_VERSION.$QUALIFIER-$POSTFIX-extras.zip $BUILD_ROOT/3.3/build/mylyn-$MAJOR_VERSION.$QUALIFIER-extras.zip
+#mv $BUILD_ROOT/3.3/build/mylyn-$MAJOR_VERSION.$QUALIFIER-$POSTFIX-incubator.zip $BUILD_ROOT/3.3/build/mylyn-$MAJOR_VERSION.$QUALIFIER-incubator.zip
 

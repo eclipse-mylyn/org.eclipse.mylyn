@@ -41,7 +41,7 @@ $JAVA_HOME/bin/java \
  -noDefaultIUs
 }
 
-pack $BUILD_ROOT/3.3/build/standardUpdateSite "Mylyn"
-pack $BUILD_ROOT/3.4/build/standardUpdateSite "Mylyn"
-pack $BUILD_ROOT/3.4/build/extrasUpdateSite "Mylyn Extras"
-pack $BUILD_ROOT/3.4/build/incubatorUpdateSite "Mylyn Incubator"
+pack $BUILD_ROOT/3.3/build/standardUpdateSite "Mylyn Weekly for Eclipse 3.3"
+pack $BUILD_ROOT/3.4/build/standardUpdateSite "Mylyn Weekly for Eclipse 3.4"
+pack $BUILD_ROOT/3.4/build/extrasUpdateSite "Mylyn Weekly Extras"
+pack $BUILD_ROOT/3.4/build/incubatorUpdateSite "Mylyn Weekly Incubator"
