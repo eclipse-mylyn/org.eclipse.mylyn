@@ -10,9 +10,9 @@ fi
 BUILD_ROOT=$(cd $(dirname $0); pwd)
 source $BUILD_ROOT/local.sh
 
+SITE_ARCHIVE=$BUILD_ROOT/site.zip
 SITE=$BUILD_ROOT/tmp/site
 
-SITE_ARCHIVE=$BUILD_ROOT/site.zip
 if [ "$2" != "-extract" ]
 then
   rm -r $SITE || true
