@@ -1308,6 +1308,18 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+ENTER">
       </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskComplete"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+C">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.markTaskIncomplete"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+I">
+      </key>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
