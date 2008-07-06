@@ -1494,7 +1494,7 @@
                <iterate>
                   <or>
                      <instanceof
-                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
+                           value="org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer">
                      </instanceof>
                   </or>
                </iterate>
@@ -1547,11 +1547,16 @@
                <visibleWhen
                      checkEnabled="false">
                   <iterate>
-                     <not>
+                     <and>
                         <instanceof
-                              value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                              value="org.eclipse.mylyn.internal.tasks.core.AbstractTask">
                         </instanceof>
+                     <not>
+                           <instanceof
+                                 value="org.eclipse.mylyn.internal.tasks.core.LocalTask">
+                           </instanceof>
                      </not>
+                     </and>
                   </iterate>
                </visibleWhen>
             </command>
