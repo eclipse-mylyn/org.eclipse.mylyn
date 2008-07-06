@@ -86,7 +86,6 @@ public class AddExistingTaskJob extends Job {
 				});
 			} else {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
 					public void run() {
 						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						if (window != null) {
@@ -94,11 +93,10 @@ public class AddExistingTaskJob extends Job {
 									MessageFormat.format("Unable to retrieve task \"{0}\" from repository.", taskId));
 						}
 					}
-
 				});
 			}
 		} catch (final CoreException e) {
-			TasksUiInternal.displayStatus("Unable to open task", e.getStatus());
+			TasksUiInternal.asyncDisplayStatus("Unable to open task", e.getStatus());
 		} finally {
 			monitor.done();
 		}

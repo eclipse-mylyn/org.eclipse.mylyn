@@ -614,7 +614,7 @@ public class TasksUiInternal {
 	 * creation, however, is pretty much handled by Mylyn core code now, and should really only be used by connectors if
 	 * necessary for testing purposes.
 	 */
-	// API 3.0 move to tests
+	@Deprecated
 	public static ITask createTask(TaskRepository repository, String id, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		ITaskList taskList = getTaskList();
@@ -641,6 +641,7 @@ public class TasksUiInternal {
 	/**
 	 * Create new repository task, adding result to tasklist
 	 */
+	@Deprecated
 	public static AbstractTask createTaskFromExistingId(AbstractLegacyRepositoryConnector connector,
 			ITaskList taskList, TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor)
 			throws CoreException {
@@ -663,6 +664,7 @@ public class TasksUiInternal {
 	/**
 	 * Creates a new task from the given task data. Does NOT add resulting task to the task list.
 	 */
+	@Deprecated
 	private static AbstractTask createTaskFromTaskData(AbstractLegacyRepositoryConnector connector, ITaskList taskList,
 			TaskRepository repository, RepositoryTaskData taskData, boolean retrieveSubTasks, IProgressMonitor monitor)
 			throws CoreException {
