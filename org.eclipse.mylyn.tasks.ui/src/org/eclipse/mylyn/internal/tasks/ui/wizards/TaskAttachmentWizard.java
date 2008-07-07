@@ -70,6 +70,8 @@ public class TaskAttachmentWizard extends Wizard {
 
 	static class ClipboardTaskAttachmentSource extends AbstractTaskAttachmentSource {
 
+		private byte[] data;
+
 		public static boolean isSupportedType(Display display) {
 			Clipboard clipboard = new Clipboard(display);
 			TransferData[] types = clipboard.getAvailableTypes();
@@ -127,15 +129,9 @@ public class TaskAttachmentWizard extends Wizard {
 
 		@Override
 		public InputStream createInputStream(IProgressMonitor monitor) throws CoreException {
-			if (contents instanceof String) {
-				return new ByteArrayInputStream(((String) contents).getBytes());
-			} else if (contents instanceof ImageData) {
-				ImageLoader loader = new ImageLoader();
-				loader.data = new ImageData[] { (ImageData) contents };
-				// TODO create image in memory?
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				loader.save(out, SWT.IMAGE_PNG);
-				return new ByteArrayInputStream(out.toByteArray());
+			byte[] bytes = getData();
+			if (bytes != null) {
+				return new ByteArrayInputStream(data);
 			}
 			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Invalid content type."));
 		}
@@ -157,10 +153,23 @@ public class TaskAttachmentWizard extends Wizard {
 
 		@Override
 		public long getLength() {
-			if (contents instanceof String) {
-				return ((String) contents).length();
+			byte[] bytes = getData();
+			return (bytes != null) ? bytes.length : -1;
+		}
+
+		private byte[] getData() {
+			if (data == null) {
+				if (contents instanceof String) {
+					data = ((String) contents).getBytes();
+				} else if (contents instanceof ImageData) {
+					ImageLoader loader = new ImageLoader();
+					loader.data = new ImageData[] { (ImageData) contents };
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					loader.save(out, SWT.IMAGE_PNG);
+					data = out.toByteArray();
+				}
 			}
-			return -1;
+			return data;
 		}
 
 		@Override
