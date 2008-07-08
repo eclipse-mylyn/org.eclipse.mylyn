@@ -133,7 +133,14 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				}
 			}
 		},
-		VERSION_CURRENT(4.4f) {
+		VERSION_4_4(4.4f) {
+			@Override
+			void migrate(TaskRepository repository, TaskData data) {
+				// summary didn't have spell checking, update to short rich text
+				updateAttribute(data, BugzillaAttribute.SHORT_DESC);
+			}
+		},
+		VERSION_CURRENT(4.5f) {
 			@Override
 			void migrate(TaskRepository repository, TaskData data) {
 				data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());

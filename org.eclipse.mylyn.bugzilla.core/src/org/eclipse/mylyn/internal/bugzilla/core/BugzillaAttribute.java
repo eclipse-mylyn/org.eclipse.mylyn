@@ -114,7 +114,7 @@ public enum BugzillaAttribute {
 	SET_DEFAULT_ASSIGNEE("Reassign to default assignee", "set_default_assignee", TaskAttribute.TYPE_OPERATION, false,
 			false),
 
-	SHORT_DESC("Summary:", "short_desc", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	SHORT_DESC("Summary:", "short_desc", TaskAttribute.TYPE_SHORT_RICH_TEXT, true, false),
 
 	SIZE("Size:", "size", TaskAttribute.TYPE_SHORT_TEXT, false, false),
 
