@@ -43,6 +43,8 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 
 	private ITaskRepositoryPage settingsPage;
 
+	private String lastConnectorKind;
+
 	public NewRepositoryWizard() {
 		this(null);
 	}
@@ -74,7 +76,8 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean canFinish() {
-		return selectConnectorPage.isPageComplete();
+		return selectConnectorPage.isPageComplete() && !(getContainer().getCurrentPage() == selectConnectorPage)
+				&& settingsPage != null && settingsPage.isPageComplete();
 	}
 
 	@Override
@@ -107,9 +110,12 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 
 	private void updateSettingsPage() {
 		assert connector != null;
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
-		settingsPage = connectorUi.getSettingsPage(null);
-		settingsPage.setWizard(this);
+		if (!connector.getConnectorKind().equals(lastConnectorKind)) {
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
+			settingsPage = connectorUi.getSettingsPage(null);
+			settingsPage.setWizard(this);
+			lastConnectorKind = connector.getConnectorKind();
+		}
 	}
 
 }
