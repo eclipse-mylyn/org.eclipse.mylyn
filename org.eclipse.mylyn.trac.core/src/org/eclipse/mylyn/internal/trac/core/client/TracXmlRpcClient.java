@@ -913,19 +913,19 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	 * This implementation uses the wiki.putAttachmentEx() call, which provides a richer functionality specific to Trac.
 	 * 
 	 * @param pageName
-	 * 		the name of the Wiki page
+	 *            the name of the Wiki page
 	 * @param fileName
-	 * 		the name of the file to be attached
+	 *            the name of the file to be attached
 	 * @param description
-	 * 		the description of the attachment
+	 *            the description of the attachment
 	 * @param in
-	 * 		An InputStream of the content of the attachment
+	 *            An InputStream of the content of the attachment
 	 * @param replace
-	 * 		whether to overwrite an existing attachment with the same filename
+	 *            whether to overwrite an existing attachment with the same filename
 	 * @return The (possibly transformed) filename of the attachment. If <code>replace</code> is <code>true</code>, the
-	 * 	returned name is always the same as the argument <code>fileName</code>; if <code>replace</code> is
-	 * 	<code>false</code> and an attachment with name <code>fileName</code> already exists, a number is appended to the
-	 * 	file name (before suffix) and the generated filename of the attachment is returned.
+	 *         returned name is always the same as the argument <code>fileName</code>; if <code>replace</code> is
+	 *         <code>false</code> and an attachment with name <code>fileName</code> already exists, a number is appended
+	 *         to the file name (before suffix) and the generated filename of the attachment is returned.
 	 * @throws TracException
 	 */
 	public String putWikiPageAttachmentData(String pageName, String fileName, String description, InputStream in,

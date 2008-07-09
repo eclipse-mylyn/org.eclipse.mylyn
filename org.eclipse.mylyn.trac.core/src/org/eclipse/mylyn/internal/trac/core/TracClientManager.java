@@ -73,17 +73,24 @@ public class TracClientManager implements IRepositoryListener {
 
 	public synchronized void repositoryAdded(TaskRepository repository) {
 		// make sure there is no stale client still in the cache, bug #149939
-		clientByUrl.remove(repository.getRepositoryUrl());
+		removeClient(repository);
 		clientDataByUrl.remove(repository.getRepositoryUrl());
 	}
 
+	private void removeClient(TaskRepository repository) {
+		ITracClient client = clientByUrl.remove(repository.getRepositoryUrl());
+		if (client != null) {
+			client.shutdown();
+		}
+	}
+
 	public synchronized void repositoryRemoved(TaskRepository repository) {
-		clientByUrl.remove(repository.getRepositoryUrl());
+		removeClient(repository);
 		clientDataByUrl.remove(repository.getRepositoryUrl());
 	}
 
 	public synchronized void repositorySettingsChanged(TaskRepository repository) {
-		clientByUrl.remove(repository.getRepositoryUrl());
+		removeClient(repository);
 		// if url is changed a stale data object will be left in
 		// clientDataByUrl, bug #149939
 	}
