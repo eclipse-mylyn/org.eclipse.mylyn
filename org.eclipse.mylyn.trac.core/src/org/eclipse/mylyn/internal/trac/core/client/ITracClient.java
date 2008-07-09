@@ -190,4 +190,6 @@ public interface ITracClient {
 
 	Date getTicketLastChanged(Integer id, IProgressMonitor monitor) throws TracException;
 
+	void shutdown();
+
 }

@@ -938,4 +938,9 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		}
 		return (String) call(monitor, "wiki.putAttachmentEx", pageName, fileName, description, data, replace);
 	}
+
+	public void shutdown() {
+		((MultiThreadedHttpConnectionManager) httpClient.getHttpConnectionManager()).shutdown();
+	}
+
 }

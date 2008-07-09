@@ -192,7 +192,6 @@ public class TracWebClient extends AbstractTracClient {
 		httpClient = new HttpClient();
 		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
 		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
-
 		WebUtil.configureHttpClient(httpClient, USER_AGENT);
 	}
 
@@ -791,6 +790,10 @@ public class TracWebClient extends AbstractTracClient {
 
 	public Date getTicketLastChanged(Integer id, IProgressMonitor monitor) {
 		throw new UnsupportedOperationException();
+	}
+
+	public void shutdown() {
+		((MultiThreadedHttpConnectionManager) httpClient.getHttpConnectionManager()).shutdown();
 	}
 
 }

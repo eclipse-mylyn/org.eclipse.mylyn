@@ -1466,4 +1466,8 @@ public class BugzillaClient {
 		return repositoryConfiguration;
 	}
 
+	public void shutdown() {
+		((MultiThreadedHttpConnectionManager) httpClient.getHttpConnectionManager()).shutdown();
+	}
+
 }

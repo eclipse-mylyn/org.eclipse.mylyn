@@ -47,15 +47,22 @@ public class BugzillaClientManager implements IRepositoryListener {
 
 	public synchronized void repositoryAdded(TaskRepository repository) {
 		// make sure there is no stale client still in the cache, bug #149939
-		clientByUrl.remove(repository.getRepositoryUrl());
+		removeClient(repository);
 	}
 
 	public synchronized void repositoryRemoved(TaskRepository repository) {
-		clientByUrl.remove(repository.getRepositoryUrl());
+		removeClient(repository);
+	}
+
+	private void removeClient(TaskRepository repository) {
+		BugzillaClient client = clientByUrl.remove(repository.getRepositoryUrl());
+		if (client != null) {
+			client.shutdown();
+		}
 	}
 
 	public synchronized void repositorySettingsChanged(TaskRepository repository) {
-		clientByUrl.remove(repository.getRepositoryUrl());
+		removeClient(repository);
 	}
 
 	public void repositoryUrlChanged(TaskRepository repository, String oldUrl) {
