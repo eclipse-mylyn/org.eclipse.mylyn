@@ -142,7 +142,7 @@ public class BugzillaCorePlugin extends Plugin {
 			return repositoryConfigurations.get(repository.getRepositoryUrl());
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
-					"Error updating attributes.\n\n" + e.getMessage(), e));
+					"Error retrieving task attributes from repository.\n\n" + e.getMessage(), e));
 		}
 	}
 
