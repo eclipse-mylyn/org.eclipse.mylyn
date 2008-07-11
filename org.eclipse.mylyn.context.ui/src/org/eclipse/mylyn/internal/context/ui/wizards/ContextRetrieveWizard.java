@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-@SuppressWarnings( { "deprecation", "restriction" })
+@SuppressWarnings( { "restriction" })
 public class ContextRetrieveWizard extends Wizard {
 
 	private static final String TITLE = "Task Repository";
@@ -38,6 +38,7 @@ public class ContextRetrieveWizard extends Wizard {
 				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		setWindowTitle(TITLE);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_CONTEXT);
+		setNeedsProgressMonitor(true);
 	}
 
 	@Override
