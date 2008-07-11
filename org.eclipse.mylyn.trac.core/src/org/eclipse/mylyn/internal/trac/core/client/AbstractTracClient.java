@@ -16,8 +16,11 @@ import java.net.URL;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.util.IdleConnectionTimeoutThread;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
@@ -36,6 +39,15 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
  * @author Steffen Pingel
  */
 public abstract class AbstractTracClient implements ITracClient {
+
+	private static IdleConnectionTimeoutThread idleConnectionTimeoutThread = new IdleConnectionTimeoutThread();
+
+	private static MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
+
+	static {
+		idleConnectionTimeoutThread.addConnectionManager(connectionManager);
+		idleConnectionTimeoutThread.start();
+	}
 
 	protected static final String USER_AGENT = "TracConnector";
 
@@ -64,6 +76,14 @@ public abstract class AbstractTracClient implements ITracClient {
 		this.repositoryUrl = location.getUrl();
 
 		this.data = new TracClientData();
+	}
+
+	protected HttpClient createHttpClient() {
+		HttpClient httpClient = new HttpClient();
+		httpClient.setHttpConnectionManager(connectionManager);
+		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
+		WebUtil.configureHttpClient(httpClient, USER_AGENT);
+		return httpClient;
 	}
 
 	public Version getVersion() {

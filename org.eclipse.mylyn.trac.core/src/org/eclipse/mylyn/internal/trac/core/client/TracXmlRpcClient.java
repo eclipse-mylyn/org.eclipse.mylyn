@@ -25,8 +25,6 @@ import java.util.TimeZone;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -190,11 +188,7 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	public TracXmlRpcClient(AbstractWebLocation location, Version version) {
 		super(location, version);
-
-		httpClient = new HttpClient();
-		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
-		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
-		WebUtil.configureHttpClient(httpClient, USER_AGENT);
+		this.httpClient = createHttpClient();
 	}
 
 	public synchronized XmlRpcClient getClient() throws TracException {
@@ -937,10 +931,6 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 			throw new TracException(e);
 		}
 		return (String) call(monitor, "wiki.putAttachmentEx", pageName, fileName, description, data, replace);
-	}
-
-	public void shutdown() {
-		((MultiThreadedHttpConnectionManager) httpClient.getHttpConnectionManager()).shutdown();
 	}
 
 }

@@ -29,9 +29,7 @@ import javax.swing.text.html.HTML.Tag;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -188,11 +186,7 @@ public class TracWebClient extends AbstractTracClient {
 
 	public TracWebClient(AbstractWebLocation location, Version version) {
 		super(location, version);
-
-		httpClient = new HttpClient();
-		httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
-		httpClient.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
-		WebUtil.configureHttpClient(httpClient, USER_AGENT);
+		this.httpClient = createHttpClient();
 	}
 
 	private synchronized GetMethod connect(String requestUrl, IProgressMonitor monitor) throws TracException {
@@ -790,10 +784,6 @@ public class TracWebClient extends AbstractTracClient {
 
 	public Date getTicketLastChanged(Integer id, IProgressMonitor monitor) {
 		throw new UnsupportedOperationException();
-	}
-
-	public void shutdown() {
-		((MultiThreadedHttpConnectionManager) httpClient.getHttpConnectionManager()).shutdown();
 	}
 
 }

@@ -55,10 +55,7 @@ public class BugzillaClientManager implements IRepositoryListener {
 	}
 
 	private void removeClient(TaskRepository repository) {
-		BugzillaClient client = clientByUrl.remove(repository.getRepositoryUrl());
-		if (client != null) {
-			client.shutdown();
-		}
+		clientByUrl.remove(repository.getRepositoryUrl());
 	}
 
 	public synchronized void repositorySettingsChanged(TaskRepository repository) {

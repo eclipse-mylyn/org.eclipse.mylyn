@@ -78,10 +78,7 @@ public class TracClientManager implements IRepositoryListener {
 	}
 
 	private void removeClient(TaskRepository repository) {
-		ITracClient client = clientByUrl.remove(repository.getRepositoryUrl());
-		if (client != null) {
-			client.shutdown();
-		}
+		clientByUrl.remove(repository.getRepositoryUrl());
 	}
 
 	public synchronized void repositoryRemoved(TaskRepository repository) {
