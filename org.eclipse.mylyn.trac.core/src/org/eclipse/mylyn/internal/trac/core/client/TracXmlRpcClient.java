@@ -147,6 +147,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 				} else {
 					throw new TracRemoteException(e);
 				}
+			} catch (OperationCanceledException e) {
+				throw e;
 			} catch (Exception e) {
 				throw new TracException(e);
 			}

@@ -13,6 +13,7 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
@@ -50,6 +51,8 @@ public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 			ITracClient client = connector.getClientManager().getTracClient(repository);
 			int id = Integer.parseInt(task.getTaskId());
 			return client.getAttachmentData(id, filename, monitor);
+		} catch (OperationCanceledException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
@@ -90,6 +93,8 @@ public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 					TracTicket ticket = new TracTicket(id);
 					client.updateTicket(ticket, comment, monitor);
 				}
+			} catch (OperationCanceledException e) {
+				throw e;
 			} catch (Exception e) {
 				throw new CoreException(TracCorePlugin.toStatus(e, repository));
 			}

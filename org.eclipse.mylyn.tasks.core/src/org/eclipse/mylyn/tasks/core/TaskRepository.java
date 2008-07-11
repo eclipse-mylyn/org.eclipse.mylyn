@@ -84,6 +84,7 @@ public final class TaskRepository extends PlatformObject {
 	@Deprecated
 	public static final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
 
+	@Deprecated
 	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylyn.tasklist.repositories.anonymous";
 
 	private static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth";

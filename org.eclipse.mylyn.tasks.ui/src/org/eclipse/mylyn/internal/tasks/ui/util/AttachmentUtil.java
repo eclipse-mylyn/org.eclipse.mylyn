@@ -8,7 +8,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,7 +26,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -55,7 +56,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.sync.SubmitJob;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -201,30 +201,45 @@ public class AttachmentUtil {
 
 	public static boolean downloadContext(final ITask task, final ITaskAttachment attachment,
 			final IRunnableContext context) {
-		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				task.getConnectorKind());
-		final TaskRepository repository = TasksUi.getRepositoryManager().getRepository(attachment.getConnectorKind(),
-				attachment.getRepositoryUrl());
-		final String directory = TasksUiPlugin.getDefault().getDataDirectory();
 		if (task.isActive()) {
 			TasksUi.getTaskActivityManager().deactivateTask(task);
 		}
-		boolean result = false;
-
-		if (connector instanceof AbstractRepositoryConnector) {
-			if (connector.getTaskAttachmentHandler() != null) {
-				result = AttachmentUtil.retrieveContext(connector.getTaskAttachmentHandler(), repository, task,
-						attachment, directory, context);
+		try {
+			context.run(true, true, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					File targetFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+					try {
+						OutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile));
+						try {
+							AttachmentUtil.downloadAttachment(attachment, out, monitor);
+						} catch (CoreException e) {
+							throw new InvocationTargetException(e);
+						} finally {
+							out.close();
+						}
+					} catch (OperationCanceledException e) {
+						throw new InterruptedException();
+					} catch (IOException e) {
+						throw new InvocationTargetException(
+								new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+										RepositoryStatus.ERROR_IO, "Error writing to context file", e)));
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			if (e.getCause() instanceof CoreException) {
+				TasksUiInternal.displayStatus(TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
+			} else {
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Unexpected error while retrieving context", e));
 			}
+			return false;
+		} catch (InterruptedException ignored) {
+			// canceled
+			return false;
 		}
-
-		if (!result) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TITLE_DIALOG, MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
-		} else {
-			TasksUiInternal.getTaskList().notifyElementChanged(task);
-			TasksUi.getTaskActivityManager().activateTask(task);
-		}
+		TasksUiInternal.getTaskList().notifyElementChanged(task);
+		TasksUi.getTaskActivityManager().activateTask(task);
 		return true;
 	}
 
@@ -233,6 +248,8 @@ public class AttachmentUtil {
 		ContextCorePlugin.getContextStore().saveActiveContext();
 		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 		if (!sourceContextFile.exists()) {
+			TasksUiInternal.displayStatus(TITLE_DIALOG, new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					"The context is empty."));
 			return false;
 		}
 
@@ -289,6 +306,7 @@ public class AttachmentUtil {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
+	@Deprecated
 	public static boolean retrieveContext(AbstractTaskAttachmentHandler attachmentHandler, TaskRepository repository,
 			ITask task, ITaskAttachment attachment, String destinationPath, IRunnableContext context) {
 
