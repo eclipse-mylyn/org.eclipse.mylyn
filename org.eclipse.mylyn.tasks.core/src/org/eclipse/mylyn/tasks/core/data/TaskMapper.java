@@ -166,9 +166,10 @@ public class TaskMapper implements ITaskMapping {
 		}
 	}
 
-	private TaskAttribute createAttribute(String attributeKey) {
+	private TaskAttribute createAttribute(String attributeKey, String type) {
 		attributeKey = taskData.getAttributeMapper().mapToRepositoryKey(taskData.getRoot(), attributeKey);
 		TaskAttribute attribute = taskData.getRoot().createAttribute(attributeKey);
+		attribute.getMetaData().defaults().setType(type);
 		return attribute;
 	}
 
@@ -208,11 +209,11 @@ public class TaskMapper implements ITaskMapping {
 		return getValues(TaskAttribute.KEYWORDS);
 	}
 
-	private TaskAttribute getWriteableAttribute(String attributeKey) {
+	private TaskAttribute getWriteableAttribute(String attributeKey, String type) {
 		TaskAttribute attribute = taskData.getRoot().getMappedAttribute(attributeKey);
 		if (createNonExistingAttributes) {
 			if (attribute == null) {
-				attribute = createAttribute(attributeKey);
+				attribute = createAttribute(attributeKey, type);
 			}
 		} else if (attribute != null && attribute.getMetaData().isReadOnly()) {
 			return null;
@@ -341,7 +342,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	private TaskAttribute setDateValue(String attributeKey, Date value) {
-		TaskAttribute attribute = getWriteableAttribute(attributeKey);
+		TaskAttribute attribute = getWriteableAttribute(attributeKey, TaskAttribute.TYPE_DATE);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setDateValue(attribute, value);
 		}
@@ -403,7 +404,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	public TaskAttribute setValue(String attributeKey, String value) {
-		TaskAttribute attribute = getWriteableAttribute(attributeKey);
+		TaskAttribute attribute = getWriteableAttribute(attributeKey, TaskAttribute.TYPE_SHORT_TEXT);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValue(attribute, value);
 		}
@@ -411,7 +412,7 @@ public class TaskMapper implements ITaskMapping {
 	}
 
 	private TaskAttribute setValues(String attributeKey, List<String> values) {
-		TaskAttribute attribute = getWriteableAttribute(attributeKey);
+		TaskAttribute attribute = getWriteableAttribute(attributeKey, TaskAttribute.TYPE_SHORT_TEXT);
 		if (attribute != null) {
 			taskData.getAttributeMapper().setValues(attribute, values);
 		}
