@@ -230,21 +230,18 @@ public class AttachmentUtil {
 
 	public static boolean uploadContext(final TaskRepository repository, final ITask task, final String comment,
 			final IRunnableContext context) {
-
-		final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
-
 		ContextCorePlugin.getContextStore().saveActiveContext();
-		final File sourceContextFile = ContextCorePlugin.getContextStore()
-				.getFileForContext(task.getHandleIdentifier());
-
+		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 		if (!sourceContextFile.exists()) {
 			return false;
 		}
 
 		FileTaskAttachmentSource source = new FileTaskAttachmentSource(sourceContextFile);
+		source.setName(CONTEXT_FILENAME);
 		source.setDescription(CONTEXT_DESCRIPTION);
 		source.setContentType(CONTEXT_CONTENT_TYPE);
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
 		final SubmitJob submitJob = TasksUiInternal.getJobFactory().createSubmitTaskAttachmentJob(connector,
 				repository, task, source, comment, null);
 		try {
@@ -255,17 +252,16 @@ public class AttachmentUtil {
 					}
 				}
 			});
-
 		} catch (InvocationTargetException e) {
-			if (e.getCause() instanceof CoreException) {
-				TasksUiInternal.displayStatus(TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
-			} else {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Unexpected error while attaching context", e));
-			}
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					"Unexpected error while attaching context", e));
 			return false;
 		} catch (InterruptedException ignored) {
 			// canceled
+			return false;
+		}
+		if (submitJob.getStatus() != null) {
+			TasksUiInternal.displayStatus(TITLE_DIALOG, submitJob.getStatus());
 			return false;
 		}
 		return true;
