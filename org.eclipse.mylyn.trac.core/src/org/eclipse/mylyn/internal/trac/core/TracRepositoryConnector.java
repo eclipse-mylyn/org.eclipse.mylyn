@@ -481,7 +481,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor.beginTask("", 1);
-			if (event.isFullSynchronization() && event.getStatus() != null) {
+			if (event.isFullSynchronization() && event.getStatus() == null) {
 				Date date = getSynchronizationTimestamp(event);
 				if (date != null) {
 					event.getTaskRepository().setSynchronizationTimeStamp(TracUtil.toTracTime(date) + "");

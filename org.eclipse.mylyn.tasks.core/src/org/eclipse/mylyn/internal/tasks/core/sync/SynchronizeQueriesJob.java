@@ -98,7 +98,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			ITask task = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 			if (task == null) {
 				task = tasksModel.createTask(repository, taskData.getTaskId());
-				if (taskData.isPartial()) {
+				if (taskData.isPartial() && connector.canSynchronizeTask(repository, task)) {
 					session.markStale(task);
 				}
 			} else {
@@ -207,7 +207,11 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					@Override
 					public void putTaskData(ITask task, TaskData taskData) throws CoreException {
 						taskDataManager.putUpdatedTaskData(task, taskData, isUser(), this);
-						if (!taskData.isPartial()) {
+						if (taskData.isPartial()) {
+							if (connector.canSynchronizeTask(repository, task)) {
+								markStale(task);
+							}
+						} else {
 							Collection<TaskRelation> relations = connector.getTaskRelations(taskData);
 							if (relations != null) {
 								relationsByTaskId.put(task.getTaskId(), relations.toArray(new TaskRelation[0]));
