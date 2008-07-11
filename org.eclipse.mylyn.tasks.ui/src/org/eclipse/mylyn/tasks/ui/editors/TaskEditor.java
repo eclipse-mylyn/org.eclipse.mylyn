@@ -451,6 +451,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			} else if (page instanceof AbstractRepositoryTaskEditor) {
 				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
 				editor.refreshEditor();
+			} else if (page instanceof BrowserFormPage) {
+				// XXX 3.1 replace by invocation of refreshFromContent();
+				((BrowserFormPage) page).init(getEditorSite(), getEditorInput());
 			}
 		}
 	}

@@ -206,9 +206,10 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				SynchronizationSession session = new SynchronizationSession(taskDataManager) {
 					@Override
 					public void putTaskData(ITask task, TaskData taskData) throws CoreException {
+						boolean changed = connector.hasTaskChanged(repository, task, taskData);
 						taskDataManager.putUpdatedTaskData(task, taskData, isUser(), this);
 						if (taskData.isPartial()) {
-							if (connector.canSynchronizeTask(repository, task)) {
+							if (changed && connector.canSynchronizeTask(repository, task)) {
 								markStale(task);
 							}
 						} else {
@@ -302,6 +303,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
 			connector.postSynchronization(event, monitor);
+			updateQueryStatus(null);
 			return true;
 		} catch (CoreException e) {
 			updateQueryStatus(e.getStatus());
@@ -317,7 +319,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
 			connector.preSynchronization(event, monitor);
-			updateQueryStatus(null);
 			return true;
 		} catch (CoreException e) {
 			// synchronization is unlikely to succeed, inform user and exit
