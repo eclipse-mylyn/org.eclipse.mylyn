@@ -58,10 +58,8 @@ public class TaskMapper implements ITaskMapping {
 			task.setOwner(getOwner());
 			changed = true;
 		}
-		String priority = (getPriorityLevel() != null) ? getPriorityLevel().toString() : PriorityLevel.getDefault()
-				.toString();
-		if (hasChanges(task.getPriority(), priority, TaskAttribute.PRIORITY)) {
-			task.setPriority(priority);
+		if (hasChanges(task.getPriority(), getPriorityLevelString(), TaskAttribute.PRIORITY)) {
+			task.setPriority(getPriorityLevelString());
 			changed = true;
 		}
 		if (hasChanges(task.getSummary(), getSummary(), TaskAttribute.SUMMARY)) {
@@ -81,6 +79,10 @@ public class TaskMapper implements ITaskMapping {
 			changed = true;
 		}
 		return changed;
+	}
+
+	private String getPriorityLevelString() {
+		return (getPriorityLevel() != null) ? getPriorityLevel().toString() : PriorityLevel.getDefault().toString();
 	}
 
 	private boolean hasChanges(Object existingValue, Object newValue, String attributeId) {
@@ -307,7 +309,7 @@ public class TaskMapper implements ITaskMapping {
 		changed |= hasChanges(task.getModificationDate(), getModificationDate(), TaskAttribute.DATE_MODIFICATION);
 		changed |= hasChanges(task.getDueDate(), getDueDate(), TaskAttribute.DATE_DUE);
 		changed |= hasChanges(task.getOwner(), getOwner(), TaskAttribute.USER_ASSIGNED);
-		changed |= hasChanges(task.getPriority(), getPriorityLevel(), TaskAttribute.PRIORITY);
+		changed |= hasChanges(task.getPriority(), getPriorityLevelString(), TaskAttribute.PRIORITY);
 		changed |= hasChanges(task.getSummary(), getSummary(), TaskAttribute.SUMMARY);
 		changed |= hasChanges(task.getTaskKey(), getTaskKey(), TaskAttribute.TASK_KEY);
 		changed |= hasChanges(task.getTaskKind(), getTaskKind(), TaskAttribute.TASK_KIND);

@@ -135,19 +135,19 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 		 * @since 3.0
 		 */
 		public static PriorityLevel fromString(String string) {
-			if (string.equals("P1")) {
+			if ("P1".equals(string)) {
 				return P1;
 			}
-			if (string.equals("P2")) {
+			if ("P2".equals(string)) {
 				return P2;
 			}
-			if (string.equals("P3")) {
+			if ("P3".equals(string)) {
 				return P3;
 			}
-			if (string.equals("P4")) {
+			if ("P4".equals(string)) {
 				return P4;
 			}
-			if (string.equals("P5")) {
+			if ("P5".equals(string)) {
 				return P5;
 			}
 			return getDefault();
