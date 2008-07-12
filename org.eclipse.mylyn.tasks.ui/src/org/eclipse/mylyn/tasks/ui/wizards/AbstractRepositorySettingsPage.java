@@ -53,7 +53,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -190,8 +189,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 
 	private Button proxyAuthButton;
 
-	private final FormToolkit toolkit = new FormToolkit(Display.getCurrent());
-
 	private Hyperlink createAccountHyperlink;
 
 	private Hyperlink manageAccountHyperlink;
@@ -203,6 +200,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 	private Button saveProxyPasswordButton;
 
 	private Button disconnectedButton;
+
+	private FormToolkit toolkit;
 
 	/**
 	 * @since 3.0
@@ -230,13 +229,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 	public void dispose() {
 		super.dispose();
 		if (toolkit != null) {
-			if (toolkit.getColors() != null) {
-				toolkit.dispose();
-			}
+			toolkit.dispose();
+			toolkit = null;
 		}
 	}
 
 	public void createControl(Composite parent) {
+		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
+
 		if (repository != null) {
 			originalUrl = repository.getRepositoryUrl();
 			AuthenticationCredentials oldCredentials = repository.getCredentials(AuthenticationType.REPOSITORY);
