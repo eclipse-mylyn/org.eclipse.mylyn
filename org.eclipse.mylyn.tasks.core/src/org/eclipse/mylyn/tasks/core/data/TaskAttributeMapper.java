@@ -175,13 +175,10 @@ public class TaskAttributeMapper {
 	}
 
 	public String getValueLabel(TaskAttribute taskAttribute) {
+		List<String> labels = getValueLabels(taskAttribute);
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
-		for (String value : taskAttribute.getValues()) {
-			String option = taskAttribute.getOption(value);
-			if (option != null) {
-				value = option;
-			}
+		for (String value : labels) {
 			sb.append(sep).append(value);
 			sep = ", ";
 		}
@@ -190,9 +187,10 @@ public class TaskAttributeMapper {
 
 	public List<String> getValueLabels(TaskAttribute taskAttribute) {
 		List<String> values = taskAttribute.getValues();
+		Map<String, String> options = getOptions(taskAttribute);
 		List<String> result = new ArrayList<String>(values.size());
 		for (String value : values) {
-			String option = taskAttribute.getOption(value);
+			String option = options.get(value);
 			if (option != null) {
 				value = option;
 			}
