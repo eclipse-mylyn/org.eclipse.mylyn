@@ -380,6 +380,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private TaskAttachmentDropListener defaultDropListener;
 
+	// TODO 3.1 define constructor for setting id and label
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label");
 		Assert.isNotNull(connectorKind);
@@ -521,7 +522,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
 		ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);
-		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(getConnectorKind(),
+		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(taskDataState.getConnectorKind(),
 				taskDataState.getRepositoryUrl());
 		return new TaskDataModel(taskRepository, input.getTask(), taskDataState);
 	}
