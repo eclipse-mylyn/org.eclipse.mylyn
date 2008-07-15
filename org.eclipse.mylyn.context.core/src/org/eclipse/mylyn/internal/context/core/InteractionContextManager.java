@@ -672,21 +672,15 @@ public class InteractionContextManager implements IInteractionContextManager {
 					(listener).contextPreActivated(activityMetaContext);
 				}
 			}
-
-			metaContextLock.acquire();
-
-			File contextHistory = contextStore.getFileForContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 			try {
-				if (!contextHistory.exists() || contextHistory.length() == 0) {
+				metaContextLock.acquire();
+
+				activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
+				if (activityMetaContext == null || activityMetaContext.getInteractionHistory().isEmpty()) {
+					File contextHistory = contextStore.getFileForContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 					if (restoreSnapshot(contextHistory)) {
 						activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 					}
-				} else {
-					activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
-				}
-
-				if (activityMetaContext == null && restoreSnapshot(contextHistory)) {
-					activityMetaContext = (InteractionContext) contextStore.loadContext(InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 				}
 
 				if (activityMetaContext == null) {
