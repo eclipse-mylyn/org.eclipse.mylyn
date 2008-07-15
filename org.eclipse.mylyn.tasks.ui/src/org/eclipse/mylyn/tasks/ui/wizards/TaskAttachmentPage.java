@@ -22,6 +22,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -181,13 +182,10 @@ public class TaskAttachmentPage extends WizardPage {
 		fileNameText.setText(taskAttachment.getFileName() == null ? "" : taskAttachment.getFileName()); //$NON-NLS-1$
 
 		/* Listener for isPatch */
-		isPatchButton.addSelectionListener(new SelectionListener() {
+		isPatchButton.addSelectionListener(new SelectionAdapter() {
 			private int lastSelected;
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// ignore
-			}
-
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				taskAttachment.setPatch(isPatchButton.getSelection());
 				if (isPatchButton.getSelection()) {
@@ -201,6 +199,12 @@ public class TaskAttachmentPage extends WizardPage {
 					contentTypeList.setEnabled(true);
 					contentTypeList.select(lastSelected);
 				}
+				validate();
+			}
+		});
+		attachContextButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
 				validate();
 			}
 		});
