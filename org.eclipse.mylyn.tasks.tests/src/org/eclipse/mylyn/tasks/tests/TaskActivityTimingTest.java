@@ -81,7 +81,7 @@ public class TaskActivityTimingTest extends TestCase {
 		File corrupt = new File(contexts, "activity.xml.zip");
 
 		File corruptSource = FileTool.getFileInPlugin(TasksTestsPlugin.getDefault(), new Path(
-				"testdata/activityTests/.activity.xml.zip"));
+				"testdata/activityTests/activity.xml.zip"));
 
 		copy(corruptSource, corrupt);
 
