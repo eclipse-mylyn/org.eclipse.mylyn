@@ -271,15 +271,15 @@ public final class TaskRepository extends PlatformObject {
 
 	// TODO e3.4 move to new api
 	public void flushAuthenticationCredentials() {
+		// API30: legacy support for versions prior to 2.2 that did not set the enable flag, remove for 3.0
+		setProperty(getKeyPrefix(AuthenticationType.HTTP) + ENABLED, null);
+		setProperty(getKeyPrefix(AuthenticationType.PROXY) + ENABLED, null);
+		setProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + ENABLED, null);
+
 		synchronized (LOCK) {
 			isCachedUserName = false;
 
 			transientProperties.clear();
-
-			// API30: legacy support for versions prior to 2.2 that did not set the enable flag, remove for 3.0
-			setProperty(getKeyPrefix(AuthenticationType.HTTP) + ENABLED, null);
-			setProperty(getKeyPrefix(AuthenticationType.PROXY) + ENABLED, null);
-			setProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + ENABLED, null);
 
 			try {
 				if (Platform.isRunning()) {
