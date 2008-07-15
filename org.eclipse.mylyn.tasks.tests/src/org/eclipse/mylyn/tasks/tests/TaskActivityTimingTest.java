@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +18,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.Path;
+import org.eclipse.mylyn.context.tests.support.FileTool;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
@@ -58,6 +63,45 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 		super.tearDown();
+	}
+
+	public void testLoadCorruptContext() throws Exception {
+		String contextPath = TasksUiPlugin.getDefault().getDataDirectory() + '/' + "contexts" + '/';
+		File contexts = new File(contextPath);
+		if (!contexts.exists()) {
+			contexts.mkdir();
+		}
+		File backup = new File(contexts, ".activity.xml.zip");
+
+		File good = FileTool.getFileInPlugin(TasksTestsPlugin.getDefault(), new Path(
+				"testdata/activityTests/.activity.xml.zip"));
+
+		copy(good, backup);
+
+		File corrupt = new File(contexts, "activity.xml.zip");
+
+		File corruptSource = FileTool.getFileInPlugin(TasksTestsPlugin.getDefault(), new Path(
+				"testdata/activityTests/.activity.xml.zip"));
+
+		copy(corruptSource, corrupt);
+
+		InteractionContextManager manager = ContextCorePlugin.getContextManager();
+		manager.loadActivityMetaContext();
+		assertFalse(manager.getActivityMetaContext().getInteractionHistory().isEmpty());
+	}
+
+	private void copy(File inFile, File outFile) throws Exception {
+
+		FileOutputStream outStream = new FileOutputStream(outFile);
+		FileInputStream inStream = new FileInputStream(inFile);
+
+		byte[] buffer = new byte[1024];
+		while (inStream.read(buffer) != -1) {
+			outStream.write(buffer);
+		}
+		inStream.close();
+		outStream.close();
+
 	}
 
 	public void testActivityWithNoTaskActive() {
