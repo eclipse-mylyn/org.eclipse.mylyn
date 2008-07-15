@@ -1004,33 +1004,37 @@ public class BugzillaClient {
 		} else {
 			TaskAttribute originalOperation = model.getRoot().getAttribute(
 					TaskAttribute.PREFIX_OPERATION + attributeOperation.getValue());
-			String inputAttributeId = originalOperation.getMetaData().getValue(
-					TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
 			if (originalOperation == null) {
+				// Work around for bug#241012
 				fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, VAL_NONE));
-			} else if (inputAttributeId == null || inputAttributeId.equals("")) {
-				String sel = attributeOperation.getValue();
-				fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, sel));
 			} else {
-				fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, attributeOperation.getValue()));
-				TaskAttribute inputAttribute = attributeOperation.getTaskData()
-						.getRoot()
-						.getAttribute(inputAttributeId);
-				if (inputAttribute != null) {
-					if (inputAttribute.getOptions().size() > 0) {
-						String sel = inputAttribute.getValue();
-						String knob = inputAttribute.getId();
-						if (knob.equals(BugzillaOperation.resolve.getInputId())) {
-							knob = BugzillaAttribute.RESOLUTION.getKey();
+				String inputAttributeId = originalOperation.getMetaData().getValue(
+						TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+				if (originalOperation == null) {
+					fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, VAL_NONE));
+				} else if (inputAttributeId == null || inputAttributeId.equals("")) {
+					String sel = attributeOperation.getValue();
+					fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, sel));
+				} else {
+					fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, attributeOperation.getValue()));
+					TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
+							inputAttributeId);
+					if (inputAttribute != null) {
+						if (inputAttribute.getOptions().size() > 0) {
+							String sel = inputAttribute.getValue();
+							String knob = inputAttribute.getId();
+							if (knob.equals(BugzillaOperation.resolve.getInputId())) {
+								knob = BugzillaAttribute.RESOLUTION.getKey();
+							}
+							fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
+						} else {
+							String sel = inputAttribute.getValue();
+							String knob = attributeOperation.getValue();
+							if (knob.equals(BugzillaOperation.reassign.toString())) {
+								knob = BugzillaAttribute.ASSIGNED_TO.getKey();
+							}
+							fields.put(knob, new NameValuePair(knob, sel));
 						}
-						fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
-					} else {
-						String sel = inputAttribute.getValue();
-						String knob = attributeOperation.getValue();
-						if (knob.equals(BugzillaOperation.reassign.toString())) {
-							knob = BugzillaAttribute.ASSIGNED_TO.getKey();
-						}
-						fields.put(knob, new NameValuePair(knob, sel));
 					}
 				}
 			}
