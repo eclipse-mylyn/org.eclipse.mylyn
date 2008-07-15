@@ -53,6 +53,7 @@ import org.eclipse.mylyn.internal.commons.net.WebClientLog;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.tasks.core.AbstractSearchHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
@@ -500,6 +501,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			WebUtil.init();
 			WebClientLog.setLoggingEnabled(DEBUG_HTTPCLIENT);
 			initializePreferences(getPreferenceStore());
+
+			// initialize CommonFonts from UI thread: bug 240076
+			CommonFonts.BOLD.toString();
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
