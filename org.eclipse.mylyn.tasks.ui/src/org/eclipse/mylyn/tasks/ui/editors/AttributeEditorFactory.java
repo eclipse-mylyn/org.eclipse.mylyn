@@ -64,7 +64,12 @@ public class AttributeEditorFactory {
 			return new SingleSelectionAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_TASK_DEPENDENCY.equals(type)) {
 			RichTextAttributeEditor editor = new RichTextAttributeEditor(model, taskRepository, taskAttribute,
-					SWT.MULTI | TasksUiInternal.SWT_NO_SCROLL);
+					SWT.MULTI | TasksUiInternal.SWT_NO_SCROLL) {
+				@Override
+				public String getValue() {
+					return getAttributeMapper().getValueLabel(getTaskAttribute());
+				}
+			};
 			editor.setMode(Mode.TASK_RELATION);
 			editor.setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE) {
 				@Override
