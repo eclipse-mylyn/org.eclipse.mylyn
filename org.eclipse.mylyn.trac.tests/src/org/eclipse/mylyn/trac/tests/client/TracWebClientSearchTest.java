@@ -41,8 +41,13 @@ public class TracWebClientSearchTest extends AbstractTracClientSearchTest {
 		search.setOrderBy("id");
 		List<TracTicket> result = new ArrayList<TracTicket>();
 		repository.search(search, result, null);
-		assertEquals(1, result.size());
+		assertEquals(2, result.size());
 		assertTicketEquals(tickets.get(7), result.get(0));
+	}
+
+	public void testStatusClosed096() throws Exception {
+		connect096();
+		statusClosed();
 	}
 
 }
