@@ -170,6 +170,17 @@ public class TasksUiUtil {
 	}
 
 	public static IEditorPart openEditor(IEditorInput input, String editorId, IWorkbenchPage page) {
+		if (page == null) {
+			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if (window != null) {
+				page = window.getActivePage();
+			}
+		}
+		if (page == null) {
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \"" + input
+					+ "\": no active workbench window"));
+			return null;
+		}
 		try {
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {

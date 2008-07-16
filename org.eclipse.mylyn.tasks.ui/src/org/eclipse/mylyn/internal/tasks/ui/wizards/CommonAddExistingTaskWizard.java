@@ -20,6 +20,8 @@ import org.eclipse.ui.progress.IProgressService;
  * @author Brock Janiczak
  * @author Mik Kersten
  */
+// TODO 3.1 remove class
+@Deprecated
 public class CommonAddExistingTaskWizard extends Wizard {
 
 	private final TaskRepository repository;

@@ -9,22 +9,17 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.text.MessageFormat;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -32,6 +27,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Willian Mitsuda
  */
+// TODO 3.1 merge with OpenRepositoryTaskJob
 public class AddExistingTaskJob extends Job {
 
 	/**
@@ -63,43 +59,65 @@ public class AddExistingTaskJob extends Job {
 
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
-		try {
-			final AbstractTask newTask = (AbstractTask) TasksUiInternal.createTask(repository, taskId, monitor);
-			if (newTask != null) {
-				TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, TaskActivityUtil.getCurrentWeek());
-
-				TasksUiInternal.refreshAndOpenTaskListElement(newTask);
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-					public void run() {
-						AbstractTaskCategory category = taskContainer;
-						TaskListView taskListView = TaskListView.getFromActivePerspective();
-						if (category == null) {
-							Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection()).getFirstElement();
-							if (selectedObject instanceof TaskCategory) {
-								category = (TaskCategory) selectedObject;
-							}
-						}
-						TasksUiInternal.getTaskList().addTask(newTask, category);
-						taskListView.getViewer().setSelection(new StructuredSelection(newTask));
-					}
-				});
-			} else {
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-						if (window != null) {
-							MessageDialog.openWarning(window.getShell(), "Add Existing Task Failed",
-									MessageFormat.format("Unable to retrieve task \"{0}\" from repository.", taskId));
+		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(repository.getConnectorKind(),
+				repository.getRepositoryUrl(), taskId, null, null);
+		IStatus result = job.run(monitor);
+		final ITask newTask = job.getTask();
+		if (newTask != null) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					AbstractTaskCategory category = taskContainer;
+					TaskListView taskListView = TaskListView.getFromActivePerspective();
+					if (category == null) {
+						Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection()).getFirstElement();
+						if (selectedObject instanceof TaskCategory) {
+							category = (TaskCategory) selectedObject;
 						}
 					}
-				});
-			}
-		} catch (final CoreException e) {
-			TasksUiInternal.asyncDisplayStatus("Unable to open task", e.getStatus());
-		} finally {
-			monitor.done();
+					TasksUiInternal.getTaskList().addTask(newTask, category);
+					taskListView.getViewer().setSelection(new StructuredSelection(newTask));
+				}
+			});
 		}
-		return Status.OK_STATUS;
+		return result;
+//		try {
+//			TasksUiUtil.openTask(repository, taskId);
+//			final AbstractTask newTask = (AbstractTask) TasksUiInternal.createTask(repository, taskId, monitor);
+//			if (newTask != null) {
+//				TasksUiPlugin.getTaskActivityManager().setScheduledFor(newTask, TaskActivityUtil.getCurrentWeek());
+//
+//				TasksUiInternal.refreshAndOpenTaskListElement(newTask);
+//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//
+//					public void run() {
+//						AbstractTaskCategory category = taskContainer;
+//						TaskListView taskListView = TaskListView.getFromActivePerspective();
+//						if (category == null) {
+//							Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection()).getFirstElement();
+//							if (selectedObject instanceof TaskCategory) {
+//								category = (TaskCategory) selectedObject;
+//							}
+//						}
+//						TasksUiInternal.getTaskList().addTask(newTask, category);
+//						taskListView.getViewer().setSelection(new StructuredSelection(newTask));
+//					}
+//				});
+//			} else {
+//				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//					public void run() {
+//						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//						if (window != null) {
+//							MessageDialog.openWarning(window.getShell(), "Add Existing Task Failed",
+//									MessageFormat.format("Unable to retrieve task \"{0}\" from repository.", taskId));
+//						}
+//					}
+//				});
+//			}
+//		} catch (final CoreException e) {
+//			TasksUiInternal.asyncDisplayStatus("Unable to open task", e.getStatus());
+//		} finally {
+//			monitor.done();
+//		}
+//		return Status.OK_STATUS;
 	}
 }

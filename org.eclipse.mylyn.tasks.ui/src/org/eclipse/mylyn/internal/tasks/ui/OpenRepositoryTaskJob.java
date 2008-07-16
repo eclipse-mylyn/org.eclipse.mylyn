@@ -45,6 +45,8 @@ public class OpenRepositoryTaskJob extends Job {
 
 	private final String taskUrl;
 
+	private ITask task;
+
 	public OpenRepositoryTaskJob(String repositoryKind, String repositoryUrl, String taskId, String taskUrl,
 			IWorkbenchPage page) {
 		super("Opening repository task " + taskId);
@@ -54,6 +56,15 @@ public class OpenRepositoryTaskJob extends Job {
 		this.repositoryUrl = repositoryUrl;
 		this.taskUrl = taskUrl;
 		this.page = page;
+	}
+
+	/**
+	 * Returns the task if it was created when openeing
+	 * 
+	 * @return
+	 */
+	public ITask getTask() {
+		return task;
 	}
 
 	@Override
@@ -96,7 +107,7 @@ public class OpenRepositoryTaskJob extends Job {
 			} else {
 				TaskData taskData = connector.getTaskData(repository, taskId, monitor);
 				if (taskData != null) {
-					final ITask task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+					task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
 					TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {

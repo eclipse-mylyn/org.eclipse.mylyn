@@ -27,6 +27,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Eugene Kuleshov
  */
+// TODO 3.1 remove class
+@Deprecated
 public class AddRepositoryTaskAction extends Action implements IViewActionDelegate {
 
 	private static final String WIZARD_LABEL = "Add an existing repository task/issue";

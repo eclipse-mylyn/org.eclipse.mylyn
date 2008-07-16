@@ -30,6 +30,7 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Mik Kersten
  */
+// TODO 3.1 rename to OpenRepositoryTaskAction
 public class OpenRepositoryTask extends Action implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
 	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylyn.tasks.ui.open.remote";

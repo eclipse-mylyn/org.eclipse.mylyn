@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author Mik Kersten
  */
+//TODO 3.1 remove class
+@Deprecated
 public class ExistingTaskWizardPage extends WizardPage {
 
 	private static final String TITLE = "Enter Task ID";

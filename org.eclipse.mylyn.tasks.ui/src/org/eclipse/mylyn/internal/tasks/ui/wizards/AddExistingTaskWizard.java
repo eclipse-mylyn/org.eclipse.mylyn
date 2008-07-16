@@ -20,6 +20,8 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  */
+// TODO 3.1 remove class
+@Deprecated
 public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 
 	public static final String TITLE = "Add Existing Repository Task";

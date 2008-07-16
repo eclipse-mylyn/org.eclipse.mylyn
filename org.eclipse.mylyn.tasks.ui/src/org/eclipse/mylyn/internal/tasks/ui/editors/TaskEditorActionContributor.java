@@ -71,7 +71,6 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-@SuppressWarnings("deprecation")
 public class TaskEditorActionContributor extends MultiPageEditorActionBarContributor implements
 		ISelectionChangedListener {
 

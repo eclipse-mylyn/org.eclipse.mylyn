@@ -146,6 +146,10 @@ public abstract class AbstractRepositoryConnectorUi {
 		return TasksUiInternal.getPriorityImage(task);
 	}
 
+	/**
+	 * This method is not used anymore.
+	 */
+	@Deprecated
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
 		return new CommonAddExistingTaskWizard(repository);
 	}
