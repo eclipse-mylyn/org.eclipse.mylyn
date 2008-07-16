@@ -37,6 +37,7 @@ cp -v javax.servlet*.jar $DEST/extrasUpdateSite/plugins
 cp -v javax.wsdl*.jar $DEST/extrasUpdateSite/plugins
 cp -v javax.xml.rpc*.jar $DEST/extrasUpdateSite/plugins
 cp -v javax.xml.soap*.jar $DEST/extrasUpdateSite/plugins
+cp -v org.apache.ant*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.axis*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.commons.discovery*.jar $DEST/extrasUpdateSite/plugins
 cp -v org.apache.commons.logging*.jar $DEST/extrasUpdateSite/plugins
@@ -53,6 +54,7 @@ cp -v javax.servlet*.jar $DEST/incubatorUpdateSite/plugins
 cp -v javax.wsdl*.jar $DEST/incubatorUpdateSite/plugins
 cp -v javax.xml.rpc*.jar $DEST/incubatorUpdateSite/plugins
 cp -v javax.xml.soap*.jar $DEST/incubatorUpdateSite/plugins
+cp -v org.apache.ant*.jar $DEST/incubatorUpdateSite/plugins
 cp -v org.apache.axis*.jar $DEST/incubatorUpdateSite/plugins
 cp -v org.apache.commons.discovery*.jar $DEST/incubatorUpdateSite/plugins
 cp -v org.apache.commons.logging*.jar $DEST/incubatorUpdateSite/plugins
@@ -62,6 +64,7 @@ cp -v org.jdom*.jar $DEST/incubatorUpdateSite/plugins
 
 mkdir -p $DEST/allUpdateSite/plugins
 cp -v javax.xml.bind*.jar $DEST/allUpdateSite/plugins
+cp -v org.apache.ant*.jar $DEST/allUpdateSite/plugins
 cp -v org.apache.commons.codec*.jar $DEST/allUpdateSite/plugins
 cp -v org.apache.commons.httpclient*.jar $DEST/allUpdateSite/plugins
 cp -v org.apache.commons.lang*.jar $DEST/allUpdateSite/plugins
