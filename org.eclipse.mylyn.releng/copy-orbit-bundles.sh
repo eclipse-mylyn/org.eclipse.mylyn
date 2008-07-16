@@ -19,6 +19,7 @@ cd $SRC
 
 pack javax.xml.rpc*
 pack javax.xml.soap*
+pack org.apache.ant*
 pack org.apache.axis*
 pack org.apache.commons.discovery*
 
