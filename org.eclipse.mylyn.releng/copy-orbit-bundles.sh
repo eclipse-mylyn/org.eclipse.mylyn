@@ -17,10 +17,14 @@ pack() {
 
 cd $SRC
 
+wget -O archive.zip `grep org.apache.ant ../maps/orbit.map | sed s/.*GET,// | sed s/,unpack=true//`
+unzip archive.zip
+rm archive.zip
+
 pack javax.xml.rpc*
 pack javax.xml.soap*
 pack org.apache.ant*
-pack org.apache.axis*
+#pack org.apache.axis*
 pack org.apache.commons.discovery*
 
 mkdir -p $DEST/standardUpdateSite/plugins
