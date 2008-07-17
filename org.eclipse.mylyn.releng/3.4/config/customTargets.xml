@@ -112,6 +112,9 @@
 		<replace dir="${buildDirectory}/features" value="${majorVersion}.${forceContextQualifier}" token="${majorVersion}.qualifier">
 			<include name="**/feature.xml" />
 		</replace>
+		<replace dir="${buildDirectory}/features" value="${majorVersion}.${mylynQualifier}" token="${majorVersion}.mylynQualifier">
+			<include name="**/feature.xml" />
+		</replace>
 	</target>
 
 	<!-- ===================================================================== -->
