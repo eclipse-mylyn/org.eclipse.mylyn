@@ -20,6 +20,7 @@ $JAVA_HOME/bin/java \
  -DbaseLocation=$ECLIPSE_HOME_3_4 \
  -Dbuilder=$BUILD_ROOT/3.4/config \
  -DforceContextQualifier=$QUALIFIER-$POSTFIX \
+ -DmylynQualifier=$QUALIFIER \
  -DmajorVersion=$MAJOR_VERSION \
  $*
 mv $BUILD_HOME/mylyn-$MAJOR_VERSION.$QUALIFIER-$POSTFIX-all.zip $BUILD_HOME/mylyn-$MAJOR_VERSION.$QUALIFIER-all.zip
