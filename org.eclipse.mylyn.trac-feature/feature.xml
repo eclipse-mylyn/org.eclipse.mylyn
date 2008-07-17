@@ -77,7 +77,7 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
       <import plugin="org.apache.xmlrpc" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="org.apache.commons.httpclient"/>
-      <import feature="org.eclipse.mylyn_feature" version="3.0.1.I20080716-2300" match="compatible"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.0.1.I20080716" match="compatible"/>
    </requires>
 
    <plugin
