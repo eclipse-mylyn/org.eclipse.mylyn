@@ -226,13 +226,21 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				session.setNeedsPerformQueries(true);
 				session.setUser(isUser());
 
-				preSynchronization(session, new SubProgressMonitor(monitor, 20));
+				updateQueryStatus(null);
+				try {
+					boolean success = preSynchronization(session, new SubProgressMonitor(monitor, 20));
 
-				if (session.needsPerformQueries() || isUser()) {
-					// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
-					synchronizeQueries(monitor, session);
-				} else {
-					monitor.worked(queries.size() * 20);
+					if ((success && session.needsPerformQueries()) || isUser()) {
+						// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
+						synchronizeQueries(monitor, session);
+					} else {
+						monitor.worked(queries.size() * 20);
+					}
+				} finally {
+					for (RepositoryQuery repositoryQuery : queries) {
+						repositoryQuery.setSynchronizing(false);
+					}
+					taskList.notifySynchronizationStateChanged(queries);
 				}
 
 				Set<ITask> tasksToBeSynchronized = new HashSet<ITask>();
@@ -285,13 +293,8 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 	private void synchronizeQueries(IProgressMonitor monitor, SynchronizationSession session) {
 		for (RepositoryQuery repositoryQuery : queries) {
 			Policy.checkCanceled(monitor);
-			repositoryQuery.setStatus(null);
-
 			monitor.subTask("Synchronizing query " + repositoryQuery.getSummary());
 			synchronizeQuery(repositoryQuery, session, new SubProgressMonitor(monitor, 20));
-
-			repositoryQuery.setSynchronizing(false);
-			taskList.notifySynchronizationStateChanged(Collections.singleton(repositoryQuery));
 		}
 	}
 
@@ -303,7 +306,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
 			connector.postSynchronization(event, monitor);
-			updateQueryStatus(null);
 			return true;
 		} catch (CoreException e) {
 			updateQueryStatus(e.getStatus());
@@ -359,9 +361,8 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 	private void updateQueryStatus(final IStatus status) {
 		for (RepositoryQuery repositoryQuery : queries) {
 			repositoryQuery.setStatus(status);
-			repositoryQuery.setSynchronizing(false);
-			taskList.notifyElementChanged(repositoryQuery);
 		}
+		taskList.notifySynchronizationStateChanged(queries);
 	}
 
 	public Collection<IStatus> getStatuses() {

@@ -481,6 +481,7 @@ public class TaskList implements ITaskList {
 		fireDelta(deltas);
 	}
 
+	// TODO rename: this indicates a change of the synchronizing/status flag, not of the synchronization state
 	public void notifySynchronizationStateChanged(Set<? extends IRepositoryElement> elements) {
 		HashSet<TaskContainerDelta> taskChangeDeltas = new HashSet<TaskContainerDelta>();
 		for (IRepositoryElement abstractTaskContainer : elements) {
@@ -492,6 +493,7 @@ public class TaskList implements ITaskList {
 		fireDelta(taskChangeDeltas);
 	}
 
+	// TODO rename: this indicates a change of the synchronizing/status flag, not of the synchronization state  
 	public void notifySynchronizationStateChanged(IRepositoryElement element) {
 		notifySynchronizationStateChanged(Collections.singleton(element));
 	}
