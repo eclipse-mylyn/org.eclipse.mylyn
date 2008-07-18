@@ -53,7 +53,7 @@ echo "Updating site archives"
 cp $WEEKLY/mylyn-$NEW_VERSION*-e3.3.zip $ROOT/mylyn-$NEW_VERSION_SHORT-e3.3.zip 
 cp $WEEKLY/mylyn-$NEW_VERSION*-e3.4.zip $ROOT/mylyn-$NEW_VERSION_SHORT-e3.4.zip 
 cp $WEEKLY/mylyn-$NEW_VERSION*-extras.zip $ROOT/mylyn-$NEW_VERSION_SHORT-extras.zip
-cp $WEEKLY/mylyn-$NEW_VERSION*-incubator.zip $ROOT/mylyn-$NEW_VERSION_SHORT-extras.zip  
+cp $WEEKLY/mylyn-$NEW_VERSION*-incubator.zip $ROOT/mylyn-$NEW_VERSION_SHORT-incubator.zip  
 
 echo "Updating mirror ulrs"
 sed -i -e 's/http:\/\/download.eclipse.org\/tools\/mylyn\/update\/weekly\//http:\/\/download.eclipse.org\/tools\/mylyn\/update\//' $ROOT/e3.3/site.xml
