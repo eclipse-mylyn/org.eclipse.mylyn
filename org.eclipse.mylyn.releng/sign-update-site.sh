@@ -96,8 +96,8 @@ rezip e3.4
 rezip extras
 rezip incubator
 
-pack e3.3 "Mylyn"
-pack e3.4 "Mylyn"
+pack e3.3 "Mylyn for Eclipse 3.3"
+pack e3.4 "Mylyn for Eclipse 3.4"
 pack extras "Mylyn Extras"
 pack incubator "Mylyn Incubator"
 
