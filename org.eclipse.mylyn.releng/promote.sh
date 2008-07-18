@@ -13,7 +13,7 @@ ROOT=~/downloads/tools/mylyn/update
 
 # backup old release 
 
-OLD_VERSION=`grep mylyn_feature.*version $ROOT/e3.3/site.xml | sed 's/.*\"\([^\"]*\)\"./\1/' | head`
+OLD_VERSION=`grep mylyn_feature.*version $ROOT/e3.3/site.xml | sed 's/.*\"\([^\"]*\)\"./\1/' | sed 's/-e33//' | head`
 OLD_VERSION_SHORT=`echo $OLD_VERSION | sed 's/\(.*\)\..*/\1/'`
 
 if [ "$OLD_VERSION" == "" ] || [ "$OLD_VERSION_SHORT" == "" ]
@@ -45,14 +45,8 @@ cp -a $WEEKLY/e3.4 $ROOT
 cp -a $WEEKLY/extras $ROOT
 cp -a $WEEKLY/incubator $ROOT
 
-NEW_VERSION=`grep mylyn_feature.*version $ROOT/e3.3/site.xml | sed 's/.*\"\([^\"]*\)\"./\1/' | head`
-NEW_VERSION_SHORT=`echo $NEW_VERSION | sed 's/\(.*\)\..*/\1/'`
-
-if [ "$NEW_VERSION" == "" ] || [ "$NEW_VERSION_SHORT" == "" ]
-then
-    echo "Could not determine new version"
-    exit 1
-fi
+NEW_VERSION=$MAJOR.$BUILD
+NEW_VERSION_SHORT=$MAJOR
 
 echo "Updating site archives"
 
