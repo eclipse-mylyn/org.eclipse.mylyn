@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-ROOT=~/downloads/tools/mylyn/update
+ROOT=$HOME/downloads/tools/mylyn/update
 
 echo "Updating site mirrors"
 sed -i -e 's/<site pack200=\"true\">/<site pack200=\"true\" mirrorsURL="http:\/\/www.eclipse.org\/downloads\/download.php?file=\/tools\/mylyn\/update\/e3.3\/site.xml\&amp;protocol=http\&amp;format=xml">/' $ROOT/e3.3/site.xml
