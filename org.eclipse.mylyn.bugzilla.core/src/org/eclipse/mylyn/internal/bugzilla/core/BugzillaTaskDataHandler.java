@@ -424,6 +424,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		String product = attributeProject.getValue();
 		initializeTaskData(repository, subTaskData, product, monitor);
 		new TaskMapper(subTaskData).merge(new TaskMapper(parentTaskData));
+		subTaskData.getRoot().getMappedAttribute(BugzillaAttribute.DEPENDSON.getKey()).setValue("");
 		subTaskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue("");
 		subTaskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("");
 		subTaskData.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey()).setValue(parentTaskData.getTaskId());
