@@ -503,7 +503,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			initializePreferences(getPreferenceStore());
 
 			// initialize CommonFonts from UI thread: bug 240076
-			CommonFonts.BOLD.toString();
+			if (CommonFonts.BOLD == null) {
+				// ignore
+			}
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
