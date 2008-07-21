@@ -22,13 +22,28 @@ import org.eclipse.swt.widgets.Display;
  */
 public class CommonFonts {
 
-	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+	public static Font BOLD;
 
-	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
+	public static Font ITALIC;
 
 	public static Font STRIKETHROUGH = null;
 
 	static {
+		if (Display.getCurrent() != null) {
+			init();
+		} else {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					init();
+				}
+			});
+		}
+	}
+
+	private static void init() {
+		BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+		ITALIC = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+
 		Font defaultFont = JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT);
 		FontData[] defaultData = defaultFont.getFontData();
 		if (defaultData != null && defaultData.length == 1) {
