@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Rob Elves
  * @author Mik Kersten
  */
-@SuppressWarnings( { "deprecation", "restriction" })
+@SuppressWarnings( { "restriction" })
 public class ContextRetrieveWizardPage extends WizardPage {
 
 	private static final String WIZARD_TITLE = "Retrieve context";
