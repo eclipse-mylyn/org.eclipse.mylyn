@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -28,19 +27,6 @@ public class TaskEditorNewCommentPart extends TaskEditorRichTextPart {
 	public void initialize(AbstractTaskEditorPage taskEditorPage) {
 		super.initialize(taskEditorPage);
 		setAttribute(getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW));
-	}
-
-	@Override
-	protected void fillToolBar(ToolBarManager barManager) {
-//		Action collapseAllAction = new Action("") {
-//			@Override
-//			public void run() {
-//				setChecked(!isChecked());
-//			}
-//		};
-//		collapseAllAction.setImageDescriptor(CommonImages.PART_MAXIMIZE);
-//		collapseAllAction.setToolTipText("Maximize");
-//		barManager.add(collapseAllAction);
 	}
 
 }

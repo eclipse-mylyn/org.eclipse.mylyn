@@ -64,6 +64,8 @@ public class EditorUtil {
 	// XXX why is this required?
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
+	public static final String KEY_TOGGLE_TO_MAXIMIZE_ACTION = "maximizeAction";
+
 	static boolean canDoGlobalAction(String actionId, TextViewer textViewer) {
 		if (actionId.equals(ActionFactory.CUT.getId())) {
 			return textViewer.canDoOperation(ITextOperationTarget.CUT);

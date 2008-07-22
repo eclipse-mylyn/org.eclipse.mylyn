@@ -1681,6 +1681,33 @@
             id="org.eclipse.mylyn.tasks.bugs.errorReporter"
             label="Report Error as Bug">
       </errorReporter>
-   </extension>    
-     
+   </extension>   
+   
+    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.mylyn.tasks.ui.category.editor"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.MaximizePartHandler"
+            description="Maximize Part"
+            id="org.eclipse.mylyn.tasks.ui.command.maximizePart"
+            name="Maximize Part">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.maximizePart"
+            contextId="org.eclipse.mylyn.tasks.ui.editors.task"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+M">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="org.eclipse.mylyn.tasks.ui.editors.task"
+            name="In Tasks Editor"
+            parentId="org.eclipse.ui.textEditorScope">
+      </context>
+   </extension>
 </plugin>

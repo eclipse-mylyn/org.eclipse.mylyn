@@ -10,8 +10,11 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -22,6 +25,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -40,6 +44,8 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 	private Composite composite;
 
 	private int sectionStyle;
+
+	protected ToggleToMaximizePartAction toggleToMaximizePartAction;
 
 	public TaskEditorRichTextPart() {
 		setSectionStyle(ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
@@ -115,6 +121,14 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 				GridDataFactory.fillDefaults().minSize(EditorUtil.MAXIMUM_WIDTH, 0).hint(EditorUtil.MAXIMUM_WIDTH,
 						SWT.DEFAULT).applyTo(editor.getControl());
 			} else {
+				toggleToMaximizePartAction = new ToggleToMaximizePartAction();
+				editor.getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, toggleToMaximizePartAction);
+				if (editor.getControl() instanceof Composite) {
+					for (Control control : ((Composite) editor.getControl()).getChildren()) {
+						control.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, toggleToMaximizePartAction);
+					}
+				}
+
 				final GridData gd = new GridData();
 				// wrap text at this margin, see comment below
 				int width = getEditorWidth();
@@ -197,6 +211,73 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 	public void setFocus() {
 		if (editor != null) {
 			editor.getControl().setFocus();
+		}
+	}
+
+	@Override
+	protected void fillToolBar(ToolBarManager barManager) {
+		if (toggleToMaximizePartAction != null) {
+			barManager.add(toggleToMaximizePartAction);
+		}
+		super.fillToolBar(barManager);
+	}
+
+	private class ToggleToMaximizePartAction extends Action {
+
+		private static final String COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.maximizePart";
+
+		private static final String MAXIMIZE = "Maximize";
+
+		private static final int SECTION_HEADER_HEIGHT = 50;
+
+		private int originalHeight = -1;
+
+		public ToggleToMaximizePartAction() {
+			super("", SWT.TOGGLE);
+			setImageDescriptor(CommonImages.PART_MAXIMIZE);
+			setToolTipText(MAXIMIZE);
+			setActionDefinitionId(COMMAND_ID);
+			setChecked(false);
+		}
+
+		@Override
+		public void run() {
+			toogleToMaximizePart();
+		}
+
+		private void toogleToMaximizePart() {
+			if (!(getEditor().getControl().getLayoutData() instanceof GridData)) {
+				return;
+			}
+
+			GridData gd = (GridData) getEditor().getControl().getLayoutData();
+
+			if (originalHeight == -1) {
+				originalHeight = gd.heightHint;
+			}
+
+			try {
+				getTaskEditorPage().setReflow(false);
+
+				int heightHint;
+				if (isChecked()) {
+					heightHint = getManagedForm().getForm().getClientArea().height - SECTION_HEADER_HEIGHT;
+				} else {
+					heightHint = originalHeight;
+				}
+
+				// ignore when not necessary
+				if (gd.heightHint == heightHint) {
+					return;
+				}
+				gd.heightHint = heightHint;
+				gd.minimumHeight = heightHint;
+			} finally {
+				getTaskEditorPage().setReflow(true);
+			}
+
+			getTaskEditorPage().reflow();
+			EditorUtil.ensureVisible(getEditor().getControl());
 		}
 	}
 

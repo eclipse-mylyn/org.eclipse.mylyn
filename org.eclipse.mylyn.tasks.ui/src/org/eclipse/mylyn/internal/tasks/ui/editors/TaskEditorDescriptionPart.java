@@ -134,6 +134,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 			};
 			toolBar.add(replyAction);
 		}
+		super.fillToolBar(toolBar);
 	}
 
 	protected IRepositoryQuery getDuplicateQuery(String name) throws CoreException {
