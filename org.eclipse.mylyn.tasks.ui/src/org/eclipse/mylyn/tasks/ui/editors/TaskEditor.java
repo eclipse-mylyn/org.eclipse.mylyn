@@ -66,7 +66,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.editor.IFormPage;
@@ -394,12 +393,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 
 		setPartName(input.getName());
-
-		// activate context
-		IContextService contextSupport = (IContextService) site.getService(IContextService.class);
-		if (contextSupport != null) {
-			contextSupport.activateContext(ID_EDITOR);
-		}
 	}
 
 	private void installTitleDrag(Form form) {
