@@ -42,7 +42,7 @@ public class CommonFonts {
 
 	private static void init() {
 		BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
-		ITALIC = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
+		ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 
 		Font defaultFont = JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT);
 		FontData[] defaultData = defaultFont.getFontData();
