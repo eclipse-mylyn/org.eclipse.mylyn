@@ -196,6 +196,8 @@ public class CommonImages {
 
 	public static final ImageDescriptor PREVIEW_WEB = create(T_TOOL, "preview-web.png");
 
+	public static final ImageDescriptor FIND = create(T_TOOL, "find.gif");
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
