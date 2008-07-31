@@ -30,6 +30,7 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.ui.editor;x-friends:="org.ec
  org.eclipse.mylyn.internal.wikitext.ui.editor.validation;x-friends:="org.eclipse.mylyn.wikitext.tests",
  org.eclipse.mylyn.internal.wikitext.ui.util;x-friends:="org.eclipse.mylyn.wikitext.tests",
  org.eclipse.mylyn.internal.wikitext.ui.viewer;x-friends:="org.eclipse.mylyn.wikitext.tests",
+ org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation;x-internal:=true,
  org.eclipse.mylyn.wikitext.ui,
  org.eclipse.mylyn.wikitext.ui.annotation,
  org.eclipse.mylyn.wikitext.ui.commands,

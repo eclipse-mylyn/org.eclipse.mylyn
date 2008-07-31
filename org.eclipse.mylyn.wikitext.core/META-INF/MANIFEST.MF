@@ -4,7 +4,10 @@ Bundle-Name: Mylyn WikiText Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.core;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylyn.wikitext.core,
+Export-Package: org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.core.util;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.core.validation;x-internal:=true,
+ org.eclipse.mylyn.wikitext.core,
  org.eclipse.mylyn.wikitext.core.parser,
  org.eclipse.mylyn.wikitext.core.parser.builder,
  org.eclipse.mylyn.wikitext.core.parser.markup,
