@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
@@ -102,6 +103,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private final GlobalAction selectAllAction;
 
+	private final GlobalAction findAction;
+
 	public TaskEditorActionContributor() {
 		cutAction = new GlobalAction(ActionFactory.CUT.getId());
 		cutAction.setText(WorkbenchMessages.Workbench_cut);
@@ -144,6 +147,11 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		selectAllAction.setText(WorkbenchMessages.Workbench_selectAll);
 		selectAllAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.SELECT_ALL);
 		selectAllAction.setEnabled(true);
+
+		findAction = new GlobalAction(ActionFactory.FIND.getId());
+		findAction.setText("Find");
+		findAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.FIND_REPLACE);
+		findAction.setImageDescriptor(CommonImages.FIND);
 	}
 
 	public void addClipboardActions(IMenuManager manager) {
@@ -289,6 +297,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			redoAction.selectionChanged(selection);
 			selectAllAction.selectionChanged(selection);
 			newTaskFromSelectionAction.selectionChanged(selection);
+			findAction.selectionChanged(selection);
 		}
 	}
 
@@ -312,6 +321,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	public void init(IActionBars bars, IWorkbenchPage page) {
 		super.init(bars, page);
 		registerGlobalHandlers(bars);
+		findAction.selectionChanged(StructuredSelection.EMPTY);
 	}
 
 	public TaskEditor getEditor() {
@@ -381,6 +391,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
 		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
 		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAllAction);
+		bars.setGlobalActionHandler(ActionFactory.FIND.getId(), findAction);
 		bars.updateActionBars();
 	}
 
@@ -391,6 +402,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
 		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), null);
 		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), null);
+		bars.setGlobalActionHandler(ActionFactory.FIND.getId(), null);
 		bars.updateActionBars();
 	}
 
