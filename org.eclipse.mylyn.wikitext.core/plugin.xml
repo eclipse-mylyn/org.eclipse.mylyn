@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<plugin>
+   <extension-point id="markupLanguage" name="Markup Language" schema="schema/markupLanguage.exsd"/>
+   <extension-point id="markupValidationRule" name="Markup Validation Rule" schema="schema/markupValidationRule.exsd"/>
+
+   <!-- The wikitext content type. MarkupLanguage-providing plugins are expected to subclass this content type
+        for the purpose of associating the editor with the appropriate files -->
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            id="org.eclipse.mylyn.wikitext"
+            name="WikiText"
+            priority="normal">
+      </content-type>
+   </extension>   
+</plugin>

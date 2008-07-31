@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn WikiText Confluence UI Plug-in
+Bundle-SymbolicName: org.eclipse.mylyn.wikitext.confluence.ui;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Eclipse.org
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.mylyn.wikitext.confluence.core;bundle-version="1.0.0",
+ org.eclipse.mylyn.wikitext.ui;bundle-version="1.0.0",
+ org.eclipse.mylyn.tasks.core;bundle-version="3.0.0",
+ org.eclipse.mylyn.tasks.ui;bundle-version="3.0.0",
+ org.eclipse.jface.text,
+ org.eclipse.swt
+Bundle-Localization: plugin

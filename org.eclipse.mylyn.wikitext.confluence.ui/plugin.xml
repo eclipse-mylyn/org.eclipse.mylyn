@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.sandbox.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.confluence.ui.editors.TaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.confluence.ui.taskEditorExtension"
+            name="%taskEditorExtension.name.0">
+      </taskEditorExtension>
+      <repositoryAssociation
+            repository="jira"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.confluence.ui.taskEditorExtension">
+      </repositoryAssociation>
+   </extension>
+
+</plugin>

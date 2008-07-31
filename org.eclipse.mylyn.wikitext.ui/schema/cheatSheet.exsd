@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.mylyn.wikitext.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.mylyn.wikitext.ui" id="cheatSheet" name="Markup Language Cheat Seet"/>
+      </appinfo>
+      <documentation>
+         Plugin cheat-sheet content specific to a markup language.
+Cheat-sheet content is help text that provides information about the syntax of a specific markup language.  This help text is presented to the user within the markup editor.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="content" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="content">
+      <annotation>
+         <documentation>
+            a pointer to markup language-specific cheat sheet help content
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="markupLanguage" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the name of the markup language for which the cheat sheet content is relevant
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="resource" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a path to the resource that provides the content
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="contentLanguage" type="string">
+            <annotation>
+               <documentation>
+                  The markup language of the help content.  If unspecified, then HTML is assumed.  Otherwise the contentLanguage may be specified as any registered markup language (eg: &quot;Textile&quot;, &quot;MediaWiki&quot;, etc).
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         2.2
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

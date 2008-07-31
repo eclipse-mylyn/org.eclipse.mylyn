@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension-point id="cheatSheet" name="Markup Language Cheat Seet"
+		schema="schema/cheatSheet.exsd" />
+	<extension-point id="contentAssist" name="Markup Language Content Assist"
+		schema="schema/contentAssist.exsd" />
+		
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="org.eclipse.mylyn.wikitext.ui.annotation.id">
+		</type>
+		<type name="org.eclipse.mylyn.wikitext.ui.annotation.anchor">
+		</type>
+		<type name="org.eclipse.mylyn.wikitext.ui.annotation.anchorName">
+		</type>
+		<type name="org.eclipse.mylyn.wikitext.ui.annotation.title">
+		</type>
+		<type name="org.eclipse.mylyn.wikitext.ui.annotation.class">
+		</type>
+		<type name="org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.bullet"/>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			class="org.eclipse.mylyn.internal.wikitext.ui.util.FilePropertyTester"
+			id="org.eclipse.mylyn.wikitext.ui.filePropertyTester" namespace="org.eclipse.mylyn.wikitext"
+			properties="contentTypeClassification" type="org.eclipse.core.resources.IFile">
+		</propertyTester>
+	</extension>
+	
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+			<menu label="%menu.label.0" tooltip="%menu.tooltip.0">
+				<command commandId="org.eclipse.mylyn.wikitext.ui.convertToDocbookCommand"
+					label="%command.label.0" tooltip="%command.tooltip.0" helpContextId="org.eclipse.mylyn.wikitext.ui.markupConversion">
+				</command>
+				<command commandId="org.eclipse.mylyn.wikitext.ui.convertToHtmlCommand"
+					label="%command.label.1" tooltip="%command.tooltip.1" helpContextId="org.eclipse.mylyn.wikitext.ui.markupConversion">
+				</command>
+				<command commandId="org.eclipse.mylyn.wikitext.ui.convertToEclipseHelpCommand"
+					label="%command.label.2" tooltip="%command.tooltip.2" helpContextId="org.eclipse.mylyn.wikitext.ui.markupConversion">
+				</command>
+				<visibleWhen>
+					<with variable="activeMenuSelection">
+						<and>
+							<count value="+"/>
+							<iterate>
+								<adapt type="org.eclipse.core.resources.IFile">
+									<test property="org.eclipse.mylyn.wikitext.contentTypeClassification"
+										value="org.eclipse.mylyn.wikitext" />
+								</adapt>
+							</iterate>
+						</and>
+					</with>
+				</visibleWhen>
+			</menu>
+		</menuContribution>
+	</extension>
+	
+	<extension point="org.eclipse.ui.commands">
+		<command
+			defaultHandler="org.eclipse.mylyn.wikitext.ui.commands.ConvertMarkupToDocbook"
+			id="org.eclipse.mylyn.wikitext.ui.convertToDocbookCommand" name="%command.name.0">
+		</command>
+		<command defaultHandler="org.eclipse.mylyn.wikitext.ui.commands.ConvertMarkupToHtml"
+			id="org.eclipse.mylyn.wikitext.ui.convertToHtmlCommand" name="%command.name.1" />
+		<command
+			defaultHandler="org.eclipse.mylyn.wikitext.ui.commands.ConvertMarkupToEclipseHelp"
+			id="org.eclipse.mylyn.wikitext.ui.convertToEclipseHelpCommand" name="%command.name.2" />
+		<command id="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
+			name="%command.name.3" />
+	</extension>
+	
+	<extension point="org.eclipse.ui.handlers">
+		<handler commandId="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
+			class="org.eclipse.mylyn.internal.wikitext.ui.editor.commands.ShowCheatSheetCommand">
+			<activeWhen>
+				<with variable="activeFocusControlId">
+					<equals value="org.eclipse.mylyn.wikitext.ui.editor.sourceViewer">
+					</equals>
+				</with>
+			</activeWhen>
+		</handler>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors">
+		<editor class="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor"
+			contributorClass="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditorActionBarContributor"
+			default="true" icon="icons/editor-icon.gif"
+			id="org.eclipse.mylyn.wikitext.ui.editor.markupEditor" name="%editor.name.0">
+			<contentTypeBinding contentTypeId="org.eclipse.mylyn.wikitext"/>
+		</editor>
+	</extension>
+	
+	<extension point="org.eclipse.ui.contexts">
+		<context description="%context.description.0"
+			id="org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext" name="%context.name.0"
+			parentId="org.eclipse.ui.textEditorScope">
+		</context>
+	</extension>
+	
+	<extension point="org.eclipse.ui.bindings">
+         <!--  win32:  M1=CTRL,    M2=SHIFT, M3=ALT, M4=-
+            carbon: M1=COMMAND, M2=SHIFT, M3=ALT, M4=CTRL -->
+		<key sequence="F1"
+			contextId="org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"
+			commandId="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
+	</extension>
+	
+	<extension point="org.eclipse.ui.commands">
+		<category description="%category.description.0"
+			id="org.eclipse.mylyn.wikitext.ui.editor.category" name="%category.name.0">
+		</category>
+		<command categoryId="org.eclipse.mylyn.wikitext.ui.editor.category"
+			description="%command.description.0"
+			id="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand" name="%command.name.4">
+		</command>
+	</extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="org.eclipse.ui.preferencePages.GeneralTextEditor"
+			class="org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.EditorPreferencePage"
+			id="org.eclipse.mylyn.wikitext.ui.editor.preferences.EditorPreferencePage"
+			name="%page.name.0">
+		</page>
+	</extension>
+	
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.PreferenceInitializer">
+		</initializer>
+	</extension>
+	
+	<extension id="org.eclipse.mylyn.wikitext.core.validation.problem"
+		name="Markup Validation Problem" point="org.eclipse.core.resources.markers">
+		<persistent value="false" />
+		<super type="org.eclipse.core.resources.problemmarker" />
+		<super type="org.eclipse.core.resources.textmarker" />
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type name="org.eclipse.mylyn.wikitext.ui.editor.problem.validation.error"
+			super="org.eclipse.ui.workbench.texteditor.error" />
+		<type
+			name="org.eclipse.mylyn.wikitext.ui.editor.problem.validation.warning"
+			super="org.eclipse.ui.workbench.texteditor.warning" />
+	</extension>
+	
+	<extension point="org.eclipse.help.toc">
+		<toc file="help/Mylyn WikiText User Guide-toc.xml" primary="true">
+		</toc>
+	</extension>
+ <extension
+       point="org.eclipse.help.contexts">
+    <contexts
+          file="contextHelp.xml">
+    </contexts>
+ </extension>
+</plugin>

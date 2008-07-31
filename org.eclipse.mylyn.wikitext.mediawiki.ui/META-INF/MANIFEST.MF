@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylyn WikiText MediaWiki UI Plug-in
+Bundle-SymbolicName: org.eclipse.mylyn.wikitext.mediawiki.ui;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Eclipse.org
+Require-Bundle: org.eclipse.mylyn.wikitext.mediawiki.core;bundle-version="1.0.0",
+ org.eclipse.mylyn.wikitext.ui;bundle-version="1.0.0"
+Bundle-Localization: plugin

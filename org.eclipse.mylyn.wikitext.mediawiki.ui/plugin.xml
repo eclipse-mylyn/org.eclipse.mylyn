@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+<extension
+         point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
+      <content
+            contentLanguage="MediaWiki"
+            markupLanguage="MediaWiki"
+            resource="help/cheatSheet/MediaWiki.mediawiki">
+      </content>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+	  <templates
+            markupLanguage="MediaWiki">
+         <!-- phrase modifiers -->
+         <template name="'''" description="%template.description.0" content="'''${text}''' $"/>
+         <template name="''" description="%template.description.1" content="''${text}'' $"/>
+         <template name="'''''" description="%template.description.2" content="'''''${text}''''' $"/>
+         
+         <!-- block templates -->
+         
+         <template name="= " description="%template.description.3" content="\n= ${text} =\n\n" block="true"/>
+         <template name="== " description="%template.description.4" content="\n== ${text} ==\n\n" block="true"/>
+         <template name="=== " description="%template.description.5" content="\n=== ${text} ===\n\n" block="true"/>
+         <template name="==== " description="%template.description.6" content="\n==== ${text} ====\n\n" block="true"/>
+         <template name="===== " description="%template.description.7" content="\n===== ${text} =====\n\n" block="true"/>
+         <template name="====== " description="%template.description.8" content="\n====== ${text} ======\n\n" block="true"/>
+         <template name="# " description="%template.description.9" content="\n# ${text}\n# ${text2}\n\n" block="true"/>
+         <template name="## " description="%template.description.10" content="\n## ${text}\n## ${text2}\n\n" block="true"/>
+         <template name="* " description="%template.description.11" content="\n* ${text}\n* ${text2}\n\n" block="true"/>
+         <template name="** " description="%template.description.12" content="\n** ${text}\n** ${text2}\n\n" block="true"/>
+         <template name=";: " description="%template.description.13" content="\n; ${text} : ${definition}\n; ${text2} : ${definition2}\n\n" block="true"/>
+      </templates>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.sandbox.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.mediawiki.ui.editors.TaskEditorExtension"
+            id="org.eclipse.mylyn.internal.wikitext.mediawiki.ui.taskEditorExtension"
+            name="%taskEditorExtension.name.0">
+      </taskEditorExtension>
+   </extension>
+
+</plugin>

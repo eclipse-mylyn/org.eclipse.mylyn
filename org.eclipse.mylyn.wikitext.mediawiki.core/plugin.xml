@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<plugin>
+	<extension point="org.eclipse.mylyn.wikitext.core.markupLanguage">
+		<language class="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage"
+			name="MediaWiki" fileExtensions="mediawiki">
+		</language>
+	</extension>
+	
+	
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="mediawiki"
+            id="org.eclipse.mylyn.wikitext.mediawiki"
+            name="MediaWiki WikiText Markup"
+            priority="normal">
+      </content-type>
+   </extension>
+</plugin>

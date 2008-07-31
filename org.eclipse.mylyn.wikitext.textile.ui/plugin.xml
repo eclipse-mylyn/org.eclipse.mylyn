@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
+      <content
+            contentLanguage="Textile"
+            markupLanguage="Textile"
+            resource="help/cheatSheet/Textile.textile">
+      </content>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+      
+      <templates
+            markupLanguage="Textile">
+         <!-- phrase modifiers -->
+         <template name="_" description="%template.description.0" content="_${text}_ $"/>
+         <template name="*" description="%template.description.1" content="*${text}* $"/>
+         <template name="__" description="%template.description.2" content="__${text}__ $"/>
+         <template name="**" description="%template.description.3" content="**${text}** $"/>
+         <template name="@" description="%template.description.4" content="@${text}@ $"/>
+         <template name="??" description="%template.description.5" content="??${text}?? $"/>
+         <template name="-" description="%template.description.6" content="-${text}- $"/>
+         <template name="+" description="%template.description.7" content="+${text}- $"/>
+         <template name="^" description="%template.description.8" content="^${text}^ $"/>
+         <template name="~" description="%template.description.9" content="~${text}~ $"/>
+         <template name="%" description="%span%" content="%${text}% $"/>
+         
+         <!-- block templates -->
+         
+         <template name="h1. " description="%template.description.10" content="\nh1. ${text}\n\n" block="true"/>
+         <template name="h2. " description="%template.description.11" content="\nh2. ${text}\n\n" block="true"/>
+         <template name="h3. " description="%template.description.12" content="\nh3. ${text}\n\n" block="true"/>
+         <template name="h4. " description="%template.description.13" content="\nh4. ${text}\n\n" block="true"/>
+         <template name="h5. " description="%template.description.14" content="\nh5. ${text}\n\n" block="true"/>
+         <template name="h6. " description="%template.description.15" content="\nh6. ${text}\n\n" block="true"/>
+         <template name="bc. " description="%template.description.16" content="\nbc. ${text}\n\n" block="true"/>
+         <template name="bc.. " description="%template.description.17" content="\nbc.. ${text}\n\n" block="true"/>
+         <template name="bq. " description="%template.description.18" content="\nbq. ${text}\n\n" block="true"/>
+         <template name="bq.. " description="%template.description.19" content="\nbq.. ${text}\n\n" block="true"/>
+         <template name="fn. " description="%template.description.20" content="\nfn${number}. ${text}\n\n" block="true"/>
+         <template name="p. " description="%template.description.21" content="\np. ${text}\n\n" block="true"/>
+         <template name="pre. " description="%template.description.22" content="\npre. ${text}\n\n" block="true"/>
+         <template name="pre.. " description="%template.description.23" content="\npre.. ${text}\n\n" block="true"/>
+         <template name="# " description="%template.description.24" content="\n# ${text}\n# ${text2}\n\n" block="true"/>
+         <template name="## " description="%template.description.25" content="\n## ${text}\n## ${text2}\n\n" block="true"/>
+         <template name="* " description="%template.description.26" content="\n* ${text}\n* ${text2}\n\n" block="true"/>
+         <template name="** " description="%template.description.27" content="\n** ${text}\n** ${text2}\n\n" block="true"/>
+         <template name="[" description="%template.description.28" content="[${number}] $" block="true"/>
+         
+         <!-- generative templates -->
+         <template name="{toc}" description="%template.description.29" content="\n{toc}\n\n" block="true"/>
+         <template name="{glossary}" description="%template.description.30" content="\n{glossary}\n\n" block="true"/> 
+         
+      </templates>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.sandbox.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.textile.ui.editors.TextileTaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtension"
+            name="%taskEditorExtension.name.0">
+      </taskEditorExtension>
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.textile.ui.editors.BugzillaTaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtensionBugzilla"
+            name="%taskEditorExtension.name.1">
+      </taskEditorExtension>
+      <repositoryAssociation
+            repository="bugzilla"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtensionBugzilla">
+      </repositoryAssociation>
+      <repositoryAssociation
+            repository="local"
+            taskEditorExtension="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtension">
+      </repositoryAssociation>
+   </extension>
+
+</plugin>

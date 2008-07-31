@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<plugin>
+
+	<extension point="org.eclipse.mylyn.wikitext.core.markupLanguage">
+		<language class="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage"
+			name="Textile" fileExtensions="textile">
+		</language>
+		<language class="org.eclipse.mylyn.wikitext.textile.core.BugzillaTextileLanguage"
+			name="Textile (Bugzilla Dialect)"
+			extends="Textile">
+		</language>
+	</extension>
+	
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.mylyn.wikitext"
+            file-extensions="textile"
+            id="org.eclipse.mylyn.wikitext.textile"
+            name="Textile WikiText Markup"
+            priority="normal">
+      </content-type>
+   </extension>
+	
+	<extension point="org.eclipse.mylyn.wikitext.core.markupValidationRule">
+		<rule markupLanguage="Textile"
+			class="org.eclipse.mylyn.internal.wikitext.textile.core.validation.BlockWhitespaceRule" />
+	</extension>
+</plugin>
