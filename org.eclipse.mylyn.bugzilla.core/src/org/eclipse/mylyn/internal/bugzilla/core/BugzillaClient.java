@@ -32,6 +32,7 @@ import java.util.Set;
 import javax.security.auth.login.LoginException;
 import javax.swing.text.html.HTML.Tag;
 
+import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -83,6 +84,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
  */
 public class BugzillaClient {
 
+	private static final String COOKIE_BUGZILLA_LOGIN = "Bugzilla_login";
+
 	protected static final String USER_AGENT = "BugzillaConnector";
 
 	private static final int MAX_RETRIEVED_PER_QUERY = 100;
@@ -115,7 +118,7 @@ public class BugzillaClient {
 	private static final String KEY_SHORT_DESC = "short_desc";
 
 	// Pages with this string in the html occur when login is required
-	private static final String LOGIN_REQUIRED = "goaheadandlogin=1";
+	//private static final String LOGIN_REQUIRED = "goaheadandlogin=1";
 
 	private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
 
@@ -262,7 +265,7 @@ public class BugzillaClient {
 			// Resolves bug#195113
 			httpClient.getParams().setParameter("http.protocol.single-cookie-header", true);
 
-			// WARNING!! Setting browser compatability breaks Bugzilla
+			// WARNING!! Setting browser compatibility breaks Bugzilla
 			// authentication
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
@@ -288,7 +291,6 @@ public class BugzillaClient {
 				authenticated = false;
 				authenticate(monitor);
 			} else if (code == HttpURLConnection.HTTP_PROXY_AUTH) {
-				// throw new LoginException("Proxy Authentication Required");
 				authenticated = false;
 				getMethod.getResponseBodyNoop();
 				getMethod.releaseConnection();
@@ -300,8 +302,6 @@ public class BugzillaClient {
 				getMethod.releaseConnection();
 				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_NETWORK, "Http error: " + HttpStatus.getStatusText(code)));
-				// throw new IOException("HttpClient connection error response
-				// code: " + code);
 			}
 		}
 
@@ -317,36 +317,8 @@ public class BugzillaClient {
 		GzipGetMethod method = null;
 		try {
 			method = getConnect(loginUrl, monitor);
-			InputStream in = getResponseStream(method, monitor);
-			try {
-				BufferedReader responseReader = new BufferedReader(new InputStreamReader(in, characterEncoding));
-
-				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
-				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-
-					if (token.getType() == Token.TAG) {
-						HtmlTag tag = (HtmlTag) token.getValue();
-						if (tag.getTagType() == Tag.A) {
-							if (tag.hasAttribute("href")) {
-								String id = tag.getAttribute("href");
-								if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
-									authenticated = false;
-									return;
-								}
-							}
-						}
-					}
-				}
-
-				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_NETWORK, repositoryUrl.toString(), "Logout unsuccessful."));
-			} finally {
-				in.close();
-			}
-		} catch (ParseException e) {
 			authenticated = false;
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
+			httpClient.getState().clearCookies();
 		} finally {
 			if (method != null) {
 				method.releaseConnection();
@@ -398,11 +370,13 @@ public class BugzillaClient {
 
 			postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
+
 			postMethod.setRequestBody(formData);
 			postMethod.setDoAuthentication(true);
 			postMethod.setFollowRedirects(false);
-
+			httpClient.getState().clearCookies();
 			httpClient.getParams().setAuthenticationPreemptive(true);
+
 			int code = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
 			if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 				authenticated = false;
@@ -429,36 +403,25 @@ public class BugzillaClient {
 			}
 
 			if (hasAuthenticationCredentials()) {
-
-				InputStream input = getResponseStream(postMethod, monitor);
-				try {
-					BufferedReader responseReader = new BufferedReader(new InputStreamReader(input, characterEncoding));
-					HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
-					for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-						if (token.getType() == Token.TAG) {
-							HtmlTag tag = (HtmlTag) token.getValue();
-							if (tag.getTagType() == Tag.A) {
-								String id = tag.getAttribute("href");
-								if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
-									responseReader.close();
-									authenticated = false;
-									throw new CoreException(new BugzillaStatus(IStatus.ERROR,
-											BugzillaCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
-											repositoryUrl.toString(), IBugzillaConstants.INVALID_CREDENTIALS));
-								}
-							}
-						}
+				for (Cookie cookie : httpClient.getState().getCookies()) {
+					if (cookie.getName().equals(COOKIE_BUGZILLA_LOGIN)) {
+						authenticated = true;
+						break;
 					}
-				} finally {
-					input.close();
 				}
-			}
-			authenticated = true;
-		} catch (ParseException e) {
-			authenticated = false;
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 
+				if (!authenticated) {
+					InputStream input = getResponseStream(postMethod, monitor);
+					try {
+						parseHtmlError(input);
+					} finally {
+						input.close();
+					}
+				}
+			} else {
+				// anonymous login
+				authenticated = true;
+			}
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_IO, repositoryUrl.toString(), e));
