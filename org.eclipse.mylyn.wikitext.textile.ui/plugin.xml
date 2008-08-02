@@ -22,7 +22,7 @@
          <template name="@" description="%template.description.4" content="@${text}@ $"/>
          <template name="??" description="%template.description.5" content="??${text}?? $"/>
          <template name="-" description="%template.description.6" content="-${text}- $"/>
-         <template name="+" description="%template.description.7" content="+${text}- $"/>
+         <template name="+" description="%template.description.7" content="+${text}+ $"/>
          <template name="^" description="%template.description.8" content="^${text}^ $"/>
          <template name="~" description="%template.description.9" content="~${text}~ $"/>
          <template name="%" description="%span%" content="%${text}% $"/>
