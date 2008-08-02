@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.mylyn.wikitext.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.mylyn.wikitext.core" id="markupLanguage" name="Markup Language"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          A means of adding support for parsing lightweight markup languages.  A MarkupLanguage defines the rules and semantics used when parsing lightweight markup (wikitext).  This extension point should be used to add new markup parsers to the WikiText framework.
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -39,9 +39,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -49,9 +49,9 @@
 
    <element name="language">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element labelAttribute="name"/>
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <attribute name="class" type="string" use="required">
@@ -59,9 +59,9 @@
                <documentation>
                   The fully qualified name of the class that implements the markup language.  Must extend org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage:"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
@@ -92,18 +92,18 @@ Plugins should also use the org.eclipse.core.contenttype.contentTypes extension 
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          2.2
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          &lt;extension point=&quot;org.eclipse.mylyn.wikitext.core.markupLanguage&quot;&gt;
  &lt;language class=&quot;org.eclipse.mylyn.wikitext.textile.core.TextileLanguage&quot;
@@ -114,18 +114,18 @@ Plugins should also use the org.eclipse.core.contenttype.contentTypes extension 
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiInfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="implementation"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>
