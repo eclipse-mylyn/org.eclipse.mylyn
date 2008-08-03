@@ -35,6 +35,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Color;
@@ -156,9 +158,7 @@ public class AttributeEditorToolkit {
 			if (!editor.isReadOnly() && richTextEditor.getMode() == Mode.TASK_RELATION) {
 				applyContentAssist(viewer.getControl(), null);
 			}
-			if (menu != null) {
-				viewer.getControl().setMenu(menu);
-			}
+			installMenu(viewer.getControl());
 			EditorUtil.setTextViewer(editor.getControl(), viewer);
 		} else {
 			final TextViewer viewer = EditorUtil.getTextViewer(editor.getControl());
@@ -174,9 +174,7 @@ public class AttributeEditorToolkit {
 						}
 					});
 				}
-				if (menu != null) {
-					viewer.getControl().setMenu(menu);
-				}
+				installMenu(viewer.getControl());
 			}
 		}
 
@@ -184,6 +182,17 @@ public class AttributeEditorToolkit {
 		EditorUtil.setMarker(editor.getControl(), editor.getTaskAttribute().getId());
 
 		editor.decorate(getColorIncoming());
+	}
+
+	private void installMenu(final Control control) {
+		if (menu != null) {
+			control.setMenu(menu);
+			control.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent e) {
+					control.setMenu(null);
+				}
+			});
+		}
 	}
 
 	/**
