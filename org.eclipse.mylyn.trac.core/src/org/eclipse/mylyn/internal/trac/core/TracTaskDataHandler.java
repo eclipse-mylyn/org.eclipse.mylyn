@@ -244,6 +244,8 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	public static void createDefaultAttributes(TaskData data, ITracClient client, boolean existingTask) {
+		data.setVersion(TASK_DATA_VERSION);
+
 		createAttribute(data, TracAttribute.SUMMARY);
 		createAttribute(data, TracAttribute.DESCRIPTION);
 		if (existingTask) {
