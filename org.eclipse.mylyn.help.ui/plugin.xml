@@ -7,7 +7,7 @@
          name="Tasks"
          point="org.eclipse.help.toc">
       <toc
-            file="doc/toc.xml"
+            file="toc.xml"
             primary="true">
       </toc>
    </extension>

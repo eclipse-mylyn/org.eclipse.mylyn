@@ -3,11 +3,12 @@
 
 <toc label="Mylyn" topic="doc/overview.html">
 	<topic label="Overview" href="doc/overview.html" />
- <topic href="doc/notices.html" label="Legal">
- </topic>
 	<!--
 	<topic label="What's new" href="doc/new.html" />
-	<topic label="Tips and tricks" href="doc/tips.html"/>-->
+	<topic label="Tips and tricks" href="doc/tips.html"/>
+	-->
+  	<anchor id="additions" />
+ 	<topic href="doc/notices.html" label="Legal" />
 </toc>
 
 
