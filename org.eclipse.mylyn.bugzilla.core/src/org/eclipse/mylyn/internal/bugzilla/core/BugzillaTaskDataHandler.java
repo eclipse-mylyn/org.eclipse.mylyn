@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -182,31 +183,32 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
+		monitor = Policy.monitorFor(monitor);
 		try {
-			BugzillaClient client = connector.getClientManager().getClient(repository,
-					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+			monitor.beginTask("Receiving task", IProgressMonitor.UNKNOWN);
+			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 			int bugId = BugzillaRepositoryConnector.getBugId(taskId);
-			TaskData taskData;
-			taskData = client.getTaskData(bugId, getAttributeMapper(repository), monitor);
+			TaskData taskData = client.getTaskData(bugId, getAttributeMapper(repository), monitor);
 			if (taskData == null) {
 				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 						"Task data could not be retrieved. Please re-synchronize task"));
 			}
 			return taskData;
-
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
+		} finally {
+			monitor.done();
 		}
 	}
 
 	@Override
 	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, TaskDataCollector collector,
 			IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask("Receiving tasks", taskIds.size());
-			BugzillaClient client = connector.getClientManager().getClient(repository,
-					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 
 			client.getTaskData(taskIds, collector, getAttributeMapper(repository), monitor);
 		} catch (IOException e) {
