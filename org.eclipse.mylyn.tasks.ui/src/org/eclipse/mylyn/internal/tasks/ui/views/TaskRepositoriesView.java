@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -19,12 +21,12 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryModelListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -39,7 +41,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -53,8 +57,6 @@ public class TaskRepositoriesView extends ViewPart {
 	private final Action addRepositoryAction = new AddRepositoryAction();
 
 	private BaseSelectionListenerAction deleteRepositoryAction;
-
-	private BaseSelectionListenerAction repositoryPropertiesAction;
 
 	private BaseSelectionListenerAction resetConfigurationAction;
 
@@ -183,14 +185,20 @@ public class TaskRepositoriesView extends ViewPart {
 //		});
 		viewer.setInput(getViewSite());
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-
 			public void doubleClick(DoubleClickEvent event) {
-				if (repositoryPropertiesAction.isEnabled()) {
-					repositoryPropertiesAction.run();
+				IHandlerService service = (IHandlerService) getSite().getService(IHandlerService.class);
+				if (service != null) {
+					try {
+						service.executeCommand(IWorkbenchActionDefinitionIds.PROPERTIES, null);
+					} catch (Exception e) {
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Opening repository properties failed", e));
+					}
 				}
 			}
 		});
 
+		// FIXME remove listener when view is disposed
 		TasksUi.getRepositoryManager().addListener(new TaskRepositoryListener());
 
 		makeActions();
@@ -209,9 +217,6 @@ public class TaskRepositoriesView extends ViewPart {
 	private void makeActions() {
 		deleteRepositoryAction = new DeleteTaskRepositoryAction();
 		viewer.addSelectionChangedListener(deleteRepositoryAction);
-
-		repositoryPropertiesAction = new EditRepositoryPropertiesAction();
-		viewer.addSelectionChangedListener(repositoryPropertiesAction);
 
 		resetConfigurationAction = new UpdateRepositoryConfigurationAction();
 		resetConfigurationAction.setActionDefinitionId("org.eclipse.ui.file.refresh");
@@ -254,7 +259,7 @@ public class TaskRepositoriesView extends ViewPart {
 		manager.add(new Separator("repository"));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator());
-		manager.add(repositoryPropertiesAction);
+		manager.add(new Separator("properties"));
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {

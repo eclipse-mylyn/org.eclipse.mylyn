@@ -20,6 +20,8 @@ import org.eclipse.ui.IViewPart;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
+@Deprecated
+// TODO 3.1 remove class
 public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction implements IViewActionDelegate {
 
 	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.properties";
