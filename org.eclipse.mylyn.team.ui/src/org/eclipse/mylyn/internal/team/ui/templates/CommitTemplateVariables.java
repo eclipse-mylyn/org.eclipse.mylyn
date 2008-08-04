@@ -225,11 +225,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task != null) {
-				String value = task.getTaskKey();
-				if (value == null) {
-					value = task.getTaskId();
-				}
-				return value;
+				return task.getTaskKey();
 			} else {
 				return null;
 			}

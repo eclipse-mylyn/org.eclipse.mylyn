@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
@@ -21,6 +22,24 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
  * @author Mik Kersten
  */
 public class CommitTemplateTest extends TestCase {
+
+	public void testCreateTemplate() {
+		String template = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description}";
+
+		String taskId = "12345678";
+		TaskTask testTask = new TaskTask("no url", taskId, "summary");
+		testTask.setTaskKey(taskId);
+
+		String commitComment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(testTask,
+				template);
+		assertTrue(commitComment.contains(taskId));
+
+		testTask.setTaskKey(null);
+
+		commitComment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(testTask, template);
+		assertFalse(commitComment.contains(taskId));
+
+	}
 
 	public void testRepositoryTaskCommentParsing() {
 		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
