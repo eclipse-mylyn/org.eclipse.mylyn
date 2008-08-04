@@ -929,6 +929,7 @@
             name="Search Repository for Task"/>
       <command
             categoryId="org.eclipse.ui.category.navigate"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.OpenRepositoryTaskHandler"
             id="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
             name="Open Remote Task"/>
       <command
