@@ -39,7 +39,7 @@ public class TaskDataModel {
 
 	private final TaskRepository taskRepository;
 
-	private final Set<TaskAttribute> unsavedChanedAttributes;
+	private final Set<TaskAttribute> unsavedChangedAttributes;
 
 	private final ITaskDataWorkingCopy workingCopy;
 
@@ -50,7 +50,7 @@ public class TaskDataModel {
 		this.task = task;
 		this.taskRepository = taskRepository;
 		this.workingCopy = taskDataState;
-		this.unsavedChanedAttributes = new HashSet<TaskAttribute>();
+		this.unsavedChangedAttributes = new HashSet<TaskAttribute>();
 	}
 
 	public void addModelListener(TaskDataModelListener listener) {
@@ -72,7 +72,7 @@ public class TaskDataModel {
 					"Editing is only supported for attributes that are attached to the root of task data");
 		}
 
-		unsavedChanedAttributes.add(attribute);
+		unsavedChangedAttributes.add(attribute);
 
 		if (this.listeners != null) {
 			final TaskDataModelEvent event = new TaskDataModelEvent(this, EventKind.CHANGED, attribute);
@@ -92,6 +92,7 @@ public class TaskDataModel {
 	}
 
 	public Set<TaskAttribute> getChangedAttributes() {
+		// TODO 3.0.2 include unsaved attributes
 		return new HashSet<TaskAttribute>(workingCopy.getEditsData().getRoot().getAttributes().values());
 	}
 
@@ -139,7 +140,7 @@ public class TaskDataModel {
 	}
 
 	public boolean isDirty() {
-		return unsavedChanedAttributes.size() > 0 || !workingCopy.isSaved();
+		return unsavedChangedAttributes.size() > 0 || !workingCopy.isSaved();
 	}
 
 	public void refresh(IProgressMonitor monitor) throws CoreException {
@@ -152,12 +153,12 @@ public class TaskDataModel {
 
 	public void revert() {
 		workingCopy.revert();
-		unsavedChanedAttributes.clear();
+		unsavedChangedAttributes.clear();
 	}
 
 	public void save(IProgressMonitor monitor) throws CoreException {
-		workingCopy.save(unsavedChanedAttributes, monitor);
-		unsavedChanedAttributes.clear();
+		workingCopy.save(unsavedChangedAttributes, monitor);
+		unsavedChangedAttributes.clear();
 	}
 
 }
