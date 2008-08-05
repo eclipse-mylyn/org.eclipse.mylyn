@@ -201,6 +201,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 
 	private Button disconnectedButton;
 
+	// TODO 3.1 make accessible to subclasses 
 	private FormToolkit toolkit;
 
 	/**
