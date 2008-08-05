@@ -9,8 +9,8 @@ POSTFIX=e3x
 BUILD_HOME=$BUILD_ROOT/3.4/build
 
 mkdir -p $BUILD_HOME/maps
-cp $BUILD_ROOT/maps/mylyn_e3.4.map $BUILD_HOME/maps/
-cp $BUILD_ROOT/maps/orbit.map $BUILD_HOME/maps/
+cp $BUILD_ROOT/maps/* $BUILD_HOME/maps/
+rm $BUILD_ROOT/maps/mylyn_e3.3.map
 
 $JAVA_HOME/bin/java \
  -jar $ECLIPSE_HOME_3_4/plugins/org.eclipse.equinox.launcher_*.jar \
