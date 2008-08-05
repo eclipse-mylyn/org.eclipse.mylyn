@@ -90,6 +90,33 @@ public class TaskActivityTimingTest extends TestCase {
 		assertFalse(manager.getActivityMetaContext().getInteractionHistory().isEmpty());
 	}
 
+	public void testConstantWriting() throws Exception {
+
+		String contextPath = TasksUiPlugin.getDefault().getDataDirectory() + '/' + "contexts" + '/';
+		File contexts = new File(contextPath);
+		if (!contexts.exists()) {
+			contexts.mkdir();
+		}
+		File backup = new File(contexts, ".activity.xml.zip");
+
+		File good = FileTool.getFileInPlugin(TasksTestsPlugin.getDefault(), new Path(
+				"testdata/activityTests/.activity.xml.zip"));
+
+		copy(good, backup);
+
+		InteractionContextManager manager = ContextCorePlugin.getContextManager();
+		manager.loadActivityMetaContext();
+		assertFalse(manager.getActivityMetaContext().getInteractionHistory().isEmpty());
+
+		for (int i = 0; i < 50; i++) {
+			manager.saveActivityMetaContext();
+		}
+
+		manager.loadActivityMetaContext();
+		assertFalse(manager.getActivityMetaContext().getInteractionHistory().isEmpty());
+
+	}
+
 	private void copy(File inFile, File outFile) throws Exception {
 
 		FileOutputStream outStream = new FileOutputStream(outFile);
