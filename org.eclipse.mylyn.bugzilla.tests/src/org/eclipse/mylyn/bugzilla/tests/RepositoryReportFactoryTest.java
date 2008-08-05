@@ -8,6 +8,9 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
@@ -23,9 +26,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
-
 
 /**
  * @author Rob Elves
@@ -137,10 +140,10 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("search-match-test 1", report.getRoot()
 				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
 				.getValue());
-//		assertEquals("search-match-test 1", report.getSummary());
-//		assertEquals("search-match-test 1", report.getDescription());
+		assertEquals("search-match-test 1", report.getRoot()
+				.getAttribute(BugzillaAttribute.LONG_DESC.getKey())
+				.getValue());
 		assertEquals("TestProduct", report.getRoot().getAttribute(BugzillaAttribute.PRODUCT.getKey()).getValue());
-//		assertEquals("TestProduct", report.getProduct());
 		assertEquals("TestComponent", report.getRoot().getAttribute(BugzillaAttribute.COMPONENT.getKey()).getValue());
 		assertEquals("PC", report.getRoot().getAttribute(BugzillaAttribute.REP_PLATFORM.getKey()).getValue());
 		assertEquals("Windows", report.getRoot().getAttribute(BugzillaAttribute.OP_SYS.getKey()).getValue());
@@ -152,25 +155,22 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("2006-05-23 17:46", report.getRoot()
 				.getAttribute(BugzillaAttribute.CREATION_TS.getKey())
 				.getValue());
-		assertEquals("2008-02-15 12:55:32", report.getRoot()
+		assertEquals("2008-07-04 16:33:55", report.getRoot()
 				.getAttribute(BugzillaAttribute.DELTA_TS.getKey())
 				.getValue());
-		assertEquals("---", report.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getRoot().getAttribute(BugzillaAttribute.REPORTER.getKey()).getValue());
 		assertEquals("nhapke@cs.ubc.ca", report.getRoot()
 				.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())
 				.getValue());
-		assertEquals(5, report.getAttributeMapper().getAttributesByType(report, TaskAttribute.TYPE_ATTACHMENT).size());
-		// assertEquals("relves@cs.ubc.ca",
-		// report.getComments().get(0).getAttribute(
-		// BugzillaReportElement.WHO.getKeyString()).getValue());
-		// assertEquals("2006-05-23 17:46:24",
-		// report.getComments().get(0).getAttribute(
-		// BugzillaReportElement.BUG_WHEN.getKeyString()).getValue());
-		// assertEquals("search-match-test 1",
-		// report.getComments().get(0).getAttribute(
-		// BugzillaReportElement.THETEXT.getKeyString()).getValue());
-		// assertEquals(0, report.getAttachments().size());
+		// test comments
+		List<TaskAttribute> comments = report.getAttributeMapper().getAttributesByType(report,
+				TaskAttribute.TYPE_COMMENT);
+		assertEquals(6, comments.size());
+		TaskCommentMapper commentMap = TaskCommentMapper.createFrom(comments.get(0));
+		assertEquals("relves@cs.ubc.ca", commentMap.getAuthor().getPersonId());
+		assertEquals("browser comment", commentMap.getText());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		assertEquals(format.parse("2006-05-30 18:56"), commentMap.getCreationDate());
 	}
 
 	public void testReadingReport2201() throws Exception {
@@ -197,7 +197,6 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("2006-05-03 13:06:11", report.getRoot()
 				.getAttribute(BugzillaAttribute.DELTA_TS.getKey())
 				.getValue());
-		assertEquals("---", report.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()).getValue());
 		TaskAttribute attribute = report.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey());
 		assertEquals("2, 9", attribute.getValue());
 		attribute = report.getRoot().getAttribute(BugzillaAttribute.CC.getKey());
@@ -370,7 +369,6 @@ public class RepositoryReportFactoryTest extends TestCase {
 		assertEquals("2006-05-05 17:45:24", report.getRoot()
 				.getAttribute(BugzillaAttribute.DELTA_TS.getKey())
 				.getValue());
-		assertEquals("---", report.getRoot().getAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getRoot().getAttribute(BugzillaAttribute.REPORTER.getKey()).getValue());
 		assertEquals("relves@cs.ubc.ca", report.getRoot()
 				.getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey())

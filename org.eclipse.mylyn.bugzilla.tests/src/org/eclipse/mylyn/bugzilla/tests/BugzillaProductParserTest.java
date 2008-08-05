@@ -82,16 +82,4 @@ public class BugzillaProductParserTest extends TestCase {
 		assertTrue(productList.contains("TestProduct"));
 	}
 
-//  No longer supporting 216
-//	public void test216Products() throws Exception {
-//
-//		repository = new TaskRepository(BugzillaPlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_216_URL,
-//				IBugzillaConstants.BugzillaServerVersion.SERVER_216.toString());
-//
-//		List<String> productList = BugzillaRepositoryUtil.getProductList(repository);
-//		Iterator<String> itr = productList.iterator();
-//		assertTrue(itr.hasNext());
-//		assertEquals("TestProduct", "TestProduct", itr.next());
-//	}
-
 }

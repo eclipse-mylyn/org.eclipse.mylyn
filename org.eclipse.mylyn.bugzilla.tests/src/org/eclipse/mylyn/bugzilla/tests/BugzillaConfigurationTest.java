@@ -140,7 +140,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		BugzillaClient client = createClient(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "", "", "", "", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals("3.0.1", config.getInstallVersion());
+		assertEquals("3.0.4", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(9, config.getResolutions().size());
 		assertEquals(6, config.getPlatforms().size());
@@ -149,7 +149,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertEquals(7, config.getSeverities().size());
 		assertTrue(config.getProducts().size() > 50);
 		assertEquals(4, config.getOpenStatusValues().size());
-		assertEquals(13, config.getComponents("Mylyn").size());
+		assertEquals(14, config.getComponents("Mylyn").size());
 		assertEquals(27, config.getKeywords().size());
 		// assertEquals(10, config.getComponents("Hyades").size());
 		// assertEquals(1, config.getTargetMilestones("TestProduct").size());

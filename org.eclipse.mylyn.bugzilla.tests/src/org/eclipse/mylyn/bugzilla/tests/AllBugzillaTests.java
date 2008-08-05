@@ -15,7 +15,6 @@ import org.eclipse.mylyn.bugzilla.deprecated.TaskListStandaloneTest;
 import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaQueryTest;
 import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaTaskHistoryTest;
 
-
 /**
  * @author Mik Kersten
  */
@@ -38,7 +37,8 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(BugzillaSearchEngineTest.class);
 		// suite.addTestSuite(Bugzilla220ParserTest.class);
-		suite.addTestSuite(BugzillaRepositoryConnectorTest.class);
+//		suite.addTestSuite(BugzillaRepositoryConnectorTest.class);
+		suite.addTestSuite(BugzillaRepositoryConnectorTest2.class);
 		suite.addTestSuite(EncodingTest.class);
 		// suite.addTestSuite(NewBugWizardTest.class);
 		// suite.addTestSuite(RegularExpressionMatchTest.class);

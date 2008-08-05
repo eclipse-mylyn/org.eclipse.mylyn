@@ -159,7 +159,7 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		assertEquals(format1.parse("2007-03-20 16:37"), mapper.getCreationDate());
-		assertEquals(format2.parse("2007-12-06 20:50:00"), mapper.getModificationDate());
+		assertEquals(format2.parse("2008-05-28 17:17:21"), mapper.getModificationDate());
 
 		//assertEquals("", mapper.getTaskUrl());
 		//assertEquals("bugzilla", mapper.getTaskKind());
@@ -233,7 +233,7 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 			AttachmentUtil.postContext(connector, repository, task, "test", attribute, new NullProgressMonitor());
 		} catch (CoreException e) {
 			assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-			assertTrue(e.getStatus().getMessage().indexOf("Invalid repository credentials.") != -1);
+			assertTrue(e.getStatus().getMessage().indexOf("invalid username or password") != -1);
 			return;
 		} finally {
 			repository.setCredentials(AuthenticationType.REPOSITORY, oldCreds, false);

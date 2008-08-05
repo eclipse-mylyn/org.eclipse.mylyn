@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -16,13 +17,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.bugzilla.deprecated.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.QueryHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.TaskFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * @author Rob Elves
@@ -53,17 +52,6 @@ public class BugzillaSearchEngineTest extends TestCase {
 		super.tearDown();
 	}
 
-// public void testSearching216() throws Exception {
-// TaskRepository repository = new
-// TaskRepository(BugzillaPlugin.REPOSITORY_KIND,
-// IBugzillaConstants.TEST_BUGZILLA_216_URL,
-// IBugzillaConstants.BugzillaServerVersion.SERVER_216.toString());
-// MylynTaskListPlugin.getRepositoryManager().addRepository(repository);
-// List<AbstractQueryHit> hits =
-// runQuery(IBugzillaConstants.TEST_BUGZILLA_216_URL, SEARCH_DESCRIPTION);
-// assertEquals(NUM_EXPECTED_HITS, hits.size());
-// }
-
 	public void testSearching218() throws Exception {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_218_URL);
@@ -93,12 +81,12 @@ public class BugzillaSearchEngineTest extends TestCase {
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		repository.setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
-		Set<AbstractTask> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
+		Set<TaskData> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
 		assertEquals(NUM_EXPECTED_HITS, hits.size());
 	}
 
 	@SuppressWarnings("deprecation")
-	private Set<AbstractTask> runQuery(String repositoryURL, String SearchString) throws Exception {
+	private Set<TaskData> runQuery(String repositoryURL, String SearchString) throws Exception {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				BugzillaCorePlugin.CONNECTOR_KIND, repositoryURL);
 		assertNotNull(repository);
@@ -108,15 +96,18 @@ public class BugzillaSearchEngineTest extends TestCase {
 
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				BugzillaCorePlugin.CONNECTOR_KIND);
-//		TaskList taskList = TasksUiPlugin.getTaskList();
-		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository));
+		final Set<TaskData> changedTaskData = new HashSet<TaskData>();
+		TaskDataCollector collector = new TaskDataCollector() {
+
+			@Override
+			public void accept(TaskData taskData) {
+				changedTaskData.add(taskData);
+			}
+		};
 
 		connector.performQuery(repository, repositoryQuery, collector, null, new NullProgressMonitor());
 
-		// results.addAll(connector.performQuery(repositoryQuery, new
-		// NullProgressMonitor(), new MultiStatus(TasksUiPlugin.PLUGIN_ID,
-		// IStatus.OK, "Query result", null)));
-		return collector.getTasks();
+		return changedTaskData;
 	}
 
 }
