@@ -38,7 +38,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewerConfiguration;
 import org.eclipse.swt.SWT;
@@ -58,17 +57,18 @@ import org.eclipse.ui.texteditor.MarkerAnnotationPreferences;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 /**
- * A task editor extension that uses a markup language to parse content.
- * Provides a markup-aware source editor, and a source viewer that displays markup in its indended formatter form.
- *
+ * A task editor extension that uses a markup language to parse content. Provides a markup-aware source editor, and a
+ * source viewer that displays markup in its indended formatter form.
+ * 
  * @author David Green
  */
 @SuppressWarnings("restriction")
 public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
+
 	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor";
 
 	private static final String ID_CONTEXT_EDITOR_TEXT = "org.eclipse.ui.DefaultTextEditor";
-	
+
 	private MarkupLanguage markupLanguage;
 
 	public MarkupLanguage getMarkupLanguage() {
@@ -85,42 +85,37 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 	}
 
 	@Override
-	public SourceViewer createViewer(TaskRepository taskRepository,
-			Composite parent, int style) {
+	public SourceViewer createViewer(TaskRepository taskRepository, Composite parent, int style) {
 		if (markupLanguage == null) {
 			throw new IllegalStateException();
 		}
-		MarkupViewer markupViewer = new MarkupViewer(parent,null,style|SWT.FLAT|SWT.WRAP);
+		MarkupViewer markupViewer = new MarkupViewer(parent, null, style | SWT.FLAT | SWT.WRAP);
 		markupViewer.setMarkupLanguage(markupLanguage.clone());
-		MarkupViewerConfiguration configuration = createViewerConfiguration(taskRepository,markupViewer);
+		MarkupViewerConfiguration configuration = createViewerConfiguration(taskRepository, markupViewer);
 		markupViewer.configure(configuration);
 
 		markupViewer.setEditable(false);
 		markupViewer.getTextWidget().setCaret(null);
-		
+
 		return markupViewer;
 	}
 
-	protected MarkupViewerConfiguration createViewerConfiguration(
-			TaskRepository taskRepository, MarkupViewer markupViewer) {
+	protected MarkupViewerConfiguration createViewerConfiguration(TaskRepository taskRepository,
+			MarkupViewer markupViewer) {
 		return new TaskMarkupViewerConfiguration(markupViewer, taskRepository);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public SourceViewer createEditor(TaskRepository taskRepository,
-			Composite parent, int style) {
-				
+	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style) {
 		SourceViewer viewer = new SourceViewer(parent, null, style | SWT.WRAP) {
 			@Override
-			public void setDocument(IDocument document,
-					IAnnotationModel annotationModel, int modelRangeOffset,
+			public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset,
 					int modelRangeLength) {
-				if (document != null) { 
+				if (document != null) {
 					configurePartitioning(document);
 				}
-				super.setDocument(document, annotationModel, modelRangeOffset,
-						modelRangeLength);
+				super.setDocument(document, annotationModel, modelRangeOffset, modelRangeLength);
 			}
 
 			private void configurePartitioning(IDocument document) {
@@ -131,20 +126,21 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 			}
 		};
 		// configure the viewer
-		MarkupSourceViewerConfiguration configuration = new TaskMarkupSourceViewerConfiguration(WikiTextUiPlugin.getDefault().getPreferenceStore(),taskRepository);
+		MarkupSourceViewerConfiguration configuration = new TaskMarkupSourceViewerConfiguration(
+				EditorsUI.getPreferenceStore(), taskRepository);
 		configuration.setMarkupLanguage(markupLanguage);
 		viewer.configure(configuration);
-		
+
 		// we want the viewer to show annotations
 		viewer.showAnnotations(true);
 
 		DefaultMarkerAnnotationAccess annotationAccess = new DefaultMarkerAnnotationAccess();
 		MarkerAnnotationPreferences annotationPreferences = new MarkerAnnotationPreferences();
-		
+
 		// configure viewer annotation/decoration support
 		final SourceViewerDecorationSupport support = new SourceViewerDecorationSupport(viewer, null, annotationAccess,
 				EditorsUI.getSharedTextColors());
-		
+
 		// hook the support up to the preference store
 		Iterator<AnnotationPreference> e = annotationPreferences.getAnnotationPreferences().iterator();
 		while (e.hasNext()) {
@@ -156,14 +152,14 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		support.setMarginPainterPreferenceKeys(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN,
 				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLOR,
 				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLUMN);
-		
+
 		support.install(EditorsUI.getPreferenceStore());
 		viewer.getControl().addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				support.dispose();
 			}
 		});
-		
+
 		IFocusService focusService = (IFocusService) PlatformUI.getWorkbench().getService(IFocusService.class);
 		if (focusService != null) {
 			focusService.addFocusTracker(viewer.getTextWidget(), MarkupEditor.EDITOR_SOURCE_VIEWER);
@@ -175,27 +171,23 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		return viewer;
 	}
 
-
 	protected static class TaskMarkupSourceViewerConfiguration extends MarkupSourceViewerConfiguration {
 
 		private final TaskRepository taskRepository;
 
-		public TaskMarkupSourceViewerConfiguration(
-				IPreferenceStore preferenceStore,TaskRepository taskRepository) {
+		public TaskMarkupSourceViewerConfiguration(IPreferenceStore preferenceStore, TaskRepository taskRepository) {
 			super(preferenceStore);
 			this.taskRepository = taskRepository;
 		}
-		
+
 		@Override
 		protected IContentAssistProcessor[] createContentAssistProcessors() {
 			// FIXME: remove usage of internal API
 //			IContentAssistProcessor processor = TasksUi.createContentAssistProcessor(taskRepository);
 //			return processor==null?null:new IContentAssistProcessor[] { processor };
-			return new IContentAssistProcessor[] {
-				new RepositoryCompletionProcessor(taskRepository)	
-			};
+			return new IContentAssistProcessor[] { new RepositoryCompletionProcessor(taskRepository) };
 		}
-		
+
 		@Override
 		public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
 			return new DefaultAnnotationHover() {
@@ -205,12 +197,12 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 				}
 			};
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
 		protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
-			addRepositoryHyperlinkDetectorTargets(taskRepository,hyperlinkDetectorTargets);
+			addRepositoryHyperlinkDetectorTargets(taskRepository, hyperlinkDetectorTargets);
 			return hyperlinkDetectorTargets;
 		}
 	}
@@ -219,7 +211,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 
 		private final TaskRepository taskRepository;
 
-		public TaskMarkupViewerConfiguration(MarkupViewer viewer,TaskRepository taskRepository) {
+		public TaskMarkupViewerConfiguration(MarkupViewer viewer, TaskRepository taskRepository) {
 			super(viewer);
 			this.taskRepository = taskRepository;
 		}
@@ -228,28 +220,25 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		@Override
 		protected Map getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 			Map hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
-			addRepositoryHyperlinkDetectorTargets(taskRepository,hyperlinkDetectorTargets);
+			addRepositoryHyperlinkDetectorTargets(taskRepository, hyperlinkDetectorTargets);
 			return hyperlinkDetectorTargets;
 		}
-		
+
 		@Override
 		public int getHyperlinkStateMask(ISourceViewer sourceViewer) {
 			return SWT.NONE;
 		}
-		
+
 		@Override
-		public IHyperlinkPresenter getHyperlinkPresenter(
-				ISourceViewer sourceViewer) {
+		public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
 			if (fPreferenceStore == null) {
-				return new TaskHyperlinkPresenter(sourceViewer,new RGB(0, 0, 255));
+				return new TaskHyperlinkPresenter(sourceViewer, new RGB(0, 0, 255));
 			}
 
-			return new TaskHyperlinkPresenter(sourceViewer,fPreferenceStore);
+			return new TaskHyperlinkPresenter(sourceViewer, fPreferenceStore);
 		}
 
 	}
-
-	
 
 	@SuppressWarnings("unchecked")
 	private static void addRepositoryHyperlinkDetectorTargets(final TaskRepository taskRepository,
@@ -276,17 +265,17 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		 */
 		private ITask currentTaskHyperlink;
 
-		public TaskHyperlinkPresenter(ISourceViewer sourceViewer,IPreferenceStore store) {
+		public TaskHyperlinkPresenter(ISourceViewer sourceViewer, IPreferenceStore store) {
 			super(store);
 			this.sourceViewer = sourceViewer;
 		}
 
-		public TaskHyperlinkPresenter(ISourceViewer sourceViewer,RGB color) {
+		public TaskHyperlinkPresenter(ISourceViewer sourceViewer, RGB color) {
 			super(color);
 			this.sourceViewer = sourceViewer;
 		}
-		private final ISourceViewer sourceViewer;
 
+		private final ISourceViewer sourceViewer;
 
 		@SuppressWarnings("unchecked")
 		@Override
@@ -310,8 +299,8 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 			if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
 				TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
 
-				ITask task = TasksUi.getRepositoryModel().getTask(hyperlink.getRepository(),hyperlink.getTaskId());
-				
+				ITask task = TasksUi.getRepositoryModel().getTask(hyperlink.getRepository(), hyperlink.getTaskId());
+
 				if (task != null && task != currentTaskHyperlink) {
 					currentTaskHyperlink = task;
 					activeRegion = hyperlink.getHyperlinkRegion();
