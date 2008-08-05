@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -1236,7 +1237,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 //		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
 		manager.add(presentationDropDownSelectionAction);
 //		manager.add(previousTaskAction);
-		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
+		manager.add(new Separator());
+		manager.add(collapseAll);
+		manager.add(new GroupMarker(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -1731,7 +1734,17 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	public void setFocusedMode(boolean focusedMode) {
+		if (this.focusedMode == focusedMode) {
+			return;
+		}
 		this.focusedMode = focusedMode;
+		IToolBarManager manager = getViewSite().getActionBars().getToolBarManager();
+		if (focusedMode) {
+			manager.remove(CollapseAllAction.ID);
+		} else {
+			manager.prependToGroup(ID_SEPARATOR_CONTEXT, collapseAll);
+		}
+		manager.update(false);
 	}
 
 	public void setSynchronizationOverlaid(boolean synchronizationOverlaid) {
