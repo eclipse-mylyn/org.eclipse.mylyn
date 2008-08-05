@@ -100,6 +100,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyActio
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
+import org.eclipse.mylyn.internal.tasks.ui.commands.CollapseAllHandler;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -171,6 +172,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
@@ -1009,6 +1011,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		hookContextMenu();
 		hookOpenAction();
 		contributeToActionBars();
+		initHandlers();
 
 		configureGradientColors();
 
@@ -1028,6 +1031,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		// Need to do this because the page, which holds the active working set is not around on creation, see bug 203179
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPageListener(PAGE_LISTENER);
+	}
+
+	private void initHandlers() {
+		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		handlerService.activateHandler(CollapseAllHandler.ID_COMMAND, new CollapseAllHandler(getViewer()));
 	}
 
 	private void hookGlobalActions() {
