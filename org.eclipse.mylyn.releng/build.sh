@@ -5,7 +5,7 @@ then
  shift
 else
  BUILD=`date -u +I%Y%m%d-%H00`
- sed -e s/QUALIFIER=.*/QUALIFIER=$BUILD/ -i local.sh
+ sed -e s/QUALIFIER=.*/QUALIFIER=$BUILD/ -i~ local.sh
 fi
 
 BUILD_ROOT=$(cd $(dirname $0); pwd)
