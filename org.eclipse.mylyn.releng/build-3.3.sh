@@ -9,7 +9,7 @@ POSTFIX=e33
 BUILD_HOME=$BUILD_ROOT/3.3/build
 
 mkdir -p $BUILD_HOME/maps
-cp $BUILD_ROOT/maps/* $BUILD_HOME/maps/
+cp $BUILD_ROOT/maps/*.map $BUILD_HOME/maps/
 rm $BUILD_HOME/maps/mylyn_e3.4.map
 
 $JAVA_HOME/bin/java \
