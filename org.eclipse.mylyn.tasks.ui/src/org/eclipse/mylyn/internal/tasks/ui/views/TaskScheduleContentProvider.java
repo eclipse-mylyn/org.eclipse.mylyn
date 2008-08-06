@@ -56,41 +56,44 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 
 	@Override
 	public Object[] getElements(Object parent) {
-		Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
-
-		WeekDateRange week = TaskActivityUtil.getCurrentWeek();
-
-		timer.cancel();
-		timer = new Timer();
-		timer.schedule(new RolloverCheck(), week.getToday().getEndDate().getTime());
-
-		for (DateRange day : week.getRemainingDays()) {
-			containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), day));
-		}
-		containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), week));
-
-		ScheduledTaskContainer nextWeekContainer = new ScheduledTaskContainer(taskActivityManager, week.next());
-		containers.add(nextWeekContainer);
-
-		ScheduledTaskContainer twoWeeksContainer = new ScheduledTaskContainer(taskActivityManager, week.next().next(),
-				"Two Weeks");
-		containers.add(twoWeeksContainer);
-
-		containers.add(unscheduled);
-		Calendar startDate = TaskActivityUtil.getCalendar();
-		startDate.setTimeInMillis(twoWeeksContainer.getEnd().getTimeInMillis());
-		TaskActivityUtil.snapNextDay(startDate);
-		Calendar endDate = TaskActivityUtil.getCalendar();
-		endDate.add(Calendar.YEAR, 4999);
-		DateRange future = new DateRange(startDate, endDate);
-
-		ScheduledTaskContainer futureContainer = new ScheduledTaskContainer(taskActivityManager, future, "Future");
-		containers.add(futureContainer);
 
 		if (parent != null && parent.equals(this.taskListView.getViewSite())) {
+
+			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
+
+			WeekDateRange week = TaskActivityUtil.getCurrentWeek();
+
+			timer.cancel();
+			timer = new Timer();
+			timer.schedule(new RolloverCheck(), week.getToday().getEndDate().getTime());
+
+			for (DateRange day : week.getRemainingDays()) {
+				containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), day));
+			}
+			containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), week));
+
+			ScheduledTaskContainer nextWeekContainer = new ScheduledTaskContainer(taskActivityManager, week.next());
+			containers.add(nextWeekContainer);
+
+			ScheduledTaskContainer twoWeeksContainer = new ScheduledTaskContainer(taskActivityManager, week.next()
+					.next(), "Two Weeks");
+			containers.add(twoWeeksContainer);
+
+			containers.add(unscheduled);
+			Calendar startDate = TaskActivityUtil.getCalendar();
+			startDate.setTimeInMillis(twoWeeksContainer.getEnd().getTimeInMillis());
+			TaskActivityUtil.snapNextDay(startDate);
+			Calendar endDate = TaskActivityUtil.getCalendar();
+			endDate.add(Calendar.YEAR, 4999);
+			DateRange future = new DateRange(startDate, endDate);
+
+			ScheduledTaskContainer futureContainer = new ScheduledTaskContainer(taskActivityManager, future, "Future");
+			containers.add(futureContainer);
+
 			return applyFilter(containers).toArray();
+
 		} else {
-			return containers.toArray();
+			return getChildren(parent);
 		}
 	}
 
