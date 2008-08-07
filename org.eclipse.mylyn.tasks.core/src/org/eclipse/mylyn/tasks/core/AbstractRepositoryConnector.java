@@ -38,11 +38,16 @@ public abstract class AbstractRepositoryConnector {
 	private static final long REPOSITORY_CONFIGURATION_UPDATE_INTERVAL = 24 * 60 * 60 * 1000;
 
 	/**
+	 * Returns true, if the connector provides a wizard for creating new tasks.
+	 * 
 	 * @since 2.0
 	 */
+	// TODO move this to ConnectorUi.hasNewTaskWizard()
 	public abstract boolean canCreateNewTask(TaskRepository repository);
 
 	/**
+	 * Returns true, if the connector supports retrieval of tasks based on String keys.
+	 * 
 	 * @since 2.0
 	 */
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);

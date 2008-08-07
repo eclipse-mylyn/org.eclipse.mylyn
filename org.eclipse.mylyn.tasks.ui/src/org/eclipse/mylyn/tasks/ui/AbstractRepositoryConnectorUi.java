@@ -61,7 +61,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 *            can be null
 	 * @since 3.0
 	 */
-	public abstract IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery queryToEdit);
+	public abstract IWizard getQueryWizard(TaskRepository taskRepository, IRepositoryQuery queryToEdit);
 
 	/**
 	 * @since 3.0

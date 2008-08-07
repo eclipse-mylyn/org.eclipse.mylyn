@@ -65,6 +65,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		setNeedsProgressMonitor(true);
 	}
 
+	@Deprecated
 	public NewTaskWizard(TaskRepository taskRepository) {
 		this.taskRepository = taskRepository;
 	}
