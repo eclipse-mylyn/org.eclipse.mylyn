@@ -13,6 +13,7 @@ cp $BUILD_ROOT/maps/*.map $BUILD_HOME/maps/
 rm $BUILD_HOME/maps/mylyn_e3.4.map
 
 $JAVA_HOME/bin/java \
+ -Xmx256m \
  -jar $ECLIPSE_HOME_3_3/plugins/org.eclipse.equinox.launcher_*.jar \
  -application org.eclipse.ant.core.antRunner \
  -buildfile $ECLIPSE_HOME_3_3/plugins/org.eclipse.pde.build_*/scripts/build.xml \
