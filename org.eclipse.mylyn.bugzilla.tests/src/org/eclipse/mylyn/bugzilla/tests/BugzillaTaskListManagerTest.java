@@ -12,19 +12,20 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.bugzilla.deprecated.BugzillaRepositoryQuery;
-import org.eclipse.mylyn.bugzilla.deprecated.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -44,7 +45,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		manager.saveTaskList();
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
-		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
 	}
 
 	@Override
@@ -52,7 +53,6 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		super.tearDown();
 		manager.resetTaskList();
 		TasksUiPlugin.getTaskListManager().saveTaskList();
-// TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
@@ -64,41 +64,59 @@ public class BugzillaTaskListManagerTest extends TestCase {
 
 		String bugNumber = "106939";
 
-		BugzillaTask task1 = new BugzillaTask(repositoryUrl, bugNumber, "label");
-		manager.getTaskList().addTask(task1);
+//		BugzillaTask task1 = new BugzillaTask(repositoryUrl, bugNumber, "label");
+
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, bugNumber);
+		TaskTask task1 = null;
+		if (task instanceof TaskTask) {
+			task1 = (TaskTask) task;
+		}
+		assertNotNull(task1);
+
+		TasksUiPlugin.getTaskList().addTask(task1);
 
 		task1.setReminded(true);
+		TasksUiPlugin.getExternalizationManager().save(true);
+		TasksUiPlugin.getExternalizationManager().requestSave();
 
-		TasksUiPlugin.getTaskListManager().saveTaskList();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
+		try {
+			TasksUiPlugin.getDefault().reloadDataDirectory();
+		} catch (CoreException e) {
+		}
 
-		TaskList taskList = manager.getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskList();
 		assertEquals(1, taskList.getAllTasks().size());
 		Set<ITask> tasksReturned = taskList.getTasks(repositoryUrl);
 		assertNotNull(tasksReturned);
 		assertEquals(1, tasksReturned.size());
-		for (ITask task : tasksReturned) {
-			assertTrue(((AbstractTask) task).isReminded());
+		for (ITask taskRet : tasksReturned) {
+			assertTrue(((AbstractTask) taskRet).isReminded());
 		}
 	}
 
 	public void testRepositoryTaskExternalization() {
-		BugzillaTask repositoryTask = new BugzillaTask(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1", "label");
+		ITask task = TasksUi.getRepositoryModel().createTask(repository, "1");
+		TaskTask repositoryTask = null;
+		if (task instanceof TaskTask) {
+			repositoryTask = (TaskTask) task;
+		}
+		assertNotNull(repositoryTask);
 		repositoryTask.setTaskKind("kind");
-		manager.getTaskList().addTask(repositoryTask);
-		manager.saveTaskList();
+		TasksUiPlugin.getTaskList().addTask(repositoryTask);
+		TasksUiPlugin.getExternalizationManager().save(true);
+		TasksUiPlugin.getExternalizationManager().requestSave();
 
-		manager.resetTaskList();
-		// manager.getTaskList().clear();
-		// TaskList list = new TaskList();
-		// manager.setTaskList(list);
-		manager.readExistingOrCreateNewList();
-		assertEquals(1, manager.getTaskList()
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		try {
+			TasksUiPlugin.getDefault().reloadDataDirectory();
+		} catch (CoreException e) {
+		}
+		assertEquals(1, TasksUiPlugin.getTaskList()
 				.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
 				.getChildren()
 				.size());
-		ITask readTask = manager.getTaskList()
+		ITask readTask = TasksUiPlugin.getTaskList()
 				.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
 				.getChildren()
 				.iterator()
@@ -110,79 +128,64 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	}
 
 	public void testQueryExternalization() {
-		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
-		// long time = 1234;
-		// Date oldDate = new Date(time);
-		// query.setLastRefresh(oldDate);
-		assertEquals("repositoryUrl", query.getRepositoryUrl());
-		assertEquals("queryUrl", query.getUrl());
+		RepositoryQuery query = (RepositoryQuery) TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+		assertEquals("https://bugs.eclipse.org/bugs", query.getRepositoryUrl());
 		assertEquals("<never>", query.getLastSynchronizedTimeStamp());
 		query.setLastSynchronizedStamp("today");
-		// assertEquals(time, query.getLastSynchronized().getTime());
-		manager.getTaskList().addQuery(query);
-		manager.saveTaskList();
-		assertNotNull(manager.getTaskList());
+		TasksUiPlugin.getTaskList().addQuery(query);
+		TasksUiPlugin.getExternalizationManager().save(true);
+		TasksUiPlugin.getExternalizationManager().requestSave();
 
-		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
-		assertEquals(1, manager.getTaskList().getQueries().size());
-		IRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
-		assertEquals(query.getUrl(), readQuery.getUrl());
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		try {
+			TasksUiPlugin.getDefault().reloadDataDirectory();
+		} catch (CoreException e) {
+		}
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
+		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
 		assertEquals("today", query.getLastSynchronizedTimeStamp());
-		assertEquals("repositoryUrl", readQuery.getRepositoryUrl());
-		// assertEquals(time, readQuery.getLastSynchronized().getTime());
-	}
-
-	public void testBugzillaCustomQueryExternalization() {
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
-		query.setCustomQuery(true);
-		manager.getTaskList().addQuery(query);
-		manager.saveTaskList();
-
-		manager.resetTaskList();
-		// manager.getTaskList().clear();
-		// TaskList list = new TaskList();
-		// manager.setTaskList(list);
-		manager.readExistingOrCreateNewList();
-		assertEquals(1, manager.getTaskList().getQueries().size());
-		BugzillaRepositoryQuery readQuery = (BugzillaRepositoryQuery) manager.getTaskList()
-				.getQueries()
-				.iterator()
-				.next();
-		assertTrue(readQuery.isCustomQuery());
+		assertEquals("https://bugs.eclipse.org/bugs", readQuery.getRepositoryUrl());
 	}
 
 	public void testDeleteQuery() {
 		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
-		manager.getTaskList().addQuery(query);
+		TasksUiPlugin.getTaskList().addQuery(query);
 
-		IRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
+		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
 
-		manager.getTaskList().deleteQuery(query);
-		assertEquals(0, manager.getTaskList().getQueries().size());
+		TasksUiPlugin.getTaskList().deleteQuery(query);
+		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
 	}
 
 	public void testDeleteQueryAfterRename() {
 		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
-		manager.getTaskList().addQuery(query);
+		TasksUiPlugin.getTaskList().addQuery(query);
 
-		IRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
+		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
-		manager.getTaskList().renameContainer(query, "newName");
-		manager.getTaskList().deleteQuery(query);
-		assertEquals(0, manager.getTaskList().getQueries().size());
+		TasksUiPlugin.getTaskList().renameContainer(query, "newName");
+		TasksUiPlugin.getTaskList().deleteQuery(query);
+		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
 	}
 
 	public void testCreateQueryWithSameName() {
 		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
-		manager.getTaskList().addQuery(query);
-		assertEquals(1, manager.getTaskList().getQueries().size());
-		IRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
+		TasksUiPlugin.getTaskList().addQuery(query);
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
+		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
 
-		manager.getTaskList().addQuery(new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label"));
-		assertEquals(1, manager.getTaskList().getQueries().size());
+		try {
+			TasksUiPlugin.getTaskList().addQuery(new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label"));
+		} catch (IllegalArgumentException e) {
+			if (!e.getMessage().equals("Handle label already exists in task list")) {
+				fail("Handle label already exists in task list nt found");
+			}
+			assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
+			return;
+		}
+		fail("IllegalArgumentException not found");
 	}
 }
