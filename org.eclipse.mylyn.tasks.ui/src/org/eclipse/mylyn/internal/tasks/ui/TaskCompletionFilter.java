@@ -7,10 +7,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.util.Collection;
+
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Mik Kersten
+ * @author Shawn Minto
  */
 public class TaskCompletionFilter extends AbstractTaskListFilter {
 
@@ -18,7 +22,20 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 	public boolean select(Object parent, Object element) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			return !task.isCompleted();
+			boolean isComplete = task.isCompleted();
+			if (!isComplete) {
+				return true;
+			} else if (element instanceof AbstractTask) {
+				AbstractTask abstractTask = (AbstractTask) element;
+				Collection<ITask> children = abstractTask.getChildren();
+				for (ITask child : children) {
+					if (select(abstractTask, child)) {
+						return true;
+					}
+				}
+				return false;
+			}
+
 		}
 		return true;
 	}
