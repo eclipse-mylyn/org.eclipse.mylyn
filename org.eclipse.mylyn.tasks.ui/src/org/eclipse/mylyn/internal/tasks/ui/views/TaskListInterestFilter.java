@@ -93,12 +93,12 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 		return task.isActive()
 				|| TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)
+				|| hasInterestingSubTasks(parent, task, depth)
 				|| hasChanges(parent, task)
-				|| !task.isCompleted()
-				&& (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary())
+				|| (!task.isCompleted() && (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary())
 						|| shouldShowInFocusedWorkweekDateContainer(parent, task)
-						|| TasksUiPlugin.getTaskActivityManager().isOverdue(task)
-						|| isInterestingForThisWeek(parent, task) || hasInterestingSubTasks(parent, task, depth));
+						|| TasksUiPlugin.getTaskActivityManager().isOverdue(task) || isInterestingForThisWeek(parent,
+						task)));
 	}
 
 	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, int depth) {
