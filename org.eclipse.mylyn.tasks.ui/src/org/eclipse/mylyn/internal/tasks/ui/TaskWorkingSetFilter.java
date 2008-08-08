@@ -8,9 +8,12 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -66,10 +69,20 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		return true;
 	}
 
-	private boolean isContainedInWorkingSet(IRepositoryElement container) {
+	private boolean isContainedInWorkingSet(IRepositoryElement element) {
+		return isContainedInWorkingSet(element, new HashSet<IRepositoryElement>());
+	}
+
+	private boolean isContainedInWorkingSet(IRepositoryElement container, Set<IRepositoryElement> visited) {
 		if (elements == null) {
 			return true;
 		}
+
+		if (visited.contains(container)) {
+			return false;
+		}
+
+		visited.add(container);
 
 		boolean seenTaskWorkingSets = false;
 		String handleIdentifier = container.getHandleIdentifier();
@@ -78,6 +91,18 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 				seenTaskWorkingSets = true;
 				if (handleIdentifier.equals(((IRepositoryElement) adaptable).getHandleIdentifier())) {
 					return true;
+				}
+
+				// handle case of sub tasks (not directly under a category/query)
+				if (container instanceof AbstractTask) {
+					for (AbstractTaskContainer parent : ((AbstractTask) container).getParentContainers()) {
+						if (visited.contains(parent)) {
+							continue;
+						}
+						if (isContainedInWorkingSet(parent, visited)) {
+							return true;
+						}
+					}
 				}
 			}
 		}
