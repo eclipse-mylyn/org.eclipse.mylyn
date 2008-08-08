@@ -561,42 +561,62 @@ public class BugzillaClient {
 	public RepositoryConfiguration getRepositoryConfiguration(IProgressMonitor monitor) throws IOException,
 			CoreException {
 		GzipGetMethod method = null;
-		try {
-			method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF, monitor);
-			// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
-			// modified to also accept "application/x-gzip" as results from a 302 redirect to a previously gzipped file.
-			if (method == null) {
-				throw new IOException("Could not retrieve configuratoin. HttpClient return null method.");
-			}
-
-			InputStream stream = getResponseStream(method, monitor);
+		int attempt = 0;
+		while (attempt < 2) {
 			try {
-				if (method.getResponseHeader("Content-Type") != null) {
-					Header responseTypeHeader = method.getResponseHeader("Content-Type");
-					for (String type : VALID_CONFIG_CONTENT_TYPES) {
-						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-							RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(stream,
-									characterEncoding);
+				method = getConnectGzip(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF, monitor);
+				// provide a solution for bug 196056 by allowing a (cached) gzipped configuration to be sent
+				// modified to also accept "application/x-gzip" as results from a 302 redirect to a previously gzipped file.
+				if (method == null) {
+					throw new IOException("Could not retrieve configuratoin. HttpClient return null method.");
+				}
 
-							repositoryConfiguration = configFactory.getConfiguration();
-							if (repositoryConfiguration != null) {
-								repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
-								return repositoryConfiguration;
+				InputStream stream = getResponseStream(method, monitor);
+				try {
+					if (method.getResponseHeader("Content-Type") != null) {
+						Header responseTypeHeader = method.getResponseHeader("Content-Type");
+						for (String type : VALID_CONFIG_CONTENT_TYPES) {
+							if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
+								RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(
+										stream, characterEncoding);
+
+								repositoryConfiguration = configFactory.getConfiguration();
+
+								if (repositoryConfiguration != null) {
+									if (!repositoryConfiguration.getStatusValues().isEmpty()) {
+										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
+										return repositoryConfiguration;
+									} else {
+										if (attempt == 0) {
+											// empty configuration, retry authenticate
+											authenticated = false;
+											break;
+										} else {
+											throw new CoreException(
+													new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+															"Unable to retrieve repository configuration. Ensure credentials are valid."));
+										}
+									}
+								}
 							}
 						}
-					}
 
+					}
+					if (authenticated) {
+						parseHtmlError(stream);
+						return null;
+					}
+				} finally {
+					stream.close();
 				}
-				parseHtmlError(stream);
 			} finally {
-				stream.close();
-			}
-			return null;
-		} finally {
-			if (method != null) {
-				method.releaseConnection();
+				attempt++;
+				if (method != null) {
+					method.releaseConnection();
+				}
 			}
 		}
+		return null;
 	}
 
 	public void getAttachmentData(String attachmentId, OutputStream out, IProgressMonitor monitor) throws IOException,
