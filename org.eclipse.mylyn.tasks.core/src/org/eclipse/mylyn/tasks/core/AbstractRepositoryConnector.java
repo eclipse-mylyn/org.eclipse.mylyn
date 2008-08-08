@@ -248,12 +248,12 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 3.0
 	 */
-	public abstract void updateRepositoryConfiguration(TaskRepository repository, IProgressMonitor monitor)
+	public abstract void updateRepositoryConfiguration(TaskRepository taskRepository, IProgressMonitor monitor)
 			throws CoreException;
 
 	/**
 	 * @since 3.0
 	 */
-	public abstract void updateTaskFromTaskData(TaskRepository repository, ITask task, TaskData taskData);
+	public abstract void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData);
 
 }

@@ -359,21 +359,17 @@ public class TaskDataManager implements ITaskDataManager {
 	}
 
 	private File getFile(String repositoryUrl, ITask task, String kind) {
-		try {
 //			String pathName = task.getConnectorKind() + "-"
 //					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
 //			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
-			String repositoryPath = task.getConnectorKind() + "-" + encode(repositoryUrl);
-			String fileName = encode(task.getTaskId()) + EXTENSION;
-			File path = new File(dataPath + File.separator + FOLDER_TASKS + File.separator + repositoryPath
-					+ File.separator + FOLDER_DATA);
-			return new File(path, fileName);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
+		String repositoryPath = task.getConnectorKind() + "-" + encode(repositoryUrl);
+		String fileName = encode(task.getTaskId()) + EXTENSION;
+		File path = new File(dataPath + File.separator + FOLDER_TASKS + File.separator + repositoryPath
+				+ File.separator + FOLDER_DATA);
+		return new File(path, fileName);
 	}
 
-	private String encode(String text) throws UnsupportedEncodingException {
+	private static String encode(String text) {
 		StringBuffer sb = new StringBuffer(text.length());
 		char[] chars = text.toCharArray();
 		for (char c : chars) {

@@ -45,8 +45,8 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	private final IRepositoryQuery query;
 
-	public AbstractRepositoryQueryPage(String title, TaskRepository taskRepository, IRepositoryQuery query) {
-		super(title);
+	public AbstractRepositoryQueryPage(String pageName, TaskRepository taskRepository, IRepositoryQuery query) {
+		super(pageName);
 		Assert.isNotNull(taskRepository);
 		this.taskRepository = taskRepository;
 		this.query = query;
@@ -56,8 +56,8 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		setPageComplete(false);
 	}
 
-	public AbstractRepositoryQueryPage(String title, TaskRepository taskRepository) {
-		this(title, taskRepository, null);
+	public AbstractRepositoryQueryPage(String pageName, TaskRepository taskRepository) {
+		this(pageName, taskRepository, null);
 	}
 
 	public IRepositoryQuery getQuery() {
