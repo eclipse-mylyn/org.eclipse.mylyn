@@ -1286,6 +1286,7 @@ public class BugzillaClient {
 		HashMap<String, TaskData> taskDataMap = new HashMap<String, TaskData>();
 		// make a copy to modify set
 		taskIds = new HashSet<String>(taskIds);
+		int authenticationAttempt = 0;
 		while (taskIds.size() > 0) {
 
 			try {
@@ -1356,7 +1357,14 @@ public class BugzillaClient {
 					parseHtmlError(getResponseStream(method, monitor));
 					break;
 				}
-
+			} catch (CoreException c) {
+				if (c.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN && authenticationAttempt < 1) {
+					authenticated = false;
+					authenticationAttempt++;
+					//StatusHandler.log(c.getStatus());
+				} else {
+					throw c;
+				}
 			} finally {
 				if (method != null) {
 					method.releaseConnection();

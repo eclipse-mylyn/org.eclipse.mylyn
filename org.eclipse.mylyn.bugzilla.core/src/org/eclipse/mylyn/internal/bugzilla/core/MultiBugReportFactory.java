@@ -46,8 +46,10 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
 			} else if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTPERMITTED)) {
-				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_OP_NOT_PERMITTED));
+				BugzillaStatus status = new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_REPOSITORY_LOGIN, mapper.getTaskRepository().getRepositoryUrl(),
+						IBugzillaConstants.ERROR_MSG_OP_NOT_PERMITTED);
+				throw new CoreException(status);
 			} else {
 				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY, "", "Unexpected error occurred: " + errorResponse));
