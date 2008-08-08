@@ -91,10 +91,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	public boolean shouldAlwaysShow(Object parent, AbstractTask task, int depth) {
 
-		return task.isActive()
-				|| TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)
+		return task.isActive() || TasksUiPlugin.getTaskActivityManager().isCompletedToday(task)
 				|| hasInterestingSubTasks(parent, task, depth)
 				|| hasChanges(parent, task)
+				// note that following condition is wrapped in ()!
 				|| (!task.isCompleted() && (LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary())
 						|| shouldShowInFocusedWorkweekDateContainer(parent, task)
 						|| TasksUiPlugin.getTaskActivityManager().isOverdue(task) || isInterestingForThisWeek(parent,
