@@ -16,12 +16,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.internal.browser.BrowserViewer;
+import org.eclipse.ui.internal.browser.IBrowserViewerContainer;
 
 /**
  * A form page that contains a browser control.
@@ -34,7 +37,7 @@ public class BrowserFormPage extends FormPage {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editor.browser";
 
-	private Browser browser;
+	private BrowserViewer browserViewer;
 
 	public BrowserFormPage(FormEditor editor, String title) {
 		super(editor, ID_EDITOR, title);
@@ -46,11 +49,27 @@ public class BrowserFormPage extends FormPage {
 		try {
 			ScrolledForm form = managedForm.getForm();
 			form.getBody().setLayout(new FillLayout());
-			browser = new Browser(form.getBody(), SWT.NONE);
-			managedForm.getForm().setContent(browser);
+			browserViewer = new BrowserViewer(form.getBody(), SWT.NONE);
+			browserViewer.setLayoutData(null);
+			browserViewer.setContainer(new IBrowserViewerContainer() {
+
+				public boolean close() {
+					return false;
+				}
+
+				public IActionBars getActionBars() {
+					return BrowserFormPage.this.getEditorSite().getActionBars();
+				}
+
+				public void openInExternalBrowser(String url) {
+					// ignore
+				}
+
+			});
+			managedForm.getForm().setContent(browserViewer);
 			String url = getUrl();
 			if (url != null) {
-				browser.setUrl(url);
+				browserViewer.setURL(url);
 			}
 		} catch (SWTError e) {
 			// TODO review error handling
@@ -66,7 +85,7 @@ public class BrowserFormPage extends FormPage {
 	 * Returns a reference to the browser control.
 	 */
 	public Browser getBrowser() {
-		return browser;
+		return browserViewer.getBrowser();
 	}
 
 	/**
