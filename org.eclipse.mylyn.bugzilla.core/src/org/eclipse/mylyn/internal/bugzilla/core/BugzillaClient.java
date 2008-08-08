@@ -583,7 +583,7 @@ public class BugzillaClient {
 								repositoryConfiguration = configFactory.getConfiguration();
 
 								if (repositoryConfiguration != null) {
-									if (!repositoryConfiguration.getStatusValues().isEmpty()) {
+									if (!repositoryConfiguration.getProducts().isEmpty()) {
 										repositoryConfiguration.setRepositoryUrl(repositoryUrl.toString());
 										return repositoryConfiguration;
 									} else {
