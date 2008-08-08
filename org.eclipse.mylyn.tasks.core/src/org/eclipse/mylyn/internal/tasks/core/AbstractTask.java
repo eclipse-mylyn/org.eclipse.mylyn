@@ -96,6 +96,8 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 		this.summary = summary;
+		// TODO 3.1 remove
+		this.creationDate = new Date();
 	}
 
 	/**
@@ -349,9 +351,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public Date getCreationDate() {
-		if (creationDate == null) {
-			creationDate = new Date();
-		}
 		return creationDate;
 	}
 
