@@ -299,6 +299,11 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	}
 
 	private void setSelectedRadionButton(Button selectedButton, boolean updateModel) {
+		// avoid changes to the model if the button is already selected
+		if (selectedButton.getSelection()) {
+			return;
+		}
+
 		selectedButton.setSelection(true);
 		for (Button button : operationButtons) {
 			if (button != selectedButton) {
