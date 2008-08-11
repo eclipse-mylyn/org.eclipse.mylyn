@@ -130,7 +130,7 @@ public class ActivityContextManager implements IActivityContextManager {
 	}
 
 	private void addMonitoredActivityTime(long start, long end) {
-		if (end > start) {
+		if ((end > 0 && start > 0) && (end > start)) {
 			String handle = getStructureHandle();
 			if (handle == null) {
 				if (workingSets != null && workingSets.length > 0) {
