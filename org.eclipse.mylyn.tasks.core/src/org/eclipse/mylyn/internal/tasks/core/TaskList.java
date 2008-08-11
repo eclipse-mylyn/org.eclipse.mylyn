@@ -135,16 +135,14 @@ public class TaskList implements ITaskList {
 		try {
 			lock();
 			task = getOrCreateTask(task);
+			if (task.getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
+				String repositoryUrl = task.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL);
+				if (repositoryUrl != null) {
+					container = getUnsubmittedContainer(repositoryUrl);
+				}
+			}
 			if (container == null) {
-				if (task.getSynchronizationState().equals(SynchronizationState.OUTGOING_NEW)) {
-					String repositoryUrl = itask.getAttribute(ITasksCoreConstants.ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL);
-					if (repositoryUrl != null) {
-						container = getUnsubmittedContainer(repositoryUrl);
-					}
-				}
-				if (container == null) {
-					container = getUnmatchedContainer(task.getRepositoryUrl());
-				}
+				container = getUnmatchedContainer(task.getRepositoryUrl());
 			} else {
 				container = getValidElement(container);
 			}
