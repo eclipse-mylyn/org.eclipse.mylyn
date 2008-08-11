@@ -75,18 +75,21 @@ public class TaskActivityMonitor {
 				}
 			} else if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
 				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) {
-					if (event.getStructureKind().equals(InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET)) {
-						taskActivityManager.addWorkingSetElapsedTime(event.getStructureHandle(), event.getDate(),
-								event.getEndDate());
-						if (!isReloading) {
-							externalizationParticipant.setDirty(true);
-							// save not requested for working set time updates so...
-							externalizationParticipant.elapsedTimeUpdated(null, 0);
-						}
-					} else {
-						AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
-						if (activatedTask != null) {
-							taskActivityManager.addElapsedTime(activatedTask, event.getDate(), event.getEndDate());
+					if (event.getDate().getTime() > 0 && event.getEndDate().getTime() > 0) {
+						if (event.getStructureKind()
+								.equals(InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET)) {
+							taskActivityManager.addWorkingSetElapsedTime(event.getStructureHandle(), event.getDate(),
+									event.getEndDate());
+							if (!isReloading) {
+								externalizationParticipant.setDirty(true);
+								// save not requested for working set time updates so...
+								externalizationParticipant.elapsedTimeUpdated(null, 0);
+							}
+						} else {
+							AbstractTask activatedTask = taskList.getTask(event.getStructureHandle());
+							if (activatedTask != null) {
+								taskActivityManager.addElapsedTime(activatedTask, event.getDate(), event.getEndDate());
+							}
 						}
 					}
 				} else if (event.getDelta().equals("removed")) {
