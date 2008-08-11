@@ -23,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 
 /**
  * Discard outgoing changes on selected task TODO: Enable multi task discard?
@@ -37,6 +38,8 @@ public class ClearOutgoingAction extends Action {
 
 	private final List<IRepositoryElement> selectedElements;
 
+	private AbstractTaskEditorPage taskEditorPage;
+
 	public ClearOutgoingAction(List<IRepositoryElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
@@ -49,6 +52,14 @@ public class ClearOutgoingAction extends Action {
 		} else {
 			setEnabled(false);
 		}
+	}
+
+	public AbstractTaskEditorPage getTaskEditorPage() {
+		return taskEditorPage;
+	}
+
+	public void setTaskEditorPage(AbstractTaskEditorPage taskEditorPage) {
+		this.taskEditorPage = taskEditorPage;
 	}
 
 	public static boolean hasOutgoingChanges(ITask task) {
@@ -72,6 +83,9 @@ public class ClearOutgoingAction extends Action {
 				if (task.getClass() != TaskTask.class) {
 					TasksUiPlugin.getTaskDataManager().discardOutgoing(task);
 				} else {
+					if (taskEditorPage != null) {
+						taskEditorPage.doSave(null);
+					}
 					try {
 						TasksUi.getTaskDataManager().discardEdits(task);
 					} catch (CoreException e) {

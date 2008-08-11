@@ -752,6 +752,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			toolBarManager.add(synchronizeEditorAction);
 		} else if (taskRepository != null && !taskData.isNew()) {
 			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
+			((ClearOutgoingAction) clearOutgoingAction).setTaskEditorPage(this);
 			if (clearOutgoingAction.isEnabled()) {
 				toolBarManager.add(clearOutgoingAction);
 			}
