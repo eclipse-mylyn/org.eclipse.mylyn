@@ -1246,6 +1246,13 @@
             id="org.eclipse.mylyn.tasks.ui.command.attachment.openInDefaultEditor"
             name="Open Attachment in Default Editor">
       </command>
+      <command
+            categoryId="org.eclipse.mylyn.tasks.ui.category.editor"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.SubmitTaskHandler"
+            description="Submits the currently open task"
+            id="org.eclipse.mylyn.tasks.ui.command.submitTask"
+            name="Submit Task">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -1320,6 +1327,12 @@
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M2+M3+I">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.submitTask"
+            contextId="org.eclipse.mylyn.tasks.ui.editors.task"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+S">
       </key>
    </extension>
    <extension
