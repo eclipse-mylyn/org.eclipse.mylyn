@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -528,7 +529,13 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	protected TaskDataModel createModel(TaskEditorInput input) throws CoreException {
-		ITaskDataWorkingCopy taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);
+		ITaskDataWorkingCopy taskDataState;
+		try {
+			taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);
+		} catch (OperationCanceledException e) {
+			// XXX retry once to work around bug 235479
+			taskDataState = TasksUi.getTaskDataManager().getWorkingCopy(task);
+		}
 		TaskRepository taskRepository = TasksUi.getRepositoryManager().getRepository(taskDataState.getConnectorKind(),
 				taskDataState.getRepositoryUrl());
 		return new TaskDataModel(taskRepository, input.getTask(), taskDataState);
