@@ -10,15 +10,20 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -107,6 +112,12 @@ public class DeleteAction extends Action {
 				task = (AbstractTask) selectedObject;
 				TasksUi.getTaskActivityManager().deactivateTask(task);
 				TasksUiInternal.getTaskList().deleteTask(task);
+				try {
+					TasksUiPlugin.getTaskDataManager().deleteTaskData(task);
+				} catch (CoreException e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to delete task data",
+							e));
+				}
 				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
 				TasksUiInternal.closeEditorInActivePage(task, false);
 			} else if (selectedObject instanceof IRepositoryQuery) {

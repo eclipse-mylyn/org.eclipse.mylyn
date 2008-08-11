@@ -155,4 +155,8 @@ public class TaskDataStore {
 		writeState(file, state);
 	}
 
+	public synchronized boolean deleteTaskData(File file) {
+		return file.delete();
+	}
+
 }

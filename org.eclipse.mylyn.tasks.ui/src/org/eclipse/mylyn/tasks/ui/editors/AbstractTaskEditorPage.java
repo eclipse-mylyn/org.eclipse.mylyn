@@ -179,6 +179,13 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 							newTask.getHandleIdentifier());
 					close();
 					TasksUiInternal.getTaskList().deleteTask(oldTask);
+					ContextCore.getContextManager().deleteContext(oldTask.getHandleIdentifier());
+					try {
+						TasksUiPlugin.getTaskDataManager().deleteTaskData(oldTask);
+					} catch (CoreException e) {
+						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+								"Failed to delete task data", e));
+					}
 					TasksUiInternal.openTaskInBackground(newTask, false);
 				}
 

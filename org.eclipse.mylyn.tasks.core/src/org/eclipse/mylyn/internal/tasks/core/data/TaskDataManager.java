@@ -457,6 +457,21 @@ public class TaskDataManager implements ITaskDataManager {
 		fireTaskDataUpdated(event);
 	}
 
+	public void deleteTaskData(final ITask itask) throws CoreException {
+		Assert.isTrue(itask instanceof AbstractTask);
+		final AbstractTask task = (AbstractTask) itask;
+		taskList.run(new ITaskListRunnable() {
+			public void execute(IProgressMonitor monitor) throws CoreException {
+				File file = getFile(task, task.getConnectorKind());
+				if (file.exists()) {
+					taskDataStore.deleteTaskData(file);
+					task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+				}
+			}
+		});
+		taskList.notifyElementChanged(task);
+	}
+
 	/**
 	 * Saves incoming data and updates task sync state appropriately
 	 * 
