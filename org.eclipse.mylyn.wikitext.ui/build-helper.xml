@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project name="org.eclipse.mylyn.wikitext.ui">
+	
+	<target name="clean">
+		<delete>
+			<fileset dir="help">
+				<include name="**/*.html"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="all" depends="plugin-docs">
+	</target>
+	
+	<target name="plugin-docs" description="generate plugin help documentation">
+		<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties">
+			<classpath>
+				<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
+				<pathelement location="../org.eclipse.mylyn.wikitext.textile.core/@dot"/>
+				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+				<pathelement location="../org.eclipse.mylyn.wikitext.textile.core/bin"/>
+			</classpath>
+		</taskdef>
+		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
+			multipleOutputFiles="true"
+			navigationImages="true"
+			helpPrefix="help">
+			<fileset dir="help" includes="**/*.textile"/>
+		</wikitext-to-eclipse-help>
+		
+		<!--
+		bug #242981: move WikiText user guide under Mylyn help
+		-->
+		<replaceregexp file="help/Mylyn WikiText User Guide-toc.xml">
+			<regexp pattern="html&quot;&gt;"/>
+			<substitution expression="html&quot; link_to=&quot;../org.eclipse.mylyn.help.ui/toc.xml#addition&quot;&gt;"/>
+		</replaceregexp>
+		
+	</target>
+
+	
+</project>

@@ -149,7 +149,7 @@
 	</extension>
 	
 	<extension point="org.eclipse.help.toc">
-		<toc file="help/Mylyn WikiText User Guide-toc.xml" primary="true">
+		<toc file="help/Mylyn WikiText User Guide-toc.xml" primary="false">
 		</toc>
 	</extension>
  <extension
