@@ -22,7 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * @author David Green
  */
 public class BugzillaGeneratedCommentBlock extends Block {
-	private static Pattern pattern = Pattern.compile("\\s*\\*\\*\\*\\s+This bug has been.*?\\*\\*\\*\\s*");
+	private static Pattern pattern = Pattern.compile("\\s*\\*\\*\\*\\s+((This bug has been)|(Bug \\d+ has been)).*?\\*\\*\\*\\s*");
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {

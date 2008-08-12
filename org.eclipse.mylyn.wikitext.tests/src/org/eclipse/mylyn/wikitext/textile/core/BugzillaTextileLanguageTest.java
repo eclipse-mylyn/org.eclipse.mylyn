@@ -67,15 +67,15 @@ public class BugzillaTextileLanguageTest extends TestCase {
 
 		String html = parser.parseToHtml(baseMarkup);
 		System.out.println(html);
-		assertTrue(html.contains("<p>*** This bug has been marked as a duplicate of bug 123 ***</p>"));
+		assertTrue(html.contains("<p style=\"color: Blue;\">*** This bug has been marked as a duplicate of bug 123 ***</p>"));
 
 		html = parser.parseToHtml(" \t " + baseMarkup);
 		System.out.println(html);
-		assertTrue(html.contains("<p> \t *** This bug has been marked as a duplicate of bug 123 ***</p>"));
+		assertTrue(html.contains("<p style=\"color: Blue;\"> \t *** This bug has been marked as a duplicate of bug 123 ***</p>"));
 
 		html = parser.parseToHtml(baseMarkup + "  ");
 		System.out.println(html);
-		assertTrue(html.contains("<p>*** This bug has been marked as a duplicate of bug 123 ***  </p>"));
+		assertTrue(html.contains("<p style=\"color: Blue;\">*** This bug has been marked as a duplicate of bug 123 ***  </p>"));
 	}
 
 	public void testThisBugHasBeenNegativeMatch() {
@@ -84,5 +84,19 @@ public class BugzillaTextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml(baseMarkup);
 		System.out.println(html);
 		assertTrue(html.contains("<body><ul><li><ul><li><ul><li>This bug has been marked as a duplicate of bug 123"));
+	}
+
+	public void testBugFooHasBeenMatch() {
+		String markup = "*** Bug 209610 has been marked as a duplicate of this bug. ***";
+		String html = parser.parseToHtml(markup);
+		System.out.println(html);
+		assertTrue(html.contains("<body><p style=\"color: Blue;\">*** Bug 209610 has been marked as a duplicate of this bug. ***</p>"));
+	}
+
+	public void testBugFooHasBeenNegativeMatch() {
+		String markup = "*** Bug 209610 has been marked as a duplicate of this bug.";
+		String html = parser.parseToHtml(markup);
+		System.out.println(html);
+		assertTrue(html.contains("<body><ul><li><ul><li><ul><li>Bug 209610 has been marked as a duplicate of this bug."));
 	}
 }
