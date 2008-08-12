@@ -25,18 +25,17 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.HtmlTextPresenter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
 
-
 /**
- * A text hover implementation that finds regions based on annotations, and
- * supports HTML markup in the tooltip string.
+ * A text hover implementation that finds regions based on annotations, and supports HTML markup in the tooltip string.
  * 
  * @author David Green
- *
+ * 
  */
 public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 	private final ISourceViewer sourceViewer;
@@ -51,7 +50,6 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 		return true;
 	}
 
-
 	@Override
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
 		IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
@@ -62,13 +60,13 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 			while (iterator.hasNext()) {
 				Annotation next = (Annotation) iterator.next();
 				Position position = annotationModel.getPosition(next);
-				if (position.getOffset() <= offset && (position.getLength()+position.getOffset()) >= offset) {
+				if (position.getOffset() <= offset && (position.getLength() + position.getOffset()) >= offset) {
 					start = Math.min(start, position.getOffset());
-					end = Math.max(end,position.getOffset()+position.getLength());
+					end = Math.max(end, position.getOffset() + position.getLength());
 				}
 			}
 			if (start <= end && end > -1) {
-				return new Region(start,end-start);
+				return new Region(start, end - start);
 			}
 		}
 		return super.getHoverRegion(textViewer, offset);
@@ -80,6 +78,7 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 	public IInformationControlCreator getHoverControlCreator() {
 		return new IInformationControlCreator() {
 
+			@SuppressWarnings("deprecation")
 			public IInformationControl createInformationControl(Shell parent) {
 
 				String tooltipAffordanceString = null;
@@ -89,19 +88,20 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 					// expected in a non-eclipse environment
 				}
 
-				return new DefaultInformationControl(parent, tooltipAffordanceString, new HtmlTextPresenter()) {
-
+				// FIXME: prefer 3.4 APIs
+//				return new DefaultInformationControl(parent, tooltipAffordanceString, new HtmlTextPresenter()) {
+				// must use 3.3 APIs for now
+				return new DefaultInformationControl(parent, SWT.NONE, new HtmlTextPresenter(), tooltipAffordanceString) {
 					@Override
 					public void setLocation(Point location) {
 						// prevent the location from being set to where the cursor is: otherwise the popup is displayed
 						// and then hidden immediately.
 						Point cursorLocation = Display.getCurrent().getCursorLocation();
-						if (cursorLocation.y+12 >= location.y) {
-							location.y = cursorLocation.y+13;
+						if (cursorLocation.y + 12 >= location.y) {
+							location.y = cursorLocation.y + 13;
 						}
 						super.setLocation(location);
 					}
-
 				};
 			}
 		};
