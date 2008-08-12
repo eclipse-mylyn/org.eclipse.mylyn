@@ -38,12 +38,13 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 /**
  * @author Mik Kersten
  */
+// TODO 3.1: rename to DeleteTaskAction
 public class DeleteAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.delete";
 
 	public DeleteAction() {
-		setText("Delete");
+		setText("Delete Task");
 		setId(ID);
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);

@@ -54,6 +54,7 @@ import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
@@ -375,6 +376,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	private final ListenerList selectionChangedListeners;
 
 	private SynchronizeEditorAction synchronizeEditorAction;
+
+	private DeleteTaskEditorAction deleteAction;
 
 	private ITask task;
 
@@ -758,6 +761,11 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				}
 			};
 			toolBarManager.add(repositoryLabelControl);
+		}
+
+		if (taskData != null && taskData.isNew()) {
+			deleteAction = new DeleteTaskEditorAction();
+			toolBarManager.add(deleteAction);
 		}
 
 		if (taskData == null) {
