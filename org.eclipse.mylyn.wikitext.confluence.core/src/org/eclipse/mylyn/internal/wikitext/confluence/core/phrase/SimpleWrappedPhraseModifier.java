@@ -72,6 +72,7 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 			case '+':
 			case '{':
 			case '}':
+			case '-':
 				buf.append('\\');
 			}
 			buf.append(c);

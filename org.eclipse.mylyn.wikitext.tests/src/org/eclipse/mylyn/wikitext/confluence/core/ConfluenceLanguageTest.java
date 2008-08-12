@@ -68,6 +68,15 @@ public class ConfluenceLanguageTest extends TestCase {
 		System.out.println("HTML:"+html);
 		assertTrue(Pattern.compile("<body><blockquote><p>a multiline<br/>\\s*block quote</p><p>with two paras</p></blockquote><p>another para</p></body>",Pattern.MULTILINE).matcher(html).find());
 	}
+
+	public void testBlockQuoteExtended2() {
+		String html = parser
+				.parseToHtml("{quote}this is a quote{quote}\nsome more text");
+		System.out.println("HTML:" + html);
+		assertTrue(html
+				.contains("<body><blockquote><p>this is a quote</p></blockquote><p>some more text</p></body>"));
+	}
+	
 	public void testBlockQuoteExtendedUnclosed() {
 		String html = parser.parseToHtml("{quote}\na multiline\nblock quote\n\nwith two paras\n");
 		System.out.println("HTML:"+html);
@@ -130,15 +139,22 @@ public class ConfluenceLanguageTest extends TestCase {
 		System.out.println("HTML: \n"+html);
 		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">Example</a> hyperlink</p></body>"));
 	}
+
+	public void testHyperlinkWithTitle2() {
+		String html = parser.parseToHtml("a [Example Two | http://example.com] hyperlink");
+		System.out.println("HTML: \n"+html);
+		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">Example Two</a> hyperlink</p></body>"));
+	}
+	
 	public void testHyperlinkHash() {
 		String html = parser.parseToHtml("a [Example|#example] hyperlink");
 		System.out.println("HTML: \n"+html);
 		assertTrue(html.contains("<body><p>a <a href=\"#example\">Example</a> hyperlink</p></body>"));
 	}
 	public void testHyperlinkWithTip() {
-		String html = parser.parseToHtml("a [http://example.com title is here] hyperlink");
+		String html = parser.parseToHtml("a [example | http://example.com | title is here] hyperlink");
 		System.out.println("HTML: \n"+html);
-		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\" title=\"title is here\">http://example.com</a> hyperlink</p></body>"));
+		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\" title=\"title is here\">example</a> hyperlink</p></body>"));
 	}
 	public void testHyperlinkImplied() {
 		String html = parser.parseToHtml("a http://example.com hyperlink");
@@ -233,7 +249,13 @@ public class ConfluenceLanguageTest extends TestCase {
 		System.out.println("HTML:"+html);
 		assertTrue(Pattern.compile("body><pre>a multiline\\s+preformatted\\s+with two paras\\s+</pre><p>another para</p></body>",Pattern.MULTILINE).matcher(html).find());
 	}
-
+	public void testPreformattedExtended2() {
+		String html = parser.parseToHtml("{noformat}\na multiline\n\tpreformatted\n\nwith two paras{noformat}another para");
+		System.out.println("HTML:"+html);
+		assertTrue(html.contains("<body><pre>a multiline"));
+		assertTrue(html.contains("</pre><p>another para</p></body>"));
+		assertTrue(Pattern.compile("with two paras\\s*</pre>",Pattern.MULTILINE).matcher(html).find());
+	}
 	public void testBlockCode() {
 		String html = parser.parseToHtml("h1. a header\n" +
 				"\n" +
@@ -251,6 +273,12 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("</code></pre><p>More text...</p>"));
 	}
 
+	public void testBlockCode2() {
+		String html = parser.parseToHtml("{code}some code{code}more text");
+		System.out.println("HTML:"+html);
+		assertTrue(html.contains("<body><pre><code>some code"));
+		assertTrue(html.contains("</code></pre><p>more text</p></body>"));
+	}
 
 	public void testNote() {
 		String html = parser.parseToHtml("h1. a header\n" +

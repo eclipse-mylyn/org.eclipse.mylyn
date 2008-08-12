@@ -130,4 +130,11 @@ public class HtmlTextPresentationParserTest extends TestCase {
 		System.out.println("text:\n"+text);
 		assertTrue(text.contains("One\nTwo"));
 	}
+	
+	public void testWhitespaceAfterTable() throws Exception {
+		parser.parse("<html><head></head><body>before<table><tr><td>in1</td></tr><tr><td>in2</td></tr></table>after</body></html>");
+		String text = parser.getText();
+		System.out.println("text:\n"+text);
+		assertTrue(text.contains("in1 \t\nin2 \t\n\nafter"));
+	}
 }

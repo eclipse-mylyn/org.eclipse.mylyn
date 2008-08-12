@@ -527,10 +527,7 @@ public class HtmlTextPresentationParser {
 					}
 				}
 				if (!skip) {
-					// FIXME: parial ends with, so that if it ends with "\n" and we want "\n\n" then "\n" is emitted
-					if (!endsWith(out,ch)) {
-						emitChars(elementState,ch);
-					}
+					emitPartial(elementState, ch);
 				}
 			}
 
@@ -543,10 +540,27 @@ public class HtmlTextPresentationParser {
 			}
 		}
 
-		private boolean endsWith(StringBuilder out, char[] ch) {
-			if (out.length() >= ch.length) {
-				for (int x = 0; x < ch.length; ++x) {
-					if (out.charAt((out.length() - ch.length) + x) != ch[x]) {
+		private void emitPartial(ElementState elementState, char[] ch) {
+			int matchShift = -1;
+			for (int shift = 0;shift < ch.length;++shift) {
+				if (endsWith(out, ch, shift, ch.length-shift)) {
+					matchShift = shift;
+					break;
+				}
+			}
+			if (matchShift > 0) {
+				char[] c2 = new char[ch.length-matchShift];
+				System.arraycopy(ch, matchShift, c2, 0, c2.length);
+				emitChars(elementState, c2);
+			} else if (matchShift == -1) {
+				emitChars(elementState, ch);
+			}
+		}
+
+		private boolean endsWith(StringBuilder out, char[] ch,int offset, int length) {
+			if (out.length() >= length) {
+				for (int x = 0; x < length; ++x) {
+					if (out.charAt((out.length() - length) + x) != ch[x+offset]) {
 						return false;
 					}
 				}
@@ -746,7 +760,7 @@ public class HtmlTextPresentationParser {
 		elementToCharacters.put("p", "\n\n".toCharArray());
 		elementToCharacters.put("br", "\n".toCharArray());
 		elementToCharacters.put("tr", "\n".toCharArray());
-		elementToCharacters.put("table", "\n".toCharArray());
+		elementToCharacters.put("table", "\n\n".toCharArray());
 		elementToCharacters.put("ol", "\n\n".toCharArray());
 		elementToCharacters.put("ul", "\n\n".toCharArray());
 		elementToCharacters.put("dl", "\n\n".toCharArray());

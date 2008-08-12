@@ -10,76 +10,46 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.confluence.core.block;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * quoted text block, matches blocks that start with <code>bc. </code>.
+ * quoted text block, matches blocks that start with <code>{noformat}</code>.
  * Creates an extended block type of {@link ParagraphBlock paragraph}.
  * 
  * @author David Green
  */
-public class ExtendedPreformattedBlock extends Block {
+public class ExtendedPreformattedBlock extends AbstractConfluenceDelimitedBlock {
 
-
-	static final Pattern startPattern = Pattern.compile("\\{noformat\\}(.*)");
-	static final Pattern endPattern = Pattern.compile("\\{noformat\\}(.*)");
-
-	private int blockLineCount = 0;
-	private Matcher matcher;
-
+	
 	public ExtendedPreformattedBlock() {
+		super("noformat");
+	}
+	
+	@Override
+	protected void beginBlock() {
+		Attributes attributes = new Attributes();
+		builder.beginBlock(BlockType.PREFORMATTED, attributes);
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
-		if (blockLineCount == 0) {
-			Attributes attributes = new Attributes();
-
-			offset = matcher.start(1);
-
-			builder.beginBlock(BlockType.PREFORMATTED, attributes);
+	protected void endBlock() {
+		builder.endBlock(); // pre
+	}
+	
+	@Override
+	protected void handleBlockContent(String content) {
+		if (content.length() > 0) {
+			builder.characters(content);
+		} else if (blockLineCount == 1) {
+			return;
 		}
-
-		++blockLineCount;
-
-		if (blockLineCount > 1) {
-			Matcher endMatcher = endPattern.matcher(line);
-			if (endMatcher.matches()) {
-				setClosed(true);
-				return endMatcher.start(1);
-			}
-		} else if (offset >= line.length()) {
-			return -1;
-		}
-
-		builder.characters(offset>0?line.substring(offset):line);
 		builder.characters("\n");
-
-		return -1;
 	}
-
+	
 	@Override
-	public boolean canStart(String line, int lineOffset) {
-		blockLineCount = 0;
-		if (lineOffset == 0) {
-			matcher = startPattern.matcher(line);
-			return matcher.matches();
-		} else {
-			matcher = null;
-			return false;
-		}
+	protected void setOption(String key, String value) {
+		// no options
 	}
-
-	@Override
-	public void setClosed(boolean closed) {
-		if (closed && !isClosed()) {
-			builder.endBlock(); // pre
-		}
-		super.setClosed(closed);
-	}
+		
 }

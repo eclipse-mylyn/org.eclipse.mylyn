@@ -20,9 +20,9 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
-import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
@@ -225,4 +225,75 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		assertTrue(html.contains("<body><div class=\"note\"><p>foo</p></div></body>"));
 		assertTrue(!html.contains("<style type=\"text/css\">"));
 	}
+
+	public void testLinkRel() throws Exception {
+		// link-specific rel
+		StringWriter out = new StringWriter();
+		HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out);
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		LinkAttributes attributes = new LinkAttributes();
+		attributes.setRel("nofollow");
+		builder.link(attributes, "http://www.foo.bar", "Foo Bar");
+		builder.endBlock();
+		builder.endDocument();
+		
+		String html = out.toString();
+		
+		System.out.println(html);
+		
+		assertTrue(html.contains("<a href=\"http://www.foo.bar\" rel=\"nofollow\">Foo Bar</a>"));
+
+		// default link rel
+		out = new StringWriter();
+		builder = new HtmlDocumentBuilder(out);
+		builder.setLinkRel("nofollow");
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		attributes = new LinkAttributes();
+		builder.link(attributes, "http://www.foo.bar", "Foo Bar");
+		builder.endBlock();
+		builder.endDocument();
+		
+		html = out.toString();
+		
+		System.out.println(html);
+		
+		assertTrue(html.contains("<a href=\"http://www.foo.bar\" rel=\"nofollow\">Foo Bar</a>"));
+
+		// both link-specific and default link ref
+		out = new StringWriter();
+		builder = new HtmlDocumentBuilder(out);
+		builder.setLinkRel("nofollow");
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		attributes = new LinkAttributes();
+		attributes.setRel("foobar");
+		builder.link(attributes, "http://www.foo.bar", "Foo Bar");
+		builder.endBlock();
+		builder.endDocument();
+		
+		html = out.toString();
+		
+		System.out.println(html);
+		
+		assertTrue(html.contains("<a href=\"http://www.foo.bar\" rel=\"foobar nofollow\">Foo Bar</a>"));
+		
+		// no rel at all
+		out = new StringWriter();
+		builder = new HtmlDocumentBuilder(out);
+		builder.beginDocument();
+		builder.beginBlock(BlockType.PARAGRAPH, new Attributes());
+		attributes = new LinkAttributes();
+		builder.link(attributes, "http://www.foo.bar", "Foo Bar");
+		builder.endBlock();
+		builder.endDocument();
+		
+		html = out.toString();
+		
+		System.out.println(html);
+		
+		assertTrue(html.contains("<a href=\"http://www.foo.bar\">Foo Bar</a>"));
+	}
+
 }

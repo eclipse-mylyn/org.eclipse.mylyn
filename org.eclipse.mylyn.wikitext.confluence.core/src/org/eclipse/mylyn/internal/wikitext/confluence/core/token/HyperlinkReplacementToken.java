@@ -24,12 +24,12 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "\\[(?:([^\\|]+)\\|)?([^\\]\\s]+)(?:\\s([^\\]]*))?\\]";
+		return "\\[([^\\]]+)\\]";
 	}
 
 	@Override
 	protected int getPatternGroupCount() {
-		return 3;
+		return 1;
 	}
 
 	@Override
@@ -40,9 +40,11 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 	private static class HyperlinkReplacementTokenProcessor extends PatternBasedElementProcessor {
 		@Override
 		public void emit() {
-			String text = group(1);
-			String href = group(2);
-			String tip = group(3);
+			String linkComposite = group(1);
+			String[] parts = linkComposite.split("\\s*\\|\\s*");
+			String text = parts.length > 1?parts[0]:null;
+			String href = parts.length > 1?parts[1]:parts[0];
+			String tip = parts.length > 2?parts[2]:null;
 			if (text == null || text.length() == 0) {
 				text = href;
 			}

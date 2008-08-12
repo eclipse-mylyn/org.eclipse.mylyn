@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser;
 
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+
 /**
  * Attributes for links (hyperlinks)
  * 
@@ -18,6 +20,7 @@ package org.eclipse.mylyn.wikitext.core.parser;
  */
 public class LinkAttributes extends Attributes {
 	private String target;
+	private String rel;
 
 	/**
 	 * The target of a link, as defined by the HTML spec.
@@ -36,4 +39,29 @@ public class LinkAttributes extends Attributes {
 	public String getTarget() {
 		return target;
 	}
+	
+
+	/**
+	 * The 'rel' of a link, as defined by the HTML spec.
+	 * 
+	 * @return the ref or null if there should be none
+	 * 
+	 * @see HtmlDocumentBuilder#getLinkRel()
+	 */
+	public String getRel() {
+		return rel;
+	}
+
+	/**
+	 * The 'rel' of a link, as defined by the HTML spec.
+	 * 
+	 * @param rel
+	 *            the rel or null if there should be none
+	 * 
+	 * @see HtmlDocumentBuilder#setLinkRel(String)
+	 */
+	public void setRel(String rel) {
+		this.rel = rel;
+	}
+
 }

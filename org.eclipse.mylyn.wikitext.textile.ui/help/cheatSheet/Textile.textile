@@ -1,1 +1,119 @@
-h3. Textile Markup Cheat Sheeth4. Phrase Modifiers| ==_emphasis_== | _emphasis_ || ==*strong*== | *strong* || ==__italic__== | __italic__ || ==**bold**== | **bold** || ==??citation??== | ??citation?? || ==-deleted text-== | -deleted text- || ==+inserted text+== | +inserted text+ || ==^superscript^== | ^superscript^ || ==~subscript~== | ~subscript~ || ==%span%== | %span% || ==@code@== | @code@ |h4. Block Modifiers| ==hn.== | Heading || ==bq.== | Block quote || ==fnn.== | Footnote || ==p.== | Paragraph || ==bc.== | Block code || ==pre.== | Pre-formatted || ==#== | Numeric list || ==*== | Bulleted list |h4. Links=="title":http://www.example.com====!images/logo.png!:http://www.example.com==h4. Images==!images/logo.png!==h4. Punctuation| =="quotes"== | "quotes" || =='quotes'== | 'quotes' || ==it's== | it's || ==em -- dash== | em -- dash || ==en - dash== | en - dash || ==2 x 4== | 2 x 4 || ==foo(tm)== | foo(tm) || ==foo(r)== | foo(r) |h4. Listsh5. Bulleted Listsbc. * one** one.one** one.two* two* one** one.one** one.two* twoh5. Numeric Listsbc. # one## one.one## one.two# two# one## one.one## one.two# twoh4. Tables==|_. a|_. table|_. header|====|a|table|row|====|a|table|row|==h4. Alignment and Padding| < | left text alignment | eg: p<. || > | right text alignment | eg: p>. || <> | justify text | eg: p<>. || = | center text | eg: p=. || ( | pad left | eg: p(. || ) | pad right | eg: p). || () | pad left and right |h4. Attributes| (class) | eg: h1(foo). || (#id) | eg: h1(foo). || {style} | eg: h1{color:red}. || [language] | eg: h1[en]. |example:==h1(main-heading){color: red}. header text==h4. Acronyms==ABW(A Better Way)==h4. Footnotes==reference[1]====fn1. footnote text==h4. Extended Blocks==bc..====bq..====pre..==h4. Generated Content=={toc}== Generates a table of contents.  Eg: =={toc}== or =={toc:style=disc|maxLevel=3}===={glossary}== Generates a glossary based on acronyms in the document.  Eg: =={glossary}== or =={glossary:style=disc}==
+h3. Textile Markup Cheat Sheet
+
+h4. Phrase Modifiers
+
+| ==_emphasis_== | _emphasis_ |
+| ==*strong*== | *strong* |
+| ==__italic__== | __italic__ |
+| ==**bold**== | **bold** |
+| ==??citation??== | ??citation?? |
+| ==-deleted text-== | -deleted text- |
+| ==+inserted text+== | +inserted text+ |
+| ==^superscript^== | ^superscript^ |
+| ==~subscript~== | ~subscript~ |
+| ==%span%== | %span% |
+| ==@code@== | @code@ |
+
+h4. Block Modifiers
+
+| ==hn.== | Heading |
+| ==bq.== | Block quote |
+| ==fnn.== | Footnote |
+| ==p.== | Paragraph (optional) |
+| ==bc.== | Block code |
+| ==pre.== | Pre-formatted |
+| ==#== | Numeric list |
+| ==*== | Bulleted list |
+
+h4. Links
+
+=="title":http://www.example.com==
+==!images/logo.png!:http://www.example.com==
+
+h4. Images
+
+==!images/logo.png!==
+
+h4. Punctuation
+
+| =="quotes"== | "quotes" |
+| =='quotes'== | 'quotes' |
+| ==it's== | it's |
+| ==em -- dash== | em -- dash |
+| ==en - dash== | en - dash |
+| ==2 x 4== | 2 x 4 |
+| ==foo(tm)== | foo(tm) |
+| ==foo(r)== | foo(r) |
+
+h4. Lists
+
+h5. Bulleted Lists
+
+bc. * one
+** one.one
+** one.two
+* two
+
+* one
+** one.one
+** one.two
+* two
+
+h5. Numeric Lists
+
+bc. # one
+## one.one
+## one.two
+# two
+
+# one
+## one.one
+## one.two
+# two
+
+h4. Tables
+
+==|_. a|_. table|_. header|==
+==|a|table|row|==
+==|a|table|row|==
+
+h4. Alignment and Padding
+
+| < | left text alignment | eg: p<. |
+| > | right text alignment | eg: p>. |
+| <> | justify text | eg: p<>. |
+| = | center text | eg: p=. |
+| ( | pad left | eg: p(. |
+| ) | pad right | eg: p). |
+| () | pad left and right |
+
+h4. Attributes
+
+| (class) | eg: h1(foo). |
+| (#id) | eg: h1(foo). |
+| {style} | eg: h1{color:red}. |
+| [language] | eg: h1[en]. |
+
+example:
+
+==h1(main-heading){color: red}. header text==
+
+h4. Acronyms
+
+==ABW(A Better Way)==
+
+h4. Footnotes
+
+==reference[1]==
+==fn1. footnote text==
+
+h4. Extended Blocks
+
+==bc..==
+==bq..==
+==pre..==
+
+h4. Generated Content
+
+=={toc}== Generates a table of contents.  Eg: =={toc}== or =={toc:style=disc|maxLevel=3}==
+=={glossary}== Generates a glossary based on acronyms in the document.  Eg: =={glossary}== or =={glossary:style=disc}==

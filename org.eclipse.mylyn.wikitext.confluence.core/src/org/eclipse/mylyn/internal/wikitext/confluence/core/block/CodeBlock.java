@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.confluence.core.block;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
@@ -21,84 +18,54 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
  *
  * @author David Green
  */
-public class CodeBlock extends ParameterizedBlock {
+public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 
-
-	private static final Pattern startPattern = Pattern.compile("\\{code(?::([^\\}]*))?\\}(.*)");
-	private static final Pattern endPattern = Pattern.compile("\\{code\\}(.*)");
-
-
-	private int blockLineCount = 0;
-	private Matcher matcher;
 
 	private String title;
-
+	
 	public CodeBlock() {
+		super("code");
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
-		if (blockLineCount == 0) {
-			setOptions(matcher.group(1));
-
-			offset = matcher.start(2);
-
-			if (title != null) {
-				Attributes attributes = new Attributes();
-				attributes.setTitle(title);
-				builder.beginBlock(BlockType.PANEL, attributes);
-			}
+	protected void beginBlock() {
+		if (title != null) {
 			Attributes attributes = new Attributes();
-
-			builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
-			builder.beginBlock(BlockType.CODE, attributes);
+			attributes.setTitle(title);
+			builder.beginBlock(BlockType.PANEL, attributes);
 		}
-		++blockLineCount;
+		Attributes attributes = new Attributes();
 
-		if (blockLineCount > 1) {
-			Matcher endMatcher = endPattern.matcher(line);
-			if (endMatcher.matches()) {
-				setClosed(true);
-				return endMatcher.start(1);
-			}
-		} else if (offset >= line.length()) {
-			builder.characters("\n");
-			return -1;
-		}
+		builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
+		builder.beginBlock(BlockType.CODE, attributes);
+	}
 
-		builder.characters(offset > 0?line.substring(offset):line);
+	@Override
+	protected void handleBlockContent(String content) {
+		builder.characters(content);
 		builder.characters("\n");
-
-		return -1;
 	}
-
+	
 	@Override
-	public boolean canStart(String line, int lineOffset) {
+	protected void endBlock() {
+		if (title != null) {
+			builder.endBlock(); // panel	
+		}
+		builder.endBlock(); // code
+		builder.endBlock(); // pre
+	}
+	
+	@Override
+	protected void resetState() {
+		super.resetState();
 		title = null;
-		blockLineCount = 0;
-		matcher = startPattern.matcher(line);
-		if (lineOffset > 0) {
-			matcher.region(lineOffset, line.length());
-		}
-		return matcher.matches();
 	}
 
-	@Override
-	public void setClosed(boolean closed) {
-		if (closed && !isClosed()) {
-			if (title != null) {
-				builder.endBlock(); // panel
-			}
-			builder.endBlock(); // code
-			builder.endBlock(); // pre
-		}
-		super.setClosed(closed);
-	}
-
+	
 	@Override
 	protected void setOption(String key, String value) {
 		if (key.equals("title")) {
 			title = value;
 		}
-	}
+	}	
 }
