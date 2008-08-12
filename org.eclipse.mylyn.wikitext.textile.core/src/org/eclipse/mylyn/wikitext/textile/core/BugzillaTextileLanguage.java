@@ -12,6 +12,7 @@ package org.eclipse.mylyn.wikitext.textile.core;
 
 import java.util.List;
 
+import org.eclipse.mylyn.internal.wikitext.textile.core.block.BugzillaGeneratedCommentBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.BugzillaQuoteBlock;
 import org.eclipse.mylyn.internal.wikitext.textile.core.block.ParagraphBlock;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
@@ -21,33 +22,40 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * 
  * Extensions to the Textile language include:
  * <ul>
- * 	<li>Email-style quoted regions, starting with a '&gt;' character</li>
- *  <li>All paragraphs are wrapped in &lt;p&gt; tags even if they start with a space character<li>
+ * <li>Email-style quoted regions, starting with a '&gt;' character</li>
+ * <li>All paragraphs are wrapped in &lt;p&gt; tags even if they start with a space character
+ * <li>
  * </ul>
  * 
  * @author David Green
- *
+ * 
  */
 public class BugzillaTextileLanguage extends TextileLanguage {
-	
+
 	public BugzillaTextileLanguage() {
 		setExtendsLanguage(getName());
 		setName("Textile (Bugzilla Dialect)");
 	}
-	
+
 	@Override
 	protected void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
-		super.addBlockExtensions(blocks,paragraphBreakingBlocks);
-		
+		super.addBlockExtensions(blocks, paragraphBreakingBlocks);
+
 		BugzillaQuoteBlock quoteBlock = new BugzillaQuoteBlock();
 		blocks.add(quoteBlock);
 		paragraphBreakingBlocks.add(quoteBlock);
+
+		// block for bugzilla-generated comments, which we want first so that it 
+		// preempts list detection
+		BugzillaGeneratedCommentBlock generatedCommentBlock = new BugzillaGeneratedCommentBlock();
+		blocks.add(0, generatedCommentBlock);
+		paragraphBreakingBlocks.add(0, quoteBlock);
 	}
-	
+
 	@Override
 	protected void initializeBlocks() {
 		super.initializeBlocks();
-		ParagraphBlock block = (ParagraphBlock) getBlocks().get(getBlocks().size()-1);
+		ParagraphBlock block = (ParagraphBlock) getBlocks().get(getBlocks().size() - 1);
 		block.setEnableUnwrapped(false);
 	}
 }
