@@ -16,43 +16,66 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 
 /**
- *
- *
+ * An abstract class for Ant tasks that use a configurable {@link MarkupLanguage}.
+ * 
  * @author David Green
  */
 public abstract class MarkupTask extends Task {
 
 	private String markupLanguage;
 
+	private String internalLinkPattern;
+
 	/**
-	 * The markup language to use.  Should correspond to a {@link MarkupLanguage#getName() markup language name}.
+	 * The markup language to use. Should correspond to a {@link MarkupLanguage#getName() markup language name}.
 	 */
 	public String getMarkupLanguage() {
 		return markupLanguage;
 	}
 
 	/**
-	 * The markup language to use.   Should correspond to a {@link MarkupLanguage#getName() markup language name}.
+	 * The markup language to use. Should correspond to a {@link MarkupLanguage#getName() markup language name}.
 	 */
 	public void setMarkupLanguage(String markupLanguage) {
 		this.markupLanguage = markupLanguage;
 	}
 
 	/**
-	 * Create a {@link MarkupLanguage markup language parser} for the {@link #getMarkupLanguage() specified markup language}.
+	 * Create a {@link MarkupLanguage markup language parser} for the {@link #getMarkupLanguage() specified markup
+	 * language}.
 	 * 
 	 * @return the markup language
 	 * 
-	 * @throws BuildException if the markup language is not specified or if it is unknown.
+	 * @throws BuildException
+	 *             if the markup language is not specified or if it is unknown.
 	 */
 	protected MarkupLanguage createMarkupLanguage() throws BuildException {
 		if (markupLanguage == null) {
 			throw new BuildException("Must specify @markupLanguage");
 		}
 		try {
-			return ServiceLocator.getInstance(getClass().getClassLoader()).getMarkupLanguage(markupLanguage);
+			MarkupLanguage language = ServiceLocator.getInstance(getClass().getClassLoader()).getMarkupLanguage(
+					markupLanguage);
+			if (internalLinkPattern != null) {
+				language.setInternalLinkPattern(internalLinkPattern);
+			}
+			return language;
 		} catch (IllegalArgumentException e) {
-			throw new BuildException(e.getMessage(),e);
+			throw new BuildException(e.getMessage(), e);
 		}
+	}
+
+	/**
+	 * @see MarkupLanguage#setInternalLinkPattern(String)
+	 */
+	public void setInternalLinkPattern(String internalLinkPattern) {
+		this.internalLinkPattern = internalLinkPattern;
+	}
+
+	/**
+	 * @see MarkupLanguage#getInternalLinkPattern()
+	 */
+	public String getInternalLinkPattern() {
+		return internalLinkPattern;
 	}
 }

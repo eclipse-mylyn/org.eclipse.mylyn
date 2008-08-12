@@ -12,6 +12,7 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -25,35 +26,37 @@ import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 
 /**
- * A markup language, which knows its formatting rules and is able to
- * process content based on {@link Block}, {@link PatternBasedElementProcessor} and {@link PatternBasedElement}
- * concepts.  All markup languages supported by WikiText extend this class.
+ * A markup language, which knows its formatting rules and is able to process content based on {@link Block},
+ * {@link PatternBasedElementProcessor} and {@link PatternBasedElement} concepts. All markup languages supported by
+ * WikiText extend this class.
  * 
- * The MarkupLanguage class provides basic functionality for determining which blocks process
- * which markup content in a particular document.  In general multi-line documents are split into
- * consecutive regions called blocks, and each line in a block is processed with spanning sections
- * called phrase modifiers, and tokens within a span are replaced with their respective replacement
- * tokens.  These rules apply to most lightweight markup languages, however subclasses may override this default
- * functionality if required.  For example, by default phrase modifiers are non-overlapping and non-nested,
- * however if required a subclass could permit such nesting.
+ * The MarkupLanguage class provides basic functionality for determining which blocks process which markup content in a
+ * particular document. In general multi-line documents are split into consecutive regions called blocks, and each line
+ * in a block is processed with spanning sections called phrase modifiers, and tokens within a span are replaced with
+ * their respective replacement tokens. These rules apply to most lightweight markup languages, however subclasses may
+ * override this default functionality if required. For example, by default phrase modifiers are non-overlapping and
+ * non-nested, however if required a subclass could permit such nesting.
  * 
- * Generally markup language classes are not accessed directly by client code, instead client code should
- * configure and call {@link MarkupParser}, accessing the markup language by name using the {@link ServiceLocator}.
+ * Generally markup language classes are not accessed directly by client code, instead client code should configure and
+ * call {@link MarkupParser}, accessing the markup language by name using the {@link ServiceLocator}.
  * 
  * @author David Green
  */
 public abstract class MarkupLanguage {
 
 	private String name;
+
 	private String extendsLanguage;
 
 	private boolean filterGenerativeBlocks;
+
 	private boolean blocksOnly;
 
+	protected String internalLinkPattern = "{0}";
 
 	/**
-	 * Create new state for tracking a document and its contents during a parse session.
-	 * Subclasses may override this method to provide additional state tracking capability.
+	 * Create new state for tracking a document and its contents during a parse session. Subclasses may override this
+	 * method to provide additional state tracking capability.
 	 * 
 	 * @return the new state.
 	 */
@@ -80,7 +83,7 @@ public abstract class MarkupLanguage {
 			try {
 				while ((line = reader.readLine()) != null) {
 
-					state.setLineNumber(reader.getLineNumber()+1);
+					state.setLineNumber(reader.getLineNumber() + 1);
 					state.setLineOffset(reader.getLineOffset());
 					state.setLineCharacterOffset(0);
 					state.setLineSegmentEndOffset(0);
@@ -89,27 +92,28 @@ public abstract class MarkupLanguage {
 					int lineOffset = 0;
 					for (;;) {
 						if (currentBlock == null) {
-							currentBlock = startBlock(line,lineOffset);
+							currentBlock = startBlock(line, lineOffset);
 							if (currentBlock == null) {
 								break;
 							}
 							currentBlock.setState(state);
 							currentBlock.setParser(parser);
 						}
-						lineOffset = currentBlock.processLineContent(line,lineOffset);
+						lineOffset = currentBlock.processLineContent(line, lineOffset);
 						if (currentBlock.isClosed()) {
 							currentBlock = null;
 						}
 						if (lineOffset < line.length() && lineOffset >= 0) {
 							if (currentBlock != null) {
-								throw new IllegalStateException("if a block does not fully process a line then it must be closed");
+								throw new IllegalStateException(
+										"if a block does not fully process a line then it must be closed");
 							}
 						} else {
 							break;
 						}
 					}
 				}
-				state.setLineNumber(reader.getLineNumber()+1);
+				state.setLineNumber(reader.getLineNumber() + 1);
 				state.setLineOffset(reader.getLineOffset());
 				state.setLineCharacterOffset(0);
 				state.setLineLength(0);
@@ -131,7 +135,7 @@ public abstract class MarkupLanguage {
 	}
 
 	private void initProcessors() {
-		for (Block block: getBlocks()) {
+		for (Block block : getBlocks()) {
 			if (block.getMarkupLanguage() != null) {
 				return;
 			}
@@ -139,12 +143,12 @@ public abstract class MarkupLanguage {
 		}
 	}
 
-	public Block startBlock(String line,int lineOffset) {
+	public Block startBlock(String line, int lineOffset) {
 		if (isEmptyLine(line)) {
 			// nothing starts on an empty line
 			return null;
 		}
-		for (Block block: getBlocks()) {
+		for (Block block : getBlocks()) {
 			if (block.canStart(line, lineOffset)) {
 				return block.clone();
 			}
@@ -154,61 +158,62 @@ public abstract class MarkupLanguage {
 
 	public abstract List<Block> getBlocks();
 
-
 	/**
-	 * Emit a markup line that may contain phrase modifiers and replacement tokens, but no
-	 * block modifiers.
+	 * Emit a markup line that may contain phrase modifiers and replacement tokens, but no block modifiers.
 	 * 
 	 * @param parser
 	 * @param state
-	 * @param textLineOffset the offset of the provided text in the current line
-	 * @param line the text to process
-	 * @param offset the offset in the <code>text</code> at which processing should begin
+	 * @param textLineOffset
+	 *            the offset of the provided text in the current line
+	 * @param line
+	 *            the text to process
+	 * @param offset
+	 *            the offset in the <code>text</code> at which processing should begin
 	 */
-	public void emitMarkupLine(MarkupParser parser, ContentState state,int textLineOffset, String line, int offset) {
+	public void emitMarkupLine(MarkupParser parser, ContentState state, int textLineOffset, String line, int offset) {
 		if (blocksOnly) {
-			emitMarkupText(parser,state,line.substring(offset));
+			emitMarkupText(parser, state, line.substring(offset));
 			return;
 		}
 		for (;;) {
-			PatternBasedElementProcessor phraseModifier = getPhraseModifierSyntax().findPatternBasedElement(line, offset);
+			PatternBasedElementProcessor phraseModifier = getPhraseModifierSyntax().findPatternBasedElement(line,
+					offset);
 			if (phraseModifier != null) {
 				int newOffset = phraseModifier.getLineStartOffset();
 				if (offset < newOffset) {
-					state.setLineCharacterOffset(textLineOffset+offset);
-					state.setLineSegmentEndOffset(textLineOffset+newOffset);
-					String text = line.substring(offset,newOffset);
-					emitMarkupText(parser,state,text);
+					state.setLineCharacterOffset(textLineOffset + offset);
+					state.setLineSegmentEndOffset(textLineOffset + newOffset);
+					String text = line.substring(offset, newOffset);
+					emitMarkupText(parser, state, text);
 				}
 				phraseModifier.setParser(parser);
 				phraseModifier.setState(state);
-				state.setLineCharacterOffset(textLineOffset+phraseModifier.getLineStartOffset());
-				state.setLineSegmentEndOffset(textLineOffset+phraseModifier.getLineEndOffset());
+				state.setLineCharacterOffset(textLineOffset + phraseModifier.getLineStartOffset());
+				state.setLineSegmentEndOffset(textLineOffset + phraseModifier.getLineEndOffset());
 				phraseModifier.emit();
 				offset = phraseModifier.getLineEndOffset();
 				if (offset >= line.length()) {
 					break;
 				}
 			} else {
-				state.setLineCharacterOffset(textLineOffset+offset);
-				state.setLineSegmentEndOffset(textLineOffset+line.length());
-				emitMarkupText(parser,state,line.substring(offset));
+				state.setLineCharacterOffset(textLineOffset + offset);
+				state.setLineSegmentEndOffset(textLineOffset + line.length());
+				emitMarkupText(parser, state, line.substring(offset));
 				break;
 			}
 		}
 	}
 
 	/**
-	 * Emit a markup line that may contain phrase modifiers and replacement tokens, but no
-	 * block modifiers.
+	 * Emit a markup line that may contain phrase modifiers and replacement tokens, but no block modifiers.
 	 * 
 	 * @param parser
 	 * @param state
 	 * @param line
 	 * @param offset
 	 */
-	public void emitMarkupLine(MarkupParser parser,ContentState state,String line,int offset) {
-		emitMarkupLine(parser, state,0, line, offset);
+	public void emitMarkupLine(MarkupParser parser, ContentState state, String line, int offset) {
+		emitMarkupLine(parser, state, 0, line, offset);
 	}
 
 	/**
@@ -218,19 +223,20 @@ public abstract class MarkupLanguage {
 	 * @param state
 	 * @param text
 	 */
-	public void emitMarkupText(MarkupParser parser,ContentState state,String text) {
+	public void emitMarkupText(MarkupParser parser, ContentState state, String text) {
 		if (blocksOnly) {
 			parser.getBuilder().characters(text);
 			return;
 		}
 		int offset = 0;
 		for (;;) {
-			PatternBasedElementProcessor patternBasedElement = getReplacementTokenSyntax().findPatternBasedElement(text, offset);
+			PatternBasedElementProcessor patternBasedElement = getReplacementTokenSyntax().findPatternBasedElement(
+					text, offset);
 			if (patternBasedElement != null) {
 				int newOffset = patternBasedElement.getLineStartOffset();
 				if (offset < newOffset) {
-					String text2 = text.substring(offset,newOffset);
-					emitMarkupText(parser,state,text2);
+					String text2 = text.substring(offset, newOffset);
+					emitMarkupText(parser, state, text2);
 				}
 				patternBasedElement.setParser(parser);
 				patternBasedElement.setState(state);
@@ -240,7 +246,7 @@ public abstract class MarkupLanguage {
 					break;
 				}
 			} else {
-				parser.getBuilder().characters(offset>0?text.substring(offset):text);
+				parser.getBuilder().characters(offset > 0 ? text.substring(offset) : text);
 				break;
 			}
 		}
@@ -252,17 +258,22 @@ public abstract class MarkupLanguage {
 
 	public static class PatternBasedSyntax {
 		protected List<PatternBasedElement> elements = new ArrayList<PatternBasedElement>();
+
 		protected Pattern elementPattern;
+
 		protected List<Integer> elementGroup = new ArrayList<Integer>();
 
-		private StringBuilder patternBuffer = new StringBuilder();
+		private final StringBuilder patternBuffer = new StringBuilder();
+
 		private int patternGroup = 0;
-		private Stack<Group> groups = new Stack<Group>();
+
+		private final Stack<Group> groups = new Stack<Group>();
 		{
 			groups.push(new Group());
 		}
 
-		public PatternBasedSyntax() {}
+		public PatternBasedSyntax() {
+		}
 
 		public void add(PatternBasedElement element) {
 			elementPattern = null;
@@ -277,13 +288,16 @@ public abstract class MarkupLanguage {
 			elementGroup.add(patternGroup);
 			patternGroup += element.getPatternGroupCount();
 		}
+
 		public void beginGroup(String regexFragment, int size) {
-			add(regexFragment,size,true);
+			add(regexFragment, size, true);
 		}
+
 		public void endGroup(String regexFragment, int size) {
-			add(regexFragment,size,false);
+			add(regexFragment, size, false);
 		}
-		private void add(String regexFragment, int size,boolean beginGroup) {
+
+		private void add(String regexFragment, int size, boolean beginGroup) {
 			elementPattern = null;
 			if (beginGroup) {
 				if (groups.peek().count++ > 0) {
@@ -301,14 +315,14 @@ public abstract class MarkupLanguage {
 			patternGroup += size;
 		}
 
-		public PatternBasedElementProcessor findPatternBasedElement(String lineText,int offset) {
+		public PatternBasedElementProcessor findPatternBasedElement(String lineText, int offset) {
 			Matcher matcher = getPattern().matcher(lineText);
 			if (offset > 0) {
 				matcher.region(offset, lineText.length());
 			}
 			if (matcher.find()) {
 				int size = elementGroup.size();
-				for (int x = 0;x<size;++x) {
+				for (int x = 0; x < size; ++x) {
 					int group = elementGroup.get(x);
 					String value = matcher.group(group);
 					if (value != null) {
@@ -316,9 +330,10 @@ public abstract class MarkupLanguage {
 						PatternBasedElementProcessor processor = element.newProcessor();
 						processor.setLineStartOffset(matcher.start());
 						processor.setLineEndOffset(matcher.end());
-						for (int y = 0;y<element.getPatternGroupCount();++y) {
-							final int groupIndex = group+y+1;
-							processor.setGroup(y+1,matcher.group(groupIndex),matcher.start(groupIndex),matcher.end(groupIndex));
+						for (int y = 0; y < element.getPatternGroupCount(); ++y) {
+							final int groupIndex = group + y + 1;
+							processor.setGroup(y + 1, matcher.group(groupIndex), matcher.start(groupIndex),
+									matcher.end(groupIndex));
 						}
 						return processor;
 					}
@@ -342,14 +357,13 @@ public abstract class MarkupLanguage {
 
 	}
 
-
 	protected abstract PatternBasedSyntax getPhraseModifierSyntax();
+
 	protected abstract PatternBasedSyntax getReplacementTokenSyntax();
 
 	/**
-	 * The name of the markup language, typically the same as the name of the
-	 * markup language supported by this markup language.  This value may be displayed to the
-	 * user.
+	 * The name of the markup language, typically the same as the name of the markup language supported by this markup
+	 * language. This value may be displayed to the user.
 	 * 
 	 * @return the name, or null if unknown
 	 */
@@ -358,16 +372,16 @@ public abstract class MarkupLanguage {
 	}
 
 	/**
-	 * The name of the markup language, typically the same as the name of the
-	 * markup language supported by this markup language.  This value may be displayed to the
-	 * user.
+	 * The name of the markup language, typically the same as the name of the markup language supported by this markup
+	 * language. This value may be displayed to the user.
 	 * 
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * The name of the markup language that is extended by this one
 	 * 
@@ -380,7 +394,8 @@ public abstract class MarkupLanguage {
 	/**
 	 * The name of the markup language that is extended by this one
 	 * 
-	 * @param extendsLanguage the name, or null if this markup language does not extend another.
+	 * @param extendsLanguage
+	 *            the name, or null if this markup language does not extend another.
 	 */
 	public void setExtendsLanguage(String extendsLanguage) {
 		this.extendsLanguage = extendsLanguage;
@@ -399,38 +414,41 @@ public abstract class MarkupLanguage {
 	}
 
 	/**
-	 * Indicate if generative contents should be filtered.  This option is used with the {@link OutlineParser}.
+	 * Indicate if generative contents should be filtered. This option is used with the {@link OutlineParser}.
 	 */
 	public boolean isFilterGenerativeContents() {
 		return filterGenerativeBlocks;
 	}
 
 	/**
-	 * Indicate if table of contents should be filtered.  This option is used with the {@link OutlineParser}.
+	 * Indicate if table of contents should be filtered. This option is used with the {@link OutlineParser}.
 	 */
 	public void setFilterGenerativeContents(boolean filterGenerativeBlocks) {
 		this.filterGenerativeBlocks = filterGenerativeBlocks;
 	}
 
 	/**
-	 * indicate if the parser should detect blocks only.  This is useful for use in a document partitioner where the partition boundaries are defined by blocks.
+	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the
+	 * partition boundaries are defined by blocks.
 	 */
 	public boolean isBlocksOnly() {
 		return blocksOnly;
 	}
 
 	/**
-	 * indicate if the parser should detect blocks only.  This is useful for use in a document partitioner where the partition boundaries are defined by blocks.
+	 * indicate if the parser should detect blocks only. This is useful for use in a document partitioner where the
+	 * partition boundaries are defined by blocks.
 	 */
 	public void setBlocksOnly(boolean blocksOnly) {
 		this.blocksOnly = blocksOnly;
 	}
 
 	/**
-	 * indicate if the given line is considered 'empty'.  The default implementation
-	 * returns true for lines of length 0, and for lines whose only content is whitespace.
+	 * indicate if the given line is considered 'empty'. The default implementation returns true for lines of length 0,
+	 * and for lines whose only content is whitespace.
 	 * 
-	 * @param line the line content
+	 * @param line
+	 *            the line content
 	 * 
 	 * @return true if the given line is considered empty by this markup language
 	 */
@@ -438,13 +456,34 @@ public abstract class MarkupLanguage {
 		if (line.length() == 0) {
 			return true;
 		}
-		for (int x = 0;x<line.length();++x) {
+		for (int x = 0; x < line.length(); ++x) {
 			if (!Character.isWhitespace(line.charAt(x))) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
-	
+
+	/**
+	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
+	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
+	 * link.
+	 * 
+	 * @see MessageFormat
+	 */
+	public String getInternalLinkPattern() {
+		return internalLinkPattern;
+	}
+
+	/**
+	 * The pattern to use when creating hyperlink targets for internal links. The pattern is implementation-specific,
+	 * however implementations are encouraged to use {@link MessageFormat}, where the 0th parameter is the internal
+	 * link.
+	 * 
+	 * @see MessageFormat
+	 */
+	public void setInternalLinkPattern(String internalLinkPattern) {
+		this.internalLinkPattern = internalLinkPattern;
+	}
+
 }
