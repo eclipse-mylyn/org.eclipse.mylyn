@@ -8,18 +8,27 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.util.Collections;
+
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Mik Kersten
  */
 public class DeleteTaskEditorAction extends DeleteAction {
 
-	public DeleteTaskEditorAction() {
-		super();
-		setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+	private final ITask task;
+
+	public DeleteTaskEditorAction(ITask task) {
+		this.task = task;
+		//setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		setImageDescriptor(CommonImages.REMOVE);
 	}
+
+	@Override
+	public void run() {
+		doDelete(Collections.singletonList(task));
+	}
+
 }

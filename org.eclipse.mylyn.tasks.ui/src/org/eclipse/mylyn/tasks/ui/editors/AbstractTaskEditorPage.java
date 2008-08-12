@@ -763,61 +763,61 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			toolBarManager.add(repositoryLabelControl);
 		}
 
-		if (taskData != null && taskData.isNew()) {
-			deleteAction = new DeleteTaskEditorAction();
-			toolBarManager.add(deleteAction);
-		}
-
 		if (taskData == null) {
 			synchronizeEditorAction = new SynchronizeEditorAction();
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
 			toolBarManager.add(synchronizeEditorAction);
-		} else if (taskRepository != null && !taskData.isNew()) {
-			clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
-			((ClearOutgoingAction) clearOutgoingAction).setTaskEditorPage(this);
-			if (clearOutgoingAction.isEnabled()) {
-				toolBarManager.add(clearOutgoingAction);
-			}
+		} else {
+			if (taskData.isNew()) {
+				deleteAction = new DeleteTaskEditorAction(getTask());
+				toolBarManager.add(deleteAction);
+			} else if (taskRepository != null) {
+				clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
+				((ClearOutgoingAction) clearOutgoingAction).setTaskEditorPage(this);
+				if (clearOutgoingAction.isEnabled()) {
+					toolBarManager.add(clearOutgoingAction);
+				}
 
-			synchronizeEditorAction = new SynchronizeEditorAction();
-			synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
-			toolBarManager.add(synchronizeEditorAction);
+				synchronizeEditorAction = new SynchronizeEditorAction();
+				synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
+				toolBarManager.add(synchronizeEditorAction);
 
-			newSubTaskAction = new NewSubTaskAction();
-			newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
-			if (newSubTaskAction.isEnabled()) {
-				toolBarManager.add(newSubTaskAction);
-			}
+				newSubTaskAction = new NewSubTaskAction();
+				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
+				if (newSubTaskAction.isEnabled()) {
+					toolBarManager.add(newSubTaskAction);
+				}
 
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
-			if (connectorUi != null) {
-				final String historyUrl = connectorUi.getTaskHistoryUrl(taskRepository, task);
-				if (historyUrl != null) {
-					historyAction = new Action() {
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
+				if (connectorUi != null) {
+					final String historyUrl = connectorUi.getTaskHistoryUrl(taskRepository, task);
+					if (historyUrl != null) {
+						historyAction = new Action() {
+							@Override
+							public void run() {
+								TasksUiUtil.openUrl(historyUrl);
+							}
+						};
+
+						historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
+						historyAction.setToolTipText("History");
+						toolBarManager.add(historyAction);
+					}
+				}
+
+				final String taskUrlToOpen = task.getUrl();
+				if (taskUrlToOpen != null) {
+					openBrowserAction = new Action() {
 						@Override
 						public void run() {
-							TasksUiUtil.openUrl(historyUrl);
+							TasksUiUtil.openUrl(taskUrlToOpen);
 						}
 					};
 
-					historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
-					historyAction.setToolTipText("History");
-					toolBarManager.add(historyAction);
+					openBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
+					openBrowserAction.setToolTipText("Open with Web Browser");
+					toolBarManager.add(openBrowserAction);
 				}
-			}
-
-			final String taskUrlToOpen = task.getUrl();
-			if (taskUrlToOpen != null) {
-				openBrowserAction = new Action() {
-					@Override
-					public void run() {
-						TasksUiUtil.openUrl(taskUrlToOpen);
-					}
-				};
-
-				openBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
-				openBrowserAction.setToolTipText("Open with Web Browser");
-				toolBarManager.add(openBrowserAction);
 			}
 		}
 	}
