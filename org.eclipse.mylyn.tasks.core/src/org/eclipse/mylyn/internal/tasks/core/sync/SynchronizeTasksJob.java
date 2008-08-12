@@ -42,6 +42,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation.Direction;
@@ -385,6 +386,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	private ITask createFromTaskData(TaskRepository taskRepository, String taskId, TaskData taskData)
 			throws CoreException {
 		ITask task = tasksModel.createTask(taskRepository, taskData.getTaskId());
+		((AbstractTask) task).setSynchronizationState(SynchronizationState.INCOMING_NEW);
 		taskDataManager.putUpdatedTaskData(task, taskData, isUser(), getSession());
 		return task;
 	}

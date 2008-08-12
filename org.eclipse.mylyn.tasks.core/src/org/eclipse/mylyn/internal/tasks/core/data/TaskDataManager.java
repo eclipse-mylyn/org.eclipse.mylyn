@@ -216,10 +216,8 @@ public class TaskDataManager implements ITaskDataManager {
 		if (taskDataChanged || user) {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
-					boolean newTask = false;
 					if (!taskData.isPartial()) {
 						File file = getMigratedFile(task, task.getConnectorKind());
-						newTask = !file.exists();
 						taskDataStore.putTaskData(ensurePathExists(file), taskData, task.isMarkReadPending(), user);
 						task.setMarkReadPending(false);
 						event.setTaskDataUpdated(true);
@@ -234,14 +232,7 @@ public class TaskDataManager implements ITaskDataManager {
 							task.setSynchronizationState(SynchronizationState.CONFLICT);
 							break;
 						case SYNCHRONIZED:
-							if (newTask) {
-								// FIXME this won't work for tasks that have partial task data 
-								task.setSynchronizationState(SynchronizationState.INCOMING_NEW);
-								// XXX legacy support for showing correct synchronization decoration in task list
-								task.setLastReadTimeStamp(null);
-							} else {
-								task.setSynchronizationState(SynchronizationState.INCOMING);
-							}
+							task.setSynchronizationState(SynchronizationState.INCOMING);
 							break;
 						}
 					}
