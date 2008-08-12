@@ -319,6 +319,15 @@ public class TaskAttachmentWizard extends Wizard {
 	}
 
 	@Override
+	public boolean canFinish() {
+		// InputAttachmentSourcePage relies on getNextPage() being called, do not allow wizard to finish on first page
+		if (getContainer() != null && getContainer().getCurrentPage() instanceof InputAttachmentSourcePage2) {
+			return false;
+		}
+		return super.canFinish();
+	}
+
+	@Override
 	public boolean performFinish() {
 		SubmitJob job = TasksUiInternal.getJobFactory()
 				.createSubmitTaskAttachmentJob(connector, model.getTaskRepository(), model.getTask(),
