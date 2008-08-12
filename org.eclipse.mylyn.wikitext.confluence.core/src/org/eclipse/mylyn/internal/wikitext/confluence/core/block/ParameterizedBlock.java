@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.wikitext.confluence.core.block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public abstract class ParameterizedBlock extends Block {
@@ -24,12 +24,12 @@ public abstract class ParameterizedBlock extends Block {
 			return;
 		}
 		String[] opts = options.split("\\s*\\|\\s*");
-		for (String optionPair: opts) {
+		for (String optionPair : opts) {
 			String[] keyValue = optionPair.split("\\s*=\\s*");
 			if (keyValue.length == 2) {
 				String key = keyValue[0].trim();
 				String value = keyValue[1].trim();
-				setOption(key,value);
+				setOption(key, value);
 			}
 		}
 	}

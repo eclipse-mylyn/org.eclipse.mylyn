@@ -18,24 +18,24 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * quoted text block, matches blocks that start with <code>bc. </code>.
- * Creates an extended block type of {@link ParagraphBlock paragraph}.
+ * quoted text block, matches blocks that start with <code>bc. </code>. Creates an extended block type of
+ * {@link ParagraphBlock paragraph}.
  * 
  * @author David Green
  */
 public class QuoteBlock extends Block {
 
-
 	static final Pattern startPattern = Pattern.compile("bq\\.\\s+(.*)");
 
 	private int blockLineCount = 0;
+
 	private Matcher matcher;
 
 	public QuoteBlock() {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 
@@ -53,7 +53,7 @@ public class QuoteBlock extends Block {
 		}
 		++blockLineCount;
 
-		getMarkupLanguage().emitMarkupLine(getParser(),state,line, offset);
+		getMarkupLanguage().emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}

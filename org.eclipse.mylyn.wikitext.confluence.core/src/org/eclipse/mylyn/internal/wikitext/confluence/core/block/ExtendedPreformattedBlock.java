@@ -14,18 +14,17 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
 /**
- * quoted text block, matches blocks that start with <code>{noformat}</code>.
- * Creates an extended block type of {@link ParagraphBlock paragraph}.
+ * quoted text block, matches blocks that start with <code>{noformat}</code>. Creates an extended block type of
+ * {@link ParagraphBlock paragraph}.
  * 
  * @author David Green
  */
 public class ExtendedPreformattedBlock extends AbstractConfluenceDelimitedBlock {
 
-	
 	public ExtendedPreformattedBlock() {
 		super("noformat");
 	}
-	
+
 	@Override
 	protected void beginBlock() {
 		Attributes attributes = new Attributes();
@@ -36,7 +35,7 @@ public class ExtendedPreformattedBlock extends AbstractConfluenceDelimitedBlock 
 	protected void endBlock() {
 		builder.endBlock(); // pre
 	}
-	
+
 	@Override
 	protected void handleBlockContent(String content) {
 		if (content.length() > 0) {
@@ -46,10 +45,10 @@ public class ExtendedPreformattedBlock extends AbstractConfluenceDelimitedBlock 
 		}
 		builder.characters("\n");
 	}
-	
+
 	@Override
 	protected void setOption(String key, String value) {
 		// no options
 	}
-		
+
 }

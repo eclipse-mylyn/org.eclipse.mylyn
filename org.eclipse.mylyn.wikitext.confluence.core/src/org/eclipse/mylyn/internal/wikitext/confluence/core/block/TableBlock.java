@@ -18,8 +18,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * Table block, matches blocks that start with <code>table. </code> or those that
- * start with a table row.
+ * Table block, matches blocks that start with <code>table. </code> or those that start with a table row.
  * 
  * @author David Green
  */
@@ -30,13 +29,14 @@ public class TableBlock extends Block {
 	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?([^\\|]*)(\\|\\|?\\s*$)?");
 
 	private int blockLineCount = 0;
+
 	private Matcher matcher;
 
 	public TableBlock() {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 			builder.beginBlock(BlockType.TABLE, attributes);
@@ -50,7 +50,7 @@ public class TableBlock extends Block {
 			return -1;
 		}
 
-		String textileLine = offset==0?line:line.substring(offset);
+		String textileLine = offset == 0 ? line : line.substring(offset);
 		Matcher rowMatcher = TABLE_ROW_PATTERN.matcher(textileLine);
 		if (!rowMatcher.find()) {
 			setClosed(true);
@@ -59,23 +59,22 @@ public class TableBlock extends Block {
 
 		builder.beginBlock(BlockType.TABLE_ROW, new Attributes());
 
-
 		do {
 			int start = rowMatcher.start();
-			if (start == textileLine.length()-1) {
+			if (start == textileLine.length() - 1) {
 				break;
 			}
 
 			String headerIndicator = rowMatcher.group(1);
 			String text = rowMatcher.group(2);
-			int lineOffset = offset+rowMatcher.start(2);
+			int lineOffset = offset + rowMatcher.start(2);
 
 			boolean header = headerIndicator != null && "|".equals(headerIndicator);
 
 			Attributes attributes = new Attributes();
-			builder.beginBlock(header?BlockType.TABLE_CELL_HEADER:BlockType.TABLE_CELL_NORMAL, attributes);
+			builder.beginBlock(header ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL, attributes);
 
-			markupLanguage.emitMarkupLine(getParser(), state,lineOffset, text, 0);
+			markupLanguage.emitMarkupLine(getParser(), state, lineOffset, text, 0);
 
 			builder.endBlock(); // table cell
 		} while (rowMatcher.find());
@@ -104,6 +103,5 @@ public class TableBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

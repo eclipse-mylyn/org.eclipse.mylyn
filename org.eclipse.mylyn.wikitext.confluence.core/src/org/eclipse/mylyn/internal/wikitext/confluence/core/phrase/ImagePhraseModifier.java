@@ -15,8 +15,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ImagePhraseModifier extends PatternBasedElement {
@@ -26,7 +26,7 @@ public class ImagePhraseModifier extends PatternBasedElement {
 	@Override
 	protected String getPattern(int groupOffset) {
 
-		return  "!([^\\|!]+)(?:\\|([^!]*))?!";
+		return "!([^\\|!]+)(?:\\|([^!]*))?!";
 	}
 
 	@Override

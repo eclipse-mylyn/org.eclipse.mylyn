@@ -26,14 +26,16 @@ public class HeadingBlock extends Block {
 	static final Pattern startPattern = Pattern.compile("h([1-6])\\.\\s+(.*)");
 
 	private int blockLineCount = 0;
+
 	private int level = -1;
+
 	private Matcher matcher;
 
 	public HeadingBlock() {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 			// 0-offset matches may start with the "hn. " prefix.
@@ -41,7 +43,7 @@ public class HeadingBlock extends Block {
 			offset = matcher.start(2);
 
 			if (attributes.getId() == null) {
-				attributes.setId(state.getIdGenerator().newId("h"+level,line.substring(offset)));
+				attributes.setId(state.getIdGenerator().newId("h" + level, line.substring(offset)));
 			}
 			builder.beginHeading(level, attributes);
 		}
@@ -51,7 +53,7 @@ public class HeadingBlock extends Block {
 		}
 		++blockLineCount;
 
-		getMarkupLanguage().emitMarkupLine(getParser(),state,line, offset);
+		getMarkupLanguage().emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}
@@ -75,6 +77,5 @@ public class HeadingBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

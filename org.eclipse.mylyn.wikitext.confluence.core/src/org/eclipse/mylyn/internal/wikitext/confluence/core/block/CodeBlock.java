@@ -14,15 +14,12 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
 /**
- *
- *
  * @author David Green
  */
 public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 
-
 	private String title;
-	
+
 	public CodeBlock() {
 		super("code");
 	}
@@ -45,7 +42,7 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 		builder.characters(content);
 		builder.characters("\n");
 	}
-	
+
 	@Override
 	protected void endBlock() {
 		if (title != null) {
@@ -54,18 +51,17 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 		builder.endBlock(); // code
 		builder.endBlock(); // pre
 	}
-	
+
 	@Override
 	protected void resetState() {
 		super.resetState();
 		title = null;
 	}
 
-	
 	@Override
 	protected void setOption(String key, String value) {
 		if (key.equals("title")) {
 			title = value;
 		}
-	}	
+	}
 }

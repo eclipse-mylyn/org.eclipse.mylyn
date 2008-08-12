@@ -33,7 +33,7 @@ public class ParagraphBlock extends Block {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 
@@ -52,7 +52,7 @@ public class ParagraphBlock extends Block {
 		// NOTE: in Textile paragraphs can have nested lists and other things, however
 		//       the resulting XHTML is invalid -- so here we allow for similar constructs
 		//       however we cause them to end the paragraph rather than being nested.
-		for (Block block: markupLanguage.getParagraphBreakingBlocks()) {
+		for (Block block : markupLanguage.getParagraphBreakingBlocks()) {
 			if (block.canStart(line, offset)) {
 				setClosed(true);
 				return 0;
@@ -66,7 +66,7 @@ public class ParagraphBlock extends Block {
 		if (blockStartMatcher.find()) {
 			int end = blockStartMatcher.start();
 			if (end > offset) {
-				markupLanguage.emitMarkupLine(getParser(),state,offset,line.substring(offset,end), 0);
+				markupLanguage.emitMarkupLine(getParser(), state, offset, line.substring(offset, end), 0);
 			}
 			setClosed(true);
 			return end;
@@ -74,7 +74,7 @@ public class ParagraphBlock extends Block {
 		if (blockLineCount > 1) {
 			builder.lineBreak();
 		}
-		markupLanguage.emitMarkupLine(getParser(),state,line, offset);
+		markupLanguage.emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}
@@ -92,6 +92,5 @@ public class ParagraphBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

@@ -14,16 +14,17 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
 /**
- * quoted text block, matches blocks that start with <code>{quote}</code>.
- * Creates an extended block type of {@link ParagraphBlock paragraph}.
+ * quoted text block, matches blocks that start with <code>{quote}</code>. Creates an extended block type of
+ * {@link ParagraphBlock paragraph}.
  * 
  * @author David Green
  */
 public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
-	
+
 	private int paraLine = 0;
+
 	private boolean paraOpen = false;
-	
+
 	public ExtendedQuoteBlock() {
 		super("quote");
 	}
@@ -34,13 +35,13 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 		paraOpen = false;
 		paraLine = 0;
 	}
-	
+
 	@Override
 	protected void beginBlock() {
 		Attributes attributes = new Attributes();
 		builder.beginBlock(BlockType.QUOTE, attributes);
 	}
-	
+
 	@Override
 	protected void endBlock() {
 		if (paraOpen) {
@@ -50,7 +51,7 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 		}
 		builder.endBlock(); // quote
 	}
-	
+
 	@Override
 	protected void handleBlockContent(String content) {
 		if (blockLineCount == 1 && content.length() == 0) {
@@ -70,12 +71,12 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 			builder.lineBreak();
 		}
 		++paraLine;
-		getMarkupLanguage().emitMarkupLine(getParser(),state,content,0);
-		
+		getMarkupLanguage().emitMarkupLine(getParser(), state, content, 0);
+
 	}
 
 	@Override
 	protected void setOption(String key, String value) {
 		// no options
-	}	
+	}
 }

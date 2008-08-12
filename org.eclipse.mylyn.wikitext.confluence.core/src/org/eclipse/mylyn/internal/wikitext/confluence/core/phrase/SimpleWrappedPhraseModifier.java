@@ -40,11 +40,11 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		}
 	}
 
-	private String startDelimiter;
+	private final String startDelimiter;
 
-	private String endDelimiter;
+	private final String endDelimiter;
 
-	private SpanType spanType;
+	private final SpanType spanType;
 
 	public SimpleWrappedPhraseModifier(String startDelimiter, String endDelimiter, SpanType spanType) {
 		this.startDelimiter = startDelimiter;

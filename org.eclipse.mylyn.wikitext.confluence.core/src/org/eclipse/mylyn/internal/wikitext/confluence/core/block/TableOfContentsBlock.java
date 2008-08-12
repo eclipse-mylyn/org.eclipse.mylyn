@@ -20,8 +20,8 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class TableOfContentsBlock extends ParameterizedBlock {
@@ -31,17 +31,17 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 	private int blockLineNumber = 0;
 
 	private String style = "none";
+
 	private int maxLevel = Integer.MAX_VALUE;
 
 	private Matcher matcher;
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineNumber++ > 0) {
 			setClosed(true);
 			return 0;
 		}
-
 
 		if (!getMarkupLanguage().isFilterGenerativeContents()) {
 			String options = matcher.group(1);
@@ -54,20 +54,19 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 		return -1;
 	}
 
-
 	private void emitToc(OutlineItem item) {
 		if (item.getChildren().isEmpty()) {
 			return;
 		}
-		if ((item.getLevel()+1) > maxLevel) {
+		if ((item.getLevel() + 1) > maxLevel) {
 			return;
 		}
 		Attributes nullAttributes = new Attributes();
 
-		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null,null,"list-style: "+style+";",null));
-		for (OutlineItem child: item.getChildren()) {
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null, null, "list-style: " + style + ";", null));
+		for (OutlineItem child : item.getChildren()) {
 			builder.beginBlock(BlockType.LIST_ITEM, nullAttributes);
-			builder.link('#'+child.getId(), child.getLabel());
+			builder.link('#' + child.getId(), child.getLabel());
 			emitToc(child);
 			builder.endBlock();
 		}
@@ -75,7 +74,7 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 	}
 
 	@Override
-	public boolean canStart(String line,int lineOffset) {
+	public boolean canStart(String line, int lineOffset) {
 		style = "none";
 		maxLevel = Integer.MAX_VALUE;
 
@@ -104,7 +103,6 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 		this.maxLevel = maxLevel;
 	}
 
-
 	@Override
 	protected void setOption(String key, String value) {
 		if (key.equals("style")) {
@@ -112,7 +110,8 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 		} else if (key.equals("maxLevel")) {
 			try {
 				maxLevel = Integer.parseInt(value);
-			} catch (NumberFormatException e) {}
+			} catch (NumberFormatException e) {
+			}
 		}
 	}
 

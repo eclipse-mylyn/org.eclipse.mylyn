@@ -23,32 +23,34 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
  */
 public class TextBoxBlock extends ParameterizedBlock {
 
-
 	private final Pattern startPattern;
+
 	private final Pattern endPattern;
 
 	private final BlockType blockType;
-	
+
 	private int blockLineCount = 0;
+
 	private Matcher matcher;
-	
+
 	private String title;
+
 	private StringBuilder markupContent;
-	
-	public TextBoxBlock(BlockType blockType,String name) {
+
+	public TextBoxBlock(BlockType blockType, String name) {
 		this.blockType = blockType;
-		startPattern = Pattern.compile("\\{"+name+"(?::([^\\}]*))?\\}(.*)");
-		endPattern = Pattern.compile("(\\{"+name+"\\})(.*)");
+		startPattern = Pattern.compile("\\{" + name + "(?::([^\\}]*))?\\}(.*)");
+		endPattern = Pattern.compile("(\\{" + name + "\\})(.*)");
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			setOptions(matcher.group(1));
-			
+
 			Attributes attributes = new Attributes();
 			attributes.setTitle(title);
-			
+
 			offset = matcher.start(2);
 
 			builder.beginBlock(blockType, attributes);
@@ -58,7 +60,7 @@ public class TextBoxBlock extends ParameterizedBlock {
 		int end = line.length();
 		int segmentEnd = end;
 		boolean terminating = false;
-		
+
 		Matcher endMatcher = endPattern.matcher(line);
 		if (offset < end) {
 			if (blockLineCount == 0) {
@@ -71,18 +73,17 @@ public class TextBoxBlock extends ParameterizedBlock {
 			}
 		}
 		++blockLineCount;
-		 
 
 		if (end < line.length()) {
 			state.setLineSegmentEndOffset(end);
 		}
-		markupContent.append(line.substring(offset,segmentEnd));
+		markupContent.append(line.substring(offset, segmentEnd));
 		markupContent.append("\n");
-		
+
 		if (terminating) {
 			setClosed(true);
 		}
-		return end==line.length()?-1:end;
+		return end == line.length() ? -1 : end;
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class TextBoxBlock extends ParameterizedBlock {
 		matcher = startPattern.matcher(line);
 		if (lineOffset > 0) {
 			matcher.region(lineOffset, line.length());
-		} 
+		}
 		return matcher.matches();
 	}
 
@@ -102,7 +103,7 @@ public class TextBoxBlock extends ParameterizedBlock {
 		if (closed && !isClosed()) {
 			if (markupContent != null) {
 
-				getParser().parse(markupContent.toString(),false);
+				getParser().parse(markupContent.toString(), false);
 				markupContent = null;
 				builder.endBlock(); // the block	
 			}
@@ -115,5 +116,5 @@ public class TextBoxBlock extends ParameterizedBlock {
 		if (key.equals("title")) {
 			title = value;
 		}
-	}	
+	}
 }
