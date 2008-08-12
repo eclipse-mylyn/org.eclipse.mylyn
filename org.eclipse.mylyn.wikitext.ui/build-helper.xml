@@ -32,8 +32,8 @@
 		bug #242981: move WikiText user guide under Mylyn help
 		-->
 		<replaceregexp file="help/Mylyn WikiText User Guide-toc.xml">
-			<regexp pattern="html&quot;&gt;"/>
-			<substitution expression="html&quot; link_to=&quot;../org.eclipse.mylyn.help.ui/toc.xml#addition&quot;&gt;"/>
+			<regexp pattern="html&quot; "/>
+			<substitution expression="html&quot; link_to=&quot;../org.eclipse.mylyn.help.ui/toc.xml#additions&quot; "/>
 		</replaceregexp>
 		
 	</target>
