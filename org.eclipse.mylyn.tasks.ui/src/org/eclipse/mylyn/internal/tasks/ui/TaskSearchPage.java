@@ -8,6 +8,7 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -355,6 +356,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					searchableRepositories.add(repository);
 				}
 			}
+
+			Collections.sort(searchableRepositories, new TaskRepositoryComparator());
 
 			String[] repositoryUrls = new String[searchableRepositories.size()];
 			int i = 0;
