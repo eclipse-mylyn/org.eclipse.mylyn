@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfigura
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -128,13 +129,13 @@ public class AttributeEditorToolkit {
 	}
 
 	public void adapt(AbstractAttributeEditor editor) {
-		if (editor.getControl() instanceof Text) {
-			Text text = (Text) editor.getControl();
+		if (editor.getControl() instanceof Text || editor.getControl() instanceof CCombo) {
+			Control control = editor.getControl();
 			if (!editor.isReadOnly() && hasContentAssist(editor.getTaskAttribute())) {
 				IContentProposalProvider contentProposalProvider = createContentProposalProvider(editor.getTaskAttribute());
 				ILabelProvider labelPropsalProvider = createLabelProposalProvider(editor.getTaskAttribute());
 				if (contentProposalProvider != null && labelPropsalProvider != null) {
-					ContentAssistCommandAdapter adapter = applyContentAssist(text, contentProposalProvider);
+					ContentAssistCommandAdapter adapter = applyContentAssist(control, contentProposalProvider);
 					adapter.setLabelProvider(labelPropsalProvider);
 					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 				}
