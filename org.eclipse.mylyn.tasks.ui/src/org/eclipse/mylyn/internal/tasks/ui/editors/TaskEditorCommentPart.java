@@ -249,7 +249,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		return formHyperlink;
 	}
 
-	private ImageHyperlink createReplyHyperlink(Composite composite, FormToolkit toolkit, final ITaskComment taskComment) {
+	protected ImageHyperlink createReplyHyperlink(Composite composite, FormToolkit toolkit,
+			final ITaskComment taskComment) {
 		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
 		toolkit.adapt(replyLink, false, false);
 		replyLink.setImage(CommonImages.getImage(TasksUiImages.COMMENT_REPLY));
