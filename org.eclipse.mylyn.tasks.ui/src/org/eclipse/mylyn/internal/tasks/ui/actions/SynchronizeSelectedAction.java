@@ -19,8 +19,9 @@ import java.util.Set;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -29,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IActionBars;
@@ -125,23 +127,21 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 		queriesToSyncMap.clear();
 		tasksToSyncMap.clear();
-
-//		TasksUiPlugin.getTaskList().notifyContainerUpdated(null);
-
-//		if (TaskListView.getFromActivePerspective() != null) {
-//			TaskListView.getFromActivePerspective().getViewer().refresh();
-//		}		
 	}
 
-	private void addTaskToSync(AbstractRepositoryConnector client, ITask repositoryTask) {
-		if (client != null) {
-			List<ITask> tasksToSync = tasksToSyncMap.get(client);
-			if (tasksToSync == null) {
-				tasksToSync = new ArrayList<ITask>();
-				tasksToSyncMap.put(client, tasksToSync);
-			}
-			tasksToSync.add(repositoryTask);
+	private void addTaskToSync(AbstractRepositoryConnector connector, ITask task) {
+		if (connector == null //
+				|| task instanceof LocalTask //
+				|| task.getSynchronizationState() == SynchronizationState.OUTGOING_NEW) {
+			return;
 		}
+
+		List<ITask> tasksToSync = tasksToSyncMap.get(connector);
+		if (tasksToSync == null) {
+			tasksToSync = new ArrayList<ITask>();
+			tasksToSyncMap.put(connector, tasksToSync);
+		}
+		tasksToSync.add(task);
 	}
 
 	private IAction action;

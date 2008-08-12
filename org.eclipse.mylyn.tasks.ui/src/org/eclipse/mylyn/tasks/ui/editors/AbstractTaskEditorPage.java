@@ -778,9 +778,11 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					toolBarManager.add(clearOutgoingAction);
 				}
 
-				synchronizeEditorAction = new SynchronizeEditorAction();
-				synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
-				toolBarManager.add(synchronizeEditorAction);
+				if (task.getSynchronizationState() != SynchronizationState.OUTGOING_NEW) {
+					synchronizeEditorAction = new SynchronizeEditorAction();
+					synchronizeEditorAction.selectionChanged(new StructuredSelection(getTaskEditor()));
+					toolBarManager.add(synchronizeEditorAction);
+				}
 
 				newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));

@@ -49,6 +49,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -214,7 +215,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				showInTaskListAction.selectionChanged(selection);
 
 				manager.add(new Separator());
-				manager.add(synchronizeEditorAction);
+				if (task.getSynchronizationState() != SynchronizationState.OUTGOING_NEW) {
+					manager.add(synchronizeEditorAction);
+				}
 				manager.add(openWithBrowserAction);
 
 				if (task.isActive()) {
