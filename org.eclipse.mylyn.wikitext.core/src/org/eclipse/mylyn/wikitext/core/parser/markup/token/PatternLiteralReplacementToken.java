@@ -14,16 +14,17 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class PatternLiteralReplacementToken extends PatternBasedElement {
 
 	private String pattern;
+
 	private String replacement;
 
-	public PatternLiteralReplacementToken(String pattern,String replacement) {
+	public PatternLiteralReplacementToken(String pattern, String replacement) {
 		this.pattern = pattern;
 		this.replacement = replacement;
 	}

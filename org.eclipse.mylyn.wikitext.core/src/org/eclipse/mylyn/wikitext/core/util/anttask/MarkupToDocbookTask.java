@@ -51,8 +51,6 @@ public class MarkupToDocbookTask extends MarkupTask {
 
 	private String doctype;
 
-
-
 	/**
 	 * Adds a set of files to process.
 	 */
@@ -71,18 +69,17 @@ public class MarkupToDocbookTask extends MarkupTask {
 		}
 		if (file != null) {
 			if (!file.exists()) {
-				throw new BuildException(String.format("File cannot be found: %s",file));
+				throw new BuildException(String.format("File cannot be found: %s", file));
 			} else if (!file.isFile()) {
-				throw new BuildException(String.format("Not a file: %s",file));
+				throw new BuildException(String.format("Not a file: %s", file));
 			} else if (!file.canRead()) {
-				throw new BuildException(String.format("Cannot read file: %s",file));
+				throw new BuildException(String.format("Cannot read file: %s", file));
 			}
 		}
 
 		MarkupLanguage markupLanguage = createMarkupLanguage();
 
-
-		for (FileSet fileset: filesets) {
+		for (FileSet fileset : filesets) {
 
 			File filesetBaseDir = fileset.getDir(getProject());
 			DirectoryScanner ds = fileset.getDirectoryScanner(getProject());
@@ -90,14 +87,15 @@ public class MarkupToDocbookTask extends MarkupTask {
 			String[] files = ds.getIncludedFiles();
 			if (files != null) {
 				File baseDir = ds.getBasedir();
-				for (String file: files) {
-					File inputFile = new File(baseDir,file);
+				for (String file : files) {
+					File inputFile = new File(baseDir, file);
 					try {
-						processFile(markupLanguage,filesetBaseDir,inputFile);
+						processFile(markupLanguage, filesetBaseDir, inputFile);
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(String.format("Cannot process file '%s': %s",inputFile,e.getMessage()),e);
+						throw new BuildException(String.format("Cannot process file '%s': %s", inputFile,
+								e.getMessage()), e);
 					}
 				}
 			}
@@ -105,27 +103,28 @@ public class MarkupToDocbookTask extends MarkupTask {
 
 		if (file != null) {
 			try {
-				processFile(markupLanguage,file.getParentFile(),file);
+				processFile(markupLanguage, file.getParentFile(), file);
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(String.format("Cannot process file '%s': %s",file,e.getMessage()),e);
+				throw new BuildException(String.format("Cannot process file '%s': %s", file, e.getMessage()), e);
 			}
 		}
 	}
 
-	private void processFile(MarkupLanguage markupLanguage, final File baseDir,final File source) throws BuildException {
+	private void processFile(MarkupLanguage markupLanguage, final File baseDir, final File source)
+			throws BuildException {
 
-		log(String.format("Processing file '%s'",source),Project.MSG_VERBOSE);
+		log(String.format("Processing file '%s'", source), Project.MSG_VERBOSE);
 
 		String markupContent = null;
 
 		String name = source.getName();
 		if (name.lastIndexOf('.') != -1) {
-			name = name.substring(0,name.lastIndexOf('.'));
+			name = name.substring(0, name.lastIndexOf('.'));
 		}
 
-		File docbookOutputFile = new File(source.getParentFile(),docbookFilenameFormat.replace("$1", name));
+		File docbookOutputFile = new File(source.getParentFile(), docbookFilenameFormat.replace("$1", name));
 		if (!docbookOutputFile.exists() || overwrite || docbookOutputFile.lastModified() < source.lastModified()) {
 
 			if (markupContent == null) {
@@ -134,9 +133,11 @@ public class MarkupToDocbookTask extends MarkupTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(docbookOutputFile)),"utf-8");
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(docbookOutputFile)),
+						"utf-8");
 			} catch (Exception e) {
-				throw new BuildException(String.format("Cannot write to file '%s': %s",docbookOutputFile,e.getMessage()),e);
+				throw new BuildException(String.format("Cannot write to file '%s': %s", docbookOutputFile,
+						e.getMessage()), e);
 			}
 			try {
 				DocBookDocumentBuilder builder = new DocBookDocumentBuilder(writer) {
@@ -148,7 +149,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 				MarkupParser parser = new MarkupParser();
 				parser.setMarkupLanaguage(markupLanguage);
 				parser.setBuilder(builder);
-				builder.setBookTitle(bookTitle==null?name:bookTitle);
+				builder.setBookTitle(bookTitle == null ? name : bookTitle);
 				if (doctype != null) {
 					builder.setDoctype(doctype);
 				}
@@ -157,7 +158,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(String.format("Cannot write to file '%s': %s",docbookOutputFile,e.getMessage()),e);
+					throw new BuildException(String.format("Cannot write to file '%s': %s", docbookOutputFile,
+							e.getMessage()), e);
 				}
 			}
 		}
@@ -171,13 +173,13 @@ public class MarkupToDocbookTask extends MarkupTask {
 			try {
 				int i;
 				while ((i = r.read()) != -1) {
-					w.write((char)i);
+					w.write((char) i);
 				}
 			} finally {
 				r.close();
 			}
 		} catch (IOException e) {
-			throw new BuildException(String.format("Cannot read file '%s': %s",inputFile,e.getMessage()),e);
+			throw new BuildException(String.format("Cannot read file '%s': %s", inputFile, e.getMessage()), e);
 		}
 		return w.toString();
 	}
@@ -190,9 +192,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 	}
 
 	/**
-	 * The format of the DocBook output file.  Consists of a pattern where the
-	 * '$1' is replaced with the filename of the input file.  Default value is
-	 * <code>$1.xml</code>
+	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
+	 * input file. Default value is <code>$1.xml</code>
 	 * 
 	 * @param docbookFilenameFormat
 	 */
@@ -213,14 +214,15 @@ public class MarkupToDocbookTask extends MarkupTask {
 	 * 
 	 * Get the book title.
 	 * 
-	 * @param bookTitle the title, or null if the source filename is to be used as the title.
+	 * @param bookTitle
+	 *            the title, or null if the source filename is to be used as the title.
 	 */
 	public void setBookTitle(String bookTitle) {
 		this.bookTitle = bookTitle;
 	}
 
 	/**
-	 * Set the XML doctype of the docbook.  The doctype should look something like this:
+	 * Set the XML doctype of the docbook. The doctype should look something like this:
 	 * <code>&lt;!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"&gt;</code>
 	 * 
 	 */

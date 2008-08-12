@@ -22,14 +22,16 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class HtmlDocumentBuilderTest extends TestCase {
 
 	private MarkupParser parser;
+
 	private StringWriter out;
+
 	private HtmlDocumentBuilder builder;
 
 	@Override
@@ -45,7 +47,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
-		System.out.println("HTML: \n"+html);
+		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"http://www.foo.bar/baz/foo/bar.html\">An URL</a>"));
 	}
 
@@ -53,7 +55,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setBase(new URI("http://www.foo.bar/baz"));
 		parser.parse("\"An URL\":http://www.baz.ca/foo/bar.html");
 		String html = out.toString();
-		System.out.println("HTML: \n"+html);
+		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"http://www.baz.ca/foo/bar.html\">An URL</a>"));
 	}
 
@@ -61,7 +63,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		builder.setBase(new File("/base/2/with space/").toURI());
 		parser.parse("\"An URL\":foo/bar.html");
 		String html = out.toString();
-		System.out.println("HTML: \n"+html);
+		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<a href=\"file:/base/2/with%20space/foo/bar.html\">An URL</a>"));
 	}
 }

@@ -39,19 +39,19 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLineBreakRepla
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplacementToken;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ConfluenceLanguage extends MarkupLanguage {
 
 	private List<Block> blocks = new ArrayList<Block>();
+
 	private List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
 
-
 	private static PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
-	private static PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
+	private static PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
 	@Override
 	protected PatternBasedSyntax getPhraseModifierSyntax() {
@@ -78,44 +78,43 @@ public class ConfluenceLanguage extends MarkupLanguage {
 		blocks.add(new ExtendedQuoteBlock());
 		blocks.add(new ExtendedPreformattedBlock());
 		// TODO: {color:red}{color}
-		blocks.add(new TextBoxBlock(BlockType.PANEL,"panel"));
-		blocks.add(new TextBoxBlock(BlockType.NOTE,"note"));
-		blocks.add(new TextBoxBlock(BlockType.INFORMATION,"info"));
-		blocks.add(new TextBoxBlock(BlockType.WARNING,"warning"));
-		blocks.add(new TextBoxBlock(BlockType.TIP,"tip"));
+		blocks.add(new TextBoxBlock(BlockType.PANEL, "panel"));
+		blocks.add(new TextBoxBlock(BlockType.NOTE, "note"));
+		blocks.add(new TextBoxBlock(BlockType.INFORMATION, "info"));
+		blocks.add(new TextBoxBlock(BlockType.WARNING, "warning"));
+		blocks.add(new TextBoxBlock(BlockType.TIP, "tip"));
 		blocks.add(new CodeBlock());
 		blocks.add(new TableOfContentsBlock());
 
 		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this must come last
 	}
 	static {
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:",0);
-		phraseModifierSyntax.add(new SimplePhraseModifier("*",SpanType.STRONG));
-		phraseModifierSyntax.add(new SimplePhraseModifier("_",SpanType.EMPHASIS));
-		phraseModifierSyntax.add(new SimplePhraseModifier("??",SpanType.CITATION));
-		phraseModifierSyntax.add(new SimplePhraseModifier("-",SpanType.DELETED));
-		phraseModifierSyntax.add(new SimplePhraseModifier("+",SpanType.UNDERLINED));
-		phraseModifierSyntax.add(new SimplePhraseModifier("^",SpanType.SUPERSCRIPT));
-		phraseModifierSyntax.add(new SimplePhraseModifier("~",SpanType.SUBSCRIPT));
-		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{","}}",SpanType.MONOSPACE));
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:", 0);
+		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG));
+		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS));
+		phraseModifierSyntax.add(new SimplePhraseModifier("??", SpanType.CITATION));
+		phraseModifierSyntax.add(new SimplePhraseModifier("-", SpanType.DELETED));
+		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.UNDERLINED));
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT));
+		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT));
+		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{", "}}", SpanType.MONOSPACE));
 		phraseModifierSyntax.add(new ImagePhraseModifier());
-		phraseModifierSyntax.endGroup(")(?=\\W|$)",0);
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
 
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)","#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)","#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)","#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)","#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)","#174"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)","#174"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174"));
 		tokenSyntax.add(new HyperlinkReplacementToken());
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(---)(?=\\s\\w))","#8212")); // emdash
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))","#8211")); // endash
-		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))","<hr/>")); // horizontal rule
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(---)(?=\\s\\w))", "#8212")); // emdash
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8211")); // endash
+		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule
 		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\\\\\\\)")); // line break
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 		tokenSyntax.add(new AnchorReplacementToken());
 	}
-
 
 	public ConfluenceLanguage() {
 		setName("Confluence");

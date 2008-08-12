@@ -14,14 +14,16 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class EntityWrappingReplacementToken extends PatternBasedElement {
 
 	private String delimiter;
+
 	private String leftEntity;
+
 	private String rightEntity;
 
 	public EntityWrappingReplacementToken(String delimiter, String leftEntity, String rightEntity) {
@@ -35,8 +37,8 @@ public class EntityWrappingReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		String quoted = Character.isLetterOrDigit(delimiter.charAt(0))?delimiter:"\\"+delimiter;
-		return "(?:(?:(?<=\\W)|^)"+quoted+"([^"+quoted+"]+)"+quoted+"(?=\\W))";
+		String quoted = Character.isLetterOrDigit(delimiter.charAt(0)) ? delimiter : "\\" + delimiter;
+		return "(?:(?:(?<=\\W)|^)" + quoted + "([^" + quoted + "]+)" + quoted + "(?=\\W))";
 	}
 
 	@Override
@@ -46,11 +48,12 @@ public class EntityWrappingReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected PatternBasedElementProcessor newProcessor() {
-		return new EntityWrappingReplacementTokenProcessor(leftEntity,rightEntity);
+		return new EntityWrappingReplacementTokenProcessor(leftEntity, rightEntity);
 	}
 
 	private static class EntityWrappingReplacementTokenProcessor extends PatternBasedElementProcessor {
 		private final String leftEntity;
+
 		private final String rightEntity;
 
 		public EntityWrappingReplacementTokenProcessor(String leftEntity, String rightEntity) {

@@ -17,11 +17,11 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
- * A parser for creating an outline of a document based on the headings in the document.
- * Uses {@link MarkupLanguage a markup language} to determine where headings start and end.
+ * A parser for creating an outline of a document based on the headings in the document. Uses {@link MarkupLanguage a
+ * markup language} to determine where headings start and end.
  * 
  * @author David Green
- *
+ * 
  */
 public class OutlineParser {
 
@@ -33,7 +33,8 @@ public class OutlineParser {
 		this.markupLanguage = markupLanguage;
 	}
 
-	public OutlineParser() {}
+	public OutlineParser() {
+	}
 
 	public int getLabelMaxLength() {
 		return labelMaxLength;
@@ -58,7 +59,7 @@ public class OutlineParser {
 	}
 
 	public OutlineItem createRootItem() {
-		return createOutlineItem(null,0,"<root>",-1,0,"<root>");
+		return createOutlineItem(null, 0, "<root>", -1, 0, "<root>");
 	}
 
 	public OutlineItem parse(OutlineItem root, String markup) {
@@ -78,13 +79,13 @@ public class OutlineParser {
 		return root;
 	}
 
-	protected OutlineItem createOutlineItem(OutlineItem current,int level, String id, int offset,
-			int length, String label) {
-		return new OutlineItem(current,level,id,offset,length,label);
+	protected OutlineItem createOutlineItem(OutlineItem current, int level, String id, int offset, int length,
+			String label) {
+		return new OutlineItem(current, level, id, offset, length, label);
 	}
 
 	public DocumentBuilder createOutlineUpdater(OutlineItem rootItem) {
-		return new OutlineBuilder(rootItem,labelMaxLength);
+		return new OutlineBuilder(rootItem, labelMaxLength);
 	}
 
 	protected class OutlineBuilder extends DocumentBuilder {
@@ -92,6 +93,7 @@ public class OutlineParser {
 		private OutlineItem currentItem;
 
 		private int level;
+
 		private StringBuilder buf;
 
 		private IdGenerator idGenerator = new IdGenerator();
@@ -104,7 +106,7 @@ public class OutlineParser {
 
 		private final int labelMaxLength;
 
-		public OutlineBuilder(OutlineItem root,int labelMaxLength) {
+		public OutlineBuilder(OutlineItem root, int labelMaxLength) {
 			super();
 			this.currentItem = root;
 			rootItem = root;
@@ -167,15 +169,16 @@ public class OutlineParser {
 				label = "";
 			} else {
 				if (labelMaxLength > 0 && label.length() > labelMaxLength) {
-					label = label.substring(0,labelMaxLength)+"...";
+					label = label.substring(0, labelMaxLength) + "...";
 				}
 			}
-			String kind = "h"+level;
+			String kind = "h" + level;
 
 			while (level <= currentItem.getLevel()) {
 				currentItem = currentItem.getParent();
 			}
-			currentItem = createOutlineItem(currentItem,level,idGenerator.newId(kind,fullLabelText), offset, length, label);
+			currentItem = createOutlineItem(currentItem, level, idGenerator.newId(kind, fullLabelText), offset, length,
+					label);
 			currentItem.setTooltip(fullLabelText);
 			currentItem.setKind(kind);
 
@@ -197,7 +200,7 @@ public class OutlineParser {
 		}
 
 		@Override
-		public void imageLink(Attributes linkAttributes, Attributes ImageAttributes,String href, String imageUrl) {
+		public void imageLink(Attributes linkAttributes, Attributes ImageAttributes, String href, String imageUrl) {
 		}
 
 		@Override
@@ -205,7 +208,7 @@ public class OutlineParser {
 		}
 
 		@Override
-		public void link(Attributes attributes,String hrefOrHashName, String text) {
+		public void link(Attributes attributes, String hrefOrHashName, String text) {
 			if (buf != null) {
 				buf.append(text);
 			}

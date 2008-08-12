@@ -57,16 +57,17 @@ public class MarkupToHtmlTask extends MarkupTask {
 	protected File file;
 
 	protected String title;
-	
+
 	protected boolean multipleOutputFiles = false;
-	
+
 	protected boolean formatOutput = false;
-	
+
 	protected boolean navigationImages = false;
 
 	private boolean useInlineCssStyles = true;
+
 	private boolean suppressBuiltInCssStyles = false;
-	
+
 	@Override
 	public void execute() throws BuildException {
 		if (file == null && filesets.isEmpty()) {
@@ -77,17 +78,17 @@ public class MarkupToHtmlTask extends MarkupTask {
 		}
 		if (file != null) {
 			if (!file.exists()) {
-				throw new BuildException(String.format("File cannot be found: %s",file));
+				throw new BuildException(String.format("File cannot be found: %s", file));
 			} else if (!file.isFile()) {
-				throw new BuildException(String.format("Not a file: %s",file));
+				throw new BuildException(String.format("Not a file: %s", file));
 			} else if (!file.canRead()) {
-				throw new BuildException(String.format("Cannot read file: %s",file));
+				throw new BuildException(String.format("Cannot read file: %s", file));
 			}
 		}
 
 		MarkupLanguage markupLanguage = createMarkupLanguage();
 
-		for (Stylesheet stylesheet: stylesheets) {
+		for (Stylesheet stylesheet : stylesheets) {
 			if (stylesheet.url == null && stylesheet.file == null) {
 				throw new BuildException("Must specify one of @file or @url on <stylesheet>");
 			}
@@ -96,20 +97,20 @@ public class MarkupToHtmlTask extends MarkupTask {
 			}
 			if (stylesheet.file != null) {
 				if (!stylesheet.file.exists()) {
-					throw new BuildException("Stylesheet file does not exist: "+stylesheet.file);
+					throw new BuildException("Stylesheet file does not exist: " + stylesheet.file);
 				}
 				if (!stylesheet.file.isFile()) {
-					throw new BuildException("Referenced stylesheet is not a file: "+stylesheet.file);
+					throw new BuildException("Referenced stylesheet is not a file: " + stylesheet.file);
 				}
 				if (!stylesheet.file.canRead()) {
-					throw new BuildException("Cannot read stylesheet: "+stylesheet.file);
+					throw new BuildException("Cannot read stylesheet: " + stylesheet.file);
 				}
 			}
 		}
 
 		Set<File> outputFolders = new HashSet<File>();
-		
-		for (FileSet fileset: filesets) {
+
+		for (FileSet fileset : filesets) {
 
 			File filesetBaseDir = fileset.getDir(getProject());
 			DirectoryScanner ds = fileset.getDirectoryScanner(getProject());
@@ -117,15 +118,16 @@ public class MarkupToHtmlTask extends MarkupTask {
 			String[] files = ds.getIncludedFiles();
 			if (files != null) {
 				File baseDir = ds.getBasedir();
-				for (String file: files) {
-					File inputFile = new File(baseDir,file);
+				for (String file : files) {
+					File inputFile = new File(baseDir, file);
 					testForOutputFolderConflict(outputFolders, inputFile);
 					try {
-						processFile(markupLanguage,filesetBaseDir,inputFile);
+						processFile(markupLanguage, filesetBaseDir, inputFile);
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(String.format("Cannot process file '%s': %s",inputFile,e.getMessage()),e);
+						throw new BuildException(String.format("Cannot process file '%s': %s", inputFile,
+								e.getMessage()), e);
 					}
 				}
 			}
@@ -133,19 +135,18 @@ public class MarkupToHtmlTask extends MarkupTask {
 		if (file != null) {
 			testForOutputFolderConflict(outputFolders, file);
 			try {
-				processFile(markupLanguage,file.getParentFile(),file);
+				processFile(markupLanguage, file.getParentFile(), file);
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(String.format("Cannot process file '%s': %s",file,e.getMessage()),e);
+				throw new BuildException(String.format("Cannot process file '%s': %s", file, e.getMessage()), e);
 			}
 		}
 	}
 
-	private void testForOutputFolderConflict(Set<File> outputFolders,
-			File inputFile) {
+	private void testForOutputFolderConflict(Set<File> outputFolders, File inputFile) {
 		if (multipleOutputFiles && !outputFolders.add(inputFile.getAbsoluteFile().getParentFile())) {
-			log(String.format("multipleOutputFiles have already been created in folder '%s'"),Project.MSG_WARN);
+			log(String.format("multipleOutputFiles have already been created in folder '%s'"), Project.MSG_WARN);
 		}
 	}
 
@@ -159,15 +160,16 @@ public class MarkupToHtmlTask extends MarkupTask {
 	 * 
 	 * @throws BuildException
 	 */
-	protected String processFile(MarkupLanguage markupLanguage,final File baseDir,final File source) throws BuildException {
+	protected String processFile(MarkupLanguage markupLanguage, final File baseDir, final File source)
+			throws BuildException {
 
-		log(String.format("Processing file '%s'",source),Project.MSG_VERBOSE);
+		log(String.format("Processing file '%s'", source), Project.MSG_VERBOSE);
 
 		String markupContent = null;
 
 		String name = source.getName();
 		if (name.lastIndexOf('.') != -1) {
-			name = name.substring(0,name.lastIndexOf('.'));
+			name = name.substring(0, name.lastIndexOf('.'));
 		}
 
 		File htmlOutputFile = computeHtmlFile(source, name);
@@ -179,13 +181,14 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)),"utf-8");
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8");
 			} catch (Exception e) {
-				throw new BuildException(String.format("Cannot write to file '%s': %s",htmlOutputFile,e.getMessage()),e);
+				throw new BuildException(
+						String.format("Cannot write to file '%s': %s", htmlOutputFile, e.getMessage()), e);
 			}
 			try {
-				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer,formatOutput);
-				for (Stylesheet stylesheet: stylesheets) {
+				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
+				for (Stylesheet stylesheet : stylesheets) {
 					if (stylesheet.url != null) {
 						builder.addCssStylesheet(stylesheet.url);
 					} else {
@@ -193,12 +196,13 @@ public class MarkupToHtmlTask extends MarkupTask {
 					}
 				}
 
-				builder.setTitle(title==null?name:title);
+				builder.setTitle(title == null ? name : title);
 				builder.setEmitDtd(true);
 				builder.setUseInlineStyles(useInlineCssStyles);
 				builder.setSuppressBuiltInStyles(suppressBuiltInCssStyles);
-				
-				SplittingStrategy splittingStrategy = multipleOutputFiles?new DefaultSplittingStrategy():new NoSplittingStrategy();
+
+				SplittingStrategy splittingStrategy = multipleOutputFiles ? new DefaultSplittingStrategy()
+						: new NoSplittingStrategy();
 				SplittingOutlineParser outlineParser = new SplittingOutlineParser();
 				outlineParser.setMarkupLanguage(markupLanguage.clone());
 				outlineParser.setSplittingStrategy(splittingStrategy);
@@ -209,30 +213,31 @@ public class MarkupToHtmlTask extends MarkupTask {
 				splittingBuilder.setOutline(item);
 				splittingBuilder.setRootFile(htmlOutputFile);
 				splittingBuilder.setNavigationImages(navigationImages);
-				
+
 				MarkupParser parser = new MarkupParser();
 				parser.setMarkupLanaguage(markupLanguage);
 				parser.setBuilder(splittingBuilder);
 
 				parser.parse(markupContent);
-				
-				processed(markupContent,item,baseDir,source);
+
+				processed(markupContent, item, baseDir, source);
 			} finally {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(String.format("Cannot write to file '%s': %s",htmlOutputFile,e.getMessage()),e);
+					throw new BuildException(String.format("Cannot write to file '%s': %s", htmlOutputFile,
+							e.getMessage()), e);
 				}
 			}
 		}
 		return markupContent;
 	}
 
-	void processed(String markupContent, SplitOutlineItem item,final File baseDir,final File source) {
+	void processed(String markupContent, SplitOutlineItem item, final File baseDir, final File source) {
 	}
 
 	protected File computeHtmlFile(final File source, String name) {
-		return new File(source.getParentFile(),htmlFilenameFormat.replace("$1", name));
+		return new File(source.getParentFile(), htmlFilenameFormat.replace("$1", name));
 	}
 
 	protected String readFully(File inputFile) {
@@ -242,13 +247,13 @@ public class MarkupToHtmlTask extends MarkupTask {
 			try {
 				int i;
 				while ((i = r.read()) != -1) {
-					w.write((char)i);
+					w.write((char) i);
 				}
 			} finally {
 				r.close();
 			}
 		} catch (IOException e) {
-			throw new BuildException(String.format("Cannot read file '%s': %s",inputFile,e.getMessage()),e);
+			throw new BuildException(String.format("Cannot read file '%s': %s", inputFile, e.getMessage()), e);
 		}
 		return w.toString();
 	}
@@ -261,9 +266,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 	}
 
 	/**
-	 * The format of the HTML output file.  Consists of a pattern where the
-	 * '$1' is replaced with the filename of the input file.  Default value is
-	 * <code>$1.html</code>
+	 * The format of the HTML output file. Consists of a pattern where the '$1' is replaced with the filename of the
+	 * input file. Default value is <code>$1.html</code>
 	 * 
 	 * @param htmlFilenameFormat
 	 */
@@ -348,7 +352,6 @@ public class MarkupToHtmlTask extends MarkupTask {
 		return navigationImages;
 	}
 
-
 	/**
 	 * indicate if navigation links should be images
 	 */
@@ -356,8 +359,6 @@ public class MarkupToHtmlTask extends MarkupTask {
 		this.navigationImages = navigationImages;
 	}
 
-
-	
 	/**
 	 * @see HtmlDocumentBuilder#isUseInlineStyles()
 	 */
@@ -386,24 +387,26 @@ public class MarkupToHtmlTask extends MarkupTask {
 		this.suppressBuiltInCssStyles = suppressBuiltInCssStyles;
 	}
 
-
-
 	public static class Stylesheet {
 		private File file;
+
 		private String url;
 
 		public File getFile() {
 			return file;
 		}
+
 		public void setFile(File file) {
 			this.file = file;
 		}
+
 		public String getUrl() {
 			return url;
 		}
+
 		public void setUrl(String url) {
 			this.url = url;
 		}
 	}
-	
+
 }

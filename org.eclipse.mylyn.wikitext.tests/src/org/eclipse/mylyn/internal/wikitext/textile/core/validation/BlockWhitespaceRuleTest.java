@@ -20,13 +20,14 @@ import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class BlockWhitespaceRuleTest extends TestCase {
 
 	private BlockWhitespaceRule rule;
+
 	private MarkupValidator validator;
 
 	@Override
@@ -56,7 +57,7 @@ public class BlockWhitespaceRuleTest extends TestCase {
 		ValidationProblem problem = rule.findProblem(markup, 0, markup.length());
 		System.out.println(problem);
 		assertNotNull(problem);
-		assertEquals(0,problem.getOffset());
+		assertEquals(0, problem.getOffset());
 	}
 
 	public void testMatch2() {
@@ -64,7 +65,7 @@ public class BlockWhitespaceRuleTest extends TestCase {
 		ValidationProblem problem = rule.findProblem(markup, 0, markup.length());
 		System.out.println(problem);
 		assertNotNull(problem);
-		assertEquals(1,problem.getOffset());
+		assertEquals(1, problem.getOffset());
 	}
 
 	public void testMatch3() {
@@ -72,17 +73,17 @@ public class BlockWhitespaceRuleTest extends TestCase {
 		ValidationProblem problem = rule.findProblem(markup, 0, markup.length());
 		System.out.println(problem);
 		assertNotNull(problem);
-		assertEquals(3,problem.getOffset());
+		assertEquals(3, problem.getOffset());
 	}
 
 	public void testValidator() {
 		String markup = "h1. Foo\n\nbc. bar\n\npre.\nsdf\n\nbc.\n\n";
 		List<ValidationProblem> result = validator.validate(new NullProgressMonitor(), markup);
-		assertEquals(2,result.size());
+		assertEquals(2, result.size());
 		System.out.println(result);
-		assertEquals(18,result.get(0).getOffset());
-		assertEquals(4,result.get(0).getLength());
-		assertEquals(28,result.get(1).getOffset());
-		assertEquals(3,result.get(1).getLength());
+		assertEquals(18, result.get(0).getOffset());
+		assertEquals(4, result.get(0).getLength());
+		assertEquals(28, result.get(1).getOffset());
+		assertEquals(3, result.get(1).getLength());
 	}
 }

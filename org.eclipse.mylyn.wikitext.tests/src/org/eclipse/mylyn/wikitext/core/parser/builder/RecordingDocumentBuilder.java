@@ -17,18 +17,23 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.util.LocatorImpl;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class RecordingDocumentBuilder extends DocumentBuilder {
 
 	public static class Event {
 		public Attributes attributes;
+
 		public BlockType blockType;
+
 		public String text;
+
 		public Integer headingLevel;
+
 		public SpanType spanType;
+
 		public LocatorImpl locator;
 
 		Event(String text) {
@@ -66,7 +71,7 @@ public class RecordingDocumentBuilder extends DocumentBuilder {
 				buf.append("Text?(");
 			}
 			if (text != null) {
-				buf.append(text.length() > 6?text.substring(0,6)+"...":text);
+				buf.append(text.length() > 6 ? text.substring(0, 6) + "..." : text);
 			}
 
 			buf.append(",lineNumber=");
@@ -100,7 +105,7 @@ public class RecordingDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
-		add(new Event(type,attributes));
+		add(new Event(type, attributes));
 	}
 
 	@Override
@@ -109,12 +114,12 @@ public class RecordingDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginHeading(int level, Attributes attributes) {
-		add(new Event(level,attributes));
+		add(new Event(level, attributes));
 	}
 
 	@Override
 	public void beginSpan(SpanType type, Attributes attributes) {
-		add(new Event(type,attributes));
+		add(new Event(type, attributes));
 	}
 
 	@Override
@@ -133,13 +138,16 @@ public class RecordingDocumentBuilder extends DocumentBuilder {
 	}
 
 	@Override
-	public void endDocument() {}
+	public void endDocument() {
+	}
 
 	@Override
-	public void endHeading() {}
+	public void endHeading() {
+	}
 
 	@Override
-	public void endSpan() {}
+	public void endSpan() {
+	}
 
 	@Override
 	public void entityReference(String entity) {
@@ -150,7 +158,7 @@ public class RecordingDocumentBuilder extends DocumentBuilder {
 	}
 
 	@Override
-	public void imageLink(Attributes linkAttributes,Attributes attributes,String href, String imageUrl) {
+	public void imageLink(Attributes linkAttributes, Attributes attributes, String href, String imageUrl) {
 	}
 
 	@Override
@@ -158,7 +166,7 @@ public class RecordingDocumentBuilder extends DocumentBuilder {
 	}
 
 	@Override
-	public void link(Attributes attributes,String hrefOrHashName, String text) {
+	public void link(Attributes attributes, String hrefOrHashName, String text) {
 	}
 
 	public java.util.List<Event> getEvents() {
@@ -170,7 +178,7 @@ public class RecordingDocumentBuilder extends DocumentBuilder {
 		StringBuilder buf = new StringBuilder();
 		buf.append(getClass().getSimpleName());
 		buf.append("(");
-		for (Event event: events) {
+		for (Event event : events) {
 			buf.append("\n\t");
 			buf.append(event);
 		}

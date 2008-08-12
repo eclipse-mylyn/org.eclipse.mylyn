@@ -16,13 +16,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class IdGenerator {
 
 	private Map<String, Integer> idGenerators = new HashMap<String, Integer>();
+
 	private Set<String> anchorNames = new HashSet<String>();
 
 	public String newId(String type, String text) {
@@ -41,10 +42,10 @@ public class IdGenerator {
 		if (text != null) {
 			id = convertToAnchor(text.trim());
 			if (id.length() == 0) {
-				id = type+'-'+current;
+				id = type + '-' + current;
 			}
 		} else {
-			id = type+'-'+current;
+			id = type + '-' + current;
 		}
 		String template = id;
 		int suffix = 1;
@@ -57,7 +58,7 @@ public class IdGenerator {
 	private String convertToAnchor(String text) {
 		String anchor = text.replaceAll("[^a-zA-Z0-9]", "");
 		if (anchor.length() > 0 && Character.isDigit(anchor.charAt(0))) {
-			anchor = 'a'+anchor;
+			anchor = 'a' + anchor;
 		}
 		return anchor;
 	}

@@ -25,13 +25,14 @@ import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final Pattern CSS_CLASS_INLINE = Pattern.compile("(^|\\s+)inline(\\s+|$)");
+
 	private static Set<Integer> entityReferenceToUnicode = new HashSet<Integer>();
 	static {
 		entityReferenceToUnicode.add(215);
@@ -45,10 +46,10 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private String bookTitle;
+
 	private String doctype = "<!DOCTYPE book PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\">";
 
-
-	private Map<String,String> acronyms = new HashMap<String, String>();
+	private Map<String, String> acronyms = new HashMap<String, String>();
 
 	private int headingLevel = 0;
 
@@ -63,7 +64,6 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	public DocBookDocumentBuilder(XmlStreamWriter writer) {
 		super(writer);
 	}
-
 
 	protected XmlStreamWriter createFormattingXmlStreamWriter(Writer out) {
 		XmlStreamWriter writer = super.createXmlStreamWriter(out);
@@ -91,12 +91,11 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		this.bookTitle = bookTitle;
 	}
 
-
 	@Override
 	public void acronym(String text, String definition) {
 		String previousDef = acronyms.put(text, definition);
 		if (previousDef != null && previousDef.length() > definition.length()) {
-			acronyms.put(text,previousDef);
+			acronyms.put(text, previousDef);
 		}
 		writer.writeStartElement("glossterm");
 		characters(text);
@@ -104,15 +103,15 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	@Override
-	public void link(Attributes attributes,String href,final String text) {
-		link(attributes,href,new ContentEmitter() {
+	public void link(Attributes attributes, String href, final String text) {
+		link(attributes, href, new ContentEmitter() {
 			public void emit() {
 				writer.writeCharacters(text);
 			}
 		});
 	}
 
-	private void link(Attributes attributes,String href, ContentEmitter emitter) {
+	private void link(Attributes attributes, String href, ContentEmitter emitter) {
 		ensureBlockElementsOpen();
 		if (href.startsWith("#")) {
 			if (href.length() > 1) {
@@ -138,7 +137,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
 		if (headingLevel == 0) {
-			beginHeading(1,new Attributes());
+			beginHeading(1, new Attributes());
 			endHeading();
 		}
 
@@ -239,13 +238,12 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			endBlockEntry(previousBlock);
 		}
 
-
 		int blockSize = 1;
 		writer.writeStartElement(elementName);
 		applyAttributes(attributes);
 
 		if (elementNames != null) {
-			for (String name: elementNames) {
+			for (String name : elementNames) {
 				writer.writeStartElement(name);
 			}
 		}
@@ -256,14 +254,14 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeEndElement();
 		}
 
-		blockDescriptions.push(new BlockDescription(type,blockSize,elementNames,closeElementsOnBlockStart));
+		blockDescriptions.push(new BlockDescription(type, blockSize, elementNames, closeElementsOnBlockStart));
 	}
 
 	@Override
 	public void endBlock() {
 		final BlockDescription blockDescription = blockDescriptions.pop();
-		int size = blockDescription.size+blockDescription.entrySize;
-		for (int x = 0;x<size;++x) {
+		int size = blockDescription.size + blockDescription.entrySize;
+		for (int x = 0; x < size; ++x) {
 			writer.writeEndElement();
 		}
 	}
@@ -275,8 +273,8 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		blockDescription.entrySize = 0;
 	}
 
-	private void openBlockEntry(BlockDescription blockDescription,String[] entry) {
-		for (String ent: entry) {
+	private void openBlockEntry(BlockDescription blockDescription, String[] entry) {
+		for (String ent : entry) {
 			writer.writeStartElement(ent);
 		}
 		blockDescription.entrySize += entry.length;
@@ -284,12 +282,12 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void beginHeading(int level, Attributes attributes) {
-		closeSections(Math.max(level-1,0));
+		closeSections(Math.max(level - 1, 0));
 
 		while (headingLevel < level) {
 			headingLevel++;
 
-			writer.writeStartElement(headingLevel==1?"chapter":"section");
+			writer.writeStartElement(headingLevel == 1 ? "chapter" : "section");
 			if (attributes != null) {
 				applyAttributes(attributes);
 				attributes = null;
@@ -366,9 +364,9 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeStartElement("literal");
 			break;
 		default:
-			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No docbook mapping for "+type);
-		writer.writeStartElement("phrase");
-		break;
+			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No docbook mapping for " + type);
+			writer.writeStartElement("phrase");
+			break;
 		}
 		applyAttributes(attributes);
 	}
@@ -411,7 +409,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeEndElement(); // title
 			writer.writeStartElement("glosslist");
 
-			for (Map.Entry<String, String> glossEntry : new TreeMap<String,String>(acronyms).entrySet()) {
+			for (Map.Entry<String, String> glossEntry : new TreeMap<String, String>(acronyms).entrySet()) {
 
 				writer.writeStartElement("glossentry");
 
@@ -436,6 +434,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	public void endSpan() {
 		writer.writeEndElement();
 	}
+
 	@Override
 	public void characters(String text) {
 		ensureBlockElementsOpen();
@@ -469,9 +468,9 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 				numeric = entity.substring(1);
 				base = 16;
 			}
-			int unicodeValue = Integer.parseInt(numeric,base);
+			int unicodeValue = Integer.parseInt(numeric, base);
 			if (entityReferenceToUnicode.contains(unicodeValue)) {
-				writer.writeCharacters(""+((char)unicodeValue));
+				writer.writeCharacters("" + ((char) unicodeValue));
 				return;
 			}
 		}
@@ -486,12 +485,12 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (cssClass != null && CSS_CLASS_INLINE.matcher(cssClass).find()) {
 			inlined = true;
 		}
-		emitImage(attributes, url,inlined);
+		emitImage(attributes, url, inlined);
 	}
 
-	private void emitImage(Attributes attributes, String url,boolean inline) {
+	private void emitImage(Attributes attributes, String url, boolean inline) {
 		ensureBlockElementsOpen();
-		writer.writeStartElement(inline?"inlinemediaobject":"mediaobject");
+		writer.writeStartElement(inline ? "inlinemediaobject" : "mediaobject");
 		applyAttributes(attributes);
 		writer.writeStartElement("imageobject");
 		writer.writeEmptyElement("imagedata");
@@ -501,10 +500,11 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	@Override
-	public void imageLink(Attributes linkAttributes, final Attributes imageAttributes,String href, final String imageUrl) {
-		link(linkAttributes,href,new ContentEmitter() {
+	public void imageLink(Attributes linkAttributes, final Attributes imageAttributes, String href,
+			final String imageUrl) {
+		link(linkAttributes, href, new ContentEmitter() {
 			public void emit() {
-				emitImage(imageAttributes,imageUrl,true);
+				emitImage(imageAttributes, imageUrl, true);
 			}
 		});
 	}
@@ -517,7 +517,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	private BlockDescription findBlockDescription(BlockType type) {
-		for (int x = blockDescriptions.size()-1;x>=0;--x) {
+		for (int x = blockDescriptions.size() - 1; x >= 0; --x) {
 			BlockDescription blockDescription = blockDescriptions.get(x);
 			if (blockDescription.type == type) {
 				return blockDescription;
@@ -528,14 +528,18 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static class BlockDescription {
 		BlockType type;
+
 		int size;
+
 		int entrySize; // the size of an entry, if it is open, otherwise 0
+
 		final String[] nestedElementNames;
+
 		final boolean closeElementsOnBlockStart;
 
-		public BlockDescription(BlockType type,int size, String[] nestedElementNames, boolean closeElementsOnBlockStart) {
+		public BlockDescription(BlockType type, int size, String[] nestedElementNames, boolean closeElementsOnBlockStart) {
 			this.size = size;
-			this.entrySize = nestedElementNames==null?0:nestedElementNames.length;
+			this.entrySize = nestedElementNames == null ? 0 : nestedElementNames.length;
 			this.type = type;
 			this.nestedElementNames = nestedElementNames;
 			this.closeElementsOnBlockStart = closeElementsOnBlockStart;
@@ -543,10 +547,9 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicate if this builder should generate an automatic glossary if acronyms are used.
-	 * When the automatic glossary is enabled and acronyms are used in the document, then an
-	 * <code>appendix</code> with title 'Glossary' is added to the document, with a <code>glosslist</code>
-	 * generated for all of the acronyms that appear in the document.
+	 * Indicate if this builder should generate an automatic glossary if acronyms are used. When the automatic glossary
+	 * is enabled and acronyms are used in the document, then an <code>appendix</code> with title 'Glossary' is added to
+	 * the document, with a <code>glosslist</code> generated for all of the acronyms that appear in the document.
 	 * 
 	 * The default is true.
 	 */
@@ -555,10 +558,9 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicate if this builder should generate an automatic glossary if acronyms are used.
-	 * When the automatic glossary is enabled and acronyms are used in the document, then an
-	 * <code>appendix</code> with title 'Glossary' is added to the document, with a <code>glosslist</code>
-	 * generated for all of the acronyms that appear in the document.
+	 * Indicate if this builder should generate an automatic glossary if acronyms are used. When the automatic glossary
+	 * is enabled and acronyms are used in the document, then an <code>appendix</code> with title 'Glossary' is added to
+	 * the document, with a <code>glosslist</code> generated for all of the acronyms that appear in the document.
 	 * 
 	 * The default is true.
 	 */

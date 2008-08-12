@@ -10,13 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.confluence.core;
 
-
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.tests.AbstractTestApplication;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class Main extends AbstractTestApplication {
@@ -33,7 +32,6 @@ public class Main extends AbstractTestApplication {
 			e.printStackTrace();
 		}
 	}
-	
 
 	protected MarkupLanguage createMarkupLanguage() {
 		return new ConfluenceLanguage();

@@ -24,20 +24,20 @@ public class ValidationRules {
 	private ValidationRules parent;
 
 	private List<ValidationRule> rules = new ArrayList<ValidationRule>();
-	
+
 	public void addValidationRule(ValidationRule rule) {
 		rules.add(rule);
 	}
-	
+
 	public List<ValidationRule> getRules() {
 		if (parent != null) {
 			List<ValidationRule> parentRules = parent.getRules();
 			if (rules.isEmpty()) {
 				return parentRules;
 			} else if (parentRules.isEmpty()) {
-				return Collections.unmodifiableList(rules); 
+				return Collections.unmodifiableList(rules);
 			}
-			List<ValidationRule> combined = new ArrayList<ValidationRule>(rules.size()+parentRules.size());
+			List<ValidationRule> combined = new ArrayList<ValidationRule>(rules.size() + parentRules.size());
 			combined.addAll(parentRules);
 			combined.addAll(rules);
 			return Collections.unmodifiableList(combined);

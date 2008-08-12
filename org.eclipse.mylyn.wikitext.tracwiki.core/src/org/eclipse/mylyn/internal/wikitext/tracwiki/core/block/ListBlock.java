@@ -31,6 +31,7 @@ public class ListBlock extends Block {
 	static final Pattern startPattern = Pattern.compile("(?:(\\s+)(?:(\\*)|(?:(\\d+)\\.)))\\s+(.*+)");
 
 	private int blockLineCount = 0;
+
 	private Matcher matcher;
 
 	private Stack<ListState> listState = new Stack<ListState>();
@@ -39,7 +40,7 @@ public class ListBlock extends Block {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			ListAttributes attributes = new ListAttributes();
 			String spaces = matcher.group(1);
@@ -52,7 +53,7 @@ public class ListBlock extends Block {
 
 			int level = calculateLevel(spaces);
 
-			BlockType type = listSpec == null?BlockType.NUMERIC_LIST:BlockType.BULLETED_LIST;
+			BlockType type = listSpec == null ? BlockType.NUMERIC_LIST : BlockType.BULLETED_LIST;
 
 			if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) {
 				attributes.setCssStyle("list-style: square");
@@ -60,7 +61,7 @@ public class ListBlock extends Block {
 
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 
-			listState.push(new ListState(level,spaces.length(),type));
+			listState.push(new ListState(level, spaces.length(), type));
 			builder.beginBlock(type, attributes);
 		} else {
 			ListAttributes attributes = new ListAttributes();
@@ -79,20 +80,19 @@ public class ListBlock extends Block {
 
 			int level = calculateLevel(spaces);
 
-			BlockType type = listSpec == null?BlockType.NUMERIC_LIST:BlockType.BULLETED_LIST;
-
+			BlockType type = listSpec == null ? BlockType.NUMERIC_LIST : BlockType.BULLETED_LIST;
 
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 
-			for (ListState listState = this.listState.peek();listState.level != level || listState.type != type;listState = this.listState.peek()) {
+			for (ListState listState = this.listState.peek(); listState.level != level || listState.type != type; listState = this.listState.peek()) {
 				if (listState.level > level || (listState.type != type && listState.level > 1)) {
 					closeOne();
 					if (this.listState.isEmpty()) {
-						this.listState.push(new ListState(1,spaces.length(),type));
+						this.listState.push(new ListState(1, spaces.length(), type));
 						builder.beginBlock(type, attributes);
 					}
 				} else {
-					this.listState.push(new ListState(level,spaces.length(),type));
+					this.listState.push(new ListState(level, spaces.length(), type));
 					builder.beginBlock(type, attributes);
 				}
 			}
@@ -106,11 +106,10 @@ public class ListBlock extends Block {
 		listState.openItem = true;
 		builder.beginBlock(BlockType.LIST_ITEM, new Attributes());
 
-		markupLanguage.emitMarkupLine(getParser(),state,line, offset);
+		markupLanguage.emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}
-
 
 	private int calculateLevel(String spaces) {
 		int length = spaces.length();
@@ -118,7 +117,7 @@ public class ListBlock extends Block {
 			throw new IllegalStateException();
 		}
 		int level = 1;
-		for (int x = 1;x<listState.size();++x) {
+		for (int x = 1; x < listState.size(); ++x) {
 			ListState state = listState.get(x);
 			if (state.numSpaces <= length) {
 				level = state.level;
@@ -129,12 +128,11 @@ public class ListBlock extends Block {
 		if (!listState.isEmpty()) {
 			ListState outerState = listState.peek();
 			if (level == outerState.level && length > outerState.numSpaces) {
-				level = outerState.level+1;
+				level = outerState.level + 1;
 			}
 		}
 		return level;
 	}
-
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
@@ -168,11 +166,14 @@ public class ListBlock extends Block {
 
 	private static class ListState {
 		int level;
+
 		int numSpaces;
+
 		BlockType type;
+
 		boolean openItem;
 
-		private ListState(int level,int numSpaces, BlockType type) {
+		private ListState(int level, int numSpaces, BlockType type) {
 			super();
 			this.level = level;
 			this.numSpaces = numSpaces;

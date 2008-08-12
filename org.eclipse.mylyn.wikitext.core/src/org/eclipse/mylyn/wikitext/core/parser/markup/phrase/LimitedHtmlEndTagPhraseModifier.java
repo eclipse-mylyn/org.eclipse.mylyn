@@ -14,8 +14,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class LimitedHtmlEndTagPhraseModifier extends PatternBasedElement {
@@ -27,7 +27,7 @@ public class LimitedHtmlEndTagPhraseModifier extends PatternBasedElement {
 		buf.append("(</");
 		buf.append("(?:");
 		int index = 0;
-		for (String elementName: elementNames) {
+		for (String elementName : elementNames) {
 			if (index++ > 0) {
 				buf.append("|");
 			}

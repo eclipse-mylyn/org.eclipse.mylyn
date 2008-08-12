@@ -18,8 +18,8 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitione
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class FastDialectPartitionerTest extends AbstractDocumentTest {
@@ -38,10 +38,10 @@ public class FastDialectPartitionerTest extends AbstractDocumentTest {
 		long nanosEnd = System.nanoTime();
 		long millisEnd = System.currentTimeMillis();
 
-		System.out.println("Elapsed Time in Nanos: "+(nanosEnd-nanos));
-		System.out.println("Elapsed Time in Millis: "+(millisEnd - millis));
+		System.out.println("Elapsed Time in Nanos: " + (nanosEnd - nanos));
+		System.out.println("Elapsed Time in Millis: " + (millisEnd - millis));
 
-		assertTrue((nanosEnd-nanos) < 800000000L);
+		assertTrue((nanosEnd - nanos) < 800000000L);
 	}
 
 	public void testTextileCausesExceptionIssue36() {
@@ -49,14 +49,7 @@ public class FastDialectPartitionerTest extends AbstractDocumentTest {
 		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
 		partitioner.setMarkupLanguage(new TextileLanguage());
 
-		document.set("a\n"+
-				"# a\n" +
-				"a\n"+
-				"# a\n" +
-				"a\n"+
-				"# a\n" +
-				"\n" +
-		"h2. a");
+		document.set("a\n" + "# a\n" + "a\n" + "# a\n" + "a\n" + "# a\n" + "\n" + "h2. a");
 
 		partitioner.connect(document);
 		document.setDocumentPartitioner(partitioner);

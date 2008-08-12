@@ -21,14 +21,16 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class DocBookDocumentBuilderTest extends TestCase {
 
 	private MarkupParser parser;
+
 	private StringWriter out;
+
 	private DocBookDocumentBuilder builder;
 
 	@Override
@@ -44,14 +46,14 @@ public class DocBookDocumentBuilderTest extends TestCase {
 	public void testInlineImage() {
 		parser.parse("some text !(inline)images/foo.png! some text");
 		String docbook = out.toString();
-		System.out.println("DocBook: \n"+docbook);
+		System.out.println("DocBook: \n" + docbook);
 		assertTrue(docbook.contains("<inlinemediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></inlinemediaobject>"));
 	}
 
 	public void testImage() {
 		parser.parse("some text !images/foo.png! some text");
 		String docbook = out.toString();
-		System.out.println("DocBook: \n"+docbook);
+		System.out.println("DocBook: \n" + docbook);
 		assertTrue(docbook.contains("<mediaobject><imageobject><imagedata fileref=\"images/foo.png\"/></imageobject></mediaobject>"));
 	}
 
@@ -79,7 +81,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		System.out.println("DocBook: \n"+docbook);
+		System.out.println("DocBook: \n" + docbook);
 
 		assertTrue(docbook.contains("<variablelist><varlistentry><term>foo</term><listitem><para>Foo definition</para></listitem></varlistentry><varlistentry><term>bar</term><listitem><para>Bar definition</para></listitem></varlistentry></variablelist>"));
 	}
@@ -89,7 +91,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		parser.parse("ABW(A Better Way) is not NIMBY(Not In My Back Yard)\n\n{glossary}");
 
 		String docbook = out.toString();
-		System.out.println("DocBook: \n"+docbook);
+		System.out.println("DocBook: \n" + docbook);
 
 		assertTrue(docbook.contains("<variablelist><varlistentry><term>ABW</term><listitem><para>A Better Way</para></listitem></varlistentry><varlistentry><term>NIMBY</term><listitem><para>Not In My Back Yard</para></listitem></varlistentry></variablelist>"));
 	}
@@ -124,7 +126,7 @@ public class DocBookDocumentBuilderTest extends TestCase {
 		builder.endDocument();
 
 		String docbook = out.toString();
-		System.out.println("DocBook: \n"+docbook);
+		System.out.println("DocBook: \n" + docbook);
 
 		// should look something like this:
 

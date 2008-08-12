@@ -16,8 +16,8 @@ import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class TextileToEclipseTocTest extends TestCase {
@@ -35,7 +35,7 @@ public class TextileToEclipseTocTest extends TestCase {
 		textileToEclipseToc.setHtmlFile("Test.html");
 		String toc = textileToEclipseToc.parse("h1. title1\n\nContent para 1\n\nh1. title2\n\nMore content\n\nh2. Nested title\n\nnested content");
 
-		System.out.println("Eclipse TOC: "+toc);
+		System.out.println("Eclipse TOC: " + toc);
 	}
 
 }

@@ -49,31 +49,32 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-
-
 /**
  * Takes a valid XHTML document and converts the document into two distinct parts:
  * <ol>
- * 	<li>Text as it should be presented in a text viewer</li>
- *  <li>A {@link TextPresentation}</li>
+ * <li>Text as it should be presented in a text viewer</li>
+ * <li>A {@link TextPresentation}</li>
  * </ol>
+ * 
  * @author David Green
- *
+ * 
  */
 public class HtmlTextPresentationParser {
 	/**
 	 * Element names for spanning elements
 	 */
 	private static Set<String> spanElements = new HashSet<String>();
+
 	/**
 	 * element names for block elements
 	 */
 	private static Set<String> blockElements = new HashSet<String>();
+
 	/**
 	 * element names for elements that cause adjacent whitespace to be collapsed
 	 */
 	private static Set<String> whitespaceCollapsingElements = new HashSet<String>();
-	
+
 	static {
 		spanElements.add("a");
 		spanElements.add("abbr");
@@ -103,7 +104,7 @@ public class HtmlTextPresentationParser {
 		spanElements.add("tt");
 		spanElements.add("u");
 		spanElements.add("var");
-		
+
 		blockElements.add("div");
 		blockElements.add("dl");
 		blockElements.add("form");
@@ -127,43 +128,52 @@ public class HtmlTextPresentationParser {
 		blockElements.add("li");
 		blockElements.add("dd");
 		blockElements.add("dt");
-		
+
 		whitespaceCollapsingElements.add("hr");
 		whitespaceCollapsingElements.add("br");
 	}
 
 	private static class ElementState {
 		String elementName;
+
 		int childCount = 0;
+
 		int textChildCount = 0;
+
 		final int originalOffset;
+
 		int offset;
 
 		boolean skipWhitespace = true;
+
 		boolean spanElement;
+
 		boolean blockElement;
+
 		boolean noWhitespaceTextContainer;
+
 		boolean collapsesAdjacentWhitespace;
 
 		final FontState fontState;
 
 		int orderedListIndex = 0;
+
 		int indentLevel = 0;
+
 		List<Annotation> annotations;
-		
+
 		char[] prefix;
+
 		List<Annotation> prefixAnnotations;
-		
+
 		/**
 		 * The last child that was just processed for this element
 		 */
 		ElementState lastChild;
-		
+
 		final ElementState parent;
-		
-		
-		
-		public ElementState(ElementState parent,String elementName,ElementState elementState,int offset) {
+
+		public ElementState(ElementState parent, String elementName, ElementState elementState, int offset) {
 			this.parent = parent;
 			this.elementName = elementName;
 			this.fontState = new FontState(elementState.fontState);
@@ -174,7 +184,7 @@ public class HtmlTextPresentationParser {
 			initState();
 		}
 
-		public ElementState(ElementState parent,String elementName,FontState fontState,int offset) {
+		public ElementState(ElementState parent, String elementName, FontState fontState, int offset) {
 			this.parent = parent;
 			this.elementName = elementName;
 			this.fontState = new FontState(fontState);
@@ -207,19 +217,22 @@ public class HtmlTextPresentationParser {
 	}
 
 	private AnnotationModel annotationModel;
+
 	private TextPresentation presentation;
+
 	private String text;
 
 	private Font defaultFont;
+
 	private Color defaultForeground;
+
 	private Color defaultBackground;
 
-	private char[] bulletChars = new char[] {
-		'\u2022', // solid round bullet, see http://www.fileformat.info/info/unicode/char/2022/index.htm
+	private char[] bulletChars = new char[] { '\u2022', // solid round bullet, see http://www.fileformat.info/info/unicode/char/2022/index.htm
 //		'\u26AA', // empty round bullet, see http://www.fileformat.info/info/unicode/char/26AA/index.htm
 //		'\u25A0', // square bullet, see http://www.fileformat.info/info/unicode/char/25A0/index.htm
 	};
-	
+
 	private CssStyleManager cssStyleManager;
 
 	public HtmlTextPresentationParser() {
@@ -228,7 +241,6 @@ public class HtmlTextPresentationParser {
 	public TextPresentation getPresentation() {
 		return presentation;
 	}
-
 
 	public void setPresentation(TextPresentation presentation) {
 		this.presentation = presentation;
@@ -283,18 +295,18 @@ public class HtmlTextPresentationParser {
 	}
 
 	/**
-	 * Set the annotation model if the parsing process should collect annotations for things like
-	 * anchors and hover info.
+	 * Set the annotation model if the parsing process should collect annotations for things like anchors and hover
+	 * info.
 	 * 
-	 * @param annotationModel the annotation model, or null if annotations should not be collected.
+	 * @param annotationModel
+	 *            the annotation model, or null if annotations should not be collected.
 	 */
 	public void setAnnotationModel(AnnotationModel annotationModel) {
 		this.annotationModel = annotationModel;
 	}
 
-
 	/**
-	 * The maximum width in pixels.  Only used when {@link #setGC(GC) a GC is provided}.
+	 * The maximum width in pixels. Only used when {@link #setGC(GC) a GC is provided}.
 	 */
 	public void setMaxWidth(int maxWidth) {
 		this.maxWidth = maxWidth;
@@ -340,24 +352,28 @@ public class HtmlTextPresentationParser {
 	private class HtmlContentHandler implements ContentHandler {
 
 		private Stack<ElementState> state = new Stack<ElementState>();
+
 		private int lastNewlineOffset = 0;
 
 		private StringBuilder out = new StringBuilder(2048);
+
 		private List<StyleRange> styleRanges = new ArrayList<StyleRange>();
-		private Map<Annotation,Position> annotationToPosition = new IdentityHashMap<Annotation, Position>();
+
+		private Map<Annotation, Position> annotationToPosition = new IdentityHashMap<Annotation, Position>();
 
 		private StringBuilder elementText = new StringBuilder();
 
 		public void characters(char[] ch, int start, int length) throws SAXException {
 			if (!state.isEmpty()) {
 				ElementState elementState = state.peek();
-				if (elementState.noWhitespaceTextContainer || 
-					(elementState.blockElement && elementState.skipWhitespace && elementState.textChildCount == 0 && elementState.childCount == 0) ||
-					(elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
+				if (elementState.noWhitespaceTextContainer
+						|| (elementState.blockElement && elementState.skipWhitespace
+								&& elementState.textChildCount == 0 && elementState.childCount == 0)
+						|| (elementState.lastChild != null && elementState.lastChild.collapsesAdjacentWhitespace)) {
 					// trim left here, since we must properly eliminate whitespace in ordered lists where we've already
 					// prepended a number to the list item text
 					int skip = 0;
-					while (Character.isWhitespace(ch[start+skip]) && skip < length) {
+					while (Character.isWhitespace(ch[start + skip]) && skip < length) {
 						++skip;
 					}
 					start += skip;
@@ -365,25 +381,25 @@ public class HtmlTextPresentationParser {
 				}
 				if (length != 0) {
 					++elementState.textChildCount;
-					append(elementState,ch, start, length);
+					append(elementState, ch, start, length);
 				}
 			}
 		}
 
-		private void append(ElementState elementState,char[] ch, int start, int length) {
+		private void append(ElementState elementState, char[] ch, int start, int length) {
 			if (elementState.skipWhitespace) {
 				// collapse adjacent whitespace, and replace newlines with a space character
 				int previousWhitespaceIndex = Integer.MIN_VALUE;
 				for (int x = 0; x < length; ++x) {
-					int index = start+x;
+					int index = start + x;
 					char c = ch[index];
 					if (Character.isWhitespace(c)) {
-						if (previousWhitespaceIndex == index-1) {
+						if (previousWhitespaceIndex == index - 1) {
 							previousWhitespaceIndex = index;
 							continue;
 						}
 						previousWhitespaceIndex = index;
-						elementText.append(c=='\t'?c:' ');
+						elementText.append(c == '\t' ? c : ' ');
 					} else {
 						elementText.append(c);
 					}
@@ -416,7 +432,7 @@ public class HtmlTextPresentationParser {
 					if (elementState.blockElement && elementState.childCount == 0) {
 						text = trimLeft(text);
 						if (text.length() == 0 && originalText.length() > 0) {
-							text = originalText.substring(0,1);
+							text = originalText.substring(0, 1);
 						}
 					}
 				}
@@ -433,16 +449,16 @@ public class HtmlTextPresentationParser {
 			boolean enforceMaxWidth = maxWidth > 0 && gc != null;
 
 			// find the offset of the last natural break
-			int lastBreakPosition = lastNewlineOffset+1;
+			int lastBreakPosition = lastNewlineOffset + 1;
 			if (enforceMaxWidth) {
-				for (int x = out.length()-1;x>=0;--x) {
+				for (int x = out.length() - 1; x >= 0; --x) {
 					char ch = out.charAt(x);
-					if (x == (lastNewlineOffset+1)) {
+					if (x == (lastNewlineOffset + 1)) {
 						break;
 					}
 
 					if (ch == '-') {
-						lastBreakPosition = x+1;
+						lastBreakPosition = x + 1;
 						break;
 					} else if (Character.isWhitespace(ch)) {
 						lastBreakPosition = x;
@@ -452,10 +468,10 @@ public class HtmlTextPresentationParser {
 				}
 			}
 
-			for (int x = 0;x<chars.length;++x) {
+			for (int x = 0; x < chars.length; ++x) {
 				char c = chars[x];
 				if (lastNewlineOffset == getOffset() && (c != '\n' && c != '\r') && indentLevel > 0) {
-					for (int y = 0;y<indentLevel;++y) {
+					for (int y = 0; y < indentLevel; ++y) {
 						out.append('\t');
 					}
 				}
@@ -468,8 +484,8 @@ public class HtmlTextPresentationParser {
 						}
 						List<Annotation> prefixAnnotations = computePrefixAnnotations(elementState);
 						if (prefixAnnotations != null && annotationModel != null) {
-							for (Annotation annotation: prefixAnnotations) {
-								annotationModel.addAnnotation(annotation, new Position(offset,1));
+							for (Annotation annotation : prefixAnnotations) {
+								annotationModel.addAnnotation(annotation, new Position(offset, 1));
 							}
 						}
 					}
@@ -477,26 +493,26 @@ public class HtmlTextPresentationParser {
 				out.append(c);
 
 				if (c == '-') {
-					lastBreakPosition = getOffset()+1;
+					lastBreakPosition = getOffset() + 1;
 				} else if (Character.isWhitespace(c)) {
 					lastBreakPosition = getOffset();
 				}
 
 				if (c == '\n') {
 					lastNewlineOffset = getOffset();
-					lastBreakPosition = getOffset()+1;
+					lastBreakPosition = getOffset() + 1;
 				} else if (enforceMaxWidth) {
-					Point extent = gc.textExtent(out.substring(lastNewlineOffset+1,out.length()));
+					Point extent = gc.textExtent(out.substring(lastNewlineOffset + 1, out.length()));
 					final int rightMargin = 2;
-					if (extent.x >= (maxWidth-rightMargin)) {
+					if (extent.x >= (maxWidth - rightMargin)) {
 						if (lastBreakPosition <= getOffset()) {
 							out.insert(lastBreakPosition, '\n');
 							lastNewlineOffset = lastBreakPosition;
-							lastBreakPosition = lastNewlineOffset+1;
+							lastBreakPosition = lastNewlineOffset + 1;
 						} else {
 							out.append('\n');
 							lastNewlineOffset = getOffset();
-							lastBreakPosition = getOffset()+1;
+							lastBreakPosition = getOffset() + 1;
 						}
 					}
 				}
@@ -506,12 +522,13 @@ public class HtmlTextPresentationParser {
 		public void endElement(String uri, String localName, String name) throws SAXException {
 			ElementState elementState = state.peek();
 
-			emitText(elementState,true);
+			emitText(elementState, true);
 			emitStyles();
 
 			if (elementState.annotations != null) {
-				for (Annotation annotation: elementState.annotations) {
-					annotationToPosition.put(annotation, new Position(elementState.originalOffset,getOffset()-elementState.originalOffset));
+				for (Annotation annotation : elementState.annotations) {
+					annotationToPosition.put(annotation, new Position(elementState.originalOffset, getOffset()
+							- elementState.originalOffset));
 				}
 			}
 
@@ -519,9 +536,11 @@ public class HtmlTextPresentationParser {
 			if (ch != null) {
 				boolean skip = false;
 				if (state.size() > 1) {
-					if (elementState.elementName.equals("ul") || elementState.elementName.equals("ol") || elementState.elementName.equals("dl")) {
-						ElementState parentState = state.get(state.size()-2);
-						if (parentState.elementName.equals("li") || parentState.elementName.equals("dt") || parentState.elementName.equals("dd")) {
+					if (elementState.elementName.equals("ul") || elementState.elementName.equals("ol")
+							|| elementState.elementName.equals("dl")) {
+						ElementState parentState = state.get(state.size() - 2);
+						if (parentState.elementName.equals("li") || parentState.elementName.equals("dt")
+								|| parentState.elementName.equals("dd")) {
 							skip = true;
 						}
 					}
@@ -542,14 +561,14 @@ public class HtmlTextPresentationParser {
 
 		private void emitPartial(ElementState elementState, char[] ch) {
 			int matchShift = -1;
-			for (int shift = 0;shift < ch.length;++shift) {
-				if (endsWith(out, ch, shift, ch.length-shift)) {
+			for (int shift = 0; shift < ch.length; ++shift) {
+				if (endsWith(out, ch, shift, ch.length - shift)) {
 					matchShift = shift;
 					break;
 				}
 			}
 			if (matchShift > 0) {
-				char[] c2 = new char[ch.length-matchShift];
+				char[] c2 = new char[ch.length - matchShift];
 				System.arraycopy(ch, matchShift, c2, 0, c2.length);
 				emitChars(elementState, c2);
 			} else if (matchShift == -1) {
@@ -557,10 +576,10 @@ public class HtmlTextPresentationParser {
 			}
 		}
 
-		private boolean endsWith(StringBuilder out, char[] ch,int offset, int length) {
+		private boolean endsWith(StringBuilder out, char[] ch, int offset, int length) {
 			if (out.length() >= length) {
 				for (int x = 0; x < length; ++x) {
-					if (out.charAt((out.length() - length) + x) != ch[x+offset]) {
+					if (out.charAt((out.length() - length) + x) != ch[x + offset]) {
 						return false;
 					}
 				}
@@ -572,44 +591,47 @@ public class HtmlTextPresentationParser {
 		public void startElement(String uri, String localName, String name, Attributes atts) throws SAXException {
 			ElementState parentElementState = state.peek();
 
-			emitText(parentElementState,false);
+			emitText(parentElementState, false);
 
 			emitStyles();
 
 			++parentElementState.childCount;
 
-			ElementState elementState = state.push(new ElementState(parentElementState,localName,state.peek(),getOffset()));
+			ElementState elementState = state.push(new ElementState(parentElementState, localName, state.peek(),
+					getOffset()));
 			if ("pre".equals(localName)) {
 				elementState.skipWhitespace = false;
-			} else if ("ul".equals(localName) || "ol".equals(localName) || "blockquote".equals(localName) || "dd".equals(localName)) {
+			} else if ("ul".equals(localName) || "ol".equals(localName) || "blockquote".equals(localName)
+					|| "dd".equals(localName)) {
 				++elementState.indentLevel;
 			}
 			// process default styles based on simple name-based CSS selector
 			String defaultCssStyle = elementToCssStyle.get(localName);
 			if (defaultCssStyle != null) {
-				cssStyleManager.processCssStyles(elementState.fontState,parentElementState.fontState,defaultCssStyle);
+				cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState, defaultCssStyle);
 			}
 			// process default styles based on simple 2-level name-based CSS selector
 			if (parentElementState.elementName != null) {
-				String twoLevelCssSelector = parentElementState.elementName+" "+localName;
+				String twoLevelCssSelector = parentElementState.elementName + " " + localName;
 				defaultCssStyle = elementToCssStyle.get(twoLevelCssSelector);
 				if (defaultCssStyle != null) {
-					cssStyleManager.processCssStyles(elementState.fontState,parentElementState.fontState,defaultCssStyle);
+					cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState,
+							defaultCssStyle);
 				}
 			}
 
 			int numAtts = atts.getLength();
-			for (int x = 0;x<numAtts;++x) {
+			for (int x = 0; x < numAtts; ++x) {
 				String attName = atts.getLocalName(x);
 				if ("style".equals(attName)) {
 					String styleValue = atts.getValue(x);
-					cssStyleManager.processCssStyles(elementState.fontState,parentElementState.fontState,styleValue);
+					cssStyleManager.processCssStyles(elementState.fontState, parentElementState.fontState, styleValue);
 				} else if ("id".equals(attName)) {
 					elementState.addAnnotation(new IdAnnotation(atts.getValue(x)));
 				} else if ("href".equals(attName)) {
 					elementState.addAnnotation(new AnchorHrefAnnotation(atts.getValue(x)));
 				} else if ("href".equals(attName)) {
-					elementState.addAnnotation(new TitleAnnotation(atts.getValue(x),localName));
+					elementState.addAnnotation(new TitleAnnotation(atts.getValue(x), localName));
 				} else if ("name".equals(attName)) {
 					if ("a".equals(localName)) {
 						elementState.addAnnotation(new AnchorNameAnnotation(atts.getValue(x)));
@@ -617,38 +639,36 @@ public class HtmlTextPresentationParser {
 				} else if ("class".equals(attName)) {
 					elementState.addAnnotation(new ClassAnnotation(atts.getValue(x)));
 				} else if ("title".equals(attName)) {
-					elementState.addAnnotation(new TitleAnnotation(atts.getValue(x),localName));
+					elementState.addAnnotation(new TitleAnnotation(atts.getValue(x), localName));
 				}
 			}
 			if ("li".equals(localName)) {
-				ElementState parentState = state.size() > 1?state.get(state.size()-2):null;
-				boolean numeric = parentState==null?false:parentState.elementName.equals("ol");
-				
+				ElementState parentState = state.size() > 1 ? state.get(state.size() - 2) : null;
+				boolean numeric = parentState == null ? false : parentState.elementName.equals("ol");
+
 				int index = ++parentState.orderedListIndex;
 				if (lastNewlineOffset != getOffset()) {
-					emitChars(state.peek(),"\n".toCharArray());
+					emitChars(state.peek(), "\n".toCharArray());
 				}
 				if (numeric) {
-					elementState.prefix = (Integer.toString(index)+". ").toCharArray();
+					elementState.prefix = (Integer.toString(index) + ". ").toCharArray();
 				} else {
-					elementState.prefix = new char[] { 
-							calculateBulletChar(elementState.indentLevel),' ',' '
-							};
+					elementState.prefix = new char[] { calculateBulletChar(elementState.indentLevel), ' ', ' ' };
 					elementState.addPrefixAnnotation(new BulletAnnotation(elementState.indentLevel));
 				}
 			} else if ("p".equals(localName)) {
 				// account for the case of a paragraph following an unescaped block (eg: Textile with first char being a space).
 				if (out.length() > 0) {
-					char lastChar = out.charAt(out.length()-1);
+					char lastChar = out.charAt(out.length() - 1);
 					if (lastChar != '\n') {
-						emitChars(state.peek(),"\n\n".toCharArray());
+						emitChars(state.peek(), "\n\n".toCharArray());
 					}
 				}
 			}
 		}
-		
+
 		private char calculateBulletChar(int indentLevel) {
-			return bulletChars[Math.min(indentLevel-1, bulletChars.length-1)];
+			return bulletChars[Math.min(indentLevel - 1, bulletChars.length - 1)];
 		}
 
 		public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
@@ -662,10 +682,10 @@ public class HtmlTextPresentationParser {
 		}
 
 		public void endDocument() throws SAXException {
-			
+
 			// bug# 236787 trim trailing whitespace and adjust style ranges.
 			trimTrailingWhitespace();
-			
+
 			text = out.toString();
 			presentation.replaceStyleRanges(styleRanges.toArray(new StyleRange[styleRanges.size()]));
 			if (annotationModel != null) {
@@ -677,7 +697,7 @@ public class HtmlTextPresentationParser {
 						annotationIterator.remove();
 					}
 				}
-				for (Map.Entry<Annotation, Position> a: annotationToPosition.entrySet()) {
+				for (Map.Entry<Annotation, Position> a : annotationToPosition.entrySet()) {
 					annotationModel.addAnnotation(a.getKey(), a.getValue());
 				}
 			}
@@ -690,14 +710,14 @@ public class HtmlTextPresentationParser {
 		 */
 		private void trimTrailingWhitespace() {
 			int length = out.length();
-			for (int x = length-1;x>=0;--x) {
+			for (int x = length - 1; x >= 0; --x) {
 				if (Character.isWhitespace(out.charAt(x))) {
 					length = x;
 				} else {
 					break;
 				}
 			}
-			if (length != out.length()) { 
+			if (length != out.length()) {
 				out.delete(length, out.length());
 				Iterator<StyleRange> styleIt = styleRanges.iterator();
 				while (styleIt.hasNext()) {
@@ -705,28 +725,36 @@ public class HtmlTextPresentationParser {
 					if (styleRange.start >= length) {
 						styleIt.remove();
 					} else {
-						int styleEnd = styleRange.start+styleRange.length;
+						int styleEnd = styleRange.start + styleRange.length;
 						if (styleEnd > length) {
-							styleRange.length -= styleEnd-length;
+							styleRange.length -= styleEnd - length;
 						}
 					}
 				}
 			}
 		}
-		
+
 		public void startDocument() throws SAXException {
-			ElementState elementState = state.push(new ElementState(null,"<document>",new FontState(),getOffset()));
+			ElementState elementState = state.push(new ElementState(null, "<document>", new FontState(), getOffset()));
 			elementState.fontState.size = defaultFont.getFontData()[0].getHeight();
-			elementState.fontState.foreground = defaultForeground==null?null:defaultForeground.getRGB();
-			elementState.fontState.background = defaultBackground==null?null:defaultBackground.getRGB();
+			elementState.fontState.foreground = defaultForeground == null ? null : defaultForeground.getRGB();
+			elementState.fontState.background = defaultBackground == null ? null : defaultBackground.getRGB();
 		}
-		public void processingInstruction(String target, String data) throws SAXException {}
-		public void skippedEntity(String name) throws SAXException {}
-		public void setDocumentLocator(Locator locator) {}
-		public void startPrefixMapping(String prefix, String uri) throws SAXException {}
-		public void endPrefixMapping(String prefix) throws SAXException {}
 
+		public void processingInstruction(String target, String data) throws SAXException {
+		}
 
+		public void skippedEntity(String name) throws SAXException {
+		}
+
+		public void setDocumentLocator(Locator locator) {
+		}
+
+		public void startPrefixMapping(String prefix, String uri) throws SAXException {
+		}
+
+		public void endPrefixMapping(String prefix) throws SAXException {
+		}
 
 		private void emitStyles() {
 			if (state.isEmpty()) {
@@ -743,11 +771,10 @@ public class HtmlTextPresentationParser {
 				return;
 			}
 
-			int length = getOffset()-offset;
-			StyleRange styleRange = cssStyleManager.createStyleRange(elementState.fontState, offset,length);
+			int length = getOffset() - offset;
+			StyleRange styleRange = cssStyleManager.createStyleRange(elementState.fontState, offset, length);
 			styleRanges.add(styleRange);
 		}
-
 
 		private int getOffset() {
 			return out.length();
@@ -755,7 +782,7 @@ public class HtmlTextPresentationParser {
 
 	}
 
-	private static Map<String,char[]> elementToCharacters = new HashMap<String, char[]>();
+	private static Map<String, char[]> elementToCharacters = new HashMap<String, char[]>();
 	static {
 		elementToCharacters.put("p", "\n\n".toCharArray());
 		elementToCharacters.put("br", "\n".toCharArray());
@@ -777,7 +804,8 @@ public class HtmlTextPresentationParser {
 		elementToCharacters.put("dt", "\n".toCharArray());
 		elementToCharacters.put("dd", "\n".toCharArray());
 	}
-	private static Map<String,String> elementToCssStyle = new HashMap<String, String>();
+
+	private static Map<String, String> elementToCssStyle = new HashMap<String, String>();
 	static {
 		// these are the default styles that would normally be applied by a browser
 		elementToCssStyle.put("h1", "font-size: 150%; font-weight: bold;");
@@ -806,8 +834,8 @@ public class HtmlTextPresentationParser {
 	}
 
 	private GC gc;
-	private int maxWidth;
 
+	private int maxWidth;
 
 	private static String trimLeft(String text) {
 		final int len = text.length();
@@ -816,7 +844,7 @@ public class HtmlTextPresentationParser {
 		while ((st < len) && (text.charAt(st) <= ' ')) {
 			st++;
 		}
-		return st > 0? text.substring(st, len) : text;
+		return st > 0 ? text.substring(st, len) : text;
 	}
 
 	public List<Annotation> computePrefixAnnotations(ElementState elementState) {
@@ -853,10 +881,9 @@ public class HtmlTextPresentationParser {
 	}
 
 	/**
-	 * get the bullet characters that are to be used when presenting bulleted lists.
-	 * For an indent level of one, the first character is used, for indent level 2 the second character is used,
-	 * etc unless the indent level exceeds the number of characters provided in which case the last character
-	 * is used.
+	 * get the bullet characters that are to be used when presenting bulleted lists. For an indent level of one, the
+	 * first character is used, for indent level 2 the second character is used, etc unless the indent level exceeds the
+	 * number of characters provided in which case the last character is used.
 	 * 
 	 * Note that not all characters are available with all fonts.
 	 */
@@ -865,10 +892,9 @@ public class HtmlTextPresentationParser {
 	}
 
 	/**
-	 * set the bullet characters that are to be used when presenting bulleted lists.
-	 * For an indent level of one, the first character is used, for indent level 2 the second character is used,
-	 * etc unless the indent level exceeds the number of characters provided in which case the last character
-	 * is used.
+	 * set the bullet characters that are to be used when presenting bulleted lists. For an indent level of one, the
+	 * first character is used, for indent level 2 the second character is used, etc unless the indent level exceeds the
+	 * number of characters provided in which case the last character is used.
 	 * 
 	 * Note that not all characters are available with all fonts.
 	 */

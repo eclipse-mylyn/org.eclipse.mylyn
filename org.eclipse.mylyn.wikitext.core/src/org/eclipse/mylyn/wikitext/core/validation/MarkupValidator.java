@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class MarkupValidator {
 
 	private static final Comparator<ValidationProblem> PROBLEM_COMPARATOR = new Comparator<ValidationProblem>() {
-		public int compare(ValidationProblem o1,ValidationProblem o2) {
+		public int compare(ValidationProblem o1, ValidationProblem o2) {
 			if (o1 == o2) {
 				return 0;
 			}
@@ -55,41 +55,41 @@ public class MarkupValidator {
 
 	private List<ValidationRule> rules = new ArrayList<ValidationRule>();
 
-	public List<ValidationProblem> validate(IProgressMonitor monitor,String markup) {
-		return validate(monitor,markup,0,markup.length());
+	public List<ValidationProblem> validate(IProgressMonitor monitor, String markup) {
+		return validate(monitor, markup, 0, markup.length());
 	}
 
-	public List<ValidationProblem> validate(IProgressMonitor monitor,String markup,int offset,int length) {
-		final int totalWork = length == 0?1:length*rules.size();
+	public List<ValidationProblem> validate(IProgressMonitor monitor, String markup, int offset, int length) {
+		final int totalWork = length == 0 ? 1 : length * rules.size();
 		monitor.beginTask("Markup Validation", totalWork);
 		try {
 			if (length == 0 || rules.isEmpty()) {
 				return Collections.emptyList();
 			}
-			int end = offset+length;
+			int end = offset + length;
 			if (end > markup.length()) {
 				end = markup.length();
 			}
 			List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
 
-			for (ValidationRule rule: rules) {
+			for (ValidationRule rule : rules) {
 				int o = offset;
 				while (o < end) {
-					ValidationProblem problem = rule.findProblem(markup, o, length - (o-offset));
+					ValidationProblem problem = rule.findProblem(markup, o, length - (o - offset));
 					if (problem == null) {
 						break;
 					}
 					problems.add(problem);
-					int newO = problem.getOffset()+problem.getLength();
+					int newO = problem.getOffset() + problem.getLength();
 					if (newO <= o) {
 						break;
 					}
-					monitor.worked(newO-o);
+					monitor.worked(newO - o);
 					o = newO;
 				}
 			}
 			if (!problems.isEmpty()) {
-				Collections.sort(problems,PROBLEM_COMPARATOR);
+				Collections.sort(problems, PROBLEM_COMPARATOR);
 			}
 			return problems;
 		} finally {

@@ -10,8 +10,7 @@ import org.eclipse.swt.graphics.Point;
 
 public class BulletDrawingStrategy implements IDrawingStrategy {
 
-	public void draw(Annotation annotation, GC gc, StyledText textWidget,
-			int offset, int length, Color color) {
+	public void draw(Annotation annotation, GC gc, StyledText textWidget, int offset, int length, Color color) {
 		BulletAnnotation bullet = (BulletAnnotation) annotation;
 		if (gc != null) {
 			final Color foreground = gc.getForeground();
@@ -29,31 +28,31 @@ public class BulletDrawingStrategy implements IDrawingStrategy {
 				left.y = right.y;
 			}
 			int baseline = textWidget.getBaseline(offset);
-			
+
 			int lineHeight = textWidget.getLineHeight(offset);
 
-			int vcenter = left.y + (baseline/2)+(baseline/4);
-			int hcenter = left.x + ((right.x - left.x)/2);
-			 
+			int vcenter = left.y + (baseline / 2) + (baseline / 4);
+			int hcenter = left.x + ((right.x - left.x) / 2);
+
 			gc.setLineWidth(0); // NOTE: 0 means width is 1 but with optimized performance
 			gc.setLineStyle(SWT.LINE_SOLID);
-			
+
 			// erase whatever character was there
-			gc.fillRectangle(left.x, left.y, right.x-left.x, lineHeight);
-			
+			gc.fillRectangle(left.x, left.y, right.x - left.x, lineHeight);
+
 			// now paint the bullet
 			switch (bullet.getIndentLevel()) {
 			case 1: // round solid bullet
 				gc.setBackground(color);
-				gc.fillOval(hcenter-3, vcenter-2, 5, 5);
+				gc.fillOval(hcenter - 3, vcenter - 2, 5, 5);
 				break;
 			case 2: // round empty bullet
 				gc.setForeground(color);
-				gc.drawOval(hcenter-3, vcenter-3, 5, 5);
+				gc.drawOval(hcenter - 3, vcenter - 3, 5, 5);
 				break;
 			default: // square bullet
 				gc.setBackground(color);
-				gc.fillRectangle(hcenter-3, vcenter-2, 5, 5);
+				gc.fillRectangle(hcenter - 3, vcenter - 2, 5, 5);
 				break;
 			}
 			gc.setForeground(foreground);

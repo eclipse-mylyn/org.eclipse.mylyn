@@ -21,8 +21,8 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MultiReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension {
@@ -48,35 +48,35 @@ public class MultiReconcilingStrategy implements IReconcilingStrategy, IReconcil
 	}
 
 	public void initialReconcile() {
-		for (IReconcilingStrategy strategy: strategies) {
+		for (IReconcilingStrategy strategy : strategies) {
 			if (strategy instanceof IReconcilingStrategyExtension) {
-				((IReconcilingStrategyExtension)strategy).initialReconcile();
+				((IReconcilingStrategyExtension) strategy).initialReconcile();
 			}
 		}
 	}
 
 	public void setProgressMonitor(IProgressMonitor monitor) {
-		for (IReconcilingStrategy strategy: strategies) {
+		for (IReconcilingStrategy strategy : strategies) {
 			if (strategy instanceof IReconcilingStrategyExtension) {
-				((IReconcilingStrategyExtension)strategy).setProgressMonitor(monitor);
+				((IReconcilingStrategyExtension) strategy).setProgressMonitor(monitor);
 			}
 		}
 	}
 
 	public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion) {
-		for (IReconcilingStrategy strategy: strategies) {
+		for (IReconcilingStrategy strategy : strategies) {
 			strategy.reconcile(dirtyRegion, subRegion);
 		}
 	}
 
 	public void reconcile(IRegion partition) {
-		for (IReconcilingStrategy strategy: strategies) {
+		for (IReconcilingStrategy strategy : strategies) {
 			strategy.reconcile(partition);
 		}
 	}
 
 	public void setDocument(IDocument document) {
-		for (IReconcilingStrategy strategy: strategies) {
+		for (IReconcilingStrategy strategy : strategies) {
 			strategy.setDocument(document);
 		}
 	}

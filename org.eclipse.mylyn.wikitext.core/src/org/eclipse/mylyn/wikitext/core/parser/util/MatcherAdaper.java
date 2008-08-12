@@ -11,8 +11,8 @@
 package org.eclipse.mylyn.wikitext.core.parser.util;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MatcherAdaper implements Matcher {

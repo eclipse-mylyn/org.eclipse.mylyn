@@ -18,27 +18,27 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.EntityWrappingReplace
 import junit.framework.TestCase;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class EntityWrappingReplacementTokenTest extends TestCase {
 
 	public void testFindQuotesAtStartOfLine() {
-		EntityWrappingReplacementToken token = new EntityWrappingReplacementToken("\"","<",">");
+		EntityWrappingReplacementToken token = new EntityWrappingReplacementToken("\"", "<", ">");
 
 		Pattern pattern = Pattern.compile(token.getPattern(0));
 		Matcher matcher = pattern.matcher("\"some text\" more text");
 		assertTrue(matcher.find());
-		assertEquals(0,matcher.start());
+		assertEquals(0, matcher.start());
 	}
 
 	public void testFindQuotesOffsetInLine() {
-		EntityWrappingReplacementToken token = new EntityWrappingReplacementToken("\"","<",">");
+		EntityWrappingReplacementToken token = new EntityWrappingReplacementToken("\"", "<", ">");
 
 		Pattern pattern = Pattern.compile(token.getPattern(0));
 		Matcher matcher = pattern.matcher("  \"some text\" more text");
 		assertTrue(matcher.find());
-		assertEquals(2,matcher.start());
+		assertEquals(2, matcher.start());
 	}
 }

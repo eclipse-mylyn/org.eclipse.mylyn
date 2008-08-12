@@ -29,16 +29,20 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Font;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MarkupTokenScanner implements ITokenScanner {
 
 	private Token currentToken = null;
+
 	private Iterator<Token> tokenIt = null;
+
 	private CssStyleManager styleManager;
+
 	private FontState defaultState;
+
 	private Preferences preferences;
 
 	public MarkupTokenScanner(Font defaultFont) {
@@ -49,11 +53,11 @@ public class MarkupTokenScanner implements ITokenScanner {
 	}
 
 	public int getTokenLength() {
-		return currentToken == null?-1:currentToken.getLength();
+		return currentToken == null ? -1 : currentToken.getLength();
 	}
 
 	public int getTokenOffset() {
-		return currentToken == null?-1:currentToken.getOffset();
+		return currentToken == null ? -1 : currentToken.getOffset();
 	}
 
 	public IToken nextToken() {
@@ -77,17 +81,19 @@ public class MarkupTokenScanner implements ITokenScanner {
 			if (partitioning != null) {
 				tokens = new ArrayList<Token>();
 
-				ITypedRegion[] partitions = ((FastMarkupPartitioner)partitioner).getScanner().computePartitions(document, offset, length);
+				ITypedRegion[] partitions = ((FastMarkupPartitioner) partitioner).getScanner().computePartitions(
+						document, offset, length);
 				int lastEnd = offset;
 
 				Token defaultToken;
 				{
 					StyleRange styleRange = styleManager.createStyleRange(defaultState, 0, 1);
-					TextAttribute textAttribute = new TextAttribute(styleRange.foreground,styleRange.background,styleRange.fontStyle,styleRange.font);
-					defaultToken = new Token(defaultState,textAttribute,offset,length);
+					TextAttribute textAttribute = new TextAttribute(styleRange.foreground, styleRange.background,
+							styleRange.fontStyle, styleRange.font);
+					defaultToken = new Token(defaultState, textAttribute, offset, length);
 				}
 				if (partitions != null) {
-					for (ITypedRegion region: partitions) {
+					for (ITypedRegion region : partitions) {
 						if (region.getOffset() >= (offset + length)) {
 							break;
 						}
@@ -98,7 +104,8 @@ public class MarkupTokenScanner implements ITokenScanner {
 							MarkupPartition partition = (MarkupPartition) region;
 
 							if (lastEnd < partition.getOffset()) {
-								Token blockBridgeToken = new Token(defaultToken.fontState,defaultToken.getData(),lastEnd,partition.getOffset()-lastEnd);
+								Token blockBridgeToken = new Token(defaultToken.fontState, defaultToken.getData(),
+										lastEnd, partition.getOffset() - lastEnd);
 								addToken(tokens, blockBridgeToken);
 							}
 
@@ -108,41 +115,43 @@ public class MarkupTokenScanner implements ITokenScanner {
 								blockToken = defaultToken;
 							}
 							if (!partition.getBlock().isSpansComputed()) {
-								fastMarkupPartitioner.reparse(document,partition.getBlock());
+								fastMarkupPartitioner.reparse(document, partition.getBlock());
 							}
 							List<Span> spans = partition.getSpans();
 							if (spans != null) {
-								for (Span span: spans) {
+								for (Span span : spans) {
 									if (span.getOffset() < lastEnd) {
 										continue;
 									}
-									Token spanToken = createToken(blockToken.getFontState(),span);
+									Token spanToken = createToken(blockToken.getFontState(), span);
 									if (spanToken != null) {
-										int blockTokenStartOffset = lastEnd < offset?offset:lastEnd;
+										int blockTokenStartOffset = lastEnd < offset ? offset : lastEnd;
 										if (blockTokenStartOffset < spanToken.getOffset()) {
-											int blockTokenLength = spanToken.getOffset()-blockTokenStartOffset;
-											final Token blockBridgeToken = new Token(blockToken.fontState,blockToken.getData(),blockTokenStartOffset,blockTokenLength);
-											addToken(tokens,blockBridgeToken);
+											int blockTokenLength = spanToken.getOffset() - blockTokenStartOffset;
+											final Token blockBridgeToken = new Token(blockToken.fontState,
+													blockToken.getData(), blockTokenStartOffset, blockTokenLength);
+											addToken(tokens, blockBridgeToken);
 										}
 										addToken(tokens, spanToken);
-										lastEnd = spanToken.offset+spanToken.length;
-										if (lastEnd > partition.getOffset()+partition.getLength()) {
+										lastEnd = spanToken.offset + spanToken.length;
+										if (lastEnd > partition.getOffset() + partition.getLength()) {
 											throw new IllegalStateException();
 										}
 									}
 								}
 							}
-							final int partitionEnd = partition.getOffset()+partition.getLength();
+							final int partitionEnd = partition.getOffset() + partition.getLength();
 							if (lastEnd < partitionEnd) {
-								final int realLastEnd = Math.max(lastEnd,partition.getOffset());
-								int diff = (partitionEnd)-realLastEnd;
+								final int realLastEnd = Math.max(lastEnd, partition.getOffset());
+								int diff = (partitionEnd) - realLastEnd;
 								if (diff > 0) {
 									int blockTokenStartOffset = realLastEnd;
 									int blockTokenLength = diff;
-									final Token blockBridgeToken = new Token(blockToken.fontState,blockToken.getData(),blockTokenStartOffset,blockTokenLength);
-									addToken(tokens,blockBridgeToken);
-									lastEnd = blockTokenStartOffset+blockTokenLength;
-									if (lastEnd > partition.getOffset()+partition.getLength()) {
+									final Token blockBridgeToken = new Token(blockToken.fontState,
+											blockToken.getData(), blockTokenStartOffset, blockTokenLength);
+									addToken(tokens, blockBridgeToken);
+									lastEnd = blockTokenStartOffset + blockTokenLength;
+									if (lastEnd > partition.getOffset() + partition.getLength()) {
 										throw new IllegalStateException();
 									}
 								}
@@ -150,8 +159,9 @@ public class MarkupTokenScanner implements ITokenScanner {
 						}
 					}
 				}
-				if (lastEnd < (offset+length)) {
-					addToken(tokens,new Token(defaultToken.fontState,defaultToken.getData(),lastEnd,length-(lastEnd-offset)));
+				if (lastEnd < (offset + length)) {
+					addToken(tokens, new Token(defaultToken.fontState, defaultToken.getData(), lastEnd, length
+							- (lastEnd - offset)));
 				}
 			}
 		}
@@ -165,7 +175,7 @@ public class MarkupTokenScanner implements ITokenScanner {
 				Token next = it.next();
 				if (next.getOffset() < offset) {
 					it.remove();
-				} else if (next.getOffset()+next.getLength() > (offset+length)) {
+				} else if (next.getOffset() + next.getLength() > (offset + length)) {
 					it.remove();
 				}
 			}
@@ -181,22 +191,22 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	private void checkAddToken(List<Token> tokens, Token newToken) {
 		if (newToken.getLength() <= 0) {
-			throw new IllegalStateException(String.format("Bad token length %s",newToken.getLength()));
+			throw new IllegalStateException(String.format("Bad token length %s", newToken.getLength()));
 		}
 		if (newToken.getOffset() < 0) {
-			throw new IllegalStateException(String.format("Bad token offset %s",newToken.getOffset()));
+			throw new IllegalStateException(String.format("Bad token offset %s", newToken.getOffset()));
 		}
 		if (!tokens.isEmpty()) {
-			Token previous = tokens.get(tokens.size()-1);
+			Token previous = tokens.get(tokens.size() - 1);
 			if (previous.getOffset() >= newToken.getOffset()) {
-				throw new IllegalStateException("New token starts on or before previous",previous.created);
-			} else if (previous.getOffset()+previous.getLength() > newToken.getOffset()) {
-				throw new IllegalStateException("New token starts before the end of the previous",previous.created);
+				throw new IllegalStateException("New token starts on or before previous", previous.created);
+			} else if (previous.getOffset() + previous.getLength() > newToken.getOffset()) {
+				throw new IllegalStateException("New token starts before the end of the previous", previous.created);
 			}
 		}
 	}
 
-	private Token createToken(FontState parentState,Span span) {
+	private Token createToken(FontState parentState, Span span) {
 		if (span.getLength() == 0) {
 			return null;
 		}
@@ -249,15 +259,16 @@ public class MarkupTokenScanner implements ITokenScanner {
 		}
 		FontState fontState = new FontState(parentState);
 		if (cssStyles != null) {
-			styleManager.processCssStyles(fontState,parentState, cssStyles);
+			styleManager.processCssStyles(fontState, parentState, cssStyles);
 		}
 		if (span.getAttributes().getCssStyle() != null) {
-			styleManager.processCssStyles(fontState,parentState, span.getAttributes().getCssStyle());
+			styleManager.processCssStyles(fontState, parentState, span.getAttributes().getCssStyle());
 		}
 		StyleRange styleRange = styleManager.createStyleRange(fontState, 0, 1);
 
-		TextAttribute textAttribute = new TextAttribute(styleRange.foreground,styleRange.background,styleRange.fontStyle,styleRange.font);
-		return new Token(fontState,textAttribute,span.getOffset(),span.getLength());
+		TextAttribute textAttribute = new TextAttribute(styleRange.foreground, styleRange.background,
+				styleRange.fontStyle, styleRange.font);
+		return new Token(fontState, textAttribute, span.getOffset(), span.getLength());
 	}
 
 	private Token createToken(MarkupPartition partition) {
@@ -265,10 +276,10 @@ public class MarkupTokenScanner implements ITokenScanner {
 			return null;
 		}
 		FontState fontState = new FontState(defaultState);
-		boolean hasStyles = processStyles(partition.getBlock(),partition, fontState);
+		boolean hasStyles = processStyles(partition.getBlock(), partition, fontState);
 
 		if (partition.getBlock().getAttributes().getCssStyle() != null) {
-			styleManager.processCssStyles(fontState,defaultState, partition.getBlock().getAttributes().getCssStyle());
+			styleManager.processCssStyles(fontState, defaultState, partition.getBlock().getAttributes().getCssStyle());
 		} else {
 			if (!hasStyles) {
 				return null;
@@ -276,27 +287,29 @@ public class MarkupTokenScanner implements ITokenScanner {
 		}
 		StyleRange styleRange = styleManager.createStyleRange(fontState, 0, 1);
 
-		TextAttribute textAttribute = new TextAttribute(styleRange.foreground,styleRange.background,styleRange.fontStyle,styleRange.font);
-		return new Token(fontState,textAttribute,partition.getOffset(),partition.getLength());
+		TextAttribute textAttribute = new TextAttribute(styleRange.foreground, styleRange.background,
+				styleRange.fontStyle, styleRange.font);
+		return new Token(fontState, textAttribute, partition.getOffset(), partition.getLength());
 	}
 
-	private boolean processStyles(Block block,MarkupPartition partition, FontState fontState) {
+	private boolean processStyles(Block block, MarkupPartition partition, FontState fontState) {
 		boolean hasStyles = false;
 		if (block.getParent() != null) {
-			hasStyles = processStyles(block.getParent(),partition,fontState);
+			hasStyles = processStyles(block.getParent(), partition, fontState);
 		}
-		String cssStyles = computeCssStyles(block,partition);
+		String cssStyles = computeCssStyles(block, partition);
 		if (cssStyles != null) {
 			hasStyles = true;
-			styleManager.processCssStyles(fontState,defaultState, cssStyles);
+			styleManager.processCssStyles(fontState, defaultState, cssStyles);
 		}
 		return hasStyles;
 	}
 
-	private String computeCssStyles(Block block,MarkupPartition partition) {
+	private String computeCssStyles(Block block, MarkupPartition partition) {
 		String cssStyles = null;
 		if (block.getHeadingLevel() > 0) {
-			cssStyles = preferences.getCssByBlockModifierType().get(Preferences.HEADING_PREFERENCES[block.getHeadingLevel()]);
+			cssStyles = preferences.getCssByBlockModifierType().get(
+					Preferences.HEADING_PREFERENCES[block.getHeadingLevel()]);
 		} else if (block.getType() != null) {
 			String key = null;
 			switch (block.getType()) {
@@ -318,12 +331,14 @@ public class MarkupTokenScanner implements ITokenScanner {
 	private static class Token extends org.eclipse.jface.text.rules.Token {
 
 		private final int offset;
+
 		private final int length;
+
 		private final FontState fontState;
 
 		private final Exception created = new Exception();
 
-		public Token(FontState fontState,TextAttribute attribute,int offset,int length) {
+		public Token(FontState fontState, TextAttribute attribute, int offset, int length) {
 			super(attribute);
 			this.fontState = fontState;
 			if (offset < 0) {

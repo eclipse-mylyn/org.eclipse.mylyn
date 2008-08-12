@@ -19,51 +19,65 @@ import org.eclipse.jface.preference.IPreferenceStore;
 // FIXME: move to internal
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class Preferences {
 
 	private static final Pattern BAD_CHAR_PATTERN = Pattern.compile("[^a-zA-Z0-9]");
+
 	public static final String PHRASE_CODE = "@code@";
+
 	public static final String PHRASE_SPAN = "%span%";
+
 	public static final String PHRASE_SUBSCRIPT = "~subscript~";
+
 	public static final String PHRASE_SUPERSCRIPT = "^superscript^";
+
 	public static final String PHRASE_INSERTED_TEXT = "+inserted text+";
+
 	public static final String PHRASE_DELETED_TEXT = "-deleted text-";
+
 	public static final String PHRASE_CITATION = "??citation??";
+
 	public static final String PHRASE_BOLD = "**bold**";
+
 	public static final String PHRASE_ITALIC = "__italic__";
+
 	public static final String PHRASE_STRONG = "*strong*";
+
 	public static final String PHRASE_EMPHASIS = "_emphasis_";
+
 	public static final String PHRASE_MONOSPACE = "monospace";
+
 	public static final String PHRASE_UNDERLINED = "underlined";
 
 	public static final String BLOCK_QUOTE = "bq.";
+
 	public static final String BLOCK_PRE = "pre.";
+
 	public static final String BLOCK_BC = "bc.";
+
 	public static final String BLOCK_H6 = "h6.";
+
 	public static final String BLOCK_H5 = "h5.";
+
 	public static final String BLOCK_H4 = "h4.";
+
 	public static final String BLOCK_H3 = "h3.";
+
 	public static final String BLOCK_H2 = "h2.";
+
 	public static final String BLOCK_H1 = "h1.";
 
 	/**
 	 * heading preferences key indexed by level (0 is null, 1 is {@link #BLOCK_H1}, etc.)
 	 */
-	public static final String[] HEADING_PREFERENCES = new String[] {
-		null,
-		BLOCK_H1,
-		BLOCK_H2,
-		BLOCK_H3,
-		BLOCK_H4,
-		BLOCK_H5,
-		BLOCK_H6
-	};
+	public static final String[] HEADING_PREFERENCES = new String[] { null, BLOCK_H1, BLOCK_H2, BLOCK_H3, BLOCK_H4,
+			BLOCK_H5, BLOCK_H6 };
 
-	private Map<String,String> cssByBlockModifierType = new LinkedHashMap<String, String>();
+	private Map<String, String> cssByBlockModifierType = new LinkedHashMap<String, String>();
 	{
 		cssByBlockModifierType.put(BLOCK_H1, "font-size: 150%; font-weight: bold;");
 		cssByBlockModifierType.put(BLOCK_H2, "font-size: 125%; font-weight: bold;");
@@ -75,7 +89,8 @@ public class Preferences {
 		cssByBlockModifierType.put(BLOCK_PRE, "font-family: monospace; color: Blue;");
 		cssByBlockModifierType.put(BLOCK_QUOTE, "font-family: monospace; color: rgb(38,86,145);");
 	}
-	private Map<String,String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
+
+	private Map<String, String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
 	{
 
 		cssByPhraseModifierType.put(PHRASE_EMPHASIS, "font-style: italic;");
@@ -103,11 +118,14 @@ public class Preferences {
 
 	/**
 	 * Save the settings to the given store
-	 * @param store the store to which the settings should be saved
-	 * @param asDefault if true, then the settings are saved as defaults.
+	 * 
+	 * @param store
+	 *            the store to which the settings should be saved
+	 * @param asDefault
+	 *            if true, then the settings are saved as defaults.
 	 */
-	public void save(IPreferenceStore store,boolean asDefault) {
-		for (Map.Entry<String,String> ent: cssByBlockModifierType.entrySet()) {
+	public void save(IPreferenceStore store, boolean asDefault) {
+		for (Map.Entry<String, String> ent : cssByBlockModifierType.entrySet()) {
 			String propKey = toPreferenceKey(ent.getKey(), true);
 			if (asDefault) {
 				store.setDefault(propKey, ent.getValue());
@@ -115,7 +133,7 @@ public class Preferences {
 				store.setValue(propKey, ent.getValue());
 			}
 		}
-		for (Map.Entry<String,String> ent: cssByPhraseModifierType.entrySet()) {
+		for (Map.Entry<String, String> ent : cssByPhraseModifierType.entrySet()) {
 			String propKey = toPreferenceKey(ent.getKey(), false);
 			if (asDefault) {
 				store.setDefault(propKey, ent.getValue());
@@ -125,13 +143,13 @@ public class Preferences {
 		}
 	}
 
-	public static String toPreferenceKey(String key,boolean block) {
-		String propKey = (block?"block-":"phrase-")+BAD_CHAR_PATTERN.matcher(key).replaceAll("");
+	public static String toPreferenceKey(String key, boolean block) {
+		String propKey = (block ? "block-" : "phrase-") + BAD_CHAR_PATTERN.matcher(key).replaceAll("");
 		return propKey;
 	}
 
 	public void load(IPreferenceStore store) {
-		for (Map.Entry<String,String> ent: cssByBlockModifierType.entrySet()) {
+		for (Map.Entry<String, String> ent : cssByBlockModifierType.entrySet()) {
 			String propKey = toPreferenceKey(ent.getKey(), true);
 
 			String value = store.getString(propKey);
@@ -139,7 +157,7 @@ public class Preferences {
 				ent.setValue(value);
 			}
 		}
-		for (Map.Entry<String,String> ent: cssByPhraseModifierType.entrySet()) {
+		for (Map.Entry<String, String> ent : cssByPhraseModifierType.entrySet()) {
 			String propKey = toPreferenceKey(ent.getKey(), false);
 			String value = store.getString(propKey);
 			if (value != null) {

@@ -14,27 +14,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class OutlineItem {
 
 	private final OutlineItem parent;
+
 	private final int level;
+
 	private final List<OutlineItem> children = new ArrayList<OutlineItem>();
+
 	private final int offset;
+
 	private final int length;
+
 	private final String id;
+
 	private String label;
+
 	private String kind;
+
 	private int childOffset;
+
 	private String tooltip;
 
-	public OutlineItem(OutlineItem parent,int level,String id, int offset, int length, String label) {
+	public OutlineItem(OutlineItem parent, int level, String id, int offset, int length, String label) {
 		super();
 		this.parent = parent;
-		this.level = (parent == null)?0:level;
+		this.level = (parent == null) ? 0 : level;
 		if (parent != null && level < parent.getLevel()) {
 			throw new IllegalArgumentException();
 		}
@@ -118,7 +127,7 @@ public class OutlineItem {
 		if (parent == null) {
 			return "";
 		}
-		return getParent().calculatePositionKey()+"/"+kind+childOffset;
+		return getParent().calculatePositionKey() + "/" + kind + childOffset;
 	}
 
 	private void addChild(OutlineItem outlineItem) {
@@ -136,6 +145,7 @@ public class OutlineItem {
 	private static class NearestItemVisitor implements Visitor {
 
 		private OutlineItem nearest = null;
+
 		private int offset;
 
 		public NearestItemVisitor(int offset) {
@@ -168,14 +178,15 @@ public class OutlineItem {
 	}
 
 	public int distance(int offset) {
-		int startDistance = this.offset-offset;
+		int startDistance = this.offset - offset;
 
 		return startDistance;
 	}
 
 	public interface Visitor {
 		/**
-		 * @param item the item to visit
+		 * @param item
+		 *            the item to visit
 		 * 
 		 * @return true if the items children should be visited
 		 */
@@ -184,7 +195,7 @@ public class OutlineItem {
 
 	public void accept(Visitor visitor) {
 		if (visitor.visit(this)) {
-			for (OutlineItem item: getChildren()) {
+			for (OutlineItem item : getChildren()) {
 				item.accept(visitor);
 			}
 		}
@@ -197,6 +208,5 @@ public class OutlineItem {
 	public String getTooltip() {
 		return tooltip;
 	}
-
 
 }

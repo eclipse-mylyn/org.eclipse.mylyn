@@ -19,28 +19,32 @@ import java.util.Set;
 import org.eclipse.jface.text.templates.Template;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class Templates {
 
 	private String markupLanguageName;
+
 	private List<Template> template = new ArrayList<Template>();
+
 	private Set<Template> blockTemplates = new HashSet<Template>();
 
 	private Templates parent;
-	
+
 	public void setMarkupLanguageName(String markupLanguageName) {
 		this.markupLanguageName = markupLanguageName;
 	}
+
 	public String getMarkupLanguageName() {
 		return markupLanguageName;
 	}
+
 	public List<Template> getTemplate() {
 		if (parent != null) {
 			List<Template> parentTemplate = parent.getTemplate();
-			List<Template> list = new ArrayList<Template>(template.size()+parentTemplate.size());
+			List<Template> list = new ArrayList<Template>(template.size() + parentTemplate.size());
 			list.addAll(parentTemplate);
 			list.addAll(template);
 			return Collections.unmodifiableList(list);
@@ -63,9 +67,11 @@ public class Templates {
 	public boolean isBlock(Template template) {
 		return blockTemplates.contains(template) || (parent != null && parent.isBlock(template));
 	}
+
 	public Templates getParent() {
 		return parent;
 	}
+
 	public void setParent(Templates parent) {
 		this.parent = parent;
 	}

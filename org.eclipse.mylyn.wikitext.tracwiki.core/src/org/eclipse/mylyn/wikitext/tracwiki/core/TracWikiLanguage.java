@@ -30,15 +30,17 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class TracWikiLanguage extends MarkupLanguage {
 	private List<Block> blocks = new ArrayList<Block>();
+
 	private List<Block> paragraphNestableBlocks = new ArrayList<Block>();
 
 	private static PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
+
 	private static PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
 	{
@@ -65,26 +67,28 @@ public class TracWikiLanguage extends MarkupLanguage {
 		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this one must be last!!
 	}
 	static {
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:",0); // always starts at the start of a line or after a non-word character excluding '!'
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!'
 		phraseModifierSyntax.add(new EscapePhraseModifier());
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''''",new SpanType[] { SpanType.BOLD, SpanType.ITALIC },true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''",SpanType.BOLD,true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("''",SpanType.ITALIC,true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("__",SpanType.UNDERLINED,true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("--",SpanType.DELETED,true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("^",SpanType.SUPERSCRIPT,true));
-		phraseModifierSyntax.add(new SimplePhraseModifier(",,",SpanType.SUBSCRIPT,true));
-		phraseModifierSyntax.endGroup(")(?=\\W|$)",0);
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC },
+				true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.UNDERLINED, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("--", SpanType.DELETED, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier(",,", SpanType.SUBSCRIPT, true));
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
 
 		tokenSyntax.add(new BangEscapeToken());
 		tokenSyntax.add(new LineBreakToken());
 		tokenSyntax.add(new HyperlinkReplacementToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 	}
+
 	public TracWikiLanguage() {
 		setName("TracWiki");
 	}
-	
+
 	@Override
 	public List<Block> getBlocks() {
 		return blocks;

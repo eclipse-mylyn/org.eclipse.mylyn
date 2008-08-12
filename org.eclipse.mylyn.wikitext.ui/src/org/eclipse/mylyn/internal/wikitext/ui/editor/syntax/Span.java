@@ -14,8 +14,8 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class Span extends Segment<Span> {
@@ -23,19 +23,21 @@ public class Span extends Segment<Span> {
 	private SpanType type;
 
 	public Span(SpanType type, int offset, int length) {
-		super(offset,length);
+		super(offset, length);
 		this.type = type;
 	}
+
 	public Span(SpanType type, Attributes attributes, int offset, int length) {
-		super(attributes,offset,length);
+		super(attributes, offset, length);
 		this.type = type;
 	}
+
 	public SpanType getType() {
 		return type;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("<%s offset=\"%s\" length=\"%s\"/>",type.name(),getOffset(),getLength());
+		return String.format("<%s offset=\"%s\" length=\"%s\"/>", type.name(), getOffset(), getLength());
 	}
 }

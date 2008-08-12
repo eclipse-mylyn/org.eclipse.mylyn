@@ -17,8 +17,8 @@ import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ServiceLocatorTest extends TestCase {
@@ -44,7 +44,7 @@ public class ServiceLocatorTest extends TestCase {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	public void testFQN() {
 		MarkupLanguage markupLanguage = locator.getMarkupLanguage(TextileLanguage.class.getName());
 		assertNotNull(markupLanguage);

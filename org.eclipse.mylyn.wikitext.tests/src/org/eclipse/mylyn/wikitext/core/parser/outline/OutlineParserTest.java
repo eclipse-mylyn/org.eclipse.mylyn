@@ -17,8 +17,8 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class OutlineParserTest extends TestCase {
@@ -33,9 +33,9 @@ public class OutlineParserTest extends TestCase {
 	public void testSimple() {
 		OutlineItem outline = outlineParser.parse("h1. First Header\n\nh2. Second Header\n\nh1. Third Header\n");
 
-		assertEquals(2,outline.getChildren().size());
-		assertEquals(1,outline.getChildren().get(0).getChildren().size());
-		assertEquals(0,outline.getChildren().get(1).getChildren().size());
+		assertEquals(2, outline.getChildren().size());
+		assertEquals(1, outline.getChildren().get(0).getChildren().size());
+		assertEquals(0, outline.getChildren().get(1).getChildren().size());
 	}
 
 	public void testNearestItem() {
@@ -47,21 +47,21 @@ public class OutlineParserTest extends TestCase {
 
 		OutlineItem h2Item = outline.findNearestMatchingOffset(idxOfH2);
 		assertNotNull(h2Item);
-		assertSame(outline.getChildren().get(0),h2Item.getParent());
-		assertEquals(2,h2Item.getLevel());
+		assertSame(outline.getChildren().get(0), h2Item.getParent());
+		assertEquals(2, h2Item.getLevel());
 
-		OutlineItem h1Item = outline.findNearestMatchingOffset(idxOfH2-1);
+		OutlineItem h1Item = outline.findNearestMatchingOffset(idxOfH2 - 1);
 		assertNotNull(h1Item);
-		assertSame(outline.getChildren().get(0),h1Item);
-		assertEquals(1,h1Item.getLevel());
+		assertSame(outline.getChildren().get(0), h1Item);
+		assertEquals(1, h1Item.getLevel());
 
 		int secondIdxOfH1 = textile.indexOf("h1. Third");
 		OutlineItem secondH1Item = outline.findNearestMatchingOffset(secondIdxOfH1);
 		assertNotNull(secondH1Item);
-		assertSame(outline.getChildren().get(1),secondH1Item);
-		assertEquals(1,secondH1Item.getLevel());
+		assertSame(outline.getChildren().get(1), secondH1Item);
+		assertEquals(1, secondH1Item.getLevel());
 
-		OutlineItem h2Item2 = outline.findNearestMatchingOffset(secondIdxOfH1-1);
-		assertSame(h2Item,h2Item2);
+		OutlineItem h2Item2 = outline.findNearestMatchingOffset(secondIdxOfH1 - 1);
+		assertSame(h2Item, h2Item2);
 	}
 }

@@ -19,8 +19,8 @@ import org.eclipse.mylyn.wikitext.core.util.LocationTrackingReader;
 import junit.framework.TestCase;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class LocationTrackingReaderTest extends TestCase {
@@ -28,28 +28,26 @@ public class LocationTrackingReaderTest extends TestCase {
 	public void testCharOffset() throws IOException {
 		String content = "aaflkjsdf \nas;dfj asl;fj\r\naslfkjasd";
 		int count = 0;
-		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(content),16);
+		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(content), 16);
 		int c;
 		while ((c = reader.read()) != -1) {
 			++count;
-			assertEquals(content.charAt(count-1),(char)c);
-			assertEquals(count-1,reader.getOffset());
+			assertEquals(content.charAt(count - 1), (char) c);
+			assertEquals(count - 1, reader.getOffset());
 		}
-		assertEquals(content.length(),count);
+		assertEquals(content.length(), count);
 	}
 
 	public void testReadLine() throws IOException {
 		String content = "\rabc\ndef\r\rfoo bar";
 		int bufSize = 3;
-		int[] lineOffsets = new int[] {
-				0,1,5,9,10,17
-		};
+		int[] lineOffsets = new int[] { 0, 1, 5, 9, 10, 17 };
 
 		doTest(content, lineOffsets, bufSize);
 	}
 
 	private void doTest(String content, int[] lineOffsets, int bufSize) throws IOException {
-		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(content),bufSize);
+		LocationTrackingReader reader = new LocationTrackingReader(new StringReader(content), bufSize);
 		BufferedReader refReader = new BufferedReader(new StringReader(content));
 
 		int lineNumber = 0;
@@ -60,9 +58,9 @@ public class LocationTrackingReaderTest extends TestCase {
 			testLine = reader.readLine();
 			refLine = refReader.readLine();
 
-			assertEquals(refLine,testLine);
-			assertEquals(expectedOffset,reader.getLineOffset());
-			assertEquals(lineNumber-1,reader.getLineNumber());
+			assertEquals(refLine, testLine);
+			assertEquals(expectedOffset, reader.getLineOffset());
+			assertEquals(lineNumber - 1, reader.getLineNumber());
 		} while (testLine != null && refLine != null);
 
 		assertTrue(refLine == null);
@@ -72,9 +70,7 @@ public class LocationTrackingReaderTest extends TestCase {
 	public void testReadLineWithWindowsNewlines() throws IOException {
 		String content = "abc\r\ndef\r\n\r\nfoo bar";
 		int bufSize = 3;
-		int[] lineOffsets = new int[] {
-				0,5,10,12,19
-		};
+		int[] lineOffsets = new int[] { 0, 5, 10, 12, 19 };
 
 		doTest(content, lineOffsets, bufSize);
 	}
@@ -82,25 +78,19 @@ public class LocationTrackingReaderTest extends TestCase {
 	public void testReadLineWithTerminatingEOLs() throws IOException {
 		String content = "abc\n";
 		int bufSize = 3;
-		int[] lineOffsets = new int[] {
-				0,4
-		};
+		int[] lineOffsets = new int[] { 0, 4 };
 
 		doTest(content, lineOffsets, bufSize);
 
 		content = "abc\r\n";
 		bufSize = 3;
-		lineOffsets = new int[] {
-				0,5
-		};
+		lineOffsets = new int[] { 0, 5 };
 
 		doTest(content, lineOffsets, bufSize);
 
 		content = "abc\r";
 		bufSize = 3;
-		lineOffsets = new int[] {
-				0,4
-		};
+		lineOffsets = new int[] { 0, 4 };
 
 		doTest(content, lineOffsets, bufSize);
 	}

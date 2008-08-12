@@ -20,26 +20,22 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDocumentProvider;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class DialectDocumentProviderTest extends TestCase {
 
 	public void testCleanUpEolMarkers() {
-		String[] lines = new String[] {
-				"one",
-				"two",
-				"three"
-		};
-		doTestCleanUpEolMarkers(lines,"\r");
-		doTestCleanUpEolMarkers(lines,"\r\n");
-		doTestCleanUpEolMarkers(lines,"\n");
+		String[] lines = new String[] { "one", "two", "three" };
+		doTestCleanUpEolMarkers(lines, "\r");
+		doTestCleanUpEolMarkers(lines, "\r\n");
+		doTestCleanUpEolMarkers(lines, "\n");
 	}
 
 	private void doTestCleanUpEolMarkers(String[] lines, String documentEol) {
 		StringBuilder buf = new StringBuilder();
-		for (String line: lines) {
+		for (String line : lines) {
 			if (buf.length() > 0) {
 				buf.append(documentEol);
 			}
@@ -54,7 +50,7 @@ public class DialectDocumentProviderTest extends TestCase {
 			int index = -1;
 			BufferedReader reader = new BufferedReader(new StringReader(document.get()));
 			while ((line = reader.readLine()) != null) {
-				assertEquals(lines[++index],line);
+				assertEquals(lines[++index], line);
 			}
 		} catch (IOException e) {
 			throw new IllegalStateException(e);

@@ -54,12 +54,12 @@ public class TextileLanguage extends MarkupLanguage {
 
 	// we use the template pattern for creating new blocks
 	private List<Block> blocks = new ArrayList<Block>();
+
 	private List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
 
-
 	private PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
-	private PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
+	private PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
 	@Override
 	protected PatternBasedSyntax getPhraseModifierSyntax() {
@@ -83,20 +83,20 @@ public class TextileLanguage extends MarkupLanguage {
 	}
 
 	protected void initializeTokens() {
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)","#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)","#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)","#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)","#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)","#174"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)","#174"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174"));
 		tokenSyntax.add(new HyperlinkReplacementToken());
 		tokenSyntax.add(new FootnoteReferenceReplacementToken());
-		tokenSyntax.add(new EntityWrappingReplacementToken("\"","#8220","#8221"));
-		tokenSyntax.add(new EntityWrappingReplacementToken("'","#8216","#8217"));
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w)(')(?=\\w))","#8217")); // apostrophe
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))","#8212")); // emdash
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(-)(?=\\s\\w))","#8211")); // endash
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\d\\s)(x)(?=\\s\\d))","#215")); // mul
+		tokenSyntax.add(new EntityWrappingReplacementToken("\"", "#8220", "#8221"));
+		tokenSyntax.add(new EntityWrappingReplacementToken("'", "#8216", "#8217"));
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w)(')(?=\\w))", "#8217")); // apostrophe
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8212")); // emdash
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(-)(?=\\s\\w))", "#8211")); // endash
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\d\\s)(x)(?=\\s\\d))", "#215")); // mul
 		tokenSyntax.add(new AcronymReplacementToken());
 
 		addTokenExtensions(tokenSyntax);
@@ -105,22 +105,22 @@ public class TextileLanguage extends MarkupLanguage {
 	protected void initializePhraseModifiers() {
 		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier());
 		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier());
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:",0);
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0);
 		phraseModifierSyntax.add(new EscapeTextilePhraseModifier());
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**",SpanType.BOLD));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("??",SpanType.CITATION));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("__",SpanType.ITALIC));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("_",SpanType.EMPHASIS));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("*",SpanType.STRONG));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("+",SpanType.INSERTED));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("~",SpanType.SUBSCRIPT));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("^",SpanType.SUPERSCRIPT));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("@",SpanType.CODE));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("%",SpanType.SPAN));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("-",SpanType.DELETED));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**", SpanType.BOLD));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("??", SpanType.CITATION));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("__", SpanType.ITALIC));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("_", SpanType.EMPHASIS));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("*", SpanType.STRONG));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("+", SpanType.INSERTED));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("~", SpanType.SUBSCRIPT));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("^", SpanType.SUPERSCRIPT));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("@", SpanType.CODE));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("%", SpanType.SPAN));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("-", SpanType.DELETED));
 		phraseModifierSyntax.add(new ImageTextilePhraseModifier());
-		phraseModifierSyntax.endGroup(")(?=\\W|$)",0);
-		
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
+
 		addPhraseModifierExtensions(phraseModifierSyntax);
 	}
 
@@ -140,21 +140,23 @@ public class TextileLanguage extends MarkupLanguage {
 		paragraphBreakingBlocks.add(tableBlock);
 
 		// extensions
-		addBlockExtensions(blocks,paragraphBreakingBlocks);
+		addBlockExtensions(blocks, paragraphBreakingBlocks);
 		// ~extensions
-		
+
 		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this must come last
 	}
-	
+
 	/**
-	 * subclasses may override this method to add blocks to the Textile language.
-	 * Overriding classes should call <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the 
-	 * default language extensions are desired (glossary and table of contents).
+	 * subclasses may override this method to add blocks to the Textile language. Overriding classes should call
+	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
+	 * desired (glossary and table of contents).
 	 * 
-	 * @param blocks the list of blocks to which extensions may be added 
-	 * @param paragraphBreakingBlocks the list of blocks that end a paragraph
+	 * @param blocks
+	 *            the list of blocks to which extensions may be added
+	 * @param paragraphBreakingBlocks
+	 *            the list of blocks that end a paragraph
 	 * 
-	 * @param paragraphBreakingBlocks 
+	 * @param paragraphBreakingBlocks
 	 */
 	protected void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		blocks.add(new TextileGlossaryBlock());
@@ -162,27 +164,28 @@ public class TextileLanguage extends MarkupLanguage {
 	}
 
 	/**
-	 * subclasses may override this method to add tokens to the Textile language.
-	 * Overriding classes should call <code>super.addTokenExtensions(tokenSyntax)</code> if the 
-	 * default language extensions are desired.
+	 * subclasses may override this method to add tokens to the Textile language. Overriding classes should call
+	 * <code>super.addTokenExtensions(tokenSyntax)</code> if the default language extensions are desired.
 	 * 
-	 * @param tokenSyntax the token syntax
+	 * @param tokenSyntax
+	 *            the token syntax
 	 */
 	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
 		// no token extensions
 	}
 
 	/**
-	 * subclasses may override this method to add phrases to the Textile language.
-	 * Overriding classes should call <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the 
-	 * default language extensions are desired.
+	 * subclasses may override this method to add phrases to the Textile language. Overriding classes should call
+	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are
+	 * desired.
 	 * 
-	 * @param phraseModifierSyntax the phrase modifier syntax
+	 * @param phraseModifierSyntax
+	 *            the phrase modifier syntax
 	 */
 	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
 		// no phrase extensions
 	}
-	
+
 	public List<Block> getParagraphBreakingBlocks() {
 		return paragraphBreakingBlocks;
 	}

@@ -13,15 +13,18 @@ package org.eclipse.mylyn.wikitext.core.util;
 import java.util.Stack;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class FormattingXMLStreamWriter extends XmlStreamWriter {
 
 	private XmlStreamWriter delegate;
+
 	private int indentLevel;
+
 	private Stack<Integer> childCounts = new Stack<Integer>();
+
 	private int childCount;
 
 	private Stack<String> elements = new Stack<String>();
@@ -90,18 +93,18 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	public void writeCharacters(char[] text, int start, int len) {
 		int lineStart = start;
 		int length = 0;
-		for (int x = 0;x<len;++x) {
-			int charOffset = lineStart+x;
+		for (int x = 0; x < len; ++x) {
+			int charOffset = lineStart + x;
 			++length;
 			if (lineOffset == 0 && text[charOffset] != '\n') {
-				maybeIndent(false,true);
+				maybeIndent(false, true);
 			}
 			++lineOffset;
 			if (text[charOffset] == '\n') {
-				delegate.writeCharacters(text,lineStart,length);
+				delegate.writeCharacters(text, lineStart, length);
 				length = 0;
 				lineOffset = 0;
-				lineStart = start+x;
+				lineStart = start + x;
 			}
 		}
 		if (length > 0) {
@@ -115,7 +118,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 		if (text == null) {
 			return;
 		}
-		writeCharacters(text.toCharArray(),0,text.length());
+		writeCharacters(text.toCharArray(), 0, text.length());
 	}
 
 	@Override
@@ -161,7 +164,6 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 		maybeIndent();
 		delegate.writeEmptyElement(localName);
 	}
-
 
 	@Override
 	public void writeEndDocument() {
@@ -246,26 +248,26 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	}
 
 	private void maybeIndent() {
-		maybeIndent(true,false);
+		maybeIndent(true, false);
 	}
 
-	private void maybeIndent(boolean withNewline,boolean force) {
-		if ((childCount == 0 && !force)||preserveWhitespace()) {
+	private void maybeIndent(boolean withNewline, boolean force) {
+		if ((childCount == 0 && !force) || preserveWhitespace()) {
 			return;
 		}
 		StringBuilder buf = new StringBuilder();
 		if (withNewline) {
 			buf.append('\n');
 		}
-		for (int x = 0;x<indentLevel;++x) {
+		for (int x = 0; x < indentLevel; ++x) {
 			buf.append('\t');
 		}
 		lineOffset = indentLevel;
-		delegate.writeCharacters(buf.toString().toCharArray(),0,buf.length());
+		delegate.writeCharacters(buf.toString().toCharArray(), 0, buf.length());
 	}
 
 	private boolean preserveWhitespace() {
-		for (int x = elements.size()-1;x>=0;--x) {
+		for (int x = elements.size() - 1; x >= 0; --x) {
 			if (preserveWhitespace(elements.get(x))) {
 				return true;
 			}
@@ -276,7 +278,8 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	/**
 	 * Override this method to indicate which elements must have whitespace preserved.
 	 * 
-	 * @param elementName the local name of the element
+	 * @param elementName
+	 *            the local name of the element
 	 */
 	protected boolean preserveWhitespace(String elementName) {
 		return false;

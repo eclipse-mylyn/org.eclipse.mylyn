@@ -16,8 +16,8 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class EventLoggingDocumentBuilder extends DocumentBuilder {
@@ -28,13 +28,13 @@ public class EventLoggingDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void acronym(String text, String definition) {
-		logger.info("ACRONYM:"+text+","+definition);
+		logger.info("ACRONYM:" + text + "," + definition);
 	}
 
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
 		++blockDepth;
-		logger.info("BLOCK START["+blockDepth+"]:"+type);
+		logger.info("BLOCK START[" + blockDepth + "]:" + type);
 	}
 
 	@Override
@@ -44,27 +44,27 @@ public class EventLoggingDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void beginHeading(int level, Attributes attributes) {
-		logger.info("HEADING START:"+level);
+		logger.info("HEADING START:" + level);
 	}
 
 	@Override
 	public void beginSpan(SpanType type, Attributes attributes) {
-		logger.info("SPAN START:"+type);
+		logger.info("SPAN START:" + type);
 	}
 
 	@Override
 	public void characters(String text) {
-		logger.info("CHARACTERS:"+text);
+		logger.info("CHARACTERS:" + text);
 	}
 
 	@Override
 	public void charactersUnescaped(String text) {
-		logger.info("HTML LITERAL:"+text);
+		logger.info("HTML LITERAL:" + text);
 	}
 
 	@Override
 	public void endBlock() {
-		logger.info("END BLOCK["+blockDepth+"]");
+		logger.info("END BLOCK[" + blockDepth + "]");
 		--blockDepth;
 	}
 
@@ -85,17 +85,17 @@ public class EventLoggingDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void entityReference(String entity) {
-		logger.info("ENTITY: "+entity);
+		logger.info("ENTITY: " + entity);
 	}
 
 	@Override
 	public void image(Attributes attributes, String url) {
-		logger.info("IMAGE: "+url);
+		logger.info("IMAGE: " + url);
 	}
 
 	@Override
-	public void imageLink(Attributes linkAttributes, Attributes imageAttributes,String href, String imageUrl) {
-		logger.info("IMAGE LINK: "+href+", "+imageUrl);
+	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
+		logger.info("IMAGE LINK: " + href + ", " + imageUrl);
 
 	}
 
@@ -105,9 +105,8 @@ public class EventLoggingDocumentBuilder extends DocumentBuilder {
 	}
 
 	@Override
-	public void link(Attributes attributes,String hrefOrHashName, String text) {
-		logger.info("LINK: "+hrefOrHashName+", "+text);
+	public void link(Attributes attributes, String hrefOrHashName, String text) {
+		logger.info("LINK: " + hrefOrHashName + ", " + text);
 	}
-
 
 }

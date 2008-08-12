@@ -38,13 +38,11 @@ import org.eclipse.swt.graphics.Image;
 // FIXME: move to internal
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
-public class MarkupTemplateCompletionProcessor extends
-TemplateCompletionProcessor {
-
+public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcessor {
 
 	public static final String CONTEXT_ID = "org.eclipse.mylyn.wikitext.ui.editor";
 
@@ -52,7 +50,7 @@ TemplateCompletionProcessor {
 
 	private static final class ProposalComparator implements Comparator<ICompletionProposal> {
 		public int compare(ICompletionProposal o1, ICompletionProposal o2) {
-			return ((TemplateProposal)o2).getRelevance() - ((TemplateProposal)o1).getRelevance();
+			return ((TemplateProposal) o2).getRelevance() - ((TemplateProposal) o1).getRelevance();
 		}
 	}
 
@@ -60,13 +58,12 @@ TemplateCompletionProcessor {
 
 	private static final Template[] NO_TEMPLATES = new Template[0];
 
-	private TemplateContextType contextType = new TemplateContextType(CONTEXT_ID,"Lightweight Markup");
+	private TemplateContextType contextType = new TemplateContextType(CONTEXT_ID, "Lightweight Markup");
 
 	private Templates templates;
 
 	@Override
-	protected TemplateContextType getContextType(ITextViewer viewer,
-			IRegion region) {
+	protected TemplateContextType getContextType(ITextViewer viewer, IRegion region) {
 		return contextType;
 	}
 
@@ -85,15 +82,13 @@ TemplateCompletionProcessor {
 		return NO_TEMPLATES;
 	}
 
-
 	/**
 	 * Override to improve matching accuracy
 	 */
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 
-		ITextSelection selection = (ITextSelection) viewer
-		.getSelectionProvider().getSelection();
+		ITextSelection selection = (ITextSelection) viewer.getSelectionProvider().getSelection();
 
 		// adjust offset to end of normalized selection
 		if (selection.getOffset() == offset) {
@@ -106,8 +101,8 @@ TemplateCompletionProcessor {
 		if (context == null) {
 			return new ICompletionProposal[0];
 		}
-		Region selectionRegion = new Region(selection.getOffset(),selection.getLength());
-		TemplateContext selectionContext = createContext(viewer,selectionRegion);
+		Region selectionRegion = new Region(selection.getOffset(), selection.getLength());
+		TemplateContext selectionContext = createContext(viewer, selectionRegion);
 
 		int lineOffset = 0;
 		try {
@@ -139,11 +134,11 @@ TemplateCompletionProcessor {
 			boolean selectionBasedMatch = isSelectionBasedMatch(template, context);
 			if (template.getName().startsWith(prefix) || selectionBasedMatch) {
 
-				int relevance = getRelevance(template,lineOffset, prefix);
+				int relevance = getRelevance(template, lineOffset, prefix);
 				if (selectionBasedMatch) {
-					matches.add(createProposal(template, selectionContext, (IRegion) selectionRegion,relevance));
+					matches.add(createProposal(template, selectionContext, (IRegion) selectionRegion, relevance));
 				} else {
-					matches.add(createProposal(template, context, (IRegion) region,relevance));
+					matches.add(createProposal(template, context, (IRegion) region, relevance));
 				}
 			}
 		}
@@ -154,18 +149,17 @@ TemplateCompletionProcessor {
 	}
 
 	private int getRelevance(Template template, int lineOffset, String prefix) {
-		boolean blockTemplate = templates==null?false:templates.isBlock(template);
+		boolean blockTemplate = templates == null ? false : templates.isBlock(template);
 		if (blockTemplate) {
 			if (template.getName().startsWith(prefix)) {
-				return lineOffset==0?95:75;
+				return lineOffset == 0 ? 95 : 75;
 			}
-			return lineOffset == 0?85:0;
+			return lineOffset == 0 ? 85 : 0;
 		}
 		return super.getRelevance(template, prefix);
 	}
 
-	private boolean isSelectionBasedMatch(Template template,
-			TemplateContext context) {
+	private boolean isSelectionBasedMatch(Template template, TemplateContext context) {
 		String pattern = template.getPattern();
 		Set<String> vars = new HashSet<String>();
 		Matcher matcher = VARIABLE_PATTERN.matcher(pattern);
@@ -182,8 +176,8 @@ TemplateCompletionProcessor {
 	}
 
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
-		templates = markupLanguage == null?null:WikiTextUiPlugin.getDefault().getTemplates().get(markupLanguage.getName());
+		templates = markupLanguage == null ? null : WikiTextUiPlugin.getDefault().getTemplates().get(
+				markupLanguage.getName());
 	}
-
 
 }
