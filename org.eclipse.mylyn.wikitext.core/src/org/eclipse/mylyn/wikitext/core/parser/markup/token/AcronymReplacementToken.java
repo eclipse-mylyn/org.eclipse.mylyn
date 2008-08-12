@@ -22,7 +22,7 @@ public class AcronymReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:(?:(?<=\\W)|^)([A-Z]+)\\(([^\\)]+)\\))";
+		return "(?:(?:(?<=\\W)|^)([A-Z]{3,})\\(([^\\)]+)\\))";
 	}
 
 	@Override

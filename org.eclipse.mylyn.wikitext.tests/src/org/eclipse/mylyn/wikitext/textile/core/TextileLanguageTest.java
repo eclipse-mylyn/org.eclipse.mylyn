@@ -860,6 +860,32 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<acronym title=\"A Better Comb\">ABC</acronym>"));
 	}
 
+	public void testAcronym3() throws IOException {
+		String html = parser.parseToHtml("Some preceding text ABCR(A Better Comb)");
+
+		System.out.println("HTML: \n"+html);
+		assertTrue(html.contains("<acronym title=\"A Better Comb\">ABCR</acronym>"));
+	}
+	
+	public void testAcronymNegative() throws IOException {
+		// must have 3 or more upper-case letters for an acronym
+		String html = parser.parseToHtml("Some preceding text AB(A Better Comb)");
+
+		System.out.println("HTML: \n"+html);
+		assertTrue(html.contains("<p>Some preceding text AB(A Better Comb)</p>"));
+	}
+
+	/**
+	 * test for bug# 240743
+	 */
+	public void testAcronymBug240743() {
+		String markup = "As a very minor improvement to Textile-J(as what I proposed here http://www.cs.ubc.ca/~jingweno/soc/SoC2008.pdf)";
+		String html = parser.parseToHtml(markup);
+		
+		System.out.println("HTML: \n"+html);
+		assertTrue(html.contains("<p>As a very minor improvement to Textile-J(as what I proposed here http://www.cs.ubc.ca/~jingweno/soc/SoC2008.pdf)</p>"));
+	}
+	
 	public void testGlossary() throws IOException {
 		String html = parser.parseToHtml("Some preceding text ABC(A Better Comb)\n\n{glossary}");
 
@@ -1026,5 +1052,5 @@ public class TextileLanguageTest extends TestCase {
 		System.out.println("HTML: \n"+html);
 		assertTrue(html.contains("<p>I am crazy about <a href=\"https://textile-j.dev.java.net\">TextileJ</a><br/>and <a href=\"https://textile-j.dev.java.net\">it's</a> <a href=\"https://textile-j.dev.java.net\">all</a> I ever<br/><a href=\"https://textile-j.dev.java.net\">link to</a>!</p><p>[textilej]https://textile-j.dev.java.net</p>"));
 	}
-	
+
 }
