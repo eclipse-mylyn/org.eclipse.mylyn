@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -244,9 +243,10 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
 			Set<TaskAttribute> changedAttributes, IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
 		try {
-			BugzillaClient client = connector.getClientManager().getClient(repository,
-					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
+			monitor.beginTask("Submitting task", IProgressMonitor.UNKNOWN);
+			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 			try {
 				return client.postTaskData(taskData, monitor);
 			} catch (CoreException e) {
@@ -256,12 +256,12 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				} else {
 					throw e;
 				}
-
 			}
-
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
+		} finally {
+			monitor.done();
 		}
 	}
 
