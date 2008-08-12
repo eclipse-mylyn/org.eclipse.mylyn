@@ -123,9 +123,9 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-//		if (needsAttachContext) {
-		addAttachContextButton(buttonComposite, toolkit);
-//		}
+		if (!getTaskData().isNew()) {
+			addAttachContextButton(buttonComposite, toolkit);
+		}
 	}
 
 	/**

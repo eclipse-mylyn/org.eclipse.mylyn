@@ -212,7 +212,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 		@Override
 		public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
-			if (attachContext) {
+			if (!getModel().getTaskData().isNew() && attachContext) {
 				AttachmentUtil.postContext(connector, getModel().getTaskRepository(), task, "", null, monitor);
 			}
 		}
