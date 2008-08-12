@@ -19,9 +19,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
-import org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.DefaultAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHover;
@@ -255,7 +255,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		hyperlinkDetectorTargets.put(ID_CONTEXT_EDITOR_TASK, context);
 	}
 
-	private static class TaskHyperlinkPresenter extends MultipleHyperlinkPresenter {
+	private static class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 
 		private IRegion activeRegion;
 
