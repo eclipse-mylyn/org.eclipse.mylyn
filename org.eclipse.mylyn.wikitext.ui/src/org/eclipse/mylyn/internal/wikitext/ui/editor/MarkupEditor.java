@@ -81,10 +81,9 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MarkupEditor extends TextEditor {
@@ -92,14 +91,21 @@ public class MarkupEditor extends TextEditor {
 	private static final String MARKUP_LANGUAGE = "markupLanguage";
 
 	public static final String CONTEXT = "org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"; //$NON-NLS-1$
-	
+
 	private IDocument document;
+
 	private IDocumentListener documentListener;
+
 	private boolean previewDirty = true;
+
 	private boolean outlineDirty = true;
+
 	private Browser browser;
+
 	private MarkupEditorOutline outlinePage;
+
 	private OutlineItem outlineModel;
+
 	private final OutlineParser outlineParser = new OutlineParser();
 	{
 		outlineParser.setLabelMaxLength(48);
@@ -107,10 +113,14 @@ public class MarkupEditor extends TextEditor {
 	}
 
 	private boolean disableReveal = false;
+
 	private ISourceViewer viewer;
+
 	private IPropertyChangeListener preferencesListener;
+
 	private IDocumentPartitioningListener documentPartitioningListener;
-	private MarkupSourceViewerConfiguration sourceViewerConfiguration;
+
+	private final MarkupSourceViewerConfiguration sourceViewerConfiguration;
 
 	private CTabItem sourceTab;
 
@@ -123,27 +133,26 @@ public class MarkupEditor extends TextEditor {
 	}
 
 	@Override
-	protected ISourceViewer createSourceViewer(Composite parent,
-			IVerticalRuler ruler, int styles) {
+	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles) {
 
-		CTabFolder folder = new CTabFolder(parent,SWT.BOTTOM);
+		CTabFolder folder = new CTabFolder(parent, SWT.BOTTOM);
 
 		{
-			sourceTab = new CTabItem(folder,SWT.NONE);
+			sourceTab = new CTabItem(folder, SWT.NONE);
 			updateSourceTabLabel();
-			
+
 			viewer = new MarkupSourceViewer(folder, ruler, styles | SWT.WRAP);
 
-			sourceTab.setControl(viewer instanceof Viewer?((Viewer)viewer).getControl():viewer.getTextWidget());
+			sourceTab.setControl(viewer instanceof Viewer ? ((Viewer) viewer).getControl() : viewer.getTextWidget());
 			folder.setSelection(sourceTab);
 		}
 
 		{
-			CTabItem previewTab = new CTabItem(folder,SWT.NONE);
+			CTabItem previewTab = new CTabItem(folder, SWT.NONE);
 			previewTab.setText(Messages.getString("MarkupEditor.PreviewView_label")); //$NON-NLS-1$
 			previewTab.setToolTipText(Messages.getString("MarkupEditor.PreviewView_tooltip")); //$NON-NLS-1$
 
-			browser = new Browser(folder,SWT.NONE);
+			browser = new Browser(folder, SWT.NONE);
 			previewTab.setControl(browser);
 		}
 
@@ -155,7 +164,6 @@ public class MarkupEditor extends TextEditor {
 			public void widgetSelected(SelectionEvent selectionevent) {
 				updatePreview();
 			}
-
 
 		});
 		viewer.getTextWidget().addSelectionListener(new SelectionListener() {
@@ -187,7 +195,9 @@ public class MarkupEditor extends TextEditor {
 
 		viewer.getTextWidget().setData(MarkupLanguage.class.getName(), getMarkupLanguage());
 		viewer.getTextWidget().setData(ISourceViewer.class.getName(), viewer);
-		
+
+		getSourceViewerDecorationSupport(viewer);
+
 		updateDocument();
 
 		if (preferencesListener == null) {
@@ -209,19 +219,15 @@ public class MarkupEditor extends TextEditor {
 		return viewer;
 	}
 
-
 	private void reloadPreferences() {
 		viewer.invalidateTextPresentation();
 	}
-
 
 	@Override
 	public void updatePartControl(IEditorInput input) {
 		super.updatePartControl(input);
 		updateDocument();
 	}
-
-
 
 	@Override
 	public void dispose() {
@@ -240,13 +246,13 @@ public class MarkupEditor extends TextEditor {
 		}
 		super.dispose();
 	}
-	
+
 	@Override
 	protected void initializeEditor() {
-		super.initializeEditor();  // ORDER DEPENDENCY
+		super.initializeEditor(); // ORDER DEPENDENCY
 		setHelpContextId(CONTEXT); // ORDER DEPENDENCY
 	}
-	
+
 	@Override
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		super.doSetInput(input);
@@ -273,14 +279,14 @@ public class MarkupEditor extends TextEditor {
 			if (document != null) {
 				if (documentListener == null) {
 					documentListener = new IDocumentListener() {
-						public void documentAboutToBeChanged(DocumentEvent event) {}
+						public void documentAboutToBeChanged(DocumentEvent event) {
+						}
 
 						public void documentChanged(DocumentEvent event) {
 							previewDirty = true;
 							outlineDirty = true;
 							scheduleOutlineUpdate();
 						}
-
 
 					};
 				}
@@ -314,7 +320,7 @@ public class MarkupEditor extends TextEditor {
 					IFile file = getFile();
 					String title = file.getName();
 					if (title.lastIndexOf('.') != -1) {
-						title = title.substring(0,title.lastIndexOf('.'));
+						title = title.substring(0, title.lastIndexOf('.'));
 					}
 					StringWriter writer = new StringWriter();
 					HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
@@ -372,7 +378,6 @@ public class MarkupEditor extends TextEditor {
 		return null;
 	}
 
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter) {
@@ -385,8 +390,6 @@ public class MarkupEditor extends TextEditor {
 		}
 		return super.getAdapter(adapter);
 	}
-
-
 
 	public OutlineItem getOutlineModel() {
 		return outlineModel;
@@ -422,7 +425,8 @@ public class MarkupEditor extends TextEditor {
 
 			outlinePage.getControl().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (outlinePage != null && outlinePage.getControl() != null && !outlinePage.getControl().isDisposed()) {
+					if (outlinePage != null && outlinePage.getControl() != null
+							&& !outlinePage.getControl().isDisposed()) {
 						updateOutlineSelection();
 					}
 				}
@@ -451,16 +455,13 @@ public class MarkupEditor extends TextEditor {
 		}
 	}
 
-
-
 	@Override
 	protected void initializeKeyBindingScopes() {
 		setKeyBindingScopes(new String[] { CONTEXT });
 	}
 
 	@Override
-	public void init(IEditorSite site, IEditorInput input)
-	throws PartInitException {
+	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 
 		IContextService contextService = (IContextService) site.getService(IContextService.class);
@@ -473,9 +474,9 @@ public class MarkupEditor extends TextEditor {
 		if (markupLanguage == null) {
 			String name = input.getName();
 			if (input instanceof IFileEditorInput) {
-				name = ((IFileEditorInput)input).getFile().getName();
+				name = ((IFileEditorInput) input).getFile().getName();
 			} else if (input instanceof IPathEditorInput) {
-				name = ((IPathEditorInput)input).getPath().lastSegment();
+				name = ((IPathEditorInput) input).getPath().lastSegment();
 			}
 			markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(name);
 			if (markupLanguage == null) {
@@ -483,11 +484,11 @@ public class MarkupEditor extends TextEditor {
 				markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage("Textile");
 			}
 		}
-		setMarkupLanguage(markupLanguage,false);
+		setMarkupLanguage(markupLanguage, false);
 	}
 
-	public void setMarkupLanguage(MarkupLanguage markupLanguage,boolean persistSetting) {
-		((MarkupDocumentProvider)getDocumentProvider()).setMarkupLanguage(markupLanguage);
+	public void setMarkupLanguage(MarkupLanguage markupLanguage, boolean persistSetting) {
+		((MarkupDocumentProvider) getDocumentProvider()).setMarkupLanguage(markupLanguage);
 
 		IDocument document = getDocumentProvider().getDocument(getEditorInput());
 		IDocumentPartitioner partitioner = document.getDocumentPartitioner();
@@ -501,20 +502,20 @@ public class MarkupEditor extends TextEditor {
 		}
 		scheduleOutlineUpdate();
 		updateSourceTabLabel();
-		
+
 		if (viewer != null) {
 			viewer.getTextWidget().setData(MarkupLanguage.class.getName(), getMarkupLanguage());
 		}
-		
+
 		if (persistSetting && markupLanguage != null) {
 			storeMarkupLanguagePreference(markupLanguage);
 		}
 		if (persistSetting) {
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer instanceof MarkupSourceViewer) {
-				IReconciler reconciler = ((MarkupSourceViewer)sourceViewer).getReconciler();
+				IReconciler reconciler = ((MarkupSourceViewer) sourceViewer).getReconciler();
 				if (reconciler instanceof MarkupMonoReconciler) {
-					((MarkupMonoReconciler)reconciler).forceReconciling();
+					((MarkupMonoReconciler) reconciler).forceReconciling();
 				}
 			}
 		}
@@ -527,8 +528,9 @@ public class MarkupEditor extends TextEditor {
 				sourceTab.setText(Messages.getString("MarkupEditor.SourceView_label")); //$NON-NLS-1$
 				sourceTab.setToolTipText(Messages.getString("MarkupEditor.SourceView_tooltip")); //$NON-NLS-1$
 			} else {
-				sourceTab.setText(Messages.getMessage("MarkupEditor.SourceView_label2",markupLanguage.getName())); //$NON-NLS-1$
-				sourceTab.setToolTipText(Messages.getMessage("MarkupEditor.SourceView_tooltip2",markupLanguage.getName())); //$NON-NLS-1$
+				sourceTab.setText(Messages.getMessage("MarkupEditor.SourceView_label2", markupLanguage.getName())); //$NON-NLS-1$
+				sourceTab.setToolTipText(Messages.getMessage(
+						"MarkupEditor.SourceView_tooltip2", markupLanguage.getName())); //$NON-NLS-1$
 			}
 		}
 	}
@@ -537,12 +539,13 @@ public class MarkupEditor extends TextEditor {
 		IFile file = getFile();
 		if (file != null) {
 			try {
-				String languageName = file.getPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(),MARKUP_LANGUAGE));
+				String languageName = file.getPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault()
+						.getPluginId(), MARKUP_LANGUAGE));
 				if (languageName != null) {
 					return WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
 				}
 			} catch (CoreException e) {
-				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,"Cannot load markup language preference",e);
+				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, "Cannot load markup language preference", e);
 			}
 		}
 		return null;
@@ -554,15 +557,18 @@ public class MarkupEditor extends TextEditor {
 		}
 		IFile file = getFile();
 		if (file != null) {
-			MarkupLanguage defaultMarkupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(file.getName());
-			String preference = markupLanguage==null?null:markupLanguage.getName();
+			MarkupLanguage defaultMarkupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(
+					file.getName());
+			String preference = markupLanguage == null ? null : markupLanguage.getName();
 			if (defaultMarkupLanguage != null && defaultMarkupLanguage.getName().equals(preference)) {
 				preference = null;
 			}
 			try {
-				file.setPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(),MARKUP_LANGUAGE), preference);
+				file.setPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(),
+						MARKUP_LANGUAGE), preference);
 			} catch (CoreException e) {
-				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,String.format("Cannot store markup language preference '%s'",preference),e);
+				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
+						String.format("Cannot store markup language preference '%s'", preference), e);
 			}
 		}
 	}
@@ -572,11 +578,10 @@ public class MarkupEditor extends TextEditor {
 		IDocumentPartitioner partitioner = document.getDocumentPartitioner();
 		MarkupLanguage markupLanguage = null;
 		if (partitioner instanceof FastMarkupPartitioner) {
-			markupLanguage = ((FastMarkupPartitioner)partitioner).getMarkupLanguage();
+			markupLanguage = ((FastMarkupPartitioner) partitioner).getMarkupLanguage();
 		}
 		return markupLanguage;
 	}
-
 
 	@Override
 	protected void createActions() {
@@ -602,15 +607,15 @@ public class MarkupEditor extends TextEditor {
 		super.setAction(actionID, action);
 	}
 
-
 	@Override
 	protected void editorContextMenuAboutToShow(IMenuManager menu) {
 		super.editorContextMenuAboutToShow(menu);
 
 		final MarkupLanguage markupLanguage = getMarkupLanguage();
 		MenuManager markupLanguageMenu = new MenuManager(Messages.getString("MarkupEditor.MarkupLanguage")); //$NON-NLS-1$
-		for (String markupLanguageName: new TreeSet<String>(WikiTextPlugin.getDefault().getMarkupLanguageNames())) {
-			markupLanguageMenu.add(new SetMarkupLanguageAction(this,markupLanguageName,markupLanguage != null && markupLanguageName.equals(markupLanguage.getName())));
+		for (String markupLanguageName : new TreeSet<String>(WikiTextPlugin.getDefault().getMarkupLanguageNames())) {
+			markupLanguageMenu.add(new SetMarkupLanguageAction(this, markupLanguageName, markupLanguage != null
+					&& markupLanguageName.equals(markupLanguage.getName())));
 		}
 
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_SETTINGS, markupLanguageMenu);
@@ -618,13 +623,11 @@ public class MarkupEditor extends TextEditor {
 
 	private static class MarkupSourceViewer extends SourceViewer {
 
-		public MarkupSourceViewer(Composite parent, IVerticalRuler ruler,
-				int styles) {
+		public MarkupSourceViewer(Composite parent, IVerticalRuler ruler, int styles) {
 			super(parent, ruler, styles);
 		}
 
-		public MarkupSourceViewer(Composite parent,
-				IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
+		public MarkupSourceViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
 				boolean showAnnotationsOverview, int styles) {
 			super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 		}
