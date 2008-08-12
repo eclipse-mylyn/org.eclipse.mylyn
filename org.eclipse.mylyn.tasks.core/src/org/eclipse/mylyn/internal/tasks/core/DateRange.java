@@ -72,7 +72,9 @@ public class DateRange implements Comparable<DateRange> {
 	@Override
 	public String toString() {
 		boolean isThisWeek = TaskActivityUtil.getCurrentWeek().includes(this);
-		boolean isNextWeek = TaskActivityUtil.getNextWeek().includes(this);
+		Calendar endNextWeek = TaskActivityUtil.getCalendar();
+		endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
+		boolean isNextWeek = TaskActivityUtil.getNextWeek().includes(this) && this.before(endNextWeek);
 		if (isDay() && (isThisWeek || isNextWeek)) {
 			String day = "";
 			switch (getStartDate().get(Calendar.DAY_OF_WEEK)) {
