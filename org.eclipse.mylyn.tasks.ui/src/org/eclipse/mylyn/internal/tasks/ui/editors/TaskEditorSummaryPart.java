@@ -16,9 +16,6 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.VerifyKeyListener;
-import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -30,20 +27,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @author Steffen Pingel
  */
 public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
-
-	private class TabVerifyKeyListener implements VerifyKeyListener {
-
-		public void verifyKey(VerifyEvent event) {
-			// if there is a tab key, do not "execute" it and instead select the Status control
-			if (event.keyCode == SWT.TAB) {
-				event.doit = false;
-				if (headerComposite != null) {
-					headerComposite.setFocus();
-				}
-			}
-		}
-
-	}
 
 	private static final int COLUMN_MARGIN = 6;
 
@@ -114,12 +97,6 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 			summaryEditor.createControl(composite, toolkit);
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryEditor.getControl());
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(summaryEditor);
-
-			// TODO EDITOR move to RichTextEditor?
-			if (summaryEditor instanceof RichTextAttributeEditor) {
-				((RichTextAttributeEditor) summaryEditor).getViewer().prependVerifyKeyListener(
-						new TabVerifyKeyListener());
-			}
 		}
 	}
 

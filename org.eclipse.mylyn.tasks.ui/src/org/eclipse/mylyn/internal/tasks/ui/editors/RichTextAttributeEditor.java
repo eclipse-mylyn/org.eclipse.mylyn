@@ -32,6 +32,8 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -135,16 +137,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		} else {
 			viewer.setEditable(true);
 			configureAsTextEditor(document);
-			viewer.addTextListener(new ITextListener() {
-				public void textChanged(TextEvent event) {
-					// filter out events caused by text presentation changes, e.g. annotation drawing
-					String value = viewer.getTextWidget().getText();
-					if (!getValue().equals(value)) {
-						setValue(value);
-						EditorUtil.ensureVisible(viewer.getTextWidget());
-					}
-				}
-			});
+			installListeners(viewer);
 			viewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		}
 
@@ -154,6 +147,32 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		toolkit.adapt(viewer.getTextWidget(), false, false);
 
 		setControl(viewer.getTextWidget());
+	}
+
+	private void installListeners(RepositoryTextViewer viewer2) {
+		viewer.addTextListener(new ITextListener() {
+			public void textChanged(TextEvent event) {
+				// filter out events caused by text presentation changes, e.g. annotation drawing
+				String value = viewer.getTextWidget().getText();
+				if (!getValue().equals(value)) {
+					setValue(value);
+					EditorUtil.ensureVisible(viewer.getTextWidget());
+				}
+			}
+		});
+		// ensure that tab traverses to next control instead of inserting a tab character unless editing multi-line text
+		if ((style & SWT.MULTI) != 0 && mode != Mode.DEFAULT) {
+			viewer.getTextWidget().addListener(SWT.Traverse, new Listener() {
+				public void handleEvent(Event event) {
+					switch (event.detail) {
+					case SWT.TRAVERSE_TAB_NEXT:
+					case SWT.TRAVERSE_TAB_PREVIOUS:
+						event.doit = true;
+						break;
+					}
+				}
+			});
+		}
 	}
 
 	public String getValue() {
