@@ -15,8 +15,8 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class PreformattedBlock extends Block {
@@ -32,7 +32,7 @@ public class PreformattedBlock extends Block {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (markupLanguage.isEmptyLine(line) || (offset == 0 && line.charAt(0) != ' ')) {
 			setClosed(true);
 			return 0;
@@ -52,6 +52,5 @@ public class PreformattedBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

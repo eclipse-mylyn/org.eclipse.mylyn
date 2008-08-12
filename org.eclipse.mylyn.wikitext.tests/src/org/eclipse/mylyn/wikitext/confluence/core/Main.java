@@ -33,6 +33,7 @@ public class Main extends AbstractTestApplication {
 		}
 	}
 
+	@Override
 	protected MarkupLanguage createMarkupLanguage() {
 		return new ConfluenceLanguage();
 	}

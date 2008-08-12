@@ -20,9 +20,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  */
 public class PatternLiteralReplacementToken extends PatternBasedElement {
 
-	private String pattern;
+	private final String pattern;
 
-	private String replacement;
+	private final String replacement;
 
 	public PatternLiteralReplacementToken(String pattern, String replacement) {
 		this.pattern = pattern;

@@ -18,9 +18,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * An entity resolver that resolves all requests for DTD content, thus preventing network access
- * when resolving DTDs.
- *
+ * An entity resolver that resolves all requests for DTD content, thus preventing network access when resolving DTDs.
+ * 
  * @author David Green
  */
 public class IgnoreDtdEntityResolver implements EntityResolver {

@@ -19,13 +19,14 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MarkupToDocbook {
 
 	private String bookTitle;
+
 	private MarkupLanguage markupLanguage;
 
 	public MarkupLanguage getMarkupLanguage() {
@@ -41,7 +42,6 @@ public class MarkupToDocbook {
 			throw new IllegalStateException("must set markupLanguage");
 		}
 		StringWriter out = new StringWriter();
-
 
 		DocBookDocumentBuilder builder = new DocBookDocumentBuilder(out) {
 			@Override
@@ -60,7 +60,6 @@ public class MarkupToDocbook {
 
 		return out.toString();
 	}
-
 
 	public String getBookTitle() {
 		return bookTitle;

@@ -13,16 +13,16 @@ package org.eclipse.mylyn.wikitext.ui.annotation;
 import junit.framework.TestCase;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class TitleAnnotationTest extends TestCase {
 
 	public void testSimple() {
-		TitleAnnotation annotation = new TitleAnnotation("title","type");
-		assertEquals("title",annotation.getTitle());
-		assertEquals("type",annotation.getTitleType());
-		assertEquals(TitleAnnotation.TYPE,annotation.getType());
+		TitleAnnotation annotation = new TitleAnnotation("title", "type");
+		assertEquals("title", annotation.getTitle());
+		assertEquals("type", annotation.getTitleType());
+		assertEquals(TitleAnnotation.TYPE, annotation.getType());
 	}
 }

@@ -29,13 +29,14 @@ public class TableBlock extends Block {
 	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|\\|\\s*([^\\|]*)\\s*(\\|\\|\\s*$)?");
 
 	private int blockLineCount = 0;
+
 	private Matcher matcher;
 
 	public TableBlock() {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 			builder.beginBlock(BlockType.TABLE, attributes);
@@ -48,7 +49,7 @@ public class TableBlock extends Block {
 		}
 		++blockLineCount;
 
-		String textileLine = offset==0?line:line.substring(offset);
+		String textileLine = offset == 0 ? line : line.substring(offset);
 		Matcher rowMatcher = TABLE_ROW_PATTERN.matcher(textileLine);
 		if (!rowMatcher.find()) {
 			setClosed(true);
@@ -59,7 +60,7 @@ public class TableBlock extends Block {
 
 		do {
 			int start = rowMatcher.start();
-			if (start == textileLine.length()-1) {
+			if (start == textileLine.length() - 1) {
 				break;
 			}
 
@@ -70,7 +71,7 @@ public class TableBlock extends Block {
 			state.setLineCharacterOffset(start);
 			builder.beginBlock(BlockType.TABLE_CELL_NORMAL, attributes);
 
-			markupLanguage.emitMarkupLine(getParser(), state,textOffset, text, 0);
+			markupLanguage.emitMarkupLine(getParser(), state, textOffset, text, 0);
 
 			builder.endBlock(); // table cell
 		} while (rowMatcher.find());
@@ -99,6 +100,5 @@ public class TableBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

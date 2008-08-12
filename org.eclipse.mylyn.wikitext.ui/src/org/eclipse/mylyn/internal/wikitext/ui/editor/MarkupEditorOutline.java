@@ -31,13 +31,14 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MarkupEditorOutline extends ContentOutlinePage {
 
 	private final MarkupEditor editor;
+
 	private boolean disableReveal;
 
 	public MarkupEditorOutline(MarkupEditor editor) {
@@ -66,29 +67,27 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 		});
 		getTreeViewer().expandAll();
 
-		new ToolTip(getTreeViewer().getControl(),ToolTip.RECREATE,false) {
+		new ToolTip(getTreeViewer().getControl(), ToolTip.RECREATE, false) {
 			@Override
-			protected Composite createToolTipContentArea(Event event,
-					Composite parent) {
+			protected Composite createToolTipContentArea(Event event, Composite parent) {
 
-
-				Composite comp = new Composite(parent,SWT.NONE);
+				Composite comp = new Composite(parent, SWT.NONE);
 				comp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
-				GridLayout gl = new GridLayout(1,false);
-				gl.marginBottom=2;
-				gl.marginTop=2;
-				gl.marginHeight=0;
-				gl.marginWidth=0;
-				gl.marginLeft=2;
-				gl.marginRight=2;
-				gl.verticalSpacing=1;
+				GridLayout gl = new GridLayout(1, false);
+				gl.marginBottom = 2;
+				gl.marginTop = 2;
+				gl.marginHeight = 0;
+				gl.marginWidth = 0;
+				gl.marginLeft = 2;
+				gl.marginRight = 2;
+				gl.verticalSpacing = 1;
 				comp.setLayout(gl);
 
-				Object tipItem = getToolTipItem(new Point(event.x,event.y));
+				Object tipItem = getToolTipItem(new Point(event.x, event.y));
 				if (tipItem instanceof OutlineItem) {
 					OutlineItem outlineItem = (OutlineItem) tipItem;
-					Label label = new Label(comp,SWT.WRAP);
+					Label label = new Label(comp, SWT.WRAP);
 					label.setBackground(comp.getBackground());
 					label.setText(outlineItem.getTooltip());
 				}
@@ -96,11 +95,11 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 				return comp;
 			}
 
-
 			@Override
 			protected boolean shouldCreateToolTip(Event event) {
-				final Object eventItem = getToolTipItem(new Point(event.x,event.y));
-				boolean shouldCreate = eventItem != null && eventItem instanceof OutlineItem && super.shouldCreateToolTip(event);
+				final Object eventItem = getToolTipItem(new Point(event.x, event.y));
+				boolean shouldCreate = eventItem != null && eventItem instanceof OutlineItem
+						&& super.shouldCreateToolTip(event);
 				if (!shouldCreate) {
 					hide();
 				}
@@ -108,7 +107,7 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 			}
 
 			protected Object getToolTipItem(Point point) {
-				TreeItem item = ((Tree)getTreeViewer().getControl()).getItem(point);
+				TreeItem item = ((Tree) getTreeViewer().getControl()).getItem(point);
 				if (item != null) {
 					return item.getData();
 				}
@@ -152,6 +151,5 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 			disableReveal = false;
 		}
 	}
-
 
 }

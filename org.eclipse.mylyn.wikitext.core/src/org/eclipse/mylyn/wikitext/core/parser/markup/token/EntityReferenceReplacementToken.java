@@ -13,14 +13,14 @@ package org.eclipse.mylyn.wikitext.core.parser.markup.token;
 import java.util.regex.Pattern;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class EntityReferenceReplacementToken extends PatternEntityReferenceReplacementToken {
 
-	public EntityReferenceReplacementToken(String token,String replacement) {
-		super("("+Pattern.quote(token)+")",replacement);
+	public EntityReferenceReplacementToken(String token, String replacement) {
+		super("(" + Pattern.quote(token) + ")", replacement);
 	}
 
 }

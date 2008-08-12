@@ -13,7 +13,6 @@ package org.eclipse.mylyn.wikitext.core.util;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**

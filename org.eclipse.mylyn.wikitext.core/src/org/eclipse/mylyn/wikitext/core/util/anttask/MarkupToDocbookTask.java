@@ -39,13 +39,13 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * @author David Green
  */
 public class MarkupToDocbookTask extends MarkupTask {
-	private List<FileSet> filesets = new ArrayList<FileSet>();
+	private final List<FileSet> filesets = new ArrayList<FileSet>();
 
 	private String docbookFilenameFormat = "$1.xml";
 
 	private String bookTitle;
 
-	private boolean overwrite = true;
+	private final boolean overwrite = true;
 
 	protected File file;
 

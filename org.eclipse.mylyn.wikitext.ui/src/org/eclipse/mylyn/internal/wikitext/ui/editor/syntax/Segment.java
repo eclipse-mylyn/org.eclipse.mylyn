@@ -15,18 +15,20 @@ import java.util.Iterator;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class Segment<ChildType extends Segment<?>> {
 	private int offset;
+
 	private int length;
+
 	private Attributes attributes;
 
 	private Segments<ChildType> children = new Segments<ChildType>();
-	private Segment<?> parent;
 
+	private Segment<?> parent;
 
 	public Segment(int offset, int length) {
 		if (offset < 0) {
@@ -40,21 +42,21 @@ public class Segment<ChildType extends Segment<?>> {
 	}
 
 	public Segment(Attributes attributes, int offset, int length) {
-		this(offset,length);
+		this(offset, length);
 		this.attributes = attributes;
 	}
 
 	/**
-	 * get the end offset of this segment, exclusive
-	 * equivalent to <code>getOffset()+getLength()</code>
+	 * get the end offset of this segment, exclusive equivalent to <code>getOffset()+getLength()</code>
 	 */
 	public int getEndOffset() {
-		return offset+length;
+		return offset + length;
 	}
 
 	public int getOffset() {
 		return offset;
 	}
+
 	public int getLength() {
 		return length;
 	}
@@ -76,7 +78,7 @@ public class Segment<ChildType extends Segment<?>> {
 					childIt.remove();
 				} else {
 					if (child.getEndOffset() > endOffset) {
-						int newChildLength = endOffset-child.getOffset();
+						int newChildLength = endOffset - child.getOffset();
 						child.setLength(newChildLength);
 					}
 				}
@@ -98,7 +100,6 @@ public class Segment<ChildType extends Segment<?>> {
 	public Segment<?> getParent() {
 		return parent;
 	}
-
 
 	public Segments<ChildType> getChildren() {
 		return children;

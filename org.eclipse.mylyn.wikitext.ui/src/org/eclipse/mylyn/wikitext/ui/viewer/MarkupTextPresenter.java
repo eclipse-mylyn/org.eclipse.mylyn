@@ -16,11 +16,11 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.graphics.Drawable;
 
 /**
- * An information presenter that supports markup.
- * Uses the {@link MarkupParser} to parse the markup to HTML, and passes the HTML to the superclass.
+ * An information presenter that supports markup. Uses the {@link MarkupParser} to parse the markup to HTML, and passes
+ * the HTML to the superclass.
  * 
  * @author David Green
- *
+ * 
  */
 public class MarkupTextPresenter extends HtmlTextPresenter {
 
@@ -41,8 +41,8 @@ public class MarkupTextPresenter extends HtmlTextPresenter {
 	}
 
 	@Override
-	public String updatePresentation(Drawable drawable, String hoverInfo,
-			TextPresentation presentation, int maxWidth, int maxHeight) {
+	public String updatePresentation(Drawable drawable, String hoverInfo, TextPresentation presentation, int maxWidth,
+			int maxHeight) {
 		if (markupLanguage == null) {
 			throw new IllegalStateException();
 		}

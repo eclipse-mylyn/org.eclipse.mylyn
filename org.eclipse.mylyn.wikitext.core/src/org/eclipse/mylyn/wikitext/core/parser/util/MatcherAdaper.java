@@ -17,7 +17,7 @@ package org.eclipse.mylyn.wikitext.core.parser.util;
  */
 public class MatcherAdaper implements Matcher {
 
-	private java.util.regex.Matcher delegate;
+	private final java.util.regex.Matcher delegate;
 
 	public MatcherAdaper(java.util.regex.Matcher delegate) {
 		this.delegate = delegate;

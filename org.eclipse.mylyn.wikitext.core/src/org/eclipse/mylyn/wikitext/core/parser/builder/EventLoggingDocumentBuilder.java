@@ -22,7 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
  */
 public class EventLoggingDocumentBuilder extends DocumentBuilder {
 
-	private Logger logger = Logger.getLogger(EventLoggingDocumentBuilder.class.getName());
+	private final Logger logger = Logger.getLogger(EventLoggingDocumentBuilder.class.getName());
 
 	private int blockDepth = 0;
 

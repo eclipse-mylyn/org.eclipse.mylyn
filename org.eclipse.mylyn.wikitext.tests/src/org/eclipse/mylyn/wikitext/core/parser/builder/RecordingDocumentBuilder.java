@@ -91,7 +91,7 @@ public class RecordingDocumentBuilder extends DocumentBuilder {
 		}
 	}
 
-	private java.util.List<Event> events = new ArrayList<Event>();
+	private final java.util.List<Event> events = new ArrayList<Event>();
 
 	private void add(Event event) {
 		event.locator = new LocatorImpl(getLocator());

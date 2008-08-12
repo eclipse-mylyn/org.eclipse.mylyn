@@ -33,23 +33,27 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * 
  * For the command to operate, the following conditions must be met:
  * <ul>
- * 	<li>The {@link ExecutionEvent#getApplicationContext() application context} must be an {@link EvaluationContext}.</li>
- * 	<li>The {@link EvaluationContext} must have an <code>activeFocusControl</code> {@link EvaluationContext#getVariable(String) variable}</li>
- * 	<li>The control must have the folllowing data items:
- *  <pre><code>
-	MarkupLanguage markupLanguage = (MarkupLanguage) control.getData(MarkupLanguage.class.getName());
-	ISourceViewer viewer = (ISourceViewer) control.getData(ISourceViewer.class.getName());
- *  </code></pre>
- *  </li>
+ * <li>The {@link ExecutionEvent#getApplicationContext() application context} must be an {@link EvaluationContext}.</li>
+ * <li>The {@link EvaluationContext} must have an <code>activeFocusControl</code>
+ * {@link EvaluationContext#getVariable(String) variable}</li>
+ * <li>The control must have the folllowing data items:
+ * 
+ * <pre>
+ * &lt;code&gt;
+ * 	MarkupLanguage markupLanguage = (MarkupLanguage) control.getData(MarkupLanguage.class.getName());
+ * 	ISourceViewer viewer = (ISourceViewer) control.getData(ISourceViewer.class.getName());
+ *  &lt;/code&gt;
+ * </pre>
+ * 
+ * </li>
  * </ul>
  * 
  * @author David Green
  */
 public class ShowCheatSheetCommand extends AbstractHandler {
 
-	
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Object activeFocusControl = HandlerUtil.getVariable(event,"activeFocusControl");
+		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl");
 		if (activeFocusControl instanceof Control) {
 			Control control = (Control) activeFocusControl;
 			MarkupLanguage markupLanguage = (MarkupLanguage) control.getData(MarkupLanguage.class.getName());
@@ -58,8 +62,10 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 			if (markupLanguage != null && viewer != null) {
 				ToolBarManager toolBarManager = new ToolBarManager();
 				toolBarManager.add(new ContextHelpAction());
-				final InformationPresenter informationPresenter = InformationPresenterUtil.getHtmlInformationPresenter(viewer, new InformationPresenterUtil.SizeConstraint(50,200,true,true),toolBarManager, computeCheatSheet(markupLanguage));
-	
+				final InformationPresenter informationPresenter = InformationPresenterUtil.getHtmlInformationPresenter(
+						viewer, new InformationPresenterUtil.SizeConstraint(50, 200, true, true), toolBarManager,
+						computeCheatSheet(markupLanguage));
+
 				// show information asynchronously since on Eclipse 3.4 it will disappear otherwise
 				Display.getCurrent().asyncExec(new Runnable() {
 					public void run() {
@@ -68,7 +74,7 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 				});
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -79,7 +85,7 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 			if (content == null) {
 				// explore the hierarchy for cheat-sheet content
 				MarkupLanguage l = markupLanguage;
-				
+
 				while (content == null && l != null && l.getExtendsLanguage() != null) {
 					l = WikiTextPlugin.getDefault().getMarkupLanguage(l.getExtendsLanguage());
 					if (l != null) {
@@ -95,6 +101,7 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 				WikiTextUiPlugin.getDefault().log(e);
 			}
 		}
-		return Messages.getMessage("MarkupEditor.noCheatSheetContent", markupLanguage==null?Messages.getString("MarkupEditor.noDialect"):markupLanguage.getName());
+		return Messages.getMessage("MarkupEditor.noCheatSheetContent",
+				markupLanguage == null ? Messages.getString("MarkupEditor.noDialect") : markupLanguage.getName());
 	}
 }

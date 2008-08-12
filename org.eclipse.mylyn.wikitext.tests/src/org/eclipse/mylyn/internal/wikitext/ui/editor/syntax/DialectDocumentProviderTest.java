@@ -17,7 +17,6 @@ import java.io.StringReader;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.text.Document;
-import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDocumentProvider;
 
 /**
  * 

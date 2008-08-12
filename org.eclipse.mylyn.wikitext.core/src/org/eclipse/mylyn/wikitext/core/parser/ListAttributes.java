@@ -11,8 +11,8 @@
 package org.eclipse.mylyn.wikitext.core.parser;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ListAttributes extends Attributes {
@@ -26,6 +26,5 @@ public class ListAttributes extends Attributes {
 	public void setStart(String start) {
 		this.start = start;
 	}
-
 
 }

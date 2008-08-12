@@ -16,8 +16,9 @@ public class BulletDrawingStrategy implements IDrawingStrategy {
 			final Color foreground = gc.getForeground();
 			final Color background = gc.getBackground();
 
-			if (length < 1)
+			if (length < 1) {
 				return;
+			}
 
 			Point left = textWidget.getLocationAtOffset(offset);
 			Point right = textWidget.getLocationAtOffset(offset + length);

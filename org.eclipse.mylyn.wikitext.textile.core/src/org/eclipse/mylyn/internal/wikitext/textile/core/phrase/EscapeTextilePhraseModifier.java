@@ -17,8 +17,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifierProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class EscapeTextilePhraseModifier extends PatternBasedElement {
@@ -27,10 +27,8 @@ public class EscapeTextilePhraseModifier extends PatternBasedElement {
 	protected String getPattern(int groupOffset) {
 		String quotedDelimiter = Pattern.quote("==");
 
-		return
-		quotedDelimiter +
-		"(\\S(?:.*?\\S)?)" + // content
-		quotedDelimiter;
+		return quotedDelimiter + "(\\S(?:.*?\\S)?)" + // content
+				quotedDelimiter;
 	}
 
 	@Override

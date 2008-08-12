@@ -22,8 +22,8 @@ import org.eclipse.ui.editors.text.FileDocumentProvider;
 // FIXME: move to internal, rename
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MarkupDocumentProvider extends FileDocumentProvider {
@@ -35,7 +35,7 @@ public class MarkupDocumentProvider extends FileDocumentProvider {
 		IDocument document = super.createDocument(element);
 		if (document != null) {
 			FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
-			partitioner.setMarkupLanguage(markupLanguage==null?null:markupLanguage.clone());
+			partitioner.setMarkupLanguage(markupLanguage == null ? null : markupLanguage.clone());
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
 		}
@@ -52,19 +52,18 @@ public class MarkupDocumentProvider extends FileDocumentProvider {
 	}
 
 	@Override
-	protected void setDocumentContent(IDocument document, InputStream contentStream, String encoding) throws CoreException {
+	protected void setDocumentContent(IDocument document, InputStream contentStream, String encoding)
+			throws CoreException {
 		super.setDocumentContent(document, contentStream, encoding);
 		cleanUpEolMarkers(document);
 	}
 
 	/**
-	 * clean up EOL markers, since mixing markers can cause problems.  For example,
-	 * if the file has \n EOL markers, and the current platform uses \r (eg on a mac)
-	 * then the user adding a new line immediately before \n can result in \r\n, which
-	 * visually for the user appears to be two lines, but when the markup is parsed is
-	 * treated as one line.  This can be confusing for the user as line markers affect how
-	 * the markup is interpreted.  Generally we want the edited markup to render the same
-	 * on all platforms, regardless of the platform-standard EOL marker.
+	 * clean up EOL markers, since mixing markers can cause problems. For example, if the file has \n EOL markers, and
+	 * the current platform uses \r (eg on a mac) then the user adding a new line immediately before \n can result in
+	 * \r\n, which visually for the user appears to be two lines, but when the markup is parsed is treated as one line.
+	 * This can be confusing for the user as line markers affect how the markup is interpreted. Generally we want the
+	 * edited markup to render the same on all platforms, regardless of the platform-standard EOL marker.
 	 */
 	protected static void cleanUpEolMarkers(IDocument document) {
 		String platformEolMarker = Text.DELIMITER;

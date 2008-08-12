@@ -77,7 +77,7 @@ public class Preferences {
 	public static final String[] HEADING_PREFERENCES = new String[] { null, BLOCK_H1, BLOCK_H2, BLOCK_H3, BLOCK_H4,
 			BLOCK_H5, BLOCK_H6 };
 
-	private Map<String, String> cssByBlockModifierType = new LinkedHashMap<String, String>();
+	private final Map<String, String> cssByBlockModifierType = new LinkedHashMap<String, String>();
 	{
 		cssByBlockModifierType.put(BLOCK_H1, "font-size: 150%; font-weight: bold;");
 		cssByBlockModifierType.put(BLOCK_H2, "font-size: 125%; font-weight: bold;");
@@ -90,7 +90,7 @@ public class Preferences {
 		cssByBlockModifierType.put(BLOCK_QUOTE, "font-family: monospace; color: rgb(38,86,145);");
 	}
 
-	private Map<String, String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
+	private final Map<String, String> cssByPhraseModifierType = new LinkedHashMap<String, String>();
 	{
 
 		cssByPhraseModifierType.put(PHRASE_EMPHASIS, "font-style: italic;");

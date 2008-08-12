@@ -26,6 +26,9 @@ import org.eclipse.mylyn.wikitext.core.parser.TableAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.TableCellAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 
+/**
+ * @author David Green
+ */
 public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 
 	private SplitOutlineItem outline;
@@ -63,6 +66,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		documentHeader();
 	}
 
+	@Override
 	public void acronym(String text, String definition) {
 		out.acronym(text, definition);
 	}
@@ -75,10 +79,12 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		out.addCssStylesheet(url);
 	}
 
+	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
 		out.beginBlock(type, attributes);
 	}
 
+	@Override
 	public void beginHeading(int level, Attributes attributes) {
 		SplitOutlineItem item = outline.getOutlineItemById(attributes.getId());
 		if (item != null && !currentFile.getName().equals(item.getSplitTarget())) {
@@ -276,14 +282,17 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		emitNavigation(true);
 	}
 
+	@Override
 	public void beginSpan(SpanType type, Attributes attributes) {
 		out.beginSpan(type, attributes);
 	}
 
+	@Override
 	public void characters(String text) {
 		out.characters(text);
 	}
 
+	@Override
 	public void charactersUnescaped(String literal) {
 		out.charactersUnescaped(literal);
 	}
@@ -292,10 +301,12 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		out.copyConfiguration(other);
 	}
 
+	@Override
 	public void endBlock() {
 		out.endBlock();
 	}
 
+	@Override
 	public void endDocument() {
 		documentFooter();
 		out.endDocument();
@@ -309,26 +320,32 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		out = null;
 	}
 
+	@Override
 	public void endHeading() {
 		out.endHeading();
 	}
 
+	@Override
 	public void endSpan() {
 		out.endSpan();
 	}
 
+	@Override
 	public void entityReference(String entity) {
 		out.entityReference(entity);
 	}
 
+	@Override
 	public Locator getLocator() {
 		return out.getLocator();
 	}
 
+	@Override
 	public void image(Attributes attributes, String url) {
 		out.image(attributes, url);
 	}
 
+	@Override
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
 		href = adjustHref(href);
 		out.imageLink(linkAttributes, imageAttributes, href, imageUrl);
@@ -344,15 +361,18 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		return href;
 	}
 
+	@Override
 	public void lineBreak() {
 		out.lineBreak();
 	}
 
+	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
 		hrefOrHashName = adjustHref(hrefOrHashName);
 		out.link(attributes, hrefOrHashName, text);
 	}
 
+	@Override
 	public void setLocator(Locator locator) {
 		if (out != null) {
 			out.setLocator(locator);

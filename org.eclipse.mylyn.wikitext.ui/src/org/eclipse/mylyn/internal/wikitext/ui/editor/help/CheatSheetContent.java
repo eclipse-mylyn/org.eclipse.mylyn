@@ -26,7 +26,7 @@ import org.osgi.framework.Bundle;
  */
 public class CheatSheetContent extends HelpContent {
 
-	private Pattern headingOpenTagPattern = Pattern.compile("(<h[4-6][^>]*)>", Pattern.MULTILINE
+	private final Pattern headingOpenTagPattern = Pattern.compile("(<h[4-6][^>]*)>", Pattern.MULTILINE
 			| Pattern.CASE_INSENSITIVE);
 
 	public CheatSheetContent(Bundle provider, String resourcePath, String resourceContentLanguage,

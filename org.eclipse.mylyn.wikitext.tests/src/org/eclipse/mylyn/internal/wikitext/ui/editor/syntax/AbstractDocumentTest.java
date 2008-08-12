@@ -21,8 +21,8 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public abstract class AbstractDocumentTest extends TestCase {
@@ -30,12 +30,13 @@ public abstract class AbstractDocumentTest extends TestCase {
 	protected IDocument createDocument(String resource) throws IOException {
 		Document document = new Document();
 
-		Reader reader = new BufferedReader(new InputStreamReader(FastDialectPartitionerTest.class.getResourceAsStream(resource)));
+		Reader reader = new BufferedReader(new InputStreamReader(
+				FastDialectPartitionerTest.class.getResourceAsStream(resource)));
 		try {
 			int i;
 			StringBuilder buf = new StringBuilder(4096);
 			while ((i = reader.read()) != -1) {
-				buf.append((char)i);
+				buf.append((char) i);
 			}
 			document.set(buf.toString());
 		} finally {

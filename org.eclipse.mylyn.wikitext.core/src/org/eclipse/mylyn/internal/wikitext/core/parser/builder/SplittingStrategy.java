@@ -10,17 +10,16 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
 
-
 /**
  * 
  * @author David Green
  */
 public abstract class SplittingStrategy {
-	
-	public abstract void heading(int level,String id);
-	
+
+	public abstract void heading(int level, String id);
+
 	public abstract boolean isSplit();
-	
+
 	public abstract String getSplitTarget();
-	
+
 }

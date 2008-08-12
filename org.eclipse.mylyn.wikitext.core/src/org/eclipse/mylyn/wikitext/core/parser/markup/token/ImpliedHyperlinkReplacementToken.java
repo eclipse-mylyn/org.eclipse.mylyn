@@ -14,8 +14,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ImpliedHyperlinkReplacementToken extends PatternBasedElement {
@@ -39,7 +39,7 @@ public class ImpliedHyperlinkReplacementToken extends PatternBasedElement {
 		@Override
 		public void emit() {
 			String target = group(1);
-			getBuilder().link(target,target);
+			getBuilder().link(target, target);
 		}
 	}
 }

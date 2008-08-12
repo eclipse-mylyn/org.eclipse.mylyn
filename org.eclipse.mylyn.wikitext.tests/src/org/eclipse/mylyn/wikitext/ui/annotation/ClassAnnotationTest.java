@@ -13,8 +13,8 @@ package org.eclipse.mylyn.wikitext.ui.annotation;
 import junit.framework.TestCase;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ClassAnnotationTest extends TestCase {
@@ -22,6 +22,6 @@ public class ClassAnnotationTest extends TestCase {
 	public void testSimple() {
 		ClassAnnotation annotation = new ClassAnnotation("foo");
 		assertEquals("foo", annotation.getCssClass());
-		assertEquals(ClassAnnotation.TYPE,annotation.getType());
+		assertEquals(ClassAnnotation.TYPE, annotation.getType());
 	}
 }

@@ -45,9 +45,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  */
 public class ConfluenceLanguage extends MarkupLanguage {
 
-	private List<Block> blocks = new ArrayList<Block>();
+	private final List<Block> blocks = new ArrayList<Block>();
 
-	private List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
+	private final List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
 
 	private static PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
 

@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.wikitext.textile.core;
 
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 import org.eclipse.mylyn.wikitext.tests.AbstractTestApplication;
 
 /**
@@ -34,6 +33,7 @@ public class Main extends AbstractTestApplication {
 		}
 	}
 
+	@Override
 	protected MarkupLanguage createMarkupLanguage() {
 		return new TextileLanguage();
 	}

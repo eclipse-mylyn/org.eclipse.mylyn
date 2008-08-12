@@ -16,14 +16,14 @@ import org.eclipse.jface.text.source.Annotation;
  * An annotation that marks the location of an <code>a/@href</code>.
  * 
  * @author David Green
- *
+ * 
  */
 public class AnchorHrefAnnotation extends Annotation {
 
 	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.anchor";
 
 	public AnchorHrefAnnotation(String href) {
-		super(TYPE,false,href);
+		super(TYPE, false, href);
 	}
 
 	public String getAnchorHref() {

@@ -146,7 +146,7 @@ public class OutlineItem {
 
 		private OutlineItem nearest = null;
 
-		private int offset;
+		private final int offset;
 
 		public NearestItemVisitor(int offset) {
 			this.offset = offset;

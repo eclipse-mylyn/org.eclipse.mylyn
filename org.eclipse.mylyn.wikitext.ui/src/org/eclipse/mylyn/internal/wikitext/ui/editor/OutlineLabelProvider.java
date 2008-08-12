@@ -15,8 +15,8 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.swt.graphics.Image;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 class OutlineLabelProvider extends LabelProvider {
@@ -30,7 +30,7 @@ class OutlineLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof OutlineItem) {
 			OutlineItem outlineItem = (OutlineItem) element;
-			return outlineItem.getKind()+". "+outlineItem.getLabel();
+			return outlineItem.getKind() + ". " + outlineItem.getLabel();
 		}
 		return element.toString();
 	}

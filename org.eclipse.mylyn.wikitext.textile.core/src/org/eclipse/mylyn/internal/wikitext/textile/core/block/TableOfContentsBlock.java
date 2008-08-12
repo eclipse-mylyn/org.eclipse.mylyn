@@ -21,8 +21,8 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class TableOfContentsBlock extends Block {
@@ -32,13 +32,13 @@ public class TableOfContentsBlock extends Block {
 	private int blockLineNumber = 0;
 
 	private String style = "none";
-	private int maxLevel = Integer.MAX_VALUE;
 
+	private int maxLevel = Integer.MAX_VALUE;
 
 	private Matcher matcher;
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineNumber++ > 0) {
 			setClosed(true);
 			return 0;
@@ -48,7 +48,7 @@ public class TableOfContentsBlock extends Block {
 			String options = matcher.group(1);
 			if (options != null) {
 				String[] optionPairs = options.split("\\s*\\|\\s*");
-				for (String optionPair: optionPairs) {
+				for (String optionPair : optionPairs) {
 					String[] keyValue = optionPair.split("\\s*=\\s*");
 					if (keyValue.length == 2) {
 						String key = keyValue[0].trim();
@@ -59,7 +59,8 @@ public class TableOfContentsBlock extends Block {
 						} else if (key.equals("maxLevel")) {
 							try {
 								maxLevel = Integer.parseInt(value);
-							} catch (NumberFormatException e) {}
+							} catch (NumberFormatException e) {
+							}
 						}
 					}
 				}
@@ -73,20 +74,19 @@ public class TableOfContentsBlock extends Block {
 		return -1;
 	}
 
-
 	private void emitToc(OutlineItem item) {
 		if (item.getChildren().isEmpty()) {
 			return;
 		}
-		if ((item.getLevel()+1) > maxLevel) {
+		if ((item.getLevel() + 1) > maxLevel) {
 			return;
 		}
 		Attributes nullAttributes = new Attributes();
 
-		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null,null,"list-style: "+style+";",null));
-		for (OutlineItem child: item.getChildren()) {
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null, null, "list-style: " + style + ";", null));
+		for (OutlineItem child : item.getChildren()) {
 			builder.beginBlock(BlockType.LIST_ITEM, nullAttributes);
-			builder.link('#'+child.getId(), child.getLabel());
+			builder.link('#' + child.getId(), child.getLabel());
 			emitToc(child);
 			builder.endBlock();
 		}
@@ -94,7 +94,7 @@ public class TableOfContentsBlock extends Block {
 	}
 
 	@Override
-	public boolean canStart(String line,int lineOffset) {
+	public boolean canStart(String line, int lineOffset) {
 		if (lineOffset == 0 && !getMarkupLanguage().isFilterGenerativeContents()) {
 			matcher = startPattern.matcher(line);
 			return matcher.matches();
@@ -119,7 +119,5 @@ public class TableOfContentsBlock extends Block {
 	public void setMaxLevel(int maxLevel) {
 		this.maxLevel = maxLevel;
 	}
-
-
 
 }

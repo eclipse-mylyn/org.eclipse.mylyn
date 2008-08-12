@@ -11,8 +11,8 @@
 package org.eclipse.mylyn.wikitext.core.util;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public abstract class XmlStreamWriter {
@@ -29,11 +29,9 @@ public abstract class XmlStreamWriter {
 
 	public abstract void writeAttribute(String localName, String value);
 
-	public abstract void writeAttribute(String namespaceURI, String localName,
-			String value);
+	public abstract void writeAttribute(String namespaceURI, String localName, String value);
 
-	public abstract void writeAttribute(String prefix, String namespaceURI,
-			String localName, String value);
+	public abstract void writeAttribute(String prefix, String namespaceURI, String localName, String value);
 
 	public abstract void writeCData(String data);
 
@@ -51,8 +49,7 @@ public abstract class XmlStreamWriter {
 
 	public abstract void writeEmptyElement(String namespaceURI, String localName);
 
-	public abstract void writeEmptyElement(String prefix, String localName,
-			String namespaceURI);
+	public abstract void writeEmptyElement(String prefix, String localName, String namespaceURI);
 
 	public abstract void writeEndDocument();
 
@@ -76,12 +73,11 @@ public abstract class XmlStreamWriter {
 
 	public abstract void writeStartElement(String namespaceURI, String localName);
 
-	public abstract void writeStartElement(String prefix, String localName,
-			String namespaceURI);
+	public abstract void writeStartElement(String prefix, String localName, String namespaceURI);
 
 	/**
-	 * Write an XML fragment directly to the output.  The given text is not processed or XML-encoded,
-	 * since it is assumed to be a legal XML fragment.
+	 * Write an XML fragment directly to the output. The given text is not processed or XML-encoded, since it is assumed
+	 * to be a legal XML fragment.
 	 */
 	public abstract void writeLiteral(String literal);
 

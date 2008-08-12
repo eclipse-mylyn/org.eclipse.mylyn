@@ -27,9 +27,9 @@ public class Templates {
 
 	private String markupLanguageName;
 
-	private List<Template> template = new ArrayList<Template>();
+	private final List<Template> template = new ArrayList<Template>();
 
-	private Set<Template> blockTemplates = new HashSet<Template>();
+	private final Set<Template> blockTemplates = new HashSet<Template>();
 
 	private Templates parent;
 

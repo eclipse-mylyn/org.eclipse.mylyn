@@ -34,7 +34,7 @@ public class ListBlock extends Block {
 
 	private Matcher matcher;
 
-	private Stack<ListState> listState = new Stack<ListState>();
+	private final Stack<ListState> listState = new Stack<ListState>();
 
 	public ListBlock() {
 	}

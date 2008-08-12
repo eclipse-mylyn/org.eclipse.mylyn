@@ -13,8 +13,8 @@ package org.eclipse.mylyn.wikitext.ui.viewer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MarkupViewerConfiguration extends HtmlViewerConfiguration {

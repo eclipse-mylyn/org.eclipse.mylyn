@@ -20,33 +20,39 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * quoted text block, matches blocks that start with <code>bc. </code>.
- * Creates an extended block type of {@link ParagraphBlock paragraph}.
+ * quoted text block, matches blocks that start with <code>bc. </code>. Creates an extended block type of
+ * {@link ParagraphBlock paragraph}.
  * 
  * @author David Green
  */
 public class QuoteBlock extends Block {
 
-	private static final int LINE_REMAINDER_GROUP = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT+3;
-	private static final int CITATION_GROUP = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT+2;
-	private static final int EXTENDED_GROUP = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT+1;
+	private static final int LINE_REMAINDER_GROUP = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 3;
 
-	static final Pattern startPattern = Pattern.compile("bq"+Textile.REGEX_BLOCK_ATTRIBUTES+"\\.(\\.)?(?::(https?://[^\\s]*))?\\s+(.*)");
+	private static final int CITATION_GROUP = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 2;
+
+	private static final int EXTENDED_GROUP = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 1;
+
+	static final Pattern startPattern = Pattern.compile("bq" + Textile.REGEX_BLOCK_ATTRIBUTES
+			+ "\\.(\\.)?(?::(https?://[^\\s]*))?\\s+(.*)");
 
 	private boolean extended;
+
 	private boolean paraOpen;
+
 	private int blockLineCount = 0;
+
 	private Matcher matcher;
 
 	public QuoteBlock() {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			QuoteAttributes attributes = new QuoteAttributes();
 
-			Textile.configureAttributes(attributes,matcher, 1,true);
+			Textile.configureAttributes(attributes, matcher, 1, true);
 
 			attributes.setCitation(matcher.group(CITATION_GROUP));
 
@@ -68,7 +74,7 @@ public class QuoteBlock extends Block {
 				}
 				return 0;
 			}
-		} else if (extended && Textile.explicitBlockBegins(line,offset)) {
+		} else if (extended && Textile.explicitBlockBegins(line, offset)) {
 			setClosed(true);
 			return offset;
 		}
@@ -82,7 +88,7 @@ public class QuoteBlock extends Block {
 		}
 		++blockLineCount;
 
-		getMarkupLanguage().emitMarkupLine(getParser(),state,line, offset);
+		getMarkupLanguage().emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}

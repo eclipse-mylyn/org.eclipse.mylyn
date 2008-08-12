@@ -11,8 +11,8 @@
 package org.eclipse.mylyn.wikitext.core.parser;
 
 /**
- * An interface that provides information about the location of the current parser activity.
- * Note that parsers may make a best-effort attempt at determining the location.
+ * An interface that provides information about the location of the current parser activity. Note that parsers may make
+ * a best-effort attempt at determining the location.
  * 
  * @author David Green
  */
@@ -32,8 +32,8 @@ public interface Locator {
 	public int getLineDocumentOffset();
 
 	/**
-	 * get the 0-based character offset of the current character from the start of the document.
-	 * Equivalent to <code>getLineDocumentOffset()+getLineCharacterOffset()</code>
+	 * get the 0-based character offset of the current character from the start of the document. Equivalent to
+	 * <code>getLineDocumentOffset()+getLineCharacterOffset()</code>
 	 */
 	public int getDocumentOffset();
 
@@ -50,8 +50,8 @@ public interface Locator {
 	/**
 	 * Get the 0-based offset of the end of the current line segment being processed, exclusive.
 	 * 
-	 * Generally a phrase modifier starts at {@link #getLineCharacterOffset()} and ends on
-	 * the character preceding this offset, <code>[s,e)</code> where s is the start and e is the end.
+	 * Generally a phrase modifier starts at {@link #getLineCharacterOffset()} and ends on the character preceding this
+	 * offset, <code>[s,e)</code> where s is the start and e is the end.
 	 */
 	public int getLineSegmentEndOffset();
 }

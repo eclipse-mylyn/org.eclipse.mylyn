@@ -16,8 +16,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class SimpleWrappedPhraseModifier extends PatternBasedElement {
@@ -41,10 +41,12 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 	}
 
 	private String startDelimiter;
+
 	private String endDelimiter;
+
 	private SpanType spanType;
 
-	public SimpleWrappedPhraseModifier(String startDelimiter,String endDelimiter, SpanType spanType) {
+	public SimpleWrappedPhraseModifier(String startDelimiter, String endDelimiter, SpanType spanType) {
 		this.startDelimiter = startDelimiter;
 		this.endDelimiter = endDelimiter;
 		this.spanType = spanType;
@@ -54,16 +56,15 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 	protected String getPattern(int groupOffset) {
 		String quotedStartDelimiter = quoteLite(startDelimiter);
 		String quotedDelimiter = quoteLite(endDelimiter);
-		
-		return 
-		quotedStartDelimiter + "(?!"+quotedDelimiter+")"+
-		"([^\\s"+quotedDelimiter+"]+|\\S[^"+quotedDelimiter+"]*[^\\s"+quotedDelimiter+"])" + // content
-		quotedDelimiter;
+
+		return quotedStartDelimiter + "(?!" + quotedDelimiter + ")" + "([^\\s" + quotedDelimiter + "]+|\\S[^"
+				+ quotedDelimiter + "]*[^\\s" + quotedDelimiter + "])" + // content
+				quotedDelimiter;
 	}
 
 	private String quoteLite(String literal) {
-		StringBuilder buf = new StringBuilder(literal.length()*2);
-		for (int x = 0;x<literal.length();++x) {
+		StringBuilder buf = new StringBuilder(literal.length() * 2);
+		for (int x = 0; x < literal.length(); ++x) {
 			char c = literal.charAt(x);
 			switch (c) {
 			case '^':
@@ -79,7 +80,7 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		}
 		return buf.toString();
 	}
-	
+
 	@Override
 	protected int getPatternGroupCount() {
 		return 1;

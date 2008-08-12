@@ -19,7 +19,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * match [[Image:someImage.png]]
  * 
  * @author David Green
- *
+ * 
  */
 public class ImageReplacementToken extends PatternBasedElement {
 
@@ -47,7 +47,7 @@ public class ImageReplacementToken extends PatternBasedElement {
 			ImageAttributes attributes = new ImageAttributes();
 			if (optionsString != null) {
 				String[] options = optionsString.split("\\s*\\|\\s*");
-				for (String option: options) {
+				for (String option : options) {
 					if ("center".equals(option)) {
 						attributes.setAlign(Align.Middle);
 					} else if ("left".equals(option)) {
@@ -56,11 +56,11 @@ public class ImageReplacementToken extends PatternBasedElement {
 						attributes.setAlign(Align.Right);
 					} else if ("none".equals(option)) {
 						attributes.setAlign(null);
-					} else if ("thumb".equals(option)||"thumbnail".equals(option)) {
+					} else if ("thumb".equals(option) || "thumbnail".equals(option)) {
 						// ignore
 					} else if (option.matches("\\d+px")) {
 						try {
-							int size = Integer.parseInt(option.substring(0,option.length()-2));
+							int size = Integer.parseInt(option.substring(0, option.length() - 2));
 							attributes.setWidth(size);
 							attributes.setHeight(size);
 						} catch (NumberFormatException e) {

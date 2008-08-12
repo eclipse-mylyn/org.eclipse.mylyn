@@ -20,11 +20,11 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  */
 public class EntityWrappingReplacementToken extends PatternBasedElement {
 
-	private String delimiter;
+	private final String delimiter;
 
-	private String leftEntity;
+	private final String leftEntity;
 
-	private String rightEntity;
+	private final String rightEntity;
 
 	public EntityWrappingReplacementToken(String delimiter, String leftEntity, String rightEntity) {
 		this.delimiter = delimiter;

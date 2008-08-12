@@ -41,16 +41,21 @@ import org.eclipse.ui.texteditor.HippieProposalProcessor;
 
 /**
  * A source viewer configuration suitable for installing on a markup editor
- *
+ * 
  * @author David Green
  */
 public class MarkupSourceViewerConfiguration extends TextSourceViewerConfiguration {
 
 	private ITokenScanner scanner;
+
 	private MarkupTemplateCompletionProcessor completionProcessor;
+
 	private MarkupLanguage markupLanguage;
+
 	private MarkupValidationReconcilingStrategy markupValidationReconcilingStrategy;
+
 	private IFile file;
+
 	private ITextHover textHover;
 
 	public MarkupSourceViewerConfiguration(IPreferenceStore preferenceStore) {
@@ -70,12 +75,12 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 
 		MarkupDamagerRepairer damagerRepairer = new MarkupDamagerRepairer(getMarkupScanner());
-		for (String partitionType: FastMarkupPartitioner.ALL_CONTENT_TYPES) {
+		for (String partitionType : FastMarkupPartitioner.ALL_CONTENT_TYPES) {
 			reconciler.setDamager(damagerRepairer, partitionType);
 			reconciler.setRepairer(damagerRepairer, partitionType);
 		}
-		reconciler.setDamager(damagerRepairer,IDocument.DEFAULT_CONTENT_TYPE);
-		reconciler.setRepairer(damagerRepairer,IDocument.DEFAULT_CONTENT_TYPE);
+		reconciler.setDamager(damagerRepairer, IDocument.DEFAULT_CONTENT_TYPE);
+		reconciler.setRepairer(damagerRepairer, IDocument.DEFAULT_CONTENT_TYPE);
 
 		return reconciler;
 	}
@@ -92,20 +97,20 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 		MultiplexingContentAssistProcessor processor = new MultiplexingContentAssistProcessor();
 		processor.addDelegate(completionProcessor);
 		processor.addDelegate(hippieProcessor);
-		
+
 		IContentAssistProcessor[] processors = createContentAssistProcessors();
 		if (processors != null) {
-			for (IContentAssistProcessor cap: processors) {
+			for (IContentAssistProcessor cap : processors) {
 				processor.addDelegate(cap);
 			}
 		}
 
-		ContentAssistant assistant= new ContentAssistant();
+		ContentAssistant assistant = new ContentAssistant();
 		assistant.enableAutoActivation(true);
 		assistant.enableAutoInsert(true);
 		assistant.setContentAssistProcessor(processor, IDocument.DEFAULT_CONTENT_TYPE);
 
-		for (String partitionType: FastMarkupPartitioner.ALL_CONTENT_TYPES) {
+		for (String partitionType : FastMarkupPartitioner.ALL_CONTENT_TYPES) {
 			assistant.setContentAssistProcessor(processor, partitionType);
 		}
 
@@ -143,10 +148,10 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 			IReconciler reconciler = super.getReconciler(sourceViewer);
 			if (reconciler != null) {
 				MultiReconcilingStrategy multiStrategy = new MultiReconcilingStrategy();
-				for (String contentType: FastMarkupPartitioner.ALL_CONTENT_TYPES) {
-					maybeAddReconcilingStrategyForContentType(multiStrategy,reconciler, contentType);
+				for (String contentType : FastMarkupPartitioner.ALL_CONTENT_TYPES) {
+					maybeAddReconcilingStrategyForContentType(multiStrategy, reconciler, contentType);
 				}
-				maybeAddReconcilingStrategyForContentType(multiStrategy,reconciler, IDocument.DEFAULT_CONTENT_TYPE);
+				maybeAddReconcilingStrategyForContentType(multiStrategy, reconciler, IDocument.DEFAULT_CONTENT_TYPE);
 				multiStrategy.add(markupValidationReconcilingStrategy);
 				strategy = multiStrategy;
 			} else {
@@ -160,9 +165,8 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 		return reconciler;
 	}
 
-	private void maybeAddReconcilingStrategyForContentType(
-			MultiReconcilingStrategy multiStrategy, IReconciler reconciler,
-			String contentType) {
+	private void maybeAddReconcilingStrategyForContentType(MultiReconcilingStrategy multiStrategy,
+			IReconciler reconciler, String contentType) {
 		final IReconcilingStrategy reconcilingStrategy = reconciler.getReconcilingStrategy(contentType);
 		if (reconcilingStrategy != null && !multiStrategy.contains(reconcilingStrategy)) {
 			multiStrategy.add(reconcilingStrategy);
@@ -177,8 +181,7 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 	}
 
 	@Override
-	public ITextHover getTextHover(ISourceViewer sourceViewer,
-			String contentType) {
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
 		if (textHover == null) {
 			textHover = new DefaultTextHover(sourceViewer);
 		}

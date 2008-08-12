@@ -14,19 +14,20 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ValidationProblemAnnotation extends Annotation {
 
 	private static final String TYPE_BASE = "org.eclipse.mylyn.wikitext.ui.editor.problem.validation";
 
-	public static final String TYPE_WARNING = TYPE_BASE +".warning";
-	public static final String TYPE_ERROR = TYPE_BASE+".error";
+	public static final String TYPE_WARNING = TYPE_BASE + ".warning";
+
+	public static final String TYPE_ERROR = TYPE_BASE + ".error";
 
 	public ValidationProblemAnnotation(ValidationProblem problem) {
-		super(computeType(problem),false,problem.getMessage());
+		super(computeType(problem), false, problem.getMessage());
 	}
 
 	private static String computeType(ValidationProblem problem) {

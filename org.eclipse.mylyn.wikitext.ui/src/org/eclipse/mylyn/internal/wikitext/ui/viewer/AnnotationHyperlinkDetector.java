@@ -32,12 +32,12 @@ import org.eclipse.mylyn.wikitext.ui.annotation.IdAnnotation;
 
 public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,IRegion region, boolean canShowMultipleHyperlinks) {
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (textViewer instanceof ISourceViewer) {
 
 			// Note: only find hyperlinks that include the region end point, otherwise we may get hyperlinks that
 			//       are not even relevant.
-			int interestingOffset = region.getOffset()+region.getLength();
+			int interestingOffset = region.getOffset() + region.getLength();
 
 			ISourceViewer sourceViewer = (ISourceViewer) textViewer;
 			IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
@@ -49,7 +49,8 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 					if (annotation instanceof AnchorHrefAnnotation) {
 						AnchorHrefAnnotation href = (AnchorHrefAnnotation) annotation;
 						Position position = annotationModel.getPosition(href);
-						if (position.getOffset() <= interestingOffset && position.getOffset()+position.getLength() >= interestingOffset) {
+						if (position.getOffset() <= interestingOffset
+								&& position.getOffset() + position.getLength() >= interestingOffset) {
 							if (hrefs == null) {
 								hrefs = new ArrayList<AnchorHrefAnnotation>();
 							}
@@ -60,25 +61,24 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 				if (hrefs != null) {
 					if (hrefs.size() > 1) {
 						// put greatest offset annotations first.
-						Collections.sort(hrefs,new OffsetComparator(annotationModel));
+						Collections.sort(hrefs, new OffsetComparator(annotationModel));
 					}
-					return new IHyperlink[] {
-							createHyperlink(sourceViewer,annotationModel,hrefs.get(0))
-					};
+					return new IHyperlink[] { createHyperlink(sourceViewer, annotationModel, hrefs.get(0)) };
 				}
 			}
 		}
 		return null;
 	}
 
-	protected IHyperlink createHyperlink(ISourceViewer viewer,IAnnotationModel annotationModel,AnchorHrefAnnotation anchorHrefAnnotation) {
+	protected IHyperlink createHyperlink(ISourceViewer viewer, IAnnotationModel annotationModel,
+			AnchorHrefAnnotation anchorHrefAnnotation) {
 		Position position = annotationModel.getPosition(anchorHrefAnnotation);
-		IRegion region = new Region(position.getOffset(),position.getLength());
+		IRegion region = new Region(position.getOffset(), position.getLength());
 		String href = anchorHrefAnnotation.getAnchorHref();
 		if (href != null && href.startsWith("#")) {
-			return new DocumentHyperlink(viewer,region,href);
+			return new DocumentHyperlink(viewer, region, href);
 		} else {
-			return new URLHyperlink(region,href);
+			return new URLHyperlink(region, href);
 		}
 	}
 
@@ -92,6 +92,7 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 		public OffsetComparator(IAnnotationModel annotationModel) {
 			this.annotationModel = annotationModel;
 		}
+
 		public int compare(Annotation o1, Annotation o2) {
 			if (o1 == o2) {
 				return 0;
@@ -114,22 +115,21 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 
 	}
 
-
 	/**
-	 * A hyperlink implementation that causes the viewer's selection (and scrolling) to adjust
-	 * to the hyperlink target.
+	 * A hyperlink implementation that causes the viewer's selection (and scrolling) to adjust to the hyperlink target.
 	 * 
 	 * @author David Green
-	 *
+	 * 
 	 */
 	protected static class DocumentHyperlink implements IHyperlink {
 
 		private final ISourceViewer viewer;
+
 		private final IRegion region;
+
 		private final String href;
 
-		public DocumentHyperlink(ISourceViewer viewer, IRegion region,
-				String href) {
+		public DocumentHyperlink(ISourceViewer viewer, IRegion region, String href) {
 			this.viewer = viewer;
 			this.region = region;
 			this.href = href;
@@ -138,12 +138,15 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 		public IRegion getHyperlinkRegion() {
 			return region;
 		}
+
 		public String getHyperlinkText() {
 			return null;
 		}
+
 		public String getTypeLabel() {
 			return null;
 		}
+
 		public void open() {
 			String lookingFor = href.substring(1); // lose the leading '#'
 

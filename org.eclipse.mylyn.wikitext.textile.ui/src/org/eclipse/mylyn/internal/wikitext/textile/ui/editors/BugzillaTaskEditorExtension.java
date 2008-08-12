@@ -16,7 +16,7 @@ import org.eclipse.mylyn.wikitext.ui.editor.MarkupTaskEditorExtension;
 
 /**
  * A task editor extension that uses the {@link BugzillaTextileLanguage}.
- *
+ * 
  * @author David Green
  */
 public class BugzillaTaskEditorExtension extends MarkupTaskEditorExtension {

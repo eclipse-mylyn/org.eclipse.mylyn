@@ -38,8 +38,8 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class WikiTextUiPlugin extends AbstractUIPlugin {
@@ -47,7 +47,9 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 	private static final String EXTENSION_POINT_CHEAT_SHEET = "cheatSheet";
 
 	private static final String EXTENSION_POINT_CONTENT_ASSIST = "contentAssist";
+
 	private static final String EXTENSION_POINT_TEMPLATES = "templates";
+
 	private static final String EXTENSION_POINT_TEMPLATE = "template";
 
 	private static WikiTextUiPlugin plugin;
@@ -73,7 +75,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static WikiTextUiPlugin getDefault() {
@@ -82,9 +84,9 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 
 	public void log(Throwable ce) {
 		if (ce instanceof CoreException) {
-			getLog().log(((CoreException)ce).getStatus());
+			getLog().log(((CoreException) ce).getStatus());
 		} else {
-			log(IStatus.ERROR,ce.getMessage(),ce);
+			log(IStatus.ERROR, ce.getMessage(), ce);
 		}
 	}
 
@@ -108,17 +110,16 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 	}
 
 	public IStatus createStatus(int statusCode, Throwable exception) {
-		return createStatus(null,statusCode, exception);
+		return createStatus(null, statusCode, exception);
 	}
 
 	public IStatus createStatus(String message, int statusCode, Throwable exception) {
 		if (message == null && exception != null) {
-			message = exception.getClass().getName()+": "+exception.getMessage();
+			message = exception.getClass().getName() + ": " + exception.getMessage();
 		}
 		Status status = new Status(statusCode, getPluginId(), statusCode, message, exception);
 		return status;
 	}
-
 
 	public Preferences getPreferences() {
 		Preferences prefs = new Preferences();
@@ -126,14 +127,15 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 		return prefs;
 	}
 
-	public SortedMap<String,HelpContent> getCheatSheets() {
+	public SortedMap<String, HelpContent> getCheatSheets() {
 		if (cheatSheets == null) {
 			SortedMap<String, HelpContent> cheatSheets = new TreeMap<String, HelpContent>();
 
-			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(), EXTENSION_POINT_CHEAT_SHEET);
+			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
+					EXTENSION_POINT_CHEAT_SHEET);
 			if (extensionPoint != null) {
 				IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-				for (IConfigurationElement element: configurationElements) {
+				for (IConfigurationElement element : configurationElements) {
 					String declaringPluginId = element.getDeclaringExtension().getContributor().getName();
 					Bundle bundle = Platform.getBundle(declaringPluginId);
 					String markupLanguage = element.getAttribute("markupLanguage");
@@ -143,19 +145,23 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 						if (markupLanguage == null) {
 							throw new Exception("Must specify markupLanguage");
 						} else if (!WikiTextPlugin.getDefault().getMarkupLanguageNames().contains(markupLanguage)) {
-							throw new Exception(String.format("'%s' is not a valid markupLanguage",markupLanguage));
+							throw new Exception(String.format("'%s' is not a valid markupLanguage", markupLanguage));
 						}
 						if (resource == null || resource.length() == 0) {
 							throw new Exception("Must specify resource");
 						}
-						HelpContent cheatSheet = new CheatSheetContent(bundle,resource,contentLanguage,markupLanguage);
-						HelpContent previous = cheatSheets.put(cheatSheet.getMarkupLanguageName(),cheatSheet);
+						HelpContent cheatSheet = new CheatSheetContent(bundle, resource, contentLanguage,
+								markupLanguage);
+						HelpContent previous = cheatSheets.put(cheatSheet.getMarkupLanguageName(), cheatSheet);
 						if (previous != null) {
-							cheatSheets.put(previous.getMarkupLanguageName(),previous);
-							throw new Exception(String.format("content for markupLanguage '%s' is already declared by plugin '%s'",previous.getMarkupLanguageName(),previous.getProvider().getSymbolicName()));
+							cheatSheets.put(previous.getMarkupLanguageName(), previous);
+							throw new Exception(String.format(
+									"content for markupLanguage '%s' is already declared by plugin '%s'",
+									previous.getMarkupLanguageName(), previous.getProvider().getSymbolicName()));
 						}
 					} catch (Exception e) {
-						log(IStatus.ERROR,String.format("Plugin '%s' extension '%s' invalid: %s",declaringPluginId,EXTENSION_POINT_CHEAT_SHEET,e.getMessage()),e);
+						log(IStatus.ERROR, String.format("Plugin '%s' extension '%s' invalid: %s", declaringPluginId,
+								EXTENSION_POINT_CHEAT_SHEET, e.getMessage()), e);
 					}
 				}
 			}
@@ -170,16 +176,16 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 	 * 
 	 * @return the templates
 	 */
-	public Map<String,Templates> getTemplates() {
+	public Map<String, Templates> getTemplates() {
 		if (templates == null) {
-			Map<String,Templates> templates = new HashMap<String, Templates>();
+			Map<String, Templates> templates = new HashMap<String, Templates>();
 
-
-			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(), EXTENSION_POINT_CONTENT_ASSIST);
+			IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
+					EXTENSION_POINT_CONTENT_ASSIST);
 			if (extensionPoint != null) {
 
 				IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-				for (IConfigurationElement element: configurationElements) {
+				for (IConfigurationElement element : configurationElements) {
 					String declaringPluginId = element.getDeclaringExtension().getContributor().getName();
 					if (EXTENSION_POINT_TEMPLATES.equals(element.getName())) {
 						try {
@@ -187,12 +193,12 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 							if (markupLanguage == null) {
 								throw new Exception("Must specify markupLanguage");
 							} else if (!WikiTextPlugin.getDefault().getMarkupLanguageNames().contains(markupLanguage)) {
-								throw new Exception(String.format("'%s' is not a valid markupLanguage",markupLanguage));
+								throw new Exception(String.format("'%s' is not a valid markupLanguage", markupLanguage));
 							}
 							Templates dialectTemplates = new Templates();
 							dialectTemplates.setMarkupLanguageName(markupLanguage);
 
-							for (IConfigurationElement templatesChild: element.getChildren()) {
+							for (IConfigurationElement templatesChild : element.getChildren()) {
 								if (EXTENSION_POINT_TEMPLATE.equals(templatesChild.getName())) {
 									try {
 										// process the template
@@ -203,45 +209,58 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 										String block = templatesChild.getAttribute("block");
 
 										if (name == null || name.length() == 0) {
-											throw new Exception(String.format("Must specify %s/name",EXTENSION_POINT_TEMPLATE));
+											throw new Exception(String.format("Must specify %s/name",
+													EXTENSION_POINT_TEMPLATE));
 										}
 										if (description == null || description.length() == 0) {
-											throw new Exception(String.format("Must specify %s/description",EXTENSION_POINT_TEMPLATE));
+											throw new Exception(String.format("Must specify %s/description",
+													EXTENSION_POINT_TEMPLATE));
 										}
 										if (content == null || content.length() == 0) {
-											throw new Exception(String.format("Must specify %s/content",EXTENSION_POINT_TEMPLATE));
+											throw new Exception(String.format("Must specify %s/content",
+													EXTENSION_POINT_TEMPLATE));
 										}
-										content = content.replace("\\r\\n", Text.DELIMITER).replace("\\r", Text.DELIMITER).replace("\\n", Text.DELIMITER).replace("\\\\","\\");
+										content = content.replace("\\r\\n", Text.DELIMITER).replace("\\r",
+												Text.DELIMITER).replace("\\n", Text.DELIMITER).replace("\\\\", "\\");
 										if (content.endsWith("$")) {
-											content = content.substring(0,content.length()-1);
+											content = content.substring(0, content.length() - 1);
 										}
 
-										dialectTemplates.addTemplate(new Template(name,description,MarkupTemplateCompletionProcessor.CONTEXT_ID,content,autoInsert == null || !"false".equalsIgnoreCase(autoInsert)),block != null && "true".equalsIgnoreCase(block));
+										dialectTemplates.addTemplate(new Template(name, description,
+												MarkupTemplateCompletionProcessor.CONTEXT_ID, content,
+												autoInsert == null || !"false".equalsIgnoreCase(autoInsert)),
+												block != null && "true".equalsIgnoreCase(block));
 									} catch (Exception e) {
-										log(IStatus.ERROR,String.format("Plugin '%s' extension '%s' invalid: %s",declaringPluginId,EXTENSION_POINT_CONTENT_ASSIST,e.getMessage()), e);
+										log(IStatus.ERROR, String.format("Plugin '%s' extension '%s' invalid: %s",
+												declaringPluginId, EXTENSION_POINT_CONTENT_ASSIST, e.getMessage()), e);
 									}
 								} else {
-									log(IStatus.ERROR,String.format("Plugin '%s' extension '%s' unexpected element: %s",declaringPluginId,EXTENSION_POINT_CONTENT_ASSIST,templatesChild.getName()), null);
+									log(IStatus.ERROR, String.format(
+											"Plugin '%s' extension '%s' unexpected element: %s", declaringPluginId,
+											EXTENSION_POINT_CONTENT_ASSIST, templatesChild.getName()), null);
 								}
 							}
-							Templates previous = templates.put(dialectTemplates.getMarkupLanguageName(), dialectTemplates);
+							Templates previous = templates.put(dialectTemplates.getMarkupLanguageName(),
+									dialectTemplates);
 							if (previous != null) {
 								dialectTemplates.addAll(previous);
 							}
 						} catch (Exception e) {
-							log(IStatus.ERROR,String.format("Plugin '%s' extension '%s' invalid: %s",declaringPluginId,EXTENSION_POINT_TEMPLATES,e.getMessage()),e);
+							log(IStatus.ERROR, String.format("Plugin '%s' extension '%s' invalid: %s",
+									declaringPluginId, EXTENSION_POINT_TEMPLATES, e.getMessage()), e);
 						}
 					} else {
-						log(IStatus.ERROR,String.format("Plugin '%s' extension '%s' unexpected element: %s",declaringPluginId,EXTENSION_POINT_CONTENT_ASSIST,element.getName()), null);
+						log(IStatus.ERROR, String.format("Plugin '%s' extension '%s' unexpected element: %s",
+								declaringPluginId, EXTENSION_POINT_CONTENT_ASSIST, element.getName()), null);
 					}
 				}
 			}
-			
+
 			// now that we have the basic templates, check for language extensions and connect the hierarchy
-			
+
 			// first ensure that all language names have templates defined
 			Set<String> languageNames = WikiTextPlugin.getDefault().getMarkupLanguageNames();
-			for (String languageName: languageNames) {
+			for (String languageName : languageNames) {
 				Templates languageTemplates = templates.get(languageName);
 				if (languageTemplates == null) {
 					languageTemplates = new Templates();
@@ -249,16 +268,16 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 				}
 			}
 			// next connect the hierarchy
-			for (String languageName: languageNames) {
+			for (String languageName : languageNames) {
 				MarkupLanguage markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
 				if (markupLanguage != null && markupLanguage.getExtendsLanguage() != null) {
 					Templates languageTemplates = templates.get(languageName);
 					Templates parentLanguageTemplates = templates.get(markupLanguage.getExtendsLanguage());
-					
+
 					languageTemplates.setParent(parentLanguageTemplates);
 				}
 			}
-			
+
 			this.templates = Collections.unmodifiableMap(templates);
 		}
 		return templates;

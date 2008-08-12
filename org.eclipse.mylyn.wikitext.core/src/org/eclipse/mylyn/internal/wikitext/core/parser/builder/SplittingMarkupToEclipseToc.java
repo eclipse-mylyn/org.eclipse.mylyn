@@ -17,7 +17,7 @@ public class SplittingMarkupToEclipseToc extends MarkupToEclipseToc {
 	@Override
 	protected String computeFile(OutlineItem item) {
 		if (item instanceof SplitOutlineItem) {
-			String target = ((SplitOutlineItem)item).getSplitTarget();
+			String target = ((SplitOutlineItem) item).getSplitTarget();
 			if (target != null) {
 				return target;
 			}

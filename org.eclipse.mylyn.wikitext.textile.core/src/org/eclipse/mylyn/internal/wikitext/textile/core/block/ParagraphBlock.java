@@ -26,26 +26,28 @@ import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
  */
 public class ParagraphBlock extends Block {
 
-	private static final int LINE_REMAINDER_GROUP_OFFSET = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT+1;
+	private static final int LINE_REMAINDER_GROUP_OFFSET = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 1;
 
-	static final Pattern startPattern = Pattern.compile("p"+Textile.REGEX_BLOCK_ATTRIBUTES+"\\.\\s+(.*)");
+	static final Pattern startPattern = Pattern.compile("p" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\.\\s+(.*)");
 
 	private int blockLineCount = 0;
+
 	private boolean unwrapped = false;
+
 	private boolean enableUnwrapped = true;
 
 	public ParagraphBlock() {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 			if (offset == 0) {
 				// 0-offset matches may start with the "p. " prefix.
 				Matcher matcher = startPattern.matcher(line);
 				if (matcher.matches()) {
-					Textile.configureAttributes(attributes,matcher, 1,true);
+					Textile.configureAttributes(attributes, matcher, 1, true);
 					offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 				} else {
 					if (line.charAt(0) == ' ') {
@@ -71,13 +73,12 @@ public class ParagraphBlock extends Block {
 		// NOTE: in Textile paragraphs can have nested lists and other things, however
 		//       the resulting XHTML is invalid -- so here we allow for similar constructs
 		//       however we cause them to end the paragraph rather than being nested.
-		for (Block block: textileLanguage.getParagraphBreakingBlocks()) {
+		for (Block block : textileLanguage.getParagraphBreakingBlocks()) {
 			if (block.canStart(line, offset)) {
 				setClosed(true);
 				return 0;
 			}
 		}
-
 
 		if (blockLineCount != 0) {
 			if (unwrapped) {
@@ -88,8 +89,7 @@ public class ParagraphBlock extends Block {
 		}
 		++blockLineCount;
 
-
-		textileLanguage.emitMarkupLine(getParser(),state,line, offset);
+		textileLanguage.emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}
@@ -111,10 +111,10 @@ public class ParagraphBlock extends Block {
 		super.setClosed(closed);
 	}
 
-
 	public void setEnableUnwrapped(boolean enableUnwrapped) {
 		this.enableUnwrapped = enableUnwrapped;
 	}
+
 	public boolean isEnableUnwrapped() {
 		return enableUnwrapped;
 	}

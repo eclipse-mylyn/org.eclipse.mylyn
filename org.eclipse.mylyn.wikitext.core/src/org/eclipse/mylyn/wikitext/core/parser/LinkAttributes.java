@@ -20,12 +20,14 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
  */
 public class LinkAttributes extends Attributes {
 	private String target;
+
 	private String rel;
 
 	/**
 	 * The target of a link, as defined by the HTML spec.
 	 * 
-	 * @param target the target or null if there should be none
+	 * @param target
+	 *            the target or null if there should be none
 	 */
 	public void setTarget(String target) {
 		this.target = target;
@@ -39,7 +41,6 @@ public class LinkAttributes extends Attributes {
 	public String getTarget() {
 		return target;
 	}
-	
 
 	/**
 	 * The 'rel' of a link, as defined by the HTML spec.

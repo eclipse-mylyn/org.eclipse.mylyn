@@ -12,7 +12,6 @@ package org.eclipse.mylyn.wikitext.core.parser.util;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**

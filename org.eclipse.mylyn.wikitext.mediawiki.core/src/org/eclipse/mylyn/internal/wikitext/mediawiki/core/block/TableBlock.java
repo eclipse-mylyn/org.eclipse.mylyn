@@ -21,29 +21,36 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * an implementation of MediaWiki tables,
- * see <a href="http://www.mediawiki.org/wiki/Help:Tables">MediaWiki:Help:Tables</a> for details
+ * an implementation of MediaWiki tables, see <a
+ * href="http://www.mediawiki.org/wiki/Help:Tables">MediaWiki:Help:Tables</a> for details
  * 
  * @author David Green
- *
+ * 
  */
 public class TableBlock extends Block {
 
 	private static final Pattern rowCellSplitter = Pattern.compile("\\s*(\\|\\||!!)\\s*");
+
 	private static final Pattern startPattern = Pattern.compile("\\{\\|\\s*(.+)?");
+
 	private static final Pattern optionsPattern = Pattern.compile("([a-zA-Z]+)=\"([^\"]*)\"");
+
 	private static final Pattern newRowPattern = Pattern.compile("\\|-\\s*(.+)?");
+
 	private static final Pattern cellPattern = Pattern.compile("(\\||!)\\s*(.+)?");
+
 	private static final Pattern cellSplitterPattern = Pattern.compile("\\s*(?:([^\\|]+)?\\|)?\\s*(.+)?");
+
 	private static final Pattern endPattern = Pattern.compile("\\|\\}\\s*(.+)?");
 
-
 	private int blockLineCount;
+
 	private Matcher matcher;
+
 	private boolean openRow;
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount++ == 0) {
 			TableAttributes attributes = new TableAttributes();
 
@@ -111,7 +118,7 @@ public class TableBlock extends Block {
 						}
 					}
 				}
-				openRow(newRowMatcher.start(),attributes);
+				openRow(newRowMatcher.start(), attributes);
 				return -1;
 			} else {
 				Matcher endMatcher = endPattern.matcher(line);
@@ -129,12 +136,12 @@ public class TableBlock extends Block {
 							return -1;
 						}
 						int contentsStart = cellMatcher.start(2);
-						BlockType type = ("!".equals(kind))?BlockType.TABLE_CELL_HEADER:BlockType.TABLE_CELL_NORMAL;
+						BlockType type = ("!".equals(kind)) ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL;
 
 						if (!openRow) {
-							openRow(cellMatcher.start(),new Attributes());
+							openRow(cellMatcher.start(), new Attributes());
 						}
-						emitCells(contentsStart,type,contents);
+						emitCells(contentsStart, type, contents);
 
 						return -1;
 					} else {
@@ -153,15 +160,15 @@ public class TableBlock extends Block {
 			int found = matcher.start();
 			String cell;
 			if (found > lastEnd) {
-				cell = contents.substring(lastEnd,found);
+				cell = contents.substring(lastEnd, found);
 			} else {
 				cell = "";
 			}
-			emitCell(lastEnd+contentsStart,type,cell);
+			emitCell(lastEnd + contentsStart, type, cell);
 			lastEnd = matcher.end();
 		}
 		if (lastEnd < contents.length()) {
-			emitCell(lastEnd+contentsStart,type,contents.substring(lastEnd));
+			emitCell(lastEnd + contentsStart, type, contents.substring(lastEnd));
 		}
 	}
 
@@ -211,11 +218,11 @@ public class TableBlock extends Block {
 
 		builder.beginBlock(type, attributes);
 
-		markupLanguage.emitMarkupLine(parser, state,lineCharacterOffset+contentsStart,cellContents, 0);
+		markupLanguage.emitMarkupLine(parser, state, lineCharacterOffset + contentsStart, cellContents, 0);
 		builder.endBlock();
 	}
 
-	private void openRow(int lineOffset,Attributes attributes) {
+	private void openRow(int lineOffset, Attributes attributes) {
 		closeRow();
 		state.setLineCharacterOffset(lineOffset);
 		builder.beginBlock(BlockType.TABLE_ROW, attributes);
@@ -250,6 +257,5 @@ public class TableBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

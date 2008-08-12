@@ -24,13 +24,13 @@ import org.eclipse.mylyn.wikitext.core.parser.Locator;
  * @author David Green
  */
 public class ContentState implements Locator {
-	private Map<String, String> footnoteIdToHtmlId = new HashMap<String, String>();
+	private final Map<String, String> footnoteIdToHtmlId = new HashMap<String, String>();
 
-	private Map<String, String> glossaryItems = new HashMap<String, String>();
+	private final Map<String, String> glossaryItems = new HashMap<String, String>();
 
 	private String markupContent;
 
-	private IdGenerator idGenerator = new IdGenerator();
+	private final IdGenerator idGenerator = new IdGenerator();
 
 	private int lineNumber = -1;
 

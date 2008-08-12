@@ -27,18 +27,18 @@ import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToDocbook;
 import org.eclipse.ui.PlatformUI;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 
-
 	@Override
 	protected void handleFile(IFile file, String name) {
-		final IFile newFile = file.getParent().getFile(new Path(name+".xml"));
+		final IFile newFile = file.getParent().getFile(new Path(name + ".xml"));
 		if (newFile.exists()) {
-			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Overwrite?", String.format("File '%s' exists: overwrite?",newFile.getFullPath()))) {
+			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					"Overwrite?", String.format("File '%s' exists: overwrite?", newFile.getFullPath()))) {
 				return;
 			}
 		}
@@ -49,11 +49,11 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 
 		try {
 			StringWriter w = new StringWriter();
-			Reader r = new InputStreamReader(new BufferedInputStream(file.getContents()),file.getCharset());
+			Reader r = new InputStreamReader(new BufferedInputStream(file.getContents()), file.getCharset());
 			try {
 				int i;
 				while ((i = r.read()) != -1) {
-					w.write((char)i);
+					w.write((char) i);
 				}
 			} finally {
 				r.close();
@@ -65,7 +65,8 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						if (newFile.exists()) {
-							newFile.setContents(new ByteArrayInputStream(docbook.getBytes("utf-8")), false,true, monitor);
+							newFile.setContents(new ByteArrayInputStream(docbook.getBytes("utf-8")), false, true,
+									monitor);
 						} else {
 							newFile.create(new ByteArrayInputStream(docbook.getBytes("utf-8")), false, monitor);
 						}
@@ -85,13 +86,13 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println("Cannot convert to docbook: "+e.getMessage());
+			out.println("Cannot convert to docbook: " + e.getMessage());
 			out.println("Details follow:");
 			e.printStackTrace(out);
 			out.close();
 
-
-			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Cannot complete operation", message.toString());
+			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					"Cannot complete operation", message.toString());
 		}
 	}
 

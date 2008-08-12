@@ -79,8 +79,9 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 		}
 
 		public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-			if (!isEnabled())
+			if (!isEnabled()) {
 				return null;
+			}
 
 			if (!createFailed && delegate == null) {
 				try {
@@ -88,8 +89,9 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 				} catch (CoreException ex) {
 					createFailed = true;
 				}
-				if (delegate != null && context != null)
+				if (delegate != null && context != null) {
 					delegate.setContext(context);
+				}
 			}
 			if (delegate != null) {
 				return delegate.detectHyperlinks(textViewer, region, canShowMultipleHyperlinks);

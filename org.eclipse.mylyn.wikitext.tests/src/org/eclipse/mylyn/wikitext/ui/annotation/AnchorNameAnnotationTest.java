@@ -13,15 +13,15 @@ package org.eclipse.mylyn.wikitext.ui.annotation;
 import junit.framework.TestCase;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class AnchorNameAnnotationTest extends TestCase {
 
 	public void testSimple() {
 		AnchorNameAnnotation annotation = new AnchorNameAnnotation("foo");
-		assertEquals("foo",annotation.getText());
-		assertEquals(AnchorNameAnnotation.TYPE,annotation.getType());
+		assertEquals("foo", annotation.getText());
+		assertEquals(AnchorNameAnnotation.TYPE, annotation.getType());
 	}
 }

@@ -31,14 +31,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.xml.sax.SAXException;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class HtmlViewer extends SourceViewer {
 
 	private TextPresentation textPresentation;
+
 	private boolean haveInit = false;
+
 	private HtmlViewerConfiguration configuration;
 
 	public HtmlViewer(Composite parent, IVerticalRuler ruler, int styles) {
@@ -46,18 +48,18 @@ public class HtmlViewer extends SourceViewer {
 		setEditable(false);
 	}
 
-	public HtmlViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
+	public HtmlViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
+			boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 		setEditable(false);
 	}
-
 
 	private void initPainter() {
 		if (haveInit) {
 			return;
 		}
 		haveInit = true;
-		
+
 		IAnnotationAccess annotationAccess = new IAnnotationAccess() {
 			public Object getType(Annotation annotation) {
 				return annotation.getType();
@@ -70,22 +72,20 @@ public class HtmlViewer extends SourceViewer {
 			public boolean isTemporary(Annotation annotation) {
 				return true;
 			}
-			
+
 		};
-		AnnotationPainter painter = new AnnotationPainter(this,
-				annotationAccess);
-		painter.addDrawingStrategy(BulletAnnotation.TYPE,
-				new BulletDrawingStrategy());
+		AnnotationPainter painter = new AnnotationPainter(this, annotationAccess);
+		painter.addDrawingStrategy(BulletAnnotation.TYPE, new BulletDrawingStrategy());
 		painter.addAnnotationType(BulletAnnotation.TYPE, BulletAnnotation.TYPE);
 		painter.setAnnotationTypeColor(BulletAnnotation.TYPE, getTextWidget().getForeground());
-		
+
 		addTextPresentationListener(painter);
 		addPainter(painter);
 	}
 
 	protected ParseResult parse(String htmlText) {
 		initPainter();
-		
+
 		ParseResult result = new ParseResult();
 
 		result.textPresentation = new TextPresentation();
@@ -105,14 +105,17 @@ public class HtmlViewer extends SourceViewer {
 		}
 
 		result.text = parser.getText();
-		
+
 		return result;
 	}
 
 	protected static class ParseResult {
 		public TextPresentation textPresentation;
+
 		TextPresentation presentation;
+
 		String text;
+
 		AnnotationModel annotationModel;
 	}
 
@@ -126,7 +129,7 @@ public class HtmlViewer extends SourceViewer {
 		}
 		super.configure(configuration);
 	}
-	
+
 	public void setHtml(String htmlText) {
 		ParseResult result = parse(htmlText);
 		textPresentation = result.textPresentation;
@@ -136,9 +139,10 @@ public class HtmlViewer extends SourceViewer {
 		}
 		setDocumentNoMarkup(new Document(result.text), result.annotationModel);
 	}
-	
+
 	@Override
-	public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset,int modelRangeLength) {
+	public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset,
+			int modelRangeLength) {
 		if (document != null) {
 			String htmlText = document.get();
 			if (htmlText.length() > 0) {
@@ -160,8 +164,7 @@ public class HtmlViewer extends SourceViewer {
 		setDocumentNoMarkup(document, annotationModel);
 	}
 
-	protected void setDocumentNoMarkup(IDocument document,
-			IAnnotationModel annotationModel) {
+	protected void setDocumentNoMarkup(IDocument document, IAnnotationModel annotationModel) {
 		super.setDocument(document, annotationModel, -1, -1);
 	}
 

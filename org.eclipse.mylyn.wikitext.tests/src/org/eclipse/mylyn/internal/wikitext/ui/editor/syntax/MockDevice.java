@@ -14,8 +14,8 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GCData;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MockDevice extends Device {

@@ -29,18 +29,22 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
-public class MarkupValidationReconcilingStrategy implements
-IReconcilingStrategy, IReconcilingStrategyExtension {
+public class MarkupValidationReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension {
 
 	private IDocument document;
+
 	private IProgressMonitor monitor;
+
 	private final ISourceViewer viewer;
+
 	private DocumentRegionValidator validator;
+
 	private IResource resource;
+
 	private MarkupLanguage markupLanguage;
 
 	public MarkupValidationReconcilingStrategy(ISourceViewer viewer) {
@@ -68,13 +72,13 @@ IReconcilingStrategy, IReconcilingStrategyExtension {
 			return;
 		}
 		if (validator == null) {
-			validator = resource==null?new AnnotationMarkupValidator():new ResourceMarkerMarkupValidator();
+			validator = resource == null ? new AnnotationMarkupValidator() : new ResourceMarkerMarkupValidator();
 		}
 		validator.setMarkupLanguage(markupLanguage);
 		validator.setAnnotationModel(getAnnotationModel());
 		validator.setResource(resource);
 		try {
-			validator.validate(monitor==null?new NullProgressMonitor():monitor, document, partition);
+			validator.validate(monitor == null ? new NullProgressMonitor() : monitor, document, partition);
 		} catch (CoreException e) {
 			WikiTextUiPlugin.getDefault().log(e);
 		}
@@ -96,7 +100,7 @@ IReconcilingStrategy, IReconcilingStrategyExtension {
 		if (document == null) {
 			return;
 		}
-		reconcile(new Region(0,document.getLength()));
+		reconcile(new Region(0, document.getLength()));
 	}
 
 	public void setProgressMonitor(IProgressMonitor monitor) {

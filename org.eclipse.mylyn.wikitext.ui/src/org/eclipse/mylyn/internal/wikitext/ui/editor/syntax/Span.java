@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
  */
 public class Span extends Segment<Span> {
 
-	private SpanType type;
+	private final SpanType type;
 
 	public Span(SpanType type, int offset, int length) {
 		super(offset, length);

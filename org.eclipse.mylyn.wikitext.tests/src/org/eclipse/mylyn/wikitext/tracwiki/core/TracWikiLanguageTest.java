@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
 
 /**
  * 

@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  */
 public class LimitedHtmlStartTagPhraseModifier extends PatternBasedElement {
 
-	private String pattern;
+	private final String pattern;
 
 	public LimitedHtmlStartTagPhraseModifier(String... elementNames) {
 		StringBuilder buf = new StringBuilder();

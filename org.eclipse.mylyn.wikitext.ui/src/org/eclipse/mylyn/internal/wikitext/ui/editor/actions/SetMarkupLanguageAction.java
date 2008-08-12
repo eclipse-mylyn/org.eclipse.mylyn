@@ -16,18 +16,20 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class SetMarkupLanguageAction extends Action {
 
 	private final MarkupEditor markupEditor;
+
 	private final String markupLanguageName;
+
 	private final boolean checked;
 
-	public SetMarkupLanguageAction(MarkupEditor markupEditor, String markupLanguageName,boolean checked) {
-		super(markupLanguageName,IAction.AS_CHECK_BOX);
+	public SetMarkupLanguageAction(MarkupEditor markupEditor, String markupLanguageName, boolean checked) {
+		super(markupLanguageName, IAction.AS_CHECK_BOX);
 		setChecked(checked);
 		this.markupEditor = markupEditor;
 		this.markupLanguageName = markupLanguageName;
@@ -39,6 +41,6 @@ public class SetMarkupLanguageAction extends Action {
 		if (checked) {
 			return;
 		}
-		markupEditor.setMarkupLanguage(WikiTextPlugin.getDefault().getMarkupLanguage(markupLanguageName),true);
+		markupEditor.setMarkupLanguage(WikiTextPlugin.getDefault().getMarkupLanguage(markupLanguageName), true);
 	}
 }

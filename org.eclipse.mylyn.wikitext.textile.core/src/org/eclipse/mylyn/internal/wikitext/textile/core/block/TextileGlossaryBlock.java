@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.core.parser.markup.block.GlossaryBlock;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class TextileGlossaryBlock extends GlossaryBlock {
@@ -27,12 +27,12 @@ public class TextileGlossaryBlock extends GlossaryBlock {
 	private Matcher matcher;
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineNumber == 0) {
 			String options = matcher.group(1);
 			if (options != null) {
 				String[] optionPairs = options.split("\\s*\\|\\s*");
-				for (String optionPair: optionPairs) {
+				for (String optionPair : optionPairs) {
 					String[] keyValue = optionPair.split("\\s*=\\s*");
 					if (keyValue.length == 2) {
 						String key = keyValue[0].trim();
@@ -49,7 +49,7 @@ public class TextileGlossaryBlock extends GlossaryBlock {
 	}
 
 	@Override
-	public boolean canStart(String line,int lineOffset) {
+	public boolean canStart(String line, int lineOffset) {
 		if (lineOffset == 0 && !markupLanguage.isFilterGenerativeContents()) {
 			matcher = startPattern.matcher(line);
 			return matcher.matches();

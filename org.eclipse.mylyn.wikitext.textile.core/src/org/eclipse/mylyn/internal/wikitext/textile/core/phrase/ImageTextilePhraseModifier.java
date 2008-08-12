@@ -20,31 +20,29 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ImageTextilePhraseModifier extends PatternBasedElement {
 
-	protected static final int ALIGNMENT_GROUP = Textile.ATTRIBUTES_GROUP_COUNT+1;
-	protected static final int CONTENT_GROUP = Textile.ATTRIBUTES_GROUP_COUNT+2;
+	protected static final int ALIGNMENT_GROUP = Textile.ATTRIBUTES_GROUP_COUNT + 1;
+
+	protected static final int CONTENT_GROUP = Textile.ATTRIBUTES_GROUP_COUNT + 2;
+
 	protected static final int ATTRIBUTES_OFFSET = 1;
 
 	@Override
 	protected String getPattern(int groupOffset) {
 		String quotedDelimiter = Pattern.quote("!");
 
-		return
-		quotedDelimiter +
-		Textile.REGEX_ATTRIBUTES +
-		"(<|>|=)?(\\S(?:.*?\\S)?)(\\([^\\)]+\\))?" + // content
-		quotedDelimiter +
-		"(:([^\\s]*[^\\s!.)(,]))?"; // optional hyperlink suffix
+		return quotedDelimiter + Textile.REGEX_ATTRIBUTES + "(<|>|=)?(\\S(?:.*?\\S)?)(\\([^\\)]+\\))?" + // content
+				quotedDelimiter + "(:([^\\s]*[^\\s!.)(,]))?"; // optional hyperlink suffix
 	}
 
 	@Override
 	protected int getPatternGroupCount() {
-		return Textile.ATTRIBUTES_GROUP_COUNT+5;
+		return Textile.ATTRIBUTES_GROUP_COUNT + 5;
 	}
 
 	@Override
@@ -57,13 +55,13 @@ public class ImageTextilePhraseModifier extends PatternBasedElement {
 		public void emit() {
 			String alignment = group(ALIGNMENT_GROUP);
 			String imageUrl = group(CONTENT_GROUP);
-			String altAndTitle = group(CONTENT_GROUP+1);
-			String href = group(CONTENT_GROUP+3);
-			String namedLinkUrl = href==null?null:((TextileContentState)getState()).getNamedLinkUrl(href);
+			String altAndTitle = group(CONTENT_GROUP + 1);
+			String href = group(CONTENT_GROUP + 3);
+			String namedLinkUrl = href == null ? null : ((TextileContentState) getState()).getNamedLinkUrl(href);
 			if (namedLinkUrl != null) {
 				href = namedLinkUrl;
 			}
-			
+
 			ImageAttributes attributes = new ImageAttributes();
 			attributes.setTitle(altAndTitle);
 			attributes.setAlt(altAndTitle);
@@ -76,7 +74,7 @@ public class ImageTextilePhraseModifier extends PatternBasedElement {
 					attributes.setAlign(Align.Center);
 				}
 			}
-			Textile.configureAttributes(this, attributes, ATTRIBUTES_OFFSET,false);
+			Textile.configureAttributes(this, attributes, ATTRIBUTES_OFFSET, false);
 			if (href != null) {
 				builder.imageLink(attributes, href, imageUrl);
 			} else {

@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToDocbook;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**

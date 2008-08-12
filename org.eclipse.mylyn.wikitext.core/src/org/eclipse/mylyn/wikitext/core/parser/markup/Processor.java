@@ -14,14 +14,17 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class Processor {
 	protected MarkupLanguage markupLanguage;
+
 	protected DocumentBuilder builder;
+
 	protected MarkupParser parser;
+
 	protected ContentState state;
 
 	public Processor() {
@@ -51,14 +54,14 @@ public class Processor {
 			}
 		}
 		this.parser = parser;
-		this.builder = (parser==null)?null:parser.getBuilder();
-		
+		this.builder = (parser == null) ? null : parser.getBuilder();
+
 	}
 
 	void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		this.markupLanguage = markupLanguage;
 	}
-	
+
 	public MarkupLanguage getMarkupLanguage() {
 		return markupLanguage;
 	}

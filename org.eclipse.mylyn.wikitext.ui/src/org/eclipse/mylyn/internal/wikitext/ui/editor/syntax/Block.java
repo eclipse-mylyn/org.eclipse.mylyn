@@ -16,23 +16,25 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 // FIXME: move to internal
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class Block extends Segment<Segment<?>> {
 
 	private final BlockType type;
+
 	private final int headingLevel;
+
 	private boolean spansComputed = false;
 
-	public Block(BlockType type,int offset, int length) {
+	public Block(BlockType type, int offset, int length) {
 		super(offset, length);
 		this.type = type;
 		headingLevel = 0;
 	}
 
-	public Block(int headingLevel,int offset, int length) {
+	public Block(int headingLevel, int offset, int length) {
 		super(offset, length);
 		if (headingLevel <= 0) {
 			throw new IllegalArgumentException();
@@ -42,13 +44,13 @@ public class Block extends Segment<Segment<?>> {
 	}
 
 	public Block(BlockType type, Attributes attributes, int offset, int length) {
-		super(attributes,offset,length);
+		super(attributes, offset, length);
 		this.type = type;
 		headingLevel = 0;
 	}
 
 	public Block(int headingLevel, Attributes attributes, int offset, int length) {
-		super(attributes,offset,length);
+		super(attributes, offset, length);
 		this.headingLevel = headingLevel;
 		type = null;
 	}
@@ -90,7 +92,7 @@ public class Block extends Segment<Segment<?>> {
 		if (type != null) {
 			elementName = type.name();
 		} else {
-			elementName = "h"+headingLevel;
+			elementName = "h" + headingLevel;
 		}
 		buf.append(elementName);
 		buf.append(" offset=\"");
@@ -104,13 +106,13 @@ public class Block extends Segment<Segment<?>> {
 			buf.append(">\n");
 			StringBuilder buf2 = new StringBuilder();
 			buf2.append("\t");
-			for (Segment<?> child: getChildren().asList()) {
+			for (Segment<?> child : getChildren().asList()) {
 				buf2.append(child);
 			}
 			String children = buf2.toString();
 			children = children.replace("\n", "\n\t");
 			if (children.endsWith("\t")) {
-				children = children.substring(0,children.length()-1);
+				children = children.substring(0, children.length() - 1);
 			} else {
 				children = children + "\n";
 			}

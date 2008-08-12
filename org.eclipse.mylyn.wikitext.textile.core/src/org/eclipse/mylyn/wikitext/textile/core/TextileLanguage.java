@@ -53,13 +53,13 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenc
 public class TextileLanguage extends MarkupLanguage {
 
 	// we use the template pattern for creating new blocks
-	private List<Block> blocks = new ArrayList<Block>();
+	private final List<Block> blocks = new ArrayList<Block>();
 
-	private List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
+	private final List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
 
-	private PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
+	private final PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
 
-	private PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
+	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
 	@Override
 	protected PatternBasedSyntax getPhraseModifierSyntax() {

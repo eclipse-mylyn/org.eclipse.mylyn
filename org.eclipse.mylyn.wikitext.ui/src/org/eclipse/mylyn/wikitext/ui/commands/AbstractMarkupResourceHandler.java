@@ -26,7 +26,7 @@ import org.eclipse.ui.PlatformUI;
  * An abstract base class for handlers that use the workbench selection to operate on resources
  * 
  * @author David Green
- *
+ * 
  */
 public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 
@@ -48,19 +48,21 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 			Object o = structuredSelection.getFirstElement();
 			IFile file = null;
 			if (o instanceof IAdaptable) {
-				file = (IFile) ((IAdaptable)o).getAdapter(IFile.class);
+				file = (IFile) ((IAdaptable) o).getAdapter(IFile.class);
 			}
 			if (file != null) {
 				String name = file.getName();
 				int idxOfDot = name.lastIndexOf('.');
 				if (idxOfDot != -1) {
-					name = name.substring(0,idxOfDot);
+					name = name.substring(0, idxOfDot);
 				}
 
 				if (markupLanguage == null) {
 					markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(file.getName());
 					if (markupLanguage == null) {
-						MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Unexpected Error", String.format("Cannot guess markup language for file '%s'",file.getName()));
+						MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+								"Unexpected Error", String.format("Cannot guess markup language for file '%s'",
+										file.getName()));
 						return null;
 					}
 				}

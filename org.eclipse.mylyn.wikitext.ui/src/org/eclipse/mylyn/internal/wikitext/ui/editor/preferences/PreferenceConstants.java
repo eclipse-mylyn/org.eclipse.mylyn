@@ -12,7 +12,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
 
 /**
  * Constant definitions for plug-in preferences
- *
+ * 
  * @author David Green
  */
 public class PreferenceConstants {

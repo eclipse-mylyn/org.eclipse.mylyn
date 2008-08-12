@@ -19,15 +19,15 @@ import java.util.Stack;
  */
 public class FormattingXMLStreamWriter extends XmlStreamWriter {
 
-	private XmlStreamWriter delegate;
+	private final XmlStreamWriter delegate;
 
 	private int indentLevel;
 
-	private Stack<Integer> childCounts = new Stack<Integer>();
+	private final Stack<Integer> childCounts = new Stack<Integer>();
 
 	private int childCount;
 
-	private Stack<String> elements = new Stack<String>();
+	private final Stack<String> elements = new Stack<String>();
 
 	private int lineOffset = 0;
 

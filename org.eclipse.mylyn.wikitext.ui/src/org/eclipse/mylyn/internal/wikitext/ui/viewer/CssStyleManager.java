@@ -192,7 +192,7 @@ public class CssStyleManager {
 
 	static final Pattern rgbPattern = Pattern.compile("rgb\\((\\d+),(\\d+),(\\d+)\\)");
 
-	private Font defaultFont;
+	private final Font defaultFont;
 
 	public CssStyleManager(Font defaultFont) {
 		if (defaultFont == null) {

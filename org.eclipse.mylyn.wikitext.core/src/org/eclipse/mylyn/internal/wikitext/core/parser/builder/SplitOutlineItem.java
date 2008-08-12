@@ -26,11 +26,12 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 public class SplitOutlineItem extends OutlineItem {
 
 	private String splitTarget;
+
 	private Map<String, SplitOutlineItem> outlineItemById;
+
 	private List<SplitOutlineItem> pages;
 
-	public SplitOutlineItem(OutlineItem parent, int level, String id,
-			int offset, int length, String label) {
+	public SplitOutlineItem(OutlineItem parent, int level, String id, int offset, int length, String label) {
 		super(parent, level, id, offset, length, label);
 	}
 
@@ -44,17 +45,17 @@ public class SplitOutlineItem extends OutlineItem {
 		}
 		return splitTarget;
 	}
-	
+
 	public List<SplitOutlineItem> getPageOrder() {
 		if (getParent() != null) {
 			return getParent().getPageOrder();
 		}
 		if (pages == null) {
-			final Set<String> pageTargets = new HashSet<String>(); 
+			final Set<String> pageTargets = new HashSet<String>();
 			pages = new ArrayList<SplitOutlineItem>();
 			accept(new Visitor() {
 				public boolean visit(OutlineItem item) {
-					SplitOutlineItem split = (SplitOutlineItem)item;
+					SplitOutlineItem split = (SplitOutlineItem) item;
 					if (pageTargets.add(split.getSplitTarget())) {
 						pages.add(split);
 					}
@@ -64,16 +65,17 @@ public class SplitOutlineItem extends OutlineItem {
 		}
 		return pages;
 	}
-	
+
 	@Override
 	public SplitOutlineItem getParent() {
 		return (SplitOutlineItem) super.getParent();
 	}
-	
+
 	/**
 	 * get the outline item for a given id
 	 * 
-	 * @param id the id for which the outline item should be returned
+	 * @param id
+	 *            the id for which the outline item should be returned
 	 * 
 	 * @return the outline item, or null if the given id is unknown
 	 */
@@ -82,14 +84,14 @@ public class SplitOutlineItem extends OutlineItem {
 			return getParent().getOutlineItemById(id);
 		}
 		if (outlineItemById == null) {
-			final Map<String,SplitOutlineItem> splitTargetById = new HashMap<String, SplitOutlineItem>();
+			final Map<String, SplitOutlineItem> splitTargetById = new HashMap<String, SplitOutlineItem>();
 			this.accept(new Visitor() {
 				public boolean visit(OutlineItem item) {
 					if (item.getId() != null) {
 						if (splitTargetById.containsKey(item.getId())) {
-							throw new IllegalStateException(String.format("Duplicate id '%s'",item.getId()));
+							throw new IllegalStateException(String.format("Duplicate id '%s'", item.getId()));
 						}
-						splitTargetById.put(item.getId(), (SplitOutlineItem)item);
+						splitTargetById.put(item.getId(), (SplitOutlineItem) item);
 					}
 					return true;
 				}

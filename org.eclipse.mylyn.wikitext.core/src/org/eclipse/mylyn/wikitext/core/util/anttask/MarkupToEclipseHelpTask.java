@@ -58,6 +58,7 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 			try {
 
 				MarkupToEclipseToc toEclipseToc = new MarkupToEclipseToc() {
+					@Override
 					protected String computeFile(OutlineItem item) {
 						return ((SplitOutlineItem) item).getSplitTarget();
 					}

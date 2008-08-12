@@ -17,13 +17,12 @@ import java.util.List;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 
 /**
- * 
  * @author David Green
  */
 public class ValidationRules {
 	private ValidationRules parent;
 
-	private List<ValidationRule> rules = new ArrayList<ValidationRule>();
+	private final List<ValidationRule> rules = new ArrayList<ValidationRule>();
 
 	public void addValidationRule(ValidationRule rule) {
 		rules.add(rule);

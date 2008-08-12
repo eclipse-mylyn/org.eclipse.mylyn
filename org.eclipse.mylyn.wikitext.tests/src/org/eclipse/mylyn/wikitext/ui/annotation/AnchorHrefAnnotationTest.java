@@ -13,17 +13,16 @@ package org.eclipse.mylyn.wikitext.ui.annotation;
 import junit.framework.TestCase;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class AnchorHrefAnnotationTest extends TestCase {
 
-
 	public void testSimple() {
 		String href = "http://foo.bar";
 		AnchorHrefAnnotation annotation = new AnchorHrefAnnotation(href);
-		assertEquals(href,annotation.getAnchorHref());
-		assertEquals(AnchorHrefAnnotation.TYPE,annotation.getType());
+		assertEquals(href, annotation.getAnchorHref());
+		assertEquals(AnchorHrefAnnotation.TYPE, annotation.getType());
 	}
 }

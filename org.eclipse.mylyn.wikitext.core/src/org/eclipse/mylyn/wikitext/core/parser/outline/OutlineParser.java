@@ -96,13 +96,13 @@ public class OutlineParser {
 
 		private StringBuilder buf;
 
-		private IdGenerator idGenerator = new IdGenerator();
+		private final IdGenerator idGenerator = new IdGenerator();
 
 		private int offset;
 
 		private int length;
 
-		private OutlineItem rootItem;
+		private final OutlineItem rootItem;
 
 		private final int labelMaxLength;
 

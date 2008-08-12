@@ -19,18 +19,18 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * quoted text block, matches blocks that start with <code>&gt;</code> or two spaces.
- * These are what they call discussion citations and block quotes, respectively.
- * Creates an extended block type of {@link ParagraphBlock paragraph}.
+ * quoted text block, matches blocks that start with <code>&gt;</code> or two spaces. These are what they call
+ * discussion citations and block quotes, respectively. Creates an extended block type of {@link ParagraphBlock
+ * paragraph}.
  * 
  * @author David Green
  */
 public class QuoteBlock extends Block {
 
-
 	static final Pattern startPattern = Pattern.compile("(?:(?:(>+)\\s+)|(  ))(.*)");
 
 	private int blockLineCount = 0;
+
 	private Matcher matcher;
 
 	private Stack<BlockState> quoteBlockState;
@@ -39,7 +39,7 @@ public class QuoteBlock extends Block {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			quoteBlockState = new Stack<BlockState>();
 		} else {
@@ -50,7 +50,7 @@ public class QuoteBlock extends Block {
 			}
 		}
 		String quoteStartGroup = matcher.group(1);
-		int level = quoteStartGroup == null?1:quoteStartGroup.length();
+		int level = quoteStartGroup == null ? 1 : quoteStartGroup.length();
 		offset = matcher.start(3);
 
 		while (quoteBlockState.size() > level) {
@@ -69,7 +69,7 @@ public class QuoteBlock extends Block {
 		}
 		++blockLineCount;
 
-		getMarkupLanguage().emitMarkupLine(getParser(),state,line, offset);
+		getMarkupLanguage().emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}

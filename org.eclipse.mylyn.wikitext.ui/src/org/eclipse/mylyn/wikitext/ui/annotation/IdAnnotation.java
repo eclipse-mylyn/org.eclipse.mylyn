@@ -22,7 +22,7 @@ public class IdAnnotation extends Annotation {
 	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.id";
 
 	public IdAnnotation(String id) {
-		super(TYPE,false,id);
+		super(TYPE, false, id);
 	}
 
 	public String getElementId() {

@@ -16,15 +16,15 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class HyperlinkReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:(\"|\\!)([^\"\\!]+)\\"+(1+groupOffset)+":([^\\s]*[^\\s!.)(,]))";
+		return "(?:(\"|\\!)([^\"\\!]+)\\" + (1 + groupOffset) + ":([^\\s]*[^\\s!.)(,]))";
 	}
 
 	@Override
@@ -43,15 +43,15 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 			String hyperlinkBoundaryText = group(1);
 			String hyperlinkSrc = group(2);
 			String href = group(3);
-			String namedLinkUrl = ((TextileContentState)getState()).getNamedLinkUrl(href);
+			String namedLinkUrl = ((TextileContentState) getState()).getNamedLinkUrl(href);
 			if (namedLinkUrl != null) {
 				href = namedLinkUrl;
 			}
-			
+
 			if (hyperlinkBoundaryText.equals("\"")) {
 				builder.link(href, hyperlinkSrc);
 			} else {
-				builder.imageLink(new ImageAttributes(),href, hyperlinkSrc);
+				builder.imageLink(new ImageAttributes(), href, hyperlinkSrc);
 			}
 		}
 	}

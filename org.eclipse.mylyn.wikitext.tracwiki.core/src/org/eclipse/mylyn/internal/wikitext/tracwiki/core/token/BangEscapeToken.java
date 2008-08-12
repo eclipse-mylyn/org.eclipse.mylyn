@@ -15,11 +15,11 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifierProcessor;
 
 /**
- * A token replacement that replaces any two characters that start with a '!' and are followed by
- * a trac markup character
+ * A token replacement that replaces any two characters that start with a '!' and are followed by a trac markup
+ * character
  * 
  * @author David Green
- *
+ * 
  */
 public class BangEscapeToken extends PatternBasedElement {
 

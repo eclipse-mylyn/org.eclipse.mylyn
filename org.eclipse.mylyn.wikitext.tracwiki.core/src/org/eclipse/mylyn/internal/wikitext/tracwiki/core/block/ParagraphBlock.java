@@ -28,7 +28,7 @@ public class ParagraphBlock extends Block {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 			builder.beginBlock(BlockType.PARAGRAPH, attributes);
@@ -43,7 +43,7 @@ public class ParagraphBlock extends Block {
 		TracWikiLanguage dialect = (TracWikiLanguage) getMarkupLanguage();
 
 		// paragraphs can have nested lists and other things
-		for (Block block: dialect.getParagraphNestableBlocks()) {
+		for (Block block : dialect.getParagraphNestableBlocks()) {
 			if (block.canStart(line, offset)) {
 				setClosed(true);
 				return 0;
@@ -54,7 +54,7 @@ public class ParagraphBlock extends Block {
 			// note: newlines don't automatically convert to line breaks
 			builder.characters("\n");
 		}
-		dialect.emitMarkupLine(getParser(),state,line, offset);
+		dialect.emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}
@@ -72,6 +72,5 @@ public class ParagraphBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

@@ -13,15 +13,15 @@ package org.eclipse.mylyn.wikitext.ui.annotation;
 import junit.framework.TestCase;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class IdAnnotationTest extends TestCase {
 
 	public void testSimple() {
 		IdAnnotation annotation = new IdAnnotation("foo");
-		assertEquals("foo",annotation.getText());
+		assertEquals("foo", annotation.getText());
 		assertEquals(annotation.getType(), IdAnnotation.TYPE);
 	}
 }

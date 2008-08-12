@@ -18,21 +18,22 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class PreformattedBlock extends Block {
 
 	private static final Pattern startPattern = Pattern.compile("\\{\\{\\{(.*)");
+
 	private static final Pattern endPattern = Pattern.compile("\\}\\}\\}(.*)");
 
 	private int blockLineCount = 0;
+
 	private Matcher matcher;
 
-
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount++ == 0) {
 			offset = matcher.start(1);
 			builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
@@ -43,7 +44,7 @@ public class PreformattedBlock extends Block {
 				return endMatcher.start(1);
 			}
 		}
-		builder.characters(offset==0?line:line.substring(offset));
+		builder.characters(offset == 0 ? line : line.substring(offset));
 		builder.characters("\n");
 		return -1;
 	}
@@ -58,7 +59,7 @@ public class PreformattedBlock extends Block {
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
-		if (lineOffset == 0 ) {
+		if (lineOffset == 0) {
 			matcher = startPattern.matcher(line);
 			return matcher.matches();
 		} else {

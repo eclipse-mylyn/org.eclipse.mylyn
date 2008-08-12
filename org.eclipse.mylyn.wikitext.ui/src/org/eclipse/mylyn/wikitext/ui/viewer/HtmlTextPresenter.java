@@ -22,23 +22,24 @@ import org.eclipse.swt.widgets.Display;
 
 //FIXME: move to internal
 /**
- * An information presenter that supports HTML markup.   Uses the {@link HtmlTextPresentationParser HTML parser}
- * to parse the HTML to readable text, and creates the appropriate corresponding {@link TextPresentation text presentation}.
+ * An information presenter that supports HTML markup. Uses the {@link HtmlTextPresentationParser HTML parser} to parse
+ * the HTML to readable text, and creates the appropriate corresponding {@link TextPresentation text presentation}.
  * 
  * @author David Green
- *
+ * 
  */
-public class HtmlTextPresenter implements DefaultInformationControl.IInformationPresenter, DefaultInformationControl.IInformationPresenterExtension {
+public class HtmlTextPresenter implements DefaultInformationControl.IInformationPresenter,
+		DefaultInformationControl.IInformationPresenterExtension {
 
-	private static Pattern HTML_OPEN_TAG_PATTERN = Pattern.compile("<html",Pattern.CASE_INSENSITIVE);
+	private static Pattern HTML_OPEN_TAG_PATTERN = Pattern.compile("<html", Pattern.CASE_INSENSITIVE);
 
-	public String updatePresentation(Display display, String hoverInfo,
-			TextPresentation presentation, int maxWidth, int maxHeight) {
+	public String updatePresentation(Display display, String hoverInfo, TextPresentation presentation, int maxWidth,
+			int maxHeight) {
 		return updatePresentation((Drawable) display, hoverInfo, presentation, maxWidth, maxHeight);
 	}
 
-	public String updatePresentation(Drawable drawable, String hoverInfo,
-			TextPresentation presentation, int maxWidth, int maxHeight) {
+	public String updatePresentation(Drawable drawable, String hoverInfo, TextPresentation presentation, int maxWidth,
+			int maxHeight) {
 		if (hoverInfo == null || hoverInfo.length() == 0) {
 			return hoverInfo;
 		}
@@ -47,7 +48,7 @@ public class HtmlTextPresenter implements DefaultInformationControl.IInformation
 		parser.setDefaultFont(JFaceResources.getFontRegistry().defaultFont());
 		String html = hoverInfo;
 		if (!HTML_OPEN_TAG_PATTERN.matcher(html).find()) {
-			html = "<html><body>"+html+"</body></html>";
+			html = "<html><body>" + html + "</body></html>";
 		}
 
 		GC gc = new GC(drawable);
@@ -58,14 +59,13 @@ public class HtmlTextPresenter implements DefaultInformationControl.IInformation
 			parser.parse(html);
 			return parser.getText();
 		} catch (Exception e) {
-			return exceptionToHoverInfo(hoverInfo, presentation,e);
+			return exceptionToHoverInfo(hoverInfo, presentation, e);
 		} finally {
 			gc.dispose();
 		}
 	}
 
-	protected String exceptionToHoverInfo(String hoverInfo,
-			TextPresentation presentation, Exception e) {
+	protected String exceptionToHoverInfo(String hoverInfo, TextPresentation presentation, Exception e) {
 		presentation.clear();
 		return hoverInfo;
 	}

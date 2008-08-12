@@ -35,9 +35,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkRepla
  * @author David Green
  */
 public class TracWikiLanguage extends MarkupLanguage {
-	private List<Block> blocks = new ArrayList<Block>();
+	private final List<Block> blocks = new ArrayList<Block>();
 
-	private List<Block> paragraphNestableBlocks = new ArrayList<Block>();
+	private final List<Block> paragraphNestableBlocks = new ArrayList<Block>();
 
 	private static PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
 

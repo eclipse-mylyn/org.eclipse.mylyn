@@ -17,18 +17,18 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class TemplateReplacementToken extends PatternBasedElement {
 
-	private static Map<String,Class<? extends PatternBasedElementProcessor>> processorByTemplate = new HashMap<String, Class<? extends PatternBasedElementProcessor>>();
+	private static Map<String, Class<? extends PatternBasedElementProcessor>> processorByTemplate = new HashMap<String, Class<? extends PatternBasedElementProcessor>>();
 	static {
-		processorByTemplate.put("endash",EndashElementProcessor.class);
-		processorByTemplate.put("ndash",EndashElementProcessor.class);
-		processorByTemplate.put("mdash",EmdashElementProcessor.class);
-		processorByTemplate.put("emdash",EmdashElementProcessor.class);
+		processorByTemplate.put("endash", EndashElementProcessor.class);
+		processorByTemplate.put("ndash", EndashElementProcessor.class);
+		processorByTemplate.put("mdash", EmdashElementProcessor.class);
+		processorByTemplate.put("emdash", EmdashElementProcessor.class);
 	}
 
 	@Override
@@ -63,8 +63,8 @@ public class TemplateReplacementToken extends PatternBasedElement {
 				delegate.setLineEndOffset(getLineEndOffset());
 				delegate.setParser(getParser());
 				delegate.setState(getState());
-				delegate.setGroup(1,group(1),start(1),end(1));
-				delegate.setGroup(2,group(2),start(2),end(2));
+				delegate.setGroup(1, group(1), start(1), end(1));
+				delegate.setGroup(2, group(2), start(2), end(2));
 				delegate.emit();
 			}
 		}
@@ -78,6 +78,7 @@ public class TemplateReplacementToken extends PatternBasedElement {
 			getBuilder().characters(" ");
 		}
 	}
+
 	public static class EmdashElementProcessor extends PatternBasedElementProcessor {
 		@Override
 		public void emit() {

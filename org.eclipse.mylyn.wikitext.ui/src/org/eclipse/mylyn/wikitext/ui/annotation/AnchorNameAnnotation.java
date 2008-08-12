@@ -14,15 +14,16 @@ import org.eclipse.jface.text.source.Annotation;
 
 /**
  * An annotation that marks the location of an <code>a/@name</code>.
+ * 
  * @author David Green
- *
+ * 
  */
 public class AnchorNameAnnotation extends Annotation {
 
 	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.anchorName";
 
 	public AnchorNameAnnotation(String name) {
-		super(TYPE,false,name);
+		super(TYPE, false, name);
 	}
 
 	public String getAnchorName() {

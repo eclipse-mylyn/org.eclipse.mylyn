@@ -15,26 +15,25 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class Segments<T extends Segment<?>> {
 	private List<T> list;
-
 
 	@SuppressWarnings("unchecked")
 	public void add(T t) {
 		if (list == null) {
 			list = new ArrayList<T>();
 		} else if (list.size() > 0) {
-			Segment previousSegment = list.get(list.size()-1);
+			Segment previousSegment = list.get(list.size() - 1);
 			final int tOffset = t.getOffset();
 			if (previousSegment.getOffset() > tOffset) {
 				throw new IllegalArgumentException();
 			}
 			if (previousSegment.getEndOffset() > tOffset) {
-				int newLength = tOffset-previousSegment.getOffset();
+				int newLength = tOffset - previousSegment.getOffset();
 				previousSegment.setLength(newLength);
 			}
 		}
@@ -46,18 +45,18 @@ public class Segments<T extends Segment<?>> {
 	}
 
 	public List<T> asList() {
-		if (list==null) {
+		if (list == null) {
 			return Collections.emptyList();
 		}
 		return list;
 	}
 
 	public boolean isEmpty() {
-		return list==null || list.isEmpty();
+		return list == null || list.isEmpty();
 	}
 
 	public int size() {
-		return list==null?0:list.size();
+		return list == null ? 0 : list.size();
 	}
 
 }

@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  */
 public class PatternLineBreakReplacementToken extends PatternBasedElement {
 
-	private String pattern;
+	private final String pattern;
 
 	public PatternLineBreakReplacementToken(String pattern) {
 		this.pattern = pattern;

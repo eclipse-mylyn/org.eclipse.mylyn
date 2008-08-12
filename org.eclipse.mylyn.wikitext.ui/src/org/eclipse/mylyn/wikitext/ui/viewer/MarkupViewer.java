@@ -36,7 +36,8 @@ public class MarkupViewer extends HtmlViewer {
 		setEditable(false);
 	}
 
-	public MarkupViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
+	public MarkupViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
+			boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 		setEditable(false);
 	}
@@ -49,9 +50,9 @@ public class MarkupViewer extends HtmlViewer {
 			if (getTextPresentation() != null) {
 				getTextPresentation().clear();
 			}
-			setDocumentNoMarkup(new Document(source),new AnnotationModel());
+			setDocumentNoMarkup(new Document(source), new AnnotationModel());
 			if (WikiTextUiPlugin.getDefault() != null) {
-				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,"Cannot parse markup; falling back to plain text",t);
+				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, "Cannot parse markup; falling back to plain text", t);
 			} else {
 				t.printStackTrace();
 			}
@@ -73,10 +74,9 @@ public class MarkupViewer extends HtmlViewer {
 	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
 		parser.setMarkupLanaguage(markupLanguage);
 	}
-	
+
 	@Override
-	public void setDocument(IDocument document,
-			IAnnotationModel annotationModel, int modelRangeOffset,
+	public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset,
 			int modelRangeLength) {
 		String markupContent = null;
 		if (document != null) {
@@ -87,8 +87,7 @@ public class MarkupViewer extends HtmlViewer {
 			}
 		}
 		try {
-			super.setDocument(document, annotationModel, modelRangeOffset,
-							modelRangeLength);
+			super.setDocument(document, annotationModel, modelRangeOffset, modelRangeLength);
 		} catch (Exception e) {
 			if (document != null) {
 				document.set(markupContent);

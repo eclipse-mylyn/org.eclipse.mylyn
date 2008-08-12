@@ -36,64 +36,69 @@ import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
- * A builder that produces XHTML output.  The nature of the output is affected by various
- * settings on the builder.
- *
+ * A builder that produces XHTML output. The nature of the output is affected by various settings on the builder.
+ * 
  * @author David Green
  */
 public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
-
-	private static final Map<SpanType,String> spanTypeToElementName = new HashMap<SpanType,String>();
+	private static final Map<SpanType, String> spanTypeToElementName = new HashMap<SpanType, String>();
 	static {
-		spanTypeToElementName.put(SpanType.BOLD,"b");
-		spanTypeToElementName.put(SpanType.CITATION,"cite");
-		spanTypeToElementName.put(SpanType.ITALIC,"i");
-		spanTypeToElementName.put(SpanType.EMPHASIS,"em");
-		spanTypeToElementName.put(SpanType.STRONG,"strong");
-		spanTypeToElementName.put(SpanType.DELETED,"del");
-		spanTypeToElementName.put(SpanType.INSERTED,"ins");
-		spanTypeToElementName.put(SpanType.UNDERLINED,"u");
-		spanTypeToElementName.put(SpanType.SUPERSCRIPT,"sup");
-		spanTypeToElementName.put(SpanType.SUBSCRIPT,"sub");
-		spanTypeToElementName.put(SpanType.SPAN,"span");
-		spanTypeToElementName.put(SpanType.CODE,"code");
-		spanTypeToElementName.put(SpanType.MONOSPACE,"tt");
+		spanTypeToElementName.put(SpanType.BOLD, "b");
+		spanTypeToElementName.put(SpanType.CITATION, "cite");
+		spanTypeToElementName.put(SpanType.ITALIC, "i");
+		spanTypeToElementName.put(SpanType.EMPHASIS, "em");
+		spanTypeToElementName.put(SpanType.STRONG, "strong");
+		spanTypeToElementName.put(SpanType.DELETED, "del");
+		spanTypeToElementName.put(SpanType.INSERTED, "ins");
+		spanTypeToElementName.put(SpanType.UNDERLINED, "u");
+		spanTypeToElementName.put(SpanType.SUPERSCRIPT, "sup");
+		spanTypeToElementName.put(SpanType.SUBSCRIPT, "sub");
+		spanTypeToElementName.put(SpanType.SPAN, "span");
+		spanTypeToElementName.put(SpanType.CODE, "code");
+		spanTypeToElementName.put(SpanType.MONOSPACE, "tt");
 	}
 
-	private static final Map<BlockType,ElementInfo> blockTypeToElementInfo = new HashMap<BlockType,ElementInfo>();
+	private static final Map<BlockType, ElementInfo> blockTypeToElementInfo = new HashMap<BlockType, ElementInfo>();
 	static {
-		blockTypeToElementInfo.put(BlockType.BULLETED_LIST,new ElementInfo("ul"));
-		blockTypeToElementInfo.put(BlockType.CODE,new ElementInfo("code" ));
-		blockTypeToElementInfo.put(BlockType.FOOTNOTE,new ElementInfo("footnote" ));
-		blockTypeToElementInfo.put(BlockType.LIST_ITEM,new ElementInfo("li"));
-		blockTypeToElementInfo.put(BlockType.NUMERIC_LIST,new ElementInfo("ol"));
-		blockTypeToElementInfo.put(BlockType.DEFINITION_LIST,new ElementInfo("dl"));
-		blockTypeToElementInfo.put(BlockType.DEFINITION_TERM,new ElementInfo("dt"));
-		blockTypeToElementInfo.put(BlockType.DEFINITION_ITEM,new ElementInfo("dd"));
-		blockTypeToElementInfo.put(BlockType.PARAGRAPH,new ElementInfo("p" ));
-		blockTypeToElementInfo.put(BlockType.PREFORMATTED,new ElementInfo("pre" ));
-		blockTypeToElementInfo.put(BlockType.QUOTE,new ElementInfo("blockquote" ));
-		blockTypeToElementInfo.put(BlockType.TABLE,new ElementInfo("table" ));
-		blockTypeToElementInfo.put(BlockType.TABLE_CELL_HEADER,new ElementInfo("th" ));
-		blockTypeToElementInfo.put(BlockType.TABLE_CELL_NORMAL,new ElementInfo("td" ));
-		blockTypeToElementInfo.put(BlockType.TABLE_ROW,new ElementInfo("tr"));
-		blockTypeToElementInfo.put(BlockType.TIP,new ElementInfo("div","tip","border: 1px solid #090;background-color: #dfd;margin: 20px;padding: 0px 6px 0px 6px;"));
-		blockTypeToElementInfo.put(BlockType.WARNING,new ElementInfo("div","warning","border: 1px solid #c00;background-color: #fcc;margin: 20px;padding: 0px 6px 0px 6px;"));
-		blockTypeToElementInfo.put(BlockType.INFORMATION,new ElementInfo("div","info","border: 1px solid #3c78b5;background-color: #D8E4F1;margin: 20px;padding: 0px 6px 0px 6px;"));
-		blockTypeToElementInfo.put(BlockType.NOTE,new ElementInfo("div","note","border: 1px solid #F0C000;background-color: #FFFFCE;margin: 20px;padding: 0px 6px 0px 6px;"));
-		blockTypeToElementInfo.put(BlockType.PANEL,new ElementInfo("div","panel","border: 1px solid #ccc;background-color: #FFFFCE;margin: 10px;padding: 0px 6px 0px 6px;"));
+		blockTypeToElementInfo.put(BlockType.BULLETED_LIST, new ElementInfo("ul"));
+		blockTypeToElementInfo.put(BlockType.CODE, new ElementInfo("code"));
+		blockTypeToElementInfo.put(BlockType.FOOTNOTE, new ElementInfo("footnote"));
+		blockTypeToElementInfo.put(BlockType.LIST_ITEM, new ElementInfo("li"));
+		blockTypeToElementInfo.put(BlockType.NUMERIC_LIST, new ElementInfo("ol"));
+		blockTypeToElementInfo.put(BlockType.DEFINITION_LIST, new ElementInfo("dl"));
+		blockTypeToElementInfo.put(BlockType.DEFINITION_TERM, new ElementInfo("dt"));
+		blockTypeToElementInfo.put(BlockType.DEFINITION_ITEM, new ElementInfo("dd"));
+		blockTypeToElementInfo.put(BlockType.PARAGRAPH, new ElementInfo("p"));
+		blockTypeToElementInfo.put(BlockType.PREFORMATTED, new ElementInfo("pre"));
+		blockTypeToElementInfo.put(BlockType.QUOTE, new ElementInfo("blockquote"));
+		blockTypeToElementInfo.put(BlockType.TABLE, new ElementInfo("table"));
+		blockTypeToElementInfo.put(BlockType.TABLE_CELL_HEADER, new ElementInfo("th"));
+		blockTypeToElementInfo.put(BlockType.TABLE_CELL_NORMAL, new ElementInfo("td"));
+		blockTypeToElementInfo.put(BlockType.TABLE_ROW, new ElementInfo("tr"));
+		blockTypeToElementInfo.put(BlockType.TIP, new ElementInfo("div", "tip",
+				"border: 1px solid #090;background-color: #dfd;margin: 20px;padding: 0px 6px 0px 6px;"));
+		blockTypeToElementInfo.put(BlockType.WARNING, new ElementInfo("div", "warning",
+				"border: 1px solid #c00;background-color: #fcc;margin: 20px;padding: 0px 6px 0px 6px;"));
+		blockTypeToElementInfo.put(BlockType.INFORMATION, new ElementInfo("div", "info",
+				"border: 1px solid #3c78b5;background-color: #D8E4F1;margin: 20px;padding: 0px 6px 0px 6px;"));
+		blockTypeToElementInfo.put(BlockType.NOTE, new ElementInfo("div", "note",
+				"border: 1px solid #F0C000;background-color: #FFFFCE;margin: 20px;padding: 0px 6px 0px 6px;"));
+		blockTypeToElementInfo.put(BlockType.PANEL, new ElementInfo("div", "panel",
+				"border: 1px solid #ccc;background-color: #FFFFCE;margin: 10px;padding: 0px 6px 0px 6px;"));
 
 	}
-
 
 	private String htmlNsUri = "http://www.w3.org/1999/xhtml";
+
 	private String htmlDtd = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
-	
-	
+
 	private boolean xhtmlStrict = false;
+
 	private boolean emitAsDocument = true;
+
 	private boolean emitDtd = false;
+
 	private String title;
 
 	private String defaultAbsoluteLinkTarget;
@@ -101,23 +106,23 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private List<Stylesheet> stylesheets = null;
 
 	private boolean useInlineStyles = true;
+
 	private boolean suppressBuiltInStyles = false;
-	
+
 	private String linkRel;
-	
+
 	public HtmlDocumentBuilder(Writer out) {
-		this(out,false);
+		this(out, false);
 	}
-	
-	public HtmlDocumentBuilder(Writer out,boolean formatting) {
-		super(formatting?createFormattingXmlStreamWriter(out):new DefaultXmlStreamWriter(out));
+
+	public HtmlDocumentBuilder(Writer out, boolean formatting) {
+		super(formatting ? createFormattingXmlStreamWriter(out) : new DefaultXmlStreamWriter(out));
 	}
 
 	public HtmlDocumentBuilder(XmlStreamWriter writer) {
 		super(writer);
 	}
 
-	
 	public void copyConfiguration(HtmlDocumentBuilder other) {
 		other.setBase(getBase());
 		other.setBaseInHead(isBaseInHead());
@@ -130,12 +135,12 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		other.setUseInlineStyles(isUseInlineStyles());
 		other.setSuppressBuiltInStyles(isSuppressBuiltInStyles());
 		if (stylesheets != null) {
-			for (Stylesheet stylesheet: stylesheets) {
+			for (Stylesheet stylesheet : stylesheets) {
 				other.stylesheets.add(stylesheet);
 			}
 		}
 	}
-	
+
 	protected static XmlStreamWriter createFormattingXmlStreamWriter(Writer out) {
 		return new FormattingXMLStreamWriter(new DefaultXmlStreamWriter(out)) {
 			@Override
@@ -146,24 +151,25 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * The XML Namespace URI of the HTML elements, only used if {@link #isEmitAsDocument()}.
-	 * The default value is "<code>http://www.w3.org/1999/xhtml</code>".
+	 * The XML Namespace URI of the HTML elements, only used if {@link #isEmitAsDocument()}. The default value is "
+	 * <code>http://www.w3.org/1999/xhtml</code>".
 	 */
 	public String getHtmlNsUri() {
 		return htmlNsUri;
 	}
 
 	/**
-	 * The XML Namespace URI of the HTML elements, only used if {@link #isEmitAsDocument()}.
-	 * The default value is "<code>http://www.w3.org/1999/xhtml</code>".
+	 * The XML Namespace URI of the HTML elements, only used if {@link #isEmitAsDocument()}. The default value is "
+	 * <code>http://www.w3.org/1999/xhtml</code>".
 	 */
 	public void setHtmlNsUri(String htmlNsUri) {
 		this.htmlNsUri = htmlNsUri;
 	}
 
 	/**
-	 * The DTD to emit, if {@link #isEmitDtd()} and {@link #isEmitAsDocument()}.
-	 * The default value is <code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</code>
+	 * The DTD to emit, if {@link #isEmitDtd()} and {@link #isEmitAsDocument()}. The default value is
+	 * 
+	 * <code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</code>
 	 */
 	public String getHtmlDtd() {
 		return htmlDtd;
@@ -171,6 +177,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	/**
 	 * The DTD to emit, if {@link #isEmitDtd()} and {@link #isEmitAsDocument()}.
+	 * 
 	 * @see #getHtmlDtd()
 	 */
 	public void setHtmlDtd(String htmlDtd) {
@@ -178,43 +185,40 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicate if the resulting HTML should be emitted as a document.  If false, the html and body tags are not included
-	 * in the output.
-	 * Default value is true.
+	 * Indicate if the resulting HTML should be emitted as a document. If false, the html and body tags are not included
+	 * in the output. Default value is true.
 	 */
 	public boolean isEmitAsDocument() {
 		return emitAsDocument;
 	}
 
 	/**
-	 * Indicate if the resulting HTML should be emitted as a document.  If false, the html and body tags are not included
-	 * in the output.
-	 * Default value is true.
+	 * Indicate if the resulting HTML should be emitted as a document. If false, the html and body tags are not included
+	 * in the output. Default value is true.
 	 */
 	public void setEmitAsDocument(boolean emitAsDocument) {
 		this.emitAsDocument = emitAsDocument;
 	}
 
 	/**
-	 * Indicate if the resulting HTML should include a DTD.  Ignored unless {@link #isEmitAsDocument()}.
-	 * Default value is false.
+	 * Indicate if the resulting HTML should include a DTD. Ignored unless {@link #isEmitAsDocument()}. Default value is
+	 * false.
 	 */
 	public boolean isEmitDtd() {
 		return emitDtd;
 	}
 
 	/**
-	 * Indicate if the resulting HTML should include a DTD.  Ignored unless {@link #isEmitAsDocument()}.
-	 * Default value is false.
+	 * Indicate if the resulting HTML should include a DTD. Ignored unless {@link #isEmitAsDocument()}. Default value is
+	 * false.
 	 */
 	public void setEmitDtd(boolean emitDtd) {
 		this.emitDtd = emitDtd;
 	}
 
-
 	/**
-	 * Set the document title, which will be emitted into the &lt;title&gt; element.
-	 * Ignored unless {@link #isEmitAsDocument()}
+	 * Set the document title, which will be emitted into the &lt;title&gt; element. Ignored unless
+	 * {@link #isEmitAsDocument()}
 	 * 
 	 * @return the title or null if there is none
 	 */
@@ -223,63 +227,58 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Set the document title, which will be emitted into the &lt;title&gt; element.
-	 * Ignored unless {@link #isEmitAsDocument()}
+	 * Set the document title, which will be emitted into the &lt;title&gt; element. Ignored unless
+	 * {@link #isEmitAsDocument()}
 	 * 
-	 * @param title the title or null if there is none
+	 * @param title
+	 *            the title or null if there is none
 	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
 	/**
-	 * A default target attribute for links that have absolute (not relative) urls.
-	 * By default this value is null.  Setting this value will cause all HTML anchors
-	 * to have their target attribute set if it's not explicitly specified in a {@link LinkAttributes}.
+	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null.
+	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
+	 * specified in a {@link LinkAttributes}.
 	 */
 	public String getDefaultAbsoluteLinkTarget() {
 		return defaultAbsoluteLinkTarget;
 	}
 
 	/**
-	 * A default target attribute for links that have absolute (not relative) urls.
-	 * By default this value is null.  Setting this value will cause all HTML anchors
-	 * to have their target attribute set if it's not explicitly specified in a {@link LinkAttributes}.
+	 * A default target attribute for links that have absolute (not relative) urls. By default this value is null.
+	 * Setting this value will cause all HTML anchors to have their target attribute set if it's not explicitly
+	 * specified in a {@link LinkAttributes}.
 	 */
 	public void setDefaultAbsoluteLinkTarget(String defaultAbsoluteLinkTarget) {
 		this.defaultAbsoluteLinkTarget = defaultAbsoluteLinkTarget;
 	}
 
-
 	/**
-	 * indicate if the builder should attempt to conform to strict XHTML rules.
-	 * The default is false.
+	 * indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
 	 */
 	public boolean isXhtmlStrict() {
 		return xhtmlStrict;
 	}
 
 	/**
-	 * indicate if the builder should attempt to conform to strict XHTML rules.
-	 * The default is false.
+	 * indicate if the builder should attempt to conform to strict XHTML rules. The default is false.
 	 */
 	public void setXhtmlStrict(boolean xhtmlStrict) {
 		this.xhtmlStrict = xhtmlStrict;
 	}
 
-	
 	/**
-	 * Add a CSS stylesheet to the output document as an URL, where the CSS stylesheet
-	 * is referenced as an HTML link.
-	 * Calling this method after {@link #beginDocument() starting the document}
-	 * has no effect.
+	 * Add a CSS stylesheet to the output document as an URL, where the CSS stylesheet is referenced as an HTML link.
+	 * Calling this method after {@link #beginDocument() starting the document} has no effect.
 	 * 
-	 * Generates code similar to the following:
-	 * <code>
+	 * Generates code similar to the following: <code>
 	 *   &lt;link type="text/css" rel="stylesheet" href="url"/>
 	 * </code>
 	 * 
-	 * @param url the CSS url to use, which may be relative or absolute
+	 * @param url
+	 *            the CSS url to use, which may be relative or absolute
 	 * 
 	 * @see #addCssStylesheet(File)
 	 */
@@ -295,17 +294,18 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Add a CSS stylesheet to the output document, where the contents of the CSS stylesheet
-	 * are embedded in the HTML.
-	 * Calling this method after {@link #beginDocument() starting the document}
-	 * has no effect.
+	 * Add a CSS stylesheet to the output document, where the contents of the CSS stylesheet are embedded in the HTML.
+	 * Calling this method after {@link #beginDocument() starting the document} has no effect.
 	 * 
 	 * Generates code similar to the following:
-	 * <pre><code>
-	 *   &lt;style type="text/css">
+	 * 
+	 * <pre>
+	 * &lt;code&gt;
+	 *   &lt;style type=&quot;text/css&quot;&gt;
 	 *   ... contents of the file ...
-	 *   &lt;/style>
-	 * </code></pre>
+	 *   &lt;/style&gt;
+	 * &lt;/code&gt;
+	 * </pre>
 	 * 
 	 * 
 	 * @param file
@@ -317,22 +317,22 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			throw new IllegalArgumentException();
 		}
 		if (!file.exists()) {
-			throw new IllegalArgumentException(String.format("File does not exist: %s",file));
+			throw new IllegalArgumentException(String.format("File does not exist: %s", file));
 		}
 		if (!file.isFile()) {
-			throw new IllegalArgumentException(String.format("Not a file: %s",file));
+			throw new IllegalArgumentException(String.format("Not a file: %s", file));
 		}
 		if (!file.canRead()) {
-			throw new IllegalArgumentException(String.format("File cannot be read: %s",file));
+			throw new IllegalArgumentException(String.format("File cannot be read: %s", file));
 		}
 		addStylesheet(new Stylesheet(file));
 	}
-	
 
 	/**
-	 * Indicate if inline styles should be used when creating output such as text boxes.
-	 * When disabled inline styles are suppressed and CSS classes are used instead, with the default styles emitted as a
-	 * stylesheet in the document head.  If disabled and {@link #isEmitAsDocument()} is false, this option has the same effect as {@link #isSuppressBuiltInStyles()}.
+	 * Indicate if inline styles should be used when creating output such as text boxes. When disabled inline styles are
+	 * suppressed and CSS classes are used instead, with the default styles emitted as a stylesheet in the document
+	 * head. If disabled and {@link #isEmitAsDocument()} is false, this option has the same effect as
+	 * {@link #isSuppressBuiltInStyles()}.
 	 * 
 	 * The default is true.
 	 * 
@@ -343,9 +343,10 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicate if inline styles should be used when creating output such as text boxes.
-	 * When disabled inline styles are suppressed and CSS classes are used instead, with the default styles emitted as a
-	 * stylesheet in the document head.  If disabled and {@link #isEmitAsDocument()} is false, this option has the same effect as {@link #isSuppressBuiltInStyles()}.
+	 * Indicate if inline styles should be used when creating output such as text boxes. When disabled inline styles are
+	 * suppressed and CSS classes are used instead, with the default styles emitted as a stylesheet in the document
+	 * head. If disabled and {@link #isEmitAsDocument()} is false, this option has the same effect as
+	 * {@link #isSuppressBuiltInStyles()}.
 	 * 
 	 * The default is true.
 	 */
@@ -354,8 +355,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * indicate if default built-in CSS styles should be suppressed.  Built-in styles are styles that are emitted by this builder
-	 * to create the desired visual effect when rendering certain types of elements, such as warnings or infos.
+	 * indicate if default built-in CSS styles should be suppressed. Built-in styles are styles that are emitted by this
+	 * builder to create the desired visual effect when rendering certain types of elements, such as warnings or infos.
 	 * the default is false.
 	 * 
 	 * @see #isUseInlineStyles()
@@ -365,8 +366,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * indicate if default built-in CSS styles should be suppressed.  Built-in styles are styles that are emitted by this builder
-	 * to create the desired visual effect when rendering certain types of elements, such as warnings or infos.
+	 * indicate if default built-in CSS styles should be suppressed. Built-in styles are styles that are emitted by this
+	 * builder to create the desired visual effect when rendering certain types of elements, such as warnings or infos.
 	 * the default is false.
 	 */
 	public void setSuppressBuiltInStyles(boolean suppressBuiltInStyles) {
@@ -374,12 +375,12 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * The 'rel' value for HTML links.  If specified the value is applied to all links generated by the builder.
-	 * The default value is null.  
+	 * The 'rel' value for HTML links. If specified the value is applied to all links generated by the builder. The
+	 * default value is null.
 	 * 
-	 * Setting this value to "nofollow" is recommended for rendering HTML in areas where users may 
-	 * add links, for example in a blog comment.  See 
-	 * <a href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
+	 * Setting this value to "nofollow" is recommended for rendering HTML in areas where users may add links, for
+	 * example in a blog comment. See <a
+	 * href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
 	 * 
 	 * @return the rel or null if there is none.
 	 * @see LinkAttributes#getRel()
@@ -389,14 +390,15 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * The 'rel' value for HTML links.  If specified the value is applied to all links generated by the builder.
-	 * The default value is null.  
+	 * The 'rel' value for HTML links. If specified the value is applied to all links generated by the builder. The
+	 * default value is null.
 	 * 
-	 * Setting this value to "nofollow" is recommended for rendering HTML in areas where users may 
-	 * add links, for example in a blog comment.  See 
-	 * <a href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
+	 * Setting this value to "nofollow" is recommended for rendering HTML in areas where users may add links, for
+	 * example in a blog comment. See <a
+	 * href="http://en.wikipedia.org/wiki/Nofollow">http://en.wikipedia.org/wiki/Nofollow</a> for more information.
 	 * 
-	 * @param linkRel the rel or null if there is none.  
+	 * @param linkRel
+	 *            the rel or null if there is none.
 	 * 
 	 * @see LinkAttributes#getRel()
 	 */
@@ -415,28 +417,28 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 				writer.writeDTD(htmlDtd);
 			}
 
-			writer.writeStartElement(htmlNsUri,"html");
+			writer.writeStartElement(htmlNsUri, "html");
 			writer.writeDefaultNamespace(htmlNsUri);
 
-			writer.writeStartElement(htmlNsUri,"head");
+			writer.writeStartElement(htmlNsUri, "head");
 			if (base != null && baseInHead) {
-				writer.writeEmptyElement(htmlNsUri,"base");
+				writer.writeEmptyElement(htmlNsUri, "base");
 				writer.writeAttribute("href", base.toString());
 			}
 			if (title != null) {
-				writer.writeStartElement(htmlNsUri,"title");
+				writer.writeStartElement(htmlNsUri, "title");
 				writer.writeCharacters(title);
 				writer.writeEndElement(); // title
 			}
 			if (!useInlineStyles && !suppressBuiltInStyles) {
-				writer.writeStartElement(htmlNsUri,"style");
+				writer.writeStartElement(htmlNsUri, "style");
 				writer.writeAttribute("type", "text/css");
 				writer.writeCharacters("\n");
-				for (Entry<BlockType, ElementInfo> ent: blockTypeToElementInfo.entrySet()) {
+				for (Entry<BlockType, ElementInfo> ent : blockTypeToElementInfo.entrySet()) {
 					ElementInfo elementInfo = ent.getValue();
 					if (elementInfo.cssStyles != null && elementInfo.cssClass != null) {
 						String[] classes = elementInfo.cssClass.split("\\s+");
-						for (String cssClass: classes) {
+						for (String cssClass : classes) {
 							writer.writeCharacters(".");
 							writer.writeCharacters(cssClass);
 							writer.writeCharacters(" ");
@@ -449,10 +451,10 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 				writer.writeEndElement();
 			}
 			if (stylesheets != null) {
-				for (Stylesheet stylesheet: stylesheets) {
+				for (Stylesheet stylesheet : stylesheets) {
 					if (stylesheet.url != null) {
 						// <link type="text/css" rel="stylesheet" href="url"/>
-						writer.writeEmptyElement(htmlNsUri,"link");
+						writer.writeEmptyElement(htmlNsUri, "link");
 						writer.writeAttribute("type", "text/css");
 						writer.writeAttribute("rel", "stylesheet");
 						writer.writeAttribute("href", makeUrlAbsolute(stylesheet.url));
@@ -460,13 +462,13 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 						//						 <style type="text/css">
 						//						   ... contents of the file ...
 						//						 </style>
-						writer.writeStartElement(htmlNsUri,"style");
+						writer.writeStartElement(htmlNsUri, "style");
 						writer.writeAttribute("type", "text/css");
 						String css;
 						try {
 							css = readFully(stylesheet.file);
 						} catch (IOException e) {
-							throw new IllegalStateException(String.format("Cannot read file: %s",stylesheet.file),e);
+							throw new IllegalStateException(String.format("Cannot read file: %s", stylesheet.file), e);
 						}
 						writer.writeCharacters(css);
 						writer.writeEndElement();
@@ -475,7 +477,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			writer.writeEndElement(); // head
 
-			writer.writeStartElement(htmlNsUri,"body");
+			writer.writeStartElement(htmlNsUri, "body");
 		} else {
 			// sanity check
 			if (stylesheets != null && !stylesheets.isEmpty()) {
@@ -483,7 +485,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 		}
 	}
-
 
 	@Override
 	public void endDocument() {
@@ -503,17 +504,17 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void acronym(String text, String definition) {
-		writer.writeStartElement(htmlNsUri,"acronym");
+		writer.writeStartElement(htmlNsUri, "acronym");
 		writer.writeAttribute("title", definition);
 		writer.writeCharacters(text);
 		writer.writeEndElement();
 	}
 
 	@Override
-	public void link(Attributes attributes,String hrefOrHashName, String text) {
-		writer.writeStartElement(htmlNsUri,"a");
+	public void link(Attributes attributes, String hrefOrHashName, String text) {
+		writer.writeStartElement(htmlNsUri, "a");
 		writer.writeAttribute("href", makeUrlAbsolute(hrefOrHashName));
-		applyLinkAttributes(attributes,hrefOrHashName);
+		applyLinkAttributes(attributes, hrefOrHashName);
 		characters(text);
 		writer.writeEndElement(); // a
 	}
@@ -524,19 +525,19 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (elementInfo == null) {
 			throw new IllegalStateException(type.name());
 		}
-		writer.writeStartElement(htmlNsUri,elementInfo.name);
+		writer.writeStartElement(htmlNsUri, elementInfo.name);
 		if (elementInfo.cssClass != null) {
 			if (attributes.getCssClass() == null) {
 				attributes.setCssClass(elementInfo.cssClass);
 			} else {
-				attributes.setCssClass(elementInfo.cssClass+' '+attributes.getCssClass());
+				attributes.setCssClass(elementInfo.cssClass + ' ' + attributes.getCssClass());
 			}
 		}
 		if (useInlineStyles && !suppressBuiltInStyles && elementInfo.cssStyles != null) {
 			if (attributes.getCssStyle() == null) {
 				attributes.setCssStyle(elementInfo.cssStyles);
 			} else {
-				attributes.setCssStyle(elementInfo.cssStyles+attributes.getCssStyle());
+				attributes.setCssStyle(elementInfo.cssStyles + attributes.getCssStyle());
 			}
 		}
 		if (type == BlockType.TABLE) {
@@ -563,13 +564,12 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 	}
 
-
 	@Override
 	public void beginHeading(int level, Attributes attributes) {
 		if (level > 6) {
 			level = 6;
 		}
-		writer.writeStartElement(htmlNsUri,"h"+level);
+		writer.writeStartElement(htmlNsUri, "h" + level);
 		applyAttributes(attributes);
 	}
 
@@ -579,10 +579,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (elementName == null) {
 			throw new IllegalStateException(type.name());
 		}
-		writer.writeStartElement(htmlNsUri,elementName);
+		writer.writeStartElement(htmlNsUri, elementName);
 		applyAttributes(attributes);
 	}
-
 
 	@Override
 	public void endBlock() {
@@ -601,11 +600,10 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void image(Attributes attributes, String url) {
-		writer.writeEmptyElement(htmlNsUri,"img");
+		writer.writeEmptyElement(htmlNsUri, "img");
 		applyImageAttributes(attributes);
 		writer.writeAttribute("src", makeUrlAbsolute(url));
 	}
-
 
 	private void applyListAttributes(Attributes attributes) {
 		applyAttributes(attributes);
@@ -616,7 +614,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 		}
 	}
-
 
 	private void applyQuoteAttributes(Attributes attributes) {
 		applyAttributes(attributes);
@@ -661,6 +658,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 		}
 	}
+
 	private void applyTableRowAttributes(Attributes attributes) {
 		applyAttributes(attributes);
 		if (attributes.getTitle() != null) {
@@ -679,7 +677,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 		}
 	}
-
 
 	private void applyCellAttributes(Attributes attributes) {
 		applyAttributes(attributes);
@@ -716,20 +713,20 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			align = imageAttributes.getAlign();
 		}
 		if (xhtmlStrict) {
-			String borderStyle = String.format("border-width: %spx;",border);
+			String borderStyle = String.format("border-width: %spx;", border);
 			String alignStyle = null;
 			if (align != null) {
 				switch (align) {
 				case Center:
 				case Right:
 				case Left:
-					alignStyle = "text-align: "+align.name().toLowerCase()+";";
+					alignStyle = "text-align: " + align.name().toLowerCase() + ";";
 					break;
 				case Bottom:
 				case Baseline:
 				case Top:
 				case Middle:
-					alignStyle = "vertical-align: "+align.name().toLowerCase()+";";
+					alignStyle = "vertical-align: " + align.name().toLowerCase() + ";";
 					break;
 				case Texttop:
 					alignStyle = "vertical-align: text-top;";
@@ -749,12 +746,12 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			if (attributes.getCssStyle() == null || attributes.getCssStyle().length() == 0) {
 				attributes.setCssStyle(additionalStyles);
 			} else {
-				attributes.setCssStyle(additionalStyles+attributes.getCssStyle());
+				attributes.setCssStyle(additionalStyles + attributes.getCssStyle());
 			}
 		}
 		applyAttributes(attributes);
 		boolean haveAlt = false;
-		
+
 		if (attributes instanceof ImageAttributes) {
 			ImageAttributes imageAttributes = (ImageAttributes) attributes;
 			if (imageAttributes.getHeight() != -1) {
@@ -785,7 +782,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 		} else {
 			// only specify border attribute if it's not already specified in CSS
-			writer.writeAttribute("border",Integer.toString(border));
+			writer.writeAttribute("border", Integer.toString(border));
 		}
 	}
 
@@ -800,7 +797,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 				writer.writeAttribute("target", linkAttributes.getTarget());
 			}
 			if (linkAttributes.getRel() != null) {
-				rel = rel==null?linkAttributes.getRel():linkAttributes.getRel()+' '+rel;
+				rel = rel == null ? linkAttributes.getRel() : linkAttributes.getRel() + ' ' + rel;
 			}
 
 		}
@@ -813,7 +810,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 		}
 
-		if (rel != null) { 
+		if (rel != null) {
 			writer.writeAttribute("rel", rel);
 		}
 	}
@@ -838,10 +835,10 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
-		writer.writeStartElement(htmlNsUri,"a");
+		writer.writeStartElement(htmlNsUri, "a");
 		writer.writeAttribute("href", makeUrlAbsolute(href));
-		applyLinkAttributes(linkAttributes,href);
-		writer.writeEmptyElement(htmlNsUri,"img");
+		applyLinkAttributes(linkAttributes, href);
+		writer.writeEmptyElement(htmlNsUri, "img");
 		applyImageAttributes(imageAttributes);
 		writer.writeAttribute("src", makeUrlAbsolute(imageUrl));
 		writer.writeEndElement(); // a
@@ -849,7 +846,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void lineBreak() {
-		writer.writeEmptyElement(htmlNsUri,"br");
+		writer.writeEmptyElement(htmlNsUri, "br");
 	}
 
 	@Override
@@ -859,31 +856,35 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final class ElementInfo {
 		final String name;
+
 		final String cssClass;
+
 		final String cssStyles;
 
 		public ElementInfo(String name, String cssClass, String cssStyles) {
 			this.name = name;
 			this.cssClass = cssClass;
-			this.cssStyles = cssStyles != null && !cssStyles.endsWith(";")?cssStyles+';':cssStyles;
+			this.cssStyles = cssStyles != null && !cssStyles.endsWith(";") ? cssStyles + ';' : cssStyles;
 		}
 
 		public ElementInfo(String name) {
-			this(name,null,null);
+			this(name, null, null);
 		}
 	}
 
 	private static class Stylesheet {
 		String url;
+
 		File file;
+
 		public Stylesheet(File file) {
 			this.file = file;
 		}
+
 		public Stylesheet(String url) {
 			this.url = url;
 		}
 	}
-
 
 	private static String readFully(File inputFile) throws IOException {
 		int length = (int) inputFile.length();
@@ -895,13 +896,12 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		try {
 			int c;
 			while ((c = reader.read()) != -1) {
-				buf.append((char)c);
+				buf.append((char) c);
 			}
 		} finally {
 			reader.close();
 		}
 		return buf.toString();
 	}
-
 
 }

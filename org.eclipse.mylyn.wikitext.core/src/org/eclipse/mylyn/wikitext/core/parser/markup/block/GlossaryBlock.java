@@ -19,8 +19,8 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public abstract class GlossaryBlock extends Block {
@@ -30,18 +30,18 @@ public abstract class GlossaryBlock extends Block {
 	private String style;
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineNumber++ > 0) {
 			setClosed(true);
 			return 0;
 		}
 		if (!getMarkupLanguage().isFilterGenerativeContents()) {
-			SortedMap<String,String> glossary = new TreeMap<String, String>(state.getGlossaryTerms());
+			SortedMap<String, String> glossary = new TreeMap<String, String>(state.getGlossaryTerms());
 
-			builder.beginBlock(BlockType.DEFINITION_LIST, new Attributes(null,
-					null, style == null ? null : "list-style: " + style, null));
+			builder.beginBlock(BlockType.DEFINITION_LIST, new Attributes(null, null, style == null ? null
+					: "list-style: " + style, null));
 			Attributes nullAttributes = new Attributes();
-			for (Map.Entry<String, String> ent: glossary.entrySet()) {
+			for (Map.Entry<String, String> ent : glossary.entrySet()) {
 				builder.beginBlock(BlockType.DEFINITION_TERM, nullAttributes);
 				builder.characters(ent.getKey());
 				builder.endBlock();

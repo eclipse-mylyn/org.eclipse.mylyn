@@ -13,8 +13,8 @@ package org.eclipse.mylyn.wikitext.core.parser.markup.token;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class EntityReplacementTokenProcessor extends PatternBasedElementProcessor {

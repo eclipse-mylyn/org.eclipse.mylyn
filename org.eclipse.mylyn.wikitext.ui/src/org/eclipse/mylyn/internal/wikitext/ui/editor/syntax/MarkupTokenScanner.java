@@ -39,11 +39,11 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	private Iterator<Token> tokenIt = null;
 
-	private CssStyleManager styleManager;
+	private final CssStyleManager styleManager;
 
-	private FontState defaultState;
+	private final FontState defaultState;
 
-	private Preferences preferences;
+	private final Preferences preferences;
 
 	public MarkupTokenScanner(Font defaultFont) {
 		styleManager = new CssStyleManager(defaultFont);

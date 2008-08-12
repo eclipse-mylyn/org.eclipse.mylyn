@@ -49,11 +49,11 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String doctype = "<!DOCTYPE book PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\">";
 
-	private Map<String, String> acronyms = new HashMap<String, String>();
+	private final Map<String, String> acronyms = new HashMap<String, String>();
 
 	private int headingLevel = 0;
 
-	private Stack<BlockDescription> blockDescriptions = new Stack<BlockDescription>();
+	private final Stack<BlockDescription> blockDescriptions = new Stack<BlockDescription>();
 
 	private boolean automaticGlossary = true;
 

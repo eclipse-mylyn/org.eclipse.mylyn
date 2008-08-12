@@ -16,15 +16,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 
- * 
  * @author David Green
  */
 public class IdGenerator {
 
-	private Map<String, Integer> idGenerators = new HashMap<String, Integer>();
+	private final Map<String, Integer> idGenerators = new HashMap<String, Integer>();
 
-	private Set<String> anchorNames = new HashSet<String>();
+	private final Set<String> anchorNames = new HashSet<String>();
 
 	public String newId(String type, String text) {
 		if (type == null) {

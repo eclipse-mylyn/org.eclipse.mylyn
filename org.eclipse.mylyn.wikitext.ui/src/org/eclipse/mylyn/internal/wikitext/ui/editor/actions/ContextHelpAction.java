@@ -18,23 +18,24 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
- * An action that invokes context help with a specific help context id. 
+ * An action that invokes context help with a specific help context id.
  * 
  * @author David Green
  */
 public class ContextHelpAction extends Action {
 
 	private static final String DEFAULT_WIKITEXT_HELP_ID = "org.eclipse.mylyn.wikitext.ui.markupSourceContext";
-	
+
 	private final String contextId;
 
 	public ContextHelpAction(String contextId) {
-		super("",AS_PUSH_BUTTON);
+		super("", AS_PUSH_BUTTON);
 		this.contextId = contextId;
 		setToolTipText("WikiText Help");
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(WikiTextUiPlugin.getDefault().getPluginId(), "icons/help.gif"));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(WikiTextUiPlugin.getDefault().getPluginId(),
+				"icons/help.gif"));
 	}
-	
+
 	public ContextHelpAction() {
 		this(DEFAULT_WIKITEXT_HELP_ID);
 	}

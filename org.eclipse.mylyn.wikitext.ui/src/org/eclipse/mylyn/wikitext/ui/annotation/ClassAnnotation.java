@@ -21,9 +21,8 @@ public class ClassAnnotation extends Annotation {
 
 	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.class";
 
-
 	public ClassAnnotation(String cssClass) {
-		super(TYPE,false,cssClass);
+		super(TYPE, false, cssClass);
 	}
 
 	public String getCssClass() {

@@ -46,13 +46,13 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * @author David Green
  */
 public class MarkupToHtmlTask extends MarkupTask {
-	private List<FileSet> filesets = new ArrayList<FileSet>();
+	private final List<FileSet> filesets = new ArrayList<FileSet>();
 
 	protected String htmlFilenameFormat = "$1.html";
 
 	protected boolean overwrite = true;
 
-	private List<Stylesheet> stylesheets = new ArrayList<Stylesheet>();
+	private final List<Stylesheet> stylesheets = new ArrayList<Stylesheet>();
 
 	protected File file;
 

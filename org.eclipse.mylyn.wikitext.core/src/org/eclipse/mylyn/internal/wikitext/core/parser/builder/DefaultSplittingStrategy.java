@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
 
-
 /**
  * 
  * @author David Green
@@ -24,7 +23,7 @@ public class DefaultSplittingStrategy extends SplittingStrategy {
 	private int headingLevel;
 
 	private int splitLevel = 1;
-	
+
 	private String id;
 
 	@Override
@@ -40,9 +39,9 @@ public class DefaultSplittingStrategy extends SplittingStrategy {
 	@Override
 	public String getSplitTarget() {
 		if (id != null) {
-			return id+".html";
+			return id + ".html";
 		}
-		return "h"+headingLevel+"p"+headingCount+".html";
+		return "h" + headingLevel + "p" + headingCount + ".html";
 	}
 
 	@Override

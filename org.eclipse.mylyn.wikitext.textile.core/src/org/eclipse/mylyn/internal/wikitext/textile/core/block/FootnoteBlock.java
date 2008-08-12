@@ -26,9 +26,10 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class FootnoteBlock extends Block {
 
-	private static final int LINE_REMAINDER_GROUP_OFFSET = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT+2;
+	private static final int LINE_REMAINDER_GROUP_OFFSET = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 2;
 
-	static final Pattern startPattern = Pattern.compile("fn([0-9]{1,2})"+Textile.REGEX_BLOCK_ATTRIBUTES+"\\.\\s+(.*)");
+	static final Pattern startPattern = Pattern.compile("fn([0-9]{1,2})" + Textile.REGEX_BLOCK_ATTRIBUTES
+			+ "\\.\\s+(.*)");
 
 	private int blockLineCount = 0;
 
@@ -40,7 +41,7 @@ public class FootnoteBlock extends Block {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 			attributes.setCssClass("footnote");
@@ -49,7 +50,7 @@ public class FootnoteBlock extends Block {
 			footnote = matcher.group(1);
 			attributes.setId(state.getFootnoteId(footnote));
 
-			Textile.configureAttributes(attributes,matcher, 2,true);
+			Textile.configureAttributes(attributes, matcher, 2, true);
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 
 			builder.beginBlock(BlockType.PARAGRAPH, attributes);
@@ -67,7 +68,7 @@ public class FootnoteBlock extends Block {
 		}
 		++blockLineCount;
 
-		getMarkupLanguage().emitMarkupLine(getParser(),state,line, offset);
+		getMarkupLanguage().emitMarkupLine(getParser(), state, line, offset);
 
 		return -1;
 	}
@@ -84,7 +85,6 @@ public class FootnoteBlock extends Block {
 		}
 	}
 
-
 	@Override
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {
@@ -92,6 +92,5 @@ public class FootnoteBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

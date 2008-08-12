@@ -10,25 +10,21 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.mediawiki.core.phrase;
 
-
-
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.core.parser.markup.phrase.LiteralPhraseModifierProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class EscapePhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return
-		"<nowiki>" +
-		"(\\S(?:.*?\\S)?)" + // content
-		"</nowiki>";
+		return "<nowiki>" + "(\\S(?:.*?\\S)?)" + // content
+				"</nowiki>";
 	}
 
 	@Override

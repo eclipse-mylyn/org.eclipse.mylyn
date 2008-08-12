@@ -17,8 +17,8 @@ import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class HeadingBlock extends Block {
@@ -26,8 +26,8 @@ public class HeadingBlock extends Block {
 	private static final Pattern pattern = Pattern.compile("\\s*(\\={1,6})([^=]+)\\1(?:\\s+\\#(\\S+)?)?");
 
 	private int blockLineCount = 0;
-	private Matcher matcher;
 
+	private Matcher matcher;
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
@@ -42,7 +42,7 @@ public class HeadingBlock extends Block {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount > 0) {
 			throw new IllegalStateException();
 		}
@@ -57,7 +57,7 @@ public class HeadingBlock extends Block {
 		Attributes attributes = new Attributes();
 		attributes.setId(id);
 
-		builder.beginHeading(level,attributes);
+		builder.beginHeading(level, attributes);
 		builder.characters(text);
 		builder.endHeading();
 

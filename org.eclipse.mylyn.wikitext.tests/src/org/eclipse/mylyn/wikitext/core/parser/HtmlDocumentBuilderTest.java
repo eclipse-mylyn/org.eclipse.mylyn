@@ -17,7 +17,6 @@ import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 

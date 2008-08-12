@@ -14,14 +14,13 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MarkupMonoReconciler extends MonoReconciler {
 
-	public MarkupMonoReconciler(IReconcilingStrategy strategy,
-			boolean isIncremental) {
+	public MarkupMonoReconciler(IReconcilingStrategy strategy, boolean isIncremental) {
 		super(strategy, isIncremental);
 	}
 

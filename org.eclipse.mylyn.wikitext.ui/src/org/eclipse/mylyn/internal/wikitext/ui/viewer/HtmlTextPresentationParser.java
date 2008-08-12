@@ -351,17 +351,17 @@ public class HtmlTextPresentationParser {
 
 	private class HtmlContentHandler implements ContentHandler {
 
-		private Stack<ElementState> state = new Stack<ElementState>();
+		private final Stack<ElementState> state = new Stack<ElementState>();
 
 		private int lastNewlineOffset = 0;
 
-		private StringBuilder out = new StringBuilder(2048);
+		private final StringBuilder out = new StringBuilder(2048);
 
-		private List<StyleRange> styleRanges = new ArrayList<StyleRange>();
+		private final List<StyleRange> styleRanges = new ArrayList<StyleRange>();
 
-		private Map<Annotation, Position> annotationToPosition = new IdentityHashMap<Annotation, Position>();
+		private final Map<Annotation, Position> annotationToPosition = new IdentityHashMap<Annotation, Position>();
 
-		private StringBuilder elementText = new StringBuilder();
+		private final StringBuilder elementText = new StringBuilder();
 
 		public void characters(char[] ch, int start, int length) throws SAXException {
 			if (!state.isEmpty()) {

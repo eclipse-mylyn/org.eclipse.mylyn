@@ -23,13 +23,14 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 public class ParagraphBlock extends Block {
 
 	private int blockLineCount = 0;
+
 	private Block nestedBlock = null;
 
 	public ParagraphBlock() {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 
@@ -58,11 +59,10 @@ public class ParagraphBlock extends Block {
 			return 0;
 		}
 
-
 		MediaWikiLanguage dialect = (MediaWikiLanguage) getMarkupLanguage();
 
 		// paragraphs can have nested lists and other things
-		for (Block block: dialect.getParagraphBreakingBlocks()) {
+		for (Block block : dialect.getParagraphBreakingBlocks()) {
 			if (block.canStart(line, offset)) {
 				setClosed(true);
 				return 0;
@@ -70,7 +70,6 @@ public class ParagraphBlock extends Block {
 		}
 
 		++blockLineCount;
-
 
 		if (nestedBlock != null) {
 			if (blockLineCount > 1) {
@@ -87,7 +86,7 @@ public class ParagraphBlock extends Block {
 				// note: newlines don't automatically convert to line breaks
 				builder.characters("\n");
 			}
-			dialect.emitMarkupLine(getParser(),state,line, offset);
+			dialect.emitMarkupLine(getParser(), state, line, offset);
 		}
 
 		return -1;
@@ -110,6 +109,5 @@ public class ParagraphBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

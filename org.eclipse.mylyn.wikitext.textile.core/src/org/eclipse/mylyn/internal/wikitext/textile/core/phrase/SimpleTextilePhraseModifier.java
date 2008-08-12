@@ -44,9 +44,9 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 		}
 	}
 
-	private String delimiter;
+	private final String delimiter;
 
-	private SpanType spanType;
+	private final SpanType spanType;
 
 	public SimpleTextilePhraseModifier(String delimiter, SpanType spanType) {
 		this.delimiter = delimiter;

@@ -12,8 +12,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
-import org.eclipse.mylyn.internal.wikitext.ui.viewer.FontState;
 import org.eclipse.swt.graphics.RGB;
 
 /**

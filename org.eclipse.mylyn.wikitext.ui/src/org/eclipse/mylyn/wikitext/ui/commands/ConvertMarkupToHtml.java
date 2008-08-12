@@ -30,18 +30,18 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 import org.eclipse.ui.PlatformUI;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 
-
 	@Override
 	protected void handleFile(IFile file, String name) {
-		final IFile newFile = file.getParent().getFile(new Path(name+".html"));
+		final IFile newFile = file.getParent().getFile(new Path(name + ".html"));
 		if (newFile.exists()) {
-			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Overwrite?", String.format("File '%s' exists: overwrite?",newFile.getFullPath()))) {
+			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					"Overwrite?", String.format("File '%s' exists: overwrite?", newFile.getFullPath()))) {
 				return;
 			}
 		}
@@ -60,11 +60,11 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 
 		try {
 			StringWriter w = new StringWriter();
-			Reader r = new InputStreamReader(new BufferedInputStream(file.getContents()),file.getCharset());
+			Reader r = new InputStreamReader(new BufferedInputStream(file.getContents()), file.getCharset());
 			try {
 				int i;
 				while ((i = r.read()) != -1) {
-					w.write((char)i);
+					w.write((char) i);
 				}
 			} finally {
 				r.close();
@@ -77,7 +77,8 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						if (newFile.exists()) {
-							newFile.setContents(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false,true, monitor);
+							newFile.setContents(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, true,
+									monitor);
 						} else {
 							newFile.create(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, monitor);
 						}
@@ -97,13 +98,13 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println("Cannot convert to HTML: "+e.getMessage());
+			out.println("Cannot convert to HTML: " + e.getMessage());
 			out.println("Details follow:");
 			e.printStackTrace(out);
 			out.close();
 
-
-			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Cannot complete operation", message.toString());
+			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					"Cannot complete operation", message.toString());
 		}
 	}
 

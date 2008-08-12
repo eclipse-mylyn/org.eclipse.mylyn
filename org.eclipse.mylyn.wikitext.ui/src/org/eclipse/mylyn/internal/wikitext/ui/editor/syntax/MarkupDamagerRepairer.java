@@ -17,8 +17,8 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class MarkupDamagerRepairer extends DefaultDamagerRepairer {
@@ -28,7 +28,7 @@ public class MarkupDamagerRepairer extends DefaultDamagerRepairer {
 	}
 
 	@Override
-	public IRegion getDamageRegion(ITypedRegion partition, DocumentEvent e,boolean documentPartitioningChanged) {
+	public IRegion getDamageRegion(ITypedRegion partition, DocumentEvent e, boolean documentPartitioningChanged) {
 		return partition;
 	}
 

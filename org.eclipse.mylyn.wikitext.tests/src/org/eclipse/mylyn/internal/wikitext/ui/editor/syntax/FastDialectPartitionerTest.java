@@ -14,7 +14,6 @@ import java.io.IOException;
 
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**

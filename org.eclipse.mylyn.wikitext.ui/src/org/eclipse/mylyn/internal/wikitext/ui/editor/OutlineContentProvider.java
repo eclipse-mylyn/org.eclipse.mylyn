@@ -15,14 +15,13 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 class OutlineContentProvider implements ITreeContentProvider {
 
 	private static final Object[] NO_CHILDREN = new Object[0];
-
 
 	public void dispose() {
 	}
@@ -32,21 +31,21 @@ class OutlineContentProvider implements ITreeContentProvider {
 
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof OutlineItem) {
-			return ((OutlineItem)parentElement).getChildren().toArray();
+			return ((OutlineItem) parentElement).getChildren().toArray();
 		}
 		return NO_CHILDREN;
 	}
 
 	public Object getParent(Object element) {
 		if (element instanceof OutlineItem) {
-			((OutlineItem)element).getParent();
+			((OutlineItem) element).getParent();
 		}
 		return null;
 	}
 
 	public boolean hasChildren(Object element) {
 		if (element instanceof OutlineItem) {
-			return !((OutlineItem)element).getChildren().isEmpty();
+			return !((OutlineItem) element).getChildren().isEmpty();
 		}
 
 		return getChildren(element).length > 0;

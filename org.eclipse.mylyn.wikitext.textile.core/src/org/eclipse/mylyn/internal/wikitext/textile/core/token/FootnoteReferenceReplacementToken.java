@@ -16,8 +16,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class FootnoteReferenceReplacementToken extends PatternBasedElement {
@@ -42,8 +42,8 @@ public class FootnoteReferenceReplacementToken extends PatternBasedElement {
 		public void emit() {
 			String footnote = group(1);
 			String htmlId = state.getFootnoteId(footnote);
-			builder.beginSpan(SpanType.SUPERSCRIPT, new Attributes(null,"footnote",null,null));
-			builder.link("#"+htmlId, footnote);
+			builder.beginSpan(SpanType.SUPERSCRIPT, new Attributes(null, "footnote", null, null));
+			builder.link("#" + htmlId, footnote);
 			builder.endSpan();
 		}
 	}

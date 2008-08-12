@@ -27,8 +27,8 @@ import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class AnnotationMarkupValidator extends DocumentRegionValidator {
@@ -42,10 +42,11 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void createProblems(IProgressMonitor monitor, IDocument document, IRegion region, List<ValidationProblem> problems) throws CoreException {
+	protected void createProblems(IProgressMonitor monitor, IDocument document, IRegion region,
+			List<ValidationProblem> problems) throws CoreException {
 		Object lockObject;
 		if (annotationModel instanceof ISynchronizable) {
-			lockObject = ((ISynchronizable)annotationModel).getLockObject();
+			lockObject = ((ISynchronizable) annotationModel).getLockObject();
 		} else {
 			lockObject = annotationModel;
 		}
@@ -57,7 +58,7 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 				if (ValidationProblemAnnotation.isValidationAnnotation(annotation)) {
 					Position position = annotationModel.getPosition(annotation);
 					int offset = position.getOffset();
-					if (overlaps(region,offset,position.getLength()) || offset >= document.getLength()) {
+					if (overlaps(region, offset, position.getLength()) || offset >= document.getLength()) {
 						if (toRemove == null) {
 							toRemove = new ArrayList<Annotation>();
 						}
@@ -66,27 +67,27 @@ public class AnnotationMarkupValidator extends DocumentRegionValidator {
 				}
 			}
 
-			Map<Annotation,Position> annotationsToAdd = new HashMap<Annotation, Position>();
-			for (ValidationProblem problem: problems) {
-				annotationsToAdd.put(new ValidationProblemAnnotation(problem),new Position(problem.getOffset(),problem.getLength()));
+			Map<Annotation, Position> annotationsToAdd = new HashMap<Annotation, Position>();
+			for (ValidationProblem problem : problems) {
+				annotationsToAdd.put(new ValidationProblemAnnotation(problem), new Position(problem.getOffset(),
+						problem.getLength()));
 			}
 
 			if (toRemove != null && annotationModel instanceof IAnnotationModelExtension) {
 				Annotation[] annotationsToRemove = toRemove.toArray(new Annotation[toRemove.size()]);
-				((IAnnotationModelExtension)annotationModel).replaceAnnotations(annotationsToRemove, annotationsToAdd);
+				((IAnnotationModelExtension) annotationModel).replaceAnnotations(annotationsToRemove, annotationsToAdd);
 			} else {
 				if (toRemove != null) {
-					for (Annotation annotation: toRemove) {
+					for (Annotation annotation : toRemove) {
 						annotationModel.removeAnnotation(annotation);
 					}
 				}
-				for (Map.Entry<Annotation, Position> entry: annotationsToAdd.entrySet()) {
+				for (Map.Entry<Annotation, Position> entry : annotationsToAdd.entrySet()) {
 					annotationModel.addAnnotation(entry.getKey(), entry.getValue());
 				}
 			}
 		}
 	}
-
 
 	@Override
 	public void validate(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {

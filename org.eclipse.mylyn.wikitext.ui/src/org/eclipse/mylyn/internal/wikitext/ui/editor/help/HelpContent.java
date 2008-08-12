@@ -28,18 +28,25 @@ import org.osgi.framework.Bundle;
  */
 public class HelpContent {
 	private final Bundle provider;
+
 	private final String resourcePath;
+
 	private final String resourceContentLanguage;
+
 	private final String markupLanguageName;
 
 	/**
 	 * 
-	 * @param provider the bundle that provides the content
-	 * @param resourcePath a bundle-relative path to the content
-	 * @param resourceContentLanguage the markup language of the content, or null if it is HTML
-	 * @param markupLanguage the markup language name for which this help content is relevant
+	 * @param provider
+	 *            the bundle that provides the content
+	 * @param resourcePath
+	 *            a bundle-relative path to the content
+	 * @param resourceContentLanguage
+	 *            the markup language of the content, or null if it is HTML
+	 * @param markupLanguage
+	 *            the markup language name for which this help content is relevant
 	 */
-	public HelpContent(Bundle provider,String resourcePath,String resourceContentLanguage,String markupLanguage) {
+	public HelpContent(Bundle provider, String resourcePath, String resourceContentLanguage, String markupLanguage) {
 		if (provider == null || resourcePath == null || markupLanguage == null) {
 			throw new IllegalArgumentException();
 		}
@@ -64,8 +71,8 @@ public class HelpContent {
 	}
 
 	/**
-	 * Get the help content, which may be formatted using HTML markup.
-	 * If HTML markup is used, the content must be well-formed HTML.
+	 * Get the help content, which may be formatted using HTML markup. If HTML markup is used, the content must be
+	 * well-formed HTML.
 	 */
 	@SuppressWarnings("serial")
 	public String getContent() throws IOException {
@@ -73,14 +80,15 @@ public class HelpContent {
 			String content = null;
 			URL resource = provider.getResource(resourcePath);
 			if (resource == null) {
-				throw new Exception(String.format("Cannot find resource '%s' in plugin '%s'",resourcePath,provider.getSymbolicName()));
+				throw new Exception(String.format("Cannot find resource '%s' in plugin '%s'", resourcePath,
+						provider.getSymbolicName()));
 			}
 			Reader reader = new InputStreamReader(new BufferedInputStream(resource.openStream()));
 			try {
 				StringBuilder buf = new StringBuilder();
 				int i;
 				while ((i = reader.read()) != -1) {
-					buf.append((char)i);
+					buf.append((char) i);
 				}
 				content = buf.toString();
 			} finally {
@@ -91,12 +99,13 @@ public class HelpContent {
 			}
 			MarkupLanguage markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage(resourceContentLanguage);
 			if (markupLanguage == null) {
-				throw new IOException(String.format("No such markup language: %s",resourceContentLanguage));
+				throw new IOException(String.format("No such markup language: %s", resourceContentLanguage));
 			}
 			MarkupParser markupParser = new MarkupParser(markupLanguage);
 			return markupParser.parseToHtml(content);
 		} catch (final Exception e) {
-			throw new IOException(String.format("Cannot access content %s/%s: %s",provider.getSymbolicName(),resourcePath,e.getMessage())) {
+			throw new IOException(String.format("Cannot access content %s/%s: %s", provider.getSymbolicName(),
+					resourcePath, e.getMessage())) {
 				@Override
 				public Throwable getCause() {
 					return e;

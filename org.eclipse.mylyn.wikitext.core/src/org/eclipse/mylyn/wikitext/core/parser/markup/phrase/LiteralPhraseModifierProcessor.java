@@ -13,8 +13,8 @@ package org.eclipse.mylyn.wikitext.core.parser.markup.phrase;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class LiteralPhraseModifierProcessor extends PatternBasedElementProcessor {

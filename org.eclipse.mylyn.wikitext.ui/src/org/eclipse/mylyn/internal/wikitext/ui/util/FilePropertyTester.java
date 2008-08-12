@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class FilePropertyTester extends PropertyTester {
@@ -29,8 +29,7 @@ public class FilePropertyTester extends PropertyTester {
 	public FilePropertyTester() {
 	}
 
-	public boolean test(Object receiver, String property, Object[] args,
-			Object expectedValue) {
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if ((receiver instanceof IFile) && property.equals(CONTENT_TYPE_CLASSIFICATION)) {
 			return testContentType((IFile) receiver, toString(expectedValue));
 		}

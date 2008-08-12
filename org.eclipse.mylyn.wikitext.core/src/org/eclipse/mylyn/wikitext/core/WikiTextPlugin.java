@@ -9,6 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,8 +32,8 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 import org.osgi.framework.BundleContext;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class WikiTextPlugin extends Plugin {
@@ -43,9 +44,11 @@ public class WikiTextPlugin extends Plugin {
 
 	private static WikiTextPlugin plugin;
 
-	private SortedMap<String,Class<? extends MarkupLanguage>> languageByName;
-	private Map<String,Class<? extends MarkupLanguage>> languageByFileExtension;
-	private Map<String,String> languageExtensionByLanguage;
+	private SortedMap<String, Class<? extends MarkupLanguage>> languageByName;
+
+	private Map<String, Class<? extends MarkupLanguage>> languageByFileExtension;
+
+	private Map<String, String> languageExtensionByLanguage;
 
 	private Map<String, ValidationRules> validationRulesByLanguageName;
 
@@ -74,7 +77,8 @@ public class WikiTextPlugin extends Plugin {
 	/**
 	 * Get a markup language by name.
 	 * 
-	 * @param name the name of the markup language to retrieve
+	 * @param name
+	 *            the name of the markup language to retrieve
 	 * 
 	 * @return the markup language or null if there is no markup language known by the given name
 	 * 
@@ -98,16 +102,18 @@ public class WikiTextPlugin extends Plugin {
 			language.setExtendsLanguage(languageExtensionByLanguage.get(name));
 			return language;
 		} catch (Exception e) {
-			log(IStatus.ERROR,String.format("Cannot instantiate markup language '%' (class '%s'): %s",name,languageClass.getName(),e.getMessage()),e);
+			log(IStatus.ERROR, String.format("Cannot instantiate markup language '%' (class '%s'): %s", name,
+					languageClass.getName(), e.getMessage()), e);
 		}
 		return null;
 	}
 
 	/**
-	 * Get a markup language for a file.  A markup language is selected based on the registered languages and their
+	 * Get a markup language for a file. A markup language is selected based on the registered languages and their
 	 * expected file extensions.
 	 * 
-	 * @param name the name of the file for which a markup language is desired
+	 * @param name
+	 *            the name of the file for which a markup language is desired
 	 * 
 	 * @return the markup language, or null if no markup language is registered for the specified file name
 	 */
@@ -116,11 +122,11 @@ public class WikiTextPlugin extends Plugin {
 			initializeMarkupLanguages();
 		}
 		int lastIndexOfDot = name.lastIndexOf('.');
-		String extension = lastIndexOfDot==-1?name:name.substring(lastIndexOfDot+1);
+		String extension = lastIndexOfDot == -1 ? name : name.substring(lastIndexOfDot + 1);
 		Class<? extends MarkupLanguage> languageClass = languageByFileExtension.get(extension);
 		if (languageClass != null) {
 			String languageName = null;
-			for (Map.Entry<String, Class<? extends MarkupLanguage>> ent: languageByName.entrySet()) {
+			for (Map.Entry<String, Class<? extends MarkupLanguage>> ent : languageByName.entrySet()) {
 				if (ent.getValue() == languageClass) {
 					languageName = ent.getKey();
 					break;
@@ -146,7 +152,8 @@ public class WikiTextPlugin extends Plugin {
 	/**
 	 * Get a markup validator by language name.
 	 * 
-	 * @param name the name of the markup language for which a validator is desired
+	 * @param name
+	 *            the name of the markup language for which a validator is desired
 	 * 
 	 * @return the markup validator
 	 * 
@@ -170,19 +177,20 @@ public class WikiTextPlugin extends Plugin {
 		initializeMarkupLanguages();
 		synchronized (this) {
 			if (validationRulesByLanguageName == null) {
-				Map<String,ValidationRules> validationRulesByLanguageName = new HashMap<String,ValidationRules>();
+				Map<String, ValidationRules> validationRulesByLanguageName = new HashMap<String, ValidationRules>();
 
-				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(), EXTENSION_VALIDATION_RULES);
+				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
+						EXTENSION_VALIDATION_RULES);
 				if (extensionPoint != null) {
 					IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-					for (IConfigurationElement element: configurationElements) {
+					for (IConfigurationElement element : configurationElements) {
 						try {
 							String markupLanguage = element.getAttribute("markupLanguage");
 							if (markupLanguage == null || markupLanguage.length() == 0) {
 								throw new Exception("Must specify markupLanguage");
 							}
 							if (!languageByName.containsKey(markupLanguage)) {
-								throw new Exception(String.format("'%s' is not a valid markupLanguage",languageByName));
+								throw new Exception(String.format("'%s' is not a valid markupLanguage", languageByName));
 							}
 							Object extension;
 							try {
@@ -192,7 +200,8 @@ public class WikiTextPlugin extends Plugin {
 								continue;
 							}
 							if (!(extension instanceof ValidationRule)) {
-								throw new Exception(String.format("%s is not a validation rule",extension.getClass().getName()));
+								throw new Exception(String.format("%s is not a validation rule", extension.getClass()
+										.getName()));
 							}
 							ValidationRules rules = validationRulesByLanguageName.get(markupLanguage);
 							if (rules == null) {
@@ -201,17 +210,18 @@ public class WikiTextPlugin extends Plugin {
 							}
 							rules.addValidationRule((ValidationRule) extension);
 						} catch (Exception e) {
-							log(IStatus.ERROR,String.format("Plugin '%s' extension '%s' invalid: %s",element.getDeclaringExtension().getContributor().getName(),EXTENSION_VALIDATION_RULES,e.getMessage()),e);
+							log(IStatus.ERROR, String.format("Plugin '%s' extension '%s' invalid: %s",
+									element.getDeclaringExtension().getContributor().getName(),
+									EXTENSION_VALIDATION_RULES, e.getMessage()), e);
 						}
 					}
 				}
-				
 
 				// now that we have the basic validation rules, check for language extensions and connect the hierarchy
-				
+
 				// first ensure that all language names have templates defined
 				Set<String> languageNames = WikiTextPlugin.getDefault().getMarkupLanguageNames();
-				for (String languageName: languageNames) {
+				for (String languageName : languageNames) {
 					ValidationRules rules = validationRulesByLanguageName.get(languageName);
 					if (rules == null) {
 						rules = new ValidationRules();
@@ -219,16 +229,15 @@ public class WikiTextPlugin extends Plugin {
 					}
 				}
 				// next connect the hierarchy
-				for (String languageName: languageNames) {
+				for (String languageName : languageNames) {
 					MarkupLanguage markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
 					if (markupLanguage != null && markupLanguage.getExtendsLanguage() != null) {
 						ValidationRules languageRules = validationRulesByLanguageName.get(languageName);
 						ValidationRules parentLanguageRules = validationRulesByLanguageName.get(markupLanguage.getExtendsLanguage());
-						
+
 						languageRules.setParent(parentLanguageRules);
 					}
 				}
-				
 
 				this.validationRulesByLanguageName = validationRulesByLanguageName;
 			}
@@ -239,16 +248,20 @@ public class WikiTextPlugin extends Plugin {
 		synchronized (this) {
 			if (this.languageByName == null) {
 				SortedMap<String, Class<? extends MarkupLanguage>> markupLanguageByName = new TreeMap<String, Class<? extends MarkupLanguage>>();
-				Map<String, Class<? extends MarkupLanguage>> languageByFileExtension = new HashMap<String,Class<? extends MarkupLanguage>>();
-				Map<String,String> languageExtensionByLanguage = new HashMap<String, String>();
+				Map<String, Class<? extends MarkupLanguage>> languageByFileExtension = new HashMap<String, Class<? extends MarkupLanguage>>();
+				Map<String, String> languageExtensionByLanguage = new HashMap<String, String>();
 
-				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(), EXTENSION_MARKUP_LANGUAGE);
+				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
+						EXTENSION_MARKUP_LANGUAGE);
 				if (extensionPoint != null) {
 					IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-					for (IConfigurationElement element: configurationElements) {
+					for (IConfigurationElement element : configurationElements) {
 						String name = element.getAttribute("name");
 						if (name == null || name.length() == 0) {
-							log(IStatus.ERROR,String.format(EXTENSION_MARKUP_LANGUAGE+"/@name must be specified by plugin '%s'",element.getDeclaringExtension().getContributor().getName()));
+							log(IStatus.ERROR, String.format(EXTENSION_MARKUP_LANGUAGE
+									+ "/@name must be specified by plugin '%s'", element.getDeclaringExtension()
+									.getContributor()
+									.getName()));
 							continue;
 						}
 						String extendsLanguage = element.getAttribute("extends");
@@ -260,29 +273,43 @@ public class WikiTextPlugin extends Plugin {
 							continue;
 						}
 						if (!(markupLanguage instanceof MarkupLanguage)) {
-							log(IStatus.ERROR,String.format("%s is not a markup language",markupLanguage.getClass().getName()));
+							log(IStatus.ERROR, String.format("%s is not a markup language", markupLanguage.getClass()
+									.getName()));
 							continue;
 						}
 						MarkupLanguage d = (MarkupLanguage) markupLanguage;
 						{
 							Class<? extends MarkupLanguage> previous = markupLanguageByName.put(name, d.getClass());
 							if (previous != null) {
-								log(IStatus.ERROR,String.format(EXTENSION_MARKUP_LANGUAGE+"/@name '%s' specified by plugin '%s' is ignored: name '%s' is already registered",name,element.getDeclaringExtension().getContributor().getName(),name));
+								log(
+										IStatus.ERROR,
+										String.format(
+												EXTENSION_MARKUP_LANGUAGE
+														+ "/@name '%s' specified by plugin '%s' is ignored: name '%s' is already registered",
+												name, element.getDeclaringExtension().getContributor().getName(), name));
 								markupLanguageByName.put(name, previous);
 								continue;
 							}
 						}
 						if (extendsLanguage != null) {
-							languageExtensionByLanguage.put(name,extendsLanguage);
+							languageExtensionByLanguage.put(name, extendsLanguage);
 						}
 						String fileExtensions = element.getAttribute("fileExtensions");
 						if (fileExtensions != null) {
 							String[] parts = fileExtensions.split("\\s*,\\s*");
-							for (String part: parts) {
+							for (String part : parts) {
 								if (part.length() != 0) {
-									Class<? extends MarkupLanguage> previous = languageByFileExtension.put(part, d.getClass());
+									Class<? extends MarkupLanguage> previous = languageByFileExtension.put(part,
+											d.getClass());
 									if (previous != null) {
-										log(IStatus.ERROR,String.format(EXTENSION_MARKUP_LANGUAGE+"/@fileExtensions '%s' specified by plugin '%s' is ignored: extension '%s' is already registered",part,element.getDeclaringExtension().getContributor().getName(),part));
+										log(
+												IStatus.ERROR,
+												String.format(
+														EXTENSION_MARKUP_LANGUAGE
+																+ "/@fileExtensions '%s' specified by plugin '%s' is ignored: extension '%s' is already registered",
+														part, element.getDeclaringExtension()
+																.getContributor()
+																.getName(), part));
 										languageByFileExtension.put(part, previous);
 										continue;
 									}
@@ -300,11 +327,11 @@ public class WikiTextPlugin extends Plugin {
 	}
 
 	public void log(int severity, String message) {
-		log(severity,message,null);
+		log(severity, message, null);
 	}
 
 	public void log(int severity, String message, Throwable t) {
-		getLog().log(new Status(severity,getPluginId(),message,t));
+		getLog().log(new Status(severity, getPluginId(), message, t));
 	}
 
 	public String getPluginId() {

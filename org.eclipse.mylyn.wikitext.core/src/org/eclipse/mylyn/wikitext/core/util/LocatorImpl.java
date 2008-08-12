@@ -19,17 +19,17 @@ import org.eclipse.mylyn.wikitext.core.parser.Locator;
  */
 public class LocatorImpl implements Locator {
 
-	private int documentOffset;
+	private final int documentOffset;
 
-	private int lineCharacterOffset;
+	private final int lineCharacterOffset;
 
-	private int lineDocumentOffset;
+	private final int lineDocumentOffset;
 
-	private int lineLength;
+	private final int lineLength;
 
-	private int lineNumber;
+	private final int lineNumber;
 
-	private int lineSegmentEndOffset;
+	private final int lineSegmentEndOffset;
 
 	public LocatorImpl(Locator other) {
 		documentOffset = other.getDocumentOffset();

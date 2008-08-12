@@ -17,7 +17,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * match [[internal links]]
  * 
  * @author David Green
- *
+ * 
  */
 public class HyperlinkExternalReplacementToken extends PatternBasedElement {
 

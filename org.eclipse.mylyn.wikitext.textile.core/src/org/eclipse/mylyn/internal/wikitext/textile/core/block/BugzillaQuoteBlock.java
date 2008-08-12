@@ -18,16 +18,15 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * A quote block that detects lines that start with '>' (email-style quoting) 
+ * A quote block that detects lines that start with '>' (email-style quoting)
  * 
  * @author David Green
- *
+ * 
  */
 public class BugzillaQuoteBlock extends Block {
 	private static Pattern pattern = Pattern.compile("((\\s*>)|\\(In reply to comment #\\d{1,}\\)).*");
-	
+
 	private int blockLineCount = 0;
-	
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
@@ -39,7 +38,7 @@ public class BugzillaQuoteBlock extends Block {
 
 	@Override
 	protected int processLineContent(String line, int offset) {
-		if (!canStart(line,offset)) {
+		if (!canStart(line, offset)) {
 			setClosed(true);
 			return 0;
 		}
@@ -50,12 +49,12 @@ public class BugzillaQuoteBlock extends Block {
 			builder.lineBreak();
 		}
 		++blockLineCount;
-		
-		getMarkupLanguage().emitMarkupLine(getParser(),state,line, offset);
-		
+
+		getMarkupLanguage().emitMarkupLine(getParser(), state, line, offset);
+
 		return -1;
 	}
-	
+
 	@Override
 	public void setClosed(boolean closed) {
 		if (closed && !isClosed()) {

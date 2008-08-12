@@ -16,8 +16,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class HyperlinkReplacementToken extends PatternBasedElement {
@@ -42,15 +42,15 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 		public void emit() {
 			String linkComposite = group(1);
 			String[] parts = linkComposite.split("\\s*\\|\\s*");
-			String text = parts.length > 1?parts[0]:null;
-			String href = parts.length > 1?parts[1]:parts[0];
-			String tip = parts.length > 2?parts[2]:null;
+			String text = parts.length > 1 ? parts[0] : null;
+			String href = parts.length > 1 ? parts[1] : parts[0];
+			String tip = parts.length > 2 ? parts[2] : null;
 			if (text == null || text.length() == 0) {
 				text = href;
 			}
 			Attributes attributes = new LinkAttributes();
 			attributes.setTitle(tip);
-			getBuilder().link(attributes,href, text);
+			getBuilder().link(attributes, href, text);
 		}
 	}
 }

@@ -16,20 +16,20 @@ import org.eclipse.jface.text.source.Annotation;
  * An annotation for "title" or tooltip text.
  * 
  * @author David Green
- *
+ * 
  */
 public class TitleAnnotation extends Annotation {
 	private final String titleType;
 
 	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.title";
 
-	public TitleAnnotation(String title,String titleType) {
-		super(TYPE,false,title);
+	public TitleAnnotation(String title, String titleType) {
+		super(TYPE, false, title);
 		this.titleType = titleType;
 	}
 
 	/**
-	 * The type of title.  Typically corresponds to the HTML element name for which there is a title.
+	 * The type of title. Typically corresponds to the HTML element name for which there is a title.
 	 */
 	public String getTitleType() {
 		return titleType;

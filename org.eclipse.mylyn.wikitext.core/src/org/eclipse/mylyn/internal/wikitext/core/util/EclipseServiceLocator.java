@@ -18,7 +18,7 @@ import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
 
 /**
  * A service locator that uses the {@link WikiTextPlugin} to resolve markup languages
- *
+ * 
  * @author David Green
  */
 public class EclipseServiceLocator extends ServiceLocator {
@@ -41,7 +41,7 @@ public class EclipseServiceLocator extends ServiceLocator {
 				// specified language not found.
 				// create a useful error message
 				StringBuilder buf = new StringBuilder();
-				for (String name: new TreeSet<String>(WikiTextPlugin.getDefault().getMarkupLanguageNames())) {
+				for (String name : new TreeSet<String>(WikiTextPlugin.getDefault().getMarkupLanguageNames())) {
 					if (buf.length() != 0) {
 						buf.append(", ");
 					}
@@ -49,7 +49,10 @@ public class EclipseServiceLocator extends ServiceLocator {
 					buf.append(name);
 					buf.append('\'');
 				}
-				throw new IllegalArgumentException(String.format("No parser available for markup language '%s'. %s",languageName,buf.length()==0?"There are no parsers available.  Check your eclipse configuration.":"Known markup languages are "+buf));
+				throw new IllegalArgumentException(String.format("No parser available for markup language '%s'. %s",
+						languageName,
+						buf.length() == 0 ? "There are no parsers available.  Check your eclipse configuration."
+								: "Known markup languages are " + buf));
 			}
 		}
 		return markupLanguage;

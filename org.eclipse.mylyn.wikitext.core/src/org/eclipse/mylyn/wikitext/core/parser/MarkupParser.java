@@ -21,14 +21,16 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * A markup processor that can process lightweight markup formats such as Textile.
  * 
  * @author David Green
- *
+ * 
  */
 public class MarkupParser {
 
 	private MarkupLanguage markupLanguage;
+
 	private DocumentBuilder builder;
 
-	public MarkupParser() {}
+	public MarkupParser() {
+	}
 
 	public MarkupParser(MarkupLanguage markupLanaguage, DocumentBuilder builder) {
 		this.markupLanguage = markupLanaguage;
@@ -68,25 +70,25 @@ public class MarkupParser {
 	}
 
 	public void parse(Reader markupContent) throws IOException {
-		parse(markupContent,true);
+		parse(markupContent, true);
 	}
 
-	public void parse(Reader markupContent,boolean asDocument) throws IOException {
-		parse(readFully(markupContent),asDocument);
+	public void parse(Reader markupContent, boolean asDocument) throws IOException {
+		parse(readFully(markupContent), asDocument);
 	}
 
 	public void parse(String markupContent) {
-		parse(markupContent,true);
+		parse(markupContent, true);
 	}
 
-	public void parse(String markupContent,boolean asDocument) {
+	public void parse(String markupContent, boolean asDocument) {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("markup language is not set");
 		}
 		if (builder == null) {
 			throw new IllegalStateException("builder is not set");
 		}
-		markupLanguage.processContent(this,markupContent,asDocument);
+		markupLanguage.processContent(this, markupContent, asDocument);
 	}
 
 	private String readFully(Reader reader) throws IOException {
@@ -98,11 +100,11 @@ public class MarkupParser {
 		return writer.toString();
 	}
 
-
 	/**
 	 * parse the given markup content and produce the result as an HTML document.
 	 * 
-	 * @param markupContent the content to parse
+	 * @param markupContent
+	 *            the content to parse
 	 * 
 	 * @return the HTML document text.
 	 */

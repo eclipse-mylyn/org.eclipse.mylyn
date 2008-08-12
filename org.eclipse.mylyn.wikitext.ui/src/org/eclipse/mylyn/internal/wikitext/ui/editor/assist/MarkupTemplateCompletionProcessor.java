@@ -58,7 +58,7 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 
 	private static final Template[] NO_TEMPLATES = new Template[0];
 
-	private TemplateContextType contextType = new TemplateContextType(CONTEXT_ID, "Lightweight Markup");
+	private final TemplateContextType contextType = new TemplateContextType(CONTEXT_ID, "Lightweight Markup");
 
 	private Templates templates;
 
@@ -121,8 +121,7 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 		Template[] templates = getTemplates(context.getContextType().getId());
 
 		List<ICompletionProposal> matches = new ArrayList<ICompletionProposal>(templates.length);
-		for (int i = 0; i < templates.length; i++) {
-			Template template = templates[i];
+		for (Template template : templates) {
 			try {
 				context.getContextType().validate(template.getPattern());
 			} catch (TemplateException e) {

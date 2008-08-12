@@ -30,9 +30,9 @@ public class MultiplexingContentAssistProcessor implements IContentAssistProcess
 
 	private IContentAssistProcessor[] delegates;
 
-	private char[] autoActivationCharacters = new char[0];
+	private final char[] autoActivationCharacters = new char[0];
 
-	private char[] contextInformationCharacters = new char[0];
+	private final char[] contextInformationCharacters = new char[0];
 
 	public void addDelegate(IContentAssistProcessor processor) {
 		if (delegates == null) {

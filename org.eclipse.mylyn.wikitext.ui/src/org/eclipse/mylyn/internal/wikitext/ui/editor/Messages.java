@@ -15,15 +15,14 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- *
- *
+ * 
+ * 
  * @author David Green
  */
 public class Messages {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.wikitext.ui.editor.messages"; //$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-	.getBundle(BUNDLE_NAME);
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
 	private Messages() {
 	}
@@ -40,10 +39,10 @@ public class Messages {
 		}
 	}
 
-	public static String getMessage(String key,Object... args) {
+	public static String getMessage(String key, Object... args) {
 		String template = getString(key);
 		if (args != null && args.length > 0) {
-			return MessageFormat.format(template,args);
+			return MessageFormat.format(template, args);
 		}
 		return template;
 	}

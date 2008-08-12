@@ -19,7 +19,7 @@ import java.io.Reader;
  * @author David Green
  */
 public class LocationTrackingReader extends Reader {
-	private Reader delegate;
+	private final Reader delegate;
 
 	private int offset = -1;
 

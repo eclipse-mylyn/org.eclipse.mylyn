@@ -53,7 +53,7 @@ public class MarkupValidator {
 		}
 	};
 
-	private List<ValidationRule> rules = new ArrayList<ValidationRule>();
+	private final List<ValidationRule> rules = new ArrayList<ValidationRule>();
 
 	public List<ValidationProblem> validate(IProgressMonitor monitor, String markup) {
 		return validate(monitor, markup, 0, markup.length());

@@ -16,7 +16,7 @@ import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
 
 /**
  * Class used to initialize default preference values.
- *
+ * 
  * @author David Green
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
@@ -25,7 +25,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = WikiTextUiPlugin.getDefault().getPreferenceStore();
 		Preferences defaults = new Preferences();
-		defaults.save(store,true);
+		defaults.save(store, true);
 	}
 
 }

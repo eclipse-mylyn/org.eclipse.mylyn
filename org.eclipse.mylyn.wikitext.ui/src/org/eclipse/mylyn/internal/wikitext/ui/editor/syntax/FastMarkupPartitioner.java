@@ -239,7 +239,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 	 *
 	 */class PartitionBuilder extends DocumentBuilder {
 
-		private Block outerBlock = new Block(null, 0, Integer.MAX_VALUE / 2);
+		private final Block outerBlock = new Block(null, 0, Integer.MAX_VALUE / 2);
 
 		private Block currentBlock = outerBlock;
 

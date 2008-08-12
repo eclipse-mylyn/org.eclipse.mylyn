@@ -21,33 +21,35 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
- * Table block, matches blocks that start with <code>table. </code> or those that
- * start with a table row.
+ * Table block, matches blocks that start with <code>table. </code> or those that start with a table row.
  * 
  * @author David Green
  */
 public class TableBlock extends Block {
 
 	// NOTE: no need for whitespace after the dot on 'table.'
-	static final Pattern startPattern = Pattern.compile("(table"+Textile.REGEX_BLOCK_ATTRIBUTES+"\\.)|(\\|(.*)?(\\|\\s*$))");
-	
-	static final Pattern rowAttributesPattern = Pattern.compile(Textile.REGEX_BLOCK_ATTRIBUTES+"\\.\\s*.*");
+	static final Pattern startPattern = Pattern.compile("(table" + Textile.REGEX_BLOCK_ATTRIBUTES
+			+ "\\.)|(\\|(.*)?(\\|\\s*$))");
 
-	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(?:\\\\(\\d+))?(?:/(\\d+))?((?:\\<\\>)|\\<|\\>|\\^)?"+Textile.REGEX_ATTRIBUTES+"(_|\\|)?\\.?\\s?([^\\|]*)(\\|\\|?\\s*$)?");
+	static final Pattern rowAttributesPattern = Pattern.compile(Textile.REGEX_BLOCK_ATTRIBUTES + "\\.\\s*.*");
+
+	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(?:\\\\(\\d+))?(?:/(\\d+))?((?:\\<\\>)|\\<|\\>|\\^)?"
+			+ Textile.REGEX_ATTRIBUTES + "(_|\\|)?\\.?\\s?([^\\|]*)(\\|\\|?\\s*$)?");
 
 	private int blockLineCount = 0;
+
 	private Matcher matcher;
 
 	public TableBlock() {
 	}
 
 	@Override
-	public int processLineContent(String line,int offset) {
+	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
 			if (matcher.group(1) != null) {
 				// 0-offset matches may start with the "table. " prefix.
-				Textile.configureAttributes(attributes,matcher, 2,true);
+				Textile.configureAttributes(attributes, matcher, 2, true);
 				offset = line.length();
 			}
 			builder.beginBlock(BlockType.TABLE, attributes);
@@ -61,7 +63,7 @@ public class TableBlock extends Block {
 			return -1;
 		}
 
-		String textileLine = offset==0?line:line.substring(offset);
+		String textileLine = offset == 0 ? line : line.substring(offset);
 		Matcher rowMatcher = TABLE_ROW_PATTERN.matcher(textileLine);
 		if (!rowMatcher.find()) {
 			setClosed(true);
@@ -84,7 +86,7 @@ public class TableBlock extends Block {
 
 		do {
 			int start = rowMatcher.start();
-			if (start == textileLine.length()-1) {
+			if (start == textileLine.length() - 1) {
 				break;
 			}
 
@@ -113,12 +115,12 @@ public class TableBlock extends Block {
 			attributes.setCssStyle(textAlign);
 			attributes.setRowspan(rowSpan);
 			attributes.setColspan(colSpan);
-			Textile.configureAttributes(attributes, rowMatcher,4,false);
+			Textile.configureAttributes(attributes, rowMatcher, 4, false);
 
 			state.setLineCharacterOffset(start);
-			builder.beginBlock(header?BlockType.TABLE_CELL_HEADER:BlockType.TABLE_CELL_NORMAL, attributes);
+			builder.beginBlock(header ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL, attributes);
 
-			markupLanguage.emitMarkupLine(getParser(), state,textLineOffset, text, 0);
+			markupLanguage.emitMarkupLine(getParser(), state, textLineOffset, text, 0);
 
 			builder.endBlock(); // table cell
 		} while (rowMatcher.find());
@@ -147,6 +149,5 @@ public class TableBlock extends Block {
 		}
 		super.setClosed(closed);
 	}
-
 
 }

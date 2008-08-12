@@ -18,18 +18,17 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
  * @author David Green
  */
 public class SplittingOutlineParser extends OutlineParser {
-	
+
 	private SplittingStrategy splittingStrategy;
-	
-	
+
 	@Override
-	protected OutlineItem createOutlineItem(OutlineItem current, int level,
-			String id, int offset, int length, String label) {
-		if (splittingStrategy == null) { 
+	protected OutlineItem createOutlineItem(OutlineItem current, int level, String id, int offset, int length,
+			String label) {
+		if (splittingStrategy == null) {
 			throw new IllegalStateException();
 		}
 		splittingStrategy.heading(level, id);
-		SplitOutlineItem outlineItem = new SplitOutlineItem(current,level,id,offset,length,label);
+		SplitOutlineItem outlineItem = new SplitOutlineItem(current, level, id, offset, length, label);
 		if (splittingStrategy.isSplit()) {
 			outlineItem.setSplitTarget(splittingStrategy.getSplitTarget());
 		}
@@ -43,7 +42,7 @@ public class SplittingOutlineParser extends OutlineParser {
 	public void setSplittingStrategy(SplittingStrategy splittingStrategy) {
 		this.splittingStrategy = splittingStrategy;
 	}
-	
+
 	@Override
 	public SplitOutlineItem parse(String markup) {
 		SplitOutlineItem rootItem = (SplitOutlineItem) super.parse(markup);
