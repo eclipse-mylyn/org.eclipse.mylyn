@@ -11,21 +11,24 @@
 package org.eclipse.mylyn.wikitext.core.validation;
 
 /**
- * A validation problem is an indication of an error or warning that occurred while validating a document.
- * A problem has a marker id, severity, message, and optional offset and length.
+ * A validation problem is an indication of an error or warning that occurred while validating a document. A problem has
+ * a marker id, severity, message, and optional offset and length.
  * 
  * @author David Green
  */
 public class ValidationProblem {
 	public enum Severity {
-		WARNING,
-		ERROR
+		WARNING, ERROR
 	}
 
-	private String markerId = "org.eclipse.mylyn.wikitext.validation.problem";
+	private String markerId = "org.eclipse.mylyn.wikitext.core.validation.problem";
+
 	private Severity severity;
+
 	private String message;
+
 	private int offset;
+
 	private int length;
 
 	/**
@@ -41,11 +44,9 @@ public class ValidationProblem {
 	 *            the length of the problem, which may be 0
 	 * 
 	 * @throws IllegalArgumentException
-	 *             if the severity is invalid, the offset is < 0, the length is <
-	 *             0, or if no message is provided
+	 *             if the severity is invalid, the offset is < 0, the length is < 0, or if no message is provided
 	 */
-	public ValidationProblem(Severity severity, String message, int offset,
-			int length) {
+	public ValidationProblem(Severity severity, String message, int offset, int length) {
 		setSeverity(severity);
 		setMessage(message);
 		setOffset(offset);
@@ -65,7 +66,8 @@ public class ValidationProblem {
 	}
 
 	/**
-	 * @param severity a severity
+	 * @param severity
+	 *            a severity
 	 */
 	public void setSeverity(Severity severity) {
 		if (severity == null) {
@@ -82,7 +84,8 @@ public class ValidationProblem {
 	}
 
 	/**
-	 * @param message the text message as it is displayed to the user
+	 * @param message
+	 *            the text message as it is displayed to the user
 	 */
 	public void setMessage(String message) {
 		if (message == null || message.length() == 0) {
@@ -121,6 +124,6 @@ public class ValidationProblem {
 
 	@Override
 	public String toString() {
-		return severity+"["+offset+","+length+"]: "+message;
+		return severity + "[" + offset + "," + length + "]: " + message;
 	}
 }

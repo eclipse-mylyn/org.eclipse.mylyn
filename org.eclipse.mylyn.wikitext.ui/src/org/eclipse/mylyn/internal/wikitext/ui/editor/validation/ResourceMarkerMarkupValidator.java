@@ -25,30 +25,28 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
 
 /**
- * Markup validators are capable of validating a region of a document.
- * Any validation problems or errors are created as
- * markers on the given resource, extending type <code>org.eclipse.mylyn.wikitext.validation.problem</code>.
+ * Markup validators are capable of validating a region of a document. Any validation problems or errors are created as
+ * markers on the given resource, extending type <code>org.eclipse.mylyn.wikitext.core.validation.problem</code>.
  * 
- * NOTE: this implementation may change in the future to use an {@link IAnnotationModel} instead of
- * resource markers
+ * NOTE: this implementation may change in the future to use an {@link IAnnotationModel} instead of resource markers
  * 
  * @author David Green
- *
+ * 
  * @see ValidationRule
  * @see ValidationProblem
  */
 public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 
-
 	@Override
 	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {
 		// find and remove any existing validation errors in the given region.
-		IMarker[] findMarkers = resource.findMarkers("org.eclipse.mylyn.wikitext.validation.problem", true, IResource.DEPTH_ZERO);
-		monitor.beginTask("clearing markers", findMarkers.length==0?1:findMarkers.length);
-		for (IMarker marker: findMarkers) {
+		IMarker[] findMarkers = resource.findMarkers("org.eclipse.mylyn.wikitext.core.validation.problem", true,
+				IResource.DEPTH_ZERO);
+		monitor.beginTask("clearing markers", findMarkers.length == 0 ? 1 : findMarkers.length);
+		for (IMarker marker : findMarkers) {
 			int offset = marker.getAttribute(IMarker.CHAR_START, 0);
 			int end = marker.getAttribute(IMarker.CHAR_END, offset);
-			if (overlaps(region,offset,end-offset) || offset >= document.getLength()) {
+			if (overlaps(region, offset, end - offset) || offset >= document.getLength()) {
 				marker.delete();
 			}
 			monitor.worked(1);
@@ -57,23 +55,24 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 	}
 
 	@Override
-	protected void createProblems(IProgressMonitor monitor, IDocument document,IRegion region, List<ValidationProblem> problems) throws CoreException {
+	protected void createProblems(IProgressMonitor monitor, IDocument document, IRegion region,
+			List<ValidationProblem> problems) throws CoreException {
 		if (problems.isEmpty()) {
 			return;
 		}
 		monitor.beginTask("creating markers", problems.size());
-		for (ValidationProblem problem: problems) {
+		for (ValidationProblem problem : problems) {
 			IMarker marker = resource.createMarker(problem.getMarkerId());
 
 			marker.setAttribute(IMarker.TRANSIENT, true);
 			marker.setAttribute(IMarker.SEVERITY, toMarkerSeverity(problem.getSeverity()));
 			marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
 			marker.setAttribute(IMarker.CHAR_START, problem.getOffset());
-			marker.setAttribute(IMarker.CHAR_END,problem.getOffset()+problem.getLength());
+			marker.setAttribute(IMarker.CHAR_END, problem.getOffset() + problem.getLength());
 
 			try {
 				int line = document.getLineOfOffset(problem.getOffset());
-				marker.setAttribute(IMarker.LINE_NUMBER, line+1);
+				marker.setAttribute(IMarker.LINE_NUMBER, line + 1);
 
 			} catch (BadLocationException e) {
 				// ignore
