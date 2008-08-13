@@ -53,7 +53,9 @@
     	
     	<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties">
 			<classpath>
+				<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
 				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+				<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/@dot"/>
 				<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
 			</classpath>
 		</taskdef>

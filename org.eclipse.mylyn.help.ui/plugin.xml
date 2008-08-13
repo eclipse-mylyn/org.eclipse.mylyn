@@ -10,6 +10,10 @@
             file="toc.xml"
             primary="true">
       </toc>
+      <toc
+            file="userguide/Mylyn User Guide-toc.xml"
+            primary="false">
+      </toc>
    </extension>
   
    <extension

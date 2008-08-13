@@ -4,7 +4,9 @@
 <toc label="Mylyn" topic="doc/overview.html">
 	<topic href="doc/overview.html" label="Overview">
  </topic>
- <link toc="userguide/Mylyn User Guide-toc.xml"/>
+ <topic href="userguide/Mylyn User Guide.html" label="User Guide">
+    <link toc="userguide/Mylyn User Guide-toc.xml"/>
+ </topic>
 	<!--
 	<topic label="What's new" href="doc/new.html" />
 	<topic label="Tips and tricks" href="doc/tips.html"/>

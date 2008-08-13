@@ -24,6 +24,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Get;
 
 /**
+ * Fetch images from a MediaWiki-generated HTML page source
+ * 
  * @author David Green
  */
 public class MediaWikiImageFetcher extends Task {
