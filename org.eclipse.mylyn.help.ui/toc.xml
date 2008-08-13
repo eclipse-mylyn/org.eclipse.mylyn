@@ -2,7 +2,9 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="Mylyn" topic="doc/overview.html">
-	<topic label="Overview" href="doc/overview.html" />
+	<topic href="doc/overview.html" label="Overview">
+ </topic>
+ <link toc="userguide/Mylyn User Guide-toc.xml"/>
 	<!--
 	<topic label="What's new" href="doc/new.html" />
 	<topic label="Tips and tricks" href="doc/tips.html"/>

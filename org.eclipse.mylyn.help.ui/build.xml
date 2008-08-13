@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.mylyn.help.ui" default="all">
+    <description>
+            Generate Eclipse help content for the Mylyn user guide
+    </description>
+
+	<property name="mylyn.userguide.url.base" value="http://wiki.eclipse.org"/>
+	<property name="mylyn.wiki.url.base" value="${mylyn.userguide.url.base}/Mylyn"/>
+	<property name="mylyn.userguide.url.html" value="${mylyn.userguide.url.base}/Mylyn/User_Guide"/>
+	<property name="mylyn.userguide.url.xml" value="${mylyn.userguide.url.base}/Special:Export/Mylyn/User_Guide"/>
+	
+	<path  id="compile.classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	<path  id="tasks.classpath" path="bin"/>
+	
+	<target name="init">
+		<mkdir dir="tmp"/>
+		<mkdir dir="bin"/>
+	</target>
+	
+	<target name="clean" depends="init">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="tmp"/>
+			<fileset dir="bin"/>
+		</delete>
+	</target>
+	
+	<target name="compile">
+		<javac srcdir="src" classpathref="compile.classpath" destdir="bin">
+		</javac>
+		<copy todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+				<exclude name="**/*.class"/>
+				<exclude name="**/package.html"/>
+			</fileset>
+		</copy>
+	</target>
+	
+    <target name="all" depends="init,compile" description="Generate Eclipse help content for the Mylyn user guide">
+        <get dest="tmp/userguide.xml" src="${mylyn.userguide.url.xml}"/>
+    	<get dest="tmp/userguide.html" src="${mylyn.userguide.url.html}"/>
+    	
+    	<taskdef classpathref="tasks.classpath" resource="org/eclipse/mylyn/internal/help/ui/anttask/tasks.properties"/>
+    	
+    	<copy todir="tmp">
+    		<fileset dir="images"/>
+    	</copy>
+    	<mediawiki-fetch-images src="tmp/userguide.html" dest="tmp" base="${mylyn.userguide.url.base}"/>
+    	
+    	<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties">
+			<classpath>
+				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+				<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
+			</classpath>
+		</taskdef>
+
+    	<xslt style="extract-markup.xsl" in="tmp/userguide.xml" out="tmp/Mylyn User Guide.mediawiki"/>
+		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage" 
+			multipleOutputFiles="true"
+			navigationImages="true"
+			helpPrefix="userguide"
+			internallinkpattern="${mylyn.wiki.url.base}/{0}">
+			<fileset dir="tmp" includes="**/*.mediawiki"/>
+		</wikitext-to-eclipse-help>
+    	
+		<copy todir="userguide">
+			<fileset dir="tmp">
+				<include name="*.gif"/>
+				<include name="*.png"/>
+				<include name="*.html"/>
+				<include name="*toc.xml"/>
+				<exclude name="userguide.html"/>
+			</fileset>
+		</copy>    	
+    </target>
+
+</project>
