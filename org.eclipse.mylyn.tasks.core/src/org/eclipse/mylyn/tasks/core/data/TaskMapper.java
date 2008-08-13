@@ -102,7 +102,7 @@ public class TaskMapper implements ITaskMapping {
 		if (targetAttribute == null) {
 			return;
 		}
-		if (!sourceAttribute.getMetaData().isReadOnly() && !targetAttribute.getMetaData().isReadOnly()) {
+		if (!targetAttribute.getMetaData().isReadOnly()) {
 			targetAttribute.clearValues();
 			if (targetAttribute.getOptions().size() > 0) {
 				List<String> values = sourceAttribute.getValues();
