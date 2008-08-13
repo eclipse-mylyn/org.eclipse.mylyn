@@ -10,29 +10,25 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.bugzilla.deprecated.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-
 
 /**
  * @author Jeff Pound
  */
 public class TaskEditorTest extends TestCase {
-
-	private static final String DESCRIPTION = "summary";
 
 	@Override
 	protected void setUp() throws Exception {
@@ -44,8 +40,7 @@ public class TaskEditorTest extends TestCase {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-		TasksUiPlugin.getTaskListManager().saveTaskList();
-		// TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		TasksUiPlugin.getExternalizationManager().requestSave();
 		super.tearDown();
 	}
 
@@ -55,53 +50,67 @@ public class TaskEditorTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testAccessNewEditor() throws Exception {
-		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+
+		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository);
+		final TaskData[] taskData = new TaskData[1];
 
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.CONNECTOR_KIND, repository.getRepositoryUrl(),
-				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
-		model.setNew(true);
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()
-				.getRepositoryConnector(repository.getConnectorKind());
-		assertNotNull(connector);
-		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
-		assertNotNull(taskDataHandler);
-		taskDataHandler.initializeTaskData(repository, model, null);
-		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
+		taskData[0] = TasksUiInternal.createTaskData(taskRepository, taskMappingInit, taskMappingSelect, null);
+		TasksUiInternal.createAndOpenNewTask(taskData[0]);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
-		assertTrue(page.getActiveEditor() instanceof TaskEditor);
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
-		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);
-		AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
-
-		String desc = DESCRIPTION;
-		String summary = "summary";
-		// ensure we have access without exceptions
-		editor.setDescriptionText(desc);
-		editor.setSummaryText(summary);
-		// editor.doSave(new NullProgressMonitor());
+		assertEquals("New Task", taskEditor.getTitle());
 	}
 
 	public void testinitializeTaskData() throws Exception {
-		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
+		final TaskMapping taskMappingInit = new TaskMapping() {
+			@Override
+			public String getSummary() {
+				return "The Summary";
+			}
+
+			@Override
+			public String getDescription() {
+				return "The Description";
+			}
+		};
+		final TaskMapping taskMappingSelect = new TaskMapping() {
+			@Override
+			public String getProduct() {
+				return "TestProduct";
+			}
+		};
+
+		TaskRepository taskRepository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
+		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository);
 
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.CONNECTOR_KIND, repository.getRepositoryUrl(),
-				TasksUiPlugin.getTaskDataStorageManager().getNewRepositoryTaskId());
-		model.setNew(true);
-		AbstractLegacyRepositoryConnector connector = (AbstractLegacyRepositoryConnector) TasksUiPlugin.getRepositoryManager()
-				.getRepositoryConnector(repository.getConnectorKind());
-		assertNotNull(connector);
-		AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
-		assertNotNull(taskDataHandler);
-		assertFalse(taskDataHandler.initializeTaskData(repository, null, null));
-		assertFalse(taskDataHandler.initializeTaskData(repository, model, null));
-		model.setAttributeValue(RepositoryTaskAttribute.PRODUCT, "TestProduct");
-		assertEquals("TestProduct", model.getProduct());
-		assertTrue(taskDataHandler.initializeTaskData(repository, model, null));
-
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				taskRepository.getConnectorKind());
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
+		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
+				"");
+		assertFalse(taskDataHandler.initializeTaskData(taskRepository, taskData, null, null));
+		assertFalse(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingInit, null));
+		assertTrue(taskDataHandler.initializeTaskData(taskRepository, taskData, taskMappingSelect, null));
 	}
 }

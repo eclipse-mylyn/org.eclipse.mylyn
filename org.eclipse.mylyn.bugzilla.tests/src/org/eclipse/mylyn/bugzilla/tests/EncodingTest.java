@@ -10,14 +10,11 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.bugzilla.deprecated.BugzillaTask;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
-import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
-
 
 /**
  * @author Mik Kersten
@@ -46,16 +43,14 @@ public class EncodingTest extends AbstractBugzillaTest {
 	public void testDifferentReportEncoding() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
+		ITask task = generateLocalTaskAndDownload("57");
 		assertNotNull(task);
-		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));
 		taskList.deleteTask(task);
 		connector.getClientManager().repositoryRemoved(repository);
 		repository.setCharacterEncoding("ISO-8859-1");
-		task = (BugzillaTask) TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
+		task = generateLocalTaskAndDownload("57");
 		assertNotNull(task);
-		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		// iso-8859-1 'incorrect' interpretation
 		assertFalse(task.getSummary().equals("\u00E6"));//"\u05D0"));
 	}
@@ -70,8 +65,9 @@ public class EncodingTest extends AbstractBugzillaTest {
 		TaskDataModel model = createModel(task);
 		if (task.getPriority().equals("P1")) {
 			priority = "P2";
-			TaskAttribute attrPriority = model.getTaskData().getRoot().getAttribute(
-					BugzillaAttribute.PRIORITY.getKey());
+			TaskAttribute attrPriority = model.getTaskData()
+					.getRoot()
+					.getAttribute(BugzillaAttribute.PRIORITY.getKey());
 			if (attrPriority != null) {
 				attrPriority.setValue(priority);
 				model.attributeChanged(attrPriority);
@@ -80,8 +76,9 @@ public class EncodingTest extends AbstractBugzillaTest {
 			}
 		} else {
 			priority = "P1";
-			TaskAttribute attrPriority = model.getTaskData().getRoot().getAttribute(
-					BugzillaAttribute.PRIORITY.getKey());
+			TaskAttribute attrPriority = model.getTaskData()
+					.getRoot()
+					.getAttribute(BugzillaAttribute.PRIORITY.getKey());
 			if (attrPriority != null) {
 				attrPriority.setValue(priority);
 				model.attributeChanged(attrPriority);
@@ -93,7 +90,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 
 		submit(model);
 		taskList.deleteTask(task);
-		task = TasksUiInternal.createTask(repository, "57", new NullProgressMonitor());
+		task = generateLocalTaskAndDownload("57");
 		assertNotNull(task);
 		assertTrue(task.getSummary().equals("\u00E6"));//"\u05D0"));
 	}
