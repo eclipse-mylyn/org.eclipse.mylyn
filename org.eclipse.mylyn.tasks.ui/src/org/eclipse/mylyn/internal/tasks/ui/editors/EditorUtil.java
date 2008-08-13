@@ -39,6 +39,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 public class EditorUtil {
@@ -365,6 +366,35 @@ public class EditorUtil {
 		ScrolledComposite form = FormUtil.getScrolledComposite(control);
 		if (form != null) {
 			FormUtil.ensureVisible(form, control);
+		}
+	}
+
+	// copied from Section.reflow()
+	public static void reflow(Control control) {
+		Composite c = control.getParent();
+		while (c != null) {
+			c.setRedraw(false);
+			c = c.getParent();
+			if (c instanceof SharedScrolledComposite) {
+				break;
+			}
+		}
+		c = control.getParent();
+		while (c != null) {
+			c.layout(true);
+			c = c.getParent();
+			if (c instanceof SharedScrolledComposite) {
+				((SharedScrolledComposite) c).reflow(true);
+				break;
+			}
+		}
+		c = control.getParent();
+		while (c != null) {
+			c.setRedraw(true);
+			c = c.getParent();
+			if (c instanceof SharedScrolledComposite) {
+				break;
+			}
 		}
 	}
 
