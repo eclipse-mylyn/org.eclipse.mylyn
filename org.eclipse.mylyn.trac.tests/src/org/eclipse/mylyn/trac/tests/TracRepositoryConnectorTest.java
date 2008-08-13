@@ -25,7 +25,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
@@ -240,9 +239,9 @@ public class TracRepositoryConnectorTest extends TestCase {
 		// TODO attachment may have been overridden therefore size may not have changed
 		//assertEquals(size + 1, task.getTaskData().getAttachments().size());
 		ITaskAttachment attachment = attachments.get(attachments.size() - 1);
-		result = AttachmentUtil.retrieveContext(connector.getTaskAttachmentHandler(), repository, task, attachment,
-				TasksUiPlugin.getDefault().getDataDirectory(), PlatformUI.getWorkbench().getProgressService());
+		result = AttachmentUtil.downloadContext(task, attachment, PlatformUI.getWorkbench().getProgressService());
 		assertTrue(result);
+		assertTrue(task.isActive());
 	}
 
 	public void testContextWeb096() throws Exception {
