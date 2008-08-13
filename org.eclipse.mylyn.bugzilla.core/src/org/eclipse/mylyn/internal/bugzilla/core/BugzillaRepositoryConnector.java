@@ -70,7 +70,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private BugzillaClientManager clientManager;
 
-	private final Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
+	private static BugzillaLanguageSettings enSetting;
+
+	private final static Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
 
 	@Override
 	public String getLabel() {
@@ -374,7 +376,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			clientManager = new BugzillaClientManager();
 			// TODO: Move this initialization elsewhere
 			BugzillaCorePlugin.setConnector(this);
-			BugzillaLanguageSettings enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
+			enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
 			enSetting.addLanguageAttribute("error_login", "Login");
 			enSetting.addLanguageAttribute("error_login", "log in");
 			enSetting.addLanguageAttribute("error_login", "check e-mail");
@@ -437,24 +439,24 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	public void addLanguageSetting(BugzillaLanguageSettings language) {
+	public static void addLanguageSetting(BugzillaLanguageSettings language) {
 		if (!languages.contains(language)) {
-			this.languages.add(language);
+			BugzillaRepositoryConnector.languages.add(language);
 		}
 	}
 
-	public Set<BugzillaLanguageSettings> getLanguageSettings() {
+	public static Set<BugzillaLanguageSettings> getLanguageSettings() {
 		return languages;
 	}
 
 	/** returns default language if language not found */
-	public BugzillaLanguageSettings getLanguageSetting(String label) {
+	public static BugzillaLanguageSettings getLanguageSetting(String label) {
 		for (BugzillaLanguageSettings language : getLanguageSettings()) {
 			if (language.getLanguageName().equals(label)) {
 				return language;
 			}
 		}
-		return BugzillaCorePlugin.getDefault().getLanguageSetting(IBugzillaConstants.DEFAULT_LANG);
+		return enSetting;
 	}
 
 	@Override

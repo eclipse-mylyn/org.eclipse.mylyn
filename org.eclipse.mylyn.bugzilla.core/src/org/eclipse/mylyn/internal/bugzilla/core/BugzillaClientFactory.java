@@ -26,7 +26,7 @@ public class BugzillaClientFactory {
 		if (language == null || language.equals("")) {
 			language = IBugzillaConstants.DEFAULT_LANG;
 		}
-		BugzillaLanguageSettings languageSettings = BugzillaCorePlugin.getDefault().getLanguageSetting(language);
+		BugzillaLanguageSettings languageSettings = BugzillaRepositoryConnector.getLanguageSetting(language);
 		AbstractWebLocation location = taskRepositoryLocationFactory.createWebLocation(taskRepository);
 		BugzillaClient client = new BugzillaClient(location, taskRepository.getCharacterEncoding(),
 				taskRepository.getProperties(), languageSettings);
