@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.wikitext_feature"
       label="Mylyn WikiText"
-      version="3.0.2.qualifier"
+      version="0.9.0.qualifier"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn.wikitext.core">
 
@@ -61,14 +61,11 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
    </license>
 
    <requires>
-      <import plugin="org.eclipse.mylyn.wikitext.core" version="3.0.2" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.wikitext.confluence.core" version="3.0.2" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.wikitext.ui" version="3.0.2" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.tasks.core" version="3.0.2" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.tasks.ui" version="3.0.2" match="compatible"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.swt"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.mylyn.wikitext.mediawiki.core" version="3.0.2" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.wikitext.tracwiki.core" version="3.0.2" match="compatible"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
@@ -77,9 +74,12 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
       <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.help"/>
-      <import plugin="org.eclipse.mylyn.sandbox.ui"/>
-      <import plugin="org.eclipse.mylyn.tasks.core" version="3.0.2" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.tasks.ui" version="3.0.2" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.wikitext.core" version="0.9.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.wikitext.confluence.core" version="0.9.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.wikitext.ui" version="0.9.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.wikitext.mediawiki.core" version="0.9.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.wikitext.textile.core" version="0.9.0" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.wikitext.tracwiki.core" version="0.9.0" match="compatible"/>
    </requires>
 
    <plugin
