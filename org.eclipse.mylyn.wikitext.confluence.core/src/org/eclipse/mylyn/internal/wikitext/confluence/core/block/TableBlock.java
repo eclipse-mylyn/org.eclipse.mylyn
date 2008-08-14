@@ -26,7 +26,8 @@ public class TableBlock extends Block {
 
 	static final Pattern startPattern = Pattern.compile("(\\|(.*)?(\\|\\s*$))");
 
-	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?([^\\|]*)(\\|\\|?\\s*$)?");
+	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?" + "((?:(?:[^\\|\\[]*)(?:\\[[^\\]]*\\])?)*)"
+			+ "(\\|\\|?\\s*$)?");
 
 	private int blockLineCount = 0;
 

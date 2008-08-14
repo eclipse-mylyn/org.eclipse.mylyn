@@ -273,6 +273,20 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a para</p><table><tr><th>a</th><th>header</th><th>row</th></tr><tr><td>a</td><td>row</td><td>not header</td></tr></table><p>tail</p></body>"));
 	}
 
+	public void testTableWithLinkAndPipes() {
+		// test for bug# 244240
+		String html = parser.parseToHtml("| [Website|https://textile-j.dev.java.net/] |");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><table><tr><td> <a href=\"https://textile-j.dev.java.net/\">Website</a> </td></tr></table></body>"));
+	}
+
+	public void testTableWithLinkAndPipes2() {
+		// test for bug# 244240
+		String html = parser.parseToHtml("| [Website|https://textile-j.dev.java.net/] | another cell | [Eclipse|http://www.eclipse.org] |");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><table><tr><td> <a href=\"https://textile-j.dev.java.net/\">Website</a> </td><td> another cell </td><td> <a href=\"http://www.eclipse.org\">Eclipse</a> </td></tr></table></body>"));
+	}
+
 	public void testPreformattedExtended() {
 		String html = parser.parseToHtml("{noformat}\na multiline\n\tpreformatted\n\nwith two paras\n{noformat}\nanother para");
 		System.out.println("HTML:" + html);
