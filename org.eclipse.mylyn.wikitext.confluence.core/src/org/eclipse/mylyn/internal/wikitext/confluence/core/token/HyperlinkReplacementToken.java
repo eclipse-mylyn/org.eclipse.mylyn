@@ -43,8 +43,17 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 			String linkComposite = group(1);
 			String[] parts = linkComposite.split("\\s*\\|\\s*");
 			String text = parts.length > 1 ? parts[0] : null;
+			if (text != null) {
+				text = text.trim();
+			}
 			String href = parts.length > 1 ? parts[1] : parts[0];
+			if (href != null) {
+				href = href.trim();
+			}
 			String tip = parts.length > 2 ? parts[2] : null;
+			if (tip != null) {
+				tip = tip.trim();
+			}
 			if (text == null || text.length() == 0) {
 				text = href;
 			}

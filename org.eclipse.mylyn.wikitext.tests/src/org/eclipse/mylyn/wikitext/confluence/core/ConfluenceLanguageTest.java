@@ -29,6 +29,7 @@ public class ConfluenceLanguageTest extends TestCase {
 
 	private MarkupParser parser;
 
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		initParser();
@@ -172,6 +173,18 @@ public class ConfluenceLanguageTest extends TestCase {
 		String html = parser.parseToHtml("a http://example.com hyperlink");
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p></body>"));
+	}
+
+	public void testHyperlinkWithSpaces() {
+		String html = parser.parseToHtml("a [ http://example.com ] hyperlink");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p></body>"));
+	}
+
+	public void testHyperlinkWithTitleAndSpace() {
+		String html = parser.parseToHtml("a [Example Two | http://example.com ] hyperlink");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">Example Two</a> hyperlink</p></body>"));
 	}
 
 	public void testNamedAnchor() {
