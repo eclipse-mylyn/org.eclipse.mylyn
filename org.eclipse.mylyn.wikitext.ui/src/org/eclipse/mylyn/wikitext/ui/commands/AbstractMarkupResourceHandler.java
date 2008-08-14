@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.ui.PlatformUI;
@@ -56,18 +57,26 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 				if (idxOfDot != -1) {
 					name = name.substring(0, idxOfDot);
 				}
-
-				if (markupLanguage == null) {
-					markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(file.getName());
+				// use a temporary so that the setting does not stick even if the handler is reused.
+				MarkupLanguage prev = markupLanguage;
+				try {
 					if (markupLanguage == null) {
-						MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								"Unexpected Error", String.format("Cannot guess markup language for file '%s'",
-										file.getName()));
-						return null;
+						markupLanguage = MarkupEditor.loadMarkupLanguagePreference(file);
+						if (markupLanguage == null) {
+							markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(file.getName());
+						}
+						if (markupLanguage == null) {
+							MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+									"Unexpected Error", String.format("Cannot guess markup language for file '%s'",
+											file.getName()));
+							return null;
+						}
 					}
-				}
 
-				handleFile(file, name);
+					handleFile(file, name);
+				} finally {
+					markupLanguage = prev;
+				}
 			}
 		}
 

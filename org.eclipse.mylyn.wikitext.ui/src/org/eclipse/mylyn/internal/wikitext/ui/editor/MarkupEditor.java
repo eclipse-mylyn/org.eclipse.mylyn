@@ -87,7 +87,11 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author David Green
  */
 public class MarkupEditor extends TextEditor {
-
+	/**
+	 * the name of the property that stores the markup language name for per-file preference
+	 * 
+	 * @see IFile#setPersistentProperty(QualifiedName, String) property
+	 */
 	private static final String MARKUP_LANGUAGE = "markupLanguage";
 
 	public static final String CONTEXT = "org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"; //$NON-NLS-1$
@@ -538,15 +542,28 @@ public class MarkupEditor extends TextEditor {
 	private MarkupLanguage loadMarkupLanguagePreference() {
 		IFile file = getFile();
 		if (file != null) {
-			try {
-				String languageName = file.getPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault()
-						.getPluginId(), MARKUP_LANGUAGE));
-				if (languageName != null) {
-					return WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
-				}
-			} catch (CoreException e) {
-				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, "Cannot load markup language preference", e);
+			return loadMarkupLanguagePreference(file);
+		}
+		return null;
+	}
+
+	/**
+	 * lookup the markup language preference of a file based on the persisted preference.
+	 * 
+	 * @param file
+	 *            the file for which the preference should be looked up
+	 * 
+	 * @return the markup language preference, or null if it was not set or could not be loaded.
+	 */
+	public static MarkupLanguage loadMarkupLanguagePreference(IFile file) {
+		try {
+			String languageName = file.getPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault()
+					.getPluginId(), MarkupEditor.MARKUP_LANGUAGE));
+			if (languageName != null) {
+				return WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
 			}
+		} catch (CoreException e) {
+			WikiTextUiPlugin.getDefault().log(IStatus.ERROR, "Cannot load markup language preference", e);
 		}
 		return null;
 	}
