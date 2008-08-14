@@ -33,6 +33,8 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryCompletionProcessor
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
+import org.eclipse.mylyn.internal.wikitext.ui.util.PlatformUrlHyperlink;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
@@ -244,6 +246,16 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 			Map hyperlinkDetectorTargets = super.getHyperlinkDetectorTargets(sourceViewer);
 			addRepositoryHyperlinkDetectorTargets(taskRepository, hyperlinkDetectorTargets);
 			return hyperlinkDetectorTargets;
+		}
+
+		@Override
+		protected AnnotationHyperlinkDetector createAnnotationHyperlinkDetector() {
+			return new AnnotationHyperlinkDetector() {
+				@Override
+				protected IHyperlink createUrlHyperlink(IRegion region, String href) {
+					return new PlatformUrlHyperlink(region, href);
+				}
+			};
 		}
 
 		@Override

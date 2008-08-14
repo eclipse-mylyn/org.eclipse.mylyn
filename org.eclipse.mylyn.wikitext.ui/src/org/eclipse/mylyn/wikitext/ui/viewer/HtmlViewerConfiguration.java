@@ -171,14 +171,14 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (sourceViewer == null || fPreferenceStore == null) {
-			return new IHyperlinkDetector[] { new AnnotationHyperlinkDetector() };
+			return new IHyperlinkDetector[] { createAnnotationHyperlinkDetector() };
 		}
 		HyperlinkDetectorRegistry registry = EditorsUI.getHyperlinkDetectorRegistry();
 		HyperlinkDetectorDescriptor[] descriptors = registry.getHyperlinkDetectorDescriptors();
 		Map<String, IAdaptable> targets = getHyperlinkDetectorTargets(sourceViewer);
 
 		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>(8);
-		detectors.add(new AnnotationHyperlinkDetector());
+		detectors.add(createAnnotationHyperlinkDetector());
 
 		for (Map.Entry<String, IAdaptable> target : targets.entrySet()) {
 			String targetId = target.getKey();
@@ -198,6 +198,10 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 			}
 		}
 		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
+	}
+
+	protected AnnotationHyperlinkDetector createAnnotationHyperlinkDetector() {
+		return new AnnotationHyperlinkDetector();
 	}
 
 	protected class MarkupViewerDamagerRepairer implements IPresentationDamager, IPresentationRepairer {

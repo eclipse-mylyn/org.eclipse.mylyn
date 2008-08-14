@@ -78,8 +78,12 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 		if (href != null && href.startsWith("#")) {
 			return new DocumentHyperlink(viewer, region, href);
 		} else {
-			return new URLHyperlink(region, href);
+			return createUrlHyperlink(region, href);
 		}
+	}
+
+	protected IHyperlink createUrlHyperlink(IRegion region, String href) {
+		return new URLHyperlink(region, href);
 	}
 
 	/**
