@@ -63,7 +63,7 @@ public class MediaWikiImageFetcher extends Task {
 			base = base.substring(0, base.length() - 1);
 		}
 		Pattern fragmentUrlPattern = Pattern.compile("src=\"([^\"]+)\"");
-		Pattern imagePattern = Pattern.compile("alt=\"Image:(.*)\"([^>]+)", Pattern.MULTILINE);
+		Pattern imagePattern = Pattern.compile("alt=\"Image:([^\"]*)\"([^>]+)", Pattern.MULTILINE);
 		String htmlSrc;
 		try {
 			htmlSrc = readSrc();
