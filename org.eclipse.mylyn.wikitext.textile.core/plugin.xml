@@ -22,9 +22,18 @@
             priority="normal">
       </content-type>
    </extension>
+   
+	<extension
+	   point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+		      extension="textile"
+		      type="text">
+		</fileTypes>
+	</extension>
 	
 	<extension point="org.eclipse.mylyn.wikitext.core.markupValidationRule">
 		<rule markupLanguage="Textile"
 			class="org.eclipse.mylyn.internal.wikitext.textile.core.validation.BlockWhitespaceRule" />
 	</extension>
+	
 </plugin>

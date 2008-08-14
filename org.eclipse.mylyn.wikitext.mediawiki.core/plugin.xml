@@ -18,4 +18,12 @@
             priority="normal">
       </content-type>
    </extension>
+   
+	<extension
+	   point="org.eclipse.team.core.fileTypes">
+		<fileTypes
+		      extension="mediawiki"
+		      type="text">
+		</fileTypes>
+	</extension>
 </plugin>
