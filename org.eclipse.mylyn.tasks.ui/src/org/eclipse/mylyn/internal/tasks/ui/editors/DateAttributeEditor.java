@@ -14,6 +14,7 @@ import java.util.Date;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -71,6 +72,9 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 				public void widgetSelected(SelectionEvent e) {
 					Calendar cal = datePicker.getDate();
 					if (cal != null) {
+						if (!showTime) {
+							TaskActivityUtil.snapStartOfDay(cal);
+						}
 						setValue(cal.getTime());
 					} else {
 						setValue(null);
