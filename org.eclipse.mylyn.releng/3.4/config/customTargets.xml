@@ -195,6 +195,7 @@
 		<copy file="${base}/config/${SiteXmlFile}" tofile="${UpdateSiteLocation}/site.xml">
 			<filterset>
 				<filter token="core" value="${org.eclipse.mylyn_feature}" />
+				<filter token="wikitext" value="${org.eclipse.mylyn.wikitext_feature}" />
 			</filterset>
 		</copy>
 
