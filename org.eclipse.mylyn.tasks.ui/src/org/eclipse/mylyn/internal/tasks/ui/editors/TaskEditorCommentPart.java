@@ -51,7 +51,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private Section section;
 
-	private List<ExpandableComposite> commentComposites;
+	protected List<ExpandableComposite> commentComposites;
 
 	private List<TaskAttribute> comments;
 
@@ -61,7 +61,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		setPartName("Comments");
 	}
 
-	private void expandComment(FormToolkit toolkit, Composite composite, Composite toolBarComposite,
+	protected void expandComment(FormToolkit toolkit, Composite composite, Composite toolBarComposite,
 			final TaskComment taskComment, boolean expanded) {
 		toolBarComposite.setVisible(expanded);
 		if (expanded && composite.getData(KEY_EDITOR) == null) {
@@ -120,13 +120,13 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			section.setEnabled(false);
 		} else {
 			if (hasIncoming) {
-				expandSection(toolkit, section);
+				expandSection(toolkit, section, comments);
 			} else {
 				section.addExpansionListener(new ExpansionAdapter() {
 					@Override
 					public void expansionStateChanged(ExpansionEvent event) {
 						if (commentComposites == null) {
-							expandSection(toolkit, section);
+							expandSection(toolkit, section, comments);
 							getTaskEditorPage().reflow();
 						}
 					}
@@ -136,12 +136,16 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		setSection(toolkit, section);
 	}
 
-	private void expandSection(final FormToolkit toolkit, final Section section) {
+	protected void expandSection(final FormToolkit toolkit, final Section section, List<TaskAttribute> comments) {
 		final Composite composite = toolkit.createComposite(section);
 		section.setClient(composite);
 		composite.setLayout(new GridLayout(1, false));
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
 
+		addComments(toolkit, composite, comments);
+	}
+
+	protected void addComments(final FormToolkit toolkit, final Composite composite, final List<TaskAttribute> comments) {
 		commentComposites = new ArrayList<ExpandableComposite>();
 		for (final TaskAttribute commentAttribute : comments) {
 			boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
