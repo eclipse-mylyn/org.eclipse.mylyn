@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 	private static final String LABEL_ERROR_SUBMIT = "Task Submit Error";
+
 	public static final String ID_PART_BUGZILLA_PLANNING = "org.eclipse.mylyn.bugzilla.ui.editors.part.planning";
 
 	public BugzillaTaskEditorPage(TaskEditor editor) {
@@ -110,7 +111,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 		TaskAttribute summaryAttribute = getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		if (summaryAttribute != null && summaryAttribute.getValue().length() == 0) {
-			MessageDialog.openInformation(null, LABEL_ERROR_SUBMIT, "Please enter a short summary before submitting");
+			getTaskEditor().setMessage("Please enter a short summary before submitting", IMessageProvider.ERROR);
 			AbstractTaskEditorPart part = getPart(ID_PART_SUMMARY);
 			if (part != null) {
 				part.setFocus();
@@ -121,7 +122,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		TaskAttribute componentAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
 				BugzillaAttribute.COMPONENT.getKey());
 		if (componentAttribute != null && componentAttribute.getValue().length() == 0) {
-			MessageDialog.openInformation(null, LABEL_ERROR_SUBMIT, "Please select a component before submitting");
+			getTaskEditor().setMessage("Please select a component before submitting", IMessageProvider.ERROR);
 			AbstractTaskEditorPart part = getPart(ID_PART_ATTRIBUTES);
 			if (part != null) {
 				part.setFocus();
@@ -132,7 +133,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		TaskAttribute descriptionAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
 				TaskAttribute.DESCRIPTION);
 		if (descriptionAttribute != null && descriptionAttribute.getValue().length() == 0) {
-			MessageDialog.openInformation(null, LABEL_ERROR_SUBMIT, "Please enter a description before submitting");
+			getTaskEditor().setMessage("Please enter a description before submitting", IMessageProvider.ERROR);
 			AbstractTaskEditorPart descriptionPart = getPart(ID_PART_DESCRIPTION);
 			if (descriptionPart != null) {
 				descriptionPart.setFocus();
