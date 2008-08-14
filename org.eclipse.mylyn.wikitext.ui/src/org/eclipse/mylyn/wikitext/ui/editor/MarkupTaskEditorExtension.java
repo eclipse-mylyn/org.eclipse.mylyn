@@ -90,7 +90,10 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 			throw new IllegalStateException();
 		}
 		MarkupViewer markupViewer = new MarkupViewer(parent, null, style | SWT.FLAT | SWT.WRAP);
-		markupViewer.setMarkupLanguage(markupLanguage.clone());
+		MarkupLanguage markupLanguageCopy = markupLanguage.clone();
+		configureMarkupLanguage(taskRepository, markupLanguageCopy);
+
+		markupViewer.setMarkupLanguage(markupLanguageCopy);
 		MarkupViewerConfiguration configuration = createViewerConfiguration(taskRepository, markupViewer);
 		markupViewer.configure(configuration);
 
@@ -108,6 +111,9 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 	@SuppressWarnings("unchecked")
 	@Override
 	public SourceViewer createEditor(TaskRepository taskRepository, Composite parent, int style) {
+		final MarkupLanguage markupLanguageCopy = markupLanguage.clone();
+		configureMarkupLanguage(taskRepository, markupLanguageCopy);
+
 		SourceViewer viewer = new SourceViewer(parent, null, style | SWT.WRAP) {
 			@Override
 			public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset,
@@ -120,7 +126,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 
 			private void configurePartitioning(IDocument document) {
 				FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
-				partitioner.setMarkupLanguage(markupLanguage.clone());
+				partitioner.setMarkupLanguage(markupLanguageCopy.clone());
 				partitioner.connect(document);
 				document.setDocumentPartitioner(partitioner);
 			}
@@ -128,7 +134,8 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		// configure the viewer
 		MarkupSourceViewerConfiguration configuration = new TaskMarkupSourceViewerConfiguration(
 				EditorsUI.getPreferenceStore(), taskRepository);
-		configuration.setMarkupLanguage(markupLanguage);
+
+		configuration.setMarkupLanguage(markupLanguageCopy);
 		viewer.configure(configuration);
 
 		// we want the viewer to show annotations
@@ -165,10 +172,25 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 			focusService.addFocusTracker(viewer.getTextWidget(), MarkupEditor.EDITOR_SOURCE_VIEWER);
 		}
 
-		viewer.getTextWidget().setData(MarkupLanguage.class.getName(), markupLanguage);
+		viewer.getTextWidget().setData(MarkupLanguage.class.getName(), markupLanguageCopy);
 		viewer.getTextWidget().setData(ISourceViewer.class.getName(), viewer);
 
 		return viewer;
+	}
+
+	/**
+	 * Configures the markup language with settings from the task repository.
+	 * 
+	 * @param taskRepository
+	 *            the repository from which settings should be used
+	 * @param markupLanguage
+	 *            the markup language to configure
+	 */
+	private void configureMarkupLanguage(TaskRepository taskRepository, MarkupLanguage markupLanguage) {
+		String internalLinkPattern = taskRepository.getProperty(AbstractTaskEditorExtension.INTERNAL_WIKI_LINK_PATTERN);
+		if (internalLinkPattern != null && internalLinkPattern.trim().length() > 0) {
+			markupLanguage.setInternalLinkPattern(internalLinkPattern.trim());
+		}
 	}
 
 	protected static class TaskMarkupSourceViewerConfiguration extends MarkupSourceViewerConfiguration {
