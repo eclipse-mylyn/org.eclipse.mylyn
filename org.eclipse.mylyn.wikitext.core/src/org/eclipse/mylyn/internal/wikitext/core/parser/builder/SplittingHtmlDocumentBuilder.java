@@ -174,7 +174,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 			if (rootPage) {
 				out.characters(rootBuilder.getTitle());
 			} else {
-				out.characters(current.getLabel());
+				out.characters(current == null ? "" : current.getLabel());
 			}
 			out.endBlock();
 

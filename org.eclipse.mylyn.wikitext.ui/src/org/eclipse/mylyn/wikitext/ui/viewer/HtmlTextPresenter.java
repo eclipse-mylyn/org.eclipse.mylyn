@@ -20,7 +20,6 @@ import org.eclipse.swt.graphics.Drawable;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
 
-//FIXME: move to internal
 /**
  * An information presenter that supports HTML markup. Uses the {@link HtmlTextPresentationParser HTML parser} to parse
  * the HTML to readable text, and creates the appropriate corresponding {@link TextPresentation text presentation}.
@@ -33,6 +32,7 @@ public class HtmlTextPresenter implements DefaultInformationControl.IInformation
 
 	private static Pattern HTML_OPEN_TAG_PATTERN = Pattern.compile("<html", Pattern.CASE_INSENSITIVE);
 
+	@SuppressWarnings("deprecation")
 	public String updatePresentation(Display display, String hoverInfo, TextPresentation presentation, int maxWidth,
 			int maxHeight) {
 		return updatePresentation((Drawable) display, hoverInfo, presentation, maxWidth, maxHeight);

@@ -54,6 +54,7 @@ public class HtmlViewer extends SourceViewer {
 		setEditable(false);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initPainter() {
 		if (haveInit) {
 			return;

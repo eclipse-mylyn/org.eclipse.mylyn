@@ -646,7 +646,7 @@ public class HtmlTextPresentationParser {
 				ElementState parentState = state.size() > 1 ? state.get(state.size() - 2) : null;
 				boolean numeric = parentState == null ? false : parentState.elementName.equals("ol");
 
-				int index = ++parentState.orderedListIndex;
+				int index = parentState == null ? 1 : ++parentState.orderedListIndex;
 				if (lastNewlineOffset != getOffset()) {
 					emitChars(state.peek(), "\n".toCharArray());
 				}

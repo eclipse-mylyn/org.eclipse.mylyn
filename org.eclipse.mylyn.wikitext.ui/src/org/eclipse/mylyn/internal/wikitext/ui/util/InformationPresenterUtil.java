@@ -62,6 +62,7 @@ public class InformationPresenterUtil {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static final class InformationProvider implements IInformationProvider, IInformationProviderExtension,
 			IInformationProviderExtension2 {
 
