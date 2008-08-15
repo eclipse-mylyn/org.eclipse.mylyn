@@ -42,7 +42,7 @@ public class TracHyperlinkUtil {
 
 	static Pattern changesetPattern1 = Pattern.compile("(r|changeset:)(\\d+)(/\\w+)?");
 
-	static Pattern changesetPattern2 = Pattern.compile("(?<![!])\\[(\\d+)(/\\w+)?\\]");
+	static Pattern changesetPattern2 = Pattern.compile("(?<!!)\\[(\\d+)(/\\w+)?\\]");
 
 	static Pattern revisionLogPattern1 = Pattern.compile("r(\\d+):(\\d+)");
 
@@ -56,7 +56,7 @@ public class TracHyperlinkUtil {
 
 	static Pattern wikiPattern1 = Pattern.compile("wiki:(\\w+)");
 
-	static Pattern wikiPattern2 = Pattern.compile("(?<![!])[A-Z][a-z0-9]+[A-Z]\\w*");
+	static Pattern wikiPattern2 = Pattern.compile("(?<!!)[A-Z][a-z0-9]+[A-Z]\\w*");
 
 	static Pattern milestonePattern = Pattern.compile("milestone:([\\w\\.]+)");
 
