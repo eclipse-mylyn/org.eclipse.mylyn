@@ -28,6 +28,7 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
  * Utility class for detecting Trac hyperlinks.
  * 
  * @author Steffen Pingel
+ * @author David Green fix for bug 244017
  */
 public class TracHyperlinkUtil {
 
@@ -41,7 +42,7 @@ public class TracHyperlinkUtil {
 
 	static Pattern changesetPattern1 = Pattern.compile("(r|changeset:)(\\d+)(/\\w+)?");
 
-	static Pattern changesetPattern2 = Pattern.compile("\\[(\\d+)(/\\w+)?\\]");
+	static Pattern changesetPattern2 = Pattern.compile("(?<![!])\\[(\\d+)(/\\w+)?\\]");
 
 	static Pattern revisionLogPattern1 = Pattern.compile("r(\\d+):(\\d+)");
 
@@ -55,7 +56,7 @@ public class TracHyperlinkUtil {
 
 	static Pattern wikiPattern1 = Pattern.compile("wiki:(\\w+)");
 
-	static Pattern wikiPattern2 = Pattern.compile("[A-Z][a-z0-9]+[A-Z]\\w*");
+	static Pattern wikiPattern2 = Pattern.compile("(?<![!])[A-Z][a-z0-9]+[A-Z]\\w*");
 
 	static Pattern milestonePattern = Pattern.compile("milestone:([\\w\\.]+)");
 
@@ -146,8 +147,8 @@ public class TracHyperlinkUtil {
 			if (isInRegion(lineOffset, m)) {
 				String rev = m.group(1);
 				String stopRev = m.group(2);
-				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev + "&stop_rev="
-						+ stopRev;
+				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev
+						+ "&stop_rev=" + stopRev;
 				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
 			}
 		}
@@ -157,8 +158,8 @@ public class TracHyperlinkUtil {
 			if (isInRegion(lineOffset, m)) {
 				String rev = m.group(1);
 				String stopRev = m.group(2);
-				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev + "&stop_rev="
-						+ stopRev;
+				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev
+						+ "&stop_rev=" + stopRev;
 				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
 			}
 		}
@@ -244,8 +245,8 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
 				String page = m.group(1);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl() + ITracClient.WIKI_URL
-						+ page));
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
+						+ ITracClient.WIKI_URL + page));
 			}
 		}
 
@@ -253,8 +254,8 @@ public class TracHyperlinkUtil {
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
 				String page = m.group(0);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl() + ITracClient.WIKI_URL
-						+ page));
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
+						+ ITracClient.WIKI_URL + page));
 			}
 		}
 

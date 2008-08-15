@@ -17,6 +17,11 @@ import org.eclipse.mylyn.internal.trac.ui.WebHyperlink;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 
+/**
+ * @author Steffen Pingel
+ * @author David Green
+ * @see http://trac.edgewall.org/wiki/TracLinks
+ */
 public class TracHyperlinkUtilTest extends TestCase {
 
 	private TaskRepository repository;
@@ -77,6 +82,12 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertEquals(1, links.length);
 		assertEquals(new Region(0, 5), links[0].getHyperlinkRegion());
 		assertEquals("http://localhost/changeset/123", ((WebHyperlink) links[0]).getURLString());
+
+		links = TracHyperlinkUtil.findTracHyperlinks(repository, "![123]", 0, 0);
+		assertNull(links);
+
+		links = TracHyperlinkUtil.findTracHyperlinks(repository, "![123]", 1, 0);
+		assertNull(links);
 
 		links = TracHyperlinkUtil.findTracHyperlinks(repository, "changeset:123", 0, 0);
 		assertEquals(1, links.length);
@@ -153,6 +164,9 @@ public class TracHyperlinkUtilTest extends TestCase {
 		links = TracHyperlinkUtil.findTracHyperlinks(repository, "Page", 0, 0);
 		assertNull(links);
 
+		links = TracHyperlinkUtil.findTracHyperlinks(repository, "!Page", 0, 0);
+		assertNull(links);
+
 		links = TracHyperlinkUtil.findTracHyperlinks(repository, "ab Page dc", 0, 0);
 		assertNull(links);
 
@@ -165,6 +179,20 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertEquals("http://localhost/wiki/WikiPage", ((WebHyperlink) links[0]).getURLString());
 		assertEquals(new Region(0, 8), links[0].getHyperlinkRegion());
 
+		links = TracHyperlinkUtil.findTracHyperlinks(repository, "!WikiPage", 0, 0);
+		assertNull(links);
+
+		links = TracHyperlinkUtil.findTracHyperlinks(repository, "!WikiPage", 1, 0);
+		assertNull(links);
+
+		links = TracHyperlinkUtil.findTracHyperlinks(repository, "a WikiPage is here", 4, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://localhost/wiki/WikiPage", ((WebHyperlink) links[0]).getURLString());
+		assertEquals(new Region(2, 8), links[0].getHyperlinkRegion());
+
+		links = TracHyperlinkUtil.findTracHyperlinks(repository, "a !WikiPage is here", 4, 0);
+		assertNull(links);
 	}
 
 	public void testFindHyperlinksMilestone() {
