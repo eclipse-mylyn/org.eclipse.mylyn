@@ -32,37 +32,42 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
  */
 public class TracHyperlinkUtil {
 
-	static Pattern ticketPattern = Pattern.compile("(ticket:|#)(\\d+)");
+	static Pattern ticketPattern = createPattern("(ticket:|#)(\\d+)");
 
-	static Pattern commentPattern = Pattern.compile("comment:ticket:(\\d+):(\\d+)");
+	static Pattern commentPattern = createPattern("comment:ticket:(\\d+):(\\d+)");
 
-	static Pattern reportPattern1 = Pattern.compile("report:(\\d+)");
+	static Pattern reportPattern1 = createPattern("report:(\\d+)");
 
-	static Pattern reportPattern2 = Pattern.compile("\\{(\\d+)\\}");
+	static Pattern reportPattern2 = createPattern("\\{(\\d+)\\}");
 
-	static Pattern changesetPattern1 = Pattern.compile("(r|changeset:)(\\d+)(/\\w+)?");
+	static Pattern changesetPattern1 = createPattern("(r|changeset:)(\\d+)(/\\w+)?");
 
-	static Pattern changesetPattern2 = Pattern.compile("(?<!!)\\[(\\d+)(/\\w+)?\\]");
+	static Pattern changesetPattern2 = createPattern("\\[(\\d+)(/\\w+)?\\]");
 
-	static Pattern revisionLogPattern1 = Pattern.compile("r(\\d+):(\\d+)");
+	static Pattern revisionLogPattern1 = createPattern("r(\\d+):(\\d+)");
 
-	static Pattern revisionLogPattern2 = Pattern.compile("\\[(\\d+):(\\d+)\\]");
+	static Pattern revisionLogPattern2 = createPattern("\\[(\\d+):(\\d+)\\]");
 
-	static Pattern revisionLogPattern3 = Pattern.compile("log:(\\w+)?@(\\d+):(\\d+)");
+	static Pattern revisionLogPattern3 = createPattern("log:(\\w+)?@(\\d+):(\\d+)");
 
-	static Pattern diffPattern1 = Pattern.compile("diff:@(\\d+):(\\d+)");
+	static Pattern diffPattern1 = createPattern("diff:@(\\d+):(\\d+)");
 
-	static Pattern diffPattern2 = Pattern.compile("diff:([\\w\\./-]+)(@(\\d+))?//([\\w\\./-]+)(@(\\d+))?");
+	static Pattern diffPattern2 = createPattern("diff:([\\w\\./-]+)(@(\\d+))?//([\\w\\./-]+)(@(\\d+))?");
 
-	static Pattern wikiPattern1 = Pattern.compile("wiki:(\\w+)");
+	static Pattern wikiPattern1 = createPattern("wiki:(\\w+)");
 
-	static Pattern wikiPattern2 = Pattern.compile("(?<!!)[A-Z][a-z0-9]+[A-Z]\\w*");
+	static Pattern wikiPattern2 = createPattern("[A-Z][a-z0-9]+[A-Z]\\w*");
 
-	static Pattern milestonePattern = Pattern.compile("milestone:([\\w\\.]+)");
+	static Pattern milestonePattern = createPattern("milestone:([\\w\\.]+)");
 
-	static Pattern attachmentPattern = Pattern.compile("attachment:ticket:(\\d+):([\\w\\.]+)");
+	static Pattern attachmentPattern = createPattern("attachment:ticket:(\\d+):([\\w\\.]+)");
 
-	static Pattern filesPattern = Pattern.compile("source:/*([\\w\\./\\-_]+)(@(\\d+)(#L(\\d+))?)?");
+	static Pattern filesPattern = createPattern("source:/*([\\w\\./\\-_]+)(@(\\d+)(#L(\\d+))?)?");
+
+	private static Pattern createPattern(String regexp) {
+		// hyperlink patterns prefixed with "!" are not links
+		return Pattern.compile("(?<!!)" + regexp);
+	}
 
 	/**
 	 * Detects hyperlinks to Trac tickets.
