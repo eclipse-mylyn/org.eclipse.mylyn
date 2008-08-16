@@ -237,7 +237,7 @@ public class CvsContextChangeSet extends CVSActiveChangeSet implements IAdaptabl
 	 */
 	@Override
 	public boolean contains(IResource local) {
-		return getAllResourcesInChangeContext().contains(local);
+		return super.contains(local); //getAllResourcesInChangeContext().contains(local);
 	}
 
 	@Override

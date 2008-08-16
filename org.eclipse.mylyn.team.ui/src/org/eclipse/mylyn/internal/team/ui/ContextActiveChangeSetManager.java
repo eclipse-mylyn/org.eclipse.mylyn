@@ -45,7 +45,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	private final List<ActiveChangeSetManager> changeSetManagers = new ArrayList<ActiveChangeSetManager>();
 
-	private final Map<String, IContextChangeSet> activeChangeSets = new HashMap<String, IContextChangeSet>();
+	private final List<IContextChangeSet> activeChangeSets = new ArrayList<IContextChangeSet>();
 
 	private static final String LABEL_NO_TASK = "<No Active Task>";
 
@@ -53,21 +53,28 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	private final Map<ActiveChangeSetManager, ActiveChangeSet> noTaskSetMap = new HashMap<ActiveChangeSetManager, ActiveChangeSet>();;
 
+	private final Map<ActiveChangeSetManager, ChangeSetChangeListener> listenerByManager = new HashMap<ActiveChangeSetManager, ChangeSetChangeListener>();
+
 	private final ITask noTaskActiveProxy = new LocalTask(HANDLE_NO_TASK, LABEL_NO_TASK);
 
 	/**
 	 * Used to restore change sets managed with task context when platform deletes them, bug 168129
 	 */
-	private final IChangeSetChangeListener CHANGE_SET_LISTENER = new IChangeSetChangeListener() {
+	private class ChangeSetChangeListener implements IChangeSetChangeListener {
+
+		private final ActiveChangeSetManager manager;
+
+		public ChangeSetChangeListener(ActiveChangeSetManager manager) {
+			this.manager = manager;
+		}
 
 		public void setRemoved(ChangeSet set) {
 			if (set instanceof IContextChangeSet) {
 				IContextChangeSet contextChangeSet = (IContextChangeSet) set;
+				// never matches the noTask change set: its task is never active
 				if (contextChangeSet.getTask() != null && contextChangeSet.getTask().isActive()) {
-					for (ActiveChangeSetManager collector : changeSetManagers) {
-						// put it back
-						collector.add((ActiveChangeSet) contextChangeSet);
-					}
+					// put it back
+					manager.add((ActiveChangeSet) contextChangeSet);
 				}
 			}
 		}
@@ -87,6 +94,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		public void resourcesChanged(ChangeSet set, IPath[] paths) {
 			// ignore
 		}
+
 	};
 
 	public ContextActiveChangeSetManager() {
@@ -94,9 +102,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				.getActiveChangeSetProviders();
 		for (AbstractActiveChangeSetProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
-			if (null != changeSetManager) {
+			if (changeSetManager != null) {
 				changeSetManagers.add(changeSetManager);
-				changeSetManager.addListener(CHANGE_SET_LISTENER);
 			}
 		}
 	}
@@ -119,9 +126,12 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	@Override
 	public void enable() {
 		super.enable();
-		if (!isEnabled) {
-			for (ActiveChangeSetManager collector : changeSetManagers) {
-				collector.addListener(CHANGE_SET_LISTENER);
+		for (ActiveChangeSetManager collector : changeSetManagers) {
+			ChangeSetChangeListener listener = listenerByManager.get(collector);
+			if (listener == null) {
+				listener = new ChangeSetChangeListener(collector);
+				listenerByManager.put(collector, listener);
+				collector.addListener(listener);
 			}
 		}
 	}
@@ -130,12 +140,17 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	public void disable() {
 		super.disable();
 		for (ActiveChangeSetManager collector : changeSetManagers) {
-			collector.removeListener(CHANGE_SET_LISTENER);
+			ChangeSetChangeListener listener = listenerByManager.get(collector);
+			if (listener != null) {
+				collector.removeListener(listener);
+				listenerByManager.remove(collector);
+			}
 		}
 	}
 
 	@Override
 	protected void initContextChangeSets() {
+		// replace existing change sets with IContextChangeSet
 		for (ActiveChangeSetManager manager : changeSetManagers) {
 			ChangeSet[] sets = manager.getSets();
 			for (ChangeSet restoredSet : sets) {
@@ -191,9 +206,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	public void contextActivated(IInteractionContext context) {
 		try {
 			ITask task = getTask(context);
-			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
+			if (task != null) {
 				for (ActiveChangeSetManager manager : changeSetManagers) {
-
 					AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
 							.getActiveChangeSetProvider(manager);
 					IContextChangeSet contextChangeSet = changeSetProvider.createChangeSet(task);
@@ -204,8 +218,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 						List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
 								.getInterestingResources(context);
 						activeChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
-
-						activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
+						activeChangeSets.add(contextChangeSet);
 
 						if (!manager.contains(activeChangeSet)) {
 							manager.add(activeChangeSet);
@@ -246,6 +259,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			}
 			// TODO: not great to do the lookup based on a String value in case the user created this set
 			collector.makeDefault(noTaskSet);
+			noTaskSet.remove(noTaskSet.getResources());
 			collector.remove(noTaskSet);
 		}
 		activeChangeSets.clear();
@@ -288,7 +302,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	public List<IContextChangeSet> getActiveChangeSets() {
-		return new ArrayList<IContextChangeSet>(activeChangeSets.values());
+		return new ArrayList<IContextChangeSet>(activeChangeSets);
 	}
 
 	private ITask getTask(IInteractionContext context) {

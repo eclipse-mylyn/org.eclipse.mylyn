@@ -206,8 +206,9 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 
 	@Override
 	public IResource[] getResources() {
-		List<IResource> allResources = getAllResourcesInChangeContext();
-		return allResources.toArray(new IResource[allResources.size()]);
+		return super.getResources();
+//		List<IResource> allResources = getAllResourcesInChangeContext();
+//		return allResources.toArray(new IResource[allResources.size()]);
 	}
 
 	public IResource[] getChangedResources() {
@@ -231,7 +232,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 	 */
 	@Override
 	public boolean contains(IResource local) {
-		return getAllResourcesInChangeContext().contains(local);
+		return super.contains(local); //return getAllResourcesInChangeContext().contains(local);
 	}
 
 	@Override
