@@ -4,7 +4,7 @@
       label="Mylyn WikiText"
       version="0.9.0.qualifier"
       provider-name="Eclipse.org"
-      plugin="org.eclipse.mylyn.wikitext.core">
+      plugin="org.eclipse.mylyn">
 
    <description>
       Enables parsing and display of lightweight markup (wiki text).  Extends the Mylyn task editor
@@ -80,6 +80,7 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
       <import plugin="org.eclipse.mylyn.wikitext.mediawiki.core" version="0.9.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.wikitext.textile.core" version="0.9.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.wikitext.tracwiki.core" version="0.9.0" match="compatible"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.0.2.I20080816" match="compatible"/>
    </requires>
 
    <plugin
