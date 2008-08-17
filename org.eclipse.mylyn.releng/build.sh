@@ -10,6 +10,8 @@ fi
 
 BUILD_ROOT=$(cd $(dirname $0); pwd)
 
+chmod 755 $BUILD_ROOT/*.sh
+
 rm -R $BUILD_ROOT/3.3/build || true
 rm -R $BUILD_ROOT/3.4/build || true
 
