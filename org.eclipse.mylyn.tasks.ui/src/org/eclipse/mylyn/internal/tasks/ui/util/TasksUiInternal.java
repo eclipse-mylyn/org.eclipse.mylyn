@@ -826,6 +826,13 @@ public class TasksUiInternal {
 
 	public static void createAndOpenNewTask(TaskData taskData) throws CoreException {
 		ITask task = TasksUiUtil.createOutgoingNewTask(taskData.getConnectorKind(), taskData.getRepositoryUrl());
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				taskData.getConnectorKind());
+		ITaskMapping mapping = connector.getTaskMapping(taskData);
+		String summary = mapping.getSummary();
+		if (summary != null && summary.length() > 0) {
+			task.setSummary(summary);
+		}
 		UnsubmittedTaskContainer unsubmitted = ((TaskList) getTaskList()).getUnsubmittedContainer(taskData.getRepositoryUrl());
 		if (unsubmitted != null) {
 			TasksUiInternal.getTaskList().addTask(task, unsubmitted);
