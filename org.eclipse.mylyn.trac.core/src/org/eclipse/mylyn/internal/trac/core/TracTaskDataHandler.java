@@ -146,15 +146,19 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		Map<String, String> valueByKey = ticket.getValues();
 		for (String key : valueByKey.keySet()) {
 			TaskAttribute taskAttribute = data.getRoot().getAttribute(key);
-			if (Key.CC.getKey().equals(key)) {
-				StringTokenizer t = new StringTokenizer(valueByKey.get(key), CC_DELIMETER);
-				while (t.hasMoreTokens()) {
-					taskAttribute.addValue(t.nextToken());
+			if (taskAttribute != null) {
+				if (Key.CC.getKey().equals(key)) {
+					StringTokenizer t = new StringTokenizer(valueByKey.get(key), CC_DELIMETER);
+					while (t.hasMoreTokens()) {
+						taskAttribute.addValue(t.nextToken());
+					}
+				} else {
+					taskAttribute.setValue(valueByKey.get(key));
 				}
+				changedAttributes.add(taskAttribute);
 			} else {
-				taskAttribute.setValue(valueByKey.get(key));
+				// TODO log missing attribute?
 			}
-			changedAttributes.add(taskAttribute);
 		}
 
 		TracComment[] comments = ticket.getComments();
