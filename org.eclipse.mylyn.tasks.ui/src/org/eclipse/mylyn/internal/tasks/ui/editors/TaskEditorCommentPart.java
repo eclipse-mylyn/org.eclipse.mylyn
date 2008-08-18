@@ -49,7 +49,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private static final String LABEL_REPLY = "Reply";
 
-	private Section section;
+	protected Section section;
 
 	protected List<ExpandableComposite> commentComposites;
 
@@ -120,12 +120,14 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			section.setEnabled(false);
 		} else {
 			if (hasIncoming) {
+				commentComposites = new ArrayList<ExpandableComposite>();
 				expandSection(toolkit, section, comments);
 			} else {
 				section.addExpansionListener(new ExpansionAdapter() {
 					@Override
 					public void expansionStateChanged(ExpansionEvent event) {
 						if (commentComposites == null) {
+							commentComposites = new ArrayList<ExpandableComposite>();
 							expandSection(toolkit, section, comments);
 							getTaskEditorPage().reflow();
 						}
@@ -146,7 +148,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	}
 
 	protected void addComments(final FormToolkit toolkit, final Composite composite, final List<TaskAttribute> comments) {
-		commentComposites = new ArrayList<ExpandableComposite>();
 		for (final TaskAttribute commentAttribute : comments) {
 			boolean hasIncomingChanges = getModel().hasIncomingChanges(commentAttribute);
 			final TaskComment taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(),
@@ -331,7 +332,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		}
 	}
 
-	private void expandAllComments() {
+	protected void expandAllComments() {
 		try {
 			getTaskEditorPage().setReflow(false);
 
