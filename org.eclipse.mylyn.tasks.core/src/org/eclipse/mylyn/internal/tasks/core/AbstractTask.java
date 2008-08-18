@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -87,7 +86,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	// TODO 3.0 make private
 	protected String taskKey;
 
-	private Map<String, String> attributes;
+	private AttributeMap attributeMap;
 
 	private boolean changed;
 
@@ -497,27 +496,31 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	}
 
 	public synchronized String getAttribute(String key) {
-		return (attributes != null) ? attributes.get(key) : null;
+		return (attributeMap != null) ? attributeMap.getAttribute(key) : null;
 	}
 
 	public synchronized Map<String, String> getAttributes() {
-		if (attributes != null) {
-			return new HashMap<String, String>(attributes);
+		if (attributeMap != null) {
+			return attributeMap.getAttributes();
 		} else {
 			return Collections.emptyMap();
 		}
 	}
 
-	public synchronized void setAttribute(String key, String value) {
-		Assert.isNotNull(key);
-		if (attributes == null) {
-			attributes = new HashMap<String, String>();
+	public void setAttribute(String key, String value) {
+		String oldValue;
+		synchronized (this) {
+			if (attributeMap == null) {
+				attributeMap = new AttributeMap();
+			}
+			oldValue = attributeMap.getAttribute(key);
+			if (!areEqual(oldValue, value)) {
+				attributeMap.setAttribute(key, value);
+			} else {
+				return;
+			}
 		}
-		String oldValue = attributes.get(key);
-		if (!areEqual(oldValue, value)) {
-			attributes.put(key, value);
-			firePropertyChange(key, oldValue, value);
-		}
+		firePropertyChange(key, oldValue, value);
 	}
 
 	@Override

@@ -8,10 +8,8 @@
 package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -36,7 +34,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 
 	private String summary;
 
-	private Map<String, String> attributes;
+	private AttributeMap attributeMap;
 
 	@Deprecated
 	public RepositoryQuery(String description) {
@@ -119,23 +117,22 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 	}
 
 	public synchronized String getAttribute(String key) {
-		return (attributes != null) ? attributes.get(key) : null;
+		return (attributeMap != null) ? attributeMap.getAttribute(key) : null;
 	}
 
 	public synchronized Map<String, String> getAttributes() {
-		if (attributes != null) {
-			return new HashMap<String, String>(attributes);
+		if (attributeMap != null) {
+			return attributeMap.getAttributes();
 		} else {
 			return Collections.emptyMap();
 		}
 	}
 
 	public synchronized void setAttribute(String key, String value) {
-		Assert.isNotNull(key);
-		if (attributes == null) {
-			attributes = new HashMap<String, String>();
+		if (attributeMap == null) {
+			attributeMap = new AttributeMap();
 		}
-		attributes.put(key, value);
+		attributeMap.setAttribute(key, value);
 	}
 
 }
