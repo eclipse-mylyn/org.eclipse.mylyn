@@ -781,6 +781,9 @@ public class TasksUiInternal {
 	 * @return Shell or <code>null</code>
 	 */
 	public static Shell getShell() {
+		if (!PlatformUI.isWorkbenchRunning() || PlatformUI.getWorkbench().isClosing()) {
+			return null;
+		}
 		Shell modal = getModalShellExcluding(null);
 		if (modal != null) {
 			return modal;

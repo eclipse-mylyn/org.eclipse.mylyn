@@ -53,11 +53,15 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 			}
 
 			PasswordRunner runner = new PasswordRunner(authType, message);
-			PlatformUI.getWorkbench().getDisplay().syncExec(runner);
-			if (runner.isCanceled()) {
-				throw new OperationCanceledException();
-			}
-			if (!runner.isChanged()) {
+			if (!PlatformUI.getWorkbench().getDisplay().isDisposed()) {
+				PlatformUI.getWorkbench().getDisplay().syncExec(runner);
+				if (runner.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+				if (!runner.isChanged()) {
+					throw new UnsupportedRequestException();
+				}
+			} else {
 				throw new UnsupportedRequestException();
 			}
 		}
