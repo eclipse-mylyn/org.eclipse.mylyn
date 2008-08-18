@@ -35,6 +35,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -598,7 +599,16 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		// TODO EDITOR remove check
 		if (task != null) {
 			if (activateAction == null) {
-				activateAction = new ToggleTaskActivationAction(task);
+				activateAction = new ToggleTaskActivationAction(task) {
+					@Override
+					public void run() {
+						TaskList taskList = TasksUiPlugin.getTaskList();
+						if (taskList.getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
+							setMessage("Task added to the Uncategorized container", IMessageProvider.INFORMATION);
+						}
+						super.run();
+					}
+				};
 			}
 			toolBarManager.add(new Separator("activation"));
 			toolBarManager.add(activateAction);
