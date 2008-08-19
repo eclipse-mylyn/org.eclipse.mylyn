@@ -485,7 +485,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			createHelpControl(composite);
 		}
 		if (needsCreateTask) {
-			createTaskButton = createButton(composite, CREATE_ID, "New Task...", true);
+			createTaskButton = createButton(composite, CREATE_ID, "&New Task...", true);
 			createTaskButton.addSelectionListener(new SelectionListener() {
 
 				public void widgetDefaultSelected(SelectionEvent e) {
