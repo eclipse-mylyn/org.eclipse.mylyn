@@ -30,8 +30,7 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 
 	static final String HANDLE_TASK = "handle.task";
 
-	// XXX this looks like a c&p error but changing it would break restoring of working sets
-	static final String HANDLE_PROJECT = "handle.task";
+	static final String HANDLE_PROJECT = "handle.project";
 
 	public IAdaptable createElement(IMemento memento) {
 		String taskHandle = memento.getString(HANDLE_TASK);
@@ -54,6 +53,18 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 						"Could not not determine project for handle: " + projectHandle, t));
+			}
+		}
+		// prior to mylyn 3.0.2 task handles and project handles were identical
+		if (taskHandle != null) {
+			try {
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(taskHandle);
+				if (project != null) {
+					return project;
+				}
+			} catch (Throwable t) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not not determine project for handle: " + taskHandle, t));
 			}
 		}
 		return null;
