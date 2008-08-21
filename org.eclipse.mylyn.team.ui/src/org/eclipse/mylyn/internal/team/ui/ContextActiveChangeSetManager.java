@@ -25,7 +25,6 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.resources.ui.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
@@ -157,15 +156,11 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				if (!(restoredSet instanceof IContextChangeSet)) {
 					String encodedTitle = restoredSet.getName();
 					String taskHandle = ContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
-					ITask task = TasksUiPlugin.getTaskList().getTask(taskHandle);
+					ITask task = TasksUi.getRepositoryModel().getTask(taskHandle);
 					if (task != null) {
 						try {
-							AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
-									.getActiveChangeSetProvider(manager);
-							IContextChangeSet contextChangeSet = changeSetProvider.createChangeSet(task);
-
+							IContextChangeSet contextChangeSet = getOrCreateSet(manager, task);
 							if (contextChangeSet instanceof ActiveChangeSet) {
-//							IContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
 								contextChangeSet.restoreResources(restoredSet.getResources());
 								manager.remove(restoredSet);
 								manager.add((ActiveChangeSet) contextChangeSet);
@@ -202,17 +197,14 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return null;
 	}
 
+	@SuppressWarnings("restriction")
 	@Override
 	public void contextActivated(IInteractionContext context) {
 		try {
 			ITask task = getTask(context);
 			if (task != null) {
 				for (ActiveChangeSetManager manager : changeSetManagers) {
-					AbstractActiveChangeSetProvider changeSetProvider = FocusedTeamUiPlugin.getDefault()
-							.getActiveChangeSetProvider(manager);
-					IContextChangeSet contextChangeSet = changeSetProvider.createChangeSet(task);
-
-//					ContextChangeSet contextChangeSet = new ContextChangeSet(task, manager);
+					IContextChangeSet contextChangeSet = getOrCreateSet(manager, task);
 					if (contextChangeSet instanceof ActiveChangeSet) {
 						ActiveChangeSet activeChangeSet = (ActiveChangeSet) contextChangeSet;
 						List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
@@ -220,9 +212,10 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 						activeChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 						activeChangeSets.add(contextChangeSet);
 
-						if (!manager.contains(activeChangeSet)) {
-							manager.add(activeChangeSet);
-						}
+						// makeDefault() will add the change set 
+//						if (!manager.contains(activeChangeSet)) {
+//							manager.add(activeChangeSet);
+//						}
 						manager.makeDefault(activeChangeSet);
 					}
 				}
@@ -230,6 +223,18 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Could not update change set", e));
 		}
+	}
+
+	private IContextChangeSet getOrCreateSet(ActiveChangeSetManager manager, ITask task) {
+		ChangeSet[] sets = manager.getSets();
+		for (ChangeSet set : sets) {
+			if (set instanceof IContextChangeSet && task.equals(((IContextChangeSet) set).getTask())) {
+				return (IContextChangeSet) set;
+			}
+		}
+		// change set does not exist, create a new one
+		AbstractActiveChangeSetProvider provider = FocusedTeamUiPlugin.getDefault().getActiveChangeSetProvider(manager);
+		return provider.createChangeSet(task);
 	}
 
 	@Override
@@ -265,6 +270,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		activeChangeSets.clear();
 	}
 
+	@SuppressWarnings("restriction")
 	@Override
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
