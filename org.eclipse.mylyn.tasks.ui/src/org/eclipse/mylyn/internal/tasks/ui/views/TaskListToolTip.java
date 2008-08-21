@@ -613,14 +613,12 @@ public class TaskListToolTip extends ToolTip {
 		textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		textLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
-		textLabel.setText(TasksUiInternal.escapeLabelText(removeTrailingNewline(text)));
-
+		text = removeTrailingNewline(text);
+		textLabel.setText(TasksUiInternal.escapeLabelText(text));
 		GC gc = new GC(textLabel);
+		int width = Math.min(gc.textExtent(text).x, MAX_WIDTH);
 		try {
-			if (gc.textExtent(text).x > MAX_WIDTH) {
-				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(MAX_WIDTH, SWT.DEFAULT).applyTo(
-						textLabel);
-			}
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(width, SWT.DEFAULT).applyTo(textLabel);
 		} finally {
 			gc.dispose();
 		}
