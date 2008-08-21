@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
@@ -76,7 +77,7 @@ public abstract class AbstractAttributeEditor {
 
 	public String getLabel() {
 		String label = getAttributeMapper().getLabel(getTaskAttribute());
-		return (label != null) ? label.replace("&", "&&") : null; // mask & from SWT
+		return TasksUiInternal.escapeLabelText(label);
 	}
 
 	public Label getLabelControl() {

@@ -911,4 +911,11 @@ public class TasksUiInternal {
 		return false;
 	}
 
+	/**
+	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
+	 */
+	public static String escapeLabelText(String text) {
+		return (text != null) ? text.replace("&", "&&") : null; // mask & from SWT
+	}
+
 }

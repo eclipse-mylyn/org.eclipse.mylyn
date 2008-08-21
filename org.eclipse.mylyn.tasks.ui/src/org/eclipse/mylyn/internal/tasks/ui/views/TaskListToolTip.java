@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -39,6 +40,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDataDiff;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -52,6 +54,7 @@ import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -78,6 +81,8 @@ import org.eclipse.swt.widgets.Widget;
 public class TaskListToolTip extends ToolTip {
 
 	private final static int MAX_TEXT_WIDTH = 300;
+
+	private final static int MAX_WIDTH = 600;
 
 	private final static int X_SHIFT;
 
@@ -604,11 +609,21 @@ public class TaskListToolTip extends ToolTip {
 		imageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		imageLabel.setImage(image);
 
-		Label textLabel = new Label(parent, SWT.NONE);
+		Label textLabel = new Label(parent, SWT.WRAP);
 		textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		textLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
-		textLabel.setText(removeTrailingNewline(text));
+		textLabel.setText(TasksUiInternal.escapeLabelText(removeTrailingNewline(text)));
+
+		GC gc = new GC(textLabel);
+		try {
+			if (gc.textExtent(text).x > MAX_WIDTH) {
+				GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(MAX_WIDTH, SWT.DEFAULT).applyTo(
+						textLabel);
+			}
+		} finally {
+			gc.dispose();
+		}
 	}
 
 	private static class ProgressData {
