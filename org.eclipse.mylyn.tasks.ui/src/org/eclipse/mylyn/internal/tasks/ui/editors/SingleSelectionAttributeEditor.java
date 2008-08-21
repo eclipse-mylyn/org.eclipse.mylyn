@@ -110,4 +110,11 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 		attributeChanged();
 	}
 
+	void selectDefaultValue() {
+		if (combo.getSelectionIndex() == -1 && values.length > 0) {
+			combo.select(0);
+			setValue(values[0]);
+		}
+	}
+
 }

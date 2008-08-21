@@ -75,6 +75,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private static final int RADIO_OPTION_WIDTH = 120;
 
+	private static final String KEY_ASSOCIATED_EDITOR = "associatedEditor";
+
 	private List<Button> operationButtons;
 
 	private Button submitButton;
@@ -235,6 +237,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			}
 			editor.getControl().setLayoutData(gd);
 			editor.getControl().addFocusListener(new FocusListener(button));
+			button.setData(KEY_ASSOCIATED_EDITOR, editor);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 		}
 	}
@@ -315,6 +318,11 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			TaskOperation taskOperation = (TaskOperation) selectedButton.getData(KEY_OPERATION);
 			getTaskData().getAttributeMapper().setTaskOperation(selectedOperationAttribute, taskOperation);
 			getModel().attributeChanged(selectedOperationAttribute);
+
+			AbstractAttributeEditor editor = (AbstractAttributeEditor) selectedButton.getData(KEY_ASSOCIATED_EDITOR);
+			if (editor instanceof SingleSelectionAttributeEditor) {
+				((SingleSelectionAttributeEditor) editor).selectDefaultValue();
+			}
 		}
 	}
 
