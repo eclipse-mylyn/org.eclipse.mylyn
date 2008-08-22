@@ -339,7 +339,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 					ISelection toSelect = resolveSelection((IEditorPart) part, textSelection, viewer);
 					if (toSelect != null) {
 						ISelection currentSelection = viewer.getSelection();
-						if (!selection.equals(currentSelection)) {
+						if (!toSelect.equals(currentSelection)) {
 							select(viewer, toSelect);
 						}
 					}
