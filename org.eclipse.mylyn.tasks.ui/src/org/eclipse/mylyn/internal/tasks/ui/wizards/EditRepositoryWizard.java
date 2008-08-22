@@ -86,6 +86,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	@Override
 	public void addPages() {
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+		// TODO 3.1 pass repository
 		settingsPage = connectorUi.getSettingsPage(null);
 		if (settingsPage instanceof AbstractRepositorySettingsPage) {
 			((AbstractRepositorySettingsPage) settingsPage).setRepository(repository);

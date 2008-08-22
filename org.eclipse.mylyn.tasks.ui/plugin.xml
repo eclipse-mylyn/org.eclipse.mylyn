@@ -1409,11 +1409,18 @@
                      value="1">
                </count>
                <iterate>
-                  <or>
+                  <and>
                      <instanceof
                            value="org.eclipse.mylyn.tasks.core.TaskRepository">
                      </instanceof>
-                  </or>
+                     <not>
+                        <test
+                              forcePluginActivation="false"
+                              property="org.eclipse.mylyn.taskRepository.connectorKind"
+                              value="local">
+                        </test>
+                     </not>
+                  </and>
                </iterate>
             </and>
          </enabledWhen>
@@ -1755,5 +1762,15 @@
             name="In Tasks Editor"
             parentId="org.eclipse.ui.textEditorScope">
       </context>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.mylyn.internal.tasks.ui.util.TaskRepositoryPropertyTester"
+            id="org.eclipse.mylyn.tasks.ui.propertyTester.taskRepository"
+            namespace="org.eclipse.mylyn.taskRepository"
+            properties="connectorKind"
+            type="org.eclipse.mylyn.tasks.core.TaskRepository">
+      </propertyTester>
    </extension>
 </plugin>
