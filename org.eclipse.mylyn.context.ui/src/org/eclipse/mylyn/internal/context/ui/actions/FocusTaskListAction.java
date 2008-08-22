@@ -21,6 +21,7 @@ import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.mylyn.internal.provisional.commons.ui.IFilteredTreeListener;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -95,25 +96,28 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 	protected boolean installInterestFilter(StructuredViewer viewer) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
-			TaskListView taskListView = (TaskListView) part;
-
-			try {
-				taskListView.getViewer().getControl().setRedraw(false);
-				taskListView.setFocusedMode(true);
-				previousSorter = taskListView.getViewer().getSorter();
-				previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
-				taskListView.clearFilters(false);
-				if (!taskListView.getFilters().contains(taskListInterestFilter)) {
-					taskListView.addFilter(taskListInterestFilter);
-				}
-				// Setting sorter causes root refresh
-				taskListView.getViewer().setSorter(taskListInterestSorter);
-				taskListView.getViewer().expandAll();
-				taskListView.setManualFiltersEnabled(false);
+			final TaskListView taskListView = (TaskListView) part;
+			TasksUiInternal.preservingSelection(taskListView.getViewer(), new Runnable() {
+				public void run() {
+					try {
+						taskListView.getViewer().getControl().setRedraw(false);
+						taskListView.setFocusedMode(true);
+						previousSorter = taskListView.getViewer().getSorter();
+						previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
+						taskListView.clearFilters(false);
+						if (!taskListView.getFilters().contains(taskListInterestFilter)) {
+							taskListView.addFilter(taskListInterestFilter);
+						}
+						// Setting sorter causes root refresh
+						taskListView.getViewer().setSorter(taskListInterestSorter);
+						taskListView.getViewer().expandAll();
+						taskListView.setManualFiltersEnabled(false);
 //				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskList().getActiveTask());
-			} finally {
-				taskListView.getViewer().getControl().setRedraw(true);
-			}
+					} finally {
+						taskListView.getViewer().getControl().setRedraw(true);
+					}
+				}
+			});
 			return true;
 		} else {
 			return false;
@@ -124,22 +128,26 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
-			TaskListView taskListView = (TaskListView) part;
+			final TaskListView taskListView = (TaskListView) part;
 			if (taskListView.isFocusedMode()) {
-				try {
-					taskListView.getViewer().getControl().setRedraw(false);
-					taskListView.setFocusedMode(false);
-					taskListView.removeFilter(taskListInterestFilter);
-					taskListView.setManualFiltersEnabled(true);
-					for (AbstractTaskListFilter filter : previousFilters) {
-						TaskListView.getFromActivePerspective().addFilter(filter);
-					}
-					taskListView.getViewer().collapseAll();
+				TasksUiInternal.preservingSelection(taskListView.getViewer(), new Runnable() {
+					public void run() {
+						try {
+							taskListView.getViewer().getControl().setRedraw(false);
+							taskListView.setFocusedMode(false);
+							taskListView.removeFilter(taskListInterestFilter);
+							taskListView.setManualFiltersEnabled(true);
+							for (AbstractTaskListFilter filter : previousFilters) {
+								TaskListView.getFromActivePerspective().addFilter(filter);
+							}
+							taskListView.getViewer().collapseAll();
 
-					taskListView.getViewer().setSorter(previousSorter);
-				} finally {
-					taskListView.getViewer().getControl().setRedraw(true);
-				}
+							taskListView.getViewer().setSorter(previousSorter);
+						} finally {
+							taskListView.getViewer().getControl().setRedraw(true);
+						}
+					}
+				});
 			}
 		}
 	}
