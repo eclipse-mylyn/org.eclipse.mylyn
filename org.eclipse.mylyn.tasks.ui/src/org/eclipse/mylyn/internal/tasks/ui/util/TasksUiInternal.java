@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +36,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -93,6 +98,7 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -916,6 +922,41 @@ public class TasksUiInternal {
 	 */
 	public static String escapeLabelText(String text) {
 		return (text != null) ? text.replace("&", "&&") : null; // mask & from SWT
+	}
+
+	public static void preservingSelection(TreeViewer viewer, Runnable runnable) {
+		TreePath[] treePath = null;
+		TreeItem[] selection = viewer.getTree().getSelection();
+		if (selection.length > 0) {
+			treePath = new TreePath[selection.length];
+			for (int i = 0; i < selection.length; i++) {
+				treePath[i] = getTreePath(selection[i]);
+				if (treePath[i] == null) {
+					treePath = null;
+					return;
+				}
+			}
+		}
+
+		runnable.run();
+
+		if (treePath != null) {
+			ISelection newSelection = viewer.getSelection();
+			if (newSelection == null || newSelection.isEmpty()) {
+				viewer.setSelection(new TreeSelection(treePath), true);
+			}
+		}
+	}
+
+	private static TreePath getTreePath(TreeItem treeItem) {
+		LinkedList<Object> segments = new LinkedList<Object>();
+		if (treeItem.getData() != null) {
+			do {
+				segments.addFirst(treeItem.getData());
+				treeItem = treeItem.getParentItem();
+			} while (treeItem != null);
+		}
+		return new TreePath(segments.toArray());
 	}
 
 }
