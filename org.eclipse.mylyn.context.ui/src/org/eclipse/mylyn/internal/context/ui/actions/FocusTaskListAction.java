@@ -76,10 +76,10 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 	@Override
 	public void run(IAction action) {
 		super.run(action);
-		IViewPart part = super.getPartForAction();
-		if (part instanceof TaskListView) {
-			((TaskListView) part).getFilteredTree().setShowProgress(super.isChecked());
-		}
+//		IViewPart part = super.getPartForAction();
+//		if (part instanceof TaskListView) {
+//			((TaskListView) part).getFilteredTree().setShowProgress(super.isChecked());
+//		}
 	}
 
 	@Override
@@ -113,15 +113,22 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 						taskListView.getViewer().expandAll();
 						taskListView.setManualFiltersEnabled(false);
 //				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskList().getActiveTask());
+
+						showProgressBar(taskListView, true);
 					} finally {
 						taskListView.getViewer().getControl().setRedraw(true);
 					}
 				}
+
 			});
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	private void showProgressBar(TaskListView taskListView, boolean visible) {
+		taskListView.getFilteredTree().setShowProgress(visible);
 	}
 
 	@Override
@@ -143,6 +150,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 							taskListView.getViewer().collapseAll();
 
 							taskListView.getViewer().setSorter(previousSorter);
+							showProgressBar(taskListView, false);
 						} finally {
 							taskListView.getViewer().getControl().setRedraw(true);
 						}
