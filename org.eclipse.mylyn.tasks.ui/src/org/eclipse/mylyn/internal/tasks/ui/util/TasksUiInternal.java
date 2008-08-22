@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -38,8 +37,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreePath;
-import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
@@ -98,7 +96,6 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -924,39 +921,24 @@ public class TasksUiInternal {
 		return (text != null) ? text.replace("&", "&&") : null; // mask & from SWT
 	}
 
-	public static void preservingSelection(TreeViewer viewer, Runnable runnable) {
-		TreePath[] treePath = null;
-		TreeItem[] selection = viewer.getTree().getSelection();
-		if (selection.length > 0) {
-			treePath = new TreePath[selection.length];
-			for (int i = 0; i < selection.length; i++) {
-				treePath[i] = getTreePath(selection[i]);
-				if (treePath[i] == null) {
-					treePath = null;
-					return;
-				}
-			}
-		}
+	public static void preservingSelection(final TreeViewer viewer, Runnable runnable) {
+		final ISelection selection = viewer.getSelection();
 
 		runnable.run();
 
-		if (treePath != null) {
+		if (selection != null) {
 			ISelection newSelection = viewer.getSelection();
-			if (newSelection == null || newSelection.isEmpty()) {
-				viewer.setSelection(new TreeSelection(treePath), true);
+			if ((newSelection == null || newSelection.isEmpty()) && !(selection == null || selection.isEmpty())) {
+				// delay execution to ensure that any delayed tree updates such as expand all have been processed and the selection is revealed properly
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						viewer.setSelection(selection, true);
+					}
+				});
+			} else if (newSelection instanceof ITreeSelection && !newSelection.isEmpty()) {
+				viewer.reveal(((ITreeSelection) newSelection).getFirstElement());
 			}
 		}
-	}
-
-	private static TreePath getTreePath(TreeItem treeItem) {
-		LinkedList<Object> segments = new LinkedList<Object>();
-		if (treeItem.getData() != null) {
-			do {
-				segments.addFirst(treeItem.getData());
-				treeItem = treeItem.getParentItem();
-			} while (treeItem != null);
-		}
-		return new TreePath(segments.toArray());
 	}
 
 }
