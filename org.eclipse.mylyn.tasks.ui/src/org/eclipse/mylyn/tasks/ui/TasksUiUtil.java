@@ -337,10 +337,16 @@ public class TasksUiUtil {
 					.getConnectorForRepositoryTaskUrl(url);
 			if (connector != null) {
 				String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(url);
-				String id = connector.getTaskIdFromTaskUrl(url);
-				TaskRepository repository = TasksUi.getRepositoryManager().getRepository(connector.getConnectorKind(),
-						repositoryUrl);
-				opened = openTask(repository, id);
+				if (repositoryUrl != null) {
+					String id = connector.getTaskIdFromTaskUrl(url);
+					if (id != null) {
+						TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
+								connector.getConnectorKind(), repositoryUrl);
+						if (repository != null) {
+							opened = openTask(repository, id);
+						}
+					}
+				}
 			}
 			if (!opened) {
 				openUrl(url, 0);
