@@ -273,7 +273,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskList().getAllTasks();
 			Set<AbstractNotification> reminders = new HashSet<AbstractNotification>();
 			for (AbstractTask task : allTasks) {
-				if (task.isPastReminder() && !task.isReminded()) {
+				if (TasksUiPlugin.getTaskActivityManager().isPastReminder(task) && !task.isReminded()) {
 					reminders.add(new TaskListNotificationReminder(task));
 					task.setReminded(true);
 				}

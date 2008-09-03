@@ -126,7 +126,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 //			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
 //				return false;
 //			}
-			if (TasksUiPlugin.getTaskActivityManager().isOverdue(task) || ((AbstractTask) task).isPastReminder()) {
+			if (TasksUiPlugin.getTaskActivityManager().isOverdue(task)
+					|| TasksUiPlugin.getTaskActivityManager().isPastReminder((AbstractTask) task)) {
 				return true;
 			}
 
@@ -139,7 +140,9 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (parent instanceof ScheduledTaskContainer) {
 			return shouldShowInFocusedWorkweekDateContainer(parent, task);
 		} else {
-			return task.isPastReminder() || TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task)
+			return TasksUiPlugin.getTaskActivityManager().isPastReminder(task)
+					|| TasksUiPlugin.getTaskActivityManager().isSheduledForPastWeek(task)
+					|| TasksUiPlugin.getTaskActivityManager().isScheduledForThisWeek(task)
 					|| TasksUiPlugin.getTaskActivityManager().isDueThisWeek(task)
 					|| TasksUiPlugin.getTaskActivityManager().isScheduledForToday(task);
 		}

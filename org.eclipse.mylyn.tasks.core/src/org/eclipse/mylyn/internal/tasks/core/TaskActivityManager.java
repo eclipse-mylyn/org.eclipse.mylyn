@@ -613,8 +613,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 	}
 
 	public boolean isPastReminder(AbstractTask task) {
-		if (task == null || task.isCompleted() || task.getScheduledForDate() == null
-				|| !task.getScheduledForDate().isDay()) {
+		if (task == null || task.isCompleted() || task.getScheduledForDate() == null) {
 			return false;
 		} else {
 			return isPastReminder(task.getScheduledForDate(), task.isCompleted());
@@ -625,7 +624,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		if (date == null || isComplete) {
 			return false;
 		} else {
-			if (date.getEndDate().compareTo(TaskActivityUtil.getCalendar()) < 0) {
+			if (date.getEndDate().compareTo(TaskActivityUtil.getCalendar()) < 0 && date.isDay()) {
 				return true;
 			} else {
 				return false;
@@ -717,6 +716,21 @@ public class TaskActivityManager implements ITaskActivityManager {
 
 			return TaskActivityUtil.getCurrentWeek().isCurrentWeekDay(range)
 					|| TaskActivityUtil.getCurrentWeek().compareTo(range) == 0;
+		}
+		return false;
+	}
+
+	public boolean isSheduledForPastWeek(AbstractTask task) {
+		boolean result = false;
+		if (task != null && task.getScheduledForDate() != null) {
+			result = isSheduledForPastWeek(task.getScheduledForDate());
+		}
+		return result;
+	}
+
+	private boolean isSheduledForPastWeek(DateRange range) {
+		if (range != null) {
+			return range.isWeek() && range.isPast();
 		}
 		return false;
 	}
