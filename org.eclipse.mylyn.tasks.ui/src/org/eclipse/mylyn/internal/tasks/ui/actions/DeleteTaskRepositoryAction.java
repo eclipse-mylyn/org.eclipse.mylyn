@@ -9,6 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -17,11 +18,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewPart;
@@ -57,6 +60,8 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 					.getShell(), "Confirm Delete", "Delete the selected task repositories?");
 			if (deleteConfirmed) {
 				IStructuredSelection selection = getStructuredSelection();
+
+				// check for queries over this repository
 				Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
 				List<TaskRepository> repositoriesInUse = new ArrayList<TaskRepository>();
 				List<TaskRepository> repositoriesToDelete = new ArrayList<TaskRepository>();
@@ -77,6 +82,27 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 					}
 				}
 
+				// check for tasks from this repository
+				// bug 243975
+				Collection<AbstractTask> tasks = TasksUiPlugin.getTaskList().getAllTasks();
+				for (Object selectedObject : selection.toList()) {
+					if (selectedObject instanceof TaskRepository) {
+						TaskRepository taskRepository = (TaskRepository) selectedObject;
+						if (tasks != null && tasks.size() > 0) {
+							for (ITask task : tasks) {
+								if (task.getRepositoryUrl() != null
+										&& task.getRepositoryUrl().equals(taskRepository.getRepositoryUrl())) {
+									repositoriesInUse.add(taskRepository);
+									break;
+								}
+							}
+						}
+						if (repositoriesInUse.contains(taskRepository)) {
+							repositoriesToDelete.remove(taskRepository);
+						}
+					}
+				}
+
 				for (TaskRepository taskRepository : repositoriesToDelete) {
 					TasksUiPlugin.getRepositoryManager().removeRepository(taskRepository,
 							TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -87,7 +113,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 				if (repositoriesInUse.size() > 0) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"Repository In Use",
-							"One or more of the selected repositories is being used by a query and can not be deleted.");
+							"One or more of the selected repositories is being used by a query or a task and can not be deleted.");
 				}
 			}
 		} catch (Exception e) {
