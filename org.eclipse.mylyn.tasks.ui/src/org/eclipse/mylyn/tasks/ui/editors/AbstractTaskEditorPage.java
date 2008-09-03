@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -52,6 +53,7 @@ import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.data.ITaskDataManagerListener;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManagerEvent;
+import org.eclipse.mylyn.internal.tasks.ui.ChangeActivityHandleOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
@@ -176,9 +178,23 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						TasksUiPlugin.getTaskActivityManager().setDueDate(newTask, dueDate);
 						((AbstractTask) newTask).setEstimatedTimeHours(((AbstractTask) oldTask).getEstimatedTimeHours());
 					}
+
 					ContextCorePlugin.getContextStore().saveActiveContext();
 					ContextCore.getContextStore().cloneContext(oldTask.getHandleIdentifier(),
 							newTask.getHandleIdentifier());
+
+					ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(
+							oldTask.getHandleIdentifier(), newTask.getHandleIdentifier());
+
+					try {
+						operation.run(new NullProgressMonitor());
+					} catch (InvocationTargetException e) {
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+								"Failed to migrate activity to new task", e.getCause()));
+					} catch (InterruptedException e) {
+						// ignore
+					}
+
 					close();
 					TasksUiInternal.getTaskList().deleteTask(oldTask);
 					ContextCore.getContextManager().deleteContext(oldTask.getHandleIdentifier());
