@@ -102,7 +102,11 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		int toAdd = 7 - days;
 		WeekDateRange nextWeek = TaskActivityUtil.getNextWeek();
 		for (int x = 0; x < toAdd; x++) {
-			DateRange day = nextWeek.getDayOfWeek(TasksUiPlugin.getTaskActivityManager().getWeekStartDay() + x);
+			int next = TasksUiPlugin.getTaskActivityManager().getWeekStartDay() + x;
+			if (next > Calendar.SATURDAY) {
+				next = x;
+			}
+			DateRange day = nextWeek.getDayOfWeek(next);
 			Action action = createDateSelectionAction(day, null);
 			subMenuManager.add(action);
 		}

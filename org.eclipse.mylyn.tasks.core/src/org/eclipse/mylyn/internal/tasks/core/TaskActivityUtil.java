@@ -72,21 +72,24 @@ public class TaskActivityUtil {
 	}
 
 	public static Calendar snapEndOfWeek(Calendar cal) {
-		if (cal.getFirstDayOfWeek() == Calendar.MONDAY) {
-			cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-		} else {
-			cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-		}
+
+		cal.set(Calendar.DAY_OF_WEEK, getLastCalDayInt(cal));
+
 		snapEndOfDay(cal);
 		return cal;
 	}
 
-	public static Calendar snapEndOfNextWeek(Calendar cal) {
-		if (cal.getFirstDayOfWeek() == Calendar.MONDAY) {
-			cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-		} else {
-			cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+	private static int getLastCalDayInt(Calendar cal) {
+		int last = cal.getFirstDayOfWeek() - 1;
+
+		if (last == 0) {
+			last = Calendar.SATURDAY;
 		}
+
+		return last;
+	}
+
+	public static Calendar snapEndOfNextWeek(Calendar cal) {
 		snapEndOfWeek(cal);
 		cal.add(Calendar.WEEK_OF_MONTH, 1);
 		return cal;

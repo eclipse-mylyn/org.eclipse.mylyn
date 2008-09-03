@@ -61,9 +61,19 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
+	private static final String LABEL_FRIDAY = "Friday";
+
+	private static final String LABEL_THURSDAY = "Thursday";
+
+	private static final String LABEL_WEDNESDAY = "Wednesday";
+
+	private static final String LABEL_TUESDAY = "Tuesday";
+
 	private static final String LABEL_MONDAY = "Monday";
 
 	private static final String LABEL_SUNDAY = "Sunday";
+
+	private static final String LABEL_SATURDAY = "Saturday";
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.preferences";
 
@@ -484,8 +494,16 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		weekStartLabel.setText("Week Start:");
 		weekStartCombo = new Combo(group, SWT.READ_ONLY);
 		// Note: Calendar.SUNDAY = 1
+//		weekStartCombo.add(LABEL_SUNDAY);
+//		weekStartCombo.add(LABEL_MONDAY);
+//		weekStartCombo.add(LABEL_SATURDAY);
 		weekStartCombo.add(LABEL_SUNDAY);
 		weekStartCombo.add(LABEL_MONDAY);
+		weekStartCombo.add(LABEL_TUESDAY);
+		weekStartCombo.add(LABEL_WEDNESDAY);
+		weekStartCombo.add(LABEL_THURSDAY);
+		weekStartCombo.add(LABEL_FRIDAY);
+		weekStartCombo.add(LABEL_SATURDAY);
 		weekStartCombo.select(getPreferenceStore().getInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 
 //		 Label workWeekBeginLabel = new Label(group, SWT.NONE);
