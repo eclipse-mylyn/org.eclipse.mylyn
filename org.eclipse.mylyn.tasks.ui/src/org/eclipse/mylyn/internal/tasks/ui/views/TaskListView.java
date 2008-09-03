@@ -1405,7 +1405,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else if (action instanceof MarkTaskIncompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
-				if (element instanceof UncategorizedTaskContainer || element instanceof UnmatchedTaskContainer) {
+				if (element instanceof UncategorizedTaskContainer) {
 					action.setEnabled(false);
 				} else {
 					action.setEnabled(true);

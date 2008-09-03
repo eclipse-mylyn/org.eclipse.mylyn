@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -20,9 +21,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AutomaticRepositoryTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -90,6 +93,11 @@ public class DeleteAction extends Action {
 				message = "Permanently delete the category?  Local tasks will be moved to the Uncategorized folder. Repository tasks will be moved to the Unmatched folder.";
 			} else if (object instanceof IRepositoryQuery) {
 				message = "Permanently delete the query?  Contained tasks will be moved to the Unmatched folder.";
+			} else if (object instanceof UnmatchedTaskContainer) {
+				message = "Delete the planning information and context of all unmatched tasks?  The server"
+						+ " copy of these tasks will not be deleted and the task will remain in queries that match it.";
+			} else if (object instanceof UnsubmittedTaskContainer) {
+				message = "Delete all of the unsubmitted tasks?";
 			} else {
 				message = "Permanently delete the element listed below?";
 			}
@@ -107,6 +115,10 @@ public class DeleteAction extends Action {
 			return;
 		}
 
+		performDeletion(toDelete);
+	}
+
+	protected void performDeletion(Collection<?> toDelete) {
 		for (Object selectedObject : toDelete) {
 			if (selectedObject instanceof ITask) {
 				AbstractTask task = null;
@@ -143,8 +155,16 @@ public class DeleteAction extends Action {
 					TasksUiInternal.closeEditorInActivePage(task, false);
 				}
 				TasksUiInternal.getTaskList().deleteCategory(cat);
-			} else if (selectedObject instanceof UnmatchedTaskContainer) {
-				// ignore
+			} else if (selectedObject instanceof AutomaticRepositoryTaskContainer) {
+				// support both the unmatched and the unsubmitted
+
+				if (toDelete.size() == 1) {
+
+					// loop to ensure that all subtasks are deleted as well
+					while (((AutomaticRepositoryTaskContainer) selectedObject).getChildren().size() != 0) {
+						performDeletion(((AutomaticRepositoryTaskContainer) selectedObject).getChildren());
+					}
+				}
 			} else {
 				MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						"Delete failed", "Nothing selected.");
