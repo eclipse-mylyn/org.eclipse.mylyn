@@ -17,11 +17,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractRetrieveTitleFromUrlJob;
@@ -36,6 +38,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.TaskFormPage;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -150,6 +153,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private final TaskEditor parentEditor;
 
+	private NewSubTaskAction newSubTaskAction;
+
 	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
 
 		@Override
@@ -185,6 +190,21 @@ public class TaskPlanningEditor extends TaskFormPage {
 		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, "Planning");
 		this.parentEditor = editor;
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
+	}
+
+	/**
+	 * Override for customizing the tool bar.
+	 */
+	public void fillToolBar(IToolBarManager toolBarManager) {
+		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
+		if (taskEditorInput != null && taskEditorInput.getTask() != null
+				&& taskEditorInput.getTask() instanceof LocalTask) {
+			newSubTaskAction = new NewSubTaskAction();
+			newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(taskEditorInput.getTask()));
+			if (newSubTaskAction.isEnabled()) {
+				toolBarManager.add(newSubTaskAction);
+			}
+		}
 	}
 
 	/** public for testing */

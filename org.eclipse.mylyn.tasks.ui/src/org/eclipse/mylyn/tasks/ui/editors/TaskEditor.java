@@ -49,6 +49,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.internal.tasks.ui.util.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -590,6 +591,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			if (page instanceof AbstractTaskEditorPage) {
 				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
 				taskEditorPage.fillToolBar(toolBarManager);
+			} else if (page instanceof TaskPlanningEditor) {
+				TaskPlanningEditor taskPlanningPage = (TaskPlanningEditor) page;
+				taskPlanningPage.fillToolBar(toolBarManager);
 			} else if (page instanceof AbstractRepositoryTaskEditor) {
 				AbstractRepositoryTaskEditor taskEditorPage = (AbstractRepositoryTaskEditor) page;
 				taskEditorPage.fillToolBar(toolBarManager);
