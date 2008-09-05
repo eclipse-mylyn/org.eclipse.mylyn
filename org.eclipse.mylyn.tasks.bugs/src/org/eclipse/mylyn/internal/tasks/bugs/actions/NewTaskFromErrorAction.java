@@ -80,15 +80,37 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 //		StringBuilder sb = new StringBuilder();
 //		buildDescriptionFromLogEntry(entry, sb, true);
 
+		ErrorLogStatus status = createStatus(entry);
+
+		new ErrorReporterManager().fail(status);
+	}
+
+	private ErrorLogStatus createStatus(LogEntry entry) {
 		ErrorLogStatus status = new ErrorLogStatus(entry.getSeverity(), entry.getPluginId(), entry.getCode(),
 				entry.getMessage());
-		status.setDate(entry.getDate());
-		status.setStack(entry.getStack());
-		LogSession session = entry.getSession();
-		if (session != null) {
-			status.setLogSessionData(session.getSessionData());
+		try {
+			status.setDate(entry.getDate());
+			status.setStack(entry.getStack());
+			LogSession session = entry.getSession();
+			if (session != null) {
+				status.setLogSessionData(session.getSessionData());
+			}
+
+			if (entry.hasChildren()) {
+				Object[] children = entry.getChildren(entry);
+				if (children != null) {
+					for (Object child : children) {
+						if (child instanceof LogEntry) {
+							ErrorLogStatus childStatus = createStatus((LogEntry) child);
+							status.add(childStatus);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			// ignore any errors for setting additional attributes
 		}
-		new ErrorReporterManager().fail(status);
+		return status;
 	}
 
 	public void run() {
