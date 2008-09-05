@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.mylyn.context.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.mylyn.context.core" id="internalBridges" name="Internal Bridges"/>
+      </appinfo>
+      <documentation>
+         Bridges extension point for internal use only.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="shadow"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="shadow">
+      <annotation>
+         <documentation>
+            Signifies that one bridge shadows another.  The bridge specified in shadowedByContent (if it exists) will always be used instead of the bridge specified in baseContent.
+
+The values correspond to the &quot;name&quot; attribute of the bridge.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="baseContent" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The bridge to be hidden by shadowedByContent.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="shadowedByContent" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The bridge that hides baseContent.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         3.0
+      </documentation>
+   </annotation>
+
+
+
+
+
+</schema>

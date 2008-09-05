@@ -45,6 +45,10 @@ public class ContextCorePlugin extends Plugin {
 
 	private final Map<String, Set<String>> childContentTypeMap = new ConcurrentHashMap<String, Set<String>>();
 
+	// specifies that one content type should shadow another
+	// the <value> content type shadows the <key> content typee
+	private final Map<String, String> contentTypeToShadowMap = new ConcurrentHashMap<String, String>();
+
 	private AbstractContextStructureBridge defaultBridge = null;
 
 	private static ContextCorePlugin INSTANCE;
@@ -144,6 +148,13 @@ public class ContextCorePlugin extends Plugin {
 		}
 	}
 
+	/**
+	 * Shadows override existing shadows if present.
+	 */
+	private void addShadowsContent(String baseContentType, String shadowedByContentType) {
+		contentTypeToShadowMap.put(baseContentType, shadowedByContentType);
+	}
+
 	private void addRelationProvider(String contentType, AbstractRelationProvider provider) {
 		Set<AbstractRelationProvider> providers = relationProviders.get(contentType);
 		if (providers == null) {
@@ -183,9 +194,30 @@ public class ContextCorePlugin extends Plugin {
 		return bridges;
 	}
 
+	/**
+	 * Finds the shadowed content for the passed in base content
+	 * 
+	 * @param baseContent
+	 * @return the shadowed content type or if null there is none
+	 */
+	private String getShadowedContentType(String baseContent) {
+		return contentTypeToShadowMap.get(baseContent);
+	}
+
 	public AbstractContextStructureBridge getStructureBridge(String contentType) {
 		BridgesExtensionPointReader.initExtensions();
 		if (contentType != null) {
+			// find the content type that shadows this one
+			// if one exists.
+			String shadowsContentType = getShadowedContentType(contentType);
+			if (shadowsContentType != null) {
+				AbstractContextStructureBridge bridge = bridges.get(shadowsContentType);
+				if (bridge != null) {
+					return bridge;
+				}
+			}
+
+			// no shadowing of content, look at original content type
 			AbstractContextStructureBridge bridge = bridges.get(contentType);
 			if (bridge != null) {
 				return bridge;
@@ -204,9 +236,21 @@ public class ContextCorePlugin extends Plugin {
 	 */
 	public AbstractContextStructureBridge getStructureBridge(Object object) {
 		BridgesExtensionPointReader.initExtensions();
-		for (AbstractContextStructureBridge structureBridge : bridges.values()) {
-			if (structureBridge.acceptsObject(object)) {
-				return structureBridge;
+
+		for (Map.Entry<String, AbstractContextStructureBridge> entry : bridges.entrySet()) {
+			// check to see if there is shadowing of content types going on.
+			String shadowsContentType = getShadowedContentType(entry.getKey());
+			if (shadowsContentType != null) {
+				AbstractContextStructureBridge structureBridge = bridges.get(shadowsContentType);
+				if (structureBridge.acceptsObject(object)) {
+					return structureBridge;
+				}
+			}
+
+			// no shadowing...look at actual content type
+			AbstractContextStructureBridge bridge = entry.getValue();
+			if (bridge != null && bridge.acceptsObject(object)) {
+				return bridge;
 			}
 		}
 
@@ -299,11 +343,15 @@ public class ContextCorePlugin extends Plugin {
 
 		private static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylyn.context.core.bridges";
 
+		private static final String EXTENSION_ID_INTERNAL_CONTEXT = "org.eclipse.mylyn.context.core.internalBridges";
+
 		private static final String EXTENSION_ID_RELATION_PROVIDERS = "org.eclipse.mylyn.context.core.relationProviders";
 
 		private static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
 
 		private static final String ELEMENT_RELATION_PROVIDER = "provider";
+
+		private static final String ELEMENT_SHADOW = "shadow";
 
 		private static final String ATTR_CLASS = "class";
 
@@ -311,11 +359,16 @@ public class ContextCorePlugin extends Plugin {
 
 		private static final String ATTR_PARENT_CONTENT_TYPE = "parentContentType";
 
+		private static final String ATTR_BASE_CONTENT = "baseContent";
+
+		private static final String ATTR_SHADOWED_BY_CONTENT = "shadowedByContent";
+
 		private static boolean extensionsRead = false;
 
 		public static void initExtensions() {
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
+
 				IExtensionPoint extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (IExtension extension : extensions) {
@@ -323,6 +376,18 @@ public class ContextCorePlugin extends Plugin {
 					for (IConfigurationElement element : elements) {
 						if (element.getName().compareTo(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE) == 0) {
 							readBridge(element);
+						}
+					}
+				}
+
+				// internal bridges
+				extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_INTERNAL_CONTEXT);
+				extensions = extensionPoint.getExtensions();
+				for (IExtension extension : extensions) {
+					IConfigurationElement[] elements = extension.getConfigurationElements();
+					for (IConfigurationElement element : elements) {
+						if (element.getName().compareTo(BridgesExtensionPointReader.ELEMENT_SHADOW) == 0) {
+							readInternalBridge(element);
 						}
 					}
 				}
@@ -363,6 +428,18 @@ public class ContextCorePlugin extends Plugin {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
 						"Could not load bridge extension", e));
 			}
+		}
+
+		private static void readInternalBridge(IConfigurationElement element) {
+			String baseContent = element.getAttribute(ATTR_BASE_CONTENT);
+			String shadowedByContent = element.getAttribute(ATTR_SHADOWED_BY_CONTENT);
+
+			if (baseContent == null || shadowedByContent == null) {
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
+						"Ignoring bridge shadowing because of invalid extension point "
+								+ BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE, new Exception()));
+			}
+			ContextCorePlugin.getDefault().addShadowsContent(baseContent, shadowedByContent);
 		}
 
 		private static void readRelationProvider(IConfigurationElement element) {

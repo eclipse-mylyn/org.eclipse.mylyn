@@ -2,5 +2,6 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="bridges" name="bridges" schema="schema/bridges.exsd"/>
+   <extension-point id="internalBridges" name="Internal Bridges" schema="schema/internalBridges.exsd"/>
    <extension-point id="relationProviders" name="relationProviders" schema="schema/relationProviders.exsd"/>
 </plugin>
