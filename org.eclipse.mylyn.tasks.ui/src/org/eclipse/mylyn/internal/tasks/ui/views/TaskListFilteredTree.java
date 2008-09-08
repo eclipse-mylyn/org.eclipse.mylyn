@@ -220,7 +220,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			return;
 		}
 
-		Set<ITask> tasksThisWeek = TasksUiPlugin.getTaskActivityManager().getScheduledForThisWeek();
+		Set<ITask> tasksThisWeek = TasksUiPlugin.getTaskActivityManager().getScheduledForADayThisWeek();
 
 		totalTasks = tasksThisWeek.size();
 		completeTime = 0;

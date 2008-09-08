@@ -761,8 +761,12 @@ public class TaskActivityManager implements ITaskActivityManager {
 		return false;
 	}
 
-	public Set<ITask> getScheduledForThisWeek() {
-		return getScheduledTasks(TaskActivityUtil.getCurrentWeek());
+	/**
+	 * Note: Returns all task scheduled for a SPECIFIC day this week. Not those in the "This Week" / Someday bin
+	 */
+	public Set<ITask> getScheduledForADayThisWeek() {
+		DateRange current = TaskActivityUtil.getCurrentWeek();
+		return getScheduledTasks(current.getStartDate(), current.getEndDate());
 	}
 
 	public TaskActivationHistory getTaskActivationHistory() {
