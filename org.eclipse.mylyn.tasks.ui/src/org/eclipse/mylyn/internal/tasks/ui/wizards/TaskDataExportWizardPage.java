@@ -135,11 +135,16 @@ public class TaskDataExportWizardPage extends WizardPage {
 	 */
 	private void createExportDirectoryControl(Composite parent) {
 		Group destDirGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		destDirGroup.setText("Export destination folder");
-		destDirGroup.setLayout(new GridLayout(2, false));
+		destDirGroup.setText("Export destination");
+		destDirGroup.setLayout(new GridLayout(3, false));
 		destDirGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		new Label(destDirGroup, SWT.NONE).setText("Export file: " + TaskListBackupManager.getBackupFileName());
-		new Label(destDirGroup, SWT.NONE);
+		new Label(destDirGroup, SWT.NONE).setText("File:");
+		Label l = new Label(destDirGroup, SWT.NONE);
+		l.setText(TaskListBackupManager.getBackupFileName());
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		l.setLayoutData(gd);
+		new Label(destDirGroup, SWT.NONE).setText("Folder:");
 
 		destDirText = new Text(destDirGroup, SWT.BORDER);
 		destDirText.setEditable(false);
@@ -161,6 +166,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 				String dir = destDirText.getText();
 				dialog.setFilterPath(dir);
 				dir = dialog.open();
+				controlChanged();
 				if (dir == null || dir.equals("")) {
 					return;
 				}
@@ -240,15 +246,18 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 	/** Returns true if the information entered by the user is valid */
 	protected boolean validate() {
+		setMessage(null);
 
 		// Check that at least one type of data has been selected
 		if (!taskListCheckBox.getSelection() && !taskActivationHistoryCheckBox.getSelection()
 				&& !taskContextsCheckBox.getSelection()) {
+			setMessage("Please select which task data to export", IStatus.WARNING);
 			return false;
 		}
 
 		// Check that a destination dir has been specified
 		if (destDirText.getText().equals("")) {
+			setMessage("Please choose an export destination", IStatus.WARNING);
 			return false;
 		}
 
