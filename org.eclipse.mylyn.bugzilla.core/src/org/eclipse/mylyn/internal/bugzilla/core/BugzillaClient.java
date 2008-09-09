@@ -102,7 +102,7 @@ public class BugzillaClient {
 
 	private static final String PROCESS_BUG_CGI = "/process_bug.cgi";
 
-	public static final int WRAP_LENGTH = 90;
+	public static final int WRAP_LENGTH = 80;
 
 	private static final String VAL_PROCESS_BUG = "process_bug";
 
@@ -920,7 +920,19 @@ public class BugzillaClient {
 
 		TaskAttribute descAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
 		if (descAttribute != null && !descAttribute.getValue().equals("")) {
-			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, descAttribute.getValue()));
+			String bugzillaVersion = null;
+			if (repositoryConfiguration != null) {
+				bugzillaVersion = repositoryConfiguration.getInstallVersion();
+			} else {
+				bugzillaVersion = "2.18";
+			}
+
+			if (bugzillaVersion.startsWith("2.18")) {
+				fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, formatTextToLineWrap(descAttribute.getValue(),
+						true)));
+			} else {
+				fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, descAttribute.getValue()));
+			}
 		}
 
 		return fields.values().toArray(new NameValuePair[fields.size()]);
@@ -965,6 +977,18 @@ public class BugzillaClient {
 					|| a.getId().equals(BugzillaAttribute.REMOVECC.getKey())
 					|| a.getId().equals(BugzillaAttribute.CREATION_TS.getKey())) {
 				continue;
+			}
+
+			if (a.getId().equals(BugzillaAttribute.NEW_COMMENT.getKey())) {
+				String bugzillaVersion = null;
+				if (repositoryConfiguration != null) {
+					bugzillaVersion = repositoryConfiguration.getInstallVersion();
+				} else {
+					bugzillaVersion = "2.18";
+				}
+				if (bugzillaVersion.startsWith("2.18")) {
+					a.setValue(formatTextToLineWrap(a.getValue(), true));
+				}
 			}
 
 			if (a.getId().equals(BugzillaAttribute.GROUP.getKey()) && a.getValue().length() > 0) {
@@ -1483,6 +1507,38 @@ public class BugzillaClient {
 
 	public void shutdown() {
 		((MultiThreadedHttpConnectionManager) httpClient.getHttpConnectionManager()).shutdown();
+	}
+
+	/**
+	 * Break text up into lines so that it is displayed properly in bugzilla
+	 */
+	public static String formatTextToLineWrap(String origText, boolean hardWrap) {
+		if (!hardWrap) {
+			return origText;
+		} else {
+			String newText = "";
+
+			while (!origText.equals("")) {
+				int newLine = origText.indexOf('\n');
+				if (newLine == -1) {
+					if (origText.length() > WRAP_LENGTH) {
+						int spaceIndex = origText.lastIndexOf(" ", WRAP_LENGTH);
+						if (spaceIndex == -1) {
+							spaceIndex = WRAP_LENGTH;
+						}
+						newText = newText + origText.substring(0, spaceIndex) + "\n";
+						origText = origText.substring(spaceIndex + 1, origText.length());
+					} else {
+						newText = newText + origText;
+						origText = "";
+					}
+				} else {
+					newText = newText + origText.substring(0, newLine + 1);
+					origText = origText.substring(newLine + 1, origText.length());
+				}
+			}
+			return newText;
+		}
 	}
 
 }

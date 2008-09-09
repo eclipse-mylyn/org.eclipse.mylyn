@@ -13,6 +13,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -192,7 +193,10 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Break text up into lines so that it is displayed properly in bugzilla
+	 * 
+	 * @deprecated use {@link BugzillaClient#formatTextToLineWrap(String, boolean)} instead
 	 */
+	@Deprecated
 	public static String formatTextToLineWrap(String origText, boolean hardWrap) {
 		// BugzillaServerVersion bugzillaServerVersion =
 		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
