@@ -81,10 +81,10 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 			return true;
 		} catch (CoreException e) {
 			if (dataFile != null) {
-				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Failed to load "
-						+ dataFile.getName() + ", restoring from snapshot"));
 				File backup = new File(dataFile.getParentFile(), SNAPSHOT_PREFIX + dataFile.getName());
 				if (backup.exists()) {
+					StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Failed to load "
+							+ dataFile.getName() + ", restoring from snapshot", e));
 					load(backup, monitor);
 					return true;
 				}
