@@ -13,8 +13,12 @@ import java.io.File;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 
 /**
  * File based externalization participant
@@ -77,6 +81,8 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 			return true;
 		} catch (CoreException e) {
 			if (dataFile != null) {
+				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Failed to load "
+						+ dataFile.getName() + ", restoring from snapshot"));
 				File backup = new File(dataFile.getParentFile(), SNAPSHOT_PREFIX + dataFile.getName());
 				if (backup.exists()) {
 					load(backup, monitor);
