@@ -2,7 +2,8 @@
 
 if [ $# -eq 0 ]
 then
- echo "usage: upload.sh username"
+ echo "usage: upload.sh username [-extract]"
+ echo "                 local [-force]"
  exit 1
 fi
 
@@ -13,8 +14,7 @@ source $BUILD_ROOT/local.sh
 SITE_ARCHIVE=$BUILD_ROOT/site.zip
 SITE=$BUILD_ROOT/tmp/site
 
-if [ "$2" != "-extract" ]
-then
+pack() {
   rm -r $SITE || true
   rm tmp/site.tar || true
   rm $SITE_ARCHIVE || true
@@ -34,9 +34,19 @@ then
   (cd tmp/site; find -name "*.jar" -or -name "site.xml" | zip -r $SITE_ARCHIVE -@)
 
   tar -C $SITE -cvf tmp/site.tar .
-  scp tmp/site.tar $1@dev.eclipse.org:
-else
-  PARM=-force
-fi
+}
 
-ssh $1@dev.eclipse.org downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER $PARM -weekly
+if [ "$1" == "local" ]
+then
+  pack
+  downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER $2 -weekly
+else
+  if [ "$2" == "-extract" ]
+  then
+    pack
+    scp tmp/site.tar $1@dev.eclipse.org:
+  else
+    PARM=-force
+  fi
+  ssh $1@dev.eclipse.org downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER $PARM -weekly
+fi
