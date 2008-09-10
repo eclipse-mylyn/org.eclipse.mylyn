@@ -39,7 +39,8 @@ pack() {
 if [ "$1" == "local" ]
 then
   pack
-  downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER $2 -weekly
+  cp tmp/site.tar $HOME
+  $HOME/downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER $2 -weekly
 else
   if [ "$2" == "-extract" ]
   then
