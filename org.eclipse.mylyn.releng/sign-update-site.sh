@@ -1,30 +1,46 @@
 #!/bin/bash -e
 
-if [ $# -lt 2 ]
-then
+help() {
   echo "usage: sign-update-site.sh major build"
+  echo "                           local"
   exit 1
+}
+
+if [ $# -eq 0 ]
+then
+ help
 fi
 
-MAJOR=$1
-BUILD=$2
+if [ "$1" == "local" ]
+then
+ BUILD_ROOT=$(cd $(dirname $0); pwd)
+ source $BUILD_ROOT/local.sh
+else
+ if [ $# -lt 2 ]
+ then
+  help
+ fi
 
-SRC=/home/data/httpd/download.eclipse.org/tools/mylyn/update-archive/$MAJOR/$BUILD
+ MAJOR_VERSION=$1
+ QUALIFIER=$2
+fi
+
+SRC=/home/data/httpd/download.eclipse.org/tools/mylyn/update-archive/$MAJOR_VERSION/$QUALIFIER
 DST=/opt/public/download-staging.priv/tools/mylyn
 OUT=$DST/output
-TMP=$DST/tmp/$MAJOR-$BUILD
+TMP=$DST/tmp/$MAJOR_VERSION-$QUALIFIER
 JAVA_HOME=/opt/ibm/java2-ppc-50
 ECLIPSE_HOME=/shared/tools/mylyn/eclipse
 
 unzip() {
  /bin/rm -R $TMP/$1 || true
  /bin/mkdir -p $TMP/$1
- /usr/bin/unzip -d $TMP/$1 $SRC/mylyn-$MAJOR.$BUILD-$1.zip
+ /usr/bin/unzip -d $TMP/$1 $SRC/mylyn-$MAJOR_VERSION.$QUALIFIER-$1.zip
 }
 
 rezip() {
  cd $TMP/$1
- /usr/bin/zip $TMP/mylyn-$MAJOR.$BUILD-$1.zip -r .
+ /usr/bin/zip $TMP/mylyn-$MAJOR_VERSION.$QUALIFIER-$1.zip -r .
 }
 
 pack() {
