@@ -61,6 +61,8 @@ public class TextileLanguage extends MarkupLanguage {
 
 	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
+	private boolean escapingHtml;
+
 	@Override
 	protected PatternBasedSyntax getPhraseModifierSyntax() {
 		return phraseModifierSyntax;
@@ -103,8 +105,8 @@ public class TextileLanguage extends MarkupLanguage {
 	}
 
 	protected void initializePhraseModifiers() {
-		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier());
-		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier());
+		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier(isEscapingHtml()));
+		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier(isEscapingHtml()));
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0);
 		phraseModifierSyntax.add(new EscapeTextilePhraseModifier());
 		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**", SpanType.BOLD));
@@ -122,6 +124,13 @@ public class TextileLanguage extends MarkupLanguage {
 		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
 
 		addPhraseModifierExtensions(phraseModifierSyntax);
+	}
+
+	/**
+	 * Indicate if this language should escape HTML tags. The default is false.
+	 */
+	protected boolean isEscapingHtml() {
+		return false;
 	}
 
 	protected void initializeBlocks() {

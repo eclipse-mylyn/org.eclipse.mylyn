@@ -23,8 +23,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * Extensions to the Textile language include:
  * <ul>
  * <li>Email-style quoted regions, starting with a '&gt;' character</li>
- * <li>All paragraphs are wrapped in &lt;p&gt; tags even if they start with a space character
- * <li>
+ * <li>All paragraphs are wrapped in &lt;p&gt; tags even if they start with a space character</li>
+ * <li>HTML tags are escaped and rendered as literal text</li>
+ * <li>bugzilla-generated text is recognized</li>
  * </ul>
  * 
  * @author David Green
@@ -35,6 +36,11 @@ public class BugzillaTextileLanguage extends TextileLanguage {
 	public BugzillaTextileLanguage() {
 		setExtendsLanguage(getName());
 		setName("Textile (Bugzilla Dialect)");
+	}
+
+	@Override
+	protected boolean isEscapingHtml() {
+		return true;
 	}
 
 	@Override

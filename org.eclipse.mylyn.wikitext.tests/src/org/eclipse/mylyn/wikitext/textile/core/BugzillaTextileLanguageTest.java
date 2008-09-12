@@ -99,4 +99,16 @@ public class BugzillaTextileLanguageTest extends TestCase {
 		System.out.println(html);
 		assertTrue(html.contains("<body><ul><li><ul><li><ul><li>Bug 209610 has been marked as a duplicate of this bug."));
 	}
+
+	public void testXmlEscaping() {
+		String html = parser.parseToHtml("some <start>mark</start> up");
+		System.out.println(html);
+		assertTrue(html.contains("<p>some &lt;start>mark&lt;/start> up</p>"));
+	}
+
+	public void testHtmlEscaping() {
+		String html = parser.parseToHtml("some <span class=\"s\">mark</span> up");
+		System.out.println(html);
+		assertTrue(html.contains("<p>some &lt;span class=\"s\">mark&lt;/span> up</p>"));
+	}
 }

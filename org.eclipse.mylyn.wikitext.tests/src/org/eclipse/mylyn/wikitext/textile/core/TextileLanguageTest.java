@@ -1036,4 +1036,15 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<p>I am crazy about <a href=\"https://textile-j.dev.java.net\">TextileJ</a><br/>and <a href=\"https://textile-j.dev.java.net\">it's</a> <a href=\"https://textile-j.dev.java.net\">all</a> I ever<br/><a href=\"https://textile-j.dev.java.net\">link to</a>!</p><p>[textilej]https://textile-j.dev.java.net</p>"));
 	}
 
+	public void testXmlEscaping() {
+		String html = parser.parseToHtml("some <start>mark</start> up");
+		System.out.println(html);
+		assertTrue(html.contains("<p>some <start>mark</start> up</p>"));
+	}
+
+	public void testHtmlEscaping() {
+		String html = parser.parseToHtml("some <span class=\"s\">mark</span> up");
+		System.out.println(html);
+		assertTrue(html.contains("<p>some <span class=\"s\">mark</span> up</p>"));
+	}
 }

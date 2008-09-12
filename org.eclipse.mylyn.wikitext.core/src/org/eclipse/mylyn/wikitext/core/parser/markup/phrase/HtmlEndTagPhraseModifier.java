@@ -20,6 +20,16 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  */
 public class HtmlEndTagPhraseModifier extends PatternBasedElement {
 
+	private final boolean escaping;
+
+	public HtmlEndTagPhraseModifier() {
+		this(false);
+	}
+
+	public HtmlEndTagPhraseModifier(boolean escaping) {
+		this.escaping = escaping;
+	}
+
 	@Override
 	protected String getPattern(int groupOffset) {
 		return "(</[a-zA-Z][a-zA-Z0-9_:-]*\\s*>)";
@@ -27,7 +37,7 @@ public class HtmlEndTagPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected PatternBasedElementProcessor newProcessor() {
-		return new LiteralPhraseModifierProcessor(false);
+		return new LiteralPhraseModifierProcessor(escaping);
 	}
 
 	@Override
