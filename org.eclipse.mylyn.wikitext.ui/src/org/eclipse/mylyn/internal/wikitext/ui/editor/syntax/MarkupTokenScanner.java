@@ -199,9 +199,9 @@ public class MarkupTokenScanner implements ITokenScanner {
 		if (!tokens.isEmpty()) {
 			Token previous = tokens.get(tokens.size() - 1);
 			if (previous.getOffset() >= newToken.getOffset()) {
-				throw new IllegalStateException("New token starts on or before previous", previous.created);
+				throw new IllegalStateException("New token starts on or before previous");
 			} else if (previous.getOffset() + previous.getLength() > newToken.getOffset()) {
-				throw new IllegalStateException("New token starts before the end of the previous", previous.created);
+				throw new IllegalStateException("New token starts before the end of the previous");
 			}
 		}
 	}
@@ -335,8 +335,6 @@ public class MarkupTokenScanner implements ITokenScanner {
 		private final int length;
 
 		private final FontState fontState;
-
-		private final Exception created = new Exception();
 
 		public Token(FontState fontState, TextAttribute attribute, int offset, int length) {
 			super(attribute);

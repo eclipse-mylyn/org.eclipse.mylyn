@@ -27,6 +27,9 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletDrawingStrategy;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleAnnotation;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleDrawingStrategy;
+import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.swt.widgets.Composite;
 import org.xml.sax.SAXException;
 
@@ -76,9 +79,16 @@ public class HtmlViewer extends SourceViewer {
 
 		};
 		AnnotationPainter painter = new AnnotationPainter(this, annotationAccess);
+		// paint bullets
 		painter.addDrawingStrategy(BulletAnnotation.TYPE, new BulletDrawingStrategy());
 		painter.addAnnotationType(BulletAnnotation.TYPE, BulletAnnotation.TYPE);
 		painter.setAnnotationTypeColor(BulletAnnotation.TYPE, getTextWidget().getForeground());
+		// paint HR
+		painter.addDrawingStrategy(HorizontalRuleAnnotation.TYPE, new HorizontalRuleDrawingStrategy());
+		painter.addAnnotationType(HorizontalRuleAnnotation.TYPE, HorizontalRuleAnnotation.TYPE);
+		painter.setAnnotationTypeColor(HorizontalRuleAnnotation.TYPE, WikiTextUiPlugin.getDefault()
+				.getColorRegistry()
+				.get(WikiTextUiPlugin.COLOR_HR));
 
 		addTextPresentationListener(painter);
 		addPainter(painter);

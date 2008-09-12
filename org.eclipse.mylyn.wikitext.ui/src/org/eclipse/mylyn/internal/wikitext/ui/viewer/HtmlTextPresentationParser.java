@@ -31,6 +31,7 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletAnnotation;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleAnnotation;
 import org.eclipse.mylyn.wikitext.core.util.IgnoreDtdEntityResolver;
 import org.eclipse.mylyn.wikitext.ui.annotation.AnchorHrefAnnotation;
 import org.eclipse.mylyn.wikitext.ui.annotation.AnchorNameAnnotation;
@@ -129,8 +130,8 @@ public class HtmlTextPresentationParser {
 		blockElements.add("dd");
 		blockElements.add("dt");
 
-		whitespaceCollapsingElements.add("hr");
 		whitespaceCollapsingElements.add("br");
+		whitespaceCollapsingElements.add("hr");
 	}
 
 	private static class ElementState {
@@ -443,6 +444,11 @@ public class HtmlTextPresentationParser {
 			}
 		}
 
+		private void emitChar(char c) {
+			out.append(c);
+			lastNewlineOffset = getOffset();
+		}
+
 		private void emitChars(ElementState elementState, char[] chars) {
 			int indentLevel = elementState.indentLevel;
 
@@ -551,6 +557,10 @@ public class HtmlTextPresentationParser {
 			}
 
 			ElementState lastChild = state.pop();
+
+			if (localName.equals("hr")) {
+				emitChar('\n');
+			}
 
 			if (!state.isEmpty()) {
 				elementState = state.peek();
@@ -664,6 +674,8 @@ public class HtmlTextPresentationParser {
 						emitChars(state.peek(), "\n\n".toCharArray());
 					}
 				}
+			} else if ("hr".equals(localName)) {
+				elementState.addAnnotation(new HorizontalRuleAnnotation());
 			}
 		}
 
