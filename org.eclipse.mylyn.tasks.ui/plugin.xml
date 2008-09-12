@@ -1022,7 +1022,7 @@
              id="org.eclipse.mylyn.tasks.ui.command.addTaskRepository"
              name="Add Task Repository">
           <commandParameter
-                id="org.eclipse.mylyn.tasks.ui.command.taskRepositoryId"
+                id="connectorKind"
                 name="Repository Type"
                 optional="true"
                 values="org.eclipse.mylyn.internal.tasks.ui.commands.TaskRepositoryParameterValues">

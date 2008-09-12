@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Willian Mitsuda - initial API and implementation
  *     Tasktop Technologies - improvements
+ *     Peter Stibrany - fix for parameter name (bug 247077)
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
@@ -32,8 +33,8 @@ public class AddTaskRepositoryHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Shell shell = HandlerUtil.getActiveShell(event);
 		if (shell != null && !shell.isDisposed()) {
-			String param = event.getParameter("org.eclipse.mylyn.tasks.command.taskRepositoryId");
-			NewRepositoryWizard repositoryWizard = new NewRepositoryWizard(param);
+			String connectorKind = event.getParameter("connectorKind");
+			NewRepositoryWizard repositoryWizard = new NewRepositoryWizard(connectorKind);
 
 			WizardDialog repositoryDialog = new WizardDialog(shell, repositoryWizard);
 			repositoryDialog.create();
