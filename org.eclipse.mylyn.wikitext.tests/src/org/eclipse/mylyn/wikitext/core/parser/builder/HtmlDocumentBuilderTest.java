@@ -11,10 +11,16 @@
 package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
@@ -38,12 +44,34 @@ public class HtmlDocumentBuilderTest extends TestCase {
 
 	private HtmlDocumentBuilder builder;
 
+	private final Map<File, URL> fileToUrl = new HashMap<File, URL>();
+
 	@Override
 	public void setUp() {
 		parser = new MarkupParser();
 		parser.setMarkupLanaguage(new TextileLanguage());
 		out = new StringWriter();
-		builder = new HtmlDocumentBuilder(out);
+		builder = new HtmlDocumentBuilder(out) {
+			@Override
+			protected void checkFileReadable(File file) {
+				if (!fileToUrl.containsKey(file)) {
+					super.checkFileReadable(file);
+				}
+			}
+
+			@Override
+			protected Reader getReader(File inputFile) throws FileNotFoundException {
+				URL url = fileToUrl.get(inputFile);
+				if (url != null) {
+					try {
+						return new InputStreamReader(url.openStream());
+					} catch (IOException e) {
+						throw new FileNotFoundException(String.format("%s (%s)", inputFile, url));
+					}
+				}
+				return super.getReader(inputFile);
+			}
+		};
 		parser.setBuilder(builder);
 	}
 
@@ -111,6 +139,9 @@ public class HtmlDocumentBuilderTest extends TestCase {
 	public void testCssStylesheetEmbedded() throws Exception {
 		URL cssResource = HtmlDocumentBuilderTest.class.getResource("resources/test.css");
 		File cssFile = new File(cssResource.toURI().getPath());
+
+		fileToUrl.put(cssFile, cssResource);
+
 		System.out.println("loading css: " + cssFile);
 
 		builder.addCssStylesheet(cssFile);

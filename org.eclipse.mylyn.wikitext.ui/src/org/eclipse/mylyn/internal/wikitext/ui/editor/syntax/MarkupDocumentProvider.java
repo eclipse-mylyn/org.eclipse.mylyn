@@ -65,7 +65,7 @@ public class MarkupDocumentProvider extends FileDocumentProvider {
 	 * This can be confusing for the user as line markers affect how the markup is interpreted. Generally we want the
 	 * edited markup to render the same on all platforms, regardless of the platform-standard EOL marker.
 	 */
-	protected static void cleanUpEolMarkers(IDocument document) {
+	public static void cleanUpEolMarkers(IDocument document) {
 		String platformEolMarker = Text.DELIMITER;
 		document.set(Pattern.compile("(\r\n|\n|\r)").matcher(document.get()).replaceAll(platformEolMarker));
 	}

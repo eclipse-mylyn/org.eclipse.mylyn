@@ -36,7 +36,7 @@ public class EntityWrappingReplacementToken extends PatternBasedElement {
 	}
 
 	@Override
-	protected String getPattern(int groupOffset) {
+	public String getPattern(int groupOffset) {
 		String quoted = Character.isLetterOrDigit(delimiter.charAt(0)) ? delimiter : "\\" + delimiter;
 		return "(?:(?:(?<=\\W)|^)" + quoted + "([^" + quoted + "]+)" + quoted + "(?=\\W))";
 	}

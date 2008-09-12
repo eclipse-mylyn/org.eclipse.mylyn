@@ -32,6 +32,7 @@ public class TextileLanguageTest extends TestCase {
 
 	private MarkupParser parser;
 
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		initParser();
@@ -991,21 +992,6 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("first\n \nsecond");
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>first</p><p>second</p></body>"));
-	}
-
-	/**
-	 * Test for a bug that only occurs when using a Java 5 VM (Java 6 fixes this bug)
-	 */
-	public void testBug20() throws Exception {
-		String vmVersion = System.getProperty("java.vm.version");
-		if (!vmVersion.startsWith("1.5")) {
-			System.out.println("WARNING: this test is only meaningful on Java 1.5 VM (found " + vmVersion + ")");
-		}
-		String s = "'s into ";
-		TextileLanguage textileDialect = new TextileLanguage();
-		System.out.println("Pattern: " + textileDialect.getReplacementTokenSyntax().getPattern());
-		System.out.println("Looking in: '" + s + "' (quotes not included)");
-		textileDialect.getReplacementTokenSyntax().findPatternBasedElement(s, 0);
 	}
 
 	public void testBug50XHTMLCompliance() throws Exception {

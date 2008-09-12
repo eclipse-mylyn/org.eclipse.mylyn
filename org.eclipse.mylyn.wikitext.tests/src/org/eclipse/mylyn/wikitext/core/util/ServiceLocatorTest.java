@@ -16,7 +16,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- * 
+ * Tests for {@link ServiceLocator}
  * 
  * @author David Green
  */
@@ -48,4 +48,5 @@ public class ServiceLocatorTest extends TestCase {
 		MarkupLanguage markupLanguage = locator.getMarkupLanguage(TextileLanguage.class.getName());
 		assertNotNull(markupLanguage);
 	}
+
 }

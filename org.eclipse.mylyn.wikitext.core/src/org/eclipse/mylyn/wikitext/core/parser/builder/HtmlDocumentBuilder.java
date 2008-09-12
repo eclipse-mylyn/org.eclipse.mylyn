@@ -12,6 +12,7 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -316,6 +317,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (file == null) {
 			throw new IllegalArgumentException();
 		}
+		checkFileReadable(file);
+		addStylesheet(new Stylesheet(file));
+	}
+
+	protected void checkFileReadable(File file) {
 		if (!file.exists()) {
 			throw new IllegalArgumentException(String.format("File does not exist: %s", file));
 		}
@@ -325,7 +331,6 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (!file.canRead()) {
 			throw new IllegalArgumentException(String.format("File cannot be read: %s", file));
 		}
-		addStylesheet(new Stylesheet(file));
 	}
 
 	/**
@@ -886,13 +891,13 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 	}
 
-	private static String readFully(File inputFile) throws IOException {
+	private String readFully(File inputFile) throws IOException {
 		int length = (int) inputFile.length();
 		if (length <= 0) {
 			length = 2048;
 		}
 		StringBuilder buf = new StringBuilder(length);
-		Reader reader = new BufferedReader(new FileReader(inputFile));
+		Reader reader = new BufferedReader(getReader(inputFile));
 		try {
 			int c;
 			while ((c = reader.read()) != -1) {
@@ -902,6 +907,10 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			reader.close();
 		}
 		return buf.toString();
+	}
+
+	protected Reader getReader(File inputFile) throws FileNotFoundException {
+		return new FileReader(inputFile);
 	}
 
 }

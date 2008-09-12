@@ -204,7 +204,7 @@ public class CssStyleManager {
 	/**
 	 * For testing purposes only
 	 */
-	CssStyleManager() {
+	public CssStyleManager() {
 		defaultFont = null;
 	}
 
@@ -432,12 +432,20 @@ public class CssStyleManager {
 		fontState.size = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, fontState.size));
 	}
 
-	Integer cssColorRgb(String ruleValue) {
-		Integer rgb = colorToRgb.get(ruleValue.toLowerCase());
+	/**
+	 * get the RGB value for a color name or any other valid CSS expression of a color value.
+	 * 
+	 * @param cssColor
+	 *            the css color
+	 * 
+	 * @return the RGB value or null if it cannot be determined.
+	 */
+	public Integer cssColorRgb(String cssColor) {
+		Integer rgb = colorToRgb.get(cssColor.toLowerCase());
 		if (rgb == null) {
 			try {
-				if (ruleValue.startsWith("#")) {
-					String rgbNumeric = ruleValue.substring(1);
+				if (cssColor.startsWith("#")) {
+					String rgbNumeric = cssColor.substring(1);
 					if (rgbNumeric.length() == 3) {
 						String firstDigit = rgbNumeric.substring(0, 1);
 						String secondDigit = rgbNumeric.substring(1, 2);
@@ -446,7 +454,7 @@ public class CssStyleManager {
 					}
 					rgb = Integer.parseInt(rgbNumeric, 16);
 				} else {
-					Matcher rgbMatcher = rgbPattern.matcher(ruleValue);
+					Matcher rgbMatcher = rgbPattern.matcher(cssColor);
 					if (rgbMatcher.matches()) {
 						String r = rgbMatcher.group(1);
 						String g = rgbMatcher.group(2);
