@@ -9,7 +9,7 @@
             name="%taskEditorExtension.name.0">
       </taskEditorExtension>
       <repositoryAssociation
-            repository="jira"
+            connectorKind="jira"
             taskEditorExtension="org.eclipse.mylyn.wikitext.confluence.ui.taskEditorExtension">
       </repositoryAssociation>
    </extension>

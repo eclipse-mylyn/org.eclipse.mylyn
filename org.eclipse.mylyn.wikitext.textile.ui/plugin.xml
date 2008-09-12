@@ -68,11 +68,11 @@
             name="%taskEditorExtension.name.1">
       </taskEditorExtension>
       <repositoryAssociation
-            repository="bugzilla"
+            connectorKind="bugzilla"
             taskEditorExtension="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtensionBugzilla">
       </repositoryAssociation>
       <repositoryAssociation
-            repository="local"
+            connectorKind="local"
             taskEditorExtension="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtension">
       </repositoryAssociation>
    </extension>
