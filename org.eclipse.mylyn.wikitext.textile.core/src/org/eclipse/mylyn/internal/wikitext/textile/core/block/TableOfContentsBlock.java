@@ -97,6 +97,7 @@ public class TableOfContentsBlock extends Block {
 	public boolean canStart(String line, int lineOffset) {
 		if (lineOffset == 0 && !getMarkupLanguage().isFilterGenerativeContents()) {
 			matcher = startPattern.matcher(line);
+			blockLineNumber = 0;
 			return matcher.matches();
 		} else {
 			matcher = null;

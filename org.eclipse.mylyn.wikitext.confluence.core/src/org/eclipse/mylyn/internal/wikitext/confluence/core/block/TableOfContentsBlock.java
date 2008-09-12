@@ -77,6 +77,7 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 	public boolean canStart(String line, int lineOffset) {
 		style = "none";
 		maxLevel = Integer.MAX_VALUE;
+		blockLineNumber = 0;
 
 		if (lineOffset == 0) {
 			matcher = startPattern.matcher(line);
