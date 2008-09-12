@@ -1,10 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.java.tests.xml;
 
 import java.io.IOException;
@@ -30,15 +34,14 @@ import org.eclipse.mylyn.java.tests.search.ActiveSearchNotifier;
 import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;
 import org.eclipse.mylyn.java.tests.search.WorkspaceSetupHelper;
 
-/*
- * TEST CASES TO HANDLE 1. all dos - with and without results TODO - in both the
- * plugin.xml and the build.xml 2. different type of xml file with and without
- * reference - shouldn't have result
+/**
+ * TEST CASES TO HANDLE 1. all dos - with and without results TODO - in both the plugin.xml and the build.xml 2.
+ * different type of xml file with and without reference - shouldn't have result
  * 
- * DEGREE OF SEPARATIONS 1 xml landmark files 2 projects of any landmark 3
- * workspace 4 workspace 5 NONE
+ * DEGREE OF SEPARATIONS 1 xml landmark files 2 projects of any landmark 3 workspace 4 workspace 5 NONE
+ * 
+ * @author Shawn Minto
  */
-
 public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 	private IType type1;
@@ -83,8 +86,7 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 	@Override
 	protected void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
-		ContextCore.getContextManager()
-				.deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
+		ContextCore.getContextManager().deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
 		assertFalse(ContextCore.getContextManager().isContextActive());
 	}
 

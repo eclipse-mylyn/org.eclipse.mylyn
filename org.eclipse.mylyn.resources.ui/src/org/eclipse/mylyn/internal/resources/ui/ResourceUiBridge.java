@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.resources.ui;
@@ -39,8 +42,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public void open(IInteractionElement element) {
-		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-				element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
 		if (bridge == null) {
 			return;
 		} else {
@@ -76,8 +78,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public void close(IInteractionElement element) {
-		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-				element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IFile) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -120,8 +121,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 		Object adapter = input.getAdapter(IResource.class);
 		if (adapter instanceof IFile) {
 			IFile javaElement = (IFile) adapter;
-			String handle = ContextCore.getStructureBridge(javaElement).getHandleIdentifier(
-					javaElement);
+			String handle = ContextCore.getStructureBridge(javaElement).getHandleIdentifier(javaElement);
 			return ContextCore.getContextManager().getElement(handle);
 		} else {
 			return null;

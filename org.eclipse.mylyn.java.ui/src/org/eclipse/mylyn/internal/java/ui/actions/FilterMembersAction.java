@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.java.ui.actions;
@@ -18,6 +21,9 @@ import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
+/**
+ * @author Mik Kersten
+ */
 public class FilterMembersAction extends Action implements IViewActionDelegate {
 
 	public static final String PREF_ID = "org.eclipse.mylyn.java.ui.explorer.filter.members";

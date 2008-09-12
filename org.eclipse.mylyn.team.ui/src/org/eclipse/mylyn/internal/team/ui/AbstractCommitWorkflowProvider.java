@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.team.ui;
@@ -26,7 +29,7 @@ public class AbstractCommitWorkflowProvider {
 	 * 
 	 * @param resources
 	 * @return <code>true</code> if the team provider manages at least one of the resources or <code>false</code>
-	 * 	otherwise.
+	 *         otherwise.
 	 */
 	public boolean hasOutgoingChanges(IResource[] resources) {
 		return false;
@@ -38,7 +41,7 @@ public class AbstractCommitWorkflowProvider {
 	 * resources from projects that are not managed by your provider or not managed at all.
 	 * 
 	 * @param resources
-	 * 		Set of resources that need to be committed
+	 *            Set of resources that need to be committed
 	 */
 	public void commit(IResource[] resources) {
 	}

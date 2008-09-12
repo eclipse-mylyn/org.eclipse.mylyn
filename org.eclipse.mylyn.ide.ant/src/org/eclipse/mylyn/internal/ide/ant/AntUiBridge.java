@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Apr 6, 2005
- */
+
 package org.eclipse.mylyn.internal.ide.ant;
 
 import java.lang.reflect.Method;
@@ -46,8 +47,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public class AntUiBridge extends AbstractContextUiBridge {
 
 	/**
-	 * @see
-	 * 	org.eclipse.mylyn.context.ui.AbstractContextUiBridge#open(org.eclipse.mylyn.context.core.IInteractionElement)
+	 * @see org.eclipse.mylyn.context.ui.AbstractContextUiBridge#open(org.eclipse.mylyn.context.core.IInteractionElement)
 	 */
 	@Override
 	public void open(IInteractionElement node) {
@@ -107,9 +107,9 @@ public class AntUiBridge extends AbstractContextUiBridge {
 	 * Open a file in the appropriate editor
 	 * 
 	 * @param file
-	 * 		The IFile to open
+	 *            The IFile to open
 	 * @param activate
-	 * 		Whether to activate the editor or not
+	 *            Whether to activate the editor or not
 	 * @return The IEditorPart that the file opened in
 	 * @throws PartInitException
 	 */

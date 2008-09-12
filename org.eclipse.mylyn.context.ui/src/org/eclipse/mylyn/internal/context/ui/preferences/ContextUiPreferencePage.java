@@ -1,14 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
-/*
- * Created on Feb 13, 2005
  *
- */
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.mylyn.internal.context.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
@@ -92,7 +92,8 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 //		getPreferenceStore().setValue(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION,
 //				exclusionFieldEditor.getStringValue());
 
-		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS, manageEditorsButton.getSelection());
+		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS,
+				manageEditorsButton.getSelection());
 		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES,
 				managePerspectivesButton.getSelection());
 		getPreferenceStore().setValue(IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION,
@@ -173,7 +174,8 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 
 		manageEditorsButton = new Button(groupEditors, SWT.CHECK);
 		manageEditorsButton.setText("Manage open editors to match task context");
-		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
+		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(
+				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
 
 		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {

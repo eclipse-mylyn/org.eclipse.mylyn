@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.java.ui.junit;
@@ -71,11 +74,8 @@ public class InteractionContextTestUtil {
 
 	public static Set<IType> getTestCasesInContext() {
 		Set<IType> testTypes = new HashSet<IType>();
-		List<IInteractionElement> interesting = ContextCore.getContextManager()
-				.getActiveContext()
-				.getInteresting();
-		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(
-				JavaStructureBridge.CONTENT_TYPE);
+		List<IInteractionElement> interesting = ContextCore.getContextManager().getActiveContext().getInteresting();
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
 		try {
 			for (IInteractionElement element : interesting) {
 				if (element.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
