@@ -12,6 +12,7 @@ package org.eclipse.mylyn.wikitext.core.parser.outline;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.HeadingAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.IdGenerator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -69,12 +70,16 @@ public class OutlineParser {
 
 		markupLanguage.setFilterGenerativeContents(true);
 		markupLanguage.setBlocksOnly(true);
-
-		OutlineBuilder outlineBuilder = (OutlineBuilder) createOutlineUpdater(root);
-		MarkupParser markupParser = new MarkupParser();
-		markupParser.setBuilder(outlineBuilder);
-		markupParser.setMarkupLanaguage(markupLanguage);
-		markupParser.parse(markup);
+		try {
+			OutlineBuilder outlineBuilder = (OutlineBuilder) createOutlineUpdater(root);
+			MarkupParser markupParser = new MarkupParser();
+			markupParser.setBuilder(outlineBuilder);
+			markupParser.setMarkupLanaguage(markupLanguage);
+			markupParser.parse(markup);
+		} finally {
+			markupLanguage.setFilterGenerativeContents(false);
+			markupLanguage.setBlocksOnly(false);
+		}
 
 		return root;
 	}
@@ -106,6 +111,8 @@ public class OutlineParser {
 
 		private final int labelMaxLength;
 
+		private Attributes attributes;
+
 		public OutlineBuilder(OutlineItem root, int labelMaxLength) {
 			super();
 			this.currentItem = root;
@@ -130,6 +137,7 @@ public class OutlineParser {
 		@Override
 		public void beginHeading(int level, Attributes attributes) {
 			this.level = level;
+			this.attributes = attributes;
 			buf = new StringBuilder();
 			offset = getLocator().getDocumentOffset();
 			length = getLocator().getLineLength();
@@ -163,28 +171,37 @@ public class OutlineParser {
 
 		@Override
 		public void endHeading() {
-			String label = buf.toString();
-			String fullLabelText = label;
-			if (label == null) {
-				label = "";
-			} else {
-				if (labelMaxLength > 0 && label.length() > labelMaxLength) {
-					label = label.substring(0, labelMaxLength) + "...";
+			boolean includeInToc = true;
+			if (attributes instanceof HeadingAttributes) {
+				HeadingAttributes headingAttributes = (HeadingAttributes) attributes;
+				if (headingAttributes.isOmitFromTableOfContents()) {
+					includeInToc = false;
 				}
 			}
-			String kind = "h" + level;
+			if (includeInToc) {
+				String label = buf.toString();
+				String fullLabelText = label;
+				if (label == null) {
+					label = "";
+				} else {
+					if (labelMaxLength > 0 && label.length() > labelMaxLength) {
+						label = label.substring(0, labelMaxLength) + "...";
+					}
+				}
+				String kind = "h" + level;
 
-			while (level <= currentItem.getLevel()) {
-				currentItem = currentItem.getParent();
+				while (level <= currentItem.getLevel()) {
+					currentItem = currentItem.getParent();
+				}
+				currentItem = createOutlineItem(currentItem, level, idGenerator.newId(kind, fullLabelText), offset,
+						length, label);
+				currentItem.setTooltip(fullLabelText);
+				currentItem.setKind(kind);
 			}
-			currentItem = createOutlineItem(currentItem, level, idGenerator.newId(kind, fullLabelText), offset, length,
-					label);
-			currentItem.setTooltip(fullLabelText);
-			currentItem.setKind(kind);
-
 			buf = null;
 			offset = 0;
 			length = 0;
+			attributes = null;
 		}
 
 		@Override

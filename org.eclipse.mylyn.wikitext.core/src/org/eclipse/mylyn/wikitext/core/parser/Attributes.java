@@ -8,13 +8,14 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-/**
- * 
- */
+
 package org.eclipse.mylyn.wikitext.core.parser;
 
 /**
- * Attributes for a markup element
+ * Attributes for a markup element. Note that though there are many specialized subclasses of this class, they are
+ * optional.
+ * 
+ * @see DocumentBuilder
  * 
  * @author David Green
  */
