@@ -31,7 +31,6 @@ import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletAnnotation
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletDrawingStrategy;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleDrawingStrategy;
-import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.swt.widgets.Composite;
 import org.xml.sax.SAXException;
 
@@ -91,7 +90,7 @@ public class HtmlViewer extends SourceViewer {
 		// paint HR
 		painter.addDrawingStrategy(HorizontalRuleAnnotation.TYPE, new HorizontalRuleDrawingStrategy());
 		painter.addAnnotationType(HorizontalRuleAnnotation.TYPE, HorizontalRuleAnnotation.TYPE);
-		painter.setAnnotationTypeColor(HorizontalRuleAnnotation.TYPE, colorRegistry.get(WikiTextUiPlugin.COLOR_HR));
+		painter.setAnnotationTypeColor(HorizontalRuleAnnotation.TYPE, colorRegistry.get(WikiTextUiResources.COLOR_HR));
 
 		addTextPresentationListener(painter);
 		addPainter(painter);

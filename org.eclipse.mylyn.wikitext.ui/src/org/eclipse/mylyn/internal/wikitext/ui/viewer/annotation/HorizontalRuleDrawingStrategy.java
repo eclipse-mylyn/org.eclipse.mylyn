@@ -2,7 +2,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation;
 
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationPainter.IDrawingStrategy;
-import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
+import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
@@ -14,7 +14,7 @@ public class HorizontalRuleDrawingStrategy implements IDrawingStrategy {
 	private final Color shadowForeground;
 
 	public HorizontalRuleDrawingStrategy() {
-		shadowForeground = WikiTextUiPlugin.getDefault().getColorRegistry().get(WikiTextUiPlugin.COLOR_HR_SHADOW);
+		shadowForeground = WikiTextUiResources.getColors().get(WikiTextUiResources.COLOR_HR_SHADOW);
 	}
 
 	public void draw(Annotation annotation, GC gc, StyledText textWidget, int offset, int length, Color color) {

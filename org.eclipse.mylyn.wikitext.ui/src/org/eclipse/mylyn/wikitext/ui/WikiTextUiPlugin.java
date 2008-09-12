@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.MarkupTemplateCompletionProcessor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.Templates;
@@ -33,7 +32,6 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.help.HelpContent;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
@@ -47,10 +45,6 @@ import org.osgi.framework.BundleContext;
  * @author David Green
  */
 public class WikiTextUiPlugin extends AbstractUIPlugin {
-
-	public static final String COLOR_HR = "HR";
-
-	public static final String COLOR_HR_SHADOW = "HR_SHADOW";
 
 	private static final String EXTENSION_POINT_CHEAT_SHEET = "cheatSheet";
 
@@ -66,12 +60,8 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 
 	private Map<String, Templates> templates;
 
-	private final ColorRegistry colorRegistry = new ColorRegistry();
-
 	public WikiTextUiPlugin() {
 		plugin = this;
-		colorRegistry.put(COLOR_HR, new RGB(132, 132, 132));
-		colorRegistry.put(COLOR_HR_SHADOW, new RGB(206, 206, 206));
 	}
 
 	@Override
@@ -92,10 +82,6 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 	 */
 	public static WikiTextUiPlugin getDefault() {
 		return plugin;
-	}
-
-	public ColorRegistry getColorRegistry() {
-		return colorRegistry;
 	}
 
 	public void log(Throwable ce) {
