@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -17,9 +20,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 
 /**
  * @author Rob Elves
@@ -47,10 +50,14 @@ public class TaskListBackupManagerTest extends TestCase {
 		TaskListBackupManager backupManager = TasksUiPlugin.getBackupManager();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.BACKUP_LAST, 0f);
-		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore().getLong(ITasksUiPreferenceConstants.BACKUP_LAST));
+		assertEquals(0, TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getLong(ITasksUiPreferenceConstants.BACKUP_LAST));
 		backupManager.start(5);
 		Thread.sleep(3000);
-		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore().getLong(ITasksUiPreferenceConstants.BACKUP_LAST));
+		assertEquals(0, TasksUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getLong(ITasksUiPreferenceConstants.BACKUP_LAST));
 	}
 
 	public void testAutoBackupEnabled() throws InterruptedException, InvocationTargetException, IOException {

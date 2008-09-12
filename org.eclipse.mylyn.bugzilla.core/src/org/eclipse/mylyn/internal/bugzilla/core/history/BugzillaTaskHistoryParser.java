@@ -1,10 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     John Anvik - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
@@ -123,9 +127,9 @@ public class BugzillaTaskHistoryParser {
 	 * Parse the events that have happened to the bug
 	 * 
 	 * @param tokenizer
-	 * 		the token stream
+	 *            the token stream
 	 * @param activity
-	 * 		the activity object to store the events in
+	 *            the activity object to store the events in
 	 * @return
 	 */
 	private void parseActivity(HtmlStreamTokenizer tokenizer, TaskHistory activity) throws IOException, ParseException {
@@ -150,9 +154,9 @@ public class BugzillaTaskHistoryParser {
 	 * Parse an activity entry
 	 * 
 	 * @param tokenizer
-	 * 		the stream of tokens
+	 *            the stream of tokens
 	 * @param activity
-	 * 		the activity object to store events in
+	 *            the activity object to store events in
 	 */
 	private void parseEvent(HtmlStreamTokenizer tokenizer, TaskHistory activity) {
 

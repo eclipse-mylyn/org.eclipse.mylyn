@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests;
@@ -15,8 +18,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.bugzilla.deprecated.BugzillaAttributeFactory;
 import org.eclipse.mylyn.bugzilla.deprecated.BugzillaTask;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
@@ -26,7 +29,6 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-
 
 /**
  * @author Mik Kersten
@@ -74,8 +76,8 @@ public class BugzillaTaskTest extends TestCase {
 		connector.updateTaskFromTaskData(new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "http://eclipse.org"),
 				task, taskData);
 		assertNotNull(task.getCompletionDate());
-		assertEquals(taskData.getAttributeFactory().getDateForAttributeType(
-				BugzillaAttribute.BUG_WHEN.getKey(), nowTimeStamp), task.getCompletionDate());
+		assertEquals(taskData.getAttributeFactory().getDateForAttributeType(BugzillaAttribute.BUG_WHEN.getKey(),
+				nowTimeStamp), task.getCompletionDate());
 
 	}
 

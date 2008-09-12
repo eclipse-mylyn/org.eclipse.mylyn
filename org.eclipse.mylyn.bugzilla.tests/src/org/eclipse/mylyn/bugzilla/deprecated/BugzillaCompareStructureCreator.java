@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.deprecated;
@@ -17,6 +20,8 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
  * object available as a hierarchical structure of <code>IStructureComparator</code>s.
  * <p>
  * It is used when comparing a modified bug report to the one on the corresponding server.
+ * 
+ * @author Rob Elves
  */
 public class BugzillaCompareStructureCreator implements IStructureCreator {
 
@@ -60,9 +65,9 @@ public class BugzillaCompareStructureCreator implements IStructureCreator {
 	 * <code>AssertionFailedException</code> since we cannot update a bug report object.
 	 * 
 	 * @param structure
-	 * 		the node for which to save the new content
+	 *            the node for which to save the new content
 	 * @param input
-	 * 		the object from which the structure tree was created in <code>getStructure</code>
+	 *            the object from which the structure tree was created in <code>getStructure</code>
 	 */
 	public void save(IStructureComparator node, Object input) {
 		// ignore

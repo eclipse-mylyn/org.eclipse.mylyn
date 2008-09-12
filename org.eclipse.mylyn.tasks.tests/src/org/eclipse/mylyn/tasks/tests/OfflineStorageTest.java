@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -37,6 +40,7 @@ public class OfflineStorageTest extends TestCase {
 
 	OfflineFileStorage storage;
 
+	@Override
 	protected void setUp() throws Exception {
 		//dataDir = new File("c:/offline");
 		dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory() + "/offline");
@@ -45,6 +49,7 @@ public class OfflineStorageTest extends TestCase {
 		super.setUp();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		storage.stop();
 		removeTestFiles(dataDir);

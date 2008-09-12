@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Xiaoyang Guan - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.trac.core.client;
@@ -29,7 +32,8 @@ public interface ITracWikiClient {
 	 * 
 	 * @param sourceText
 	 *            wiki source text
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return The HTML-formatted string of the wiki text
 	 * @throws TracException
 	 *             thrown in case of a connection error
@@ -38,7 +42,9 @@ public interface ITracWikiClient {
 
 	/**
 	 * Validates the Trac XML-RPC WikiRPC API version of the repository
-	 * @param monitor TODO
+	 * 
+	 * @param monitor
+	 *            TODO
 	 * 
 	 * @throws TracException
 	 */
@@ -46,7 +52,9 @@ public interface ITracWikiClient {
 
 	/**
 	 * Gets the list of the names of all pages from the repository
-	 * @param monitor TODO
+	 * 
+	 * @param monitor
+	 *            TODO
 	 * 
 	 * @return The array of the names of all Wiki pages
 	 * @throws TracException
@@ -58,7 +66,8 @@ public interface ITracWikiClient {
 	 * 
 	 * @param pageName
 	 *            the name of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return the Wiki page at the latest version
 	 * @throws TracException
 	 */
@@ -71,7 +80,8 @@ public interface ITracWikiClient {
 	 *            the name of the Wiki page
 	 * @param version
 	 *            the version of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return the Wiki page at the specified version
 	 * @throws TracException
 	 */
@@ -82,7 +92,8 @@ public interface ITracWikiClient {
 	 * 
 	 * @param pageName
 	 *            the name of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return The information about the page at the latest version
 	 * @throws TracException
 	 */
@@ -95,29 +106,34 @@ public interface ITracWikiClient {
 	 *            the name of the Wiki page
 	 * @param version
 	 *            the version of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return The information about the page at the specified version
 	 * @throws TracException
 	 */
-	public TracWikiPageInfo getWikiPageInfo(String pageName, int version, IProgressMonitor monitor) throws TracException;
+	public TracWikiPageInfo getWikiPageInfo(String pageName, int version, IProgressMonitor monitor)
+			throws TracException;
 
 	/**
 	 * Gets the information about all versions of a Wiki page from the repository
 	 * 
 	 * @param pageName
 	 *            the name of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return array of TracWikiPageInfo that contains the information about all versions of the page
 	 * @throws TracException
 	 */
-	public TracWikiPageInfo[] getWikiPageInfoAllVersions(String pageName, IProgressMonitor monitor) throws TracException;
+	public TracWikiPageInfo[] getWikiPageInfoAllVersions(String pageName, IProgressMonitor monitor)
+			throws TracException;
 
 	/**
 	 * Gets the raw Wiki text of the latest version of a Wiki page from the repository
 	 * 
 	 * @param pageName
 	 *            the name of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return the raw Wiki text of the page, latest version
 	 * @throws TracException
 	 */
@@ -130,7 +146,8 @@ public interface ITracWikiClient {
 	 *            the name of the Wiki page
 	 * @param version
 	 *            the version of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return the raw Wiki text of the page, specified version
 	 * @throws TracException
 	 */
@@ -141,7 +158,8 @@ public interface ITracWikiClient {
 	 * 
 	 * @param pageName
 	 *            the name of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return the rendered HTML of the page, latest version
 	 * @throws TracException
 	 */
@@ -154,7 +172,8 @@ public interface ITracWikiClient {
 	 *            the name of the Wiki page
 	 * @param version
 	 *            the version of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return the rendered HTML of the page, specified version
 	 * @throws TracException
 	 */
@@ -165,7 +184,8 @@ public interface ITracWikiClient {
 	 * 
 	 * @param since
 	 *            the date from which the changes to the Wiki pages should be retrieved
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return array of TracWikiPageInfo that contains the information about the modified pages
 	 * @throws TracException
 	 */
@@ -182,21 +202,24 @@ public interface ITracWikiClient {
 	 *            a Map used to set any Wiki-specific things, which the server can freely ignore or incorporate.
 	 *            Standard names are:
 	 *            <ul>
-	 *            <li> comment (String): A comment for the page.
-	 *            <li> minoredit (Boolean): This was a minor edit only.
+	 *            <li>comment (String): A comment for the page.
+	 *            <li>minoredit (Boolean): This was a minor edit only.
 	 *            </ul>
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return <code>true</code> if successful
 	 * @throws TracException
 	 */
-	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes, IProgressMonitor monitor) throws TracException;
+	public boolean putWikipage(String pageName, String content, Map<String, Object> attributes, IProgressMonitor monitor)
+			throws TracException;
 
 	/**
 	 * Gets the list of the names of attachments on a given Wiki page from the repository
 	 * 
 	 * @param pageName
 	 *            the name of the Wiki page
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return an array of the names of attachments on the given page. Returns an empty array if the page has no
 	 *         attachment or the page does not exist.
 	 * @throws TracException
@@ -210,11 +233,13 @@ public interface ITracWikiClient {
 	 *            the name of the Wiki page
 	 * @param fileName
 	 *            the name of the attachment file
-	 * @param monitor TODO
+	 * @param monitor
+	 *            TODO
 	 * @return An InputStream of the content of the attachment
 	 * @throws TracException
 	 */
-	public InputStream getWikiPageAttachmentData(String pageName, String fileName, IProgressMonitor monitor) throws TracException;
+	public InputStream getWikiPageAttachmentData(String pageName, String fileName, IProgressMonitor monitor)
+			throws TracException;
 
 	/**
 	 * Attach a file to a Wiki page on the repository.
@@ -232,11 +257,12 @@ public interface ITracWikiClient {
 	 *            An InputStream of the content of the attachment
 	 * @param replace
 	 *            whether to overwrite an existing attachment with the same filename
-	 * @param monitor TODO
-	 * @return The (possibly transformed) filename of the attachment. If <code>replace</code> is <code>true</code>,
-	 *         the returned name is always the same as the argument <code>fileName</code>; if <code>replace</code>
-	 *         is <code>false</code> and an attachment with name <code>fileName</code> already exists, a different
-	 *         name is generated for the new attachment by the repository server and the new name is returned.
+	 * @param monitor
+	 *            TODO
+	 * @return The (possibly transformed) filename of the attachment. If <code>replace</code> is <code>true</code>, the
+	 *         returned name is always the same as the argument <code>fileName</code>; if <code>replace</code> is
+	 *         <code>false</code> and an attachment with name <code>fileName</code> already exists, a different name is
+	 *         generated for the new attachment by the repository server and the new name is returned.
 	 * @throws TracException
 	 */
 	public String putWikiPageAttachmentData(String pageName, String fileName, String description, InputStream in,

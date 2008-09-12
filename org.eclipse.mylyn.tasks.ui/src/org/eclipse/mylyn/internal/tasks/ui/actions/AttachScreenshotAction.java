@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
@@ -42,8 +45,8 @@ public class AttachScreenshotAction extends AttachAction {
 				return;
 			}
 			AbstractTask repositoryTask = (AbstractTask) selection;
-			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(
-					repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
+			TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
+					repositoryTask.getRepositoryUrl());
 
 			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask, true);
 			NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(PlatformUI.getWorkbench()

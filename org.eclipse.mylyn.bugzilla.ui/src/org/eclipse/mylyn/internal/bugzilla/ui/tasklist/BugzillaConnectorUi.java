@@ -1,9 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
+ *     Eugene Kuleshov - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
@@ -19,8 +23,8 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
@@ -39,8 +43,6 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
 /**
  * @author Mik Kersten
- * @author Eugene Kuleshov
- * @author Rob Elves
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 

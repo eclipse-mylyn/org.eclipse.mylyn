@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Eugene Kuleshov - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui;
@@ -42,7 +45,9 @@ public abstract class AbstractTaskRepositoryLinkProvider implements IExecutableE
 
 	/**
 	 * This operation is invoked frequently by hyperlink detectors and needs to be fast (i.e. cannot do network access
-	 * or invoke long-running refreshes). Return null if the repository cannot be resolved without excessive file I/O.@since 3.0
+	 * or invoke long-running refreshes). Return null if the repository cannot be resolved without excessive file
+	 * I/O.@since 3.0
+	 * 
 	 * @since 3.0
 	 */
 	public abstract TaskRepository getTaskRepository(IResource resource, IRepositoryManager repositoryManager);

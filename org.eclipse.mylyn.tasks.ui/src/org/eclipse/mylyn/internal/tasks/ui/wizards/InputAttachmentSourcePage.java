@@ -1,10 +1,18 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Sebastian Davids <sdavids@gmx.de> - layout tweaks
+ *     Jeff Pound - modified for attachment input
+ *     Chris Aniszczyk <caniszczyk@gmail.com> - bug 20957
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
@@ -64,11 +72,6 @@ import org.eclipse.ui.views.navigator.ResourceComparator;
  * A wizard to input the source of the attachment.
  * <p>
  * Based on org.eclipse.compare.internal.InputPatchPage.
- * 
- * @author IBM Corporation - initial API and implementation
- * @author Sebastian Davids <sdavids@gmx.de> - layout tweaks
- * @author Jeff Pound - modified for attachment input
- * @author Chris Aniszczyk <caniszczyk@gmail.com> - bug 209572
  */
 /**
  * @deprecated Do not use. This class is pending for removal: see bug 237552.

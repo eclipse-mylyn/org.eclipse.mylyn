@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.trac.core.model;
@@ -14,8 +17,8 @@ import java.util.List;
 /**
  * Represents a search criterion. Each criterion is applied to a field such as milestone or priority. It has a compare
  * operator and a list of values. The compare mode is <code>OR</code> for the operators <code>contains</code>,
- * <code>starts with</code>, <code>ends with</code> and <code>is</code>. The compare mode is <code>AND</code>
- * for all other (negated) operators.
+ * <code>starts with</code>, <code>ends with</code> and <code>is</code>. The compare mode is <code>AND</code> for all
+ * other (negated) operators.
  * 
  * @author Steffen Pingel
  */

@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.deprecated;
@@ -37,7 +40,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	 * Constructor.
 	 * 
 	 * @param configuration
-	 * 		The compare configuration used in this compare input.
+	 *            The compare configuration used in this compare input.
 	 * @see CompareConfiguration
 	 */
 	public BugzillaCompareInput(CompareConfiguration configuration) {
@@ -65,7 +68,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	 * Sets the original object that's to be compared (appears on the top of the compare view).
 	 * 
 	 * @param newAncestor
-	 * 		The new original object.
+	 *            The new original object.
 	 */
 	public void setAncestor(RepositoryTaskData newAncestor) {
 		threeWay = (newAncestor != null);
@@ -84,7 +87,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	 * Sets the local object that's to be compared (appears on the left side of the compare view).
 	 * 
 	 * @param newLeft
-	 * 		The new local object.
+	 *            The new local object.
 	 */
 	public void setLeft(RepositoryTaskData newLeft) {
 		BugzillaCompareStructureCreator structureCreator = new BugzillaCompareStructureCreator();
@@ -102,7 +105,7 @@ public class BugzillaCompareInput extends CompareEditorInput {
 	 * Sets the online object that's to be compared (appears on the right side of the compare view).
 	 * 
 	 * @param newRight
-	 * 		The new online object.
+	 *            The new online object.
 	 */
 	public void setRight(RepositoryTaskData newRight) {
 		BugzillaCompareStructureCreator structureCreator = new BugzillaCompareStructureCreator();

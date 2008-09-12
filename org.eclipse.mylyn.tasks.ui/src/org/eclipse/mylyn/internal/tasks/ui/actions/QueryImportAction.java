@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+* Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Jevgeni Holodkov - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
@@ -119,7 +122,7 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 	 * that overlaps with the existing one, the the suffix [x] is added, where x is a number starting from 1.
 	 * 
 	 * @param queries
-	 * 		to insert
+	 *            to insert
 	 * @return the list queries, which were not inserted since because the related repository was not found.
 	 */
 	public List<RepositoryQuery> insertQueries(List<RepositoryQuery> queries) {
@@ -156,8 +159,8 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 	 * 
 	 * @param query
 	 * @return a handle, that is not in conflict with any existed one in the system. If there were no conflict in the
-	 * 	beginning, then the query's own identifier is returned. If there were, then the suffix [x] is applied the
-	 * 	query's identifier, where x is a number.
+	 *         beginning, then the query's own identifier is returned. If there were, then the suffix [x] is applied the
+	 *         query's identifier, where x is a number.
 	 * @since 2.1
 	 */
 	public static String resolveIdentifiersConflict(RepositoryQuery query) {

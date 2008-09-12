@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Maarten Meijer - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.bugzilla.core;
@@ -17,7 +20,8 @@ import org.apache.commons.httpclient.methods.PostMethod;
 
 /**
  * Use <code>GzipPostMethod</code> instead of {@link PostMethod} to make Mylyn well-behaved when accessing repositories
- * that can supply gzipped responses.<br /> <br>
+ * that can supply gzipped responses.<br />
+ * <br>
  * References:
  * <ul>
  * <li><a href="http://www.schroepl.net/projekte/mod_gzip/index.htm">Gzip home</a></li>

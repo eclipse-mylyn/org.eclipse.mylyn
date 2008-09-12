@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.tests.headless;
@@ -20,8 +23,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
-
-// import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Example use of headless API (no ui dependencies)
@@ -50,7 +51,7 @@ public class BugzillaQueryTest extends TestCase {
 				IBugzillaConstants.DEFAULT_LANG);
 
 		connector = new BugzillaRepositoryConnector();
-		connector.addLanguageSetting(language);
+		BugzillaRepositoryConnector.addLanguageSetting(language);
 		handler = connector.getTaskDataHandler();
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();

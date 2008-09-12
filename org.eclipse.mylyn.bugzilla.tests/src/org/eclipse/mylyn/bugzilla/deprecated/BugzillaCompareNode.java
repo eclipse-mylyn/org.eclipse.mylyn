@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.bugzilla.deprecated;
@@ -26,6 +29,8 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * A node for the tree used to compare bugs in the compare viewer.
+ * 
+ * @author Rob Elves
  */
 public class BugzillaCompareNode implements IStreamContentAccessor, IStructureComparator, ITypedElement {
 
@@ -45,9 +50,9 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Constructor. The image for this node is set to <code>null</code>.
 	 * 
 	 * @param key
-	 * 		The label for this node.
+	 *            The label for this node.
 	 * @param value
-	 * 		The data for this node.
+	 *            The data for this node.
 	 */
 	public BugzillaCompareNode(String key, String value) {
 		this(key, value, null);
@@ -57,11 +62,11 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Constructor.
 	 * 
 	 * @param key
-	 * 		The label for this node.
+	 *            The label for this node.
 	 * @param value
-	 * 		The data for this node.
+	 *            The data for this node.
 	 * @param image
-	 * 		The image for this node.
+	 *            The image for this node.
 	 */
 	public BugzillaCompareNode(String key, String value, Image image) {
 		super();
@@ -76,9 +81,9 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * returned instead.
 	 * 
 	 * @param newValue
-	 * 		The string to be checked.
+	 *            The string to be checked.
 	 * @return If the text is <code>null</code>, then return the null string (<code>""</code>). Otherwise, return the
-	 * 	text.
+	 *         text.
 	 */
 	private String checkText(String newValue) {
 		return ((newValue == null) ? "" : newValue);
@@ -92,7 +97,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Adds a node to this node's list of children.
 	 * 
 	 * @param bugNode
-	 * 		The new child.
+	 *            The new child.
 	 */
 	public void addChild(BugzillaCompareNode bugNode) {
 		if (nodeChildren == null) {
@@ -116,7 +121,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Set the label for this node.
 	 * 
 	 * @param key
-	 * 		The new label.
+	 *            The new label.
 	 */
 	public void setKey(String key) {
 		this.key = key;
@@ -133,7 +138,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Set the data for this node.
 	 * 
 	 * @param value
-	 * 		The new data.
+	 *            The new data.
 	 */
 	public void setValue(String value) {
 		this.value = checkText(value);
@@ -147,7 +152,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * Sets the image for this object. This image is used when displaying this object in the UI.
 	 * 
 	 * @param newImage
-	 * 		The new image.
+	 *            The new image.
 	 */
 	public void setImage(Image newImage) {
 		this.image = newImage;
@@ -180,7 +185,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 	 * compare viewer.
 	 * 
 	 * @param bug
-	 * 		The <code>BugReport</code> that needs parsing.
+	 *            The <code>BugReport</code> that needs parsing.
 	 * @return The tree of <code>BugzillaCompareNode</code>'s.
 	 */
 	public static BugzillaCompareNode parseBugReport(RepositoryTaskData bug) {
@@ -199,8 +204,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		for (TaskComment taskComment : bug.getComments()) {
 			String bodyString = "Comment from " + taskComment.getAuthorName() + ":\n\n" + taskComment.getText();
 			comments.addChild(new BugzillaCompareNode(
-					taskComment.getAttributeValue(BugzillaAttribute.BUG_WHEN.getKey()), bodyString,
-					defaultImage));
+					taskComment.getAttributeValue(BugzillaAttribute.BUG_WHEN.getKey()), bodyString, defaultImage));
 		}
 		topNode.addChild(comments);
 
