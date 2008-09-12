@@ -8,6 +8,7 @@
  * Contributors:
  * IBM - Initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.commons.net;
 
 import org.eclipse.osgi.util.NLS;

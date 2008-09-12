@@ -1,9 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Balazs Brinkus - initial API and implementation
+ *     Tasktop Technologies - improvements
+ *     Willian Mitsuda - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.provisional.commons.ui;
@@ -885,7 +890,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 	 * Creates the final screenshot
 	 * 
 	 * @return The final screenshot, with all markings, and cropped according to user settings; <strong>The caller is
-	 * 	responsible for disposing the returned image</strong>
+	 *         responsible for disposing the returned image</strong>
 	 */
 	public Image createImage() {
 		Image screenshot = new Image(getShell().getDisplay(), currentSelection != null ? currentSelection

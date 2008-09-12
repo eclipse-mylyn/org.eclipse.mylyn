@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.commons.net;
 
 import org.eclipse.core.runtime.IProgressMonitor;

@@ -1,10 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.mylyn.internal.commons.core;
 
 import java.io.BufferedInputStream;
@@ -41,9 +45,9 @@ public class ZipFileUtil {
 	 * Only unzips files in zip file not directories
 	 * 
 	 * @param zipped
-	 * 		file
+	 *            file
 	 * @param destPath
-	 * 		Destination path
+	 *            Destination path
 	 * @return Files that were unzipped
 	 */
 	public static List<File> unzipFiles(File zippedfile, String destPath) throws FileNotFoundException, IOException {
@@ -115,9 +119,9 @@ public class ZipFileUtil {
 
 	/**
 	 * @param zipFile
-	 * 		Destination zipped file
+	 *            Destination zipped file
 	 * @param files
-	 * 		List of files to add to the zip file
+	 *            List of files to add to the zip file
 	 */
 	public static void createZipFile(File zipFile, List<File> files) throws FileNotFoundException, IOException {
 		createZipFile(zipFile, files, null, null);
@@ -130,11 +134,11 @@ public class ZipFileUtil {
 
 	/**
 	 * @param zipFile
-	 * 		Destination zipped file
+	 *            Destination zipped file
 	 * @param files
-	 * 		List of files to add to the zip file
+	 *            List of files to add to the zip file
 	 * @param progressMonitor
-	 * 		will report worked(1) to the monitor for each file zipped
+	 *            will report worked(1) to the monitor for each file zipped
 	 * @author Shawn Minto
 	 * @author Wesley Coelho
 	 */

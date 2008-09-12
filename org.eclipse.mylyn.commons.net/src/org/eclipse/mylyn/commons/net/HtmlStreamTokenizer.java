@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 Mylyn project committers and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.mylyn.commons.net;
@@ -472,8 +475,8 @@ public class HtmlStreamTokenizer {
 
 		/**
 		 * Returns the token's value. This is an HtmlTag for tokens of type <code>TAG</code> and a StringBuffer for
-		 * tokens of type <code>TEXT</code> and <code>COMMENT</code>. For tokens of type <code>EOF</code>, the
-		 * value is <code>null</code>.
+		 * tokens of type <code>TEXT</code> and <code>COMMENT</code>. For tokens of type <code>EOF</code>, the value is
+		 * <code>null</code>.
 		 */
 		public Object getValue() {
 			return value;
