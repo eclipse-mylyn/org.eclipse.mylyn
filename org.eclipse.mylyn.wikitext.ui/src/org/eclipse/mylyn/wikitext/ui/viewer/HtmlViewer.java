@@ -12,6 +12,7 @@ package org.eclipse.mylyn.wikitext.ui.viewer;
 
 import java.io.IOException;
 
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextPresentation;
@@ -24,6 +25,7 @@ import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletDrawingStrategy;
@@ -64,6 +66,9 @@ public class HtmlViewer extends SourceViewer {
 		}
 		haveInit = true;
 
+		// bug# 245759: must work outside of an Eclipse runtime
+		ColorRegistry colorRegistry = WikiTextUiResources.getColors();
+
 		IAnnotationAccess annotationAccess = new IAnnotationAccess() {
 			public Object getType(Annotation annotation) {
 				return annotation.getType();
@@ -86,9 +91,7 @@ public class HtmlViewer extends SourceViewer {
 		// paint HR
 		painter.addDrawingStrategy(HorizontalRuleAnnotation.TYPE, new HorizontalRuleDrawingStrategy());
 		painter.addAnnotationType(HorizontalRuleAnnotation.TYPE, HorizontalRuleAnnotation.TYPE);
-		painter.setAnnotationTypeColor(HorizontalRuleAnnotation.TYPE, WikiTextUiPlugin.getDefault()
-				.getColorRegistry()
-				.get(WikiTextUiPlugin.COLOR_HR));
+		painter.setAnnotationTypeColor(HorizontalRuleAnnotation.TYPE, colorRegistry.get(WikiTextUiPlugin.COLOR_HR));
 
 		addTextPresentationListener(painter);
 		addPainter(painter);

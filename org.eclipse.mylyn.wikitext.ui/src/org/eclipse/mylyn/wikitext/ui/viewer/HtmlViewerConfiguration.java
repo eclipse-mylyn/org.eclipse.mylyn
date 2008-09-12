@@ -41,6 +41,7 @@ import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.TextHover;
+import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.ui.annotation.TitleAnnotation;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.ui.editors.text.EditorsUI;
@@ -127,8 +128,13 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 	private TextPresentation textPresentation;
 
 	public HtmlViewerConfiguration(HtmlViewer viewer) {
-		super(EditorsUI.getPreferenceStore());
+		super(getDefaultPreferenceStore());
 		this.viewer = viewer;
+	}
+
+	private static IPreferenceStore getDefaultPreferenceStore() {
+		// bug# 245759: must work outside of an Eclipse runtime
+		return WikiTextUiPlugin.getDefault() == null ? null : EditorsUI.getPreferenceStore();
 	}
 
 	public HtmlViewerConfiguration(HtmlViewer viewer, IPreferenceStore preferenceStore) {

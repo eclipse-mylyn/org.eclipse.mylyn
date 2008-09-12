@@ -173,7 +173,7 @@ public abstract class AbstractTestApplication {
 
 	private void createJTextileViewer(CTabFolder folder) {
 		CTabItem viewerItem = new CTabItem(folder, SWT.NONE);
-		viewerItem.setText("JTextile Viewer");
+		viewerItem.setText("WikiText Viewer");
 
 		viewer = new MarkupViewer(folder, null, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		viewer.setMarkupLanguage(createMarkupLanguage());
