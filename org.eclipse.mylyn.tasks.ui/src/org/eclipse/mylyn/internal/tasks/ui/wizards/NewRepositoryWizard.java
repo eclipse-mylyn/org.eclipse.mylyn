@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Peter Stibrany - fix for NPE (bug 247077)     
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
@@ -79,8 +80,9 @@ public class NewRepositoryWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean canFinish() {
-		return selectConnectorPage.isPageComplete() && !(getContainer().getCurrentPage() == selectConnectorPage)
-				&& settingsPage != null && settingsPage.isPageComplete();
+		return (selectConnectorPage == null || selectConnectorPage.isPageComplete())
+				&& !(getContainer().getCurrentPage() == selectConnectorPage) && settingsPage != null
+				&& settingsPage.isPageComplete();
 	}
 
 	@Override
