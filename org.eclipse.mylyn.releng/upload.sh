@@ -42,7 +42,7 @@ then
   cp tmp/site.tar $HOME
   $HOME/downloads/tools/mylyn/extract-site.sh $MAJOR_VERSION $QUALIFIER $2 -weekly
 else
-  if [ "$2" == "-extract" ]
+  if [ "$2" != "-extract" ]
   then
     pack
     scp tmp/site.tar $1@dev.eclipse.org:
