@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ import org.eclipse.ui.handlers.IHandlerService;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-// API 3.0 rename to AddTaskRepositoryAction
+// TODO 3.1 rename to AddTaskRepositoryAction
 public class AddRepositoryAction extends Action {
 
 	private static final String PREF_ADD_QUERY = "org.eclipse.mylyn.internal.tasks.add.query";

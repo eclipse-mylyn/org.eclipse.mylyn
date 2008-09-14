@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -185,7 +185,7 @@ public class TaskDataStorageManager {
 
 	}
 
-	// API 3.0 review: the state of the elements of changedAttribues could change between this call and the time state is written to disk, might need to make a full copy  
+	// TODO review: the state of the elements of changedAttribues could change between this call and the time state is written to disk, might need to make a full copy  
 	public void saveEdits(String repositoryUrl, String id, Set<RepositoryTaskAttribute> changedAttributes) {
 		TaskDataState state = retrieveState(repositoryUrl, id);
 		if (state != null) {

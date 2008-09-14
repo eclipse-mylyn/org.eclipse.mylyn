@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author Rob Elves
  * @author Jevgeni Holodkov
  */
-// API-3.0: rewrite this class
+// TODO 3.1: replace with TaskListExternalizer
 // - move to core
 // - separate error handling and backup mechanism from externalization
 // - make the externalization stream based instead of file base

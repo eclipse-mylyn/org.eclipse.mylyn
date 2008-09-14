@@ -1776,7 +1776,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
-	// API 3.0 get this from the AttributeEditorToolkit
+	// XXX get this from the AttributeEditorToolkit
 	private ContentAssistCommandAdapter applyContentAssist(Combo text, IContentProposalProvider proposalProvider) {
 		ControlDecoration controlDecoration = new ControlDecoration(text, (SWT.TOP | SWT.LEFT));
 		controlDecoration.setMarginWidth(0);
@@ -1806,13 +1806,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	 *            attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
-	// API 3.0 get this from the AttributeEditorToolkit?
+	// XXX get this from the AttributeEditorToolkit?
 	private IContentProposalProvider createContentProposalProvider() {
 		return new PersonProposalProvider(getTaskRepository().getRepositoryUrl(),
 				getTaskRepository().getConnectorKind());
 	}
 
-	// API 3.0 get this from the AttributeEditorToolkit?
+	// XXX get this from the AttributeEditorToolkit?
 	private ILabelProvider createProposalLabelProvider() {
 		return new PersonProposalLabelProvider();
 	}

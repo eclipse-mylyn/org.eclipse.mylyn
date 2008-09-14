@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ import org.eclipse.ui.INewWizard;
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  */
-// API-3.0: rename this class, the name conflicts with org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard
+// TODO 3.1 rename this class, the name conflicts with org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard
 public class NewTaskWizard extends MultiRepositoryAwareWizard implements INewWizard {
 
 	private static final String TITLE = "New Task";

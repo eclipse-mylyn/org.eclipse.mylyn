@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -250,7 +250,6 @@ public final class TaskRepository extends PlatformObject {
 					headlessCreds.putAll(map);
 				}
 			} catch (CoreException e) {
-				// API 3.0 propagate exception
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 						"Could not set authorization credentials", e));
 			}
@@ -275,7 +274,7 @@ public final class TaskRepository extends PlatformObject {
 
 	// TODO e3.4 move to new api
 	public void flushAuthenticationCredentials() {
-		// API30: legacy support for versions prior to 2.2 that did not set the enable flag, remove for 3.0
+		// legacy support for versions prior to 2.2 that did not set the enable flag
 		setProperty(getKeyPrefix(AuthenticationType.HTTP) + ENABLED, null);
 		setProperty(getKeyPrefix(AuthenticationType.PROXY) + ENABLED, null);
 		setProperty(getKeyPrefix(AuthenticationType.REPOSITORY) + ENABLED, null);

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -168,7 +168,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	protected void addPages() {
 		initialize();
 
-		// API REVIEW remove check
+		// TODO 3.1 remove check
 		if (taskEditorInput != null) {
 			// determine factories
 			Set<String> conflictingIds = new HashSet<String>();
@@ -215,7 +215,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			}
 		}
 
-		// API REVIEW remove code
+		// TODO 3.1 remove code
 		List<AbstractTaskEditorFactory> factories = new ArrayList<AbstractTaskEditorFactory>(TasksUiPlugin.getDefault()
 				.getTaskEditorFactories());
 		Collections.sort(factories, new Comparator<AbstractTaskEditorFactory>() {
@@ -385,14 +385,14 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		// API REVIEW remove the commented parts
+		// TODO 3.1 remove the commented parts
 		//		if (!(input instanceof TaskEditorInput)) {
 //			throw new PartInitException("Invalid editor input \"" + input.getClass() + "\"");
 //		}
 
 		super.init(site, input);
 
-		// API REVIEW remove the instanceof check
+		// TODO 3.1 remove the instanceof check
 		if (input instanceof TaskEditorInput) {
 			this.taskEditorInput = (TaskEditorInput) input;
 			this.task = taskEditorInput.getTask();
@@ -408,7 +408,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	private void installTitleDrag(Form form) {
-		// API 3.0 remove
+		// TODO 3.1 remove
 		if (task == null) {
 			return;
 		}

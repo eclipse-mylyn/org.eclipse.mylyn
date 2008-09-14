@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,7 +69,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		}
 	}
 
-	// API 3.0: move to TasksUiUtil / into core
+	// TODO move to TasksUiUtil / into core
 	public static String getTextForTask(Object object) {
 		String text = "";
 		if (object instanceof ITask) {

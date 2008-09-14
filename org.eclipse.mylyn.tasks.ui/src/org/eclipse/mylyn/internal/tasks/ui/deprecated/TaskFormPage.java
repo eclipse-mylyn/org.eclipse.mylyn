@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -730,7 +730,7 @@ public class TaskFormPage extends FormPage {
 	/**
 	 * @since 2.2
 	 */
-	// API 3.0 remove method
+	// TODO 3.1 remove method
 	public String getSelectionText() {
 		Control focusControl = getFocusControl();
 		if (focusControl == null) {

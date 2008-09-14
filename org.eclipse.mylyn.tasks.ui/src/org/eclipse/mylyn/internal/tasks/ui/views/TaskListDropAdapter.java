@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,7 +59,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves (added URL based task creation support)
  * @author Jevgeni Holodkov
  */
-// API 3.0 rename to TaskListDropTargetListener
+// TODO 3.1 rename to TaskListDropTargetListener
 public class TaskListDropAdapter extends ViewerDropAdapter {
 
 	private AbstractTask newTask = null;

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -295,9 +295,6 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		return getEstimatedTimeHours();
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public int getEstimatedTimeHours() {
 		return estimatedTimeHours;
 	}
@@ -306,17 +303,10 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.estimatedTimeHours = estimated;
 	}
 
-	/**
-	 * @API 3.0: Rename to internalAddParentContainer
-	 */
 	public void addParentContainer(AbstractTaskContainer container) {
 		containers.add(container);
 	}
 
-	/**
-	 * @API 3.0: Rename to internalremoveParentContainer
-	 * @since 3.0
-	 */
 	public void removeParentContainer(AbstractTaskContainer container) {
 		containers.remove(container);
 	}
@@ -458,16 +448,10 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.stale = stale;
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public Date getModificationDate() {
 		return modificationDate;
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public void setModificationDate(Date modificationDate) {
 		if (!areEqual(this.modificationDate, modificationDate)) {
 			Date oldValue = this.modificationDate;
@@ -476,16 +460,10 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		}
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public boolean isMarkReadPending() {
 		return markReadPending;
 	}
 
-	/**
-	 * @since 3.0
-	 */
 	public void setMarkReadPending(boolean markReadPending) {
 		this.markReadPending = markReadPending;
 	}
