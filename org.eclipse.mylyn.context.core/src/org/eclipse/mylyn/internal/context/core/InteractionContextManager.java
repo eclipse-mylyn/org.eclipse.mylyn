@@ -637,7 +637,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		return activationHistorySuppressed;
 	}
 
-	// API-3.0: consider removing check for pause and making clients explicitly determine this, 
+	// TODO consider removing check for pause and making clients explicitly determine this, 
 	// or provide a separate method
 	public boolean isContextActive() {
 		return !contextCapturePaused && activeContext.getContextMap().values().size() > 0;

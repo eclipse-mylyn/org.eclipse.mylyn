@@ -100,7 +100,7 @@ public class ContextEditorManager extends AbstractContextListener {
 					ContextCore.getContextManager().setContextCapturePaused(true);
 				}
 				String mementoString = null;
-				// API-3.0: remove coupling to AbstractTask, change where memento is stored
+				// TODO change where memento is stored
 				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				try {
 					mementoString = readEditorMemento(context);

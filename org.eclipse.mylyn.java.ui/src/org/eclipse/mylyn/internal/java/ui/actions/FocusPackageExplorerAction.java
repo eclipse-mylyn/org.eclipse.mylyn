@@ -62,7 +62,6 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 			StructuredSelection currentSelection = (StructuredSelection) viewer.getSelection();
 			if (currentSelection.size() <= 1) {
 				if (elementToSelect instanceof IMember) {
-					// API 3.0 remove JavaDeclarationsFilter
 					if (viewer.getContentProvider() instanceof StandardJavaElementContentProvider) {
 						if (!((StandardJavaElementContentProvider) viewer.getContentProvider()).getProvideMembers()) {
 							elementToSelect = ((IMember) elementToSelect).getCompilationUnit();

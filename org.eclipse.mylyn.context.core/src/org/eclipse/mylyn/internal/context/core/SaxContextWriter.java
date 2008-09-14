@@ -176,7 +176,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 		}
 	}
 
-	// API-3.0: make this method non-static and private?
+	// TODO 3.1 make this method non-static and private?
 	@SuppressWarnings( { "deprecation", "restriction" })
 	public static Attributes createEventAttributes(InteractionEvent ie) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(InteractionContextExternalizer.DATE_FORMAT_STRING,

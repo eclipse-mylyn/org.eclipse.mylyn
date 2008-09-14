@@ -81,7 +81,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 		}
 	}
 
-	// API-3.0: make this method non-static and private?
+	// TODO 3.1 make this method non-static and private?
 	@SuppressWarnings( { "deprecation", "restriction" })
 	public static InteractionEvent createEventFromAttributes(Attributes attributes) throws ParseException {
 		String delta = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_DELTA));

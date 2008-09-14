@@ -264,7 +264,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			// NOTE: this needs to be done because some views (e.g. Project Explorer) are not
 			// correctly initialized on startup and do not have the dummy selection event
 			// sent to them.  See PartPluginAction and bug 213545.
-			// API-3.0: consider a mechanism to identify only views that provide focus
+			// TODO consider a mechanism to identify only views that provide focus
 			for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
 				if (window.getActivePage() != null) {
 					IViewReference[] views = window.getActivePage().getViewReferences();
