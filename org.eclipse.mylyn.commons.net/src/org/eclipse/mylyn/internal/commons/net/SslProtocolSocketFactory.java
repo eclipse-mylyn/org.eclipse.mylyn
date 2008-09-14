@@ -37,7 +37,7 @@ import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
  * @author Steffen Pingel
  * @since 2.0
  */
-// API 3.0 with PollingSslProtocolSocketFactory
+// TODO merge with PollingSslProtocolSocketFactory
 public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
 	private static final String KEY_STORE = "javax.net.ssl.keyStore";

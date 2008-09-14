@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.commons.core;
 /**
  * @author Ken Sueda
  */
-// API-3.0: should use xerces or some other parser's facilities
+// XXX should use xerces or some other parser's facilities
 public class XmlStringConverter {
 
 	@Deprecated

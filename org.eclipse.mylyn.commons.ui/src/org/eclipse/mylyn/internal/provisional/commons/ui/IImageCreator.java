@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author Willian Mitsuda
  */
-// API-3.0: delete or expand
+// TODO 3.1 remove
 public interface IImageCreator {
 
 	/**

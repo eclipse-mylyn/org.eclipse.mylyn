@@ -150,7 +150,7 @@ public class WebUtil {
 	public static void configureHttpClient(HttpClient client, String userAgent) {
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
 		client.getParams().setParameter(HttpMethodParams.USER_AGENT, getUserAgent(userAgent));
-		// API REVIEW consider setting this as the default
+		// TODO consider setting this as the default
 		//client.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
 		configureHttpClientConnectionManager(client);
 	}
