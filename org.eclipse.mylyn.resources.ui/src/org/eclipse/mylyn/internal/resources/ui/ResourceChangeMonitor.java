@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,7 +63,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 					}
 				}
 //				int changeMask = IResourceDelta.CONTENT | IResourceDelta.REMOVED | IResourceDelta.MOVED_TO | IResourceDelta.MOVED_FROM;
-				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED | IResourceDelta.REMOVED);
+				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CONTENT | IResourceDelta.REMOVED);
 				for (IResourceDelta element : changed) {
 					IResource resource = element.getResource();
 					if (resource instanceof IFile) {
