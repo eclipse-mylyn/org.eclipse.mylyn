@@ -30,13 +30,14 @@ import org.eclipse.mylyn.tasks.tests.connector.MockTask;
  */
 public class NewTaskFromSelectionActionTest extends TestCase {
 
-	public void testNoSelection() throws Exception {
-		NewTaskFromSelectionAction action = new NewTaskFromSelectionAction();
-		assertNull(action.getTaskSelection());
-		action.run();
-		action.selectionChanged(null);
-		assertNull(action.getTaskSelection());
-	}
+	// FIXME 3.1 causes display of modal dialog
+//	public void testNoSelection() throws Exception {
+//		NewTaskFromSelectionAction action = new NewTaskFromSelectionAction();
+//		assertNull(action.getTaskSelection());
+//		action.run();
+//		action.selectionChanged(null);
+//		assertNull(action.getTaskSelection());
+//	}
 
 	public void testComment() throws Exception {
 		TaskRepository taskRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
