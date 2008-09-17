@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ public class OrphanedTasksTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TaskTestUtil.resetTaskList();
 		taskList = TasksUiPlugin.getTaskList();
 		assertTrue(taskList.getDefaultCategory().isEmpty());
 
@@ -100,7 +100,6 @@ public class OrphanedTasksTest extends TestCase {
 	 */
 	public void testTaskRemovedFromQuery() {
 		MockTask mockTask = new MockTask("1");
-		mockTask.setLastReadTimeStamp("now");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		taskList.addQuery(mockQuery);
 		taskList.addTask(mockTask, mockQuery);
@@ -117,7 +116,6 @@ public class OrphanedTasksTest extends TestCase {
 	 */
 	public void testTaskRemovedFromQueryButInCategory() {
 		MockTask mockTask = new MockTask("1");
-		mockTask.setLastReadTimeStamp("now");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		taskList.addQuery(mockQuery);
 		taskList.addTask(mockTask, mockQuery);
@@ -188,17 +186,14 @@ public class OrphanedTasksTest extends TestCase {
 		taskList.addTask(mockTask, taskList.getDefaultCategory());
 		assertEquals(1, taskList.getCategories().size());
 		assertFalse(taskList.getDefaultCategory().isEmpty());
-		// save tasklist, restore tasklist
-		TasksUiPlugin.getExternalizationManager().save(true);
-		TasksUiPlugin.getTaskListManager().resetTaskList();
-		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
+
+		TaskTestUtil.saveAndReadTasklist();
 		assertEquals(1, taskList.getCategories().size());
 		assertEquals(1, taskList.getQueries().size());
 		assertFalse(taskList.getDefaultCategory().isEmpty());
+
 		taskList.deleteQuery(mockQuery);
-		TasksUiPlugin.getTaskListManager().saveTaskList();
-		TasksUiPlugin.getTaskListManager().resetTaskList();
-		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
+		TaskTestUtil.saveAndReadTasklist();
 		assertEquals(1, taskList.getCategories().size());
 		assertEquals(0, taskList.getQueries().size());
 		assertFalse(taskList.getDefaultCategory().isEmpty());
@@ -270,7 +265,6 @@ public class OrphanedTasksTest extends TestCase {
 
 	public void testRefactorOrphanedHandle() {
 		MockTask mockTask = new MockTask("1");
-		mockTask.setLastReadTimeStamp("now");
 		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
 		taskList.addQuery(mockQuery);
 		taskList.addTask(mockTask, mockQuery);

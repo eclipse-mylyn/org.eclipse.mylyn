@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,9 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 
+/**
+ * @author Steffen Pingel
+ */
 public class TaskListExternalizationTest extends TestCase {
 
 	private TaskList taskList;
@@ -39,7 +42,7 @@ public class TaskListExternalizationTest extends TestCase {
 		super.setUp();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TaskTestUtil.resetTaskList();
 
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -49,7 +52,7 @@ public class TaskListExternalizationTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TaskTestUtil.resetTaskList();
 	}
 
 	public void testTaskAttributes() throws CoreException {

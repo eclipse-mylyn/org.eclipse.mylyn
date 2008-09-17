@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,20 +17,28 @@ import java.io.RandomAccessFile;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.DownloadAttachmentJob;
+import org.eclipse.mylyn.internal.tasks.ui.util.CopyAttachmentToClipboardJob;
+import org.eclipse.mylyn.internal.tasks.ui.util.DownloadAttachmentJob;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockAttachmentHandler;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Test task attachment jobs.
  * 
  * @author Steffen Pingel
  */
-public class AttachmentJobTest extends TestCase {
+public class TaskAttachmentTest extends TestCase {
 
 	private TaskRepositoryManager manager;
 
@@ -57,7 +65,9 @@ public class AttachmentJobTest extends TestCase {
 		connector.setAttachmentHandler(attachmentHandler);
 		manager.addRepositoryConnector(connector);
 
-//		attachment = new TaskAttachment(repository, task, attribute);
+		TaskData taskData = new TaskData(new TaskAttributeMapper(repository), MockRepositoryConnector.REPOSITORY_KIND,
+				MockRepositoryConnector.REPOSITORY_URL, "1");
+		attachment = new TaskAttachment(repository, new MockTask("1"), taskData.getRoot().createAttribute("attachment"));
 	}
 
 	@Override
@@ -65,18 +75,17 @@ public class AttachmentJobTest extends TestCase {
 		manager.removeRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
-// TODO: refactor 3.0
-//	public void testCopyToClipboardAction() throws Exception {
-//		String expected = "attachment content";
-//		attachmentHandler.setAttachmentData(expected.getBytes());
-//
-//		CopyAttachmentToClipboardJob job = new CopyAttachmentToClipboardJob(attachment);
-//		job.schedule();
-//		job.join();
-//
-//		Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-//		assertEquals(expected, clipboard.getContents(TextTransfer.getInstance()));
-//	}
+	public void testCopyToClipboardAction() throws Exception {
+		String expected = "attachment content";
+		attachmentHandler.setAttachmentData(expected.getBytes());
+
+		CopyAttachmentToClipboardJob job = new CopyAttachmentToClipboardJob(attachment);
+		job.schedule();
+		job.join();
+
+		Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
+		assertEquals(expected, clipboard.getContents(TextTransfer.getInstance()));
+	}
 
 	public void testDownloadAttachmentJob() throws Exception {
 		File file = File.createTempFile("mylyn", null);

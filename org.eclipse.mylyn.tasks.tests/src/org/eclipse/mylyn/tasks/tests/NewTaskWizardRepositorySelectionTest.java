@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,7 +75,7 @@ public class NewTaskWizardRepositorySelectionTest extends TestCase {
 		TaskListView view = (TaskListView) TasksUiUtil.openTasksViewInActivePerspective();
 		view.getViewer().setSelection(new StructuredSelection());
 
-		NewTaskWizard wizard = new NewTaskWizard(null);
+		NewTaskWizard wizard = new NewTaskWizard(null, null);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		WizardDialog dialog = null;
 		dialog = new WizardDialog(shell, wizard);

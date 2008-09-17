@@ -12,17 +12,17 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import junit.framework.TestCase;
 
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.TaskComment;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskFromSelectionAction;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
  * @author Frank Becker
@@ -30,21 +30,23 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
  */
 public class NewTaskFromSelectionActionTest extends TestCase {
 
-	// Steffen: re-enable?
-//	public void testNoSelection() throws Exception {
-//		NewTaskFromSelectionAction action = new NewTaskFromSelectionAction();
-//		assertNull(action.getTaskSelection());
-//		action.run();
-//		action.selectionChanged(null);
-//		assertNull(action.getTaskSelection());
-//	}
+	public void testNoSelection() throws Exception {
+		NewTaskFromSelectionAction action = new NewTaskFromSelectionAction();
+		assertNull(action.getTaskSelection());
+		action.run();
+		action.selectionChanged(null);
+		assertNull(action.getTaskSelection());
+	}
 
 	public void testComment() throws Exception {
-		StubAttributeFactory targetFactory = new StubAttributeFactory();
-		TaskComment comment = new TaskComment(targetFactory, 1);
+		TaskRepository taskRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
+				MockRepositoryConnector.REPOSITORY_URL);
+		TaskData taskData = new TaskData(new TaskAttributeMapper(taskRepository), "kind", "http://url", "1");
+		TaskComment comment = new TaskComment(taskRepository, new MockTask("1"), taskData.getRoot().createAttribute(
+				"id"));
 
 		NewTaskFromSelectionAction action = new NewTaskFromSelectionAction();
-		action.selectionChanged(new RepositoryTaskSelection("id", "server", "kind", "", comment, "summary"));
+		action.selectionChanged(new StructuredSelection(comment));
 		assertNotNull(action.getTaskSelection());
 	}
 
@@ -62,41 +64,4 @@ public class NewTaskFromSelectionActionTest extends TestCase {
 		assertNull(action.getTaskSelection());
 	}
 
-	private class StubAttributeFactory extends AbstractAttributeFactory {
-
-		private static final long serialVersionUID = 1L;
-
-		private final Map<String, String> attributeMap = new HashMap<String, String>();
-
-		@Override
-		public Date getDateForAttributeType(String attributeKey, String dateString) {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public String getName(String key) {
-			// ignore
-			return null;
-		}
-
-		@Override
-		public boolean isHidden(String key) {
-			// ignore
-			return false;
-		}
-
-		@Override
-		public boolean isReadOnly(String key) {
-			// ignore
-			return false;
-		}
-
-		@Override
-		public String mapCommonAttributeKey(String key) {
-			String mappedKey = attributeMap.get(key);
-			return (mappedKey != null) ? mappedKey : key;
-		}
-
-	}
 }

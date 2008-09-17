@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -60,6 +61,18 @@ public class TaskTestUtil {
 		}
 		in.close();
 		out.close();
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void resetTaskList() {
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void saveAndReadTasklist() {
+		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
 	}
 
 }

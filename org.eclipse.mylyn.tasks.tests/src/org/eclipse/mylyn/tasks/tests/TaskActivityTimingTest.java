@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,8 +63,7 @@ public class TaskActivityTimingTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
-		TasksUiPlugin.getTaskListManager().resetTaskList();
-		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TaskTestUtil.resetTaskList();
 		super.tearDown();
 	}
 
@@ -708,7 +707,7 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(activityEvent1, false);
 		metaContext.parseEvent(activityEvent2);
 		TasksUiPlugin.getTaskActivityMonitor().parseInteractionEvent(activityEvent2, false);
-		TasksUiPlugin.getTaskListManager().deactivateAllTasks();
+		TasksUiPlugin.getTaskActivityManager().deactivateActiveTask();
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 
 		TasksUiPlugin.getTaskListManager().saveTaskList();

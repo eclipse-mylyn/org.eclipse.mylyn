@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import java.util.Collection;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListDropAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -26,30 +26,26 @@ import org.eclipse.mylyn.tasks.core.ITask;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class TaskListDnDTest extends TestCase {
+public class TaskListDropAdapterTest extends TestCase {
 
 	private TaskListDropAdapter dropAdapter;
 
-	private TaskListManager manager;
+	private TaskList taskList;
 
 	@Override
 	protected void setUp() throws Exception {
-		manager = TasksUiPlugin.getTaskListManager();
-		manager.resetTaskList();
+		TaskTestUtil.resetTaskList();
+		TasksUiPlugin.getDefault().getLocalTaskRepository();
 
 		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
 		assertNotNull(viewer);
 		dropAdapter = new TaskListDropAdapter(viewer);
-
-		TasksUiPlugin.getDefault().getLocalTaskRepository();
+		taskList = TasksUiPlugin.getTaskList();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		manager.resetTaskList();
-		manager.saveTaskList();
-		assertNull(manager.getActiveTask());
+		TaskTestUtil.resetTaskList();
 	}
 
 	public void testisUrl() {
@@ -62,13 +58,13 @@ public class TaskListDnDTest extends TestCase {
 	}
 
 	public void testUrlDrop() {
-		assertEquals(0, manager.getTaskList().getDefaultCategory().getChildren().size());
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
 		String url = "http://eclipse.org/mylyn";
 		String title = "Mylar Technology Project";
 		String urlData = url + "\n" + title;
 
 		dropAdapter.performDrop(urlData);
-		Collection<ITask> tasks = manager.getTaskList().getDefaultCategory().getChildren();
+		Collection<ITask> tasks = taskList.getDefaultCategory().getChildren();
 		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
 		assertEquals(url, tasks.iterator().next().getUrl());

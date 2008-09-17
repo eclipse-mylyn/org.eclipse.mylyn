@@ -29,7 +29,6 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskListPresentationTest.class);
 		suite.addTestSuite(TaskRepositoryTest.class);
 		suite.addTestSuite(TaskRepositorySorterTest.class);
-		suite.addTestSuite(TaskDataStorageManagerTest.class);
 		suite.addTestSuite(CopyDetailsActionTest.class);
 		suite.addTestSuite(NewTaskFromSelectionActionTest.class);
 		suite.addTestSuite(TaskListTest.class);
@@ -47,25 +46,23 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskKeyComparatorTest.class);
 		suite.addTestSuite(TaskTest.class);
 		suite.addTestSuite(TaskListUiTest.class);
-		suite.addTestSuite(TaskListDnDTest.class);
+		suite.addTestSuite(TaskListDropAdapterTest.class);
 		suite.addTestSuite(TasksUiUtilTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
 		// XXX: Put back
 		//suite.addTestSuite(TaskDataImportTest.class);
 		suite.addTestSuite(ScheduledPresentationTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
-		suite.addTestSuite(AttachmentJobTest.class);
+		suite.addTestSuite(TaskAttachmentTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
-		suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(CommentQuoterTest.class);
-		suite.addTestSuite(OfflineStorageTest.class);
-		suite.addTestSuite(OfflineCachingStorageTest.class);
+		suite.addTestSuite(TaskDataStoreTest.class);
 		suite.addTestSuite(QueryExportImportTest.class);
 		suite.addTestSuite(TaskExportImportTest.class);
 		suite.addTestSuite(PersonProposalProviderTest.class);
 		suite.addTestSuite(TaskRepositoryLocationTest.class);
 		suite.addTestSuite(AttachmentSizeFormatterTest.class);
-		suite.addTestSuite(TaskMappingTest.class);
+		suite.addTestSuite(TaskMapperTest.class);
 		suite.addTestSuite(OrphanedTasksTest.class);
 		suite.addTestSuite(TaskWorkingSetTest.class);
 		suite.addTestSuite(TaskActivationHistoryTest.class);

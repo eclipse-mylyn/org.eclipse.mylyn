@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,7 +95,6 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
 		page.setNeedsAnonymousLogin(true);
-		page.setRepository(repository);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		page.createControl(shell);
@@ -148,7 +147,6 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertTrue(repository.getSavePassword(AuthenticationType.REPOSITORY));
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
-		page.setRepository(repository);
 		try {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
@@ -159,7 +157,6 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		repository.setCredentials(AuthenticationType.REPOSITORY, null, false);
 		page = new MockRepositorySettingsPage(repository);
-		page.setRepository(repository);
 		try {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
@@ -177,7 +174,6 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
 		page.setNeedsHttpAuth(true);
-		page.setRepository(repository);
 		try {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
@@ -189,7 +185,6 @@ public class RepositorySettingsPageTest extends TestCase {
 		repository.setCredentials(AuthenticationType.HTTP, null, false);
 //		page = new MockRepositorySettingsPage(repository);
 		page.setNeedsHttpAuth(true);
-		page.setRepository(repository);
 		try {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
@@ -207,7 +202,6 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
 		page.setNeedsProxy(true);
-		page.setRepository(repository);
 		try {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);
@@ -219,7 +213,6 @@ public class RepositorySettingsPageTest extends TestCase {
 		repository.setCredentials(AuthenticationType.PROXY, null, false);
 		page = new MockRepositorySettingsPage(repository);
 		page.setNeedsProxy(true);
-		page.setRepository(repository);
 		try {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			page.createControl(shell);

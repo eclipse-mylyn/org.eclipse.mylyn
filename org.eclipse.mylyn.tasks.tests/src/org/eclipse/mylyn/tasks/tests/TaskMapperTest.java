@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 /**
  * @author Steffen Pingel
  */
-public class TaskMappingTest extends TestCase {
+public class TaskMapperTest extends TestCase {
 
 	private StubTaskAttributeMapper mapper;
 

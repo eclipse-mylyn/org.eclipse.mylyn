@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,8 +15,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityManager;
 import org.eclipse.mylyn.tasks.core.TaskActivationAdapter;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Shawn Minto
@@ -68,18 +70,21 @@ public class TaskActivityListenerTest extends TestCase {
 
 	}
 
+	private ITaskActivityManager taskActivityManager;
+
 	@Override
 	protected void setUp() throws Exception {
-		TasksUiPlugin.getTaskListManager().deactivateAllTasks();
+		taskActivityManager = TasksUi.getTaskActivityManager();
+		taskActivityManager.deactivateActiveTask();
 	}
 
 	public void testTaskActivation() {
 		MockTask task = new MockTask("test:activation");
 		MockTaskActivationListener listener = new MockTaskActivationListener();
 		try {
-			TasksUiPlugin.getTaskActivityManager().addActivationListener(listener);
+			taskActivityManager.addActivationListener(listener);
 			try {
-				TasksUiPlugin.getTaskListManager().activateTask(task);
+				taskActivityManager.activateTask(task);
 				assertTrue(listener.hasPreActivated);
 				assertTrue(listener.hasActivated);
 				assertFalse(listener.hasPreDeactivated);
@@ -87,7 +92,7 @@ public class TaskActivityListenerTest extends TestCase {
 
 				listener.reset();
 			} finally {
-				TasksUiPlugin.getTaskListManager().deactivateTask(task);
+				taskActivityManager.deactivateTask(task);
 			}
 			assertFalse(listener.hasPreActivated);
 			assertFalse(listener.hasActivated);
