@@ -54,7 +54,7 @@ $JAVA_HOME/bin/java \
  -outputDir $DIR $DIR
 
 echo Processing $DIR
-rm -f $DIR/artifacts.jar $DIR/contents.jar
+rm -f $DIR/artifacts.jar $DIR/content.jar
 $JAVA_HOME/bin/java \
  -Xmx512m \
  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
