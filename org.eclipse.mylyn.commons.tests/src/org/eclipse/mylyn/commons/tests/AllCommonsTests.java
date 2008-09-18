@@ -17,13 +17,13 @@ import junit.framework.TestSuite;
 /**
  * @author Mik Kersten
  */
-public class AllTests {
+public class AllCommonsTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.commons.tests");
-
 		suite.addTestSuite(RetrieveTitleFromUrlTest.class);
-
+		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
+		suite.addTestSuite(WebUtilTest.class);
 		return suite;
 	}
 
