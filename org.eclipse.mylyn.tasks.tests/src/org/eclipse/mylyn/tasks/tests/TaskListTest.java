@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,12 +11,22 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.util.Set;
+
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.tasks.core.ITaskList;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskContainer;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
+import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 
 /**
  * @author Mik Kersten
@@ -25,14 +35,19 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
  */
 public class TaskListTest extends TestCase {
 
+	private TaskList taskList;
+
+	@Override
+	protected void setUp() throws Exception {
+		taskList = new TaskList();
+	}
+
 	public void testGetCategories() {
-		TaskList taskList = new TaskList();
 		taskList.addCategory(new TaskCategory("a"));
 		assertEquals(2, taskList.getCategories().size());
 	}
 
 	public void testLocalSubTaskAdd() {
-		ITaskList taskList = new TaskList();
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask = new LocalTask("2", "subTask");
 
@@ -44,7 +59,6 @@ public class TaskListTest extends TestCase {
 	}
 
 	public void testLocalTaskAddToSelf() {
-		ITaskList taskList = new TaskList();
 		LocalTask task = new LocalTask("1", "summary");
 
 		taskList.addTask(task);
@@ -54,7 +68,6 @@ public class TaskListTest extends TestCase {
 	}
 
 	public void testLocalSubTaskAddCycle() {
-		TaskList taskList = new TaskList();
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask = new LocalTask("2", "subTask");
 
@@ -71,7 +84,6 @@ public class TaskListTest extends TestCase {
 	}
 
 	public void testLocalSubTaskAddDeepCycle() {
-		TaskList taskList = new TaskList();
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask1 = new LocalTask("2", "subTask");
 		LocalTask subTask2 = new LocalTask("3", "subTask");
@@ -135,7 +147,6 @@ public class TaskListTest extends TestCase {
 	}
 
 	public void testLocalSubTaskAddMaxSubTaskDepthDeepCycle() {
-		TaskList taskList = new TaskList();
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask1 = new LocalTask("2", "subTask");
 		LocalTask subTask2 = new LocalTask("3", "subTask");
@@ -204,7 +215,6 @@ public class TaskListTest extends TestCase {
 	}
 
 	public void testLocalSubTaskAddReallyDeepCycle() {
-		TaskList taskList = new TaskList();
 		LocalTask task = new LocalTask("1", "summary");
 		LocalTask subTask1 = new LocalTask("2", "subTask");
 		LocalTask subTask2 = new LocalTask("3", "subTask");
@@ -309,4 +319,237 @@ public class TaskListTest extends TestCase {
 
 		assertEquals(0, subTask18.getChildren().size());
 	}
+
+	public void testQueryAndCategoryNameClash() {
+		TaskCategory category = new TaskCategory("TestClash");
+		taskList.addCategory(category);
+		assertTrue(taskList.getCategories().contains(category));
+		assertEquals(2, taskList.getCategories().size());
+
+		MockRepositoryQuery query = new MockRepositoryQuery("TestClash");
+		taskList.addQuery(query);
+		assertTrue(taskList.getCategories().contains(category));
+		assertEquals(2, taskList.getCategories().size());
+	}
+
+	public void testMoveToRoot() {
+		AbstractTask task1 = new LocalTask("t1", "t1");
+		taskList.addTask(task1, taskList.getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
+		assertEquals(1, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(taskList.getDefaultCategory(), TaskCategory.getParentTaskCategory(task1));
+
+		TaskCategory cat1 = new TaskCategory("c1");
+		taskList.addCategory(cat1);
+
+		taskList.addTask(task1, cat1);
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(cat1, TaskCategory.getParentTaskCategory(task1));
+
+		taskList.addTask(task1, taskList.getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
+		assertEquals(1, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(0, cat1.getChildren().size());
+		assertEquals(taskList.getDefaultCategory(), TaskCategory.getParentTaskCategory(task1));
+	}
+
+	public void testDeleteCategory() {
+		assertEquals(1, taskList.getCategories().size());
+		TaskCategory category = new TaskCategory("cat");
+		taskList.addCategory(category);
+		assertEquals(2, taskList.getCategories().size());
+		taskList.deleteCategory(category);
+		assertEquals(1, taskList.getCategories().size());
+	}
+
+	public void testDeleteCategoryMovesTasksToRoot() {
+		AbstractTask task = new MockTask("delete");
+		TaskCategory category = new TaskCategory("cat");
+		taskList.addCategory(category);
+		taskList.addTask(task, category);
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+		taskList.deleteCategory(category);
+		taskList.getUnmatchedContainer(MockRepositoryConnector.REPOSITORY_URL);
+	}
+
+	@SuppressWarnings("deprecation")
+	public void testRenameCategory() {
+		TaskCategory category = new TaskCategory("handle", "cat");
+		taskList.addCategory(category);
+		assertEquals(2, taskList.getCategories().size());
+		taskList.renameContainer(category, "newDescription");
+		AbstractTaskCategory container = taskList.getContainerForHandle("handle");
+		assertNotNull(container);
+		assertEquals("newDescription", container.getSummary());
+		taskList.deleteCategory(container);
+		assertEquals(1, taskList.getCategories().size());
+	}
+
+	@SuppressWarnings("deprecation")
+	public void testDeleteCategoryAfterRename() {
+		String newDesc = "newDescription";
+		assertNotNull(taskList);
+		assertEquals(1, taskList.getCategories().size());
+		TaskCategory category = new TaskCategory("cat");
+		taskList.addCategory(category);
+		assertEquals(2, taskList.getCategories().size());
+		taskList.renameContainer(category, newDesc);
+		taskList.deleteCategory(category);
+		assertEquals(1, taskList.getCategories().size());
+	}
+
+	public void testCreateSameCategoryName() {
+		assertEquals(1, taskList.getCategories().size());
+		TaskCategory category = new TaskCategory("cat");
+		taskList.addCategory(category);
+		assertEquals(2, taskList.getCategories().size());
+		TaskCategory category2 = new TaskCategory("cat");
+		try {
+			taskList.addCategory(category2);
+			fail("expected IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+		}
+		assertEquals(2, taskList.getCategories().size());
+		ITaskContainer container = taskList.getContainerForHandle("cat");
+		assertEquals(container, category);
+	}
+
+	public void testDeleteRootTask() {
+		AbstractTask task = new LocalTask("1", "label");
+		taskList.addTask(task);
+		taskList.deleteTask(task);
+		assertEquals(0, taskList.getAllTasks().size());
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+	}
+
+	public void testDeleteFromCategory() {
+		assertEquals(0, taskList.getAllTasks().size());
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+		//assertEquals(0, taskList.getArchiveContainer().getChildren().size());
+		assertEquals(1, taskList.getCategories().size());
+
+		AbstractTask task = new LocalTask("1", "label");
+		TaskCategory category = new TaskCategory("handleAndDescription");
+		taskList.addTask(task);
+		assertEquals(1, taskList.getDefaultCategory().getChildren().size());
+
+		taskList.addCategory(category);
+		taskList.addTask(task, category);
+		assertEquals(2, taskList.getCategories().size());
+		assertEquals(1, category.getChildren().size());
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(1, taskList.getAllTasks().size());
+
+		taskList.deleteTask(task);
+		assertEquals(0, taskList.getAllTasks().size());
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+		assertEquals(0, category.getChildren().size());
+	}
+
+	public void testDeleteRepositoryTask() {
+		String repositoryUrl = "http://somewhere.com";
+		MockTask task = new MockTask(repositoryUrl, "1");
+		taskList.addTask(task, taskList.getDefaultCategory());
+		MockRepositoryQuery query = new MockRepositoryQuery("query");
+		taskList.addQuery(query);
+		taskList.addTask(task, query);
+		assertEquals(1, taskList.getAllTasks().size());
+		assertEquals(1, taskList.getDefaultCategory().getChildren().size());
+		taskList.deleteTask(task);
+		assertEquals(0, taskList.getAllTasks().size());
+		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
+	}
+
+	public void testgetQueriesAndHitsForHandle() {
+		MockTask hit1 = new MockTask("1");
+		MockTask hit2 = new MockTask("2");
+		MockTask hit3 = new MockTask("3");
+
+		MockTask hit1twin = new MockTask("1");
+		MockTask hit2twin = new MockTask("2");
+		MockTask hit3twin = new MockTask("3");
+
+		MockRepositoryQuery query1 = new MockRepositoryQuery("query1");
+		MockRepositoryQuery query2 = new MockRepositoryQuery("query2");
+
+		taskList.addQuery(query1);
+		taskList.addQuery(query2);
+		taskList.addTask(hit1, query1);
+		taskList.addTask(hit2, query1);
+		taskList.addTask(hit3, query1);
+
+		assertEquals(3, query1.getChildren().size());
+
+		taskList.addTask(hit1twin, query2);
+		taskList.addTask(hit2twin, query2);
+		taskList.addTask(hit3twin, query2);
+
+		assertEquals(3, query2.getChildren().size());
+
+		Set<AbstractTaskContainer> queriesReturned = hit1.getParentContainers();
+		assertNotNull(queriesReturned);
+		assertEquals(2, queriesReturned.size());
+		assertTrue(queriesReturned.contains(query1));
+		assertTrue(queriesReturned.contains(query2));
+	}
+
+	public void testUpdateQueryHits() {
+		MockTask hit1 = new MockTask("1");
+		MockTask hit2 = new MockTask("2");
+		MockTask hit3 = new MockTask("3");
+
+		MockTask hit1twin = new MockTask("1");
+		MockTask hit2twin = new MockTask("2");
+		MockTask hit3twin = new MockTask("3");
+
+		MockRepositoryQuery query1 = new MockRepositoryQuery("query1");
+		taskList.addQuery(query1);
+
+		taskList.addTask(hit1, query1);
+		taskList.addTask(hit2, query1);
+		taskList.addTask(hit3, query1);
+
+		taskList.addTask(hit1twin, query1);
+		taskList.addTask(hit2twin, query1);
+		taskList.addTask(hit3twin, query1);
+
+		assertEquals(3, query1.getChildren().size());
+		for (ITask child : query1.getChildren()) {
+			taskList.removeFromContainer(query1, child);
+		}
+		assertEquals(0, query1.getChildren().size());
+		taskList.addTask(hit1, query1);
+		taskList.addTask(hit2, query1);
+		assertEquals(2, query1.getChildren().size());
+		hit1.setNotified(true);
+
+		taskList.addTask(hit1twin, query1);
+		taskList.addTask(hit2twin, query1);
+		taskList.addTask(hit3twin, query1);
+		assertEquals(3, query1.getChildren().size());
+		assertTrue(query1.getChildren().contains(hit1twin));
+		assertTrue(query1.getChildren().contains(hit2twin));
+		assertTrue(query1.getChildren().contains(hit3twin));
+		for (ITask hit : query1.getChildren()) {
+			if (hit.equals(hit1twin)) {
+				assertTrue(((AbstractTask) hit).isNotified());
+			} else {
+				assertFalse(((AbstractTask) hit).isNotified());
+			}
+		}
+	}
+
+	public void testGetRepositoryTasks() {
+		String repositoryUrl = "https://bugs.eclipse.org/bugs";
+		String bugNumber = "106939";
+		MockTask task1 = new MockTask(repositoryUrl, bugNumber);
+		taskList.addTask(task1);
+		MockTask task2 = new MockTask("https://unresolved", bugNumber);
+		taskList.addTask(task2);
+
+		assertEquals(2, taskList.getAllTasks().size());
+		Set<ITask> tasksReturned = taskList.getTasks(repositoryUrl);
+		assertNotNull(tasksReturned);
+		assertEquals(1, tasksReturned.size());
+		assertTrue(tasksReturned.contains(task1));
+	}
+
 }

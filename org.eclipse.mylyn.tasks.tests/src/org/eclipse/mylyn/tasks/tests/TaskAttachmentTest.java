@@ -62,7 +62,7 @@ public class TaskAttachmentTest extends TestCase {
 		attachmentHandler = new MockAttachmentHandler();
 
 		connector = new MockRepositoryConnector();
-		connector.setAttachmentHandler(attachmentHandler);
+		connector.setTaskAttachmentHandler(attachmentHandler);
 		manager.addRepositoryConnector(connector);
 
 		TaskData taskData = new TaskData(new TaskAttributeMapper(repository), MockRepositoryConnector.REPOSITORY_KIND,

@@ -11,24 +11,16 @@
 
 package org.eclipse.mylyn.tasks.tests.connector;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
@@ -36,15 +28,16 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Shawn Minto
+ * @author Steffen Pingel
  */
-public class MockRepositoryConnector extends AbstractLegacyRepositoryConnector {
+public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	// TODO 3.1 rename to CONNECTOR_KIND
 	public static final String REPOSITORY_KIND = "mock";
 
 	public static final String REPOSITORY_URL = "http://mockrepository.test";
 
-	private AbstractAttachmentHandler attachmentHandler;
+	private AbstractTaskAttachmentHandler attachmentHandler;
 
 	private boolean canQuery = false;
 
@@ -86,60 +79,8 @@ public class MockRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public AbstractAttachmentHandler getAttachmentHandler() {
-		return attachmentHandler;
-	}
-
-	@Override
 	public String getLabel() {
 		return "Mock Repository (for unit tests)";
-	}
-
-	@Override
-	public AbstractTaskDataHandler getLegacyTaskDataHandler() {
-		// ignore
-		return new AbstractTaskDataHandler() {
-
-			@Override
-			public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind,
-					String taskKind) {
-				// we don't care about the repository information right now
-				return new MockAttributeFactory();
-			}
-
-			@Override
-			public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
-					throws CoreException {
-				// ignore
-				return null;
-			}
-
-			@Override
-			public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
-					throws CoreException {
-				// ignore
-				return null;
-			}
-
-			@Override
-			public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data,
-					IProgressMonitor monitor) throws CoreException {
-				// ignore
-				return false;
-			}
-
-			@Override
-			public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
-				// ignore
-				return new MockAttributeFactory();
-			}
-
-			@Override
-			public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
-				return Collections.emptySet();
-			}
-
-		};
 	}
 
 	@Override
@@ -170,44 +111,42 @@ public class MockRepositoryConnector extends AbstractLegacyRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, ITask repositoryTask, IProgressMonitor monitor) {
-		// ignore
-	}
-
-	@Override
-	public AbstractTask createTask(String repositoryUrl, String id, String summary) {
-		// ignore
-		return null;
-	}
-
-	@Override
-	public boolean updateTaskFromTaskData(TaskRepository repository, ITask repositoryTask, RepositoryTaskData taskData) {
-		return false;
-	}
-
-	@Override
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector resultCollector,
 			ISynchronizationSession event, IProgressMonitor monitor) {
 		return Status.OK_STATUS;
 	}
 
-	public void setAttachmentHandler(AbstractAttachmentHandler attachmentHandler) {
+	@Override
+	public AbstractTaskAttachmentHandler getTaskAttachmentHandler() {
+		return attachmentHandler;
+	}
+
+	public void setTaskAttachmentHandler(MockAttachmentHandler attachmentHandler) {
 		this.attachmentHandler = attachmentHandler;
 	}
 
 	@Override
-	public Set<RepositoryTemplate> getTemplates() {
-		Set<RepositoryTemplate> templates = new HashSet<RepositoryTemplate>();
-		RepositoryTemplate template = new RepositoryTemplate("Mock Template", REPOSITORY_URL, "utf-8", "1", "new",
-				"prefix", "query", "newAccountUrl", false, true);
-		templates.add(template);
-		return templates;
-	}
-
-	@Override
-	public RepositoryTaskData getLegacyTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+	public TaskData getTaskData(TaskRepository taskRepository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		return null;
 	}
+
+	@Override
+	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
+		return false;
+	}
+
+	@Override
+	public void updateTaskFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {
+	}
+
+//	@Override
+//	public Set<RepositoryTemplate> getTemplates() {
+//		Set<RepositoryTemplate> templates = new HashSet<RepositoryTemplate>();
+//		RepositoryTemplate template = new RepositoryTemplate("Mock Template", REPOSITORY_URL, "utf-8", "1", "new",
+//				"prefix", "query", "newAccountUrl", false, true);
+//		templates.add(template);
+//		return templates;
+//	}
 
 }

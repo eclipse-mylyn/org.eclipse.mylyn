@@ -22,8 +22,6 @@ public class AllTasksTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tasks.tests");
-
-		// $JUnit-BEGIN$
 		suite.addTestSuite(LinkProviderTest.class);
 		suite.addTestSuite(TaskActivationActionTest.class);
 		suite.addTestSuite(TaskListPresentationTest.class);
@@ -35,9 +33,8 @@ public class AllTasksTests {
 		suite.addTestSuite(ProjectRepositoryAssociationTest.class);
 		suite.addTestSuite(TaskList06DataMigrationTest.class);
 		suite.addTestSuite(TaskPlanningEditorTest.class);
-		suite.addTestSuite(TaskListManagerTest.class);
 		suite.addTestSuite(TaskListExternalizationTest.class);
-		suite.addTestSuite(RepositoryTaskSynchronizationTest.class);
+		suite.addTestSuite(TaskDataManagerTest.class);
 		suite.addTestSuite(TaskRepositoryManagerTest.class);
 		suite.addTestSuite(TaskRepositoriesExternalizerTest.class);
 		suite.addTestSuite(TaskListContentProviderTest.class);
@@ -51,13 +48,13 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskDataExportTest.class);
 		// XXX: Put back
 		//suite.addTestSuite(TaskDataImportTest.class);
+		//suite.addTestSuite(QueryExportImportTest.class);
 		suite.addTestSuite(ScheduledPresentationTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
 		suite.addTestSuite(TaskAttachmentTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		suite.addTestSuite(CommentQuoterTest.class);
 		suite.addTestSuite(TaskDataStoreTest.class);
-		suite.addTestSuite(QueryExportImportTest.class);
 		suite.addTestSuite(TaskExportImportTest.class);
 		suite.addTestSuite(PersonProposalProviderTest.class);
 		suite.addTestSuite(TaskRepositoryLocationTest.class);
@@ -66,18 +63,19 @@ public class AllTasksTests {
 		suite.addTestSuite(OrphanedTasksTest.class);
 		suite.addTestSuite(TaskWorkingSetTest.class);
 		suite.addTestSuite(TaskActivationHistoryTest.class);
-		// $JUnit-END$
+		suite.addTestSuite(TaskActivityManagerTest.class);
+		suite.addTestSuite(TaskRepositoryFilterTests.class);
+		suite.addTestSuite(TaskDiffUtilTest.class);
+		suite.addTestSuite(RefactorRepositoryUrlOperationTest.class);
 
 		// suite.addTestSuite(BackgroundSaveTest.class);
 		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 
+		// web connector tests
 		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.NamedPatternTest.class);
 		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.HtmlDecodeEntityTest.class);
 		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.WebRepositoryTest.class);
 
-		suite.addTestSuite(TaskActivityListenerTest.class);
-		suite.addTestSuite(TaskRepositoryFilterTests.class);
-		suite.addTestSuite(TaskDiffUtilTest.class);
 		return suite;
 	}
 }

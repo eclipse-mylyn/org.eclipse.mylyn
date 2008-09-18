@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,8 +23,8 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
@@ -121,7 +121,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testConnectorAddition() {
-		AbstractLegacyRepositoryConnector connector = new MockRepositoryConnector();
+		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
 		assertNotNull(manager.getRepositoryConnector(connector.getConnectorKind()));
 	}
@@ -203,14 +203,13 @@ public class TaskRepositoryManagerTest extends TestCase {
 	}
 
 	public void testRepositoryWithCustomAttributes() throws Exception {
-
 		// Note: if a connector doesn't exist the associated repositories are not loaded (orphaned) 
 		// causing this test to fail.
-		AbstractLegacyRepositoryConnector connector = new MockRepositoryConnector();
+		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
 
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
-				"http://jroller.com/page/eu");
+				"http://mylyn.eclipse.org/");
 		repository.setProperty("owner", "euxx");
 		manager.addRepository(repository);
 		TasksUiPlugin.getDefault();
