@@ -53,6 +53,8 @@ $JAVA_HOME/bin/java \
  -digestBuilder -digestOutputDir=$DIR -siteXML=$DIR/site.xml \
  -outputDir $DIR $DIR
 
+echo Processing $DIR
+rm -f $DIR/artifacts.jar $DIR/contents.jar
 $JAVA_HOME/bin/java \
  -Xmx512m \
  -jar $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*.jar \
