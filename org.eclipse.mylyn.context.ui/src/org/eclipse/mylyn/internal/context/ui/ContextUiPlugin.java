@@ -37,6 +37,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
@@ -183,6 +184,11 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		@SuppressWarnings( { "deprecation", "restriction" })
 		@Override
 		public void taskActivated(ITask task) {
+			if (CoreUtil.TEST_MODE) {
+				// avoid blocking the test suite
+				return;
+			}
+
 			boolean hasLocalContext = ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
 				if (org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil.hasContextAttachment(task)) {
