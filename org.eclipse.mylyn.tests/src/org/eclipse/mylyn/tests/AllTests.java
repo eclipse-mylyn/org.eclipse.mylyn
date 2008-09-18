@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
+import org.eclipse.mylyn.commons.tests.AllCommonsTests;
 import org.eclipse.mylyn.context.tests.AllContextTests;
 import org.eclipse.mylyn.ide.tests.AllIdeTests;
 import org.eclipse.mylyn.java.tests.AllJavaTests;
@@ -34,9 +35,9 @@ import org.eclipse.mylyn.xplanner.tests.AllXPlannerTests;
 public class AllTests {
 
 	public static Test suite() {
-		// TODO: the order of these tests might still matter, but shouldn't
-
+		// the order of these tests might still matter, but shouldn't
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
+		suite.addTest(AllCommonsTests.suite());
 		suite.addTest(AllContextTests.suite());
 		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllMonitorTests.suite());
@@ -45,7 +46,6 @@ public class AllTests {
 		suite.addTest(AllTasksTests.suite());
 		suite.addTest(AllResourcesTests.suite());
 		suite.addTest(AllTeamTests.suite());
-		suite.addTest(AllCoreTests.suite());
 		suite.addTest(AllMiscTests.suite());
 		suite.addTest(AllBugzillaTests.suite());
 		suite.addTest(AllJiraTests.suite());
