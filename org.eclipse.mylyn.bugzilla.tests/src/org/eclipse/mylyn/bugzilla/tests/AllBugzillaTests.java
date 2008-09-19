@@ -14,7 +14,6 @@ package org.eclipse.mylyn.bugzilla.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.bugzilla.deprecated.DuplicateDetetionTest;
 import org.eclipse.mylyn.bugzilla.deprecated.TaskListStandaloneTest;
 import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaQueryTest;
 import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaTaskHistoryTest;
@@ -56,7 +55,6 @@ public class AllBugzillaTests {
 		// TODO: enable
 		// suite.addTest(new TestSuite(BugzillaParserTest.class));
 		suite.addTestSuite(BugzillaSearchDialogTest.class);
-		suite.addTestSuite(DuplicateDetetionTest.class);
 		suite.addTestSuite(BugzillaTaskHistoryTest.class);
 		// $JUnit-END$
 		return suite;

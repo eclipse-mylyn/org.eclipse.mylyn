@@ -46,9 +46,6 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskListDropAdapterTest.class);
 		suite.addTestSuite(TasksUiUtilTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
-		// XXX: Put back
-		//suite.addTestSuite(TaskDataImportTest.class);
-		//suite.addTestSuite(QueryExportImportTest.class);
 		suite.addTestSuite(ScheduledPresentationTest.class);
 		suite.addTestSuite(TaskActivityTimingTest.class);
 		suite.addTestSuite(TaskAttachmentTest.class);
@@ -67,9 +64,12 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskRepositoryFilterTests.class);
 		suite.addTestSuite(TaskDiffUtilTest.class);
 		suite.addTestSuite(RefactorRepositoryUrlOperationTest.class);
+		suite.addTestSuite(StackTraceDuplicateDetectorTest.class);
 
-		// suite.addTestSuite(BackgroundSaveTest.class);
-		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
+		// XXX long running tests, put back?
+		//suite.addTestSuite(TaskDataImportTest.class);
+		//suite.addTestSuite(QueryExportImportTest.class);
+		//suite.addTestSuite(BackgroundSaveTest.class);
 
 		// web connector tests
 		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.NamedPatternTest.class);
@@ -78,4 +78,5 @@ public class AllTasksTests {
 
 		return suite;
 	}
+
 }
