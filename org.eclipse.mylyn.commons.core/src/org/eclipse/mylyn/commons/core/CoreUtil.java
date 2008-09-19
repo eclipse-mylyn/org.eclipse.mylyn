@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.commons.core;
 
+
 /**
  * @since 3.0
  * @author Steffen Pingel
@@ -24,7 +25,14 @@ public class CoreUtil {
 	public static final boolean TEST_MODE;
 
 	static {
-		TEST_MODE = System.getProperty("eclipse.application", "").endsWith("testapplication");
+		String application = System.getProperty("eclipse.application", "");
+		if (application.length() > 0) {
+			TEST_MODE = application.endsWith("testapplication");
+		} else {
+			// eclipse 3.3 does not the eclipse.application property
+			String commands = System.getProperty("eclipse.commands", "");
+			TEST_MODE = commands.contains("testapplication\n");
+		}
 	}
 
 }
