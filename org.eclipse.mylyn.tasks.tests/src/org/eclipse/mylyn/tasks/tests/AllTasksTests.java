@@ -22,10 +22,10 @@ public class AllTasksTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tasks.tests");
+		suite.addTestSuite(TaskRepositoryTest.class);
 		suite.addTestSuite(LinkProviderTest.class);
 		suite.addTestSuite(TaskActivationActionTest.class);
 		suite.addTestSuite(TaskListPresentationTest.class);
-		suite.addTestSuite(TaskRepositoryTest.class);
 		suite.addTestSuite(TaskRepositorySorterTest.class);
 		suite.addTestSuite(CopyDetailsActionTest.class);
 		suite.addTestSuite(NewTaskFromSelectionActionTest.class);

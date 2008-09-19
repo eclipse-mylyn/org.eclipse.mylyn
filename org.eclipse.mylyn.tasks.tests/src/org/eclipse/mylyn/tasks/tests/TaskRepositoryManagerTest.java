@@ -79,7 +79,6 @@ public class TaskRepositoryManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		MockTask task = new MockTask("1");
-		task.setLastReadTimeStamp("now");
 		MockRepositoryQuery query = new MockRepositoryQuery("Test");
 		TasksUiPlugin.getTaskList().addQuery(query);
 		TasksUiPlugin.getTaskList().addTask(task, query);
@@ -189,7 +188,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		assertNull(manager.getRepository(repository2.getConnectorKind(), repository2.getRepositoryUrl()));
 	}
 
-	public void testRepositoryWithUnnownUrlHandler() {
+	public void testRepositoryWithUnknownUrlHandler() {
 		TaskRepository repository = new TaskRepository("eclipse.technology.mylar",
 				"abc://news.eclipse.org/eclipse.technology.mylar");
 

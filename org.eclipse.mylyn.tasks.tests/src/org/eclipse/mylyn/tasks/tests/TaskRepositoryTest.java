@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -28,6 +29,14 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class TaskRepositoryTest extends TestCase {
 
+	@SuppressWarnings("deprecation")
+	public void testPlatformAuthHandlerAvailable() throws Exception {
+		URL url = new URL("http://mylyn");
+		Platform.addAuthorizationInfo(url, "", "", Collections.EMPTY_MAP);
+		assertNotNull("Tests require org.eclipse.core.runtime.compatibility.auth", Platform.getAuthorizationInfo(url,
+				"", ""));
+	}
+
 	public void testLabel() {
 		TaskRepository repository = new TaskRepository("kind", "http://foo.bar");
 		assertTrue(repository.getRepositoryLabel().equals(repository.getRepositoryUrl()));
@@ -36,6 +45,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertTrue(repository.getRepositoryLabel().equals("label"));
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testPassword() throws Exception {
 		password(AuthenticationType.REPOSITORY);
 
@@ -49,6 +59,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertEquals(null, taskRepository.getHttpPassword());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testHttpPassword() throws Exception {
 		password(AuthenticationType.HTTP);
 
@@ -58,6 +69,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertEquals("pwd", taskRepository.getHttpPassword());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testProxyPassword() throws Exception {
 		password(AuthenticationType.PROXY);
 
@@ -67,6 +79,7 @@ public class TaskRepositoryTest extends TestCase {
 		assertEquals("pwd", taskRepository.getProxyPassword());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testFlushCredentials() throws Exception {
 		TaskRepository taskRepository = new TaskRepository("kind", "url");
 		taskRepository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", "pwd"),
