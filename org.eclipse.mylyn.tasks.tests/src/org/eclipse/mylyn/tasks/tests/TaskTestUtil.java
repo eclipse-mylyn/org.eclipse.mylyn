@@ -20,7 +20,10 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 
 /**
  * @author Mik Kersten
@@ -63,16 +66,42 @@ public class TaskTestUtil {
 		out.close();
 	}
 
+	/**
+	 * Clears tasks and repositories. When this method returns only the local task repository will exist and the task
+	 * list will only have default categories but no tasks.
+	 */
 	@SuppressWarnings("deprecation")
-	public static void resetTaskList() {
+	public static void resetTaskListAndRepositories() throws Exception {
+		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TasksUiPlugin.getDefault().getLocalTaskRepository();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 	}
 
+	/**
+	 * Clears all tasks.
+	 */
 	@SuppressWarnings("deprecation")
-	public static void saveAndReadTasklist() {
+	public static void resetTaskList() throws Exception {
+		TasksUiPlugin.getTaskListManager().resetTaskList();
+	}
+
+	/**
+	 * @see #resetTaskList()
+	 */
+	@SuppressWarnings("deprecation")
+	public static void saveAndReadTasklist() throws Exception {
+		TasksUiPlugin.getTaskList().notifyElementsChanged(null);
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
+	}
+
+	public static TaskTask createMockTask(String taskId) {
+		return new TaskTask(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, taskId);
+	}
+
+	public static RepositoryQuery createMockQuery(String queryId) {
+		return new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, queryId);
 	}
 
 }
