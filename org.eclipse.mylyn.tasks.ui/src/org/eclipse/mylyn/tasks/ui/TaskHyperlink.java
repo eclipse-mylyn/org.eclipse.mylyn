@@ -59,7 +59,7 @@ public final class TaskHyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return "Open Task " + taskId;
+		return "Open Task " + taskId + " in " + repository.getRepositoryLabel();
 	}
 
 	public void open() {
