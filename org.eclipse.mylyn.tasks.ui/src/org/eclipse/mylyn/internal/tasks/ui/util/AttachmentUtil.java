@@ -67,7 +67,7 @@ public class AttachmentUtil {
 
 	protected static final int BUFFER_SIZE = 1024;
 
-	private static final String CONTEXT_DESCRIPTION = "mylyn/context/zip";
+	public static final String CONTEXT_DESCRIPTION = "mylyn/context/zip";
 
 	private static final String CONTEXT_DESCRIPTION_LEGACY = "mylar/context/zip";
 
