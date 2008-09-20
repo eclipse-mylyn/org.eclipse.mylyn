@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -139,6 +139,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -886,6 +887,17 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 									if (actionPart != null && actionPart.getControl() instanceof ExpandableComposite) {
 										EditorUtil.toggleExpandableComposite(true,
 												(ExpandableComposite) actionPart.getControl());
+										if (actionPart.getControl() instanceof Section) {
+											Control client = ((Section) actionPart.getControl()).getClient();
+											if (client instanceof Composite) {
+												for (Control control : ((Composite) client).getChildren()) {
+													// toggle subsections
+													if (control instanceof Section) {
+														EditorUtil.toggleExpandableComposite(true, (Section) control);
+													}
+												}
+											}
+										}
 									}
 								}
 								EditorUtil.reveal(form, attribute.getId());
