@@ -552,12 +552,36 @@ public class WebUtil {
 		// initialization is done in the static initializer		
 	}
 
+	/**
+	 * Defaults org.apache.commons.logging system properties.
+	 * <p>
+	 * Only sets System properties if they are NOT already set to a value.
+	 * </p>
+	 * <p>
+	 * For example adding this to your Eclipse Java launch command line enables verbose Mylyn wire logging:
+	 * 
+	 * <pre>
+	 * 
+	 * -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
+	 * -Dorg.apache.commons.logging.simplelog.showlogname=true -Dorg.apache.commons.logging.simplelog.defaultlog=off
+	 * -Dorg.apache.commons.logging.simplelog.log.httpclient.wire=debug
+	 * -Dorg.apache.commons.logging.simplelog.log.org.apache.commons.httpclient=off
+	 * -Dorg.apache.commons.logging.simplelog.log.org.apache.axis.message=debug
+	 * 
+	 * </pre>
+	 * </p>
+	 */
 	private static void initCommonsLoggingSettings() {
-		// remove?
-		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-		System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "off");
-		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
-		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
+		defaultSystemProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		defaultSystemProperty("org.apache.commons.logging.simplelog.defaultlog", "off");
+		defaultSystemProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
+		defaultSystemProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
+	}
+
+	private static void defaultSystemProperty(String key, String defaultValue) {
+		if (System.getProperty(key) == null) {
+			System.setProperty(key, defaultValue);
+		}
 	}
 
 	private static boolean isRepositoryHttps(String repositoryUrl) {
