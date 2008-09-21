@@ -358,10 +358,9 @@ public class InteractionEvent {
 	}
 
 	/**
-	 * API-3.0: consider refactoring in order to de-couple events from interest.
-	 * 
 	 * @return If an aggregate event, amount of interest of all contained events.
 	 */
+	// TODO: consider refactoring in order to de-couple events from interest.
 	public float getInterestContribution() {
 		return interestContribution;
 	}
