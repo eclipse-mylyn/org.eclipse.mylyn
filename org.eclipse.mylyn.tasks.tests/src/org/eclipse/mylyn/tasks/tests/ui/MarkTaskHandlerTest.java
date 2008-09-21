@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.commands.MarkTaskHandler.MarkTaskComp
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
@@ -41,6 +42,7 @@ public class MarkTaskHandlerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
 		// TODO figure out which test leaves a filter enabled
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(new IWorkingSet[0]);
 		TaskTestUtil.openTasksViewInActivePerspective().clearFilters();
 	}
 
