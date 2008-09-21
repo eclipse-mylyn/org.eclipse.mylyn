@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,13 +25,14 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
+import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
@@ -44,8 +45,6 @@ import org.eclipse.ui.internal.Workbench;
 public class TaskListFilterTest extends TestCase {
 
 	private TaskListView view;
-
-	private final TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
 	private Set<AbstractTaskListFilter> previousFilters;
 
@@ -63,44 +62,46 @@ public class TaskListFilterTest extends TestCase {
 
 	private AbstractTask taskCompleteAndOverdue;
 
+	private TaskList taskList;
+
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
+		TaskTestUtil.resetTaskListAndRepositories();
+
 		view = (TaskListView) TasksUiUtil.openTasksViewInActivePerspective();
 		assertNotNull(view);
 		previousFilters = view.getFilters();
-		view.clearFilters(false);
+		view.clearFilters();
 
-		manager.getTaskList().reset();
-		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		taskList = TasksUiPlugin.getTaskList();
 
 		taskCompleted = new LocalTask("1", "completed");
 		taskCompleted.setCompletionDate(TaskActivityUtil.snapForwardNumDays(Calendar.getInstance(), -1).getTime());
-		manager.getTaskList().addTask(taskCompleted);
+		taskList.addTask(taskCompleted);
 
 		taskIncomplete = new LocalTask("2", "t-incomplete");
-		manager.getTaskList().addTask(taskIncomplete);
+		taskList.addTask(taskIncomplete);
 
 		taskOverdue = new LocalTask("3", "t-overdue");
 		taskOverdue.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday().previous());
-		manager.getTaskList().addTask(taskOverdue);
+		taskList.addTask(taskOverdue);
 
 		taskDueToday = new LocalTask("4", "t-today");
 		taskDueToday.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday());
-		manager.getTaskList().addTask(taskDueToday);
+		taskList.addTask(taskDueToday);
 
 		taskCompletedToday = new LocalTask("5", "t-donetoday");
 		taskCompletedToday.setScheduledForDate(TaskActivityUtil.getCurrentWeek().getToday());
 		taskCompletedToday.setCompletionDate(new Date());
-		manager.getTaskList().addTask(taskCompletedToday);
+		taskList.addTask(taskCompletedToday);
 
 		taskScheduledLastWeek = new LocalTask("6", "t-scheduledLastWeek");
-		manager.getTaskList().addTask(taskScheduledLastWeek);
+		taskList.addTask(taskScheduledLastWeek);
 		TasksUiPlugin.getTaskActivityManager().setScheduledFor(taskScheduledLastWeek,
 				TaskActivityUtil.getCurrentWeek().previous());
 
 		taskCompleteAndOverdue = new LocalTask("7", "t-completeandoverdue");
-		manager.getTaskList().addTask(taskCompleteAndOverdue);
+		taskList.addTask(taskCompleteAndOverdue);
 		Calendar cal = TaskActivityUtil.getCalendar();
 		cal.add(Calendar.DAY_OF_MONTH, -1);
 		TasksUiPlugin.getTaskActivityManager().setDueDate(taskCompleteAndOverdue, cal.getTime());
@@ -109,8 +110,8 @@ public class TaskListFilterTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		view.clearFilters(true);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(new IWorkingSet[0]);
+		view.clearFilters();
 		for (AbstractTaskListFilter filter : previousFilters) {
 			view.addFilter(filter);
 		}
@@ -118,9 +119,9 @@ public class TaskListFilterTest extends TestCase {
 
 	public void testSearchScheduledWorkingSet() throws InterruptedException {
 		TaskCategory category = new TaskCategory("category");
-		manager.getTaskList().addCategory(category);
-		manager.getTaskList().addTask(taskOverdue, category);
-		manager.getTaskList().addTask(taskIncomplete, category);
+		taskList.addCategory(category);
+		taskList.addTask(taskOverdue, category);
+		taskList.addTask(taskIncomplete, category);
 		view.getViewer().refresh();
 		view.getViewer().expandAll();
 		List<Object> items = UiTestUtil.getAllData(view.getViewer().getTree());
@@ -145,8 +146,8 @@ public class TaskListFilterTest extends TestCase {
 		workingSets = new IWorkingSet[0];
 		view.removeFilter(workingSetFilter);
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(workingSets);
-		manager.getTaskList().removeFromContainer(category, taskOverdue);
-		manager.getTaskList().removeFromContainer(category, taskIncomplete);
+		taskList.removeFromContainer(category, taskOverdue);
+		taskList.removeFromContainer(category, taskIncomplete);
 		view.getFilteredTree().setFilterText("");
 		view.getFilteredTree().getRefreshPolicy().internalForceRefresh();
 	}
