@@ -61,6 +61,10 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 	public static final String CONTAINMENT_PROPAGATION_ID = "org.eclipse.mylyn.core.model.edges.containment";
 
+	/**
+	 * @deprecated not used anymore (used in version < 1.0.1)
+	 */
+	@Deprecated
 	public static final String OLD_CONTEXT_HISTORY_FILE_NAME = "context-history";
 
 	public static final String CONTEXT_HISTORY_FILE_NAME = "activity";
