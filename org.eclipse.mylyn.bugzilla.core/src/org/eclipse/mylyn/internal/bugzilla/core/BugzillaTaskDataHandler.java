@@ -445,4 +445,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		return new BugzillaAttributeMapper(taskRepository);
 	}
 
+	public static void setVersionToTaskDataVersion(TaskData data) {
+		data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
+	}
+
 }

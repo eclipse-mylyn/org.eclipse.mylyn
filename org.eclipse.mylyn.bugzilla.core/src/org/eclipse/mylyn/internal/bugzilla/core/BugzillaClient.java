@@ -453,6 +453,7 @@ public class BugzillaClient {
 			@Override
 			public void accept(TaskData taskData) {
 				getRepositoryConfiguration().configureTaskData(taskData);
+				BugzillaTaskDataHandler.setVersionToTaskDataVersion(taskData);
 				retrievedData[0] = taskData;
 			}
 		};
@@ -1368,6 +1369,7 @@ public class BugzillaClient {
 									@Override
 									public void accept(TaskData taskData) {
 										getRepositoryConfiguration().configureTaskData(taskData);
+										BugzillaTaskDataHandler.setVersionToTaskDataVersion(taskData);
 										collector.accept(taskData);
 										monitor.worked(1);
 									}
