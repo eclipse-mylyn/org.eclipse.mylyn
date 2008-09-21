@@ -87,7 +87,7 @@ public class TaskActivationHistoryTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(new WorkingSet[0]);
 	}
 
 	public void testWithWorkinSet() {

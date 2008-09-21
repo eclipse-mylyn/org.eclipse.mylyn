@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Ken Sueda and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,11 @@
  *
  * Contributors:
  *     Ken Sueda - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -25,12 +25,10 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.MoveToCategoryMenuContributor;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -45,11 +43,9 @@ import org.eclipse.swt.widgets.TreeItem;
  * Tests TaskListView's filtering mechanism.
  * 
  * @author Ken Sueda
- * 
+ * @author Steffen Pingel
  */
 public class TaskListUiTest extends TestCase {
-
-	private TaskListManager manager = null;
 
 	private TaskCategory cat1 = null;
 
@@ -79,6 +75,8 @@ public class TaskListUiTest extends TestCase {
 
 	private AbstractTask cat2task1sub1 = null;
 
+	private TaskList taskList;
+
 	private final static int CHECK_COMPLETE_FILTER = 1;
 
 	private final static int CHECK_INCOMPLETE_FILTER = 2;
@@ -87,97 +85,78 @@ public class TaskListUiTest extends TestCase {
 
 	@Override
 	public void setUp() throws Exception {
-		TasksUiUtil.openTasksViewInActivePerspective();
-		manager = TasksUiPlugin.getTaskListManager();
+		taskList = TasksUiPlugin.getTaskList();
 
 		// make sure no unmatched folders exist
-		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		manager.resetTaskList();
-
-		TasksUiPlugin.getDefault().getLocalTaskRepository();
+		TaskTestUtil.resetTaskListAndRepositories();
+		TasksUiUtil.openTasksViewInActivePerspective();
 
 		cat1 = new TaskCategory("First Category");
-		manager.getTaskList().addCategory(cat1);
+		taskList.addCategory(cat1);
 
 		cat1task1 = TasksUiInternal.createNewLocalTask("task 1");
 		cat1task1.setPriority(PriorityLevel.P1.toString());
 		cat1task1.setCompletionDate(new Date());
-		manager.getTaskList().addTask(cat1task1, cat1);
+		taskList.addTask(cat1task1, cat1);
 
 		cat1task1sub1 = TasksUiInternal.createNewLocalTask("sub task 1");
 		cat1task1sub1.setPriority(PriorityLevel.P1.toString());
 		cat1task1sub1.setCompletionDate(new Date());
-		manager.getTaskList().addTask(cat1task1sub1, cat1task1);
+		taskList.addTask(cat1task1sub1, cat1task1);
 
 		cat1task2 = TasksUiInternal.createNewLocalTask("task 2");
 		cat1task2.setPriority(PriorityLevel.P2.toString());
-		manager.getTaskList().addTask(cat1task2, cat1);
+		taskList.addTask(cat1task2, cat1);
 
 		cat1task3 = TasksUiInternal.createNewLocalTask("task 3");
 		cat1task3.setPriority(PriorityLevel.P3.toString());
 		cat1task3.setCompletionDate(new Date());
-		manager.getTaskList().addTask(cat1task3, cat1);
+		taskList.addTask(cat1task3, cat1);
 
 		cat1task4 = TasksUiInternal.createNewLocalTask("task 4");
 		cat1task4.setPriority(PriorityLevel.P4.toString());
-		manager.getTaskList().addTask(cat1task4, cat1);
+		taskList.addTask(cat1task4, cat1);
 
 		cat1task5 = TasksUiInternal.createNewLocalTask("task 5");
 		cat1task5.setPriority(PriorityLevel.P5.toString());
 		cat1task5.setCompletionDate(new Date());
-		manager.getTaskList().addTask(cat1task5, cat1);
+		taskList.addTask(cat1task5, cat1);
 
 		assertEquals(cat1.getChildren().size(), 5);
 
 		cat2 = new TaskCategory("Second Category");
-		manager.getTaskList().addCategory(cat2);
+		taskList.addCategory(cat2);
 
 		cat2task1 = TasksUiInternal.createNewLocalTask("task 1");
 		cat2task1.setPriority(PriorityLevel.P1.toString());
-		manager.getTaskList().addTask(cat2task1, cat2);
+		taskList.addTask(cat2task1, cat2);
 
 		cat2task1sub1 = TasksUiInternal.createNewLocalTask("sub task 1");
 		cat2task1sub1.setPriority(PriorityLevel.P1.toString());
-		manager.getTaskList().addTask(cat2task1sub1, cat2task1);
+		taskList.addTask(cat2task1sub1, cat2task1);
 
 		cat2task2 = TasksUiInternal.createNewLocalTask("task 2");
 		cat2task2.setPriority(PriorityLevel.P2.toString());
 		cat2task2.setCompletionDate(new Date());
-		manager.getTaskList().addTask(cat2task2, cat2);
+		taskList.addTask(cat2task2, cat2);
 
 		cat2task3 = TasksUiInternal.createNewLocalTask("task 3");
 		cat2task3.setPriority(PriorityLevel.P3.toString());
-		manager.getTaskList().addTask(cat2task3, cat2);
+		taskList.addTask(cat2task3, cat2);
 
 		cat2task4 = TasksUiInternal.createNewLocalTask("task 4");
 		cat2task4.setPriority(PriorityLevel.P4.toString());
 		cat2task4.setCompletionDate(new Date());
-		manager.getTaskList().addTask(cat2task4, cat2);
+		taskList.addTask(cat2task4, cat2);
 
 		cat2task5 = TasksUiInternal.createNewLocalTask("task 5");
 		cat2task5.setPriority(PriorityLevel.P5.toString());
-		manager.getTaskList().addTask(cat2task5, cat2);
-
-		manager.saveTaskList();
+		taskList.addTask(cat2task5, cat2);
 	}
 
 	@Override
 	public void tearDown() throws Exception {
 		// clear everything
-	}
-
-	public void testMarkWebTaskCompleted() {
-		TaskListView view = TaskListView.getFromActivePerspective();
-		assertNotNull(view);
-		TaskTask webTask = new TaskTask("1", "1", "");
-		TasksUiPlugin.getTaskList().addTask(webTask);
-		view.getViewer().refresh();
-		// Arrays.asList(view.getViewer().getVisibleExpandedElements());
-		assertFalse(webTask.isCompleted());
-		ArrayList<IRepositoryElement> tasks = new ArrayList<IRepositoryElement>();
-		tasks.add(webTask);
-		new MarkTaskCompleteAction(tasks).run();
-		assertTrue(webTask.isCompleted());
 	}
 
 	public void testUiFilter() {
@@ -210,21 +189,20 @@ public class TaskListUiTest extends TestCase {
 		int numListenersDuring = 0;
 		int numListenersAfter = 0;
 
-		TaskListManager manager = TasksUiPlugin.getTaskListManager();
-		Set<ITaskListChangeListener> listeners = manager.getTaskList().getChangeListeners();
+		Set<ITaskListChangeListener> listeners = taskList.getChangeListeners();
 		numListenersBefore = listeners.size();
 
 		TasksUiUtil.openTask(cat1task1);
 		TasksUiUtil.openTask(cat1task2);
 
-		listeners = manager.getTaskList().getChangeListeners();
+		listeners = taskList.getChangeListeners();
 		numListenersDuring = listeners.size();
 
 		assertEquals(numListenersDuring, numListenersBefore + 2);
 
 		TasksUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 
-		listeners = manager.getTaskList().getChangeListeners();
+		listeners = taskList.getChangeListeners();
 		numListenersAfter = listeners.size();
 		assertEquals(numListenersBefore, numListenersAfter);
 	}
@@ -237,7 +215,7 @@ public class TaskListUiTest extends TestCase {
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
 		List<IRepositoryElement> selectedElements = new Vector<IRepositoryElement>();
 		selectedElements.add(cat1task1);
-		int numCategories = manager.getTaskList().getCategories().size();
+		int numCategories = taskList.getCategories().size();
 		int numSeparators = 1;
 		// adding a separator and the New Category... action
 		int expectedNrOfSubMenuEntries = numCategories + numSeparators + 1;

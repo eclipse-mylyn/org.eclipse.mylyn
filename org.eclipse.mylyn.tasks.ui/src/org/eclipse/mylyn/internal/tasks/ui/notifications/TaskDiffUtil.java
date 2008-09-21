@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,7 +79,6 @@ public class TaskDiffUtil {
 			}
 		}
 		return foldSpaces(text);
-
 	}
 
 	public static String listToString(List<String> values) {
@@ -101,7 +100,7 @@ public class TaskDiffUtil {
 	}
 
 	public static String foldSpaces(String value) {
-		return value.replaceAll("\\s", " ").trim();
+		return value.replaceAll("\\s+", " ").trim();
 	}
 
 	public static String trim(String value, int length) {

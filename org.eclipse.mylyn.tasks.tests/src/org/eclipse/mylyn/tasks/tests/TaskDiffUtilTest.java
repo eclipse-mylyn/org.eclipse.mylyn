@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Eugene Kuleshov - initial API and implementation
+ *     Tasktop Technologies - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.tests;
@@ -17,8 +18,17 @@ import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDiffUtil;
 
 /**
  * @author Eugene Kuleshov
+ * @author Steffen Pingel
  */
 public class TaskDiffUtilTest extends TestCase {
+
+	public void testFoldSpaces() {
+		assertEquals("a b", TaskDiffUtil.foldSpaces("a   b"));
+		assertEquals("", TaskDiffUtil.foldSpaces("  "));
+		assertEquals("a b c d", TaskDiffUtil.cleanCommentText("a   b c   d"));
+		assertEquals("b", TaskDiffUtil.cleanCommentText("   b   "));
+		assertEquals("b", TaskDiffUtil.cleanCommentText("   b"));
+	}
 
 	public void testCleanComment() {
 		assertEquals("attachment: some attachment. attachment description",

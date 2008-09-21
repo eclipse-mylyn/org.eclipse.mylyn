@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,7 +72,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.CategorizedPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
@@ -94,8 +93,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GoUpAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.GroupSubTasksAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -1405,11 +1402,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				action.setEnabled(true);
 			}
 		} else if (element != null) {
-			if (action instanceof MarkTaskCompleteAction) {
-				action.setEnabled(false);
-			} else if (action instanceof MarkTaskIncompleteAction) {
-				action.setEnabled(false);
-			} else if (action instanceof DeleteAction) {
+			if (action instanceof DeleteAction) {
 				if (element instanceof UncategorizedTaskContainer) {
 					action.setEnabled(false);
 				} else {
@@ -1555,10 +1548,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
-	/**
-	 * @API-3.0 eliminate parameter from this method
-	 */
-	public void clearFilters(boolean preserveArchiveFilter) {
+	public void clearFilters() {
 		filters.clear();
 		filters.add(filterArchive);
 		filters.add(filterWorkingSet);

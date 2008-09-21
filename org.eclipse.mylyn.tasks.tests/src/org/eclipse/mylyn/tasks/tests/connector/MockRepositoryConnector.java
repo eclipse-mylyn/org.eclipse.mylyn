@@ -23,6 +23,7 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Mik Kersten
@@ -37,18 +38,29 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String REPOSITORY_URL = "http://mockrepository.test";
 
+	public static MockRepositoryConnector getDefault() {
+		return (MockRepositoryConnector) TasksUi.getRepositoryConnector(REPOSITORY_KIND);
+	}
+
 	private AbstractTaskAttachmentHandler attachmentHandler;
 
-	private boolean canQuery = false;
+	private boolean canQuery;
 
-	private boolean canCreateNewTask = false;
+	private boolean canCreateNewTask;
 
-	private boolean canCreateTaskFromKey = false;
+	private boolean canCreateTaskFromKey;
+
+	private boolean hasLocalCompletionState;
+
+	public MockRepositoryConnector() {
+		resetDefaults();
+	}
 
 	public void resetDefaults() {
 		canQuery = false;
 		canCreateNewTask = false;
 		canCreateTaskFromKey = false;
+		hasLocalCompletionState = false;
 	}
 
 	public void setCanCreateNewTask(boolean canCreateNewTask) {
@@ -61,6 +73,10 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public void setCanQuery(boolean canQuery) {
 		this.canQuery = canQuery;
+	}
+
+	public void setHasLocalCompletionState(boolean hasLocalCompletionState) {
+		this.hasLocalCompletionState = hasLocalCompletionState;
 	}
 
 	@Override
@@ -134,6 +150,11 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
 		return false;
+	}
+
+	@Override
+	public boolean hasLocalCompletionState(TaskRepository taskRepository, ITask task) {
+		return hasLocalCompletionState;
 	}
 
 	@Override

@@ -19,11 +19,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
+import junit.framework.Assert;
+
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.ViewIntroAdapterPart;
 
 /**
  * @author Mik Kersten
@@ -96,12 +106,44 @@ public class TaskTestUtil {
 		TasksUiPlugin.getDefault().reloadDataDirectory();
 	}
 
+	public static TaskRepository createMockRepository() {
+		return new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
+	}
+
 	public static TaskTask createMockTask(String taskId) {
 		return new TaskTask(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, taskId);
 	}
 
 	public static RepositoryQuery createMockQuery(String queryId) {
 		return new RepositoryQuery(MockRepositoryConnector.REPOSITORY_KIND, queryId);
+	}
+
+	public static TaskListView openTasksViewInActivePerspective() throws Exception {
+		IWorkbenchPart activePart = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
+				.getActivePart();
+		if (activePart instanceof ViewIntroAdapterPart) {
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView((IViewPart) activePart);
+		}
+		TaskListView taskListView = (TaskListView) PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
+				.showView(TaskListView.ID);
+		Assert.assertSame("Failed to make task list view active", PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
+				.getActivePart(), taskListView);
+		return taskListView;
+	}
+
+	public static void addAndSelectTask(ITask task) throws Exception {
+		TasksUiPlugin.getTaskList().addTask(task);
+		TaskListView taskListView = TaskTestUtil.openTasksViewInActivePerspective();
+		taskListView.refresh();
+		taskListView.getViewer().expandAll();
+		taskListView.getViewer().setSelection(new StructuredSelection(task), true);
+		Assert.assertSame("Failed to select task", task, taskListView.getSelectedTask());
 	}
 
 }

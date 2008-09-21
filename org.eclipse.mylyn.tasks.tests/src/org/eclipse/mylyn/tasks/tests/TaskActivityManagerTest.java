@@ -93,7 +93,7 @@ public class TaskActivityManagerTest extends TestCase {
 		taskActivityManager.deactivateActiveTask();
 		taskList = TasksUiPlugin.getTaskList();
 
-		TaskTestUtil.resetTaskList();
+		TaskTestUtil.resetTaskListAndRepositories();
 
 		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);

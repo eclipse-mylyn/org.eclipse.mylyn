@@ -42,14 +42,14 @@ public class TaskListContentProviderTest extends TestCase {
 		view = TaskListView.getFromActivePerspective();
 		provider = (TaskListContentProvider) view.getViewer().getContentProvider();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.GROUP_SUBTASKS, true);
-		view.clearFilters(true);
+		view.clearFilters();
 		view.addFilter(view.getCompleteFilter());
 		taskList = TasksUiPlugin.getTaskList();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		view.clearFilters(true);
+		view.clearFilters();
 		super.tearDown();
 	}
 

@@ -14,6 +14,8 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.tasks.tests.ui.MarkTaskHandlerTest;
+
 /**
  * @author Mik Kersten
  * @author Shawn Minto
@@ -64,6 +66,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskDiffUtilTest.class);
 		suite.addTestSuite(RefactorRepositoryUrlOperationTest.class);
 		suite.addTestSuite(StackTraceDuplicateDetectorTest.class);
+		suite.addTestSuite(MarkTaskHandlerTest.class);
 
 		// XXX long running tests, put back?
 		//suite.addTestSuite(TaskDataImportTest.class);

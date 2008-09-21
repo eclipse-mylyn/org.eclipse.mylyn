@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -330,9 +330,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	}
 
 	/**
-	 * Reset and update the repository attributes from the server (e.g. products, components)
-	 * 
-	 * API-3.0: Rename to updateRepositoryConfiguration()
+	 * Reset and update the repository attributes from the server (e.g. products, components) *
 	 * 
 	 * @deprecated Use {@link #updateRepositoryConfiguration(TaskRepository,IProgressMonitor)} instead
 	 */

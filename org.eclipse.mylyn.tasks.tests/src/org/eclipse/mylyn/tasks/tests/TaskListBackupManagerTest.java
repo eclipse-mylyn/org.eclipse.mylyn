@@ -59,9 +59,9 @@ public class TaskListBackupManagerTest extends TestCase {
 		backupManager.backupNow(true);
 		assertEquals(1, backupManager.getBackupFiles().size());
 
+		// make sure a new date stamp is generated
+		Thread.sleep(1000);
 		backupManager.backupNow(true);
-		assertTrue(backupFileFolder.exists());
-		assertTrue(backupFileFolder.isDirectory());
 		assertEquals(2, backupManager.getBackupFiles().size());
 
 		// test removal of old backups
