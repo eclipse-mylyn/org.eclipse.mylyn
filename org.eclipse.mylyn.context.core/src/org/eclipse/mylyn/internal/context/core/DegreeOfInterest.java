@@ -127,7 +127,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	/**
 	 * Sums predicted and propagated values
 	 * 
-	 * API-3.0: improve method name
+	 * TODO 3.1: improve method name
 	 */
 	public boolean isPropagated() {
 		float value = selections * contextScaling.get(InteractionEvent.Kind.SELECTION) + edits

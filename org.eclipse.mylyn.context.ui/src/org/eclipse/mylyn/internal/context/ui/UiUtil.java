@@ -20,9 +20,8 @@ import org.eclipse.ui.IViewPart;
 
 /**
  * @author Mik Kersten
- * 
- *         API-3.0: remove
  */
+// TODO 3.1: remove
 public class UiUtil {
 
 	public static void initializeViewerSelection(IViewPart viewPart) {

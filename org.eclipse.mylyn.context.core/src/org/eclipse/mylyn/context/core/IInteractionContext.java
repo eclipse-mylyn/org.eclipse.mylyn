@@ -37,8 +37,6 @@ public interface IInteractionContext {
 
 	/**
 	 * @since 2.2
-	 * 
-	 *        API-3.0: this might get changed or removed
 	 */
 	public List<IInteractionElement> getLandmarks();
 
@@ -59,15 +57,11 @@ public interface IInteractionContext {
 
 	/**
 	 * @since 2.2
-	 * 
-	 *        API-3.0: this might get changed or removed for 3.0
 	 */
 	public String getContentLimitedTo();
 
 	/**
 	 * @since 2.2
-	 * 
-	 *        API-3.0: this might get changed or removed for 3.0
 	 */
 	public void setContentLimitedTo(String contentLimitedTo);
 

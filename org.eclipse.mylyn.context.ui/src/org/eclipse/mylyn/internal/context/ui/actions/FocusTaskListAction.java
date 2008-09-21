@@ -107,7 +107,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 						taskListView.setFocusedMode(true);
 						previousSorter = taskListView.getViewer().getSorter();
 						previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
-						taskListView.clearFilters(false);
+						taskListView.clearFilters();
 						if (!taskListView.getFilters().contains(taskListInterestFilter)) {
 							taskListView.addFilter(taskListInterestFilter);
 						}
