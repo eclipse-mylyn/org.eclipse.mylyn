@@ -41,6 +41,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Unscheduled;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
@@ -209,8 +210,12 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					}
 				} else if (currentTarget instanceof ScheduledTaskContainer) {
 					ScheduledTaskContainer container = (ScheduledTaskContainer) currentTarget;
-					TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
-							container.getDateRange());
+					if (container instanceof Unscheduled) {
+						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task, null);
+					} else {
+						TasksUiPlugin.getTaskActivityManager().setScheduledFor((AbstractTask) task,
+								container.getDateRange());
+					}
 				} else if (currentTarget == null) {
 					TasksUiInternal.getTaskList().addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
 				}

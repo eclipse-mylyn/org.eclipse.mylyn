@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,9 +26,9 @@ public class DateRange implements Comparable<DateRange> {
 
 	private static final String DESCRIPTION_PREVIOUS_WEEK = "Previous Week";
 
-	private static final String DESCRIPTION_THIS_WEEK = "This Week";
+	private static final String DESCRIPTION_THIS_WEEK = "Someday This Week";
 
-	private static final String DESCRIPTION_NEXT_WEEK = "Next Week";
+	private static final String DESCRIPTION_NEXT_WEEK = "Someday Next Week";
 
 	private static final String DESCRIPTION_WEEK_AFTER_NEXT = "Two Weeks";
 
@@ -74,11 +74,15 @@ public class DateRange implements Comparable<DateRange> {
 	 */
 	@Override
 	public String toString() {
+		return toString(true);
+	}
+
+	public String toString(boolean useDayOfWeekForNextWeek) {
 		boolean isThisWeek = TaskActivityUtil.getCurrentWeek().includes(this);
 		Calendar endNextWeek = TaskActivityUtil.getCalendar();
 		endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
 		boolean isNextWeek = TaskActivityUtil.getNextWeek().includes(this) && this.before(endNextWeek);
-		if (isDay() && (isThisWeek || isNextWeek)) {
+		if (isDay() && (isThisWeek || (useDayOfWeekForNextWeek && isNextWeek))) {
 			String day = "";
 			switch (getStartDate().get(Calendar.DAY_OF_WEEK)) {
 			case Calendar.MONDAY:

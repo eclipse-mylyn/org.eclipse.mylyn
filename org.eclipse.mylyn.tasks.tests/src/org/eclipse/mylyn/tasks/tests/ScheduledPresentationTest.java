@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,15 +46,16 @@ public class ScheduledPresentationTest extends TestCase {
 	}
 
 	public void testWeekStartChange() {
+		TaskListInterestFilter filter = new TaskListInterestFilter();
 		TasksUiPlugin.getTaskActivityManager().setWeekStartDay(Calendar.MONDAY);
 		DateRange lastDay = TaskActivityUtil.getCurrentWeek().getDayOfWeek(Calendar.SUNDAY);
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskList().addTask(task1);
 		TasksUiPlugin.getTaskActivityManager().setScheduledFor(task1, lastDay);
-		assertTrue(TaskListInterestFilter.isInterestingForThisWeek(null, task1));
+		assertTrue(filter.isInterestingForThisWeek(null, task1));
 
 		TasksUiPlugin.getTaskActivityManager().setWeekStartDay(Calendar.SUNDAY);
-		assertFalse(TaskListInterestFilter.isInterestingForThisWeek(null, task1));
+		assertFalse(filter.isInterestingForThisWeek(null, task1));
 
 	}
 

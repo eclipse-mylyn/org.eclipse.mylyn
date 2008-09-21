@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 
 			WeekDateRange week = TaskActivityUtil.getCurrentWeek();
+			WeekDateRange nextWeek = TaskActivityUtil.getNextWeek();
 
 			timer.cancel();
 			timer = new Timer();
@@ -75,7 +76,11 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			}
 			containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), week));
 
-			ScheduledTaskContainer nextWeekContainer = new ScheduledTaskContainer(taskActivityManager, week.next());
+			for (DateRange day : nextWeek.getDaysOfWeek()) {
+				containers.add(new ScheduledTaskContainer(TasksUiPlugin.getTaskActivityManager(), day));
+			}
+
+			ScheduledTaskContainer nextWeekContainer = new ScheduledTaskContainer(taskActivityManager, nextWeek);
 			containers.add(nextWeekContainer);
 
 			ScheduledTaskContainer twoWeeksContainer = new ScheduledTaskContainer(taskActivityManager, week.next()

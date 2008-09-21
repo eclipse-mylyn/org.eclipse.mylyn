@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider.Unscheduled;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
@@ -120,26 +121,37 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
-	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
+	private boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
 		if (parent instanceof ScheduledTaskContainer) {
+
 			ScheduledTaskContainer container = (ScheduledTaskContainer) parent;
-			if (container.isWeekDay() || container.isPresent()) {
+
+			if (container instanceof Unscheduled) {
+				return false;
+			}
+
+			if (isDateRangeInteresting(container)) {
 				return true;
 			}
-//			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
-//				return false;
+
+//			if (container.isWeekDay() || container.isPresent()) {
+//				return true;
 //			}
-			if (TasksUiPlugin.getTaskActivityManager().isOverdue(task)
-					|| TasksUiPlugin.getTaskActivityManager().isPastReminder((AbstractTask) task)) {
-				return true;
-			}
+//
+////			if (!TasksUiPlugin.getTaskActivityManager().isWeekDay((ScheduledTaskContainer) parent)) {
+////				return false;
+////			}
+//			if (TasksUiPlugin.getTaskActivityManager().isOverdue(task)
+//					|| TasksUiPlugin.getTaskActivityManager().isPastReminder((AbstractTask) task)) {
+//				return true;
+//			}
 
 		}
 
 		return false;
 	}
 
-	public static boolean isInterestingForThisWeek(Object parent, AbstractTask task) {
+	public boolean isInterestingForThisWeek(Object parent, AbstractTask task) {
 		if (parent instanceof ScheduledTaskContainer) {
 			return shouldShowInFocusedWorkweekDateContainer(parent, task);
 		} else {
@@ -151,7 +163,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		}
 	}
 
-	public static boolean hasChanges(Object parent, ITask task) {
+	public boolean hasChanges(Object parent, ITask task) {
 		if (parent instanceof ScheduledTaskContainer && !(parent instanceof TaskScheduleContentProvider.Unscheduled)) {
 			if (!shouldShowInFocusedWorkweekDateContainer(parent, task)) {
 				return false;
@@ -160,7 +172,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return hasChangesHelper(parent, task);
 	}
 
-	private static boolean hasChangesHelper(Object parent, ITask task) {
+	private boolean hasChangesHelper(Object parent, ITask task) {
 		if (task.getSynchronizationState().isOutgoing()) {
 			return true;
 		} else if (task.getSynchronizationState().isIncoming()) {

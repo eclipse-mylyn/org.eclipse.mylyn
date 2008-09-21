@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,11 +32,11 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 	private final DateRange range;
 
 	public ScheduledTaskContainer(TaskActivityManager activityManager, DateRange range, String summary) {
-		super(summary == null ? range.toString() : summary);
+		super(summary == null ? range.toString(false) : summary);
 		this.activityManager = activityManager;
 		this.range = range;
 		if (summary == null) {
-			this.summary = range.toString();
+			this.summary = range.toString(false);
 		} else {
 			this.summary = summary;
 		}
