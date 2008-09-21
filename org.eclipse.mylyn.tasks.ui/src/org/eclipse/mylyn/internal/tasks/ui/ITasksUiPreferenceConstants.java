@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,10 +22,22 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String SHOW_TRIM = "org.eclipse.mylyn.tasks.ui.show.trim";
 
+	/**
+	 * @deprecated not used anymore, see {@link TaskListBackupManager}
+	 */
+	@Deprecated
 	public static final String BACKUP_LAST = "org.eclipse.mylyn.tasks.ui.backup.last";
 
+	/**
+	 * @deprecated not used anymore, see {@link TaskListBackupManager}
+	 */
+	@Deprecated
 	public static final String BACKUP_MAXFILES = "org.eclipse.mylyn.tasks.ui.backup.maxfiles";
 
+	/**
+	 * @deprecated not used anymore, see {@link TaskListBackupManager}
+	 */
+	@Deprecated
 	public static final String BACKUP_SCHEDULE = "org.eclipse.mylyn.tasks.ui.backup.schedule";
 
 	public static final String FILTER_ARCHIVE_MODE = "org.eclipse.mylyn.tasks.ui.filters.archive";

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListInterestSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.swt.widgets.Control;
@@ -104,37 +105,47 @@ public class TableSorterTest extends TestCase {
 	}
 
 	public void testSummaryOrderSorting() {
-		final TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
-
-		final MockTask[] tasks = new MockTask[5];
+		MockTask[] tasks = new MockTask[6];
 		tasks[0] = new MockTask("local", "4", "c");
 		tasks[1] = new MockTask("local", "1", "b");
 		tasks[2] = new MockTask("local", "11", "a");
-		tasks[3] = new MockTask("local", "3", "c");
-		tasks[4] = new MockTask("local", "5", "a");
+		tasks[3] = new MockTask("local", "11", "d");
+		tasks[4] = new MockTask("local", "3", "c");
+		tasks[5] = new MockTask("local", "5", "a");
 
+		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
+		sorter.setSortByIndex(SortByIndex.SUMMARY);
 		sorter.sort(new EmptyViewer(), tasks);
 
-		assertTrue("1".equals(tasks[0].getTaskKey()) && "b".equals(tasks[0].getSummary()));
-		assertTrue("3".equals(tasks[1].getTaskKey()) && "c".equals(tasks[1].getSummary()));
-		assertTrue("11".equals(tasks[4].getTaskKey()) && "a".equals(tasks[4].getSummary()));
+		assertEquals("1", tasks[0].getTaskKey());
+		assertEquals("3", tasks[1].getTaskKey());
+		assertEquals("4", tasks[2].getTaskKey());
+		assertEquals("5", tasks[3].getTaskKey());
+		assertEquals("11", tasks[4].getTaskKey());
+		assertEquals("a", tasks[4].getSummary());
+		assertEquals("11", tasks[5].getTaskKey());
+		assertEquals("d", tasks[5].getSummary());
 	}
 
 	public void testModuleSummaryOrderSorting() {
-		final TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
-
-		final MockTask[] tasks = new MockTask[5];
+		MockTask[] tasks = new MockTask[5];
 		tasks[0] = new MockTask("local", "MYLN:4", "c");
 		tasks[1] = new MockTask("local", "MYLN:1", "b");
 		tasks[2] = new MockTask("local", "MYLN:11", "a");
 		tasks[3] = new MockTask("local", "MYLN:11", "b");
 		tasks[4] = new MockTask("local", "MYLN:5", "a");
 
+		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective());
+		sorter.setSortByIndex(SortByIndex.SUMMARY);
 		sorter.sort(new EmptyViewer(), tasks);
 
-		assertTrue("MYLN:1".equals(tasks[0].getTaskKey()) && "b".equals(tasks[0].getSummary()));
-		assertTrue("MYLN:4".equals(tasks[1].getTaskKey()) && "c".equals(tasks[1].getSummary()));
-		assertTrue("MYLN:11".equals(tasks[4].getTaskKey()) && "b".equals(tasks[4].getSummary()));
+		assertEquals("MYLN:1", tasks[0].getTaskKey());
+		assertEquals("MYLN:4", tasks[1].getTaskKey());
+		assertEquals("MYLN:5", tasks[2].getTaskKey());
+		assertEquals("MYLN:11", tasks[3].getTaskKey());
+		assertEquals("a", tasks[3].getSummary());
+		assertEquals("MYLN:11", tasks[4].getTaskKey());
+		assertEquals("b", tasks[4].getSummary());
 	}
 
 	public void testLocalTaskSort() {

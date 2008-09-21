@@ -31,7 +31,6 @@ public class AllTasksTests {
 		suite.addTestSuite(NewTaskFromSelectionActionTest.class);
 		suite.addTestSuite(TaskListTest.class);
 		suite.addTestSuite(ProjectRepositoryAssociationTest.class);
-		suite.addTestSuite(TaskList06DataMigrationTest.class);
 		suite.addTestSuite(TaskPlanningEditorTest.class);
 		suite.addTestSuite(TaskListExternalizationTest.class);
 		suite.addTestSuite(TaskDataManagerTest.class);
