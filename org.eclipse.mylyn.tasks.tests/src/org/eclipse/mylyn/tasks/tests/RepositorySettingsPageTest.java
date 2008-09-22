@@ -15,7 +15,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
-import org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
@@ -132,12 +131,6 @@ public class RepositorySettingsPageTest extends TestCase {
 		assertEquals("password", page.getPasswordEditor().getStringValue());
 		assertEquals("user", page.getUserName());
 		assertEquals("password", page.getPassword());
-	}
-
-	public void testTemplateDeletion() {
-		assertFalse(TaskRepositoryUtil.isAddAutomaticallyDisabled(MockRepositoryConnector.REPOSITORY_URL));
-		TaskRepositoryUtil.disableAddAutomatically(MockRepositoryConnector.REPOSITORY_URL);
-		assertTrue(TaskRepositoryUtil.isAddAutomaticallyDisabled(MockRepositoryConnector.REPOSITORY_URL));
 	}
 
 	public void testSavePassword() {

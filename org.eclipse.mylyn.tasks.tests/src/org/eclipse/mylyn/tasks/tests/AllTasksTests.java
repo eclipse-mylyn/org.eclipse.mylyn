@@ -67,6 +67,7 @@ public class AllTasksTests {
 		suite.addTestSuite(RefactorRepositoryUrlOperationTest.class);
 		suite.addTestSuite(StackTraceDuplicateDetectorTest.class);
 		suite.addTestSuite(MarkTaskHandlerTest.class);
+		suite.addTestSuite(RepositoryTemplateManagerTest.class);
 
 		// XXX long running tests, put back?
 		//suite.addTestSuite(TaskDataImportTest.class);

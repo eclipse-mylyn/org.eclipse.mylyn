@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -38,12 +39,10 @@ public class OrphanedTasksTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		TaskTestUtil.resetTaskList();
+		TaskTestUtil.resetTaskListAndRepositories();
 		taskList = TasksUiPlugin.getTaskList();
-		assertTrue(taskList.getDefaultCategory().isEmpty());
 
-		TaskRepository taskRepository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
-				MockRepositoryConnector.REPOSITORY_URL);
+		TaskRepository taskRepository = TaskTestUtil.createMockRepository();
 		TasksUiPlugin.getRepositoryManager().addRepository(taskRepository);
 	}
 
@@ -178,8 +177,8 @@ public class OrphanedTasksTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testQueryRemovedTaskInCategory() throws Exception {
-		MockTask mockTask = new MockTask("1");
-		MockRepositoryQuery mockQuery = new MockRepositoryQuery("mock query");
+		TaskTask mockTask = TaskTestUtil.createMockTask("1");
+		RepositoryQuery mockQuery = TaskTestUtil.createMockQuery("mock query");
 		taskList.addQuery(mockQuery);
 		taskList.addTask(mockTask, mockQuery);
 		assertTrue(taskList.getDefaultCategory().isEmpty());
