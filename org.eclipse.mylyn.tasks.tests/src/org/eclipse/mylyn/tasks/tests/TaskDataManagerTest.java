@@ -13,11 +13,34 @@ package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
+
 /**
  * @author Rob Elves
  * @author Steffen Pingel
  */
 public class TaskDataManagerTest extends TestCase {
+
+	private TaskDataManager taskDataManger;
+
+	@Override
+	protected void setUp() throws Exception {
+		taskDataManger = TasksUiPlugin.getTaskDataManager();
+	}
+
+	public void testPutUpdatedTaskData() throws Exception {
+		TaskRepository taskRepository = TaskTestUtil.createMockRepository();
+		TaskTask task = TaskTestUtil.createMockTask("1");
+		task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
+		TaskData taskData = TaskTestUtil.createTaskData(taskRepository, "1");
+		taskDataManger.putUpdatedTaskData(task, taskData, true, null);
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+	}
 
 //	public void testHasIncomingDateComparison() {
 //		final Stack<Date> dates = new Stack<Date>();

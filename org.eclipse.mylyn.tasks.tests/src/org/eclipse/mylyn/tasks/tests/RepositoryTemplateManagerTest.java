@@ -19,6 +19,9 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 
+/**
+ * @author Steffen Pingel
+ */
 public class RepositoryTemplateManagerTest extends TestCase {
 
 	private RepositoryTemplateManager manager;

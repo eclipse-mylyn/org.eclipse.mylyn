@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * 
@@ -45,6 +46,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 
 	@Override
 	protected void setUp() throws Exception {
+		TasksUi.getTaskActivityManager().deactivateActiveTask();
 		super.setUp();
 		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
 //		ContextCore.getContextStore().init();

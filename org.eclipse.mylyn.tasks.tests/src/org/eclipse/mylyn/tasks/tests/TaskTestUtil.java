@@ -29,6 +29,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
@@ -144,6 +146,11 @@ public class TaskTestUtil {
 		taskListView.getViewer().expandAll();
 		taskListView.getViewer().setSelection(new StructuredSelection(task), true);
 		Assert.assertSame("Failed to select task", task, taskListView.getSelectedTask());
+	}
+
+	public static TaskData createTaskData(TaskRepository taskRepository, String taskId) {
+		return new TaskData(new TaskAttributeMapper(taskRepository), taskRepository.getConnectorKind(),
+				taskRepository.getRepositoryUrl(), taskId);
 	}
 
 }
