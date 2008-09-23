@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
  */
 public class BugzillaClientFactory {
 
-	private static TaskRepositoryLocationFactory taskRepositoryLocationFactory = new TaskRepositoryLocationFactory();
+	protected static TaskRepositoryLocationFactory taskRepositoryLocationFactory = new TaskRepositoryLocationFactory();
 
 	public static BugzillaClient createClient(TaskRepository taskRepository) throws MalformedURLException {
 		String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);

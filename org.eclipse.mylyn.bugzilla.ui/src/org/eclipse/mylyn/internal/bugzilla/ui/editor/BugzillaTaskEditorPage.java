@@ -34,12 +34,20 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
  */
 public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
-	private static final String LABEL_ERROR_SUBMIT = "Task Submit Error";
-
 	public static final String ID_PART_BUGZILLA_PLANNING = "org.eclipse.mylyn.bugzilla.ui.editors.part.planning";
 
 	public BugzillaTaskEditorPage(TaskEditor editor) {
 		super(editor, BugzillaCorePlugin.CONNECTOR_KIND);
+	}
+
+	/**
+	 * Call this constructor if extending the Bugzilla connector
+	 * 
+	 * @param editor
+	 * @param connectorKind
+	 */
+	public BugzillaTaskEditorPage(TaskEditor editor, String connectorKind) {
+		super(editor, connectorKind);
 	}
 
 	@Override

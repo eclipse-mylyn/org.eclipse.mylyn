@@ -504,8 +504,7 @@ public class BugzillaClient {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						InputStream stream = getResponseStream(postMethod, monitor);
 						try {
-							RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(stream,
-									characterEncoding);
+							RepositoryQueryResultsFactory queryFactory = getQueryResultsFactory(stream);
 							int count = queryFactory.performQuery(repositoryUrl.toString(), collector, mapper,
 									TaskDataCollector.MAX_HITS);
 							return count > 0;
@@ -523,6 +522,10 @@ public class BugzillaClient {
 			}
 		}
 		return false;
+	}
+
+	protected RepositoryQueryResultsFactory getQueryResultsFactory(InputStream stream) {
+		return new RepositoryQueryResultsFactory(stream, characterEncoding);
 	}
 
 	public static void setupExistingBugAttributes(String serverUrl, TaskData existingReport) {
@@ -1343,8 +1346,7 @@ public class BugzillaClient {
 				for (; itr.hasNext(); x++) {
 					String taskId = itr.next();
 					formData[x] = new NameValuePair("id", taskId);
-					TaskData taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND,
-							repositoryUrl.toString(), taskId);
+					TaskData taskData = new TaskData(mapper, getConnectorKind(), repositoryUrl.toString(), taskId);
 					setupExistingBugAttributes(repositoryUrl.toString(), taskData);
 					taskDataMap.put(taskId, taskData);
 				}
@@ -1407,6 +1409,10 @@ public class BugzillaClient {
 				}
 			}
 		}
+	}
+
+	protected String getConnectorKind() {
+		return BugzillaCorePlugin.CONNECTOR_KIND;
 	}
 
 	public String getConfigurationTimestamp(IProgressMonitor monitor) throws CoreException {

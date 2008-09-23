@@ -64,7 +64,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			tag = BugzillaAttribute.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 			switch (tag) {
 			case ID:
-				taskData = new TaskData(mapper, BugzillaCorePlugin.CONNECTOR_KIND, repositoryUrl, parsedText);
+				taskData = new TaskData(mapper, getConnectorKind(), repositoryUrl, parsedText);
 				taskData.setPartial(true);
 				break;
 			case SHORT_SHORT_DESC:
@@ -93,6 +93,10 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			throw e;
 		}
 
+	}
+
+	protected String getConnectorKind() {
+		return BugzillaCorePlugin.CONNECTOR_KIND;
 	}
 
 	public int getResultCount() {

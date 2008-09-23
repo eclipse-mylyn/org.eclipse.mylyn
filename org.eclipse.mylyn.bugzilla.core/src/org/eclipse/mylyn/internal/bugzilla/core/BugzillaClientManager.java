@@ -40,12 +40,16 @@ public class BugzillaClientManager implements IRepositoryListener {
 			if (language == null || language.equals("")) {
 				language = IBugzillaConstants.DEFAULT_LANG;
 			}
-			client = BugzillaClientFactory.createClient(taskRepository);
+			client = createClient(taskRepository);
 			clientByUrl.put(taskRepository.getRepositoryUrl(), client);
 			client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false,
 					monitor));
 		}
 		return client;
+	}
+
+	protected BugzillaClient createClient(TaskRepository taskRepository) throws MalformedURLException {
+		return BugzillaClientFactory.createClient(taskRepository);
 	}
 
 	public synchronized void repositoryAdded(TaskRepository repository) {

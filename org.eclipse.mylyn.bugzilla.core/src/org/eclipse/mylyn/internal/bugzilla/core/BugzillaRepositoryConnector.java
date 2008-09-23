@@ -71,11 +71,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private final BugzillaTaskDataHandler taskDataHandler = new BugzillaTaskDataHandler(this);
 
-	private BugzillaClientManager clientManager;
+	protected BugzillaClientManager clientManager;
 
-	private static BugzillaLanguageSettings enSetting;
+	protected static BugzillaLanguageSettings enSetting;
 
-	private final static Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
+	protected final static Set<BugzillaLanguageSettings> languages = new LinkedHashSet<BugzillaLanguageSettings>();
 
 	@Override
 	public String getLabel() {
