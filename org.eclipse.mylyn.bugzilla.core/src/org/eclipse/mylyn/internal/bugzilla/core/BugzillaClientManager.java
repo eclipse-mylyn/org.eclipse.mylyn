@@ -17,6 +17,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -32,7 +34,7 @@ public class BugzillaClientManager implements IRepositoryListener {
 	}
 
 	public synchronized BugzillaClient getClient(TaskRepository taskRepository, IProgressMonitor monitor)
-			throws MalformedURLException, CoreException {
+			throws CoreException {
 		BugzillaClient client = clientByUrl.get(taskRepository.getRepositoryUrl());
 		if (client == null) {
 
@@ -40,7 +42,12 @@ public class BugzillaClientManager implements IRepositoryListener {
 			if (language == null || language.equals("")) {
 				language = IBugzillaConstants.DEFAULT_LANG;
 			}
-			client = createClient(taskRepository);
+			try {
+				client = createClient(taskRepository);
+			} catch (MalformedURLException e) {
+				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+						"Malformed Repository Url", e));
+			}
 			clientByUrl.put(taskRepository.getRepositoryUrl(), client);
 			client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false,
 					monitor));

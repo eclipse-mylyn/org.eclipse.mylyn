@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -412,21 +411,16 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			throws CoreException {
 		if (super.isRepositoryConfigurationStale(repository, monitor)) {
 			boolean result = true;
-			try {
-				BugzillaClient client = getClientManager().getClient(repository, monitor);
-				if (client != null) {
-					String timestamp = client.getConfigurationTimestamp(monitor);
-					if (timestamp != null) {
-						String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
-						if (oldTimestamp != null) {
-							result = !timestamp.equals(oldTimestamp);
-						}
-						repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, timestamp);
+			BugzillaClient client = getClientManager().getClient(repository, monitor);
+			if (client != null) {
+				String timestamp = client.getConfigurationTimestamp(monitor);
+				if (timestamp != null) {
+					String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
+					if (oldTimestamp != null) {
+						result = !timestamp.equals(oldTimestamp);
 					}
+					repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, timestamp);
 				}
-			} catch (MalformedURLException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-						"Error retrieving configuration timestamp for " + repository.getRepositoryUrl(), e));
 			}
 			return result;
 		}

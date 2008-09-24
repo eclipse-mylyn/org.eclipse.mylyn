@@ -443,27 +443,6 @@ public class BugzillaClient {
 		}
 	}
 
-	public TaskData getTaskData(int id, TaskAttributeMapper mapper, IProgressMonitor monitor) throws IOException,
-			CoreException {
-		final String idString = String.valueOf(id);
-		Set<String> data = new HashSet<String>();
-		data.add(idString);
-		final TaskData[] retrievedData = new TaskData[1];
-		TaskDataCollector collector = new TaskDataCollector() {
-			@Override
-			public void accept(TaskData taskData) {
-				getRepositoryConfiguration().configureTaskData(taskData);
-				BugzillaTaskDataHandler.setVersionToTaskDataVersion(taskData);
-				retrievedData[0] = taskData;
-			}
-		};
-
-		getTaskData(data, collector, mapper, monitor);
-
-		return retrievedData[0];
-
-	}
-
 	public boolean getSearchHits(IRepositoryQuery query, TaskDataCollector collector, TaskAttributeMapper mapper,
 			IProgressMonitor monitor) throws IOException, CoreException {
 		GzipPostMethod postMethod = null;
@@ -1365,22 +1344,11 @@ public class BugzillaClient {
 							InputStream input = getResponseStream(method, monitor);
 							try {
 								MultiBugReportFactory factory = new MultiBugReportFactory(input, characterEncoding);
-
-								TaskDataCollector collector2 = new TaskDataCollector() {
-
-									@Override
-									public void accept(TaskData taskData) {
-										getRepositoryConfiguration().configureTaskData(taskData);
-										BugzillaTaskDataHandler.setVersionToTaskDataVersion(taskData);
-										collector.accept(taskData);
-										monitor.worked(1);
-									}
-								};
 								List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
 								if (repositoryConfiguration != null) {
 									customFields = repositoryConfiguration.getCustomFields();
 								}
-								factory.populateReport(taskDataMap, collector2, mapper, customFields);
+								factory.populateReport(taskDataMap, collector, mapper, customFields);
 								taskIds.removeAll(idsToRetrieve);
 								parseable = true;
 								break;

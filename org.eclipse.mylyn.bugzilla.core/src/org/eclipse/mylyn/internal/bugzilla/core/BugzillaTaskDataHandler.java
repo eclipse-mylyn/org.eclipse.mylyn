@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -185,34 +186,87 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	public TaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		monitor = Policy.monitorFor(monitor);
-		try {
-			monitor.beginTask("Receiving task", IProgressMonitor.UNKNOWN);
-			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
-			int bugId = BugzillaRepositoryConnector.getBugId(taskId);
-			TaskData taskData = client.getTaskData(bugId, getAttributeMapper(repository), monitor);
-			if (taskData == null) {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-						"Task data could not be retrieved. Please re-synchronize task"));
+
+		Set<String> taskIds = new HashSet<String>();
+		taskIds.add(taskId);
+		final TaskData[] retrievedData = new TaskData[1];
+		TaskDataCollector collector = new TaskDataCollector() {
+
+			@Override
+			public void accept(TaskData taskData) {
+				retrievedData[0] = taskData;
 			}
-			return taskData;
-		} catch (IOException e) {
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
-		} finally {
-			monitor.done();
+		};
+		getMultiTaskData(repository, taskIds, collector, monitor);
+
+		if (retrievedData[0] == null) {
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+					"Task data could not be retrieved. Please re-synchronize task"));
 		}
+		return retrievedData[0];
+
+//		monitor = Policy.monitorFor(monitor);
+//		try {
+//			monitor.beginTask("Receiving task", IProgressMonitor.UNKNOWN);
+//			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
+//			int bugId = BugzillaRepositoryConnector.getBugId(taskId);
+//			TaskData taskData = client.getTaskData(bugId, getAttributeMapper(repository), monitor);
+//			if (taskData == null) {
+//				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+//						"Task data could not be retrieved. Please re-synchronize task"));
+//			}
+//			return taskData;
+//		} catch (IOException e) {
+//			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+//					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
+//		} finally {
+//			monitor.done();
+//		}
 	}
 
 	@Override
-	public void getMultiTaskData(TaskRepository repository, Set<String> taskIds, TaskDataCollector collector,
-			IProgressMonitor monitor) throws CoreException {
+	public void getMultiTaskData(final TaskRepository repository, Set<String> taskIds,
+			final TaskDataCollector collector, IProgressMonitor monitor) throws CoreException {
+
 		monitor = Policy.monitorFor(monitor);
+
 		try {
 			monitor.beginTask("Receiving tasks", taskIds.size());
 			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
+			final CoreException[] collectionException = new CoreException[1];
 
-			client.getTaskData(taskIds, collector, getAttributeMapper(repository), monitor);
+			class CollectorWrapper extends TaskDataCollector {
+
+				private final IProgressMonitor monitor2;
+
+				private final TaskDataCollector collector;
+
+				public CollectorWrapper(TaskDataCollector collector, IProgressMonitor monitor2) {
+					this.collector = collector;
+					this.monitor2 = monitor2;
+				}
+
+				@Override
+				public void accept(TaskData taskData) {
+					try {
+						initializeTaskData(repository, taskData, null, new SubProgressMonitor(monitor2, 1));
+					} catch (CoreException e) {
+						if (collectionException[0] == null) {
+							collectionException[0] = e;
+						}
+					}
+					collector.accept(taskData);
+					monitor2.worked(1);
+				}
+			}
+
+			TaskDataCollector collector2 = new CollectorWrapper(collector, monitor);
+
+			client.getTaskData(taskIds, collector2, getAttributeMapper(repository), monitor);
+
+			if (collectionException[0] != null) {
+				throw collectionException[0];
+			}
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
@@ -269,27 +323,44 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public boolean initializeTaskData(TaskRepository repository, TaskData data, ITaskMapping initializationData,
+	public boolean initializeTaskData(TaskRepository repository, TaskData taskData, ITaskMapping initializationData,
 			IProgressMonitor monitor) throws CoreException {
-		if (initializationData == null) {
-			return false;
-		}
-		String product = initializationData.getProduct();
-		if (product == null) {
-			return false;
-		}
-		return initializeTaskData(repository, data, product, monitor);
-	}
 
-	public boolean initializeTaskData(TaskRepository repository, TaskData data, String product, IProgressMonitor monitor)
-			throws CoreException {
-
-		data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
+		// Note: setting current version to latest assumes the data arriving here is either for a new task or is
+		// fresh from the repository (not locally stored data that may not have been migrated).
+		taskData.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
 
 		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
 				false, monitor);
 
-		TaskAttribute productAttribute = createAttribute(data, BugzillaAttribute.PRODUCT);
+		if (repositoryConfiguration == null) {
+			return false;
+		}
+
+		if (taskData.isNew()) {
+
+			if (initializationData == null) {
+				return false;
+			}
+
+			String product = initializationData.getProduct();
+			if (product == null) {
+				return false;
+			}
+			return initializeNewTaskDataAttributes(repositoryConfiguration, taskData, product, monitor);
+		} else {
+			repositoryConfiguration.configureTaskData(taskData);
+		}
+		return true;
+	}
+
+	/**
+	 * Only new, unsubmitted task data or freshly received task data from the repository can be passed in here.
+	 */
+	private boolean initializeNewTaskDataAttributes(RepositoryConfiguration repositoryConfiguration, TaskData taskData,
+			String product, IProgressMonitor monitor) {
+
+		TaskAttribute productAttribute = createAttribute(taskData, BugzillaAttribute.PRODUCT);
 		productAttribute.setValue(product);
 
 		List<String> optionValues = repositoryConfiguration.getProducts();
@@ -298,7 +369,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			productAttribute.putOption(optionValue, optionValue);
 		}
 
-		TaskAttribute attributeStatus = createAttribute(data, BugzillaAttribute.BUG_STATUS);
+		TaskAttribute attributeStatus = createAttribute(taskData, BugzillaAttribute.BUG_STATUS);
 		optionValues = repositoryConfiguration.getStatusValues();
 		for (String option : optionValues) {
 			attributeStatus.putOption(option, option);
@@ -306,9 +377,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		attributeStatus.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
 
-		createAttribute(data, BugzillaAttribute.SHORT_DESC);
+		createAttribute(taskData, BugzillaAttribute.SHORT_DESC);
 
-		TaskAttribute attributeVersion = createAttribute(data, BugzillaAttribute.VERSION);
+		TaskAttribute attributeVersion = createAttribute(taskData, BugzillaAttribute.VERSION);
 		optionValues = repositoryConfiguration.getVersions(productAttribute.getValue());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -318,7 +389,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeVersion.setValue(optionValues.get(optionValues.size() - 1));
 		}
 
-		TaskAttribute attributeComponent = createAttribute(data, BugzillaAttribute.COMPONENT);
+		TaskAttribute attributeComponent = createAttribute(taskData, BugzillaAttribute.COMPONENT);
 		optionValues = repositoryConfiguration.getComponents(productAttribute.getValue());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
@@ -328,7 +399,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeComponent.setValue(optionValues.get(0));
 		}
 
-		TaskAttribute attributePlatform = createAttribute(data, BugzillaAttribute.REP_PLATFORM);
+		TaskAttribute attributePlatform = createAttribute(taskData, BugzillaAttribute.REP_PLATFORM);
 		optionValues = repositoryConfiguration.getPlatforms();
 		for (String option : optionValues) {
 			attributePlatform.putOption(option, option);
@@ -338,7 +409,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributePlatform.setValue(optionValues.get(0));
 		}
 
-		TaskAttribute attributeOPSYS = createAttribute(data, BugzillaAttribute.OP_SYS);
+		TaskAttribute attributeOPSYS = createAttribute(taskData, BugzillaAttribute.OP_SYS);
 		optionValues = repositoryConfiguration.getOSs();
 		for (String option : optionValues) {
 			attributeOPSYS.putOption(option, option);
@@ -348,7 +419,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeOPSYS.setValue(optionValues.get(0));
 		}
 
-		TaskAttribute attributePriority = createAttribute(data, BugzillaAttribute.PRIORITY);
+		TaskAttribute attributePriority = createAttribute(taskData, BugzillaAttribute.PRIORITY);
 		optionValues = repositoryConfiguration.getPriorities();
 		for (String option : optionValues) {
 			attributePriority.putOption(option, option);
@@ -358,7 +429,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributePriority.setValue(optionValues.get((optionValues.size() / 2)));
 		}
 
-		TaskAttribute attributeSeverity = createAttribute(data, BugzillaAttribute.BUG_SEVERITY);
+		TaskAttribute attributeSeverity = createAttribute(taskData, BugzillaAttribute.BUG_SEVERITY);
 		optionValues = repositoryConfiguration.getSeverities();
 		for (String option : optionValues) {
 			attributeSeverity.putOption(option, option);
@@ -368,48 +439,31 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			attributeSeverity.setValue(optionValues.get((optionValues.size() / 2)));
 		}
 
-		TaskAttribute attributeAssignedTo = createAttribute(data, BugzillaAttribute.ASSIGNED_TO);
+		TaskAttribute attributeAssignedTo = createAttribute(taskData, BugzillaAttribute.ASSIGNED_TO);
 		attributeAssignedTo.setValue("");
 
-		TaskAttribute attributeBugFileLoc = createAttribute(data, BugzillaAttribute.BUG_FILE_LOC);
+		TaskAttribute attributeBugFileLoc = createAttribute(taskData, BugzillaAttribute.BUG_FILE_LOC);
 		attributeBugFileLoc.setValue("http://");
 
-		createAttribute(data, BugzillaAttribute.DEPENDSON);
-		createAttribute(data, BugzillaAttribute.BLOCKED);
-		createAttribute(data, BugzillaAttribute.NEWCC);
-		createAttribute(data, BugzillaAttribute.LONG_DESC);
+		createAttribute(taskData, BugzillaAttribute.DEPENDSON);
+		createAttribute(taskData, BugzillaAttribute.BLOCKED);
+		createAttribute(taskData, BugzillaAttribute.NEWCC);
+		createAttribute(taskData, BugzillaAttribute.LONG_DESC);
 
-		if (data.isNew()) {
-			TaskAttribute attrDescription = data.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
-			if (attrDescription != null) {
-				attrDescription.getMetaData().setReadOnly(false);
-			}
-			TaskAttribute attrOwner = data.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
-			if (attrOwner != null) {
-				attrOwner.getMetaData().setReadOnly(false);
-			}
-			TaskAttribute attrAddSelfToCc = data.getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC);
-			if (attrAddSelfToCc != null) {
-				attrAddSelfToCc.getMetaData().setKind(null);
-			}
+		TaskAttribute attrDescription = taskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION);
+		if (attrDescription != null) {
+			attrDescription.getMetaData().setReadOnly(false);
+		}
+		TaskAttribute attrOwner = taskData.getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED);
+		if (attrOwner != null) {
+			attrOwner.getMetaData().setReadOnly(false);
+		}
+		TaskAttribute attrAddSelfToCc = taskData.getRoot().getMappedAttribute(TaskAttribute.ADD_SELF_CC);
+		if (attrAddSelfToCc != null) {
+			attrAddSelfToCc.getMetaData().setKind(null);
 		}
 
 		return true;
-	}
-
-	public static TaskAttribute createAttribute(TaskData data, BugzillaAttribute key) {
-		return createAttribute(data.getRoot(), key);
-	}
-
-	public static TaskAttribute createAttribute(TaskAttribute parent, BugzillaAttribute key) {
-		TaskAttribute attribute = parent.createAttribute(key.getKey());
-		attribute.getMetaData()
-				.defaults()
-				.setReadOnly(key.isReadOnly())
-				.setKind(key.getKind())
-				.setLabel(key.toString())
-				.setType(key.getType());
-		return attribute;
 	}
 
 	@Override
@@ -425,9 +479,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public boolean initializeSubTaskData(TaskRepository repository, TaskData subTaskData, TaskData parentTaskData,
 			IProgressMonitor monitor) throws CoreException {
-		TaskAttribute attributeProject = parentTaskData.getRoot().getMappedAttribute(TaskAttribute.PRODUCT);
-		String product = attributeProject.getValue();
-		initializeTaskData(repository, subTaskData, product, monitor);
+		initializeTaskData(repository, subTaskData, null, monitor);
 		new TaskMapper(subTaskData).merge(new TaskMapper(parentTaskData));
 		subTaskData.getRoot().getMappedAttribute(BugzillaAttribute.DEPENDSON.getKey()).setValue("");
 		subTaskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue("");
@@ -445,8 +497,19 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		return new BugzillaAttributeMapper(taskRepository);
 	}
 
-	public static void setVersionToTaskDataVersion(TaskData data) {
-		data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());
+	public static TaskAttribute createAttribute(TaskData data, BugzillaAttribute key) {
+		return createAttribute(data.getRoot(), key);
+	}
+
+	public static TaskAttribute createAttribute(TaskAttribute parent, BugzillaAttribute key) {
+		TaskAttribute attribute = parent.createAttribute(key.getKey());
+		attribute.getMetaData()
+				.defaults()
+				.setReadOnly(key.isReadOnly())
+				.setKind(key.getKind())
+				.setLabel(key.toString())
+				.setType(key.getType());
+		return attribute;
 	}
 
 }
