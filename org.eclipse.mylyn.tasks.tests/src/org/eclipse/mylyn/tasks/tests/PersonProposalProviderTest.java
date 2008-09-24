@@ -15,13 +15,19 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.ui.PersonContentProposal;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Frank Becker
@@ -31,11 +37,12 @@ public class PersonProposalProviderTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		TaskTestUtil.resetTaskList();
+		TaskTestUtil.resetTaskListAndRepositories();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
+		TaskTestUtil.resetTaskListAndRepositories();
 	}
 
 	public void testGetProposalsNullParameters() {
@@ -164,8 +171,6 @@ public class PersonProposalProviderTest extends TestCase {
 	}
 
 	public void testConstructorRepositoryUrlKind() throws Exception {
-		IContentProposal[] result;
-
 		MockTask task1 = new MockTask(MockRepositoryConnector.REPOSITORY_URL, "1");
 		task1.setOwner("foo");
 		PersonProposalProvider provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
@@ -174,12 +179,28 @@ public class PersonProposalProviderTest extends TestCase {
 		TasksUiPlugin.getTaskList().addQuery(query);
 		TasksUiPlugin.getTaskList().addTask(task1, query);
 
-		result = provider.getProposals("f,xx", 1);
+		IContentProposal[] result = provider.getProposals("f,xx", 1);
 		assertNotNull(result);
 		assertEquals(1, result.length);
 		assertEquals("foo,xx", result[0].getContent());
 		assertEquals("foo", result[0].getLabel());
 		assertEquals(3, result[0].getCursorPosition());
+	}
+
+	public void testCurrentUser() throws Exception {
+		TaskTask task = TaskTestUtil.createMockTask("1");
+		task.setOwner("user");
+		TasksUiPlugin.getTaskList().addTask(task);
+		TaskRepository repository = TaskTestUtil.createMockRepository();
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("user", ""), false);
+		TasksUi.getRepositoryManager().addRepository(repository);
+
+		PersonProposalProvider provider = new PersonProposalProvider(MockRepositoryConnector.REPOSITORY_URL,
+				MockRepositoryConnector.REPOSITORY_KIND);
+		IContentProposal[] result = provider.getProposals("user", 1);
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertTrue(((PersonContentProposal) result[0]).isCurrentUser());
 	}
 
 }
