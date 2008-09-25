@@ -25,12 +25,19 @@ import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.mylyn.internal.wikitext.ui.util.ImageCache;
 import org.eclipse.mylyn.internal.wikitext.ui.util.WikiTextUiResources;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.HtmlTextPresentationParser;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.ImageManager;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletDrawingStrategy;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleDrawingStrategy;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageAnnotation;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageDrawingStrategy;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.xml.sax.SAXException;
 
@@ -46,6 +53,10 @@ public class HtmlViewer extends SourceViewer {
 	private boolean haveInit = false;
 
 	private HtmlViewerConfiguration configuration;
+
+	private final ImageCache imageCache = new ImageCache();
+
+	private boolean displayImages = true;
 
 	public HtmlViewer(Composite parent, IVerticalRuler ruler, int styles) {
 		super(parent, ruler, styles);
@@ -91,9 +102,25 @@ public class HtmlViewer extends SourceViewer {
 		painter.addDrawingStrategy(HorizontalRuleAnnotation.TYPE, new HorizontalRuleDrawingStrategy());
 		painter.addAnnotationType(HorizontalRuleAnnotation.TYPE, HorizontalRuleAnnotation.TYPE);
 		painter.setAnnotationTypeColor(HorizontalRuleAnnotation.TYPE, colorRegistry.get(WikiTextUiResources.COLOR_HR));
+		if (displayImages) {
+			// paint images
+			painter.addDrawingStrategy(ImageAnnotation.TYPE, new ImageDrawingStrategy());
+			painter.addAnnotationType(ImageAnnotation.TYPE, ImageAnnotation.TYPE);
+			painter.setAnnotationTypeColor(ImageAnnotation.TYPE, getTextWidget().getForeground());
+		}
 
 		addTextPresentationListener(painter);
 		addPainter(painter);
+
+		getTextWidget().addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				imageCache.dispose();
+			}
+		});
+
+		if (displayImages) {
+			new ImageManager(this, imageCache, painter);
+		}
 	}
 
 	protected ParseResult parse(String htmlText) {
@@ -104,17 +131,26 @@ public class HtmlViewer extends SourceViewer {
 		result.textPresentation = new TextPresentation();
 
 		HtmlTextPresentationParser parser = new HtmlTextPresentationParser();
+		if (displayImages) {
+			parser.setImageCache(imageCache);
+			parser.setEnableImages(displayImages);
+		}
 		parser.setPresentation(result.textPresentation);
 		parser.setDefaultFont(getTextWidget().getFont());
 		result.annotationModel = new AnnotationModel();
 		parser.setAnnotationModel(result.annotationModel);
+
+		GC gc = new GC(getTextWidget());
 		try {
-			//			System.out.println(htmlText);
+			parser.setGC(gc);
+
 			parser.parse(htmlText);
 		} catch (SAXException e) {
 			throw new IllegalStateException(e);
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
+		} finally {
+			gc.dispose();
 		}
 
 		result.text = parser.getText();
@@ -184,4 +220,27 @@ public class HtmlViewer extends SourceViewer {
 	public TextPresentation getTextPresentation() {
 		return textPresentation;
 	}
+
+	public void setTextPresentation(TextPresentation textPresentation) {
+		this.textPresentation = textPresentation;
+		if (configuration != null) {
+			configuration.setTextPresentation(textPresentation);
+		}
+		changeTextPresentation(textPresentation, false);
+	}
+
+	/**
+	 * indicate if the viewer should support display of images.
+	 */
+	public boolean isDisplayImages() {
+		return displayImages;
+	}
+
+	/**
+	 * indicate if the viewer should support display of images.
+	 */
+	public void setDisplayImages(boolean displayImages) {
+		this.displayImages = displayImages;
+	}
+
 }

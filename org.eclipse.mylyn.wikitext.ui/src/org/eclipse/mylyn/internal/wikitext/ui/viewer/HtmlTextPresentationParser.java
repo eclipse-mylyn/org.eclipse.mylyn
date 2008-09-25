@@ -30,8 +30,10 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModel;
+import org.eclipse.mylyn.internal.wikitext.ui.util.ImageCache;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.BulletAnnotation;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.HorizontalRuleAnnotation;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.ImageAnnotation;
 import org.eclipse.mylyn.wikitext.core.util.IgnoreDtdEntityResolver;
 import org.eclipse.mylyn.wikitext.ui.annotation.AnchorHrefAnnotation;
 import org.eclipse.mylyn.wikitext.ui.annotation.AnchorNameAnnotation;
@@ -235,6 +237,10 @@ public class HtmlTextPresentationParser {
 	};
 
 	private CssStyleManager cssStyleManager;
+
+	private boolean enableImages = false;
+
+	private ImageCache imageCache = new ImageCache();
 
 	public HtmlTextPresentationParser() {
 	}
@@ -560,6 +566,37 @@ public class HtmlTextPresentationParser {
 
 			if (localName.equals("hr")) {
 				emitChar('\n');
+			} else if (localName.equals("img")) {
+				if (enableImages) {
+					for (Annotation annotation : elementState.annotations) {
+						if (annotation instanceof ImageAnnotation) {
+							ImageAnnotation imageAnnotation = (ImageAnnotation) annotation;
+							// ensure that the image is painted on a new line
+							if (out.length() > 0) {
+								char lastChar = out.charAt(out.length() - 1);
+								if (lastChar != '\n' && lastChar != '\r') {
+									emitChar('\n');
+									Position position = annotationToPosition.get(imageAnnotation);
+									annotationToPosition.put(imageAnnotation, new Position(position.getOffset() + 1,
+											position.getLength()));
+								}
+							}
+							if (imageAnnotation.getImage() != null) {
+								// ensure that there are enough blank lines to display
+								// the image
+								int height = imageAnnotation.getImage().getBounds().height;
+								gc.setFont(defaultFont);
+								Point extent = gc.textExtent("\n");
+								if (extent.y > 0) {
+									int numNewlines = (int) Math.ceil(((double) height) / ((double) extent.y));
+									for (int x = 0; x < numNewlines && x < 1000; ++x) {
+										emitChar('\n');
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			if (!state.isEmpty()) {
@@ -676,6 +713,11 @@ public class HtmlTextPresentationParser {
 				}
 			} else if ("hr".equals(localName)) {
 				elementState.addAnnotation(new HorizontalRuleAnnotation());
+			} else if ("img".equals(localName) && enableImages) {
+				String url = atts.getValue("src");
+				if (url != null && url.trim().length() > 0) {
+					elementState.addAnnotation(new ImageAnnotation(url.trim(), imageCache.getMissingImage()));
+				}
 			}
 		}
 
@@ -694,6 +736,12 @@ public class HtmlTextPresentationParser {
 		}
 
 		public void endDocument() throws SAXException {
+			// ORDER DEPENDENCY: do this first
+			if (annotationModel != null) {
+				for (Map.Entry<Annotation, Position> a : annotationToPosition.entrySet()) {
+					annotationModel.addAnnotation(a.getKey(), a.getValue());
+				}
+			}
 
 			// bug# 236787 trim trailing whitespace and adjust style ranges.
 			trimTrailingWhitespace();
@@ -705,12 +753,9 @@ public class HtmlTextPresentationParser {
 				Iterator<?> annotationIterator = annotationModel.getAnnotationIterator();
 				while (annotationIterator.hasNext()) {
 					Annotation annotation = (Annotation) annotationIterator.next();
-					if (annotation.getType().startsWith(idPrefix)) {
+					if (annotation.getType().startsWith(idPrefix) && !annotationToPosition.containsKey(annotation)) {
 						annotationIterator.remove();
 					}
-				}
-				for (Map.Entry<Annotation, Position> a : annotationToPosition.entrySet()) {
-					annotationModel.addAnnotation(a.getKey(), a.getValue());
 				}
 			}
 
@@ -724,6 +769,9 @@ public class HtmlTextPresentationParser {
 			int length = out.length();
 			for (int x = length - 1; x >= 0; --x) {
 				if (Character.isWhitespace(out.charAt(x))) {
+					if (annotationsIncludeOffset(x)) {
+						return;
+					}
 					length = x;
 				} else {
 					break;
@@ -744,6 +792,14 @@ public class HtmlTextPresentationParser {
 					}
 				}
 			}
+		}
+
+		private boolean annotationsIncludeOffset(int offset) {
+			if (annotationModel == null) {
+				return false;
+			}
+			Iterator<?> annotationIterator = annotationModel.getAnnotationIterator(offset, 1, true, true);
+			return annotationIterator.hasNext();
 		}
 
 		public void startDocument() throws SAXException {
@@ -914,4 +970,25 @@ public class HtmlTextPresentationParser {
 		this.bulletChars = bulletChars;
 	}
 
+	/**
+	 * indicate if image display is enabled. The default is false.
+	 */
+	public boolean isEnableImages() {
+		return enableImages;
+	}
+
+	/**
+	 * indicate if image display is enabled. The default is false.
+	 */
+	public void setEnableImages(boolean enableImages) {
+		this.enableImages = enableImages;
+	}
+
+	public ImageCache getImageCache() {
+		return imageCache;
+	}
+
+	public void setImageCache(ImageCache imageCache) {
+		this.imageCache = imageCache;
+	}
 }
