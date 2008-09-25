@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 
 /**
  * 

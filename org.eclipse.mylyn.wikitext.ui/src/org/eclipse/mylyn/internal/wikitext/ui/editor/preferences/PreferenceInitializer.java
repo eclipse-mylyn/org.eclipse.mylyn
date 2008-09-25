@@ -12,7 +12,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 
 /**
  * Class used to initialize default preference values.

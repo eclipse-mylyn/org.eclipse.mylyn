@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.wikitext.ui;
+package org.eclipse.mylyn.internal.wikitext.ui;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,8 +36,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-
-// FIXME: move to internal
 
 /**
  * 

@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.actions;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 

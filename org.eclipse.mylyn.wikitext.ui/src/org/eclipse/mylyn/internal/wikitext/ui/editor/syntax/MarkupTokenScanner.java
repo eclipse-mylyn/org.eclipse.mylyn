@@ -20,11 +20,11 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.ITokenScanner;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner.MarkupPartition;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.FontState;
-import org.eclipse.mylyn.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Font;
 
