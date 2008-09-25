@@ -36,13 +36,23 @@ public class MarkupDocumentProvider extends FileDocumentProvider {
 	protected IDocument createDocument(Object element) throws CoreException {
 		IDocument document = super.createDocument(element);
 		if (document != null) {
-			FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
-			partitioner.setMarkupLanguage(markupLanguage == null ? null : markupLanguage.clone());
-			partitioner.connect(document);
-			document.setDocumentPartitioner(partitioner);
+			connectPartitioner(document);
 		}
-
 		return document;
+	}
+
+	@Override
+	protected IDocument createEmptyDocument() {
+		IDocument document = super.createEmptyDocument();
+		connectPartitioner(document);
+		return document;
+	}
+
+	private void connectPartitioner(IDocument document) {
+		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
+		partitioner.setMarkupLanguage(markupLanguage == null ? null : markupLanguage.clone());
+		partitioner.connect(document);
+		document.setDocumentPartitioner(partitioner);
 	}
 
 	public MarkupLanguage getMarkupLanguage() {
