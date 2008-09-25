@@ -18,7 +18,7 @@
             base-type="org.eclipse.mylyn.wikitext"
             file-extensions="textile"
             id="org.eclipse.mylyn.wikitext.textile"
-            name="Textile WikiText Markup"
+            name="%content-type.name.0"
             priority="normal">
       </content-type>
    </extension>

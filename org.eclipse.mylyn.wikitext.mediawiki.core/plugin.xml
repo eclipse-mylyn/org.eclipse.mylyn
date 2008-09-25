@@ -14,7 +14,7 @@
             base-type="org.eclipse.mylyn.wikitext"
             file-extensions="mediawiki"
             id="org.eclipse.mylyn.wikitext.mediawiki"
-            name="MediaWiki WikiText Markup"
+            name="%content-type.name.0"
             priority="normal">
       </content-type>
    </extension>

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn WikiText MediaWiki UI Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.mediawiki.ui;singleton:=true
 Bundle-Version: 0.9.0.qualifier
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
 Require-Bundle: org.eclipse.jface.text,
  org.eclipse.swt,
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.2,4.0.0)",

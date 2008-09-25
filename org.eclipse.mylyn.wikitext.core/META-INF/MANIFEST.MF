@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn WikiText Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.core;singleton:=true
 Bundle-Version: 0.9.0.qualifier
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor.0
 Export-Package: org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.util;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.validation;x-internal:=true,
@@ -24,3 +24,4 @@ Bundle-Activator: org.eclipse.mylyn.wikitext.core.WikiTextPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.apache.ant;bundle-version="1.7.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Localization: plugin

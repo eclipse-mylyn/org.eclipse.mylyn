@@ -16,7 +16,7 @@
             base-type="org.eclipse.mylyn.wikitext"
             file-extensions="confluence"
             id="org.eclipse.mylyn.wikitext.confluence"
-            name="Confluence WikiText Markup"
+            name="%content-type.name.0"
             priority="normal">
       </content-type>
    </extension>
