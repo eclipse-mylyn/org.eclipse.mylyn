@@ -224,6 +224,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 						Point extent = gc.textExtent("\n");
 						if (extent.y > 0) {
 							int numNewlines = (int) Math.ceil(((double) height) / ((double) extent.y));
+							final int originalNewlines = numNewlines;
 							IDocument document = viewer.getDocument();
 							try {
 								for (int x = position.offset; x < document.getLength(); ++x) {
@@ -248,7 +249,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 									document.replace(position.offset, -numNewlines, "");
 								}
 								if (numNewlines != 0) {
-									// no need to fixup annotation positions, since the annotation model is hooked into the document.
+									// no need to fixup other annotation positions, since the annotation model is hooked into the document.
 
 									// fix up styles
 									for (StyleRange range : ranges) {
@@ -260,6 +261,14 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 											rangesAdjusted = true;
 										}
 									}
+								}
+
+								// bug# 248643: update the annotation size to reflect the full size of the image
+								//              so that it gets repainted when some portion of the image is exposed
+								//              as a result of scrolling
+								if (position.getLength() != originalNewlines) {
+									annotationModel.modifyAnnotationPosition(annotation, new Position(position.offset,
+											originalNewlines));
 								}
 							} catch (BadLocationException e) {
 								// ignore

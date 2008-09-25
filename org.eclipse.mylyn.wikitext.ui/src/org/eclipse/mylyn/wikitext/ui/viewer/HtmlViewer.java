@@ -104,7 +104,7 @@ public class HtmlViewer extends SourceViewer {
 		painter.setAnnotationTypeColor(HorizontalRuleAnnotation.TYPE, colorRegistry.get(WikiTextUiResources.COLOR_HR));
 		if (displayImages) {
 			// paint images
-			painter.addDrawingStrategy(ImageAnnotation.TYPE, new ImageDrawingStrategy());
+			painter.addDrawingStrategy(ImageAnnotation.TYPE, new ImageDrawingStrategy(this));
 			painter.addAnnotationType(ImageAnnotation.TYPE, ImageAnnotation.TYPE);
 			painter.setAnnotationTypeColor(ImageAnnotation.TYPE, getTextWidget().getForeground());
 		}
