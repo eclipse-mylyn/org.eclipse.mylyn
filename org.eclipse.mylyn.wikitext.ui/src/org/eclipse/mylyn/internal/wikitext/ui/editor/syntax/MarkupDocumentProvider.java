@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Text;
@@ -67,7 +69,26 @@ public class MarkupDocumentProvider extends FileDocumentProvider {
 	 */
 	public static void cleanUpEolMarkers(IDocument document) {
 		String platformEolMarker = Text.DELIMITER;
-		document.set(Pattern.compile("(\r\n|\n|\r)").matcher(document.get()).replaceAll(platformEolMarker));
+		replaceLineDelimiters(document, platformEolMarker);
 	}
 
+	private static void replaceLineDelimiters(IDocument document, String newLineDelimiter) {
+		document.set(Pattern.compile("(\r\n|\n|\r)").matcher(document.get()).replaceAll(newLineDelimiter));
+	}
+
+	/**
+	 * override the default implementation to handle EOL issues on Mac, see bug 247777
+	 */
+	@Override
+	protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite)
+			throws CoreException {
+		String platformEolMarker = Text.DELIMITER;
+		if (platformEolMarker.equals("\r")) {
+			// bug 247777: store document with *nix line delimiter
+			Document newDocument = new Document(document.get());
+			replaceLineDelimiters(newDocument, "\n");
+			document = newDocument;
+		}
+		super.doSaveDocument(monitor, element, document, overwrite);
+	}
 }
