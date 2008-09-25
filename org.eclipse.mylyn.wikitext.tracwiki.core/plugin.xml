@@ -17,7 +17,7 @@
             base-type="org.eclipse.mylyn.wikitext"
             file-extensions="tracwiki"
             id="org.eclipse.mylyn.wikitext.tracwiki"
-            name="TracWiki WikiText Markup"
+            name="%content-type.name.0"
             priority="normal">
       </content-type>
    </extension>
