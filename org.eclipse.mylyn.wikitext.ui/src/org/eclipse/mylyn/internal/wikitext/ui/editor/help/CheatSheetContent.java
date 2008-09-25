@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 
 import org.osgi.framework.Bundle;
 
-// FIXME: move to internal
 /**
  * A handle to cheat sheet content, which may modify the content to be more suitable for cheat-sheet viewing by applying
  * CSS styles.

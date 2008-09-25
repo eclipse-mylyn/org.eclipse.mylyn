@@ -23,8 +23,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 
-// FIXME: move to internal
-
 /**
  * 
  * 

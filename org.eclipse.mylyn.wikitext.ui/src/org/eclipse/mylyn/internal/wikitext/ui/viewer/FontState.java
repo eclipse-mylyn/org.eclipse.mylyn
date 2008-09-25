@@ -15,8 +15,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import org.eclipse.swt.graphics.RGB;
 
-//FIXME: move to internal
-
 /**
  * 
  * 

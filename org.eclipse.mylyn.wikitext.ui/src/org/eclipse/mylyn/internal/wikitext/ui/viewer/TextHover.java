@@ -88,7 +88,7 @@ public class TextHover extends DefaultTextHover implements ITextHoverExtension {
 					// expected in a non-eclipse environment
 				}
 
-				// FIXME: prefer 3.4 APIs
+				// TODO: prefer 3.4 APIs
 //				return new DefaultInformationControl(parent, tooltipAffordanceString, new HtmlTextPresenter()) {
 				// must use 3.3 APIs for now
 				return new DefaultInformationControl(parent, SWT.NONE, new HtmlTextPresenter(), tooltipAffordanceString) {

@@ -13,8 +13,6 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 
-// FIXME: move to internal
-
 /**
  * 
  * 

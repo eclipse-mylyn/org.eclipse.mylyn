@@ -16,8 +16,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 
-// FIXME: move to internal
-
 /**
  * 
  * 

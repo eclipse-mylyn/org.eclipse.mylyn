@@ -35,8 +35,6 @@ import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.graphics.Image;
 
-// FIXME: move to internal
-
 /**
  * 
  * 

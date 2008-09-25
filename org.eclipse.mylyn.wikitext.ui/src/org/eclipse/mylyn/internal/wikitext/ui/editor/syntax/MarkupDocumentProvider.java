@@ -21,8 +21,6 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 
-// FIXME: move to internal, rename
-
 /**
  * 
  * 

@@ -484,7 +484,6 @@ public class MarkupEditor extends TextEditor {
 			}
 			markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(name);
 			if (markupLanguage == null) {
-				// FIXME: this could be a project or workspace setting
 				markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage("Textile");
 			}
 		}
