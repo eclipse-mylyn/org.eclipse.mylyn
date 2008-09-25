@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -381,7 +382,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	/**
 	 * Mylyn's task activation history
 	 */
-	private final List<AbstractTask> history;
+	private final LinkedHashSet<AbstractTask> history;
 
 	private final TaskHistoryItemsComparator itemsComparator;
 
@@ -429,8 +430,8 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	public TaskSelectionDialog(Shell parent) {
 		super(parent);
 		this.taskActivationHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
-		this.history = new ArrayList<AbstractTask>(taskActivationHistory.getPreviousTasks());
-		this.itemsComparator = new TaskHistoryItemsComparator(this.history);
+		this.history = new LinkedHashSet<AbstractTask>(taskActivationHistory.getPreviousTasks());
+		this.itemsComparator = new TaskHistoryItemsComparator(new ArrayList<AbstractTask>(history));
 		this.needsCreateTask = true;
 		this.labelProvider = new TaskElementLabelProvider(false);
 		this.showCompletedTasksAction = new ShowCompletedTasksAction();
