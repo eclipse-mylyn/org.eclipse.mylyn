@@ -479,8 +479,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	@Override
 	public boolean initializeSubTaskData(TaskRepository repository, TaskData subTaskData, TaskData parentTaskData,
 			IProgressMonitor monitor) throws CoreException {
-		initializeTaskData(repository, subTaskData, null, monitor);
-		new TaskMapper(subTaskData).merge(new TaskMapper(parentTaskData));
+		TaskMapper mapper = new TaskMapper(parentTaskData);
+		initializeTaskData(repository, subTaskData, mapper, monitor);
+		new TaskMapper(subTaskData).merge(mapper);
 		subTaskData.getRoot().getMappedAttribute(BugzillaAttribute.DEPENDSON.getKey()).setValue("");
 		subTaskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue("");
 		subTaskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("");
