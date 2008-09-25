@@ -59,7 +59,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
 /**
- * Manages the download of images for viewing in an {@link HtmlViewer}, and creates appropriate space for their display.
+ * Manages the download of images for viewing in an {@link HtmlViewer}, and creates appropriate space for their
+ * display.
  * 
  * Downloads image data in a background thread, instantiates the corresopnding images, and ensures that enough vertical
  * space exists in the viewer to display the images.
@@ -227,7 +228,9 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 							try {
 								for (int x = position.offset; x < document.getLength(); ++x) {
 									if (document.getChar(x) == '\n') {
-										if (x != position.offset && annotationsIncludeOffset(x)) {
+										if (x != position.offset
+												&& Util.annotationsIncludeOffset(
+														(AnnotationModel) viewer.getAnnotationModel(), x)) {
 											break;
 										}
 										--numNewlines;
@@ -289,15 +292,6 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 				computingChanges = false;
 			}
 		}
-	}
-
-	private boolean annotationsIncludeOffset(int offset) {
-		AnnotationModel annotationModel = (AnnotationModel) viewer.getAnnotationModel();
-		if (annotationModel == null) {
-			return false;
-		}
-		Iterator<?> annotationIterator = annotationModel.getAnnotationIterator(offset, 1, true, true);
-		return annotationIterator.hasNext();
 	}
 
 	private static final AtomicInteger resolverIdSeed = new AtomicInteger(1);

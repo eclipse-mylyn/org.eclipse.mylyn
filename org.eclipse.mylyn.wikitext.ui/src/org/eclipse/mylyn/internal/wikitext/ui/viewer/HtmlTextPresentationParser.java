@@ -769,7 +769,7 @@ public class HtmlTextPresentationParser {
 			int length = out.length();
 			for (int x = length - 1; x >= 0; --x) {
 				if (Character.isWhitespace(out.charAt(x))) {
-					if (annotationsIncludeOffset(x)) {
+					if (Util.annotationsIncludeOffset(annotationModel, x)) {
 						return;
 					}
 					length = x;
@@ -792,14 +792,6 @@ public class HtmlTextPresentationParser {
 					}
 				}
 			}
-		}
-
-		private boolean annotationsIncludeOffset(int offset) {
-			if (annotationModel == null) {
-				return false;
-			}
-			Iterator<?> annotationIterator = annotationModel.getAnnotationIterator(offset, 1, true, true);
-			return annotationIterator.hasNext();
 		}
 
 		public void startDocument() throws SAXException {
@@ -991,4 +983,5 @@ public class HtmlTextPresentationParser {
 	public void setImageCache(ImageCache imageCache) {
 		this.imageCache = imageCache;
 	}
+
 }
