@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - indicate deprecated attachments, bug 215549
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -21,7 +22,6 @@ import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorToolkit;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.ISharedImages;
@@ -87,8 +87,6 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 			}
 		case 1:
 			return attachment.getDescription();
-//		case 2:
-//			return attachment.getContentType();
 		case 2:
 			Long length = attachment.getLength();
 			if (length < 0) {
@@ -125,20 +123,13 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 		// ignore
 	}
 
-	public Color getForeground(Object element, int columnIndex) {
+	@Override
+	public Color getForeground(Object element) {
 		ITaskAttachment att = (ITaskAttachment) element;
 		if (att.isDeprecated()) {
 			return themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_COMPLETED);
 		}
 		return super.getForeground(element);
-	}
-
-	public Color getBackground(Object element, int columnIndex) {
-		return super.getBackground(element);
-	}
-
-	public Font getFont(Object element, int columnIndex) {
-		return super.getFont(element);
 	}
 
 	@Override
