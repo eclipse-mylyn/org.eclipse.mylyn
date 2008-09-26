@@ -19,38 +19,22 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
+import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 
 /**
  * 
  * 
  * @author David Green
  */
-public class MarkupDocumentProvider extends FileDocumentProvider {
+public class MarkupDocumentProvider extends TextFileDocumentProvider {
 
 	private MarkupLanguage markupLanguage;
 
-	@Override
-	protected IDocument createDocument(Object element) throws CoreException {
-		IDocument document = super.createDocument(element);
-		if (document != null) {
-			connectPartitioner(document);
-		}
-		return document;
-	}
-
-	@Override
-	protected IDocument createEmptyDocument() {
-		IDocument document = super.createEmptyDocument();
-		connectPartitioner(document);
-		return document;
-	}
-
-	private void connectPartitioner(IDocument document) {
-		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
-		partitioner.setMarkupLanguage(markupLanguage == null ? null : markupLanguage.clone());
-		partitioner.connect(document);
-		document.setDocumentPartitioner(partitioner);
+	public MarkupDocumentProvider() {
+		super(new MarkupFileDocumentProvider());
 	}
 
 	public MarkupLanguage getMarkupLanguage() {
@@ -62,10 +46,77 @@ public class MarkupDocumentProvider extends FileDocumentProvider {
 	}
 
 	@Override
-	protected void setDocumentContent(IDocument document, InputStream contentStream, String encoding)
-			throws CoreException {
-		super.setDocumentContent(document, contentStream, encoding);
-		cleanUpEolMarkers(document);
+	public void connect(Object element) throws CoreException {
+		super.connect(element);
+		IDocument document = super.getDocument(element);
+		connectPartitioner(document);
+	}
+
+	private void connectPartitioner(IDocument document) {
+		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
+		partitioner.setMarkupLanguage(markupLanguage == null ? null : markupLanguage.clone());
+		partitioner.connect(document);
+		document.setDocumentPartitioner(partitioner);
+	}
+
+	@Override
+	protected FileInfo createFileInfo(Object element) throws CoreException {
+		if (dispatchToParent(element)) {
+			// bug 247778: dispatch to MarkupFileDocumentProvider by returning null
+
+			// unfortunately this means that we can't fixup EOL markers for better
+			// cross-platform markup for opened files that aren't in the workspace
+			return null;
+		}
+		return super.createFileInfo(element);
+	}
+
+	private boolean dispatchToParent(Object element) {
+		return element instanceof IStorageEditorInput || element instanceof IFileEditorInput;
+	}
+
+	@Override
+	protected DocumentProviderOperation createSaveOperation(final Object element, final IDocument document,
+			final boolean overwrite) throws CoreException {
+		if (dispatchToParent(element)) {
+			//  bug 247778: dispatch to MarkupFileDocumentProvider
+			return new DocumentProviderOperation() {
+				@Override
+				protected void execute(IProgressMonitor monitor) throws CoreException {
+					getParentProvider().saveDocument(monitor, element, document, overwrite);
+				}
+			};
+		} else {
+			return super.createSaveOperation(element, document, overwrite);
+		}
+	}
+
+	private static class MarkupFileDocumentProvider extends FileDocumentProvider {
+
+		@Override
+		protected void setDocumentContent(IDocument document, InputStream contentStream, String encoding)
+				throws CoreException {
+			super.setDocumentContent(document, contentStream, encoding);
+			cleanUpEolMarkers(document);
+		}
+
+		/**
+		 * override the default implementation to handle EOL issues on Mac, see bug 247777
+		 */
+		@Override
+		protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite)
+				throws CoreException {
+			String platformEolMarker = Text.DELIMITER;
+			if (platformEolMarker.equals("\r")) {
+				// bug 247777: store document with *nix line delimiter
+				// note that we don't modify the provided document here, we substitute another 
+				// document instead.
+				Document newDocument = new Document(document.get());
+				replaceLineDelimiters(newDocument, "\n");
+				document = newDocument;
+			}
+			super.doSaveDocument(monitor, element, document, overwrite);
+		}
 	}
 
 	/**
@@ -84,19 +135,4 @@ public class MarkupDocumentProvider extends FileDocumentProvider {
 		document.set(Pattern.compile("(\r\n|\n|\r)").matcher(document.get()).replaceAll(newLineDelimiter));
 	}
 
-	/**
-	 * override the default implementation to handle EOL issues on Mac, see bug 247777
-	 */
-	@Override
-	protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite)
-			throws CoreException {
-		String platformEolMarker = Text.DELIMITER;
-		if (platformEolMarker.equals("\r")) {
-			// bug 247777: store document with *nix line delimiter
-			Document newDocument = new Document(document.get());
-			replaceLineDelimiters(newDocument, "\n");
-			document = newDocument;
-		}
-		super.doSaveDocument(monitor, element, document, overwrite);
-	}
 }
