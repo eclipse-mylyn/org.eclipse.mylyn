@@ -252,4 +252,18 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		assertEquals(((TaskHyperlink) links[0]).getRepository(), repository1);
 	}
 
+	public void testMatchMultipleEmptyRegion() {
+		String testString = "bug 123 bug 345";
+		viewer.setDocument(new Document(testString));
+		Region region = new Region(10, 0);
+		viewer.setRepository(repository1);
+		repositoryManager.addRepository(repository1);
+
+		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertTrue(links[0] instanceof TaskHyperlink);
+		assertEquals("345", ((TaskHyperlink) links[0]).getTaskId());
+	}
+
 }
