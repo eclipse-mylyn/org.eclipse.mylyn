@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.test_feature"
       label="Mylyn Test Feature"
-      version="3.0.2.qualifier"
+      version="3.1.0.qualifier"
       plugin="org.eclipse.mylyn">
 
    <description url="http://eclipse.org/mylyn">

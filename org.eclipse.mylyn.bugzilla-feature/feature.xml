@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.bugzilla_feature"
       label="Mylyn Connector: Bugzilla"
-      version="3.0.2.qualifier"
+      version="3.1.0.qualifier"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -76,7 +76,7 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.mylyn.tasks.ui" version="3.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn_feature" version="3.0.2.qualifier" match="perfect"/>
+      <import feature="org.eclipse.mylyn_feature" version="3.1.0.qualifier" match="perfect"/>
       <import plugin="org.eclipse.mylyn.commons.net" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.core" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.mylyn.commons.ui" version="3.0.0" match="compatible"/>
@@ -86,14 +86,14 @@ Java and all Java-based trademarks are trademarks of Sun Microsystems, Inc. in t
          id="org.eclipse.mylyn.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="3.0.2.qualifier"
+         version="3.1.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="3.0.2.qualifier"
+         version="3.1.0.qualifier"
          unpack="false"/>
 
 </feature>
