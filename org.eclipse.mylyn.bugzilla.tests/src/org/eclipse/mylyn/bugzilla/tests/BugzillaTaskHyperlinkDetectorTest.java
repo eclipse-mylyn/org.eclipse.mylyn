@@ -114,11 +114,12 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		for (String format : formats) {
 			String testString = "is ends with " + format;
 			viewer.setDocument(new Document(testString));
-			Region region = new Region(testString.indexOf(format), testString.length());
+			int i = testString.indexOf(format);
+			Region region = new Region(i, testString.length() - i);
 			IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 			assertNotNull(links);
 			assertEquals(1, links.length);
-			assertEquals(testString.indexOf(format), links[0].getHyperlinkRegion().getOffset());
+			assertEquals(i, links[0].getHyperlinkRegion().getOffset());
 		}
 	}
 
@@ -126,7 +127,8 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		for (String format : formats) {
 			String testString = "is a " + format + " in the middle";
 			viewer.setDocument(new Document(testString));
-			Region region = new Region(testString.indexOf(format), testString.length());
+			int i = testString.indexOf(format);
+			Region region = new Region(i, testString.length() - i);
 			IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 			assertNotNull(links);
 			assertEquals(1, links.length);
@@ -137,27 +139,30 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 	public void testTwoOnSingleLine() {
 		String testString = "is a " + BUG_FORMAT_1 + " in the middle and at the end " + BUG_FORMAT_1_2;
 		viewer.setDocument(new Document(testString));
-		Region region = new Region(testString.indexOf(BUG_FORMAT_1_2), testString.length());
+		Region region = new Region(0, testString.length());
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
-		assertEquals(1, links.length);
-		assertEquals(testString.indexOf(BUG_FORMAT_1_2), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(2, links.length);
+		assertEquals(testString.indexOf(BUG_FORMAT_1), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(testString.indexOf(BUG_FORMAT_1_2), links[1].getHyperlinkRegion().getOffset());
 	}
 
 	public void testMultiLine() {
 		String testString = "is a the first line\n this is the second which ends with a bug, " + BUG_FORMAT_1_2;
 		viewer.setDocument(new Document(testString));
-		Region region = new Region(testString.indexOf(BUG_FORMAT_1_2), testString.length());
+		int i = testString.indexOf(BUG_FORMAT_1_2);
+		Region region = new Region(i, testString.length() - i);
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
 		assertEquals(1, links.length);
-		assertEquals(testString.indexOf(BUG_FORMAT_1_2), links[0].getHyperlinkRegion().getOffset());
+		assertEquals(i, links[0].getHyperlinkRegion().getOffset());
 	}
 
 	public void testDuplicate() {
 		String testString = "*** This bug has been marked as a " + DUPLICATE + " ***";
 		viewer.setDocument(new Document(testString));
-		Region region = new Region(testString.indexOf(DUPLICATE), testString.length());
+		int i = testString.indexOf(DUPLICATE);
+		Region region = new Region(i, testString.length() - i);
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, false);
 		assertNotNull(links);
 		assertEquals(1, links.length);

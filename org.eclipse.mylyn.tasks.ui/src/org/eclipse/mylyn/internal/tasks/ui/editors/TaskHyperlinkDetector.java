@@ -21,6 +21,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -48,20 +49,38 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 		}
 
 		IDocument document = textViewer.getDocument();
-		if (document == null) {
+		if (document == null || document.getLength() == 0) {
 			return null;
 		}
 
-		IRegion lineInfo;
-		String line;
+		String content;
+		int contentOffset;
+
 		try {
-			lineInfo = document.getLineInformationOfOffset(region.getOffset());
-			line = document.get(lineInfo.getOffset(), lineInfo.getLength());
+			if (region.getLength() == 0) {
+				// expand the region to include the whole line
+				IRegion lineInfo = document.getLineInformationOfOffset(region.getOffset());
+				int lineLength = lineInfo.getLength();
+				int lineOffset = lineInfo.getOffset();
+				int lineEnd = lineOffset + lineLength;
+				int regionEnd = region.getOffset() + region.getLength();
+				if (lineOffset < region.getOffset()) {
+					int regionLength = Math.max(regionEnd, lineEnd) - lineOffset;
+					contentOffset = lineOffset;
+					content = document.get(lineOffset, regionLength);
+					region = new Region(0, regionLength);
+				} else {
+					int regionLength = Math.max(regionEnd, lineEnd) - region.getOffset();
+					contentOffset = region.getOffset();
+					content = document.get(contentOffset, regionLength);
+					region = new Region(0, regionLength);
+				}
+			} else {
+				content = document.get(region.getOffset(), region.getLength());
+				contentOffset = region.getOffset();
+				region = new Region(0, region.getLength());
+			}
 		} catch (BadLocationException ex) {
-			return null;
-		}
-
-		if (line.length() == 0) {
 			return null;
 		}
 
@@ -75,22 +94,21 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 		}
 
 		List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();
-		detectHyperlinks(line, region.getOffset() - lineInfo.getOffset(), lineInfo.getOffset(), repositories,
-				hyperlinks);
+		detectHyperlinks(content, contentOffset, region, repositories, hyperlinks);
 		if (hyperlinks.isEmpty()) {
 			return null;
 		}
 		return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
 	}
 
-	protected void detectHyperlinks(String line, int lineOffset, int regionOffset, List<TaskRepository> repositories,
+	private void detectHyperlinks(String content, int contentOffset, IRegion region, List<TaskRepository> repositories,
 			List<IHyperlink> hyperlinks) {
 		for (TaskRepository repository : repositories) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 			if (connectorUi == null) {
 				continue;
 			}
-			IHyperlink[] links = connectorUi.findHyperlinks(repository, line, lineOffset, regionOffset);
+			IHyperlink[] links = connectorUi.findHyperlinks(repository, content, contentOffset, region);
 			if (links == null) {
 				continue;
 			}

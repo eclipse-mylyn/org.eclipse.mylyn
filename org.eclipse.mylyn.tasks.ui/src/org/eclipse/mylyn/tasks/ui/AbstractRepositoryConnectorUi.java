@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     Eugene Kuleshov - improvements
+ *     David Green - fix for bug 244442
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui;
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
@@ -218,9 +220,32 @@ public abstract class AbstractRepositoryConnectorUi {
 	 *            the offset of <code>text</code>
 	 * @return an array of hyperlinks
 	 * @since 2.0
+	 * 
+	 * @deprecated use {@link #findHyperlinks(TaskRepository, String, int, IRegion)} instead
 	 */
+	@Deprecated
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int textOffset, int lineOffset) {
 		return null;
+	}
+
+	/**
+	 * Returns an array of hyperlinks that link to tasks within <code>content</code>.
+	 * 
+	 * @param repository
+	 *            the repository for which hyperlinks should be detected, never <code>null</code>
+	 * @param content
+	 *            the text content in which to find hyperlinks
+	 * @param contentOffset
+	 *            the offset into the original content at which the <code>content</code> starts. Returned hyperlinks
+	 *            should be offset by this factor
+	 * @param region
+	 *            the region that specifies the subset of the content in which to find hyperlinks
+	 * 
+	 * @return an array of hyperlinks, or null
+	 * @since 3.1
+	 */
+	public IHyperlink[] findHyperlinks(TaskRepository repository, String content, int contentOffset, IRegion region) {
+		return findHyperlinks(repository, content, region.getOffset(), contentOffset);
 	}
 
 	/**
@@ -244,4 +269,5 @@ public abstract class AbstractRepositoryConnectorUi {
 	public IWizardPage getTaskAttachmentPage(TaskAttachmentModel model) {
 		return new TaskAttachmentPage(model);
 	}
+
 }
