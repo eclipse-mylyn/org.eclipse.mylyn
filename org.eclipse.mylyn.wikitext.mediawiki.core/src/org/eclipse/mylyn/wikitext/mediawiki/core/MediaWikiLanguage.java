@@ -139,7 +139,7 @@ public class MediaWikiLanguage extends MarkupLanguage {
 	 * 
 	 * @return the href to access the page
 	 * 
-	 * @see #getInternalPageHrefPrefix()
+	 * @see MarkupLanguage#getInternalLinkPattern()
 	 */
 	public String toInternalHref(String pageName) {
 		String pageId = pageName.replace(' ', '_');
