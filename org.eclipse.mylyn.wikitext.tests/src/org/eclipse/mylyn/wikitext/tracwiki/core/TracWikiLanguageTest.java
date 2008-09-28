@@ -276,9 +276,10 @@ public class TracWikiLanguageTest extends TestCase {
 	}
 
 	public void testWikiWord() {
+		markupLanaguage.setInternalLinkPattern("https://foo.bar/wiki/{0}");
 		String html = parser.parseToHtml("A WikiWord points somewhere");
 		System.out.println(html);
-		assertTrue(html.contains("<body><p>A <a href=\"WikiWord\">WikiWord</a> points somewhere</p></body>"));
+		assertTrue(html.contains("<body><p>A <a href=\"https://foo.bar/wiki/WikiWord\">WikiWord</a> points somewhere</p></body>"));
 	}
 
 	public void testWikiWordNoAutolink() {
