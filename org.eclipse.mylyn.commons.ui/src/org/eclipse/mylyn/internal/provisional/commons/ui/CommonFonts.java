@@ -31,6 +31,8 @@ public class CommonFonts {
 
 	public static Font STRIKETHROUGH = null;
 
+	public static boolean HAS_STRIKETHROUGH;
+
 	static {
 		if (Display.getCurrent() != null) {
 			init();
@@ -68,7 +70,10 @@ public class CommonFonts {
 			}
 		}
 		if (CommonFonts.STRIKETHROUGH == null) {
+			CommonFonts.HAS_STRIKETHROUGH = false;
 			CommonFonts.STRIKETHROUGH = defaultFont;
+		} else {
+			CommonFonts.HAS_STRIKETHROUGH = true;
 		}
 	}
 
