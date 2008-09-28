@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.tracwiki.core;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +25,14 @@ import org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase.SimplePhraseModi
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.BangEscapeToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.HyperlinkReplacementToken;
 import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.LineBreakToken;
+import org.eclipse.mylyn.internal.wikitext.tracwiki.core.token.WikiWordReplacementToken;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkReplacementToken;
 
 /**
- * 
+ * An implementation of the <a href="http://trac.edgewall.org/wiki/TracWiki">TracWiki</a> markup language.
  * 
  * @author David Green
  */
@@ -38,6 +40,8 @@ public class TracWikiLanguage extends MarkupLanguage {
 	private final List<Block> blocks = new ArrayList<Block>();
 
 	private final List<Block> paragraphNestableBlocks = new ArrayList<Block>();
+
+	private boolean autoLinking = true;
 
 	private static PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
 
@@ -83,6 +87,7 @@ public class TracWikiLanguage extends MarkupLanguage {
 		tokenSyntax.add(new LineBreakToken());
 		tokenSyntax.add(new HyperlinkReplacementToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
+		tokenSyntax.add(new WikiWordReplacementToken());
 	}
 
 	public TracWikiLanguage() {
@@ -108,4 +113,45 @@ public class TracWikiLanguage extends MarkupLanguage {
 		return tokenSyntax;
 	}
 
+	/**
+	 * Convert a page name to an href to the page.
+	 * 
+	 * @param pageName
+	 *            the name of the page to target
+	 * 
+	 * @return the href to access the page
+	 * 
+	 * @see MarkupLanguage#getInternalLinkPattern()
+	 */
+	public String toInternalHref(String pageName) {
+		String pageId = pageName;
+		if (pageId.startsWith("#")) {
+			// internal anchor
+			return pageId;
+		}
+		return MessageFormat.format(super.internalLinkPattern, pageId);
+	}
+
+	/**
+	 * for the purpose of converting wiki words into links, determine if the wiki word exists.
+	 * 
+	 * @see WikiWordReplacementToken
+	 */
+	public boolean computeInternalLinkExists(String link) {
+		return true;
+	}
+
+	/**
+	 * Indicate if the markup should match WikiWords as hyperlinks. The default is true.
+	 */
+	public boolean isAutoLinking() {
+		return autoLinking;
+	}
+
+	/**
+	 * Indicate if the markup should match WikiWords as hyperlinks. The default is true.
+	 */
+	public void setAutoLinking(boolean autoLinking) {
+		this.autoLinking = autoLinking;
+	}
 }

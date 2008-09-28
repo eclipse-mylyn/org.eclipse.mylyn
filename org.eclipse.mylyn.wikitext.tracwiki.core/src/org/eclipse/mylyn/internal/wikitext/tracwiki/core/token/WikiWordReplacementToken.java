@@ -10,50 +10,58 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.tracwiki.core.token;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
 
 /**
- * recognizes explicit hyperlink syntax that uses '[' and ']' delimiters
+ * Matches WikiWord internal hyperlinks.
  * 
  * @author David Green
+ * 
+ * @see TracWikiLanguage#isAutoLinking()
  */
-public class HyperlinkReplacementToken extends PatternBasedElement {
+public class WikiWordReplacementToken extends PatternBasedElement {
+
+	private static final Pattern replacementPattern = Pattern.compile("\\W");
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "\\[\\s*(wiki:)?([^\\]\\s]+)\\s*([^\\]]+)?\\s*\\]";
+		return "(!)?([A-Z]\\w+(?:[A-Z]\\w*)+)";
 	}
 
 	@Override
 	protected int getPatternGroupCount() {
-		return 3;
+		return 2;
 	}
 
 	@Override
 	protected PatternBasedElementProcessor newProcessor() {
-		return new HyperlinkReplacementTokenProcessor();
+		return new WikiWordProcessor();
 	}
 
-	private static class HyperlinkReplacementTokenProcessor extends PatternBasedElementProcessor {
+	private class WikiWordProcessor extends PatternBasedElementProcessor {
 		@Override
 		public void emit() {
-			String wikiUrl = group(1);
-			String href = group(2);
-			String text = group(3);
-			if (text == null) {
-				text = href;
+			String escaped = group(1);
+			String word = group(2);
+			TracWikiLanguage twikiLanguage = (TracWikiLanguage) markupLanguage;
+			if (escaped != null || !twikiLanguage.isAutoLinking()) {
+				builder.characters(word);
 			} else {
-				text = text.trim();
-				if (text.length() == 0) {
-					text = href;
+				String target = replacementPattern.matcher(word).replaceAll("");
+				boolean exists = twikiLanguage.computeInternalLinkExists(target);
+
+				String internalHref = twikiLanguage.toInternalHref(target);
+				if (!exists) {
+					builder.characters(word);
+					builder.link(internalHref, "?");
+				} else {
+					builder.link(internalHref, word);
 				}
 			}
-			if (wikiUrl != null) {
-				href = ((TracWikiLanguage) markupLanguage).toInternalHref(href);
-			}
-			builder.link(href, text);
 		}
 	}
 

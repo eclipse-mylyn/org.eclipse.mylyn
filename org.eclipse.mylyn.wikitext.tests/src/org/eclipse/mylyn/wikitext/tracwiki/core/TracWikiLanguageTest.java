@@ -26,8 +26,12 @@ public class TracWikiLanguageTest extends TestCase {
 
 	private MarkupParser parser;
 
+	private TracWikiLanguage markupLanaguage;
+
+	@Override
 	public void setUp() {
-		parser = new MarkupParser(new TracWikiLanguage());
+		markupLanaguage = new TracWikiLanguage();
+		parser = new MarkupParser(markupLanaguage);
 	}
 
 	public void testParagraphs() throws IOException {
@@ -258,4 +262,36 @@ public class TracWikiLanguageTest extends TestCase {
 				.matcher(html)
 				.find());
 	}
+
+	public void testInternalHyperlinkWithTitle() {
+		String html = parser.parseToHtml("a normal para [wiki:ISO9000 ISO 9000] with a hyperlink");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>a normal para <a href=\"ISO9000\">ISO 9000</a> with a hyperlink</p></body>"));
+	}
+
+	public void testInternalHyperlinkWithoutTitle() {
+		String html = parser.parseToHtml("a normal para [wiki:ISO9000] with a hyperlink");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>a normal para <a href=\"ISO9000\">ISO9000</a> with a hyperlink</p></body>"));
+	}
+
+	public void testWikiWord() {
+		String html = parser.parseToHtml("A WikiWord points somewhere");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A <a href=\"WikiWord\">WikiWord</a> points somewhere</p></body>"));
+	}
+
+	public void testWikiWordNoAutolink() {
+		markupLanaguage.setAutoLinking(false);
+		String html = parser.parseToHtml("A WikiWord points somewhere but not this one!");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A WikiWord points somewhere but not this one!</p></body>"));
+	}
+
+	public void testWikiWordEscaped() {
+		String html = parser.parseToHtml("A !WikiWord points somewhere");
+		System.out.println(html);
+		assertTrue(html.contains("<body><p>A WikiWord points somewhere</p></body>"));
+	}
+
 }
