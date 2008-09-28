@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.wikitext.tracwiki.ui.editors;
 
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
 import org.eclipse.mylyn.wikitext.ui.editor.MarkupTaskEditorExtension;
 
@@ -25,4 +27,14 @@ public class TracWikiTaskEditorExtension extends MarkupTaskEditorExtension {
 		setMarkupLanguage(new TracWikiLanguage());
 	}
 
+	@Override
+	protected void configureDefaultInternalLinkPattern(TaskRepository taskRepository, MarkupLanguage markupLanguage) {
+		String url = taskRepository.getRepositoryUrl();
+		if (url != null && url.length() > 0) {
+			if (!url.endsWith("/")) {
+				url = url + "/";
+			}
+			markupLanguage.setInternalLinkPattern(url + "wiki/{0}");
+		}
+	}
 }
