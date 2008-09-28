@@ -181,18 +181,37 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 	}
 
 	/**
-	 * Configures the markup language with settings from the task repository.
+	 * Configures the markup language with settings from the task repository. Subclasses may override this method, but
+	 * should call <code>super.configureMarkupLanguage(taskRepository,markupLanguage)</code>.
 	 * 
 	 * @param taskRepository
 	 *            the repository from which settings should be used
 	 * @param markupLanguage
 	 *            the markup language to configure
+	 * 
+	 * @see #configureDefaultInternalLinkPattern(TaskRepository, MarkupLanguage)
 	 */
-	private void configureMarkupLanguage(TaskRepository taskRepository, MarkupLanguage markupLanguage) {
+	protected void configureMarkupLanguage(TaskRepository taskRepository, MarkupLanguage markupLanguage) {
 		String internalLinkPattern = taskRepository.getProperty(AbstractTaskEditorExtension.INTERNAL_WIKI_LINK_PATTERN);
 		if (internalLinkPattern != null && internalLinkPattern.trim().length() > 0) {
 			markupLanguage.setInternalLinkPattern(internalLinkPattern.trim());
+		} else {
+			configureDefaultInternalLinkPattern(taskRepository, markupLanguage);
 		}
+	}
+
+	/**
+	 * Overriding methods should set the {@link MarkupLanguage#getInternalLinkPattern() internal hyperlink pattern} of
+	 * the given markup language based on some default rules applied to the task repository URL. The default
+	 * implementation does nothing.
+	 * 
+	 * @param taskRepository
+	 *            the task repository from which settings may be obtained
+	 * @param markupLanguage
+	 *            the markup language to configure
+	 */
+	protected void configureDefaultInternalLinkPattern(TaskRepository taskRepository, MarkupLanguage markupLanguage) {
+		// nothing to do
 	}
 
 	protected static class TaskMarkupSourceViewerConfiguration extends MarkupSourceViewerConfiguration {
