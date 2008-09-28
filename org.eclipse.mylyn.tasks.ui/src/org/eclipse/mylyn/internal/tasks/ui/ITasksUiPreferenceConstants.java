@@ -58,6 +58,8 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String EDITOR_TASKS_RICH = "org.eclipse.mylyn.tasks.ui.reporting.open.editor";
 
+	public static final String USE_STRIKETHROUGH_FOR_COMPLETED = "org.eclipse.mylyn.tasks.ui.strikethrough.for.completed";
+
 	public static final String REPOSITORY_SYNCH_SCHEDULE_ENABLED = "org.eclipse.mylyn.tasks.ui.repositories.synch.schedule";
 
 	public static final String REPOSITORY_SYNCH_SCHEDULE_MILISECONDS = "org.eclipse.mylyn.tasks.ui.repositories.synch.schedule.miliseconds";

@@ -885,6 +885,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.SHOW_TRIM, false);
 		// remove preference
 		store.setToDefault(ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED);
+		store.setDefault(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED, true);
 
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000));

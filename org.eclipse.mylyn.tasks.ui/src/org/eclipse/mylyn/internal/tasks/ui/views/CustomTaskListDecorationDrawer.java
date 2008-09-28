@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Frank Becker - fixes for bug 169916
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.context.core.ContextCore;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonFonts;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -28,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -55,12 +58,29 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private final boolean tweakClipping;
 
+	private boolean useStrikethroughForCompleted;
+
+	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
+
+		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
+			if (event.getProperty().equals(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)) {
+				if (event.getNewValue() instanceof Boolean) {
+					useStrikethroughForCompleted = (Boolean) event.getNewValue();
+					taskListView.refresh();
+				}
+			}
+		}
+	};
+
 	CustomTaskListDecorationDrawer(TaskListView taskListView, int activationImageOffset) {
 		this.taskListView = taskListView;
 		this.activationImageOffset = activationImageOffset;
 		this.taskListView.synchronizationOverlaid = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
 				ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT);
 
+		useStrikethroughForCompleted = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
+				ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED);
+		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 		if (SWT.getPlatform().equals("gtk")) {
 			this.platformSpecificSquish = 8;
 			this.tweakClipping = true;
@@ -89,6 +109,18 @@ class CustomTaskListDecorationDrawer implements Listener {
 				activationImage = taskInactiveContext;
 			} else {
 				activationImage = taskInactive;
+			}
+		}
+		if (!CommonFonts.HAS_STRIKETHROUGH) {
+			if (data instanceof AbstractTask & useStrikethroughForCompleted) {
+				AbstractTask task = (AbstractTask) data;
+				if (task.isCompleted()) {
+					Rectangle bounds = ((TreeItem) event.item).getBounds();
+					int lineY = bounds.y + (bounds.height / 2);
+					String itemText = ((TreeItem) event.item).getText();
+					Point extent = event.gc.textExtent(itemText);
+					event.gc.drawLine(bounds.x, lineY, bounds.x + extent.x, lineY);
+				}
 			}
 		}
 		if (data instanceof ITaskContainer) {
@@ -274,4 +306,9 @@ class CustomTaskListDecorationDrawer implements Listener {
 		// HACK: need a proper blank image
 		return CommonImages.OVERLAY_CLEAR;
 	}
+
+	public void dispose() {
+		TasksUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(PROPERTY_LISTENER);
+	}
+
 }

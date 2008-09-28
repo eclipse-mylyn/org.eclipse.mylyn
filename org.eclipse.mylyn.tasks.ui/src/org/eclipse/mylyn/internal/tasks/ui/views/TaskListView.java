@@ -425,6 +425,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private Color categoryGradientEnd;
 
+	private CustomTaskListDecorationDrawer customDrawer;
+
 	private final IPageListener PAGE_LISTENER = new IPageListener() {
 		public void pageActivated(IWorkbenchPage page) {
 			filteredTree.indicateActiveTaskWorkingSet();
@@ -706,6 +708,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
 		}
 
+		customDrawer.dispose();
 		categoryGradientStart.dispose();
 		categoryGradientEnd.dispose();
 	}
@@ -905,7 +908,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		getViewer().setInput(getViewSite());
 
 		final int activationImageOffset = 20;
-		CustomTaskListDecorationDrawer customDrawer = new CustomTaskListDecorationDrawer(this, activationImageOffset);
+		customDrawer = new CustomTaskListDecorationDrawer(this, activationImageOffset);
 		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
 		getViewer().getTree().addListener(SWT.PaintItem, customDrawer);
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -211,7 +211,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		//getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, useRichEditor.getSelection());
-
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				enableBackgroundSynch.getSelection());
 		long miliseconds = 60000 * Long.parseLong(synchScheduleTime.getText());
@@ -272,6 +271,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		//backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
 
 		useRichEditor.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
+
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(

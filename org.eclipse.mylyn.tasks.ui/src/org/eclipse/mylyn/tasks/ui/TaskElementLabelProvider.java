@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -268,7 +269,13 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			if (((AbstractTask) element).isActive()) {
 				return CommonFonts.BOLD;
 			} else if (((AbstractTask) element).isCompleted()) {
-				return CommonFonts.STRIKETHROUGH;
+				if (CommonFonts.HAS_STRIKETHROUGH
+						&& TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
+								ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED)) {
+					return CommonFonts.STRIKETHROUGH;
+				} else {
+					return null;
+				}
 			}
 			for (ITask child : ((ITaskContainer) element).getChildren()) {
 				if (child.isActive() || (child instanceof ITaskContainer && showHasActiveChild((ITaskContainer) child))) {
