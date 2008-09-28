@@ -36,7 +36,6 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
@@ -173,11 +172,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			}
 		}
 
-		if (currentTarget instanceof LocalTask
-				&& areAllLocalTasks(tasksToMove)
-				&& getCurrentLocation() == LOCATION_ON
-				&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
+		if (currentTarget instanceof LocalTask && areAllLocalTasks(tasksToMove) && getCurrentLocation() == LOCATION_ON) {
 			for (ITask task : tasksToMove) {
 				if (!((AbstractTask) task).contains(((LocalTask) currentTarget).getHandleIdentifier())) {
 					TasksUiInternal.getTaskList().addTask(task, (LocalTask) currentTarget);
@@ -351,10 +346,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			} else if (getCurrentTarget() instanceof ITaskContainer
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
 				return true;
-			} else if (getCurrentTarget() instanceof LocalTask
-					&& getCurrentLocation() == ViewerDropAdapter.LOCATION_ON
-					&& TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-							ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
+			} else if (getCurrentTarget() instanceof LocalTask && getCurrentLocation() == ViewerDropAdapter.LOCATION_ON) {
 				return true;
 			} else {
 				return false;

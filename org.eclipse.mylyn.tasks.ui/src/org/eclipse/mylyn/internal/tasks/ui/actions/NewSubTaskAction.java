@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -250,10 +249,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		if (selection instanceof StructuredSelection) {
 			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof LocalTask) {
-				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED)) {
-					selectedTask = (AbstractTask) selectedObject;
-				}
+				selectedTask = (AbstractTask) selectedObject;
 			} else if (selectedObject instanceof ITask) {
 				selectedTask = (AbstractTask) selectedObject;
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(

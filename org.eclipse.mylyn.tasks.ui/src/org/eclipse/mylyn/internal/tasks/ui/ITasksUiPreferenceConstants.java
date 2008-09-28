@@ -66,6 +66,13 @@ public interface ITasksUiPreferenceConstants {
 
 	public static final String TEMPLATES_DELETED_DELIM = "|";
 
+	/**
+	 * Local subtasks are now enabled by default.
+	 * 
+	 * @deprecated not used anymore
+	 */
+	// TODO 4.0 remove
+	@Deprecated
 	public static final String LOCAL_SUB_TASKS_ENABLED = "org.eclipse.mylyn.tasks.ui.subtasks.local";
 
 	// NOTE: legacy name, do not change

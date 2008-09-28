@@ -883,7 +883,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH, true);
 		store.setDefault(ITasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED, false);
 		store.setDefault(ITasksUiPreferenceConstants.SHOW_TRIM, false);
-		store.setDefault(ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED, false);
+		// remove preference
+		store.setToDefault(ITasksUiPreferenceConstants.LOCAL_SUB_TASKS_ENABLED);
 
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000));
