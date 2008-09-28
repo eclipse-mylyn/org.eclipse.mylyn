@@ -34,6 +34,7 @@ public class TracWikiTaskEditorExtension extends MarkupTaskEditorExtension {
 			if (!url.endsWith("/")) {
 				url = url + "/";
 			}
+			// bug 247772: set the default wiki link URL for the repository
 			markupLanguage.setInternalLinkPattern(url + "wiki/{0}");
 		}
 	}
