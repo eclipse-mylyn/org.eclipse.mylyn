@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,6 +144,14 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 			installListeners(viewer);
 			viewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		}
+
+		TaskHyperlinkTextPresentationManager hyperlinkTextPresentationManager = new TaskHyperlinkTextPresentationManager();
+		if (mode == Mode.TASK_RELATION) {
+			hyperlinkTextPresentationManager.setHyperlinkDetector(new TaskRelationHyperlinkDetector());
+		} else {
+			hyperlinkTextPresentationManager.setHyperlinkDetector(new TaskHyperlinkDetector());
+		}
+		hyperlinkTextPresentationManager.install(viewer);
 
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
