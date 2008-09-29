@@ -19,6 +19,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
@@ -43,29 +44,29 @@ public class TaskListStandaloneTest extends TestCase {
 		manager = TasksUiPlugin.getTaskListManager();
 
 		manager.resetTaskList();
-		assertEquals("should be empty: " + manager.getTaskList().getDefaultCategory().getChildren(), 0,
-				manager.getTaskList().getDefaultCategory().getChildren().size());
+		assertEquals("should be empty: " + TasksUiPlugin.getTaskList().getDefaultCategory().getChildren(), 0,
+				TasksUiPlugin.getTaskList().getDefaultCategory().getChildren().size());
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		manager.resetTaskList();
-		manager.saveTaskList();
+//		manager.resetTaskList();
+		TasksUiPlugin.getExternalizationManager().requestSave();
 		super.tearDown();
 	}
 
-	public void testDueDateExternalization() {
+	public void testDueDateExternalization() throws CoreException {
 		AbstractTask task = new LocalTask("1", "task 1");
 		Date dueDate = new Date();
 		task.setDueDate(dueDate);
-		manager.getTaskList().addTask(task);
-		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		TasksUiPlugin.getTaskList().addTask(task);
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
 
-		manager.saveTaskList();
+		TasksUiPlugin.getExternalizationManager().requestSave();
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
-		assertEquals(1, manager.getTaskList().getAllTasks().size());
-		Collection<ITask> readList = manager.getTaskList().getDefaultCategory().getChildren();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
+		Collection<ITask> readList = TasksUiPlugin.getTaskList().getDefaultCategory().getChildren();
 		ITask readTask = readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 		assertTrue(readTask.getDueDate().compareTo(dueDate) == 0);
@@ -76,23 +77,24 @@ public class TaskListStandaloneTest extends TestCase {
 
 		task.setScheduledForDate(new DateRange(Calendar.getInstance()));
 		Thread.sleep(2000);
-		assertTrue(task.isPastReminder());
+// old API		assertTrue(task.isPastReminder());
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isPastReminder(task));
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MINUTE, 2);
 		task.setScheduledForDate(new DateRange(cal));
-		assertFalse(task.isPastReminder());
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isPastReminder(task));
 
 		Calendar cal1 = Calendar.getInstance();
 		cal1.add(Calendar.MINUTE, -2);
 		task.setScheduledForDate(new DateRange(cal1, cal));
-		assertFalse(task.isPastReminder());
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isPastReminder(task));
 
 		Calendar cal2 = Calendar.getInstance();
 		cal2.add(Calendar.MINUTE, -2);
 		task.setScheduledForDate(new DateRange(cal2));
 		task.setCompletionDate(new Date());
-		assertFalse(task.isPastReminder());
+		assertFalse(TasksUiPlugin.getTaskActivityManager().isPastReminder(task));
 	}
 
 	public void testDates() {
@@ -100,24 +102,24 @@ public class TaskListStandaloneTest extends TestCase {
 		Date creation = new Date();
 		AbstractTask task = new LocalTask("1", "task 1");
 
-		manager.getTaskList().addTask(task);
+		TasksUiPlugin.getTaskList().addTask(task);
 		assertDatesCloseEnough(task.getCreationDate(), start);
 
-		task.setCompleted(true);
+		task.setCompletionDate(creation);
 		assertDatesCloseEnough(task.getCompletionDate(), start);
 
-		assertEquals(1, manager.getTaskList().getRootElements().size());
-		manager.saveTaskList();
+		assertEquals(1, TasksUiPlugin.getTaskList().getRootElements().size());
+		TasksUiPlugin.getExternalizationManager().requestSave();
 
-		assertNotNull(manager.getTaskList());
+		assertNotNull(TasksUiPlugin.getTaskList());
 		// TaskList list = new TaskList();
 		// manager.setTaskList(list);
-		// assertEquals(0, manager.getTaskList().getRootTasks().size());
+		// assertEquals(0, TasksUiPlugin.getTaskList().getRootTasks().size());
 		// manager.readOrCreateTaskList();
-		// assertNotNull(manager.getTaskList());
-		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
+		// assertNotNull(TasksUiPlugin.getTaskList());
+		assertEquals(1, TasksUiPlugin.getTaskList().getDefaultCategory().getChildren().size());
 
-		Collection<ITask> readList = manager.getTaskList().getDefaultCategory().getChildren();
+		Collection<ITask> readList = TasksUiPlugin.getTaskList().getDefaultCategory().getChildren();
 		AbstractTask readTask = (AbstractTask) readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 
@@ -127,7 +129,7 @@ public class TaskListStandaloneTest extends TestCase {
 	}
 
 	// Task retention when connector missing upon startup
-	public void testOrphanedTasks() {
+	public void testOrphanedTasks() throws CoreException {
 		List<AbstractTaskListFactory> originalExternalizers = manager.getTaskListWriter().getExternalizers();
 		List<AbstractTaskListFactory> externalizers;
 		externalizers = new ArrayList<AbstractTaskListFactory>();
@@ -135,13 +137,13 @@ public class TaskListStandaloneTest extends TestCase {
 		// make some tasks
 		// save them
 		BugzillaTask task = new BugzillaTask("http://bugs", "1", "1");
-		manager.getTaskList().addTask(task);
-		manager.saveTaskList();
+		TasksUiPlugin.getTaskList().addTask(task);
+		TasksUiPlugin.getExternalizationManager().requestSave();
 
 		// reload tasklist and check that they persist
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
-		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		TasksUiPlugin.getDefault().reloadDataDirectory();
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
 
 		// removed/disable externalizers
 		externalizers.clear();
@@ -149,11 +151,11 @@ public class TaskListStandaloneTest extends TestCase {
 
 		// reload tasklist ensure task didn't load
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
-		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		TasksUiPlugin.getDefault().reloadDataDirectory();
+		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
 		// Save the task list (tasks with missing connectors should get
 		// persisted)
-		manager.saveTaskList();
+		TasksUiPlugin.getExternalizationManager().requestSave();
 
 		// re-enable connector
 		externalizers.add(new BugzillaTaskListFactory());
@@ -161,15 +163,15 @@ public class TaskListStandaloneTest extends TestCase {
 
 		// re-load tasklist
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
 
 		// ensure that task now gets loaded
-		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
 		manager.getTaskListWriter().setDelegateExternalizers(originalExternalizers);
 	}
 
 	// Query retention when connector missing/fails to load
-	public void testOrphanedQueries() {
+	public void testOrphanedQueries() throws CoreException {
 		List<AbstractTaskListFactory> originalExternalizers = manager.getTaskListWriter().getExternalizers();
 		List<AbstractTaskListFactory> externalizers;
 		externalizers = new ArrayList<AbstractTaskListFactory>();
@@ -178,13 +180,13 @@ public class TaskListStandaloneTest extends TestCase {
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				"http://queryurl", "summary");
 
-		manager.getTaskList().addQuery(query);
-		manager.saveTaskList();
+		TasksUiPlugin.getTaskList().addQuery(query);
+		TasksUiPlugin.getExternalizationManager().requestSave();
 
 		// reload tasklist and check that they persist
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
-		assertEquals(1, manager.getTaskList().getQueries().size());
+		TasksUiPlugin.getDefault().reloadDataDirectory();
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
 
 		// removed/disable externalizers
 		externalizers.clear();
@@ -192,11 +194,11 @@ public class TaskListStandaloneTest extends TestCase {
 
 		// reload tasklist ensure query didn't load
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
-		assertEquals(0, manager.getTaskList().getQueries().size());
+		TasksUiPlugin.getDefault().reloadDataDirectory();
+		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
 		// Save the task list (queries with missing connectors should get
 		// persisted)
-		manager.saveTaskList();
+		TasksUiPlugin.getExternalizationManager().requestSave();
 
 		// re-enable connector
 		externalizers.add(new BugzillaTaskListFactory());
@@ -204,10 +206,10 @@ public class TaskListStandaloneTest extends TestCase {
 
 		// re-load tasklist
 		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
 
 		// ensure that task now gets loaded
-		assertEquals(1, manager.getTaskList().getQueries().size());
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
 		manager.getTaskListWriter().setDelegateExternalizers(originalExternalizers);
 	}
 

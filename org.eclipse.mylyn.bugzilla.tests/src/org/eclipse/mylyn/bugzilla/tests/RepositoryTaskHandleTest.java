@@ -13,10 +13,13 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.bugzilla.deprecated.BugzillaTask;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 
@@ -40,42 +43,23 @@ public class RepositoryTaskHandleTest extends TestCase {
 		manager.resetTaskList();
 	}
 
-	// Dash now allowed in task id
-	// public void testInvalidHandle() {
-	// // MockRepositoryTask task = new MockRepositoryTask()
-	// String url = "http://foo";
-	// assertEquals(url + "-" + "abc", RepositoryTaskHandleUtil.getHandle(url,
-	// "abc"));
-	// Exception caught = null;
-	// try {
-	// RepositoryTaskHandleUtil.getHandle(url, "a-23");
-	// } catch (Exception e) {
-	// caught = e;
-	// }
-	// assertNotNull(caught);
-	// }
-
-	public void testRepositoryUrlHandles() {
+	public void testRepositoryUrlHandles() throws CoreException {
+		String taskId = "123";
 		String repositoryUrl = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, repositoryUrl);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 
-		String id = "123";
-		BugzillaTask bugTask = new BugzillaTask(repositoryUrl, id, "label 124");
+		ITask bugTask = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, repositoryUrl, taskId);
+		bugTask.setSummary("Summary");
 		assertEquals(repositoryUrl, bugTask.getRepositoryUrl());
 
-		manager.getTaskList().addTask(bugTask);
-		manager.saveTaskList();
-		manager.resetTaskList();
-		manager.readExistingOrCreateNewList();
+		TasksUiPlugin.getTaskList().addTask(bugTask);
+		TasksUiPlugin.getExternalizationManager().save(true);
+		TasksUiPlugin.getDefault().reloadDataDirectory();
 
-		BugzillaTask readReport = (BugzillaTask) manager.getTaskList()
-				.getUnmatchedContainer(repositoryUrl)
-				.getChildren()
-				.iterator()
-				.next();
-		assertEquals(readReport.getSummary(), readReport.getSummary());
-		assertEquals(readReport.getRepositoryUrl(), readReport.getRepositoryUrl());
+		ITask readReport = TasksUiPlugin.getTaskList().getTask(repositoryUrl, taskId);
+		assertEquals("Summary", readReport.getSummary());
+		assertEquals(repositoryUrl, readReport.getRepositoryUrl());
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
