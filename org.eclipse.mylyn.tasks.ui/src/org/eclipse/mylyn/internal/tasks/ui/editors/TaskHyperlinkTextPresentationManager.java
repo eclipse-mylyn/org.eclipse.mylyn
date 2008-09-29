@@ -63,6 +63,7 @@ public class TaskHyperlinkTextPresentationManager {
 	public void install(ISourceViewer viewer) {
 		this.viewer = viewer;
 		((ITextViewerExtension4) viewer).addTextPresentationListener(textPresentationListener);
+		viewer.invalidateTextPresentation();
 	}
 
 	public void uninstall() {
