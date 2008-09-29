@@ -83,6 +83,13 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		return repositoryConnectors.get(connectorKind);
 	}
 
+	/**
+	 * primarily for testing
+	 */
+	public AbstractRepositoryConnector removeRepositoryConnector(String connectorKind) {
+		return repositoryConnectors.remove(connectorKind);
+	}
+
 	public void addRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
 		if (!repositoryConnectors.values().contains(repositoryConnector)) {
 			repositoryConnectors.put(repositoryConnector.getConnectorKind(), repositoryConnector);
