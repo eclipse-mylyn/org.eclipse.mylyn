@@ -35,7 +35,6 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 
 	protected MarkupLanguage markupLanguage;
 
-	@Override
 	@SuppressWarnings("unchecked")
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
