@@ -28,7 +28,7 @@ public class AllBugzillaTests {
 		// $JUnit-BEGIN$
 		suite.addTestSuite(RepositoryTaskHandleTest.class);
 		suite.addTestSuite(TaskListNotificationManagerTest.class);
-		suite.addTestSuite(BugzillaTaskTest.class);
+		suite.addTestSuite(BugzillaTaskCompletionTest.class);
 		suite.addTestSuite(BugzillaTaskDataHandlerTest.class);
 		suite.addTestSuite(TaskListStandaloneTest.class);
 		suite.addTestSuite(BugzillaTaskListManagerTest.class);
