@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorToolkit;
 import org.eclipse.swt.graphics.Color;
@@ -41,10 +42,13 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 
 	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" };
 
-	private final AttributeEditorToolkit attributeToolkit;
+	private final TaskDataModel model;
 
-	public AttachmentTableLabelProvider2(AttributeEditorToolkit attributeToolkit) {
-		this.attributeToolkit = attributeToolkit;
+	private final AttributeEditorToolkit attributeEditorToolkit;
+
+	public AttachmentTableLabelProvider2(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
+		this.model = model;
+		this.attributeEditorToolkit = attributeEditorToolkit;
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -177,5 +181,15 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 		cell.setBackground(getBackground(element));
 		cell.setForeground(getForeground(element));
 		cell.setFont(getFont(element));
+	}
+
+	@Override
+	public Color getBackground(Object element) {
+		ITaskAttachment attachment = (ITaskAttachment) element;
+		if (model.hasIncomingChanges(attachment.getTaskAttribute())) {
+			return attributeEditorToolkit.getColorIncoming();
+		} else {
+			return null;
+		}
 	}
 }
