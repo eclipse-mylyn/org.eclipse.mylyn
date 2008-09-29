@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.commands;
 
+import java.util.Iterator;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -33,6 +35,8 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 
 	protected MarkupLanguage markupLanguage;
 
+	@Override
+	@SuppressWarnings("unchecked")
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
 		ISelection currentSelection = null;
@@ -45,37 +49,41 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 
 		if (currentSelection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) currentSelection;
-
-			Object o = structuredSelection.getFirstElement();
-			IFile file = null;
-			if (o instanceof IAdaptable) {
-				file = (IFile) ((IAdaptable) o).getAdapter(IFile.class);
-			}
-			if (file != null) {
-				String name = file.getName();
-				int idxOfDot = name.lastIndexOf('.');
-				if (idxOfDot != -1) {
-					name = name.substring(0, idxOfDot);
+			Iterator<Object> it = structuredSelection.iterator();
+			while (it.hasNext()) {
+				Object o = it.next();
+				IFile file = null;
+				if (o instanceof IAdaptable) {
+					file = (IFile) ((IAdaptable) o).getAdapter(IFile.class);
 				}
-				// use a temporary so that the setting does not stick even if the handler is reused.
-				MarkupLanguage prev = markupLanguage;
-				try {
-					if (markupLanguage == null) {
-						markupLanguage = MarkupEditor.loadMarkupLanguagePreference(file);
-						if (markupLanguage == null) {
-							markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(file.getName());
-						}
-						if (markupLanguage == null) {
-							MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									"Unexpected Error", String.format("Cannot guess markup language for file '%s'",
-											file.getName()));
-							return null;
-						}
+				if (file != null) {
+					String name = file.getName();
+					int idxOfDot = name.lastIndexOf('.');
+					if (idxOfDot != -1) {
+						name = name.substring(0, idxOfDot);
 					}
+					// use a temporary so that the setting does not stick even if the handler is reused.
+					MarkupLanguage prev = markupLanguage;
+					try {
+						if (markupLanguage == null) {
+							markupLanguage = MarkupEditor.loadMarkupLanguagePreference(file);
+							if (markupLanguage == null) {
+								markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(
+										file.getName());
+							}
+							if (markupLanguage == null) {
+								MessageDialog.openError(
+										PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+										"Unexpected Error", String.format("Cannot guess markup language for file '%s'",
+												file.getName()));
+								return null;
+							}
+						}
 
-					handleFile(file, name);
-				} finally {
-					markupLanguage = prev;
+						handleFile(file, name);
+					} finally {
+						markupLanguage = prev;
+					}
 				}
 			}
 		}
