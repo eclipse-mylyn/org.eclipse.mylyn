@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,8 +43,9 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		if (region == null || textViewer == null) {
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, final IRegion matchRegion,
+			boolean canShowMultipleHyperlinks) {
+		if (matchRegion == null || textViewer == null) {
 			return null;
 		}
 
@@ -55,7 +56,7 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		String content;
 		int contentOffset;
-
+		IRegion region = matchRegion;
 		try {
 			if (region.getLength() == 0) {
 				// expand the region to include the whole line
@@ -94,15 +95,15 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 		}
 
 		List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();
-		detectHyperlinks(content, contentOffset, region, repositories, hyperlinks);
+		detectHyperlinks(content, contentOffset, matchRegion, region, repositories, hyperlinks);
 		if (hyperlinks.isEmpty()) {
 			return null;
 		}
 		return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
 	}
 
-	private void detectHyperlinks(String content, int contentOffset, IRegion region, List<TaskRepository> repositories,
-			List<IHyperlink> hyperlinks) {
+	private void detectHyperlinks(String content, int contentOffset, IRegion matchRegion, IRegion region,
+			List<TaskRepository> repositories, List<IHyperlink> hyperlinks) {
 		for (TaskRepository repository : repositories) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 			if (connectorUi == null) {
@@ -112,8 +113,22 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 			if (links == null) {
 				continue;
 			}
-			hyperlinks.addAll(Arrays.asList(links));
+			if (matchRegion.getLength() == 0) {
+				for (IHyperlink link : links) {
+					IRegion hyperlinkRegion = link.getHyperlinkRegion();
+					if (isInRegion(matchRegion, hyperlinkRegion)) {
+						hyperlinks.add(link);
+					}
+				}
+			} else {
+				hyperlinks.addAll(Arrays.asList(links));
+			}
 		}
+	}
+
+	private boolean isInRegion(IRegion matchRegion, IRegion hyperlinkRegion) {
+		return matchRegion.getOffset() >= hyperlinkRegion.getOffset()
+				&& matchRegion.getOffset() <= hyperlinkRegion.getOffset() + hyperlinkRegion.getLength();
 	}
 
 	protected TaskRepository getTaskRepository(ITextViewer textViewer) {
