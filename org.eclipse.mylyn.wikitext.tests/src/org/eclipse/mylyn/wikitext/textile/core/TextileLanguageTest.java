@@ -12,13 +12,17 @@ package org.eclipse.mylyn.wikitext.textile.core;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.RecordingDocumentBuilder.Event;
 
 /**
  * NOTE: most textile test cases can be found in {@link MarkupParserTest}
@@ -1046,5 +1050,20 @@ public class TextileLanguageTest extends TestCase {
 		String html = parser.parseToHtml("some <span class=\"s\">mark</span> up");
 		System.out.println(html);
 		assertTrue(html.contains("<p>some <span class=\"s\">mark</span> up</p>"));
+	}
+
+	public void testFootnoteReferenceLexicalPosition() {
+		RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
+		parser.setBuilder(builder);
+		parser.parse("a footnote reference[1] more text");
+		List<Event> events = builder.getEvents();
+		for (Event event : events) {
+			if (event.spanType == SpanType.SUPERSCRIPT) {
+				assertEquals(20, event.locator.getLineCharacterOffset());
+				assertEquals(23, event.locator.getLineSegmentEndOffset());
+				return;
+			}
+		}
+		fail("expected to find superscript span");
 	}
 }

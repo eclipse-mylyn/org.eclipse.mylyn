@@ -42,9 +42,17 @@ public class FootnoteReferenceReplacementToken extends PatternBasedElement {
 		public void emit() {
 			String footnote = group(1);
 			String htmlId = state.getFootnoteId(footnote);
+
+			int originalSegmentEndOffset = state.getLineSegmentEndOffset();
+			state.setLineCharacterOffset(start(1) - 1);
+			state.setLineSegmentEndOffset(end(1) + 1);
+
 			builder.beginSpan(SpanType.SUPERSCRIPT, new Attributes(null, "footnote", null, null));
 			builder.link("#" + htmlId, footnote);
 			builder.endSpan();
+
+			state.setLineCharacterOffset(originalSegmentEndOffset);
+			state.setLineSegmentEndOffset(originalSegmentEndOffset);
 		}
 	}
 
