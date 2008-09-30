@@ -61,8 +61,6 @@ public class TextileLanguage extends MarkupLanguage {
 
 	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
-	private boolean escapingHtml;
-
 	@Override
 	protected PatternBasedSyntax getPhraseModifierSyntax() {
 		return phraseModifierSyntax;
