@@ -6,7 +6,41 @@
       <taskEditorExtension
             class="org.eclipse.mylyn.internal.wikitext.twiki.ui.TaskEditorExtension"
             id="org.eclipse.mylyn.wikitext.twiki.ui.taskEditorExtension1"
-            name="TWiki">
+            name="%taskEditorExtension.name.0">
       </taskEditorExtension>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+      <templates
+            markupLanguage="TWiki">
+            
+         <!-- phrase modifiers -->
+         <template name="*" description="%template.description.0" content="*${text}* $"/>
+         <template name="_" description="%template.description.1" content="_${text}_ $"/>
+         <template name="__" description="%template.description.2" content="__${text}__ $"/>
+         <template name="=" description="%template.description.3" content="=${text}= $"/>
+         <template name="==" description="%template.description.4" content="==${text}== $"/>
+            
+         <!-- block templates -->
+         
+         <template name="---+ " description="%template.description.5" content="\n---+ ${text}\n\n" block="true"/>
+         <template name="---++ " description="%template.description.6" content="\n---++ ${text}\n\n" block="true"/>
+         <template name="---+++ " description="%template.description.7" content="\n---+++ ${text}\n\n" block="true"/>
+         <template name="---++++ " description="%template.description.8" content="\n---++++ ${text}\n\n" block="true"/>
+         <template name="---+++++ " description="%template.description.9" content="\n---+++++ ${text}\n\n" block="true"/>
+         <template name="---++++++ " description="%template.description.10" content="\n---++++++ ${text}\n\n" block="true"/>
+         <template name="* " description="%template.description.11" content="\n   * ${text}\n   * ${text2}\n\n" block="true"/>
+         <template name="** " description="%template.description.12" content="\n      * ${text}\n      * ${text2}\n\n" block="true"/>
+         <template name="1. " description="%template.description.13" content="\n   1. ${text}\n   1. ${text2}\n\n" block="true"/>
+         <template name="i. " description="%template.description.14" content="\n   i. ${text}\n   i. ${text2}\n\n" block="true"/>
+         <template name="d. " description="%template.description.15" content="\n   \$ ${text}: ${text2}\n   \$ ${text3}: ${text4}\n\n" block="true"/>
+         <template name="&lt;verbatim&gt;" description="%template.description.16" content="\n&lt;verbatim&gt;\n${text}\n&lt;/verbatim&gt;\n\n" block="true"/>
+         <template name="&lt;literal&gt;" description="%template.description.17" content="\n&lt;literal&gt;\n${text}\n&lt;/literal&gt;\n\n" block="true"/>
+         
+         
+         <!-- other -->
+         
+         <template name="---" description="%template.description.18" content="\n---\n\n"/>
+      </templates>
    </extension>
 </plugin>
