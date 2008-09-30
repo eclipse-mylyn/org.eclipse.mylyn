@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension
+         point="org.eclipse.mylyn.sandbox.ui.taskEditorExtensions">
+      <taskEditorExtension
+            class="org.eclipse.mylyn.internal.wikitext.twiki.ui.TaskEditorExtension"
+            id="org.eclipse.mylyn.wikitext.twiki.ui.taskEditorExtension1"
+            name="TWiki">
+      </taskEditorExtension>
+   </extension>
 </plugin>
