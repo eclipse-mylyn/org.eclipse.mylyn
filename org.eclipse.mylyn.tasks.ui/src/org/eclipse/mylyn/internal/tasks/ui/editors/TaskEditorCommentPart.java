@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -82,9 +82,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					}
 				});
 				composite.setData(KEY_EDITOR, editor);
-
-				GridDataFactory.fillDefaults().minSize(EditorUtil.MAXIMUM_WIDTH, 0).hint(EditorUtil.MAXIMUM_WIDTH,
-						SWT.DEFAULT).applyTo(editor.getControl());
 
 				getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 				getTaskEditorPage().reflow();
@@ -199,11 +196,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 			final Composite commentTextComposite = toolkit.createComposite(commentComposite);
 			commentComposite.setClient(commentTextComposite);
-			GridLayout ecLayout = new GridLayout();
-			ecLayout.marginHeight = 0;
-			ecLayout.marginBottom = 3;
-			ecLayout.marginLeft = 15;
-			commentTextComposite.setLayout(ecLayout);
+			commentTextComposite.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 15, 0,
+					0, 3));
 			commentTextComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			commentComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override

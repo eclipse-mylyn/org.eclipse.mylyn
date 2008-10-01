@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -119,8 +119,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		} else {
 			editor.createControl(composite, toolkit);
 			if (editor.isReadOnly()) {
-				GridDataFactory.fillDefaults().minSize(EditorUtil.MAXIMUM_WIDTH, 0).hint(EditorUtil.MAXIMUM_WIDTH,
-						SWT.DEFAULT).applyTo(editor.getControl());
+				composite.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 0, 0, 0, 3));
 			} else {
 				final GridData gd = new GridData();
 				// wrap text at this margin, see comment below

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     David Green - fixes for bug 237503
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.editors;
@@ -110,6 +111,8 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -118,8 +121,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Table;
@@ -420,6 +426,15 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		this.selectionChangedListeners = new ListenerList();
 	}
 
+	/**
+	 * @since 3.1
+	 * @see FormPage#getEditor()
+	 */
+	@Override
+	public TaskEditor getEditor() {
+		return (TaskEditor) super.getEditor();
+	}
+
 	private void addFocusListener(Composite composite, FocusListener listener) {
 		Control[] children = composite.getChildren();
 		for (Control control : children) {
@@ -478,8 +493,20 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	@Override
+	public void createPartControl(Composite parent) {
+		parent.addListener(SWT.Resize, new Listener() {
+			public void handleEvent(Event event) {
+				getManagedForm().reflow(true);
+			}
+		});
+		super.createPartControl(parent);
+	}
+
+	@Override
 	protected void createFormContent(final IManagedForm managedForm) {
+
 		form = managedForm.getForm();
+
 		toolkit = managedForm.getToolkit();
 		registerDefaultDropListener(form);
 		EditorUtil.disableScrollingOnFocus(form);
@@ -517,7 +544,37 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			updateHeaderMessage();
 		} finally {
 			setReflow(true);
+
+			// if the editor is restored as part of workbench startup then we must reflow() asynchronously
+			// otherwise the editor layout is incorrect
+			boolean reflowRequired = calculateReflowRequired(form);
+
+			if (reflowRequired) {
+				Display.getCurrent().asyncExec(new Runnable() {
+					public void run() {
+						// this fixes a problem with layout that occurs when an editor
+						// is restored before the workbench is fully initialized
+						reflow();
+					}
+				});
+			}
 		}
+	}
+
+	private boolean calculateReflowRequired(ScrolledForm form) {
+		Composite stopComposite = getEditor().getEditorParent().getParent().getParent();
+		Composite composite = form.getParent();
+		while (composite != null) {
+			Rectangle clientArea = composite.getClientArea();
+			if (clientArea.width > 1) {
+				return false;
+			}
+			if (composite == stopComposite) {
+				return true;
+			}
+			composite = composite.getParent();
+		}
+		return true;
 	}
 
 	private void createFormContentInternal() {
@@ -974,7 +1031,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	public TaskEditor getTaskEditor() {
-		return (TaskEditor) getEditor();
+		return getEditor();
 	}
 
 	public TaskRepository getTaskRepository() {
@@ -1096,7 +1153,17 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	 */
 	public void reflow() {
 		if (reflow) {
-			form.layout(true, true);
+			// help the layout managers: ensure that the form width always matches
+			// the parent client area width.
+			Rectangle parentClientArea = form.getParent().getClientArea();
+			Point formSize = form.getSize();
+			if (formSize.x != parentClientArea.width) {
+				ScrollBar verticalBar = form.getVerticalBar();
+				int verticalBarWidth = verticalBar != null ? verticalBar.getSize().x : 15;
+				form.setSize(parentClientArea.width - verticalBarWidth, formSize.y);
+			}
+
+			form.layout(true, false);
 			form.reflow(true);
 		}
 	}

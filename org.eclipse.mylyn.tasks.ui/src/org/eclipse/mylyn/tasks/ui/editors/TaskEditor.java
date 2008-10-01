@@ -65,6 +65,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
@@ -112,7 +113,19 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private TaskDragSourceListener titleDragSourceListener;
 
+	private Composite editorParent;
+
 	public TaskEditor() {
+	}
+
+	@Override
+	protected Composite createPageContainer(Composite parent) {
+		this.editorParent = parent;
+		return super.createPageContainer(parent);
+	}
+
+	Composite getEditorParent() {
+		return editorParent;
 	}
 
 	@Deprecated
