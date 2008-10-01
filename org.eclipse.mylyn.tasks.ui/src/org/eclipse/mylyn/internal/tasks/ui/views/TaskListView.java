@@ -136,6 +136,8 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -876,6 +878,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		// bug#160897
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
 		getViewer().getTree().setToolTipText("");
+
+		filteredTree.getFilterControl().addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateFilterEnablement();
+			}
+		});
 
 		getViewer().getTree().setHeaderVisible(false);
 		getViewer().setUseHashlookup(true);
@@ -1728,7 +1736,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		return filterArchive;
 	}
 
-	public void setManualFiltersEnabled(boolean enabled) {
+	private void updateFilterEnablement() {
+		boolean enabled = !isFocusedMode();
+		if (enabled) {
+			Text textControl = filteredTree.getFilterControl();
+			if (textControl != null && textControl.getText().length() > 0) {
+				enabled = false;
+			}
+		}
 		sortDialogAction.setEnabled(enabled);
 		filterOnPriorityAction.setEnabled(enabled);
 		filterCompleteTask.setEnabled(enabled);
@@ -1755,6 +1770,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			manager.prependToGroup(ID_SEPARATOR_CONTEXT, collapseAll);
 		}
 		manager.update(false);
+		updateFilterEnablement();
 	}
 
 	public void setSynchronizationOverlaid(boolean synchronizationOverlaid) {
