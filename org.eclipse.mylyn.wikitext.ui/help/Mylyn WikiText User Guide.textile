@@ -70,7 +70,17 @@ h1. Task Editor Integration
 
 WikiText extends Mylyn to provide a markup-aware task editor.  With WikiText installed, Mylyn can render wiki markup as intended, provide markup-specific syntax highlighting, content-assist, validation, and a cheat-sheet for wiki markup syntax.
 
-_TODO: complete this section_
+h2. Repository Configuration
+
+To use the WikiText extension to the Mylyn task editor you may need to configure your Mylyn task repository.  To do so, open the Mylyn *Task Repositories* view (*Window->Show View->Other...->Mylyn->Task Repositories*).  Select the repository that you wish to configure and then select *Properties* from the context menu.
+
+!images/repository-settings-task-editor-extension.png!
+
+In the *Task Editor Extension* section select the markup language of choice.  Note that you may need to expand this section to see available choices.  To disable WikiText extensions to the Mylyn task editor select *None*. 
+
+If your repository supports internal wiki links enter the link URL format under *Wiki Links*.  For example, you could enter @http://wiki.eclipse.org/{0}@.  Leaving this section blank will cause the default wiki URL for the repository to be used.  Note that the '@{0}@' portion of the URL will be replaced by the wiki-specific page identifier.
+
+Press the *Finish* button when you've finished to make the changes permanent.  Note that changes to these settings will only be visible for newly opened task editors.  Task editors that were open prior to making the changes will need to be closed and reopened for the settings to take effect.
 
 h1. Markup Conversion
 
@@ -274,6 +284,8 @@ The following CSS styles are recognized:
 h1. More Information
 
 More information about WikiText can be accessed from the "Mylyn WikiText Homepage":http://wiki.eclipse.org/Mylyn/Incubator/WikiText
+
+Also see this article by Mik Kersten: "Rich Editing for Tasks via Mylyn WikiText":http://tasktop.com/blog/?p=37
 
 h2. Feedback
 
