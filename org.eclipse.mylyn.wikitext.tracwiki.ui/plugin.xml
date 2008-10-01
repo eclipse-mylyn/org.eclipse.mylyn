@@ -13,4 +13,45 @@
             taskEditorExtension="org.eclipse.mylyn.wikitext.tracwiki.ui.taskEditorExtension">
       </repositoryAssociation>
    </extension>
+   
+   
+   <extension
+         point="org.eclipse.mylyn.wikitext.ui.contentAssist">
+      
+      <templates
+            markupLanguage="TracWiki">
+         <!-- phrase modifiers -->
+         <template name="'''" description="'''bold'''" content="'''${text}''' $"/>
+         <template name="''" description="''italic''" content="''${text}'' $"/>
+         <template name="'''''" description="'''''bold italic'''''" content="'''''${text}''''' $"/>
+         <template name="__" description="__underline__" content="__${text}__ $"/>
+         <template name="{{{" description="{{{monospace}}}" content="{{{${text}}}} $"/>
+         <template name="~~" description="~~strike-through~~" content="~~${text}~~ $"/>
+         <template name="^^" description="^superscript^" content="^^${text}^^ $"/>
+         <template name=",," description=",,subscript,," content=",,${text},, $"/>
+         
+         <!-- block templates -->
+         
+         
+         <template name="= " description="Heading 1" content="\n= ${text} =\n\n" block="true"/>
+         <template name="== " description="Heading 2" content="\n== ${text} ==\n\n" block="true"/>
+         <template name="=== " description="Heading 3" content="\n=== ${text} ===\n\n" block="true"/>
+         <template name="==== " description="Heading 4" content="\n==== ${text} ====\n\n" block="true"/>
+         <template name="===== " description="Heading 5" content="\n===== ${text} =====\n\n" block="true"/>
+         <template name="====== " description="Heading 6" content="\n====== ${text} ======\n\n" block="true"/>
+         <template name=" * " description="List (bulleted)" content="\n * ${text}\n * ${text2}\n\n" block="true"/>
+         <template name="  * " description="List (level 2, bulleted)" content="\n  * ${text}\n  * ${text2}\n\n" block="true"/>
+         <template name=" 1. " description="List (numeric)" content="\n 1. ${text}\n 1. ${text2}\n\n" block="true"/>
+         <template name="  1. " description="List (level 2, numeric)" content="\n  1. ${text}\n  1. ${text2}\n\n" block="true"/>
+         <template name="{{{" description="Preformatted block" content="\n{{{\n${text}\n}}}\n\n" block="true"/>
+         <template name="  " description="Block quote" content="\n  ${text}\n\n" block="true"/>
+         <template name="&gt;" description="Citation" content="\n&gt; ${text}\n\n" block="true"/>
+         <template name="||" description="Table" content="\n|| ${text} || ${text2} ||\n|| ${text3} || ${text4} ||\n\n" block="true"/>
+         
+         <!-- other -->
+         <template name="[[BR]]" description="line break" content="[[BR]]"/>
+         
+      </templates>
+   </extension>
+   
 </plugin>
