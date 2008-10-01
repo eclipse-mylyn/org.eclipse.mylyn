@@ -114,7 +114,6 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 						// Setting sorter causes root refresh
 						taskListView.getViewer().setSorter(taskListInterestSorter);
 						taskListView.getViewer().expandAll();
-						taskListView.setManualFiltersEnabled(false);
 //				taskListView.selectedAndFocusTask(TasksUiPlugin.getTaskList().getActiveTask());
 
 						showProgressBar(taskListView, true);
@@ -146,7 +145,6 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 							taskListView.getViewer().getControl().setRedraw(false);
 							taskListView.setFocusedMode(false);
 							taskListView.removeFilter(taskListInterestFilter);
-							taskListView.setManualFiltersEnabled(true);
 							for (AbstractTaskListFilter filter : previousFilters) {
 								TaskListView.getFromActivePerspective().addFilter(filter);
 							}
