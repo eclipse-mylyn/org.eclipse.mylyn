@@ -195,8 +195,8 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 							} else if (!WikiTextPlugin.getDefault().getMarkupLanguageNames().contains(markupLanguage)) {
 								throw new Exception(String.format("'%s' is not a valid markupLanguage", markupLanguage));
 							}
-							Templates dialectTemplates = new Templates();
-							dialectTemplates.setMarkupLanguageName(markupLanguage);
+							Templates markupLanguageTemplates = new Templates();
+							markupLanguageTemplates.setMarkupLanguageName(markupLanguage);
 
 							for (IConfigurationElement templatesChild : element.getChildren()) {
 								if (EXTENSION_POINT_TEMPLATE.equals(templatesChild.getName())) {
@@ -222,11 +222,11 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 										}
 										content = content.replace("\\r\\n", Text.DELIMITER).replace("\\r",
 												Text.DELIMITER).replace("\\n", Text.DELIMITER).replace("\\\\", "\\");
-										if (content.endsWith("$")) {
+										if (content.endsWith("$") && !content.endsWith("\\$")) {
 											content = content.substring(0, content.length() - 1);
 										}
 
-										dialectTemplates.addTemplate(new Template(name, description,
+										markupLanguageTemplates.addTemplate(new Template(name, description,
 												MarkupTemplateCompletionProcessor.CONTEXT_ID, content,
 												autoInsert == null || !"false".equalsIgnoreCase(autoInsert)),
 												block != null && "true".equalsIgnoreCase(block));
@@ -240,10 +240,10 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 											EXTENSION_POINT_CONTENT_ASSIST, templatesChild.getName()), null);
 								}
 							}
-							Templates previous = templates.put(dialectTemplates.getMarkupLanguageName(),
-									dialectTemplates);
+							Templates previous = templates.put(markupLanguageTemplates.getMarkupLanguageName(),
+									markupLanguageTemplates);
 							if (previous != null) {
-								dialectTemplates.addAll(previous);
+								markupLanguageTemplates.addAll(previous);
 							}
 						} catch (Exception e) {
 							log(IStatus.ERROR, String.format("Plugin '%s' extension '%s' invalid: %s",
