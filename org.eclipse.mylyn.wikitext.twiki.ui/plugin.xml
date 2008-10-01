@@ -33,7 +33,7 @@
          <template name="** " description="%template.description.12" content="\n      * ${text}\n      * ${text2}\n\n" block="true"/>
          <template name="1. " description="%template.description.13" content="\n   1. ${text}\n   1. ${text2}\n\n" block="true"/>
          <template name="i. " description="%template.description.14" content="\n   i. ${text}\n   i. ${text2}\n\n" block="true"/>
-         <template name="d. " description="%template.description.15" content="\n   \$ ${text}: ${text2}\n   \$ ${text3}: ${text4}\n\n" block="true"/>
+         <template name="$" description="%template.description.15" content="\n   \$ ${text}: ${definition}\n   \$ ${term2}: ${definition2}\n\n" block="true"/>
          <template name="&lt;verbatim&gt;" description="%template.description.16" content="\n&lt;verbatim&gt;\n${text}\n&lt;/verbatim&gt;\n\n" block="true"/>
          <template name="&lt;literal&gt;" description="%template.description.17" content="\n&lt;literal&gt;\n${text}\n&lt;/literal&gt;\n\n" block="true"/>
          
