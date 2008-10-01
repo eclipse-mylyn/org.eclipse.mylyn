@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextPresentationListener;
 import org.eclipse.jface.text.ITextViewerExtension4;
-import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
@@ -73,19 +72,19 @@ public class TaskHyperlinkTextPresentationManager {
 
 	private class Support implements ITextPresentationListener {
 		public void applyTextPresentation(TextPresentation textPresentation) {
-			StyleRange[] styleRanges = computeStyleRanges();
+			System.err.println(textPresentation.getExtent());
+			StyleRange[] styleRanges = computeStyleRanges(textPresentation.getExtent());
 			if (styleRanges != null && styleRanges.length > 0) {
 				textPresentation.mergeStyleRanges(styleRanges);
 			}
 		}
 	}
 
-	private StyleRange[] computeStyleRanges() {
+	private StyleRange[] computeStyleRanges(IRegion extent) {
 		if (viewer == null || hyperlinkDetector == null || viewer.getDocument() == null) {
 			return null;
 		}
-		IHyperlink[] hyperlinks = hyperlinkDetector.detectHyperlinks(viewer, new Region(0, viewer.getDocument()
-				.getLength()), true);
+		IHyperlink[] hyperlinks = hyperlinkDetector.detectHyperlinks(viewer, extent, true);
 		if (hyperlinks != null && hyperlinks.length > 0) {
 			List<IRegion> regions = null;
 

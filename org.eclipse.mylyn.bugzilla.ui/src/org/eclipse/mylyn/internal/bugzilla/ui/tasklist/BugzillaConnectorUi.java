@@ -110,36 +110,13 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
-		ArrayList<IHyperlink> hyperlinksFound = new ArrayList<IHyperlink>();
+	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
+		ArrayList<IHyperlink> hyperlinksFound = null;
 
 		Matcher m = PATTERN.matcher(text);
 		while (m.find()) {
-			if (lineOffset <= m.start() && lineOffset < m.end()) {
-				IHyperlink link = extractHyperlink(repository, regionOffset, m);
-				if (link != null) {
-					hyperlinksFound.add(link);
-				}
-			}
-		}
-
-		if (hyperlinksFound.size() > 0) {
-			return hyperlinksFound.toArray(new IHyperlink[1]);
-		}
-		return null;
-	}
-
-	@Override
-	public IHyperlink[] findHyperlinks(TaskRepository repository, String content, int contentOffset, IRegion region) {
-		List<IHyperlink> hyperlinksFound = null;
-
-		final int start = region.getOffset();
-		final int end = region.getOffset() + region.getLength();
-
-		Matcher m = PATTERN.matcher(content);
-		while (m.find()) {
-			if (start <= m.start() && end >= m.end()) {
-				IHyperlink link = extractHyperlink(repository, contentOffset, m);
+			if (index == -1 || (index >= m.start() && index <= m.end())) {
+				IHyperlink link = extractHyperlink(repository, textOffset, m);
 				if (link != null) {
 					if (hyperlinksFound == null) {
 						hyperlinksFound = new ArrayList<IHyperlink>();
@@ -149,10 +126,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 			}
 		}
 
-		if (hyperlinksFound != null && !hyperlinksFound.isEmpty()) {
-			return hyperlinksFound.toArray(new IHyperlink[1]);
-		}
-		return null;
+		return (hyperlinksFound != null) ? hyperlinksFound.toArray(new IHyperlink[0]) : null;
 	}
 
 	@Override

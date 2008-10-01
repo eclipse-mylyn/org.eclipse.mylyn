@@ -14,16 +14,18 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -43,9 +45,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, final IRegion matchRegion,
-			boolean canShowMultipleHyperlinks) {
-		if (matchRegion == null || textViewer == null) {
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, final IRegion region, boolean canShowMultipleHyperlinks) {
+		if (region == null || textViewer == null) {
 			return null;
 		}
 
@@ -56,7 +57,7 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		String content;
 		int contentOffset;
-		IRegion region = matchRegion;
+		int index;
 		try {
 			if (region.getLength() == 0) {
 				// expand the region to include the whole line
@@ -69,24 +70,24 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 					int regionLength = Math.max(regionEnd, lineEnd) - lineOffset;
 					contentOffset = lineOffset;
 					content = document.get(lineOffset, regionLength);
-					region = new Region(0, regionLength);
+					index = region.getOffset() - lineOffset;
 				} else {
+					// the line starts after region, may never happen 
 					int regionLength = Math.max(regionEnd, lineEnd) - region.getOffset();
 					contentOffset = region.getOffset();
 					content = document.get(contentOffset, regionLength);
-					region = new Region(0, regionLength);
+					index = 0;
 				}
 			} else {
 				content = document.get(region.getOffset(), region.getLength());
 				contentOffset = region.getOffset();
-				region = new Region(0, region.getLength());
+				index = -1;
 			}
 		} catch (BadLocationException ex) {
 			return null;
 		}
 
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-
 		TaskRepository selectedRepository = getTaskRepository(textViewer);
 		if (selectedRepository != null) {
 			repositories.add(selectedRepository);
@@ -94,36 +95,59 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 			repositories.addAll(TasksUi.getRepositoryManager().getAllRepositories());
 		}
 
-		List<IHyperlink> hyperlinks = new ArrayList<IHyperlink>();
-		detectHyperlinks(content, contentOffset, matchRegion, region, repositories, hyperlinks);
+		List<IHyperlink> hyperlinks = detectHyperlinks(content, index, contentOffset, repositories);
+		if (hyperlinks == null) {
+			return null;
+		}
+
+		// filter hyperlinks that do not match original region
+		if (region.getLength() == 0) {
+			for (Iterator<IHyperlink> it = hyperlinks.iterator(); it.hasNext();) {
+				IHyperlink hyperlink = it.next();
+				IRegion hyperlinkRegion = hyperlink.getHyperlinkRegion();
+				if (!isInRegion(region, hyperlinkRegion)) {
+					it.remove();
+				}
+			}
+		}
 		if (hyperlinks.isEmpty()) {
 			return null;
 		}
+
 		return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
 	}
 
-	private void detectHyperlinks(String content, int contentOffset, IRegion matchRegion, IRegion region,
-			List<TaskRepository> repositories, List<IHyperlink> hyperlinks) {
-		for (TaskRepository repository : repositories) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
+	protected List<IHyperlink> detectHyperlinks(final String content, final int index, final int contentOffset,
+			List<TaskRepository> repositories) {
+		List<IHyperlink> result = null;
+		for (final TaskRepository repository : repositories) {
+			final AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository);
 			if (connectorUi == null) {
 				continue;
 			}
-			IHyperlink[] links = connectorUi.findHyperlinks(repository, content, contentOffset, region);
-			if (links == null) {
-				continue;
-			}
-			if (matchRegion.getLength() == 0) {
-				for (IHyperlink link : links) {
-					IRegion hyperlinkRegion = link.getHyperlinkRegion();
-					if (isInRegion(matchRegion, hyperlinkRegion)) {
-						hyperlinks.add(link);
-					}
+			final IHyperlink[][] links = new IHyperlink[1][];
+			SafeRunnable.run(new ISafeRunnable() {
+
+				public void handleException(Throwable exception) {
 				}
-			} else {
-				hyperlinks.addAll(Arrays.asList(links));
+
+				public void run() throws Exception {
+					links[0] = connectorUi.findHyperlinks(repository, content, index, contentOffset);
+				}
+
+			});
+			if (links[0] != null && links[0].length > 0) {
+				if (result == null) {
+					result = new ArrayList<IHyperlink>();
+				}
+				result.addAll(Arrays.asList(links[0]));
 			}
 		}
+		return result;
+	}
+
+	protected AbstractRepositoryConnectorUi getConnectorUi(TaskRepository repository) {
+		return TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 	}
 
 	private boolean isInRegion(IRegion matchRegion, IRegion hyperlinkRegion) {

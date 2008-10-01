@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
@@ -208,44 +207,23 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	/**
-	 * Returns an array of hyperlinks that link to tasks within <code>text</code>.
+	 * Returns an array of hyperlinks that link to tasks within <code>text</code>. If <code>index</code> is != -1
+	 * clients may limit the results to hyperlinks found at <code>index</code>. It is legal for clients to always return
+	 * all results.
 	 * 
 	 * @param repository
 	 *            the task repository, never <code>null</code>
 	 * @param text
 	 *            the line of text
+	 * @param index
+	 *            the index within <code>text</code>, if -1 return all hyperlinks found in text
 	 * @param textOffset
-	 *            the offset within <code>text</code>
-	 * @param lineOffset
 	 *            the offset of <code>text</code>
-	 * @return an array of hyperlinks
+	 * @return an array of hyperlinks, or null if no hyperlinks were found
 	 * @since 2.0
-	 * 
-	 * @deprecated use {@link #findHyperlinks(TaskRepository, String, int, IRegion)} instead
 	 */
-	@Deprecated
-	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int textOffset, int lineOffset) {
+	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int index, int textOffset) {
 		return null;
-	}
-
-	/**
-	 * Returns an array of hyperlinks that link to tasks within <code>content</code>.
-	 * 
-	 * @param repository
-	 *            the repository for which hyperlinks should be detected, never <code>null</code>
-	 * @param content
-	 *            the text content in which to find hyperlinks
-	 * @param contentOffset
-	 *            the offset into the original content at which the <code>content</code> starts. Returned hyperlinks
-	 *            should be offset by this factor
-	 * @param region
-	 *            the region that specifies the subset of the content in which to find hyperlinks
-	 * 
-	 * @return an array of hyperlinks, or null
-	 * @since 3.1
-	 */
-	public IHyperlink[] findHyperlinks(TaskRepository repository, String content, int contentOffset, IRegion region) {
-		return findHyperlinks(repository, content, region.getOffset(), contentOffset);
 	}
 
 	/**

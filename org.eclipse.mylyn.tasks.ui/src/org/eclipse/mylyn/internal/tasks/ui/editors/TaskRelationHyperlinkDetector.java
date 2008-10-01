@@ -11,6 +11,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -25,23 +30,46 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
  */
 public class TaskRelationHyperlinkDetector extends TaskHyperlinkDetector {
 
+	private static Pattern HYPERLINK_PATTERN = Pattern.compile("([^\\s,]+)");
+
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (region == null || textViewer == null || textViewer.getDocument() == null) {
 			return null;
 		}
 
-		TaskRepository taskRepository = getTaskRepository(textViewer);
-		if (taskRepository != null) {
-			String prefix = extractPrefix(textViewer, region.getOffset());
-			String postfix = extractPostfix(textViewer, region.getOffset());
-			String taskKey = prefix + postfix;
-			if (taskKey != null) {
-				Region hyperlinkRegion = new Region(region.getOffset() - prefix.length(), taskKey.length());
-				return new IHyperlink[] { new TaskHyperlink(hyperlinkRegion, taskRepository, taskKey) };
+		if (region.getLength() > 0) {
+			return super.detectHyperlinks(textViewer, region, canShowMultipleHyperlinks);
+		} else {
+			TaskRepository taskRepository = getTaskRepository(textViewer);
+			if (taskRepository != null) {
+				String prefix = extractPrefix(textViewer, region.getOffset());
+				String postfix = extractPostfix(textViewer, region.getOffset());
+				String taskKey = prefix + postfix;
+				if (taskKey.length() > 0) {
+					Region hyperlinkRegion = new Region(region.getOffset() - prefix.length(), taskKey.length());
+					return new IHyperlink[] { new TaskHyperlink(hyperlinkRegion, taskRepository, taskKey) };
+				}
 			}
 		}
 		return null;
+	}
+
+	@Override
+	protected List<IHyperlink> detectHyperlinks(String content, int index, int contentOffset,
+			List<TaskRepository> repositories) {
+		List<IHyperlink> links = null;
+		for (TaskRepository repository : repositories) {
+			Matcher m = HYPERLINK_PATTERN.matcher(content);
+			while (m.find()) {
+				if (links == null) {
+					links = new ArrayList<IHyperlink>();
+				}
+				Region region = new Region(contentOffset + m.start(), m.end() - m.start());
+				links.add(new TaskHyperlink(region, repository, m.group()));
+			}
+		}
+		return links;
 	}
 
 	private String extractPrefix(ITextViewer viewer, int offset) {

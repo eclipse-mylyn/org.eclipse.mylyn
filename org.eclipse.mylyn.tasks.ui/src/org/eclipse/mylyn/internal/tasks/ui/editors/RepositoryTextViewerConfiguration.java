@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -147,7 +147,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	@Override
 	public IHyperlinkPresenter getHyperlinkPresenter(final ISourceViewer sourceViewer) {
-		return new TaskTextViewerHyperlinkPresenter(JFaceResources.getColorRegistry().get(
+		return new RepositoryTextViewerHyperlinkPresenter(JFaceResources.getColorRegistry().get(
 				JFacePreferences.ACTIVE_HYPERLINK_COLOR), sourceViewer);
 	}
 
@@ -165,7 +165,8 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 		}
 	}
 
-	private final class TaskTextViewerHyperlinkPresenter extends DefaultHyperlinkPresenter {
+	private final class RepositoryTextViewerHyperlinkPresenter extends DefaultHyperlinkPresenter {
+
 		private final ISourceViewer sourceViewer;
 
 		private IRegion activeRegion;
@@ -176,7 +177,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 		 */
 		private ITask currentTaskHyperlink;
 
-		private TaskTextViewerHyperlinkPresenter(Color color, ISourceViewer sourceViewer) {
+		private RepositoryTextViewerHyperlinkPresenter(Color color, ISourceViewer sourceViewer) {
 			super(color);
 			this.sourceViewer = sourceViewer;
 		}
@@ -238,11 +239,6 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 			super.hideHyperlinks();
 		}
 
-		@Override
-		public void uninstall() {
-			// ignore
-			super.uninstall();
-		}
 	}
 
 	private static class RepositoryTextScanner extends RuleBasedScanner {
