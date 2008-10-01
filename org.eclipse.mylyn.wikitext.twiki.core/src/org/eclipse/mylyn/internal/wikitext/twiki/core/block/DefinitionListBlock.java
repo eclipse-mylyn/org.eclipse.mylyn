@@ -19,7 +19,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * implements definition lists: <code><pre>
- * $ word : definition
+ *    $ word : definition
  * </pre></code>
  * 
  * @author David Green
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 public class DefinitionListBlock extends Block {
 
 	private static final Pattern startPattern = Pattern
-			.compile("\\$\\s+([^:]+):\\s+(.+)");
+			.compile(" {3}\\$\\s+([^:]+):\\s+(.+)");
 
 	private int blockLineCount;
 
