@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project name="testsuite" default="" basedir=".">
 	
 	<property name="BUILD_ROOT" value="./" />
@@ -8,12 +7,16 @@
 	<property name="build" value="${QUALIFIER}" />
 
 	<property name="junit-report-output" value="./report/${build}" />
+	<property name="version" value="${MAJOR_VERSION}" />
+	<property name="eclipse-home-3.3" value="${ECLIPSE_HOME_3_3}" />
+	<property name="eclipse-home-3.4" value="${ECLIPSE_HOME_3_4}" />
+	<property name="eclipse-home-3.5" value="${ECLIPSE_HOME_3_5}" />
 	<property name="eclipse-test-home-3.4" value="${ECLIPSE_TEST_HOME_3_4}" />
 	<property name="eclipse-test-home-3.3" value="${ECLIPSE_TEST_HOME_3_3}" />
 	<property name="jvm" value="${JAVA_HOME}/bin/java" />
 
 	
-	<target name="all" depends="clean">
+	<target name="all" depends="test-clean">
 		<exec executable="./build-3.4.sh" />
 		<exec executable="./run-tests-3.4.sh">
 			<arg value="run" />
@@ -38,6 +41,12 @@
 	</target>
 
 	<target name="clean">
+		<delete dir="${eclipse-home-3.3}/build" />
+		<delete dir="${eclipse-home-3.4}/build" />
+		<delete dir="${eclipse-home-3.5}/build" />
+	</target>
+
+	<target name="test-clean">
 		<delete dir="${eclipse-test-home-3.3}/results" />
 		<delete>
 			<fileset dir="${eclipse-test-home-3.3}" includes="org*.xml" />
@@ -54,16 +63,16 @@
 	</target>
 
 	<target name="report">
-		<mkdir dir="${junit-report-output}/e3.3" />
-		<xslt style="${eclipse-test-home-3.3}/plugins/org.eclipse.test/JUNIT.XSL" basedir="${eclipse-test-home-3.3}/results" includes="*.xml" destdir="${junit-report-output}/e3.3" />
-		<copy todir="${junit-report-output}/e3.3">
-			<fileset dir="${eclipse-test-home-3.3}/results" />
-		</copy>
-
 		<mkdir dir="${junit-report-output}/e3.4" />
-		<xslt style="${eclipse-test-home-3.4}/plugins/org.eclipse.test/JUNIT.XSL" basedir="${eclipse-test-home-3.4}/results" includes="*.xml" destdir="${junit-report-output}/e3.4" />
+		<xslt style="${eclipse-test-home-3.4}/dropins/eclipse/plugins/org.eclipse.test_3.2.0/JUNIT.XSL" basedir="${eclipse-test-home-3.4}/results" includes="*.xml" destdir="${junit-report-output}/e3.4" />
 		<copy todir="${junit-report-output}/e3.4">
 			<fileset dir="${eclipse-test-home-3.4}/results" />
+		</copy>
+
+		<mkdir dir="${junit-report-output}/e3.3" />
+		<xslt style="${eclipse-test-home-3.3}/plugins/org.eclipse.test_3.2.0/JUNIT.XSL" basedir="${eclipse-test-home-3.3}/results" includes="*.xml" destdir="${junit-report-output}/e3.3" />
+		<copy todir="${junit-report-output}/e3.3">
+			<fileset dir="${eclipse-test-home-3.3}/results" />
 		</copy>
 	</target>
 
@@ -82,4 +91,17 @@
 		</java>
 	</target>
 
+	<target name="update-versions">
+		<replace dir="..">
+			<replacefilter 
+			    token="3.0.2.qualifier"
+				value="3.0.3.qualifier"/>
+			<replacefilter 
+			    token="3.0.2.mylynQualifier"
+				value="3.0.3.mylynQualifier"/>
+			<include name="org.eclipse.mylyn*/**/MANIFEST.MF"/>
+			<include name="org.eclipse.mylyn*/**/feature.xml"/>
+		</replace>
+	</target>
+	
 </project>
