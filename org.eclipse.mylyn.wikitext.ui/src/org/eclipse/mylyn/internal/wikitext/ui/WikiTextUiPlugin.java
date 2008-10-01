@@ -222,9 +222,11 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 										}
 										content = content.replace("\\r\\n", Text.DELIMITER).replace("\\r",
 												Text.DELIMITER).replace("\\n", Text.DELIMITER).replace("\\\\", "\\");
-										if (content.endsWith("$") && !content.endsWith("\\$")) {
+										if (content.endsWith("$")
+												&& !(content.endsWith("\\$") || content.endsWith("$$"))) {
 											content = content.substring(0, content.length() - 1);
 										}
+										content = content.replace("\\$", "$$");
 
 										markupLanguageTemplates.addTemplate(new Template(name, description,
 												MarkupTemplateCompletionProcessor.CONTEXT_ID, content,
