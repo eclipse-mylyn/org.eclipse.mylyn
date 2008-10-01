@@ -21,35 +21,35 @@
       <templates
             markupLanguage="TracWiki">
          <!-- phrase modifiers -->
-         <template name="'''" description="'''bold'''" content="'''${text}''' $"/>
-         <template name="''" description="''italic''" content="''${text}'' $"/>
-         <template name="'''''" description="'''''bold italic'''''" content="'''''${text}''''' $"/>
-         <template name="__" description="__underline__" content="__${text}__ $"/>
-         <template name="{{{" description="{{{monospace}}}" content="{{{${text}}}} $"/>
-         <template name="~~" description="~~strike-through~~" content="~~${text}~~ $"/>
-         <template name="^^" description="^superscript^" content="^^${text}^^ $"/>
-         <template name=",," description=",,subscript,," content=",,${text},, $"/>
+         <template name="'''" description="%template.description.0" content="'''${text}''' $"/>
+         <template name="''" description="%template.description.1" content="''${text}'' $"/>
+         <template name="'''''" description="%template.description.2" content="'''''${text}''''' $"/>
+         <template name="__" description="%template.description.3" content="__${text}__ $"/>
+         <template name="{{{" description="%template.description.4" content="{{{${text}}}} $"/>
+         <template name="~~" description="%template.description.5" content="~~${text}~~ $"/>
+         <template name="^^" description="%template.description.6" content="^^${text}^^ $"/>
+         <template name=",," description="%template.description.7" content=",,${text},, $"/>
          
          <!-- block templates -->
          
          
-         <template name="= " description="Heading 1" content="\n= ${text} =\n\n" block="true"/>
-         <template name="== " description="Heading 2" content="\n== ${text} ==\n\n" block="true"/>
-         <template name="=== " description="Heading 3" content="\n=== ${text} ===\n\n" block="true"/>
-         <template name="==== " description="Heading 4" content="\n==== ${text} ====\n\n" block="true"/>
-         <template name="===== " description="Heading 5" content="\n===== ${text} =====\n\n" block="true"/>
-         <template name="====== " description="Heading 6" content="\n====== ${text} ======\n\n" block="true"/>
-         <template name=" * " description="List (bulleted)" content="\n * ${text}\n * ${text2}\n\n" block="true"/>
-         <template name="  * " description="List (level 2, bulleted)" content="\n  * ${text}\n  * ${text2}\n\n" block="true"/>
-         <template name=" 1. " description="List (numeric)" content="\n 1. ${text}\n 1. ${text2}\n\n" block="true"/>
-         <template name="  1. " description="List (level 2, numeric)" content="\n  1. ${text}\n  1. ${text2}\n\n" block="true"/>
-         <template name="{{{" description="Preformatted block" content="\n{{{\n${text}\n}}}\n\n" block="true"/>
-         <template name="  " description="Block quote" content="\n  ${text}\n\n" block="true"/>
-         <template name="&gt;" description="Citation" content="\n&gt; ${text}\n\n" block="true"/>
-         <template name="||" description="Table" content="\n|| ${text} || ${text2} ||\n|| ${text3} || ${text4} ||\n\n" block="true"/>
+         <template name="= " description="%template.description.8" content="\n= ${text} =\n\n" block="true"/>
+         <template name="== " description="%template.description.9" content="\n== ${text} ==\n\n" block="true"/>
+         <template name="=== " description="%template.description.10" content="\n=== ${text} ===\n\n" block="true"/>
+         <template name="==== " description="%template.description.11" content="\n==== ${text} ====\n\n" block="true"/>
+         <template name="===== " description="%template.description.12" content="\n===== ${text} =====\n\n" block="true"/>
+         <template name="====== " description="%template.description.13" content="\n====== ${text} ======\n\n" block="true"/>
+         <template name=" * " description="%template.description.14" content="\n * ${text}\n * ${text2}\n\n" block="true"/>
+         <template name="  * " description="%template.description.15" content="\n  * ${text}\n  * ${text2}\n\n" block="true"/>
+         <template name=" 1. " description="%template.description.16" content="\n 1. ${text}\n 1. ${text2}\n\n" block="true"/>
+         <template name="  1. " description="%template.description.17" content="\n  1. ${text}\n  1. ${text2}\n\n" block="true"/>
+         <template name="{{{" description="%template.description.18" content="\n{{{\n${text}\n}}}\n\n" block="true"/>
+         <template name="  " description="%template.description.19" content="\n  ${text}\n\n" block="true"/>
+         <template name="&gt;" description="%template.description.20" content="\n&gt; ${text}\n\n" block="true"/>
+         <template name="||" description="%template.description.21" content="\n|| ${text} || ${text2} ||\n|| ${text3} || ${text4} ||\n\n" block="true"/>
          
          <!-- other -->
-         <template name="[[BR]]" description="line break" content="[[BR]]"/>
+         <template name="[[BR]]" description="%template.description.22" content="[[BR]]"/>
          
       </templates>
    </extension>
