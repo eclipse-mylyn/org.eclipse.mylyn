@@ -72,7 +72,6 @@ public class TaskHyperlinkTextPresentationManager {
 
 	private class Support implements ITextPresentationListener {
 		public void applyTextPresentation(TextPresentation textPresentation) {
-			System.err.println(textPresentation.getExtent());
 			StyleRange[] styleRanges = computeStyleRanges(textPresentation.getExtent());
 			if (styleRanges != null && styleRanges.length > 0) {
 				textPresentation.mergeStyleRanges(styleRanges);
