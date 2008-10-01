@@ -162,7 +162,7 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		assertEquals(format1.parse("2007-03-20 16:37"), mapper.getCreationDate());
-		assertEquals(format2.parse("2008-05-28 17:17:21"), mapper.getModificationDate());
+		assertEquals(format2.parse("2008-09-24 13:33:02"), mapper.getModificationDate());
 
 		//assertEquals("", mapper.getTaskUrl());
 		//assertEquals("bugzilla", mapper.getTaskKind());
