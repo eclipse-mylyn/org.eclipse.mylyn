@@ -48,6 +48,8 @@
          <template name="* " description="%template.description.26" content="\n* ${text}\n* ${text2}\n\n" block="true"/>
          <template name="** " description="%template.description.27" content="\n** ${text}\n** ${text2}\n\n" block="true"/>
          <template name="[" description="%template.description.28" content="[${number}] $" block="true"/>
+         <template name="|" description="Table" content="\n| ${text} | ${text2} |\n| ${text3} | ${text4} |\n\n" block="true"/>
+         <template name="|_." description="Table heading" content="\n|_. ${text} |_. ${text2} |\n" block="true"/>
          
          <!-- generative templates -->
          <template name="{toc}" description="%template.description.29" content="\n{toc}\n\n" block="true"/>
