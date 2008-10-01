@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,11 +78,12 @@ public class ResourceInterestUpdater {
 				}
 			}
 		}
-		if (InteractionEvent.Kind.SELECTION.equals(interactionKind)) {
-			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, true);
-		} else {
-			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, false);
-		}
+		ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, true);
+//		if (InteractionEvent.Kind.SELECTION.equals(interactionKind)) {
+//		ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, true);
+//		} else {
+//			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, false);
+//		}
 	}
 
 	private boolean acceptResource(IResource resource) {

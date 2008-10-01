@@ -49,11 +49,16 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		}
 		final Set<IResource> addedResources = new HashSet<IResource>();
 		final Set<IResource> changedResources = new HashSet<IResource>();
-		final Set<String> excludedPatterns = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
-		excludedPatterns.addAll(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns());
+		final Set<String> excludedPatterns = getExclusionPatterns();
+
 		IResourceDelta rootDelta = event.getDelta();
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {
+
+				if (isExcluded(delta.getResource().getProjectRelativePath(), delta.getResource(), excludedPatterns)) {
+					return false;
+				}
+
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 				for (IResourceDelta element : added) {
 					IResource resource = element.getResource();
@@ -62,11 +67,18 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 						addedResources.add(resource);
 					}
 				}
-//				int changeMask = IResourceDelta.CONTENT | IResourceDelta.REMOVED | IResourceDelta.MOVED_TO | IResourceDelta.MOVED_FROM;
-				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CONTENT | IResourceDelta.REMOVED);
+
+				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED | IResourceDelta.REMOVED);
 				for (IResourceDelta element : changed) {
 					IResource resource = element.getResource();
-					if (resource instanceof IFile) {
+					if (resource instanceof IFile
+							&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)) {
+
+						if (element.getKind() == IResourceDelta.CHANGED
+								&& (element.getFlags() & IResourceDelta.CONTENT) == 0) {
+							// make sure that there was a content change and not just a markers change
+							continue;
+						}
 						changedResources.add(resource);
 					}
 				}
@@ -76,11 +88,38 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		try {
 			rootDelta.accept(visitor);
 			ResourcesUi.addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
-			ResourcesUi.addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);
+			ResourcesUi.addResourceToContext(addedResources, InteractionEvent.Kind.PROPAGATION);
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
 					"Could not accept marker visitor", e));
 		}
+	}
+
+	private Set<String> getExclusionPatterns() {
+		Set<String> excludedResourcePatterns = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
+		excludedResourcePatterns.addAll(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns());
+
+		Set<String> excludedPatterns = new HashSet<String>();
+
+		for (String pattern : excludedResourcePatterns) {
+			if (pattern != null && pattern.length() > 0) {
+				pattern = createRegexFromPattern(pattern);
+
+				excludedPatterns.add(pattern);
+			}
+		}
+
+		return excludedPatterns;
+	}
+
+	/**
+	 * Public for testing *
+	 */
+	public String createRegexFromPattern(String pattern) {
+		// prepare the pattern to be a regex
+		pattern = pattern.replaceAll("\\.", "\\\\.");
+		pattern = pattern.replaceAll("\\*", ".*");
+		return pattern;
 	}
 
 	/**
@@ -90,6 +129,9 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	 *            can be null
 	 */
 	public boolean isExcluded(IPath path, IResource resource, Set<String> excludedPatterns) {
+		if (resource != null && resource.isDerived()) {
+			return true;
+		}
 		boolean excluded = false;
 		// NOTE: n^2 time complexity, but should not be a bottleneck
 		for (String pattern : excludedPatterns) {
@@ -97,7 +139,12 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				excluded |= isUriExcluded(resource.getLocationURI().toString(), pattern);
 			} else {
 				for (String segment : path.segments()) {
-					excluded |= segment.matches(pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
+					excluded |= segment.matches(pattern);
+
+					// minor performance improvement
+					if (excluded) {
+						break;
+					}
 				}
 			}
 
