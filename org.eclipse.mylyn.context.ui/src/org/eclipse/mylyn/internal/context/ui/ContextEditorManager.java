@@ -359,9 +359,9 @@ public class ContextEditorManager extends AbstractContextListener {
 				if (page != null) {
 					IEditorReference[] references = page.getEditorReferences();
 					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
-					for (int i = 0; i < references.length; i++) {
-						if (canClose(references[i]) && !isUnsubmittedTaskEditor(references[i])) {
-							toClose.add(references[i]);
+					for (IEditorReference reference : references) {
+						if (canClose(reference)) {
+							toClose.add(reference);
 						}
 					}
 					page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
@@ -378,19 +378,6 @@ public class ContextEditorManager extends AbstractContextListener {
 			return ((IContextAwareEditor) editor).canClose();
 		}
 		return true;
-	}
-
-	@SuppressWarnings( { "deprecation", "restriction" })
-	private boolean isUnsubmittedTaskEditor(IEditorReference editorReference) {
-		try {
-			IEditorInput input = editorReference.getEditorInput();
-			if (input instanceof org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput) {
-				return true;
-			}
-		} catch (PartInitException e) {
-			// ignore
-		}
-		return false;
 	}
 
 	@Override

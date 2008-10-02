@@ -131,7 +131,7 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 		} else {
 			task = selectedTask;
 			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
-			action.setEnabled(AttachmentUtil.canDownloadAttachment(task) && AttachmentUtil.hasContext(repository, task));
+			action.setEnabled(AttachmentUtil.canDownloadAttachment(task) && AttachmentUtil.hasContextAttachment(task));
 		}
 	}
 }
