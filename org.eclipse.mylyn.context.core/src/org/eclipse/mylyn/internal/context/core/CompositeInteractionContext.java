@@ -57,7 +57,7 @@ public class CompositeInteractionContext implements IInteractionContext {
 	}
 
 	public IInteractionElement get(String handle) {
-		if (contexts.values().size() == 0) {
+		if (handle == null || contexts.values().size() == 0) {
 			return null;
 		}
 		List<InteractionContextElement> nodes = new ArrayList<InteractionContextElement>();
