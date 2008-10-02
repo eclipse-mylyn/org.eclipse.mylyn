@@ -53,7 +53,6 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 		}
 	}
 
-	@SuppressWarnings( { "deprecation" })
 	private void runWithSelection(final Object selectedObject) {
 		final TaskEditor editor;
 		final ITask task;

@@ -260,7 +260,6 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		taskList.notifySynchronizationStateChanged(task);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void synchronizeTasks(IProgressMonitor monitor, final TaskRepository repository, Set<ITask> tasks)
 			throws CoreException {
 		monitor.subTask("Receiving " + tasks.size() + " tasks from " + repository.getRepositoryLabel());

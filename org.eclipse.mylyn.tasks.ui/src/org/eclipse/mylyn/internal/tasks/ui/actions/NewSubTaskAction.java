@@ -67,7 +67,6 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		setImageDescriptor(TasksUiImages.TASK_NEW_SUB);
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
 	@Override
 	public void run() {
 		if (selectedTask == null) {

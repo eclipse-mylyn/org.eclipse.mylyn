@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,14 +31,11 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -162,18 +159,19 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 				event.data = paths;
 			}
 		} else if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-			if (structuredSelection.getFirstElement() instanceof RepositoryTaskData) {
-				RepositoryTaskData taskData = (RepositoryTaskData) structuredSelection.getFirstElement();
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						taskData.getConnectorKind());
-				if (connector != null) {
-					event.data = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());
-				} else {
-					event.data = taskData.getSummary();
-				}
-			} else {
-				event.data = CopyTaskDetailsAction.getTextForTask(structuredSelection.getFirstElement());
-			}
+			// FIXME 3.1 reimplement
+			//			if (structuredSelection.getFirstElement() instanceof RepositoryTaskData) {
+//				RepositoryTaskData taskData = (RepositoryTaskData) structuredSelection.getFirstElement();
+//				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+//						taskData.getConnectorKind());
+//				if (connector != null) {
+//					event.data = connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());
+//				} else {
+//					event.data = taskData.getSummary();
+//				}
+//			} else {
+			event.data = CopyTaskDetailsAction.getTextForTask(structuredSelection.getFirstElement());
+//			}
 		}
 	}
 
