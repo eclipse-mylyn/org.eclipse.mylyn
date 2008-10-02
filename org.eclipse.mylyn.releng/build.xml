@@ -2,13 +2,16 @@
 
 <project name="testsuite" default="" basedir=".">
 	
-	<property name="BUILD_ROOT" value="./" />
+	<property name="BUILD_ROOT" value="." />
 	<property file="local.sh"/>
 
 	<property name="build" value="${QUALIFIER}" />
 
 	<property name="junit-report-output" value="./report/${build}" />
 	<property name="version" value="${MAJOR_VERSION}" />
+	<property name="build-home-3.3" value="./3.3" />
+	<property name="build-home-3.4" value="./3.4" />
+	<property name="build-home-3.5" value="./3.5" />
 	<property name="eclipse-home-3.3" value="${ECLIPSE_HOME_3_3}" />
 	<property name="eclipse-home-3.4" value="${ECLIPSE_HOME_3_4}" />
 	<property name="eclipse-home-3.5" value="${ECLIPSE_HOME_3_5}" />
@@ -42,9 +45,9 @@
 	</target>
 
 	<target name="clean">
-		<delete dir="${eclipse-home-3.3}/build" />
-		<delete dir="${eclipse-home-3.4}/build" />
-		<delete dir="${eclipse-home-3.5}/build" />
+		<delete dir="${build-home-3.3}/build" />
+		<delete dir="${build-home-3.4}/build" />
+		<delete dir="${build-home-3.5}/build" />
 	</target>
 
 	<target name="test-clean">
