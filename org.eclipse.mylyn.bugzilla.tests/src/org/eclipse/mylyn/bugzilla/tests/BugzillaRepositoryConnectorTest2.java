@@ -170,7 +170,7 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 
 		// test comments
 		List<TaskAttribute> comments = data.getAttributeMapper().getAttributesByType(data, TaskAttribute.TYPE_COMMENT);
-		assertEquals(11, comments.size());
+		assertEquals(12, comments.size());
 		TaskCommentMapper commentMap = TaskCommentMapper.createFrom(comments.get(0));
 		assertEquals("Rob Elves", commentMap.getAuthor().getName());
 		assertEquals("Created an attachment (id=1)\ntest\n\ntest attachments", commentMap.getText());

@@ -175,7 +175,9 @@ public class BugzillaTaskDataHandlerTest extends TestCase {
 		String bugid = "17";
 		setRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.TEST_BUGZILLA_30_URL);
 		TaskData report1 = init(bugid);
-		assertEquals("Testing! \"&@ $\" &amp;", report1.getRoot().getAttribute(BugzillaAttribute.SHORT_DESC.getKey()));
+		assertEquals("Testing! \"&@ $\" &amp;", report1.getRoot()
+				.getAttribute(BugzillaAttribute.SHORT_DESC.getKey())
+				.getValue());
 	}
 
 }
