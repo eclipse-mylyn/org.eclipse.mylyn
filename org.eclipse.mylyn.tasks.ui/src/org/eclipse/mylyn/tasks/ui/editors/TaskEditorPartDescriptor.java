@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,6 +45,7 @@ public abstract class TaskEditorPartDescriptor {
 	public TaskEditorPartDescriptor(String id) {
 		Assert.isNotNull(id);
 		this.id = id;
+		setPath(AbstractTaskEditorPage.PATH_COMMENTS);
 	}
 
 	public abstract AbstractTaskEditorPart createPart();
@@ -55,9 +56,6 @@ public abstract class TaskEditorPartDescriptor {
 			return true;
 		}
 		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		TaskEditorPartDescriptor other = (TaskEditorPartDescriptor) obj;
