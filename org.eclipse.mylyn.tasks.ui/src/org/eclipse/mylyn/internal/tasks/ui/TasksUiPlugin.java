@@ -78,7 +78,6 @@ import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationMana
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
@@ -157,12 +156,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private TaskListBackupManager taskListBackupManager;
 
-	private TaskDataStorageManager taskDataStorageManager;
-
 	private RepositoryTemplateManager repositoryTemplateManager;
-
-	@Deprecated
-	private final Set<AbstractTaskEditorFactory> taskEditorFactories = new HashSet<AbstractTaskEditorFactory>();
 
 	private final Set<AbstractTaskEditorPageFactory> taskEditorPageFactories = new HashSet<AbstractTaskEditorPageFactory>();
 
@@ -567,15 +561,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// instantiates taskDataManager
 			File root = new File(this.getDataDirectory() + '/' + FOLDER_OFFLINE);
-			OfflineFileStorage storage = new OfflineFileStorage(root);
-			OfflineCachingStorage cachedStorage = new OfflineCachingStorage(storage);
-			taskDataStorageManager = new TaskDataStorageManager(repositoryManager, cachedStorage);
-			taskDataStorageManager.start();
 
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
 
-			taskDataManager = new TaskDataManager(taskDataStorageManager, taskDataStore, repositoryManager,
-					taskListManager.getTaskList(), taskActivityManager);
+			taskDataManager = new TaskDataManager(new TaskDataStorageManager(null, null), taskDataStore,
+					repositoryManager, taskListManager.getTaskList(), taskActivityManager);
 			taskDataManager.setDataPath(getDataDirectory());
 
 			for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
@@ -606,7 +596,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				public void saving(ISaveContext context) throws CoreException {
 					if (context.getKind() == ISaveContext.FULL_SAVE) {
 						externalizationManager.stop();
-						taskDataStorageManager.stop();
 					}
 				}
 			};
@@ -987,16 +976,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		return taskEditorPageFactories.toArray(new AbstractTaskEditorPageFactory[0]);
 	}
 
-	public Set<AbstractTaskEditorFactory> getTaskEditorFactories() {
-		return taskEditorFactories;
-	}
-
-	public void addContextEditor(AbstractTaskEditorFactory contextEditor) {
-		if (contextEditor != null) {
-			this.taskEditorFactories.add(contextEditor);
-		}
-	}
-
 	/**
 	 * @since 3.0
 	 */
@@ -1048,10 +1027,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public static TaskListBackupManager getBackupManager() {
 		return INSTANCE.taskListBackupManager;
-	}
-
-	public static TaskDataStorageManager getTaskDataStorageManager() {
-		return INSTANCE.taskDataStorageManager;
 	}
 
 	public void addRepositoryConnectorUi(AbstractRepositoryConnectorUi repositoryConnectorUi) {
@@ -1205,10 +1180,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					"No repository was found. Associate a Task Repository with this project via the project's property page.");
 		}
 		return repository;
-	}
-
-	public String getNextNewRepositoryTaskId() {
-		return getTaskDataStorageManager().getNewRepositoryTaskId();
 	}
 
 	public static ExternalizationManager getExternalizationManager() {

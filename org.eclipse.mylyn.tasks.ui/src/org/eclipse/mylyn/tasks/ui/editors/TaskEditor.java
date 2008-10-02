@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,15 +39,9 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditorInput;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractTaskEditorFactory;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
@@ -75,7 +68,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -91,7 +83,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Mik Kersten
  * @author Rob Elves
  */
-@SuppressWarnings( { "deprecation", "restriction" })
 public class TaskEditor extends SharedHeaderFormEditor {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
@@ -99,7 +90,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	private ToggleTaskActivationAction activateAction;
 
 	@Deprecated
-	private IEditorPart contentOutlineProvider = null;
+	private final IEditorPart contentOutlineProvider = null;
 
 	private EditorBusyIndicator editorBusyIndicator;
 
@@ -128,116 +119,52 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		return editorParent;
 	}
 
-	@Deprecated
-	private void addPage(AbstractTaskEditorFactory factory) {
-		IEditorInput editorInput;
-		if (taskEditorInput != null && taskEditorInput.getTask() == null) {
-			editorInput = new RepositoryTaskEditorInput(taskEditorInput.getTaskRepository(), taskEditorInput.getTask()
-					.getTaskId(), "");
-		} else {
-			editorInput = getEditorInput();
-		}
-		if (factory.canCreateEditorFor(task) || factory.canCreateEditorFor(editorInput)) {
-			try {
-				IEditorPart editor = factory.createEditor(this, editorInput);
-				IEditorInput input = task != null ? factory.createEditorInput(task) : editorInput;
-				if (editor != null && input != null) {
-					FormPage taskEditor = (FormPage) editor;
-					editor.init(getEditorSite(), input);
-					int index = addPage(taskEditor);
-					if (input.getImageDescriptor() != null) {
-						setPageImage(index, CommonImages.getImage(input.getImageDescriptor()));
-					}
-					if (editor instanceof AbstractRepositoryTaskEditor) {
-						((AbstractRepositoryTaskEditor) editor).setParentEditor(this);
-
-						if (editorInput instanceof RepositoryTaskEditorInput) {
-							RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) editorInput;
-							setPartName(existingInput.getName());
-						} else if (editorInput instanceof NewTaskEditorInput) {
-							String label = ((NewTaskEditorInput) editorInput).getName();
-							setPartName(label);
-						}
-						setPageText(index, factory.getTitle());
-
-						// TODO review
-						setActivePage(index);
-					}
-				}
-
-				// HACK: overwrites if multiple present
-				if (factory.providesOutline()) {
-					contentOutlineProvider = editor;
-				}
-			} catch (Exception e) {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not create editor via factory: " + factory, e));
-			}
-		}
-
-	}
-
 	@Override
 	protected void addPages() {
 		initialize();
 
-		// TODO 3.1 remove check
-		if (taskEditorInput != null) {
-			// determine factories
-			Set<String> conflictingIds = new HashSet<String>();
-			ArrayList<AbstractTaskEditorPageFactory> pageFactories = new ArrayList<AbstractTaskEditorPageFactory>();
-			for (AbstractTaskEditorPageFactory pageFactory : TasksUiPlugin.getDefault().getTaskEditorPageFactories()) {
-				if (pageFactory.canCreatePageFor(getTaskEditorInput())) {
-					pageFactories.add(pageFactory);
-					String[] ids = pageFactory.getConflictingIds(getTaskEditorInput());
-					if (ids != null) {
-						conflictingIds.addAll(Arrays.asList(ids));
-					}
-				}
-			}
-			for (Iterator<AbstractTaskEditorPageFactory> it = pageFactories.iterator(); it.hasNext();) {
-				if (conflictingIds.contains(it.next().getId())) {
-					it.remove();
-				}
-			}
-
-			// sort by priority
-			Collections.sort(pageFactories, new Comparator<AbstractTaskEditorPageFactory>() {
-				public int compare(AbstractTaskEditorPageFactory o1, AbstractTaskEditorPageFactory o2) {
-					return o1.getPriority() - o2.getPriority();
-				}
-			});
-
-			// create pages
-			for (AbstractTaskEditorPageFactory factory : pageFactories) {
-				try {
-					IFormPage page = factory.createPage(this);
-					int index = addPage(page);
-					setPageImage(index, factory.getPageImage());
-					setPageText(index, factory.getPageText());
-					if (factory.getPriority() == AbstractTaskEditorPageFactory.PRIORITY_TASK) {
-						setActivePage(index);
-					}
-					if (page instanceof ISelectionProvider) {
-						((ISelectionProvider) page).addSelectionChangedListener(getActionBarContributor());
-					}
-				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Could not create editor via factory: " + factory, e));
+		// determine factories
+		Set<String> conflictingIds = new HashSet<String>();
+		ArrayList<AbstractTaskEditorPageFactory> pageFactories = new ArrayList<AbstractTaskEditorPageFactory>();
+		for (AbstractTaskEditorPageFactory pageFactory : TasksUiPlugin.getDefault().getTaskEditorPageFactories()) {
+			if (pageFactory.canCreatePageFor(getTaskEditorInput())) {
+				pageFactories.add(pageFactory);
+				String[] ids = pageFactory.getConflictingIds(getTaskEditorInput());
+				if (ids != null) {
+					conflictingIds.addAll(Arrays.asList(ids));
 				}
 			}
 		}
+		for (Iterator<AbstractTaskEditorPageFactory> it = pageFactories.iterator(); it.hasNext();) {
+			if (conflictingIds.contains(it.next().getId())) {
+				it.remove();
+			}
+		}
 
-		// TODO 3.1 remove code
-		List<AbstractTaskEditorFactory> factories = new ArrayList<AbstractTaskEditorFactory>(TasksUiPlugin.getDefault()
-				.getTaskEditorFactories());
-		Collections.sort(factories, new Comparator<AbstractTaskEditorFactory>() {
-			public int compare(AbstractTaskEditorFactory o1, AbstractTaskEditorFactory o2) {
-				return o1.getTabOrderPriority() - o2.getTabOrderPriority();
+		// sort by priority
+		Collections.sort(pageFactories, new Comparator<AbstractTaskEditorPageFactory>() {
+			public int compare(AbstractTaskEditorPageFactory o1, AbstractTaskEditorPageFactory o2) {
+				return o1.getPriority() - o2.getPriority();
 			}
 		});
-		for (AbstractTaskEditorFactory factory : factories) {
-			addPage(factory);
+
+		// create pages
+		for (AbstractTaskEditorPageFactory factory : pageFactories) {
+			try {
+				IFormPage page = factory.createPage(this);
+				int index = addPage(page);
+				setPageImage(index, factory.getPageImage());
+				setPageText(index, factory.getPageText());
+				if (factory.getPriority() == AbstractTaskEditorPageFactory.PRIORITY_TASK) {
+					setActivePage(index);
+				}
+				if (page instanceof ISelectionProvider) {
+					((ISelectionProvider) page).addSelectionChangedListener(getActionBarContributor());
+				}
+			} catch (Exception e) {
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						"Could not create editor via factory: " + factory, e));
+			}
 		}
 
 		updateTitleImage();
@@ -398,18 +325,14 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		// TODO 3.1 remove the commented parts
-		//		if (!(input instanceof TaskEditorInput)) {
-//			throw new PartInitException("Invalid editor input \"" + input.getClass() + "\"");
-//		}
+		if (!(input instanceof TaskEditorInput)) {
+			throw new PartInitException("Invalid editor input \"" + input.getClass() + "\"");
+		}
 
 		super.init(site, input);
 
-		// TODO 3.1 remove the instanceof check
-		if (input instanceof TaskEditorInput) {
-			this.taskEditorInput = (TaskEditorInput) input;
-			this.task = taskEditorInput.getTask();
-		}
+		this.taskEditorInput = (TaskEditorInput) input;
+		this.task = taskEditorInput.getTask();
 
 		setPartName(input.getName());
 
@@ -421,11 +344,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	private void installTitleDrag(Form form) {
-		// TODO 3.1 remove
-		if (task == null) {
-			return;
-		}
-
 		if (titleDragSourceListener == null) {
 			Transfer[] transferTypes;
 			if (null == task) {
@@ -473,9 +391,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		for (IFormPage page : getPages()) {
 			if (page instanceof AbstractTaskEditorPage) {
 				((AbstractTaskEditorPage) page).refreshFormContent();
-			} else if (page instanceof AbstractRepositoryTaskEditor) {
-				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
-				editor.refreshEditor();
 			} else if (page instanceof BrowserFormPage) {
 				// XXX 3.1 replace by invocation of refreshFromContent();
 				((BrowserFormPage) page).init(getEditorSite(), getEditorInput());
@@ -578,15 +493,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		if (input instanceof TaskEditorInput) {
 			updateHeaderImage(task.getConnectorKind());
 			updateHeaderLabel(task);
-		} else if (input instanceof RepositoryTaskEditorInput) {
-			RepositoryTaskData taskData = ((RepositoryTaskEditorInput) input).getTaskData();
-			if (task != null) {
-				updateHeaderImage(task.getConnectorKind());
-				updateHeaderLabel(task);
-			} else if (taskData != null) {
-				updateHeaderImage(taskData.getConnectorKind());
-				updateHeaderLabel(taskData);
-			}
 		}
 		setTitleToolTip(input.getToolTipText());
 		setPartName(input.getName());
@@ -610,9 +516,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			} else if (page instanceof TaskPlanningEditor) {
 				TaskPlanningEditor taskPlanningPage = (TaskPlanningEditor) page;
 				taskPlanningPage.fillToolBar(toolBarManager);
-			} else if (page instanceof AbstractRepositoryTaskEditor) {
-				AbstractRepositoryTaskEditor taskEditorPage = (AbstractRepositoryTaskEditor) page;
-				taskEditorPage.fillToolBar(toolBarManager);
 			}
 		}
 
@@ -669,29 +572,6 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		}
 	}
 
-	@Deprecated
-	private void updateHeaderLabel(RepositoryTaskData taskData) {
-		String kindLabel = taskData.getTaskKind();
-		String idLabel = taskData.getTaskKey();
-
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getConnectorKind());
-		if (connectorUi != null && task != null) {
-			kindLabel = connectorUi.getTaskKindLabel(task);
-		}
-		if (taskData.isNew()) {
-			kindLabel = "New " + kindLabel;
-			idLabel = "";
-		}
-
-		if (getHeaderForm().getForm() != null) {
-			if (idLabel != null) {
-				getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
-			} else {
-				getHeaderForm().getForm().setText(kindLabel);
-			}
-		}
-	}
-
 	/**
 	 * Update the title of the editor
 	 */
@@ -712,8 +592,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			} else {
 				setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
 			}
-		} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
-			setTitleImage(CommonImages.getImage(TasksUiImages.TASK_REMOTE));
+//		} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
+//			setTitleImage(CommonImages.getImage(TasksUiImages.TASK_REMOTE));
 		} else {
 			setTitleImage(CommonImages.getImage(TasksUiImages.TASK));
 		}

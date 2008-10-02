@@ -17,7 +17,6 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -101,16 +100,6 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		} else if (object instanceof IRepositoryElement) {
 			IRepositoryElement element = (IRepositoryElement) object;
 			text = element.getSummary();
-		} else if (object instanceof RepositoryTaskSelection) {
-			RepositoryTaskSelection selection = (RepositoryTaskSelection) object;
-			text += selection.getId() + ": " + selection.getBugSummary();
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					selection.getRepositoryKind());
-			if (connector != null) {
-				text += "\n" + connector.getTaskUrl(selection.getRepositoryUrl(), selection.getId());
-			} else {
-				text += "\n" + selection.getRepositoryUrl();
-			}
 		}
 		return text;
 	}

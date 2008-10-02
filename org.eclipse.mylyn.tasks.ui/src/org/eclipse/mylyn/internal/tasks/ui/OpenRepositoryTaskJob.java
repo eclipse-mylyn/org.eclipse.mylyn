@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,41 +89,21 @@ public class OpenRepositoryTaskJob extends Job {
 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(repositoryKind);
 		try {
-			if (connector instanceof AbstractLegacyRepositoryConnector) {
-				org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler offlineHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
-				if (offlineHandler != null) {
-					// the following code was copied from SynchronizeTaskJob
-					RepositoryTaskData downloadedTaskData = null;
-					downloadedTaskData = offlineHandler.getTaskData(repository, taskId, monitor);
-					if (downloadedTaskData != null) {
-						TasksUiPlugin.getTaskDataStorageManager().setNewTaskData(downloadedTaskData);
+			TaskData taskData = connector.getTaskData(repository, taskId, monitor);
+			if (taskData != null) {
+				task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
+				TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						TasksUiUtil.openTask(task);
 					}
-					openEditor(repository, (AbstractLegacyRepositoryConnector) connector, repository,
-							downloadedTaskData);
-				} else {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							TasksUiUtil.openUrl(taskUrl);
-						}
-					});
-				}
+				});
 			} else {
-				TaskData taskData = connector.getTaskData(repository, taskId, monitor);
-				if (taskData != null) {
-					task = TasksUi.getRepositoryModel().createTask(repository, taskData.getTaskId());
-					TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							TasksUiUtil.openTask(task);
-						}
-					});
-				} else {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							TasksUiUtil.openUrl(taskUrl);
-						}
-					});
-				}
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						TasksUiUtil.openUrl(taskUrl);
+					}
+				});
 			}
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

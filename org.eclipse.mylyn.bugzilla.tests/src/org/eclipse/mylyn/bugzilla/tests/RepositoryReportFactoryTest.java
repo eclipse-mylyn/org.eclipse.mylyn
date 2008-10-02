@@ -18,7 +18,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.bugzilla.deprecated.BugzillaAttributeFactory;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
@@ -39,7 +38,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskMapper;
  */
 public class RepositoryReportFactoryTest extends TestCase {
 
-	BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
+//	BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
 	TaskRepository repository;
 

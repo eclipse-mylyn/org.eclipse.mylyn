@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,10 +60,6 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 		if (selectedObject instanceof TaskEditor) {
 			editor = (TaskEditor) selectedObject;
 			task = editor.getTaskEditorInput().getTask();
-		} else if (selectedObject instanceof org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor) {
-			org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor page = (org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor) selectedObject;
-			editor = page.getParentEditor();
-			task = page.getRepositoryTask();
 		} else {
 			return;
 		}
@@ -81,8 +77,6 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 									if (selectedObject instanceof TaskEditor) {
 										TaskEditor editor = (TaskEditor) selectedObject;
 										editor.refreshPages();
-									} else if (selectedObject instanceof org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor) {
-										((org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor) selectedObject).refreshEditor();
 									}
 								} finally {
 									if (editor != null) {

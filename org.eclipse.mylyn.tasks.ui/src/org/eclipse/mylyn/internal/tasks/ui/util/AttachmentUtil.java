@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,9 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -38,16 +36,13 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.FileAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.DownloadAttachmentJob;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -127,30 +122,6 @@ public class AttachmentUtil {
 		return false;
 	}
 
-	/**
-	 * Implementors of this repositoryOperations must perform it locally without going to the server since it is used
-	 * for frequent repositoryOperations such as decoration.
-	 * 
-	 * @return an empty set if no contexts
-	 */
-	public static Set<RepositoryAttachment> getLegacyContextAttachments(TaskRepository repository, ITask task) {
-		TaskDataStorageManager taskDataManager = TasksUiPlugin.getTaskDataStorageManager();
-		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
-		if (taskDataManager != null) {
-			RepositoryTaskData newData = taskDataManager.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-			if (newData != null) {
-				for (RepositoryAttachment attachment : newData.getAttachments()) {
-					if (attachment.getDescription().equals(CONTEXT_DESCRIPTION)) {
-						contextAttachments.add(attachment);
-					} else if (attachment.getDescription().equals(CONTEXT_DESCRIPTION_LEGACY)) {
-						contextAttachments.add(attachment);
-					}
-				}
-			}
-		}
-		return contextAttachments;
-	}
-
 	public static List<ITaskAttachment> getContextAttachments(TaskRepository repository, ITask task) {
 		List<ITaskAttachment> contextAttachments = new ArrayList<ITaskAttachment>();
 		TaskData taskData;
@@ -174,31 +145,13 @@ public class AttachmentUtil {
 		return contextAttachments;
 	}
 
-	public static boolean hasContext(TaskRepository repository, ITask task) {
-		if (repository == null || task == null) {
-			return false;
-		} else {
-			Set<RepositoryAttachment> remoteContextAttachments = getLegacyContextAttachments(repository, task);
-			return (remoteContextAttachments != null && remoteContextAttachments.size() > 0);
-		}
-	}
-
 	public static boolean hasContextAttachment(ITask task) {
 		Assert.isNotNull(task);
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
-		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-				repository.getConnectorKind());
-		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			Set<RepositoryAttachment> remoteContextAttachments = getLegacyContextAttachments(repository, task);
-			return (remoteContextAttachments != null && remoteContextAttachments.size() > 0);
-		} else {
-			List<ITaskAttachment> contextAttachments = getContextAttachments(repository, task);
-			return contextAttachments.size() > 0;
-		}
+		List<ITaskAttachment> contextAttachments = getContextAttachments(repository, task);
+		return contextAttachments.size() > 0;
 	}
-
-	private static final String MESSAGE_ATTACHMENTS_NOT_SUPPORTED = "Attachments not supported by connector: ";
 
 	private static final String TITLE_DIALOG = "Mylyn Information";
 

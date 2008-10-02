@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryQueryWizard;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -81,8 +80,6 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 			String oldSummary = null;
 			if (query != null) {
 				oldSummary = query.getSummary();
-			} else if (getWizard() instanceof AbstractRepositoryQueryWizard) {
-				oldSummary = ((AbstractRepositoryQueryWizard) getWizard()).getQuerySummary();
 			}
 			if (oldSummary != null && queryTitle.equals(oldSummary)) {
 				setErrorMessage(null);

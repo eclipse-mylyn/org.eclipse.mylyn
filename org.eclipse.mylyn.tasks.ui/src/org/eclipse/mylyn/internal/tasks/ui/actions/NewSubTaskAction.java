@@ -30,11 +30,8 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttributeFactory;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -46,10 +43,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -94,11 +89,6 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				selectedTask.getConnectorKind());
-		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			createLegacyTask((AbstractLegacyRepositoryConnector) connector);
-			return;
-		}
-
 		TaskData taskData = createTaskData(connector);
 		if (taskData != null) {
 			try {
@@ -174,66 +164,6 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 					"The connector does not support creating subtasks for this task"));
 		}
 		return null;
-	}
-
-	@Deprecated
-	private void createLegacyTask(AbstractLegacyRepositoryConnector connector) {
-		final org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler taskDataHandler = connector.getLegacyTaskDataHandler();
-		if (taskDataHandler == null) {
-			return;
-		}
-
-		String repositoryUrl = selectedTask.getRepositoryUrl();
-		final RepositoryTaskData selectedTaskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(
-				repositoryUrl, selectedTask.getTaskId());
-		if (selectedTaskData == null) {
-			TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.WARNING,
-					TasksUiPlugin.ID_PLUGIN, "Could not retrieve task data for task: " + selectedTask.getUrl()));
-			// TODO try to retrieve task data or fall back to invoking connector code
-			return;
-		}
-
-		if (!taskDataHandler.canInitializeSubTaskData(selectedTask, selectedTaskData)) {
-			return;
-		}
-
-		final TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
-		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(
-				taskRepository.getRepositoryUrl(), taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
-		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, selectedTask.getConnectorKind(),
-				taskRepository.getRepositoryUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
-		taskData.setNew(true);
-
-		final boolean[] result = new boolean[1];
-		IProgressService service = PlatformUI.getWorkbench().getProgressService();
-		try {
-			service.busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					try {
-						result[0] = taskDataHandler.initializeSubTaskData(taskRepository, taskData, selectedTaskData,
-								new NullProgressMonitor());
-					} catch (CoreException e) {
-						throw new InvocationTargetException(e);
-					}
-				}
-			});
-		} catch (InvocationTargetException e) {
-			TasksUiInternal.displayStatus("Unable to create subtask", ((CoreException) e.getCause()).getStatus());
-			return;
-		} catch (InterruptedException e) {
-			// canceled
-			return;
-		}
-
-		if (result[0]) {
-			// open editor
-			NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, taskData);
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
-		} else {
-			TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-					"The connector does not support creating subtasks for this task"));
-		}
 	}
 
 	public void run(IAction action) {

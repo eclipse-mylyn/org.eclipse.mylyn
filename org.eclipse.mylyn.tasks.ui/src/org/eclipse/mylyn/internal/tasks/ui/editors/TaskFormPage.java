@@ -10,7 +10,7 @@
  *     Eugene Kuleshov - spelling correction
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.deprecated;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,9 +44,6 @@ import org.eclipse.jface.text.source.ImageUtilities;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;

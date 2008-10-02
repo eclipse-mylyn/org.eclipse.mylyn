@@ -19,9 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -283,14 +281,15 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			for (TaskRepository repository : TasksUi.getRepositoryManager().getRepositories(
 					connector.getConnectorKind())) {
 				if (repository.getRepositoryUrl().equals(repositoryUrl)) {
-					try {
-						newTask = (AbstractTask) TasksUiInternal.createTask(repository, id, new NullProgressMonitor());
-						TasksUiInternal.refreshAndOpenTaskListElement(newTask);
-						return true;
-					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create task", e));
-						return false;
-					}
+					// FIXME 3.1 reimplement
+//					try {
+//						newTask = (AbstractTask) TasksUiInternal.createTask(repository, id, new NullProgressMonitor());
+//						TasksUiInternal.refreshAndOpenTaskListElement(newTask);
+//						return true;
+//					} catch (CoreException e) {
+//						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create task", e));
+//						return false;
+//					}
 				}
 			}
 			return false;

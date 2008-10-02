@@ -422,9 +422,6 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 		}
 
 		setPageComplete(attachmentFound);
-		if (getWizard() instanceof NewAttachmentWizard) {
-			((NewAttachmentWizard) getWizard()).getAttachment().setFilePath(getAbsoluteAttachmentPath());
-		}
 
 		if (showError) {
 			setErrorMessage(error);
@@ -516,9 +513,6 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 	private String getAttachmentFilePath() {
 		if (fileNameField != null) {
 			return fileNameField.getText();
-		}
-		if (getWizard() instanceof NewAttachmentWizard) {
-			return ((NewAttachmentWizard) getWizard()).getAttachment().getFilePath();
 		}
 		return null;
 	}

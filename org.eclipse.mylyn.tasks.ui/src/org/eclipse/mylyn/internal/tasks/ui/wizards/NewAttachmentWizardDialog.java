@@ -21,10 +21,6 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * @author Jeff Pound
  */
-/**
- * @deprecated Do not use. This class is pending for removal: see bug 237552.
- */
-@Deprecated
 public class NewAttachmentWizardDialog extends WizardDialog {
 
 	private static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "PatchWizard";

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,9 +35,6 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskEditorAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskFromSelectionAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -45,10 +42,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ShowInTaskListAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractRepositoryTaskEditor;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.NewTaskEditorInput;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.RepositoryTaskEditorInput;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.TaskFormPage;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
@@ -56,6 +49,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -84,10 +78,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private final OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
 	private final CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction();
-
-	private final AbstractTaskEditorAction attachAction = new AttachAction();
-
-	private final AbstractTaskEditorAction attachScreenshotAction = new AttachScreenshotAction();
 
 	private final SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 
@@ -173,7 +163,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	public void contextMenuAboutToShow(IMenuManager mng) {
 		IFormPage page = getActivePage();
-		boolean addClipboard = (page instanceof TaskPlanningEditor || page instanceof AbstractRepositoryTaskEditor || page instanceof AbstractTaskEditorPage);
+		boolean addClipboard = (page instanceof TaskPlanningEditor || page instanceof AbstractTaskEditorPage);
 		contextMenuAboutToShow(mng, addClipboard);
 	}
 
@@ -205,8 +195,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			}
 			copyTaskDetailsAction.selectionChanged(new StructuredSelection(getSelection()));
 			manager.add(subMenuManager);
-		} else if (editor.getEditorInput() instanceof NewTaskEditorInput) {
-			// empty menu
 		} else {
 			final ITask task = editor.getTaskEditorInput().getTask();
 			if (task != null) {
@@ -262,17 +250,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				manager.add(new GroupMarker(TaskListView.ID_SEPARATOR_OPERATIONS));
 				manager.add(new GroupMarker(TaskListView.ID_SEPARATOR_CONTEXT));
 				manager.add(new Separator());
-				if (getActivePage() instanceof AbstractRepositoryTaskEditor) {
-					attachAction.selectionChanged(selection);
-					attachAction.setEditor(editor);
-					attachScreenshotAction.selectionChanged(selection);
-					attachScreenshotAction.setEditor(editor);
-
-					manager.add(new Separator());
-					manager.add(attachAction);
-					manager.add(attachScreenshotAction);
-				}
-				manager.add(new Separator());
 			}
 		}
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -280,11 +257,11 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private void moveToCategory(AbstractTaskCategory category) {
 		IEditorInput input = getEditor().getEditorInput();
-		if (input instanceof RepositoryTaskEditorInput) {
-			RepositoryTaskEditorInput repositoryTaskEditorInput = (RepositoryTaskEditorInput) input;
+		if (input instanceof TaskEditorInput) {
+			TaskEditorInput repositoryTaskEditorInput = (TaskEditorInput) input;
 			final IProgressService svc = PlatformUI.getWorkbench().getProgressService();
-			final AddExistingTaskJob job = new AddExistingTaskJob(repositoryTaskEditorInput.getRepository(),
-					repositoryTaskEditorInput.getId(), category);
+			final AddExistingTaskJob job = new AddExistingTaskJob(repositoryTaskEditorInput.getTaskRepository(),
+					repositoryTaskEditorInput.getTask().getTaskId(), category);
 			job.schedule();
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {

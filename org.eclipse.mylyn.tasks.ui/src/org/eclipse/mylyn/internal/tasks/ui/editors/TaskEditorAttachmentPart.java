@@ -31,8 +31,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
-import org.eclipse.mylyn.internal.tasks.ui.actions.AttachAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.AttachScreenshotAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiMenus;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
@@ -161,7 +159,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentControlsComposite.setLayout(new GridLayout(2, false));
 		attachmentControlsComposite.setLayoutData(new GridData(GridData.BEGINNING));
 
-		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, AttachAction.LABEL, SWT.PUSH);
+		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, "Attach...", SWT.PUSH);
 		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
 		attachFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -171,7 +169,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		});
 		getTaskEditorPage().registerDefaultDropListener(attachFileButton);
 
-		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, AttachScreenshotAction.LABEL,
+		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, "Attach Screenshot...",
 				SWT.PUSH);
 		attachScreenshotButton.setImage(CommonImages.getImage(CommonImages.IMAGE_CAPTURE));
 		attachScreenshotButton.addSelectionListener(new SelectionAdapter() {

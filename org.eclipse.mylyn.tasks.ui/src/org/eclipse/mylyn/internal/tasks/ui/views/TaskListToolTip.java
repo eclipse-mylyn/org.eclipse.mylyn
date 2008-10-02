@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,6 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskDataDiff;
-import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.notifications.TaskListNotifier;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -287,27 +286,16 @@ public class TaskListToolTip extends ToolTip {
 		return null;
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
 	private String getIncommingText(IRepositoryElement element) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			if (task.getSynchronizationState().isIncoming()) {
 				String text = null;
-				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-						task.getConnectorKind());
-				if (connector instanceof org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector) {
-					TaskListNotification notification = org.eclipse.mylyn.internal.tasks.ui.LegacyChangeManager.getIncommingNotification(
-							connector, task);
-					if (notification != null) {
-						text = notification.getDescription();
-					}
-				} else {
-					TaskListNotifier notifier = new TaskListNotifier(TasksUiPlugin.getRepositoryModel(),
-							TasksUiPlugin.getTaskDataManager());
-					TaskDataDiff diff = notifier.getDiff(task);
-					if (diff != null) {
-						text = diff.toString(MAX_TEXT_WIDTH);
-					}
+				TaskListNotifier notifier = new TaskListNotifier(TasksUiPlugin.getRepositoryModel(),
+						TasksUiPlugin.getTaskDataManager());
+				TaskDataDiff diff = notifier.getDiff(task);
+				if (diff != null) {
+					text = diff.toString(MAX_TEXT_WIDTH);
 				}
 				if (text != null && text.length() > 0) {
 					return text;

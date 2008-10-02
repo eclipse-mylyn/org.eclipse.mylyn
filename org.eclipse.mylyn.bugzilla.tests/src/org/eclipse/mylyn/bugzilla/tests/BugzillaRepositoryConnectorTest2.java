@@ -183,8 +183,6 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		init30();
 		String taskNumber = "5";
 
-		TasksUiPlugin.getTaskDataStorageManager().clear();
-
 		// Get the task
 		ITask task = generateLocalTaskAndDownload(taskNumber);
 

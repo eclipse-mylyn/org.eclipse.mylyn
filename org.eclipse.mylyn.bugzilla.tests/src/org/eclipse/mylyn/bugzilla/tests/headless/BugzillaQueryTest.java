@@ -34,10 +34,12 @@ public class BugzillaQueryTest extends TestCase {
 
 	private TaskRepository repository;
 
+	@SuppressWarnings("unused")
 	private AbstractRepositoryConnector connectorOriginal;
 
 	private BugzillaRepositoryConnector connector;
 
+	@SuppressWarnings("unused")
 	private AbstractTaskDataHandler handler;
 
 	@Override

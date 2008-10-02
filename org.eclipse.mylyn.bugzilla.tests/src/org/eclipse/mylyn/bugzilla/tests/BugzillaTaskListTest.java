@@ -16,7 +16,6 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.bugzilla.deprecated.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -139,7 +138,8 @@ public class BugzillaTaskListTest extends TestCase {
 	}
 
 	public void testDeleteQuery() {
-		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
+		RepositoryQuery query = new RepositoryQuery(BugzillaCorePlugin.CONNECTOR_KIND, "queryUrl");
+		query.setRepositoryUrl("repositoryUrl");
 		TasksUiPlugin.getTaskList().addQuery(query);
 
 		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
@@ -150,7 +150,8 @@ public class BugzillaTaskListTest extends TestCase {
 	}
 
 	public void testDeleteQueryAfterRename() {
-		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
+		RepositoryQuery query = new RepositoryQuery(BugzillaCorePlugin.CONNECTOR_KIND, "queryUrl");
+		query.setRepositoryUrl("repositoryUrl");
 		TasksUiPlugin.getTaskList().addQuery(query);
 
 		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
@@ -161,14 +162,17 @@ public class BugzillaTaskListTest extends TestCase {
 	}
 
 	public void testCreateQueryWithSameName() {
-		RepositoryQuery query = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label");
+		RepositoryQuery query = new RepositoryQuery(BugzillaCorePlugin.CONNECTOR_KIND, "queryUrl");
+		query.setRepositoryUrl("repositoryUrl");
 		TasksUiPlugin.getTaskList().addQuery(query);
 		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
 		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
 
 		try {
-			TasksUiPlugin.getTaskList().addQuery(new BugzillaRepositoryQuery("repositoryUrl", "queryUrl", "label"));
+			query = new RepositoryQuery(BugzillaCorePlugin.CONNECTOR_KIND, "queryUrl");
+			query.setRepositoryUrl("repositoryUrl");
+			TasksUiPlugin.getTaskList().addQuery(query);
 		} catch (IllegalArgumentException e) {
 			if (!e.getMessage().equals("Handle label already exists in task list")) {
 				fail("Handle label already exists in task list nt found");
@@ -178,4 +182,5 @@ public class BugzillaTaskListTest extends TestCase {
 		}
 		fail("IllegalArgumentException not found");
 	}
+
 }

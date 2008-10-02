@@ -18,13 +18,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
@@ -76,46 +71,46 @@ public class NewTaskFromSelectionAction extends Action {
 			} else {
 				taskSelection = null;
 			}
-		} else if (selection instanceof RepositoryTaskSelection) {
-			RepositoryTaskSelection repositoryTaskSelection = (RepositoryTaskSelection) selection;
-			IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
-			AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repositoryTaskSelection.getRepositoryKind());
-
-			TaskComment comment = repositoryTaskSelection.getComment();
-			if (comment != null) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("\n-- Created from Comment --");
-				if (connector != null) {
-					sb.append("\nURL: ");
-					sb.append(connector.getTaskUrl(repositoryTaskSelection.getRepositoryUrl(),
-							repositoryTaskSelection.getId()));
-				}
-				sb.append("\nComment: ");
-				sb.append(comment.getNumber());
-
-				sb.append("\n\n");
-				if (taskSelection != null) {
-					// if text was selected, prefer that 
-					sb.append(taskSelection.getLegacyTaskData().getDescription());
-				} else {
-					sb.append(comment.getText());
-				}
-
-				taskSelection = new TaskSelection("", sb.toString());
-			} else if (taskSelection != null) {
-				StringBuilder sb = new StringBuilder();
-				if (connector != null) {
-					sb.append("\n-- Created from Task --");
-					sb.append("\nURL: ");
-					sb.append(connector.getTaskUrl(repositoryTaskSelection.getRepositoryUrl(),
-							repositoryTaskSelection.getId()));
-				}
-
-				sb.append("\n\n");
-				sb.append(taskSelection.getLegacyTaskData().getDescription());
-
-				taskSelection = new TaskSelection("", sb.toString());
-			}
+//		} else if (selection instanceof RepositoryTaskSelection) {
+//			RepositoryTaskSelection repositoryTaskSelection = (RepositoryTaskSelection) selection;
+//			IRepositoryManager repositoryManager = TasksUi.getRepositoryManager();
+//			AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repositoryTaskSelection.getRepositoryKind());
+//
+//			TaskComment comment = repositoryTaskSelection.getComment();
+//			if (comment != null) {
+//				StringBuilder sb = new StringBuilder();
+//				sb.append("\n-- Created from Comment --");
+//				if (connector != null) {
+//					sb.append("\nURL: ");
+//					sb.append(connector.getTaskUrl(repositoryTaskSelection.getRepositoryUrl(),
+//							repositoryTaskSelection.getId()));
+//				}
+//				sb.append("\nComment: ");
+//				sb.append(comment.getNumber());
+//
+//				sb.append("\n\n");
+//				if (taskSelection != null) {
+//					// if text was selected, prefer that 
+//					sb.append(taskSelection.getLegacyTaskData().getDescription());
+//				} else {
+//					sb.append(comment.getText());
+//				}
+//
+//				taskSelection = new TaskSelection("", sb.toString());
+//			} else if (taskSelection != null) {
+//				StringBuilder sb = new StringBuilder();
+//				if (connector != null) {
+//					sb.append("\n-- Created from Task --");
+//					sb.append("\nURL: ");
+//					sb.append(connector.getTaskUrl(repositoryTaskSelection.getRepositoryUrl(),
+//							repositoryTaskSelection.getId()));
+//				}
+//
+//				sb.append("\n\n");
+//				sb.append(taskSelection.getLegacyTaskData().getDescription());
+//
+//				taskSelection = new TaskSelection("", sb.toString());
+//			}
 		} else if (selection instanceof StructuredSelection) {
 			Object element = ((StructuredSelection) selection).getFirstElement();
 			if (element instanceof ITaskComment) {

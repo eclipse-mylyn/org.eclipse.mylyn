@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,6 @@ import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.deprecated.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.internal.tasks.ui.views.AbstractTaskListPresentation;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractDuplicateDetector;
@@ -85,8 +84,6 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_REPOSITORY_UI = "connectorUi";
 
-	public static final String ELMNT_EXTERNALIZER = "taskListFactory";
-
 	public static final String ELMNT_MIGRATOR = "taskListMigrator";
 
 	public static final String ATTR_BRANDING_ICON = "brandingIcon";
@@ -110,8 +107,6 @@ public class TasksUiExtensionReader {
 	public static final String ATTR_MENU_PATH = "menuPath";
 
 	public static final String EXTENSION_EDITORS = "org.eclipse.mylyn.tasks.ui.editors";
-
-	public static final String ELMNT_EDITOR_FACTORY = "editorFactory";
 
 	public static final String ELMNT_TASK_EDITOR_PAGE_FACTORY = "pageFactory";
 
@@ -142,7 +137,6 @@ public class TasksUiExtensionReader {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 
 			// NOTE: has to be read first, consider improving
-			List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
 			List<AbstractTaskListMigrator> migrators = new ArrayList<AbstractTaskListMigrator>();
 			IExtensionPoint repositoriesExtensionPoint = registry.getExtensionPoint(EXTENSION_REPOSITORIES);
 			IExtension[] repositoryExtensions = repositoriesExtensionPoint.getExtensions();
@@ -151,15 +145,13 @@ public class TasksUiExtensionReader {
 				for (IConfigurationElement element : elements) {
 					if (element.getName().equals(ELMNT_REPOSITORY_CONNECTOR)) {
 						readRepositoryConnectorCore(element);
-					} else if (element.getName().equals(ELMNT_EXTERNALIZER)) {
-						readExternalizer(element, externalizers);
 					} else if (element.getName().equals(ELMNT_MIGRATOR)) {
 						readMigrator(element, migrators);
 					}
 				}
 			}
-			taskListExternalizer.initialize(externalizers, migrators);
-			taskListImporter.setDelegateExternalizers(externalizers, migrators);
+			taskListExternalizer.initialize(new ArrayList<AbstractTaskListFactory>(), migrators);
+			taskListImporter.setDelegateExternalizers(new ArrayList<AbstractTaskListFactory>(), migrators);
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
 			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();
@@ -187,9 +179,7 @@ public class TasksUiExtensionReader {
 			for (IExtension editor : editors) {
 				IConfigurationElement[] elements = editor.getConfigurationElements();
 				for (IConfigurationElement element : elements) {
-					if (element.getName().equals(ELMNT_EDITOR_FACTORY)) {
-						readEditorFactory(element);
-					} else if (element.getName().equals(ELMNT_TASK_EDITOR_PAGE_FACTORY)) {
+					if (element.getName().equals(ELMNT_TASK_EDITOR_PAGE_FACTORY)) {
 						readTaskEditorPageFactory(element);
 					}
 				}
@@ -301,21 +291,6 @@ public class TasksUiExtensionReader {
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load repository link provider", e));
-		}
-	}
-
-	private static void readEditorFactory(IConfigurationElement element) {
-		try {
-			Object editor = element.createExecutableExtension(ATTR_CLASS);
-			if (editor instanceof AbstractTaskEditorFactory) {
-				TasksUiPlugin.getDefault().addContextEditor((AbstractTaskEditorFactory) editor);
-			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load editor "
-						+ editor.getClass().getCanonicalName() + " must implement "
-						+ AbstractTaskEditorFactory.class.getCanonicalName()));
-			}
-		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load editor", e));
 		}
 	}
 
@@ -442,23 +417,6 @@ public class TasksUiExtensionReader {
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 					"Could not load dynamic popup menu extension", e));
-		}
-	}
-
-	private static void readExternalizer(IConfigurationElement element, List<AbstractTaskListFactory> externalizers) {
-		try {
-			Object externalizerObject = element.createExecutableExtension(ATTR_CLASS);
-			if (externalizerObject instanceof AbstractTaskListFactory) {
-				AbstractTaskListFactory externalizer = (AbstractTaskListFactory) externalizerObject;
-				externalizers.add(externalizer);
-			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load externalizer: "
-						+ externalizerObject.getClass().getCanonicalName() + " must implement "
-						+ AbstractTaskListFactory.class.getCanonicalName()));
-			}
-		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load task handler extension", e));
 		}
 	}
 
