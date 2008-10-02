@@ -37,10 +37,18 @@ public class InteractionContextElement implements IInteractionElement {
 	private final Map<String/* target handle */, InteractionContextRelation> edges = new HashMap<String, InteractionContextRelation>();
 
 	public InteractionContextElement(String kind, String elementHandle, InteractionContext context) {
+		this(kind, elementHandle, context, -1);
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public InteractionContextElement(String kind, String elementHandle, InteractionContext context,
+			int eventCountOnCreation) {
 		if (elementHandle == null) {
 			throw new RuntimeException("malformed context: null handle");
 		}
-		interest = new DegreeOfInterest(context, context.getScaling());
+		interest = new DegreeOfInterest(context, context.getScaling(), eventCountOnCreation);
 		this.handle = elementHandle;
 		this.kind = kind;
 		this.context = context;

@@ -48,6 +48,10 @@ public class InteractionContextExternalizer {
 
 	public static final String ATR_INTEREST = "Interest";
 
+	public static final String ATR_NUM_EVENTS = "NumEvents";
+
+	public static final String ATR_CREATION_COUNT = "CreationCount";
+
 	public static final String ATR_DELTA = "Delta";
 
 	public static final String ATR_END_DATE = "EndDate";

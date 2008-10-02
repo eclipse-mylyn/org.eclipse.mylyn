@@ -54,23 +54,11 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	}
 
 	public void testContentAttributeExternalization() {
-		// Gets a file to write to and creates contexts folder if necessary
-		File file = ContextCorePlugin.getContextStore().getFileForContext(context.getHandleIdentifier());
-		file.deleteOnExit();
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		context.parseEvent(mockSelection("1"));
 		context.setContentLimitedTo("foobar");
 
-		externalizer.writeContextToXml(context, file);
-
-		// TODO: fix up directory refs
-		File dataDirectory = ContextCorePlugin.getContextStore().getContextDirectory().getParentFile();
-		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
-		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
-		assertTrue(zippedContextFile.exists());
-		IInteractionContext loaded = externalizer.readContextFromXml(CONTEXT_HANDLE, zippedContextFile, scaling);
-		assertNotNull(loaded);
+		IInteractionContext loaded = writeAndReadContext(context, externalizer);
 
 		assertEquals("foobar", loaded.getContentLimitedTo());
 	}
@@ -140,9 +128,6 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	}
 
 	public void testExternalization() {
-		// Gets a file to write to and creates contexts folder if necessary
-		File file = ContextCorePlugin.getContextStore().getFileForContext(context.getHandleIdentifier());
-		file.deleteOnExit();
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
 		IInteractionElement node = context.parseEvent(mockSelection("1"));
@@ -160,16 +145,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		// "3" not a user event
 		assertEquals("2", context.getActiveNode().getHandleIdentifier());
 
-		externalizer.writeContextToXml(context, file);
-
-		// TODO: fix up directory refs
-		File dataDirectory = ContextCorePlugin.getContextStore().getContextDirectory().getParentFile();
-		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
-		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
-				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
-		assertTrue(zippedContextFile.exists());
-		IInteractionContext loaded = externalizer.readContextFromXml(CONTEXT_HANDLE, zippedContextFile, scaling);
-		assertNotNull(loaded);
+		IInteractionContext loaded = writeAndReadContext(context, externalizer);
 		assertEquals(3, loaded.getInteractionHistory().size());
 		IInteractionElement loadedNode = loaded.get("1");
 		IInteractionRelation edgeNode = loadedNode.getRelation("2");
@@ -183,6 +159,94 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertNotNull(loaded.getLandmarks());
 
 		assertEquals("2", loaded.getActiveNode().getHandleIdentifier());
+	}
+
+	/**
+	 * What is written and read from disk should always return the same doi for an element when the context is collapsed
+	 */
+	public void testExternalizationWithCollapse() {
+		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
+
+		// create nodes in the context and ensure that writing and reading work properly
+		IInteractionElement node1 = context.parseEvent(mockSelection("1"));
+		IInteractionElement node2 = context.parseEvent(mockSelection("2"));
+		context.parseEvent(mockSelection("2"));
+		context.parseEvent(mockSelection("2"));
+
+		float doi1 = node1.getInterest().getValue();
+		float doi2 = node2.getInterest().getValue();
+
+		int numEvents = context.getUserEventCount();
+
+		// key to this test
+		context.collapse();
+		InteractionContext loadedContext = (InteractionContext) writeAndReadContext(context, externalizer);
+
+		assertEquals(numEvents, loadedContext.getUserEventCount());
+
+		IInteractionElement loadedNode1 = loadedContext.get("1");
+		IInteractionElement loadedNode2 = loadedContext.get("2");
+
+		assertEquals(doi1, loadedNode1.getInterest().getValue());
+		assertEquals(doi2, loadedNode2.getInterest().getValue());
+
+		//
+		// try to write a second time without changes
+		//
+
+		// key to this test
+		loadedContext.collapse();
+		InteractionContext loadedContext2 = (InteractionContext) writeAndReadContext(loadedContext, externalizer);
+
+		assertEquals(numEvents, loadedContext2.getUserEventCount());
+
+		loadedNode1 = loadedContext2.get("1");
+		loadedNode2 = loadedContext2.get("2");
+
+		assertEquals(doi1, loadedNode1.getInterest().getValue());
+		assertEquals(doi2, loadedNode2.getInterest().getValue());
+
+		//
+		// try to change the context that was read and write again
+		//
+		node1 = loadedContext2.parseEvent(mockSelection("1"));
+		node2 = loadedContext2.parseEvent(mockSelection("2"));
+		loadedContext2.parseEvent(mockSelection("2"));
+		loadedContext2.parseEvent(mockSelection("1"));
+
+		doi1 = node1.getInterest().getValue();
+		doi2 = node2.getInterest().getValue();
+
+		numEvents = loadedContext2.getUserEventCount();
+
+		loadedContext2.collapse();
+
+		InteractionContext loadedContext3 = (InteractionContext) writeAndReadContext(loadedContext2, externalizer);
+
+		assertEquals(numEvents, loadedContext3.getUserEventCount());
+
+		loadedNode1 = loadedContext3.get("1");
+		loadedNode2 = loadedContext3.get("2");
+
+		assertEquals(doi1, loadedNode1.getInterest().getValue());
+		assertEquals(doi2, loadedNode2.getInterest().getValue());
+	}
+
+	private IInteractionContext writeAndReadContext(InteractionContext contextToWrite,
+			InteractionContextExternalizer externalizer) {
+		File file = ContextCorePlugin.getContextStore().getFileForContext(contextToWrite.getHandleIdentifier());
+		file.deleteOnExit();
+		externalizer.writeContextToXml(contextToWrite, file);
+
+		// TODO: fix up directory refs
+		File dataDirectory = ContextCorePlugin.getContextStore().getContextDirectory().getParentFile();
+		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
+		File zippedContextFile = new File(contextsDirectory, contextToWrite.getHandleIdentifier()
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+		assertTrue(zippedContextFile.exists());
+		IInteractionContext loaded = externalizer.readContextFromXml(CONTEXT_HANDLE, zippedContextFile, scaling);
+		assertNotNull(loaded);
+		return loaded;
 	}
 
 }

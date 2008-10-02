@@ -26,6 +26,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.IInteractionContextReader;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.monitor.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.w3c.dom.Document;
@@ -36,7 +37,7 @@ import org.w3c.dom.NodeList;
 /**
  * @author Mik Kersten
  * 
- *         TODO: merge into a single externalizer
+ * TODO: merge into a single externalizer
  */
 public class DomContextReader implements IInteractionContextReader {
 
@@ -99,11 +100,40 @@ public class DomContextReader implements IInteractionContextReader {
 			String navigation = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("Navigation"));
 			String delta = org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertXmlToString(e.getAttribute("Delta"));
 			String interest = e.getAttribute("Interest");
+			String numEventsString = e.getAttribute("NumEvents");
+			int numEvents = 1;
+			if (numEventsString != null && numEventsString.length() != 0) {
+				try {
+					numEvents = Integer.parseInt(numEventsString);
+				} catch (NumberFormatException nfe) {
+					//ignore.
+				}
+			}
+
+			String eventCountOnCreationString = e.getAttribute("CreationCount");
+			int eventCountOnCreation = -1;
+			if (eventCountOnCreationString != null && eventCountOnCreationString.length() != 0) {
+				try {
+					eventCountOnCreation = Integer.parseInt(eventCountOnCreationString);
+				} catch (NumberFormatException nfe) {
+					//ignore.
+				}
+			}
 
 			String formatString = "yyyy-MM-dd HH:mm:ss.S z";
 			SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
-			InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId,
-					navigation, delta, Float.parseFloat(interest), format.parse(startDate), format.parse(endDate));
+
+			InteractionEvent ie = null;
+			if (numEventsString == null || eventCountOnCreationString == null) {
+				// if we don't have the values for the collapsed event, it must be one that is uncollapsed
+				ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId, navigation,
+						delta, Float.parseFloat(interest), format.parse(startDate), format.parse(endDate));
+			} else {
+				ie = new AggregateInteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId,
+						navigation, delta, Float.parseFloat(interest), format.parse(startDate), format.parse(endDate),
+						numEvents, eventCountOnCreation);
+			}
+
 			return ie;
 		} catch (ParseException e) {
 			throw new RuntimeException(e);

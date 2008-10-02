@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.internal.monitor.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -207,6 +208,16 @@ public class SaxContextWriter implements IInteractionContextWriter {
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_KIND,
 				InteractionContextExternalizer.ATR_STRUCTURE_KIND, "",
 				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getStructureKind()));
+
+		if (ie instanceof AggregateInteractionEvent) {
+			// keep the state of the element (how it was collapsed and when it was created) to ensure that the context is the same after writing
+			ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_NUM_EVENTS,
+					InteractionContextExternalizer.ATR_NUM_EVENTS, "",
+					Integer.toString(((AggregateInteractionEvent) ie).getNumCollapsedEvents()));
+			ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_CREATION_COUNT,
+					InteractionContextExternalizer.ATR_CREATION_COUNT, "",
+					Integer.toString(((AggregateInteractionEvent) ie).getEventCountOnCreation()));
+		}
 		return ieAttributes;
 	}
 }

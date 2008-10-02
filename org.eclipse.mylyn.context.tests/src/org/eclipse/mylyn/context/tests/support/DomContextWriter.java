@@ -30,6 +30,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.IInteractionContextWriter;
+import org.eclipse.mylyn.internal.monitor.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -110,6 +111,11 @@ public class DomContextWriter implements IInteractionContextWriter {
 		node.setAttribute("Delta",
 				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(e.getDelta()));
 		node.setAttribute("Interest", "" + e.getInterestContribution());
+
+		if (e instanceof AggregateInteractionEvent) {
+			root.setAttribute("NumEvents", "" + ((AggregateInteractionEvent) e).getNumCollapsedEvents());
+			root.setAttribute("CreationCount", "" + ((AggregateInteractionEvent) e).getEventCountOnCreation());
+		}
 		root.appendChild(node);
 	}
 
@@ -138,6 +144,12 @@ public class DomContextWriter implements IInteractionContextWriter {
 		root.setAttribute("Delta",
 				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(e.getDelta()));
 		root.setAttribute("Interest", "" + e.getInterestContribution());
+
+		if (e instanceof AggregateInteractionEvent) {
+			root.setAttribute("NumEvents", "" + ((AggregateInteractionEvent) e).getNumCollapsedEvents());
+			root.setAttribute("CreationCount", "" + ((AggregateInteractionEvent) e).getEventCountOnCreation());
+		}
+
 		writeDOMtoStream(doc);
 	}
 

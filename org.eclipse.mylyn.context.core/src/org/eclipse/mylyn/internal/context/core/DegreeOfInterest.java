@@ -18,12 +18,13 @@ import java.util.Map;
 
 import org.eclipse.mylyn.context.core.IDegreeOfInterest;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
+import org.eclipse.mylyn.internal.monitor.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
  * 
- *         TODO: make package-visible
+ * TODO: make package-visible
  */
 public class DegreeOfInterest implements IDegreeOfInterest {
 
@@ -50,8 +51,19 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	private final int eventCountOnCreation;
 
 	public DegreeOfInterest(InteractionContext context, IInteractionContextScaling scaling) {
+		this(context, scaling, context.getUserEventCount());
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public DegreeOfInterest(InteractionContext context, IInteractionContextScaling scaling, int eventCountOnCreation) {
 		this.context = context;
-		this.eventCountOnCreation = context.getUserEventCount();
+		if (eventCountOnCreation <= 0) {
+			this.eventCountOnCreation = context.getUserEventCount();
+		} else {
+			this.eventCountOnCreation = eventCountOnCreation;
+		}
 		this.contextScaling = scaling;
 	}
 
@@ -62,14 +74,21 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		events.add(event); // NOTE: was events.add(0, event);
 		InteractionEvent last = collapsedEvents.get(event.getKind());
 		if (last != null) {
-			InteractionEvent aggregateEvent = new InteractionEvent(event.getKind(), event.getStructureKind(),
-					event.getStructureHandle(), event.getOriginId(), event.getNavigation(), event.getDelta(),
-					last.getInterestContribution() + event.getInterestContribution(), last.getDate(),
-					event.getEndDate());
+
+			int numCollapsedEvents = 1;
+			if (last instanceof AggregateInteractionEvent) {
+				numCollapsedEvents = ((AggregateInteractionEvent) last).getNumCollapsedEvents();
+			}
+
+			AggregateInteractionEvent aggregateEvent = new AggregateInteractionEvent(event.getKind(),
+					event.getStructureKind(), event.getStructureHandle(), event.getOriginId(), event.getNavigation(),
+					event.getDelta(), last.getInterestContribution() + event.getInterestContribution(), last.getDate(),
+					event.getEndDate(), numCollapsedEvents + 1, eventCountOnCreation);
 			collapsedEvents.put(event.getKind(), aggregateEvent);
 		} else {
 			collapsedEvents.put(event.getKind(), event);
 		}
+
 		updateEventState(event);
 	}
 
@@ -163,11 +182,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	public List<InteractionEvent> getCollapsedEvents() {
 		List<InteractionEvent> allCollapsed = new ArrayList<InteractionEvent>();
 		allCollapsed.addAll(collapsedEvents.values());
-		if (!allCollapsed.isEmpty()) {
-			allCollapsed.add(0, new InteractionEvent(InteractionEvent.Kind.MANIPULATION, allCollapsed.get(0)
-					.getStructureKind(), allCollapsed.get(0).getStructureHandle(),
-					InteractionContextManager.SOURCE_ID_DECAY, -getDecayValue()));
-		}
+
 		return allCollapsed;
 	}
 
