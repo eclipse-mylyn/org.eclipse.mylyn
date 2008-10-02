@@ -13,25 +13,18 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextAttachmentHandler;
 import org.eclipse.mylyn.internal.context.ui.commands.RetrieveContextHandler;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextRetrieveWizard;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -47,10 +40,6 @@ import org.eclipse.ui.PlatformUI;
 public class ContextRetrieveAction extends Action implements IViewActionDelegate {
 
 	private AbstractTask task;
-
-	private TaskRepository repository;
-
-	private StructuredSelection selection;
 
 	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.retrieve";
 
@@ -73,30 +62,6 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 	public void run(IAction action) {
 		if (task != null) {
 			run(task);
-		} else {
-			// TODO: consider refactoring to be based on object contributions
-			if (selection.getFirstElement() instanceof RepositoryAttachment) {
-				RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
-
-				// HACK: need better way of getting task
-				IEditorPart activeEditor = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow()
-						.getActivePage()
-						.getActiveEditor();
-				ITask currentTask = null;
-				if (activeEditor instanceof TaskEditor) {
-					currentTask = ((TaskEditor) activeEditor).getTaskEditorInput().getTask();
-				}
-
-				if (currentTask != null) {
-					// legacy
-//					AttachmentUtil.downloadContext(currentTask, attachment, PlatformUI.getWorkbench()
-//							.getProgressService());
-				} else {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"Retrieve Context", "Can not retrieve contenxt for local tasks.");
-				}
-			}
 		}
 	}
 
@@ -117,21 +82,11 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
-		if (selectedTask == null) {
-			StructuredSelection structuredSelection = (StructuredSelection) selection;
-			this.selection = structuredSelection;
-			if (structuredSelection.getFirstElement() instanceof RepositoryAttachment) {
-				RepositoryAttachment attachment = (RepositoryAttachment) structuredSelection.getFirstElement();
-				if (AttachmentUtil.isContext(attachment)) {
-					action.setEnabled(true);
-				} else {
-					action.setEnabled(false);
-				}
-			}
-		} else {
+		if (selectedTask != null) {
 			task = selectedTask;
-			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 			action.setEnabled(AttachmentUtil.canDownloadAttachment(task) && AttachmentUtil.hasContextAttachment(task));
+		} else {
+			action.setEnabled(false);
 		}
 	}
 }

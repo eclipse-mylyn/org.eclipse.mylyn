@@ -21,14 +21,10 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.ui.commands.AttachContextHandler;
 import org.eclipse.mylyn.internal.context.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -46,10 +42,6 @@ import org.eclipse.ui.PlatformUI;
 public class ContextAttachAction extends Action implements IViewActionDelegate {
 
 	private ITask task;
-
-	private TaskRepository repository;
-
-	private AbstractRepositoryConnector connector;
 
 	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.attach";
 
@@ -102,13 +94,8 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
 		if (selectedTask != null) {
 			task = selectedTask;
-			repository = TasksUi.getRepositoryManager().getRepository(task.getConnectorKind(), task.getRepositoryUrl());
-			connector = TasksUi.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
-			if (connector instanceof AbstractLegacyRepositoryConnector) {
-				AbstractAttachmentHandler handler = ((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler();
-				action.setEnabled(handler != null && handler.canUploadAttachment(repository, task)
-						&& (task.isActive() || ContextCore.getContextManager().hasContext(task.getHandleIdentifier())));
-			}
+			action.setEnabled(AttachmentUtil.canUploadAttachment(task)
+					&& (task.isActive() || ContextCore.getContextManager().hasContext(task.getHandleIdentifier())));
 		} else {
 			task = null;
 			action.setEnabled(false);
