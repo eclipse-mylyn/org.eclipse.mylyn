@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,13 +16,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
-import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -46,19 +43,6 @@ public class TaskListManager {
 		this.taskList = taskList;
 		this.importer = importer;
 		this.participant = participant;
-	}
-
-	/**
-	 * @deprecated moved to TasksUiPlugin
-	 */
-	@Deprecated
-	private void prepareOrphanContainers() {
-		for (TaskRepository repository : TasksUi.getRepositoryManager().getAllRepositories()) {
-			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
-				taskList.addUnmatchedContainer(new UnmatchedTaskContainer(repository.getConnectorKind(),
-						repository.getRepositoryUrl()));
-			}
-		}
 	}
 
 	@Deprecated
@@ -146,13 +130,4 @@ public class TaskListManager {
 		TasksUi.getTaskActivityManager().deactivateActiveTask();
 	}
 
-	/**
-	 * use <code>TasksUi.getTaskActivityManager().deactivateTask(task)</code>
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public void deactivateTask(ITask task) {
-		TasksUi.getTaskActivityManager().deactivateTask(task);
-	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -34,7 +33,6 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
-import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewActionDelegate;
@@ -86,9 +84,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				}
 			}
 
-			ITaskDataManager syncManager = TasksUiPlugin.getTaskDataManager();
 			if (!queriesToSyncMap.isEmpty()) {
-
 				// determine which repositories to synch changed tasks for
 				HashMap<TaskRepository, Set<RepositoryQuery>> repositoriesToSync = new HashMap<TaskRepository, Set<RepositoryQuery>>();
 				for (AbstractRepositoryConnector connector : queriesToSyncMap.keySet()) {
