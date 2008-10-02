@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,22 +80,23 @@ public class TaskDataExportTest extends AbstractContextTest {
 		mockContext = (InteractionContext) ContextCorePlugin.getContextStore().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");
 		mockContext.parseEvent(event);
-		ContextCorePlugin.getContextManager().internalActivateContext(mockContext);
 
 		// Save the context file and check that it exists
-		assertTrue(ContextCorePlugin.getContextStore().getContextDirectory().exists());
 		ContextCorePlugin.getContextStore().saveContext(mockContext);
 		File taskFile = ContextCorePlugin.getContextStore().getFileForContext(task1.getHandleIdentifier());
 		assertTrue(ContextCore.getContextManager().hasContext(task1.getHandleIdentifier()));
 		assertTrue(taskFile.exists());
+
+		// do this last to make sure tearDown() runs
+		ContextCorePlugin.getContextManager().internalActivateContext(mockContext);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
+		ContextCore.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
 		removeFiles(destinationDir);
 		destinationDir.delete();
 		assertFalse(destinationDir.exists());
-		ContextCore.getContextManager().deactivateContext(mockContext.getHandleIdentifier());
 		super.tearDown();
 	}
 

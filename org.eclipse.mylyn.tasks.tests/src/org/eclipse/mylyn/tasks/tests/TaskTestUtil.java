@@ -32,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -82,11 +83,10 @@ public class TaskTestUtil {
 	 * Clears tasks and repositories. When this method returns only the local task repository will exist and the task
 	 * list will only have default categories but no tasks.
 	 */
-	@SuppressWarnings("deprecation")
 	public static void resetTaskListAndRepositories() throws Exception {
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TasksUiPlugin.getDefault().getLocalTaskRepository();
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		resetTaskList();
 	}
 
 	/**
@@ -94,6 +94,7 @@ public class TaskTestUtil {
 	 */
 	@SuppressWarnings("deprecation")
 	public static void resetTaskList() throws Exception {
+		TasksUi.getTaskActivityManager().deactivateActiveTask();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 	}
 

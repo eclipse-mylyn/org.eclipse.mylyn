@@ -22,6 +22,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class TaskActivationActionTest extends TestCase {
 
+	@Override
+	protected void tearDown() throws Exception {
+		TasksUi.getTaskActivityManager().deactivateActiveTask();
+	}
+
 	public void testUpdateOnExternalActivation() {
 		MockTask task = new MockTask("test:activation");
 		ToggleTaskActivationAction action = new ToggleTaskActivationAction(task);
