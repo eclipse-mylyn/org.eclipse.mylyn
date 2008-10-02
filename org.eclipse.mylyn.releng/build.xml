@@ -8,12 +8,16 @@
 	<property name="build" value="${QUALIFIER}" />
 
 	<property name="junit-report-output" value="./report/${build}" />
+	<property name="version" value="${MAJOR_VERSION}" />
+	<property name="eclipse-home-3.3" value="${ECLIPSE_HOME_3_3}" />
+	<property name="eclipse-home-3.4" value="${ECLIPSE_HOME_3_4}" />
+	<property name="eclipse-home-3.5" value="${ECLIPSE_HOME_3_5}" />
 	<property name="eclipse-test-home-3.4" value="${ECLIPSE_TEST_HOME_3_4}" />
 	<property name="eclipse-test-home-3.3" value="${ECLIPSE_TEST_HOME_3_3}" />
 	<property name="jvm" value="${JAVA_HOME}/bin/java" />
 
 	
-	<target name="all" depends="clean">
+	<target name="all" depends="test-clean">
 		<exec executable="./build-3.4.sh" />
 		<exec executable="./run-tests-3.4.sh">
 			<arg value="run" />
@@ -38,6 +42,12 @@
 	</target>
 
 	<target name="clean">
+		<delete dir="${eclipse-home-3.3}/build" />
+		<delete dir="${eclipse-home-3.4}/build" />
+		<delete dir="${eclipse-home-3.5}/build" />
+	</target>
+
+	<target name="test-clean">
 		<delete dir="${eclipse-test-home-3.3}/results" />
 		<delete>
 			<fileset dir="${eclipse-test-home-3.3}" includes="org*.xml" />
@@ -82,4 +92,17 @@
 		</java>
 	</target>
 
+	<target name="update-versions">
+		<replace dir="..">
+			<replacefilter 
+			    token="3.1.0.qualifier"
+				value="3.1.0.qualifier"/>
+			<replacefilter 
+			    token="3.1.0.mylynQualifier"
+				value="3.1.0.mylynQualifier"/>
+			<include name="org.eclipse.mylyn*/**/MANIFEST.MF"/>
+			<include name="org.eclipse.mylyn*/**/feature.xml"/>
+		</replace>
+	</target>
+	
 </project>
