@@ -78,11 +78,6 @@ public class AllTasksTests {
 		//suite.addTestSuite(QueryExportImportTest.class);
 		//suite.addTestSuite(BackgroundSaveTest.class);
 
-		// web connector tests
-		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.NamedPatternTest.class);
-		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.HtmlDecodeEntityTest.class);
-		suite.addTestSuite(org.eclipse.mylyn.tasks.tests.web.WebRepositoryTest.class);
-
 		return suite;
 	}
 
