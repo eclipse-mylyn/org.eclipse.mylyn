@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -33,19 +32,15 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 /**
  * @author Mik Kersten
  */
-public class BugzillaTaskListManagerTest extends TestCase {
-
-	private TaskListManager manager;
+public class BugzillaTaskListTest extends TestCase {
 
 	private TaskRepository repository;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		manager = TasksUiPlugin.getTaskListManager();
-		manager.readExistingOrCreateNewList();
-		manager.resetTaskList();
-		manager.saveTaskList();
+		TasksUiPlugin.getTaskList().reset();
+		TasksUiPlugin.getExternalizationManager().save(true);
 		repository = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
 		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
@@ -54,20 +49,18 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		manager.resetTaskList();
-		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TasksUiPlugin.getTaskList().reset();
+		TasksUiPlugin.getExternalizationManager().save(true);
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
-	// TODO: move
-	public void testRemindedPersistance() {
+	@SuppressWarnings("null")
+	public void testRemindedPersistance() throws CoreException {
 
 		String repositoryUrl = "https://bugs.eclipse.org/bugs";
 
 		String bugNumber = "106939";
-
-//		BugzillaTask task1 = new BugzillaTask(repositoryUrl, bugNumber, "label");
 
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, bugNumber);
 		TaskTask task1 = null;
@@ -80,13 +73,9 @@ public class BugzillaTaskListManagerTest extends TestCase {
 
 		task1.setReminded(true);
 		TasksUiPlugin.getExternalizationManager().save(true);
-		TasksUiPlugin.getExternalizationManager().requestSave();
 
-		TasksUiPlugin.getTaskListManager().resetTaskList();
-		try {
-			TasksUiPlugin.getDefault().reloadDataDirectory();
-		} catch (CoreException e) {
-		}
+		TasksUiPlugin.getTaskList().reset();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
 
 		TaskList taskList = TasksUiPlugin.getTaskList();
 		assertEquals(1, taskList.getAllTasks().size());
@@ -98,7 +87,8 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		}
 	}
 
-	public void testRepositoryTaskExternalization() {
+	@SuppressWarnings("null")
+	public void testRepositoryTaskExternalization() throws CoreException {
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, "1");
 		TaskTask repositoryTask = null;
 		if (task instanceof TaskTask) {
@@ -110,11 +100,8 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		TasksUiPlugin.getExternalizationManager().save(true);
 		TasksUiPlugin.getExternalizationManager().requestSave();
 
-		TasksUiPlugin.getTaskListManager().resetTaskList();
-		try {
-			TasksUiPlugin.getDefault().reloadDataDirectory();
-		} catch (CoreException e) {
-		}
+		TasksUiPlugin.getTaskList().reset();
+		TasksUiPlugin.getDefault().reloadDataDirectory();
 		assertEquals(1, TasksUiPlugin.getTaskList()
 				.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
 				.getChildren()
@@ -139,7 +126,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		TasksUiPlugin.getExternalizationManager().save(true);
 		TasksUiPlugin.getExternalizationManager().requestSave();
 
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getTaskList().reset();
 		try {
 			TasksUiPlugin.getDefault().reloadDataDirectory();
 		} catch (CoreException e) {
@@ -168,7 +155,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 
 		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
 		assertEquals(query, readQuery);
-		TasksUiPlugin.getTaskList().renameContainer(query, "newName");
+		query.setSummary("newName");
 		TasksUiPlugin.getTaskList().deleteQuery(query);
 		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
 	}

@@ -17,19 +17,20 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.bugzilla.deprecated.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Rob Elves
  */
-public class BugzillaSearchEngineTest extends TestCase {
+public class BugzillaSearchTest extends TestCase {
 
 	private static final String QUERY_NAME = "Query Page Name";
 
@@ -88,14 +89,13 @@ public class BugzillaSearchEngineTest extends TestCase {
 		assertEquals(NUM_EXPECTED_HITS, hits.size());
 	}
 
-	@SuppressWarnings("deprecation")
 	private Set<TaskData> runQuery(String repositoryURL, String SearchString) throws Exception {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				BugzillaCorePlugin.CONNECTOR_KIND, repositoryURL);
 		assertNotNull(repository);
-
-		final BugzillaRepositoryQuery repositoryQuery = new BugzillaRepositoryQuery(repository.getRepositoryUrl(),
-				repository.getRepositoryUrl() + BUG_DESC_SUBSTRING_SEARCH + SearchString, QUERY_NAME);
+		IRepositoryQuery repositoryQuery = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+		repositoryQuery.setUrl(repository.getRepositoryUrl() + BUG_DESC_SUBSTRING_SEARCH + SearchString);
+		repositoryQuery.setSummary(QUERY_NAME);
 
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				BugzillaCorePlugin.CONNECTOR_KIND);

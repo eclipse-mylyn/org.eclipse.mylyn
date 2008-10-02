@@ -29,14 +29,14 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaTaskCompletionTest.class);
 		suite.addTestSuite(BugzillaTaskDataHandlerTest.class);
 		suite.addTestSuite(TaskListStandaloneTest.class);
-		suite.addTestSuite(BugzillaTaskListManagerTest.class);
+		suite.addTestSuite(BugzillaTaskListTest.class);
 		suite.addTestSuite(TaskEditorTest.class);
 		suite.addTestSuite(BugzillaQueryTest.class);
 		suite.addTestSuite(RepositoryEditorWizardTest.class);
 		suite.addTestSuite(RepositoryReportFactoryTest.class);
 		suite.addTestSuite(BugzillaConfigurationTest.class);
 		suite.addTestSuite(BugzillaTaskHyperlinkDetectorTest.class);
-		suite.addTestSuite(BugzillaSearchEngineTest.class);
+		suite.addTestSuite(BugzillaSearchTest.class);
 		suite.addTestSuite(BugzillaRepositoryConnectorTest2.class);
 		suite.addTestSuite(EncodingTest.class);
 		suite.addTestSuite(BugzillaProductParserTest.class);
