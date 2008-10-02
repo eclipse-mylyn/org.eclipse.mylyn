@@ -18,8 +18,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskSelection;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
+import org.eclipse.mylyn.tasks.core.ITaskMapping;
+import org.eclipse.mylyn.tasks.core.TaskMapping;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.Shell;
@@ -35,7 +36,7 @@ public class NewTaskFromSelectionAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.newTaskFromSelection";
 
-	private TaskSelection taskSelection;
+	private ITaskMapping taskMapping;
 
 	public NewTaskFromSelectionAction() {
 		super(LABEL);
@@ -43,8 +44,8 @@ public class NewTaskFromSelectionAction extends Action {
 		setImageDescriptor(TasksUiImages.TASK_NEW);
 	}
 
-	public TaskSelection getTaskSelection() {
-		return taskSelection;
+	public ITaskMapping getTaskMapping() {
+		return taskMapping;
 	}
 
 	public void run(IAction action) {
@@ -53,23 +54,28 @@ public class NewTaskFromSelectionAction extends Action {
 
 	@Override
 	public void run() {
-		if (taskSelection == null) {
+		if (taskMapping == null) {
 			MessageDialog.openError(null, LABEL, "Nothing selected to create task from.");
 			return;
 		}
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		TasksUiUtil.openNewTaskEditor(shell, taskSelection, null);
+		TasksUiUtil.openNewTaskEditor(shell, taskMapping, null);
 	}
 
 	public void selectionChanged(ISelection selection) {
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection;
-			String text = textSelection.getText();
+			final String text = textSelection.getText();
 			if (text != null && text.length() > 0) {
-				taskSelection = new TaskSelection("", text);
+				taskMapping = new TaskMapping() {
+					@Override
+					public String getDescription() {
+						return text;
+					}
+				};
 			} else {
-				taskSelection = null;
+				taskMapping = null;
 			}
 //		} else if (selection instanceof RepositoryTaskSelection) {
 //			RepositoryTaskSelection repositoryTaskSelection = (RepositoryTaskSelection) selection;
@@ -115,7 +121,7 @@ public class NewTaskFromSelectionAction extends Action {
 			Object element = ((StructuredSelection) selection).getFirstElement();
 			if (element instanceof ITaskComment) {
 				ITaskComment comment = (ITaskComment) element;
-				StringBuilder sb = new StringBuilder();
+				final StringBuilder sb = new StringBuilder();
 				sb.append("\n-- Created from Comment --");
 				if (comment.getUrl() == null) {
 					sb.append("\nURL: ");
@@ -129,10 +135,15 @@ public class NewTaskFromSelectionAction extends Action {
 
 				sb.append("\n\n");
 				sb.append(comment.getText());
-				taskSelection = new TaskSelection("", sb.toString());
+				taskMapping = new TaskMapping() {
+					@Override
+					public String getDescription() {
+						return sb.toString();
+					}
+				};
 			}
 		}
-		setEnabled(taskSelection != null);
+		setEnabled(taskMapping != null);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -34,11 +33,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
@@ -46,7 +40,9 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation.Direction;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation.Kind;
@@ -223,18 +219,11 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private boolean canGetMultiTaskData(TaskRepository taskRepository) {
-		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			AbstractTaskDataHandler taskDataHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
-			return taskDataHandler != null && taskDataHandler.canGetMultiTaskData();
-		} else {
-			org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-			return taskDataHandler != null && taskDataHandler.canGetMultiTaskData(taskRepository);
-		}
+		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+		return taskDataHandler != null && taskDataHandler.canGetMultiTaskData(taskRepository);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void synchronizeTask(IProgressMonitor monitor, ITask task) throws CoreException {
 		monitor.subTask("Receiving task " + task.getSummary());
 		resetStatus(task);
@@ -242,23 +231,10 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			monitor = Policy.backgroundMonitorFor(monitor);
 		}
 		String taskId = task.getTaskId();
-		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			RepositoryTaskData downloadedTaskData = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskData(
-					taskRepository, taskId, monitor);
-			if (downloadedTaskData != null) {
-				try {
-					updateFromTaskData(taskRepository, task, downloadedTaskData);
-				} catch (CoreException e) {
-					updateStatus(taskRepository, task, e.getStatus());
-				}
-				return;
-			}
-		} else {
-			TaskData taskData = connector.getTaskData(taskRepository, taskId, monitor);
-			if (taskData != null) {
-				updateFromTaskData(taskRepository, task, taskData);
-				return;
-			}
+		TaskData taskData = connector.getTaskData(taskRepository, taskId, monitor);
+		if (taskData != null) {
+			updateFromTaskData(taskRepository, task, taskData);
+			return;
 		}
 		throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 				"Connector failed to return task data for task \"" + task + "\""));
@@ -269,18 +245,12 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		if (!isUser()) {
 			monitor = Policy.backgroundMonitorFor(monitor);
 		}
-		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			RepositoryTaskData downloadedTaskData = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskData(
-					taskRepository, taskId, monitor);
-			if (downloadedTaskData != null) {
-				return updateFromTaskData(taskRepository, null, downloadedTaskData);
-			}
-		} else {
-			TaskData taskData = connector.getTaskData(taskRepository, taskId, monitor);
-			if (taskData != null) {
-				return createFromTaskData(taskRepository, taskId, taskData);
-			}
+
+		TaskData taskData = connector.getTaskData(taskRepository, taskId, monitor);
+		if (taskData != null) {
+			return createFromTaskData(taskRepository, taskId, taskData);
 		}
+
 		throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 				"Connector failed to return task data for task \"" + taskId + "\""));
 	}
@@ -300,20 +270,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			idToTask.put(task.getTaskId(), task);
 		}
 
-		LegacyTaskDataCollector collector = new LegacyTaskDataCollector() {
-			@Override
-			public void accept(RepositoryTaskData taskData) {
-				ITask task = idToTask.remove(taskData.getTaskId());
-				if (task != null) {
-					try {
-						updateFromTaskData(repository, task, taskData);
-					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-								"Synchronization failed", e));
-					}
-				}
-			}
-
+		TaskDataCollector collector = new TaskDataCollector() {
 			@Override
 			public void accept(TaskData taskData) {
 				ITask task = idToTask.remove(taskData.getTaskId());
@@ -327,49 +284,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			monitor = Policy.backgroundMonitorFor(monitor);
 		}
 		Set<String> taskIds = Collections.unmodifiableSet(new HashSet<String>(idToTask.keySet()));
-		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler().getMultiTaskData(repository,
-					taskIds, collector, monitor);
-		} else {
-			connector.getTaskDataHandler().getMultiTaskData(repository, taskIds, collector, monitor);
-		}
-
-	}
-
-	@SuppressWarnings("deprecation")
-	private ITask updateFromTaskData(TaskRepository repository, ITask task, RepositoryTaskData taskData)
-			throws CoreException {
-		// HACK: part of hack below
-		//Date oldDueDate = repositoryTask.getDueDate();
-
-//		boolean changed = ((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task,
-//				taskData);
-//		if (!taskData.isPartial()) {
-//			((TaskDataManager) taskDataManager).saveIncoming(task, taskData, isUser());
-//		} else if (changed && !task.isStale() && task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
-//			// TODO move to synchronizationManager
-//			// set incoming marker for web tasks 
-//			((AbstractTask) task).setSynchronizationState(SynchronizationState.INCOMING);
-//		}
-
-		TaskFactory factory = new TaskFactory(repository, true, isUser(),
-				(AbstractLegacyRepositoryConnector) connector, taskDataManager, taskList);
-		task = factory.createTask(taskData, new NullProgressMonitor());
-
-		// HACK: Remove once connectors can get access to
-		// TaskDataManager and do this themselves
-//		if ((oldDueDate == null && repositoryTask.getDueDate() != null)
-//				|| (oldDueDate != null && repositoryTask.getDueDate() == null)) {
-//			TasksUiPlugin.getTaskActivityManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
-//		} else if (oldDueDate != null && repositoryTask.getDueDate() != null
-//				&& oldDueDate.compareTo(repositoryTask.getDueDate()) != 0) {
-//			TasksUiPlugin.getTaskActivityManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
-//		}
-
-		((AbstractTask) task).setSynchronizing(false);
-		taskList.notifySynchronizationStateChanged(task);
-
-		return task;
+		connector.getTaskDataHandler().getMultiTaskData(repository, taskIds, collector, monitor);
 	}
 
 	private void updateFromTaskData(TaskRepository taskRepository, ITask task, TaskData taskData) {

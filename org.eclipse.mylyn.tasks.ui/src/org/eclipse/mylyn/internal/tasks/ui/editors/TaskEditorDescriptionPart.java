@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -166,11 +166,9 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 		setAttribute(getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION));
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
 	private boolean isValidDuplicateDetector(AbstractDuplicateDetector detector) {
-		return !(detector instanceof org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyDuplicateDetector) //
-				&& (detector.getConnectorKind() == null || detector.getConnectorKind().equals(
-						getTaskEditorPage().getConnectorKind())) //
+		return (detector.getConnectorKind() == null || detector.getConnectorKind().equals(
+				getTaskEditorPage().getConnectorKind())) //
 				&& detector.canQuery(getTaskData());
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,14 +38,10 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.LegacyTaskDataCollector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
@@ -79,8 +75,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	private class TaskCollector extends LegacyTaskDataCollector {
+	private class TaskCollector extends TaskDataCollector {
 
 		private final Set<ITask> removedQueryResults;
 
@@ -113,38 +108,6 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to save task", e));
 			}
 			taskList.addTask(task, repositoryQuery);
-			resultCount++;
-		}
-
-		@Override
-		@Deprecated
-		public void accept(RepositoryTaskData taskData) {
-			boolean changed;
-			AbstractTask task = (AbstractTask) taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
-			if (task == null) {
-				task = ((AbstractLegacyRepositoryConnector) connector).createTask(taskData.getRepositoryUrl(),
-						taskData.getTaskId(), "");
-				task.setStale(true);
-				changed = ((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task,
-						taskData);
-			} else {
-				changed = ((AbstractLegacyRepositoryConnector) connector).updateTaskFromTaskData(repository, task,
-						taskData);
-				removedQueryResults.remove(task);
-			}
-			taskList.addTask(task, repositoryQuery);
-			if (!taskData.isPartial()) {
-				(taskDataManager).saveIncoming(task, taskData, isUser());
-			} else if (changed && !task.isStale()
-					&& task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED) {
-				// TODO move to synchronizationManager
-				// set incoming marker for web tasks 
-				task.setSynchronizationState(SynchronizationState.INCOMING);
-			}
-			if (task.isStale()) {
-				session.markStale(task);
-				task.setSynchronizing(true);
-			}
 			resultCount++;
 		}
 

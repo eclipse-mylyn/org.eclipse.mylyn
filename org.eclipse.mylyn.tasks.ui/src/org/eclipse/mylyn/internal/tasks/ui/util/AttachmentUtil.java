@@ -33,13 +33,11 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.FileAttachment;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -48,7 +46,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -69,42 +66,6 @@ public class AttachmentUtil {
 	private static final String CONTEXT_FILENAME = "mylyn-context.zip";
 
 	private static final String CONTEXT_CONTENT_TYPE = "application/octet-stream";
-
-	/**
-	 * Attaches the associated context to <code>task</code>.
-	 * 
-	 * @return false, if operation is not supported by repository
-	 */
-	@SuppressWarnings("restriction")
-	@Deprecated
-	public static boolean attachContext(AbstractAttachmentHandler attachmentHandler, TaskRepository repository,
-			ITask task, String longComment, IProgressMonitor monitor) throws CoreException {
-		ContextCorePlugin.getContextStore().saveActiveContext();
-		final File sourceContextFile = ContextCorePlugin.getContextStore()
-				.getFileForContext(task.getHandleIdentifier());
-
-		SynchronizationState previousState = task.getSynchronizationState();
-
-		if (sourceContextFile != null && sourceContextFile.exists()) {
-			try {
-				((AbstractTask) task).setSubmitting(true);
-				((AbstractTask) task).setSynchronizationState(SynchronizationState.OUTGOING);
-				FileAttachment attachment = new FileAttachment(sourceContextFile);
-				attachment.setDescription(CONTEXT_DESCRIPTION);
-				attachment.setFilename(CONTEXT_FILENAME);
-				attachmentHandler.uploadAttachment(repository, task, attachment, longComment, monitor);
-			} catch (CoreException e) {
-				// TODO: Calling method should be responsible for returning
-				// state of task. Wizard will have different behaviour than
-				// editor.
-				((AbstractTask) task).setSynchronizationState(previousState);
-				throw e;
-			} catch (OperationCanceledException e) {
-				return true;
-			}
-		}
-		return true;
-	}
 
 	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
 			String comment, TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {

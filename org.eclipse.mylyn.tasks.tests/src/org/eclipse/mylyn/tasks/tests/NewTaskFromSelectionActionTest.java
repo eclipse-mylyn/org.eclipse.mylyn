@@ -48,7 +48,7 @@ public class NewTaskFromSelectionActionTest extends TestCase {
 
 		NewTaskFromSelectionAction action = new NewTaskFromSelectionAction();
 		action.selectionChanged(new StructuredSelection(comment));
-		assertNotNull(action.getTaskSelection());
+		assertNotNull(action.getTaskMapping());
 	}
 
 	public void testText() throws Exception {
@@ -59,10 +59,10 @@ public class NewTaskFromSelectionActionTest extends TestCase {
 				return "text";
 			}
 		});
-		assertNotNull(action.getTaskSelection());
+		assertNotNull(action.getTaskMapping());
 
 		action.selectionChanged(new TextSelection(0, 0));
-		assertNull(action.getTaskSelection());
+		assertNull(action.getTaskMapping());
 	}
 
 }

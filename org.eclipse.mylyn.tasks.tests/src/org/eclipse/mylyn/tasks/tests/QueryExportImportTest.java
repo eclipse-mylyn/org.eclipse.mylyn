@@ -32,7 +32,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
-import org.eclipse.mylyn.tasks.tests.connector.MockTaskListFactory;
 
 /**
  * @author Jevgeni Holodkov
@@ -74,7 +73,7 @@ public class QueryExportImportTest extends TestCase {
 				.getTaskListWriter()
 				.getExternalizers();
 		List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
-		externalizers.add(new MockTaskListFactory());
+		//externalizers.add(new MockTaskListFactory());
 		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(externalizers);
 
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
@@ -264,7 +263,7 @@ public class QueryExportImportTest extends TestCase {
 				.getTaskListWriter()
 				.getExternalizers();
 		List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
-		externalizers.add(new MockTaskListFactory());
+		//externalizers.add(new MockTaskListFactory());
 		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(externalizers);
 
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,

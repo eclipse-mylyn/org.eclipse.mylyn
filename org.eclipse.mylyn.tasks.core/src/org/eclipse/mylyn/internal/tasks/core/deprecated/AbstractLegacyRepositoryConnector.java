@@ -17,25 +17,21 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataManager;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
-import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 
 /**
  * @deprecated Do not use. This class is pending for removal: see bug 237552.
@@ -172,18 +168,6 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	 */
 	@Deprecated
 	public abstract AbstractTask createTask(String repositoryUrl, String id, String summary);
-
-	/**
-	 * @since 2.0
-	 * @deprecated use
-	 *             {@link #performQuery(TaskRepository, RepositoryQuery, TaskDataCollector, SynchronizationSession, IProgressMonitor)}
-	 *             instead
-	 */
-	@Deprecated
-	public IStatus performQuery(IRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
-			final ITaskCollector resultCollector) {
-		return null;
-	}
 
 	/**
 	 * Updates the properties of <code>repositoryTask</code>. Invoked when on task synchronization if
