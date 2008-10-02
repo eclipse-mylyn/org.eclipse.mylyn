@@ -81,18 +81,19 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			if (TasksUiInternal.isValidUrl(task.getUrl())) {
 				text += "\n" + task.getUrl();
 			}
-		} else if (object instanceof RepositoryTaskData) {
-			RepositoryTaskData taskData = (RepositoryTaskData) object;
-			if (taskData.getTaskKey() != null) {
-				text += taskData.getTaskKey() + ": ";
-			}
-
-			text += taskData.getSummary();
-			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-					taskData.getConnectorKind());
-			if (connector != null) {
-				text += "\n" + connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());
-			}
+			// FIXME 3.1 reimplement
+			//		} else if (object instanceof RepositoryTaskData) {
+//			RepositoryTaskData taskData = (RepositoryTaskData) object;
+//			if (taskData.getTaskKey() != null) {
+//				text += taskData.getTaskKey() + ": ";
+//			}
+//
+//			text += taskData.getSummary();
+//			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+//					taskData.getConnectorKind());
+//			if (connector != null) {
+//				text += "\n" + connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());
+//			}
 		} else if (object instanceof IRepositoryQuery) {
 			RepositoryQuery query = (RepositoryQuery) object;
 			text += query.getSummary();

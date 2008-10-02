@@ -25,9 +25,6 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.TaskComment;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -38,12 +35,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  * @author Eugene Kuleshov
  * @author Steffen Pingel
  */
-@SuppressWarnings( { "deprecation", "restriction" })
 public class PersonProposalProvider implements IContentProposalProvider {
 
 	private final AbstractTask currentTask;
-
-	private final RepositoryTaskData currentTaskData;
 
 	private String currentUser;
 
@@ -53,21 +47,9 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	private String connectorKind;
 
-	public PersonProposalProvider(AbstractTask task, TaskData taskData) {
-		this.currentTask = task;
-		// TODO EDITOR keep reference to task data
-		this.currentTaskData = null;
-		if (task != null) {
-			repositoryUrl = task.getRepositoryUrl();
-			connectorKind = task.getConnectorKind();
-		} else if (taskData != null) {
-			repositoryUrl = taskData.getRepositoryUrl();
-			connectorKind = taskData.getConnectorKind();
-		}
-	}
+	private TaskData currentTaskData;
 
-	@Deprecated
-	public PersonProposalProvider(AbstractTask task, RepositoryTaskData taskData) {
+	public PersonProposalProvider(AbstractTask task, TaskData taskData) {
 		this.currentTask = task;
 		this.currentTaskData = taskData;
 		if (task != null) {
@@ -81,7 +63,6 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 	public PersonProposalProvider(String repositoryUrl, String repositoryKind) {
 		this.currentTask = null;
-		this.currentTaskData = null;
 		this.repositoryUrl = repositoryUrl;
 		this.connectorKind = repositoryKind;
 	}
@@ -195,18 +176,19 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		addAddress(task.getOwner(), addressSet);
 	}
 
-	private void addAddresses(RepositoryTaskData data, Set<String> addressSet) {
+	private void addAddresses(TaskData data, Set<String> addressSet) {
 		// addressSet.add(data.getAssignedTo());  // owner
-		addAddress(data.getReporter(), addressSet); // ??
-		for (String address : data.getCc()) {
-			addAddress(address, addressSet);
-		}
-		for (TaskComment comment : currentTaskData.getComments()) {
-			addAddress(comment.getAuthor(), addressSet);
-		}
-		for (RepositoryAttachment attachment : currentTaskData.getAttachments()) {
-			addAddress(attachment.getCreator(), addressSet);
-		}
+		// TODO 3.1 reimplement
+		//		addAddress(data.getReporter(), addressSet); // ??
+//		for (String address : data.getCc()) {
+//			addAddress(address, addressSet);
+//		}
+//		for (TaskComment comment : currentTaskData.getComments()) {
+//			addAddress(comment.getAuthor(), addressSet);
+//		}
+//		for (RepositoryAttachment attachment : currentTaskData.getAttachments()) {
+//			addAddress(attachment.getCreator(), addressSet);
+//		}
 	}
 
 	private void addAddress(String address, Set<String> addressSet) {

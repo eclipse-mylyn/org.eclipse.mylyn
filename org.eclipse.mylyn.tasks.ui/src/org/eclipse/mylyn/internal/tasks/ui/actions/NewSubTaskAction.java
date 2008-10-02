@@ -30,7 +30,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -173,7 +172,6 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 	public void init(IViewPart view) {
 	}
 
-	@SuppressWarnings( { "deprecation", "restriction" })
 	public void selectionChanged(IAction action, ISelection selection) {
 		selectedTask = null;
 		if (selection instanceof StructuredSelection) {
@@ -184,16 +182,9 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 				selectedTask = (AbstractTask) selectedObject;
 				AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 						selectedTask.getConnectorKind());
-				if (connector instanceof AbstractLegacyRepositoryConnector) {
-					org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskDataHandler taskDataHandler = ((AbstractLegacyRepositoryConnector) connector).getLegacyTaskDataHandler();
-					if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(selectedTask, null)) {
-						selectedTask = null;
-					}
-				} else {
-					AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-					if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(null, selectedTask)) {
-						selectedTask = null;
-					}
+				AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+				if (taskDataHandler == null || !taskDataHandler.canInitializeSubTaskData(null, selectedTask)) {
+					selectedTask = null;
 				}
 			}
 		}

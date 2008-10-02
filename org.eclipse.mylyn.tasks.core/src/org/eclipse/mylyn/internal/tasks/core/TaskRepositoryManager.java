@@ -300,12 +300,6 @@ public class TaskRepositoryManager implements IRepositoryManager {
 		return false;
 	}
 
-	@Deprecated
-	public void setSynchronizationTime(TaskRepository repository, String syncTime, String repositoriesFilePath) {
-		repository.setSynchronizationTimeStamp(syncTime);
-		saveRepositories(repositoriesFilePath);
-	}
-
 	protected synchronized boolean saveRepositories(String destinationPath) {
 //		if (!Platform.isRunning()) {// || TasksUiPlugin.getDefault() == null) {
 //			return false;

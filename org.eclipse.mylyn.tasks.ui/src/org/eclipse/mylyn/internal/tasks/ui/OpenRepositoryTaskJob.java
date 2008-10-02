@@ -17,9 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -27,8 +24,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -39,8 +34,6 @@ import org.eclipse.ui.PlatformUI;
 public class OpenRepositoryTaskJob extends Job {
 
 	private final String repositoryUrl;
-
-	private final IWorkbenchPage page;
 
 	private final String repositoryKind;
 
@@ -58,7 +51,6 @@ public class OpenRepositoryTaskJob extends Job {
 		this.taskId = taskId;
 		this.repositoryUrl = repositoryUrl;
 		this.taskUrl = taskUrl;
-		this.page = page;
 	}
 
 	/**
@@ -115,23 +107,6 @@ public class OpenRepositoryTaskJob extends Job {
 			monitor.done();
 		}
 		return Status.OK_STATUS;
-	}
-
-	private void openEditor(final TaskRepository repository, final AbstractLegacyRepositoryConnector connector,
-			final TaskRepository taskRepository, final RepositoryTaskData taskData) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				if (taskData == null) {
-					TasksUiUtil.openUrl(taskUrl);
-				} else {
-					AbstractTask task = connector.createTask(taskData.getRepositoryUrl(), taskData.getTaskId(),
-							taskData.getSummary());
-					connector.updateTaskFromTaskData(taskRepository, task, taskData);
-					TaskEditorInput editorInput = new TaskEditorInput(repository, task);
-					TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
-				}
-			}
-		});
 	}
 
 }

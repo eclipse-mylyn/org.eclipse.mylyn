@@ -72,7 +72,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataStore;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.externalization.ExternalizationManager;
 import org.eclipse.mylyn.internal.tasks.core.externalization.IExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
@@ -563,12 +562,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskDataManager = new TaskDataManager(taskDataStore, repositoryManager, taskListManager.getTaskList(),
 					taskActivityManager);
 			taskDataManager.setDataPath(getDataDirectory());
-
-			for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
-				if (connector instanceof AbstractLegacyRepositoryConnector) {
-					((AbstractLegacyRepositoryConnector) connector).init(taskDataManager);
-				}
-			}
 
 			taskJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager,
 					repositoryModel);

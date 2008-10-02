@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,6 @@ import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
@@ -108,13 +107,8 @@ public class SubmitTaskJob extends SubmitJob {
 
 	private ITask createTask(IProgressMonitor monitor, TaskData updatedTaskData) throws CoreException {
 		if (taskData.isNew()) {
-			if (connector instanceof AbstractLegacyRepositoryConnector) {
-				task = ((AbstractLegacyRepositoryConnector) connector).createTask(taskRepository.getRepositoryUrl(),
-						updatedTaskData.getTaskId(), "");
-			} else {
-				task = new TaskTask(connector.getConnectorKind(), taskRepository.getRepositoryUrl(),
-						updatedTaskData.getTaskId());
-			}
+			task = new TaskTask(connector.getConnectorKind(), taskRepository.getRepositoryUrl(),
+					updatedTaskData.getTaskId());
 		}
 		return task;
 	}
