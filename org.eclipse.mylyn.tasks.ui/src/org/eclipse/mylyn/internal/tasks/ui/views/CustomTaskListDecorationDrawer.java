@@ -266,13 +266,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 				} else {
 					return CommonImages.OVERLAY_SYNC_OUTGOING_NEW;
 				}
-			} else if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING
-					&& ((AbstractTask) repositoryTask).getLastReadTimeStamp() == null) {
-				if (synchViewStyle) {
-					return CommonImages.OVERLAY_SYNC_OLD_INCOMMING_NEW;
-				} else {
-					return CommonImages.OVERLAY_SYNC_INCOMMING_NEW;
-				}
 			}
 			ImageDescriptor imageDescriptor = null;
 			if (repositoryTask.getSynchronizationState() == SynchronizationState.OUTGOING

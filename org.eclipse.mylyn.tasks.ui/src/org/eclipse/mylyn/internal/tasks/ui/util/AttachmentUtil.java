@@ -36,9 +36,6 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractAttachmentHandler;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractLegacyRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment;
 import org.eclipse.mylyn.internal.tasks.core.sync.SubmitTaskAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -206,13 +203,6 @@ public class AttachmentUtil {
 		return ContextCore.getContextManager().hasContext(task.getHandleIdentifier());
 	}
 
-	@SuppressWarnings("restriction")
-	@Deprecated
-	public static boolean isContext(RepositoryAttachment attachment) {
-		return CONTEXT_DESCRIPTION.equals(attachment.getDescription())
-				|| CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
-	}
-
 	public static boolean isContext(ITaskAttachment attachment) {
 		return CONTEXT_DESCRIPTION.equals(attachment.getDescription())
 				|| CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription());
@@ -294,16 +284,9 @@ public class AttachmentUtil {
 				task.getRepositoryUrl());
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
-		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			AbstractAttachmentHandler attachmentHandler = ((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler();
-			if (attachmentHandler != null) {
-				return attachmentHandler.canUploadAttachment(repository, task);
-			}
-		} else {
-			AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-			if (attachmentHandler != null) {
-				return attachmentHandler.canPostContent(repository, task);
-			}
+		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+		if (attachmentHandler != null) {
+			return attachmentHandler.canPostContent(repository, task);
 		}
 		return false;
 	}
@@ -313,16 +296,9 @@ public class AttachmentUtil {
 				task.getRepositoryUrl());
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				repository.getConnectorKind());
-		if (connector instanceof AbstractLegacyRepositoryConnector) {
-			AbstractAttachmentHandler attachmentHandler = ((AbstractLegacyRepositoryConnector) connector).getAttachmentHandler();
-			if (attachmentHandler != null) {
-				return attachmentHandler.canDownloadAttachment(repository, task);
-			}
-		} else {
-			AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
-			if (attachmentHandler != null) {
-				return attachmentHandler.canGetContent(repository, task);
-			}
+		AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
+		if (attachmentHandler != null) {
+			return attachmentHandler.canGetContent(repository, task);
 		}
 		return false;
 	}

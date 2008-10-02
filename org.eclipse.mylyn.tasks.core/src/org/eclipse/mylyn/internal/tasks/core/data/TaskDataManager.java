@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,10 +14,8 @@ package org.eclipse.mylyn.internal.tasks.core.data;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.Assert;
@@ -32,7 +30,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListRunnable;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -67,9 +64,6 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private final IRepositoryManager repositoryManager;
 
-	@Deprecated
-	private final TaskDataStorageManager taskDataStorageManager;
-
 	private final TaskDataStore taskDataStore;
 
 	private final TaskList taskList;
@@ -78,9 +72,8 @@ public class TaskDataManager implements ITaskDataManager {
 
 	private final List<ITaskDataManagerListener> listeners = new CopyOnWriteArrayList<ITaskDataManagerListener>();
 
-	public TaskDataManager(TaskDataStorageManager taskDataManager, TaskDataStore taskDataStore,
-			IRepositoryManager repositoryManager, TaskList taskList, TaskActivityManager taskActivityManager) {
-		this.taskDataStorageManager = taskDataManager;
+	public TaskDataManager(TaskDataStore taskDataStore, IRepositoryManager repositoryManager, TaskList taskList,
+			TaskActivityManager taskActivityManager) {
 		this.taskDataStore = taskDataStore;
 		this.repositoryManager = repositoryManager;
 		this.taskList = taskList;
@@ -93,38 +86,6 @@ public class TaskDataManager implements ITaskDataManager {
 
 	public void removeListener(ITaskDataManagerListener listener) {
 		listeners.remove(listener);
-	}
-
-	/** public for testing purposes */
-	@Deprecated
-	public boolean checkHasIncoming(ITask repositoryTask,
-			org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData newData) {
-		if (repositoryTask.getSynchronizationState() == SynchronizationState.INCOMING) {
-			return true;
-		}
-
-		String lastModified = ((AbstractTask) repositoryTask).getLastReadTimeStamp();
-		org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute.DATE_MODIFIED);
-		if (lastModified != null && modifiedDateAttribute != null && modifiedDateAttribute.getValue() != null) {
-			if (lastModified.trim().compareTo(modifiedDateAttribute.getValue().trim()) == 0) {
-				// Only set to synchronized state if not in incoming state.
-				// Case of incoming->sync handled by markRead upon opening
-				// or a forced synchronization on the task only.
-				return false;
-			}
-
-			Date modifiedDate = newData.getAttributeFactory().getDateForAttributeType(
-					org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute.DATE_MODIFIED,
-					modifiedDateAttribute.getValue());
-			Date lastModifiedDate = newData.getAttributeFactory().getDateForAttributeType(
-					org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute.DATE_MODIFIED,
-					lastModified);
-			if (modifiedDate != null && lastModifiedDate != null && modifiedDate.equals(lastModifiedDate)) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	public ITaskDataWorkingCopy createWorkingCopy(final ITask task, final TaskData taskData) {
@@ -166,8 +127,6 @@ public class TaskDataManager implements ITaskDataManager {
 					case INCOMING:
 					case INCOMING_NEW:
 						task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-						// XXX legacy support for showing correct synchronization decoration in task list
-						task.setLastReadTimeStamp(new Date().toString());
 						break;
 					case CONFLICT:
 						task.setSynchronizationState(SynchronizationState.OUTGOING);
@@ -329,13 +288,6 @@ public class TaskDataManager implements ITaskDataManager {
 		fireEditsDiscarded(event);
 	}
 
-	@Deprecated
-	public void discardOutgoing(AbstractTask repositoryTask) {
-		taskDataStorageManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
-		repositoryTask.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-		//taskList.notifyElementChanged(repositoryTask);
-	}
-
 	private File findFile(ITask task, String kind) {
 		File file = getFile(task, kind);
 		if (file.exists()) {
@@ -466,90 +418,6 @@ public class TaskDataManager implements ITaskDataManager {
 		taskList.notifyElementChanged(task);
 	}
 
-	/**
-	 * Saves incoming data and updates task sync state appropriately
-	 * 
-	 * @return true if call results in change of sync state
-	 */
-	@Deprecated
-	public synchronized boolean saveIncoming(final ITask itask,
-			final org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData newTaskData, boolean forceSync) {
-		final AbstractTask task = (AbstractTask) itask;
-		Assert.isNotNull(newTaskData);
-		final SynchronizationState startState = task.getSynchronizationState();
-		SynchronizationState status = task.getSynchronizationState();
-
-		org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData previousTaskData = taskDataStorageManager.getNewTaskData(
-				task.getRepositoryUrl(), task.getTaskId());
-
-		if (task.isSubmitting()) {
-			status = SynchronizationState.SYNCHRONIZED;
-			task.setSubmitting(false);
-			TaskDataStorageManager dataManager = taskDataStorageManager;
-			dataManager.discardEdits(task.getRepositoryUrl(), task.getTaskId());
-
-			taskDataStorageManager.setNewTaskData(newTaskData);
-			/**
-			 * If we set both so we don't see our own changes
-			 * 
-			 * @see RepositorySynchronizationManager.setTaskRead(AbstractTask, boolean)
-			 */
-			// taskDataManager.setOldTaskData(repositoryTask.getHandleIdentifier(),
-			// newTaskData);
-		} else {
-
-			switch (status) {
-			case OUTGOING:
-				if (checkHasIncoming(task, newTaskData)) {
-					status = SynchronizationState.CONFLICT;
-				}
-				taskDataStorageManager.setNewTaskData(newTaskData);
-				break;
-
-			case CONFLICT:
-				// fall through to INCOMING (conflict implies incoming)
-			case INCOMING:
-				// only most recent incoming will be displayed if two
-				// sequential incoming's /conflicts happen
-
-				taskDataStorageManager.setNewTaskData(newTaskData);
-				break;
-			case SYNCHRONIZED:
-				boolean hasIncoming = checkHasIncoming(task, newTaskData);
-				if (hasIncoming) {
-					status = SynchronizationState.INCOMING;
-					task.setNotified(false);
-				}
-				if (hasIncoming || previousTaskData == null || forceSync) {
-					taskDataStorageManager.setNewTaskData(newTaskData);
-				}
-				break;
-			}
-		}
-		task.setSynchronizationState(status);
-		return startState != task.getSynchronizationState();
-	}
-
-	@Deprecated
-	public void saveOffline(ITask task, org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData taskData) {
-		taskDataStorageManager.setNewTaskData(taskData);
-	}
-
-	/**
-	 * @param repositoryTask
-	 *            task that changed
-	 * @param modifiedAttributes
-	 *            attributes that have changed during edit session
-	 */
-	@Deprecated
-	public synchronized void saveOutgoing(AbstractTask repositoryTask,
-			Set<org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskAttribute> modifiedAttributes) {
-		repositoryTask.setSynchronizationState(SynchronizationState.OUTGOING);
-		taskDataStorageManager.saveEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId(),
-				Collections.unmodifiableSet(modifiedAttributes));
-		taskList.notifyElementChanged(repositoryTask);
-	}
-
 	public void setDataPath(String dataPath) {
 		this.dataPath = dataPath;
 	}
@@ -563,17 +431,10 @@ public class TaskDataManager implements ITaskDataManager {
 	public void setTaskRead(final ITask itask, final boolean read) {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
-		// legacy support
-		if (task.getClass() != TaskTask.class) {
-			setTaskReadDeprecated(task, read);
-			return;
-		}
-		// current api
 		try {
 			taskList.run(new ITaskListRunnable() {
 				public void execute(IProgressMonitor monitor) throws CoreException {
 					if (read) {
-						task.setLastReadTimeStamp(new Date().toString());
 						switch (task.getSynchronizationState()) {
 						case INCOMING:
 						case INCOMING_NEW:
@@ -602,54 +463,6 @@ public class TaskDataManager implements ITaskDataManager {
 		taskList.notifyElementChanged(task);
 	}
 
-	@Deprecated
-	private void setTaskReadDeprecated(ITask itask, boolean read) {
-		final AbstractTask task = (AbstractTask) itask;
-		org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData taskData = taskDataStorageManager.getNewTaskData(
-				task.getRepositoryUrl(), task.getTaskId());
-		if (read && task.getSynchronizationState().equals(SynchronizationState.INCOMING)) {
-			if (taskData != null && taskData.getLastModified() != null) {
-				task.setLastReadTimeStamp(taskData.getLastModified());
-				taskDataStorageManager.setOldTaskData(taskData);
-			}
-			task.setSynchronizationState(SynchronizationState.SYNCHRONIZED);
-			taskList.notifyElementChanged(task);
-		} else if (read && task.getSynchronizationState().equals(SynchronizationState.CONFLICT)) {
-			if (taskData != null && taskData.getLastModified() != null) {
-				task.setLastReadTimeStamp(taskData.getLastModified());
-			}
-			task.setSynchronizationState(SynchronizationState.OUTGOING);
-			taskList.notifyElementChanged(task);
-		} else if (read && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
-			if (taskData != null && taskData.getLastModified() != null) {
-				task.setLastReadTimeStamp(taskData.getLastModified());
-				// By setting old every time (and not setting upon submission)
-				// we see our changes
-				// If condition is enabled and we save old in OUTGOING handler
-				// our own changes
-				// will not be displayed after submission.
-				// if
-				// (dataManager.getOldTaskData(repositoryTask.getHandleIdentifier())
-				// == null) {
-				taskDataStorageManager.setOldTaskData(taskData);
-				// }
-			}
-//			else if (repositoryTask.getLastReadTimeStamp() == null && repositoryTask.isLocal()) {
-//				// fall back for cases where the stamp is missing, set bogus date
-//				repositoryTask.setLastReadTimeStamp(LocalTask.SYNC_DATE_NOW);
-//			}
-
-		} else if (!read && task.getSynchronizationState().equals(SynchronizationState.SYNCHRONIZED)) {
-			task.setSynchronizationState(SynchronizationState.INCOMING);
-			taskList.notifyElementChanged(task);
-		}
-
-		// for connectors that don't support task data set read date to now (bug#204741)
-		if (read && taskData == null && task.isLocal()) {
-			task.setLastReadTimeStamp((new Date()).toString());
-		}
-	}
-
 	void putEdits(final ITask itask, final TaskData editsData) throws CoreException {
 		final AbstractTask task = (AbstractTask) itask;
 		Assert.isNotNull(task);
@@ -671,22 +484,6 @@ public class TaskDataManager implements ITaskDataManager {
 			}
 		});
 		taskList.notifySynchronizationStateChanged(task);
-	}
-
-	@Deprecated
-	public org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData getNewTaskData(String repositoryUrl,
-			String taskId) {
-		return taskDataStorageManager.getNewTaskData(repositoryUrl, taskId);
-	}
-
-	@Deprecated
-	public void setNewTaskData(org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryTaskData taskData) {
-		taskDataStorageManager.setNewTaskData(taskData);
-	}
-
-	@Deprecated
-	public TaskDataStorageManager getTaskDataStorageManager() {
-		return taskDataStorageManager;
 	}
 
 	private void fireTaskDataUpdated(final TaskDataManagerEvent event) {

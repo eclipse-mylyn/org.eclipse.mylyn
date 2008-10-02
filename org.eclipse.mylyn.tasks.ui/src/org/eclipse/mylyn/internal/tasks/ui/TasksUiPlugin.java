@@ -68,7 +68,6 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
-import org.eclipse.mylyn.internal.tasks.core.TaskDataStorageManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
@@ -559,13 +558,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// conditions previously
 			TasksUiExtensionReader.initStartupExtensions(taskListExternalizer, taskListImporter);
 
-			// instantiates taskDataManager
-			File root = new File(this.getDataDirectory() + '/' + FOLDER_OFFLINE);
-
+			// instantiate taskDataManager
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
-
-			taskDataManager = new TaskDataManager(new TaskDataStorageManager(null, null), taskDataStore,
-					repositoryManager, taskListManager.getTaskList(), taskActivityManager);
+			taskDataManager = new TaskDataManager(taskDataStore, repositoryManager, taskListManager.getTaskList(),
+					taskActivityManager);
 			taskDataManager.setDataPath(getDataDirectory());
 
 			for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {

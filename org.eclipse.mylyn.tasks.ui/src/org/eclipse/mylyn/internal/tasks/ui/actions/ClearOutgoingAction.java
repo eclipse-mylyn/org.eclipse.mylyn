@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,8 +19,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.TaskTask;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -83,17 +81,13 @@ public class ClearOutgoingAction extends Action {
 			boolean confirm = MessageDialog.openConfirm(null, "Confirm discard", "Discard all outgoing changes?\n\n"
 					+ task.getSummary());
 			if (confirm) {
-				if (task.getClass() != TaskTask.class) {
-					TasksUiPlugin.getTaskDataManager().discardOutgoing(task);
-				} else {
-					if (taskEditorPage != null) {
-						taskEditorPage.doSave(null);
-					}
-					try {
-						TasksUi.getTaskDataManager().discardEdits(task);
-					} catch (CoreException e) {
-						TasksUiInternal.displayStatus("Clear outgoing failed", e.getStatus());
-					}
+				if (taskEditorPage != null) {
+					taskEditorPage.doSave(null);
+				}
+				try {
+					TasksUi.getTaskDataManager().discardEdits(task);
+				} catch (CoreException e) {
+					TasksUiInternal.displayStatus("Clear outgoing failed", e.getStatus());
 				}
 			}
 		}

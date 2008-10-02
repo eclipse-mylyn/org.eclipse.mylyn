@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
-import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.sync.SynchronizationSession;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -71,12 +70,6 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 	public void init(ITaskDataManager taskDataManager) {
 		this.taskDataManager = taskDataManager;
 	}
-
-	/**
-	 * @return null if not supported
-	 */
-	@Deprecated
-	public abstract AbstractAttachmentHandler getAttachmentHandler();
 
 	/**
 	 * @return null if not supported
@@ -139,7 +132,7 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 				repositoryTask = createTask(repository.getRepositoryUrl(), taskData.getTaskId(), taskData.getTaskId()
 						+ ": " + taskData.getDescription());
 				updateTaskFromTaskData(repository, repositoryTask, taskData);
-				((TaskDataManager) getTaskDataManager()).setNewTaskData(taskData);
+//				((TaskDataManager) getTaskDataManager()).setNewTaskData(taskData);
 
 				if (retrieveSubTasks) {
 					monitor.beginTask("Creating task", getLegacyTaskDataHandler().getSubTaskIds(taskData).size());
@@ -352,9 +345,6 @@ public abstract class AbstractLegacyRepositoryConnector extends AbstractReposito
 
 	@Deprecated
 	private RepositoryTaskData getTaskData(ITask task) {
-		if (getTaskDataManager() != null) {
-			return ((TaskDataManager) getTaskDataManager()).getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-		}
 		return null;
 	}
 
