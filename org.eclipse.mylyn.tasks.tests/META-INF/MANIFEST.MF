@@ -31,7 +31,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-tasklist-tests.jar
 Export-Package: org.eclipse.mylyn.tasks.tests;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.connector;x-internal:=true,
- org.eclipse.mylyn.tasks.tests.data;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.performance;x-internal:=true,
- org.eclipse.mylyn.tasks.tests.util
+ org.eclipse.mylyn.tasks.tests.ui;x-internal:=true,
+ org.eclipse.mylyn.tasks.tests.ui.editor;x-internal:=true,
+ org.eclipse.mylyn.tasks.tests.util;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
