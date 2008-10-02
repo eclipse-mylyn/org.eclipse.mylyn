@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.deprecated;
 
 import junit.framework.TestCase;
 
@@ -27,7 +27,9 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 
 /**
  * @author Rob Elves
+ * @deprecated
  */
+@Deprecated
 public class TaskListNotificationManagerTest extends TestCase {
 
 	@Override

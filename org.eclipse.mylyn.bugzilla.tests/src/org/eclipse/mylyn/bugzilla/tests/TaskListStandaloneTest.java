@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.bugzilla.deprecated;
+package org.eclipse.mylyn.bugzilla.tests;
 
 import java.util.Calendar;
 import java.util.Collection;
