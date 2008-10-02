@@ -52,12 +52,6 @@ public class EditorUtil {
 //
 //	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
 
-	@Deprecated
-	public static final String DATE_FORMAT = "yyyy-MM-dd";
-
-	@Deprecated
-	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
-
 	static final String KEY_MARKER = "marker";
 
 	static final String KEY_TEXT_VIEWER = "textViewer";

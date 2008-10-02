@@ -43,7 +43,6 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -1159,16 +1158,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 							+ "\""));
 		}
 		return null;
-	}
-
-	@Deprecated
-	public TaskRepository getRepositoryForResource(final IResource resource, boolean silent) {
-		TaskRepository repository = getRepositoryForResource(resource);
-		if (repository == null && !silent) {
-			MessageDialog.openInformation(null, "No Repository Found",
-					"No repository was found. Associate a Task Repository with this project via the project's property page.");
-		}
-		return repository;
 	}
 
 	public static ExternalizationManager getExternalizationManager() {

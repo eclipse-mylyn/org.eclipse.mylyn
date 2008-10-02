@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -152,10 +151,12 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * This method is not used anymore.
+	 * 
+	 * @return returns null
 	 */
 	@Deprecated
 	public IWizard getAddExistingTaskWizard(TaskRepository repository) {
-		return new CommonAddExistingTaskWizard(repository);
+		return null;
 	}
 
 	/**

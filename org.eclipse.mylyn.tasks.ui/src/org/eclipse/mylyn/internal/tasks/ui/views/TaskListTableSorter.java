@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -229,26 +229,6 @@ public class TaskListTableSorter extends ViewerSorter {
 			}
 		}
 		return 0;
-	}
-
-	/**
-	 * * Return a sortable string in the format "key: summary"
-	 * 
-	 * @param element
-	 * @return sortable string
-	 * @deprecated Use getSortableFromElement()
-	 */
-	@Deprecated
-	public static String getSortableSummaryFromElement(IRepositoryElement element) {
-		String summary = element.getSummary();
-
-		if (element instanceof ITask) {
-			ITask task1 = (ITask) element;
-			if (task1.getTaskKey() != null) {
-				summary = task1.getTaskKey() + ": " + summary;
-			}
-		}
-		return summary;
 	}
 
 	/**
