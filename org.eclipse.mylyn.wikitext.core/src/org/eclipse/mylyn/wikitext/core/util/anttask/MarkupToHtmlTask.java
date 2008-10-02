@@ -179,6 +179,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 				markupContent = readFully(source);
 			}
 
+			performValidation(source, markupContent);
+
 			Writer writer;
 			try {
 				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8");

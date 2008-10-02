@@ -130,6 +130,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 			if (markupContent == null) {
 				markupContent = readFully(source);
 			}
+			performValidation(source, markupContent);
 
 			Writer writer;
 			try {

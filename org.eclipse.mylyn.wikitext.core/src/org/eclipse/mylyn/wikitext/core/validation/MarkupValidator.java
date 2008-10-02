@@ -12,7 +12,6 @@ package org.eclipse.mylyn.wikitext.core.validation;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -23,35 +22,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author David Green
  */
 public class MarkupValidator {
-
-	private static final Comparator<ValidationProblem> PROBLEM_COMPARATOR = new Comparator<ValidationProblem>() {
-		public int compare(ValidationProblem o1, ValidationProblem o2) {
-			if (o1 == o2) {
-				return 0;
-			}
-			int offset1 = o1.getOffset();
-			int offset2 = o2.getOffset();
-			if (offset1 < offset2) {
-				return -1;
-			} else if (offset2 < offset1) {
-				return 1;
-			} else {
-				int length1 = o1.getLength();
-				int length2 = o2.getLength();
-				if (length1 > length2) {
-					return -1;
-				} else if (length2 > length1) {
-					return 1;
-				} else {
-					int i = o1.getMessage().compareTo(o2.getMessage());
-					if (i == 0) {
-						i = o1.getMarkerId().compareTo(o2.getMarkerId());
-					}
-					return i;
-				}
-			}
-		}
-	};
 
 	private final List<ValidationRule> rules = new ArrayList<ValidationRule>();
 
@@ -89,7 +59,7 @@ public class MarkupValidator {
 				}
 			}
 			if (!problems.isEmpty()) {
-				Collections.sort(problems, PROBLEM_COMPARATOR);
+				Collections.sort(problems);
 			}
 			return problems;
 		} finally {
