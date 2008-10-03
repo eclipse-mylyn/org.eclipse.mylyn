@@ -38,6 +38,8 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	private final Clipboard clipboard;
 
+	private static String lineSeparator = System.getProperty("line.separator", "\n");
+
 	public CopyTaskDetailsAction() {
 		super(LABEL);
 		setToolTipText(LABEL);
@@ -55,7 +57,8 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		Object[] seletedElements = ((IStructuredSelection) selection).toArray();
 		for (int i = 0; i < seletedElements.length; i++) {
 			if (i > 0) {
-				sb.append("\n\n");
+				sb.append(lineSeparator);
+				sb.append(lineSeparator);
 			}
 			sb.append(getTextForTask(seletedElements[i]));
 		}
@@ -67,38 +70,31 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	// TODO move to TasksUiUtil / into core
 	public static String getTextForTask(Object object) {
-		String text = "";
+		StringBuffer sb = new StringBuffer();
 		if (object instanceof ITask) {
 			AbstractTask task = (AbstractTask) object;
 			if (task.getTaskKey() != null) {
-				text += task.getTaskKey() + ": ";
+				sb.append(task.getTaskKey());
+				sb.append(": ");
 			}
 
-			text += task.getSummary();
+			sb.append(task.getSummary());
 			if (TasksUiInternal.isValidUrl(task.getUrl())) {
-				text += "\n" + task.getUrl();
+				sb.append(lineSeparator);
+				sb.append(task.getUrl());
 			}
-			// FIXME 3.1 reimplement
-			//		} else if (object instanceof RepositoryTaskData) {
-//			RepositoryTaskData taskData = (RepositoryTaskData) object;
-//			if (taskData.getTaskKey() != null) {
-//				text += taskData.getTaskKey() + ": ";
-//			}
-//
-//			text += taskData.getSummary();
-//			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
-//					taskData.getConnectorKind());
-//			if (connector != null) {
-//				text += "\n" + connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getTaskId());
-//			}
 		} else if (object instanceof IRepositoryQuery) {
 			RepositoryQuery query = (RepositoryQuery) object;
-			text += query.getSummary();
-			text += "\n" + query.getUrl();
+			sb.append(query.getSummary());
+			if (TasksUiInternal.isValidUrl(query.getUrl())) {
+				sb.append(lineSeparator);
+				sb.append(query.getUrl());
+			}
 		} else if (object instanceof IRepositoryElement) {
 			IRepositoryElement element = (IRepositoryElement) object;
-			text = element.getSummary();
+			sb.append(element.getSummary());
 		}
-		return text;
+		return sb.toString();
 	}
+
 }
