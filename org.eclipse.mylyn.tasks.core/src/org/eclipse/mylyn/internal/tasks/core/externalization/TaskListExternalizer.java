@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,7 +48,6 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryModel;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
 import org.w3c.dom.Document;
@@ -92,8 +91,8 @@ public class TaskListExternalizer {
 		this.delegatingExternalizer = new DelegatingTaskExternalizer(repositoryModel, repositoryManager);
 	}
 
-	public void initialize(List<AbstractTaskListFactory> externalizers, List<AbstractTaskListMigrator> migrators) {
-		this.delegatingExternalizer.initialize(externalizers, migrators);
+	public void initialize(List<AbstractTaskListMigrator> migrators) {
+		this.delegatingExternalizer.initialize(migrators);
 	}
 
 	public void writeTaskList(TaskList taskList, File outFile) throws CoreException {
@@ -214,7 +213,7 @@ public class TaskListExternalizer {
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
 			if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
-					&& !child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+					&& !child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 				AbstractTask task = delegatingExternalizer.readTask(child, null, null);
 				if (task != null) {
 					taskList.addTask(task);
@@ -235,7 +234,7 @@ public class TaskListExternalizer {
 		// read queries
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
-			if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+			if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 				RepositoryQuery query = delegatingExternalizer.readQuery(child);
 				if (query != null) {
 					taskList.addQuery(query);

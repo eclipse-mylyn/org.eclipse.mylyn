@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
@@ -59,7 +58,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.externalization.DelegatingTaskExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
@@ -106,13 +104,9 @@ public class TaskListElementImporter {
 
 	private static final String FILE_SUFFIX_SAVE = "save.xml";
 
-	private List<AbstractTaskListFactory> externalizers;
-
 	private DelegatingTaskExternalizer delegatingExternalizer;
 
 	private final TaskRepositoriesExternalizer repositoriesExternalizer;
-
-	private final InteractionContextExternalizer contextExternalizer;
 
 	private final List<Node> orphanedTaskNodes = new ArrayList<Node>();
 
@@ -130,18 +124,10 @@ public class TaskListElementImporter {
 		this.repositoryManager = repositoryManager;
 		this.delegatingExternalizer = new DelegatingTaskExternalizer(repositoryModel, repositoryManager);
 		this.repositoriesExternalizer = new TaskRepositoriesExternalizer();
-		this.contextExternalizer = new InteractionContextExternalizer();
 	}
 
-	public void setDelegateExternalizers(List<AbstractTaskListFactory> externalizers,
-			List<AbstractTaskListMigrator> migrators) {
-		this.externalizers = externalizers;
-		this.delegatingExternalizer.initialize(externalizers, migrators);
-	}
-
-	public void setDelegateExternalizers(List<AbstractTaskListFactory> externalizers) {
-		this.externalizers = externalizers;
-		this.delegatingExternalizer.initialize(externalizers, new ArrayList<AbstractTaskListMigrator>(0));
+	public void setDelegateExternalizers(List<AbstractTaskListMigrator> migrators) {
+		this.delegatingExternalizer.initialize(migrators);
 	}
 
 	public void writeTaskList(TaskList taskList, File outFile) {
@@ -290,7 +276,7 @@ public class TaskListElementImporter {
 					Node child = list.item(i);
 					try {
 						if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
-								&& !child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+								&& !child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 
 							AbstractTask task = delegatingExternalizer.readTask(child, null, null);
 							if (task == null) {
@@ -320,7 +306,7 @@ public class TaskListElementImporter {
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
-						if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 							delegatingExternalizer.readQuery(child);
 						}
 					} catch (Exception e) {
@@ -548,10 +534,6 @@ public class TaskListElementImporter {
 		this.delegatingExternalizer = delagatingExternalizer;
 	}
 
-	public List<AbstractTaskListFactory> getExternalizers() {
-		return externalizers;
-	}
-
 	public void writeQueries(List<RepositoryQuery> queries, File outFile) {
 		Set<TaskRepository> repositories = new HashSet<TaskRepository>();
 		for (IRepositoryQuery query : queries) {
@@ -626,7 +608,7 @@ public class TaskListElementImporter {
 			for (int i = 0; i < list.getLength(); i++) {
 				Node child = list.item(i);
 				try {
-					if (child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+					if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 						RepositoryQuery query = delegatingExternalizer.readQuery(child);
 						if (query != null) {
 							queries.add(query);
@@ -718,7 +700,7 @@ public class TaskListElementImporter {
 					Node child = list.item(i);
 					try {
 						if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
-								&& !child.getNodeName().endsWith(AbstractTaskListFactory.KEY_QUERY)) {
+								&& !child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 							AbstractTask task = delegatingExternalizer.readTask(child, null, null);
 							if (task != null) {
 								tasks.add(task);

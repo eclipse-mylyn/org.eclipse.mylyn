@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -150,8 +149,8 @@ public class TasksUiExtensionReader {
 					}
 				}
 			}
-			taskListExternalizer.initialize(new ArrayList<AbstractTaskListFactory>(), migrators);
-			taskListImporter.setDelegateExternalizers(new ArrayList<AbstractTaskListFactory>(), migrators);
+			taskListExternalizer.initialize(migrators);
+			taskListImporter.setDelegateExternalizers(migrators);
 
 			IExtensionPoint templatesExtensionPoint = registry.getExtensionPoint(EXTENSION_TEMPLATES);
 			IExtension[] templateExtensions = templatesExtensionPoint.getExtensions();

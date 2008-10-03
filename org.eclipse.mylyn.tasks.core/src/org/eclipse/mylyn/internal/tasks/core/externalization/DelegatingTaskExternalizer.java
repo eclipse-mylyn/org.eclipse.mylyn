@@ -48,7 +48,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IAttributeContainer;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
@@ -87,6 +86,10 @@ public final class DelegatingTaskExternalizer {
 	public static final String KEY_NAME = "Name";
 
 	public static final String KEY_LABEL = "Label";
+
+	public static final String KEY_QUERY = "Query";
+
+	public static final String KEY_QUERY_STRING = "QueryString";
 
 	static final String KEY_HANDLE = "Handle";
 
@@ -173,8 +176,6 @@ public final class DelegatingTaskExternalizer {
 
 	static final String KEY_KEY = "Key";
 
-	private List<AbstractTaskListFactory> factories;
-
 	// 2.0 -> 3.0 migration holds tasks to category handles 
 	private final Map<AbstractTask, String> parentCategoryMap;
 
@@ -195,14 +196,11 @@ public final class DelegatingTaskExternalizer {
 		this.repositoryManager = repositoryManager;
 		this.parentCategoryMap = new HashMap<AbstractTask, String>();
 		this.errors = new ArrayList<IStatus>();
-		this.factories = Collections.emptyList();
 		this.migrators = Collections.emptyList();
 	}
 
-	public void initialize(List<AbstractTaskListFactory> factories, List<AbstractTaskListMigrator> migrators) {
-		Assert.isNotNull(factories);
+	public void initialize(List<AbstractTaskListMigrator> migrators) {
 		Assert.isNotNull(migrators);
-		this.factories = factories;
 		this.migrators = migrators;
 	}
 
@@ -217,40 +215,14 @@ public final class DelegatingTaskExternalizer {
 		return node;
 	}
 
+	@SuppressWarnings("deprecation")
 	public Element createTaskElement(final AbstractTask task, Document doc, Element parent) {
 		final Element node;
 		if (task.getClass() == TaskTask.class || task instanceof LocalTask) {
 			node = doc.createElement(NODE_TASK);
 		} else {
-			AbstractTaskListFactory factory = null;
-			for (AbstractTaskListFactory currentFactory : factories) {
-				if (currentFactory.canCreate(task)) {
-					factory = currentFactory;
-					break;
-				}
-			}
-			String taskTagName;
-			if (factory != null) {
-				taskTagName = factory.getTaskElementName();
-			} else {
-				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "No externalizer for task: "
-						+ task));
-				return null;
-			}
-			node = doc.createElement(taskTagName);
-			final AbstractTaskListFactory finalFactory = factory;
-			SafeRunner.run(new ISafeRunnable() {
-
-				public void handleException(Throwable e) {
-					errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-							"Reading of task attributes failed for \"" + task + "\"", e));
-				}
-
-				public void run() throws Exception {
-					finalFactory.setAdditionalAttributes(task, node);
-				}
-
-			});
+			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "No externalizer for task: " + task));
+			return null;
 		}
 
 		node.setAttribute(KEY_CONNECTOR_KIND, task.getConnectorKind());
@@ -462,15 +434,6 @@ public final class DelegatingTaskExternalizer {
 				}
 			}
 		}
-		// legacy support
-		if (task == null) {
-			for (AbstractTaskListFactory externalizer : factories) {
-				if (node.getNodeName().equals(externalizer.getTaskElementName())) {
-					task = externalizer.createTask(repositoryUrl, taskId, summary, element);
-					break;
-				}
-			}
-		}
 		// populate common attributes
 		if (task != null) {
 			if (repositoryManager.getRepositoryConnector(task.getConnectorKind()) == null) {
@@ -524,6 +487,7 @@ public final class DelegatingTaskExternalizer {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void readTaskInfo(AbstractTask task, Element element, ITask parent, AbstractTaskCategory legacyCategory) {
 		if (element.hasAttribute(KEY_CATEGORY)) {
 			// Migration 2.0 -> 3.0 task list.  Category no longer maintained on the task element but
@@ -698,40 +662,15 @@ public final class DelegatingTaskExternalizer {
 		if (query.getClass() == RepositoryQuery.class) {
 			node = doc.createElement(NODE_QUERY);
 		} else {
-			String queryTagName = null;
-			AbstractTaskListFactory factory = null;
-			for (AbstractTaskListFactory currentFactory : factories) {
-				if (currentFactory.canCreate(query)) {
-					factory = currentFactory;
-					queryTagName = factory.getQueryElementName(query);
-					break;
-				}
-			}
-			if (factory == null || queryTagName == null) {
-				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-						"Missing factory to externalize query \"" + query + "\""));
-				return null;
-			}
-			node = doc.createElement(queryTagName);
-			final AbstractTaskListFactory finalFactory = factory;
-			SafeRunner.run(new ISafeRunnable() {
-
-				public void handleException(Throwable e) {
-					errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-							"Reading of query attributes failed for \"" + query + "\"", e));
-				}
-
-				public void run() throws Exception {
-					finalFactory.setAdditionalAttributes(query, node);
-				}
-
-			});
+			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
+					"Missing factory to externalize query \"" + query + "\""));
+			return null;
 		}
 
 		node.setAttribute(KEY_HANDLE, query.getHandleIdentifier());
 		node.setAttribute(KEY_CONNECTOR_KIND, query.getConnectorKind());
 		node.setAttribute(KEY_NAME, query.getSummary());
-		node.setAttribute(AbstractTaskListFactory.KEY_QUERY_STRING, query.getUrl());
+		node.setAttribute(KEY_QUERY_STRING, query.getUrl());
 		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		if (query.getLastSynchronizedTimeStamp() != null) {
 			node.setAttribute(KEY_LAST_REFRESH, query.getLastSynchronizedTimeStamp());
@@ -743,10 +682,6 @@ public final class DelegatingTaskExternalizer {
 
 		parent.appendChild(node);
 		return node;
-	}
-
-	public List<AbstractTaskListFactory> getDelegateExternalizers() {
-		return factories;
 	}
 
 	public Map<AbstractTask, String> getLegacyParentCategoryMap() {
@@ -761,12 +696,12 @@ public final class DelegatingTaskExternalizer {
 	public RepositoryQuery readQuery(Node node) {
 		final Element element = (Element) node;
 		String repositoryUrl = element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
-		String queryString = element.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);
-		if (queryString.length() == 0) { // fallback for legacy
-			queryString = element.getAttribute(AbstractTaskListFactory.KEY_QUERY);
+		String queryString = element.getAttribute(KEY_QUERY_STRING);
+		if (queryString.length() == 0) { // fall back for legacy
+			queryString = element.getAttribute(KEY_QUERY);
 		}
 		String label = element.getAttribute(DelegatingTaskExternalizer.KEY_NAME);
-		if (label.length() == 0) { // fallback for legacy
+		if (label.length() == 0) { // fall back for legacy
 			label = element.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
 		}
 
@@ -783,16 +718,6 @@ public final class DelegatingTaskExternalizer {
 				if (queryTagNames != null && queryTagNames.contains(node.getNodeName())) {
 					query = readDefaultQuery(migrator.getConnectorKind(), repositoryUrl, queryString, label, element);
 					queryMigrator = migrator;
-					break;
-				}
-			}
-		}
-		// legacy support
-		if (query == null) {
-			for (AbstractTaskListFactory externalizer : factories) {
-				Set<String> queryTagNames = externalizer.getQueryElementNames();
-				if (queryTagNames != null && queryTagNames.contains(node.getNodeName())) {
-					query = externalizer.createQuery(repositoryUrl, queryString, label, element);
 					break;
 				}
 			}

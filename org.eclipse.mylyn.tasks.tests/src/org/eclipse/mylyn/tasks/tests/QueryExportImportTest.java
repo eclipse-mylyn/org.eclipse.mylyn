@@ -26,9 +26,9 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.QueryImportAction;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -37,14 +37,15 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
  * @author Jevgeni Holodkov
  */
 // FIXME speed up test
+@SuppressWarnings("deprecation")
 public class QueryExportImportTest extends TestCase {
 
 	private File dest;
 
+	private TaskListElementImporter taskListWriter;
+
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-
 		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
 
 		// Create test export destination directory
@@ -55,27 +56,22 @@ public class QueryExportImportTest extends TestCase {
 			dest.mkdir();
 		}
 		assertTrue(dest.exists());
+
+		taskListWriter = TasksUiPlugin.getTaskListManager().getTaskListWriter();
+
+		TaskTestUtil.resetTaskListAndRepositories();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-
 		removeFiles(dest);
 		dest.delete();
 		assertFalse(dest.exists());
-		// Don't want synch manager to be in asynch mode for tests so commented out:
-		//TasksUiPlugin.getSynchronizationManager().setForceSyncExec(false);
+
+		TaskTestUtil.resetTaskListAndRepositories();
 	}
 
 	public void testExportImportQuery() throws Exception {
-		List<AbstractTaskListFactory> oldExternalizers = TasksUiPlugin.getTaskListManager()
-				.getTaskListWriter()
-				.getExternalizers();
-		List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
-		//externalizers.add(new MockTaskListFactory());
-		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(externalizers);
-
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Test Query");
@@ -87,20 +83,15 @@ public class QueryExportImportTest extends TestCase {
 
 		File outFile = new File(dest, "test-query.xml.zip");
 
-		TasksUiPlugin.getTaskListManager().getTaskListWriter().writeQueries(queries, outFile);
+		taskListWriter.writeQueries(queries, outFile);
 		assertTrue(outFile.exists());
 
 		File inFile = new File(dest, "test-query.xml.zip");
-		List<RepositoryQuery> resultQueries = TasksUiPlugin.getTaskListManager()
-				.getTaskListWriter()
-				.readQueries(inFile);
+		List<RepositoryQuery> resultQueries = taskListWriter.readQueries(inFile);
 		assertEquals("2 Queries is imported", 2, resultQueries.size());
-		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(oldExternalizers);
 	}
 
 	public void testImportedQueriesNameConflictResolving1() {
-		// prepare for test
-		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -137,8 +128,6 @@ public class QueryExportImportTest extends TestCase {
 	}
 
 	public void testImportedQueriesNameConflictResolving2() {
-		// prepare for test
-		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -176,8 +165,6 @@ public class QueryExportImportTest extends TestCase {
 	}
 
 	public void testImportedBadQueriesNameConflictResolving() {
-		// prepare for test
-		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -222,8 +209,6 @@ public class QueryExportImportTest extends TestCase {
 	}
 
 	public void testImportedBadQueries() {
-		// prepare for test
-		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -257,15 +242,6 @@ public class QueryExportImportTest extends TestCase {
 	}
 
 	public void testExportImportQueryWithRepositoryInfo() throws Exception {
-		// prepare for test
-		TasksUiPlugin.getTaskListManager().resetTaskList();
-		List<AbstractTaskListFactory> oldExternalizers = TasksUiPlugin.getTaskListManager()
-				.getTaskListWriter()
-				.getExternalizers();
-		List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
-		//externalizers.add(new MockTaskListFactory());
-		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(externalizers);
-
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository);
@@ -278,7 +254,7 @@ public class QueryExportImportTest extends TestCase {
 
 		File outFile = new File(dest, "test-repository-query.xml.zip");
 
-		TasksUiPlugin.getTaskListManager().getTaskListWriter().writeQueries(queries, outFile);
+		taskListWriter.writeQueries(queries, outFile);
 
 		assertTrue(outFile.exists());
 
@@ -298,10 +274,8 @@ public class QueryExportImportTest extends TestCase {
 		assertTrue("There are currently no repositories defined", TasksUiPlugin.getRepositoryManager().getRepository(
 				MockRepositoryConnector.REPOSITORY_URL) == null);
 
-		List<RepositoryQuery> resultQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(
-				outFile);
-		Set<TaskRepository> repositories = TasksUiPlugin.getTaskListManager().getTaskListWriter().readRepositories(
-				outFile);
+		List<RepositoryQuery> resultQueries = taskListWriter.readQueries(outFile);
+		Set<TaskRepository> repositories = taskListWriter.readRepositories(outFile);
 
 		TasksUiPlugin.getRepositoryManager().insertRepositories(repositories,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -319,8 +293,6 @@ public class QueryExportImportTest extends TestCase {
 		assertTrue("'Test Query' query inserted", queriesMap.containsKey("Test Query"));
 		assertTrue("1 repository is loaded", TasksUiPlugin.getRepositoryManager().getRepository(
 				MockRepositoryConnector.REPOSITORY_URL) != null);
-		TasksUiPlugin.getTaskListManager().getTaskListWriter().setDelegateExternalizers(oldExternalizers);
-
 	}
 
 	private void removeFiles(File root) {
