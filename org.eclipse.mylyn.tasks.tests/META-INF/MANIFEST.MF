@@ -31,6 +31,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: mylyn-tasklist-tests.jar
 Export-Package: org.eclipse.mylyn.tasks.tests;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.connector;x-internal:=true,
+ org.eclipse.mylyn.tasks.tests.data,
  org.eclipse.mylyn.tasks.tests.performance;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.ui;x-internal:=true,
  org.eclipse.mylyn.tasks.tests.ui.editor;x-internal:=true,

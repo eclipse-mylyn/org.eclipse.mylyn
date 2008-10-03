@@ -86,7 +86,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private boolean markReadPending;
 
-	// TODO 3.0 make private
+	// TODO 4.0 make private
 	protected String taskKey;
 
 	private AttributeMap attributeMap;
