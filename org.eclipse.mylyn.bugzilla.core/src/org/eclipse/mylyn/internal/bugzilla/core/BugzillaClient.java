@@ -241,7 +241,8 @@ public class BugzillaClient {
 	 * @throws IOException
 	 * @throws CoreException
 	 */
-	private GzipGetMethod getConnectGzip(String serverURL, IProgressMonitor monitor) throws IOException, CoreException {
+	protected GzipGetMethod getConnectGzip(String serverURL, IProgressMonitor monitor) throws IOException,
+			CoreException {
 
 		return connectInternal(serverURL, true, monitor);
 
@@ -330,7 +331,7 @@ public class BugzillaClient {
 		}
 	}
 
-	private InputStream getResponseStream(HttpMethodBase method, IProgressMonitor monitor) throws IOException {
+	protected InputStream getResponseStream(HttpMethodBase method, IProgressMonitor monitor) throws IOException {
 		InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 		if (isZippedReply(method)) {
 			in = new java.util.zip.GZIPInputStream(in);
