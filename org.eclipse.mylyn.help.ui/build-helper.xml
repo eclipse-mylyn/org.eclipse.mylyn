@@ -9,38 +9,19 @@
 	<property name="mylyn.userguide.url.html" value="${mylyn.userguide.url.base}/Mylyn/User_Guide"/>
 	<property name="mylyn.userguide.url.xml" value="${mylyn.userguide.url.base}/Special:Export/Mylyn/User_Guide"/>
 	
-	<path  id="compile.classpath">
-		<fileset dir="lib">
-			<include name="**/*.jar"/>
-		</fileset>
-	</path>
 	<path  id="tasks.classpath" path="bin"/>
 	
 	<target name="init">
 		<mkdir dir="tmp"/>
-		<mkdir dir="bin"/>
 	</target>
 	
 	<target name="clean" depends="init">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="tmp"/>
-			<fileset dir="bin"/>
 		</delete>
 	</target>
 	
-	<target name="compile">
-		<javac srcdir="src" classpathref="compile.classpath" destdir="bin">
-		</javac>
-		<copy todir="bin">
-			<fileset dir="src">
-				<exclude name="**/*.java"/>
-				<exclude name="**/*.class"/>
-				<exclude name="**/package.html"/>
-			</fileset>
-		</copy>
-	</target>
-	
-    <target name="all" depends="init,compile" description="Generate Eclipse help content for the Mylyn user guide">
+    <target name="all" depends="init" description="Generate Eclipse help content for the Mylyn user guide">
         <get dest="tmp/userguide.xml" src="${mylyn.userguide.url.xml}"/>
     	<get dest="tmp/userguide.html" src="${mylyn.userguide.url.html}"/>
     	
@@ -65,11 +46,13 @@
 			multipleOutputFiles="true"
 			navigationImages="true"
 			helpPrefix="userguide"
-			internallinkpattern="${mylyn.wiki.url.base}/{0}">
+			internallinkpattern="${mylyn.wiki.url.base}/{0}"
+			validate="true"
+			failonvalidationerror="true">
 			<fileset dir="tmp" includes="**/*.mediawiki"/>
 		</wikitext-to-eclipse-help>
     	
-		<copy todir="userguide">
+		<copy todir="userguide" overwrite="true">
 			<fileset dir="tmp">
 				<include name="*.gif"/>
 				<include name="*.png"/>
@@ -77,7 +60,36 @@
 				<include name="*toc.xml"/>
 				<exclude name="userguide.html"/>
 			</fileset>
-		</copy>    	
+		</copy>
+    	<antcall target="test"/>
     </target>
 
+	<target name="test" depends="init" description="verify that all of the HTML files are well-formed XML">
+		<echo level="info">
+Validating userguide XML and HTML files: The Eclipse help system expects well-formed XML
+			
+If validation fails it is because either:
+			
+* the userguide source code is poorly formed, or
+* the WikiText MediaWiki parser has a bug
+			
+Problems with userguide source are usually caused by improper use of HTML markup in the MediaWiki source,
+or inadvertently starting a line with a space character (in MediaWiki this starts a preformatted block)
+		</echo>
+
+		<!-- 
+		Don't bother with DTD validation: we only care if the files are well-formed.
+		We therefore provide an empty DTD 
+		-->
+		<echo file="tmp/__empty.dtd" message=""/>
+		<xmlvalidate lenient="true">
+			<fileset dir="userguide">
+				<include name="**/*.xml"/>
+			</fileset>
+			<fileset dir="userguide">
+				<include name="**/*.html"/>
+			</fileset>
+			<dtd publicid="-//W3C//DTD XHTML 1.0 Transitional//EN" location="${basedir}/tmp/__empty.dtd"/>
+		</xmlvalidate>
+	</target>
 </project>
