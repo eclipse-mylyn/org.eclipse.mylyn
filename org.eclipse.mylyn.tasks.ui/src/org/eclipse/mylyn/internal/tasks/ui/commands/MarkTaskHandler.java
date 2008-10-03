@@ -83,7 +83,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 			if (item instanceof ITask) {
 				ITask task = (ITask) item;
 				TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-				GoToUnreadTaskHandler.execute(event, org.eclipse.mylyn.internal.commons.ui.TreeWalker.Direction.DOWN);
+				GoToUnreadTaskHandler.execute(event, org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction.DOWN);
 			}
 		}
 	}
@@ -96,7 +96,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 			if (item instanceof ITask) {
 				ITask task = (ITask) item;
 				TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
-				GoToUnreadTaskHandler.execute(event, org.eclipse.mylyn.internal.commons.ui.TreeWalker.Direction.UP);
+				GoToUnreadTaskHandler.execute(event, org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.Direction.UP);
 			}
 		}
 	}
