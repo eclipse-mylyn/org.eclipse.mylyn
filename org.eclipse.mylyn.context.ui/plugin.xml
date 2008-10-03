@@ -47,18 +47,6 @@
 	  		enablesFor="*"/>
 	 </objectContribution> 
 	 
-	 <objectContribution
-            adaptable="false"
-            id="org.eclipse.mylyn.context.ui.task.attachment.contribution"
-            objectClass="org.eclipse.mylyn.internal.tasks.core.deprecated.RepositoryAttachment">
-         <action
-               class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
-               enablesFor="1"
-               icon="icons/etool16/context-retrieve.gif"
-               id="org.eclipse.mylyn.context.ui.repository.task.retrieve"
-               label="Retrieve Context"
-               menubarPath="actions"/>
-      </objectContribution>
 	 <!--
 	 <objectContribution
            adaptable="false"
