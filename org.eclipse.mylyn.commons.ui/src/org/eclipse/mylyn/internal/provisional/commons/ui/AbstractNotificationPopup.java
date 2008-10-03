@@ -60,9 +60,9 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	private static final String LABEL_JOB_CLOSE = "Close Notification Job";
 
-	private static final int DEFAULT_WIDTH = 400;
+	private static final int MAX_WIDTH = 400;
 
-	private static final int DEFAULT_HEIGHT = 100;
+	private static final int MIN_HEIGHT = 100;
 
 	private static final long DEFAULT_DELAY_CLOSE = 8 * 1000;
 
@@ -472,13 +472,11 @@ public abstract class AbstractNotificationPopup extends Window {
 	@Override
 	protected void initializeBounds() {
 		Rectangle clArea = getPrimaryClientArea();
-		int initialHeight = shell.computeSize(DEFAULT_WIDTH, SWT.DEFAULT).y;
-		int height = DEFAULT_HEIGHT;
-		if (DEFAULT_HEIGHT < initialHeight) {
-			height = initialHeight;
-		}
+		Point initialSize = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		int height = Math.max(initialSize.y, MIN_HEIGHT);
+		int width = Math.min(initialSize.x, MAX_WIDTH);
 
-		Point size = new Point(DEFAULT_WIDTH, height);
+		Point size = new Point(width, height);
 		shell.setLocation(clArea.width + clArea.x - size.x - PADDING_EDGE, clArea.height + clArea.y - size.y
 				- PADDING_EDGE);
 		shell.setSize(size);
