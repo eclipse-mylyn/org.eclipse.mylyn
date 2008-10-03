@@ -25,7 +25,7 @@
          <template name="+" description="%template.description.7" content="+${text}+ $"/>
          <template name="^" description="%template.description.8" content="^${text}^ $"/>
          <template name="~" description="%template.description.9" content="~${text}~ $"/>
-         <template name="%" description="%span%" content="%${text}% $"/>
+         <template name="%" description="%template.description.35" content="%${text}% $"/>
          
          <!-- block templates -->
          
@@ -48,9 +48,12 @@
          <template name="* " description="%template.description.26" content="\n* ${text}\n* ${text2}\n\n" block="true"/>
          <template name="** " description="%template.description.27" content="\n** ${text}\n** ${text2}\n\n" block="true"/>
          <template name="[" description="%template.description.28" content="[${number}] $" block="true"/>
-         <template name="|" description="Table" content="\n| ${text} | ${text2} |\n| ${text3} | ${text4} |\n\n" block="true"/>
-         <template name="|_." description="Table heading" content="\n|_. ${text} |_. ${text2} |\n" block="true"/>
-         
+         <template name="|" description="%template.description.31" content="\n| ${text} | ${text2} |\n| ${text3} | ${text4} |\n\n" block="true"/>
+         <template name="|_." description="%template.description.32" content="\n|_. ${text} |_. ${text2} |\n" block="true"/>
+
+		 <template name="!" description="%template.description.33" content="!${text}! $"/>
+		 <template name="&quot;" description="%template.description.34" content="&quot;${text}&quot;:{url} $"/>         
+
          <!-- generative templates -->
          <template name="{toc}" description="%template.description.29" content="\n{toc}\n\n" block="true"/>
          <template name="{glossary}" description="%template.description.30" content="\n{glossary}\n\n" block="true"/> 
