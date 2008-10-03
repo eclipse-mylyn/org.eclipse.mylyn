@@ -116,6 +116,11 @@ public class Segment<ChildType extends Segment<?>> {
 	@SuppressWarnings("unchecked")
 	public void replaceChildren(Segment<?> s) {
 		children = (Segments<ChildType>) s.children;
+		if (children != null) {
+			for (ChildType child : children.asList()) {
+				child.parent = this;
+			}
+		}
 		s.children = null;
 	}
 }

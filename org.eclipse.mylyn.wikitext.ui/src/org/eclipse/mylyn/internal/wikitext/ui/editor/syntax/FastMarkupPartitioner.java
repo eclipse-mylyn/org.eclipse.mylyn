@@ -65,9 +65,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 		}
 	}
 
-	static/**
-	 *
-	 */class PartitionTokenScanner implements IPartitionTokenScanner {
+	static class PartitionTokenScanner implements IPartitionTokenScanner {
 
 		private ITypedRegion[] regions = null;
 
@@ -79,9 +77,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 		private int lengthOfPartitions;
 
-		private static/**
-		 *
-		 */class OLP {
+		private static class OLP {
 			int offset;
 
 			int length;
@@ -176,9 +172,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 		}
 	}
 
-	public static/**
-	 *
-	 */class MarkupPartition implements ITypedRegion {
+	public static class MarkupPartition implements ITypedRegion {
 
 		private final Block block;
 
@@ -189,7 +183,6 @@ public class FastMarkupPartitioner extends FastPartitioner {
 		private List<Span> spans;
 
 		private MarkupPartition(Block block, int offset, int length) {
-
 			this.block = block;
 			this.offset = offset;
 			this.length = length;
@@ -233,11 +226,14 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			}
 		}
 
+		@Override
+		public String toString() {
+			return String.format("MarkupPartition(type=%s,offset=%s,length=%s,end=%s)", block.getType(), offset,
+					length, offset + length);
+		}
 	}
 
-	private static/**
-	 *
-	 */class PartitionBuilder extends DocumentBuilder {
+	private static class PartitionBuilder extends DocumentBuilder {
 
 		private final Block outerBlock = new Block(null, 0, Integer.MAX_VALUE / 2);
 
@@ -358,6 +354,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 							if (partition.length + partition.offset == parent.length + parent.offset) {
 								// end on the same offset, so shrink the parent
 								parent.length = partition.offset - parent.offset;
+								partitions.add(partition);
 							} else {
 								// split the parent
 								int parentLength = parent.length;
@@ -393,6 +390,12 @@ public class FastMarkupPartitioner extends FastPartitioner {
 			case TABLE_CELL_NORMAL:
 			case TABLE_ROW:
 				return true;
+			case PARAGRAPH:
+				// bug 249615: ignore paras that are nested inside a quote block
+				if (block.getParent() != null && block.getParent().getType() == BlockType.QUOTE) {
+					return true;
+				}
+				break;
 			case BULLETED_LIST:
 			case NUMERIC_LIST:
 			case DEFINITION_LIST:

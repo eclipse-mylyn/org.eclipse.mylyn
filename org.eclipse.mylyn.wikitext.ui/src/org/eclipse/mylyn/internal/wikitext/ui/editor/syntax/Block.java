@@ -98,7 +98,7 @@ public class Block extends Segment<Segment<?>> {
 		buf.append("\" length=\"");
 		buf.append(getLength());
 		buf.append('"');
-		if (getChildren().isEmpty()) {
+		if (getChildren() == null || getChildren().isEmpty()) {
 			buf.append("/>\n");
 		} else {
 			buf.append(">\n");
