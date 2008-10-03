@@ -16,7 +16,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -29,13 +32,65 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
- * validate markup given a set of rules (stand-alone, outside of an Eclipse environment)
+ * Validate markup given a set of rules (stand-alone, outside of an Eclipse environment)
  * 
  * @author David Green
  */
 public class StandaloneMarkupValidator {
 
-	private final List<ValidationRule> rules = new ArrayList<ValidationRule>();
+	private static Map<ClassLoader, Map<String, StandaloneMarkupValidator>> validatorCacheByClassLoader = new WeakHashMap<ClassLoader, Map<String, StandaloneMarkupValidator>>();
+
+	private List<ValidationRule> rules = new ArrayList<ValidationRule>();
+
+	private ClassLoader classLoader;
+
+	private boolean immutable;
+
+	/**
+	 * Get the default validator for the specified markup language. Validators that are returned by this method are
+	 * immutable and thread-safe
+	 * 
+	 * @param markupLanguage
+	 *            the markup language for which a validator is desired
+	 * 
+	 * @return the validator
+	 */
+	public static StandaloneMarkupValidator getValidator(String markupLanguage) {
+		// For correctness we cache validators by class loader.  This is necessary for usage
+		// in a container where the calling class loader could affect the rules that are loaded.
+		// Also we use a weak hash map so that class loaders can be GC'd
+		ClassLoader classLoader = computeClassLoader();
+		synchronized (StandaloneMarkupValidator.class) {
+			Map<String, StandaloneMarkupValidator> validatorByMarkupLanguage = validatorCacheByClassLoader.get(classLoader);
+			if (validatorByMarkupLanguage == null) {
+				validatorByMarkupLanguage = new HashMap<String, StandaloneMarkupValidator>();
+				validatorCacheByClassLoader.put(classLoader, validatorByMarkupLanguage);
+			}
+			StandaloneMarkupValidator validator = validatorByMarkupLanguage.get(markupLanguage);
+			if (validator == null) {
+				validator = new StandaloneMarkupValidator();
+				validator.computeRules(markupLanguage);
+				validator.setImmutable();
+				validatorByMarkupLanguage.put(markupLanguage, validator);
+			}
+			return validator;
+		}
+	}
+
+	private static ClassLoader computeClassLoader() {
+		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+		if (contextClassLoader != null) {
+			return contextClassLoader;
+		}
+		return StandaloneMarkupValidator.class.getClassLoader();
+	}
+
+	private void setImmutable() {
+		if (!immutable) {
+			this.immutable = true;
+			rules = Collections.unmodifiableList(rules);
+		}
+	}
 
 	public List<ValidationProblem> validate(String markup) {
 		return validate(markup, 0, markup.length());
@@ -76,7 +131,13 @@ public class StandaloneMarkupValidator {
 		return rules;
 	}
 
+	/**
+	 * Compute rules for a markup language based on looking them up in the available plugin.xml files
+	 * 
+	 * @param markupLanguage
+	 */
 	public void computeRules(String markupLanguage) {
+		// NOTE: we load plugin.xml files here directly since we assume that we're not running in an Eclipse (OSGi) container.
 		try {
 			Enumeration<URL> resources = getClassLoader().getResources("plugin.xml");
 			while (resources.hasMoreElements()) {
@@ -88,7 +149,15 @@ public class StandaloneMarkupValidator {
 		}
 	}
 
-	private void computeRules(String markupLanguage, URL url) {
+	/**
+	 * compute rules for the specified markup language given an URL to a plugin.xml
+	 * 
+	 * @param markupLanguage
+	 *            the markup language for which rules should be loaded
+	 * @param url
+	 *            the URL to the plugin.xml that specifies the rules
+	 */
+	public void computeRules(String markupLanguage, URL url) {
 		try {
 			InputStream in = url.openStream();
 			try {
@@ -111,7 +180,7 @@ public class StandaloneMarkupValidator {
 		}
 	}
 
-	private void computeRules(String markupLanguage, Document pluginXml) {
+	void computeRules(String markupLanguage, Document pluginXml) {
 		for (Node child = pluginXml.getDocumentElement().getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child.getNodeType() == Node.ELEMENT_NODE && child.getLocalName().equals("extension")) {
 				Element element = (Element) child;
@@ -137,11 +206,19 @@ public class StandaloneMarkupValidator {
 	}
 
 	private ClassLoader getClassLoader() {
-		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-		if (contextClassLoader != null) {
-			return contextClassLoader;
+		if (classLoader != null) {
+			return classLoader;
 		}
-		return StandaloneMarkupValidator.class.getClassLoader();
+		return computeClassLoader();
 	}
 
+	/**
+	 * for testing purposes, set the class loader to use when loading validation rules
+	 */
+	public void setClassLoader(ClassLoader classLoader) {
+		if (immutable) {
+			throw new IllegalStateException();
+		}
+		this.classLoader = classLoader;
+	}
 }

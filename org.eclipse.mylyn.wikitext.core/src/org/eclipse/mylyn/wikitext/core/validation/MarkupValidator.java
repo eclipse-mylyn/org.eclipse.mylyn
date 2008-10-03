@@ -15,11 +15,14 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylyn.internal.wikitext.core.validation.StandaloneMarkupValidator;
 
 /**
- * validate markup given a set of rules
+ * Validate markup given a set of rules
  * 
  * @author David Green
+ * 
+ * @see StandaloneMarkupValidator
  */
 public class MarkupValidator {
 

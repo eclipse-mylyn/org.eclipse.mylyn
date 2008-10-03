@@ -143,8 +143,7 @@ public abstract class MarkupTask extends Task {
 		}
 		log(String.format("Validating %s", source), Project.MSG_VERBOSE);
 
-		StandaloneMarkupValidator markupValidator = new StandaloneMarkupValidator();
-		markupValidator.computeRules(markupLanguage);
+		StandaloneMarkupValidator markupValidator = StandaloneMarkupValidator.getValidator(markupLanguage);
 
 		List<ValidationProblem> problems = markupValidator.validate(markupContent);
 

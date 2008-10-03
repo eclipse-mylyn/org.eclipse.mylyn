@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+A plugin.xml used for testing with org.eclipse.mylyn.internal.wikitext.core.validation.StandaloneMarkupValidatorTest
+-->
+<plugin>
+ <extension
+       point="org.eclipse.mylyn.wikitext.core.markupValidationRule">
+    <rule
+          class="org.eclipse.mylyn.internal.wikitext.core.validation.TestMarkupValidationRule"
+          markupLanguage="TestMarkupLanguage">
+    </rule>
+ </extension>	
+</plugin>
