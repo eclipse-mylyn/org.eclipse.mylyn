@@ -76,7 +76,6 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	}
 
 	public static class MarkTaskReadGoToNextUnreadTaskHandler extends AbstractTaskListViewHandler {
-		@SuppressWarnings("restriction")
 		@Override
 		protected void execute(ExecutionEvent event, TaskListView taskListView, IRepositoryElement item)
 				throws ExecutionException {
@@ -89,7 +88,6 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 	}
 
 	public static class MarkTaskReadGoToPreviousUnreadTaskHandler extends AbstractTaskListViewHandler {
-		@SuppressWarnings("restriction")
 		@Override
 		protected void execute(ExecutionEvent event, TaskListView taskListView, IRepositoryElement item)
 				throws ExecutionException {

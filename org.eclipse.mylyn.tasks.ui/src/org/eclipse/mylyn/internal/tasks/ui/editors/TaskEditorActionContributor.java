@@ -378,6 +378,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		bars.updateActionBars();
 	}
 
+	@SuppressWarnings("unused")
 	private void unregisterGlobalHandlers(IActionBars bars) {
 		bars.setGlobalActionHandler(ActionFactory.CUT.getId(), null);
 		bars.setGlobalActionHandler(ActionFactory.PASTE.getId(), null);

@@ -73,7 +73,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
-import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -377,7 +376,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// }
 		// }
 		setControl(control);
-		WorkbenchHelpSystem.getInstance().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
 	}
 
 	protected void createOptionsGroup(Composite control) {
