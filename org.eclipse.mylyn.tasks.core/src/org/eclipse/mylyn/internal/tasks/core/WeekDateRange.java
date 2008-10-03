@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,15 @@ import java.util.List;
  */
 public class WeekDateRange extends DateRange {
 
-	private final List<DateRange> days = new ArrayList<DateRange>();
+	private static final String DESCRIPTION_WEEK_AFTER_NEXT = "Two Weeks";
+
+	private static final String DESCRIPTION_PREVIOUS_WEEK = "Previous Week";
+
+	private static final String DESCRIPTION_THIS_WEEK = "Someday This Week";
+
+	private static final String DESCRIPTION_NEXT_WEEK = "Someday Next Week";
+
+	private final List<DayDateRange> days = new ArrayList<DayDateRange>();
 
 	public WeekDateRange(Calendar startDate, Calendar endDate) {
 		super(startDate, endDate);
@@ -36,7 +44,7 @@ public class WeekDateRange extends DateRange {
 		return remainingDays;
 	}
 
-	public List<DateRange> getDaysOfWeek() {
+	public List<DayDateRange> getDaysOfWeek() {
 		if (days.isEmpty()) {
 			for (int x = TaskActivityUtil.getStartDay(); x < (TaskActivityUtil.getStartDay() + 7); x++) {
 				Calendar dayStart = TaskActivityUtil.getCalendar();
@@ -55,7 +63,7 @@ public class WeekDateRange extends DateRange {
 					dayEnd.set(Calendar.DAY_OF_WEEK, x);
 				}
 
-				days.add(new DateRange(dayStart, dayEnd));
+				days.add(new DayDateRange(dayStart, dayEnd));
 			}
 		}
 		return days;
@@ -64,10 +72,10 @@ public class WeekDateRange extends DateRange {
 	/**
 	 * @return today's DayDateRange, null if does not exist (now > endDate)
 	 */
-	public DateRange getToday() {
-		DateRange today = null;
+	public DayDateRange getToday() {
+		DayDateRange today = null;
 		Calendar now = TaskActivityUtil.getCalendar();
-		for (DateRange range : getDaysOfWeek()) {
+		for (DayDateRange range : getDaysOfWeek()) {
 			if (range.includes(now)) {
 				today = range;
 				break;
@@ -78,7 +86,7 @@ public class WeekDateRange extends DateRange {
 			TaskActivityUtil.snapStartOfDay(todayStart);
 			Calendar todayEnd = TaskActivityUtil.getCalendar();
 			TaskActivityUtil.snapEndOfDay(todayEnd);
-			today = new DateRange(todayStart, todayEnd);
+			today = new DayDateRange(todayStart, todayEnd);
 		}
 		return today;
 	}
@@ -90,6 +98,57 @@ public class WeekDateRange extends DateRange {
 		return getDaysOfWeek().contains(range);
 	}
 
+	private boolean isNextWeek() {
+		return TaskActivityUtil.getNextWeek().compareTo(this) == 0;
+	}
+
+	public boolean isThisWeek() {
+		//if (isWeek()) {
+		return this.includes(Calendar.getInstance());
+		//}
+		//return false;
+	}
+
+	private boolean isPreviousWeek() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.WEEK_OF_YEAR, -1);
+		return this.includes(cal);
+	}
+
+	private boolean isWeekAfterNext() {
+		return TaskActivityUtil.getNextWeek().next().compareTo(this) == 0;
+	}
+
+	public WeekDateRange next() {
+		return create(Calendar.WEEK_OF_YEAR, 1);
+	}
+
+	public WeekDateRange previous() {
+		return create(Calendar.WEEK_OF_YEAR, -1);
+	}
+
+	protected WeekDateRange create(int field, int multiplier) {
+		Calendar previousStart = (Calendar) getStartDate().clone();
+		Calendar previousEnd = (Calendar) getEndDate().clone();
+		previousStart.add(field, 1 * multiplier);
+		previousEnd.add(field, 1 * multiplier);
+		return new WeekDateRange(previousStart, previousEnd);
+	}
+
+	@Override
+	public String toString(boolean useDayOfWeekForNextWeek) {
+		if (isWeekAfterNext()) {
+			return DESCRIPTION_WEEK_AFTER_NEXT;
+		} else if (isThisWeek()) {
+			return DESCRIPTION_THIS_WEEK;
+		} else if (isNextWeek()) {
+			return DESCRIPTION_NEXT_WEEK;
+		} else if (isPreviousWeek()) {
+			return DESCRIPTION_PREVIOUS_WEEK;
+		}
+		return super.toString(useDayOfWeekForNextWeek);
+	}
+
 	public DateRange getDayOfWeek(int dayNum) {
 		if (dayNum > 0 && dayNum <= 7) {
 			for (DateRange day : getDaysOfWeek()) {
@@ -98,6 +157,10 @@ public class WeekDateRange extends DateRange {
 				}
 			}
 		}
-		return null;
+		throw new IllegalArgumentException("Valid day values are 1 - 7");
+	}
+
+	public static boolean isWeekRange(Calendar calStart, Calendar calEnd) {
+		return ((calEnd.getTimeInMillis() - calStart.getTimeInMillis()) == (DAY * 7) - 1);
 	}
 }

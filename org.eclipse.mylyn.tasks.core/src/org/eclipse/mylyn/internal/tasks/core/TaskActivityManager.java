@@ -328,7 +328,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 			Set<ITask> result = scheduledTasks.get(range);
 			if (result != null && !result.isEmpty()) {
 				resultingTasks.addAll(result);
-			} else if (!range.isWeek()) {
+			} else if (!(range instanceof WeekDateRange)) {
 				return getScheduledTasks(range.getStartDate(), range.getEndDate());
 			}
 		}
@@ -627,7 +627,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 		if (date == null || isComplete) {
 			return false;
 		} else {
-			if (date.getEndDate().compareTo(TaskActivityUtil.getCalendar()) < 0 && date.isDay()) {
+			if (date.getEndDate().compareTo(TaskActivityUtil.getCalendar()) < 0 && date instanceof DayDateRange) {
 				return true;
 			} else {
 				return false;
@@ -733,7 +733,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 
 	private boolean isSheduledForPastWeek(DateRange range) {
 		if (range != null) {
-			return range.isWeek() && range.isPast();
+			return (range instanceof WeekDateRange && range.isPast());
 		}
 		return false;
 	}

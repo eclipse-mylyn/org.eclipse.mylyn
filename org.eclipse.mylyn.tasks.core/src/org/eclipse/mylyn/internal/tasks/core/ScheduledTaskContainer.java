@@ -54,14 +54,16 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		return range.getStartDate().before(Calendar.getInstance()) && range.getEndDate().after(Calendar.getInstance());
 	}
 
-	public boolean isWeekDay() {
-		return TaskActivityUtil.getCurrentWeek().isCurrentWeekDay(range);
-	}
+//	public boolean isWeekDay() {
+//		return TaskActivityUtil.getCurrentWeek().isCurrentWeekDay(range);
+//	}
 
-	public boolean isToday() {
-		return isPresent()
-				&& range.getStartDate().get(Calendar.DAY_OF_YEAR) == range.getEndDate().get(Calendar.DAY_OF_YEAR);
-	}
+//	public boolean isToday() {
+//		if (range instanceof DayDateRange) {
+//			return ((DayDateRange) range).isToday();
+//		}
+//		return false;
+//	}
 
 //	public Collection<ITask> getChildren() {
 //		Set<ITask> children = new HashSet<ITask>();
@@ -131,7 +133,7 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		}
 
 		// Add due tasks if not the This Week container
-		if (!(range instanceof WeekDateRange && isPresent())) {
+		if (!(range instanceof WeekDateRange && ((WeekDateRange) range).isPresent())) {
 			for (ITask task : activityManager.getDueTasks(range.getStartDate(), range.getEndDate())) {
 				if (activityManager.isOwnedByUser(task)) {
 					children.add(task);
@@ -140,9 +142,10 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 		}
 
 		// All over due/scheduled tasks are present in the Today folder
-		if (isToday()) {
+		if ((range instanceof DayDateRange) && ((DayDateRange) range).isPresent()) {
 			for (ITask task : activityManager.getOverScheduledTasks()) {
-				if (task instanceof AbstractTask && !((AbstractTask) task).getScheduledForDate().isWeek()) {
+				if (task instanceof AbstractTask
+						&& !(((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange)) {
 					children.add(task);
 				}
 			}
@@ -154,9 +157,10 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 			}
 		}
 
-		if (range.isThisWeek()) {
+		if (range instanceof WeekDateRange && ((WeekDateRange) range).isThisWeek()) {
 			for (ITask task : activityManager.getOverScheduledTasks()) {
-				if (task instanceof AbstractTask && ((AbstractTask) task).getScheduledForDate().isWeek()) {
+				if (task instanceof AbstractTask
+						&& ((AbstractTask) task).getScheduledForDate() instanceof WeekDateRange) {
 					children.add(task);
 				}
 			}

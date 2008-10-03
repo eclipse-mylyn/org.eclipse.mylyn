@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
@@ -128,7 +129,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 		if (scheduleDatePicker != null && scheduleDatePicker.getScheduledDate() != null) {
 			if (task.getScheduledForDate() == null
 					|| (task.getScheduledForDate() != null && !scheduleDatePicker.getScheduledDate().equals(
-							task.getScheduledForDate())) || (task).getScheduledForDate().isDay()) {
+							task.getScheduledForDate())) || (task).getScheduledForDate() instanceof DayDateRange) {
 				TasksUiPlugin.getTaskActivityManager().setScheduledFor(task, scheduleDatePicker.getScheduledDate());
 				(task).setReminded(false);
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.internal.tasks.core.DateRange;
+import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
@@ -47,6 +47,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.core.deprecated.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListMigrator;
 import org.eclipse.mylyn.tasks.core.IAttributeContainer;
@@ -615,7 +616,14 @@ public final class DelegatingTaskExternalizer {
 				calStart.setTime(startDate);
 				Calendar calEnd = TaskActivityUtil.getCalendar();
 				calEnd.setTime(endDate);
-				task.setScheduledForDate(new DateRange(calStart, calEnd));
+				if (DayDateRange.isDayRange(calStart, calEnd)) {
+					task.setScheduledForDate(new DayDateRange(calStart, calEnd));
+				} else if (WeekDateRange.isWeekRange(calStart, calEnd)) {
+					task.setScheduledForDate(new WeekDateRange(calStart, calEnd));
+				} else {
+					// Neither week nor day found, default to today 
+					task.setScheduledForDate(TaskActivityUtil.getDayOf(new Date()));
+				}
 			}
 		}
 		if (element.hasAttribute(KEY_REMINDED) && element.getAttribute(KEY_REMINDED).compareTo(VAL_TRUE) == 0) {

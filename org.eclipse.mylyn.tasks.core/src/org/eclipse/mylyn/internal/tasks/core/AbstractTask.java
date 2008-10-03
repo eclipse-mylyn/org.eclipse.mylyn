@@ -397,7 +397,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 	 */
 	@Deprecated
 	public boolean isPastReminder() {
-		if (isCompleted() || scheduledForDate == null || !getScheduledForDate().isDay()) {
+		if (isCompleted() || scheduledForDate == null || !(getScheduledForDate() instanceof DayDateRange)) {
 			return false;
 		} else {
 			if (/*!internalIsFloatingScheduledDate() && */scheduledForDate.getEndDate().compareTo(

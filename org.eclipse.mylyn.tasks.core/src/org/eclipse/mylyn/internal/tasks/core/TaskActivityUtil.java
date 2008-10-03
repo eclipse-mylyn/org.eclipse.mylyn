@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -239,7 +239,7 @@ public class TaskActivityUtil {
 		return new WeekDateRange(weekStart, weekEnd);
 	}
 
-	public static DateRange getWeekOf(Date date) {
+	public static WeekDateRange getWeekOf(Date date) {
 		Calendar weekStart = getCalendar();
 		weekStart.setTime(date);
 		Calendar weekEnd = getCalendar();
@@ -250,7 +250,7 @@ public class TaskActivityUtil {
 		return new WeekDateRange(weekStart, weekEnd);
 	}
 
-	public static DateRange getDayOf(Date date) {
+	public static DayDateRange getDayOf(Date date) {
 		Calendar dayStart = getCalendar();
 		dayStart.setTime(date);
 		Calendar dayEnd = getCalendar();
@@ -258,6 +258,6 @@ public class TaskActivityUtil {
 
 		snapStartOfDay(dayStart);
 		snapEndOfDay(dayEnd);
-		return new DateRange(dayStart, dayEnd);
+		return new DayDateRange(dayStart, dayEnd);
 	}
 }

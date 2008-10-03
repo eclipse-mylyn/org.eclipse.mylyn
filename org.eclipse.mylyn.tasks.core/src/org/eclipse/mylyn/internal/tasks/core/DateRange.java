@@ -21,16 +21,7 @@ import org.eclipse.core.runtime.Assert;
  * @since 3.0
  */
 public class DateRange implements Comparable<DateRange> {
-
-	private static final long DAY = 1000 * 60 * 60 * 24;
-
-	private static final String DESCRIPTION_PREVIOUS_WEEK = "Previous Week";
-
-	private static final String DESCRIPTION_THIS_WEEK = "Someday This Week";
-
-	private static final String DESCRIPTION_NEXT_WEEK = "Someday Next Week";
-
-	private static final String DESCRIPTION_WEEK_AFTER_NEXT = "Two Weeks";
+	protected static final long DAY = 1000 * 60 * 60 * 24;
 
 	private final Calendar startDate;
 
@@ -78,113 +69,36 @@ public class DateRange implements Comparable<DateRange> {
 	}
 
 	public String toString(boolean useDayOfWeekForNextWeek) {
-		boolean isThisWeek = TaskActivityUtil.getCurrentWeek().includes(this);
-		Calendar endNextWeek = TaskActivityUtil.getCalendar();
-		endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
-		boolean isNextWeek = TaskActivityUtil.getNextWeek().includes(this) && this.before(endNextWeek);
-		if (isDay() && (isThisWeek || (useDayOfWeekForNextWeek && isNextWeek))) {
-			String day = "";
-			switch (getStartDate().get(Calendar.DAY_OF_WEEK)) {
-			case Calendar.MONDAY:
-				day = "Monday";
-				break;
-			case Calendar.TUESDAY:
-				day = "Tuesday";
-				break;
-			case Calendar.WEDNESDAY:
-				day = "Wednesday";
-				break;
-			case Calendar.THURSDAY:
-				day = "Thursday";
-				break;
-			case Calendar.FRIDAY:
-				day = "Friday";
-				break;
-			case Calendar.SATURDAY:
-				day = "Saturday";
-				break;
-			case Calendar.SUNDAY:
-				day = "Sunday";
-				break;
-			}
-			if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == getStartDate().get(Calendar.DAY_OF_WEEK)) {
-				return day + " - Today";
-			} else {
-				return day;
-			}
-		} else if (isThisWeek()) {
-			return DESCRIPTION_THIS_WEEK;
-		} else if (isNextWeek()) {
-			return DESCRIPTION_NEXT_WEEK;
-		} else if (isWeekAfterNext()) {
-			return DESCRIPTION_WEEK_AFTER_NEXT;
-		} else if (isPreviousWeek()) {
-			return DESCRIPTION_PREVIOUS_WEEK;
-		}
 		return DateFormat.getDateInstance(DateFormat.MEDIUM).format(startDate.getTime());
 		/* + " to "+ DateFormat.getDateInstance(DateFormat.MEDIUM).format(endDate.getTime());*/
 	}
 
-	private boolean isWeekAfterNext() {
-		return TaskActivityUtil.getCurrentWeek().next().next().compareTo(this) == 0;
-	}
+//	protected DateRange create(int field, int multiplier) {
+//		Calendar previousStart = (Calendar) getStartDate().clone();
+//		Calendar previousEnd = (Calendar) getEndDate().clone();
+//		previousStart.add(field, 1 * multiplier);
+//		previousEnd.add(field, 1 * multiplier);
+//		return new DateRange(previousStart, previousEnd);
+//	}
 
-	public DateRange next() {
-		if (isDay()) {
-			return create(Calendar.DAY_OF_YEAR, 1);
-		} else if (isWeek()) {
-			return create(Calendar.WEEK_OF_YEAR, 1);
-		}
-		return null;
-	}
+//	public boolean isDay() {
+//		return ((getEndDate().getTimeInMillis() - getStartDate().getTimeInMillis()) == DAY - 1);
+//	}
+//
+//	public boolean isWeek() {
+//		return ((getEndDate().getTimeInMillis() - getStartDate().getTimeInMillis()) == (DAY * 7) - 1);
+//	}
 
-	public DateRange previous() {
-		if (isDay()) {
-			return create(Calendar.DAY_OF_YEAR, -1);
-		} else if (isWeek()) {
-			return create(Calendar.WEEK_OF_YEAR, -1);
-		}
-		return null;
-	}
-
-	private DateRange create(int field, int multiplier) {
-		Calendar previousStart = (Calendar) getStartDate().clone();
-		Calendar previousEnd = (Calendar) getEndDate().clone();
-		previousStart.add(field, 1 * multiplier);
-		previousEnd.add(field, 1 * multiplier);
-		return new DateRange(previousStart, previousEnd);
-	}
-
-	private boolean isNextWeek() {
-		return TaskActivityUtil.getCurrentWeek().next().compareTo(this) == 0;
-	}
-
-	public boolean isThisWeek() {
-		if (isWeek()) {
-			return this.includes(Calendar.getInstance());
-		}
-		return false;
-	}
-
-	private boolean isPreviousWeek() {
-		if (isWeek()) {
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.WEEK_OF_YEAR, -1);
-			return this.includes(cal);
-		}
-		return false;
-	}
-
-	public boolean isDay() {
-		return ((getEndDate().getTimeInMillis() - getStartDate().getTimeInMillis()) == DAY - 1);
-	}
-
-	public boolean isWeek() {
-		return ((getEndDate().getTimeInMillis() - getStartDate().getTimeInMillis()) == (DAY * 7) - 1);
+	public boolean isPresent() {
+		return this.getStartDate().before(Calendar.getInstance()) && this.getEndDate().after(Calendar.getInstance());
 	}
 
 	public boolean isPast() {
 		return getEndDate().compareTo(Calendar.getInstance()) < 0;
+	}
+
+	public boolean isFuture() {
+		return !isPresent() && this.getStartDate().after(Calendar.getInstance());
 	}
 
 	public boolean isBefore(DateRange scheduledDate) {
