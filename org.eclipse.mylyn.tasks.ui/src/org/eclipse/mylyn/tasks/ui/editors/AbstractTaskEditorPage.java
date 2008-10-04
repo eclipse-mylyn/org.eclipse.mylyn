@@ -180,6 +180,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					}
 					TasksUiInternal.getTaskList().addTask(newTask, parent);
 					ITask oldTask = getTask();
+
+					// migrate task details
 					if (oldTask instanceof AbstractTask && newTask instanceof AbstractTask) {
 						((AbstractTask) newTask).setNotes(((AbstractTask) oldTask).getNotes());
 						DateRange scheduledDate = ((AbstractTask) oldTask).getScheduledForDate();
@@ -189,13 +191,14 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						((AbstractTask) newTask).setEstimatedTimeHours(((AbstractTask) oldTask).getEstimatedTimeHours());
 					}
 
+					// migrate context
 					ContextCorePlugin.getContextStore().saveActiveContext();
 					ContextCore.getContextStore().cloneContext(oldTask.getHandleIdentifier(),
 							newTask.getHandleIdentifier());
 
+					// migrate task activity
 					ChangeActivityHandleOperation operation = new ChangeActivityHandleOperation(
 							oldTask.getHandleIdentifier(), newTask.getHandleIdentifier());
-
 					try {
 						operation.run(new NullProgressMonitor());
 					} catch (InvocationTargetException e) {
@@ -205,7 +208,13 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						// ignore
 					}
 
+					boolean active = oldTask.isActive();
+					if (active) {
+						TasksUi.getTaskActivityManager().deactivateTask(oldTask);
+					}
 					close();
+
+					// delete old task details
 					TasksUiInternal.getTaskList().deleteTask(oldTask);
 					ContextCore.getContextManager().deleteContext(oldTask.getHandleIdentifier());
 					try {
@@ -213,6 +222,10 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					} catch (CoreException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 								"Failed to delete task data", e));
+					}
+
+					if (active) {
+						TasksUi.getTaskActivityManager().activateTask(newTask);
 					}
 					TasksUiInternal.openTaskInBackground(newTask, false);
 				}
