@@ -54,11 +54,11 @@ public class DatePicker extends Composite {
 
 	public static final String LABEL_CHOOSE = "Choose Date";
 
-	private Text dateText = null;
+	private Text dateText;
 
-	private Button pickButton = null;
+	private Button pickButton;
 
-	private Calendar date = null;
+	private Calendar date;
 
 	private final List<SelectionListener> pickerListeners = new LinkedList<SelectionListener>();
 
@@ -104,7 +104,6 @@ public class DatePicker extends Composite {
 		GridData dateTextGridData = new GridData(SWT.FILL, SWT.FILL, false, false);
 		dateTextGridData.grabExcessHorizontalSpace = true;
 		dateTextGridData.verticalAlignment = SWT.FILL;
-		dateTextGridData.verticalIndent = 0;
 
 		dateText.setLayoutData(dateTextGridData);
 		dateText.setText(initialText);
@@ -197,6 +196,7 @@ public class DatePicker extends Composite {
 	@Override
 	public void setBackground(Color backgroundColor) {
 		dateText.setBackground(backgroundColor);
+		pickButton.setBackground(backgroundColor);
 		super.setBackground(backgroundColor);
 	}
 
