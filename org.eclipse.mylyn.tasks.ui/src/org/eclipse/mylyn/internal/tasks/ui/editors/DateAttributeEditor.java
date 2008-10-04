@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,10 +59,12 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 		} else {
 			Composite dateWithClearComposite = toolkit.createComposite(composite);
 			GridLayout layout = new GridLayout(2, false);
+			layout.marginHeight = 2;
 			layout.marginWidth = 1;
+			layout.verticalSpacing = 2;
+			layout.horizontalSpacing = 2;
 			dateWithClearComposite.setLayout(layout);
-
-			datePicker = new DatePicker(dateWithClearComposite, SWT.BORDER | SWT.FLAT, getTextValue(), false, 0);
+			datePicker = new DatePicker(dateWithClearComposite, SWT.FLAT, getTextValue(), false, 0);
 			datePicker.setFont(EditorUtil.TEXT_FONT);
 			datePicker.setDateFormat(EditorUtil.getDateFormat());
 			if (getValue() != null) {
@@ -87,6 +89,8 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			});
 
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(datePicker);
+			datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			toolkit.adapt(datePicker, false, false);
 
 			ImageHyperlink clearDeadlineDate = toolkit.createImageHyperlink(dateWithClearComposite, SWT.NONE);
 			clearDeadlineDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
@@ -100,6 +104,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 			});
 
+			toolkit.paintBordersFor(dateWithClearComposite);
 			setControl(dateWithClearComposite);
 		}
 	}
