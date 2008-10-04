@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -266,6 +266,33 @@ public class TaskAttachmentMapper {
 		if (url != null) {
 			taskAttachment.setUrl(getUrl());
 		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TaskAttachmentMapper)) {
+			return false;
+		}
+		TaskAttachmentMapper other = (TaskAttachmentMapper) obj;
+		if (!other.attachmentId.equals(this.attachmentId)) {
+			return false;
+		}
+		if (!(other.deprecated == this.deprecated)) {
+			return false;
+		}
+		if (!(other.patch == this.patch)) {
+			return false;
+		}
+		if (!other.description.equals(this.description)) {
+			return false;
+		}
+		if (!other.contentType.equals(this.contentType)) {
+			return false;
+		}
+		if (!other.fileName.equals(this.fileName)) {
+			return false;
+		}
+		return true;
 	}
 
 }

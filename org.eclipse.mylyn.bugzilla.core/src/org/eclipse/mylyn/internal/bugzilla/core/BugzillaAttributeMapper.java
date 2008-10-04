@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 
@@ -269,4 +270,17 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 		}
 		return super.getOptions(attribute);
 	}
+
+	@Override
+	public boolean equals(TaskAttribute newAttribute, TaskAttribute oldAttribute) {
+		if (oldAttribute.getId().startsWith(TaskAttribute.PREFIX_ATTACHMENT)) {
+			TaskAttachmentMapper oldAttachment;
+			oldAttachment = TaskAttachmentMapper.createFrom(oldAttribute);
+			TaskAttachmentMapper newAttachment;
+			newAttachment = TaskAttachmentMapper.createFrom(newAttribute);
+			return newAttachment.equals(oldAttachment);
+		}
+		return super.equals(newAttribute, oldAttribute);
+	}
+
 }
