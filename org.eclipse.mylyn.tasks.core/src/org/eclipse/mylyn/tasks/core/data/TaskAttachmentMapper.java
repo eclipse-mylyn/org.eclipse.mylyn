@@ -274,22 +274,22 @@ public class TaskAttachmentMapper {
 			return false;
 		}
 		TaskAttachmentMapper other = (TaskAttachmentMapper) obj;
-		if (!other.attachmentId.equals(this.attachmentId)) {
+		if ((other.attachmentId != null && this.attachmentId != null) && !other.attachmentId.equals(this.attachmentId)) {
 			return false;
 		}
-		if (!(other.deprecated == this.deprecated)) {
+		if ((other.deprecated != null && this.deprecated != null) && !(other.deprecated == this.deprecated)) {
 			return false;
 		}
-		if (!(other.patch == this.patch)) {
+		if ((other.patch != null && this.patch != null) && !(other.patch == this.patch)) {
 			return false;
 		}
-		if (!other.description.equals(this.description)) {
+		if ((other.description != null && this.description != null) && !other.description.equals(this.description)) {
 			return false;
 		}
-		if (!other.contentType.equals(this.contentType)) {
+		if ((other.contentType != null && this.contentType != null) && !other.contentType.equals(this.contentType)) {
 			return false;
 		}
-		if (!other.fileName.equals(this.fileName)) {
+		if ((other.fileName != null && this.fileName != null) && !other.fileName.equals(this.fileName)) {
 			return false;
 		}
 		return true;
