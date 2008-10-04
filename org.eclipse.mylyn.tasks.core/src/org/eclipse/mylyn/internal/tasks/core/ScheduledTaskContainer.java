@@ -127,7 +127,8 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 		// All tasks scheduled for this date range
 		for (ITask task : activityManager.getScheduledTasks(range)) {
-			if (!task.isCompleted()) {
+			if (!task.isCompleted()
+					|| (task.isCompleted() && TaskActivityUtil.getDayOf(task.getCompletionDate()).isPresent())) {
 				children.add(task);
 			}
 		}
