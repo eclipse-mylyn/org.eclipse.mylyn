@@ -143,6 +143,8 @@ public class MediaWikiLanguage extends MarkupLanguage {
 	 */
 	public String toInternalHref(String pageName) {
 		String pageId = pageName.replace(' ', '_');
+		// FIXME: other character encodings occur here, not just ' '
+
 		if (pageId.startsWith(":")) { // category
 			pageId = pageId.substring(1);
 		} else if (pageId.startsWith("#")) {
