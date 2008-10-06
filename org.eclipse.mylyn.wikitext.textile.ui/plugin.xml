@@ -25,7 +25,7 @@
          <template name="+" description="%template.description.7" content="+${text}+ $"/>
          <template name="^" description="%template.description.8" content="^${text}^ $"/>
          <template name="~" description="%template.description.9" content="~${text}~ $"/>
-         <template name="%" description="%template.description.35" content="%${text}% $"/>
+         <template name="%" description="%template.description.35" content="%%${text}% $"/>
          
          <!-- block templates -->
          
