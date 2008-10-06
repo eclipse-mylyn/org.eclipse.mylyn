@@ -17,6 +17,7 @@
          <template name="'''" description="%template.description.0" content="'''${text}''' $"/>
          <template name="''" description="%template.description.1" content="''${text}'' $"/>
          <template name="'''''" description="%template.description.2" content="'''''${text}''''' $"/>
+         <template name="&lt;!--" description="%template.description.14" content="&lt;!-- ${text} --&gt;"/>
          
          <!-- block templates -->
          
