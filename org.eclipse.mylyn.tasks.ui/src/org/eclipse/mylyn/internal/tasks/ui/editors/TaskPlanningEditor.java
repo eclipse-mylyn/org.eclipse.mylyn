@@ -481,13 +481,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		String creationDateString = "";
-		try {
-			creationDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCreationDate());
-		} catch (RuntimeException e) {
-			// FIXME what exception is caught here?
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format creation date", e));
-		}
+		Date creationDate = task.getCreationDate();
+		String creationDateString = (creationDate != null) ? DateFormat.getDateInstance(DateFormat.LONG).format(
+				creationDate) : "";
 		addNameValueComp(statusComposite, "Created:", creationDateString, SWT.FLAT | SWT.READ_ONLY);
 
 		String completionDateString = "";

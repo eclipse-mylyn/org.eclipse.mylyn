@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import java.util.Date;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -224,8 +226,9 @@ public class TaskListTableSorter extends ViewerSorter {
 			t2 = (AbstractTask) element2;
 		}
 		if (t1 != null && t2 != null) {
-			if (t1.getCreationDate() != null) {
-				return sortDirection * t1.getCreationDate().compareTo(t2.getCreationDate());
+			Date creationDate1 = t1.getCreationDate();
+			if (creationDate1 != null) {
+				return sortDirection * creationDate1.compareTo(t2.getCreationDate());
 			}
 		}
 		return 0;

@@ -542,7 +542,7 @@ public final class DelegatingTaskExternalizer {
 		if (element.hasAttribute(KEY_DATE_CREATION)) {
 			task.setCreationDate(getDateFromString(element.getAttribute(KEY_DATE_CREATION)));
 		} else {
-			task.setCreationDate(Calendar.getInstance().getTime());
+			task.setCreationDate(null);
 		}
 		if (element.hasAttribute(KEY_DATE_MODIFICATION)) {
 			task.setModificationDate(getDateFromString(element.getAttribute(KEY_DATE_MODIFICATION)));
