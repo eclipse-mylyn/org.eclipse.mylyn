@@ -115,7 +115,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static final int DELAY_QUERY_REFRESH_ON_STARTUP = 20 * 1000;
 
-	private static final int LINK_PROVIDER_TIMEOUT_SECONDS = 5;
+	private static final int DEFAULT_LINK_PROVIDER_TIMEOUT = 5 * 1000;
 
 	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories";
 
@@ -1134,9 +1134,16 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 */
 	public TaskRepository getRepositoryForResource(final IResource resource) {
 		Assert.isNotNull(resource);
+		long timeout;
+		try {
+			timeout = Long.parseLong(System.getProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT,
+					DEFAULT_LINK_PROVIDER_TIMEOUT + ""));
+		} catch (NumberFormatException e) {
+			timeout = DEFAULT_LINK_PROVIDER_TIMEOUT;
+		}
 		Set<AbstractTaskRepositoryLinkProvider> defectiveLinkProviders = new HashSet<AbstractTaskRepositoryLinkProvider>();
 		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
-			long startTime = System.nanoTime();
+			long startTime = System.currentTimeMillis();
 			final TaskRepository[] repository = new TaskRepository[1];
 			SafeRunnable.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
@@ -1148,8 +1155,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					repository[0] = linkProvider.getTaskRepository(resource, getRepositoryManager());
 				}
 			});
-			long elapsed = System.nanoTime() - startTime;
-			if (elapsed > LINK_PROVIDER_TIMEOUT_SECONDS * 1000 * 1000 * 1000) {
+			long elapsed = System.currentTimeMillis() - startTime;
+			if (timeout >= 0 && elapsed > timeout) {
 				defectiveLinkProviders.add(linkProvider);
 			}
 			if (repository[0] != null) {
@@ -1158,9 +1165,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 		if (!defectiveLinkProviders.isEmpty()) {
 			repositoryLinkProviders.removeAll(defectiveLinkProviders);
-			StatusHandler.log(new Status(IStatus.WARNING, ID_PLUGIN,
-					"Repository link provider took over 5s to execute and was timed out: \"" + defectiveLinkProviders
-							+ "\""));
+			StatusHandler.log(new Status(IStatus.WARNING, ID_PLUGIN, "Repository link provider took over " + timeout
+					+ " ms to execute and was timed out: \"" + defectiveLinkProviders + "\""));
 		}
 		return null;
 	}
@@ -1215,6 +1221,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			formColors.markShared();
 		}
 		return formColors;
+	}
+
+	public void removeRepositoryLinkProvider(AbstractTaskRepositoryLinkProvider provider) {
+		repositoryLinkProviders.remove(provider);
 	}
 
 }
