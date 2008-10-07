@@ -30,7 +30,6 @@ import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-// TODO refactor into extension point 
 public class CommitTemplateVariables {
 
 	// TODO refactor completion labels
