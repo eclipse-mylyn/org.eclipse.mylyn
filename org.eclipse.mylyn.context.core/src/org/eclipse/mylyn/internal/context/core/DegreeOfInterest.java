@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.eclipse.mylyn.context.core.IDegreeOfInterest;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
-import org.eclipse.mylyn.internal.monitor.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**

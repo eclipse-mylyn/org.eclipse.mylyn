@@ -21,7 +21,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextScaling;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.monitor.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**

@@ -29,8 +29,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.internal.context.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.internal.context.core.IInteractionContextWriter;
-import org.eclipse.mylyn.internal.monitor.core.AggregateInteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
