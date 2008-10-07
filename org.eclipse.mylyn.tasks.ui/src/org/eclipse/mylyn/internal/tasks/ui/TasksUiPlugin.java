@@ -121,8 +121,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.ui";
 
-	private static final String FOLDER_OFFLINE = "offline";
-
 	private static final String DIRECTORY_METADATA = ".metadata";
 
 	private static final String NAME_DATA_DIR = ".mylyn";
@@ -402,11 +400,18 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					// XXX: recovery from task list load failure  (Rendered in task list)
 				}
 
+				boolean activateTask = Boolean.parseBoolean(System.getProperty(
+						ITasksCoreConstants.PROPERTY_ACTIVATE_TASK, Boolean.TRUE.toString()));
 				// Needs to happen asynchronously to avoid bug 159706
-				for (AbstractTask task : taskListManager.getTaskList().getAllTasks()) {
+				for (AbstractTask task : taskList.getAllTasks()) {
 					if (task.isActive()) {
-						taskListManager.activateTask(task);
-						break;
+						// the externalizer might set multiple tasks active 
+						task.setActive(false);
+						if (activateTask) {
+							// make sure only one task is activated
+							taskActivityManager.activateTask(task);
+							activateTask = false;
+						}
 					}
 				}
 				//taskActivityMonitor.reloadActivityTime();
