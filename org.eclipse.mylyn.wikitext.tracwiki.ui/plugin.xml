@@ -2,7 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.mylyn.sandbox.ui.taskEditorExtensions">
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
       <taskEditorExtension
             class="org.eclipse.mylyn.internal.wikitext.tracwiki.ui.editors.TracWikiTaskEditorExtension"
             id="org.eclipse.mylyn.wikitext.tracwiki.ui.taskEditorExtension"
@@ -44,7 +44,7 @@
          <template name=" 1. " description="%template.description.16" content="\n 1. ${text}\n 1. ${text2}\n\n" block="true"/>
          <template name="  1. " description="%template.description.17" content="\n  1. ${text}\n  1. ${text2}\n\n" block="true"/>
          <template name="{{{" description="%template.description.18" content="\n{{{\n${text}\n}}}\n\n" block="true"/>
-         <template name="  " description="%template.description.19" content="\n  ${text}\n\n" block="true"/>
+         <template name="bq." description="%template.description.19" content="\n  ${text}\n\n" block="true"/>
          <template name="&gt;" description="%template.description.20" content="\n&gt; ${text}\n\n" block="true"/>
          <template name="||" description="%template.description.21" content="\n|| ${text} || ${text2} ||\n|| ${text3} || ${text4} ||\n\n" block="true"/>
          

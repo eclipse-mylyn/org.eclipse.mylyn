@@ -209,15 +209,15 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 										String block = templatesChild.getAttribute("block");
 
 										if (name == null || name.length() == 0) {
-											throw new Exception(String.format("Must specify %s/name",
+											throw new Exception(String.format("Must specify %s/@name",
 													EXTENSION_POINT_TEMPLATE));
 										}
 										if (description == null || description.length() == 0) {
-											throw new Exception(String.format("Must specify %s/description",
+											throw new Exception(String.format("Must specify %s/@description",
 													EXTENSION_POINT_TEMPLATE));
 										}
 										if (content == null || content.length() == 0) {
-											throw new Exception(String.format("Must specify %s/content",
+											throw new Exception(String.format("Must specify %s/@content",
 													EXTENSION_POINT_TEMPLATE));
 										}
 										content = content.replace("\\r\\n", Text.DELIMITER).replace("\\r",
