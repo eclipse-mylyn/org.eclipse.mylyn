@@ -885,6 +885,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
 	}
 
+	@Deprecated
 	public static TaskListManager getTaskListManager() {
 		return taskListManager;
 	}

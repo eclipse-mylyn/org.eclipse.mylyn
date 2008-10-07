@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import java.io.File;
 
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizardPage;
@@ -36,8 +35,6 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	private File sourceZipFile = null;
 
-	private final TaskListManager manager = TasksUiPlugin.getTaskListManager();
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -49,14 +46,11 @@ public class TaskDataImportTest extends AbstractContextTest {
 		wizardPage = (TaskDataImportWizardPage) wizard.getPage(TaskDataImportWizardPage.PAGE_NAME);
 		assertNotNull(wizardPage);
 
-		manager.resetTaskList();
-		assertEquals(2, manager.getTaskList().getRootElements().size());
+		TaskTestUtil.resetTaskListAndRepositories();
 
 		sourceZipFile = TaskTestUtil.getLocalFile(sourceZipPath);
 		assertTrue(sourceZipFile.exists());
 
-		// make correct number of categories exist prior to import tests
-		assertEquals(1, manager.getTaskList().getTaskCategories().size());
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 	}
 

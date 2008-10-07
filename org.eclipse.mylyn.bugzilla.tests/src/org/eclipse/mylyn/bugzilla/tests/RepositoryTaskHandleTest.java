@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 
 /**
@@ -28,19 +28,14 @@ import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
  */
 public class RepositoryTaskHandleTest extends TestCase {
 
-	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
-
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-		manager = TasksUiPlugin.getTaskListManager();
-		manager.resetTaskList();
+		TaskTestUtil.resetTaskList();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		manager.resetTaskList();
+		TaskTestUtil.resetTaskList();
 	}
 
 	public void testRepositoryUrlHandles() throws CoreException {

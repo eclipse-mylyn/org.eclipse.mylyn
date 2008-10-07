@@ -152,9 +152,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				return new Object[] { tasksContainer, resourcesContainer };
 			} else if (parentElement instanceof TaskRepository) {
 				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
-				for (AbstractTaskContainer element : TasksUiPlugin.getTaskListManager()
-						.getTaskList()
-						.getRepositoryQueries(((TaskRepository) parentElement).getRepositoryUrl())) {
+				for (AbstractTaskContainer element : TasksUiPlugin.getTaskList().getRepositoryQueries(
+						((TaskRepository) parentElement).getRepositoryUrl())) {
 					if (element instanceof IRepositoryQuery) {
 						taskContainers.add(element);
 						queryMap.put((IRepositoryQuery) element, (TaskRepository) parentElement);

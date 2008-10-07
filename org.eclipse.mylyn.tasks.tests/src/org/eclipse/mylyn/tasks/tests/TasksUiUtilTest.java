@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
@@ -35,8 +35,6 @@ import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
  */
 public class TasksUiUtilTest extends TestCase {
 
-	private TaskListManager manager;
-
 	private TaskCategory cat1;
 
 	private AbstractTask cat1task1;
@@ -45,26 +43,25 @@ public class TasksUiUtilTest extends TestCase {
 
 	private IWorkbenchPage activePage;
 
+	private TaskList taskList;
+
 	@Override
 	public void setUp() throws Exception {
-		manager = TasksUiPlugin.getTaskListManager();
+		taskList = TasksUiPlugin.getTaskList();
 
-		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		manager.resetTaskList();
-
-		TasksUiPlugin.getDefault().getLocalTaskRepository();
+		TaskTestUtil.resetTaskListAndRepositories();
 
 		cat1 = new TaskCategory("First Category");
-		manager.getTaskList().addCategory(cat1);
+		taskList.addCategory(cat1);
 
 		cat1task1 = TasksUiInternal.createNewLocalTask("task 1");
 		cat1task1.setPriority(PriorityLevel.P1.toString());
 		cat1task1.setCompletionDate(new Date());
-		manager.getTaskList().addTask(cat1task1, cat1);
+		taskList.addTask(cat1task1, cat1);
 
 		cat1task2 = TasksUiInternal.createNewLocalTask("task 2");
 		cat1task2.setPriority(PriorityLevel.P2.toString());
-		manager.getTaskList().addTask(cat1task2, cat1);
+		taskList.addTask(cat1task2, cat1);
 
 		assertEquals(cat1.getChildren().size(), 2);
 
@@ -75,6 +72,7 @@ public class TasksUiUtilTest extends TestCase {
 
 	@Override
 	public void tearDown() throws Exception {
+		TaskTestUtil.resetTaskListAndRepositories();
 		activePage.closeAllEditors(false);
 	}
 
