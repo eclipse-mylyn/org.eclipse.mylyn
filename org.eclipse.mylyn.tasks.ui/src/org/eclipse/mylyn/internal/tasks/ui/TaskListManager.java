@@ -12,15 +12,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
-import org.eclipse.mylyn.internal.tasks.core.ITaskList;
-import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.core.externalization.TaskListExternalizationParticipant;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * Provides facilities for using and managing the Task List and task activity information.
@@ -34,100 +26,8 @@ public class TaskListManager {
 
 	private final TaskListElementImporter importer;
 
-	private final TaskList taskList;
-
-	private final TaskListExternalizationParticipant participant;
-
-	public TaskListManager(TaskList taskList, TaskListExternalizationParticipant participant,
-			TaskListElementImporter importer) {
-		this.taskList = taskList;
+	public TaskListManager(TaskListElementImporter importer) {
 		this.importer = importer;
-		this.participant = participant;
-	}
-
-	@Deprecated
-	public TaskListElementImporter getTaskListWriter() {
-		return importer;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public ITaskList resetTaskList() {
-		participant.resetTaskList();
-		return taskList;
-	}
-
-	/**
-	 * @deprecated use TasksUiPlugin.reloadDataDirectory()
-	 */
-	@Deprecated
-	public boolean readExistingOrCreateNewList() {
-		try {
-			TasksUiPlugin.getDefault().reloadDataDirectory();
-		} catch (CoreException e) {
-			StatusHandler.fail(e.getStatus());
-		}
-		return true;
-	}
-
-	/**
-	 * @deprecated use {@link TasksUiPlugin#getTaskList()} instead
-	 */
-	@Deprecated
-	public TaskList getTaskList() {
-		return taskList;
-	}
-
-	/**
-	 * use <code>TasksUi.getTaskActivityManager().getActiveTask()</code>
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public ITask getActiveTask() {
-		return TasksUi.getTaskActivityManager().getActiveTask();
-	}
-
-	/**
-	 * Will not save an empty task list to avoid losing data on bad startup.
-	 * 
-	 * @deprecated use <code>TasksUiPlugin.getExternalizationManager().requestSave()</code>
-	 */
-	@Deprecated
-	public synchronized void saveTaskList() {
-		TasksUiPlugin.getExternalizationManager().requestSave();
-	}
-
-	/**
-	 * use <code>TasksUi.getTaskActivityManager().activateTask(task)</code>
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public void activateTask(AbstractTask task) {
-		TasksUi.getTaskActivityManager().activateTask(task);
-	}
-
-	/**
-	 * use <code>TasksUi.getTaskActivityManager().activateTask(task)</code>
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public void activateTask(AbstractTask task, boolean addToHistory) {
-		TasksUi.getTaskActivityManager().activateTask(task);
-	}
-
-	/**
-	 * use <code>TasksUi.getTaskActivityManager().deactivateAllTasks()</code>
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	public void deactivateAllTasks() {
-		TasksUi.getTaskActivityManager().deactivateActiveTask();
 	}
 
 }

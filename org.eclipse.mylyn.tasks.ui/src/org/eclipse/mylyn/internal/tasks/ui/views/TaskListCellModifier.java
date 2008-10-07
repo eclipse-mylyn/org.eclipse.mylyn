@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,9 +96,7 @@ class TaskListCellModifier implements ICellModifier {
 				AbstractTaskContainer container = (AbstractTaskContainer) data;
 				switch (columnIndex) {
 				case 0:
-					TasksUiPlugin.getTaskListManager()
-							.getTaskList()
-							.renameContainer(container, ((String) value).trim());
+					TasksUiPlugin.getTaskList().renameContainer(container, ((String) value).trim());
 				case 1:
 					break;
 				case 2:

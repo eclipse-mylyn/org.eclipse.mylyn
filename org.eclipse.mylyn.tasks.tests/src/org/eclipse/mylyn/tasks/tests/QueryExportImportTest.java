@@ -56,8 +56,7 @@ public class QueryExportImportTest extends TestCase {
 			dest.mkdir();
 		}
 		assertTrue(dest.exists());
-
-		taskListWriter = TasksUiPlugin.getTaskListManager().getTaskListWriter();
+		taskListWriter = TasksUiPlugin.getTaskListWriter();
 
 		TaskTestUtil.resetTaskListAndRepositories();
 	}

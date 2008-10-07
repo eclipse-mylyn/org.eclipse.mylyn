@@ -133,8 +133,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static ExternalizationManager externalizationManager;
 
-	private static TaskListManager taskListManager;
-
 	private static TaskActivityManager taskActivityManager;
 
 	private static TaskRepositoryManager repositoryManager;
@@ -375,6 +373,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private boolean settingDataDirectory = false;
 
+	private static TaskListElementImporter taskListImporter;
+
 	private static TaskList taskList;
 
 	private static RepositoryModel repositoryModel;
@@ -521,7 +521,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskList = new TaskList();
 			repositoryModel = new RepositoryModel(taskList, repositoryManager);
 			taskListExternalizer = new TaskListExternalizer(repositoryModel, repositoryManager);
-			TaskListElementImporter taskListImporter = new TaskListElementImporter(repositoryManager, repositoryModel);
+			taskListImporter = new TaskListElementImporter(repositoryManager, repositoryModel);
 
 			taskListSaveParticipant = new TaskListExternalizationParticipant(repositoryModel, taskList,
 					taskListExternalizer, externalizationManager, repositoryManager);
@@ -531,8 +531,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			taskActivityManager = new TaskActivityManager(repositoryManager, taskList);
 			taskActivityManager.addActivationListener(taskListSaveParticipant);
-
-			taskListManager = new TaskListManager(taskList, taskListSaveParticipant, taskListImporter);
 
 			// initialize
 			updateTaskActivityManager();
@@ -563,12 +561,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			// instantiate taskDataManager
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
-			taskDataManager = new TaskDataManager(taskDataStore, repositoryManager, taskListManager.getTaskList(),
-					taskActivityManager);
+			taskDataManager = new TaskDataManager(taskDataStore, repositoryManager, taskList, taskActivityManager);
 			taskDataManager.setDataPath(getDataDirectory());
 
-			taskJobFactory = new TaskJobFactory(taskListManager.getTaskList(), taskDataManager, repositoryManager,
-					repositoryModel);
+			taskJobFactory = new TaskJobFactory(taskList, taskDataManager, repositoryManager, repositoryModel);
 
 			taskActivityManager.addActivationListener(CONTEXT_TASK_ACTIVATION_LISTENER);
 
@@ -883,11 +879,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.WEEK_START_DAY, Calendar.getInstance().getFirstDayOfWeek());
 		//store.setDefault(TasksUiPreferenceConstants.PLANNING_STARTHOUR, 9);
 		store.setDefault(ITasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
-	}
-
-	@Deprecated
-	public static TaskListManager getTaskListManager() {
-		return taskListManager;
 	}
 
 	public static TaskActivityManager getTaskActivityManager() {
@@ -1226,6 +1217,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public void removeRepositoryLinkProvider(AbstractTaskRepositoryLinkProvider provider) {
 		repositoryLinkProviders.remove(provider);
+	}
+
+	public static TaskListElementImporter getTaskListWriter() {
+		return taskListImporter;
 	}
 
 }

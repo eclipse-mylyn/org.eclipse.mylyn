@@ -90,9 +90,4 @@ public class TracTestUtil {
 		return attachments;
 	}
 
-	@SuppressWarnings("deprecation")
-	public static void resetTaskList() {
-		TasksUiPlugin.getTaskListManager().resetTaskList();
-	}
-
 }

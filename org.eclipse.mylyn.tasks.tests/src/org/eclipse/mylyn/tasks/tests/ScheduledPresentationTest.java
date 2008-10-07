@@ -35,13 +35,13 @@ public class ScheduledPresentationTest extends TestCase {
 	protected void setUp() throws Exception {
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TaskTestUtil.resetTaskList();
 		TasksUiPlugin.getExternalizationManager().requestSave();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TaskTestUtil.resetTaskList();
 		TasksUiPlugin.getExternalizationManager().requestSave();
 	}
 

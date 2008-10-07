@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ package org.eclipse.mylyn.tasks.tests.performance;
 import java.io.File;
 
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListElementImporter;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
@@ -26,14 +25,11 @@ public class TaskListPerformanceTest extends PerformanceTestCase {
 
 	private TaskList taskList;
 
-	private TaskListManager taskListManager;
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		taskListManager = TasksUiPlugin.getTaskListManager();
-		taskList = taskListManager.getTaskList();
+		taskList = TasksUiPlugin.getTaskList();
 		taskList.reset();
 	}
 
@@ -46,7 +42,7 @@ public class TaskListPerformanceTest extends PerformanceTestCase {
 
 	public void testReadTasksWith4000Tasks() {
 		final File file = TaskTestUtil.getLocalFile(TASK_LIST_4000);
-		final TaskListElementImporter taskListWriter = taskListManager.getTaskListWriter();
+		final TaskListElementImporter taskListWriter = TasksUiPlugin.getTaskListWriter();
 
 		for (int i = 0; i < 10; i++) {
 			startMeasuring();
@@ -61,7 +57,7 @@ public class TaskListPerformanceTest extends PerformanceTestCase {
 
 	public void testReadTaskListWith4000Tasks() {
 		final File file = TaskTestUtil.getLocalFile(TASK_LIST_4000);
-		final TaskListElementImporter taskListWriter = taskListManager.getTaskListWriter();
+		final TaskListElementImporter taskListWriter = TasksUiPlugin.getTaskListWriter();
 
 		for (int i = 0; i < 10; i++) {
 			startMeasuring();

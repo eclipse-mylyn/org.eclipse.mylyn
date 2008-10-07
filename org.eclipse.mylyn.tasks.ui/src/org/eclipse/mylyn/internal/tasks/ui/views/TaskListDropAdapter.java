@@ -125,21 +125,16 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				final File file = new File(path);
 				final List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 				final Set<TaskRepository> repositories = new HashSet<TaskRepository>();
-				final List<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager().getTaskListWriter().readTasks(
-						file);
+				final List<AbstractTask> readTasks = TasksUiPlugin.getTaskListWriter().readTasks(file);
 				if (file.isFile()) {
 					List<RepositoryQuery> readQueries;
 					try {
-						readQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(file);
+						readQueries = TasksUiPlugin.getTaskListWriter().readQueries(file);
 						if (readQueries.size() > 0) {
 							queries.addAll(readQueries);
-							repositories.addAll(TasksUiPlugin.getTaskListManager()
-									.getTaskListWriter()
-									.readRepositories(file));
+							repositories.addAll(TasksUiPlugin.getTaskListWriter().readRepositories(file));
 						} else {
-							repositories.addAll(TasksUiPlugin.getTaskListManager()
-									.getTaskListWriter()
-									.readRepositories(file));
+							repositories.addAll(TasksUiPlugin.getTaskListWriter().readRepositories(file));
 						}
 					} catch (IOException e) {
 						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "The specified file \""

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,10 +81,8 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 
 		List<RepositoryQuery> queries = new ArrayList<RepositoryQuery>();
 		queries.add(selectedQuery);
-
-		Document queryDoc = TasksUiPlugin.getTaskListManager().getTaskListWriter().createQueryDocument(queries);
-		List<RepositoryQuery> clonedQueries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueryDocument(
-				queryDoc);
+		Document queryDoc = TasksUiPlugin.getTaskListWriter().createQueryDocument(queries);
+		List<RepositoryQuery> clonedQueries = TasksUiPlugin.getTaskListWriter().readQueryDocument(queryDoc);
 
 		if (clonedQueries.size() > 0) {
 			for (RepositoryQuery query : clonedQueries) {

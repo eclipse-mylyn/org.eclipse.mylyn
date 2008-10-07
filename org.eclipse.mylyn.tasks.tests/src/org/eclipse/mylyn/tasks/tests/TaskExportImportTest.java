@@ -13,14 +13,12 @@ package org.eclipse.mylyn.tasks.tests;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
@@ -71,7 +69,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		super.tearDown();
 	}
 
-	public void testTaskContextExport() throws IOException, CoreException {
+	public void testTaskContextExport() throws Exception {
 
 		LocalTask task = TasksUiInternal.createNewLocalTask("Test local task");
 		TaskList taskList = TasksUiPlugin.getTaskList();
@@ -91,7 +89,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		assertTrue(ContextCore.getContextManager().hasContext(task.getHandleIdentifier()));
 
 		File outFile = new File(dest + File.separator + "local-task.xml.zip");
-		TasksUiPlugin.getTaskListManager().getTaskListWriter().writeTask(task, outFile);
+		TasksUiPlugin.getTaskListWriter().writeTask(task, outFile);
 		assertTrue(outFile.exists());
 
 		// check the content of the archive
@@ -111,14 +109,14 @@ public class TaskExportImportTest extends AbstractContextTest {
 		assertTrue("exported file contains a file with context", files.contains(contextName));
 
 		// reset all data
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TaskTestUtil.resetTaskList();
 		assertTrue(taskList.getAllTasks().size() == 0);
 
 		ContextCore.getContextManager().deleteContext(handleIdentifier);
 		assertFalse(ContextCore.getContextManager().hasContext(task.getHandleIdentifier()));
 
 		// load data back
-		List<AbstractTask> tasks = TasksUiPlugin.getTaskListManager().getTaskListWriter().readTasks(outFile);
+		List<AbstractTask> tasks = TasksUiPlugin.getTaskListWriter().readTasks(outFile);
 		IInteractionContext loadedContext = ContextCore.getContextStore().importContext(task.getHandleIdentifier(),
 				outFile);
 

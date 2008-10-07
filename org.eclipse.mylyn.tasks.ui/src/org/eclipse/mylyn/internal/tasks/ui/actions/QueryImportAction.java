@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,11 +70,8 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 			File file = new File(path);
 			if (file.isFile()) {
 				try {
-					List<RepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskListWriter().readQueries(
-							file);
-					Set<TaskRepository> repositories = TasksUiPlugin.getTaskListManager()
-							.getTaskListWriter()
-							.readRepositories(file);
+					List<RepositoryQuery> queries = TasksUiPlugin.getTaskListWriter().readQueries(file);
+					Set<TaskRepository> repositories = TasksUiPlugin.getTaskListWriter().readRepositories(file);
 					if (queries.size() > 0) {
 						importQueries(queries, repositories, shell);
 					} else {
@@ -168,7 +165,7 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 		Pattern pattern = Pattern.compile(patternStr);
 
 		// resolve name conflict
-		Set<RepositoryQuery> existingQueries = TasksUiPlugin.getTaskListManager().getTaskList().getQueries();
+		Set<RepositoryQuery> existingQueries = TasksUiPlugin.getTaskList().getQueries();
 		Map<String, RepositoryQuery> queryMap = new HashMap<String, RepositoryQuery>();
 		for (RepositoryQuery existingQuery : existingQueries) {
 			queryMap.put(existingQuery.getHandleIdentifier(), existingQuery);

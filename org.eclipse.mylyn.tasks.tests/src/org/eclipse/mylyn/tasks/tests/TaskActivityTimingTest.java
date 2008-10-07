@@ -710,7 +710,7 @@ public class TaskActivityTimingTest extends TestCase {
 		TasksUiPlugin.getTaskActivityManager().deactivateActiveTask();
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
 
-		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TaskTestUtil.saveTaskList();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
@@ -888,7 +888,7 @@ public class TaskActivityTimingTest extends TestCase {
 
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskList().addTask(task1);
-		TasksUiPlugin.getTaskListManager().activateTask(task1);
+		TasksUiPlugin.getTaskActivityManager().activateTask(task1);
 		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		metaContext.reset();
 		assertEquals(0, metaContext.getInteractionHistory().size());
@@ -919,9 +919,9 @@ public class TaskActivityTimingTest extends TestCase {
 		assertEquals(1000 * 60 * 2, activityManager.getElapsedTime(task1, startTime1, endTime1));
 		assertEquals(1000 * 60 * 8, activityManager.getElapsedTime(task1, startTime2, endTime2));
 
-		TasksUiPlugin.getTaskListManager().deactivateAllTasks();
+		TasksUi.getTaskActivityManager().deactivateActiveTask();
 		assertEquals(4, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());
-		TasksUiPlugin.getTaskListManager().saveTaskList();
+		TaskTestUtil.saveTaskList();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		assertEquals(0, ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory().size());

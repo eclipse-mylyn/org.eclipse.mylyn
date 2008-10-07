@@ -64,19 +64,22 @@ public class TaskTestUtil {
 		}
 	}
 
-	/**
-	 * Adaptred from Java Developers' almanac
-	 */
 	public static void copy(File source, File dest) throws IOException {
 		InputStream in = new FileInputStream(source);
-		OutputStream out = new FileOutputStream(dest);
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
+		try {
+			OutputStream out = new FileOutputStream(dest);
+			try {
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = in.read(buf)) > 0) {
+					out.write(buf, 0, len);
+				}
+			} finally {
+				out.close();
+			}
+		} finally {
+			in.close();
 		}
-		in.close();
-		out.close();
 	}
 
 	/**
@@ -92,21 +95,23 @@ public class TaskTestUtil {
 	/**
 	 * Clears all tasks.
 	 */
-	@SuppressWarnings("deprecation")
 	public static void resetTaskList() throws Exception {
 		TasksUi.getTaskActivityManager().deactivateActiveTask();
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TaskTestUtil.resetTaskList();
 	}
 
 	/**
 	 * @see #resetTaskList()
 	 */
-	@SuppressWarnings("deprecation")
 	public static void saveAndReadTasklist() throws Exception {
 		TasksUiPlugin.getTaskList().notifyElementsChanged(null);
-		TasksUiPlugin.getTaskListManager().saveTaskList();
-		TasksUiPlugin.getTaskListManager().resetTaskList();
+		saveTaskList();
+		TaskTestUtil.resetTaskList();
 		TasksUiPlugin.getDefault().reloadDataDirectory();
+	}
+
+	public static void saveTaskList() {
+		TasksUiPlugin.getExternalizationManager().requestSave();
 	}
 
 	public static TaskRepository createMockRepository() {

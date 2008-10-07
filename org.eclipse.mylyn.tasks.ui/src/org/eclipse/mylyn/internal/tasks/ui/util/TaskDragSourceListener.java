@@ -109,9 +109,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 						ITasksCoreConstants.FILENAME_ENCODING);
 				File file = File.createTempFile(encodedName, ITasksCoreConstants.FILE_EXTENSION, tempDir);
 				file.deleteOnExit();
-
-				TasksUiPlugin.getTaskListManager().getTaskListWriter().writeQueries(Collections.singletonList(query),
-						file);
+				TasksUiPlugin.getTaskListWriter().writeQueries(Collections.singletonList(query), file);
 				taskFiles.add(file);
 			}
 
@@ -120,8 +118,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 						ITasksCoreConstants.FILENAME_ENCODING);
 				File file = File.createTempFile(encodedName, ITasksCoreConstants.FILE_EXTENSION, tempDir);
 				file.deleteOnExit();
-
-				TasksUiPlugin.getTaskListManager().getTaskListWriter().writeTask(task, file);
+				TasksUiPlugin.getTaskListWriter().writeTask(task, file);
 				taskFiles.add(file);
 			}
 

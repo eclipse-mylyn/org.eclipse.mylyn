@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,11 +61,8 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 		if (path != null) {
 			File file = new File(path);
 			if (file.isFile()) {
-				Set<TaskRepository> repositories = TasksUiPlugin.getTaskListManager()
-						.getTaskListWriter()
-						.readRepositories(file);
-				Collection<AbstractTask> readTasks = TasksUiPlugin.getTaskListManager().getTaskListWriter().readTasks(
-						file);
+				Set<TaskRepository> repositories = TasksUiPlugin.getTaskListWriter().readRepositories(file);
+				Collection<AbstractTask> readTasks = TasksUiPlugin.getTaskListWriter().readTasks(file);
 				if (readTasks.size() > 0) {
 					TasksUiInternal.importTasks(readTasks, repositories, file, shell);
 //					refreshTaskListView();

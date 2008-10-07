@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient.Version;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.trac.tests.support.TracTestConstants;
 import org.eclipse.mylyn.trac.tests.support.TracTestUtil;
@@ -30,7 +31,7 @@ public class TracTaskEditorTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		TracTestUtil.resetTaskList();
+		TaskTestUtil.resetTaskList();
 	}
 
 	public void testGetSelectedRepository() throws Exception {
