@@ -13,6 +13,8 @@ package org.eclipse.mylyn.wikitext.mediawiki.core;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.HeadingBlock;
 import org.eclipse.mylyn.internal.wikitext.mediawiki.core.block.ListBlock;
@@ -45,6 +47,12 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  * 
  */
 public class MediaWikiLanguage extends MarkupLanguage {
+	private static final String CATEGORY_PREFIX = ":";
+
+	private static final Pattern STANDARD_EXTERNAL_LINK_FORMAT = Pattern.compile(".*?/([^/]+)/(\\{\\d+\\})");
+
+	private static final Pattern QUALIFIED_INTERNAL_LINK = Pattern.compile("([^/]+)/(.+)");
+
 	private final List<Block> blocks = new ArrayList<Block>();
 
 	private final List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
@@ -145,11 +153,17 @@ public class MediaWikiLanguage extends MarkupLanguage {
 		String pageId = pageName.replace(' ', '_');
 		// FIXME: other character encodings occur here, not just ' '
 
-		if (pageId.startsWith(":")) { // category
-			pageId = pageId.substring(1);
+		if (pageId.startsWith(CATEGORY_PREFIX) && pageId.length() > CATEGORY_PREFIX.length()) { // category
+			return pageId.substring(CATEGORY_PREFIX.length());
 		} else if (pageId.startsWith("#")) {
 			// internal anchor
 			return pageId;
+		}
+		if (QUALIFIED_INTERNAL_LINK.matcher(pageId).matches()) {
+			Matcher matcher = STANDARD_EXTERNAL_LINK_FORMAT.matcher(internalLinkPattern);
+			if (matcher.matches()) {
+				return internalLinkPattern.substring(0, matcher.start(1)) + pageId;
+			}
 		}
 		return MessageFormat.format(super.internalLinkPattern, pageId);
 	}

@@ -29,9 +29,12 @@ public class MediaWikiLanguageTest extends TestCase {
 
 	private MarkupParser parser;
 
+	private MediaWikiLanguage markupLanaguage;
+
 	@Override
 	public void setUp() {
-		parser = new MarkupParser(new MediaWikiLanguage());
+		markupLanaguage = new MediaWikiLanguage();
+		parser = new MarkupParser(markupLanaguage);
 	}
 
 	public void testParagraph() {
@@ -276,6 +279,13 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("Also see the [[Mylyn_FAQ#Installation_Troubleshooting | Installation FAQ]].");
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("<p>Also see the <a href=\"/wiki/Mylyn_FAQ#Installation_Troubleshooting\" title=\"Mylyn_FAQ#Installation_Troubleshooting\">Installation FAQ</a>.</p>"));
+	}
+
+	public void testHyperlinkQualifiedInternal() {
+		markupLanaguage.setInternalLinkPattern("http://wiki.eclipse.org/Mylyn/{0}");
+		String html = parser.parseToHtml("Also see the [[Mylyn/FAQ#Installation_Troubleshooting | Installation FAQ]].");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<p>Also see the <a href=\"http://wiki.eclipse.org/Mylyn/FAQ#Installation_Troubleshooting\" title=\"Mylyn/FAQ#Installation_Troubleshooting\">Installation FAQ</a>.</p>"));
 	}
 
 	public void testHyperlinkExternal() {
