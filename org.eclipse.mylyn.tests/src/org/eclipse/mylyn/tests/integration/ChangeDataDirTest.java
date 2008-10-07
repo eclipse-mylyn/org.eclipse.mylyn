@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,10 +28,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 
 /**
  * Tests changes to the main data directory location.
@@ -41,15 +42,15 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class ChangeDataDirTest extends TestCase {
 
-	private String newDataDir = null;
+	private String newDataDir;
 
-	private final String defaultDir = TasksUiPlugin.getDefault().getDefaultDataDirectory();
+	private String defaultDir;
 
-	private final TaskListManager manager = TasksUiPlugin.getTaskListManager();
+	private TaskList taskList;
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
+		defaultDir = TasksUiPlugin.getDefault().getDefaultDataDirectory();
 
 		newDataDir = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
 				+ ChangeDataDirTest.class.getSimpleName();
@@ -57,14 +58,15 @@ public class ChangeDataDirTest extends TestCase {
 
 		dir.mkdir();
 		dir.deleteOnExit();
-		manager.resetTaskList();
-		TasksUiPlugin.getExternalizationManager().requestSave();
+
+		taskList = TasksUiPlugin.getTaskList();
+
+		TaskTestUtil.resetTaskList();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		manager.resetTaskList();
+		TaskTestUtil.resetTaskList();
 		TasksUiPlugin.getDefault().setDataDirectory(defaultDir, new NullProgressMonitor());
 	}
 
@@ -80,16 +82,15 @@ public class ChangeDataDirTest extends TestCase {
 	public void testTaskMove() throws CoreException {
 		AbstractTask task = TasksUiInternal.createNewLocalTask("label");
 		String handle = task.getHandleIdentifier();
-		manager.getTaskList().addTask(task,
-				manager.getTaskList().getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
+		taskList.addTask(task, taskList.getUnmatchedContainer(LocalRepositoryConnector.REPOSITORY_URL));
 
-		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);
+		ITask readTaskBeforeMove = taskList.getTask(handle);
 		assertNotNull(readTaskBeforeMove);
-		assertTrue(manager.getTaskList().getAllTasks().size() > 0);
+		assertTrue(taskList.getAllTasks().size() > 0);
 		copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir, new NullProgressMonitor());
-		assertTrue(manager.getTaskList().getAllTasks().size() > 0);
-		ITask readTaskAfterMove = manager.getTaskList().getTask(handle);
+		assertTrue(taskList.getAllTasks().size() > 0);
+		ITask readTaskAfterMove = taskList.getTask(handle);
 
 		assertNotNull(readTaskAfterMove);
 		assertEquals(readTaskBeforeMove.getCreationDate(), readTaskAfterMove.getCreationDate());
