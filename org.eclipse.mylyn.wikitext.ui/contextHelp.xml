@@ -4,7 +4,7 @@
       <topic href="help/Mylyn WikiText User Guide.html" label="WikiText User Guide"/>
    </context>
    <context id="markupConversion" title="Markup Conversion">
-      <topic href="help/MarkupConversion.html" label="WikiText Markup Conversion"/>
+      <topic href="help/Markup-Conversion.html" label="WikiText Markup Conversion"/>
    </context>
    <context id="preferences" title="Preferences">
       <topic href="help/Preferences.html" label="WikiText Preferences"/>

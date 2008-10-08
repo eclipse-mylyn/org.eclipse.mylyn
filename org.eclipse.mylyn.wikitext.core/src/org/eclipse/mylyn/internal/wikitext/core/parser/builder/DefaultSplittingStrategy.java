@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 
  * @author David Green
@@ -26,22 +29,51 @@ public class DefaultSplittingStrategy extends SplittingStrategy {
 
 	private String id;
 
+	private String label;
+
+	private String target;
+
+	private final Set<String> targets = new HashSet<String>();
+
 	@Override
-	public void heading(int level, String id) {
+	public void heading(int level, String id, String label) {
 		if (level <= 0) {
 			return;
 		}
+		this.label = label;
 		this.id = id;
 		this.headingLevel = level;
 		++headingCount;
+		if (isSplit()) {
+			target = computeSplitTarget();
+		}
 	}
 
 	@Override
 	public String getSplitTarget() {
-		if (id != null) {
-			return id + ".html";
+		return target;
+	}
+
+	protected String computeSplitTarget() {
+		String candidate = null;
+		if (candidate == null) {
+			if (label != null && label.length() > 0) {
+				candidate = label.replaceAll("[^a-zA-Z0-9]+", "-");
+			}
+			if (candidate == null || candidate.length() == 0) {
+				if (id != null) {
+					candidate = id;
+				} else {
+					candidate = "h" + headingLevel + "p" + headingCount;
+				}
+			}
 		}
-		return "h" + headingLevel + "p" + headingCount + ".html";
+		String computedTarget = candidate;
+		int seed = 1;
+		while (!targets.add(computedTarget)) {
+			computedTarget = candidate + (++seed);
+		}
+		return computedTarget + ".html";
 	}
 
 	@Override

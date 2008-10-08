@@ -11,12 +11,13 @@
 package org.eclipse.mylyn.internal.wikitext.core.parser.builder;
 
 /**
+ * A strategy for deciding when to split content into multiple files based on headings.
  * 
  * @author David Green
  */
 public abstract class SplittingStrategy {
 
-	public abstract void heading(int level, String id);
+	public abstract void heading(int level, String id, String label);
 
 	public abstract boolean isSplit();
 

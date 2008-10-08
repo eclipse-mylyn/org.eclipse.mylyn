@@ -27,7 +27,7 @@ public class SplittingOutlineParser extends OutlineParser {
 		if (splittingStrategy == null) {
 			throw new IllegalStateException();
 		}
-		splittingStrategy.heading(level, id);
+		splittingStrategy.heading(level, id, label);
 		SplitOutlineItem outlineItem = new SplitOutlineItem(current, level, id, offset, length, label);
 		if (splittingStrategy.isSplit()) {
 			outlineItem.setSplitTarget(splittingStrategy.getSplitTarget());

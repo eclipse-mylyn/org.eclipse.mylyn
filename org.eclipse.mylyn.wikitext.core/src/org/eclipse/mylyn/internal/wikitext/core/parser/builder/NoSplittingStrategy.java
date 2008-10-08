@@ -23,7 +23,7 @@ public class NoSplittingStrategy extends SplittingStrategy {
 	}
 
 	@Override
-	public void heading(int level, String id) {
+	public void heading(int level, String id, String label) {
 	}
 
 	@Override
