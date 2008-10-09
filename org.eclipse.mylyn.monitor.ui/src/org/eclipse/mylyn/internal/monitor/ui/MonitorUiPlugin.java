@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,8 +54,6 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	private static final int DEFAULT_ACTIVITY_TIMEOUT = 180000;
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.monitor.ui";
-
-	private static final int TIMEOUT_INACTIVITY_MILLIS = 60 * 1000;
 
 	private static MonitorUiPlugin INSTANCE;
 
@@ -410,7 +408,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			monitors.add(new WorkbenchUserActivityMonitor());
 			new MonitorUiExtensionPointReader().initExtensions();
 
-			activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, monitors);
+			activityContextManager = new ActivityContextManager(monitors);
 
 			updateActivityTimout();
 

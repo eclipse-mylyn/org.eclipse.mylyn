@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,10 +16,6 @@ import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -46,25 +42,11 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("restriction")
 public class ActivityContextManager implements IActivityContextManager {
 
-	private final int TICK = 30 * 1000;
-
-	private final int SHORT_TICK = 5 * 1000;
-
 	private AbstractUserActivityMonitor userActivityMonitor;
 
 	private final Set<IUserAttentionListener> attentionListeners = new CopyOnWriteArraySet<IUserAttentionListener>();
 
-	private long startTime = -1;
-
-	private int timeout;
-
-	private final Object startTimeLock = new Object();
-
-	private boolean wasTimedOut = true;
-
-	private int wait = SHORT_TICK;
-
-	private CheckActivityJob checkJob;
+	private final CheckActivityJob checkJob;
 
 	private IWorkingSet[] workingSets;
 
@@ -82,10 +64,23 @@ public class ActivityContextManager implements IActivityContextManager {
 		}
 	};
 
-	public ActivityContextManager(int timeout, ArrayList<AbstractUserActivityMonitor> monitors) {
+	public ActivityContextManager(ArrayList<AbstractUserActivityMonitor> monitors) {
 		this.activityMonitors = monitors;
-		this.timeout = timeout;
+		checkJob = new CheckActivityJob(new IActivityManagerCallback() {
+			public void addMonitoredActivityTime(long localStartTime, long currentTime) {
+				ActivityContextManager.this.addMonitoredActivityTime(localStartTime, currentTime);
+			}
 
+			public void fireInactive() {
+				ActivityContextManager.this.fireInactive();
+			}
+
+			public long getLastEventTime() {
+				return ActivityContextManager.this.getLastEventTime();
+			}
+		});
+		checkJob.setSystem(true);
+		checkJob.setPriority(Job.INTERACTIVE);
 	}
 
 	protected void updateWorkingSetSelection() {
@@ -106,22 +101,15 @@ public class ActivityContextManager implements IActivityContextManager {
 		}
 		updateWorkingSetSelection();
 		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
-		checkJob = new CheckActivityJob();
-		checkJob.setSystem(true);
-		checkJob.setPriority(Job.DECORATE);
-		checkJob.schedule(TICK);
+		checkJob.reschedule();
 	}
 
 	public void stop() {
 		for (AbstractUserActivityMonitor monitor : activityMonitors) {
 			monitor.stop();
 		}
-
 		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(WORKING_SET_CHANGE_LISTENER);
-
-		if (checkJob != null) {
-			checkJob.cancel();
-		}
+		checkJob.cancel();
 	}
 
 	public void addListener(IUserAttentionListener listener) {
@@ -200,69 +188,12 @@ public class ActivityContextManager implements IActivityContextManager {
 		return -1;
 	}
 
-	private long getStartTime() {
-		synchronized (startTimeLock) {
-			return startTime;
-		}
-	}
-
-	private void setStartTime(long startTime) {
-		synchronized (startTimeLock) {
-			this.startTime = startTime;
-		}
-	}
-
-	class CheckActivityJob extends Job {
-
-		public CheckActivityJob() {
-			super("Activity Monitor Job");
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			try {
-				if (Platform.isRunning()) {
-					if (!MonitorUiPlugin.getDefault().getWorkbench().isClosing()) {
-
-						long localLastEventTime = getLastEventTime();
-						long localStartTime = getStartTime();
-						long currentTime = System.currentTimeMillis();
-						if ((currentTime - localLastEventTime) >= timeout && timeout != 0) {
-							if (wasTimedOut == false) {
-								fireInactive();
-								// timed out
-								wasTimedOut = true;
-							}
-							wait = SHORT_TICK;
-						} else {
-							if (wasTimedOut) {
-								wasTimedOut = false;
-								// back...
-								setStartTime(localLastEventTime);
-							} else {
-								addMonitoredActivityTime(localStartTime, currentTime);
-								setStartTime(currentTime);
-							}
-							wait = TICK;
-						}
-
-					}
-				}
-				return Status.OK_STATUS;
-			} finally {
-				if (Platform.isRunning()) {
-					checkJob.schedule(wait);
-				}
-			}
-		}
-	}
-
 	public void setInactivityTimeout(int inactivityTimeout) {
-		timeout = inactivityTimeout;
+		checkJob.setInactivityTimeout(inactivityTimeout);
 	}
 
 	public int getInactivityTimeout() {
-		return timeout;
+		return checkJob.getInactivityTimeout();
 	}
 
 	/**
