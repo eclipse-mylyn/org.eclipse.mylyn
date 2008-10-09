@@ -372,12 +372,13 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 
 		@Override
 		public void hideHyperlinks() {
-			Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
-			if (cursorControl != null) {
-				cursorControl.setToolTipText(null);
+			if (currentTaskHyperlink != null) {
+				Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
+				if (cursorControl != null) {
+					cursorControl.setToolTipText(null);
+				}
+				currentTaskHyperlink = null;
 			}
-			currentTaskHyperlink = null;
-
 			super.hideHyperlinks();
 		}
 	}
