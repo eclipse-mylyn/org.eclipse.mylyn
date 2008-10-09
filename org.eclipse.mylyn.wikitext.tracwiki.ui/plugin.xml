@@ -2,7 +2,7 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
+         point="org.eclipse.mylyn.sandbox.ui.taskEditorExtensions">
       <taskEditorExtension
             class="org.eclipse.mylyn.internal.wikitext.tracwiki.ui.editors.TracWikiTaskEditorExtension"
             id="org.eclipse.mylyn.wikitext.tracwiki.ui.taskEditorExtension"
