@@ -230,12 +230,13 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 		@Override
 		public void hideHyperlinks() {
-			Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
-			if (cursorControl != null) {
-				cursorControl.setToolTipText(null);
+			if (currentTaskHyperlink != null) {
+				Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
+				if (cursorControl != null) {
+					cursorControl.setToolTipText(null);
+				}
+				currentTaskHyperlink = null;
 			}
-			currentTaskHyperlink = null;
-
 			super.hideHyperlinks();
 		}
 
