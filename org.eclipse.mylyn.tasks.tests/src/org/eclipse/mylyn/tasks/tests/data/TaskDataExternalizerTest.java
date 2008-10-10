@@ -43,6 +43,7 @@ public class TaskDataExternalizerTest extends TestCase {
 		ZipInputStream in = new ZipInputStream(new FileInputStream(file));
 		try {
 			in.getNextEntry();
+			@SuppressWarnings("unused")
 			ITaskDataWorkingCopy state = externalizer.readState(in);
 		} finally {
 			in.close();
@@ -83,6 +84,7 @@ public class TaskDataExternalizerTest extends TestCase {
 		}
 
 		TaskData taskData = state.getRepositoryData();
+		@SuppressWarnings("unused")
 		TaskMapper taskScheme = new TaskMapper(taskData);
 
 		fail("fixme");

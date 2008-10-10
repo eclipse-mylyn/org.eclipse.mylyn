@@ -44,7 +44,6 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
@@ -132,8 +131,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	protected static final String CONTEXT_MENU_ID = "#MylynPlanningEditor";
 
-	private Text pathText;
-
 	private Text endDate;
 
 	private ScrolledForm form;
@@ -184,8 +181,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	};
 
 	private FormToolkit toolkit;
-
-	private ToggleTaskActivationAction activateAction;
 
 	private ITaskActivityListener timingListener;
 
