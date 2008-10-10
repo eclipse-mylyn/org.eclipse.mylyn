@@ -26,6 +26,7 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
@@ -62,7 +63,7 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 public class RepositoryTextViewerConfiguration extends TextSourceViewerConfiguration {
 
 	public enum Mode {
-		URL, TASK_RELATION, DEFAULT
+		URL, TASK, TASK_RELATION, DEFAULT
 	}
 
 	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor";
@@ -115,17 +116,47 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if (mode == Mode.URL) {
-			return new IHyperlinkDetector[] { new TaskUrlHyperlinkDetector() };
-		} else if (mode == Mode.TASK_RELATION) {
-			return new IHyperlinkDetector[] { new TaskRelationHyperlinkDetector() };
+		if (mode == Mode.URL || mode == Mode.TASK_RELATION) {
+			return getDefaultHyperlinkDetectors(sourceViewer, mode);
 		}
 		return super.getHyperlinkDetectors(sourceViewer);
+	}
+
+	public IHyperlinkDetector[] getDefaultHyperlinkDetectors(ISourceViewer sourceViewer, Mode mode) {
+		IHyperlinkDetector[] detectors;
+		if (mode == Mode.URL) {
+			detectors = new IHyperlinkDetector[] { new TaskUrlHyperlinkDetector() };
+		} else if (mode == Mode.TASK) {
+			detectors = new IHyperlinkDetector[] { new TaskHyperlinkDetector() };
+		} else if (mode == Mode.TASK_RELATION) {
+			detectors = new IHyperlinkDetector[] { new TaskRelationHyperlinkDetector() };
+		} else {
+			detectors = super.getHyperlinkDetectors(sourceViewer);
+		}
+		if (detectors != null) {
+			IAdaptable target = getDefaultHyperlinkTarget();
+			for (IHyperlinkDetector hyperlinkDetector : detectors) {
+				if (hyperlinkDetector instanceof AbstractHyperlinkDetector) {
+					((AbstractHyperlinkDetector) hyperlinkDetector).setContext(target);
+				}
+			}
+		}
+		return detectors;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Map getHyperlinkDetectorTargets(final ISourceViewer sourceViewer) {
+		IAdaptable context = getDefaultHyperlinkTarget();
+
+		Map targets = new HashMap();
+		targets.put(ID_CONTEXT_EDITOR_TEXT, context);
+		targets.put(ID_CONTEXT_EDITOR_TASK, context);
+		return targets;
+	}
+
+	@SuppressWarnings("unchecked")
+	private IAdaptable getDefaultHyperlinkTarget() {
 		IAdaptable context = new IAdaptable() {
 			public Object getAdapter(Class adapter) {
 				if (adapter == TaskRepository.class) {
@@ -134,11 +165,7 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 				return null;
 			}
 		};
-
-		Map targets = new HashMap();
-		targets.put(ID_CONTEXT_EDITOR_TEXT, context);
-		targets.put(ID_CONTEXT_EDITOR_TASK, context);
-		return targets;
+		return context;
 	}
 
 	public TaskRepository getTaskRepository() {

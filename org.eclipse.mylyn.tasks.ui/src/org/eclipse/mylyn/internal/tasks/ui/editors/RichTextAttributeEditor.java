@@ -129,10 +129,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 		// NOTE: configuration must be applied before the document is set in order for
 		// hyper link coloring to work, the Presenter requires the document object up front
-		RepositoryTextViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(taskRepository,
-				spellCheckingEnabled);
-		viewerConfig.setMode(getMode());
-		viewer.configure(viewerConfig);
+		configure();
 
 		Document document = new Document(getValue());
 		if (isReadOnly()) {
@@ -145,20 +142,36 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 			viewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		}
 
-		TaskHyperlinkTextPresentationManager hyperlinkTextPresentationManager = new TaskHyperlinkTextPresentationManager();
-		if (mode == Mode.TASK_RELATION) {
-			hyperlinkTextPresentationManager.setHyperlinkDetector(new TaskRelationHyperlinkDetector());
-		} else {
-			hyperlinkTextPresentationManager.setHyperlinkDetector(new TaskHyperlinkDetector());
-		}
-		hyperlinkTextPresentationManager.install(viewer);
-
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		Font font = themeManager.getCurrentTheme().getFontRegistry().get(CommonThemes.FONT_EDITOR_COMMENT);
 		viewer.getTextWidget().setFont(font);
 		toolkit.adapt(viewer.getTextWidget(), false, false);
 
 		setControl(viewer.getTextWidget());
+	}
+
+	private RepositoryTextViewerConfiguration configure() {
+		RepositoryTextViewerConfiguration configuration = new RepositoryTextViewerConfiguration(taskRepository,
+				spellCheckingEnabled);
+		configuration.setMode(getMode());
+		viewer.configure(configuration);
+
+		AbstractHyperlinkTextPresentationManager manager;
+		if (getMode() == Mode.DEFAULT) {
+			manager = new HighlightingHyperlinkTextPresentationManager();
+			manager.setHyperlinkDetectors(configuration.getDefaultHyperlinkDetectors(viewer, null));
+			manager.install(viewer);
+
+			manager = new TaskHyperlinkTextPresentationManager();
+			manager.setHyperlinkDetectors(configuration.getDefaultHyperlinkDetectors(viewer, Mode.TASK));
+			manager.install(viewer);
+		} else if (getMode() == Mode.TASK_RELATION) {
+			manager = new TaskHyperlinkTextPresentationManager();
+			manager.setHyperlinkDetectors(configuration.getDefaultHyperlinkDetectors(viewer, Mode.TASK_RELATION));
+			manager.install(viewer);
+		}
+
+		return configuration;
 	}
 
 	private void installListeners(RepositoryTextViewer viewer2) {
