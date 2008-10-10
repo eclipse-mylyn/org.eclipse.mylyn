@@ -340,9 +340,8 @@ public class TaskListToolTip extends ToolTip {
 	}
 
 	private ProgressData getProgressData(IRepositoryElement element) {
-		if (element instanceof ITask) {
-			return null;
-		} else if (element instanceof ITaskContainer) {
+		System.err.println(">>>> " + element);
+		if (element instanceof ITaskContainer) {
 			Object[] children = new Object[0];
 
 			children = ((ITaskContainer) element).getChildren().toArray();
