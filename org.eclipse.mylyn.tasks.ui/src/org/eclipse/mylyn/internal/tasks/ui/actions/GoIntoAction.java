@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,9 +28,6 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.view.go.into";
 
-	//		
-	// private DrillDownAdapter drillDownAdapter;
-	//	
 	public GoIntoAction() {
 		setId(ID);
 		setText(LABEL);
@@ -40,7 +37,6 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 
 	public void init(IViewPart view) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -57,6 +53,5 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
-
 	}
 }
