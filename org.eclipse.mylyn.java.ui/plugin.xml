@@ -445,7 +445,7 @@
    <extension point="org.eclipse.jdt.ui.javaElementFilters">
         <filter
             targetId="org.eclipse.jdt.ui.PackageExplorer"
-            name="Java Declarations Filter"
+            name="Java Members"
             enabled="false"
             description="Java Declarations Filter"
             class="org.eclipse.mylyn.internal.java.ui.JavaDeclarationsFilter"
