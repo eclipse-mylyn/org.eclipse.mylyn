@@ -24,9 +24,9 @@ public class WeekDateRange extends DateRange {
 
 	private static final String DESCRIPTION_PREVIOUS_WEEK = "Previous Week";
 
-	private static final String DESCRIPTION_THIS_WEEK = "Someday This Week";
+	private static final String DESCRIPTION_THIS_WEEK = "This Week";
 
-	private static final String DESCRIPTION_NEXT_WEEK = "Someday Next Week";
+	private static final String DESCRIPTION_NEXT_WEEK = "Next Week";
 
 	private final List<DayDateRange> days = new ArrayList<DayDateRange>();
 

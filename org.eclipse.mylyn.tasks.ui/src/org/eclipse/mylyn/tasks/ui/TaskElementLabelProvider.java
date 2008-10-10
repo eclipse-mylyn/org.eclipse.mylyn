@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AutomaticRepositoryTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
 import org.eclipse.mylyn.internal.tasks.core.Person;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -33,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -133,7 +135,15 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else if (element instanceof ITask) {
 					compositeDescriptor.icon = TasksUiImages.TASK;
 				} else if (element instanceof ScheduledTaskContainer) {
-					compositeDescriptor.icon = CommonImages.CALENDAR;
+					ScheduledTaskContainer scheduledTaskContainer = (ScheduledTaskContainer) element;
+					System.err.println(">>>> " + scheduledTaskContainer.getClass());
+					if (scheduledTaskContainer.getDateRange() instanceof DayDateRange) {
+						compositeDescriptor.icon = CommonImages.SCHEDULE_DAY;
+					} else if (scheduledTaskContainer.getDateRange() instanceof WeekDateRange) {
+						compositeDescriptor.icon = CommonImages.SCHEDULE_WEEK;
+					} else {
+						compositeDescriptor.icon = TasksUiImages.QUERY_UNMATCHED;
+					}
 				} else if (element instanceof Person) {
 					compositeDescriptor.icon = CommonImages.PERSON;
 					Person person = (Person) element;
