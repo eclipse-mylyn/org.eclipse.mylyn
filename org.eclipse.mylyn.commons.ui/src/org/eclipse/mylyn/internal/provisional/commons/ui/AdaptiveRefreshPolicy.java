@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -24,34 +25,31 @@ import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class AdaptiveRefreshPolicy {
 
-	private int refreshThreshold = 1500;
+	private int refreshDelay = 1500;
 
 	private final Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
-
-	private Text filterText = null;
 
 	private String oldText = "";
 
 	protected Job refreshJob;
 
-	/**
-	 * @param refreshJob
-	 * @param filterText
-	 *            can be null
-	 */
+	@Deprecated
 	public AdaptiveRefreshPolicy(Job refreshJob, Text filterText) {
+		this(refreshJob);
+	}
+
+	public AdaptiveRefreshPolicy(Job refreshJob) {
+		Assert.isNotNull(refreshJob);
 		this.refreshJob = refreshJob;
-		this.filterText = filterText;
 		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
 	}
 
 	public void dispose() {
-		if (refreshJob != null) {
-			refreshJob.removeJobChangeListener(REFRESH_JOB_LISTENER);
-		}
+		refreshJob.removeJobChangeListener(REFRESH_JOB_LISTENER);
 	}
 
 	protected final IJobChangeListener REFRESH_JOB_LISTENER = new IJobChangeListener() {
@@ -65,13 +63,15 @@ public class AdaptiveRefreshPolicy {
 		}
 
 		public void done(IJobChangeEvent event) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					for (IFilteredTreeListener listener : listeners) {
-						listener.filterTextChanged(filterText.getText());
+			if (event.getResult().isOK()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						for (IFilteredTreeListener listener : listeners) {
+							listener.filterTextChanged(oldText);
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 
 		public void running(IJobChangeEvent event) {
@@ -88,20 +88,19 @@ public class AdaptiveRefreshPolicy {
 	};
 
 	public void textChanged(String text) {
-		if (refreshJob == null || (oldText != null && oldText.equals(text))) {
+		if (text == null || text.equals(oldText)) {
 			return;
 		}
 
 		refreshJob.cancel();
-		int refreshDelay = 0;
+		int delay = 0;
 		int textLength = text.length();
 		if (textLength > 0) {
-			refreshDelay = (int) (refreshThreshold / (textLength * 0.6));
+			delay = (int) (this.refreshDelay / (textLength * 0.6));
 		}
-		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
-		refreshJob.schedule(refreshDelay);
+		refreshJob.schedule(delay);
 
-		oldText = text;
+		this.oldText = text;
 	}
 
 	/**
@@ -120,7 +119,11 @@ public class AdaptiveRefreshPolicy {
 	}
 
 	public void setRefreshDelay(int refreshDelay) {
-		this.refreshThreshold = refreshDelay;
+		this.refreshDelay = refreshDelay;
+	}
+
+	public int getRefreshDelay() {
+		return refreshDelay;
 	}
 
 }

@@ -64,7 +64,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
 			refreshField.setAccessible(true);
 			refreshJob = (Job) refreshField.get(this);
-			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob, super.getFilterControl());
+			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
 		} catch (Exception e) {
 			CommonsUiPlugin.getDefault().getLog().log(
 					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Could not get refresh job", e));
@@ -190,7 +190,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 		super.textChanged();
 
 		if (refreshPolicy != null) {
-			refreshPolicy.textChanged(filterText.getText());
+			refreshPolicy.textChanged(getFilterString());
 		}
 		// bug 165353 work-around for premature return at FilteredTree.java:374
 		updateToolbar(true);
