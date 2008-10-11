@@ -136,7 +136,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					compositeDescriptor.icon = TasksUiImages.TASK;
 				} else if (element instanceof ScheduledTaskContainer) {
 					ScheduledTaskContainer scheduledTaskContainer = (ScheduledTaskContainer) element;
-					System.err.println(">>>> " + scheduledTaskContainer.getClass());
 					if (scheduledTaskContainer.getDateRange() instanceof DayDateRange) {
 						compositeDescriptor.icon = CommonImages.SCHEDULE_DAY;
 					} else if (scheduledTaskContainer.getDateRange() instanceof WeekDateRange) {
