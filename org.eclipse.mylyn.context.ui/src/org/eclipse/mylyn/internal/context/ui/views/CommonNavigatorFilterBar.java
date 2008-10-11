@@ -77,7 +77,7 @@ public class CommonNavigatorFilterBar extends Composite {
 		createRefreshJob();
 		setInitialText("");
 		setFont(parent.getFont());
-		refreshPolicy = new AdaptiveRefreshPolicy(refreshJob, filterText);
+		refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
 	}
 
 	protected void textChanged() {
