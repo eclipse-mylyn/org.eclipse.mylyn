@@ -380,8 +380,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private AttributeEditorToolkit attributeEditorToolkit;
 
-	private Action clearOutgoingAction;
-
 	private AbstractRepositoryConnector connector;
 
 	private final String connectorKind;
@@ -394,8 +392,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private boolean formBusy;
 
-	private Action historyAction;
-
 	private Control lastFocusControl;
 
 	private ISelection lastSelection;
@@ -404,10 +400,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private boolean needsAddToCategory;
 
-	private NewSubTaskAction newSubTaskAction;
-
-	private Action openBrowserAction;
-
 	private boolean reflow;
 
 	private volatile boolean refreshDisabled;
@@ -415,8 +407,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	private final ListenerList selectionChangedListeners;
 
 	private SynchronizeEditorAction synchronizeEditorAction;
-
-	private DeleteTaskEditorAction deleteAction;
 
 	private ITask task;
 
@@ -859,11 +849,12 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			toolBarManager.add(synchronizeEditorAction);
 		} else {
 			if (taskData.isNew()) {
-				deleteAction = new DeleteTaskEditorAction(getTask());
+				DeleteTaskEditorAction deleteAction = new DeleteTaskEditorAction(getTask());
 				toolBarManager.add(deleteAction);
 			} else if (taskRepository != null) {
-				clearOutgoingAction = new ClearOutgoingAction(Collections.singletonList((IRepositoryElement) task));
-				((ClearOutgoingAction) clearOutgoingAction).setTaskEditorPage(this);
+				ClearOutgoingAction clearOutgoingAction = new ClearOutgoingAction(
+						Collections.singletonList((IRepositoryElement) task));
+				(clearOutgoingAction).setTaskEditorPage(this);
 				if (clearOutgoingAction.isEnabled()) {
 					toolBarManager.add(clearOutgoingAction);
 				}
@@ -874,7 +865,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					toolBarManager.add(synchronizeEditorAction);
 				}
 
-				newSubTaskAction = new NewSubTaskAction();
+				NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
 				newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(task));
 				if (newSubTaskAction.isEnabled()) {
 					toolBarManager.add(newSubTaskAction);
@@ -884,7 +875,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				if (connectorUi != null) {
 					final String historyUrl = connectorUi.getTaskHistoryUrl(taskRepository, task);
 					if (historyUrl != null) {
-						historyAction = new Action() {
+						Action historyAction = new Action() {
 							@Override
 							public void run() {
 								TasksUiUtil.openUrl(historyUrl);
@@ -899,7 +890,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 				final String taskUrlToOpen = task.getUrl();
 				if (taskUrlToOpen != null) {
-					openBrowserAction = new Action() {
+					Action openBrowserAction = new Action() {
 						@Override
 						public void run() {
 							TasksUiUtil.openUrl(taskUrlToOpen);

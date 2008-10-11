@@ -43,6 +43,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduleDatePicker;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -153,8 +154,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private final TaskEditor parentEditor;
 
-	private NewSubTaskAction newSubTaskAction;
-
 	private final ITaskListChangeListener TASK_LIST_LISTENER = new TaskListChangeAdapter() {
 
 		@Override
@@ -195,9 +194,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 	 */
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
-		if (taskEditorInput != null && taskEditorInput.getTask() != null
-				&& taskEditorInput.getTask() instanceof LocalTask) {
-			newSubTaskAction = new NewSubTaskAction();
+		if (taskEditorInput.getTask() instanceof LocalTask) {
+			DeleteTaskEditorAction deleteAction = new DeleteTaskEditorAction(taskEditorInput.getTask());
+			toolBarManager.add(deleteAction);
+
+			NewSubTaskAction newSubTaskAction = new NewSubTaskAction();
 			newSubTaskAction.selectionChanged(newSubTaskAction, new StructuredSelection(taskEditorInput.getTask()));
 			if (newSubTaskAction.isEnabled()) {
 				toolBarManager.add(newSubTaskAction);
