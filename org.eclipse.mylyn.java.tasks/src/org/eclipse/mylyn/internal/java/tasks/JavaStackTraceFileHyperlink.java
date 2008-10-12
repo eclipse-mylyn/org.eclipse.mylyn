@@ -21,6 +21,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.tasks.ui.IHighlightingHyperlink;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -31,15 +32,18 @@ import org.eclipse.ui.texteditor.ITextEditor;
 /**
  * @author Rob Elves
  */
-public class JavaStackTraceFileHyperlink implements IHyperlink {
+public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyperlink {
 
 	private final IRegion region;
 
 	private final String traceLine;
 
-	public JavaStackTraceFileHyperlink(IRegion region, String traceLine) {
+	private final IRegion highlightingRegion;
+
+	public JavaStackTraceFileHyperlink(IRegion region, String traceLine, IRegion highlightingRegion) {
 		this.region = region;
 		this.traceLine = traceLine;
+		this.highlightingRegion = highlightingRegion;
 	}
 
 	public IRegion getHyperlinkRegion() {
@@ -217,6 +221,10 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 		}
 
 		throw new CoreException(null);
+	}
+
+	public IRegion getHighlightingRegion() {
+		return (highlightingRegion != null) ? highlightingRegion : region;
 	}
 
 }
