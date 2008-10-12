@@ -23,6 +23,7 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.mylyn.tasks.ui.IHighlightingHyperlink;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.swt.custom.StyleRange;
 
@@ -55,7 +56,7 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 
 	private class Support implements ITextPresentationListener {
 		public void applyTextPresentation(TextPresentation textPresentation) {
-			StyleRange[] styleRanges = computeStyleRanges(textPresentation.getExtent());
+			StyleRange[] styleRanges = computeStyleRanges(textPresentation.getCoverage());
 			if (styleRanges != null && styleRanges.length > 0) {
 				textPresentation.mergeStyleRanges(styleRanges);
 			}
@@ -136,7 +137,8 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 						if (regions == null) {
 							regions = new ArrayList<IRegion>();
 						}
-						regions.add(hyperlink.getHyperlinkRegion());
+						regions.add(hyperlink instanceof IHighlightingHyperlink ? ((IHighlightingHyperlink) hyperlink).getHighlightingRegion()
+								: hyperlink.getHyperlinkRegion());
 					}
 				}
 			}
