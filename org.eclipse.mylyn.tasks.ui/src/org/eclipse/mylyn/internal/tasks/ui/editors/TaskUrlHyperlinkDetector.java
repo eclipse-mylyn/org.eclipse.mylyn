@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,9 +22,11 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
- * Source from {@link org.eclipse.jface.text.hyperlink.URLHyperlinkDetector}
+ * Source from {@link org.eclipse.jface.text.hyperlink.URLHyperlinkDetector}. Returns hyperlinks that use
+ * {@link TasksUiUtil} to open urls.
  * 
  * @author Rob Elves
  */
@@ -153,4 +155,5 @@ public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 		IRegion urlRegion = new Region(offset + urlOffsetInLine, urlLength);
 		return new IHyperlink[] { new TaskUrlHyperlink(urlRegion, urlString) };
 	}
+
 }

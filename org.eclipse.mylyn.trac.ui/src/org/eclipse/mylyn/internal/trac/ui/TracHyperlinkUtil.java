@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,70 +112,70 @@ public class TracHyperlinkUtil {
 	 * 
 	 * @see http://trac.edgewall.org/wiki/TracLinks
 	 */
-	public static IHyperlink[] findTracHyperlinks(TaskRepository repository, String text, int lineOffset,
-			int regionOffset) {
+	public static List<IHyperlink> findTracHyperlinks(TaskRepository repository, String text, int offsetInText,
+			int textOffset) {
 		List<IHyperlink> links = new ArrayList<IHyperlink>();
 
 		Matcher m = ticketPattern.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String id = m.group(2);
-				links.add(new TaskHyperlink(determineRegion(regionOffset, m), repository, id));
+				links.add(new TaskHyperlink(determineRegion(textOffset, m), repository, id));
 			}
 		}
 
 		m = commentPattern.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String id = m.group(1);
 				// String comment = m.group(2);
-				links.add(new TaskHyperlink(determineRegion(regionOffset, m), repository, id));
+				links.add(new TaskHyperlink(determineRegion(textOffset, m), repository, id));
 			}
 		}
 
 		m = reportPattern1.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String id = m.group(1);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
+				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
 						+ ITracClient.REPORT_URL + id));
 			}
 		}
 
 		m = reportPattern2.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String id = m.group(1);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
+				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
 						+ ITracClient.REPORT_URL + id));
 			}
 		}
 
 		m = revisionLogPattern1.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String rev = m.group(1);
 				String stopRev = m.group(2);
 				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev
 						+ "&stop_rev=" + stopRev;
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
 
 		m = revisionLogPattern2.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String rev = m.group(1);
 				String stopRev = m.group(2);
 				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev
 						+ "&stop_rev=" + stopRev;
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
 
 		m = revisionLogPattern3.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String branch = m.group(1);
 				String rev = m.group(2);
 				String stopRev = m.group(3);
@@ -184,50 +184,50 @@ public class TracHyperlinkUtil {
 					url += branch;
 				}
 				url += "?rev=" + rev + "&stop_rev=" + stopRev;
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
 
 		m = changesetPattern1.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String rev = m.group(2);
 				String branch = m.group(3);
 				String url = repository.getRepositoryUrl() + ITracClient.CHANGESET_URL + rev;
 				if (branch != null) {
 					url += branch;
 				}
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
 
 		m = changesetPattern2.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String rev = m.group(1);
 				String branch = m.group(2);
 				String url = repository.getRepositoryUrl() + ITracClient.CHANGESET_URL + rev;
 				if (branch != null) {
 					url += branch;
 				}
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
 
 		m = diffPattern1.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String old_rev = m.group(1);
 				String new_rev = m.group(2);
 				String url = repository.getRepositoryUrl() + ITracClient.CHANGESET_URL;
 				url += "?new=" + new_rev + "&old=" + old_rev;
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
 
 		m = diffPattern2.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String old_path = m.group(1);
 				String old_rev = m.group(3);
 				String new_path = m.group(4);
@@ -246,49 +246,49 @@ public class TracHyperlinkUtil {
 				if (old_rev != null) {
 					url += "&old=" + old_rev;
 				}
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
 
 		m = wikiPattern1.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String page = m.group(1);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
+				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
 						+ ITracClient.WIKI_URL + page));
 			}
 		}
 
 		m = wikiPattern2.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String page = m.group(0);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
+				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
 						+ ITracClient.WIKI_URL + page));
 			}
 		}
 
 		m = milestonePattern.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String milestone = m.group(1);
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), repository.getRepositoryUrl()
+				links.add(new WebHyperlink(determineRegion(textOffset, m), repository.getRepositoryUrl()
 						+ ITracClient.MILESTONE_URL + milestone));
 			}
 		}
 
 		m = attachmentPattern.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String id = m.group(1);
 				// String attachment = m.group(2);
-				links.add(new TaskHyperlink(determineRegion(regionOffset, m), repository, id));
+				links.add(new TaskHyperlink(determineRegion(textOffset, m), repository, id));
 			}
 		}
 
 		m = filesPattern.matcher(text);
 		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
+			if (isInRegion(offsetInText, m)) {
 				String filename = m.group(1);
 				String rev = m.group(3);
 				String line = m.group(5);
@@ -299,19 +299,19 @@ public class TracHyperlinkUtil {
 						url += "#L" + line;
 					}
 				}
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
 
-		return links.isEmpty() ? null : links.toArray(new IHyperlink[0]);
+		return links;
 	}
 
-	private static boolean isInRegion(int lineOffset, Matcher m) {
-		return (lineOffset >= m.start() && lineOffset <= m.end());
+	private static boolean isInRegion(int offsetInText, Matcher m) {
+		return (offsetInText == -1) || (offsetInText >= m.start() && offsetInText <= m.end());
 	}
 
-	private static IRegion determineRegion(int regionOffset, Matcher m) {
-		return new Region(regionOffset + m.start(), m.end() - m.start());
+	private static IRegion determineRegion(int textOffset, Matcher m) {
+		return new Region(textOffset + m.start(), m.end() - m.start());
 	}
 
 }

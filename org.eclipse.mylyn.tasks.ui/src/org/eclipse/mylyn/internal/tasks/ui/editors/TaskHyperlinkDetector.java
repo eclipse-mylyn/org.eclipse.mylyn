@@ -7,120 +7,35 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
- *     Eugene Kuleshov - improvements
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
 
 /**
- * @author Rob Elves
+ * Delegates to {@link AbstractRepositoryConnectorUi} for detecting hyperlinks.
+ * 
  * @author Steffen Pingel
- * @author Eugene Kuleshov
- * @author Terry Hon
  */
-public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
+public class TaskHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, final IRegion region, boolean canShowMultipleHyperlinks) {
-		if (region == null || textViewer == null) {
-			return null;
-		}
-
-		IDocument document = textViewer.getDocument();
-		if (document == null || document.getLength() == 0) {
-			return null;
-		}
-
-		String content;
-		int contentOffset;
-		int index;
-		try {
-			if (region.getLength() == 0) {
-				// expand the region to include the whole line
-				IRegion lineInfo = document.getLineInformationOfOffset(region.getOffset());
-				int lineLength = lineInfo.getLength();
-				int lineOffset = lineInfo.getOffset();
-				int lineEnd = lineOffset + lineLength;
-				int regionEnd = region.getOffset() + region.getLength();
-				if (lineOffset < region.getOffset()) {
-					int regionLength = Math.max(regionEnd, lineEnd) - lineOffset;
-					contentOffset = lineOffset;
-					content = document.get(lineOffset, regionLength);
-					index = region.getOffset() - lineOffset;
-				} else {
-					// the line starts after region, may never happen 
-					int regionLength = Math.max(regionEnd, lineEnd) - region.getOffset();
-					contentOffset = region.getOffset();
-					content = document.get(contentOffset, regionLength);
-					index = 0;
-				}
-			} else {
-				content = document.get(region.getOffset(), region.getLength());
-				contentOffset = region.getOffset();
-				index = -1;
-			}
-		} catch (BadLocationException ex) {
-			return null;
-		}
-
-		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
-		TaskRepository selectedRepository = getTaskRepository(textViewer);
-		if (selectedRepository != null) {
-			repositories.add(selectedRepository);
-		} else {
-			repositories.addAll(TasksUi.getRepositoryManager().getAllRepositories());
-		}
-
-		List<IHyperlink> hyperlinks = detectHyperlinks(content, index, contentOffset, repositories);
-		if (hyperlinks == null) {
-			return null;
-		}
-
-		// filter hyperlinks that do not match original region
-		if (region.getLength() == 0) {
-			for (Iterator<IHyperlink> it = hyperlinks.iterator(); it.hasNext();) {
-				IHyperlink hyperlink = it.next();
-				IRegion hyperlinkRegion = hyperlink.getHyperlinkRegion();
-				if (!isInRegion(region, hyperlinkRegion)) {
-					it.remove();
-				}
-			}
-		}
-		if (hyperlinks.isEmpty()) {
-			return null;
-		}
-
-		return hyperlinks.toArray(new IHyperlink[hyperlinks.size()]);
-	}
-
-	protected List<IHyperlink> detectHyperlinks(final String content, final int index, final int contentOffset,
-			List<TaskRepository> repositories) {
+	@Override
+	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, final String content, final int index,
+			final int contentOffset) {
 		List<IHyperlink> result = null;
-		for (final TaskRepository repository : repositories) {
+		for (final TaskRepository repository : getTaskRepositories(textViewer)) {
 			final AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository);
 			if (connectorUi == null) {
 				continue;
@@ -148,45 +63,6 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	protected AbstractRepositoryConnectorUi getConnectorUi(TaskRepository repository) {
 		return TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-	}
-
-	private boolean isInRegion(IRegion matchRegion, IRegion hyperlinkRegion) {
-		return matchRegion.getOffset() >= hyperlinkRegion.getOffset()
-				&& matchRegion.getOffset() <= hyperlinkRegion.getOffset() + hyperlinkRegion.getLength();
-	}
-
-	protected TaskRepository getTaskRepository(ITextViewer textViewer) {
-		TaskRepository repository = (TaskRepository) getAdapter(TaskRepository.class);
-		if (repository != null) {
-			return repository;
-		}
-
-		IResource resource = (IResource) getAdapter(IResource.class);
-		if (resource == null) {
-			if (textViewer instanceof RepositoryTextViewer) {
-				RepositoryTextViewer viewer = (RepositoryTextViewer) textViewer;
-				return viewer.getRepository();
-			}
-
-			// use currently active editor (if any)
-			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (window != null) {
-				IWorkbenchPage activePage = window.getActivePage();
-				if (activePage != null) {
-					IWorkbenchPart part = activePage.getActivePart();
-					if (part instanceof IEditorPart) {
-						IEditorInput input = ((IEditorPart) part).getEditorInput();
-						if (input != null) {
-							resource = (IResource) input.getAdapter(IResource.class);
-						}
-					}
-				}
-			}
-		}
-		if (resource != null) {
-			return TasksUiPlugin.getDefault().getRepositoryForResource(resource);
-		}
-		return null;
 	}
 
 }

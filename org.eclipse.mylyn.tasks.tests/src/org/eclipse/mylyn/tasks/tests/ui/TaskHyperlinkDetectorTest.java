@@ -24,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
 
 /**
  * @author Steffen Pingel
@@ -41,7 +42,7 @@ public class TaskHyperlinkDetectorTest extends TestCase {
 	}
 
 	protected IHyperlink[] detect(final String text, int start, int length) {
-		TaskHyperlinkDetector detector = createHyperlinkDetector();
+		AbstractTaskHyperlinkDetector detector = createHyperlinkDetector();
 		return detector.detectHyperlinks(new TextViewer() {
 			@Override
 			public IDocument getDocument() {
@@ -50,7 +51,7 @@ public class TaskHyperlinkDetectorTest extends TestCase {
 		}, new Region(start, length), true);
 	}
 
-	protected TaskHyperlinkDetector createHyperlinkDetector() {
+	protected AbstractTaskHyperlinkDetector createHyperlinkDetector() {
 		TaskHyperlinkDetector detector = new TaskHyperlinkDetector() {
 			@Override
 			protected TaskRepository getTaskRepository(ITextViewer textViewer) {

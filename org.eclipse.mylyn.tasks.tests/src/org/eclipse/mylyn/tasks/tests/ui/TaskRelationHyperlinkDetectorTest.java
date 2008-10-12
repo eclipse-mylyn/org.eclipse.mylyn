@@ -12,10 +12,9 @@
 package org.eclipse.mylyn.tasks.tests.ui;
 
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskHyperlinkDetector;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskRelationHyperlinkDetector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
 
 /**
  * @author Steffen Pingel
@@ -23,16 +22,11 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 public class TaskRelationHyperlinkDetectorTest extends TaskHyperlinkDetectorTest {
 
 	@Override
-	protected TaskHyperlinkDetector createHyperlinkDetector() {
+	protected AbstractTaskHyperlinkDetector createHyperlinkDetector() {
 		TaskRelationHyperlinkDetector detector = new TaskRelationHyperlinkDetector() {
 			@Override
 			protected TaskRepository getTaskRepository(ITextViewer textViewer) {
 				return repository;
-			}
-
-			@Override
-			protected AbstractRepositoryConnectorUi getConnectorUi(TaskRepository repository) {
-				return connectorUi;
 			}
 		};
 		return detector;

@@ -23,24 +23,25 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 
 /**
  * @author Steffen Pingel
  */
-public class TaskRelationHyperlinkDetector extends TaskHyperlinkDetector {
+public class TaskRelationHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 
 	private static Pattern HYPERLINK_PATTERN = Pattern.compile("([^\\s,]+)");
 
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		if (region == null || textViewer == null || textViewer.getDocument() == null) {
-			return null;
-		}
-
 		if (region.getLength() > 0) {
 			return super.detectHyperlinks(textViewer, region, canShowMultipleHyperlinks);
 		} else {
+			if (textViewer.getDocument() == null) {
+				return null;
+			}
+
 			TaskRepository taskRepository = getTaskRepository(textViewer);
 			if (taskRepository != null) {
 				String prefix = extractPrefix(textViewer, region.getOffset());
@@ -56,10 +57,9 @@ public class TaskRelationHyperlinkDetector extends TaskHyperlinkDetector {
 	}
 
 	@Override
-	protected List<IHyperlink> detectHyperlinks(String content, int index, int contentOffset,
-			List<TaskRepository> repositories) {
+	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int index, int contentOffset) {
 		List<IHyperlink> links = null;
-		for (TaskRepository repository : repositories) {
+		for (TaskRepository repository : getTaskRepositories(textViewer)) {
 			Matcher m = HYPERLINK_PATTERN.matcher(content);
 			while (m.find()) {
 				if (links == null) {
