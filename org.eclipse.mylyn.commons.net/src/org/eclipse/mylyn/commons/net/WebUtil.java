@@ -32,6 +32,7 @@ import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpMethodBase;
+import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -45,6 +46,7 @@ import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
@@ -257,9 +259,16 @@ public class WebUtil {
 	 */
 	public static int execute(final HttpClient client, final HostConfiguration hostConfiguration,
 			final HttpMethod method, IProgressMonitor monitor) throws IOException {
-		if (client == null || method == null) {
-			throw new IllegalArgumentException();
-		}
+		return execute(client, hostConfiguration, method, null, monitor);
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public static int execute(final HttpClient client, final HostConfiguration hostConfiguration,
+			final HttpMethod method, final HttpState state, IProgressMonitor monitor) throws IOException {
+		Assert.isNotNull(client);
+		Assert.isNotNull(method);
 
 		monitor = Policy.monitorFor(monitor);
 
@@ -270,7 +279,7 @@ public class WebUtil {
 			}
 
 			public Integer call() throws Exception {
-				return client.executeMethod(hostConfiguration, method);
+				return client.executeMethod(hostConfiguration, method, state);
 			}
 		};
 
@@ -569,6 +578,7 @@ public class WebUtil {
 	 * -Dorg.apache.commons.logging.simplelog.log.org.apache.axis.message=debug
 	 * 
 	 * </pre>
+	 * 
 	 * </p>
 	 */
 	private static void initCommonsLoggingSettings() {

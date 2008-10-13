@@ -56,6 +56,7 @@ public class PollingProtocolSocketFactory implements ProtocolSocketFactory {
 		int timeout = params.getConnectionTimeout();
 		Socket socket = factory.createSocket();
 		socket.bind(new InetSocketAddress(localAddress, localPort));
+		// FIME convert OperationCanceledException?
 		WebUtil.connect(socket, new InetSocketAddress(host, port), timeout, monitor);
 		return socket;
 	}
