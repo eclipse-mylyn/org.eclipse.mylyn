@@ -67,10 +67,10 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 		private HostConfiguration hostConfiguration;
 
-		private final HttpRequestInterceptor interceptor;
+		private final HttpMethodInterceptor interceptor;
 
 		public TracHttpClientTransport(XmlRpcClient client, HttpClient httpClient, AbstractWebLocation location,
-				HttpRequestInterceptor interceptor) {
+				HttpMethodInterceptor interceptor) {
 			super(client, "");
 			this.httpClient = httpClient;
 			this.location = location;
@@ -135,7 +135,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			method.getParams().setVersion(HttpVersion.HTTP_1_1);
 
 			if (interceptor != null) {
-				interceptor.process(method);
+				interceptor.processRequest(method);
 			}
 		}
 
@@ -208,6 +208,9 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 			try {
 				WebUtil.execute(httpClient, hostConfiguration, method, monitor);
+				if (interceptor != null) {
+					interceptor.processResponse(method);
+				}
 			} catch (XmlRpcIOException e) {
 				Throwable t = e.getLinkedException();
 				if (t instanceof XmlRpcException) {
@@ -240,7 +243,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 	private final HttpClient httpClient;
 
-	private HttpRequestInterceptor interceptor;
+	private HttpMethodInterceptor interceptor;
 
 	public TracHttpClientTransportFactory(XmlRpcClient xmlRpcClient, HttpClient httpClient) {
 		this.xmlRpcClient = xmlRpcClient;
@@ -259,11 +262,11 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 		this.location = location;
 	}
 
-	public HttpRequestInterceptor getInterceptor() {
+	public HttpMethodInterceptor getInterceptor() {
 		return interceptor;
 	}
 
-	public void setInterceptor(HttpRequestInterceptor interceptor) {
+	public void setInterceptor(HttpMethodInterceptor interceptor) {
 		this.interceptor = interceptor;
 	}
 

@@ -32,12 +32,13 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.auth.AuthenticationException;
+import org.apache.commons.httpclient.auth.BasicScheme;
 import org.apache.commons.httpclient.auth.DigestScheme;
-import org.apache.commons.httpclient.auth.MalformedChallengeException;
 import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -71,7 +72,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPage;
 import org.eclipse.mylyn.internal.trac.core.model.TracWikiPageInfo;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylyn.internal.trac.core.util.HttpRequestInterceptor;
+import org.eclipse.mylyn.internal.trac.core.util.HttpMethodInterceptor;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtil;
 import org.eclipse.mylyn.internal.trac.core.util.TracXmlRpcClientRequest;
@@ -143,6 +144,10 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 		private Object executeCallInternal(IProgressMonitor monitor) throws TracException {
 			try {
+				if (isTracd && digestScheme != null) {
+					probeAuthenticationScheme(monitor);
+				}
+
 				TracXmlRpcClientRequest request = new TracXmlRpcClientRequest(xmlrpc.getClientConfig(), method,
 						parameters, monitor);
 				return xmlrpc.execute(request);
@@ -211,6 +216,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 	private final AuthScope authScope;
 
+	private boolean isTracd;
+
 	public TracXmlRpcClient(AbstractWebLocation location, Version version) {
 		super(location, version);
 		this.httpClient = createHttpClient();
@@ -232,18 +239,22 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 
 			factory = new TracHttpClientTransportFactory(xmlrpc, httpClient);
 			factory.setLocation(location);
-			factory.setInterceptor(new HttpRequestInterceptor() {
-				public void process(HttpMethod method) {
+			factory.setInterceptor(new HttpMethodInterceptor() {
+				public void processRequest(HttpMethod method) {
 					DigestScheme scheme = digestScheme;
 					if (scheme != null) {
 						Credentials creds = httpClient.getState().getCredentials(authScope);
 						if (creds != null) {
-							try {
-								method.addRequestHeader("Authorization", scheme.authenticate(creds, method));
-							} catch (AuthenticationException e) {
-								// ignore
-							}
+							method.getHostAuthState().setAuthScheme(digestScheme);
+							method.getHostAuthState().setAuthRequested(true);
 						}
+					}
+				}
+
+				public void processResponse(HttpMethod method) {
+					AuthScheme authScheme = method.getHostAuthState().getAuthScheme();
+					if (authScheme instanceof DigestScheme) {
+						digestScheme = (DigestScheme) authScheme;
 					}
 				}
 			});
@@ -278,50 +289,62 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	private void probeAuthenticationScheme(IProgressMonitor monitor) throws TracException {
-		if (probed) {
+		this.digestScheme = null;
+
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+		if (!credentialsValid(credentials)) {
 			return;
 		}
 
+		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
+		HeadMethod method = new HeadMethod(getXmlRpcUrl(credentials).toString());
 		try {
-			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-			if (!credentialsValid(credentials)) {
-				return;
-			}
-
-			HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
-			HeadMethod method = new HeadMethod(getXmlRpcUrl(credentials).toString());
-			try {
-				int result = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
-				if (result == HttpStatus.SC_UNAUTHORIZED || result == HttpStatus.SC_FORBIDDEN) {
-					Header header = method.getResponseHeader("WWW-Authenticate");
-					if (header != null) {
-						if (header.getValue().startsWith("Basic")) {
-							httpClient.getParams().setAuthenticationPreemptive(true);
-						} else if (header.getValue().startsWith("Digest")) {
-							DigestScheme scheme = new DigestScheme();
-							try {
-								scheme.processChallenge(header.getValue());
-								this.digestScheme = scheme;
-							} catch (MalformedChallengeException e) {
-								// ignore
-							}
-						}
-					}
+			// execute without any credentials set
+			int result = WebUtil.execute(httpClient, hostConfiguration, method, new HttpState(), monitor);
+			if (result == HttpStatus.SC_UNAUTHORIZED || result == HttpStatus.SC_FORBIDDEN) {
+				AuthScheme authScheme = method.getHostAuthState().getAuthScheme();
+				if (authScheme instanceof DigestScheme) {
+					this.digestScheme = (DigestScheme) authScheme;
+				} else if (authScheme instanceof BasicScheme) {
+					httpClient.getParams().setAuthenticationPreemptive(true);
 				}
-			} catch (IOException e) {
-				// ignore
-			} finally {
-				method.releaseConnection();
+
+				Header header = method.getResponseHeader("Server");
+				isTracd = (header != null && header.getValue().startsWith("tracd"));
+
+//					Header header = method.getResponseHeader("WWW-Authenticate");
+//					if (header != null) {
+//						if (header.getValue().startsWith("Basic")) {
+//							httpClient.getParams().setAuthenticationPreemptive(true);
+//						} else if (header.getValue().startsWith("Digest")) {
+//							DigestScheme scheme = new DigestScheme();
+//							try {
+//								scheme.processChallenge(header.getValue());
+//								this.digestScheme = scheme;
+//							} catch (MalformedChallengeException e) {
+//								// ignore
+//							}
+//						}
+//					}
 			}
+		} catch (IOException e) {
+			// ignore
 		} finally {
-			probed = true;
+			method.releaseConnection();
 		}
 	}
 
 	private Object call(IProgressMonitor monitor, String method, Object... parameters) throws TracException {
 		monitor = Policy.monitorFor(monitor);
 		while (true) {
-			probeAuthenticationScheme(monitor);
+			if (!probed) {
+				try {
+					probeAuthenticationScheme(monitor);
+				} finally {
+					probed = true;
+				}
+			}
+
 			getClient();
 
 			try {

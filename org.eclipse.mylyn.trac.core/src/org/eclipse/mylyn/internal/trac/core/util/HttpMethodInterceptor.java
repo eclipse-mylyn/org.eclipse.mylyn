@@ -16,8 +16,10 @@ import org.apache.commons.httpclient.HttpMethod;
 /**
  * @author Steffen Pingel
  */
-public interface HttpRequestInterceptor {
+public interface HttpMethodInterceptor {
 
-	public abstract void process(HttpMethod method);
+	public abstract void processRequest(HttpMethod method);
+
+	public abstract void processResponse(HttpMethod method);
 
 }
