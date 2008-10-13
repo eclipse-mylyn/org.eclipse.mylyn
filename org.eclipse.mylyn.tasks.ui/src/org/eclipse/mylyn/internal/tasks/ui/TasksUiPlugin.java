@@ -367,7 +367,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private IProxyChangeListener proxyChangeListener;
 
-	private TaskListExternalizationParticipant taskListSaveParticipant;
+	private static TaskListExternalizationParticipant taskListExternalizationParticipant;
 
 	private final Set<IRepositoryModelListener> listeners = new HashSet<IRepositoryModelListener>();
 
@@ -523,14 +523,14 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			taskListExternalizer = new TaskListExternalizer(repositoryModel, repositoryManager);
 			taskListImporter = new TaskListElementImporter(repositoryManager, repositoryModel);
 
-			taskListSaveParticipant = new TaskListExternalizationParticipant(repositoryModel, taskList,
+			taskListExternalizationParticipant = new TaskListExternalizationParticipant(repositoryModel, taskList,
 					taskListExternalizer, externalizationManager, repositoryManager);
 			//externalizationManager.load(taskListSaveParticipant);
-			externalizationManager.addParticipant(taskListSaveParticipant);
-			taskList.addChangeListener(taskListSaveParticipant);
+			externalizationManager.addParticipant(taskListExternalizationParticipant);
+			taskList.addChangeListener(taskListExternalizationParticipant);
 
 			taskActivityManager = new TaskActivityManager(repositoryManager, taskList);
-			taskActivityManager.addActivationListener(taskListSaveParticipant);
+			taskActivityManager.addActivationListener(taskListExternalizationParticipant);
 
 			// initialize
 			updateTaskActivityManager();
@@ -1221,6 +1221,10 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public static TaskListElementImporter getTaskListWriter() {
 		return taskListImporter;
+	}
+
+	public static TaskListExternalizationParticipant getTaskListExternalizationParticipant() {
+		return taskListExternalizationParticipant;
 	}
 
 }
