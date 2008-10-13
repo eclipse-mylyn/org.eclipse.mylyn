@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,18 +18,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpVersion;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -38,7 +33,6 @@ import org.apache.xmlrpc.client.XmlRpcHttpClientConfig;
 import org.apache.xmlrpc.client.XmlRpcHttpTransport;
 import org.apache.xmlrpc.client.XmlRpcTransport;
 import org.apache.xmlrpc.client.XmlRpcTransportFactory;
-import org.apache.xmlrpc.common.XmlRpcStreamConfig;
 import org.apache.xmlrpc.common.XmlRpcStreamRequestConfig;
 import org.apache.xmlrpc.util.HttpUtil;
 import org.apache.xmlrpc.util.XmlRpcIOException;
@@ -63,8 +57,6 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 		private final AbstractWebLocation location;
 
-		private final Cookie[] cookies;
-
 		private PostMethod method;
 
 		private int contentLength = -1;
@@ -75,13 +67,14 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 		private HostConfiguration hostConfiguration;
 
-		public TracHttpClientTransport(XmlRpcClient client, HttpClient httpClient, AbstractWebLocation location,
-				Cookie[] cookies) {
-			super(client, "");
+		private final HttpRequestInterceptor interceptor;
 
+		public TracHttpClientTransport(XmlRpcClient client, HttpClient httpClient, AbstractWebLocation location,
+				HttpRequestInterceptor interceptor) {
+			super(client, "");
 			this.httpClient = httpClient;
 			this.location = location;
-			this.cookies = cookies;
+			this.interceptor = interceptor;
 		}
 
 		@Override
@@ -127,9 +120,6 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 			String url = config.getServerURL().toString();
 			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
-			if (cookies != null) {
-				httpClient.getState().addCookies(cookies);
-			}
 			method = new PostMethod(WebUtil.getRequestPath(url));
 
 			super.initHttpHeaders(request);
@@ -143,6 +133,10 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			}
 
 			method.getParams().setVersion(HttpVersion.HTTP_1_1);
+
+			if (interceptor != null) {
+				interceptor.process(method);
+			}
 		}
 
 		@Override
@@ -158,18 +152,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 		@Override
 		protected void setCredentials(XmlRpcHttpClientConfig config) throws XmlRpcClientException {
-			String userName = config.getBasicUserName();
-			if (userName != null) {
-				String encoding = config.getBasicEncoding();
-				if (encoding == null) {
-					encoding = XmlRpcStreamConfig.UTF8_ENCODING;
-				}
-				httpClient.getParams().setParameter(HttpMethodParams.CREDENTIAL_CHARSET, encoding);
-				Credentials creds = new UsernamePasswordCredentials(userName, config.getBasicPassword());
-				AuthScope scope = new AuthScope(null, AuthScope.ANY_PORT, null, AuthScope.ANY_SCHEME);
-				httpClient.getState().setCredentials(scope, creds);
-				httpClient.getParams().setAuthenticationPreemptive(true);
-			}
+			// handled by TracXmlRpcClient
 		}
 
 		@Override
@@ -253,19 +236,15 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 	private final XmlRpcClient xmlRpcClient;
 
-	private Cookie[] cookies;
-
 	private AbstractWebLocation location;
 
 	private final HttpClient httpClient;
 
+	private HttpRequestInterceptor interceptor;
+
 	public TracHttpClientTransportFactory(XmlRpcClient xmlRpcClient, HttpClient httpClient) {
 		this.xmlRpcClient = xmlRpcClient;
 		this.httpClient = httpClient;
-	}
-
-	public Cookie[] getCookies() {
-		return cookies;
 	}
 
 	public AbstractWebLocation getLocation() {
@@ -273,15 +252,19 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 	}
 
 	public XmlRpcTransport getTransport() {
-		return new TracHttpClientTransport(xmlRpcClient, httpClient, location, cookies);
-	}
-
-	public void setCookies(Cookie[] cookies) {
-		this.cookies = cookies;
+		return new TracHttpClientTransport(xmlRpcClient, httpClient, location, interceptor);
 	}
 
 	public void setLocation(AbstractWebLocation location) {
 		this.location = location;
+	}
+
+	public HttpRequestInterceptor getInterceptor() {
+		return interceptor;
+	}
+
+	public void setInterceptor(HttpRequestInterceptor interceptor) {
+		this.interceptor = interceptor;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -126,8 +126,9 @@ public class TracWebClient extends AbstractTracClient {
 					throw new TracLoginException();
 				}
 
-				// try standard basic/digest authentication first
-				AuthScope authScope = new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM);
+				// try standard basic/digest/ntlm authentication first
+				AuthScope authScope = new AuthScope(WebUtil.getHost(repositoryUrl), WebUtil.getPort(repositoryUrl),
+						null, AuthScope.ANY_SCHEME);
 				httpClient.getState().setCredentials(authScope,
 						WebUtil.getHttpClientCredentials(credentials, WebUtil.getHost(repositoryUrl)));
 
@@ -135,14 +136,12 @@ public class TracWebClient extends AbstractTracClient {
 				method.setFollowRedirects(false);
 				int code;
 				try {
-					httpClient.getParams().setAuthenticationPreemptive(true);
 					code = WebUtil.execute(httpClient, hostConfiguration, method, monitor);
 					if (needsReauthentication(code, monitor)) {
 						continue;
 					}
 				} finally {
 					method.releaseConnection();
-					httpClient.getParams().setAuthenticationPreemptive(false);
 				}
 
 				// the expected return code is a redirect, anything else is suspicious
