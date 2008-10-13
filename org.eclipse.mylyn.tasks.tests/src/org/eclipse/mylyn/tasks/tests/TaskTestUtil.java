@@ -97,7 +97,7 @@ public class TaskTestUtil {
 	 */
 	public static void resetTaskList() throws Exception {
 		TasksUi.getTaskActivityManager().deactivateActiveTask();
-		TaskTestUtil.resetTaskList();
+		TasksUiPlugin.getTaskList().reset();
 	}
 
 	/**
