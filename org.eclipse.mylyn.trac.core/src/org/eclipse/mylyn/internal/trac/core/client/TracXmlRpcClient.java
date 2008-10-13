@@ -289,8 +289,6 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 	}
 
 	private void probeAuthenticationScheme(IProgressMonitor monitor) throws TracException {
-		this.digestScheme = null;
-
 		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
 		if (!credentialsValid(credentials)) {
 			return;
