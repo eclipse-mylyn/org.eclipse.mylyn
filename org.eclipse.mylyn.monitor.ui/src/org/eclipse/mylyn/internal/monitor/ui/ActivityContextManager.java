@@ -122,22 +122,28 @@ public class ActivityContextManager implements IActivityContextManager {
 
 	private void addMonitoredActivityTime(long start, long end) {
 		if ((end > 0 && start > 0) && (end > start)) {
+
+			String origin = InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH;
+
+			if (userActivityMonitor != null && userActivityMonitor.getOriginId() != null) {
+				origin = userActivityMonitor.getOriginId();
+			}
+
 			String handle = getStructureHandle();
 			if (handle == null) {
 				if (workingSets != null && workingSets.length > 0) {
 					for (IWorkingSet workingSet : workingSets) {
 						String workingSetName = workingSet.getName();
-						processWorkbenchEvent(InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
-								InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET, workingSetName, start, end);
+						processWorkbenchEvent(origin, InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET,
+								workingSetName, start, end);
 					}
 				} else {
-					processWorkbenchEvent(InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
-							InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET,
+					processWorkbenchEvent(origin, InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET,
 							InteractionContextManager.ACTIVITY_HANDLE_NONE, start, end);
 				}
 			} else {
-				processWorkbenchEvent(InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH,
-						InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle, start, end);
+				processWorkbenchEvent(origin, InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle, start,
+						end);
 			}
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionGained();
