@@ -21,8 +21,6 @@ import org.eclipse.osgi.util.NLS;
  * Needed by org.eclipse.mylyn.internal.team.ui.preferences.workaround.RegExContentProposalProvider.
  * <p>
  * TODO Ask platform guys to open this API
- * 
- * @since 3.1
  */
 final class RegExMessages extends NLS {
 

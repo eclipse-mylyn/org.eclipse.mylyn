@@ -23,7 +23,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 /**
  * @author Mik Kersten
  * 
- * TODO: make package-visible
+ *         TODO: make package-visible
  */
 public class DegreeOfInterest implements IDegreeOfInterest {
 
@@ -53,9 +53,6 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		this(context, scaling, context.getUserEventCount());
 	}
 
-	/**
-	 * @since 3.1
-	 */
 	public DegreeOfInterest(InteractionContext context, IInteractionContextScaling scaling, int eventCountOnCreation) {
 		this.context = context;
 		if (eventCountOnCreation <= 0) {

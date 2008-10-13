@@ -40,9 +40,6 @@ public class InteractionContextElement implements IInteractionElement {
 		this(kind, elementHandle, context, -1);
 	}
 
-	/**
-	 * @since 3.1
-	 */
 	public InteractionContextElement(String kind, String elementHandle, InteractionContext context,
 			int eventCountOnCreation) {
 		if (elementHandle == null) {
