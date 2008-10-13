@@ -22,30 +22,47 @@ public abstract class AbstractUserActivityMonitor {
 
 	private long lastEventTimeStamp = -1;
 
+	/**
+	 * @since 2.0
+	 */
 	public long getLastInteractionTime() {
 		synchronized (this) {
 			return lastEventTimeStamp;
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setLastEventTime(long lastEventTime) {
 		synchronized (this) {
 			lastEventTimeStamp = lastEventTime;
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public abstract void start();
 
+	/**
+	 * @since 2.0
+	 */
 	public abstract void stop();
 
 	/**
 	 * @return false if monitor unable to run (i.e. startup failures of any kind)
+	 * @since 2.0
 	 */
 	public boolean isEnabled() {
 		return true;
 	}
 
+	/**
+	 * @since 3.1
+	 */
 	public String getOriginId() {
 		return null;
 	}
+
 }
