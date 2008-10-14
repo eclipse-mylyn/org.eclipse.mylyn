@@ -56,6 +56,7 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -108,6 +109,8 @@ import org.eclipse.ui.PlatformUI;
  * @author Steffen Pingel
  */
 public class TasksUiInternal {
+
+	private static final String LABEL_CREATE_TASK = "Create Task";
 
 	// TODO e3.4 replace with SWT.NO_SCROLL constant
 	public static final int SWT_NO_SCROLL = 1 << 4;
@@ -504,8 +507,9 @@ public class TasksUiInternal {
 			taskList.addTask(newTask, view.getDrilledIntoCategory());
 		} else {
 			if (view != null && view.getDrilledIntoCategory() != null) {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Create Task",
-						"The new task has been added to the root of the list, since tasks can not be added to a query.");
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_CREATE_TASK,
+						"The new task will be added to the " + UncategorizedTaskContainer.LABEL
+								+ " container, since tasks can not be added to a query.");
 			}
 			taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
 		}
