@@ -37,8 +37,8 @@ public class JavaStackTraceHyperlinkDetector extends AbstractTaskHyperlinkDetect
 	}
 
 	@Override
-	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int contentOffset,
-			int offsetInContent) {
+	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int offsetInContent,
+			int contentOffset) {
 		List<IHyperlink> links = null;
 		Matcher m = stackTracePattern.matcher(content);
 		while (m.find()) {
