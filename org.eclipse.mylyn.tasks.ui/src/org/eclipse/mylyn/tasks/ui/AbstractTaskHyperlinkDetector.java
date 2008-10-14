@@ -91,7 +91,7 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 			return null;
 		}
 
-		List<IHyperlink> hyperlinks = detectHyperlinks(textViewer, content, contentOffset, index);
+		List<IHyperlink> hyperlinks = detectHyperlinks(textViewer, content, index, contentOffset);
 		if (hyperlinks == null) {
 			return null;
 		}
@@ -115,8 +115,8 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 	/**
 	 * @since 3.1
 	 */
-	protected abstract List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int contentOffset,
-			int index);
+	protected abstract List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int index,
+			int contentOffset);
 
 	private boolean isInRegion(IRegion detectInRegion, IRegion hyperlinkRegion) {
 		return detectInRegion.getOffset() >= hyperlinkRegion.getOffset()

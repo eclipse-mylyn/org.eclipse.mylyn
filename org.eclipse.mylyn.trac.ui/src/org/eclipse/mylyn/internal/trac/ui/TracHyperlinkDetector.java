@@ -28,7 +28,7 @@ public class TracHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 	}
 
 	@Override
-	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int contentOffset, int index) {
+	protected List<IHyperlink> detectHyperlinks(ITextViewer textViewer, String content, int index, int contentOffset) {
 		TaskRepository taskRepository = getTaskRepository(textViewer);
 		if (taskRepository != null && TracCorePlugin.CONNECTOR_KIND.equals(taskRepository.getConnectorKind())) {
 			return TracHyperlinkUtil.findTracHyperlinks(taskRepository, content, index, contentOffset);
