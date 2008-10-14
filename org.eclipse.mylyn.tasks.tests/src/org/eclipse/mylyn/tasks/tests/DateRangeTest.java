@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,12 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TimeZone;
 import java.util.TreeMap;
 
 import junit.framework.TestCase;
@@ -22,6 +24,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
+import org.eclipse.mylyn.internal.tasks.core.WeekDateRange;
 import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
@@ -67,6 +70,25 @@ public class DateRangeTest extends TestCase {
 		DateRange range3 = TaskActivityUtil.getCurrentWeek().getToday().next();
 		result = scheduledTasks.subMap(range0, range3);
 		assertEquals(2, result.size());
+	}
+
+	public void testIsWeekRange() {
+		TimeZone defaultTimeZone = TimeZone.getDefault();
+		try {
+			TimeZone.setDefault(TimeZone.getTimeZone("PST"));
+			Calendar time = TaskActivityUtil.getCalendar();
+
+			time.set(2008, 9, 1);
+			WeekDateRange week = TaskActivityUtil.getWeekOf(time.getTime());
+			assertTrue(WeekDateRange.isWeekRange(week.getStartDate(), week.getEndDate()));
+
+			// PDT changes to PST on Nov 1st 2008
+			time.set(2008, 10, 1);
+			week = TaskActivityUtil.getWeekOf(time.getTime());
+			assertTrue(WeekDateRange.isWeekRange(week.getStartDate(), week.getEndDate()));
+		} finally {
+			TimeZone.setDefault(defaultTimeZone);
+		}
 	}
 
 }
