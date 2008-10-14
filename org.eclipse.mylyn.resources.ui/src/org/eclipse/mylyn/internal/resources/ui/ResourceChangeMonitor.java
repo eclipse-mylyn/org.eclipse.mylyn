@@ -54,7 +54,6 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		IResourceDelta rootDelta = event.getDelta();
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {
-
 				if (isExcluded(delta.getResource().getProjectRelativePath(), delta.getResource(), excludedPatterns)) {
 					return false;
 				}
@@ -71,9 +70,10 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED | IResourceDelta.REMOVED);
 				for (IResourceDelta element : changed) {
 					IResource resource = element.getResource();
+					// special rule for feature.xml files: bug 249856 
 					if (resource instanceof IFile
-							&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)) {
-
+							&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)
+							&& !"feature.xml".equals(resource.getName())) {
 						if (element.getKind() == IResourceDelta.CHANGED
 								&& (element.getFlags() & IResourceDelta.CONTENT) == 0) {
 							// make sure that there was a content change and not just a markers change
