@@ -228,7 +228,12 @@ public class TaskListTableSorter extends ViewerSorter {
 		if (t1 != null && t2 != null) {
 			Date creationDate1 = t1.getCreationDate();
 			if (creationDate1 != null) {
-				return sortDirection * creationDate1.compareTo(t2.getCreationDate());
+				Date creationDate2 = t2.getCreationDate();
+				if (creationDate2 != null) {
+					return sortDirection * creationDate1.compareTo(creationDate2);
+				} else {
+					return 1;
+				}
 			}
 		}
 		return 0;
