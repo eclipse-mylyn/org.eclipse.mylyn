@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
 
 import junit.framework.TestCase;
@@ -50,15 +49,11 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		TaskTestUtil.resetTaskList();
 	}
 
-	private void runRepositoryUrlOperation(String oldUrl, String newUrl) {
-		try {
-			new RefactorRepositoryUrlOperation(oldUrl, newUrl).run(new NullProgressMonitor());
-		} catch (Exception e) {
-			fail();
-		}
+	private void runRepositoryUrlOperation(String oldUrl, String newUrl) throws Exception {
+		new RefactorRepositoryUrlOperation(oldUrl, newUrl).run(new NullProgressMonitor());
 	}
 
-	public void testMigrateTaskContextFiles() throws IOException {
+	public void testMigrateTaskContextFiles() throws Exception {
 		File fileA = ContextCorePlugin.getContextStore().getFileForContext("http://a-1");
 		fileA.createNewFile();
 		fileA.deleteOnExit();
@@ -69,7 +64,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertFalse(fileA.exists());
 	}
 
-	public void testMigrateQueryUrlHandles() {
+	public void testMigrateQueryUrlHandles() throws Exception {
 		RepositoryQuery query = new MockRepositoryQuery("mquery");
 		query.setRepositoryUrl("http://foo.bar");
 		query.setUrl("http://foo.bar/b");
@@ -82,7 +77,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertEquals("http://bar.baz/b", changedQuery.getUrl());
 	}
 
-	public void testMigrateQueryHandles() {
+	public void testMigrateQueryHandles() throws Exception {
 		RepositoryQuery query = new MockRepositoryQuery("mquery");
 		query.setRepositoryUrl("http://a");
 		taskList.addQuery(query);
@@ -118,7 +113,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertEquals("TEST", otherData.getRoot().getAttribute("comment").getValue());
 	}
 
-	public void testMigrateTaskHandlesWithExplicitSet() {
+	public void testMigrateTaskHandlesWithExplicitSet() throws Exception {
 		AbstractTask task = new MockTask("http://a", "123");
 		task.setUrl("http://a/task/123");
 		taskList.addTask(task);
@@ -128,7 +123,7 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		assertEquals("http://b/task/123", task.getUrl());
 	}
 
-	public void testRefactorMetaContextHandles() {
+	public void testRefactorMetaContextHandles() throws Exception {
 		String firstUrl = "http://repository1.com/bugs";
 		String secondUrl = "http://repository2.com/bugs";
 		AbstractTask task1 = new MockTask(firstUrl, "1");
