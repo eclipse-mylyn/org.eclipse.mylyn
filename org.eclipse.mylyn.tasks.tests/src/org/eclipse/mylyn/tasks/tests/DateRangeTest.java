@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
@@ -118,7 +117,6 @@ public class DateRangeTest extends TestCase {
 	public void testIsDayRange() {
 		TimeZone defaultTimeZone = TimeZone.getDefault();
 		try {
-			System.err.println(Arrays.toString(TimeZone.getAvailableIDs()));
 			TimeZone.setDefault(TimeZone.getTimeZone("PST"));
 			Calendar time = TaskActivityUtil.getCalendar();
 			time.set(2008, 9, 1);
