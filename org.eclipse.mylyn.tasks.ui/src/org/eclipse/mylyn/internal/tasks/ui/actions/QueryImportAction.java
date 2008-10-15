@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -63,7 +64,9 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 	public void run() {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		FileDialog dialog = new FileDialog(shell);
-		dialog.setFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION });
+		dialog.setText("Import Mylyn Query");
+		dialog.setFilterExtensions(PlatformUtil.getFilterExtensions(ITasksCoreConstants.FILE_EXTENSION));
+		dialog.setFilterNames(new String[] { "Mylyn Queries (*" + ITasksCoreConstants.FILE_EXTENSION + ")" });
 
 		String path = dialog.open();
 		if (path != null) {
