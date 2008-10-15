@@ -161,6 +161,8 @@ public class WeekDateRange extends DateRange {
 	}
 
 	public static boolean isWeekRange(Calendar calStart, Calendar calEnd) {
-		return ((calEnd.getTimeInMillis() - calStart.getTimeInMillis()) == (DAY * 7) - 1);
+		// bug 248683
+		long diff = (calEnd.getTimeInMillis() - calStart.getTimeInMillis()) - (DAY * 7 - 1);
+		return Math.abs(diff) <= 60 * 60 * 1000;
 	}
 }

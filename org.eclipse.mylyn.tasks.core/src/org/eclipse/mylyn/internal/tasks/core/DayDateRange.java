@@ -79,6 +79,8 @@ public class DayDateRange extends DateRange {
 	}
 
 	public static boolean isDayRange(Calendar calStart, Calendar calEnd) {
-		return ((calEnd.getTimeInMillis() - calStart.getTimeInMillis()) == DAY - 1);
+		// bug 248683
+		long diff = (calEnd.getTimeInMillis() - calStart.getTimeInMillis()) - (DAY - 1);
+		return Math.abs(diff) <= 60 * 60 * 1000;
 	}
 }
