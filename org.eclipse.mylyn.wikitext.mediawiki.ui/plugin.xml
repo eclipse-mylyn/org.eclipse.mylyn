@@ -35,7 +35,7 @@
       </templates>
    </extension>
    <extension
-         point="org.eclipse.mylyn.sandbox.ui.taskEditorExtensions">
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
       <taskEditorExtension
             class="org.eclipse.mylyn.internal.wikitext.mediawiki.ui.editors.TaskEditorExtension"
             id="org.eclipse.mylyn.internal.wikitext.mediawiki.ui.taskEditorExtension"

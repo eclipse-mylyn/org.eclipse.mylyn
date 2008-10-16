@@ -61,7 +61,7 @@
       </templates>
    </extension>
    <extension
-         point="org.eclipse.mylyn.sandbox.ui.taskEditorExtensions">
+         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
       <taskEditorExtension
             class="org.eclipse.mylyn.internal.wikitext.textile.ui.editors.TextileTaskEditorExtension"
             id="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtension"
