@@ -51,7 +51,6 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
@@ -242,12 +241,11 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 				if (task != null && task != currentTaskHyperlink) {
 					currentTaskHyperlink = task;
 					activeRegion = hyperlink.getHyperlinkRegion();
-					Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
-					if (cursorControl != null) {
+					if (sourceViewer.getTextWidget() != null && !sourceViewer.getTextWidget().isDisposed()) {
 						if (task.getTaskKey() == null) {
-							cursorControl.setToolTipText(task.getSummary());
+							sourceViewer.getTextWidget().setToolTipText(task.getSummary());
 						} else {
-							cursorControl.setToolTipText(task.getTaskKey() + ": " + task.getSummary());
+							sourceViewer.getTextWidget().setToolTipText(task.getTaskKey() + ": " + task.getSummary());
 						}
 					}
 				}
@@ -258,9 +256,8 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 		@Override
 		public void hideHyperlinks() {
 			if (currentTaskHyperlink != null) {
-				Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
-				if (cursorControl != null) {
-					cursorControl.setToolTipText(null);
+				if (sourceViewer.getTextWidget() != null && !sourceViewer.getTextWidget().isDisposed()) {
+					sourceViewer.getTextWidget().setToolTipText(null);
 				}
 				currentTaskHyperlink = null;
 			}
