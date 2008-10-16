@@ -42,6 +42,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.data.TaskRelation;
@@ -96,6 +97,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			ITask task = taskList.getTask(taskData.getRepositoryUrl(), taskData.getTaskId());
 			if (task == null) {
 				task = tasksModel.createTask(repository, taskData.getTaskId());
+				((AbstractTask) task).setSynchronizationState(SynchronizationState.INCOMING_NEW);
 				if (taskData.isPartial() && connector.canSynchronizeTask(repository, task)) {
 					session.markStale(task);
 				}
