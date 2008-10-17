@@ -29,6 +29,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryCompletionProcessor;
+import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
@@ -352,7 +353,13 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 			if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
 				TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
 
-				ITask task = TasksUi.getRepositoryModel().getTask(hyperlink.getRepository(), hyperlink.getTaskId());
+				ITask task = null;
+				try {
+					task = TasksUi.getRepositoryModel().getTask(hyperlink.getRepository(), hyperlink.getTaskId());
+				} catch (Exception e) {
+					// workaround for bug 251177
+					WikiTextUiPlugin.getDefault().log(e);
+				}
 
 				if (task != null && task != currentTaskHyperlink) {
 					currentTaskHyperlink = task;
