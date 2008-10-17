@@ -124,6 +124,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 
 	protected CommonViewer createCommonViewer(Composite parent) {
 		CommonViewer viewer = new CommonViewer(ID_VIEWER, parent, SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer.setUseHashlookup(true);
 		viewer.getControl().setLayoutData(new GridData(500, 400));
 		return viewer;
 	}

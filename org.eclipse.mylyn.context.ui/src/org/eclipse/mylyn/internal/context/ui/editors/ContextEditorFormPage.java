@@ -455,6 +455,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	protected CommonViewer createCommonViewer(Composite parent) {
 		CommonViewer viewer = new CommonViewer(ID_VIEWER, parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer.setUseHashlookup(true);
 		return viewer;
 	}
 
