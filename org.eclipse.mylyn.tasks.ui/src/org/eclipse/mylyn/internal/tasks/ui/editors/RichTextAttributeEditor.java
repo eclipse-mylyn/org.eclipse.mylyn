@@ -33,6 +33,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
@@ -116,6 +117,10 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	private final int style;
 
 	private Mode mode;
+
+	private AbstractRenderingEngine renderingEngine;
+
+	private BrowserPreviewViewer browserViewer;
 
 	public RichTextAttributeEditor(TaskDataModel manager, TaskRepository taskRepository, TaskAttribute taskAttribute) {
 		this(manager, taskRepository, taskAttribute, SWT.MULTI);
@@ -280,7 +285,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 			style |= SWT.V_SCROLL;
 		}
 
-		if (extension != null) {
+		if (extension != null || renderingEngine != null) {
 			editorComposite = new Composite(parent, SWT.NULL);
 			editorLayout = new StackLayout() {
 				@Override
@@ -291,27 +296,33 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 			editorComposite.setLayout(editorLayout);
 			setControl(editorComposite);
 
-			if (isReadOnly()) {
-				editorViewer = extension.createViewer(taskRepository, editorComposite, style);
-			} else {
-				editorViewer = extension.createEditor(taskRepository, editorComposite, style);
-				editorViewer.getTextWidget().addFocusListener(new FocusListener() {
-					public void focusGained(FocusEvent e) {
-						setContext();
-					}
+			if (extension != null) {
+				if (isReadOnly()) {
+					editorViewer = extension.createViewer(taskRepository, editorComposite, style);
+				} else {
+					editorViewer = extension.createEditor(taskRepository, editorComposite, style);
+					editorViewer.getTextWidget().addFocusListener(new FocusListener() {
+						public void focusGained(FocusEvent e) {
+							setContext();
+						}
 
-					public void focusLost(FocusEvent e) {
-						unsetContext();
-					}
-				});
-				editorViewer.getTextWidget().addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent e) {
-						unsetContext();
-					}
-				});
+						public void focusLost(FocusEvent e) {
+							unsetContext();
+						}
+					});
+					editorViewer.getTextWidget().addDisposeListener(new DisposeListener() {
+						public void widgetDisposed(DisposeEvent e) {
+							unsetContext();
+						}
+					});
+				}
+				configure(editorViewer, isReadOnly());
+				show(editorViewer);
+			} else {
+				defaultViewer = createDefaultEditor(editorComposite, style);
+				configure(defaultViewer, isReadOnly());
+				show(defaultViewer);
 			}
-			configure(editorViewer, isReadOnly());
-			show(editorViewer);
 		} else {
 			defaultViewer = createDefaultEditor(parent, style);
 			configure(defaultViewer, isReadOnly());
@@ -415,14 +426,21 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	 * Brings <code>viewer</code> to top.
 	 */
 	private void show(SourceViewer viewer) {
+		show(viewer.getControl());
+	}
+
+	/**
+	 * Brings <code>control</code> to top.
+	 */
+	private void show(Control control) {
 		// no extension is available
 		if (editorComposite == null) {
 			return;
 		}
 
-		editorLayout.topControl = viewer.getControl();
+		editorLayout.topControl = control;
 		editorComposite.layout();
-		viewer.getControl().setFocus();
+		control.setFocus();
 	}
 
 	public void showDefault() {
@@ -436,7 +454,11 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	public void showEditor() {
-		show(getEditorViewer());
+		if (getEditorViewer() != null) {
+			show(getEditorViewer());
+		} else {
+			show(getDefaultViewer());
+		}
 	}
 
 	private void unsetContext() {
@@ -451,6 +473,38 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 	public boolean hasPreview() {
 		return extension != null && !isReadOnly();
+	}
+
+	public boolean hasBrowser() {
+		return renderingEngine != null;
+	}
+
+	private BrowserPreviewViewer getBrowserViewer() {
+		if (editorComposite == null || renderingEngine == null) {
+			return null;
+		}
+
+		if (browserViewer == null) {
+			browserViewer = new BrowserPreviewViewer(getModel().getTaskRepository(), renderingEngine);
+			browserViewer.createControl(editorComposite, toolkit);
+		}
+		return browserViewer;
+	}
+
+	public AbstractRenderingEngine getRenderingEngine() {
+		return renderingEngine;
+	}
+
+	public void setRenderingEngine(AbstractRenderingEngine renderingEngine) {
+		this.renderingEngine = renderingEngine;
+	}
+
+	public void showBrowser() {
+		BrowserPreviewViewer viewer = getBrowserViewer();
+		viewer.update(getValue());
+		if (viewer != null) {
+			show(viewer.getControl());
+		}
 	}
 
 }

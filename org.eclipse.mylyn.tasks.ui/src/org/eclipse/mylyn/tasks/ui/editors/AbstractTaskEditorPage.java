@@ -595,6 +595,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		Assert.isNotNull(attributeEditorToolkit);
 		attributeEditorToolkit.setMenu(editorComposite.getMenu());
 		attributeEditorToolkit.setSelectionChangedListener(this);
+		attributeEditorFactory.setEditorToolkit(attributeEditorToolkit);
 
 		createParts();
 

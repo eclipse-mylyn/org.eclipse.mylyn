@@ -15,13 +15,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRenderingEngine;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -49,6 +47,10 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 	private int sectionStyle;
 
 	private ToggleToMaximizePartAction toggleToMaximizePartAction;
+
+	private Action togglePreviewAction;
+
+	private Action toggleBrowserAction;
 
 	public TaskEditorRichTextPart() {
 		setSectionStyle(ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
@@ -110,41 +112,32 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 		editor = (RichTextAttributeEditor) attributEditor;
 
-		AbstractRenderingEngine renderingEngine = getTaskEditorPage().getAttributeEditorToolkit().getRenderingEngine(
-				attribute);
-		if (renderingEngine != null) {
-			PreviewAttributeEditor previewEditor = new PreviewAttributeEditor(getModel(), attribute,
-					getTaskEditorPage().getTaskRepository(), renderingEngine, editor);
-			previewEditor.createControl(composite, toolkit);
-			GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(
-					previewEditor.getControl());
+		editor.createControl(composite, toolkit);
+		if (editor.isReadOnly()) {
+			composite.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 0, 0, 0, 3));
 		} else {
-			editor.createControl(composite, toolkit);
-			if (editor.isReadOnly()) {
-				composite.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 0, 0, 0, 3));
-			} else {
-				final GridData gd = new GridData();
-				// wrap text at this margin, see comment below
-				int width = getEditorWidth();
-				// the goal is to make the text viewer as big as the text so it does not require scrolling when first drawn 
-				// on screen
-				Point size = editor.getViewer().getTextWidget().computeSize(width, SWT.DEFAULT, true);
-				gd.widthHint = EditorUtil.MAXIMUM_WIDTH;
-				gd.minimumWidth = EditorUtil.MAXIMUM_WIDTH;
-				gd.horizontalAlignment = SWT.FILL;
-				gd.grabExcessHorizontalSpace = true;
-				// limit height to be avoid dynamic resizing of the text widget: 
-				// MAXIMUM_HEIGHT < height < MAXIMUM_HEIGHT * 3
-				//gd.minimumHeight = AbstractAttributeEditor.MAXIMUM_HEIGHT;
-				gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y), EditorUtil.MAXIMUM_HEIGHT * 3);
-				if (getExpandVertically()) {
-					gd.verticalAlignment = SWT.FILL;
-					gd.grabExcessVerticalSpace = true;
-				}
-				editor.getControl().setLayoutData(gd);
-				editor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-				// shrink the text control if the editor width is reduced, otherwise the text field will always keep it's original 
-				// width and will cause the editor to have a horizonal scroll bar 
+			final GridData gd = new GridData();
+			// wrap text at this margin, see comment below
+			int width = getEditorWidth();
+			// the goal is to make the text viewer as big as the text so it does not require scrolling when first drawn 
+			// on screen
+			Point size = editor.getViewer().getTextWidget().computeSize(width, SWT.DEFAULT, true);
+			gd.widthHint = EditorUtil.MAXIMUM_WIDTH;
+			gd.minimumWidth = EditorUtil.MAXIMUM_WIDTH;
+			gd.horizontalAlignment = SWT.FILL;
+			gd.grabExcessHorizontalSpace = true;
+			// limit height to be avoid dynamic resizing of the text widget: 
+			// MAXIMUM_HEIGHT < height < MAXIMUM_HEIGHT * 3
+			//gd.minimumHeight = AbstractAttributeEditor.MAXIMUM_HEIGHT;
+			gd.heightHint = Math.min(Math.max(EditorUtil.MAXIMUM_HEIGHT, size.y), EditorUtil.MAXIMUM_HEIGHT * 3);
+			if (getExpandVertically()) {
+				gd.verticalAlignment = SWT.FILL;
+				gd.grabExcessVerticalSpace = true;
+			}
+			editor.getControl().setLayoutData(gd);
+			editor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			// shrink the text control if the editor width is reduced, otherwise the text field will always keep it's original 
+			// width and will cause the editor to have a horizonal scroll bar 
 //				composite.addControlListener(new ControlAdapter() {
 //					@Override
 //					public void controlResized(ControlEvent e) {
@@ -157,7 +150,6 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 //						sectionComposite.layout();
 //					}
 //				});
-			}
 		}
 
 		getEditor().getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, getMaximizePartAction());
@@ -280,27 +272,47 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 	@Override
 	protected void fillToolBar(ToolBarManager manager) {
 		if (getEditor().hasPreview()) {
-			Action toggleEditingAction = new Action("", SWT.TOGGLE) {
+			togglePreviewAction = new Action("", SWT.TOGGLE) {
 				@Override
 				public void run() {
-					toggleEditing(this);
+					if (isChecked()) {
+						editor.showPreview();
+					} else {
+						editor.showEditor();
+					}
+
+					if (toggleBrowserAction != null) {
+						toggleBrowserAction.setChecked(false);
+					}
 				}
 			};
-			toggleEditingAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
-			toggleEditingAction.setToolTipText("Preview");
-			toggleEditingAction.setChecked(false);
-			manager.add(toggleEditingAction);
+			togglePreviewAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
+			togglePreviewAction.setToolTipText("Preview");
+			togglePreviewAction.setChecked(false);
+			manager.add(togglePreviewAction);
+		}
+		if (getEditor().hasBrowser()) {
+			toggleBrowserAction = new Action("", SWT.TOGGLE) {
+				@Override
+				public void run() {
+					if (isChecked()) {
+						editor.showBrowser();
+					} else {
+						editor.showEditor();
+					}
+
+					if (togglePreviewAction != null) {
+						togglePreviewAction.setChecked(false);
+					}
+				}
+			};
+			toggleBrowserAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
+			toggleBrowserAction.setToolTipText("Browser Preview");
+			toggleBrowserAction.setChecked(false);
+			manager.add(toggleBrowserAction);
 		}
 		manager.add(getMaximizePartAction());
 		super.fillToolBar(manager);
-	}
-
-	private void toggleEditing(Action action) {
-		if (action.isChecked()) {
-			editor.showPreview();
-		} else {
-			editor.showEditor();
-		}
 	}
 
 }

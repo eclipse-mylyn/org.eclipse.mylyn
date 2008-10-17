@@ -44,6 +44,8 @@ public class AttributeEditorFactory {
 
 	private final IServiceLocator serviceLocator;
 
+	private AttributeEditorToolkit editorToolkit;
+
 	public AttributeEditorFactory(TaskDataModel model, TaskRepository taskRepository) {
 		this(model, taskRepository, null);
 	}
@@ -59,6 +61,20 @@ public class AttributeEditorFactory {
 		this.serviceLocator = serviceLocator;
 	}
 
+	/**
+	 * @since 3.1
+	 */
+	public AttributeEditorToolkit getEditorToolkit() {
+		return editorToolkit;
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public void setEditorToolkit(AttributeEditorToolkit editorToolkit) {
+		this.editorToolkit = editorToolkit;
+	}
+
 	public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
 		Assert.isNotNull(type);
 
@@ -69,17 +85,24 @@ public class AttributeEditorFactory {
 		} else if (TaskAttribute.TYPE_PERSON.equals(type)) {
 			return new PersonAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_LONG_RICH_TEXT.equals(type)) {
+			RichTextAttributeEditor editor = null;
 			if (serviceLocator != null) {
 				IContextService contextService = (IContextService) serviceLocator.getService(IContextService.class);
 				if (contextService != null) {
 					AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(model.getTaskRepository());
 					if (extension != null) {
-						return new RichTextAttributeEditor(model, taskRepository, taskAttribute, SWT.MULTI,
+						editor = new RichTextAttributeEditor(model, taskRepository, taskAttribute, SWT.MULTI,
 								contextService, extension);
 					}
 				}
 			}
-			return new RichTextAttributeEditor(model, taskRepository, taskAttribute);
+			if (editor == null) {
+				editor = new RichTextAttributeEditor(model, taskRepository, taskAttribute);
+			}
+			if (editorToolkit != null) {
+				editor.setRenderingEngine(editorToolkit.getRenderingEngine(taskAttribute));
+			}
+			return editor;
 		} else if (TaskAttribute.TYPE_LONG_TEXT.equals(type)) {
 			return new LongTextAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_MULTI_SELECT.equals(type)) {
