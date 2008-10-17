@@ -94,7 +94,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 	@Override
 	protected AttributeEditorFactory createAttributeEditorFactory() {
-		AttributeEditorFactory factory = new AttributeEditorFactory(getModel(), getTaskRepository()) {
+		AttributeEditorFactory factory = new AttributeEditorFactory(getModel(), getTaskRepository(), getEditorSite()) {
 			@Override
 			public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
 				AbstractAttributeEditor editor;

@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -27,6 +28,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -158,6 +160,12 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			}
 		}
 
+		getEditor().getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, getMaximizePartAction());
+		if (getEditor().getControl() instanceof Composite) {
+			for (Control control : ((Composite) getEditor().getControl()).getChildren()) {
+				control.setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION, getMaximizePartAction());
+			}
+		}
 		getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 
 		toolkit.paintBordersFor(composite);
@@ -234,10 +242,6 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 		@Override
 		public void run() {
-			toogleToMaximizePart();
-		}
-
-		private void toogleToMaximizePart() {
 			if (!(getEditor().getControl().getLayoutData() instanceof GridData)) {
 				return;
 			}
@@ -270,6 +274,32 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 			getTaskEditorPage().reflow();
 			EditorUtil.ensureVisible(getEditor().getControl());
+		}
+	}
+
+	@Override
+	protected void fillToolBar(ToolBarManager manager) {
+		if (getEditor().hasPreview()) {
+			Action toggleEditingAction = new Action("", SWT.TOGGLE) {
+				@Override
+				public void run() {
+					toggleEditing(this);
+				}
+			};
+			toggleEditingAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
+			toggleEditingAction.setToolTipText("Preview");
+			toggleEditingAction.setChecked(false);
+			manager.add(toggleEditingAction);
+		}
+		manager.add(getMaximizePartAction());
+		super.fillToolBar(manager);
+	}
+
+	private void toggleEditing(Action action) {
+		if (action.isChecked()) {
+			editor.showPreview();
+		} else {
+			editor.showEditor();
 		}
 	}
 

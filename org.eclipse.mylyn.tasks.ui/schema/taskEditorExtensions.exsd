@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.mylyn.tasks.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.mylyn.tasks.ui" id="taskEditorExtensions" name="Task Editor Extensions"/>
+      </appinfo>
+      <documentation>
+         An extension to the Mylyn task editor that can provide viewing and editing controls that are markup-aware.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="taskEditorExtension" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="repositoryAssociation" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="taskEditorExtension">
+      <annotation>
+         <documentation>
+            Declare an extension to the Mylyn task editor.  Extensions are typically capable of providing improved editing capabilities, such as markup-aware.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the fully qualified class name of the class that extends org.eclipse.mylyn.internal.sandbox.ui.editors.AbstractTaskEditorExtension
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.internal.sandbox.ui.editors.AbstractTaskEditorExtension:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  a unique identifier identifying the extension
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A human-readable name for the extension that is presented to the Eclipse user in the UI.    Should be translated.  Used in the UI to identify the type of extension, so the name should indicate what the extension is for, and it should be short so that it can be displayed on one line (for example as an option in a combo box.)  Example: &quot;TracWiki&quot;, or &quot;Textile&quot;.
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="repositoryAssociation">
+      <annotation>
+         <documentation>
+            Associate the task editor extension with a kind of repository.  Making such an association causes the taskEditorExtension to become the default or preferred setting for a kind of repository.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="connectorKind" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the kind of connector for that this task editor extension should be associated with.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="taskEditorExtension" type="string" use="required">
+            <annotation>
+               <documentation>
+                  the id of the taskEditorExtension to associate
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         3.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

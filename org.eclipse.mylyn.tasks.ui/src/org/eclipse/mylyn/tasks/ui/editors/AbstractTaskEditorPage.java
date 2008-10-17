@@ -487,7 +487,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	protected AttributeEditorFactory createAttributeEditorFactory() {
-		return new AttributeEditorFactory(getModel(), getTaskRepository());
+		return new AttributeEditorFactory(getModel(), getTaskRepository(), getEditorSite());
 	}
 
 	AttributeEditorToolkit createAttributeEditorToolkit() {

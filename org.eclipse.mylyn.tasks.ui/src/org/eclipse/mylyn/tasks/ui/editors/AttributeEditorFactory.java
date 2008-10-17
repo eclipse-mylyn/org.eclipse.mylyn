@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.MultiSelectionAttributeEditor
 import org.eclipse.mylyn.internal.tasks.ui.editors.PersonAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.SingleSelectionAttributeEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensions;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -28,6 +29,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
 import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.services.IServiceLocator;
 
 /**
  * @since 3.0
@@ -39,9 +42,21 @@ public class AttributeEditorFactory {
 
 	private final TaskRepository taskRepository;
 
+	private final IServiceLocator serviceLocator;
+
 	public AttributeEditorFactory(TaskDataModel model, TaskRepository taskRepository) {
+		this(model, taskRepository, null);
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public AttributeEditorFactory(TaskDataModel model, TaskRepository taskRepository, IServiceLocator serviceLocator) {
+		Assert.isNotNull(model);
+		Assert.isNotNull(taskRepository);
 		this.model = model;
 		this.taskRepository = taskRepository;
+		this.serviceLocator = serviceLocator;
 	}
 
 	public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
@@ -54,6 +69,16 @@ public class AttributeEditorFactory {
 		} else if (TaskAttribute.TYPE_PERSON.equals(type)) {
 			return new PersonAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_LONG_RICH_TEXT.equals(type)) {
+			if (serviceLocator != null) {
+				IContextService contextService = (IContextService) serviceLocator.getService(IContextService.class);
+				if (contextService != null) {
+					AbstractTaskEditorExtension extension = TaskEditorExtensions.getTaskEditorExtension(model.getTaskRepository());
+					if (extension != null) {
+						return new RichTextAttributeEditor(model, taskRepository, taskAttribute, SWT.MULTI,
+								contextService, extension);
+					}
+				}
+			}
 			return new RichTextAttributeEditor(model, taskRepository, taskAttribute);
 		} else if (TaskAttribute.TYPE_LONG_TEXT.equals(type)) {
 			return new LongTextAttributeEditor(model, taskAttribute);

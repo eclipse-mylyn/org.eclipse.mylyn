@@ -7,6 +7,7 @@
     <extension-point id="projectLinkProviders" name="Linking Provider from Project to the Task Repository" schema="schema/projectLinkProviders.exsd"/>
     <extension-point id="duplicateDetectors" name="duplicateDetectors" schema="schema/duplicateDetectors.exsd"/>
     <extension-point id="presentations" name="presentations" schema="schema/presentations.exsd"/>
+    <extension-point id="taskEditorExtensions" name="Task Editor Extension" schema="schema/taskEditorExtensions.exsd"/>
 
     <extension
           point="org.eclipse.mylyn.context.core.bridges">
@@ -1744,6 +1745,12 @@
             description="Maximize Part"
             id="org.eclipse.mylyn.tasks.ui.command.maximizePart"
             name="Maximize Part">
+      </command>
+      <command
+            categoryId="org.eclipse.mylyn.tasks.ui.commands"
+            defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.ViewSourceHandler"
+            id="org.eclipse.mylyn.sandbox.ui.viewSource.command"
+            name="View Source">
       </command>
    </extension>
    <extension
