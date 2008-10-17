@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Jingwen Ou - comment grouping
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -19,9 +20,11 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.TaskComment;
+import org.eclipse.mylyn.internal.tasks.ui.editors.CommentGroupStrategy.CommentGroup;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.ITaskComment;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
@@ -32,6 +35,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -45,6 +49,7 @@ import org.eclipse.ui.forms.widgets.Section;
 /**
  * @author Robert Elves
  * @author Steffen Pingel
+ * @author Jingwen Ou
  */
 public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
@@ -59,6 +64,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	private List<TaskAttribute> comments;
 
 	private boolean hasIncoming;
+
+	private CommentGroupStrategy commentGroupStrategy;
+
+	private List<Section> subSections;
 
 	public TaskEditorCommentPart() {
 		setPartName("Comments");
@@ -144,7 +153,17 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		composite.setLayout(new GridLayout(1, false));
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
 
-		addComments(toolkit, composite, comments);
+		// fewer than 12 comments then no subsections
+		if (comments.size() < 12) {
+			addComments(toolkit, composite, comments);
+		} else {
+			GridLayout layout = new GridLayout();
+			layout.marginHeight = 0;
+			// expandable composites are indented by 6 pixels by default
+			layout.marginWidth = -6;
+			composite.setLayout(layout);
+			createCommentSubsections(toolkit, composite, comments);
+		}
 	}
 
 	protected void addComments(final FormToolkit toolkit, final Composite composite, final List<TaskAttribute> comments) {
@@ -336,6 +355,21 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (section != null) {
 				EditorUtil.toggleExpandableComposite(true, section);
 			}
+
+			if (subSections != null) {
+				// first toggle on all subSections
+				if (section != null) {
+					EditorUtil.toggleExpandableComposite(true, section);
+				}
+
+				for (Section subSection : subSections) {
+					if (subSection.isDisposed()) {
+						continue;
+					}
+					EditorUtil.toggleExpandableComposite(true, subSection);
+				}
+			}
+
 			for (ExpandableComposite composite : commentComposites) {
 				if (composite.isDisposed()) {
 					continue;
@@ -344,6 +378,163 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					EditorUtil.toggleExpandableComposite(true, composite);
 				}
 			}
+		} finally {
+			getTaskEditorPage().setReflow(true);
+		}
+		getTaskEditorPage().reflow();
+	}
+
+	private static void toggleChildren(Composite composite, boolean expended) {
+		for (Control child : composite.getChildren()) {
+			if (child instanceof ExpandableComposite && !child.isDisposed()) {
+				EditorUtil.toggleExpandableComposite(expended, (ExpandableComposite) child);
+			}
+			if (child instanceof Composite) {
+				toggleChildren((Composite) child, expended);
+			}
+		}
+	}
+
+	private TaskComment convertToTaskComment(TaskDataModel taskDataModel, TaskAttribute commentAttribute) {
+		TaskComment taskComment = new TaskComment(taskDataModel.getTaskRepository(), taskDataModel.getTask(),
+				commentAttribute);
+		taskDataModel.getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
+		return taskComment;
+	}
+
+	private void createCommentSubsections(final FormToolkit toolkit, final Composite composite,
+			List<TaskAttribute> commentAttributes) {
+		List<ITaskComment> comments = new ArrayList<ITaskComment>();
+		for (TaskAttribute commentAttribute : commentAttributes) {
+			comments.add(convertToTaskComment(getModel(), commentAttribute));
+		}
+		String currentPersonId = getModel().getTaskRepository().getUserName();
+		List<CommentGroup> commentGroups = getCommentGroupStrategy().groupComments(comments, currentPersonId);
+
+		// if there is only one subsection, then don't show it
+		if (commentGroups.size() == 1) {
+			for (CommentGroup commentGroup : commentGroups) {
+				addComments(toolkit, composite, commentGroup.getCommentAttributes());
+			}
+		} else {
+			subSections = new ArrayList<Section>();
+			for (CommentGroup commentGroup : commentGroups) {
+				createGroupSection(toolkit, composite, commentGroup);
+
+			}
+		}
+	}
+
+	private void createCurrentSubsectionToolBar(final FormToolkit toolkit, final Section section) {
+		if (section == null) {
+			return;
+		}
+
+		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+
+		Action collapseAllAction = new Action("") {
+			@Override
+			public void run() {
+				toggleSection(section, false);
+			}
+		};
+		collapseAllAction.setImageDescriptor(CommonImages.COLLAPSE_ALL_SMALL);
+		collapseAllAction.setToolTipText("Collapse All Current Comments");
+		toolBarManager.add(collapseAllAction);
+
+		Action expandAllAction = new Action("") {
+			@Override
+			public void run() {
+				toggleSection(section, true);
+			}
+		};
+		expandAllAction.setImageDescriptor(CommonImages.EXPAND_ALL_SMALL);
+		expandAllAction.setToolTipText("Expand All Current Comments");
+		toolBarManager.add(expandAllAction);
+
+		Composite toolbarComposite = toolkit.createComposite(section);
+		toolbarComposite.setBackground(null);
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.marginTop = 0;
+		rowLayout.marginBottom = 0;
+		rowLayout.marginLeft = 0;
+		rowLayout.marginRight = 0;
+		toolbarComposite.setLayout(rowLayout);
+
+		toolBarManager.createControl(toolbarComposite);
+		section.setTextClient(toolbarComposite);
+	}
+
+	private void createGroupSection(final FormToolkit toolkit, final Composite parent, final CommentGroup commentGroup) {
+		int style = ExpandableComposite.TWISTIE | ExpandableComposite.SHORT_TITLE_BAR;
+		if (commentGroup.getGroupName().equals("Current")) {
+			style |= ExpandableComposite.EXPANDED;
+		}
+
+		final Section groupSection = toolkit.createSection(parent, style);
+		groupSection.setBackground(null);
+		groupSection.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(groupSection);
+		groupSection.setText(commentGroup.getGroupName() + " (" + commentGroup.getCommentAttributes().size() + ")");
+
+		// create toolbar only for Current section
+		if (commentGroup.getGroupName().equals("Current")) {
+			createCurrentSubsectionToolBar(toolkit, groupSection);
+		}
+
+		// only Current subsection will be expanded by default
+		if (groupSection.isExpanded()) {
+			expendSubsection(toolkit, commentGroup, groupSection);
+		}
+		groupSection.addExpansionListener(new ExpansionAdapter() {
+			@Override
+			public void expansionStateChanged(ExpansionEvent e) {
+				expendSubsection(toolkit, commentGroup, groupSection);
+				getTaskEditorPage().reflow();
+			}
+
+		});
+
+		subSections.add(groupSection);
+	}
+
+	private void expendSubsection(final FormToolkit toolkit, CommentGroup commentGroup, Section groupSection) {
+		if (groupSection.getData("isInit") == null) {
+			Composite groupContentComposite = toolkit.createComposite(groupSection);
+			groupSection.setClient(groupContentComposite);
+			GridLayout contentLayout = new GridLayout();
+			contentLayout.marginHeight = 0;
+			contentLayout.marginWidth = 0;
+			groupContentComposite.setLayout(contentLayout);
+			groupContentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+			addComments(toolkit, groupContentComposite, commentGroup.getCommentAttributes());
+
+			groupSection.setData("isInit", true);
+		}
+	}
+
+	private CommentGroupStrategy getCommentGroupStrategy() {
+		if (commentGroupStrategy == null) {
+			commentGroupStrategy = new CommentGroupStrategy() {
+				@Override
+				protected boolean hasIncomingChanges(ITaskComment taskComment) {
+					return getModel().hasIncomingChanges(taskComment.getTaskAttribute());
+				}
+			};
+		}
+		return commentGroupStrategy;
+	}
+
+	private void toggleSection(Section section, boolean expended) {
+		try {
+			getTaskEditorPage().setReflow(false);
+
+			if (expended && !section.isDisposed()) {
+				EditorUtil.toggleExpandableComposite(true, section);
+			}
+
+			toggleChildren(section, expended);
 		} finally {
 			getTaskEditorPage().setReflow(true);
 		}
