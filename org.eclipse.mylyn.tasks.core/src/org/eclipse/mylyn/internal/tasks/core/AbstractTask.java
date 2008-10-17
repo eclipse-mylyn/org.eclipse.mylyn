@@ -303,11 +303,11 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		this.estimatedTimeHours = estimated;
 	}
 
-	public void addParentContainer(AbstractTaskContainer container) {
+	void addParentContainer(AbstractTaskContainer container) {
 		containers.add(container);
 	}
 
-	public void removeParentContainer(AbstractTaskContainer container) {
+	void removeParentContainer(AbstractTaskContainer container) {
 		containers.remove(container);
 	}
 
