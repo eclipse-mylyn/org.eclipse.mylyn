@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,10 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -33,7 +33,7 @@ import org.eclipse.mylyn.tasks.core.ITaskContainer;
  */
 public class SearchResultTreeContentProvider extends SearchResultContentProvider {
 
-	private final List<Object> elements = new ArrayList<Object>();
+	private final Set<Object> elements = new LinkedHashSet<Object>();
 
 	private final Map<String, Person> owners = new HashMap<String, Person>();
 
@@ -93,9 +93,8 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 	@Override
 	public void elementsChanged(Object[] updatedElements) {
 		for (Object object : updatedElements) {
-			elements.add(object);
-
-			if (object instanceof ITask) {
+			boolean added = elements.add(object);
+			if (added && object instanceof ITask) {
 				AbstractTask task = ((AbstractTask) object);
 				String owner = task.getOwner();
 				if (owner == null) {
