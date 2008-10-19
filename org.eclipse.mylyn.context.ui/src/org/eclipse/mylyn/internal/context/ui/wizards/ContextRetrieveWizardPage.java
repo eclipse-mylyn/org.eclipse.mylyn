@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Text;
 @SuppressWarnings( { "restriction" })
 public class ContextRetrieveWizardPage extends WizardPage {
 
-	private static final String WIZARD_TITLE = "Retrieve context";
+	private static final String TITLE = "Select context";
 
 	private static final String DESCRIPTION = "Select a context to retrieve from table below.";
 
@@ -63,10 +63,11 @@ public class ContextRetrieveWizardPage extends WizardPage {
 	private ITaskAttachment selectedContextAttachment;
 
 	protected ContextRetrieveWizardPage(TaskRepository repository, ITask task) {
-		super(WIZARD_TITLE);
+		super(TITLE);
 		this.repository = repository;
 		this.task = task;
 		setDescription(DESCRIPTION);
+		setTitle(TITLE);
 	}
 
 	public void createControl(Composite parent) {

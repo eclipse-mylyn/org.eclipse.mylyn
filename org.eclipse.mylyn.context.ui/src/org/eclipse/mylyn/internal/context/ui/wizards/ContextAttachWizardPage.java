@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ContextAttachWizardPage extends WizardPage {
 
-	private static final String WIZARD_TITLE = "Attach context";
+	private static final String TITLE = "Enter comment";
 
 	private static final String DESCRIPTION = "Attaches local context to repository task";
 
@@ -39,9 +39,10 @@ public class ContextAttachWizardPage extends WizardPage {
 	private Text commentText;
 
 	protected ContextAttachWizardPage(TaskRepository repository, ITask task) {
-		super(WIZARD_TITLE);
+		super(TITLE);
 		this.repository = repository;
 		this.task = task;
+		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 	}
 

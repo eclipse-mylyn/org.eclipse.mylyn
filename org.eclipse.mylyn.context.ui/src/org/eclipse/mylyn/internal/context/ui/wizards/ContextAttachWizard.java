@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 @SuppressWarnings( { "restriction" })
 public class ContextAttachWizard extends Wizard {
 
-	private static final String TITLE = "Task Repository";
+	private static final String TITLE = "Attach Context";
 
 	private final TaskRepository repository;
 

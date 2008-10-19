@@ -33,7 +33,6 @@ public class AttachContextHandler extends AbstractTaskHandler {
 		if (shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);
 			dialog.create();
-			dialog.setTitle("Attach Context");
 			dialog.setBlockOnOpen(true);
 			if (dialog.open() == Window.CANCEL) {
 				dialog.close();
