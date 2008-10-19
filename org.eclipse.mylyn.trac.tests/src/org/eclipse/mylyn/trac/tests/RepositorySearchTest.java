@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.client.ITracClient;
@@ -79,10 +80,11 @@ public class RepositorySearchTest extends TestCase {
 		query.setUrl(queryUrl);
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskList(), repository, query);
 		collector.run(new NullProgressMonitor());
-		assertEquals(data.tickets.size(), collector.getTasks().size());
-		for (ITask task : collector.getTasks()) {
+		RepositorySearchResult searchResult = (RepositorySearchResult) collector.getSearchResult();
+		assertEquals(data.tickets.size(), searchResult.getMatchCount());
+		for (Object match : searchResult.getElements()) {
+			ITask task = (ITask) match;
 			assertEquals(TracTestConstants.TEST_TRAC_096_URL, task.getRepositoryUrl());
 		}
 	}
-
 }

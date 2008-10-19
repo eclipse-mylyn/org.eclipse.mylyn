@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -40,15 +37,13 @@ import org.eclipse.ui.PlatformUI;
  * Used for returning results from Eclipse Search view. Collects results of a repository search.
  * 
  * @author Rob Elves
- * @since 2.0
+ * @author Steffen Pingel
  */
 public class SearchHitCollector extends TaskDataCollector implements ISearchQuery {
 
 	private static final String LABEL_MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
 	private static final String QUERYING_REPOSITORY = "Querying Repository...";
-
-	private final Set<ITask> taskResults = new HashSet<ITask>();
 
 	private final ITaskList taskList;
 
@@ -60,9 +55,6 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 
 	private AbstractRepositoryConnector connector;
 
-	/**
-	 * @since 3.0
-	 */
 	public SearchHitCollector(ITaskList tasklist, TaskRepository repository, IRepositoryQuery repositoryQuery) {
 		this.taskList = tasklist;
 		this.repository = repository;
@@ -71,8 +63,6 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 	}
 
 	public void aboutToStart() {
-		taskResults.clear();
-
 		searchResult.removeAll();
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -90,8 +80,7 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 				connector.updateTaskFromTaskData(repository, task, taskData);
 			}
 		}
-		taskResults.add(task);
-		this.searchResult.addMatch(new Match(task, 0, 0));
+		searchResult.addMatch(new Match(task, 0, 0));
 	}
 
 	public String getLabel() {
@@ -107,17 +96,11 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 	}
 
 	public ISearchResult getSearchResult() {
-		if (searchResult.getMatchCount() >= TaskDataCollector.MAX_HITS) {
-			TasksUiInternal.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(
-					repository.getRepositoryUrl(), IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
-		}
 		return searchResult;
 	}
 
 	public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
-		if (monitor == null) {
-			monitor = new NullProgressMonitor();
-		}
+		monitor = Policy.monitorFor(monitor);
 
 		aboutToStart();
 
@@ -133,17 +116,23 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 						TasksUiInternal.displayStatus("Search failed", status);
 					}
 				});
+			} else {
+				if (searchResult.getMatchCount() >= TaskDataCollector.MAX_HITS) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							TasksUiInternal.displayStatus("Search returned maximum number of hits",
+									RepositoryStatus.createStatus(repository.getRepositoryUrl(), IStatus.WARNING,
+											TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
+						}
+					});
+				}
 			}
 		} else {
 			return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, IStatus.OK,
-					"repository connector could not be found", null);
+					"Repository connector could not be found", null);
 		}
 
 		return Status.OK_STATUS;
-	}
-
-	public Set<ITask> getTasks() {
-		return taskResults;
 	}
 
 	public IRepositoryQuery getRepositoryQuery() {
