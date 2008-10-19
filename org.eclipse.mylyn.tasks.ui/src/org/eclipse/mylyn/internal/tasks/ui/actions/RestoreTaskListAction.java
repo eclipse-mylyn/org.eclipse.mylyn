@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,12 +44,11 @@ public class RestoreTaskListAction extends Action implements IViewActionDelegate
 	@Override
 	public void run() {
 		try {
-			IWizard wizard = new TaskDataImportWizard();
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null && !shell.isDisposed()) {
+				IWizard wizard = new TaskDataImportWizard();
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
-				dialog.setTitle("Restore Tasks from History");
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Window.CANCEL) {
 					dialog.close();

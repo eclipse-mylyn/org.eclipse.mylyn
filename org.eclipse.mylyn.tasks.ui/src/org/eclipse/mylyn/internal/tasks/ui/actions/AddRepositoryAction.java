@@ -103,7 +103,6 @@ public class AddRepositoryAction extends Action {
 
 				WizardDialog queryDialog = new WizardDialog(shell, queryWizard);
 				queryDialog.create();
-				queryDialog.setTitle("Add Repository Query");
 				queryDialog.setBlockOnOpen(true);
 				queryDialog.open();
 			}

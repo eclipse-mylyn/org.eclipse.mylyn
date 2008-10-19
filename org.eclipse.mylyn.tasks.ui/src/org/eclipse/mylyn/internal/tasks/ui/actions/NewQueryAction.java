@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,8 +45,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewQueryAction extends Action implements IViewActionDelegate, IExecutableExtension {
 
-	private static final String WIZARD_LABEL = "Add or modify repository query";
-
 	private boolean skipRepositoryPage;
 
 	public void run(IAction action) {
@@ -82,7 +80,6 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 			if (shell != null && !shell.isDisposed()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				dialog.create();
-				dialog.setTitle(WIZARD_LABEL);
 				dialog.setBlockOnOpen(true);
 				if (dialog.open() == Window.CANCEL) {
 					dialog.close();
