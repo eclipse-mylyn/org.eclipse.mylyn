@@ -71,8 +71,13 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 		IScopeContext projectScope = new ProjectScope(project);
 		IEclipsePreferences projectNode = projectScope.getNode(TasksUiPlugin.ID_PLUGIN);
 		if (projectNode != null) {
-			projectNode.put(PROJECT_REPOSITORY_KIND, repository.getConnectorKind());
-			projectNode.put(PROJECT_REPOSITORY_URL, repository.getRepositoryUrl());
+			if (repository != null) {
+				projectNode.put(PROJECT_REPOSITORY_KIND, repository.getConnectorKind());
+				projectNode.put(PROJECT_REPOSITORY_URL, repository.getRepositoryUrl());
+			} else {
+				projectNode.remove(PROJECT_REPOSITORY_KIND);
+				projectNode.remove(PROJECT_REPOSITORY_URL);
+			}
 			try {
 				projectNode.flush();
 				return true;

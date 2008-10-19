@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,6 @@ package org.eclipse.mylyn.internal.tasks.ui.properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -24,7 +20,6 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
@@ -47,6 +42,8 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.dialogs.DialogUtil;
 
 /**
+ * A property page that support per project configuration of an associated task repository.
+ * 
  * @author Rob Elves
  * @see Adapted from org.eclipse.ui.internal.ide.dialogs.ProjectReferencePage
  */
@@ -61,7 +58,6 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 	private CheckboxTableViewer listViewer;
 
 	public ProjectTaskRepositoryPage() {
-		// Do nothing on creation
 	}
 
 	@Override
@@ -165,18 +161,12 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 
 	}
 
-	/**
-	 * Initializes a ProjectReferencePage.
-	 */
 	private void initialize() {
 		project = (IProject) getElement().getAdapter(IResource.class);
 		noDefaultAndApplyButton();
 		setDescription("Select a task repository to associate with this project below:");
 	}
 
-	/**
-	 * @see PreferencePage#performOk
-	 */
 	@Override
 	public boolean performOk() {
 		if (!modified) {
@@ -184,15 +174,9 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		}
 		if (listViewer.getCheckedElements().length > 0) {
 			TaskRepository selectedRepository = (TaskRepository) listViewer.getCheckedElements()[0];
-			try {
-				TasksUiPlugin plugin = TasksUiPlugin.getDefault();
-				if (plugin.canSetRepositoryForResource(project)) {
-					plugin.setRepositoryForResource(project, selectedRepository);
-				}
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Unable to associate project with task repository", e));
-			}
+			TasksUiPlugin.getDefault().setRepositoryForResource(project, selectedRepository);
+		} else {
+			TasksUiPlugin.getDefault().setRepositoryForResource(project, null);
 		}
 		return true;
 	}

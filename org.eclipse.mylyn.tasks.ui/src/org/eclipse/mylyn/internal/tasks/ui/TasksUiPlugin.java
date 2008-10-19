@@ -1070,21 +1070,49 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		listeners.remove(listener);
 	}
 
-	public boolean canSetRepositoryForResource(IResource resource) {
+	public boolean canSetRepositoryForResource(final IResource resource) {
 		if (resource == null) {
 			return false;
 		}
 
-		// find first provider that can link repository
-		for (AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
-			TaskRepository repository = linkProvider.getTaskRepository(resource, getRepositoryManager());
-			if (repository != null) {
-				return linkProvider.canSetTaskRepository(resource);
+		// if a repository has already been linked only that provider should be queried to ensure that it is the same
+		// provider that is used by getRepositoryForResource()
+		final boolean result[] = new boolean[1];
+		final boolean found[] = new boolean[1];
+		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e));
+				}
+
+				public void run() throws Exception {
+					if (linkProvider.getTaskRepository(resource, getRepositoryManager()) != null) {
+						found[0] = true;
+						result[0] = linkProvider.canSetTaskRepository(resource);
+					}
+				}
+			});
+			if (found[0]) {
+				return result[0];
 			}
 		}
-		// find first provider that can set new repository
-		for (AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
-			if (linkProvider.canSetTaskRepository(resource)) {
+
+		// find a provider that can set new repository
+		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e));
+				}
+
+				public void run() throws Exception {
+					if (linkProvider.canSetTaskRepository(resource)) {
+						result[0] = true;
+					}
+				}
+			});
+			if (result[0]) {
 				return true;
 			}
 		}
@@ -1100,21 +1128,22 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	 *            task repository to associate with given project
 	 * @throws CoreException
 	 */
-	public void setRepositoryForResource(IResource resource, TaskRepository repository) throws CoreException {
-		if (resource == null || repository == null) {
-			return;
-		}
+	public void setRepositoryForResource(final IResource resource, final TaskRepository repository) {
+		Assert.isNotNull(resource);
+		for (final AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void handleException(Throwable e) {
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e));
+				}
 
-		for (AbstractTaskRepositoryLinkProvider linkProvider : repositoryLinkProviders) {
-			TaskRepository r = linkProvider.getTaskRepository(resource, getRepositoryManager());
-			boolean canSetRepository = linkProvider.canSetTaskRepository(resource);
-			if (r != null && !canSetRepository) {
-				return;
-			}
-			if (canSetRepository) {
-				linkProvider.setTaskRepository(resource, repository);
-				return;
-			}
+				public void run() throws Exception {
+					boolean canSetRepository = linkProvider.canSetTaskRepository(resource);
+					if (canSetRepository) {
+						linkProvider.setTaskRepository(resource, repository);
+					}
+				}
+			});
 		}
 	}
 
@@ -1139,7 +1168,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			final TaskRepository[] repository = new TaskRepository[1];
 			SafeRunnable.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Repository link provider failed: \""
+					StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Task repository link provider failed: \""
 							+ linkProvider.getId() + "\"", e));
 				}
 
