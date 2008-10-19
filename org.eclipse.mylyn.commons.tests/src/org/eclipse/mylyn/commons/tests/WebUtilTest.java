@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.mylyn.commons.tests;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.net.Proxy.Type;
 
 import javax.net.ssl.SSLHandshakeException;
@@ -484,6 +485,18 @@ public class WebUtilTest extends TestCase {
 		assertEquals(
 				"/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=11093&resolution=-1&sorter/field=updated&sorter/order=DESC&tempMax=1000",
 				WebUtil.getRequestPath(url));
+	}
+
+	public void testGetTitleFromUrl() throws Exception {
+		assertEquals("Eclipse.org home", WebUtil.getTitleFromUrl(new WebLocation("http://eclipse.org"), null));
+		try {
+			WebUtil.getTitleFromUrl(new WebLocation("invalidurl"), null);
+			fail("Expected UnknownHostException");
+		} catch (UnknownHostException e) {
+		}
+		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
+		testProxy.addResponse(TestProxy.OK);
+		assertNull(WebUtil.getTitleFromUrl(new WebLocation(url), null));
 	}
 
 	private class StubProgressMonitor implements IProgressMonitor {
