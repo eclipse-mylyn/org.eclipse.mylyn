@@ -26,7 +26,6 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.mylyn.internal.team.ui;x-internal:=true,
  org.eclipse.mylyn.internal.team.ui.actions;x-internal:=true,
  org.eclipse.mylyn.internal.team.ui.preferences;x-internal:=true,
- org.eclipse.mylyn.internal.team.ui.preferences.workaround;x-internal:=true,
  org.eclipse.mylyn.internal.team.ui.properties;x-internal:=true,
  org.eclipse.mylyn.internal.team.ui.templates;x-internal:=true,
  org.eclipse.mylyn.team.ui
