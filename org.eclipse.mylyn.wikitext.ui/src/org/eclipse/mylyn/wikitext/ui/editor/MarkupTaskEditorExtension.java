@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.PlatformUrlHyperlink;
+import org.eclipse.mylyn.internal.wikitext.ui.util.PreferenceStoreFacade;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -47,9 +48,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.swt.IFocusService;
@@ -135,8 +139,9 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 			}
 		};
 		// configure the viewer
-		MarkupSourceViewerConfiguration configuration = new TaskMarkupSourceViewerConfiguration(
-				EditorsUI.getPreferenceStore(), taskRepository);
+		IPreferenceStore preferenceStore = EditorsUI.getPreferenceStore();
+		MarkupSourceViewerConfiguration configuration = new TaskMarkupSourceViewerConfiguration(preferenceStore,
+				taskRepository);
 
 		configuration.setMarkupLanguage(markupLanguageCopy);
 		viewer.configure(configuration);
@@ -163,7 +168,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLOR,
 				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLUMN);
 
-		support.install(EditorsUI.getPreferenceStore());
+		support.install(new EditorExtensionPreferenceStore(preferenceStore, viewer.getControl()));
 		viewer.getControl().addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				support.dispose();
@@ -387,6 +392,56 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 				currentTaskHyperlink = null;
 			}
 			super.hideHyperlinks();
+		}
+	}
+
+	public class EditorExtensionPreferenceStore extends PreferenceStoreFacade {
+
+		final Control control;
+
+		public EditorExtensionPreferenceStore(IPreferenceStore preferenceStore, Control control) {
+			super(preferenceStore);
+			this.control = control;
+			control.addFocusListener(new FocusListener() {
+				public void focusGained(FocusEvent e) {
+					handleFocusChanged();
+				}
+
+				private void handleFocusChanged() {
+					// must do it asynchronously, otherwise control.isFocusControl() lies
+					Display.getCurrent().asyncExec(new Runnable() {
+						public void run() {
+							if (EditorExtensionPreferenceStore.this.control.isDisposed()) {
+								return;
+							}
+							focusChanged();
+						}
+					});
+				}
+
+				public void focusLost(FocusEvent e) {
+					handleFocusChanged();
+				}
+			});
+		}
+
+		protected void focusChanged() {
+			if (!super.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE)) {
+				return;
+			}
+			boolean newValue = getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE);
+			firePropertyChangeEvent(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, !newValue,
+					newValue);
+		}
+
+		@Override
+		public boolean getBoolean(String name) {
+			if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE.equals(name)) {
+				if (!control.isFocusControl()) {
+					return false;
+				}
+			}
+			return super.getBoolean(name);
 		}
 	}
 }
