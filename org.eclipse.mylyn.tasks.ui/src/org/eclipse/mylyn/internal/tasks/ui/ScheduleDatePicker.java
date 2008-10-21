@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -135,7 +135,15 @@ public class ScheduleDatePicker extends Composite {
 	}
 
 	@Override
+	public void setForeground(Color color) {
+		pickButton.setForeground(color);
+		scheduledDateText.setForeground(color);
+		super.setForeground(color);
+	}
+
+	@Override
 	public void setBackground(Color backgroundColor) {
+		pickButton.setBackground(backgroundColor);
 		scheduledDateText.setBackground(backgroundColor);
 		super.setBackground(backgroundColor);
 	}
