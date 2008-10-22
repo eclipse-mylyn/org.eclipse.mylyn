@@ -394,7 +394,13 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		}
 	}
 
-	public static class EditorExtensionPreferenceStore extends PreferenceStoreFacade {
+	/**
+	 * bug 251657: wrap preferences so that we can alter the current line highlight based on the focus state of the
+	 * provided control
+	 * 
+	 * @author dgreen
+	 */
+	private static class EditorExtensionPreferenceStore extends PreferenceStoreFacade {
 
 		// track separately from isFocusControl() since isFocusControl() is not accurate while processing a focus event
 		boolean controlFocused;
