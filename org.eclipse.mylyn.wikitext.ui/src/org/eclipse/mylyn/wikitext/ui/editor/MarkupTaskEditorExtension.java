@@ -53,7 +53,6 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.swt.IFocusService;
@@ -395,32 +394,23 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		}
 	}
 
-	public class EditorExtensionPreferenceStore extends PreferenceStoreFacade {
+	public static class EditorExtensionPreferenceStore extends PreferenceStoreFacade {
 
-		final Control control;
+		// track separately from isFocusControl() since isFocusControl() is not accurate while processing a focus event
+		boolean controlFocused;
 
 		public EditorExtensionPreferenceStore(IPreferenceStore preferenceStore, Control control) {
 			super(preferenceStore);
-			this.control = control;
+			controlFocused = control.isFocusControl();
 			control.addFocusListener(new FocusListener() {
 				public void focusGained(FocusEvent e) {
-					handleFocusChanged();
-				}
-
-				private void handleFocusChanged() {
-					// must do it asynchronously, otherwise control.isFocusControl() lies
-					Display.getCurrent().asyncExec(new Runnable() {
-						public void run() {
-							if (EditorExtensionPreferenceStore.this.control.isDisposed()) {
-								return;
-							}
-							focusChanged();
-						}
-					});
+					controlFocused = true;
+					focusChanged();
 				}
 
 				public void focusLost(FocusEvent e) {
-					handleFocusChanged();
+					controlFocused = false;
+					focusChanged();
 				}
 			});
 		}
@@ -437,7 +427,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		@Override
 		public boolean getBoolean(String name) {
 			if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE.equals(name)) {
-				if (!control.isFocusControl()) {
+				if (!controlFocused) {
 					return false;
 				}
 			}
