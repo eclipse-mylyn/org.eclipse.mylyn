@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 
@@ -25,7 +26,18 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 
 	@Override
 	public String getValue() {
-		return getAttributeMapper().getRepositoryPerson(getTaskAttribute()).toString();
+		IRepositoryPerson repositoryPerson = getAttributeMapper().getRepositoryPerson(getTaskAttribute());
+		if (repositoryPerson != null) {
+			return (isReadOnly()) ? repositoryPerson.toString() : repositoryPerson.getPersonId();
+		}
+		return "";
+	}
+
+	@Override
+	public void setValue(String text) {
+		IRepositoryPerson person = getAttributeMapper().getTaskRepository().createPerson(text);
+		getAttributeMapper().setRepositoryPerson(getTaskAttribute(), person);
+		attributeChanged();
 	}
 
 }
