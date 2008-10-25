@@ -197,13 +197,21 @@ public class TaskListToolTip extends ToolTip {
 			ITask task = (ITask) element;
 			StringBuilder sb = new StringBuilder();
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
+			String kindLabel = null;
 			if (connectorUi != null) {
-				sb.append(connectorUi.getTaskKindLabel(task));
+				kindLabel = connectorUi.getTaskKindLabel(task);
+				sb.append(kindLabel);
 			}
 			String key = task.getTaskKey();
 			if (key != null) {
 				sb.append(" ");
 				sb.append(key);
+			}
+			String taskKind = task.getTaskKind();
+			if (taskKind != null && taskKind.length() > 0 && !taskKind.equals(kindLabel)) {
+				sb.append(" (");
+				sb.append(taskKind);
+				sb.append(") ");
 			}
 			sb.append(", ");
 			sb.append(task.getPriority());
