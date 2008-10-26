@@ -255,6 +255,13 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>an <img border=\"0\" src=\"image.png\"/> image</p></body>"));
 	}
 
+	public void testImageNegativeMatch() {
+		// Issue 67: https://textile-j.dev.java.net/issues/show_bug.cgi?id=67
+		String html = parser.parseToHtml("I really like ice cream! Yay!");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>I really like ice cream! Yay!</p></body>"));
+	}
+
 	public void testTable() {
 		String html = parser.parseToHtml("|a|row|not header|");
 		System.out.println("HTML: \n" + html);
