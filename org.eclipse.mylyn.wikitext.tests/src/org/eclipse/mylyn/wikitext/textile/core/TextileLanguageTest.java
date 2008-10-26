@@ -855,6 +855,17 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"http://www.google.com\">hyperlink</a>"));
 	}
 
+	public void testHyperlinkTail() throws IOException {
+		String[] tails = new String[] { ",", ".", ")", ":", ";" };
+		for (String tail : tails) {
+			String html = parser.parseToHtml("Here comes a \"hyperlink\":http://www.google.com" + tail
+					+ " to something");
+
+			System.out.println("HTML: \n" + html);
+			assertTrue(html.contains("<a href=\"http://www.google.com\">hyperlink</a>" + tail + " to"));
+		}
+	}
+
 	public void testHyperlinkRelative() throws IOException {
 		String html = parser.parseToHtml("Here comes a \"hyperlink\":foo/bar/baz.jpg to something");
 

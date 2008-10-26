@@ -24,7 +24,7 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:(\"|\\!)([^\"\\!]+)\\" + (1 + groupOffset) + ":([^\\s]*[^\\s!.)(,]))";
+		return "(?:(\"|\\!)([^\"\\!]+)\\" + (1 + groupOffset) + ":([^\\s]*[^\\s!.)(,:;]))";
 	}
 
 	@Override
