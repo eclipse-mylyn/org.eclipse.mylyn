@@ -175,6 +175,18 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">http://example.com</a> hyperlink</p></body>"));
 	}
 
+	public void testHyperlinkImpliedNegativeMatch() {
+		String html = parser.parseToHtml("a http://example.com. hyperlink");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">http://example.com</a>. hyperlink</p></body>"));
+	}
+
+	public void testHyperlinkImpliedNegativeMatch2() {
+		String html = parser.parseToHtml("a http://example.com) hyperlink");
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("<body><p>a <a href=\"http://example.com\">http://example.com</a>) hyperlink</p></body>"));
+	}
+
 	public void testHyperlinkWithSpaces() {
 		String html = parser.parseToHtml("a [ http://example.com ] hyperlink");
 		System.out.println("HTML: \n" + html);
