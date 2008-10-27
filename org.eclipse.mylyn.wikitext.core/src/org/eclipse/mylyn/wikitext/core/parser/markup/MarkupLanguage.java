@@ -175,33 +175,36 @@ public abstract class MarkupLanguage {
 			emitMarkupText(parser, state, line.substring(offset));
 			return;
 		}
+		int previousShift = state.getShift();
+		state.setShift(previousShift + textLineOffset);
 		for (;;) {
 			PatternBasedElementProcessor phraseModifier = getPhraseModifierSyntax().findPatternBasedElement(line,
 					offset);
 			if (phraseModifier != null) {
 				int newOffset = phraseModifier.getLineStartOffset();
 				if (offset < newOffset) {
-					state.setLineCharacterOffset(textLineOffset + offset);
-					state.setLineSegmentEndOffset(textLineOffset + newOffset);
+					state.setLineCharacterOffset(state.getShift() + offset);
+					state.setLineSegmentEndOffset(state.getShift() + newOffset);
 					String text = line.substring(offset, newOffset);
 					emitMarkupText(parser, state, text);
 				}
 				phraseModifier.setParser(parser);
 				phraseModifier.setState(state);
-				state.setLineCharacterOffset(textLineOffset + phraseModifier.getLineStartOffset());
-				state.setLineSegmentEndOffset(textLineOffset + phraseModifier.getLineEndOffset());
+				state.setLineCharacterOffset(state.getShift() + phraseModifier.getLineStartOffset());
+				state.setLineSegmentEndOffset(state.getShift() + phraseModifier.getLineEndOffset());
 				phraseModifier.emit();
 				offset = phraseModifier.getLineEndOffset();
 				if (offset >= line.length()) {
 					break;
 				}
 			} else {
-				state.setLineCharacterOffset(textLineOffset + offset);
-				state.setLineSegmentEndOffset(textLineOffset + line.length());
+				state.setLineCharacterOffset(state.getShift() + offset);
+				state.setLineSegmentEndOffset(state.getShift() + line.length());
 				emitMarkupText(parser, state, line.substring(offset));
 				break;
 			}
 		}
+		state.setShift(previousShift);
 	}
 
 	/**

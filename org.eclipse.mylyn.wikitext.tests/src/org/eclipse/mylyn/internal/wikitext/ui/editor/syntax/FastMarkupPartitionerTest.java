@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
  * 
  * @author David Green
  */
-public class FastDialectPartitionerTest extends AbstractDocumentTest {
+public class FastMarkupPartitionerTest extends AbstractDocumentTest {
 
 	public void testConnectLargeDocument() throws IOException {
 		IDocument document = createDocument("resources/large.textile");
@@ -49,6 +49,17 @@ public class FastDialectPartitionerTest extends AbstractDocumentTest {
 		partitioner.setMarkupLanguage(new TextileLanguage());
 
 		document.set("a\n" + "# a\n" + "a\n" + "# a\n" + "a\n" + "# a\n" + "\n" + "h2. a");
+
+		partitioner.connect(document);
+		document.setDocumentPartitioner(partitioner);
+	}
+
+	public void testTextileNestedPhraseModifiersException() {
+		IDocument document = new Document();
+		FastMarkupPartitioner partitioner = new FastMarkupPartitioner();
+		partitioner.setMarkupLanguage(new TextileLanguage());
+
+		document.set("a _sample *bold*_");
 
 		partitioner.connect(document);
 		document.setDocumentPartitioner(partitioner);

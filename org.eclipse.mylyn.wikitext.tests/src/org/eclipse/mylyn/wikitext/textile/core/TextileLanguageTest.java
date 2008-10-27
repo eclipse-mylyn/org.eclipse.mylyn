@@ -1095,4 +1095,29 @@ public class TextileLanguageTest extends TestCase {
 		System.out.println(html);
 		assertTrue(html.contains("<strong><em>bold and italic</em> not just bold</strong>"));
 	}
+
+	public void testNestedPhraseModifiersLexicalPosition() {
+		RecordingDocumentBuilder builder = new RecordingDocumentBuilder();
+		parser.setBuilder(builder);
+		parser.parse("a _sample *bold -sdf-*_");
+		List<Event> events = builder.getEvents();
+		int found = 0;
+		for (Event event : events) {
+			System.out.println(event);
+			if (event.spanType == SpanType.EMPHASIS) {
+				++found;
+				assertEquals(2, event.locator.getLineCharacterOffset());
+				assertEquals(23, event.locator.getLineSegmentEndOffset());
+			} else if (event.spanType == SpanType.STRONG) {
+				++found;
+				assertEquals(10, event.locator.getLineCharacterOffset());
+				assertEquals(22, event.locator.getLineSegmentEndOffset());
+			} else if (event.spanType == SpanType.DELETED) {
+				++found;
+				assertEquals(16, event.locator.getLineCharacterOffset());
+				assertEquals(21, event.locator.getLineSegmentEndOffset());
+			}
+		}
+		assertEquals(3, found);
+	}
 }

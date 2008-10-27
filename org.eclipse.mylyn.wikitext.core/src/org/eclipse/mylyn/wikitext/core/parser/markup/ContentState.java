@@ -42,6 +42,8 @@ public class ContentState implements Locator {
 
 	private int lineSegmentEndOffset;
 
+	private int shift;
+
 	public ContentState() {
 	}
 
@@ -153,4 +155,11 @@ public class ContentState implements Locator {
 		return lineSegmentEndOffset;
 	}
 
+	void setShift(int shift) {
+		this.shift = shift;
+	}
+
+	int getShift() {
+		return shift;
+	}
 }

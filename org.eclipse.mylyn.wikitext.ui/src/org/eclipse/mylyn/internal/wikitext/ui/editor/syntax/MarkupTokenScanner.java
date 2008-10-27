@@ -132,7 +132,18 @@ public class MarkupTokenScanner implements ITokenScanner {
 													blockToken.getData(), blockTokenStartOffset, blockTokenLength);
 											addToken(tokens, blockBridgeToken);
 										}
-										addToken(tokens, spanToken);
+
+										Token[] spanTokens = null;
+										if (!span.getChildren().isEmpty()) {
+											spanTokens = splitSpan(spanToken, span);
+										}
+										if (spanTokens != null) {
+											for (Token spanSplitToken : spanTokens) {
+												addToken(tokens, spanSplitToken);
+											}
+										} else {
+											addToken(tokens, spanToken);
+										}
 										lastEnd = spanToken.offset + spanToken.length;
 										if (lastEnd > partition.getOffset() + partition.getLength()) {
 											throw new IllegalStateException();
@@ -182,6 +193,38 @@ public class MarkupTokenScanner implements ITokenScanner {
 			tokenIt = tokens.iterator();
 		}
 
+	}
+
+	/**
+	 * handle nested spans: given a token for a specific span, split it into one or more tokens based on analyzing its
+	 * children
+	 * 
+	 * @return an array of tokens that contiguously cover the region represented by the original span.
+	 */
+	private Token[] splitSpan(Token spanToken, Span span) {
+		List<Token> tokens = new ArrayList<Token>(span.getChildren().size() + 1);
+		int previousEnd = spanToken.offset;
+		for (Span child : span.getChildren().asList()) {
+			if (child.getOffset() > previousEnd) {
+				tokens.add(new Token(spanToken.fontState, spanToken.getData(), previousEnd, child.getOffset()
+						- previousEnd));
+			}
+			Token childToken = createToken(spanToken.fontState, child);
+			if (child.getChildren().isEmpty()) {
+				tokens.add(childToken);
+			} else {
+				// recursively apply to children
+				for (Token t : splitSpan(childToken, child)) {
+					tokens.add(t);
+				}
+			}
+			previousEnd = child.getEndOffset();
+		}
+		if (previousEnd < span.getEndOffset()) {
+			tokens.add(new Token(spanToken.fontState, spanToken.getData(), previousEnd, span.getEndOffset()
+					- previousEnd));
+		}
+		return tokens.toArray(new Token[tokens.size()]);
 	}
 
 	private void addToken(List<Token> tokens, Token newToken) {

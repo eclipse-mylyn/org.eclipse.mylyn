@@ -42,8 +42,7 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 				getBuilder().beginSpan(type, new Attributes());
 			}
 			if (nesting) {
-				getMarkupLanguage().emitMarkupLine(parser, state, state.getLineCharacterOffset() + getStart(this),
-						getContent(this), 0);
+				getMarkupLanguage().emitMarkupLine(parser, state, getStart(this), getContent(this), 0);
 			} else {
 				getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
 			}

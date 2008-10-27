@@ -31,7 +31,7 @@ public abstract class AbstractDocumentTest extends TestCase {
 		Document document = new Document();
 
 		Reader reader = new BufferedReader(new InputStreamReader(
-				FastDialectPartitionerTest.class.getResourceAsStream(resource)));
+				FastMarkupPartitionerTest.class.getResourceAsStream(resource)));
 		try {
 			int i;
 			StringBuilder buf = new StringBuilder(4096);

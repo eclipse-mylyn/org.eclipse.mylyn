@@ -52,7 +52,7 @@
          <template name="|_." description="%template.description.32" content="\n|_. ${text} |_. ${text2} |\n" block="true"/>
 
 		 <template name="!" description="%template.description.33" content="!${text}! $"/>
-		 <template name="&quot;" description="%template.description.34" content="&quot;${text}&quot;:{url} $"/>         
+		 <template name="&quot;" description="%template.description.34" content="&quot;${text}&quot;:${url} $"/>         
 
          <!-- generative templates -->
          <template name="{toc}" description="%template.description.29" content="\n{toc}\n\n" block="true"/>
