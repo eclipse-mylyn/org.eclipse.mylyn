@@ -1077,4 +1077,22 @@ public class TextileLanguageTest extends TestCase {
 		}
 		fail("expected to find superscript span");
 	}
+
+	public void testBoldItalicsBold() {
+		String html = parser.parseToHtml("*bold _ital ics_ bold*");
+		System.out.println(html);
+		assertTrue(html.contains("<strong>bold <em>ital ics</em> bold</strong>"));
+	}
+
+	public void testItalicsBold() {
+		String html = parser.parseToHtml("_italics **bol d** italics_");
+		System.out.println(html);
+		assertTrue(html.contains("<em>italics <b>bol d</b> italics</em>"));
+	}
+
+	public void testBoldItalics() {
+		String html = parser.parseToHtml("*_bold and italic_ not just bold*");
+		System.out.println(html);
+		assertTrue(html.contains("<strong><em>bold and italic</em> not just bold</strong>"));
+	}
 }

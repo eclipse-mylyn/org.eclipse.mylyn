@@ -107,17 +107,17 @@ public class TextileLanguage extends MarkupLanguage {
 		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier(isEscapingHtml()));
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0);
 		phraseModifierSyntax.add(new EscapeTextilePhraseModifier());
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**", SpanType.BOLD));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("??", SpanType.CITATION));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("__", SpanType.ITALIC));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("_", SpanType.EMPHASIS));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("*", SpanType.STRONG));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("+", SpanType.INSERTED));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("~", SpanType.SUBSCRIPT));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("^", SpanType.SUPERSCRIPT));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("@", SpanType.CODE));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("%", SpanType.SPAN));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("-", SpanType.DELETED));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**", SpanType.BOLD, true));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("??", SpanType.CITATION, true));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("__", SpanType.ITALIC, true));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("_", SpanType.EMPHASIS, true));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("*", SpanType.STRONG, true));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("+", SpanType.INSERTED, true));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("~", SpanType.SUBSCRIPT, false));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("^", SpanType.SUPERSCRIPT, false));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("@", SpanType.CODE, false));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("%", SpanType.SPAN, true));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("-", SpanType.DELETED, true));
 		phraseModifierSyntax.add(new ImageTextilePhraseModifier());
 		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
 
@@ -162,8 +162,6 @@ public class TextileLanguage extends MarkupLanguage {
 	 *            the list of blocks to which extensions may be added
 	 * @param paragraphBreakingBlocks
 	 *            the list of blocks that end a paragraph
-	 * 
-	 * @param paragraphBreakingBlocks
 	 */
 	protected void addBlockExtensions(List<Block> blocks, List<Block> paragraphBreakingBlocks) {
 		blocks.add(new TextileGlossaryBlock());

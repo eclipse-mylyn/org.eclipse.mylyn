@@ -17,7 +17,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- * 
+ * A simple phrase modifier implementation that matches a pattern in text and emits a {@link SpanType span} containing
+ * the content of the matched region.
  * 
  * @author David Green
  */
@@ -30,8 +31,11 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 	private static class SimplePhraseModifierProcessor extends PatternBasedElementProcessor {
 		private final SpanType spanType;
 
-		public SimplePhraseModifierProcessor(SpanType spanType) {
+		private final boolean nesting;
+
+		public SimplePhraseModifierProcessor(SpanType spanType, boolean nesting) {
 			this.spanType = spanType;
+			this.nesting = nesting;
 		}
 
 		@Override
@@ -39,7 +43,12 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 			Attributes attributes = new Attributes();
 			configureAttributes(this, attributes);
 			getBuilder().beginSpan(spanType, attributes);
-			getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
+			if (nesting) {
+				getMarkupLanguage().emitMarkupLine(parser, state, state.getLineCharacterOffset() + getStart(this),
+						getContent(this), 0);
+			} else {
+				getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
+			}
 			getBuilder().endSpan();
 		}
 	}
@@ -48,9 +57,21 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 
 	private final SpanType spanType;
 
-	public SimpleTextilePhraseModifier(String delimiter, SpanType spanType) {
+	private final boolean nesting;
+
+	/**
+	 * 
+	 * @param delimiter
+	 *            the text pattern to detect
+	 * @param spanType
+	 *            the type of span to be emitted for this phrase modifier
+	 * @param nesting
+	 *            indicate if this phrase modifier allows nested phrase modifiers
+	 */
+	public SimpleTextilePhraseModifier(String delimiter, SpanType spanType, boolean nesting) {
 		this.delimiter = delimiter;
 		this.spanType = spanType;
+		this.nesting = nesting;
 	}
 
 	@Override
@@ -62,6 +83,9 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 				quotedDelimiter;
 	}
 
+	/**
+	 * quote a literal for use in a regular expression
+	 */
 	private String quoteLite(String literal) {
 		StringBuilder buf = new StringBuilder(literal.length() * 2);
 		for (int x = 0; x < literal.length(); ++x) {
@@ -96,8 +120,12 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 		return processor.group(CONTENT_GROUP);
 	}
 
+	protected static int getStart(PatternBasedElementProcessor processor) {
+		return processor.start(CONTENT_GROUP);
+	}
+
 	@Override
 	protected PatternBasedElementProcessor newProcessor() {
-		return new SimplePhraseModifierProcessor(spanType);
+		return new SimplePhraseModifierProcessor(spanType, nesting);
 	}
 }
