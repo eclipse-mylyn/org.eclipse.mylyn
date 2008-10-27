@@ -62,6 +62,12 @@ public class ConfluenceLanguageTest extends TestCase {
 			assertTrue(Pattern.compile(
 					"<body><h" + x + " id=\"aheading\">a heading</h" + x + "><p>with a para</p></body>",
 					Pattern.MULTILINE).matcher(html).find());
+
+			html = parser.parseToHtml("  h" + x + ". a heading\n\nwith a para");
+			System.out.println("HTML:" + html);
+			assertTrue(Pattern.compile(
+					"<body><h" + x + " id=\"aheading\">a heading</h" + x + "><p>with a para</p></body>",
+					Pattern.MULTILINE).matcher(html).find());
 		}
 	}
 
@@ -95,6 +101,18 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(Pattern.compile(
 				"<body><blockquote><p>a multiline<br/>\\s*block quote</p><p>with two paras</p></blockquote></body>",
 				Pattern.MULTILINE).matcher(html).find());
+	}
+
+	public void testBlockQuoteExtendedLeadingSpaces() {
+		String html = parser.parseToHtml("     {quote}\na multiline\nblock quote\n    {quote}\nmore text");
+		System.out.println("HTML:" + html);
+		assertTrue(html.contains("<body><blockquote><p>a multiline<br/>block quote</p></blockquote><p>more text</p></body>"));
+	}
+
+	public void testBlockQuoteExtendedBreaksPara() {
+		String html = parser.parseToHtml("a para\n{quote}quoted{quote}new para");
+		System.out.println("HTML:" + html);
+		assertTrue(html.contains("<body><p>a para</p><blockquote><p>quoted</p></blockquote><p>new para</p></body>"));
 	}
 
 	public void testSimplePhraseModifiers() throws IOException {
@@ -453,5 +471,23 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<h2 id=\"Subhead2\">"));
 		assertFalse(html.contains("href=\"#Subhead4\""));
 		assertTrue(html.contains("<h3 id=\"Subhead4\">"));
+	}
+
+	public void testBoldItalicsBold() {
+		String html = parser.parseToHtml("*bold _ital ics_ bold*");
+		System.out.println(html);
+		assertTrue(html.contains("<strong>bold <em>ital ics</em> bold</strong>"));
+	}
+
+	public void testItalicsBold() {
+		String html = parser.parseToHtml("_italics *bol d* italics_");
+		System.out.println(html);
+		assertTrue(html.contains("<em>italics <strong>bol d</strong> italics</em>"));
+	}
+
+	public void testBoldItalics() {
+		String html = parser.parseToHtml("*_bold and italic_ not just bold*");
+		System.out.println(html);
+		assertTrue(html.contains("<strong><em>bold and italic</em> not just bold</strong>"));
 	}
 }

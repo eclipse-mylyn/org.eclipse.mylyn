@@ -24,8 +24,8 @@ public abstract class AbstractConfluenceDelimitedBlock extends ParameterizedBloc
 	private Matcher matcher;
 
 	public AbstractConfluenceDelimitedBlock(String blockName) {
-		startPattern = Pattern.compile("\\{" + blockName + "(?::([^\\}]*))?\\}(.*)");
-		endPattern = Pattern.compile("(\\{" + blockName + "\\})(.*)");
+		startPattern = Pattern.compile("\\s*\\{" + blockName + "(?::([^\\}]*))?\\}(.*)");
+		endPattern = Pattern.compile("\\s*(\\{" + blockName + "\\})(.*)");
 	}
 
 	@Override

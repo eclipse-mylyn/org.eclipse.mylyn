@@ -67,7 +67,9 @@ public class ConfluenceLanguage extends MarkupLanguage {
 
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 
-		blocks.add(new HeadingBlock());
+		HeadingBlock headingBlock = new HeadingBlock();
+		blocks.add(headingBlock);
+		paragraphBreakingBlocks.add(headingBlock);
 		ListBlock listBlock = new ListBlock();
 		blocks.add(listBlock);
 		paragraphBreakingBlocks.add(listBlock);
@@ -75,29 +77,35 @@ public class ConfluenceLanguage extends MarkupLanguage {
 		TableBlock tableBlock = new TableBlock();
 		blocks.add(tableBlock);
 		paragraphBreakingBlocks.add(tableBlock);
-		blocks.add(new ExtendedQuoteBlock());
-		blocks.add(new ExtendedPreformattedBlock());
+		ExtendedQuoteBlock quoteBlock = new ExtendedQuoteBlock();
+		blocks.add(quoteBlock);
+		paragraphBreakingBlocks.add(quoteBlock);
+		ExtendedPreformattedBlock noformatBlock = new ExtendedPreformattedBlock();
+		blocks.add(noformatBlock);
+		paragraphBreakingBlocks.add(noformatBlock);
 		// TODO: {color:red}{color}
 		blocks.add(new TextBoxBlock(BlockType.PANEL, "panel"));
 		blocks.add(new TextBoxBlock(BlockType.NOTE, "note"));
 		blocks.add(new TextBoxBlock(BlockType.INFORMATION, "info"));
 		blocks.add(new TextBoxBlock(BlockType.WARNING, "warning"));
 		blocks.add(new TextBoxBlock(BlockType.TIP, "tip"));
-		blocks.add(new CodeBlock());
+		CodeBlock codeBlock = new CodeBlock();
+		blocks.add(codeBlock);
+		paragraphBreakingBlocks.add(codeBlock);
 		blocks.add(new TableOfContentsBlock());
 
 		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this must come last
 	}
 	static {
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:", 0);
-		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG));
-		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS));
-		phraseModifierSyntax.add(new SimplePhraseModifier("??", SpanType.CITATION));
-		phraseModifierSyntax.add(new SimplePhraseModifier("-", SpanType.DELETED));
-		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.UNDERLINED));
-		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT));
-		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT));
-		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{", "}}", SpanType.MONOSPACE));
+		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("??", SpanType.CITATION, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("-", SpanType.DELETED, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.UNDERLINED, true));
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, false));
+		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, false));
+		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{", "}}", SpanType.MONOSPACE, false));
 		phraseModifierSyntax.add(new ImagePhraseModifier());
 		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
 

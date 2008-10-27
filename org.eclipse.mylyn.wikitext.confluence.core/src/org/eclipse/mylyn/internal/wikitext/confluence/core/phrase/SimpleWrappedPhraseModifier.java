@@ -27,15 +27,23 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 	private static class SimplePhraseModifierProcessor extends PatternBasedElementProcessor {
 		private final SpanType spanType;
 
-		public SimplePhraseModifierProcessor(SpanType spanType) {
+		private final boolean nesting;
+
+		public SimplePhraseModifierProcessor(SpanType spanType, boolean nesting) {
 			this.spanType = spanType;
+			this.nesting = nesting;
 		}
 
 		@Override
 		public void emit() {
 			Attributes attributes = new Attributes();
 			getBuilder().beginSpan(spanType, attributes);
-			getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
+			if (nesting) {
+				getMarkupLanguage().emitMarkupLine(parser, state, state.getLineCharacterOffset() + getStart(this),
+						getContent(this), 0);
+			} else {
+				getMarkupLanguage().emitMarkupText(parser, state, getContent(this));
+			}
 			getBuilder().endSpan();
 		}
 	}
@@ -46,10 +54,13 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 
 	private final SpanType spanType;
 
-	public SimpleWrappedPhraseModifier(String startDelimiter, String endDelimiter, SpanType spanType) {
+	private final boolean nesting;
+
+	public SimpleWrappedPhraseModifier(String startDelimiter, String endDelimiter, SpanType spanType, boolean nesting) {
 		this.startDelimiter = startDelimiter;
 		this.endDelimiter = endDelimiter;
 		this.spanType = spanType;
+		this.nesting = nesting;
 	}
 
 	@Override
@@ -90,8 +101,12 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		return processor.group(CONTENT_GROUP);
 	}
 
+	protected static int getStart(PatternBasedElementProcessor processor) {
+		return processor.start(CONTENT_GROUP);
+	}
+
 	@Override
 	protected PatternBasedElementProcessor newProcessor() {
-		return new SimplePhraseModifierProcessor(spanType);
+		return new SimplePhraseModifierProcessor(spanType, nesting);
 	}
 }

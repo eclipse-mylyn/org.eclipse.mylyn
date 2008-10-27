@@ -19,8 +19,8 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.SpanType;
  */
 public class SimplePhraseModifier extends SimpleWrappedPhraseModifier {
 
-	public SimplePhraseModifier(String delimiter, SpanType spanType) {
-		super(delimiter, delimiter, spanType);
+	public SimplePhraseModifier(String delimiter, SpanType spanType, boolean nesting) {
+		super(delimiter, delimiter, spanType, nesting);
 	}
 
 }
