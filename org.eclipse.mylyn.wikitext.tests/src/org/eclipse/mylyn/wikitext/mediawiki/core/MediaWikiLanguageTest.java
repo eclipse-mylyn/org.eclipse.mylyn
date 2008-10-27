@@ -266,7 +266,7 @@ public class MediaWikiLanguageTest extends TestCase {
 	public void testLinkInternalCategoryReference() {
 		String html = parser.parseToHtml("a [[:Category:Help]] reference to the Main Page");
 		System.out.println("HTML: \n" + html);
-		assertTrue(html.contains("<body><p>a <a href=\"/wiki/Category:Help\" title=\"Category:Help\">Category:Help</a> reference to the Main Page</p></body>"));
+		assertTrue(html.contains("<body><p>a <a href=\"Category:Help\" title=\"Category:Help\">Category:Help</a> reference to the Main Page</p></body>"));
 	}
 
 	public void testHyperlinkImplied() {

@@ -39,12 +39,11 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkRepla
 import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplacementToken;
 
 /**
- * A dialect for <a href="http://www.mediawiki.org">MediaWiki</a> <a
+ * A markup language for <a href="http://www.mediawiki.org">MediaWiki</a> <a
  * href="http://en.wikipedia.org/wiki/Wikitext">Wikitext markup</a>, which is the wiki format used by <a
  * href="http://www.wikipedia.org>WikiPedia</a> and <a href="http://www.wikimedia.org/">several other major sites</a>.
  * 
  * @author David Green
- * 
  */
 public class MediaWikiLanguage extends MarkupLanguage {
 	private static final String CATEGORY_PREFIX = ":";
@@ -57,29 +56,42 @@ public class MediaWikiLanguage extends MarkupLanguage {
 
 	private final List<Block> paragraphBreakingBlocks = new ArrayList<Block>();
 
-	private static PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
+	private final PatternBasedSyntax tokenSyntax = new PatternBasedSyntax();
 
-	private static PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
+	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
-	{
-
-		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
-
-		blocks.add(new HeadingBlock());
-		blocks.add(new ListBlock());
-		blocks.add(new PreformattedBlock());
-		blocks.add(new TableBlock());
-		final ParagraphBlock paragraphBlock = new ParagraphBlock();
-		blocks.add(paragraphBlock); // ORDER DEPENDENCY: this one must be last!!
-
-		for (Block block : blocks) {
-			if (block == paragraphBlock) {
-				continue;
-			}
-			paragraphBreakingBlocks.add(block);
-		}
+	public MediaWikiLanguage() {
+		setName("MediaWiki");
+		setInternalLinkPattern("/wiki/{0}");
+		initializeSyntax();
 	}
-	static {
+
+	protected void initializeSyntax() {
+		initializeBlocks();
+		initializePhraseModifiers();
+		initializeTokens();
+	}
+
+	protected void initializeTokens() {
+		tokenSyntax.add(new LineBreakToken());
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174"));
+		tokenSyntax.add(new ImageReplacementToken());
+		tokenSyntax.add(new HyperlinkInternalReplacementToken());
+		tokenSyntax.add(new HyperlinkExternalReplacementToken());
+		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
+		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule
+		tokenSyntax.add(new TemplateReplacementToken());
+		tokenSyntax.add(new org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.EntityReferenceReplacementToken());
+
+		addTokenExtensions(tokenSyntax);
+	}
+
+	protected void initializePhraseModifiers() {
 		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0);
 		phraseModifierSyntax.add(new EscapePhraseModifier());
 		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC },
@@ -99,25 +111,67 @@ public class MediaWikiLanguage extends MarkupLanguage {
 		phraseModifierSyntax.add(new LimitedHtmlStartTagPhraseModifier(allowedHtmlTags));
 		phraseModifierSyntax.add(new HtmlCommentPhraseModifier());
 
-		tokenSyntax.add(new LineBreakToken());
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174"));
-		tokenSyntax.add(new ImageReplacementToken());
-		tokenSyntax.add(new HyperlinkInternalReplacementToken());
-		tokenSyntax.add(new HyperlinkExternalReplacementToken());
-		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
-		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule
-		tokenSyntax.add(new TemplateReplacementToken());
-		tokenSyntax.add(new org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.EntityReferenceReplacementToken());
+		addPhraseModifierExtensions(phraseModifierSyntax);
 	}
 
-	public MediaWikiLanguage() {
-		setName("MediaWiki");
-		setInternalLinkPattern("/wiki/{0}");
+	protected void initializeBlocks() {
+		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
+
+		blocks.add(new HeadingBlock());
+		blocks.add(new ListBlock());
+		blocks.add(new PreformattedBlock());
+		blocks.add(new TableBlock());
+		final ParagraphBlock paragraphBlock = new ParagraphBlock();
+		blocks.add(paragraphBlock); // ORDER DEPENDENCY: this one must be last!!
+
+		// extensions
+		addBlockExtensions(blocks, paragraphBreakingBlocks);
+		// ~extensions
+
+		for (Block block : blocks) {
+			if (block == paragraphBlock) {
+				continue;
+			}
+			paragraphBreakingBlocks.add(block);
+		}
+
+	}
+
+	/**
+	 * subclasses may override this method to add tokens to the MediaWiki language. Overriding classes should call
+	 * <code>super.addTokenExtensions(tokenSyntax)</code> if the default language extensions are desired.
+	 * 
+	 * @param tokenSyntax
+	 *            the token syntax
+	 */
+	protected void addTokenExtensions(PatternBasedSyntax tokenSyntax) {
+		// no token extensions
+	}
+
+	/**
+	 * subclasses may override this method to add phrases to the MediaWiki language. Overriding classes should call
+	 * <code>super.addPhraseModifierExtensions(phraseModifierSyntax)</code> if the default language extensions are
+	 * desired.
+	 * 
+	 * @param phraseModifierSyntax
+	 *            the phrase modifier syntax
+	 */
+	protected void addPhraseModifierExtensions(PatternBasedSyntax phraseModifierSyntax) {
+		// no phrase extensions
+	}
+
+	/**
+	 * subclasses may override this method to add blocks to the MediaWiki language. Overriding classes should call
+	 * <code>super.addBlockExtensions(blocks,paragraphBreakingBlocks)</code> if the default language extensions are
+	 * desired.
+	 * 
+	 * @param blocks
+	 *            the list of blocks to which extensions may be added
+	 * @param paragraphBreakingBlocks
+	 *            the list of blocks that end a paragraph
+	 */
+	protected void addBlockExtensions(List<Block> blocks2, List<Block> paragraphBreakingBlocks) {
+		// no block extensions
 	}
 
 	@Override
