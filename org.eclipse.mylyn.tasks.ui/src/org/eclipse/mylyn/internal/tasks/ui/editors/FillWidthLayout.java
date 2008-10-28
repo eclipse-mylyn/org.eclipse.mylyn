@@ -42,9 +42,13 @@ public class FillWidthLayout extends Layout {
 
 	private final int marginBottom;
 
-	private int widthHintMargin = 15;
+	private final int widthHintMargin;
 
 	private Composite layoutAdvisor;
+
+	private int lastWidthHint;
+
+	private Point lastComputedSize;
 
 	/**
 	 * create with 0 margins
@@ -92,9 +96,9 @@ public class FillWidthLayout extends Layout {
 		this.marginTop = marginTop;
 		this.marginBottom = marginBottom;
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
-			widthHintMargin = 15;
+			this.widthHintMargin = 15;
 		} else {
-			widthHintMargin = 25;
+			this.widthHintMargin = 20;
 		}
 	}
 
@@ -143,10 +147,10 @@ public class FillWidthLayout extends Layout {
 
 	@Override
 	protected Point computeSize(Composite composite, int widthHint, int heightHint, boolean flushCache) {
-		int resultX = 1;
-		int resultY = 1;
-
 		Control[] children = composite.getChildren();
+		if (children.length == 0) {
+			return new Point(0, 0);
+		}
 
 		if (widthHint <= 0) {
 			widthHint = calculateWidthHint(composite);
@@ -157,21 +161,25 @@ public class FillWidthLayout extends Layout {
 			}
 		}
 
-		int horizontalMargin = marginLeft + marginRight;
+		if (lastComputedSize == null || widthHint != lastWidthHint) {
+			int horizontalMargin = marginLeft + marginRight;
+			int resultX = 1;
+			int resultY = 1;
+			for (Control control : children) {
+				Point sz = control.computeSize(widthHint - horizontalMargin, -1, flushCache);
+				resultX = Math.max(resultX, sz.x);
+				resultY = Math.max(resultY, sz.y);
+			}
 
-		for (Control control : children) {
-			Point sz = control.computeSize(widthHint - horizontalMargin, -1, flushCache);
-
-			resultX = Math.max(resultX, sz.x);
-			resultY = Math.max(resultY, sz.y);
+			lastWidthHint = widthHint;
+			lastComputedSize = new Point(resultX + horizontalMargin, resultY + marginTop + marginBottom);
 		}
 
-		return new Point(resultX + horizontalMargin, resultY + marginTop + marginBottom);
+		return new Point(lastComputedSize.x, lastComputedSize.y);
 	}
 
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
-
 		Rectangle area = composite.getClientArea();
 		if (area.width == 0) {
 			area.width = calculateWidthHint(composite);
