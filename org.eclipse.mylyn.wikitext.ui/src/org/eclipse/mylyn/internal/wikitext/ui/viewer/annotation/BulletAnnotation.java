@@ -4,7 +4,7 @@ import org.eclipse.jface.text.source.Annotation;
 
 public class BulletAnnotation extends Annotation {
 
-	public static final String TYPE = "org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.bullet";
+	public static final String TYPE = "org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.bullet"; //$NON-NLS-1$
 
 	private final int indentLevel;
 

@@ -19,7 +19,7 @@ import org.eclipse.jface.text.source.Annotation;
  */
 public class IdAnnotation extends Annotation {
 
-	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.id";
+	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.id"; //$NON-NLS-1$
 
 	public IdAnnotation(String id) {
 		super(TYPE, false, id);

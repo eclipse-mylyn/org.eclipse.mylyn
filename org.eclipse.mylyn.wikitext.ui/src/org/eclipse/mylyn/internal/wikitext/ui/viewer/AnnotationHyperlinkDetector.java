@@ -75,7 +75,7 @@ public class AnnotationHyperlinkDetector implements IHyperlinkDetector {
 		Position position = annotationModel.getPosition(anchorHrefAnnotation);
 		IRegion region = new Region(position.getOffset(), position.getLength());
 		String href = anchorHrefAnnotation.getAnchorHref();
-		if (href != null && href.startsWith("#")) {
+		if (href != null && href.startsWith("#")) { //$NON-NLS-1$
 			return new DocumentHyperlink(viewer, region, href);
 		} else {
 			return createUrlHyperlink(region, href);

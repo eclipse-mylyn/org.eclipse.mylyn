@@ -34,7 +34,7 @@ public class MarkupValidator {
 
 	public List<ValidationProblem> validate(IProgressMonitor monitor, String markup, int offset, int length) {
 		final int totalWork = length == 0 ? 1 : length * rules.size();
-		monitor.beginTask("Markup Validation", totalWork); 
+		monitor.beginTask(Messages.getString("MarkupValidator.0"), totalWork);  //$NON-NLS-1$
 		try {
 			if (length == 0 || rules.isEmpty()) {
 				return Collections.emptyList();

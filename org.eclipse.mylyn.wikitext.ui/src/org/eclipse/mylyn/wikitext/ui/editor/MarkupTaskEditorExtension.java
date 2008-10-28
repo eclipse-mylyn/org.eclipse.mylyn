@@ -71,9 +71,9 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 @SuppressWarnings("restriction")
 public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 
-	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor";
+	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor"; //$NON-NLS-1$
 
-	private static final String ID_CONTEXT_EDITOR_TEXT = "org.eclipse.ui.DefaultTextEditor";
+	private static final String ID_CONTEXT_EDITOR_TEXT = "org.eclipse.ui.DefaultTextEditor"; //$NON-NLS-1$
 
 	private MarkupLanguage markupLanguage;
 
@@ -241,7 +241,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 			return new DefaultAnnotationHover() {
 				@Override
 				protected boolean isIncluded(Annotation annotation) {
-					return annotation.getType().startsWith("org.eclipse.wikitext") || super.isIncluded(annotation);
+					return annotation.getType().startsWith("org.eclipse.wikitext") || super.isIncluded(annotation); //$NON-NLS-1$
 				}
 			};
 		}
@@ -373,7 +373,7 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 						if (task.getTaskKey() == null) {
 							cursorControl.setToolTipText(task.getSummary());
 						} else {
-							cursorControl.setToolTipText(task.getTaskKey() + ": " + task.getSummary());
+							cursorControl.setToolTipText(task.getTaskKey() + ": " + task.getSummary()); //$NON-NLS-1$
 						}
 					}
 				}

@@ -38,6 +38,6 @@ public class Span extends Segment<Span> {
 
 	@Override
 	public String toString() {
-		return String.format("<%s offset=\"%s\" length=\"%s\"/>", type.name(), getOffset(), getLength());
+		return String.format("<%s offset=\"%s\" length=\"%s\"/>", type.name(), getOffset(), getLength()); //$NON-NLS-1$
 	}
 }

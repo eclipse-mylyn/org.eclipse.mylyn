@@ -20,11 +20,11 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
  */
 public class ValidationProblemAnnotation extends Annotation {
 
-	private static final String TYPE_BASE = "org.eclipse.mylyn.wikitext.ui.editor.problem.validation";
+	private static final String TYPE_BASE = "org.eclipse.mylyn.wikitext.ui.editor.problem.validation"; //$NON-NLS-1$
 
-	public static final String TYPE_WARNING = TYPE_BASE + ".warning";
+	public static final String TYPE_WARNING = TYPE_BASE + ".warning"; //$NON-NLS-1$
 
-	public static final String TYPE_ERROR = TYPE_BASE + ".error";
+	public static final String TYPE_ERROR = TYPE_BASE + ".error"; //$NON-NLS-1$
 
 	public ValidationProblemAnnotation(ValidationProblem problem) {
 		super(computeType(problem), false, problem.getMessage());

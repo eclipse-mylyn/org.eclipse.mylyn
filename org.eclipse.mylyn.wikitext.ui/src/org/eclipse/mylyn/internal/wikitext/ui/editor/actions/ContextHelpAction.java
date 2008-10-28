@@ -24,16 +24,16 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class ContextHelpAction extends Action {
 
-	private static final String DEFAULT_WIKITEXT_HELP_ID = "org.eclipse.mylyn.wikitext.ui.markupSourceContext";
+	private static final String DEFAULT_WIKITEXT_HELP_ID = "org.eclipse.mylyn.wikitext.ui.markupSourceContext"; //$NON-NLS-1$
 
 	private final String contextId;
 
 	public ContextHelpAction(String contextId) {
-		super("", AS_PUSH_BUTTON);
+		super("", AS_PUSH_BUTTON); //$NON-NLS-1$
 		this.contextId = contextId;
-		setToolTipText("WikiText Help");
+		setToolTipText(Messages.getString("ContextHelpAction.2")); //$NON-NLS-1$
 		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(WikiTextUiPlugin.getDefault().getPluginId(),
-				"icons/help.gif"));
+				"icons/help.gif")); //$NON-NLS-1$
 	}
 
 	public ContextHelpAction() {

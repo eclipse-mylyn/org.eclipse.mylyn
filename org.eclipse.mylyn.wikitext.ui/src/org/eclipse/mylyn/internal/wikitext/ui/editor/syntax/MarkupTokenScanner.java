@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.syntax;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -234,17 +235,19 @@ public class MarkupTokenScanner implements ITokenScanner {
 
 	private void checkAddToken(List<Token> tokens, Token newToken) {
 		if (newToken.getLength() <= 0) {
-			throw new IllegalStateException(String.format("Bad token length %s", newToken.getLength()));
+			throw new IllegalStateException(MessageFormat.format(
+					Messages.getString("MarkupTokenScanner.0"), newToken.getLength())); //$NON-NLS-1$
 		}
 		if (newToken.getOffset() < 0) {
-			throw new IllegalStateException(String.format("Bad token offset %s", newToken.getOffset()));
+			throw new IllegalStateException(MessageFormat.format(
+					Messages.getString("MarkupTokenScanner.1"), newToken.getOffset())); //$NON-NLS-1$
 		}
 		if (!tokens.isEmpty()) {
 			Token previous = tokens.get(tokens.size() - 1);
 			if (previous.getOffset() >= newToken.getOffset()) {
-				throw new IllegalStateException("New token starts on or before previous");
+				throw new IllegalStateException(Messages.getString("MarkupTokenScanner.2")); //$NON-NLS-1$
 			} else if (previous.getOffset() + previous.getLength() > newToken.getOffset()) {
-				throw new IllegalStateException("New token starts before the end of the previous");
+				throw new IllegalStateException(Messages.getString("MarkupTokenScanner.3")); //$NON-NLS-1$
 			}
 		}
 	}

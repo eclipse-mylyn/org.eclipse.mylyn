@@ -80,7 +80,7 @@ public class ImageCache {
 
 	public Image getMissingImage() {
 		if (missingImage == null) {
-			missingImage = ImageDescriptor.createFromURL(ImageCache.class.getResource("resources/missing-image.png"))
+			missingImage = ImageDescriptor.createFromURL(ImageCache.class.getResource("resources/missing-image.png")) //$NON-NLS-1$
 					.createImage();
 		}
 		return missingImage;

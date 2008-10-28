@@ -32,7 +32,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * @author David Green
  */
 public class FastMarkupPartitioner extends FastPartitioner {
-	public static final String CONTENT_TYPE_MARKUP = "__markup_block";
+	public static final String CONTENT_TYPE_MARKUP = "__markup_block"; //$NON-NLS-1$
 
 	public static final String[] ALL_CONTENT_TYPES = new String[] { CONTENT_TYPE_MARKUP };
 
@@ -228,7 +228,7 @@ public class FastMarkupPartitioner extends FastPartitioner {
 
 		@Override
 		public String toString() {
-			return String.format("MarkupPartition(type=%s,offset=%s,length=%s,end=%s)", block.getType(), offset,
+			return String.format("MarkupPartition(type=%s,offset=%s,length=%s,end=%s)", block.getType(), offset, //$NON-NLS-1$
 					length, offset + length);
 		}
 	}

@@ -96,10 +96,10 @@ public class InformationPresenterUtil {
 	}
 
 	private static final String DATA_INFORMATION_PRESENTER = InformationPresenterUtil.class.getName()
-			+ "#informationPresenter";
+			+ "#informationPresenter"; //$NON-NLS-1$
 
 	private static final String DATA_INFORMATION_CONTROL_CREATOR = InformationPresenterUtil.class.getName()
-			+ "#informationControlCreator";
+			+ "#informationControlCreator"; //$NON-NLS-1$
 
 	/**
 	 * Get an information presenter to present the provided HTML content. The returned presenter is ready for displaying

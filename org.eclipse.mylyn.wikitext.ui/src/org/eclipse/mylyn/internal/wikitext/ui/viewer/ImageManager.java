@@ -15,6 +15,7 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,8 +60,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
 /**
- * Manages the download of images for viewing in an {@link HtmlViewer}, and creates appropriate space for their
- * display.
+ * Manages the download of images for viewing in an {@link HtmlViewer}, and creates appropriate space for their display.
  * 
  * Downloads image data in a background thread, instantiates the corresopnding images, and ensures that enough vertical
  * space exists in the viewer to display the images.
@@ -221,7 +221,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 							font = viewer.getTextWidget().getFont();
 						}
 						gc.setFont(font);
-						Point extent = gc.textExtent("\n");
+						Point extent = gc.textExtent("\n"); //$NON-NLS-1$
 						if (extent.y > 0) {
 							int numNewlines = (int) Math.ceil(((double) height) / ((double) extent.y));
 							final int originalNewlines = numNewlines;
@@ -240,13 +240,13 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 									}
 								}
 								if (numNewlines > 0) {
-									String newlines = "";
+									String newlines = ""; //$NON-NLS-1$
 									for (int x = 0; x < numNewlines; ++x) {
-										newlines += "\n";
+										newlines += "\n"; //$NON-NLS-1$
 									}
 									document.replace(position.offset + 1, 0, newlines);
 								} else if (numNewlines < 0) {
-									document.replace(position.offset, -numNewlines, "");
+									document.replace(position.offset, -numNewlines, ""); //$NON-NLS-1$
 								}
 								if (numNewlines != 0) {
 									// no need to fixup other annotation positions, since the annotation model is hooked into the document.
@@ -338,7 +338,7 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 							} catch (Exception e) {
 								if (WikiTextUiPlugin.getDefault() != null) {
 									WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
-											String.format("Cannot access %s", location), e);
+											MessageFormat.format(Messages.getString("ImageManager.4"), location), e); //$NON-NLS-1$
 								}
 								urlToImageData.put(imgSrc, null);
 							}

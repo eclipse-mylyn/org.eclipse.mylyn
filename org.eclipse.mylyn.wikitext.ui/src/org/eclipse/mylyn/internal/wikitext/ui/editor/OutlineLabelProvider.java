@@ -30,7 +30,7 @@ class OutlineLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof OutlineItem) {
 			OutlineItem outlineItem = (OutlineItem) element;
-			return outlineItem.getKind() + ". " + outlineItem.getLabel();
+			return outlineItem.getKind() + ". " + outlineItem.getLabel(); //$NON-NLS-1$
 		}
 		return element.toString();
 	}

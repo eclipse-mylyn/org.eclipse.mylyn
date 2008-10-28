@@ -20,10 +20,10 @@ import org.eclipse.jface.text.source.Annotation;
  */
 public class HorizontalRuleAnnotation extends Annotation {
 
-	public static final String TYPE = "org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.hr";
+	public static final String TYPE = "org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.hr"; //$NON-NLS-1$
 
 	public HorizontalRuleAnnotation() {
-		super(TYPE, false, "");
+		super(TYPE, false, ""); //$NON-NLS-1$
 	}
 
 	public String getElementId() {

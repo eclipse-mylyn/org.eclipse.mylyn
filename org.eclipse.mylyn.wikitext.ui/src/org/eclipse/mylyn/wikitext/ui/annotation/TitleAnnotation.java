@@ -21,7 +21,7 @@ import org.eclipse.jface.text.source.Annotation;
 public class TitleAnnotation extends Annotation {
 	private final String titleType;
 
-	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.title";
+	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.title"; //$NON-NLS-1$
 
 	public TitleAnnotation(String title, String titleType) {
 		super(TYPE, false, title);

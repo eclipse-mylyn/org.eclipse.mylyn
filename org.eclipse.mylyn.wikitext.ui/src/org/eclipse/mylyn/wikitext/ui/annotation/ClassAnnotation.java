@@ -19,7 +19,7 @@ import org.eclipse.jface.text.source.Annotation;
  */
 public class ClassAnnotation extends Annotation {
 
-	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.class";
+	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.class"; //$NON-NLS-1$
 
 	public ClassAnnotation(String cssClass) {
 		super(TYPE, false, cssClass);

@@ -12,6 +12,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.TreeSet;
 
 import org.eclipse.core.resources.IFile;
@@ -92,7 +93,7 @@ public class MarkupEditor extends TextEditor {
 	 * 
 	 * @see IFile#setPersistentProperty(QualifiedName, String) property
 	 */
-	private static final String MARKUP_LANGUAGE = "markupLanguage";
+	private static final String MARKUP_LANGUAGE = "markupLanguage"; //$NON-NLS-1$
 
 	public static final String CONTEXT = "org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"; //$NON-NLS-1$
 
@@ -128,7 +129,7 @@ public class MarkupEditor extends TextEditor {
 
 	private CTabItem sourceTab;
 
-	public static final String EDITOR_SOURCE_VIEWER = "org.eclipse.mylyn.wikitext.ui.editor.sourceViewer";
+	public static final String EDITOR_SOURCE_VIEWER = "org.eclipse.mylyn.wikitext.ui.editor.sourceViewer"; //$NON-NLS-1$
 
 	public MarkupEditor() {
 		setDocumentProvider(new MarkupDocumentProvider());
@@ -400,7 +401,7 @@ public class MarkupEditor extends TextEditor {
 	}
 
 	private void scheduleOutlineUpdate() {
-		UIJob updateOutlineJob = new UIJob("Update outline") {
+		UIJob updateOutlineJob = new UIJob(Messages.getString("MarkupEditor.2")) { //$NON-NLS-1$
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				if (!outlineDirty) {
@@ -484,7 +485,7 @@ public class MarkupEditor extends TextEditor {
 			}
 			markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(name);
 			if (markupLanguage == null) {
-				markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage("Textile");
+				markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage("Textile"); //$NON-NLS-1$
 			}
 		}
 		setMarkupLanguage(markupLanguage, false);
@@ -562,7 +563,7 @@ public class MarkupEditor extends TextEditor {
 				return WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
 			}
 		} catch (CoreException e) {
-			WikiTextUiPlugin.getDefault().log(IStatus.ERROR, "Cannot load markup language preference", e);
+			WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.getString("MarkupEditor.0"), e); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -584,7 +585,7 @@ public class MarkupEditor extends TextEditor {
 						MARKUP_LANGUAGE), preference);
 			} catch (CoreException e) {
 				WikiTextUiPlugin.getDefault().log(IStatus.ERROR,
-						String.format("Cannot store markup language preference '%s'", preference), e);
+						MessageFormat.format(Messages.getString("MarkupEditor.1"), preference), e); //$NON-NLS-1$
 			}
 		}
 	}

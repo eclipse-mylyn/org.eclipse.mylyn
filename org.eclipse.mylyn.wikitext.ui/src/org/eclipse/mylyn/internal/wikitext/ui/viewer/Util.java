@@ -27,7 +27,7 @@ class Util {
 		try {
 			// eclipse 3.4
 			Iterator<?> annotationIterator = (Iterator<?>) annotationModel.getClass().getMethod(
-					"getAnnotationIterator", int.class, int.class, boolean.class, boolean.class).invoke(
+					"getAnnotationIterator", int.class, int.class, boolean.class, boolean.class).invoke( //$NON-NLS-1$
 					annotationModel, offset, 1, true, true);
 			return annotationIterator.hasNext();
 		} catch (Exception e) {

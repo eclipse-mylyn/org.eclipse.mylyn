@@ -37,7 +37,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 	public EditorPreferencePage() {
 		super(GRID);
 		setPreferenceStore(WikiTextUiPlugin.getDefault().getPreferenceStore());
-		setDescription("WikiText editor preferences for syntax highlighting.  CSS is used to control font size, color and style.");
+		setDescription(Messages.getString("EditorPreferencePage.0")); //$NON-NLS-1$
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		Preferences prefs = new Preferences();
 
 		Group group = new Group(getFieldEditorParent(), SWT.NULL);
-		group.setText("Block Modifiers");
+		group.setText(Messages.getString("EditorPreferencePage.1")); //$NON-NLS-1$
 		group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
 		for (Map.Entry<String, String> ent : prefs.getCssByBlockModifierType().entrySet()) {
@@ -58,7 +58,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		}
 
 		group = new Group(getFieldEditorParent(), SWT.NULL);
-		group.setText("Phrase Modifiers");
+		group.setText(Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
 		group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
 		for (Map.Entry<String, String> ent : prefs.getCssByPhraseModifierType().entrySet()) {
@@ -66,7 +66,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 			addField(new StringFieldEditor(preferenceKey, ent.getKey(), group));
 		}
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				WikiTextUiPlugin.getDefault().getPluginId() + ".preferences");
+				WikiTextUiPlugin.getDefault().getPluginId() + ".preferences"); //$NON-NLS-1$
 	}
 
 	/*

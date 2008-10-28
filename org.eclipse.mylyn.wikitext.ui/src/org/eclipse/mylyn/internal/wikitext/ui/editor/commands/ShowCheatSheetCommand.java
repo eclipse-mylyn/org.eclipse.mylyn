@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor.commands;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -18,7 +20,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
-import org.eclipse.mylyn.internal.wikitext.ui.editor.Messages;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.actions.ContextHelpAction;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.help.HelpContent;
 import org.eclipse.mylyn.internal.wikitext.ui.util.InformationPresenterUtil;
@@ -53,7 +54,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 public class ShowCheatSheetCommand extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl");
+		Object activeFocusControl = HandlerUtil.getVariable(event, "activeFocusControl"); //$NON-NLS-1$
 		if (activeFocusControl instanceof Control) {
 			Control control = (Control) activeFocusControl;
 			MarkupLanguage markupLanguage = (MarkupLanguage) control.getData(MarkupLanguage.class.getName());
@@ -101,7 +102,7 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 				WikiTextUiPlugin.getDefault().log(e);
 			}
 		}
-		return Messages.getMessage("MarkupEditor.noCheatSheetContent",
-				markupLanguage == null ? Messages.getString("MarkupEditor.noDialect") : markupLanguage.getName());
+		return MessageFormat.format(Messages.getString("MarkupEditor.noCheatSheetContent"), //$NON-NLS-1$
+				markupLanguage == null ? Messages.getString("MarkupEditor.noDialect") : markupLanguage.getName()); //$NON-NLS-1$
 	}
 }

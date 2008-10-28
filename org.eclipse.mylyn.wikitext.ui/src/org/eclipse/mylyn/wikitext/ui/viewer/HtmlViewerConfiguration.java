@@ -193,7 +193,7 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 			for (HyperlinkDetectorDescriptor descriptor : descriptors) {
 				if (targetId.equals(descriptor.getTargetId())) {
 					String id = descriptor.getId();
-					if ("org.eclipse.ui.internal.editors.text.URLHyperlinkDetector".equals(id)) {
+					if ("org.eclipse.ui.internal.editors.text.URLHyperlinkDetector".equals(id)) { //$NON-NLS-1$
 						// filter out the platform URL hyperlink detector since Mylyn contributes one as well.
 						continue;
 					}

@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -37,10 +38,11 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 	@Override
 	protected void handleFile(IFile file, String name) {
 		super.handleFile(file, name);
-		final IFile newFile = file.getParent().getFile(new Path(name + "-toc.xml"));
+		final IFile newFile = file.getParent().getFile(new Path(name + "-toc.xml")); //$NON-NLS-1$
 		if (newFile.exists()) {
-			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Overwrite?", String.format("File '%s' exists: overwrite?", newFile.getFullPath()))) {
+			if (!MessageDialog.openQuestion(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.getString("ConvertMarkupToEclipseHelp.1"), MessageFormat.format(Messages.getString("ConvertMarkupToEclipseHelp.2"), newFile.getFullPath()))) { //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 		}
@@ -52,11 +54,11 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		markupToEclipseToc.setMarkupLanguage(markupLanguage);
 		markupToEclipseToc.setBookTitle(name);
 
-		String htmlFilePath = name + ".html";
+		String htmlFilePath = name + ".html"; //$NON-NLS-1$
 		if (pluginPathToHelp.segmentCount() > 0) {
 			String pathPart = pluginPathToHelp.toString();
-			if (!pathPart.endsWith("/")) {
-				pathPart = pathPart + "/";
+			if (!pathPart.endsWith("/")) { //$NON-NLS-1$
+				pathPart = pathPart + "/"; //$NON-NLS-1$
 			}
 			htmlFilePath = pathPart + htmlFilePath;
 		}
@@ -80,12 +82,12 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						if (newFile.exists()) {
-							newFile.setContents(new ByteArrayInputStream(tocXml.getBytes("utf-8")), false, true,
+							newFile.setContents(new ByteArrayInputStream(tocXml.getBytes("utf-8")), false, true, //$NON-NLS-1$
 									monitor);
 						} else {
-							newFile.create(new ByteArrayInputStream(tocXml.getBytes("utf-8")), false, monitor);
+							newFile.create(new ByteArrayInputStream(tocXml.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
 						}
-						newFile.setCharset("utf-8", monitor);
+						newFile.setCharset("utf-8", monitor); //$NON-NLS-1$
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					}
@@ -101,13 +103,13 @@ public class ConvertMarkupToEclipseHelp extends ConvertMarkupToHtml {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println("Cannot convert to eclipse help table of contents: " + e.getMessage());
-			out.println("Details follow:");
+			out.println(Messages.getString("ConvertMarkupToEclipseHelp.9") + e.getMessage()); //$NON-NLS-1$
+			out.println(Messages.getString("ConvertMarkupToEclipseHelp.10")); //$NON-NLS-1$
 			e.printStackTrace(out);
 			out.close();
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Cannot complete operation", message.toString());
+					Messages.getString("ConvertMarkupToEclipseHelp.11"), message.toString()); //$NON-NLS-1$
 		}
 	}
 

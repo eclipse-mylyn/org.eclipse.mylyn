@@ -17,12 +17,12 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor.preferences;
  */
 public class PreferenceConstants {
 
-	public static final String P_PATH = "pathPreference";
+	public static final String P_PATH = "pathPreference"; //$NON-NLS-1$
 
-	public static final String P_BOOLEAN = "booleanPreference";
+	public static final String P_BOOLEAN = "booleanPreference"; //$NON-NLS-1$
 
-	public static final String P_CHOICE = "choicePreference";
+	public static final String P_CHOICE = "choicePreference"; //$NON-NLS-1$
 
-	public static final String P_STRING = "stringPreference";
+	public static final String P_STRING = "stringPreference"; //$NON-NLS-1$
 
 }

@@ -18,6 +18,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,10 +39,11 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 
 	@Override
 	protected void handleFile(IFile file, String name) {
-		final IFile newFile = file.getParent().getFile(new Path(name + ".html"));
+		final IFile newFile = file.getParent().getFile(new Path(name + ".html")); //$NON-NLS-1$
 		if (newFile.exists()) {
-			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Overwrite?", String.format("File '%s' exists: overwrite?", newFile.getFullPath()))) {
+			if (!MessageDialog.openQuestion(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.getString("ConvertMarkupToHtml.1"), MessageFormat.format(Messages.getString("ConvertMarkupToHtml.2"), newFile.getFullPath()))) { //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 		}
@@ -77,12 +79,12 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						if (newFile.exists()) {
-							newFile.setContents(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, true,
+							newFile.setContents(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, true, //$NON-NLS-1$
 									monitor);
 						} else {
-							newFile.create(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, monitor);
+							newFile.create(new ByteArrayInputStream(xhtmlContent.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
 						}
-						newFile.setCharset("utf-8", monitor);
+						newFile.setCharset("utf-8", monitor); //$NON-NLS-1$
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					}
@@ -98,13 +100,13 @@ public class ConvertMarkupToHtml extends AbstractMarkupResourceHandler {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println("Cannot convert to HTML: " + e.getMessage());
-			out.println("Details follow:");
+			out.println(Messages.getString("ConvertMarkupToHtml.6") + e.getMessage()); //$NON-NLS-1$
+			out.println(Messages.getString("ConvertMarkupToHtml.7")); //$NON-NLS-1$
 			e.printStackTrace(out);
 			out.close();
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Cannot complete operation", message.toString());
+					Messages.getString("ConvertMarkupToHtml.8"), message.toString()); //$NON-NLS-1$
 		}
 	}
 

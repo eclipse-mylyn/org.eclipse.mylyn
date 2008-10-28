@@ -107,12 +107,12 @@ public class MarkupDocumentProvider extends TextFileDocumentProvider {
 		protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite)
 				throws CoreException {
 			String platformEolMarker = Text.DELIMITER;
-			if (platformEolMarker.equals("\r")) {
+			if (platformEolMarker.equals("\r")) { //$NON-NLS-1$
 				// bug 247777: store document with *nix line delimiter
 				// note that we don't modify the provided document here, we substitute another 
 				// document instead.
 				Document newDocument = new Document(document.get());
-				replaceLineDelimiters(newDocument, "\n");
+				replaceLineDelimiters(newDocument, "\n"); //$NON-NLS-1$
 				document = newDocument;
 			}
 			super.doSaveDocument(monitor, element, document, overwrite);
@@ -132,7 +132,7 @@ public class MarkupDocumentProvider extends TextFileDocumentProvider {
 	}
 
 	private static void replaceLineDelimiters(IDocument document, String newLineDelimiter) {
-		document.set(Pattern.compile("(\r\n|\n|\r)").matcher(document.get()).replaceAll(newLineDelimiter));
+		document.set(Pattern.compile("(\r\n|\n|\r)").matcher(document.get()).replaceAll(newLineDelimiter)); //$NON-NLS-1$
 	}
 
 }

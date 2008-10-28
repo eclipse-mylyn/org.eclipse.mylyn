@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.ui.commands;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -73,7 +74,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 							if (markupLanguage == null) {
 								MessageDialog.openError(
 										PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-										"Unexpected Error", String.format("Cannot guess markup language for file '%s'",
+										Messages.getString("AbstractMarkupResourceHandler.0"), MessageFormat.format(Messages.getString("AbstractMarkupResourceHandler.1"), //$NON-NLS-1$ //$NON-NLS-2$
 												file.getName()));
 								return null;
 							}

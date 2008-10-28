@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -35,10 +36,11 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 
 	@Override
 	protected void handleFile(IFile file, String name) {
-		final IFile newFile = file.getParent().getFile(new Path(name + ".xml"));
+		final IFile newFile = file.getParent().getFile(new Path(name + ".xml")); //$NON-NLS-1$
 		if (newFile.exists()) {
-			if (!MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Overwrite?", String.format("File '%s' exists: overwrite?", newFile.getFullPath()))) {
+			if (!MessageDialog.openQuestion(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.getString("ConvertMarkupToDocbook.1"), MessageFormat.format(Messages.getString("ConvertMarkupToDocbook.2"), newFile.getFullPath()))) { //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 		}
@@ -65,12 +67,12 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						if (newFile.exists()) {
-							newFile.setContents(new ByteArrayInputStream(docbook.getBytes("utf-8")), false, true,
+							newFile.setContents(new ByteArrayInputStream(docbook.getBytes("utf-8")), false, true, //$NON-NLS-1$
 									monitor);
 						} else {
-							newFile.create(new ByteArrayInputStream(docbook.getBytes("utf-8")), false, monitor);
+							newFile.create(new ByteArrayInputStream(docbook.getBytes("utf-8")), false, monitor); //$NON-NLS-1$
 						}
-						newFile.setCharset("utf-8", monitor);
+						newFile.setCharset("utf-8", monitor); //$NON-NLS-1$
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					}
@@ -86,13 +88,13 @@ public class ConvertMarkupToDocbook extends AbstractMarkupResourceHandler {
 		} catch (Throwable e) {
 			StringWriter message = new StringWriter();
 			PrintWriter out = new PrintWriter(message);
-			out.println("Cannot convert to docbook: " + e.getMessage());
-			out.println("Details follow:");
+			out.println(Messages.getString("ConvertMarkupToDocbook.6") + e.getMessage()); //$NON-NLS-1$
+			out.println(Messages.getString("ConvertMarkupToDocbook.7")); //$NON-NLS-1$
 			e.printStackTrace(out);
 			out.close();
 
 			MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Cannot complete operation", message.toString());
+					Messages.getString("ConvertMarkupToDocbook.8"), message.toString()); //$NON-NLS-1$
 		}
 	}
 

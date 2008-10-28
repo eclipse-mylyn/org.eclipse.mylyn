@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
  */
 public class FilePropertyTester extends PropertyTester {
 
-	private static final String CONTENT_TYPE_CLASSIFICATION = "contentTypeClassification";
+	private static final String CONTENT_TYPE_CLASSIFICATION = "contentTypeClassification"; //$NON-NLS-1$
 
 	public FilePropertyTester() {
 	}

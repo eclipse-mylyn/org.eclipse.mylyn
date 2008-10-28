@@ -85,39 +85,39 @@ public class Block extends Segment<Segment<?>> {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
-		buf.append("<");
+		buf.append("<"); //$NON-NLS-1$
 		String elementName;
 		if (type != null) {
 			elementName = type.name();
 		} else {
-			elementName = "h" + headingLevel;
+			elementName = "h" + headingLevel; //$NON-NLS-1$
 		}
 		buf.append(elementName);
-		buf.append(" offset=\"");
+		buf.append(" offset=\""); //$NON-NLS-1$
 		buf.append(getOffset());
-		buf.append("\" length=\"");
+		buf.append("\" length=\""); //$NON-NLS-1$
 		buf.append(getLength());
 		buf.append('"');
 		if (getChildren() == null || getChildren().isEmpty()) {
-			buf.append("/>\n");
+			buf.append("/>\n"); //$NON-NLS-1$
 		} else {
-			buf.append(">\n");
+			buf.append(">\n"); //$NON-NLS-1$
 			StringBuilder buf2 = new StringBuilder();
-			buf2.append("\t");
+			buf2.append("\t"); //$NON-NLS-1$
 			for (Segment<?> child : getChildren().asList()) {
 				buf2.append(child);
 			}
 			String children = buf2.toString();
-			children = children.replace("\n", "\n\t");
-			if (children.endsWith("\t")) {
+			children = children.replace("\n", "\n\t"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (children.endsWith("\t")) { //$NON-NLS-1$
 				children = children.substring(0, children.length() - 1);
 			} else {
-				children = children + "\n";
+				children = children + "\n"; //$NON-NLS-1$
 			}
 			buf.append(children);
-			buf.append("</");
+			buf.append("</"); //$NON-NLS-1$
 			buf.append(elementName);
-			buf.append(">\n");
+			buf.append(">\n"); //$NON-NLS-1$
 		}
 		return buf.toString();
 	}

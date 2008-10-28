@@ -52,7 +52,7 @@ public class MarkupViewer extends HtmlViewer {
 			}
 			setDocumentNoMarkup(new Document(source), new AnnotationModel());
 			if (WikiTextUiPlugin.getDefault() != null) {
-				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, "Cannot parse markup; falling back to plain text", t);
+				WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.getString("MarkupViewer.0"), t); //$NON-NLS-1$
 			} else {
 				t.printStackTrace();
 			}

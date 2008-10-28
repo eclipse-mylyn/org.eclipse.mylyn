@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Image;
  * @author David Green
  */
 public class ImageAnnotation extends Annotation {
-	public static final String TYPE = "org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.image";
+	public static final String TYPE = "org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation.image"; //$NON-NLS-1$
 
 	private Image image;
 
@@ -33,7 +33,7 @@ public class ImageAnnotation extends Annotation {
 	 *            the image to display for this annotation, which must be disposed by the caller. May be null
 	 */
 	public ImageAnnotation(String url, Image image) {
-		super(TYPE, false, "");
+		super(TYPE, false, ""); //$NON-NLS-1$
 		this.url = url;
 		this.image = image;
 	}

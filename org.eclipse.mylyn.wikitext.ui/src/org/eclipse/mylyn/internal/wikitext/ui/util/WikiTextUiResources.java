@@ -26,17 +26,17 @@ public class WikiTextUiResources {
 	// IMPOARTANT IMPLEMENTATION NOTE: 
 	//   these resources must work in a stand-alone SWT application.  See bug# 245759 
 
-	private static final String KEY_COLOR_REGISTRY = WikiTextUiResources.class.getName() + "#colorRegistry";
+	private static final String KEY_COLOR_REGISTRY = WikiTextUiResources.class.getName() + "#colorRegistry"; //$NON-NLS-1$
 
 	/**
 	 * the color of a horizontal rule
 	 */
-	public static final String COLOR_HR = "HR";
+	public static final String COLOR_HR = "HR"; //$NON-NLS-1$
 
 	/**
 	 * the color of a horizontal rule shadow
 	 */
-	public static final String COLOR_HR_SHADOW = "HR_SHADOW";
+	public static final String COLOR_HR_SHADOW = "HR_SHADOW"; //$NON-NLS-1$
 
 	/**
 	 * get colors for use in the UI

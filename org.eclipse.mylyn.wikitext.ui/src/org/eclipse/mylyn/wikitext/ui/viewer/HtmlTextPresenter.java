@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Display;
 public class HtmlTextPresenter implements DefaultInformationControl.IInformationPresenter,
 		DefaultInformationControl.IInformationPresenterExtension {
 
-	private static Pattern HTML_OPEN_TAG_PATTERN = Pattern.compile("<html", Pattern.CASE_INSENSITIVE);
+	private static Pattern HTML_OPEN_TAG_PATTERN = Pattern.compile("<html", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	@SuppressWarnings("deprecation")
 	public String updatePresentation(Display display, String hoverInfo, TextPresentation presentation, int maxWidth,
@@ -48,12 +48,12 @@ public class HtmlTextPresenter implements DefaultInformationControl.IInformation
 		parser.setDefaultFont(JFaceResources.getFontRegistry().defaultFont());
 		String html = hoverInfo;
 		if (!HTML_OPEN_TAG_PATTERN.matcher(html).find()) {
-			html = "<html><body>" + html + "</body></html>";
+			html = "<html><body>" + html + "</body></html>"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		GC gc = new GC(drawable);
 		try {
-			html = html.replaceAll("<br>", "<br/>");
+			html = html.replaceAll("<br>", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
 			parser.setMaxWidth(maxWidth);
 			parser.setGC(gc);
 			parser.parse(html);

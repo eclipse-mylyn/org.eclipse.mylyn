@@ -20,7 +20,7 @@ import org.eclipse.jface.text.source.Annotation;
  */
 public class AnchorHrefAnnotation extends Annotation {
 
-	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.anchor";
+	public static final String TYPE = "org.eclipse.mylyn.wikitext.ui.annotation.anchor"; //$NON-NLS-1$
 
 	public AnchorHrefAnnotation(String href) {
 		super(TYPE, false, href);

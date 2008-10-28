@@ -42,9 +42,9 @@ import org.eclipse.swt.graphics.Image;
  */
 public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcessor {
 
-	public static final String CONTEXT_ID = "org.eclipse.mylyn.wikitext.ui.editor";
+	public static final String CONTEXT_ID = "org.eclipse.mylyn.wikitext.ui.editor"; //$NON-NLS-1$
 
-	private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{([^\\}]+)\\}");
+	private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{([^\\}]+)\\}"); //$NON-NLS-1$
 
 	private static final class ProposalComparator implements Comparator<ICompletionProposal> {
 		public int compare(ICompletionProposal o1, ICompletionProposal o2) {
@@ -56,7 +56,7 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 
 	private static final Template[] NO_TEMPLATES = new Template[0];
 
-	private final TemplateContextType contextType = new TemplateContextType(CONTEXT_ID, "Lightweight Markup");
+	private final TemplateContextType contextType = new TemplateContextType(CONTEXT_ID, Messages.getString("MarkupTemplateCompletionProcessor.2")); //$NON-NLS-1$
 
 	private Templates templates;
 

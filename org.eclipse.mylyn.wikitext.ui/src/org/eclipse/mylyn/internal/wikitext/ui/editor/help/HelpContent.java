@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -112,12 +113,13 @@ public class HelpContent {
 			}
 			MarkupLanguage markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage(resourceContentLanguage);
 			if (markupLanguage == null) {
-				throw new IOException(String.format("No such markup language: %s", resourceContentLanguage));
+				throw new IOException(
+						MessageFormat.format(Messages.getString("HelpContent.0"), resourceContentLanguage)); //$NON-NLS-1$
 			}
 			MarkupParser markupParser = new MarkupParser(markupLanguage);
 			return markupParser.parseToHtml(content);
 		} catch (final Exception e) {
-			throw new IOException(String.format("Cannot access content %s/%s: %s", provider.getSymbolicName(),
+			throw new IOException(MessageFormat.format(Messages.getString("HelpContent.1"), provider.getSymbolicName(), //$NON-NLS-1$
 					resourcePath, e.getMessage())) {
 				@Override
 				public Throwable getCause() {
@@ -142,13 +144,13 @@ public class HelpContent {
 			String variant = locale.getVariant();
 
 			if (variant.length() > 0) {
-				paths.add(basePath + "_" + language + "_" + country + "_" + variant + "." + extension);
+				paths.add(basePath + "_" + language + "_" + country + "_" + variant + "." + extension); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 			if (country.length() > 0) {
-				paths.add(basePath + "_" + language + "_" + country + "." + extension);
+				paths.add(basePath + "_" + language + "_" + country + "." + extension); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			if (language.length() > 0) {
-				paths.add(basePath + "_" + language + "." + extension);
+				paths.add(basePath + "_" + language + "." + extension); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		paths.add(resourcePath);
@@ -159,7 +161,7 @@ public class HelpContent {
 				return resource;
 			}
 		}
-		throw new Exception(String.format("Cannot find resource '%s' in plugin '%s'", resourcePath,
+		throw new Exception(MessageFormat.format(Messages.getString("HelpContent.11"), resourcePath, //$NON-NLS-1$
 				provider.getSymbolicName()));
 	}
 }

@@ -40,9 +40,9 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 	@Override
 	protected void clearProblems(IProgressMonitor monitor, IDocument document, IRegion region) throws CoreException {
 		// find and remove any existing validation errors in the given region.
-		IMarker[] findMarkers = resource.findMarkers("org.eclipse.mylyn.wikitext.core.validation.problem", true,
+		IMarker[] findMarkers = resource.findMarkers("org.eclipse.mylyn.wikitext.core.validation.problem", true, //$NON-NLS-1$
 				IResource.DEPTH_ZERO);
-		monitor.beginTask("clearing markers", findMarkers.length == 0 ? 1 : findMarkers.length);
+		monitor.beginTask(Messages.getString("ResourceMarkerMarkupValidator.1"), findMarkers.length == 0 ? 1 : findMarkers.length); //$NON-NLS-1$
 		for (IMarker marker : findMarkers) {
 			int offset = marker.getAttribute(IMarker.CHAR_START, 0);
 			int end = marker.getAttribute(IMarker.CHAR_END, offset);
@@ -60,7 +60,7 @@ public class ResourceMarkerMarkupValidator extends DocumentRegionValidator {
 		if (problems.isEmpty()) {
 			return;
 		}
-		monitor.beginTask("creating markers", problems.size());
+		monitor.beginTask(Messages.getString("ResourceMarkerMarkupValidator.2"), problems.size()); //$NON-NLS-1$
 		for (ValidationProblem problem : problems) {
 			IMarker marker = resource.createMarker(problem.getMarkerId());
 
