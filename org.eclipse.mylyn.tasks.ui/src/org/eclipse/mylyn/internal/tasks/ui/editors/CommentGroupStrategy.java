@@ -27,15 +27,26 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public class CommentGroupStrategy {
 
-	public class CommentGroup {
+	private static final int MAX_CURRENT = 12;
+
+	private static final int MAX_RECENT = 20;
+
+	public static class CommentGroup {
 
 		private final List<ITaskComment> comments;
 
 		private final String groupName;
 
-		CommentGroup(String groupName, List<ITaskComment> comments) {
+		private final boolean incoming;
+
+		CommentGroup(String groupName, List<ITaskComment> comments, boolean incoming) {
 			this.groupName = groupName;
 			this.comments = comments;
+			this.incoming = incoming;
+		}
+
+		public boolean hasIncoming() {
+			return incoming;
 		}
 
 		public List<TaskAttribute> getCommentAttributes() {
@@ -64,74 +75,84 @@ public class CommentGroupStrategy {
 	 * @return list of comment groups. Groups will be ignored if there are no comments under them.
 	 */
 	public List<CommentGroup> groupComments(List<ITaskComment> comments, String currentPersonId) {
-		List<CommentGroup> commentGroups = new ArrayList<CommentGroup>();
+		if (comments.size() == 0) {
+			return Collections.emptyList();
+		}
+
+		List<CommentGroup> commentGroups = new ArrayList<CommentGroup>(3);
 
 		// current
-		int currentFromIndex = -1;
-		List<ITaskComment> current = new ArrayList<ITaskComment>();
-
-		// update task comment and get current group index
-		ITaskComment latestComment = null;
-		for (int i = 0; i < comments.size(); i++) {
-			ITaskComment taskComment = comments.get(i);
-
-			// add all incoming changes
-			if (hasIncomingChanges(taskComment)) {
-				current.add(taskComment);
-			}
-
-			IRepositoryPerson person = taskComment.getAuthor();
-			if (person != null && person.getPersonId().equals(currentPersonId)) {
-				currentFromIndex = i;
-				latestComment = taskComment;
-			}
-		}
-
-		if (current.size() > 0) {
-			comments.removeAll(current);
-		}
-
-		// group by last author
-		if (currentFromIndex != -1 && currentFromIndex < comments.size()) {
-			// bug 238038 comment #58, if the latest comment is generated automatically, lookback one comment
-			if (latestComment != null && latestComment.getText().contains(AttachmentUtil.CONTEXT_DESCRIPTION)
-					&& currentFromIndex > 0) {
-				ITaskComment secondLatestComment = comments.get(currentFromIndex - 1);
-				IRepositoryPerson person = secondLatestComment.getAuthor();
-				if (person != null && person.getPersonId().equals(currentPersonId)) {
-					currentFromIndex--;
+		List<ITaskComment> current = new ArrayList<ITaskComment>(MAX_CURRENT);
+		if (comments.size() > MAX_CURRENT) {
+			for (int i = comments.size() - 1; i >= 0; i--) {
+				ITaskComment comment = comments.get(i);
+				if (isCurrent(current, comment, currentPersonId)) {
+					current.add(comment);
 				}
 			}
+			Collections.reverse(current);
+		} else {
+			current = comments;
+		}
+		commentGroups.add(new CommentGroup("Current", current, hasIncomingChanges(current)));
 
-			current.addAll(0, new ArrayList<ITaskComment>(comments.subList(currentFromIndex, comments.size())));
-			if (current.size() > 0) {
-				comments.removeAll(current);
+		// recent
+		if (comments.size() > current.size()) {
+			int recentToIndex = comments.size() - current.size();
+			int recentFromIndex = Math.max(recentToIndex - MAX_RECENT, 0);
+			List<ITaskComment> recent = new ArrayList<ITaskComment>(comments.subList(recentFromIndex, recentToIndex));
+			if (recent.size() > 0) {
+				commentGroups.add(new CommentGroup("Recent", recent, hasIncomingChanges(recent)));
+
+				// the rest goes to older
+				if (comments.size() > current.size() + recent.size()) {
+					int olderToIndex = comments.size() - current.size() - recent.size();
+					List<ITaskComment> older = new ArrayList<ITaskComment>(comments.subList(0, olderToIndex));
+					commentGroups.add(new CommentGroup("Older", older, hasIncomingChanges(older)));
+				}
 			}
 		}
 
-		// recent
-		int recentFromIndex = comments.size() - 20 < 0 ? 0 : comments.size() - 20;
-		List<ITaskComment> recent = new ArrayList<ITaskComment>(comments.subList(recentFromIndex, comments.size()));
-		if (recent.size() > 0) {
-			comments.removeAll(recent);
-		}
-
-		// ignore groups that have no comment
-
-		// the rest goes to Older
-		if (comments.size() > 0) {
-			commentGroups.add(new CommentGroup("Older", comments));
-		}
-
-		if (recent.size() > 0) {
-			commentGroups.add(new CommentGroup("Recent", recent));
-		}
-
-		if (current.size() > 0) {
-			commentGroups.add(new CommentGroup("Current", current));
-		}
-
+		Collections.reverse(commentGroups);
 		return commentGroups;
+	}
+
+	private boolean hasIncomingChanges(List<ITaskComment> comments) {
+		for (ITaskComment comment : comments) {
+			if (hasIncomingChanges(comment)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isCurrent(List<ITaskComment> current, ITaskComment comment, String currentPersonId) {
+		if (current.size() >= MAX_CURRENT) {
+			return false;
+		}
+
+		// add all incoming changes
+		if (hasIncomingChanges(comment)) {
+			return true;
+		}
+
+		if (!current.isEmpty()) {
+			// check if last comment was by current user
+			ITaskComment lastComment = current.get(current.size() - 1);
+			IRepositoryPerson lastPerson = lastComment.getAuthor();
+			if (lastPerson != null && lastPerson.getPersonId().equals(currentPersonId)) {
+				// bug 238038 comment #58, if the latest comment is generated automatically, look back one comment
+				IRepositoryPerson person = comment.getAuthor();
+				if (person != null && person.getPersonId().equals(currentPersonId) && lastComment.getText() != null
+						&& lastComment.getText().contains(AttachmentUtil.CONTEXT_DESCRIPTION)) {
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	protected boolean hasIncomingChanges(ITaskComment taskComment) {
