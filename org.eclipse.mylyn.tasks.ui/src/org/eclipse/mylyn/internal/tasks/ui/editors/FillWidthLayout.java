@@ -32,7 +32,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * 
  * @author David Green
  */
-public class FillWidthLayout extends Layout {
+class FillWidthLayout extends Layout {
 
 	private final int marginLeft;
 
