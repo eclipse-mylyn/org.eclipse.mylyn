@@ -25,7 +25,7 @@ import org.osgi.framework.Bundle;
  */
 public class CheatSheetContent extends HelpContent {
 
-	private final Pattern headingOpenTagPattern = Pattern.compile("(<h[4-6][^>]*)>", Pattern.MULTILINE
+	private final Pattern headingOpenTagPattern = Pattern.compile("(<h[4-6][^>]*)>", Pattern.MULTILINE //$NON-NLS-1$
 			| Pattern.CASE_INSENSITIVE);
 
 	public CheatSheetContent(Bundle provider, String resourcePath, String resourceContentLanguage,
@@ -37,7 +37,7 @@ public class CheatSheetContent extends HelpContent {
 	public String getContent() throws IOException {
 		String content = super.getContent();
 		Matcher headingMatcher = headingOpenTagPattern.matcher(content);
-		return headingMatcher.replaceAll("$1 style=\"color: DarkBlue;\">");
+		return headingMatcher.replaceAll("$1 style=\"color: DarkBlue;\">"); //$NON-NLS-1$
 	}
 
 }

@@ -12,6 +12,11 @@ Cheat-sheet content is help text that provides information about the syntax of a
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="content" minOccurs="1" maxOccurs="unbounded"/>
@@ -53,14 +58,25 @@ Cheat-sheet content is help text that provides information about the syntax of a
          <attribute name="markupLanguage" type="string" use="required">
             <annotation>
                <documentation>
-                  the name of the markup language for which the cheat sheet content is relevant
+                  the name of the markup language for which the cheat sheet content is relevant (eg: &quot;Textile&quot;, &quot;MediaWiki&quot;, etc)
                </documentation>
             </annotation>
          </attribute>
          <attribute name="resource" type="string" use="required">
             <annotation>
                <documentation>
-                  a path to the resource that provides the content
+                  A path to the resource that provides the content.  
+
+The provided resource path is the default resource, however additional resources may be located alongside the default resource in order to provide locale-specific content.  This works in the same way as for resource bundles.  
+
+For example, the resource may be specified as help/cheatSheet.textile and for the locale &apos;no_NO_NY&apos; the following resource paths would be searched in the following order:
+
+help/cheatSheet_no_NO_NY.textile
+help/cheatSheet_no_NO.textile
+help/cheatSheet_no.textile
+help/cheatSheet.textile
+
+in this way the user is presented with the most locale-specific help resource.
                </documentation>
                <appInfo>
                   <meta.attribute kind="resource"/>

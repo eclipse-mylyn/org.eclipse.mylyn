@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
@@ -22,7 +25,21 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.osgi.framework.Bundle;
 
 /**
- * A handle to help content.
+ * A handle to help content. HelpContent is retrieved from a resource path from a bundle. Help content is retrieved in a
+ * locale-specific manner, much in the same way as resource bundles are. A resource path is used with the
+ * {@link Locale#getDefault() default locale} to construct a search path.
+ * 
+ * For example, the resource may be specified as <code>help/cheatSheet.textile</code> and for the locale
+ * <tt>no_NO_NY</tt> the following resource paths would be searched in the following order:
+ * 
+ * <ul>
+ * <li><code>help/cheatSheet_no_NO_NY.textile</code></li>
+ * <li><code>help/cheatSheet_no_NO.textile</code></li>
+ * <li><code>help/cheatSheet_no.textile</code></li>
+ * <li><code>help/cheatSheet.textile</code></li>
+ * </ul>
+ * 
+ * In this way the user is presented with the most locale-specific help resource.
  * 
  * @author David Green
  */
@@ -78,11 +95,7 @@ public class HelpContent {
 	public String getContent() throws IOException {
 		try {
 			String content = null;
-			URL resource = provider.getResource(resourcePath);
-			if (resource == null) {
-				throw new Exception(String.format("Cannot find resource '%s' in plugin '%s'", resourcePath,
-						provider.getSymbolicName()));
-			}
+			URL resource = getResource();
 			Reader reader = new InputStreamReader(new BufferedInputStream(resource.openStream()));
 			try {
 				StringBuilder buf = new StringBuilder();
@@ -94,7 +107,7 @@ public class HelpContent {
 			} finally {
 				reader.close();
 			}
-			if (resourceContentLanguage == null || "html".equalsIgnoreCase(resourceContentLanguage)) {
+			if (resourceContentLanguage == null || "html".equalsIgnoreCase(resourceContentLanguage)) { //$NON-NLS-1$
 				return content;
 			}
 			MarkupLanguage markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage(resourceContentLanguage);
@@ -112,5 +125,41 @@ public class HelpContent {
 				}
 			};
 		}
+	}
+
+	private URL getResource() throws Exception {
+		int idx = resourcePath.lastIndexOf('.');
+		List<String> paths = new ArrayList<String>();
+		if (idx != -1) {
+
+			// construct a search path based on the users locale
+			String basePath = resourcePath.substring(0, idx);
+			String extension = resourcePath.substring(idx + 1);
+
+			Locale locale = Locale.getDefault();
+			String language = locale.getLanguage();
+			String country = locale.getCountry();
+			String variant = locale.getVariant();
+
+			if (variant.length() > 0) {
+				paths.add(basePath + "_" + language + "_" + country + "_" + variant + "." + extension);
+			}
+			if (country.length() > 0) {
+				paths.add(basePath + "_" + language + "_" + country + "." + extension);
+			}
+			if (language.length() > 0) {
+				paths.add(basePath + "_" + language + "." + extension);
+			}
+		}
+		paths.add(resourcePath);
+
+		for (String path : paths) {
+			URL resource = provider.getResource(path);
+			if (resource != null) {
+				return resource;
+			}
+		}
+		throw new Exception(String.format("Cannot find resource '%s' in plugin '%s'", resourcePath,
+				provider.getSymbolicName()));
 	}
 }
