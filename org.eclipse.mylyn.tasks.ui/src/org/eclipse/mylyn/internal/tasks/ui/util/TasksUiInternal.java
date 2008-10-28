@@ -587,6 +587,7 @@ public class TasksUiInternal {
 	 * @since 3.0
 	 */
 	public static void closeEditorInActivePage(ITask task, boolean save) {
+		Assert.isNotNull(task);
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
 			return;

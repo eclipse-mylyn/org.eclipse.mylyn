@@ -82,7 +82,7 @@ public abstract class AbstractHyperlinkTextPresentationManager {
 	}
 
 	protected StyleRange[] computeStyleRanges(IRegion extent) {
-		if (viewer == null || hyperlinkDetectors == null || viewer.getDocument() == null) {
+		if (viewer == null || hyperlinkDetectors == null || viewer.getDocument() == null || extent == null) {
 			return null;
 		}
 		List<IRegion> regions = getRegions(extent);
