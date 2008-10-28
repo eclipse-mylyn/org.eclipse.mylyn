@@ -159,6 +159,33 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractTaskEditorPage extends FormPage implements ISelectionProvider, ISelectionChangedListener {
 
+	/**
+	 * Causes the form page to reflow on resize.
+	 */
+	private final class ParentResizeHandler implements Listener {
+		private int generation;
+
+		public void handleEvent(Event event) {
+			++generation;
+
+			Display.getCurrent().timerExec(300, new Runnable() {
+				int scheduledGeneration = generation;
+
+				public void run() {
+					if (getManagedForm().getForm().isDisposed()) {
+						return;
+					}
+
+					// only reflow if this is the latest generation to prevent
+					// unnecessary reflows while the form is being resized
+					if (scheduledGeneration == generation) {
+						getManagedForm().reflow(true);
+					}
+				}
+			});
+		}
+	}
+
 	private class SubmitTaskJobListener extends SubmitJobListener {
 
 		private final boolean attachContext;
@@ -497,11 +524,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.addListener(SWT.Resize, new Listener() {
-			public void handleEvent(Event event) {
-				getManagedForm().reflow(true);
-			}
-		});
+		parent.addListener(SWT.Resize, new ParentResizeHandler());
 		super.createPartControl(parent);
 	}
 
