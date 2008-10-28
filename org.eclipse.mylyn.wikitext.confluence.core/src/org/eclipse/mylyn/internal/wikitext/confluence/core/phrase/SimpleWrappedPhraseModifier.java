@@ -67,8 +67,8 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 		String quotedStartDelimiter = quoteLite(startDelimiter);
 		String quotedDelimiter = quoteLite(endDelimiter);
 
-		return quotedStartDelimiter + "(?!" + quotedDelimiter + ")" + "([^\\s" + quotedDelimiter + "]+|\\S[^"
-				+ quotedDelimiter + "]*[^\\s" + quotedDelimiter + "])" + // content
+		return quotedStartDelimiter + "(?!" + quotedDelimiter + ")" + "([^\\s" + quotedDelimiter + "]+|\\S[^" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ quotedDelimiter + "]*[^\\s" + quotedDelimiter + "])" + // content //$NON-NLS-1$ //$NON-NLS-2$
 				quotedDelimiter;
 	}
 

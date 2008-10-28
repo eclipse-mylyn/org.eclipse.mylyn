@@ -26,7 +26,7 @@ public class HyperlinkInternalReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:\\[\\[([^\\]\\|]+?)\\s*(?:\\|\\s*([^\\]]*))?\\]\\])";
+		return "(?:\\[\\[([^\\]\\|]+?)\\s*(?:\\|\\s*([^\\]]*))?\\]\\])"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -47,16 +47,16 @@ public class HyperlinkInternalReplacementToken extends PatternBasedElement {
 			String href = ((MediaWikiLanguage) getMarkupLanguage()).toInternalHref(pageName);
 
 			// category references start with ':' but are not referenced that way in the text
-			if (pageName.startsWith(":")) {
+			if (pageName.startsWith(":")) { //$NON-NLS-1$
 				pageName = pageName.substring(1);
 			}
 			if (altText == null || altText.trim().length() == 0) {
 				altText = pageName;
-				if (altText.startsWith("#")) {
+				if (altText.startsWith("#")) { //$NON-NLS-1$
 					altText = altText.substring(1);
 				}
 			}
-			if (pageName.startsWith("#")) {
+			if (pageName.startsWith("#")) { //$NON-NLS-1$
 				builder.link(href, altText);
 			} else {
 				Attributes attributes = new LinkAttributes();

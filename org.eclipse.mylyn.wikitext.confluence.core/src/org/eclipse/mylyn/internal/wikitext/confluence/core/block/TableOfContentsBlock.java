@@ -26,11 +26,11 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
  */
 public class TableOfContentsBlock extends ParameterizedBlock {
 
-	static final Pattern startPattern = Pattern.compile("\\s*\\{toc(?::([^\\}]+))?\\}\\s*");
+	static final Pattern startPattern = Pattern.compile("\\s*\\{toc(?::([^\\}]+))?\\}\\s*"); //$NON-NLS-1$
 
 	private int blockLineNumber = 0;
 
-	private String style = "none";
+	private String style = "none"; //$NON-NLS-1$
 
 	private int maxLevel = Integer.MAX_VALUE;
 
@@ -63,7 +63,7 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 		}
 		Attributes nullAttributes = new Attributes();
 
-		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null, null, "list-style: " + style + ";", null));
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null, null, "list-style: " + style + ";", null)); //$NON-NLS-1$ //$NON-NLS-2$
 		for (OutlineItem child : item.getChildren()) {
 			builder.beginBlock(BlockType.LIST_ITEM, nullAttributes);
 			builder.link('#' + child.getId(), child.getLabel());
@@ -75,7 +75,7 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
-		style = "none";
+		style = "none"; //$NON-NLS-1$
 		maxLevel = Integer.MAX_VALUE;
 		blockLineNumber = 0;
 
@@ -106,9 +106,9 @@ public class TableOfContentsBlock extends ParameterizedBlock {
 
 	@Override
 	protected void setOption(String key, String value) {
-		if (key.equals("style")) {
+		if (key.equals("style")) { //$NON-NLS-1$
 			setStyle(value);
-		} else if (key.equals("maxLevel")) {
+		} else if (key.equals("maxLevel")) { //$NON-NLS-1$
 			try {
 				maxLevel = Integer.parseInt(value);
 			} catch (NumberFormatException e) {

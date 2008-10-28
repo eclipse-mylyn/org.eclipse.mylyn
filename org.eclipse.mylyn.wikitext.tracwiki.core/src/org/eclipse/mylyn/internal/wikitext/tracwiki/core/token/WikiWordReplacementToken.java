@@ -25,11 +25,11 @@ import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
  */
 public class WikiWordReplacementToken extends PatternBasedElement {
 
-	private static final Pattern replacementPattern = Pattern.compile("\\W");
+	private static final Pattern replacementPattern = Pattern.compile("\\W"); //$NON-NLS-1$
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(!)?([A-Z]\\w+(?:[A-Z]\\w*)+)";
+		return "(!)?([A-Z]\\w+(?:[A-Z]\\w*)+)"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -51,13 +51,13 @@ public class WikiWordReplacementToken extends PatternBasedElement {
 			if (escaped != null || !twikiLanguage.isAutoLinking()) {
 				builder.characters(word);
 			} else {
-				String target = replacementPattern.matcher(word).replaceAll("");
+				String target = replacementPattern.matcher(word).replaceAll(""); //$NON-NLS-1$
 				boolean exists = twikiLanguage.computeInternalLinkExists(target);
 
 				String internalHref = twikiLanguage.toInternalHref(target);
 				if (!exists) {
 					builder.characters(word);
-					builder.link(internalHref, "?");
+					builder.link(internalHref, "?"); //$NON-NLS-1$
 				} else {
 					builder.link(internalHref, word);
 				}

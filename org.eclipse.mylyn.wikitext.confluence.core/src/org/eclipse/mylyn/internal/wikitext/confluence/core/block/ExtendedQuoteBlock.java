@@ -26,7 +26,7 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 	private boolean paraOpen = false;
 
 	public ExtendedQuoteBlock() {
-		super("quote");
+		super("quote"); //$NON-NLS-1$
 	}
 
 	@Override

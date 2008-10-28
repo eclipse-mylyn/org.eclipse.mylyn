@@ -26,7 +26,7 @@ public class ImagePhraseModifier extends PatternBasedElement {
 	@Override
 	protected String getPattern(int groupOffset) {
 
-		return "!([^\\|!\\s]+)(?:\\|([^!]*))?!";
+		return "!([^\\|!\\s]+)(?:\\|([^!]*))?!"; //$NON-NLS-1$
 	}
 
 	@Override

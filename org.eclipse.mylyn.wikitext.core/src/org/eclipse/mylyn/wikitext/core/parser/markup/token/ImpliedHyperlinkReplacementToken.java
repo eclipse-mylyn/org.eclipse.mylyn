@@ -22,7 +22,7 @@ public class ImpliedHyperlinkReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(https?://\\S+[^\\s\\.,;\\):])";
+		return "(https?://\\S+[^\\s\\.,;\\):])"; //$NON-NLS-1$
 	}
 
 	@Override

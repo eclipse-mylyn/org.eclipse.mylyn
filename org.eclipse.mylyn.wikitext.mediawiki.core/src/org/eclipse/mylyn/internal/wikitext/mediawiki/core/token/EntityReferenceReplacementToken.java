@@ -25,12 +25,12 @@ public class EntityReferenceReplacementToken extends PatternBasedElement {
 
 	private static final Set<String> allowedEntities = new HashSet<String>();
 	static {
-		allowedEntities.add("");
+		allowedEntities.add(""); //$NON-NLS-1$
 	}
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "&(#?[a-zA-Z0-9]{2,7});";
+		return "&(#?[a-zA-Z0-9]{2,7});"; //$NON-NLS-1$
 	}
 
 	@Override

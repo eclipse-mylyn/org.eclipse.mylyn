@@ -27,8 +27,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class ListBlock extends Block {
 
-	static final Pattern startPattern = Pattern.compile("((?: {3})+)(\\*|(?:1|a|A|i|I)\\.)\\s(.*+)");
-	static final Pattern continuationPattern = Pattern.compile(" {3}\\s*(.*+)");
+	static final Pattern startPattern = Pattern.compile("((?: {3})+)(\\*|(?:1|a|A|i|I)\\.)\\s(.*+)"); //$NON-NLS-1$
+	static final Pattern continuationPattern = Pattern.compile(" {3}\\s*(.*+)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -104,16 +104,16 @@ public class ListBlock extends Block {
 		if (type == BlockType.NUMERIC_LIST) {
 			switch (typeSpec.charAt(0)) {
 			case 'a':
-				attributes.setCssStyle("list-style: lower-alpha;");
+				attributes.setCssStyle("list-style: lower-alpha;"); //$NON-NLS-1$
 				break;
 			case 'A':
-				attributes.setCssStyle("list-style: upper-alpha;");
+				attributes.setCssStyle("list-style: upper-alpha;"); //$NON-NLS-1$
 				break;
 			case 'i':
-				attributes.setCssStyle("list-style: lower-roman;");
+				attributes.setCssStyle("list-style: lower-roman;"); //$NON-NLS-1$
 				break;
 			case 'I':
-				attributes.setCssStyle("list-style: upper-roman;");
+				attributes.setCssStyle("list-style: upper-roman;"); //$NON-NLS-1$
 				break;
 			}
 		}

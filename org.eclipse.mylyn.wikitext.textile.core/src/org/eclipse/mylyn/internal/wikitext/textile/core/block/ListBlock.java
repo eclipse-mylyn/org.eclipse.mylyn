@@ -28,8 +28,8 @@ public class ListBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 2;
 
-	static final Pattern startPattern = Pattern.compile("((?:(?:\\*)|(?:#)|(?:-))+)" + Textile.REGEX_BLOCK_ATTRIBUTES
-			+ "\\s(.*+)");
+	static final Pattern startPattern = Pattern.compile("((?:(?:\\*)|(?:#)|(?:-))+)" + Textile.REGEX_BLOCK_ATTRIBUTES //$NON-NLS-1$
+			+ "\\s(.*+)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 

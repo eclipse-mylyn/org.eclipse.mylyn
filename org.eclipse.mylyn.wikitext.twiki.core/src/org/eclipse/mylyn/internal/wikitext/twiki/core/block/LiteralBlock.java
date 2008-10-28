@@ -27,9 +27,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class LiteralBlock extends Block {
 
-	private static final Pattern startPattern = Pattern.compile("\\s*<literal>(.*)");
+	private static final Pattern startPattern = Pattern.compile("\\s*<literal>(.*)"); //$NON-NLS-1$
 
-	private static final Pattern endPattern = Pattern.compile("\\s*</literal>(.*)");
+	private static final Pattern endPattern = Pattern.compile("\\s*</literal>(.*)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -49,7 +49,7 @@ public class LiteralBlock extends Block {
 			}
 		}
 		markupLanguage.emitMarkupLine(parser, state, line, offset);
-		builder.characters("\n");
+		builder.characters("\n"); //$NON-NLS-1$
 		return -1;
 	}
 

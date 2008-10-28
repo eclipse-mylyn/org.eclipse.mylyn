@@ -63,7 +63,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	@Override
 	public void writeAttribute(String prefix, String namespaceURI, String localName, String value) {
 		if (value == null) {
-			value = "";
+			value = ""; //$NON-NLS-1$
 		}
 		delegate.writeAttribute(prefix, namespaceURI, localName, value);
 	}
@@ -71,7 +71,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	@Override
 	public void writeAttribute(String namespaceURI, String localName, String value) {
 		if (value == null) {
-			value = "";
+			value = ""; //$NON-NLS-1$
 		}
 		delegate.writeAttribute(namespaceURI, localName, value);
 	}
@@ -79,7 +79,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	@Override
 	public void writeAttribute(String localName, String value) {
 		if (value == null) {
-			value = "";
+			value = ""; //$NON-NLS-1$
 		}
 		delegate.writeAttribute(localName, value);
 	}
@@ -129,7 +129,7 @@ public class FormattingXMLStreamWriter extends XmlStreamWriter {
 	@Override
 	public void writeComment(String data) {
 		if (data == null) {
-			data = "";
+			data = ""; //$NON-NLS-1$
 		}
 		delegate.writeComment(data);
 	}

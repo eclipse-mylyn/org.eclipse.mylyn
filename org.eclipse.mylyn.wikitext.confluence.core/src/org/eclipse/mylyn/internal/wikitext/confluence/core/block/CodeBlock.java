@@ -21,7 +21,7 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 	private String title;
 
 	public CodeBlock() {
-		super("code");
+		super("code"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 	@Override
 	protected void handleBlockContent(String content) {
 		builder.characters(content);
-		builder.characters("\n");
+		builder.characters("\n"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class CodeBlock extends AbstractConfluenceDelimitedBlock {
 
 	@Override
 	protected void setOption(String key, String value) {
-		if (key.equals("title")) {
+		if (key.equals("title")) { //$NON-NLS-1$
 			title = value;
 		}
 	}

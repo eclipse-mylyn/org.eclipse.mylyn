@@ -24,16 +24,16 @@ public class LimitedHtmlStartTagPhraseModifier extends PatternBasedElement {
 
 	public LimitedHtmlStartTagPhraseModifier(String... elementNames) {
 		StringBuilder buf = new StringBuilder();
-		buf.append("(<");
-		buf.append("(?:");
+		buf.append("(<"); //$NON-NLS-1$
+		buf.append("(?:"); //$NON-NLS-1$
 		int index = 0;
 		for (String elementName : elementNames) {
 			if (index++ > 0) {
-				buf.append("|");
+				buf.append("|"); //$NON-NLS-1$
 			}
 			buf.append(elementName);
 		}
-		buf.append(")(?:\\s*[a-zA-Z][a-zA-Z0-9_:-]*=\"[^\"]*\")*\\s*/?>)");
+		buf.append(")(?:\\s*[a-zA-Z][a-zA-Z0-9_:-]*=\"[^\"]*\")*\\s*/?>)"); //$NON-NLS-1$
 		pattern = buf.toString();
 	}
 

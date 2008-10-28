@@ -24,7 +24,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * 
  */
 public class BugzillaQuoteBlock extends Block {
-	private static Pattern pattern = Pattern.compile("((\\s*>)|\\(In reply to comment #\\d{1,}\\)).*");
+	private static Pattern pattern = Pattern.compile("((\\s*>)|\\(In reply to comment #\\d{1,}\\)).*"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 

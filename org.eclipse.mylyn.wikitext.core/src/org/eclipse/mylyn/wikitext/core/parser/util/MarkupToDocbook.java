@@ -39,7 +39,7 @@ public class MarkupToDocbook {
 
 	public String parse(String markupContent) throws Exception {
 		if (markupLanguage == null) {
-			throw new IllegalStateException("must set markupLanguage");
+			throw new IllegalStateException("must set markupLanguage"); //$NON-NLS-1$
 		}
 		StringWriter out = new StringWriter();
 

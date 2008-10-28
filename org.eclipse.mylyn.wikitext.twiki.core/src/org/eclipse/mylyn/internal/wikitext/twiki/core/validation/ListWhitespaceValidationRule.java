@@ -24,7 +24,7 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
  */
 public class ListWhitespaceValidationRule extends ValidationRule {
 
-	private static final Pattern almostListPattern = Pattern.compile("^((?: |\t)*)(\\*|((i|I|a|A|1)\\.))(\\S)?",
+	private static final Pattern almostListPattern = Pattern.compile("^((?: |\t)*)(\\*|((i|I|a|A|1)\\.))(\\S)?", //$NON-NLS-1$
 			Pattern.MULTILINE);
 
 	public ListWhitespaceValidationRule() {
@@ -42,13 +42,13 @@ public class ListWhitespaceValidationRule extends ValidationRule {
 				int problemOffset = matcher.start();
 				int problemLength = Math.max(2, matcher.end(2) - problemOffset);
 				return new ValidationProblem(Severity.WARNING,
-						"Lists must be indented with spaces in multiples of three", problemOffset, problemLength);
+						Messages.getString("ListWhitespaceValidationRule.1"), problemOffset, problemLength); //$NON-NLS-1$
 			}
 			String after = matcher.group(5);
 			if (after != null) {
 				int problemOffset = matcher.start();
 				int problemLength = Math.max(2, matcher.end(2) - problemOffset);
-				return new ValidationProblem(Severity.WARNING, "List item markup must be followed by whitespace",
+				return new ValidationProblem(Severity.WARNING, Messages.getString("ListWhitespaceValidationRule.2"), //$NON-NLS-1$
 						problemOffset, problemLength);
 			}
 		}

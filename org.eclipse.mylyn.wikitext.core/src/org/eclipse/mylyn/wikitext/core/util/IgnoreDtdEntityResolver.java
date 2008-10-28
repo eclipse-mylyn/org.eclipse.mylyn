@@ -30,8 +30,8 @@ public class IgnoreDtdEntityResolver implements EntityResolver {
 	}
 
 	public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-		if ((publicId != null && publicId.indexOf("//DTD") != -1) || (systemId != null && systemId.endsWith(".dtd"))) {
-			return new InputSource(new StringReader(""));
+		if ((publicId != null && publicId.indexOf("//DTD") != -1) || (systemId != null && systemId.endsWith(".dtd"))) { //$NON-NLS-1$ //$NON-NLS-2$
+			return new InputSource(new StringReader("")); //$NON-NLS-1$
 		}
 		return null;
 	}

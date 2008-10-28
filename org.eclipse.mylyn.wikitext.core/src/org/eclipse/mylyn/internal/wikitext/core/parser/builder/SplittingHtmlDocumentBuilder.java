@@ -97,7 +97,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 				}
 				currentFile = new File(rootFile.getParent(), item.getSplitTarget());
 
-				writer = new OutputStreamWriter(new FileOutputStream(currentFile), "UTF-8");
+				writer = new OutputStreamWriter(new FileOutputStream(currentFile), "UTF-8"); //$NON-NLS-1$
 				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatting);
 				rootBuilder.copyConfiguration(builder);
 				if (item.getLabel() != null) {
@@ -105,7 +105,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 					if (title == null) {
 						title = item.getLabel();
 					} else {
-						title += " - " + item.getLabel();
+						title += " - " + item.getLabel(); //$NON-NLS-1$
 					}
 					builder.setTitle(title);
 				}
@@ -151,14 +151,14 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		}
 
 		if (!header) {
-			out.charactersUnescaped("<hr/>");
+			out.charactersUnescaped("<hr/>"); //$NON-NLS-1$
 		}
 
 		TableAttributes tableAttributes = new TableAttributes();
-		tableAttributes.setCssClass("navigation");
-		tableAttributes.setCssStyle("width: 100%;");
-		tableAttributes.setBorder("0");
-		tableAttributes.setSummary("navigation");
+		tableAttributes.setCssClass("navigation"); //$NON-NLS-1$
+		tableAttributes.setCssStyle("width: 100%;"); //$NON-NLS-1$
+		tableAttributes.setBorder("0"); //$NON-NLS-1$
+		tableAttributes.setSummary("navigation"); //$NON-NLS-1$
 		out.beginBlock(BlockType.TABLE, tableAttributes);
 
 		TableCellAttributes tableCellAttributes;
@@ -167,14 +167,14 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 			out.beginBlock(BlockType.TABLE_ROW, new Attributes());
 
 			tableCellAttributes = new TableCellAttributes();
-			tableCellAttributes.setAlign("center");
-			tableCellAttributes.setCssStyle("width: 100%");
-			tableCellAttributes.setColspan("3");
+			tableCellAttributes.setAlign("center"); //$NON-NLS-1$
+			tableCellAttributes.setCssStyle("width: 100%"); //$NON-NLS-1$
+			tableCellAttributes.setColspan("3"); //$NON-NLS-1$
 			out.beginBlock(BlockType.TABLE_CELL_HEADER, tableCellAttributes);
 			if (rootPage) {
 				out.characters(rootBuilder.getTitle());
 			} else {
-				out.characters(current == null ? "" : current.getLabel());
+				out.characters(current == null ? "" : current.getLabel()); //$NON-NLS-1$
 			}
 			out.endBlock();
 
@@ -187,25 +187,27 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		LinkAttributes linkAttributes;
 
 		tableCellAttributes = new TableCellAttributes();
-		tableCellAttributes.setAlign("left");
-		tableCellAttributes.setCssStyle("width: 20%");
+		tableCellAttributes.setAlign("left"); //$NON-NLS-1$
+		tableCellAttributes.setCssStyle("width: 20%"); //$NON-NLS-1$
 		out.beginBlock(BlockType.TABLE_CELL_NORMAL, tableCellAttributes);
 		if (previous != null) {
 			linkAttributes = new LinkAttributes();
 			linkAttributes.setTitle(previous.getLabel());
 			if (navigationImages) {
 				ImageAttributes imageAttributes = new ImageAttributes();
-				imageAttributes.setAlt("Previous");
-				out.imageLink(linkAttributes, imageAttributes, previous.getSplitTarget(), "images/prev.gif");
+				imageAttributes.setAlt(Messages.getString("SplittingHtmlDocumentBuilder.Previous")); //$NON-NLS-1$
+				out.imageLink(linkAttributes, imageAttributes, previous.getSplitTarget(),
+						Messages.getString("SplittingHtmlDocumentBuilder.Previous_Image")); //$NON-NLS-1$
 			} else {
-				out.link(linkAttributes, previous.getSplitTarget(), "Previous");
+				out.link(linkAttributes, previous.getSplitTarget(),
+						Messages.getString("SplittingHtmlDocumentBuilder.Previous")); //$NON-NLS-1$
 			}
 		}
 		out.endBlock();
 
 		tableCellAttributes = new TableCellAttributes();
-		tableCellAttributes.setAlign("center");
-		tableCellAttributes.setCssStyle("width: 60%");
+		tableCellAttributes.setAlign("center"); //$NON-NLS-1$
+		tableCellAttributes.setCssStyle("width: 60%"); //$NON-NLS-1$
 		out.beginBlock(BlockType.TABLE_CELL_NORMAL, tableCellAttributes);
 		if (!header && !rootPage) {
 			linkAttributes = new LinkAttributes();
@@ -213,26 +215,28 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 			if (navigationImages) {
 				ImageAttributes imageAttributes = new ImageAttributes();
 				imageAttributes.setAlt(rootBuilder.getTitle());
-				out.imageLink(linkAttributes, imageAttributes, rootFile.getName(), "images/home.gif");
+				out.imageLink(linkAttributes, imageAttributes, rootFile.getName(),
+						Messages.getString("SplittingHtmlDocumentBuilder.Home_Image")); //$NON-NLS-1$
 			} else {
-				out.link(linkAttributes, rootFile.getName(), "Top");
+				out.link(linkAttributes, rootFile.getName(), Messages.getString("SplittingHtmlDocumentBuilder.Home")); //$NON-NLS-1$
 			}
 		}
 		out.endBlock();
 
 		tableCellAttributes = new TableCellAttributes();
-		tableCellAttributes.setAlign("right");
-		tableCellAttributes.setCssStyle("width: 20%");
+		tableCellAttributes.setAlign("right"); //$NON-NLS-1$
+		tableCellAttributes.setCssStyle("width: 20%"); //$NON-NLS-1$
 		out.beginBlock(BlockType.TABLE_CELL_NORMAL, tableCellAttributes);
 		if (next != null) {
 			linkAttributes = new LinkAttributes();
 			linkAttributes.setTitle(next.getLabel());
 			if (navigationImages) {
 				ImageAttributes imageAttributes = new ImageAttributes();
-				imageAttributes.setAlt("Next");
-				out.imageLink(linkAttributes, imageAttributes, next.getSplitTarget(), "images/next.gif");
+				imageAttributes.setAlt(Messages.getString("SplittingHtmlDocumentBuilder.Next")); //$NON-NLS-1$
+				out.imageLink(linkAttributes, imageAttributes, next.getSplitTarget(),
+						Messages.getString("SplittingHtmlDocumentBuilder.Next_Image")); //$NON-NLS-1$
 			} else {
-				out.link(linkAttributes, next.getSplitTarget(), "Next");
+				out.link(linkAttributes, next.getSplitTarget(), Messages.getString("SplittingHtmlDocumentBuilder.Next")); //$NON-NLS-1$
 			}
 		}
 		out.endBlock();
@@ -243,9 +247,9 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		out.beginBlock(BlockType.TABLE_ROW, new Attributes());
 
 		tableCellAttributes = new TableCellAttributes();
-		tableCellAttributes.setAlign("left");
-		tableCellAttributes.setValign("top");
-		tableCellAttributes.setCssStyle("width: 20%");
+		tableCellAttributes.setAlign("left"); //$NON-NLS-1$
+		tableCellAttributes.setValign("top"); //$NON-NLS-1$
+		tableCellAttributes.setCssStyle("width: 20%"); //$NON-NLS-1$
 		out.beginBlock(BlockType.TABLE_CELL_NORMAL, tableCellAttributes);
 		if (previous != null) {
 			out.characters(previous.getLabel());
@@ -253,16 +257,16 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		out.endBlock();
 
 		tableCellAttributes = new TableCellAttributes();
-		tableCellAttributes.setAlign("center");
-		tableCellAttributes.setCssStyle("width: 60%");
+		tableCellAttributes.setAlign("center"); //$NON-NLS-1$
+		tableCellAttributes.setCssStyle("width: 60%"); //$NON-NLS-1$
 		out.beginBlock(BlockType.TABLE_CELL_NORMAL, tableCellAttributes);
 
 		out.endBlock();
 
 		tableCellAttributes = new TableCellAttributes();
-		tableCellAttributes.setAlign("right");
-		tableCellAttributes.setValign("top");
-		tableCellAttributes.setCssStyle("width: 20%");
+		tableCellAttributes.setAlign("right"); //$NON-NLS-1$
+		tableCellAttributes.setValign("top"); //$NON-NLS-1$
+		tableCellAttributes.setCssStyle("width: 20%"); //$NON-NLS-1$
 		out.beginBlock(BlockType.TABLE_CELL_NORMAL, tableCellAttributes);
 		if (next != null) {
 			out.characters(next.getLabel());
@@ -274,7 +278,7 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		out.endBlock(); // table
 
 		if (header) {
-			out.charactersUnescaped("<hr/>");
+			out.charactersUnescaped("<hr/>"); //$NON-NLS-1$
 		}
 	}
 
@@ -352,10 +356,10 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 	}
 
 	private String adjustHref(String href) {
-		if (href != null && href.startsWith("#")) {
+		if (href != null && href.startsWith("#")) { //$NON-NLS-1$
 			SplitOutlineItem target = outline.getOutlineItemById(href.substring(1));
 			if (target != null && target.getSplitTarget() != null) {
-				href = target.getSplitTarget().replace(" ", "%20") + href;
+				href = target.getSplitTarget().replace(" ", "%20") + href; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		return href;

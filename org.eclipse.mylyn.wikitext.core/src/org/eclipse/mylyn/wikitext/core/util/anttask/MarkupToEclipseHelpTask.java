@@ -28,7 +28,7 @@ import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
  */
 public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 
-	private String xmlFilenameFormat = "$1-toc.xml";
+	private String xmlFilenameFormat = Messages.getString("MarkupToEclipseHelpTask.0"); //$NON-NLS-1$
 
 	private String helpPrefix;
 
@@ -50,9 +50,9 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocOutputFile)), "utf-8");
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocOutputFile)), Messages.getString("MarkupToEclipseHelpTask.1")); //$NON-NLS-1$
 			} catch (Exception e) {
-				throw new BuildException(String.format("Cannot write to file '%s': %s", tocOutputFile, e.getMessage()),
+				throw new BuildException(String.format("Cannot write to file '%s': %s", tocOutputFile, e.getMessage()), //$NON-NLS-1$
 						e);
 			}
 			try {
@@ -70,7 +70,7 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 				String outputFilePath = htmlOutputFile.getAbsolutePath().replace('\\', '/');
 				if (outputFilePath.startsWith(basePath)) {
 					String filePath = outputFilePath.substring(basePath.length());
-					if (filePath.startsWith("/")) {
+					if (filePath.startsWith(Messages.getString("MarkupToEclipseHelpTask.3"))) { //$NON-NLS-1$
 						filePath = filePath.substring(1);
 					}
 					toEclipseToc.setHtmlFile(filePath);
@@ -83,13 +83,13 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 				try {
 					writer.write(tocXml);
 				} catch (Exception e) {
-					throw new BuildException(String.format("Cannot write to file '%s': %s", tocXml, e.getMessage()), e);
+					throw new BuildException(String.format("Cannot write to file '%s': %s", tocXml, e.getMessage()), e); //$NON-NLS-1$
 				}
 			} finally {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(String.format("Cannot write to file '%s': %s", tocOutputFile,
+					throw new BuildException(String.format("Cannot write to file '%s': %s", tocOutputFile, //$NON-NLS-1$
 							e.getMessage()), e);
 				}
 			}
@@ -97,7 +97,7 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 	}
 
 	private File computeTocFile(File source, String name) {
-		return new File(source.getParentFile(), xmlFilenameFormat.replace("$1", name));
+		return new File(source.getParentFile(), xmlFilenameFormat.replace(Messages.getString("MarkupToEclipseHelpTask.6"), name)); //$NON-NLS-1$
 	}
 
 	/**

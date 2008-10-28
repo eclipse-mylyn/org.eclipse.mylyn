@@ -125,9 +125,9 @@ public class OutlineItem {
 
 	private String calculatePositionKey() {
 		if (parent == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
-		return getParent().calculatePositionKey() + "/" + kind + childOffset;
+		return getParent().calculatePositionKey() + "/" + kind + childOffset; //$NON-NLS-1$
 	}
 
 	private void addChild(OutlineItem outlineItem) {

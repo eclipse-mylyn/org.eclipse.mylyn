@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class HeadingBlock extends Block {
 
-	private static final Pattern startPattern = Pattern.compile("---(\\+{1,6})\\s*(!!\\s*)?(.*)");
+	private static final Pattern startPattern = Pattern.compile("---(\\+{1,6})\\s*(!!\\s*)?(.*)"); //$NON-NLS-1$
 
 	private Matcher matcher;
 
@@ -41,7 +41,7 @@ public class HeadingBlock extends Block {
 		if (offset > 0 && level > 0) {
 			HeadingAttributes attributes = new HeadingAttributes();
 			attributes.setOmitFromTableOfContents(omitFromToc);
-			attributes.setId(state.getIdGenerator().newId("h" + level, line.substring(offset)));
+			attributes.setId(state.getIdGenerator().newId("h" + level, line.substring(offset))); //$NON-NLS-1$
 			
 			builder.beginHeading(level, attributes);
 			builder.characters(line.substring(offset).trim());

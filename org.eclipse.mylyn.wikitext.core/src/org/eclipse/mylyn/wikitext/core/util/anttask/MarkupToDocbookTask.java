@@ -21,6 +21,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 public class MarkupToDocbookTask extends MarkupTask {
 	private final List<FileSet> filesets = new ArrayList<FileSet>();
 
-	private String docbookFilenameFormat = "$1.xml";
+	private String docbookFilenameFormat = "$1.xml"; //$NON-NLS-1$
 
 	private String bookTitle;
 
@@ -62,18 +63,18 @@ public class MarkupToDocbookTask extends MarkupTask {
 	public void execute() throws BuildException {
 
 		if (file == null && filesets.isEmpty()) {
-			throw new BuildException("Please add one or more source filesets or specify @file");
+			throw new BuildException(Messages.getString("MarkupToDocbookTask.1")); //$NON-NLS-1$
 		}
 		if (file != null && !filesets.isEmpty()) {
-			throw new BuildException("@file may not be specified if filesets are also specified");
+			throw new BuildException(Messages.getString("MarkupToDocbookTask.2")); //$NON-NLS-1$
 		}
 		if (file != null) {
 			if (!file.exists()) {
-				throw new BuildException(String.format("File cannot be found: %s", file));
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDocbookTask.3"), file)); //$NON-NLS-1$
 			} else if (!file.isFile()) {
-				throw new BuildException(String.format("Not a file: %s", file));
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDocbookTask.4"), file)); //$NON-NLS-1$
 			} else if (!file.canRead()) {
-				throw new BuildException(String.format("Cannot read file: %s", file));
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDocbookTask.5"), file)); //$NON-NLS-1$
 			}
 		}
 
@@ -94,7 +95,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(String.format("Cannot process file '%s': %s", inputFile,
+						throw new BuildException(MessageFormat.format(
+								Messages.getString("MarkupToDocbookTask.6"), inputFile, //$NON-NLS-1$
 								e.getMessage()), e);
 					}
 				}
@@ -107,7 +109,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(String.format("Cannot process file '%s': %s", file, e.getMessage()), e);
+				throw new BuildException(MessageFormat.format(
+						Messages.getString("MarkupToDocbookTask.7"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -115,7 +118,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 	private void processFile(MarkupLanguage markupLanguage, final File baseDir, final File source)
 			throws BuildException {
 
-		log(String.format("Processing file '%s'", source), Project.MSG_VERBOSE);
+		log(MessageFormat.format(Messages.getString("MarkupToDocbookTask.8"), source), Project.MSG_VERBOSE); //$NON-NLS-1$
 
 		String markupContent = null;
 
@@ -124,7 +127,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 			name = name.substring(0, name.lastIndexOf('.'));
 		}
 
-		File docbookOutputFile = new File(source.getParentFile(), docbookFilenameFormat.replace("$1", name));
+		File docbookOutputFile = new File(source.getParentFile(), docbookFilenameFormat.replace("$1", name)); //$NON-NLS-1$
 		if (!docbookOutputFile.exists() || overwrite || docbookOutputFile.lastModified() < source.lastModified()) {
 
 			if (markupContent == null) {
@@ -135,9 +138,10 @@ public class MarkupToDocbookTask extends MarkupTask {
 			Writer writer;
 			try {
 				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(docbookOutputFile)),
-						"utf-8");
+						"utf-8"); //$NON-NLS-1$
 			} catch (Exception e) {
-				throw new BuildException(String.format("Cannot write to file '%s': %s", docbookOutputFile,
+				throw new BuildException(MessageFormat.format(
+						Messages.getString("MarkupToDocbookTask.11"), docbookOutputFile, //$NON-NLS-1$
 						e.getMessage()), e);
 			}
 			try {
@@ -159,7 +163,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(String.format("Cannot write to file '%s': %s", docbookOutputFile,
+					throw new BuildException(MessageFormat.format(
+							Messages.getString("MarkupToDocbookTask.12"), docbookOutputFile, //$NON-NLS-1$
 							e.getMessage()), e);
 				}
 			}
@@ -180,7 +185,8 @@ public class MarkupToDocbookTask extends MarkupTask {
 				r.close();
 			}
 		} catch (IOException e) {
-			throw new BuildException(String.format("Cannot read file '%s': %s", inputFile, e.getMessage()), e);
+			throw new BuildException(MessageFormat.format(
+					Messages.getString("MarkupToDocbookTask.13"), inputFile, e.getMessage()), e); //$NON-NLS-1$
 		}
 		return w.toString();
 	}

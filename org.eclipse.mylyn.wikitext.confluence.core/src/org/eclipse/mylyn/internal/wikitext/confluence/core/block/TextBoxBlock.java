@@ -39,8 +39,8 @@ public class TextBoxBlock extends ParameterizedBlock {
 
 	public TextBoxBlock(BlockType blockType, String name) {
 		this.blockType = blockType;
-		startPattern = Pattern.compile("\\{" + name + "(?::([^\\}]*))?\\}(.*)");
-		endPattern = Pattern.compile("(\\{" + name + "\\})(.*)");
+		startPattern = Pattern.compile("\\{" + name + "(?::([^\\}]*))?\\}(.*)"); //$NON-NLS-1$ //$NON-NLS-2$
+		endPattern = Pattern.compile("(\\{" + name + "\\})(.*)"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class TextBoxBlock extends ParameterizedBlock {
 			state.setLineSegmentEndOffset(end);
 		}
 		markupContent.append(line.substring(offset, segmentEnd));
-		markupContent.append("\n");
+		markupContent.append("\n"); //$NON-NLS-1$
 
 		if (terminating) {
 			setClosed(true);
@@ -113,7 +113,7 @@ public class TextBoxBlock extends ParameterizedBlock {
 
 	@Override
 	protected void setOption(String key, String value) {
-		if (key.equals("title")) {
+		if (key.equals("title")) { //$NON-NLS-1$
 			title = value;
 		}
 	}

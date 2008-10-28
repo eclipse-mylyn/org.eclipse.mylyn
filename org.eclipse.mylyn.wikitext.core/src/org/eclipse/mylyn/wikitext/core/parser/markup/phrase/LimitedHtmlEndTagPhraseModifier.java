@@ -24,16 +24,16 @@ public class LimitedHtmlEndTagPhraseModifier extends PatternBasedElement {
 
 	public LimitedHtmlEndTagPhraseModifier(String... elementNames) {
 		StringBuilder buf = new StringBuilder();
-		buf.append("(</");
-		buf.append("(?:");
+		buf.append("(</"); //$NON-NLS-1$
+		buf.append("(?:"); //$NON-NLS-1$
 		int index = 0;
 		for (String elementName : elementNames) {
 			if (index++ > 0) {
-				buf.append("|");
+				buf.append("|"); //$NON-NLS-1$
 			}
 			buf.append(elementName);
 		}
-		buf.append(")\\s*>)");
+		buf.append(")\\s*>)"); //$NON-NLS-1$
 		pattern = buf.toString();
 	}
 

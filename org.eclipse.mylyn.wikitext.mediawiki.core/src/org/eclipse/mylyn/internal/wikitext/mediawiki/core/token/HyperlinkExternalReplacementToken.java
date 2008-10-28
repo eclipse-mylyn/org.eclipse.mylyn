@@ -23,7 +23,7 @@ public class HyperlinkExternalReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:\\[([^\\[\\]\\|\\s]+)(?:(?:\\||\\s)([^\\]]*))?\\s*\\])";
+		return "(?:\\[([^\\[\\]\\|\\s]+)(?:(?:\\||\\s)([^\\]]*))?\\s*\\])"; //$NON-NLS-1$
 	}
 
 	@Override

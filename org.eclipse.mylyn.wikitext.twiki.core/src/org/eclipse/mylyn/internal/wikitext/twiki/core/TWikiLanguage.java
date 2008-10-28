@@ -67,12 +67,12 @@ public class TWikiLanguage extends MarkupLanguage {
 	
 	private boolean isAutoLinking = true;
 
-	private String iconPattern = "TWikiDocGraphics/{0}.gif"; // FIXME find out if this is correct
+	private String iconPattern = "TWikiDocGraphics/{0}.gif"; // FIXME find out if this is correct //$NON-NLS-1$
 
 
 	public TWikiLanguage() {
-		setName("TWiki");
-		setInternalLinkPattern("/cgi-bin/view/{0}/{1}");
+		setName("TWiki"); //$NON-NLS-1$
+		setInternalLinkPattern("/cgi-bin/view/{0}/{1}"); //$NON-NLS-1$
 		initializeSyntax();
 	}
 
@@ -115,12 +115,12 @@ public class TWikiLanguage extends MarkupLanguage {
 	private void initializeTokens() {
 		// IMPORTANT NOTE: Most items below have order dependencies.  DO NOT REORDER ITEMS BELOW!!
 		
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new LinkReplacementToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 		tokenSyntax.add(new ImpliedEmailLinkReplacementToken());
@@ -136,13 +136,13 @@ public class TWikiLanguage extends MarkupLanguage {
 		phraseModifierSyntax.add(new AutoLinkSwitchPhraseModifier());
 		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier());
 		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier());
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0);
-		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.BOLD));
-		phraseModifierSyntax.add(new SimplePhraseModifier("__", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }));
-		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.ITALIC));
-		phraseModifierSyntax.add(new SimplePhraseModifier("==",new SpanType[] { SpanType.BOLD, SpanType.MONOSPACE }));
-		phraseModifierSyntax.add(new SimplePhraseModifier("=", SpanType.MONOSPACE));
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.BOLD)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("__", new SpanType[] { SpanType.BOLD, SpanType.ITALIC })); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.ITALIC)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("==",new SpanType[] { SpanType.BOLD, SpanType.MONOSPACE })); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("=", SpanType.MONOSPACE)); //$NON-NLS-1$
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 
 		literalPhraseModifierSyntax.add(new HtmlStartTagPhraseModifier());
 		literalPhraseModifierSyntax.add(new HtmlEndTagPhraseModifier());
@@ -178,9 +178,9 @@ public class TWikiLanguage extends MarkupLanguage {
 	 * @see #getInternalPageHrefPrefix()
 	 */
 	public String toInternalHref(String pageName) {
-		String[] parts = pageName.split("\\.");
+		String[] parts = pageName.split("\\."); //$NON-NLS-1$
 		if (parts.length == 1) {
-			parts = new String[] { "Main",parts[0] };
+			parts = new String[] { "Main",parts[0] }; //$NON-NLS-1$
 		}
 		return MessageFormat.format(super.internalLinkPattern,(Object[]) parts);
 	}

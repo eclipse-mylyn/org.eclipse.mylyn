@@ -58,7 +58,7 @@ public class ContentState implements Locator {
 	public String getFootnoteId(String footnote) {
 		String id = footnoteIdToHtmlId.get(footnote);
 		if (id == null) {
-			id = "fn" + UUID.randomUUID().toString().replace("-", "");
+			id = "fn" + UUID.randomUUID().toString().replace("-", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			footnoteIdToHtmlId.put(footnote, id);
 		}
 		return id;

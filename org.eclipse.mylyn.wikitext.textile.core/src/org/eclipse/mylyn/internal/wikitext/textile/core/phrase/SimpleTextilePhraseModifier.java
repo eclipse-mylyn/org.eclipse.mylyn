@@ -77,8 +77,8 @@ public class SimpleTextilePhraseModifier extends PatternBasedElement {
 	protected String getPattern(int groupOffset) {
 		String quotedDelimiter = quoteLite(getDelimiter());
 
-		return quotedDelimiter + "(?!" + quotedDelimiter + ")" + Textile.REGEX_ATTRIBUTES + "([^\\s" + quotedDelimiter
-				+ "]+|\\S[^" + quotedDelimiter + "]*[^\\s" + quotedDelimiter + "])" + // content
+		return quotedDelimiter + "(?!" + quotedDelimiter + ")" + Textile.REGEX_ATTRIBUTES + "([^\\s" + quotedDelimiter //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ "]+|\\S[^" + quotedDelimiter + "]*[^\\s" + quotedDelimiter + "])" + // content //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				quotedDelimiter;
 	}
 

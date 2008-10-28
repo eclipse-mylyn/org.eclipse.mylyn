@@ -22,7 +22,7 @@ public class HtmlCommentPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(<!--|-->)";
+		return "(<!--|-->)"; //$NON-NLS-1$
 	}
 
 	@Override

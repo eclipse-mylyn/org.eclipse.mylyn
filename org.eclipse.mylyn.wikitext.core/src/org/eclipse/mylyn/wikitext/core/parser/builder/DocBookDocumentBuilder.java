@@ -31,7 +31,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  */
 public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
-	private static final Pattern CSS_CLASS_INLINE = Pattern.compile("(^|\\s+)inline(\\s+|$)");
+	private static final Pattern CSS_CLASS_INLINE = Pattern.compile("(^|\\s+)inline(\\s+|$)"); //$NON-NLS-1$
 
 	private static Set<Integer> entityReferenceToUnicode = new HashSet<Integer>();
 	static {
@@ -47,7 +47,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String bookTitle;
 
-	private String doctype = "<!DOCTYPE book PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\">";
+	private String doctype = "<!DOCTYPE book PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\">"; //$NON-NLS-1$
 
 	private final Map<String, String> acronyms = new HashMap<String, String>();
 
@@ -70,7 +70,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		return new FormattingXMLStreamWriter(writer) {
 			@Override
 			protected boolean preserveWhitespace(String elementName) {
-				return elementName.equals("code") || elementName.startsWith("literal");
+				return elementName.equals("code") || elementName.startsWith("literal"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		};
 	}
@@ -97,7 +97,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (previousDef != null && previousDef.length() > definition.length()) {
 			acronyms.put(text, previousDef);
 		}
-		writer.writeStartElement("glossterm");
+		writer.writeStartElement("glossterm"); //$NON-NLS-1$
 		characters(text);
 		writer.writeEndElement();
 	}
@@ -113,18 +113,18 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void link(Attributes attributes, String href, ContentEmitter emitter) {
 		ensureBlockElementsOpen();
-		if (href.startsWith("#")) {
+		if (href.startsWith("#")) { //$NON-NLS-1$
 			if (href.length() > 1) {
-				writer.writeStartElement("link");
-				writer.writeAttribute("linkend", href.substring(1));
+				writer.writeStartElement("link"); //$NON-NLS-1$
+				writer.writeAttribute("linkend", href.substring(1)); //$NON-NLS-1$
 				emitter.emit();
 				writer.writeEndElement(); // link
 			} else {
 				emitter.emit();
 			}
 		} else {
-			writer.writeStartElement("ulink");
-			writer.writeAttribute("url", href);
+			writer.writeStartElement("ulink"); //$NON-NLS-1$
+			writer.writeAttribute("url", href); //$NON-NLS-1$
 			emitter.emit();
 			writer.writeEndElement(); // ulink
 		}
@@ -152,13 +152,13 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		switch (type) {
 		case BULLETED_LIST:
-			elementName = "itemizedlist";
+			elementName = "itemizedlist"; //$NON-NLS-1$
 			break;
 		case NUMERIC_LIST:
-			elementName = "orderedlist";
+			elementName = "orderedlist"; //$NON-NLS-1$
 			break;
 		case DEFINITION_LIST:
-			elementName = "variablelist";
+			elementName = "variablelist"; //$NON-NLS-1$
 
 			//			variablelist
 			//				varlistentry+
@@ -172,63 +172,63 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 			if (blockDescription.entrySize > 0) {
 				endBlockEntry(blockDescription);
 			}
-			openBlockEntry(blockDescription, new String[] { "varlistentry" });
+			openBlockEntry(blockDescription, new String[] { "varlistentry" }); //$NON-NLS-1$
 
-			elementName = "term";
+			elementName = "term"; //$NON-NLS-1$
 			break;
 		case DEFINITION_ITEM:
-			elementName = "listitem";
-			elementNames = new String[] { "para" };
+			elementName = "listitem"; //$NON-NLS-1$
+			elementNames = new String[] { "para" }; //$NON-NLS-1$
 			closeElementsOnBlockStart = true;
 			break;
 		case FOOTNOTE:
 		case PARAGRAPH:
-			elementName = "para";
+			elementName = "para"; //$NON-NLS-1$
 			break;
 		case CODE:
-			elementName = "code";
+			elementName = "code"; //$NON-NLS-1$
 			break;
 		case PREFORMATTED:
-			elementName = "literallayout";
+			elementName = "literallayout"; //$NON-NLS-1$
 			break;
 		case QUOTE:
-			elementName = "blockquote";
+			elementName = "blockquote"; //$NON-NLS-1$
 			break;
 		case LIST_ITEM:
-			elementName = "listitem";
-			elementNames = new String[] { "para" };
+			elementName = "listitem"; //$NON-NLS-1$
+			elementNames = new String[] { "para" }; //$NON-NLS-1$
 			closeElementsOnBlockStart = true;
 			break;
 		case TABLE:
-			elementName = "informaltable";
+			elementName = "informaltable"; //$NON-NLS-1$
 			break;
 		case TABLE_CELL_HEADER:
-			elementName = "th";
+			elementName = "th"; //$NON-NLS-1$
 			break;
 		case TABLE_CELL_NORMAL:
-			elementName = "td";
+			elementName = "td"; //$NON-NLS-1$
 			break;
 		case TABLE_ROW:
-			elementName = "tr";
+			elementName = "tr"; //$NON-NLS-1$
 			break;
 		case INFORMATION:
-			elementName = "important";
+			elementName = "important"; //$NON-NLS-1$
 			allowTitle = true;
 			break;
 		case NOTE:
-			elementName = "note";
+			elementName = "note"; //$NON-NLS-1$
 			allowTitle = true;
 			break;
 		case WARNING:
-			elementName = "warning";
+			elementName = "warning"; //$NON-NLS-1$
 			allowTitle = true;
 			break;
 		case TIP:
-			elementName = "tip";
+			elementName = "tip"; //$NON-NLS-1$
 			allowTitle = true;
 			break;
 		case PANEL:
-			elementName = "note"; // docbook has nothing better for 'note'
+			elementName = "note"; // docbook has nothing better for 'note' //$NON-NLS-1$
 			allowTitle = true;
 			break;
 		default:
@@ -249,7 +249,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		}
 
 		if (allowTitle && attributes.getTitle() != null) {
-			writer.writeStartElement("title");
+			writer.writeStartElement("title"); //$NON-NLS-1$
 			writer.writeCharacters(attributes.getTitle());
 			writer.writeEndElement();
 		}
@@ -287,14 +287,14 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		while (headingLevel < level) {
 			headingLevel++;
 
-			writer.writeStartElement(headingLevel == 1 ? "chapter" : "section");
+			writer.writeStartElement(headingLevel == 1 ? "chapter" : "section"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (attributes != null) {
 				applyAttributes(attributes);
 				attributes = null;
 			}
 		}
 
-		writer.writeStartElement("title");
+		writer.writeStartElement("title"); //$NON-NLS-1$
 
 	}
 
@@ -309,8 +309,8 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeStartDocument();
 		writer.writeDTD(doctype);
 
-		writer.writeStartElement("book");
-		writer.writeStartElement("title");
+		writer.writeStartElement("book"); //$NON-NLS-1$
+		writer.writeStartElement("title"); //$NON-NLS-1$
 		if (bookTitle != null) {
 			writer.writeCharacters(bookTitle);
 		}
@@ -323,49 +323,49 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 		switch (type) {
 		case BOLD:
 		case STRONG:
-			writer.writeStartElement("emphasis");
-			writer.writeAttribute("role", "bold");
+			writer.writeStartElement("emphasis"); //$NON-NLS-1$
+			writer.writeAttribute("role", "bold"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case CITATION:
-			writer.writeStartElement("citation");
+			writer.writeStartElement("citation"); //$NON-NLS-1$
 			break;
 		case CODE:
-			writer.writeStartElement("code");
+			writer.writeStartElement("code"); //$NON-NLS-1$
 			break;
 		case DELETED:
-			writer.writeStartElement("emphasis");
-			writer.writeAttribute("role", "del");
+			writer.writeStartElement("emphasis"); //$NON-NLS-1$
+			writer.writeAttribute("role", "del"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case EMPHASIS:
-			writer.writeStartElement("emphasis");
+			writer.writeStartElement("emphasis"); //$NON-NLS-1$
 			break;
 		case INSERTED:
-			writer.writeStartElement("emphasis");
-			writer.writeAttribute("role", "ins");
+			writer.writeStartElement("emphasis"); //$NON-NLS-1$
+			writer.writeAttribute("role", "ins"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case UNDERLINED:
-			writer.writeStartElement("emphasis");
-			writer.writeAttribute("role", "underline");
+			writer.writeStartElement("emphasis"); //$NON-NLS-1$
+			writer.writeAttribute("role", "underline"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case ITALIC:
-			writer.writeStartElement("emphasis");
-			writer.writeAttribute("role", "italic");
+			writer.writeStartElement("emphasis"); //$NON-NLS-1$
+			writer.writeAttribute("role", "italic"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case SPAN:
-			writer.writeStartElement("phrase");
+			writer.writeStartElement("phrase"); //$NON-NLS-1$
 			break;
 		case SUBSCRIPT:
-			writer.writeStartElement("subscript");
+			writer.writeStartElement("subscript"); //$NON-NLS-1$
 			break;
 		case SUPERSCRIPT:
-			writer.writeStartElement("superscript");
+			writer.writeStartElement("superscript"); //$NON-NLS-1$
 			break;
 		case MONOSPACE:
-			writer.writeStartElement("literal");
+			writer.writeStartElement("literal"); //$NON-NLS-1$
 			break;
 		default:
-			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No docbook mapping for " + type);
-			writer.writeStartElement("phrase");
+			Logger.getLogger(DocBookDocumentBuilder.class.getName()).warning("No docbook mapping for " + type); //$NON-NLS-1$
+			writer.writeStartElement("phrase"); //$NON-NLS-1$
 			break;
 		}
 		applyAttributes(attributes);
@@ -373,7 +373,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void applyAttributes(Attributes attributes) {
 		if (attributes.getId() != null) {
-			writer.writeAttribute("id", attributes.getId());
+			writer.writeAttribute("id", attributes.getId()); //$NON-NLS-1$
 		}
 	}
 
@@ -401,24 +401,24 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void writeGlossaryAppendix() {
 		if (!acronyms.isEmpty() && automaticGlossary) {
-			writer.writeStartElement("appendix");
-			writer.writeAttribute("id", "glossary");
-			writer.writeStartElement("title");
-			writer.writeAttribute("id", "glossary-end");
-			writer.writeCharacters("Glossary");
+			writer.writeStartElement("appendix"); //$NON-NLS-1$
+			writer.writeAttribute("id", "glossary"); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeStartElement("title"); //$NON-NLS-1$
+			writer.writeAttribute("id", "glossary-end"); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeCharacters(Messages.getString("DocBookDocumentBuilder.0")); //$NON-NLS-1$
 			writer.writeEndElement(); // title
-			writer.writeStartElement("glosslist");
+			writer.writeStartElement("glosslist"); //$NON-NLS-1$
 
 			for (Map.Entry<String, String> glossEntry : new TreeMap<String, String>(acronyms).entrySet()) {
 
-				writer.writeStartElement("glossentry");
+				writer.writeStartElement("glossentry"); //$NON-NLS-1$
 
-				writer.writeStartElement("glossterm");
+				writer.writeStartElement("glossterm"); //$NON-NLS-1$
 				writer.writeCharacters(glossEntry.getKey());
 				writer.writeEndElement(); // glossterm
 
-				writer.writeStartElement("glossdef");
-				writer.writeStartElement("para");
+				writer.writeStartElement("glossdef"); //$NON-NLS-1$
+				writer.writeStartElement("para"); //$NON-NLS-1$
 				writer.writeCharacters(glossEntry.getValue());
 				writer.writeEndElement(); // para
 				writer.writeEndElement(); // glossdef
@@ -461,16 +461,16 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void entityReference(String entity) {
 		ensureBlockElementsOpen();
-		if (entity.startsWith("#")) {
+		if (entity.startsWith("#")) { //$NON-NLS-1$
 			String numeric = entity.substring(1);
 			int base = 10;
-			if (numeric.startsWith("x")) {
+			if (numeric.startsWith("x")) { //$NON-NLS-1$
 				numeric = entity.substring(1);
 				base = 16;
 			}
 			int unicodeValue = Integer.parseInt(numeric, base);
 			if (entityReferenceToUnicode.contains(unicodeValue)) {
-				writer.writeCharacters("" + ((char) unicodeValue));
+				writer.writeCharacters("" + ((char) unicodeValue)); //$NON-NLS-1$
 				return;
 			}
 		}
@@ -490,11 +490,11 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private void emitImage(Attributes attributes, String url, boolean inline) {
 		ensureBlockElementsOpen();
-		writer.writeStartElement(inline ? "inlinemediaobject" : "mediaobject");
+		writer.writeStartElement(inline ? "inlinemediaobject" : "mediaobject"); //$NON-NLS-1$ //$NON-NLS-2$
 		applyAttributes(attributes);
-		writer.writeStartElement("imageobject");
-		writer.writeEmptyElement("imagedata");
-		writer.writeAttribute("fileref", makeUrlAbsolute(url));
+		writer.writeStartElement("imageobject"); //$NON-NLS-1$
+		writer.writeEmptyElement("imagedata"); //$NON-NLS-1$
+		writer.writeAttribute("fileref", makeUrlAbsolute(url)); //$NON-NLS-1$
 		writer.writeEndElement(); // imageobject
 		writer.writeEndElement(); // inlinemediaobject or mediaobject
 	}
@@ -513,7 +513,7 @@ public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 	public void lineBreak() {
 		ensureBlockElementsOpen();
 		// no equivalent in DocBook.
-		characters("\n");
+		characters("\n"); //$NON-NLS-1$
 	}
 
 	private BlockDescription findBlockDescription(BlockType type) {

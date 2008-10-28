@@ -31,11 +31,11 @@ public class TracWikiTaskEditorExtension extends MarkupTaskEditorExtension {
 	protected void configureDefaultInternalLinkPattern(TaskRepository taskRepository, MarkupLanguage markupLanguage) {
 		String url = taskRepository.getRepositoryUrl();
 		if (url != null && url.length() > 0) {
-			if (!url.endsWith("/")) {
-				url = url + "/";
+			if (!url.endsWith("/")) { //$NON-NLS-1$
+				url = url + "/"; //$NON-NLS-1$
 			}
 			// bug 247772: set the default wiki link URL for the repository
-			markupLanguage.setInternalLinkPattern(url + "wiki/{0}");
+			markupLanguage.setInternalLinkPattern(url + "wiki/{0}"); //$NON-NLS-1$
 		}
 	}
 }

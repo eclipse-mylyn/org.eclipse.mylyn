@@ -27,9 +27,9 @@ public class ListBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = 2;
 
-	static final Pattern startPattern = Pattern.compile("((?:(?:\\*)|(?:#)|(?:-)|(?:\\;)|(?:\\:))+)\\s?(.+)");
+	static final Pattern startPattern = Pattern.compile("((?:(?:\\*)|(?:#)|(?:-)|(?:\\;)|(?:\\:))+)\\s?(.+)"); //$NON-NLS-1$
 
-	static final Pattern definitionPattern = Pattern.compile("(\\s+\\:\\s+)(.*)");
+	static final Pattern definitionPattern = Pattern.compile("(\\s+\\:\\s+)(.*)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -53,7 +53,7 @@ public class ListBlock extends Block {
 			BlockType itemType = calculateItemType(lastChar);
 
 			if (type == BlockType.BULLETED_LIST && '-' == lastChar) {
-				attributes.setCssStyle("list-style: square");
+				attributes.setCssStyle("list-style: square"); //$NON-NLS-1$
 			}
 
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
@@ -151,7 +151,7 @@ public class ListBlock extends Block {
 
 				Attributes blockAttributes = new Attributes();
 				if (type == BlockType.BULLETED_LIST && '-' == lastChar) {
-					blockAttributes.setCssStyle("list-style: square");
+					blockAttributes.setCssStyle("list-style: square"); //$NON-NLS-1$
 				}
 				listState.push(new ListState(previousState.level + 1, type, itemType));
 				builder.beginBlock(type, blockAttributes);
@@ -176,7 +176,7 @@ public class ListBlock extends Block {
 				if (listState.isEmpty()) {
 					Attributes blockAttributes = new Attributes();
 					if (type == BlockType.BULLETED_LIST && '-' == lastChar) {
-						blockAttributes.setCssStyle("list-style: square");
+						blockAttributes.setCssStyle("list-style: square"); //$NON-NLS-1$
 					}
 					listState.push(new ListState(1, type, itemType));
 					builder.beginBlock(type, blockAttributes);

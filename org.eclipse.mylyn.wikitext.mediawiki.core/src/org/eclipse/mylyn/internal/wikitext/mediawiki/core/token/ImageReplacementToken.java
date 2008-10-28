@@ -25,7 +25,7 @@ public class ImageReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:\\[\\[Image:([^\\]\\|]+)(?:\\|([^\\]]*))?\\]\\])";
+		return "(?:\\[\\[Image:([^\\]\\|]+)(?:\\|([^\\]]*))?\\]\\])"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -46,19 +46,19 @@ public class ImageReplacementToken extends PatternBasedElement {
 
 			ImageAttributes attributes = new ImageAttributes();
 			if (optionsString != null) {
-				String[] options = optionsString.split("\\s*\\|\\s*");
+				String[] options = optionsString.split("\\s*\\|\\s*"); //$NON-NLS-1$
 				for (String option : options) {
-					if ("center".equals(option)) {
+					if ("center".equals(option)) { //$NON-NLS-1$
 						attributes.setAlign(Align.Middle);
-					} else if ("left".equals(option)) {
+					} else if ("left".equals(option)) { //$NON-NLS-1$
 						attributes.setAlign(Align.Left);
-					} else if ("right".equals(option)) {
+					} else if ("right".equals(option)) { //$NON-NLS-1$
 						attributes.setAlign(Align.Right);
-					} else if ("none".equals(option)) {
+					} else if ("none".equals(option)) { //$NON-NLS-1$
 						attributes.setAlign(null);
-					} else if ("thumb".equals(option) || "thumbnail".equals(option)) {
+					} else if ("thumb".equals(option) || "thumbnail".equals(option)) { //$NON-NLS-1$ //$NON-NLS-2$
 						// ignore
-					} else if (option.matches("\\d+px")) {
+					} else if (option.matches("\\d+px")) { //$NON-NLS-1$
 						try {
 							int size = Integer.parseInt(option.substring(0, option.length() - 2));
 							attributes.setWidth(size);
@@ -66,9 +66,9 @@ public class ImageReplacementToken extends PatternBasedElement {
 						} catch (NumberFormatException e) {
 							// ignore
 						}
-					} else if ("frameless".equals(option)) {
+					} else if ("frameless".equals(option)) { //$NON-NLS-1$
 						attributes.setBorder(0);
-					} else if ("frame".equals(option)) {
+					} else if ("frame".equals(option)) { //$NON-NLS-1$
 						attributes.setBorder(1);
 					} else {
 						attributes.setTitle(option);

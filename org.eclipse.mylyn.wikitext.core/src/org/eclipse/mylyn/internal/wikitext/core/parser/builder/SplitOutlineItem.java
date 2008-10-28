@@ -89,7 +89,7 @@ public class SplitOutlineItem extends OutlineItem {
 				public boolean visit(OutlineItem item) {
 					if (item.getId() != null) {
 						if (splitTargetById.containsKey(item.getId())) {
-							throw new IllegalStateException(String.format("Duplicate id '%s'", item.getId()));
+							throw new IllegalStateException(String.format("Duplicate id '%s'", item.getId())); //$NON-NLS-1$
 						}
 						splitTargetById.put(item.getId(), (SplitOutlineItem) item);
 					}

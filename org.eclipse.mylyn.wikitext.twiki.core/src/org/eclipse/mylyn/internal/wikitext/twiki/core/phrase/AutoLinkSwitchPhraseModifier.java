@@ -8,7 +8,7 @@ public class AutoLinkSwitchPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(</?noautolink>)";
+		return "(</?noautolink>)"; //$NON-NLS-1$
 	}
 
 	@Override

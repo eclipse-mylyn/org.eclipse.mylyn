@@ -24,10 +24,10 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class TableBlock extends Block {
 
-	static final Pattern startPattern = Pattern.compile("(\\|(.*)?(\\|\\s*$))");
+	static final Pattern startPattern = Pattern.compile("(\\|(.*)?(\\|\\s*$))"); //$NON-NLS-1$
 
-	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?" + "((?:(?:[^\\|\\[]*)(?:\\[[^\\]]*\\])?)*)"
-			+ "(\\|\\|?\\s*$)?");
+	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(\\|)?" + "((?:(?:[^\\|\\[]*)(?:\\[[^\\]]*\\])?)*)" //$NON-NLS-1$ //$NON-NLS-2$
+			+ "(\\|\\|?\\s*$)?"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -70,7 +70,7 @@ public class TableBlock extends Block {
 			String text = rowMatcher.group(2);
 			int lineOffset = offset + rowMatcher.start(2);
 
-			boolean header = headerIndicator != null && "|".equals(headerIndicator);
+			boolean header = headerIndicator != null && "|".equals(headerIndicator); //$NON-NLS-1$
 
 			Attributes attributes = new Attributes();
 			builder.beginBlock(header ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL, attributes);

@@ -28,8 +28,8 @@ public class FootnoteBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 2;
 
-	static final Pattern startPattern = Pattern.compile("fn([0-9]{1,2})" + Textile.REGEX_BLOCK_ATTRIBUTES
-			+ "\\.\\s+(.*)");
+	static final Pattern startPattern = Pattern.compile("fn([0-9]{1,2})" + Textile.REGEX_BLOCK_ATTRIBUTES //$NON-NLS-1$
+			+ "\\.\\s+(.*)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -44,7 +44,7 @@ public class FootnoteBlock extends Block {
 	public int processLineContent(String line, int offset) {
 		if (blockLineCount == 0) {
 			Attributes attributes = new Attributes();
-			attributes.setCssClass("footnote");
+			attributes.setCssClass("footnote"); //$NON-NLS-1$
 
 			// 0-offset matches may start with the "fnnn. " prefix.
 			footnote = matcher.group(1);
@@ -57,7 +57,7 @@ public class FootnoteBlock extends Block {
 			builder.beginSpan(SpanType.SUPERSCRIPT, new Attributes());
 			builder.characters(footnote);
 			builder.endSpan();
-			builder.characters(" ");
+			builder.characters(" "); //$NON-NLS-1$
 		}
 		if (markupLanguage.isEmptyLine(line)) {
 			setClosed(true);

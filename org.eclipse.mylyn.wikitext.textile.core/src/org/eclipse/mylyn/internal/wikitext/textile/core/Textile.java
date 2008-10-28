@@ -25,30 +25,30 @@ import org.eclipse.mylyn.wikitext.core.parser.util.MatcherAdaper;
  */
 public class Textile {
 
-	private static final String REGEX_TEXTILE_CLASS_ID = "(?:\\(([^#\\)]+)?(?:#([^\\)]+))?\\))";
+	private static final String REGEX_TEXTILE_CLASS_ID = "(?:\\(([^#\\)]+)?(?:#([^\\)]+))?\\))"; //$NON-NLS-1$
 
-	private static final String REGEX_TEXTILE_STYLE = "(?:\\{([^\\}]+)\\})";
+	private static final String REGEX_TEXTILE_STYLE = "(?:\\{([^\\}]+)\\})"; //$NON-NLS-1$
 
-	private static final String REGEX_LANGUAGE = "(?:\\[([^\\]]+)\\])";
+	private static final String REGEX_LANGUAGE = "(?:\\[([^\\]]+)\\])"; //$NON-NLS-1$
 
-	public static final String REGEX_ATTRIBUTES = "(?:" + REGEX_TEXTILE_CLASS_ID + "|" + REGEX_TEXTILE_STYLE + "|"
-			+ REGEX_LANGUAGE + "){0,3}";
+	public static final String REGEX_ATTRIBUTES = "(?:" + REGEX_TEXTILE_CLASS_ID + "|" + REGEX_TEXTILE_STYLE + "|" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			+ REGEX_LANGUAGE + "){0,3}"; //$NON-NLS-1$
 
-	public static final String REGEX_BLOCK_ATTRIBUTES = "(\\(+)?(\\)+)?(\\<|\\>|\\=|\\<\\>)?" + REGEX_ATTRIBUTES;
+	public static final String REGEX_BLOCK_ATTRIBUTES = "(\\(+)?(\\)+)?(\\<|\\>|\\=|\\<\\>)?" + REGEX_ATTRIBUTES; //$NON-NLS-1$
 
 	public static final int ATTRIBUTES_GROUP_COUNT = 4;
 
 	public static final int ATTRIBUTES_BLOCK_GROUP_COUNT = 7;
 
-	private static final Pattern explicitBlockBeginPattern = Pattern.compile("(((h[1-6])|p|pre|bc|bq|table)|(fn([0-9]{1,2})))"
-			+ REGEX_ATTRIBUTES + "\\.\\.?\\s+.*");
+	private static final Pattern explicitBlockBeginPattern = Pattern.compile("(((h[1-6])|p|pre|bc|bq|table)|(fn([0-9]{1,2})))" //$NON-NLS-1$
+			+ REGEX_ATTRIBUTES + "\\.\\.?\\s+.*"); //$NON-NLS-1$
 
 	private static final Map<String, String> alignmentToStyle = new HashMap<String, String>();
 	static {
-		alignmentToStyle.put("<", "text-align: left;");
-		alignmentToStyle.put(">", "text-align: right;");
-		alignmentToStyle.put("=", "text-align: center;");
-		alignmentToStyle.put("<>", "text-align: justify;");
+		alignmentToStyle.put("<", "text-align: left;"); //$NON-NLS-1$ //$NON-NLS-2$
+		alignmentToStyle.put(">", "text-align: right;"); //$NON-NLS-1$ //$NON-NLS-2$
+		alignmentToStyle.put("=", "text-align: center;"); //$NON-NLS-1$ //$NON-NLS-2$
+		alignmentToStyle.put("<>", "text-align: justify;"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static Attributes configureAttributes(Attributes attributes, Matcher matcher, int offset, boolean block) {
@@ -63,10 +63,10 @@ public class Textile {
 		if (styles == null) {
 			attributes.setCssStyle(cssStyles);
 		} else {
-			if (styles.endsWith(";")) {
-				styles += " ";
+			if (styles.endsWith(";")) { //$NON-NLS-1$
+				styles += " "; //$NON-NLS-1$
 			} else {
-				styles += "; ";
+				styles += "; "; //$NON-NLS-1$
 			}
 			styles += cssStyles;
 			attributes.setCssStyle(styles);
@@ -83,7 +83,7 @@ public class Textile {
 			{
 				String padding = matcher.group(offset);
 				if (padding != null) {
-					appendStyles(attributes, "padding-left: " + padding.length() + "em;");
+					appendStyles(attributes, "padding-left: " + padding.length() + "em;"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				++offset;
 			}
@@ -92,7 +92,7 @@ public class Textile {
 			{
 				String padding = matcher.group(offset);
 				if (padding != null) {
-					appendStyles(attributes, "padding-right: " + padding.length() + "em;");
+					appendStyles(attributes, "padding-right: " + padding.length() + "em;"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				++offset;
 			}

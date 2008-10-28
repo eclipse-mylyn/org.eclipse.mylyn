@@ -26,7 +26,7 @@ public class IdGenerator {
 
 	public String newId(String type, String text) {
 		if (type == null) {
-			type = "";
+			type = ""; //$NON-NLS-1$
 		}
 		Integer current = idGenerators.get(type);
 		if (current == null) {
@@ -54,7 +54,7 @@ public class IdGenerator {
 	}
 
 	private String convertToAnchor(String text) {
-		String anchor = text.replaceAll("[^a-zA-Z0-9]", "");
+		String anchor = text.replaceAll("[^a-zA-Z0-9]", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		if (anchor.length() > 0 && Character.isDigit(anchor.charAt(0))) {
 			anchor = 'a' + anchor;
 		}

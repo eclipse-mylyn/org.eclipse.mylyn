@@ -71,17 +71,17 @@ public class TracWikiLanguage extends MarkupLanguage {
 		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this one must be last!!
 	}
 	static {
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!'
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); // always starts at the start of a line or after a non-word character excluding '!' //$NON-NLS-1$
 		phraseModifierSyntax.add(new EscapePhraseModifier());
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC },
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
 				true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.UNDERLINED, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("--", SpanType.DELETED, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier(",,", SpanType.SUBSCRIPT, true));
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("__", SpanType.UNDERLINED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("--", SpanType.DELETED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier(",,", SpanType.SUBSCRIPT, true)); //$NON-NLS-1$
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 
 		tokenSyntax.add(new BangEscapeToken());
 		tokenSyntax.add(new LineBreakToken());
@@ -91,7 +91,7 @@ public class TracWikiLanguage extends MarkupLanguage {
 	}
 
 	public TracWikiLanguage() {
-		setName("TracWiki");
+		setName("TracWiki"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class TracWikiLanguage extends MarkupLanguage {
 	 */
 	public String toInternalHref(String pageName) {
 		String pageId = pageName;
-		if (pageId.startsWith("#")) {
+		if (pageId.startsWith("#")) { //$NON-NLS-1$
 			// internal anchor
 			return pageId;
 		}

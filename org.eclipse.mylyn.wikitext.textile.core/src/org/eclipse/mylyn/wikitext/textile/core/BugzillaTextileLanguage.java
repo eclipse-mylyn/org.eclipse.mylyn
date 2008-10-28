@@ -35,7 +35,7 @@ public class BugzillaTextileLanguage extends TextileLanguage {
 
 	public BugzillaTextileLanguage() {
 		setExtendsLanguage(getName());
-		setName("Textile (Bugzilla Dialect)");
+		setName("Textile (Bugzilla Dialect)"); //$NON-NLS-1$
 	}
 
 	@Override

@@ -33,8 +33,8 @@ public class QuoteBlock extends Block {
 
 	private static final int EXTENDED_GROUP = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 1;
 
-	static final Pattern startPattern = Pattern.compile("bq" + Textile.REGEX_BLOCK_ATTRIBUTES
-			+ "\\.(\\.)?(?::(https?://[^\\s]*))?\\s+(.*)");
+	static final Pattern startPattern = Pattern.compile("bq" + Textile.REGEX_BLOCK_ATTRIBUTES //$NON-NLS-1$
+			+ "\\.(\\.)?(?::(https?://[^\\s]*))?\\s+(.*)"); //$NON-NLS-1$
 
 	private boolean extended;
 

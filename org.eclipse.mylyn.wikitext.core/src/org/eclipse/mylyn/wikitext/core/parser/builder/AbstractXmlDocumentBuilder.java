@@ -24,7 +24,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * @author David Green
  */
 public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
-	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*");
+	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*"); //$NON-NLS-1$
 
 	protected final XmlStreamWriter writer;
 
@@ -58,11 +58,11 @@ public abstract class AbstractXmlDocumentBuilder extends DocumentBuilder {
 		if (ABSOLUTE_URL_PATTERN.matcher(url).matches()) {
 			return url;
 		}
-		if (url.startsWith("#")) {
+		if (url.startsWith("#")) { //$NON-NLS-1$
 			return url;
 		}
 		String absoluteUrl = base.toString();
-		if (!absoluteUrl.endsWith("/") && !url.startsWith("/")) {
+		if (!absoluteUrl.endsWith("/") && !url.startsWith("/")) { //$NON-NLS-1$ //$NON-NLS-2$
 			absoluteUrl = absoluteUrl + '/';
 		}
 		absoluteUrl = absoluteUrl + url;

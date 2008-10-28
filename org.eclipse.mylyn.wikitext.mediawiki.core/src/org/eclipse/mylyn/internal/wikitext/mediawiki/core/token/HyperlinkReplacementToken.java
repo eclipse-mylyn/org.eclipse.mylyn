@@ -22,7 +22,7 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:(\"|\\!)([^\"]+)\\" + (1 + groupOffset) + ":([^\\s]+))";
+		return "(?:(\"|\\!)([^\"]+)\\" + (1 + groupOffset) + ":([^\\s]+))"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 			String hyperlinkSrc = group(2);
 			String href = group(3);
 
-			if (hyperlinkBoundaryText.equals("\"")) {
+			if (hyperlinkBoundaryText.equals("\"")) { //$NON-NLS-1$
 				builder.link(href, hyperlinkSrc);
 			} else {
 				builder.imageLink(href, hyperlinkSrc);

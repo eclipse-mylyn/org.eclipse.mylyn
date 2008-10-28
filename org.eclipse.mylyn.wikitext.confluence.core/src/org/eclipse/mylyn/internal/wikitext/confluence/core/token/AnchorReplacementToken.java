@@ -24,7 +24,7 @@ public class AnchorReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "\\{anchor:([^\\}]+)\\}";
+		return "\\{anchor:([^\\}]+)\\}"; //$NON-NLS-1$
 	}
 
 	@Override

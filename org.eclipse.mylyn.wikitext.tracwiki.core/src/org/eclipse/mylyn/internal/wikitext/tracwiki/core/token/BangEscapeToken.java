@@ -25,7 +25,7 @@ public class BangEscapeToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "!(['\\}\\{\\^,_\\-])";
+		return "!(['\\}\\{\\^,_\\-])"; //$NON-NLS-1$
 	}
 
 	@Override

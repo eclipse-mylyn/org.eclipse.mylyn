@@ -22,7 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * @author David Green
  */
 public class BugzillaGeneratedCommentBlock extends Block {
-	private static Pattern pattern = Pattern.compile("\\s*\\*\\*\\*\\s+((This bug has been)|(Bug \\d+ has been)).*?\\*\\*\\*\\s*");
+	private static Pattern pattern = Pattern.compile("\\s*\\*\\*\\*\\s+((This bug has been)|(Bug \\d+ has been)).*?\\*\\*\\*\\s*"); //$NON-NLS-1$
 
 	@Override
 	public boolean canStart(String line, int lineOffset) {
@@ -35,7 +35,7 @@ public class BugzillaGeneratedCommentBlock extends Block {
 	@Override
 	protected int processLineContent(String line, int offset) {
 		Attributes attributes = new Attributes();
-		attributes.setCssStyle("color: Blue;");// FIXME: hard-coded color?
+		attributes.setCssStyle("color: Blue;");// FIXME: hard-coded color? //$NON-NLS-1$
 		builder.beginBlock(BlockType.PARAGRAPH, attributes);
 		getMarkupLanguage().emitMarkupLine(getParser(), state, line, offset);
 		setClosed(true);

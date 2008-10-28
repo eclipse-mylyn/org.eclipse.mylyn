@@ -72,7 +72,7 @@ public class TextileLanguage extends MarkupLanguage {
 	}
 
 	public TextileLanguage() {
-		setName("Textile");
+		setName("Textile"); //$NON-NLS-1$
 		initializeSyntax();
 	}
 
@@ -83,20 +83,20 @@ public class TextileLanguage extends MarkupLanguage {
 	}
 
 	protected void initializeTokens() {
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new HyperlinkReplacementToken());
 		tokenSyntax.add(new FootnoteReferenceReplacementToken());
-		tokenSyntax.add(new EntityWrappingReplacementToken("\"", "#8220", "#8221"));
-		tokenSyntax.add(new EntityWrappingReplacementToken("'", "#8216", "#8217"));
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w)(')(?=\\w))", "#8217")); // apostrophe
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8212")); // emdash
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(-)(?=\\s\\w))", "#8211")); // endash
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\d\\s)(x)(?=\\s\\d))", "#215")); // mul
+		tokenSyntax.add(new EntityWrappingReplacementToken("\"", "#8220", "#8221")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		tokenSyntax.add(new EntityWrappingReplacementToken("'", "#8216", "#8217")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w)(')(?=\\w))", "#8217")); // apostrophe //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(-)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\d\\s)(x)(?=\\s\\d))", "#215")); // mul //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new AcronymReplacementToken());
 
 		addTokenExtensions(tokenSyntax);
@@ -105,21 +105,21 @@ public class TextileLanguage extends MarkupLanguage {
 	protected void initializePhraseModifiers() {
 		phraseModifierSyntax.add(new HtmlEndTagPhraseModifier(isEscapingHtml()));
 		phraseModifierSyntax.add(new HtmlStartTagPhraseModifier(isEscapingHtml()));
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0);
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
 		phraseModifierSyntax.add(new EscapeTextilePhraseModifier());
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**", SpanType.BOLD, true));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("??", SpanType.CITATION, true));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("__", SpanType.ITALIC, true));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("_", SpanType.EMPHASIS, true));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("*", SpanType.STRONG, true));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("+", SpanType.INSERTED, true));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("~", SpanType.SUBSCRIPT, false));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("^", SpanType.SUPERSCRIPT, false));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("@", SpanType.CODE, false));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("%", SpanType.SPAN, true));
-		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("-", SpanType.DELETED, true));
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("**", SpanType.BOLD, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("??", SpanType.CITATION, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("__", SpanType.ITALIC, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("_", SpanType.EMPHASIS, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("+", SpanType.INSERTED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("~", SpanType.SUBSCRIPT, false)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("^", SpanType.SUPERSCRIPT, false)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("@", SpanType.CODE, false)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("%", SpanType.SPAN, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleTextilePhraseModifier("-", SpanType.DELETED, true)); //$NON-NLS-1$
 		phraseModifierSyntax.add(new ImageTextilePhraseModifier());
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 
 		addPhraseModifierExtensions(phraseModifierSyntax);
 	}

@@ -60,7 +60,7 @@ public class OutlineParser {
 	}
 
 	public OutlineItem createRootItem() {
-		return createOutlineItem(null, 0, "<root>", -1, 0, "<root>");
+		return createOutlineItem(null, 0, "<root>", -1, 0, "<root>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public OutlineItem parse(OutlineItem root, String markup) {
@@ -182,13 +182,13 @@ public class OutlineParser {
 				String label = buf.toString();
 				String fullLabelText = label;
 				if (label == null) {
-					label = "";
+					label = ""; //$NON-NLS-1$
 				} else {
 					if (labelMaxLength > 0 && label.length() > labelMaxLength) {
-						label = label.substring(0, labelMaxLength) + "...";
+						label = label.substring(0, labelMaxLength) + "..."; //$NON-NLS-1$
 					}
 				}
-				String kind = "h" + level;
+				String kind = "h" + level; //$NON-NLS-1$
 
 				while (level <= currentItem.getLevel()) {
 					currentItem = currentItem.getParent();

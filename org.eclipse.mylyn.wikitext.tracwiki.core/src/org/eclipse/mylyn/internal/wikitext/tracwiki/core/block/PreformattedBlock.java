@@ -24,9 +24,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class PreformattedBlock extends Block {
 
-	private static final Pattern startPattern = Pattern.compile("\\{\\{\\{(.*)");
+	private static final Pattern startPattern = Pattern.compile("\\{\\{\\{(.*)"); //$NON-NLS-1$
 
-	private static final Pattern endPattern = Pattern.compile("\\}\\}\\}(.*)");
+	private static final Pattern endPattern = Pattern.compile("\\}\\}\\}(.*)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -45,7 +45,7 @@ public class PreformattedBlock extends Block {
 			}
 		}
 		builder.characters(offset == 0 ? line : line.substring(offset));
-		builder.characters("\n");
+		builder.characters("\n"); //$NON-NLS-1$
 		return -1;
 	}
 

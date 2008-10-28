@@ -32,7 +32,7 @@ public class HtmlEndTagPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(</[a-zA-Z][a-zA-Z0-9_:-]*\\s*>)";
+		return "(</[a-zA-Z][a-zA-Z0-9_:-]*\\s*>)"; //$NON-NLS-1$
 	}
 
 	@Override

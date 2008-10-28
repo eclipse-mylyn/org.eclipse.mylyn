@@ -23,7 +23,7 @@ public class ValidationProblem implements Comparable<ValidationProblem> {
 		WARNING, ERROR
 	}
 
-	private String markerId = "org.eclipse.mylyn.wikitext.core.validation.problem";
+	private String markerId = "org.eclipse.mylyn.wikitext.core.validation.problem"; //$NON-NLS-1$
 
 	private Severity severity;
 
@@ -126,7 +126,7 @@ public class ValidationProblem implements Comparable<ValidationProblem> {
 
 	@Override
 	public String toString() {
-		return severity + "[" + offset + "," + length + "]: " + message;
+		return severity + "[" + offset + "," + length + "]: " + message; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	public int compareTo(ValidationProblem o2) {

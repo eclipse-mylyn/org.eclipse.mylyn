@@ -25,9 +25,9 @@ public class EscapeTextilePhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		String quotedDelimiter = Pattern.quote("==");
+		String quotedDelimiter = Pattern.quote("=="); //$NON-NLS-1$
 
-		return quotedDelimiter + "(\\S(?:.*?\\S)?)" + // content
+		return quotedDelimiter + "(\\S(?:.*?\\S)?)" + // content //$NON-NLS-1$
 				quotedDelimiter;
 	}
 

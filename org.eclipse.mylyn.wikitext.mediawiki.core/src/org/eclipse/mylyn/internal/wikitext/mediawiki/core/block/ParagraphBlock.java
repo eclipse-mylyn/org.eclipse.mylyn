@@ -84,7 +84,7 @@ public class ParagraphBlock extends Block {
 			}
 			if (blockLineCount != 1) {
 				// note: newlines don't automatically convert to line breaks
-				builder.characters("\n");
+				builder.characters("\n"); //$NON-NLS-1$
 			}
 			dialect.emitMarkupLine(getParser(), state, line, offset);
 		}

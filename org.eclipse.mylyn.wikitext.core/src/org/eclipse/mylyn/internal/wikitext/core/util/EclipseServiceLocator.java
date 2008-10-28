@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.core.util;
 
+import java.text.MessageFormat;
 import java.util.TreeSet;
 
 import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
@@ -43,16 +44,15 @@ public class EclipseServiceLocator extends ServiceLocator {
 				StringBuilder buf = new StringBuilder();
 				for (String name : new TreeSet<String>(WikiTextPlugin.getDefault().getMarkupLanguageNames())) {
 					if (buf.length() != 0) {
-						buf.append(", ");
+						buf.append(", "); //$NON-NLS-1$
 					}
 					buf.append('\'');
 					buf.append(name);
 					buf.append('\'');
 				}
-				throw new IllegalArgumentException(String.format("No parser available for markup language '%s'. %s",
-						languageName,
-						buf.length() == 0 ? "There are no parsers available.  Check your eclipse configuration."
-								: "Known markup languages are " + buf));
+				throw new IllegalArgumentException(MessageFormat.format(Messages.getString("EclipseServiceLocator.1"), //$NON-NLS-1$
+						languageName, buf.length() == 0 ? Messages.getString("EclipseServiceLocator.2") //$NON-NLS-1$
+								: MessageFormat.format(Messages.getString("EclipseServiceLocator.3"), buf))); //$NON-NLS-1$
 			}
 		}
 		return markupLanguage;

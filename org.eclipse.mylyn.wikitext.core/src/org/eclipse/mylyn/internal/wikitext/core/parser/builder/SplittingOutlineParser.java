@@ -51,7 +51,7 @@ public class SplittingOutlineParser extends OutlineParser {
 			if (firstChild.getSplitTarget() == null || firstChild.getSplitTarget().equals(rootItem.getSplitTarget())) {
 				rootItem.setLabel(firstChild.getLabel());
 			} else {
-				rootItem.setLabel("");
+				rootItem.setLabel(""); //$NON-NLS-1$
 			}
 		}
 		return rootItem;

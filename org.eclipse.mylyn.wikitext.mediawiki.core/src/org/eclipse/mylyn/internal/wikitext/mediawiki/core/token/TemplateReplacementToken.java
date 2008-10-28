@@ -25,15 +25,15 @@ public class TemplateReplacementToken extends PatternBasedElement {
 
 	private static Map<String, Class<? extends PatternBasedElementProcessor>> processorByTemplate = new HashMap<String, Class<? extends PatternBasedElementProcessor>>();
 	static {
-		processorByTemplate.put("endash", EndashElementProcessor.class);
-		processorByTemplate.put("ndash", EndashElementProcessor.class);
-		processorByTemplate.put("mdash", EmdashElementProcessor.class);
-		processorByTemplate.put("emdash", EmdashElementProcessor.class);
+		processorByTemplate.put("endash", EndashElementProcessor.class); //$NON-NLS-1$
+		processorByTemplate.put("ndash", EndashElementProcessor.class); //$NON-NLS-1$
+		processorByTemplate.put("mdash", EmdashElementProcessor.class); //$NON-NLS-1$
+		processorByTemplate.put("emdash", EmdashElementProcessor.class); //$NON-NLS-1$
 	}
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(\\{\\{([^\\s]+)\\}\\})";
+		return "(\\{\\{([^\\s]+)\\}\\})"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -73,18 +73,18 @@ public class TemplateReplacementToken extends PatternBasedElement {
 	public static class EndashElementProcessor extends PatternBasedElementProcessor {
 		@Override
 		public void emit() {
-			getBuilder().entityReference("nbsp");
-			getBuilder().entityReference("ndash");
-			getBuilder().characters(" ");
+			getBuilder().entityReference("nbsp"); //$NON-NLS-1$
+			getBuilder().entityReference("ndash"); //$NON-NLS-1$
+			getBuilder().characters(" "); //$NON-NLS-1$
 		}
 	}
 
 	public static class EmdashElementProcessor extends PatternBasedElementProcessor {
 		@Override
 		public void emit() {
-			getBuilder().entityReference("nbsp");
-			getBuilder().entityReference("mdash");
-			getBuilder().characters(" ");
+			getBuilder().entityReference("nbsp"); //$NON-NLS-1$
+			getBuilder().entityReference("mdash"); //$NON-NLS-1$
+			getBuilder().characters(" "); //$NON-NLS-1$
 		}
 	}
 }

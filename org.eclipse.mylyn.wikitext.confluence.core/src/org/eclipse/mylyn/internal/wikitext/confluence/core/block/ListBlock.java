@@ -27,7 +27,7 @@ public class ListBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = 2;
 
-	static final Pattern startPattern = Pattern.compile("((?:(?:\\*)|(?:#)|(?:-))+)\\s(.*+)");
+	static final Pattern startPattern = Pattern.compile("((?:(?:\\*)|(?:#)|(?:-))+)\\s(.*+)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -47,8 +47,8 @@ public class ListBlock extends Block {
 			int level = calculateLevel(listSpec);
 			BlockType type = calculateType(listSpec);
 
-			if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) {
-				attributes.setCssStyle("list-style: square");
+			if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) { //$NON-NLS-1$
+				attributes.setCssStyle("list-style: square"); //$NON-NLS-1$
 			}
 
 			// 0-offset matches may start with the "*** " prefix.
@@ -96,8 +96,8 @@ public class ListBlock extends Block {
 				}
 
 				Attributes blockAttributes = new Attributes();
-				if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) {
-					blockAttributes.setCssStyle("list-style: square");
+				if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) { //$NON-NLS-1$
+					blockAttributes.setCssStyle("list-style: square"); //$NON-NLS-1$
 				}
 				listState.push(new ListState(previousState.level + 1, type));
 				builder.beginBlock(type, blockAttributes);
@@ -105,8 +105,8 @@ public class ListBlock extends Block {
 				closeOne();
 				if (listState.isEmpty()) {
 					Attributes blockAttributes = new Attributes();
-					if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) {
-						blockAttributes.setCssStyle("list-style: square");
+					if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) { //$NON-NLS-1$
+						blockAttributes.setCssStyle("list-style: square"); //$NON-NLS-1$
 					}
 
 					listState.push(new ListState(1, type));

@@ -73,8 +73,8 @@ public class SimpleWrappedPhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return Pattern.quote(startDelimiter) + "([^\\s-](?:.*?[^\\s-])?)(?:(?<=[^!])" + // content: note that we dont allow preceding '-' or trailing '-' to avoid conflict with strikethrough and emdash
-				Pattern.quote(endDelimiter) + ")";
+		return Pattern.quote(startDelimiter) + "([^\\s-](?:.*?[^\\s-])?)(?:(?<=[^!])" + // content: note that we dont allow preceding '-' or trailing '-' to avoid conflict with strikethrough and emdash //$NON-NLS-1$
+				Pattern.quote(endDelimiter) + ")"; //$NON-NLS-1$
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.TreeSet;
@@ -29,7 +30,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  */
 public class ServiceLocator {
 
-	private static final String UTF_8 = "utf-8";
+	private static final String UTF_8 = "utf-8"; //$NON-NLS-1$
 
 	protected final ClassLoader classLoader;
 
@@ -72,13 +73,13 @@ public class ServiceLocator {
 		if (languageName == null) {
 			throw new IllegalArgumentException();
 		}
-		Pattern classNamePattern = Pattern.compile("\\s*([^\\s#]+)?#?.*");
+		Pattern classNamePattern = Pattern.compile("\\s*([^\\s#]+)?#?.*"); //$NON-NLS-1$
 		// first try Java services (jar-based)
 		Set<String> names = new TreeSet<String>();
 		try {
 			// note that we can't use the standard Java services API to load services here since the service may be declared on 
 			// a specific class loader (not the system class loader).
-			String servicesFilename = "META-INF/services/" + MarkupLanguage.class.getName();
+			String servicesFilename = "META-INF/services/" + MarkupLanguage.class.getName(); //$NON-NLS-1$
 			Enumeration<URL> resources = classLoader.getResources(servicesFilename);
 			while (resources.hasMoreElements()) {
 				URL url = resources.nextElement();
@@ -138,18 +139,15 @@ public class ServiceLocator {
 		StringBuilder buf = new StringBuilder();
 		for (String name : names) {
 			if (buf.length() != 0) {
-				buf.append(", ");
+				buf.append(", "); //$NON-NLS-1$
 			}
 			buf.append('\'');
 			buf.append(name);
 			buf.append('\'');
 		}
-		throw new IllegalArgumentException(
-				String.format(
-						"No parser available for markup language '%s'. %s",
-						languageName,
-						buf.length() == 0 ? "There are no markup language parsers available on the current classpath.  Did you forget to add a jar file?"
-								: "Known markup languages are " + buf));
+		throw new IllegalArgumentException(MessageFormat.format(Messages.getString("ServiceLocator.4"), //$NON-NLS-1$
+				languageName, buf.length() == 0 ? Messages.getString("ServiceLocator.5") //$NON-NLS-1$
+						: Messages.getString("ServiceLocator.6") + buf)); //$NON-NLS-1$
 	}
 
 	public static void setImplementation(Class<? extends ServiceLocator> implementationClass) {

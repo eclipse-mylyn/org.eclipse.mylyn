@@ -24,12 +24,12 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  */
 public class LinkReplacementToken extends PatternBasedElement {
 
-	private static final Pattern replacementPattern = Pattern.compile("\\W");
-	private static final Pattern wordBoundaryPattern = Pattern.compile("\\W\\w");
+	private static final Pattern replacementPattern = Pattern.compile("\\W"); //$NON-NLS-1$
+	private static final Pattern wordBoundaryPattern = Pattern.compile("\\W\\w"); //$NON-NLS-1$
 	
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(!)?(\\[\\[([^\\]]+)(?:(\\]\\[)(.*))?\\]\\])";
+		return "(!)?(\\[\\[([^\\]]+)(?:(\\]\\[)(.*))?\\]\\])"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -58,21 +58,21 @@ public class LinkReplacementToken extends PatternBasedElement {
 				boolean looksLikeEmail = link.indexOf('@') != -1;
 				if (link.indexOf('/') != -1 || link.indexOf('#') != -1 || looksLikeEmail) {
 					if (looksLikeEmail) {
-						text = text.replaceFirst("\\s*mailto:","");
+						text = text.replaceFirst("\\s*mailto:",""); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					// url link
 					builder.link(link, text);
 				} else {
 					// wiki link
 					link = camelCaseWordBoundaries(link);
-					String target = replacementPattern.matcher(link).replaceAll("");
+					String target = replacementPattern.matcher(link).replaceAll(""); //$NON-NLS-1$
 					TWikiLanguage twikiLanguage = (TWikiLanguage)markupLanguage;
 					boolean exists = twikiLanguage.computeInternalLinkExists(target);
 					
 					String internalHref = twikiLanguage.toInternalHref(target);
 					if (!exists) {
 						builder.characters(text);
-						builder.link(internalHref, "?");
+						builder.link(internalHref, "?"); //$NON-NLS-1$
 					} else {
 						builder.link(internalHref, text);
 					}

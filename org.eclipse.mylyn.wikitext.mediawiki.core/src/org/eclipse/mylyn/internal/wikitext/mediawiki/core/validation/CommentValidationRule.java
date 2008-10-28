@@ -25,7 +25,7 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
  */
 public class CommentValidationRule extends ValidationRule {
 
-	private static Pattern commentPattern = Pattern.compile("(<!-{3,}|-{3,}>)", Pattern.MULTILINE);
+	private static Pattern commentPattern = Pattern.compile("(<!-{3,}|-{3,}>)", Pattern.MULTILINE); //$NON-NLS-1$
 
 	public CommentValidationRule() {
 	}
@@ -40,7 +40,7 @@ public class CommentValidationRule extends ValidationRule {
 			int problemOffset = matcher.start();
 			int problemLength = Math.max(2, matcher.end() - problemOffset);
 			return new ValidationProblem(Severity.WARNING,
-					"Comments should start with '<!--' and end with '-->' (too many '-' characters in markup)",
+					Messages.getString("CommentValidationRule.1"), //$NON-NLS-1$
 					problemOffset, problemLength);
 		}
 		return null;

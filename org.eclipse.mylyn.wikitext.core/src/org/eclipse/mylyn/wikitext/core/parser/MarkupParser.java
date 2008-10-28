@@ -83,10 +83,10 @@ public class MarkupParser {
 
 	public void parse(String markupContent, boolean asDocument) {
 		if (markupLanguage == null) {
-			throw new IllegalStateException("markup language is not set");
+			throw new IllegalStateException("markup language is not set"); //$NON-NLS-1$
 		}
 		if (builder == null) {
-			throw new IllegalStateException("builder is not set");
+			throw new IllegalStateException("builder is not set"); //$NON-NLS-1$
 		}
 		markupLanguage.processContent(this, markupContent, asDocument);
 	}
@@ -110,7 +110,7 @@ public class MarkupParser {
 	 */
 	public String parseToHtml(String markupContent) {
 		if (builder != null) {
-			throw new IllegalStateException("Builder must not be set");
+			throw new IllegalStateException("Builder must not be set"); //$NON-NLS-1$
 		}
 
 		StringWriter out = new StringWriter();

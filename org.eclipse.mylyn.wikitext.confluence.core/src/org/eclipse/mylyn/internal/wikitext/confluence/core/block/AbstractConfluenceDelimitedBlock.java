@@ -24,8 +24,8 @@ public abstract class AbstractConfluenceDelimitedBlock extends ParameterizedBloc
 	private Matcher matcher;
 
 	public AbstractConfluenceDelimitedBlock(String blockName) {
-		startPattern = Pattern.compile("\\s*\\{" + blockName + "(?::([^\\}]*))?\\}(.*)");
-		endPattern = Pattern.compile("\\s*(\\{" + blockName + "\\})(.*)");
+		startPattern = Pattern.compile("\\s*\\{" + blockName + "(?::([^\\}]*))?\\}(.*)"); //$NON-NLS-1$ //$NON-NLS-2$
+		endPattern = Pattern.compile("\\s*(\\{" + blockName + "\\})(.*)"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

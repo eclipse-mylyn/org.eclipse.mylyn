@@ -25,7 +25,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class QuoteBlock extends Block {
 
-	static final Pattern startPattern = Pattern.compile("bq\\.\\s+(.*)");
+	static final Pattern startPattern = Pattern.compile("bq\\.\\s+(.*)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 

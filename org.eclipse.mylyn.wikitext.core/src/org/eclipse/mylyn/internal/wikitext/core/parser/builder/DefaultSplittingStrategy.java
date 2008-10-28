@@ -58,13 +58,13 @@ public class DefaultSplittingStrategy extends SplittingStrategy {
 		String candidate = null;
 		if (candidate == null) {
 			if (label != null && label.length() > 0) {
-				candidate = label.replaceAll("[^a-zA-Z0-9]+", "-");
+				candidate = label.replaceAll("[^a-zA-Z0-9]+", "-"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (candidate == null || candidate.length() == 0) {
 				if (id != null) {
 					candidate = id;
 				} else {
-					candidate = "h" + headingLevel + "p" + headingCount;
+					candidate = "h" + headingLevel + "p" + headingCount; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -73,7 +73,7 @@ public class DefaultSplittingStrategy extends SplittingStrategy {
 		while (!targets.add(computedTarget)) {
 			computedTarget = candidate + (++seed);
 		}
-		return computedTarget + ".html";
+		return computedTarget + ".html"; //$NON-NLS-1$
 	}
 
 	@Override

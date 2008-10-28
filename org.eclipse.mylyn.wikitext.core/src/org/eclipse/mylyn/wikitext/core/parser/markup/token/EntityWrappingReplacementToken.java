@@ -37,8 +37,8 @@ public class EntityWrappingReplacementToken extends PatternBasedElement {
 
 	@Override
 	public String getPattern(int groupOffset) {
-		String quoted = Character.isLetterOrDigit(delimiter.charAt(0)) ? delimiter : "\\" + delimiter;
-		return "(?:(?:(?<=\\W)|^)" + quoted + "([^" + quoted + "]+)" + quoted + "(?=\\W))";
+		String quoted = Character.isLetterOrDigit(delimiter.charAt(0)) ? delimiter : "\\" + delimiter; //$NON-NLS-1$
+		return "(?:(?:(?<=\\W)|^)" + quoted + "([^" + quoted + "]+)" + quoted + "(?=\\W))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	@Override

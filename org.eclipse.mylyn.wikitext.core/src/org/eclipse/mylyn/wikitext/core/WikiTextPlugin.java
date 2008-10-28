@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,9 +39,9 @@ import org.osgi.framework.BundleContext;
  */
 public class WikiTextPlugin extends Plugin {
 
-	private static final String EXTENSION_MARKUP_LANGUAGE = "markupLanguage";
+	private static final String EXTENSION_MARKUP_LANGUAGE = "markupLanguage"; //$NON-NLS-1$
 
-	private static final String EXTENSION_VALIDATION_RULES = "markupValidationRule";
+	private static final String EXTENSION_VALIDATION_RULES = "markupValidationRule"; //$NON-NLS-1$
 
 	private static WikiTextPlugin plugin;
 
@@ -102,7 +103,7 @@ public class WikiTextPlugin extends Plugin {
 			language.setExtendsLanguage(languageExtensionByLanguage.get(name));
 			return language;
 		} catch (Exception e) {
-			log(IStatus.ERROR, String.format("Cannot instantiate markup language '%' (class '%s'): %s", name,
+			log(IStatus.ERROR, MessageFormat.format(Messages.getString("WikiTextPlugin.2"), name, //$NON-NLS-1$
 					languageClass.getName(), e.getMessage()), e);
 		}
 		return null;
@@ -185,23 +186,25 @@ public class WikiTextPlugin extends Plugin {
 					IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 					for (IConfigurationElement element : configurationElements) {
 						try {
-							String markupLanguage = element.getAttribute("markupLanguage");
+							String markupLanguage = element.getAttribute("markupLanguage"); //$NON-NLS-1$
 							if (markupLanguage == null || markupLanguage.length() == 0) {
-								throw new Exception("Must specify markupLanguage");
+								throw new Exception(Messages.getString("WikiTextPlugin.4")); //$NON-NLS-1$
 							}
 							if (!languageByName.containsKey(markupLanguage)) {
-								throw new Exception(String.format("'%s' is not a valid markupLanguage", languageByName));
+								throw new Exception(MessageFormat.format(
+										Messages.getString("WikiTextPlugin.5"), languageByName)); //$NON-NLS-1$
 							}
 							Object extension;
 							try {
-								extension = element.createExecutableExtension("class");
+								extension = element.createExecutableExtension("class"); //$NON-NLS-1$
 							} catch (CoreException e) {
 								getLog().log(e.getStatus());
 								continue;
 							}
 							if (!(extension instanceof ValidationRule)) {
-								throw new Exception(String.format("%s is not a validation rule", extension.getClass()
-										.getName()));
+								throw new Exception(MessageFormat.format(
+										Messages.getString("WikiTextPlugin.7"), extension.getClass() //$NON-NLS-1$
+												.getName()));
 							}
 							ValidationRules rules = validationRulesByLanguageName.get(markupLanguage);
 							if (rules == null) {
@@ -210,7 +213,8 @@ public class WikiTextPlugin extends Plugin {
 							}
 							rules.addValidationRule((ValidationRule) extension);
 						} catch (Exception e) {
-							log(IStatus.ERROR, String.format("Plugin '%s' extension '%s' invalid: %s",
+							log(IStatus.ERROR, MessageFormat.format(
+									Messages.getString("WikiTextPlugin.8"), //$NON-NLS-1$
 									element.getDeclaringExtension().getContributor().getName(),
 									EXTENSION_VALIDATION_RULES, e.getMessage()), e);
 						}
@@ -256,37 +260,35 @@ public class WikiTextPlugin extends Plugin {
 				if (extensionPoint != null) {
 					IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 					for (IConfigurationElement element : configurationElements) {
-						String name = element.getAttribute("name");
+						String name = element.getAttribute("name"); //$NON-NLS-1$
 						if (name == null || name.length() == 0) {
-							log(IStatus.ERROR, String.format(EXTENSION_MARKUP_LANGUAGE
-									+ "/@name must be specified by plugin '%s'", element.getDeclaringExtension()
+							log(IStatus.ERROR, MessageFormat.format(EXTENSION_MARKUP_LANGUAGE
+									+ Messages.getString("WikiTextPlugin.10"), element.getDeclaringExtension() //$NON-NLS-1$
 									.getContributor()
 									.getName()));
 							continue;
 						}
-						String extendsLanguage = element.getAttribute("extends");
+						String extendsLanguage = element.getAttribute("extends"); //$NON-NLS-1$
 						Object markupLanguage;
 						try {
-							markupLanguage = element.createExecutableExtension("class");
+							markupLanguage = element.createExecutableExtension("class"); //$NON-NLS-1$
 						} catch (CoreException e) {
 							getLog().log(e.getStatus());
 							continue;
 						}
 						if (!(markupLanguage instanceof MarkupLanguage)) {
-							log(IStatus.ERROR, String.format("%s is not a markup language", markupLanguage.getClass()
-									.getName()));
+							log(IStatus.ERROR, MessageFormat.format(
+									Messages.getString("WikiTextPlugin.13"), markupLanguage.getClass() //$NON-NLS-1$
+											.getName()));
 							continue;
 						}
 						MarkupLanguage d = (MarkupLanguage) markupLanguage;
 						{
 							Class<? extends MarkupLanguage> previous = markupLanguageByName.put(name, d.getClass());
 							if (previous != null) {
-								log(
-										IStatus.ERROR,
-										String.format(
-												EXTENSION_MARKUP_LANGUAGE
-														+ "/@name '%s' specified by plugin '%s' is ignored: name '%s' is already registered",
-												name, element.getDeclaringExtension().getContributor().getName(), name));
+								log(IStatus.ERROR, MessageFormat.format(EXTENSION_MARKUP_LANGUAGE
+										+ Messages.getString("WikiTextPlugin.14"), //$NON-NLS-1$
+										name, element.getDeclaringExtension().getContributor().getName(), name));
 								markupLanguageByName.put(name, previous);
 								continue;
 							}
@@ -294,22 +296,17 @@ public class WikiTextPlugin extends Plugin {
 						if (extendsLanguage != null) {
 							languageExtensionByLanguage.put(name, extendsLanguage);
 						}
-						String fileExtensions = element.getAttribute("fileExtensions");
+						String fileExtensions = element.getAttribute("fileExtensions"); //$NON-NLS-1$
 						if (fileExtensions != null) {
-							String[] parts = fileExtensions.split("\\s*,\\s*");
+							String[] parts = fileExtensions.split("\\s*,\\s*"); //$NON-NLS-1$
 							for (String part : parts) {
 								if (part.length() != 0) {
 									Class<? extends MarkupLanguage> previous = languageByFileExtension.put(part,
 											d.getClass());
 									if (previous != null) {
-										log(
-												IStatus.ERROR,
-												String.format(
-														EXTENSION_MARKUP_LANGUAGE
-																+ "/@fileExtensions '%s' specified by plugin '%s' is ignored: extension '%s' is already registered",
-														part, element.getDeclaringExtension()
-																.getContributor()
-																.getName(), part));
+										log(IStatus.ERROR, MessageFormat.format(EXTENSION_MARKUP_LANGUAGE
+												+ Messages.getString("WikiTextPlugin.17"), //$NON-NLS-1$
+												part, element.getDeclaringExtension().getContributor().getName(), part));
 										languageByFileExtension.put(part, previous);
 										continue;
 									}

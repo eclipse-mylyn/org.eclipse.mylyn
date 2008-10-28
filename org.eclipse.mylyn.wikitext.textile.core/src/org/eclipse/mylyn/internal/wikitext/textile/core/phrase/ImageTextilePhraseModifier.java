@@ -34,10 +34,10 @@ public class ImageTextilePhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		String quotedDelimiter = Pattern.quote("!");
+		String quotedDelimiter = Pattern.quote("!"); //$NON-NLS-1$
 
-		return quotedDelimiter + Textile.REGEX_ATTRIBUTES + "(<|>|=)?(\\S(?:.*?\\S)?)(\\([^\\)]+\\))?" + // content
-				quotedDelimiter + "(:([^\\s]*[^\\s!.)(,]))?"; // optional hyperlink suffix
+		return quotedDelimiter + Textile.REGEX_ATTRIBUTES + "(<|>|=)?(\\S(?:.*?\\S)?)(\\([^\\)]+\\))?" + // content //$NON-NLS-1$
+				quotedDelimiter + "(:([^\\s]*[^\\s!.)(,]))?"; // optional hyperlink suffix //$NON-NLS-1$
 	}
 
 	@Override
@@ -66,11 +66,11 @@ public class ImageTextilePhraseModifier extends PatternBasedElement {
 			attributes.setTitle(altAndTitle);
 			attributes.setAlt(altAndTitle);
 			if (alignment != null) {
-				if ("<".equals(alignment)) {
+				if ("<".equals(alignment)) { //$NON-NLS-1$
 					attributes.setAlign(Align.Left);
-				} else if (">".equals(alignment)) {
+				} else if (">".equals(alignment)) { //$NON-NLS-1$
 					attributes.setAlign(Align.Right);
-				} else if ("=".equals(alignment)) {
+				} else if ("=".equals(alignment)) { //$NON-NLS-1$
 					attributes.setAlign(Align.Center);
 				}
 			}

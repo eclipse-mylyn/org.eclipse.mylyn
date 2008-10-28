@@ -23,9 +23,9 @@ public abstract class ParameterizedBlock extends Block {
 		if (options == null) {
 			return;
 		}
-		String[] opts = options.split("\\s*\\|\\s*");
+		String[] opts = options.split("\\s*\\|\\s*"); //$NON-NLS-1$
 		for (String optionPair : opts) {
-			String[] keyValue = optionPair.split("\\s*=\\s*");
+			String[] keyValue = optionPair.split("\\s*=\\s*"); //$NON-NLS-1$
 			if (keyValue.length == 2) {
 				String key = keyValue[0].trim();
 				String value = keyValue[1].trim();

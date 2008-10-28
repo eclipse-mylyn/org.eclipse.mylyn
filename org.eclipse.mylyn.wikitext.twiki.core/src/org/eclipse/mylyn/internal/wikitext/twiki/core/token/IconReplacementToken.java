@@ -27,7 +27,7 @@ public class IconReplacementToken extends PatternBasedElement {
 	
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "%ICON\\{\"([a-zA-Z]+)\"\\}%";
+		return "%ICON\\{\"([a-zA-Z]+)\"\\}%"; //$NON-NLS-1$
 	}
 
 	@Override

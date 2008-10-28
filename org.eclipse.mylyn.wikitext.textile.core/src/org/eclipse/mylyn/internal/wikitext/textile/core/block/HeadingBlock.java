@@ -26,7 +26,7 @@ public class HeadingBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 2;
 
-	static final Pattern startPattern = Pattern.compile("h([1-6])" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\.\\s+(.*)");
+	static final Pattern startPattern = Pattern.compile("h([1-6])" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\.\\s+(.*)"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private int blockLineCount = 0;
 
@@ -48,7 +48,7 @@ public class HeadingBlock extends Block {
 				offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
 			}
 			if (attributes.getId() == null) {
-				attributes.setId(state.getIdGenerator().newId("h" + level, line.substring(offset)));
+				attributes.setId(state.getIdGenerator().newId("h" + level, line.substring(offset))); //$NON-NLS-1$
 			}
 			builder.beginHeading(level, attributes);
 		}
@@ -57,7 +57,7 @@ public class HeadingBlock extends Block {
 			return 0;
 		}
 		if (blockLineCount != 0) {
-			getMarkupLanguage().emitMarkupText(getParser(), state, "\n");
+			getMarkupLanguage().emitMarkupText(getParser(), state, "\n"); //$NON-NLS-1$
 		}
 		++blockLineCount;
 

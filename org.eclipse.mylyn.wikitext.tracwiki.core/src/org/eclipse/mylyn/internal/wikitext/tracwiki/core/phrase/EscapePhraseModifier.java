@@ -24,10 +24,10 @@ public class EscapePhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		String escapedContent = "(\\S(?:.*?\\S)?)";
-		return "(?:(?:`" + escapedContent + // content
-				"`)|(?:\\{\\{" + escapedContent + // content
-				"\\}\\}))";
+		String escapedContent = "(\\S(?:.*?\\S)?)"; //$NON-NLS-1$
+		return "(?:(?:`" + escapedContent + // content //$NON-NLS-1$
+				"`)|(?:\\{\\{" + escapedContent + // content //$NON-NLS-1$
+				"\\}\\}))"; //$NON-NLS-1$
 	}
 
 	@Override

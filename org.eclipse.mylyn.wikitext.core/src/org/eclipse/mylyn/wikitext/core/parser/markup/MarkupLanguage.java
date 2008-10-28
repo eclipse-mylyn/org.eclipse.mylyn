@@ -52,7 +52,7 @@ public abstract class MarkupLanguage {
 
 	private boolean blocksOnly;
 
-	protected String internalLinkPattern = "{0}";
+	protected String internalLinkPattern = "{0}"; //$NON-NLS-1$
 
 	/**
 	 * Create new state for tracking a document and its contents during a parse session. Subclasses may override this
@@ -106,7 +106,7 @@ public abstract class MarkupLanguage {
 						if (lineOffset < line.length() && lineOffset >= 0) {
 							if (currentBlock != null) {
 								throw new IllegalStateException(
-										"if a block does not fully process a line then it must be closed");
+										"if a block does not fully process a line then it must be closed"); //$NON-NLS-1$
 							}
 						} else {
 							break;
@@ -307,13 +307,13 @@ public abstract class MarkupLanguage {
 					patternBuffer.append('|');
 				}
 				groups.push(new Group());
-				patternBuffer.append("(?:");
+				patternBuffer.append("(?:"); //$NON-NLS-1$
 			} else {
 				groups.pop();
 			}
 			patternBuffer.append(regexFragment);
 			if (!beginGroup) {
-				patternBuffer.append(")");
+				patternBuffer.append(")"); //$NON-NLS-1$
 			}
 			patternGroup += size;
 		}

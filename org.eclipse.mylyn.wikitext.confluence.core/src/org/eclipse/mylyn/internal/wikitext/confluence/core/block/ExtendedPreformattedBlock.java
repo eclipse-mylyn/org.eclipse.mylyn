@@ -22,7 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 public class ExtendedPreformattedBlock extends AbstractConfluenceDelimitedBlock {
 
 	public ExtendedPreformattedBlock() {
-		super("noformat");
+		super("noformat"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class ExtendedPreformattedBlock extends AbstractConfluenceDelimitedBlock 
 		} else if (blockLineCount == 1) {
 			return;
 		}
-		builder.characters("\n");
+		builder.characters("\n"); //$NON-NLS-1$
 	}
 
 	@Override

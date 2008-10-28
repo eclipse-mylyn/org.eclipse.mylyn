@@ -27,11 +27,11 @@ import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
  */
 public class TableOfContentsBlock extends Block {
 
-	static final Pattern startPattern = Pattern.compile("\\s*\\{toc(?::([^\\}]+))?\\}\\s*");
+	static final Pattern startPattern = Pattern.compile("\\s*\\{toc(?::([^\\}]+))?\\}\\s*"); //$NON-NLS-1$
 
 	private int blockLineNumber = 0;
 
-	private String style = "none";
+	private String style = "none"; //$NON-NLS-1$
 
 	private int maxLevel = Integer.MAX_VALUE;
 
@@ -47,16 +47,16 @@ public class TableOfContentsBlock extends Block {
 		if (!getMarkupLanguage().isFilterGenerativeContents()) {
 			String options = matcher.group(1);
 			if (options != null) {
-				String[] optionPairs = options.split("\\s*\\|\\s*");
+				String[] optionPairs = options.split("\\s*\\|\\s*"); //$NON-NLS-1$
 				for (String optionPair : optionPairs) {
-					String[] keyValue = optionPair.split("\\s*=\\s*");
+					String[] keyValue = optionPair.split("\\s*=\\s*"); //$NON-NLS-1$
 					if (keyValue.length == 2) {
 						String key = keyValue[0].trim();
 						String value = keyValue[1].trim();
 
-						if (key.equals("style")) {
+						if (key.equals("style")) { //$NON-NLS-1$
 							setStyle(value);
-						} else if (key.equals("maxLevel")) {
+						} else if (key.equals("maxLevel")) { //$NON-NLS-1$
 							try {
 								maxLevel = Integer.parseInt(value);
 							} catch (NumberFormatException e) {
@@ -83,7 +83,7 @@ public class TableOfContentsBlock extends Block {
 		}
 		Attributes nullAttributes = new Attributes();
 
-		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null, null, "list-style: " + style + ";", null));
+		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null, null, "list-style: " + style + ";", null)); //$NON-NLS-1$ //$NON-NLS-2$
 		for (OutlineItem child : item.getChildren()) {
 			builder.beginBlock(BlockType.LIST_ITEM, nullAttributes);
 			builder.link('#' + child.getId(), child.getLabel());

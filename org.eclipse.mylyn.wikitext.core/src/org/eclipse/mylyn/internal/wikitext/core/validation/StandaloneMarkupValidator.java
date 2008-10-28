@@ -139,7 +139,7 @@ public class StandaloneMarkupValidator {
 	public void computeRules(String markupLanguage) {
 		// NOTE: we load plugin.xml files here directly since we assume that we're not running in an Eclipse (OSGi) container.
 		try {
-			Enumeration<URL> resources = getClassLoader().getResources("plugin.xml");
+			Enumeration<URL> resources = getClassLoader().getResources("plugin.xml"); //$NON-NLS-1$
 			while (resources.hasMoreElements()) {
 				URL url = resources.nextElement();
 				computeRules(markupLanguage, url);
@@ -169,7 +169,7 @@ public class StandaloneMarkupValidator {
 				computeRules(markupLanguage, pluginXml);
 
 			} catch (SAXException e) {
-				throw new IllegalStateException(String.format("Cannot parse file %s", url), e);
+				throw new IllegalStateException(String.format("Cannot parse file %s", url), e); //$NON-NLS-1$
 			} catch (ParserConfigurationException e) {
 				throw new IllegalStateException(e);
 			} finally {
@@ -182,15 +182,15 @@ public class StandaloneMarkupValidator {
 
 	void computeRules(String markupLanguage, Document pluginXml) {
 		for (Node child = pluginXml.getDocumentElement().getFirstChild(); child != null; child = child.getNextSibling()) {
-			if (child.getNodeType() == Node.ELEMENT_NODE && child.getLocalName().equals("extension")) {
+			if (child.getNodeType() == Node.ELEMENT_NODE && child.getLocalName().equals("extension")) { //$NON-NLS-1$
 				Element element = (Element) child;
-				String point = element.getAttribute("point");
-				if ("org.eclipse.mylyn.wikitext.core.markupValidationRule".equals(point)) {
+				String point = element.getAttribute("point"); //$NON-NLS-1$
+				if ("org.eclipse.mylyn.wikitext.core.markupValidationRule".equals(point)) { //$NON-NLS-1$
 					for (Node vrNode = child.getFirstChild(); vrNode != null; vrNode = vrNode.getNextSibling()) {
-						if (vrNode.getNodeType() == Node.ELEMENT_NODE && vrNode.getLocalName().equals("rule")) {
+						if (vrNode.getNodeType() == Node.ELEMENT_NODE && vrNode.getLocalName().equals("rule")) { //$NON-NLS-1$
 							Element rule = (Element) vrNode;
-							if (markupLanguage.equals(rule.getAttribute("markupLanguage"))) {
-								String className = rule.getAttribute("class");
+							if (markupLanguage.equals(rule.getAttribute("markupLanguage"))) { //$NON-NLS-1$
+								String className = rule.getAttribute("class"); //$NON-NLS-1$
 								try {
 									Class<?> validationRuleClass = Class.forName(className, true, getClassLoader());
 									rules.add((ValidationRule) validationRuleClass.newInstance());

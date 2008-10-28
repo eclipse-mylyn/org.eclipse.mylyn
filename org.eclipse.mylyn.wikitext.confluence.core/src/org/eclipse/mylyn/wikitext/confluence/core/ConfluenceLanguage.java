@@ -84,11 +84,11 @@ public class ConfluenceLanguage extends MarkupLanguage {
 		blocks.add(noformatBlock);
 		paragraphBreakingBlocks.add(noformatBlock);
 		// TODO: {color:red}{color}
-		blocks.add(new TextBoxBlock(BlockType.PANEL, "panel"));
-		blocks.add(new TextBoxBlock(BlockType.NOTE, "note"));
-		blocks.add(new TextBoxBlock(BlockType.INFORMATION, "info"));
-		blocks.add(new TextBoxBlock(BlockType.WARNING, "warning"));
-		blocks.add(new TextBoxBlock(BlockType.TIP, "tip"));
+		blocks.add(new TextBoxBlock(BlockType.PANEL, "panel")); //$NON-NLS-1$
+		blocks.add(new TextBoxBlock(BlockType.NOTE, "note")); //$NON-NLS-1$
+		blocks.add(new TextBoxBlock(BlockType.INFORMATION, "info")); //$NON-NLS-1$
+		blocks.add(new TextBoxBlock(BlockType.WARNING, "warning")); //$NON-NLS-1$
+		blocks.add(new TextBoxBlock(BlockType.TIP, "tip")); //$NON-NLS-1$
 		CodeBlock codeBlock = new CodeBlock();
 		blocks.add(codeBlock);
 		paragraphBreakingBlocks.add(codeBlock);
@@ -97,35 +97,35 @@ public class ConfluenceLanguage extends MarkupLanguage {
 		blocks.add(new ParagraphBlock()); // ORDER DEPENDENCY: this must come last
 	}
 	static {
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:", 0);
-		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("??", SpanType.CITATION, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("-", SpanType.DELETED, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.UNDERLINED, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, false));
-		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, false));
-		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{", "}}", SpanType.MONOSPACE, false));
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\[\\]])|^)(?:", 0); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("*", SpanType.STRONG, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("_", SpanType.EMPHASIS, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("??", SpanType.CITATION, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("-", SpanType.DELETED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("+", SpanType.UNDERLINED, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("^", SpanType.SUPERSCRIPT, false)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("~", SpanType.SUBSCRIPT, false)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimpleWrappedPhraseModifier("{{", "}}", SpanType.MONOSPACE, false)); //$NON-NLS-1$ //$NON-NLS-2$
 		phraseModifierSyntax.add(new ImagePhraseModifier());
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new HyperlinkReplacementToken());
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(---)(?=\\s\\w))", "#8212")); // emdash
-		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8211")); // endash
-		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule
-		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\\\\\\\)")); // line break
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(---)(?=\\s\\w))", "#8212")); // emdash //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternEntityReferenceReplacementToken("(?:(?<=\\w\\s)(--)(?=\\s\\w))", "#8211")); // endash //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new PatternLineBreakReplacementToken("(\\\\\\\\)")); // line break //$NON-NLS-1$
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
 		tokenSyntax.add(new AnchorReplacementToken());
 	}
 
 	public ConfluenceLanguage() {
-		setName("Confluence");
+		setName("Confluence"); //$NON-NLS-1$
 	}
 
 	@Override

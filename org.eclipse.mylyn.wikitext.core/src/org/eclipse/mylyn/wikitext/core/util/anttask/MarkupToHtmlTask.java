@@ -48,7 +48,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 public class MarkupToHtmlTask extends MarkupTask {
 	private final List<FileSet> filesets = new ArrayList<FileSet>();
 
-	protected String htmlFilenameFormat = "$1.html";
+	protected String htmlFilenameFormat = "$1.html"; //$NON-NLS-1$
 
 	protected boolean overwrite = true;
 
@@ -71,18 +71,18 @@ public class MarkupToHtmlTask extends MarkupTask {
 	@Override
 	public void execute() throws BuildException {
 		if (file == null && filesets.isEmpty()) {
-			throw new BuildException("Please add one or more source filesets or specify @file");
+			throw new BuildException(Messages.getString("MarkupToHtmlTask.1")); //$NON-NLS-1$
 		}
 		if (file != null && !filesets.isEmpty()) {
-			throw new BuildException("@file may not be specified if filesets are also specified");
+			throw new BuildException(Messages.getString("MarkupToHtmlTask.2")); //$NON-NLS-1$
 		}
 		if (file != null) {
 			if (!file.exists()) {
-				throw new BuildException(String.format("File cannot be found: %s", file));
+				throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.3"), file)); //$NON-NLS-1$
 			} else if (!file.isFile()) {
-				throw new BuildException(String.format("Not a file: %s", file));
+				throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.4"), file)); //$NON-NLS-1$
 			} else if (!file.canRead()) {
-				throw new BuildException(String.format("Cannot read file: %s", file));
+				throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.5"), file)); //$NON-NLS-1$
 			}
 		}
 
@@ -90,20 +90,20 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 		for (Stylesheet stylesheet : stylesheets) {
 			if (stylesheet.url == null && stylesheet.file == null) {
-				throw new BuildException("Must specify one of @file or @url on <stylesheet>");
+				throw new BuildException(Messages.getString("MarkupToHtmlTask.6")); //$NON-NLS-1$
 			}
 			if (stylesheet.url != null && stylesheet.file != null) {
-				throw new BuildException("May only specify one of @file or @url on <stylesheet>");
+				throw new BuildException(Messages.getString("MarkupToHtmlTask.7")); //$NON-NLS-1$
 			}
 			if (stylesheet.file != null) {
 				if (!stylesheet.file.exists()) {
-					throw new BuildException("Stylesheet file does not exist: " + stylesheet.file);
+					throw new BuildException(Messages.getString("MarkupToHtmlTask.8") + stylesheet.file); //$NON-NLS-1$
 				}
 				if (!stylesheet.file.isFile()) {
-					throw new BuildException("Referenced stylesheet is not a file: " + stylesheet.file);
+					throw new BuildException(Messages.getString("MarkupToHtmlTask.9") + stylesheet.file); //$NON-NLS-1$
 				}
 				if (!stylesheet.file.canRead()) {
-					throw new BuildException("Cannot read stylesheet: " + stylesheet.file);
+					throw new BuildException(Messages.getString("MarkupToHtmlTask.10") + stylesheet.file); //$NON-NLS-1$
 				}
 			}
 		}
@@ -126,7 +126,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 					} catch (BuildException e) {
 						throw e;
 					} catch (Exception e) {
-						throw new BuildException(String.format("Cannot process file '%s': %s", inputFile,
+						throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.11"), inputFile, //$NON-NLS-1$
 								e.getMessage()), e);
 					}
 				}
@@ -139,14 +139,14 @@ public class MarkupToHtmlTask extends MarkupTask {
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(String.format("Cannot process file '%s': %s", file, e.getMessage()), e);
+				throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.12"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
 
 	private void testForOutputFolderConflict(Set<File> outputFolders, File inputFile) {
 		if (multipleOutputFiles && !outputFolders.add(inputFile.getAbsoluteFile().getParentFile())) {
-			log(String.format("multipleOutputFiles have already been created in folder '%s'"), Project.MSG_WARN);
+			log(String.format(Messages.getString("MarkupToHtmlTask.13")), Project.MSG_WARN); //$NON-NLS-1$
 		}
 	}
 
@@ -163,7 +163,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	protected String processFile(MarkupLanguage markupLanguage, final File baseDir, final File source)
 			throws BuildException {
 
-		log(String.format("Processing file '%s'", source), Project.MSG_VERBOSE);
+		log(String.format(Messages.getString("MarkupToHtmlTask.14"), source), Project.MSG_VERBOSE); //$NON-NLS-1$
 
 		String markupContent = null;
 
@@ -183,10 +183,10 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8");
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8"); //$NON-NLS-1$
 			} catch (Exception e) {
 				throw new BuildException(
-						String.format("Cannot write to file '%s': %s", htmlOutputFile, e.getMessage()), e);
+						String.format(Messages.getString("MarkupToHtmlTask.16"), htmlOutputFile, e.getMessage()), e); //$NON-NLS-1$
 			}
 			try {
 				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
@@ -227,7 +227,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 				try {
 					writer.close();
 				} catch (Exception e) {
-					throw new BuildException(String.format("Cannot write to file '%s': %s", htmlOutputFile,
+					throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.17"), htmlOutputFile, //$NON-NLS-1$
 							e.getMessage()), e);
 				}
 			}
@@ -239,7 +239,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 	}
 
 	protected File computeHtmlFile(final File source, String name) {
-		return new File(source.getParentFile(), htmlFilenameFormat.replace("$1", name));
+		return new File(source.getParentFile(), htmlFilenameFormat.replace("$1", name)); //$NON-NLS-1$
 	}
 
 	protected String readFully(File inputFile) {
@@ -255,7 +255,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 				r.close();
 			}
 		} catch (IOException e) {
-			throw new BuildException(String.format("Cannot read file '%s': %s", inputFile, e.getMessage()), e);
+			throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.19"), inputFile, e.getMessage()), e); //$NON-NLS-1$
 		}
 		return w.toString();
 	}

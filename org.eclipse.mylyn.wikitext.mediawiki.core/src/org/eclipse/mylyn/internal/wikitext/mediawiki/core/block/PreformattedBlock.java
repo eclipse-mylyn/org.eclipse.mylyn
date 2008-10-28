@@ -41,7 +41,7 @@ public class PreformattedBlock extends Block {
 			builder.beginBlock(BlockType.PREFORMATTED, new Attributes());
 		}
 		builder.characters(line.substring(1));
-		builder.characters("\n");
+		builder.characters("\n"); //$NON-NLS-1$
 		return -1;
 	}
 

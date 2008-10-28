@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,54 +46,54 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private static final Map<SpanType, String> spanTypeToElementName = new HashMap<SpanType, String>();
 	static {
-		spanTypeToElementName.put(SpanType.BOLD, "b");
-		spanTypeToElementName.put(SpanType.CITATION, "cite");
-		spanTypeToElementName.put(SpanType.ITALIC, "i");
-		spanTypeToElementName.put(SpanType.EMPHASIS, "em");
-		spanTypeToElementName.put(SpanType.STRONG, "strong");
-		spanTypeToElementName.put(SpanType.DELETED, "del");
-		spanTypeToElementName.put(SpanType.INSERTED, "ins");
-		spanTypeToElementName.put(SpanType.UNDERLINED, "u");
-		spanTypeToElementName.put(SpanType.SUPERSCRIPT, "sup");
-		spanTypeToElementName.put(SpanType.SUBSCRIPT, "sub");
-		spanTypeToElementName.put(SpanType.SPAN, "span");
-		spanTypeToElementName.put(SpanType.CODE, "code");
-		spanTypeToElementName.put(SpanType.MONOSPACE, "tt");
+		spanTypeToElementName.put(SpanType.BOLD, "b"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.CITATION, "cite"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.ITALIC, "i"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.EMPHASIS, "em"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.STRONG, "strong"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.DELETED, "del"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.INSERTED, "ins"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.UNDERLINED, "u"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.SUPERSCRIPT, "sup"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.SUBSCRIPT, "sub"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.SPAN, "span"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.CODE, "code"); //$NON-NLS-1$
+		spanTypeToElementName.put(SpanType.MONOSPACE, "tt"); //$NON-NLS-1$
 	}
 
 	private static final Map<BlockType, ElementInfo> blockTypeToElementInfo = new HashMap<BlockType, ElementInfo>();
 	static {
-		blockTypeToElementInfo.put(BlockType.BULLETED_LIST, new ElementInfo("ul"));
-		blockTypeToElementInfo.put(BlockType.CODE, new ElementInfo("code"));
-		blockTypeToElementInfo.put(BlockType.FOOTNOTE, new ElementInfo("footnote"));
-		blockTypeToElementInfo.put(BlockType.LIST_ITEM, new ElementInfo("li"));
-		blockTypeToElementInfo.put(BlockType.NUMERIC_LIST, new ElementInfo("ol"));
-		blockTypeToElementInfo.put(BlockType.DEFINITION_LIST, new ElementInfo("dl"));
-		blockTypeToElementInfo.put(BlockType.DEFINITION_TERM, new ElementInfo("dt"));
-		blockTypeToElementInfo.put(BlockType.DEFINITION_ITEM, new ElementInfo("dd"));
-		blockTypeToElementInfo.put(BlockType.PARAGRAPH, new ElementInfo("p"));
-		blockTypeToElementInfo.put(BlockType.PREFORMATTED, new ElementInfo("pre"));
-		blockTypeToElementInfo.put(BlockType.QUOTE, new ElementInfo("blockquote"));
-		blockTypeToElementInfo.put(BlockType.TABLE, new ElementInfo("table"));
-		blockTypeToElementInfo.put(BlockType.TABLE_CELL_HEADER, new ElementInfo("th"));
-		blockTypeToElementInfo.put(BlockType.TABLE_CELL_NORMAL, new ElementInfo("td"));
-		blockTypeToElementInfo.put(BlockType.TABLE_ROW, new ElementInfo("tr"));
-		blockTypeToElementInfo.put(BlockType.TIP, new ElementInfo("div", "tip",
-				"border: 1px solid #090;background-color: #dfd;margin: 20px;padding: 0px 6px 0px 6px;"));
-		blockTypeToElementInfo.put(BlockType.WARNING, new ElementInfo("div", "warning",
-				"border: 1px solid #c00;background-color: #fcc;margin: 20px;padding: 0px 6px 0px 6px;"));
-		blockTypeToElementInfo.put(BlockType.INFORMATION, new ElementInfo("div", "info",
-				"border: 1px solid #3c78b5;background-color: #D8E4F1;margin: 20px;padding: 0px 6px 0px 6px;"));
-		blockTypeToElementInfo.put(BlockType.NOTE, new ElementInfo("div", "note",
-				"border: 1px solid #F0C000;background-color: #FFFFCE;margin: 20px;padding: 0px 6px 0px 6px;"));
-		blockTypeToElementInfo.put(BlockType.PANEL, new ElementInfo("div", "panel",
-				"border: 1px solid #ccc;background-color: #FFFFCE;margin: 10px;padding: 0px 6px 0px 6px;"));
+		blockTypeToElementInfo.put(BlockType.BULLETED_LIST, new ElementInfo("ul")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.CODE, new ElementInfo("code")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.FOOTNOTE, new ElementInfo("footnote")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.LIST_ITEM, new ElementInfo("li")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.NUMERIC_LIST, new ElementInfo("ol")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.DEFINITION_LIST, new ElementInfo("dl")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.DEFINITION_TERM, new ElementInfo("dt")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.DEFINITION_ITEM, new ElementInfo("dd")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.PARAGRAPH, new ElementInfo("p")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.PREFORMATTED, new ElementInfo("pre")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.QUOTE, new ElementInfo("blockquote")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.TABLE, new ElementInfo("table")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.TABLE_CELL_HEADER, new ElementInfo("th")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.TABLE_CELL_NORMAL, new ElementInfo("td")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.TABLE_ROW, new ElementInfo("tr")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.TIP, new ElementInfo("div", "tip", //$NON-NLS-1$ //$NON-NLS-2$
+				"border: 1px solid #090;background-color: #dfd;margin: 20px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.WARNING, new ElementInfo("div", "warning", //$NON-NLS-1$ //$NON-NLS-2$
+				"border: 1px solid #c00;background-color: #fcc;margin: 20px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.INFORMATION, new ElementInfo("div", "info", //$NON-NLS-1$ //$NON-NLS-2$
+				"border: 1px solid #3c78b5;background-color: #D8E4F1;margin: 20px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.NOTE, new ElementInfo("div", "note", //$NON-NLS-1$ //$NON-NLS-2$
+				"border: 1px solid #F0C000;background-color: #FFFFCE;margin: 20px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
+		blockTypeToElementInfo.put(BlockType.PANEL, new ElementInfo("div", "panel", //$NON-NLS-1$ //$NON-NLS-2$
+				"border: 1px solid #ccc;background-color: #FFFFCE;margin: 10px;padding: 0px 6px 0px 6px;")); //$NON-NLS-1$
 
 	}
 
-	private String htmlNsUri = "http://www.w3.org/1999/xhtml";
+	private String htmlNsUri = "http://www.w3.org/1999/xhtml"; //$NON-NLS-1$
 
-	private String htmlDtd = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+	private String htmlDtd = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"; //$NON-NLS-1$
 
 	private boolean xhtmlStrict = false;
 
@@ -146,7 +147,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		return new FormattingXMLStreamWriter(new DefaultXmlStreamWriter(out)) {
 			@Override
 			protected boolean preserveWhitespace(String elementName) {
-				return elementName.equals("pre") || elementName.equals("code");
+				return elementName.equals("pre") || elementName.equals("code"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		};
 	}
@@ -323,13 +324,13 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	protected void checkFileReadable(File file) {
 		if (!file.exists()) {
-			throw new IllegalArgumentException(String.format("File does not exist: %s", file));
+			throw new IllegalArgumentException(MessageFormat.format(Messages.getString("HtmlDocumentBuilder.3"), file)); //$NON-NLS-1$
 		}
 		if (!file.isFile()) {
-			throw new IllegalArgumentException(String.format("Not a file: %s", file));
+			throw new IllegalArgumentException(MessageFormat.format(Messages.getString("HtmlDocumentBuilder.1"), file)); //$NON-NLS-1$
 		}
 		if (!file.canRead()) {
-			throw new IllegalArgumentException(String.format("File cannot be read: %s", file));
+			throw new IllegalArgumentException(MessageFormat.format(Messages.getString("HtmlDocumentBuilder.2"), file)); //$NON-NLS-1$
 		}
 	}
 
@@ -422,35 +423,35 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 				writer.writeDTD(htmlDtd);
 			}
 
-			writer.writeStartElement(htmlNsUri, "html");
+			writer.writeStartElement(htmlNsUri, "html"); //$NON-NLS-1$
 			writer.writeDefaultNamespace(htmlNsUri);
 
-			writer.writeStartElement(htmlNsUri, "head");
+			writer.writeStartElement(htmlNsUri, "head"); //$NON-NLS-1$
 			if (base != null && baseInHead) {
-				writer.writeEmptyElement(htmlNsUri, "base");
-				writer.writeAttribute("href", base.toString());
+				writer.writeEmptyElement(htmlNsUri, "base"); //$NON-NLS-1$
+				writer.writeAttribute("href", base.toString()); //$NON-NLS-1$
 			}
 			if (title != null) {
-				writer.writeStartElement(htmlNsUri, "title");
+				writer.writeStartElement(htmlNsUri, "title"); //$NON-NLS-1$
 				writer.writeCharacters(title);
 				writer.writeEndElement(); // title
 			}
 			if (!useInlineStyles && !suppressBuiltInStyles) {
-				writer.writeStartElement(htmlNsUri, "style");
-				writer.writeAttribute("type", "text/css");
-				writer.writeCharacters("\n");
+				writer.writeStartElement(htmlNsUri, "style"); //$NON-NLS-1$
+				writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeCharacters("\n"); //$NON-NLS-1$
 				for (Entry<BlockType, ElementInfo> ent : blockTypeToElementInfo.entrySet()) {
 					ElementInfo elementInfo = ent.getValue();
 					if (elementInfo.cssStyles != null && elementInfo.cssClass != null) {
-						String[] classes = elementInfo.cssClass.split("\\s+");
+						String[] classes = elementInfo.cssClass.split("\\s+"); //$NON-NLS-1$
 						for (String cssClass : classes) {
-							writer.writeCharacters(".");
+							writer.writeCharacters("."); //$NON-NLS-1$
 							writer.writeCharacters(cssClass);
-							writer.writeCharacters(" ");
+							writer.writeCharacters(" "); //$NON-NLS-1$
 						}
-						writer.writeCharacters("{");
+						writer.writeCharacters("{"); //$NON-NLS-1$
 						writer.writeCharacters(elementInfo.cssStyles);
-						writer.writeCharacters("}\n");
+						writer.writeCharacters("}\n"); //$NON-NLS-1$
 					}
 				}
 				writer.writeEndElement();
@@ -459,21 +460,22 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 				for (Stylesheet stylesheet : stylesheets) {
 					if (stylesheet.url != null) {
 						// <link type="text/css" rel="stylesheet" href="url"/>
-						writer.writeEmptyElement(htmlNsUri, "link");
-						writer.writeAttribute("type", "text/css");
-						writer.writeAttribute("rel", "stylesheet");
-						writer.writeAttribute("href", makeUrlAbsolute(stylesheet.url));
+						writer.writeEmptyElement(htmlNsUri, "link"); //$NON-NLS-1$
+						writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
+						writer.writeAttribute("rel", "stylesheet"); //$NON-NLS-1$ //$NON-NLS-2$
+						writer.writeAttribute("href", makeUrlAbsolute(stylesheet.url)); //$NON-NLS-1$
 					} else {
 						//						 <style type="text/css">
 						//						   ... contents of the file ...
 						//						 </style>
-						writer.writeStartElement(htmlNsUri, "style");
-						writer.writeAttribute("type", "text/css");
+						writer.writeStartElement(htmlNsUri, "style"); //$NON-NLS-1$
+						writer.writeAttribute("type", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
 						String css;
 						try {
 							css = readFully(stylesheet.file);
 						} catch (IOException e) {
-							throw new IllegalStateException(String.format("Cannot read file: %s", stylesheet.file), e);
+							throw new IllegalStateException(MessageFormat.format(Messages.getString("HtmlDocumentBuilder.4"), //$NON-NLS-1$
+									stylesheet.file), e);
 						}
 						writer.writeCharacters(css);
 						writer.writeEndElement();
@@ -482,11 +484,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			}
 			writer.writeEndElement(); // head
 
-			writer.writeStartElement(htmlNsUri, "body");
+			writer.writeStartElement(htmlNsUri, "body"); //$NON-NLS-1$
 		} else {
 			// sanity check
 			if (stylesheets != null && !stylesheets.isEmpty()) {
-				throw new IllegalStateException("CSS stylesheets are specified but the HTML output is not a document");
+				throw new IllegalStateException(Messages.getString("HtmlDocumentBuilder.0")); //$NON-NLS-1$
 			}
 		}
 	}
@@ -509,16 +511,16 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void acronym(String text, String definition) {
-		writer.writeStartElement(htmlNsUri, "acronym");
-		writer.writeAttribute("title", definition);
+		writer.writeStartElement(htmlNsUri, "acronym"); //$NON-NLS-1$
+		writer.writeAttribute("title", definition); //$NON-NLS-1$
 		writer.writeCharacters(text);
 		writer.writeEndElement();
 	}
 
 	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
-		writer.writeStartElement(htmlNsUri, "a");
-		writer.writeAttribute("href", makeUrlAbsolute(hrefOrHashName));
+		writer.writeStartElement(htmlNsUri, "a"); //$NON-NLS-1$
+		writer.writeAttribute("href", makeUrlAbsolute(hrefOrHashName)); //$NON-NLS-1$
 		applyLinkAttributes(attributes, hrefOrHashName);
 		characters(text);
 		writer.writeEndElement(); // a
@@ -574,7 +576,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (level > 6) {
 			level = 6;
 		}
-		writer.writeStartElement(htmlNsUri, "h" + level);
+		writer.writeStartElement(htmlNsUri, "h" + level); //$NON-NLS-1$
 		applyAttributes(attributes);
 	}
 
@@ -605,9 +607,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	@Override
 	public void image(Attributes attributes, String url) {
-		writer.writeEmptyElement(htmlNsUri, "img");
+		writer.writeEmptyElement(htmlNsUri, "img"); //$NON-NLS-1$
 		applyImageAttributes(attributes);
-		writer.writeAttribute("src", makeUrlAbsolute(url));
+		writer.writeAttribute("src", makeUrlAbsolute(url)); //$NON-NLS-1$
 	}
 
 	private void applyListAttributes(Attributes attributes) {
@@ -615,7 +617,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (attributes instanceof ListAttributes) {
 			ListAttributes listAttributes = (ListAttributes) attributes;
 			if (listAttributes.getStart() != null) {
-				writer.writeAttribute("start", listAttributes.getStart());
+				writer.writeAttribute("start", listAttributes.getStart()); //$NON-NLS-1$
 			}
 		}
 	}
@@ -625,7 +627,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (attributes instanceof QuoteAttributes) {
 			QuoteAttributes quoteAttributes = (QuoteAttributes) attributes;
 			if (quoteAttributes.getCitation() != null) {
-				writer.writeAttribute("cite", quoteAttributes.getCitation());
+				writer.writeAttribute("cite", quoteAttributes.getCitation()); //$NON-NLS-1$
 			}
 		}
 	}
@@ -633,33 +635,33 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private void applyTableAttributes(Attributes attributes) {
 		applyAttributes(attributes);
 		if (attributes.getTitle() != null) {
-			writer.writeAttribute("title", attributes.getTitle());
+			writer.writeAttribute("title", attributes.getTitle()); //$NON-NLS-1$
 		}
 		if (attributes instanceof TableAttributes) {
 			TableAttributes tableAttributes = (TableAttributes) attributes;
 			if (tableAttributes.getBgcolor() != null) {
-				writer.writeAttribute("bgcolor", tableAttributes.getBgcolor());
+				writer.writeAttribute("bgcolor", tableAttributes.getBgcolor()); //$NON-NLS-1$
 			}
 			if (tableAttributes.getBorder() != null) {
-				writer.writeAttribute("border", tableAttributes.getBorder());
+				writer.writeAttribute("border", tableAttributes.getBorder()); //$NON-NLS-1$
 			}
 			if (tableAttributes.getCellpadding() != null) {
-				writer.writeAttribute("cellpadding", tableAttributes.getCellpadding());
+				writer.writeAttribute("cellpadding", tableAttributes.getCellpadding()); //$NON-NLS-1$
 			}
 			if (tableAttributes.getCellspacing() != null) {
-				writer.writeAttribute("cellspacing", tableAttributes.getCellspacing());
+				writer.writeAttribute("cellspacing", tableAttributes.getCellspacing()); //$NON-NLS-1$
 			}
 			if (tableAttributes.getFrame() != null) {
-				writer.writeAttribute("frame", tableAttributes.getFrame());
+				writer.writeAttribute("frame", tableAttributes.getFrame()); //$NON-NLS-1$
 			}
 			if (tableAttributes.getRules() != null) {
-				writer.writeAttribute("rules", tableAttributes.getRules());
+				writer.writeAttribute("rules", tableAttributes.getRules()); //$NON-NLS-1$
 			}
 			if (tableAttributes.getSummary() != null) {
-				writer.writeAttribute("summary", tableAttributes.getSummary());
+				writer.writeAttribute("summary", tableAttributes.getSummary()); //$NON-NLS-1$
 			}
 			if (tableAttributes.getWidth() != null) {
-				writer.writeAttribute("width", tableAttributes.getWidth());
+				writer.writeAttribute("width", tableAttributes.getWidth()); //$NON-NLS-1$
 			}
 		}
 	}
@@ -667,18 +669,18 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private void applyTableRowAttributes(Attributes attributes) {
 		applyAttributes(attributes);
 		if (attributes.getTitle() != null) {
-			writer.writeAttribute("title", attributes.getTitle());
+			writer.writeAttribute("title", attributes.getTitle()); //$NON-NLS-1$
 		}
 		if (attributes instanceof TableRowAttributes) {
 			TableRowAttributes tableRowAttributes = (TableRowAttributes) attributes;
 			if (tableRowAttributes.getBgcolor() != null) {
-				writer.writeAttribute("bgcolor", tableRowAttributes.getBgcolor());
+				writer.writeAttribute("bgcolor", tableRowAttributes.getBgcolor()); //$NON-NLS-1$
 			}
 			if (tableRowAttributes.getAlign() != null) {
-				writer.writeAttribute("align", tableRowAttributes.getAlign());
+				writer.writeAttribute("align", tableRowAttributes.getAlign()); //$NON-NLS-1$
 			}
 			if (tableRowAttributes.getValign() != null) {
-				writer.writeAttribute("valign", tableRowAttributes.getValign());
+				writer.writeAttribute("valign", tableRowAttributes.getValign()); //$NON-NLS-1$
 			}
 		}
 	}
@@ -686,25 +688,25 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private void applyCellAttributes(Attributes attributes) {
 		applyAttributes(attributes);
 		if (attributes.getTitle() != null) {
-			writer.writeAttribute("title", attributes.getTitle());
+			writer.writeAttribute("title", attributes.getTitle()); //$NON-NLS-1$
 		}
 
 		if (attributes instanceof TableCellAttributes) {
 			TableCellAttributes tableCellAttributes = (TableCellAttributes) attributes;
 			if (tableCellAttributes.getBgcolor() != null) {
-				writer.writeAttribute("bgcolor", tableCellAttributes.getBgcolor());
+				writer.writeAttribute("bgcolor", tableCellAttributes.getBgcolor()); //$NON-NLS-1$
 			}
 			if (tableCellAttributes.getAlign() != null) {
-				writer.writeAttribute("align", tableCellAttributes.getAlign());
+				writer.writeAttribute("align", tableCellAttributes.getAlign()); //$NON-NLS-1$
 			}
 			if (tableCellAttributes.getValign() != null) {
-				writer.writeAttribute("valign", tableCellAttributes.getValign());
+				writer.writeAttribute("valign", tableCellAttributes.getValign()); //$NON-NLS-1$
 			}
 			if (tableCellAttributes.getRowspan() != null) {
-				writer.writeAttribute("rowspan", tableCellAttributes.getRowspan());
+				writer.writeAttribute("rowspan", tableCellAttributes.getRowspan()); //$NON-NLS-1$
 			}
 			if (tableCellAttributes.getColspan() != null) {
-				writer.writeAttribute("colspan", tableCellAttributes.getColspan());
+				writer.writeAttribute("colspan", tableCellAttributes.getColspan()); //$NON-NLS-1$
 			}
 		}
 	}
@@ -718,29 +720,29 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			align = imageAttributes.getAlign();
 		}
 		if (xhtmlStrict) {
-			String borderStyle = String.format("border-width: %spx;", border);
+			String borderStyle = String.format("border-width: %spx;", border); //$NON-NLS-1$
 			String alignStyle = null;
 			if (align != null) {
 				switch (align) {
 				case Center:
 				case Right:
 				case Left:
-					alignStyle = "text-align: " + align.name().toLowerCase() + ";";
+					alignStyle = "text-align: " + align.name().toLowerCase() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				case Bottom:
 				case Baseline:
 				case Top:
 				case Middle:
-					alignStyle = "vertical-align: " + align.name().toLowerCase() + ";";
+					alignStyle = "vertical-align: " + align.name().toLowerCase() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				case Texttop:
-					alignStyle = "vertical-align: text-top;";
+					alignStyle = "vertical-align: text-top;"; //$NON-NLS-1$
 					break;
 				case Absmiddle:
-					alignStyle = "vertical-align: middle;";
+					alignStyle = "vertical-align: middle;"; //$NON-NLS-1$
 					break;
 				case Absbottom:
-					alignStyle = "vertical-align: bottom;";
+					alignStyle = "vertical-align: bottom;"; //$NON-NLS-1$
 					break;
 				}
 			}
@@ -760,34 +762,34 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (attributes instanceof ImageAttributes) {
 			ImageAttributes imageAttributes = (ImageAttributes) attributes;
 			if (imageAttributes.getHeight() != -1) {
-				writer.writeAttribute("height", Integer.toString(imageAttributes.getHeight()));
+				writer.writeAttribute("height", Integer.toString(imageAttributes.getHeight())); //$NON-NLS-1$
 			}
 			if (imageAttributes.getWidth() != -1) {
-				writer.writeAttribute("width", Integer.toString(imageAttributes.getWidth()));
+				writer.writeAttribute("width", Integer.toString(imageAttributes.getWidth())); //$NON-NLS-1$
 			}
 			if (!xhtmlStrict && align != null) {
-				writer.writeAttribute("align", align.name().toLowerCase());
+				writer.writeAttribute("align", align.name().toLowerCase()); //$NON-NLS-1$
 			}
 			if (imageAttributes.getAlt() != null) {
 				haveAlt = true;
-				writer.writeAttribute("alt", imageAttributes.getAlt());
+				writer.writeAttribute("alt", imageAttributes.getAlt()); //$NON-NLS-1$
 			}
 		}
 		if (attributes.getTitle() != null) {
-			writer.writeAttribute("title", attributes.getTitle());
+			writer.writeAttribute("title", attributes.getTitle()); //$NON-NLS-1$
 			if (!haveAlt) {
 				haveAlt = true;
-				writer.writeAttribute("alt", attributes.getTitle());
+				writer.writeAttribute("alt", attributes.getTitle()); //$NON-NLS-1$
 			}
 		}
 		if (xhtmlStrict) {
 			if (!haveAlt) {
 				// XHTML requires img/@alt
-				writer.writeAttribute("alt", "");
+				writer.writeAttribute("alt", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else {
 			// only specify border attribute if it's not already specified in CSS
-			writer.writeAttribute("border", Integer.toString(border));
+			writer.writeAttribute("border", Integer.toString(border)); //$NON-NLS-1$
 		}
 	}
 
@@ -799,7 +801,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			LinkAttributes linkAttributes = (LinkAttributes) attributes;
 			if (linkAttributes.getTarget() != null) {
 				hasTarget = true;
-				writer.writeAttribute("target", linkAttributes.getTarget());
+				writer.writeAttribute("target", linkAttributes.getTarget()); //$NON-NLS-1$
 			}
 			if (linkAttributes.getRel() != null) {
 				rel = rel == null ? linkAttributes.getRel() : linkAttributes.getRel() + ' ' + rel;
@@ -807,16 +809,16 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 		}
 		if (attributes.getTitle() != null && attributes.getTitle().length() > 0) {
-			writer.writeAttribute("title", attributes.getTitle());
+			writer.writeAttribute("title", attributes.getTitle()); //$NON-NLS-1$
 		}
 		if (!hasTarget && defaultAbsoluteLinkTarget != null && href != null) {
 			if (isExternalLink(href)) {
-				writer.writeAttribute("target", defaultAbsoluteLinkTarget);
+				writer.writeAttribute("target", defaultAbsoluteLinkTarget); //$NON-NLS-1$
 			}
 		}
 
 		if (rel != null) {
-			writer.writeAttribute("rel", rel);
+			writer.writeAttribute("rel", rel); //$NON-NLS-1$
 		}
 	}
 
@@ -825,33 +827,33 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 */
 	private void applyAttributes(Attributes attributes) {
 		if (attributes.getId() != null) {
-			writer.writeAttribute("id", attributes.getId());
+			writer.writeAttribute("id", attributes.getId()); //$NON-NLS-1$
 		}
 		if (attributes.getCssClass() != null) {
-			writer.writeAttribute("class", attributes.getCssClass());
+			writer.writeAttribute("class", attributes.getCssClass()); //$NON-NLS-1$
 		}
 		if (attributes.getCssStyle() != null) {
-			writer.writeAttribute("style", attributes.getCssStyle());
+			writer.writeAttribute("style", attributes.getCssStyle()); //$NON-NLS-1$
 		}
 		if (attributes.getLanguage() != null) {
-			writer.writeAttribute("lang", attributes.getLanguage());
+			writer.writeAttribute("lang", attributes.getLanguage()); //$NON-NLS-1$
 		}
 	}
 
 	@Override
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
-		writer.writeStartElement(htmlNsUri, "a");
-		writer.writeAttribute("href", makeUrlAbsolute(href));
+		writer.writeStartElement(htmlNsUri, "a"); //$NON-NLS-1$
+		writer.writeAttribute("href", makeUrlAbsolute(href)); //$NON-NLS-1$
 		applyLinkAttributes(linkAttributes, href);
-		writer.writeEmptyElement(htmlNsUri, "img");
+		writer.writeEmptyElement(htmlNsUri, "img"); //$NON-NLS-1$
 		applyImageAttributes(imageAttributes);
-		writer.writeAttribute("src", makeUrlAbsolute(imageUrl));
+		writer.writeAttribute("src", makeUrlAbsolute(imageUrl)); //$NON-NLS-1$
 		writer.writeEndElement(); // a
 	}
 
 	@Override
 	public void lineBreak() {
-		writer.writeEmptyElement(htmlNsUri, "br");
+		writer.writeEmptyElement(htmlNsUri, "br"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -869,7 +871,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		public ElementInfo(String name, String cssClass, String cssStyles) {
 			this.name = name;
 			this.cssClass = cssClass;
-			this.cssStyles = cssStyles != null && !cssStyles.endsWith(";") ? cssStyles + ';' : cssStyles;
+			this.cssStyles = cssStyles != null && !cssStyles.endsWith(";") ? cssStyles + ';' : cssStyles; //$NON-NLS-1$
 		}
 
 		public ElementInfo(String name) {

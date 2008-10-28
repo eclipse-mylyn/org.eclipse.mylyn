@@ -24,7 +24,7 @@ public class FootnoteReferenceReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(?:\\[(\\d+)\\])";
+		return "(?:\\[(\\d+)\\])"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -47,8 +47,8 @@ public class FootnoteReferenceReplacementToken extends PatternBasedElement {
 			state.setLineCharacterOffset(start(1) - 1);
 			state.setLineSegmentEndOffset(end(1) + 1);
 
-			builder.beginSpan(SpanType.SUPERSCRIPT, new Attributes(null, "footnote", null, null));
-			builder.link("#" + htmlId, footnote);
+			builder.beginSpan(SpanType.SUPERSCRIPT, new Attributes(null, "footnote", null, null)); //$NON-NLS-1$
+			builder.link("#" + htmlId, footnote); //$NON-NLS-1$
 			builder.endSpan();
 
 			state.setLineCharacterOffset(originalSegmentEndOffset);

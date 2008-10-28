@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.textile.core.validation;
 
+import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +24,7 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
  */
 public class BlockWhitespaceRule extends ValidationRule {
 
-	private static final Pattern pattern = Pattern.compile("((?:bc|bq|pre|table|p)(?:\\.){1,2})(.)?", Pattern.MULTILINE);
+	private static final Pattern pattern = Pattern.compile("((?:bc|bq|pre|table|p)(?:\\.){1,2})(.)?", Pattern.MULTILINE); //$NON-NLS-1$
 
 	@Override
 	public ValidationProblem findProblem(String markup, int offset, int length) {
@@ -44,13 +45,12 @@ public class BlockWhitespaceRule extends ValidationRule {
 			}
 			if (startOfLine) {
 				String followingCharacter = matcher.group(2);
-				if (followingCharacter == null || !followingCharacter.equals(" ")) {
+				if (followingCharacter == null || !followingCharacter.equals(" ")) { //$NON-NLS-1$
 					int problemLength = matcher.end(1) - start;
 					String matched = matcher.group(1);
-					return new ValidationProblem(ValidationProblem.Severity.WARNING,
-							String.format(
-									"'%s' will not start a new block unless it is followed by a space character (' ')",
-									matched), start, problemLength);
+					return new ValidationProblem(ValidationProblem.Severity.WARNING, MessageFormat.format(
+							Messages.getString("BlockWhitespaceRule.2"), //$NON-NLS-1$
+							matched), start, problemLength);
 				}
 			}
 		}

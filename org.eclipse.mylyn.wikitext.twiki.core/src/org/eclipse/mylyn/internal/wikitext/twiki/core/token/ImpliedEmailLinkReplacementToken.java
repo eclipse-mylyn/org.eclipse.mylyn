@@ -8,7 +8,7 @@ public class ImpliedEmailLinkReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "([a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+(?:[a-zA-Z]{2,6}))";
+		return "([a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+(?:[a-zA-Z]{2,6}))"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class ImpliedEmailLinkReplacementToken extends PatternBasedElement {
 		@Override
 		public void emit() {
 			String email = group(1);
-			builder.link(new LinkAttributes(), "mailto:"+email, email);
+			builder.link(new LinkAttributes(), "mailto:"+email, email); //$NON-NLS-1$
 		}
 		
 	}

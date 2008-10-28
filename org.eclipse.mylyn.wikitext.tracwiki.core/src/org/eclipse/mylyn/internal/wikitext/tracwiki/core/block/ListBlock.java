@@ -28,7 +28,7 @@ public class ListBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = 4;
 
-	static final Pattern startPattern = Pattern.compile("(?:(\\s+)(?:(\\*)|(?:(\\d+)\\.)))\\s+(.*+)");
+	static final Pattern startPattern = Pattern.compile("(?:(\\s+)(?:(\\*)|(?:(\\d+)\\.)))\\s+(.*+)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -47,7 +47,7 @@ public class ListBlock extends Block {
 			String listSpec = matcher.group(2);
 			String numericListSpec = matcher.group(3);
 
-			if (numericListSpec != null && !"1".equals(numericListSpec)) {
+			if (numericListSpec != null && !"1".equals(numericListSpec)) { //$NON-NLS-1$
 				attributes.setStart(numericListSpec);
 			}
 
@@ -55,8 +55,8 @@ public class ListBlock extends Block {
 
 			BlockType type = listSpec == null ? BlockType.NUMERIC_LIST : BlockType.BULLETED_LIST;
 
-			if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) {
-				attributes.setCssStyle("list-style: square");
+			if (type == BlockType.BULLETED_LIST && "-".equals(listSpec)) { //$NON-NLS-1$
+				attributes.setCssStyle("list-style: square"); //$NON-NLS-1$
 			}
 
 			offset = matcher.start(LINE_REMAINDER_GROUP_OFFSET);
@@ -74,7 +74,7 @@ public class ListBlock extends Block {
 			String listSpec = matcher.group(2);
 			String numericListSpec = matcher.group(3);
 
-			if (numericListSpec != null && !"1".equals(numericListSpec)) {
+			if (numericListSpec != null && !"1".equals(numericListSpec)) { //$NON-NLS-1$
 				attributes.setStart(numericListSpec);
 			}
 

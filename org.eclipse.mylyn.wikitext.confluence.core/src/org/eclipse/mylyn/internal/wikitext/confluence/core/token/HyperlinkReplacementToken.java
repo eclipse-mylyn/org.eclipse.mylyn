@@ -24,7 +24,7 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "\\[([^\\]]+)\\]";
+		return "\\[([^\\]]+)\\]"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class HyperlinkReplacementToken extends PatternBasedElement {
 		@Override
 		public void emit() {
 			String linkComposite = group(1);
-			String[] parts = linkComposite.split("\\s*\\|\\s*");
+			String[] parts = linkComposite.split("\\s*\\|\\s*"); //$NON-NLS-1$
 			String text = parts.length > 1 ? parts[0] : null;
 			if (text != null) {
 				text = text.trim();

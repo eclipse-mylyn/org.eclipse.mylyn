@@ -46,11 +46,11 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  * @author David Green
  */
 public class MediaWikiLanguage extends MarkupLanguage {
-	private static final String CATEGORY_PREFIX = ":";
+	private static final String CATEGORY_PREFIX = ":"; //$NON-NLS-1$
 
-	private static final Pattern STANDARD_EXTERNAL_LINK_FORMAT = Pattern.compile(".*?/([^/]+)/(\\{\\d+\\})");
+	private static final Pattern STANDARD_EXTERNAL_LINK_FORMAT = Pattern.compile(".*?/([^/]+)/(\\{\\d+\\})"); //$NON-NLS-1$
 
-	private static final Pattern QUALIFIED_INTERNAL_LINK = Pattern.compile("([^/]+)/(.+)");
+	private static final Pattern QUALIFIED_INTERNAL_LINK = Pattern.compile("([^/]+)/(.+)"); //$NON-NLS-1$
 
 	private final List<Block> blocks = new ArrayList<Block>();
 
@@ -61,8 +61,8 @@ public class MediaWikiLanguage extends MarkupLanguage {
 	private final PatternBasedSyntax phraseModifierSyntax = new PatternBasedSyntax();
 
 	public MediaWikiLanguage() {
-		setName("MediaWiki");
-		setInternalLinkPattern("/wiki/{0}");
+		setName("MediaWiki"); //$NON-NLS-1$
+		setInternalLinkPattern("/wiki/{0}"); //$NON-NLS-1$
 		initializeSyntax();
 	}
 
@@ -74,17 +74,17 @@ public class MediaWikiLanguage extends MarkupLanguage {
 
 	protected void initializeTokens() {
 		tokenSyntax.add(new LineBreakToken());
-		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174"));
-		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174"));
+		tokenSyntax.add(new EntityReferenceReplacementToken("(tm)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(TM)", "#8482")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(c)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(C)", "#169")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(r)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
+		tokenSyntax.add(new EntityReferenceReplacementToken("(R)", "#174")); //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new ImageReplacementToken());
 		tokenSyntax.add(new HyperlinkInternalReplacementToken());
 		tokenSyntax.add(new HyperlinkExternalReplacementToken());
 		tokenSyntax.add(new ImpliedHyperlinkReplacementToken());
-		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule
+		tokenSyntax.add(new PatternLiteralReplacementToken("(?:(?<=\\w\\s)(----)(?=\\s\\w))", "<hr/>")); // horizontal rule //$NON-NLS-1$ //$NON-NLS-2$
 		tokenSyntax.add(new TemplateReplacementToken());
 		tokenSyntax.add(new org.eclipse.mylyn.internal.wikitext.mediawiki.core.token.EntityReferenceReplacementToken());
 
@@ -92,21 +92,21 @@ public class MediaWikiLanguage extends MarkupLanguage {
 	}
 
 	protected void initializePhraseModifiers() {
-		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0);
+		phraseModifierSyntax.beginGroup("(?:(?<=[\\s\\.,\\\"'?!;:\\)\\(\\{\\}\\[\\]])|^)(?:", 0); //$NON-NLS-1$
 		phraseModifierSyntax.add(new EscapePhraseModifier());
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC },
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''''", new SpanType[] { SpanType.BOLD, SpanType.ITALIC }, //$NON-NLS-1$
 				true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true));
-		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true));
-		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0);
+		phraseModifierSyntax.add(new SimplePhraseModifier("'''", SpanType.BOLD, true)); //$NON-NLS-1$
+		phraseModifierSyntax.add(new SimplePhraseModifier("''", SpanType.ITALIC, true)); //$NON-NLS-1$
+		phraseModifierSyntax.endGroup(")(?=\\W|$)", 0); //$NON-NLS-1$
 
 		String[] allowedHtmlTags = new String[] {
 				// HANDLED BY LineBreakToken "<br>",
 				// HANDLED BY LineBreakToken "<br/>",
-				"b", "big", "blockquote", "caption", "center", "cite", "code", "dd", "del", "div", "dl", "dt", "em",
-				"font", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "i", "ins", "li", "ol", "p", "pre", "rb", "rp", "rt",
-				"ruby", "s", "small", "span", "strike", "strong", "sub", "sup", "table", "td", "th", "tr", "tt", "u",
-				"ul", "var" };
+				"b", "big", "blockquote", "caption", "center", "cite", "code", "dd", "del", "div", "dl", "dt", "em", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
+				"font", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "i", "ins", "li", "ol", "p", "pre", "rb", "rp", "rt", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$ //$NON-NLS-16$ //$NON-NLS-17$
+				"ruby", "s", "small", "span", "strike", "strong", "sub", "sup", "table", "td", "th", "tr", "tt", "u", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$
+				"ul", "var" }; //$NON-NLS-1$ //$NON-NLS-2$
 		phraseModifierSyntax.add(new LimitedHtmlEndTagPhraseModifier(allowedHtmlTags));
 		phraseModifierSyntax.add(new LimitedHtmlStartTagPhraseModifier(allowedHtmlTags));
 		phraseModifierSyntax.add(new HtmlCommentPhraseModifier());
@@ -209,7 +209,7 @@ public class MediaWikiLanguage extends MarkupLanguage {
 
 		if (pageId.startsWith(CATEGORY_PREFIX) && pageId.length() > CATEGORY_PREFIX.length()) { // category
 			return pageId.substring(CATEGORY_PREFIX.length());
-		} else if (pageId.startsWith("#")) {
+		} else if (pageId.startsWith("#")) { //$NON-NLS-1$
 			// internal anchor
 			return pageId;
 		}

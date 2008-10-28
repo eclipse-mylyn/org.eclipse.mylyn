@@ -29,19 +29,19 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class TableBlock extends Block {
 
-	private static final Pattern rowCellSplitter = Pattern.compile("\\s*(\\|\\||!!)\\s*");
+	private static final Pattern rowCellSplitter = Pattern.compile("\\s*(\\|\\||!!)\\s*"); //$NON-NLS-1$
 
-	private static final Pattern startPattern = Pattern.compile("\\{\\|\\s*(.+)?");
+	private static final Pattern startPattern = Pattern.compile("\\{\\|\\s*(.+)?"); //$NON-NLS-1$
 
-	private static final Pattern optionsPattern = Pattern.compile("([a-zA-Z]+)=\"([^\"]*)\"");
+	private static final Pattern optionsPattern = Pattern.compile("([a-zA-Z]+)=\"([^\"]*)\""); //$NON-NLS-1$
 
-	private static final Pattern newRowPattern = Pattern.compile("\\|-\\s*(.+)?");
+	private static final Pattern newRowPattern = Pattern.compile("\\|-\\s*(.+)?"); //$NON-NLS-1$
 
-	private static final Pattern cellPattern = Pattern.compile("(\\||!)\\s*(.+)?");
+	private static final Pattern cellPattern = Pattern.compile("(\\||!)\\s*(.+)?"); //$NON-NLS-1$
 
-	private static final Pattern cellSplitterPattern = Pattern.compile("\\s*(?:([^\\|]+)?\\|)?\\s*(.+)?");
+	private static final Pattern cellSplitterPattern = Pattern.compile("\\s*(?:([^\\|]+)?\\|)?\\s*(.+)?"); //$NON-NLS-1$
 
-	private static final Pattern endPattern = Pattern.compile("\\|\\}\\s*(.+)?");
+	private static final Pattern endPattern = Pattern.compile("\\|\\}\\s*(.+)?"); //$NON-NLS-1$
 
 	private int blockLineCount;
 
@@ -61,29 +61,29 @@ public class TableBlock extends Block {
 				while (optionsMatcher.find()) {
 					String optionName = optionsMatcher.group(1);
 					String optionValue = optionsMatcher.group(2);
-					if (optionName.equalsIgnoreCase("id")) {
+					if (optionName.equalsIgnoreCase("id")) { //$NON-NLS-1$
 						attributes.setId(optionValue);
-					} else if (optionName.equalsIgnoreCase("style")) {
+					} else if (optionName.equalsIgnoreCase("style")) { //$NON-NLS-1$
 						attributes.setCssStyle(optionValue);
-					} else if (optionName.equalsIgnoreCase("class")) {
+					} else if (optionName.equalsIgnoreCase("class")) { //$NON-NLS-1$
 						attributes.setCssClass(optionValue);
-					} else if (optionName.equalsIgnoreCase("title")) {
+					} else if (optionName.equalsIgnoreCase("title")) { //$NON-NLS-1$
 						attributes.setTitle(optionValue);
-					} else if (optionName.equalsIgnoreCase("border")) {
+					} else if (optionName.equalsIgnoreCase("border")) { //$NON-NLS-1$
 						attributes.setBorder(optionValue);
-					} else if (optionName.equalsIgnoreCase("summary")) {
+					} else if (optionName.equalsIgnoreCase("summary")) { //$NON-NLS-1$
 						attributes.setSummary(optionValue);
-					} else if (optionName.equalsIgnoreCase("width")) {
+					} else if (optionName.equalsIgnoreCase("width")) { //$NON-NLS-1$
 						attributes.setWidth(optionValue);
-					} else if (optionName.equalsIgnoreCase("frame")) {
+					} else if (optionName.equalsIgnoreCase("frame")) { //$NON-NLS-1$
 						attributes.setFrame(optionValue);
-					} else if (optionName.equalsIgnoreCase("rules")) {
+					} else if (optionName.equalsIgnoreCase("rules")) { //$NON-NLS-1$
 						attributes.setRules(optionValue);
-					} else if (optionName.equalsIgnoreCase("cellspacing")) {
+					} else if (optionName.equalsIgnoreCase("cellspacing")) { //$NON-NLS-1$
 						attributes.setCellspacing(optionValue);
-					} else if (optionName.equalsIgnoreCase("cellpadding")) {
+					} else if (optionName.equalsIgnoreCase("cellpadding")) { //$NON-NLS-1$
 						attributes.setCellpadding(optionValue);
-					} else if (optionName.equalsIgnoreCase("bgcolor")) {
+					} else if (optionName.equalsIgnoreCase("bgcolor")) { //$NON-NLS-1$
 						attributes.setBgcolor(optionValue);
 					}
 				}
@@ -101,19 +101,19 @@ public class TableBlock extends Block {
 					while (optionsMatcher.find()) {
 						String optionName = optionsMatcher.group(1);
 						String optionValue = optionsMatcher.group(2);
-						if (optionName.equalsIgnoreCase("id")) {
+						if (optionName.equalsIgnoreCase("id")) { //$NON-NLS-1$
 							attributes.setId(optionValue);
-						} else if (optionName.equalsIgnoreCase("style")) {
+						} else if (optionName.equalsIgnoreCase("style")) { //$NON-NLS-1$
 							attributes.setCssStyle(optionValue);
-						} else if (optionName.equalsIgnoreCase("class")) {
+						} else if (optionName.equalsIgnoreCase("class")) { //$NON-NLS-1$
 							attributes.setCssClass(optionValue);
-						} else if (optionName.equalsIgnoreCase("title")) {
+						} else if (optionName.equalsIgnoreCase("title")) { //$NON-NLS-1$
 							attributes.setTitle(optionValue);
-						} else if (optionName.equalsIgnoreCase("align")) {
+						} else if (optionName.equalsIgnoreCase("align")) { //$NON-NLS-1$
 							attributes.setAlign(optionValue);
-						} else if (optionName.equalsIgnoreCase("valign")) {
+						} else if (optionName.equalsIgnoreCase("valign")) { //$NON-NLS-1$
 							attributes.setValign(optionValue);
-						} else if (optionName.equalsIgnoreCase("bgcolor")) {
+						} else if (optionName.equalsIgnoreCase("bgcolor")) { //$NON-NLS-1$
 							attributes.setBgcolor(optionValue);
 						}
 					}
@@ -136,7 +136,7 @@ public class TableBlock extends Block {
 							return -1;
 						}
 						int contentsStart = cellMatcher.start(2);
-						BlockType type = ("!".equals(kind)) ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL;
+						BlockType type = ("!".equals(kind)) ? BlockType.TABLE_CELL_HEADER : BlockType.TABLE_CELL_NORMAL; //$NON-NLS-1$
 
 						if (!openRow) {
 							openRow(cellMatcher.start(), new Attributes());
@@ -162,7 +162,7 @@ public class TableBlock extends Block {
 			if (found > lastEnd) {
 				cell = contents.substring(lastEnd, found);
 			} else {
-				cell = "";
+				cell = ""; //$NON-NLS-1$
 			}
 			emitCell(lastEnd + contentsStart, type, cell);
 			lastEnd = matcher.end();
@@ -193,23 +193,23 @@ public class TableBlock extends Block {
 			while (optionsMatcher.find()) {
 				String optionName = optionsMatcher.group(1);
 				String optionValue = optionsMatcher.group(2);
-				if (optionName.equalsIgnoreCase("id")) {
+				if (optionName.equalsIgnoreCase("id")) { //$NON-NLS-1$
 					attributes.setId(optionValue);
-				} else if (optionName.equalsIgnoreCase("style")) {
+				} else if (optionName.equalsIgnoreCase("style")) { //$NON-NLS-1$
 					attributes.setCssStyle(optionValue);
-				} else if (optionName.equalsIgnoreCase("class")) {
+				} else if (optionName.equalsIgnoreCase("class")) { //$NON-NLS-1$
 					attributes.setCssClass(optionValue);
-				} else if (optionName.equalsIgnoreCase("title")) {
+				} else if (optionName.equalsIgnoreCase("title")) { //$NON-NLS-1$
 					attributes.setTitle(optionValue);
-				} else if (optionName.equalsIgnoreCase("align")) {
+				} else if (optionName.equalsIgnoreCase("align")) { //$NON-NLS-1$
 					attributes.setAlign(optionValue);
-				} else if (optionName.equalsIgnoreCase("valign")) {
+				} else if (optionName.equalsIgnoreCase("valign")) { //$NON-NLS-1$
 					attributes.setValign(optionValue);
-				} else if (optionName.equalsIgnoreCase("bgcolor")) {
+				} else if (optionName.equalsIgnoreCase("bgcolor")) { //$NON-NLS-1$
 					attributes.setBgcolor(optionValue);
-				} else if (optionName.equalsIgnoreCase("colspan")) {
+				} else if (optionName.equalsIgnoreCase("colspan")) { //$NON-NLS-1$
 					attributes.setColspan(optionValue);
-				} else if (optionName.equalsIgnoreCase("rowspan")) {
+				} else if (optionName.equalsIgnoreCase("rowspan")) { //$NON-NLS-1$
 					attributes.setRowspan(optionValue);
 				}
 			}

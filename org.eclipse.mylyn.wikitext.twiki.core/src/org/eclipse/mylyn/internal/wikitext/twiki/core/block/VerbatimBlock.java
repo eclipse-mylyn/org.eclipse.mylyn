@@ -26,9 +26,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class VerbatimBlock extends Block {
 
-	private static final Pattern startPattern = Pattern.compile("\\s*<verbatim>(.*)");
+	private static final Pattern startPattern = Pattern.compile("\\s*<verbatim>(.*)"); //$NON-NLS-1$
 
-	private static final Pattern endPattern = Pattern.compile("\\s*</verbatim>(.*)");
+	private static final Pattern endPattern = Pattern.compile("\\s*</verbatim>(.*)"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -47,7 +47,7 @@ public class VerbatimBlock extends Block {
 			}
 		}
 		builder.characters(offset == 0 ? line : line.substring(offset));
-		builder.characters("\n");
+		builder.characters("\n"); //$NON-NLS-1$
 		return -1;
 	}
 

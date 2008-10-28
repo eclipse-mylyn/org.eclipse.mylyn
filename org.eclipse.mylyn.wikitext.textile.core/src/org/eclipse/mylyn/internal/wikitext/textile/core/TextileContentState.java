@@ -23,7 +23,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
  * @author David Green
  */
 public class TextileContentState extends ContentState {
-	private static final Pattern NAMED_LINK_PATTERN = Pattern.compile("\\[(\\S+)\\]([a-zA-Z]{3,5}:\\S+)",
+	private static final Pattern NAMED_LINK_PATTERN = Pattern.compile("\\[(\\S+)\\]([a-zA-Z]{3,5}:\\S+)", //$NON-NLS-1$
 			Pattern.MULTILINE);
 
 	private final Map<String, String> nameToUrl = new HashMap<String, String>();

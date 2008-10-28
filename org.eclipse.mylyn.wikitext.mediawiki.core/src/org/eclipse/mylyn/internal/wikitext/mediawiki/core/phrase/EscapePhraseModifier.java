@@ -23,8 +23,8 @@ public class EscapePhraseModifier extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "<nowiki>" + "(\\S(?:.*?\\S)?)" + // content
-				"</nowiki>";
+		return "<nowiki>" + "(\\S(?:.*?\\S)?)" + // content //$NON-NLS-1$ //$NON-NLS-2$
+				"</nowiki>"; //$NON-NLS-1$
 	}
 
 	@Override

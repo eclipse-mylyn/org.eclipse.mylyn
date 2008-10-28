@@ -22,7 +22,7 @@ public class LineBreakToken extends PatternBasedElement {
 
 	@Override
 	protected String getPattern(int groupOffset) {
-		return "(<br>|<br/>)";
+		return "(<br>|<br/>)"; //$NON-NLS-1$
 	}
 
 	@Override

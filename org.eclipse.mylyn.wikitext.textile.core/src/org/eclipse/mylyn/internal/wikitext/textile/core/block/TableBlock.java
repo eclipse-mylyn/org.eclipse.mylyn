@@ -28,13 +28,13 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 public class TableBlock extends Block {
 
 	// NOTE: no need for whitespace after the dot on 'table.'
-	static final Pattern startPattern = Pattern.compile("(table" + Textile.REGEX_BLOCK_ATTRIBUTES
-			+ "\\.)|(\\|(.*)?(\\|\\s*$))");
+	static final Pattern startPattern = Pattern.compile("(table" + Textile.REGEX_BLOCK_ATTRIBUTES //$NON-NLS-1$
+			+ "\\.)|(\\|(.*)?(\\|\\s*$))"); //$NON-NLS-1$
 
-	static final Pattern rowAttributesPattern = Pattern.compile(Textile.REGEX_BLOCK_ATTRIBUTES + "\\.\\s*.*");
+	static final Pattern rowAttributesPattern = Pattern.compile(Textile.REGEX_BLOCK_ATTRIBUTES + "\\.\\s*.*"); //$NON-NLS-1$
 
-	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(?:\\\\(\\d+))?(?:/(\\d+))?((?:\\<\\>)|\\<|\\>|\\^)?"
-			+ Textile.REGEX_ATTRIBUTES + "(_|\\|)?\\.?\\s?([^\\|]*)(\\|\\|?\\s*$)?");
+	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|(?:\\\\(\\d+))?(?:/(\\d+))?((?:\\<\\>)|\\<|\\>|\\^)?" //$NON-NLS-1$
+			+ Textile.REGEX_ATTRIBUTES + "(_|\\|)?\\.?\\s?([^\\|]*)(\\|\\|?\\s*$)?"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 
@@ -97,18 +97,18 @@ public class TableBlock extends Block {
 			String text = rowMatcher.group(9);
 			int textLineOffset = rowMatcher.start(9);
 
-			boolean header = headerIndicator != null && ("_".equals(headerIndicator) || "|".equals(headerIndicator));
+			boolean header = headerIndicator != null && ("_".equals(headerIndicator) || "|".equals(headerIndicator)); //$NON-NLS-1$ //$NON-NLS-2$
 
 			String textAlign = null;
 			if (alignment != null) {
-				if (alignment.equals("<>")) {
-					textAlign = "text-align: center;";
-				} else if (alignment.equals(">")) {
-					textAlign = "text-align: right;";
-				} else if (alignment.equals("<")) {
-					textAlign = "text-align: left;";
-				} else if (alignment.equals("^")) {
-					textAlign = "text-align: top;";
+				if (alignment.equals("<>")) { //$NON-NLS-1$
+					textAlign = "text-align: center;"; //$NON-NLS-1$
+				} else if (alignment.equals(">")) { //$NON-NLS-1$
+					textAlign = "text-align: right;"; //$NON-NLS-1$
+				} else if (alignment.equals("<")) { //$NON-NLS-1$
+					textAlign = "text-align: left;"; //$NON-NLS-1$
+				} else if (alignment.equals("^")) { //$NON-NLS-1$
+					textAlign = "text-align: top;"; //$NON-NLS-1$
 				}
 			}
 			TableCellAttributes attributes = new TableCellAttributes();

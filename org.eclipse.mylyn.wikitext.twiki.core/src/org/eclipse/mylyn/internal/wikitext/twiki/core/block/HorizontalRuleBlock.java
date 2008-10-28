@@ -22,13 +22,13 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class HorizontalRuleBlock extends Block {
 
-	private static final Pattern startPattern = Pattern.compile("-{3,}\\s*");
+	private static final Pattern startPattern = Pattern.compile("-{3,}\\s*"); //$NON-NLS-1$
 
 	private Matcher matcher;
 
 	@Override
 	public int processLineContent(String line, int offset) {
-		builder.charactersUnescaped("<hr/>");
+		builder.charactersUnescaped("<hr/>"); //$NON-NLS-1$
 		setClosed(true);
 		return -1;
 	}

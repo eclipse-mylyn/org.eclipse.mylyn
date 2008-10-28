@@ -64,7 +64,7 @@ public abstract class MarkupTask extends Task {
 	 */
 	protected MarkupLanguage createMarkupLanguage() throws BuildException {
 		if (markupLanguage == null) {
-			throw new BuildException("Must specify @markupLanguage");
+			throw new BuildException(Messages.getString("MarkupTask.0")); //$NON-NLS-1$
 		}
 		try {
 			MarkupLanguage language = ServiceLocator.getInstance(getClass().getClassLoader()).getMarkupLanguage(
@@ -141,7 +141,7 @@ public abstract class MarkupTask extends Task {
 		if (markupLanguage == null) {
 			throw new IllegalStateException();
 		}
-		log(String.format("Validating %s", source), Project.MSG_VERBOSE);
+		log(String.format(Messages.getString("MarkupTask.1"), source), Project.MSG_VERBOSE); //$NON-NLS-1$
 
 		StandaloneMarkupValidator markupValidator = StandaloneMarkupValidator.getValidator(markupLanguage);
 
@@ -157,11 +157,11 @@ public abstract class MarkupTask extends Task {
 				++warningCount;
 				messageLevel = Project.MSG_WARN;
 			}
-			log(String.format("%s:%s %s", source.getName(), problem.getOffset(), problem.getMessage()), messageLevel);
+			log(String.format("%s:%s %s", source.getName(), problem.getOffset(), problem.getMessage()), messageLevel); //$NON-NLS-1$
 		}
 
 		if ((errorCount > 0 && failOnValidationError) || (warningCount > 0 && failOnValidationWarning)) {
-			throw new BuildException(String.format("Validation: %s errors and %s warnings on file %s", errorCount,
+			throw new BuildException(String.format(Messages.getString("MarkupTask.3"), errorCount, //$NON-NLS-1$
 					warningCount, source));
 		}
 	}

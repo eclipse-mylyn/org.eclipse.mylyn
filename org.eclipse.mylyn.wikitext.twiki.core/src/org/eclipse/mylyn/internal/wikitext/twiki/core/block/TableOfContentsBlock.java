@@ -27,7 +27,7 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
  */
 public class TableOfContentsBlock extends Block {
 
-	static final Pattern startPattern = Pattern.compile("\\s*\\%TOC\\%\\s*");
+	static final Pattern startPattern = Pattern.compile("\\s*\\%TOC\\%\\s*"); //$NON-NLS-1$
 
 	private int blockLineNumber = 0;
 

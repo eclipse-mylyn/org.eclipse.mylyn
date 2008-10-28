@@ -39,7 +39,7 @@ public class MarkupToEclipseToc {
 
 	public String parse(String markupContent) {
 		if (markupLanguage == null) {
-			throw new IllegalStateException("Must set markupLanguage");
+			throw new IllegalStateException("Must set markupLanguage"); //$NON-NLS-1$
 		}
 		OutlineParser parser = new OutlineParser(markupLanguage);
 
@@ -53,11 +53,11 @@ public class MarkupToEclipseToc {
 
 		XmlStreamWriter writer = createXmlStreamWriter(out);
 
-		writer.writeStartDocument("utf-8", "1.0");
+		writer.writeStartDocument("utf-8", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		writer.writeStartElement("toc");
-		writer.writeAttribute("topic", adjustForPrefix(getHtmlFile()));
-		writer.writeAttribute("label", getBookTitle());
+		writer.writeStartElement("toc"); //$NON-NLS-1$
+		writer.writeAttribute("topic", adjustForPrefix(getHtmlFile())); //$NON-NLS-1$
+		writer.writeAttribute("label", getBookTitle()); //$NON-NLS-1$
 
 		emitToc(writer, root.getChildren());
 
@@ -71,14 +71,14 @@ public class MarkupToEclipseToc {
 
 	private void emitToc(XmlStreamWriter writer, List<OutlineItem> children) {
 		for (OutlineItem item : children) {
-			writer.writeStartElement("topic");
+			writer.writeStartElement("topic"); //$NON-NLS-1$
 
 			String file = computeFile(item);
 
 			file = adjustForPrefix(file);
 
-			writer.writeAttribute("href", file + "#" + item.getId());
-			writer.writeAttribute("label", item.getLabel());
+			writer.writeAttribute("href", file + "#" + item.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+			writer.writeAttribute("label", item.getLabel()); //$NON-NLS-1$
 
 			if (!item.getChildren().isEmpty()) {
 				emitToc(writer, item.getChildren());
@@ -90,7 +90,7 @@ public class MarkupToEclipseToc {
 
 	private String adjustForPrefix(String file) {
 		if (helpPrefix != null) {
-			if (helpPrefix.endsWith("/")) {
+			if (helpPrefix.endsWith("/")) { //$NON-NLS-1$
 				file = helpPrefix + file;
 			} else {
 				file = helpPrefix + '/' + file;

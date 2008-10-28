@@ -28,7 +28,7 @@ public class ParagraphBlock extends Block {
 
 	private static final int LINE_REMAINDER_GROUP_OFFSET = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 1;
 
-	static final Pattern startPattern = Pattern.compile("p" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\.\\s+(.*)");
+	static final Pattern startPattern = Pattern.compile("p" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\.\\s+(.*)"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private int blockLineCount = 0;
 
@@ -82,7 +82,7 @@ public class ParagraphBlock extends Block {
 
 		if (blockLineCount != 0) {
 			if (unwrapped) {
-				builder.characters("\n");
+				builder.characters("\n"); //$NON-NLS-1$
 			} else {
 				builder.lineBreak();
 			}

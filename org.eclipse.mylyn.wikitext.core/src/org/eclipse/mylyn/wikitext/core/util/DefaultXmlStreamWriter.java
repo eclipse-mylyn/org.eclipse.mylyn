@@ -74,7 +74,7 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	}
 
 	protected PrintWriter createUtf8PrintWriter(java.io.OutputStream out) throws UnsupportedEncodingException {
-		return new java.io.PrintWriter(new OutputStreamWriter(out, "UTF8"));
+		return new java.io.PrintWriter(new OutputStreamWriter(out, "UTF8")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void setDefaultNamespace(String uri) {
-		setPrefix("", uri);
+		setPrefix("", uri); //$NON-NLS-1$
 	}
 
 	@Override
@@ -115,11 +115,11 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	public void writeAttribute(String localName, String value) {
 		out.write(' ');
 		out.write(localName);
-		out.write("=\"");
+		out.write("=\""); //$NON-NLS-1$
 		if (value != null) {
 			attrEncode(value);
 		}
-		out.write("\"");
+		out.write("\""); //$NON-NLS-1$
 	}
 
 	@Override
@@ -131,11 +131,11 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 			out.write(':');
 		}
 		out.write(localName);
-		out.write("=\"");
+		out.write("=\""); //$NON-NLS-1$
 		if (value != null) {
 			attrEncode(value);
 		}
-		out.write("\"");
+		out.write("\""); //$NON-NLS-1$
 	}
 
 	@Override
@@ -146,11 +146,11 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 			out.write(':');
 		}
 		out.write(localName);
-		out.write("=\"");
+		out.write("=\""); //$NON-NLS-1$
 		if (value != null) {
 			attrEncode(value);
 		}
-		out.write("\"");
+		out.write("\""); //$NON-NLS-1$
 	}
 
 	private void attrEncode(String value) {
@@ -170,9 +170,9 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	@Override
 	public void writeCData(String data) {
 		closeElement();
-		out.write("<![CDATA[");
+		out.write("<![CDATA["); //$NON-NLS-1$
 		out.write(data);
-		out.write("]]>");
+		out.write("]]>"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -200,9 +200,9 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	@Override
 	public void writeComment(String data) {
 		closeElement();
-		out.write("<!-- ");
+		out.write("<!-- "); //$NON-NLS-1$
 		out.write(data);
-		out.write(" -->");
+		out.write(" -->"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -212,15 +212,15 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeDefaultNamespace(String namespaceURI) {
-		writeAttribute("xmlns", namespaceURI);
+		writeAttribute("xmlns", namespaceURI); //$NON-NLS-1$
 	}
 
 	private void closeElement() {
 		if (inEmptyElement) {
-			out.write("/>");
+			out.write("/>"); //$NON-NLS-1$
 			inEmptyElement = false;
 		} else if (inStartElement) {
-			out.write(">");
+			out.write(">"); //$NON-NLS-1$
 			inStartElement = false;
 		}
 	}
@@ -261,7 +261,7 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	@Override
 	public void writeEndDocument() {
 		if (!elements.isEmpty()) {
-			throw new IllegalStateException(elements.size() + " elements not closed");
+			throw new IllegalStateException(elements.size() + " elements not closed"); //$NON-NLS-1$
 		}
 	}
 
@@ -289,9 +289,9 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	@Override
 	public void writeNamespace(String prefix, String namespaceURI) {
 		if (prefix == null || prefix.length() == 0) {
-			writeAttribute("xmlns", namespaceURI);
+			writeAttribute("xmlns", namespaceURI); //$NON-NLS-1$
 		} else {
-			writeAttribute("xmlns:" + prefix, namespaceURI);
+			writeAttribute("xmlns:" + prefix, namespaceURI); //$NON-NLS-1$
 		}
 	}
 
@@ -308,17 +308,17 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 
 	@Override
 	public void writeStartDocument() {
-		out.write(processXmlHeader("<?xml version='1.0' ?>"));
+		out.write(processXmlHeader("<?xml version='1.0' ?>")); //$NON-NLS-1$
 	}
 
 	@Override
 	public void writeStartDocument(String version) {
-		out.write(processXmlHeader("<?xml version='" + version + "' ?>"));
+		out.write(processXmlHeader("<?xml version='" + version + "' ?>")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
 	public void writeStartDocument(String encoding, String version) {
-		out.write(processXmlHeader("<?xml version='" + version + "' encoding='" + encoding + "' ?>"));
+		out.write(processXmlHeader("<?xml version='" + version + "' encoding='" + encoding + "' ?>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
@@ -415,7 +415,7 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 	 * Escapes chars
 	 */
 	final static void printHex(PrintWriter writer, int ch) throws IOException {
-		writer.write("&#x");
+		writer.write("&#x"); //$NON-NLS-1$
 		writer.write(Integer.toHexString(ch));
 		writer.write(';');
 	}
@@ -426,17 +426,17 @@ public class DefaultXmlStreamWriter extends XmlStreamWriter {
 		// These five are defined by default for all XML documents.
 		switch (ch) {
 		case '<':
-			return "lt";
+			return "lt"; //$NON-NLS-1$
 
 			// no need to encode '>'.
 
 		case '"':
 			if (attribute) {
-				return "quot";
+				return "quot"; //$NON-NLS-1$
 			}
 			break;
 		case '&':
-			return "amp";
+			return "amp"; //$NON-NLS-1$
 
 			// WARN: there is no need to encode apostrophe, and doing so has an
 			// adverse

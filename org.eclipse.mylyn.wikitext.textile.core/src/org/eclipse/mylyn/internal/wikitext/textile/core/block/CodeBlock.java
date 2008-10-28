@@ -29,7 +29,7 @@ public class CodeBlock extends Block {
 
 	private static final int EXTENDED_GROUP = Textile.ATTRIBUTES_BLOCK_GROUP_COUNT + 1;
 
-	static final Pattern startPattern = Pattern.compile("bc" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\.(\\.)?\\s+(.*)");
+	static final Pattern startPattern = Pattern.compile("bc" + Textile.REGEX_BLOCK_ATTRIBUTES + "\\.(\\.)?\\s+(.*)"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private boolean extended;
 
@@ -62,7 +62,7 @@ public class CodeBlock extends Block {
 		++blockLineCount;
 
 		builder.characters(offset > 0 ? line.substring(offset) : line);
-		builder.characters("\n");
+		builder.characters("\n"); //$NON-NLS-1$
 
 		return -1;
 	}

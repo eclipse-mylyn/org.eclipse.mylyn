@@ -39,7 +39,7 @@ public abstract class GlossaryBlock extends Block {
 			SortedMap<String, String> glossary = new TreeMap<String, String>(state.getGlossaryTerms());
 
 			builder.beginBlock(BlockType.DEFINITION_LIST, new Attributes(null, null, style == null ? null
-					: "list-style: " + style, null));
+					: "list-style: " + style, null)); //$NON-NLS-1$
 			Attributes nullAttributes = new Attributes();
 			for (Map.Entry<String, String> ent : glossary.entrySet()) {
 				builder.beginBlock(BlockType.DEFINITION_TERM, nullAttributes);

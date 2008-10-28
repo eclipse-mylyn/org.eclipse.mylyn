@@ -24,9 +24,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  */
 public class TableBlock extends Block {
 
-	static final Pattern tableRowPattern = Pattern.compile("(\\|\\|(.*)?(\\|\\|\\s*$))");
+	static final Pattern tableRowPattern = Pattern.compile("(\\|\\|(.*)?(\\|\\|\\s*$))"); //$NON-NLS-1$
 
-	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|\\|\\s*([^\\|]*)\\s*(\\|\\|\\s*$)?");
+	static final Pattern TABLE_ROW_PATTERN = Pattern.compile("\\|\\|\\s*([^\\|]*)\\s*(\\|\\|\\s*$)?"); //$NON-NLS-1$
 
 	private int blockLineCount = 0;
 

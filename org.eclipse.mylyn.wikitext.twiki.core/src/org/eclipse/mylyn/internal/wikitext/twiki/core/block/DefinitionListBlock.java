@@ -27,7 +27,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 public class DefinitionListBlock extends Block {
 
 	private static final Pattern startPattern = Pattern
-			.compile(" {3}\\$\\s+([^:]+):\\s+(.+)");
+			.compile(" {3}\\$\\s+([^:]+):\\s+(.+)"); //$NON-NLS-1$
 
 	private int blockLineCount;
 
