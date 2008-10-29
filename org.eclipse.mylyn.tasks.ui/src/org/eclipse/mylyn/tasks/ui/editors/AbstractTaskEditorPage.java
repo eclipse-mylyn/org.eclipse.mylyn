@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     David Green - fixes for bug 237503
+ *     Frank Becker - fixes for bug 252300
  *******************************************************************************/
 
 package org.eclipse.mylyn.tasks.ui.editors;
@@ -202,7 +203,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				private void openNewTask(ITask newTask) {
 					AbstractTaskContainer parent = null;
 					AbstractTaskEditorPart actionPart = getPart(ID_PART_ACTIONS);
-					if (actionPart instanceof TaskEditorAttributePart) {
+					if (actionPart instanceof TaskEditorActionPart) {
 						parent = ((TaskEditorActionPart) actionPart).getCategory();
 					}
 					TasksUiInternal.getTaskList().addTask(newTask, parent);
