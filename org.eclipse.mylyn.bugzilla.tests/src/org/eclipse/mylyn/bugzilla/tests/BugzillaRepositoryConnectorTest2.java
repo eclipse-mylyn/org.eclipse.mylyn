@@ -25,12 +25,15 @@ import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskAttachmentHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
@@ -300,42 +303,27 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 
 	}
 
-//	public void testMissingHits() throws Exception {
-//	// query for all mylyn bugzilla tasks.
-//	// reset sync date
-//	// mark stale tasks should equal number of tasks
-//	TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
-//	init(IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-//	repository.setAuthenticationCredentials("username", "password");
-//	String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=NEW&priority=P1&priority=P2&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-//	//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&priority=P1&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-//	//String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&component=Tasks&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-//	BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(IBugzillaConstants.ECLIPSE_BUGZILLA_URL, queryString, "test" );
-//	//TasksUiPlugin.getTaskList().addQuery(query);
-//	AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-////	QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository, false, false));
-////	connector.performQuery(query, repository, new NullProgressMonitor(), collector);
-////	for (AbstractTask task : collector.getTasks()) {
-////		TasksUiPlugin.getTaskList().addTask(task);
-////	}
-//
-//	TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
-//	for (AbstractTask task : query.getChildren()) {
-//		assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
-//		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
-//		task.setLastReadTimeStamp("1970-01-01");
-//		assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
-//	}
-//
-//	for (AbstractTask task : query.getChildren()) {
-//		assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
-//	}
-//
-//	repository.setSynchronizationTimeStamp("1970-01-01");//getSynchronizationTimeStamp();
-//	//connector.markStaleTasks(repository, query.getChildren(), new NullProgressMonitor());
-//	TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
-//	for (AbstractTask task : query.getChildren()) {
-//		assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
-//	}
-//}
+	public void testMissingHits() throws Exception {
+		init(IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+		//repository.setAuthenticationCredentials("username", "password");
+		String queryString = "https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=&classification=Tools&product=Mylyn&component=Bugzilla&long_desc_type=allwordssubstr&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&status_whiteboard_type=allwordssubstr&status_whiteboard=&keywords_type=allwords&keywords=&bug_status=NEW&priority=P1&priority=P2&emailtype1=substring&email1=&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+		RepositoryQuery query = new RepositoryQuery(BugzillaCorePlugin.CONNECTOR_KIND, "test");
+		query.setRepositoryUrl(repository.getRepositoryUrl());
+		query.setUrl(queryString);
+		TasksUiPlugin.getTaskList().addQuery(query);
+
+		TasksUiInternal.synchronizeQuery(connector, query, null, true);
+
+		for (ITask task : query.getChildren()) {
+			assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
+			TasksUiPlugin.getTaskDataManager().setTaskRead(task, true);
+			assertTrue(task.getSynchronizationState() == SynchronizationState.SYNCHRONIZED);
+		}
+
+		repository.setSynchronizationTimeStamp("1970-01-01");//getSynchronizationTimeStamp();
+		TasksUiInternal.synchronizeQuery(connector, query, null, true);
+		for (ITask task : query.getChildren()) {
+			assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
+		}
+	}
 }
