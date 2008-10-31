@@ -11,7 +11,9 @@
 package org.eclipse.mylyn.wikitext.core.parser.outline;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -39,6 +41,8 @@ public class OutlineItem {
 	private int childOffset;
 
 	private String tooltip;
+
+	private Map<String, OutlineItem> itemsById;
 
 	public OutlineItem(OutlineItem parent, int level, String id, int offset, int length, String label) {
 		super();
@@ -140,6 +144,21 @@ public class OutlineItem {
 		accept(visitor);
 
 		return visitor.nearest;
+	}
+
+	public OutlineItem findItemById(String id) {
+		if (itemsById == null) {
+			itemsById = new HashMap<String, OutlineItem>();
+			accept(new Visitor() {
+				public boolean visit(OutlineItem item) {
+					if (item.getId() != null) {
+						itemsById.put(item.getId(), item);
+					}
+					return true;
+				}
+			});
+		}
+		return itemsById.get(id);
 	}
 
 	private static class NearestItemVisitor implements Visitor {

@@ -21,13 +21,19 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
+import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToDocbook;
 import org.eclipse.mylyn.wikitext.core.util.FormattingXMLStreamWriter;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
+import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDocbookTask;
 
 /**
- * 
+ * A builder that can emit <a href="http://www.docbook.org/">Docbook</a>
  * 
  * @author David Green
+ * 
+ * @see MarkupToDocbook
+ * @see MarkupToDocbookTask
+ * @see DitaBookMapDocumentBuilder
  */
 public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 

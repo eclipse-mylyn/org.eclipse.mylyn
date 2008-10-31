@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.wikitext.core.util.anttask;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.tools.ant.BuildException;
@@ -141,7 +142,7 @@ public abstract class MarkupTask extends Task {
 		if (markupLanguage == null) {
 			throw new IllegalStateException();
 		}
-		log(String.format(Messages.getString("MarkupTask.1"), source), Project.MSG_VERBOSE); //$NON-NLS-1$
+		log(MessageFormat.format(Messages.getString("MarkupTask.1"), source), Project.MSG_VERBOSE); //$NON-NLS-1$
 
 		StandaloneMarkupValidator markupValidator = StandaloneMarkupValidator.getValidator(markupLanguage);
 
@@ -161,7 +162,7 @@ public abstract class MarkupTask extends Task {
 		}
 
 		if ((errorCount > 0 && failOnValidationError) || (warningCount > 0 && failOnValidationWarning)) {
-			throw new BuildException(String.format(Messages.getString("MarkupTask.3"), errorCount, //$NON-NLS-1$
+			throw new BuildException(MessageFormat.format(Messages.getString("MarkupTask.3"), errorCount, //$NON-NLS-1$
 					warningCount, source));
 		}
 	}

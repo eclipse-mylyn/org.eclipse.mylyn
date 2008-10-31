@@ -30,19 +30,20 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.eclipse.mylyn.wikitext.core.parser.builder.DocBookDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.DitaBookMapDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
-import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 
 /**
- * An Ant task for converting markup to docbook format.
+ * An Ant task for converting markup to OASIS DITA format.
  * 
  * @author David Green
  */
-public class MarkupToDocbookTask extends MarkupTask {
+public class MarkupToDitaTask extends MarkupTask {
 	private final List<FileSet> filesets = new ArrayList<FileSet>();
 
-	private String docbookFilenameFormat = "$1.xml"; //$NON-NLS-1$
+	private String ditamapFilenameFormat = "$1.ditamap"; //$NON-NLS-1$
 
 	private String bookTitle;
 
@@ -51,6 +52,10 @@ public class MarkupToDocbookTask extends MarkupTask {
 	protected File file;
 
 	private String doctype;
+
+	private String topicDoctype;
+
+	private String topicFolder = "topics";
 
 	/**
 	 * Adds a set of files to process.
@@ -63,18 +68,18 @@ public class MarkupToDocbookTask extends MarkupTask {
 	public void execute() throws BuildException {
 
 		if (file == null && filesets.isEmpty()) {
-			throw new BuildException(Messages.getString("MarkupToDocbookTask.1")); //$NON-NLS-1$
+			throw new BuildException(Messages.getString("MarkupToDitaTask.1")); //$NON-NLS-1$
 		}
 		if (file != null && !filesets.isEmpty()) {
-			throw new BuildException(Messages.getString("MarkupToDocbookTask.2")); //$NON-NLS-1$
+			throw new BuildException(Messages.getString("MarkupToDitaTask.2")); //$NON-NLS-1$
 		}
 		if (file != null) {
 			if (!file.exists()) {
-				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDocbookTask.3"), file)); //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.3"), file)); //$NON-NLS-1$
 			} else if (!file.isFile()) {
-				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDocbookTask.4"), file)); //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.4"), file)); //$NON-NLS-1$
 			} else if (!file.canRead()) {
-				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDocbookTask.5"), file)); //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.5"), file)); //$NON-NLS-1$
 			}
 		}
 
@@ -96,7 +101,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 						throw e;
 					} catch (Exception e) {
 						throw new BuildException(MessageFormat.format(
-								Messages.getString("MarkupToDocbookTask.6"), inputFile, //$NON-NLS-1$
+								Messages.getString("MarkupToDitaTask.6"), inputFile, //$NON-NLS-1$
 								e.getMessage()), e);
 					}
 				}
@@ -110,7 +115,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 				throw e;
 			} catch (Exception e) {
 				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToDocbookTask.7"), file, e.getMessage()), e); //$NON-NLS-1$
+						Messages.getString("MarkupToDitaTask.7"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -118,7 +123,7 @@ public class MarkupToDocbookTask extends MarkupTask {
 	private void processFile(MarkupLanguage markupLanguage, final File baseDir, final File source)
 			throws BuildException {
 
-		log(MessageFormat.format(Messages.getString("MarkupToDocbookTask.8"), source), Project.MSG_VERBOSE); //$NON-NLS-1$
+		log(MessageFormat.format(Messages.getString("MarkupToDitaTask.8"), source), Project.MSG_VERBOSE); //$NON-NLS-1$
 
 		String markupContent = null;
 
@@ -127,44 +132,60 @@ public class MarkupToDocbookTask extends MarkupTask {
 			name = name.substring(0, name.lastIndexOf('.'));
 		}
 
-		File docbookOutputFile = new File(source.getParentFile(), docbookFilenameFormat.replace("$1", name)); //$NON-NLS-1$
-		if (!docbookOutputFile.exists() || overwrite || docbookOutputFile.lastModified() < source.lastModified()) {
+		File ditamapOutputFile = new File(source.getParentFile(), ditamapFilenameFormat.replace("$1", name)); //$NON-NLS-1$
+		if (!ditamapOutputFile.exists() || overwrite || ditamapOutputFile.lastModified() < source.lastModified()) {
 
 			if (markupContent == null) {
 				markupContent = readFully(source);
 			}
 			performValidation(source, markupContent);
 
+			OutlineItem outline = new OutlineParser(markupLanguage).parse(markupContent);
+
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(docbookOutputFile)),
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(ditamapOutputFile)),
 						"utf-8"); //$NON-NLS-1$
 			} catch (Exception e) {
 				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToDocbookTask.11"), docbookOutputFile, //$NON-NLS-1$
+						Messages.getString("MarkupToDitaTask.11"), ditamapOutputFile, //$NON-NLS-1$
 						e.getMessage()), e);
 			}
 			try {
-				DocBookDocumentBuilder builder = new DocBookDocumentBuilder(writer) {
-					@Override
-					protected XmlStreamWriter createXmlStreamWriter(Writer out) {
-						return super.createFormattingXmlStreamWriter(out);
+				DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(writer);
+				try {
+					MarkupParser parser = new MarkupParser();
+					parser.setMarkupLanaguage(markupLanguage);
+					parser.setBuilder(builder);
+
+					builder.setBookTitle(bookTitle == null ? name : bookTitle);
+
+					if (doctype != null) {
+						builder.setDoctype(doctype);
 					}
-				};
-				MarkupParser parser = new MarkupParser();
-				parser.setMarkupLanaguage(markupLanguage);
-				parser.setBuilder(builder);
-				builder.setBookTitle(bookTitle == null ? name : bookTitle);
-				if (doctype != null) {
-					builder.setDoctype(doctype);
+					if (topicDoctype != null) {
+						builder.setTopicDoctype(topicDoctype);
+					}
+					builder.setTargetFile(ditamapOutputFile);
+					builder.setTopicFolder(topicFolder);
+					builder.setOutline(outline);
+
+					parser.parse(markupContent);
+				} finally {
+					try {
+						builder.close();
+					} catch (IOException e) {
+						throw new BuildException(MessageFormat.format(
+								Messages.getString("MarkupToDitaTask.12"), ditamapOutputFile, //$NON-NLS-1$
+								e.getMessage()), e);
+					}
 				}
-				parser.parse(markupContent);
 			} finally {
 				try {
 					writer.close();
 				} catch (Exception e) {
 					throw new BuildException(MessageFormat.format(
-							Messages.getString("MarkupToDocbookTask.12"), docbookOutputFile, //$NON-NLS-1$
+							Messages.getString("MarkupToDitaTask.12"), ditamapOutputFile, //$NON-NLS-1$
 							e.getMessage()), e);
 				}
 			}
@@ -186,29 +207,27 @@ public class MarkupToDocbookTask extends MarkupTask {
 			}
 		} catch (IOException e) {
 			throw new BuildException(MessageFormat.format(
-					Messages.getString("MarkupToDocbookTask.13"), inputFile, e.getMessage()), e); //$NON-NLS-1$
+					Messages.getString("MarkupToDitaTask.13"), inputFile, e.getMessage()), e); //$NON-NLS-1$
 		}
 		return w.toString();
 	}
 
 	/**
 	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
-	 * input file. Default value is <code>$1.xml</code>
+	 * input file. Default value is <code>$1.ditamap</code>
 	 * 
-	 * @see #setDocbookFilenameFormat(String)
+	 * @see #setDitamapFilenameFormat(String)
 	 */
-	public String getDocbookFilenameFormat() {
-		return docbookFilenameFormat;
+	public String getDitamapFilenameFormat() {
+		return ditamapFilenameFormat;
 	}
 
 	/**
 	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
-	 * input file. Default value is <code>$1.xml</code>
-	 * 
-	 * @param docbookFilenameFormat
+	 * input file. Default value is <code>$1.ditamap</code>
 	 */
-	public void setDocbookFilenameFormat(String docbookFilenameFormat) {
-		this.docbookFilenameFormat = docbookFilenameFormat;
+	public void setDitamapFilenameFormat(String ditamapFilenameFormat) {
+		this.ditamapFilenameFormat = ditamapFilenameFormat;
 	}
 
 	/**
@@ -232,8 +251,11 @@ public class MarkupToDocbookTask extends MarkupTask {
 	}
 
 	/**
-	 * Set the XML doctype of the docbook. The doctype should look something like this:
-	 * <code>&lt;!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"&gt;</code>
+	 * Set the XML doctype of the ditamap. The doctype should look something like this:
+	 * 
+	 * <pre>
+	 * &lt;!DOCTYPE bookmap PUBLIC \&quot;-//OASIS//DTD DITA 1.1 BookMap//EN\&quot;  \&quot;http://docs.oasis-open.org/dita/v1.1/OS/dtd/bookmap.dtd\&quot;&gt;
+	 * </pre>
 	 * 
 	 */
 	public void setDoctype(String doctype) {
@@ -241,10 +263,29 @@ public class MarkupToDocbookTask extends MarkupTask {
 	}
 
 	/**
-	 * The XML doctype of the docbook.
+	 * The XML doctype of the ditamap.
 	 */
 	public String getDoctype() {
 		return doctype;
+	}
+
+	/**
+	 * the XML doctype of topics
+	 */
+	public String getTopicDoctype() {
+		return topicDoctype;
+	}
+
+	/**
+	 * the XML doctype of topics The doctype should look something like this:
+	 * 
+	 * <pre>
+	 * &lt;!DOCTYPE topic PUBLIC \&quot;-//OASIS//DTD DITA 1.1 Topic//EN\&quot;&gt;
+	 * </pre>
+	 * 
+	 */
+	public void setTopicDoctype(String topicDoctype) {
+		this.topicDoctype = topicDoctype;
 	}
 
 	public boolean isOverwrite() {
@@ -253,6 +294,14 @@ public class MarkupToDocbookTask extends MarkupTask {
 
 	public void setOverwrite(boolean overwrite) {
 		this.overwrite = overwrite;
+	}
+
+	public String getTopicFolder() {
+		return topicFolder;
+	}
+
+	public void setTopicFolder(String topicFolder) {
+		this.topicFolder = topicFolder;
 	}
 
 }
