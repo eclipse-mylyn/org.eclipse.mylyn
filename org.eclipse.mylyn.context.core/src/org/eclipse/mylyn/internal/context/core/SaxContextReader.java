@@ -13,10 +13,8 @@
 
 package org.eclipse.mylyn.internal.context.core;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -48,51 +46,45 @@ public class SaxContextReader implements IInteractionContextReader {
 		if (!file.exists()) {
 			return null;
 		}
-		FileInputStream fileInputStream = null;
-		ZipInputStream zipInputStream = null;
 		try {
-			fileInputStream = new FileInputStream(file);
-			zipInputStream = new ZipInputStream(fileInputStream);
-
-			// search for context entry
-			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
-			String contextFileName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
-			ZipEntry entry = zipInputStream.getNextEntry();
-			while (entry != null) {
-				if (contextFileName.equals(entry.getName())) {
-					break;
-				}
-				entry = zipInputStream.getNextEntry();
-			}
-
-			if (entry == null) {
-				return null;
-			}
-
-			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier, contextScaling);
-			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(contentHandler);
-			reader.parse(new InputSource(zipInputStream));
-			return contentHandler.getContext();
-		} catch (Throwable t) {
-			closeStream(zipInputStream);
-			closeStream(fileInputStream);
-			file.renameTo(new File(file.getAbsolutePath() + "-save"));
-			return null;
-		} finally {
-			closeStream(zipInputStream);
-			closeStream(fileInputStream);
-		}
-	}
-
-	private static final void closeStream(Closeable closeable) {
-		if (closeable != null) {
+			FileInputStream fileInputStream = new FileInputStream(file);
 			try {
-				closeable.close();
-			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-						"Failed to close context input", e));
+				ZipInputStream zipInputStream = new ZipInputStream(fileInputStream);
+				try {
+					// search for context entry
+					String encoded = URLEncoder.encode(handleIdentifier,
+							InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+					String contextFileName = encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
+					ZipEntry entry = zipInputStream.getNextEntry();
+					while (entry != null) {
+						if (contextFileName.equals(entry.getName())) {
+							break;
+						}
+						entry = zipInputStream.getNextEntry();
+					}
+
+					if (entry == null) {
+						return null;
+					}
+
+					SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier,
+							contextScaling);
+					XMLReader reader = XMLReaderFactory.createXMLReader();
+					reader.setContentHandler(contentHandler);
+					reader.parse(new InputSource(zipInputStream));
+					return contentHandler.getContext();
+				} finally {
+					zipInputStream.close();
+				}
+			} finally {
+				fileInputStream.close();
 			}
+		} catch (Exception e) {
+			File saveFile = new File(file.getAbsolutePath() + "-save");
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
+					"Error loading context, backup saved to \"" + saveFile + "\"", e));
+			file.renameTo(saveFile);
+			return null;
 		}
 	}
 
