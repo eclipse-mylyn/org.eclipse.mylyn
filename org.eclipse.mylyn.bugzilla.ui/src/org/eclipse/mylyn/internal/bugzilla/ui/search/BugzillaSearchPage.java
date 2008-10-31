@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -57,6 +58,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -129,6 +131,19 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2",
 			"emaillongdesc2" };
+
+	// dialog store id constants
+	private final static String DIALOG_BOUNDS_KEY = "ResizableDialogBounds"; //$NON-NLS-1$
+
+	private static final String X = "x"; //$NON-NLS-1$
+
+	private static final String Y = "y"; //$NON-NLS-1$
+
+	private static final String WIDTH = "width"; //$NON-NLS-1$
+
+	private static final String HEIGHT = "height"; //$NON-NLS-1$
+
+	private Rectangle fNewBounds;
 
 	private IRepositoryQuery originalQuery = null;
 
@@ -377,6 +392,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// }
 		setControl(control);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
+		restoreBounds();
 	}
 
 	protected void createOptionsGroup(Composite control) {
@@ -1753,6 +1769,38 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// settings.put(STORE_REPO_ID, repositoryCombo.getText());
 	}
 
+	private void saveBounds(Rectangle bounds) {
+		IDialogSettings settings = getDialogSettings();
+		IDialogSettings dialogBounds = settings.getSection(DIALOG_BOUNDS_KEY);
+		if (dialogBounds == null) {
+			dialogBounds = new DialogSettings(DIALOG_BOUNDS_KEY);
+			settings.addSection(dialogBounds);
+		}
+		dialogBounds.put(X, bounds.x);
+		dialogBounds.put(Y, bounds.y);
+		dialogBounds.put(WIDTH, bounds.width);
+		dialogBounds.put(HEIGHT, bounds.height);
+	}
+
+	private void restoreBounds() {
+		IDialogSettings settings = getDialogSettings();
+		IDialogSettings dialogBounds = settings.getSection(DIALOG_BOUNDS_KEY);
+		Rectangle bounds = this.getShell().getBounds();
+
+		if (bounds != null && dialogBounds != null) {
+			try {
+				bounds.x = dialogBounds.getInt(X);
+				bounds.y = dialogBounds.getInt(Y);
+				bounds.height = dialogBounds.getInt(HEIGHT);
+				bounds.width = dialogBounds.getInt(WIDTH);
+				this.getShell().setBounds(bounds);
+			} catch (NumberFormatException e) {
+				// silently ignored
+			}
+		}
+
+	}
+
 	/* Testing hook to see if any products are present */
 	public int getProductCount() throws Exception {
 		return product.getItemCount();
@@ -1928,5 +1976,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public void applyTo(IRepositoryQuery query) {
 		query.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
 		query.setSummary(getQueryTitle());
+		saveBounds(this.getShell().getBounds());
 	}
+
 }
