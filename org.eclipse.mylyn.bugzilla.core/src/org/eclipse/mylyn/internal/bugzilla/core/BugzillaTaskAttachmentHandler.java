@@ -17,18 +17,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.commons.httpclient.methods.multipart.PartSource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -107,7 +106,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			}
 
 			client.postAttachment(task.getTaskId(), comment, description, contentType, isPatch,
-					new AttachmentPartSource(source, filename), monitor);
+					new TaskAttachmentPartSource(source, filename), monitor);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Unable to submit attachment", e));
@@ -130,38 +129,4 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 		}
 	}
 
-	public static class AttachmentPartSource implements PartSource {
-
-		private final AbstractTaskAttachmentSource attachment;
-
-		private final String filename;
-
-		public AttachmentPartSource(AbstractTaskAttachmentSource attachment, String filename) {
-			this.attachment = attachment;
-			this.filename = filename;
-		}
-
-		public AttachmentPartSource(AbstractTaskAttachmentSource attachment) {
-			this(attachment, attachment.getName());
-		}
-
-		public InputStream createInputStream() throws IOException {
-			try {
-				return attachment.createInputStream(null);
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-						"Error submitting attachment", e));
-				throw new IOException("Failed to create source stream");
-			}
-		}
-
-		public String getFileName() {
-			return filename;
-		}
-
-		public long getLength() {
-			return attachment.getLength();
-		}
-
-	}
 }
