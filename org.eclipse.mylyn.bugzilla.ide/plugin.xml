@@ -23,10 +23,10 @@
       <mapping
             pluginIdPrefix="org.eclipse.mylyn">
          <product
-               value="Mylyn">
+               value="%product.name">
          </product>
          <branding
-               name="Eclipse Mylyn - Eclipse.org Open Source Project">
+               name="%product.description">
          </branding>
       </mapping>
    </extension>
