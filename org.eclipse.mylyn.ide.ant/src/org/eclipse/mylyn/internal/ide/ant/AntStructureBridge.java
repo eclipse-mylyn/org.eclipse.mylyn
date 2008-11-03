@@ -47,7 +47,7 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 @SuppressWarnings("restriction")
 public class AntStructureBridge extends AbstractContextStructureBridge {
 
-	public final static String CONTENT_TYPE = "build.xml";
+	public final static String CONTENT_TYPE = "build.xml"; //$NON-NLS-1$
 
 	private static final char HANDLE_PATH_SEPARATOR = ';';
 
@@ -61,7 +61,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getContentType(String elementHandle) {
-		if (elementHandle.endsWith(".xml")) {
+		if (elementHandle.endsWith(".xml")) { //$NON-NLS-1$
 			return parentContentType;
 		} else {
 			return CONTENT_TYPE;
@@ -92,7 +92,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 			} else {
 				// if the parent is null, we just need to return the handle for
 				// the file
-				int delimeterIndex = handle.indexOf(";");
+				int delimeterIndex = handle.indexOf(";"); //$NON-NLS-1$
 				if (delimeterIndex != -1) {
 					String parentHandle = handle.substring(0, delimeterIndex);
 					return parentHandle;
@@ -119,7 +119,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				return null;
 			}
 			int first = handle.indexOf(HANDLE_PATH_SEPARATOR);
-			String filename = "";
+			String filename = ""; //$NON-NLS-1$
 			if (first == -1) {
 				// we have just the filename, so return the IFile for this
 				// filename
@@ -140,7 +140,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 
 			// get the line number that the element is on
 			String elementPath = handle.substring(first + 1);
-			if (elementPath.equals("")) {
+			if (elementPath.equals("")) { //$NON-NLS-1$
 				return file;
 			} else {
 				// XXX needed if the editor is the only way to get the model
@@ -192,7 +192,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 		} else if (object instanceof File) {
 			File file = (File) object;
 			// get the handle for the build.xml file
-			if (file.getFullPath().toString().endsWith("build.xml")) {
+			if (file.getFullPath().toString().endsWith("build.xml")) { //$NON-NLS-1$
 				return file.getFullPath().toString();
 			}
 		}
@@ -206,15 +206,15 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	public String getLabel(Object object) {
 		if (object instanceof AntElementNode) {
 			AntElementNode n = (AntElementNode) object;
-			String name = n.getIFile().getName() + ": " + n.getName();
+			String name = n.getIFile().getName() + ": " + n.getName(); //$NON-NLS-1$
 			return name;
 		} else if (object instanceof File) {
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("build.xml")) {
-				return "build.xml";
+			if (file.getFullPath().toString().endsWith("build.xml")) { //$NON-NLS-1$
+				return "build.xml"; //$NON-NLS-1$
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -239,12 +239,12 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 		if (object instanceof AntElementNode) {
 			return true;
 		} else if (object instanceof XmlNodeHelper) {
-			if (((XmlNodeHelper) object).getFilename().endsWith("build.xml")) {
+			if (((XmlNodeHelper) object).getFilename().endsWith("build.xml")) { //$NON-NLS-1$
 				return true;
 			}
 		} else if (object instanceof File) {
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("build.xml")) {
+			if (file.getFullPath().toString().endsWith("build.xml")) { //$NON-NLS-1$
 				return true;
 			}
 		}
@@ -294,7 +294,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 			try {
 				if (markerResource instanceof IFile) {
 					IFile file = (IFile) markerResource;
-					if (file.getFullPath().toString().endsWith("build.xml")) {
+					if (file.getFullPath().toString().endsWith("build.xml")) { //$NON-NLS-1$
 						return file.getFullPath().toString();
 					} else {
 						return null;
@@ -302,14 +302,14 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				}
 				return null;
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Could not find element for: "
+				StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Could not find element for: " //$NON-NLS-1$
 						+ object, t));
 				return null;
 			}
 		} else if (object instanceof IFile) {
 			try {
 				IFile file = (IFile) object;
-				if (file.getFullPath().toString().endsWith("build.xml")) {
+				if (file.getFullPath().toString().endsWith("build.xml")) { //$NON-NLS-1$
 					FileEditorInput fei = new FileEditorInput(file);
 					String content = XmlNodeHelper.getContents(file.getContents());
 					IDocument d = new Document(content);
@@ -331,7 +331,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.WARNING, AntUiBridgePlugin.ID_PLUGIN,
-						"Unable to get handle for offset in object", e));
+						"Unable to get handle for offset in object", e)); //$NON-NLS-1$
 			}
 		}
 		return null;

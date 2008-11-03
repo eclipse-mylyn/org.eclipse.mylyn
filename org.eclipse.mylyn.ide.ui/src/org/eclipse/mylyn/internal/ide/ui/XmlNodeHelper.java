@@ -34,10 +34,10 @@ public class XmlNodeHelper {
 	private String end;
 
 	public XmlNodeHelper(String handle) {
-		int first = handle.indexOf(";");
+		int first = handle.indexOf(";"); //$NON-NLS-1$
 		if (first == -1) {
 			filename = handle;
-			end = "";
+			end = ""; //$NON-NLS-1$
 		} else {
 			filename = handle.substring(0, first);
 			end = handle.substring(first + 1);
@@ -54,7 +54,7 @@ public class XmlNodeHelper {
 	 */
 	public XmlNodeHelper(String filename, int s) {
 		this.filename = filename;
-		this.end = "" + s;
+		this.end = "" + s; //$NON-NLS-1$
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class XmlNodeHelper {
 	 * @return The to the node handle in String form
 	 */
 	public String getHandle() {
-		return filename + ";" + getValue();
+		return filename + ";" + getValue(); //$NON-NLS-1$
 	}
 
 	public String getFilename() {
@@ -112,21 +112,21 @@ public class XmlNodeHelper {
 	 * @return The <code>String</code> representing the contents
 	 */
 	public static String getContents(InputStream is) {
-		String contents = "";
+		String contents = ""; //$NON-NLS-1$
 
 		// create a new reader for the stream
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		try {
 
 			// get the contents
-			String s = "";
+			String s = ""; //$NON-NLS-1$
 			char[] cbuf = new char[512];
 			while (br.read(cbuf) != -1) {
 				s = new String(cbuf);
 				contents += s;
 			}
 		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN, "Could not get contents", e));
+			StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN, "Could not get contents", e)); //$NON-NLS-1$
 		}
 		return contents;
 	}

@@ -21,9 +21,9 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  */
 public class IdeUiUtil {
 
-	public static final String ID_VIEW_SYNCHRONIZE = "org.eclipse.team.sync.views.SynchronizeView";
+	public static final String ID_VIEW_SYNCHRONIZE = "org.eclipse.team.sync.views.SynchronizeView"; //$NON-NLS-1$
 
-	public static final String ID_NAVIGATOR = "org.eclipse.ui.views.ResourceNavigator";
+	public static final String ID_NAVIGATOR = "org.eclipse.ui.views.ResourceNavigator"; //$NON-NLS-1$
 
 	public static IViewPart getView(String id) {
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

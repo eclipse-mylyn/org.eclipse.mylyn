@@ -12,11 +12,11 @@
            enablesFor="*"
            icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ide.ui.actions.focus.projectExplorer"
-           label="Focus on Active Task"
+           label="%FocusProjectExplorerAction.label"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)">
+           tooltip="%FocusProjectExplorerAction.tooltip">
         <enablement>
            <systemProperty
                  name="org.eclipse.mylyn.context.core.context.active"
@@ -35,11 +35,11 @@
            enablesFor="*"
            icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ide.ui.actions.focus.resourceNavigator"
-           label="Focus on Active Task"
+           label="%FocusResourceNavigatorAction.label"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)">
+           tooltip="%FocusResourceNavigatorAction.tooltip">
         <enablement>
            <systemProperty
                  name="org.eclipse.mylyn.context.core.context.active"
@@ -57,11 +57,11 @@
            enablesFor="*"
            icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ide.ui.actions.focus.markers.problems"
-           label="Focus on Active Task"
+           label="%FocusProblemsListAction.label"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task">
+           tooltip="%FocusProblemsListAction.tooltip">
   		</action>  
       </viewContribution> 
 
@@ -74,11 +74,11 @@
            enablesFor="*"
            icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ide.ui.actions.focus.markers.all"
-           label="Focus on Active Task"
+           label="%FocusAllMarkersViewAction.label"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task">
+           tooltip="%FocusAllMarkersViewAction.tooltip">
   		</action>  
       </viewContribution>
       
@@ -91,11 +91,11 @@
            enablesFor="*"
            icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ide.ui.actions.focus.markers.tasks"
-           label="Focus on Active Task"
+           label="%FocusTaskMarkersViewAction.label"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task">
+           tooltip="%FocusTaskMarkersViewAction.tooltip">
   		</action>  
       </viewContribution>
    <viewContribution
@@ -107,11 +107,11 @@
             enablesFor="*"
             icon="icons/elcl16/focus.gif"
             id="org.eclipse.mylyn.ide.ui.actions.focus.markers.bookmarks"
-            label="Focus on Active Task"
+            label="%FocusBookmarkMarkersViewAction.label"
             menubarPath="mylyn"
             style="toggle"
             toolbarPath="mylyn"
-            tooltip="Focus on Active Task">
+            tooltip="%FocusBookmarkMarkersViewAction.tooltip">
       </action>
    </viewContribution> 
     </extension>

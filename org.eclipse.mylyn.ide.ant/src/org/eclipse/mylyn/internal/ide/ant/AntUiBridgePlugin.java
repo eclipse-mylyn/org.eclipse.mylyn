@@ -30,7 +30,7 @@ public class AntUiBridgePlugin extends Plugin {
 
 	}
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.ide.ant";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.ide.ant"; //$NON-NLS-1$
 
 	private static AntUiBridgePlugin INSTANCE;
 

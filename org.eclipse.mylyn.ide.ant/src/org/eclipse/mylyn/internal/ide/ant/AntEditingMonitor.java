@@ -74,7 +74,7 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 					super.handleElementSelection(part, xnode, contributeToContext);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN,
-							"Resolving selection failed", e));
+							"Resolving selection failed", e)); //$NON-NLS-1$
 				}
 			}
 		}

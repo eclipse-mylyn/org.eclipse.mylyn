@@ -21,11 +21,11 @@ import org.osgi.framework.BundleContext;
  */
 public class IdeUiBridgePlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.ide";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.ide"; //$NON-NLS-1$
 
 	private static IdeUiBridgePlugin INSTANCE;
 
-	public static final ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif");
+	public static final ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif"); //$NON-NLS-1$
 
 	public static class IdeUiBridgeStartup implements IContextUiStartup {
 
@@ -61,7 +61,7 @@ public class IdeUiBridgePlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.ide", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.ide", path); //$NON-NLS-1$
 	}
 
 }

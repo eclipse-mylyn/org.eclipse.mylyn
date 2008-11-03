@@ -54,8 +54,8 @@ public class AntUiBridge extends AbstractContextUiBridge {
 		// get the handle of the node
 		String handle = node.getHandleIdentifier();
 
-		int first = handle.indexOf(";");
-		String filename = "";
+		int first = handle.indexOf(";"); //$NON-NLS-1$
+		String filename = ""; //$NON-NLS-1$
 		if (first == -1) {
 			filename = handle;
 		} else {
@@ -73,7 +73,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 			// if the editor is null, we had a problem and should return
 			if (editor == null) {
 				StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN,
-						"Unable to open editor for file: " + filename));
+						"Unable to open editor for file: " + filename)); //$NON-NLS-1$
 				return;
 			}
 
@@ -99,7 +99,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 			// }
 
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Could not open XML editor", e));
+			StatusHandler.log(new Status(IStatus.ERROR, AntUiBridgePlugin.ID_PLUGIN, "Could not open XML editor", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -167,11 +167,11 @@ public class AntUiBridge extends AbstractContextUiBridge {
 				AntEditor ae = (AntEditor) editor;
 				AntEditorContentOutlinePage outline = (AntEditorContentOutlinePage) ae.getAdapter(IContentOutlinePage.class);
 				Class<?> clazz = ContentOutlinePage.class;
-				Method method = clazz.getDeclaredMethod("getTreeViewer", new Class[] {});
+				Method method = clazz.getDeclaredMethod("getTreeViewer", new Class[] {}); //$NON-NLS-1$
 				method.setAccessible(true);
 				viewers.add((TreeViewer) method.invoke(outline, new Object[] {}));
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.WARNING, AntUiBridgePlugin.ID_PLUGIN, "Unable to get outline", e));
+				StatusHandler.log(new Status(IStatus.WARNING, AntUiBridgePlugin.ID_PLUGIN, "Unable to get outline", e)); //$NON-NLS-1$
 			}
 		}
 		return viewers;

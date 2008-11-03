@@ -75,7 +75,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 				if (viewPart != null) {
 					// NOTE: following code is Eclipse 3.4 specific
 					Class<?> clazz = ExtendedMarkersView.class;
-					Field field = clazz.getDeclaredField("viewer");
+					Field field = clazz.getDeclaredField("viewer"); //$NON-NLS-1$
 					field.setAccessible(true);
 					cachedViewer = (MarkersTreeViewer) field.get(viewPart);
 					if (cachedViewer != null && !cachedViewer.getControl().isDisposed()) {
@@ -84,7 +84,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, IdeUiBridgePlugin.ID_PLUGIN,
-						"Could not get problems view viewer", e));
+						"Could not get problems view viewer", e)); //$NON-NLS-1$
 			}
 		}
 		if (cachedViewer != null) {

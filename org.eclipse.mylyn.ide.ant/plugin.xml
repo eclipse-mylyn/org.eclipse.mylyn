@@ -5,7 +5,7 @@
    	<extension point="org.eclipse.mylyn.context.core.bridges">
 		<structureBridge
 	        class="org.eclipse.mylyn.internal.ide.ant.AntStructureBridge"
-	        name="Ant Structure Bridge"
+	        name="%AntStructureBridge.name"
 	        parentContentType="resource"/>
 	</extension>
 	
@@ -14,7 +14,7 @@
           class="org.eclipse.mylyn.internal.ide.ant.AntUiBridge"
           contentType="build.xml"
           activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
-	      activeSearchLabel="XML Search"/>
+	      activeSearchLabel="%bridges.activeSearchLabel"/>
   	</extension>
 
 </plugin>

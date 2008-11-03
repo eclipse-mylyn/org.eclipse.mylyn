@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Ant Bridge
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.ide.ant;singleton:=true
 Bundle-Version: 3.1.0.qualifier
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ant.ui,
  org.eclipse.core.runtime,
  org.eclipse.debug.ui,
@@ -23,3 +23,4 @@ Bundle-Activator: org.eclipse.mylyn.internal.ide.ant.AntUiBridgePlugin
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.internal.ide.ant;x-internal:=true
 Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin

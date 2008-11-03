@@ -26,7 +26,7 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 	public boolean select(Viewer viewer, Object parent, Object element) {
 
 		if (element instanceof MarkerItem) {
-			if (element.getClass().getSimpleName().equals("MarkerCategory")) {
+			if (element.getClass().getSimpleName().equals("MarkerCategory")) { //$NON-NLS-1$
 //				Class<?> clazz;
 //				try {
 //					clazz = Class.forName("org.eclipse.ui.internal.views.markers.MarkerCategory");
@@ -38,7 +38,7 @@ public class MarkerInterestFilter extends AbstractMarkerInterestFilter {
 //				}
 
 				return true;
-			} else if (element.getClass().getSimpleName().equals("MarkerEntry")) {
+			} else if (element.getClass().getSimpleName().equals("MarkerEntry")) { //$NON-NLS-1$
 				return isInteresting(((MarkerItem) element).getMarker(), viewer, parent);
 			}
 		}
