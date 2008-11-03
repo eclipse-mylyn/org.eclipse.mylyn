@@ -20,13 +20,13 @@ import org.eclipse.ui.activities.IActivityManagerListener;
  */
 public class ActivityChangeMonitor implements IActivityManagerListener {
 
-	private static final String ACTIVITIES_CHANGED = "activities changed";
+	private static final String ACTIVITIES_CHANGED = "activities changed"; //$NON-NLS-1$
 
 	public void activityManagerChanged(ActivityManagerEvent activityManagerEvent) {
 		if (activityManagerEvent.haveEnabledActivityIdsChanged()) {
 			String source = activityManagerEvent.getActivityManager().toString();
 			String delta = activityManagerEvent.getActivityManager().getEnabledActivityIds().toString();
-			InteractionEvent interactionEvent = InteractionEvent.makePreference(source, ACTIVITIES_CHANGED + ": "
+			InteractionEvent interactionEvent = InteractionEvent.makePreference(source, ACTIVITIES_CHANGED + ": " //$NON-NLS-1$
 					+ delta);
 			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 		}

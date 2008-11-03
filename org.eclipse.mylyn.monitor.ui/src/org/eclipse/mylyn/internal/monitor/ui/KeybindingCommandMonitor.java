@@ -20,7 +20,7 @@ import org.eclipse.mylyn.monitor.ui.AbstractCommandMonitor;
  */
 public class KeybindingCommandMonitor extends AbstractCommandMonitor {
 
-	public static final String COMMAND_INVOKED = "keybinding";
+	public static final String COMMAND_INVOKED = "keybinding"; //$NON-NLS-1$
 
 	@Override
 	protected void handleCommandExecution(String commandId, ExecutionEvent event) {

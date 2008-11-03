@@ -25,15 +25,15 @@ import org.eclipse.ui.internal.registry.PerspectiveDescriptor;
  */
 public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 
-	public static final String PERSPECTIVE_SAVED = "perspective saved";
+	public static final String PERSPECTIVE_SAVED = "perspective saved"; //$NON-NLS-1$
 
-	public static final String PERSPECTIVE_OPENED = "perspective opened";
+	public static final String PERSPECTIVE_OPENED = "perspective opened"; //$NON-NLS-1$
 
-	public static final String PERSPECTIVE_CLOSED = "perspective closed";
+	public static final String PERSPECTIVE_CLOSED = "perspective closed"; //$NON-NLS-1$
 
-	public static final String PERSPECTIVE_CHANGED = "perspective changed";
+	public static final String PERSPECTIVE_CHANGED = "perspective changed"; //$NON-NLS-1$
 
-	public static final String PERSPECTIVE_ACTIVATED = "perspective activated";
+	public static final String PERSPECTIVE_ACTIVATED = "perspective activated"; //$NON-NLS-1$
 
 	@Override
 	public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
@@ -48,7 +48,7 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 			IWorkbenchPartReference partRef, String changeId) {
 		if (partRef != null) {
 			String source = partRef.getId();
-			InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CHANGED + ": "
+			InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CHANGED + ": " //$NON-NLS-1$
 					+ changeId);
 			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 		}
@@ -57,7 +57,7 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 	@Override
 	public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
 		String source = this.getPerspectiveId(perspective);
-		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CHANGED + ": "
+		InteractionEvent interactionEvent = InteractionEvent.makePreference(source, PERSPECTIVE_CHANGED + ": " //$NON-NLS-1$
 				+ changeId);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
@@ -90,7 +90,7 @@ public class PerspectiveChangeMonitor extends PerspectiveAdapter {
 		if (perspective instanceof PerspectiveDescriptor) {
 			String originalId = ((PerspectiveDescriptor) perspective).getOriginalId();
 			if (!originalId.equals(perspective.getId())) {
-				id = originalId + "[customized]";
+				id = originalId + "[customized]"; //$NON-NLS-1$
 			} else {
 				id = perspective.getId();
 			}

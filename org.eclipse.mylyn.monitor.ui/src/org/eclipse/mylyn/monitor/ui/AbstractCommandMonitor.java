@@ -40,7 +40,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 			commandService.addExecutionListener(this);
 		} catch (NullPointerException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN,
-					"Monitors can not be instantiated until the workbench is active.", e));
+					"Monitors can not be instantiated until the workbench is active.", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -50,7 +50,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 					ICommandService.class);
 			commandService.removeExecutionListener(this);
 		} catch (NullPointerException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not dispose monitor.", e));
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not dispose monitor.", e)); //$NON-NLS-1$
 		}
 	}
 

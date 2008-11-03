@@ -53,7 +53,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	private static final int DEFAULT_ACTIVITY_TIMEOUT = 180000;
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.monitor.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.monitor.ui"; //$NON-NLS-1$
 
 	private static MonitorUiPlugin INSTANCE;
 
@@ -80,9 +80,9 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	private final Set<IWorkbenchWindow> monitoredWindows = new HashSet<IWorkbenchWindow>();
 
-	public static final String OBFUSCATED_LABEL = "[obfuscated]";
+	public static final String OBFUSCATED_LABEL = "[obfuscated]"; //$NON-NLS-1$
 
-	public static final String PREF_USER_ACTIVITY_ENABLED = "org.eclipse.mylyn.monitor.user.activity.enabled";
+	public static final String PREF_USER_ACTIVITY_ENABLED = "org.eclipse.mylyn.monitor.user.activity.enabled"; //$NON-NLS-1$
 
 	private IWorkbenchWindow launchingWorkbenchWindow = null;
 
@@ -187,7 +187,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI stop failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI stop failed", e)); //$NON-NLS-1$
 		}
 		INSTANCE = null;
 	}
@@ -285,11 +285,11 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	class MonitorUiExtensionPointReader {
 
-		public static final String EXTENSION_ID_USER = "org.eclipse.mylyn.monitor.ui.user";
+		public static final String EXTENSION_ID_USER = "org.eclipse.mylyn.monitor.ui.user"; //$NON-NLS-1$
 
-		public static final String ELEMENT_ACTIVITY_TIMER = "osActivityTimer";
+		public static final String ELEMENT_ACTIVITY_TIMER = "osActivityTimer"; //$NON-NLS-1$
 
-		public static final String ELEMENT_CLASS = "class";
+		public static final String ELEMENT_CLASS = "class"; //$NON-NLS-1$
 
 		private boolean extensionsRead = false;
 
@@ -313,7 +313,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				}
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN,
-						"Could not read monitor extension", t));
+						"Could not read monitor extension", t)); //$NON-NLS-1$
 			}
 		}
 
@@ -326,7 +326,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					}
 				}
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not load activity timer",
+				StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not load activity timer", //$NON-NLS-1$
 						e));
 			}
 		}
@@ -338,10 +338,10 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public boolean suppressConfigurationWizards() {
 		List<String> commandLineArgs = Arrays.asList(Platform.getCommandLineArgs());
-		if (commandLineArgs.contains("-showMylynWizards")) {
+		if (commandLineArgs.contains("-showMylynWizards")) { //$NON-NLS-1$
 			return false;
 		} else {
-			return commandLineArgs.contains("-pdelaunch");
+			return commandLineArgs.contains("-pdelaunch"); //$NON-NLS-1$
 		}
 	}
 
@@ -419,7 +419,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Monitor UI start failed", e)); //$NON-NLS-1$
 		}
 	}
 

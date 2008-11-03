@@ -44,7 +44,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 			MonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
 		} catch (NullPointerException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN,
-					"Monitors can not be instantiated until the workbench is active", e));
+					"Monitors can not be instantiated until the workbench is active", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -52,7 +52,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		try {
 			MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
 		} catch (NullPointerException e) {
-			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Could not dispose monitor", e));
+			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Could not dispose monitor", e)); //$NON-NLS-1$
 		}
 	}
 

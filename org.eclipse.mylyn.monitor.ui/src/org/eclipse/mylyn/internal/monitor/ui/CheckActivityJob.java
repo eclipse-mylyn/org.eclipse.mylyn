@@ -50,7 +50,7 @@ public class CheckActivityJob extends Job {
 	protected long tick = ACTIVE_TICK;
 
 	public CheckActivityJob(IActivityManagerCallback callback) {
-		super("Activity Monitor Job");
+		super(Messages.CheckActivityJob_Activity_Monitor_Job);
 		this.callback = callback;
 	}
 

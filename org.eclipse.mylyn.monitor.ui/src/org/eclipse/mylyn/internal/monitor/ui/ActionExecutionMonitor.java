@@ -21,7 +21,7 @@ import org.eclipse.mylyn.monitor.ui.IActionExecutionListener;
 public class ActionExecutionMonitor implements IActionExecutionListener {
 
 	public void actionObserved(IAction action) {
-		InteractionEvent interactionEvent = InteractionEvent.makeCommand(action.getId(), "");
+		InteractionEvent interactionEvent = InteractionEvent.makeCommand(action.getId(), ""); //$NON-NLS-1$
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 }

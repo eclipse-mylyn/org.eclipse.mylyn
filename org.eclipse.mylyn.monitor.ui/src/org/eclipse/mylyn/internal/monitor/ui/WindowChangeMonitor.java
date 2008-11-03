@@ -25,13 +25,13 @@ import org.eclipse.ui.IWorkbenchWindow;
  */
 public class WindowChangeMonitor implements IWindowListener {
 
-	public static final String WINDOW_CLOSED = "closed";
+	public static final String WINDOW_CLOSED = "closed"; //$NON-NLS-1$
 
-	public static final String WINDOW_OPENED = "opened";
+	public static final String WINDOW_OPENED = "opened"; //$NON-NLS-1$
 
-	public static final String WINDOW_ACTIVATED = "activated";
+	public static final String WINDOW_ACTIVATED = "activated"; //$NON-NLS-1$
 
-	public static final String WINDOW_DEACTIVATED = "deactivated";
+	public static final String WINDOW_DEACTIVATED = "deactivated"; //$NON-NLS-1$
 
 	public WindowChangeMonitor() {
 		super();

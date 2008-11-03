@@ -33,13 +33,13 @@ import org.eclipse.swt.widgets.ToolItem;
  */
 public class MenuCommandMonitor implements Listener {
 
-	public static final String MENU_ITEM_ID = "item.label.";
+	public static final String MENU_ITEM_ID = "item.label."; //$NON-NLS-1$
 
-	public static final String MENU_ITEM_SELECTED = "menu";
+	public static final String MENU_ITEM_SELECTED = "menu"; //$NON-NLS-1$
 
-	public static final String TOOLBAR_ITEM_SELECTED = "toolbar";
+	public static final String TOOLBAR_ITEM_SELECTED = "toolbar"; //$NON-NLS-1$
 
-	public static final String MENU_PATH_DELIM = "/";
+	public static final String MENU_PATH_DELIM = "/"; //$NON-NLS-1$
 
 	public void handleEvent(Event event) {
 		try {
@@ -70,7 +70,7 @@ public class MenuCommandMonitor implements Listener {
 			if (item instanceof MenuItem) {
 				MenuItem menu = (MenuItem) item;
 				Menu parentMenu = menu.getParent();
-				String location = "";
+				String location = ""; //$NON-NLS-1$
 				if (parentMenu != null) {
 					while (parentMenu.getParentItem() != null) {
 						location = parentMenu.getParentItem().getText() + MENU_PATH_DELIM + location;
@@ -102,7 +102,7 @@ public class MenuCommandMonitor implements Listener {
 			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not log selection", t));
+			StatusHandler.log(new Status(IStatus.ERROR, MonitorUiPlugin.ID_PLUGIN, "Could not log selection", t)); //$NON-NLS-1$
 		}
 	}
 }

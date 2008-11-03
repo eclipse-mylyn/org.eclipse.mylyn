@@ -40,7 +40,7 @@ import org.eclipse.ui.internal.browser.WebBrowserEditor;
 public class BrowserMonitor extends AbstractUserInteractionMonitor implements IPartListener, IWindowListener,
 		IPageListener {
 
-	public static final String URL_LIST_DELIM = ",";
+	public static final String URL_LIST_DELIM = ","; //$NON-NLS-1$
 
 	private final UrlTrackingListener urlTrackingListener = new UrlTrackingListener();
 
@@ -61,8 +61,8 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 				}
 			}
 			if (accept) {
-				InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, "url", url,
-						WebBrowserEditor.WEB_BROWSER_EDITOR_ID, "null", "", 0);
+				InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, "url", url, //$NON-NLS-1$
+						WebBrowserEditor.WEB_BROWSER_EDITOR_ID, "null", "", 0); //$NON-NLS-1$ //$NON-NLS-2$
 				MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO:
 				// move
 			}
@@ -106,14 +106,14 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 	private Browser getBrowser(final WebBrowserEditor browserEditor) {
 		try { // HACK: using reflection to gain accessibility
 			Class<?> browserClass = browserEditor.getClass();
-			Field browserField = browserClass.getDeclaredField("webBrowser");
+			Field browserField = browserClass.getDeclaredField("webBrowser"); //$NON-NLS-1$
 			browserField.setAccessible(true);
 			Object browserObject = browserField.get(browserEditor);
 			if (browserObject != null && browserObject instanceof BrowserViewer) {
 				return ((BrowserViewer) browserObject).getBrowser();
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Could not add browser listener",
+			StatusHandler.log(new Status(IStatus.WARNING, MonitorUiPlugin.ID_PLUGIN, "Could not add browser listener", //$NON-NLS-1$
 					e));
 		}
 		return null;
