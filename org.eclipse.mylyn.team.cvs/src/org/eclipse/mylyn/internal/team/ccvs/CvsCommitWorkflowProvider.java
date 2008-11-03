@@ -24,7 +24,7 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings( { "deprecation", "restriction" })
 public class CvsCommitWorkflowProvider extends AbstractCommitWorkflowProvider {
 
-	private static final String WIZARD_LABEL = "Commit Resources in Task Context";
+	private static final String WIZARD_LABEL = Messages.CvsCommitWorkflowProvider_Commit_Resources_in_Task_Context;
 
 	@Override
 	public boolean hasOutgoingChanges(IResource[] resources) {

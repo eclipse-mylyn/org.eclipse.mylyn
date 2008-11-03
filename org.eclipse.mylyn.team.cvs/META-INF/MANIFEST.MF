@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn CVS Extensions
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.team.cvs;singleton:=true
 Bundle-Version: 3.1.0.qualifier
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.team.ui,
  org.eclipse.team.core,
  org.eclipse.team.cvs.ui,
@@ -21,3 +21,4 @@ Require-Bundle: org.eclipse.team.ui,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.internal.team.ccvs;x-internal:=true
+Bundle-Localization: plugin
