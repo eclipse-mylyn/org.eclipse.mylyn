@@ -64,6 +64,10 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String filename;
 
+	private int topicBreakLevel = Integer.MAX_VALUE;
+
+	private String rootTitle;
+
 	public DitaTopicDocumentBuilder(Writer out) {
 		super(out);
 	}
@@ -292,6 +296,12 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	public void beginDocument() {
 		writer.writeStartDocument();
 		writer.writeDTD(doctype);
+		if (rootTitle != null) {
+			writer.writeStartElement("topic");
+			writer.writeStartElement("title");
+			writer.writeCharacters(rootTitle);
+			writer.writeEndElement();
+		}
 	}
 
 	@Override
@@ -419,6 +429,9 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void endDocument() {
 		closeTopics(0);
+		if (rootTitle != null) {
+			writer.writeEndElement();
+		}
 		writer.writeEndDocument();
 	}
 
@@ -549,11 +562,11 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * @return the href adjusted, or the original href if the given URL appears to be to non-document content
 	 */
 	private String computeDitaXref(String href) {
-		if (href.startsWith("#")) {
+		if (href.startsWith("#") && topicBreakLevel < Integer.MAX_VALUE) {
 			if (outline != null) {
 				OutlineItem item = outline.findItemById(href.substring(1));
 				if (item != null) {
-					OutlineItem topicItem = computeTopicItem(item);
+					OutlineItem topicItem = computeTopicFileItem(item);
 					String targetFilename = computeTargetFilename(topicItem);
 					String ref;
 					if (targetFilename.equals(filename)) {
@@ -576,14 +589,44 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String computeTargetFilename(OutlineItem item) {
 		String filenameSuffix = filename.substring(filename.lastIndexOf('.'));
-		return computeName(item.getLevel() == 1 ? item.getId() : null, filenameSuffix);
+		return computeName(item.getLevel() == topicBreakLevel ? item.getId() : null, filenameSuffix);
 	}
 
-	private OutlineItem computeTopicItem(OutlineItem item) {
-		while (item.getLevel() > 1 && item.getParent() != null && item.getParent().getLevel() > 0) {
+	private OutlineItem computeTopicFileItem(OutlineItem item) {
+		while (item.getLevel() > topicBreakLevel && item.getParent() != null
+				&& item.getParent().getLevel() > (topicBreakLevel - 1)) {
 			item = item.getParent();
 		}
 		return item;
 	}
 
+	/**
+	 * the heading level at which topics are determined
+	 */
+	public int getTopicBreakLevel() {
+		return topicBreakLevel;
+	}
+
+	/**
+	 * the heading level at which topics are determined
+	 */
+	public void setTopicBreakLevel(int topicBreakLevel) {
+		this.topicBreakLevel = topicBreakLevel;
+	}
+
+	/**
+	 * The title of the root topic if there should be one. If specified, the topic file is created with a 'wrapper' root
+	 * topic with the given title.
+	 */
+	public void setRootTopicTitle(String rootTitle) {
+		this.rootTitle = rootTitle;
+	}
+
+	/**
+	 * The title of the root topic if there should be one. If specified, the topic file is created with a 'wrapper' root
+	 * topic with the given title.
+	 */
+	public String getRootTopicTitle() {
+		return rootTitle;
+	}
 }

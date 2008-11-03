@@ -69,6 +69,8 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 
 	private OutlineItem outline;
 
+	private int topicBreakLevel = 1;
+
 	public DitaBookMapDocumentBuilder(Writer out) {
 		super(out);
 	}
@@ -199,6 +201,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 			if (topicDoctype != null) {
 				currentTopic.setDoctype(topicDoctype);
 			}
+			currentTopic.setTopicBreakLevel(topicBreakLevel);
 			currentTopic.setOutline(outline);
 			currentTopic.setFilename(currentTopicFile.getName());
 			currentTopic.beginDocument();
@@ -229,7 +232,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 	@Override
 	public void beginHeading(int level, Attributes attributes) {
 		headingLevels.push(level);
-		if (level == 1) {
+		if (level <= topicBreakLevel) {
 			closeCurrentTopic();
 			latestHeadingId = attributes.getId();
 
@@ -301,7 +304,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 	public void endHeading() {
 		int level = headingLevels.pop();
 
-		if (level == 1) {
+		if (level <= topicBreakLevel) {
 			if (mapEntryOpen) {
 				mapEntryOpen = false;
 				writer.writeAttribute("navtitle", titleText);
@@ -372,4 +375,17 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 		this.outline = outline;
 	}
 
+	/**
+	 * the heading level at which topics are determined
+	 */
+	public int getTopicBreakLevel() {
+		return topicBreakLevel;
+	}
+
+	/**
+	 * the heading level at which topics are determined
+	 */
+	public void setTopicBreakLevel(int topicBreakLevel) {
+		this.topicBreakLevel = topicBreakLevel;
+	}
 }

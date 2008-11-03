@@ -29,6 +29,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.eclipse.mylyn.internal.wikitext.core.parser.builder.DitaTopicDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.DitaBookMapDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -41,9 +42,24 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
  * @author David Green
  */
 public class MarkupToDitaTask extends MarkupTask {
+	public enum BreakStrategy {
+		/**
+		 * do not break: all output is one topic
+		 */
+		NONE,
+		/**
+		 * break on level-1 headings
+		 */
+		LEVEL1,
+		/**
+		 * break on the first level heading found in the document
+		 */
+		FIRST
+	}
+
 	private final List<FileSet> filesets = new ArrayList<FileSet>();
 
-	private String ditamapFilenameFormat = "$1.ditamap"; //$NON-NLS-1$
+	private String filenameFormat;
 
 	private String bookTitle;
 
@@ -56,6 +72,8 @@ public class MarkupToDitaTask extends MarkupTask {
 	private String topicDoctype;
 
 	private String topicFolder = "topics";
+
+	private BreakStrategy topicStrategy = BreakStrategy.FIRST;
 
 	/**
 	 * Adds a set of files to process.
@@ -80,6 +98,16 @@ public class MarkupToDitaTask extends MarkupTask {
 				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.4"), file)); //$NON-NLS-1$
 			} else if (!file.canRead()) {
 				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.5"), file)); //$NON-NLS-1$
+			}
+		}
+
+		if (filenameFormat == null) {
+			switch (topicStrategy) {
+			case NONE:
+				filenameFormat = "$.dita"; //$NON-NLS-1$
+				break;
+			default:
+				filenameFormat = "$1.ditamap"; //$NON-NLS-1$
 			}
 		}
 
@@ -131,10 +159,8 @@ public class MarkupToDitaTask extends MarkupTask {
 		if (name.lastIndexOf('.') != -1) {
 			name = name.substring(0, name.lastIndexOf('.'));
 		}
-
-		File ditamapOutputFile = new File(source.getParentFile(), ditamapFilenameFormat.replace("$1", name)); //$NON-NLS-1$
-		if (!ditamapOutputFile.exists() || overwrite || ditamapOutputFile.lastModified() < source.lastModified()) {
-
+		File outputFile = new File(source.getParentFile(), filenameFormat.replace("$1", name)); //$NON-NLS-1$
+		if (!outputFile.exists() || overwrite || outputFile.lastModified() < source.lastModified()) {
 			if (markupContent == null) {
 				markupContent = readFully(source);
 			}
@@ -144,40 +170,66 @@ public class MarkupToDitaTask extends MarkupTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(ditamapOutputFile)),
-						"utf-8"); //$NON-NLS-1$
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outputFile)), "utf-8"); //$NON-NLS-1$
 			} catch (Exception e) {
-				throw new BuildException(MessageFormat.format(
-						Messages.getString("MarkupToDitaTask.11"), ditamapOutputFile, //$NON-NLS-1$
+				throw new BuildException(MessageFormat.format(Messages.getString("MarkupToDitaTask.11"), outputFile, //$NON-NLS-1$
 						e.getMessage()), e);
 			}
 			try {
-				DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(writer);
-				try {
+				if (topicStrategy == BreakStrategy.NONE) {
+					DitaTopicDocumentBuilder builder = new DitaTopicDocumentBuilder(writer);
+					builder.setRootTopicTitle(bookTitle);
+
 					MarkupParser parser = new MarkupParser();
 					parser.setMarkupLanaguage(markupLanguage);
 					parser.setBuilder(builder);
-
-					builder.setBookTitle(bookTitle == null ? name : bookTitle);
-
-					if (doctype != null) {
-						builder.setDoctype(doctype);
-					}
 					if (topicDoctype != null) {
-						builder.setTopicDoctype(topicDoctype);
+						builder.setDoctype(topicDoctype);
 					}
-					builder.setTargetFile(ditamapOutputFile);
-					builder.setTopicFolder(topicFolder);
+					builder.setFilename(outputFile.getName());
 					builder.setOutline(outline);
 
 					parser.parse(markupContent);
-				} finally {
+				} else {
+					DitaBookMapDocumentBuilder builder = new DitaBookMapDocumentBuilder(writer);
 					try {
-						builder.close();
-					} catch (IOException e) {
-						throw new BuildException(MessageFormat.format(
-								Messages.getString("MarkupToDitaTask.12"), ditamapOutputFile, //$NON-NLS-1$
-								e.getMessage()), e);
+						MarkupParser parser = new MarkupParser();
+						parser.setMarkupLanaguage(markupLanguage);
+						parser.setBuilder(builder);
+
+						builder.setBookTitle(bookTitle == null ? name : bookTitle);
+
+						if (doctype != null) {
+							builder.setDoctype(doctype);
+						}
+						if (topicDoctype != null) {
+							builder.setTopicDoctype(topicDoctype);
+						}
+						builder.setTargetFile(outputFile);
+						builder.setTopicFolder(topicFolder);
+						builder.setOutline(outline);
+						switch (topicStrategy) {
+						case FIRST:
+							if (!outline.getChildren().isEmpty()) {
+								builder.setTopicBreakLevel(outline.getChildren().get(0).getLevel());
+							} else {
+								builder.setTopicBreakLevel(1);
+							}
+							break;
+						case LEVEL1:
+							builder.setTopicBreakLevel(1);
+							break;
+						}
+
+						parser.parse(markupContent);
+					} finally {
+						try {
+							builder.close();
+						} catch (IOException e) {
+							throw new BuildException(MessageFormat.format(
+									Messages.getString("MarkupToDitaTask.12"), outputFile, //$NON-NLS-1$
+									e.getMessage()), e);
+						}
 					}
 				}
 			} finally {
@@ -185,12 +237,11 @@ public class MarkupToDitaTask extends MarkupTask {
 					writer.close();
 				} catch (Exception e) {
 					throw new BuildException(MessageFormat.format(
-							Messages.getString("MarkupToDitaTask.12"), ditamapOutputFile, //$NON-NLS-1$
+							Messages.getString("MarkupToDitaTask.12"), outputFile, //$NON-NLS-1$
 							e.getMessage()), e);
 				}
 			}
 		}
-
 	}
 
 	private String readFully(File inputFile) {
@@ -216,18 +267,18 @@ public class MarkupToDitaTask extends MarkupTask {
 	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
 	 * input file. Default value is <code>$1.ditamap</code>
 	 * 
-	 * @see #setDitamapFilenameFormat(String)
+	 * @see #setFilenameFormat(String)
 	 */
-	public String getDitamapFilenameFormat() {
-		return ditamapFilenameFormat;
+	public String getFilenameFormat() {
+		return filenameFormat;
 	}
 
 	/**
 	 * The format of the DocBook output file. Consists of a pattern where the '$1' is replaced with the filename of the
 	 * input file. Default value is <code>$1.ditamap</code>
 	 */
-	public void setDitamapFilenameFormat(String ditamapFilenameFormat) {
-		this.ditamapFilenameFormat = ditamapFilenameFormat;
+	public void setFilenameFormat(String filenameFormat) {
+		this.filenameFormat = filenameFormat;
 	}
 
 	/**
@@ -302,6 +353,22 @@ public class MarkupToDitaTask extends MarkupTask {
 
 	public void setTopicFolder(String topicFolder) {
 		this.topicFolder = topicFolder;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public BreakStrategy getTopicStrategy() {
+		return topicStrategy;
+	}
+
+	public void setTopicStrategy(BreakStrategy topicStrategy) {
+		this.topicStrategy = topicStrategy;
 	}
 
 }

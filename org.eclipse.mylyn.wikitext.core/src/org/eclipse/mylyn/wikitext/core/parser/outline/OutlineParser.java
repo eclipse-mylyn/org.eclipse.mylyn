@@ -193,8 +193,13 @@ public class OutlineParser {
 				while (level <= currentItem.getLevel()) {
 					currentItem = currentItem.getParent();
 				}
-				currentItem = createOutlineItem(currentItem, level, idGenerator.newId(kind, fullLabelText), offset,
-						length, label);
+				String id = attributes.getId();
+				if (id != null) {
+					idGenerator.reserveId(id);
+				} else {
+					id = idGenerator.newId(kind, fullLabelText);
+				}
+				currentItem = createOutlineItem(currentItem, level, id, offset, length, label);
 				currentItem.setTooltip(fullLabelText);
 				currentItem.setKind(kind);
 			}
