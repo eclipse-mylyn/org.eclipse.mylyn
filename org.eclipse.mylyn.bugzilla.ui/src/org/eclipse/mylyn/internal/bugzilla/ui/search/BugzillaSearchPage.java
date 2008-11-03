@@ -604,7 +604,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		keywordsSelectButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (repositoryConfiguration != null) {
+				if (repositoryConfiguration != null && getShell() != null) {
 					KeywordsDialog dialog = new KeywordsDialog(getShell(), keywords.getText(), //
 							repositoryConfiguration.getKeywords());
 					if (dialog.open() == Window.OK) {
@@ -1785,17 +1785,20 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private void restoreBounds() {
 		IDialogSettings settings = getDialogSettings();
 		IDialogSettings dialogBounds = settings.getSection(DIALOG_BOUNDS_KEY);
-		Rectangle bounds = this.getShell().getBounds();
+		Shell shell = getShell();
+		if (shell != null) {
+			Rectangle bounds = shell.getBounds();
 
-		if (bounds != null && dialogBounds != null) {
-			try {
-				bounds.x = dialogBounds.getInt(X);
-				bounds.y = dialogBounds.getInt(Y);
-				bounds.height = dialogBounds.getInt(HEIGHT);
-				bounds.width = dialogBounds.getInt(WIDTH);
-				this.getShell().setBounds(bounds);
-			} catch (NumberFormatException e) {
-				// silently ignored
+			if (bounds != null && dialogBounds != null) {
+				try {
+					bounds.x = dialogBounds.getInt(X);
+					bounds.y = dialogBounds.getInt(Y);
+					bounds.height = dialogBounds.getInt(HEIGHT);
+					bounds.width = dialogBounds.getInt(WIDTH);
+					shell.setBounds(bounds);
+				} catch (NumberFormatException e) {
+					// silently ignored
+				}
 			}
 		}
 
@@ -1900,12 +1903,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 			} catch (InvocationTargetException ex) {
 				Shell shell = null;
-				if (getWizard() != null && getWizard().getContainer() != null) {
-					shell = getWizard().getContainer().getShell();
-				}
-				if (shell == null && getControl() != null) {
-					shell = getControl().getShell();
-				}
+				shell = getShell();
 				if (ex.getCause() instanceof CoreException) {
 					CoreException cause = ((CoreException) ex.getCause());
 					if (cause.getStatus() instanceof RepositoryStatus
@@ -1951,6 +1949,18 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	@Override
+	public Shell getShell() {
+		Shell shell = null;
+		if (getWizard() != null && getWizard().getContainer() != null) {
+			shell = getWizard().getContainer().getShell();
+		}
+		if (shell == null && getControl() != null) {
+			shell = getControl().getShell();
+		}
+		return shell;
+	}
+
+	@Override
 	public String getQueryTitle() {
 		return (queryTitle != null) ? queryTitle.getText() : "";
 	}
@@ -1976,7 +1986,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public void applyTo(IRepositoryQuery query) {
 		query.setUrl(getQueryURL(getTaskRepository(), getQueryParameters()));
 		query.setSummary(getQueryTitle());
-		saveBounds(this.getShell().getBounds());
+		Shell shell = getShell();
+		if (shell != null) {
+			saveBounds(shell.getBounds());
+		}
 	}
 
 }
