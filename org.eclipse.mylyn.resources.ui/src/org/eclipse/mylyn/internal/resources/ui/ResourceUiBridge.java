@@ -63,13 +63,13 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 			}
 		} catch (PartInitException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
-					"Failed to open editor for: \"" + file + "\"", e));
+					"Failed to open editor for: \"" + file + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	private boolean isContextIgnoring(IEditorDescriptor editorDescriptor) {
 		// TODO: could find a better mechanism than tagging the ID
-		if (editorDescriptor.getId() != null && editorDescriptor.getId().endsWith(".contextIgnoring")) {
+		if (editorDescriptor.getId() != null && editorDescriptor.getId().endsWith(".contextIgnoring")) { //$NON-NLS-1$
 			return true;
 		} else {
 			return false;

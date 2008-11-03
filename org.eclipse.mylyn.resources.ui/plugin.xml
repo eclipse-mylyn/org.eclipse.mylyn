@@ -6,7 +6,7 @@
  
    <extension point="org.eclipse.ui.preferencePages">
       <page 
-         name="Resources"
+         name="%FocusedResourcesPreferencePage.name"
          class="org.eclipse.mylyn.internal.resources.ui.preferences.FocusedResourcesPreferencePage"
          id="org.eclipse.mylyn.resources.ui.preferences.resources"
          category="org.eclipse.mylyn.tasks.ui.preferences">
@@ -17,7 +17,7 @@
    <extension
    		point="org.eclipse.ui.keywords">
       <keyword
-            label="mylyn resources"
+            label="%keywords.label"
             id="org.eclipse.mylyn.resources.ui.keywords"/>
    </extension>
   
@@ -31,7 +31,7 @@
          point="org.eclipse.mylyn.context.core.bridges">
       <structureBridge
             class="org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge"
-            name="Resource Structure Bridge"/> 
+            name="%ResourceStructureBridge.name"/> 
    </extension>
    
    <extension
@@ -72,9 +72,9 @@
               enablesFor="*"
               icon="icons/elcl16/interest-decrease.gif"
               id="org.eclipse.mylyn.resources.ui.ui.interest.remove.element"
-              label="Remove from Context"
+              label="%InterestDecrementAction.label"
               menubarPath="group.reorganize"
-              tooltip="Mark selected element as uninteresting">
+              tooltip="%InterestDecrementAction.tooltip">
            <enablement>
               <systemProperty
                     name="org.eclipse.mylyn.context.core.context.active"
@@ -93,9 +93,9 @@
            enablesFor="*"
            icon="icons/elcl16/interest-increase.gif"
            id="org.eclipse.mylyn.resources.ui.ui.interest.increase.element"
-           label="Mark as Landmark"
+           label="%InterestIncrementAction.label"
            menubarPath="group.reorganize"
-           tooltip="Make selected element a landmark">
+           tooltip="%InterestIncrementAction.tooltip">
         <enablement>
            <systemProperty
                  name="org.eclipse.mylyn.context.core.context.active"

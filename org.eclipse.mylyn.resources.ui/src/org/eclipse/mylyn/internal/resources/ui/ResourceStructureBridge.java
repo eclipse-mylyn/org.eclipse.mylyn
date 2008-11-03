@@ -86,8 +86,8 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 					}
 					return childHandles;
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN, ""
-							+ "Could not get child", e));
+					StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN, "" //$NON-NLS-1$
+							+ "Could not get child", e)); //$NON-NLS-1$
 				}
 			} else if (resource instanceof IFile) {
 				// delegate to child bridges
@@ -103,7 +103,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof IProject) {
 			String path = ((IResource) object).getFullPath().toPortableString();
-			String javaCoreStylePath = "=" + path.substring(1);
+			String javaCoreStylePath = "=" + path.substring(1); //$NON-NLS-1$
 			return javaCoreStylePath;
 		}
 		if (object instanceof IResource) {
@@ -146,7 +146,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 		if (object instanceof IResource) {
 			return ((IResource) object).getName();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -206,7 +206,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 			return null;
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
-					"Could not find element for: \"" + object + "\"", t));
+					"Could not find element for: \"" + object + "\"", t)); //$NON-NLS-1$ //$NON-NLS-2$
 			return null;
 		}
 	}

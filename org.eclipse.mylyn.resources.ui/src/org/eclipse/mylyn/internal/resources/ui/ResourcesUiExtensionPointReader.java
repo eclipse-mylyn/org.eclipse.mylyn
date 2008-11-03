@@ -27,11 +27,11 @@ import org.eclipse.core.runtime.Platform;
  */
 public class ResourcesUiExtensionPointReader {
 
-	public final static String EXTENSION_CHANGE_MONITORING = "changeMonitoring";
+	public final static String EXTENSION_CHANGE_MONITORING = "changeMonitoring"; //$NON-NLS-1$
 
-	public final static String ELEMENT_EXCLUDE = "exclude";
+	public final static String ELEMENT_EXCLUDE = "exclude"; //$NON-NLS-1$
 
-	public final static String ATTR_PATTERN = "pattern";
+	public final static String ATTR_PATTERN = "pattern"; //$NON-NLS-1$
 
 	private static Set<String> resourceExclusionPatterns = new HashSet<String>();
 

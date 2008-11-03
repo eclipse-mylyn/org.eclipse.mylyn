@@ -35,7 +35,7 @@ public class ResourceInterestUpdater {
 	/**
 	 * In Mylyn 2.0 was: "org.eclipse.mylyn.ide.resource.interest.updater"
 	 */
-	public static final String SOURCE_ID = "org.eclipse.mylyn.resources.ui.interest.updater";
+	public static final String SOURCE_ID = "org.eclipse.mylyn.resources.ui.interest.updater"; //$NON-NLS-1$
 
 	private boolean syncExec = false;
 
@@ -56,8 +56,8 @@ public class ResourceInterestUpdater {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN, ""
-					+ "Could not add resource to context: \"" + resources + "\"", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN, "" //$NON-NLS-1$
+					+ "Could not add resource to context: \"" + resources + "\"", t)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

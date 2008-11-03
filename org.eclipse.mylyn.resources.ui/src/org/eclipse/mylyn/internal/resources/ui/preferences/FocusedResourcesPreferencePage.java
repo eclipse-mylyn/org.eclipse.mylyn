@@ -43,7 +43,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 
 	public static final Color GRAY = new Color(Display.getDefault(), 100, 100, 100);
 
-	private static final String LABEL_AUTOMATIC = "[automatic]";
+	private static final String LABEL_AUTOMATIC = Messages.FocusedResourcesPreferencePage__automatic_;
 
 	private Table ignoreTable;
 
@@ -64,7 +64,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 
 	private void createExcludesTable(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Resource Monitoring Exclusions");
+		group.setText(Messages.FocusedResourcesPreferencePage_Resource_Monitoring_Exclusions);
 		GridLayout layout = new GridLayout(1, false);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		group.setLayout(layout);
@@ -78,7 +78,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label l1 = new Label(composite, SWT.NULL);
-		l1.setText("Matching file or directory names will not be added automatically to the context");
+		l1.setText(Messages.FocusedResourcesPreferencePage_Matching_file_or_directory_names_will_not_be_added_automatically_to_the_context);
 		GridData data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 2;
 		l1.setLayoutData(data);
@@ -102,7 +102,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		buttons.setLayout(layout);
 
 		addButton = new Button(buttons, SWT.PUSH);
-		addButton.setText("Add...");
+		addButton.setText(Messages.FocusedResourcesPreferencePage_Add_);
 		addButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				addIgnore();
@@ -110,7 +110,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		});
 
 		removeButton = new Button(buttons, SWT.PUSH);
-		removeButton.setText("Remove");
+		removeButton.setText(Messages.FocusedResourcesPreferencePage_Remove);
 		removeButton.setEnabled(false);
 		removeButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -161,20 +161,20 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		}
 		for (String pattern : forced) {
 			TableItem item = new TableItem(ignoreTable, SWT.NONE);
-			item.setText(pattern + " " + LABEL_AUTOMATIC);
+			item.setText(pattern + " " + LABEL_AUTOMATIC); //$NON-NLS-1$
 			item.setForeground(GRAY);
 		}
 	}
 
 	private void addIgnore() {
-		InputDialog dialog = new InputDialog(getShell(), "Add Ignored Resource", "Enter pattern (* = any string)",
+		InputDialog dialog = new InputDialog(getShell(), Messages.FocusedResourcesPreferencePage_Add__IGNORED_RESOURCE, Messages.FocusedResourcesPreferencePage_Enter_pattern_____any_string_,
 				null, null); // 
 		dialog.open();
 		if (dialog.getReturnCode() != Window.OK) {
 			return;
 		}
 		String pattern = dialog.getValue();
-		if (pattern.equals("")) {
+		if (pattern.equals("")) { //$NON-NLS-1$
 			return;
 		}
 		TableItem item = new TableItem(ignoreTable, SWT.NONE);

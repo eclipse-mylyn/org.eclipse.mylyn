@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class EditorInteractionMonitor extends AbstractEditorTracker {
 
-	public static final String SOURCE_ID = "org.eclipse.mylyn.resources.ui.editor.tracker.interest";
+	public static final String SOURCE_ID = "org.eclipse.mylyn.resources.ui.editor.tracker.interest"; //$NON-NLS-1$
 
 	@Override
 	protected void editorBroughtToTop(IEditorPart part) {
@@ -110,11 +110,8 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 					if (!CoreUtil.TEST_MODE) {
 						MessageDialog.openInformation(
 								PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								"Mylyn",
-								"Closing a file automatically removes it from the Task Context. "
-										+ "This is recommended in order to make the open editors match "
-										+ "the focused views. It can be disabled via Preferences -> Mylyn -> Context.\n\n"
-										+ "This dialog will not show again.");
+								"Mylyn", //$NON-NLS-1$
+								Messages.EditorInteractionMonitor_Closing_a_file_automatically_removes_it_from_the_Task_Context);
 					}
 				} finally {
 					org.eclipse.mylyn.internal.context.ui.ContextUiPlugin.getDefault()

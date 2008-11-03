@@ -73,7 +73,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 					// special rule for feature.xml files: bug 249856 
 					if (resource instanceof IFile
 							&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)
-							&& !"feature.xml".equals(resource.getName())) {
+							&& !"feature.xml".equals(resource.getName())) { //$NON-NLS-1$
 						if (element.getKind() == IResourceDelta.CHANGED
 								&& (element.getFlags() & IResourceDelta.CONTENT) == 0) {
 							// make sure that there was a content change and not just a markers change
@@ -91,7 +91,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 			ResourcesUi.addResourceToContext(addedResources, InteractionEvent.Kind.PROPAGATION);
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
-					"Could not accept marker visitor", e));
+					"Could not accept marker visitor", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -117,8 +117,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	 */
 	public String createRegexFromPattern(String pattern) {
 		// prepare the pattern to be a regex
-		pattern = pattern.replaceAll("\\.", "\\\\.");
-		pattern = pattern.replaceAll("\\*", ".*");
+		pattern = pattern.replaceAll("\\.", "\\\\."); //$NON-NLS-1$ //$NON-NLS-2$
+		pattern = pattern.replaceAll("\\*", ".*"); //$NON-NLS-1$ //$NON-NLS-2$
 		return pattern;
 	}
 
@@ -135,7 +135,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		boolean excluded = false;
 		// NOTE: n^2 time complexity, but should not be a bottleneck
 		for (String pattern : excludedPatterns) {
-			if (resource != null && pattern.startsWith("file:/")) {
+			if (resource != null && pattern.startsWith("file:/")) { //$NON-NLS-1$
 				excluded |= isUriExcluded(resource.getLocationURI().toString(), pattern);
 			} else {
 				for (String segment : path.segments()) {

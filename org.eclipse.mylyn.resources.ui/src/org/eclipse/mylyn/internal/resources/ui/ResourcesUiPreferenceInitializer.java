@@ -28,11 +28,11 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitializer {
 
 	// XXX these constants are duplicated in ResourcesUiBridgePlugin
-	public static final String PREF_DEFAULT_SCOPE = "org.eclipse.mylyn.ide.resources";
+	public static final String PREF_DEFAULT_SCOPE = "org.eclipse.mylyn.ide.resources"; //$NON-NLS-1$
 
-	private static final String PREF_STORE_DELIM = ", ";
+	private static final String PREF_STORE_DELIM = ", "; //$NON-NLS-1$
 
-	public static final String PREF_RESOURCES_IGNORED = PREF_DEFAULT_SCOPE + ".ignored.pattern";
+	public static final String PREF_RESOURCES_IGNORED = PREF_DEFAULT_SCOPE + ".ignored.pattern"; //$NON-NLS-1$
 
 	public static Set<String> forcedExclusionPatterns = new HashSet<String>();
 

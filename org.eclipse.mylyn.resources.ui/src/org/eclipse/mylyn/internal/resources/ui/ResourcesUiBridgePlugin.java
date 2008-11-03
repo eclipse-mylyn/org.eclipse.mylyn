@@ -53,7 +53,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	}
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.resources.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.resources.ui"; //$NON-NLS-1$
 
 	private static ResourcesUiBridgePlugin INSTANCE;
 
@@ -65,11 +65,11 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	private ResourceInterestUpdater interestUpdater;
 
-	private static final String PREF_STORE_DELIM = ", ";
+	private static final String PREF_STORE_DELIM = ", "; //$NON-NLS-1$
 
-	public static final String PREF_RESOURCES_IGNORED = "org.eclipse.mylyn.ide.resources.ignored.pattern";
+	public static final String PREF_RESOURCES_IGNORED = "org.eclipse.mylyn.ide.resources.ignored.pattern"; //$NON-NLS-1$
 
-	public static final String PREF_VAL_DEFAULT_RESOURCES_IGNORED = ".*" + PREF_STORE_DELIM;
+	public static final String PREF_VAL_DEFAULT_RESOURCES_IGNORED = ".*" + PREF_STORE_DELIM; //$NON-NLS-1$
 
 	public ResourcesUiBridgePlugin() {
 		super();
