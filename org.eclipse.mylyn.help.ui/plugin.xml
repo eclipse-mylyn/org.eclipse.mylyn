@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<?eclipse version="3.0"?>
 <plugin>
 	<extension
          id="org.eclipse.mylyn.helpDocs"
@@ -20,39 +19,39 @@
          point="org.eclipse.ui.intro.configExtension">
       <configExtension
             configId="org.eclipse.ui.intro.universalConfig"
-            content="intro/overviewExtensionContent.xml">
+            content="$nl$/intro/overviewExtensionContent.xml">
       </configExtension>
       <configExtension
             configId="org.eclipse.ui.intro.universalConfig"
-            content="intro/whatsnewExtensionContent.xml">
+            content="$nl$/intro/whatsnewExtensionContent.xml">
       </configExtension>
       <configExtension
             configId="org.eclipse.ui.intro.universalConfig"
-            content="intro/tutorialsExtensionContent.xml">
+            content="$nl$/intro/tutorialsExtensionContent.xml">
       </configExtension>
    </extension>
    <extension
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
             id="org.eclipse.mylyn.cheatsheet"
-            name="Tasks">
+            name="%cheatsheet.category.name">
       </category>
       <cheatsheet
             category="org.eclipse.mylyn.cheatsheet"
-            contentFile="cheatsheets/Query.xml"
+            contentFile="$nl$/cheatsheets/Query.xml"
             id="org.eclipse.mylyn.cheatsheet.query"
-            name="Create a task repository query">
+            name="%cheatsheet.query.name">
          <description>
-            Learn how to work with task and queries using the Task List
+            %cheatsheet.query.description
          </description>
       </cheatsheet>
       <cheatsheet
             category="org.eclipse.mylyn.cheatsheet"
-            contentFile="cheatsheets/TaskFocus.xml"
+            contentFile="$nl$/cheatsheets/TaskFocus.xml"
             id="org.eclipse.mylyn.cheatsheet.taskfocus"
-            name="Work with task context">
+            name="%cheatsheet.taskfocus.name">
          <description>
-            Learn how to activate tasks and use the Task-Focused UI
+            %cheatsheet.taskfocus.description
          </description>
       </cheatsheet>
    </extension>

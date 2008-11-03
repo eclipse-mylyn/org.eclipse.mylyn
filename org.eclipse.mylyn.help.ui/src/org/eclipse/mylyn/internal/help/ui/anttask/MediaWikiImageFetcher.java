@@ -42,38 +42,38 @@ public class MediaWikiImageFetcher extends Task {
 	@Override
 	public void execute() throws BuildException {
 		if (dest == null) {
-			throw new BuildException("Must specify @dest");
+			throw new BuildException("Must specify @dest"); //$NON-NLS-1$
 		}
 		if (!dest.exists()) {
-			throw new BuildException("@dest does not exist: " + dest);
+			throw new BuildException("@dest does not exist: " + dest); //$NON-NLS-1$
 		}
 		if (!dest.isDirectory()) {
-			throw new BuildException("@dest is not a directory: " + dest);
+			throw new BuildException("@dest is not a directory: " + dest); //$NON-NLS-1$
 		}
 		if (src == null) {
-			throw new BuildException("Must specify @src");
+			throw new BuildException("Must specify @src"); //$NON-NLS-1$
 		}
 		if (!src.exists()) {
-			throw new BuildException("@src does not exist: " + src);
+			throw new BuildException("@src does not exist: " + src); //$NON-NLS-1$
 		}
 		if (!src.isFile()) {
-			throw new BuildException("@src is not a file: " + src);
+			throw new BuildException("@src is not a file: " + src); //$NON-NLS-1$
 		}
 		if (base == null) {
-			throw new BuildException("Must specify @base");
+			throw new BuildException("Must specify @base"); //$NON-NLS-1$
 		}
-		if (base.endsWith("/")) {
+		if (base.endsWith("/")) { //$NON-NLS-1$
 			base = base.substring(0, base.length() - 1);
 		}
-		Pattern fragmentUrlPattern = Pattern.compile("src=\"([^\"]+)\"");
-		Pattern imagePattern = Pattern.compile("alt=\"Image:([^\"]*)\"([^>]+)", Pattern.MULTILINE);
+		Pattern fragmentUrlPattern = Pattern.compile("src=\"([^\"]+)\""); //$NON-NLS-1$
+		Pattern imagePattern = Pattern.compile("alt=\"Image:([^\"]*)\"([^>]+)", Pattern.MULTILINE); //$NON-NLS-1$
 		String htmlSrc;
 		try {
 			htmlSrc = readSrc();
 		} catch (IOException e) {
-			throw new BuildException("Cannot read src: " + src + ": " + e.getMessage(), e);
+			throw new BuildException("Cannot read src: " + src + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		log("Parsing " + src, Project.MSG_INFO);
+		log("Parsing " + src, Project.MSG_INFO); //$NON-NLS-1$
 		int fileCount = 0;
 		Matcher imagePatternMatcher = imagePattern.matcher(htmlSrc);
 		while (imagePatternMatcher.find()) {
@@ -84,14 +84,14 @@ public class MediaWikiImageFetcher extends Task {
 				if (fragmentUrlMatcher.find()) {
 					String url = fragmentUrlMatcher.group(1);
 					String qualifiedUrl = base + url;
-					log("Fetching " + qualifiedUrl, Project.MSG_INFO);
+					log("Fetching " + qualifiedUrl, Project.MSG_INFO); //$NON-NLS-1$
 					Get get = new Get();
 					get.setProject(getProject());
 					get.setLocation(getLocation());
 					try {
 						get.setSrc(new URL(qualifiedUrl));
 					} catch (MalformedURLException e) {
-						log("Skipping " + url + ": " + e.getMessage(), Project.MSG_WARN);
+						log("Skipping " + url + ": " + e.getMessage(), Project.MSG_WARN); //$NON-NLS-1$ //$NON-NLS-2$
 						continue;
 					}
 					// note: we use the alt text for the name since for some files there is a case-difference between
@@ -103,7 +103,7 @@ public class MediaWikiImageFetcher extends Task {
 				}
 			}
 		}
-		log("Fetched " + fileCount + " image files for " + src, Project.MSG_INFO);
+		log("Fetched " + fileCount + " image files for " + src, Project.MSG_INFO); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public String getBase() {
