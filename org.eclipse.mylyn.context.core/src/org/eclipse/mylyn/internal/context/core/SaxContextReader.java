@@ -82,7 +82,7 @@ public class SaxContextReader implements IInteractionContextReader {
 		} catch (Exception e) {
 			File saveFile = new File(file.getAbsolutePath() + "-save");
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-					"Error loading context, backup saved to \"" + saveFile + "\"", e));
+					"Error loading context, backup saved to \"" + saveFile + "\"", e)); //$NON-NLS-1$
 			file.renameTo(saveFile);
 			return null;
 		}

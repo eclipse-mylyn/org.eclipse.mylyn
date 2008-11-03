@@ -43,7 +43,7 @@ public class InteractionContextElement implements IInteractionElement {
 	public InteractionContextElement(String kind, String elementHandle, InteractionContext context,
 			int eventCountOnCreation) {
 		if (elementHandle == null) {
-			throw new RuntimeException("malformed context: null handle");
+			throw new RuntimeException("malformed context: null handle"); //$NON-NLS-1$
 		}
 		interest = new DegreeOfInterest(context, context.getScaling(), eventCountOnCreation);
 		this.handle = elementHandle;

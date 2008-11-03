@@ -30,37 +30,37 @@ import org.eclipse.mylyn.context.core.IInteractionContextScaling;
  */
 public class InteractionContextExternalizer {
 
-	public static final String ELMNT_INTERACTION_HISTORY_OLD = "interactionEvent";
+	public static final String ELMNT_INTERACTION_HISTORY_OLD = "interactionEvent"; //$NON-NLS-1$
 
-	public static final String ELMNT_INTERACTION_HISTORY = "InteractionHistory";
+	public static final String ELMNT_INTERACTION_HISTORY = "InteractionHistory"; //$NON-NLS-1$
 
-	public static final String ATR_STRUCTURE_KIND = "StructureKind";
+	public static final String ATR_STRUCTURE_KIND = "StructureKind"; //$NON-NLS-1$
 
-	public static final String ATR_STRUCTURE_HANDLE = "StructureHandle";
+	public static final String ATR_STRUCTURE_HANDLE = "StructureHandle"; //$NON-NLS-1$
 
-	public static final String ATR_START_DATE = "StartDate";
+	public static final String ATR_START_DATE = "StartDate"; //$NON-NLS-1$
 
-	public static final String ATR_ORIGIN_ID = "OriginId";
+	public static final String ATR_ORIGIN_ID = "OriginId"; //$NON-NLS-1$
 
-	public static final String ATR_NAVIGATION = "Navigation";
+	public static final String ATR_NAVIGATION = "Navigation"; //$NON-NLS-1$
 
-	public static final String ATR_KIND = "Kind";
+	public static final String ATR_KIND = "Kind"; //$NON-NLS-1$
 
-	public static final String ATR_INTEREST = "Interest";
+	public static final String ATR_INTEREST = "Interest"; //$NON-NLS-1$
 
-	public static final String ATR_NUM_EVENTS = "NumEvents";
+	public static final String ATR_NUM_EVENTS = "NumEvents"; //$NON-NLS-1$
 
-	public static final String ATR_CREATION_COUNT = "CreationCount";
+	public static final String ATR_CREATION_COUNT = "CreationCount"; //$NON-NLS-1$
 
-	public static final String ATR_DELTA = "Delta";
+	public static final String ATR_DELTA = "Delta"; //$NON-NLS-1$
 
-	public static final String ATR_END_DATE = "EndDate";
+	public static final String ATR_END_DATE = "EndDate"; //$NON-NLS-1$
 
-	public static final String ATR_ID = "Id";
+	public static final String ATR_ID = "Id"; //$NON-NLS-1$
 
-	public static final String ATR_VERSION = "Version";
+	public static final String ATR_VERSION = "Version"; //$NON-NLS-1$
 
-	static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss.S z";
+	static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss.S z"; //$NON-NLS-1$
 
 	public void writeContextToXml(IInteractionContext context, File file) {
 		writeContextToXml(context, file, new SaxContextWriter());
@@ -86,7 +86,7 @@ public class InteractionContextExternalizer {
 
 		} catch (IOException e) {
 			// TODO: propagate exception?
-			StatusHandler.fail(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not write: "
+			StatusHandler.fail(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not write: " //$NON-NLS-1$
 					+ file.getAbsolutePath(), e));
 		} finally {
 			try {
@@ -97,7 +97,7 @@ public class InteractionContextExternalizer {
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Unable to write context "
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Unable to write context " //$NON-NLS-1$
 						+ context.getHandleIdentifier(), e));
 			}
 		}
@@ -146,7 +146,7 @@ public class InteractionContextExternalizer {
 			}
 		} catch (Exception e) {
 			// TODO: propagate exception instead?
-			StatusHandler.fail(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not read: "
+			StatusHandler.fail(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not read: " //$NON-NLS-1$
 					+ fromFile.getAbsolutePath(), e));
 		}
 		return null;

@@ -24,7 +24,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class LegacyActivityAdaptor {
 
-	private static final String LEGACY_HANDLE_ATTENTION = "attention";
+	private static final String LEGACY_HANDLE_ATTENTION = "attention"; //$NON-NLS-1$
 
 	private String currentTask;
 
@@ -38,7 +38,7 @@ public class LegacyActivityAdaptor {
 					}
 				} else if (event.getStructureHandle() != null
 						&& event.getStructureHandle().equals(LEGACY_HANDLE_ATTENTION)) {
-					if (currentTask != null && !currentTask.equals("")) {
+					if (currentTask != null && !currentTask.equals("")) { //$NON-NLS-1$
 						return new InteractionEvent(InteractionEvent.Kind.ATTENTION,
 								InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, currentTask,
 								InteractionContextManager.ACTIVITY_ORIGINID_WORKBENCH, null,
@@ -60,7 +60,7 @@ public class LegacyActivityAdaptor {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Error parsing interaction event",
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Error parsing interaction event", //$NON-NLS-1$
 					t));
 		}
 		return event;

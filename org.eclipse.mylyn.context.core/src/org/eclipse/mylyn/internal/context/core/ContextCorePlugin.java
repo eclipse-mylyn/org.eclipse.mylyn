@@ -43,7 +43,7 @@ import org.osgi.framework.BundleContext;
  */
 public class ContextCorePlugin extends Plugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.core";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.core"; //$NON-NLS-1$
 
 	private final Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
 
@@ -89,7 +89,7 @@ public class ContextCorePlugin extends Plugin {
 
 		@Override
 		public String getLabel(Object object) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		@Override
@@ -148,7 +148,7 @@ public class ContextCorePlugin extends Plugin {
 				provider.stopAllRunningJobs();
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Mylyn Core stop failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Mylyn Core stop failed", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -345,27 +345,27 @@ public class ContextCorePlugin extends Plugin {
 
 	static class BridgesExtensionPointReader {
 
-		private static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylyn.context.core.bridges";
+		private static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylyn.context.core.bridges"; //$NON-NLS-1$
 
-		private static final String EXTENSION_ID_INTERNAL_CONTEXT = "org.eclipse.mylyn.context.core.internalBridges";
+		private static final String EXTENSION_ID_INTERNAL_CONTEXT = "org.eclipse.mylyn.context.core.internalBridges"; //$NON-NLS-1$
 
-		private static final String EXTENSION_ID_RELATION_PROVIDERS = "org.eclipse.mylyn.context.core.relationProviders";
+		private static final String EXTENSION_ID_RELATION_PROVIDERS = "org.eclipse.mylyn.context.core.relationProviders"; //$NON-NLS-1$
 
-		private static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
+		private static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge"; //$NON-NLS-1$
 
-		private static final String ELEMENT_RELATION_PROVIDER = "provider";
+		private static final String ELEMENT_RELATION_PROVIDER = "provider"; //$NON-NLS-1$
 
-		private static final String ELEMENT_SHADOW = "shadow";
+		private static final String ELEMENT_SHADOW = "shadow"; //$NON-NLS-1$
 
-		private static final String ATTR_CLASS = "class";
+		private static final String ATTR_CLASS = "class"; //$NON-NLS-1$
 
-		private static final String ATTR_CONTENT_TYPE = "contentType";
+		private static final String ATTR_CONTENT_TYPE = "contentType"; //$NON-NLS-1$
 
-		private static final String ATTR_PARENT_CONTENT_TYPE = "parentContentType";
+		private static final String ATTR_PARENT_CONTENT_TYPE = "parentContentType"; //$NON-NLS-1$
 
-		private static final String ATTR_BASE_CONTENT = "baseContent";
+		private static final String ATTR_BASE_CONTENT = "baseContent"; //$NON-NLS-1$
 
-		private static final String ATTR_SHADOWED_BY_CONTENT = "shadowedByContent";
+		private static final String ATTR_SHADOWED_BY_CONTENT = "shadowedByContent"; //$NON-NLS-1$
 
 		private static boolean extensionsRead = false;
 
@@ -415,7 +415,7 @@ public class ContextCorePlugin extends Plugin {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (!(object instanceof AbstractContextStructureBridge)) {
 					StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-							"Could not load bridge: " + object.getClass().getCanonicalName() + " must implement "
+							"Could not load bridge: " + object.getClass().getCanonicalName() + " must implement " //$NON-NLS-1$ //$NON-NLS-2$
 									+ AbstractContextStructureBridge.class.getCanonicalName()));
 					return;
 				}
@@ -430,7 +430,7 @@ public class ContextCorePlugin extends Plugin {
 				ContextCorePlugin.getDefault().addStructureBridge(bridge);
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-						"Could not load bridge extension", e));
+						"Could not load bridge extension", e)); //$NON-NLS-1$
 			}
 		}
 
@@ -440,7 +440,7 @@ public class ContextCorePlugin extends Plugin {
 
 			if (baseContent == null || shadowedByContent == null) {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-						"Ignoring bridge shadowing because of invalid extension point "
+						"Ignoring bridge shadowing because of invalid extension point " //$NON-NLS-1$
 								+ BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE, new Exception()));
 			}
 			ContextCorePlugin.getDefault().addShadowsContent(baseContent, shadowedByContent);
@@ -455,7 +455,7 @@ public class ContextCorePlugin extends Plugin {
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-						"Could not load relation provider", e));
+						"Could not load relation provider", e)); //$NON-NLS-1$
 			}
 		}
 	}

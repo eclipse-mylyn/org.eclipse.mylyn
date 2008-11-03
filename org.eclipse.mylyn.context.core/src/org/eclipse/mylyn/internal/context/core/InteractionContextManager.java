@@ -53,66 +53,66 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
  */
 public class InteractionContextManager implements IInteractionContextManager {
 
-	public static final String SOURCE_ID_DECAY = "org.eclipse.mylyn.core.model.interest.decay";
+	public static final String SOURCE_ID_DECAY = "org.eclipse.mylyn.core.model.interest.decay"; //$NON-NLS-1$
 
-	public static final String CONTEXT_FILE_EXTENSION_OLD = ".xml";
+	public static final String CONTEXT_FILE_EXTENSION_OLD = ".xml"; //$NON-NLS-1$
 
-	public static final String CONTEXT_FILE_EXTENSION = ".xml.zip";
+	public static final String CONTEXT_FILE_EXTENSION = ".xml.zip"; //$NON-NLS-1$
 
-	public static final String CONTAINMENT_PROPAGATION_ID = "org.eclipse.mylyn.core.model.edges.containment";
+	public static final String CONTAINMENT_PROPAGATION_ID = "org.eclipse.mylyn.core.model.edges.containment"; //$NON-NLS-1$
 
 	/**
 	 * @deprecated not used anymore (used in version < 1.0.1)
 	 */
 	@Deprecated
-	public static final String OLD_CONTEXT_HISTORY_FILE_NAME = "context-history";
+	public static final String OLD_CONTEXT_HISTORY_FILE_NAME = "context-history"; //$NON-NLS-1$
 
-	public static final String CONTEXT_HISTORY_FILE_NAME = "activity";
+	public static final String CONTEXT_HISTORY_FILE_NAME = "activity"; //$NON-NLS-1$
 
-	public static final String CONTEXT_FILENAME_ENCODING = "UTF-8";
+	public static final String CONTEXT_FILENAME_ENCODING = "UTF-8"; //$NON-NLS-1$
 
-	public static final String PROPERTY_CONTEXT_ACTIVE = "org.eclipse.mylyn.context.core.context.active";
+	public static final String PROPERTY_CONTEXT_ACTIVE = "org.eclipse.mylyn.context.core.context.active"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_STRUCTUREKIND_ACTIVATION = "activation";
+	public static final String ACTIVITY_STRUCTUREKIND_ACTIVATION = "activation"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_STRUCTUREKIND_TIMING = "timing";
+	public static final String ACTIVITY_STRUCTUREKIND_TIMING = "timing"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_STRUCTUREKIND_WORKINGSET = "workingset";
+	public static final String ACTIVITY_STRUCTUREKIND_WORKINGSET = "workingset"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_STRUCTUREKIND_LIFECYCLE = "lifecycle";
+	public static final String ACTIVITY_STRUCTUREKIND_LIFECYCLE = "lifecycle"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_ORIGINID_USER = "user";
+	public static final String ACTIVITY_ORIGINID_USER = "user"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_ORIGINID_OS = "os";
+	public static final String ACTIVITY_ORIGINID_OS = "os"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_ORIGINID_WORKBENCH = "org.eclipse.ui.workbench";
+	public static final String ACTIVITY_ORIGINID_WORKBENCH = "org.eclipse.ui.workbench"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_HANDLE_NONE = "none";
+	public static final String ACTIVITY_HANDLE_NONE = "none"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_DELTA_STOPPED = "stopped";
+	public static final String ACTIVITY_DELTA_STOPPED = "stopped"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_DELTA_STARTED = "started";
+	public static final String ACTIVITY_DELTA_STARTED = "started"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_DELTA_REMOVED = "removed";
+	public static final String ACTIVITY_DELTA_REMOVED = "removed"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_DELTA_ADDED = "added";
+	public static final String ACTIVITY_DELTA_ADDED = "added"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_DELTA_ACTIVATED = "activated";
+	public static final String ACTIVITY_DELTA_ACTIVATED = "activated"; //$NON-NLS-1$
 
-	public static final String ACTIVITY_DELTA_DEACTIVATED = "deactivated";
+	public static final String ACTIVITY_DELTA_DEACTIVATED = "deactivated"; //$NON-NLS-1$
 
 	// TODO: move constants
 	private static final int MAX_PROPAGATION = 17; // TODO: parametrize this
 
 	private static final ILock metaContextLock = Job.getJobManager().newLock();
 
-	private static final String PREFERENCE_ATTENTION_MIGRATED = "mylyn.attention.migrated";
+	private static final String PREFERENCE_ATTENTION_MIGRATED = "mylyn.attention.migrated"; //$NON-NLS-1$
 
-	private static final String SOURCE_ID_DECAY_CORRECTION = "org.eclipse.mylyn.core.model.interest.decay.correction";
+	private static final String SOURCE_ID_DECAY_CORRECTION = "org.eclipse.mylyn.core.model.interest.decay.correction"; //$NON-NLS-1$
 
-	private static final String SOURCE_ID_MODEL_ERROR = "org.eclipse.mylyn.core.model.interest.propagation";
+	private static final String SOURCE_ID_MODEL_ERROR = "org.eclipse.mylyn.core.model.interest.propagation"; //$NON-NLS-1$
 
-	private static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylyn.core.model.interest.propagation";
+	private static final String SOURCE_ID_MODEL_PROPAGATION = "org.eclipse.mylyn.core.model.interest.propagation"; //$NON-NLS-1$
 
 	private boolean activationHistorySuppressed = false;
 
@@ -162,13 +162,13 @@ public class InteractionContextManager implements IInteractionContextManager {
 				suppressListenerNotification = true;
 				internalActivateContext(context);
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not load context"));
+				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not load context")); //$NON-NLS-1$
 			}
 			suppressListenerNotification = false;
 			contextListeners.addAll(waitingContextListeners);
 			waitingContextListeners.clear();
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not activate context", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not activate context", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -200,7 +200,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-					"Error during meta activity collapse", e));
+					"Error during meta activity collapse", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -270,7 +270,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 
 			if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)
 					&& event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ADDED)) {
-				if (event.getStructureHandle() == null || event.getStructureHandle().equals("")) {
+				if (event.getStructureHandle() == null || event.getStructureHandle().equals("")) { //$NON-NLS-1$
 					continue;
 				}
 				List<InteractionEvent> interactionEvents = attention.get(event.getStructureHandle());
@@ -380,7 +380,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 						listener.contextDeactivated(context);
 					} catch (Exception e) {
 						StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-								"Context listener failed: " + listener.getClass().getCanonicalName(), e));
+								"Context listener failed: " + listener.getClass().getCanonicalName(), e)); //$NON-NLS-1$
 					}
 				}
 				setContextCapturePaused(false);
@@ -393,7 +393,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			}
 //			saveActivityMetaContext();
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not deactivate context", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not deactivate context", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -574,7 +574,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	 * Public for testing, activate via handle
 	 */
 	public void internalActivateContext(IInteractionContext context) {
-		Assert.isTrue(context instanceof InteractionContext, "Must provide a concrete InteractionContext");
+		Assert.isTrue(context instanceof InteractionContext, "Must provide a concrete InteractionContext"); //$NON-NLS-1$
 
 		System.setProperty(InteractionContextManager.PROPERTY_CONTEXT_ACTIVE, Boolean.TRUE.toString());
 		activeContext.getContextMap().put(context.getHandleIdentifier(), (InteractionContext) context);
@@ -592,7 +592,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			try {
 				listener.contextActivated(context);
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Context listener failed: "
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Context listener failed: " //$NON-NLS-1$
 						+ listener.getClass().getCanonicalName(), e));
 			}
 		}
@@ -709,7 +709,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 		} else {
 			resetActivityMetaContext();
 			StatusHandler.log(new Status(IStatus.INFO, ContextCorePlugin.ID_PLUGIN,
-					"No context store installed, not restoring activity context."));
+					"No context store installed, not restoring activity context.")); //$NON-NLS-1$
 		}
 	}
 
@@ -729,7 +729,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 			contextStore.saveContext(collapseActivityMetaContext(context),
 					InteractionContextManager.CONTEXT_HISTORY_FILE_NAME);
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not save activity history",
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not save activity history", //$NON-NLS-1$
 					t));
 		} finally {
 			metaContextLock.release();
@@ -745,7 +745,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 	protected boolean takeSnapshot(File file) {
 		if (file.length() > 0) {
 			File originalFile = file.getAbsoluteFile();
-			File backup = new File(file.getParentFile(), "." + file.getName());
+			File backup = new File(file.getParentFile(), "." + file.getName()); //$NON-NLS-1$
 			backup.delete();
 			return originalFile.renameTo(backup);
 		}
@@ -753,11 +753,11 @@ public class InteractionContextManager implements IInteractionContextManager {
 	}
 
 	protected boolean restoreSnapshot(File file) {
-		File backup = new File(file.getParentFile(), "." + file.getName());
+		File backup = new File(file.getParentFile(), "." + file.getName()); //$NON-NLS-1$
 		File originalFile = file.getAbsoluteFile();
 		if (originalFile.exists()) {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.ENGLISH);
-			File failed = new File(file.getParentFile(), "failed-" + format.format(new Date()) + "-"
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.ENGLISH); //$NON-NLS-1$
+			File failed = new File(file.getParentFile(), "failed-" + format.format(new Date()) + "-" //$NON-NLS-1$ //$NON-NLS-2$
 					+ originalFile.getName());
 			originalFile.renameTo(failed);
 		}
@@ -912,7 +912,7 @@ public class InteractionContextManager implements IInteractionContextManager {
 				changed.add(element);
 				listener.interestChanged(changed);
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Context listener failed: "
+				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Context listener failed: " //$NON-NLS-1$
 						+ listener.getClass().getCanonicalName(), t));
 			}
 		}

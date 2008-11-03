@@ -164,8 +164,8 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 
 	@Override
 	public String toString() {
-		return "(" + "selections: " + selections + ", edits: " + edits + ", commands: " + commands + ", predicted: "
-				+ predictedBias + ", propagated: " + propagatedBias + ", manipulation: " + manipulationBias + ")";
+		return "(" + "selections: " + selections + ", edits: " + edits + ", commands: " + commands + ", predicted: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+				+ predictedBias + ", propagated: " + propagatedBias + ", manipulation: " + manipulationBias + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**

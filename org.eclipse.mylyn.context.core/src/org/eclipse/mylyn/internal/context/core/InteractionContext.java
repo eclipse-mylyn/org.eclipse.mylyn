@@ -98,7 +98,7 @@ public class InteractionContext implements IInteractionContext {
 			numUserEvents += ((AggregateInteractionEvent) event).getNumCollapsedEvents() - 1;
 		}
 
-		if (event.getNavigation() != null && !event.getNavigation().equals("null") && lastEdgeEvent != null
+		if (event.getNavigation() != null && !event.getNavigation().equals("null") && lastEdgeEvent != null //$NON-NLS-1$
 				&& lastEdgeNode != null && lastEdgeEvent.getStructureHandle() != null
 				&& event.getKind() != InteractionEvent.Kind.PROPAGATION
 				&& event.getKind() != InteractionEvent.Kind.PREDICTION) {

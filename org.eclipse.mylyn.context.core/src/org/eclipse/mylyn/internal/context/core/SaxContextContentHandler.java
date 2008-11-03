@@ -45,9 +45,9 @@ public class SaxContextContentHandler extends DefaultHandler {
 
 	private final String contextHandleIdentifier;
 
-	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent";
+	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent"; //$NON-NLS-1$
 
-	static final String ATTRIBUTE_CONTENT = "Content";
+	static final String ATTRIBUTE_CONTENT = "Content"; //$NON-NLS-1$
 
 	public SaxContextContentHandler(String contextHandleIdentifier, IInteractionContextScaling contextScaling) {
 		this.contextHandleIdentifier = contextHandleIdentifier;
@@ -75,7 +75,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 				context.parseEvent(ie);
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-						"Ignored unexpected activity event", e));
+						"Ignored unexpected activity event", e)); //$NON-NLS-1$
 			}
 			break;
 		}

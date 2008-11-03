@@ -54,7 +54,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 
 	public void writeContextToStream(IInteractionContext context) throws IOException {
 		if (outputStream == null) {
-			IOException ioe = new IOException("OutputStream not set");
+			IOException ioe = new IOException("OutputStream not set"); //$NON-NLS-1$
 			throw ioe;
 		}
 
@@ -63,7 +63,7 @@ public class SaxContextWriter implements IInteractionContextWriter {
 			transformer.transform(new SAXSource(new SaxWriter(), new InteractionContextInputSource(context)),
 					new StreamResult(outputStream));
 		} catch (TransformerException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not write context", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Could not write context", e)); //$NON-NLS-1$
 			throw new IOException(e.getMessage());
 		}
 	}
@@ -139,40 +139,40 @@ public class SaxContextWriter implements IInteractionContextWriter {
 
 		public void parse(InputSource input) throws IOException, SAXException {
 			if (!(input instanceof InteractionContextInputSource)) {
-				throw new SAXException("Can only parse writable input sources");
+				throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
 			}
 
 			IInteractionContext context = ((InteractionContextInputSource) input).getContext();
 
 			handler.startDocument();
 			AttributesImpl rootAttributes = new AttributesImpl();
-			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_ID,
-					InteractionContextExternalizer.ATR_ID, "", context.getHandleIdentifier());
+			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_ID, //$NON-NLS-1$
+					InteractionContextExternalizer.ATR_ID, "", context.getHandleIdentifier()); //$NON-NLS-1$
 			if (context.getContentLimitedTo() != null) {
-				rootAttributes.addAttribute("", SaxContextContentHandler.ATTRIBUTE_CONTENT,
-						SaxContextContentHandler.ATTRIBUTE_CONTENT, "", context.getContentLimitedTo());
+				rootAttributes.addAttribute("", SaxContextContentHandler.ATTRIBUTE_CONTENT, //$NON-NLS-1$
+						SaxContextContentHandler.ATTRIBUTE_CONTENT, "", context.getContentLimitedTo()); //$NON-NLS-1$
 			}
-			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_VERSION,
-					InteractionContextExternalizer.ATR_VERSION, "", "1");
+			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_VERSION, //$NON-NLS-1$
+					InteractionContextExternalizer.ATR_VERSION, "", "1"); //$NON-NLS-1$ //$NON-NLS-2$
 
-			handler.startElement("", InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY,
+			handler.startElement("", InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY, //$NON-NLS-1$
 					InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY, rootAttributes);
 			// List could get modified as we're writing
 			for (InteractionEvent ie : context.getInteractionHistory()) {
 				Attributes ieAttributes = createEventAttributes(ie);
-				handler.startElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT,
+				handler.startElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT, //$NON-NLS-1$
 						SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT, ieAttributes);
-				handler.endElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT,
+				handler.endElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT, //$NON-NLS-1$
 						SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT);
 			}
-			handler.endElement("", InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY,
+			handler.endElement("", InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY, //$NON-NLS-1$
 					InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY);
 
 			handler.endDocument();
 		}
 
 		public void parse(String systemId) throws IOException, SAXException {
-			throw new SAXException("Can only parse writable input sources");
+			throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
 		}
 	}
 
@@ -184,37 +184,37 @@ public class SaxContextWriter implements IInteractionContextWriter {
 
 		AttributesImpl ieAttributes = new AttributesImpl();
 
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_DELTA,
-				InteractionContextExternalizer.ATR_DELTA, "",
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_DELTA, //$NON-NLS-1$
+				InteractionContextExternalizer.ATR_DELTA, "", //$NON-NLS-1$
 				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getDelta()));
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_END_DATE,
-				InteractionContextExternalizer.ATR_END_DATE, "", dateFormat.format(ie.getEndDate()));
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_INTEREST,
-				InteractionContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution()));
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_KIND, InteractionContextExternalizer.ATR_KIND,
-				"", ie.getKind().toString());
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_NAVIGATION,
-				InteractionContextExternalizer.ATR_NAVIGATION, "",
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_END_DATE, //$NON-NLS-1$
+				InteractionContextExternalizer.ATR_END_DATE, "", dateFormat.format(ie.getEndDate())); //$NON-NLS-1$
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_INTEREST, //$NON-NLS-1$
+				InteractionContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution())); //$NON-NLS-1$
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_KIND, InteractionContextExternalizer.ATR_KIND, //$NON-NLS-1$
+				"", ie.getKind().toString()); //$NON-NLS-1$
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_NAVIGATION, //$NON-NLS-1$
+				InteractionContextExternalizer.ATR_NAVIGATION, "", //$NON-NLS-1$
 				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getNavigation()));
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_ORIGIN_ID,
-				InteractionContextExternalizer.ATR_ORIGIN_ID, "",
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_ORIGIN_ID, //$NON-NLS-1$
+				InteractionContextExternalizer.ATR_ORIGIN_ID, "", //$NON-NLS-1$
 				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getOriginId()));
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_START_DATE,
-				InteractionContextExternalizer.ATR_START_DATE, "", dateFormat.format(ie.getDate()));
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_HANDLE,
-				InteractionContextExternalizer.ATR_STRUCTURE_HANDLE, "",
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_START_DATE, //$NON-NLS-1$
+				InteractionContextExternalizer.ATR_START_DATE, "", dateFormat.format(ie.getDate())); //$NON-NLS-1$
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_HANDLE, //$NON-NLS-1$
+				InteractionContextExternalizer.ATR_STRUCTURE_HANDLE, "", //$NON-NLS-1$
 				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getStructureHandle()));
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_KIND,
-				InteractionContextExternalizer.ATR_STRUCTURE_KIND, "",
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_KIND, //$NON-NLS-1$
+				InteractionContextExternalizer.ATR_STRUCTURE_KIND, "", //$NON-NLS-1$
 				org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(ie.getStructureKind()));
 
 		if (ie instanceof AggregateInteractionEvent) {
 			// keep the state of the element (how it was collapsed and when it was created) to ensure that the context is the same after writing
-			ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_NUM_EVENTS,
-					InteractionContextExternalizer.ATR_NUM_EVENTS, "",
+			ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_NUM_EVENTS, //$NON-NLS-1$
+					InteractionContextExternalizer.ATR_NUM_EVENTS, "", //$NON-NLS-1$
 					Integer.toString(((AggregateInteractionEvent) ie).getNumCollapsedEvents()));
-			ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_CREATION_COUNT,
-					InteractionContextExternalizer.ATR_CREATION_COUNT, "",
+			ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_CREATION_COUNT, //$NON-NLS-1$
+					InteractionContextExternalizer.ATR_CREATION_COUNT, "", //$NON-NLS-1$
 					Integer.toString(((AggregateInteractionEvent) ie).getEventCountOnCreation()));
 		}
 		return ieAttributes;

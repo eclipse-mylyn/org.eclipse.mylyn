@@ -124,11 +124,11 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 	@Override
 	public String toString() {
 		StringBuffer result = new StringBuffer();
-		result.append("composite(");
+		result.append("composite("); //$NON-NLS-1$
 		for (IDegreeOfInterest info : composed) {
 			result.append(info.toString());
 		}
-		result.append(")");
+		result.append(")"); //$NON-NLS-1$
 		return result.toString();
 	}
 }

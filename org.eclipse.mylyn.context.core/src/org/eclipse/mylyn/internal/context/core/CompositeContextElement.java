@@ -121,7 +121,7 @@ public class CompositeContextElement implements IInteractionElement {
 			return null;
 		} else if (edges.size() > 1) {
 			StatusHandler.log(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN,
-					"Multiple edges found in composite, not supported"));
+					"Multiple edges found in composite, not supported")); //$NON-NLS-1$
 		}
 		return edges.iterator().next();
 	}
@@ -160,6 +160,6 @@ public class CompositeContextElement implements IInteractionElement {
 
 	@Override
 	public String toString() {
-		return "composite" + nodes;
+		return "composite" + nodes; //$NON-NLS-1$
 	}
 }

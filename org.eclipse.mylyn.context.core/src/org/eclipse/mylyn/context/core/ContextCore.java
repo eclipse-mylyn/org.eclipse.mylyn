@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
  */
 public final class ContextCore {
 
-	public static final String CONTENT_TYPE_RESOURCE = "resource";
+	public static final String CONTENT_TYPE_RESOURCE = "resource"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0

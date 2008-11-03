@@ -112,7 +112,7 @@ public class LocalContextStore implements IContextStore {
 			}
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-					"Could not get context handle from " + sourceFile, e));
+					"Could not get context handle from " + sourceFile, e)); //$NON-NLS-1$
 		}
 	}
 
@@ -160,7 +160,7 @@ public class LocalContextStore implements IContextStore {
 				addToCache(context);
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "could not save context", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "could not save context", t)); //$NON-NLS-1$
 		} finally {
 			if (!wasPaused) {
 				// FIXME this should not reference the context manager
@@ -230,7 +230,7 @@ public class LocalContextStore implements IContextStore {
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-					"Could not determine path for context", e));
+					"Could not determine path for context", e)); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -247,7 +247,7 @@ public class LocalContextStore implements IContextStore {
 			}
 		} catch (SecurityException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-					"Could not delete context file, insufficient permissions.", e));
+					"Could not delete context file, insufficient permissions.", e)); //$NON-NLS-1$
 		}
 	}
 

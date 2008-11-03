@@ -51,8 +51,8 @@ public class InteractionContextRelation implements IInteractionRelation {
 
 	@Override
 	public String toString() {
-		return "(rel: " + relationshipHandle + ", source: " + source.getHandleIdentifier() + ", target: "
-				+ target.getHandleIdentifier() + ")";
+		return "(rel: " + relationshipHandle + ", source: " + source.getHandleIdentifier() + ", target: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ target.getHandleIdentifier() + ")"; //$NON-NLS-1$
 	}
 
 	public String getLabel() {

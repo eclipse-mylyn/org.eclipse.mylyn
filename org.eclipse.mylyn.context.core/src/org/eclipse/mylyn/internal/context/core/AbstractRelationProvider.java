@@ -28,17 +28,17 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public abstract class AbstractRelationProvider extends AbstractContextListener {
 
-	protected final String DOS_0_LABEL = "disabled";
+	protected final String DOS_0_LABEL = "disabled"; //$NON-NLS-1$
 
-	protected final String DOS_1_LABEL = "landmark resources";
+	protected final String DOS_1_LABEL = "landmark resources"; //$NON-NLS-1$
 
-	protected final String DOS_2_LABEL = "interesting resources";
+	protected final String DOS_2_LABEL = "interesting resources"; //$NON-NLS-1$
 
-	protected final String DOS_3_LABEL = "interesting projects";
+	protected final String DOS_3_LABEL = "interesting projects"; //$NON-NLS-1$
 
-	protected final String DOS_4_LABEL = "project dependencies";
+	protected final String DOS_4_LABEL = "project dependencies"; //$NON-NLS-1$
 
-	protected final String DOS_5_LABEL = "entire workspace (slow)";
+	protected final String DOS_5_LABEL = "entire workspace (slow)"; //$NON-NLS-1$
 
 	private boolean enabled = false;
 
@@ -140,7 +140,7 @@ public abstract class AbstractRelationProvider extends AbstractContextListener {
 
 	@Override
 	public String toString() {
-		return "(provider for: " + id + ")";
+		return "(provider for: " + id + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public String getStructureKind() {
