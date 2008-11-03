@@ -29,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, ISelectionChangedListener {
 
-	public static final String ID = "org.eclipse.mylyn.bugzilla.actions.newTaskFromJunitResultView";
+	public static final String ID = "org.eclipse.mylyn.bugzilla.actions.newTaskFromJunitResultView"; //$NON-NLS-1$
 
 	private String traceString;
 
@@ -44,16 +44,17 @@ public class NewTaskFromJunitResultViewAction implements IViewActionDelegate, IS
 			return;
 		}
 
+		// TODO NLS externalize strings
 		final StringBuilder sb = new StringBuilder();
-		sb.append("\n-- Error Log from JUnit --\nClass: ");
+		sb.append("\n-- Error Log from JUnit --\nClass: "); //$NON-NLS-1$
 		sb.append(testCaseElement.getTestClassName());
-		sb.append("\nMethod: ");
+		sb.append("\nMethod: "); //$NON-NLS-1$
 		sb.append(testCaseElement.getTestMethodName());
-		sb.append("\nActual: ");
+		sb.append("\nActual: "); //$NON-NLS-1$
 		sb.append(testCaseElement.getActual());
-		sb.append("\nExpected: ");
+		sb.append("\nExpected: "); //$NON-NLS-1$
 		sb.append(testCaseElement.getExpected());
-		sb.append("\nStack Trace:\n");
+		sb.append("\nStack Trace:\n"); //$NON-NLS-1$
 		sb.append(traceString);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();

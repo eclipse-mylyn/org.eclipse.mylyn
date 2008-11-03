@@ -75,8 +75,9 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 			startSourceSearch(typeName, lineNumber);
 
 		} catch (CoreException e1) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Open Type",
-					"Failed to open type.");
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.JavaStackTraceFileHyperlink_Open_Type,
+					Messages.JavaStackTraceFileHyperlink_Failed_to_open_type);
 			return;
 		}
 
@@ -89,7 +90,7 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 	 *            the type to search for
 	 */
 	protected void startSourceSearch(final String typeName, final int lineNumber) {
-		Job search = new Job("Searching...") {
+		Job search = new Job(Messages.JavaStackTraceFileHyperlink_Searching_) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
@@ -108,13 +109,14 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 
 	protected void searchCompleted(final Object source, final String typeName, final int lineNumber,
 			final IStatus status) {
-		UIJob job = new UIJob("link search complete") { //$NON-NLS-1$
+		UIJob job = new UIJob(Messages.JavaStackTraceFileHyperlink_link_search_complete) {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				if (source == null) {
 					// did not find source
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"Open Type", "Type could not be located.");
+							Messages.JavaStackTraceFileHyperlink_Open_Type,
+							Messages.JavaStackTraceFileHyperlink_Type_could_not_be_located);
 				} else {
 					processSearchResult(source, typeName, lineNumber);
 				}
@@ -157,13 +159,15 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 						} catch (BadLocationException e) {
 							MessageDialog.openInformation(PlatformUI.getWorkbench()
 									.getActiveWorkbenchWindow()
-									.getShell(), "Open Type", "Line not found in type.");
+									.getShell(), Messages.JavaStackTraceFileHyperlink_Open_Type,
+									Messages.JavaStackTraceFileHyperlink_Line_not_found_in_type);
 						}
 						provider.disconnect(editorInput);
 					}
 				} catch (CoreException e) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"Open Type", "Failed to open type.");
+							Messages.JavaStackTraceFileHyperlink_Open_Type,
+							Messages.JavaStackTraceFileHyperlink_Failed_to_open_type);
 				}
 			}
 		}
@@ -177,7 +181,7 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 
 			// get File name (w/o .java)
 			String typeName = traceLine.substring(start + 1, end);
-			typeName = typeName.substring(0, typeName.indexOf("."));
+			typeName = typeName.substring(0, typeName.indexOf(".")); //$NON-NLS-1$
 
 			String qualifier = traceLine.substring(0, start);
 			// remove the method name
@@ -201,7 +205,7 @@ public class JavaStackTraceFileHyperlink implements IHyperlink, IHighlightingHyp
 			return typeName.trim();
 		}
 
-		return "error"; // TODO: Complain
+		return "error"; // TODO: Complain //$NON-NLS-1$
 	}
 
 	// adapted from JavaStackTraceHyperlink

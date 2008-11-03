@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Java Tasks
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.java.tasks;singleton:=true
 Bundle-Version: 3.1.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.ui;bundle-version="[3.0.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.internal.java.tasks;x-internal:=true
+Bundle-Localization: plugin

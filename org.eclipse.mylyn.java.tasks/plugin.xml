@@ -7,7 +7,7 @@
       <hyperlinkDetector            
             class="org.eclipse.mylyn.internal.java.tasks.JavaStackTraceHyperlinkDetector"
             id="org.eclipse.mylyn.java.hyperlink.detector.stack"
-            name="Mylyn Stack Trace"
+            name="%JavaStackTraceHyperlinkDetector.name"
             targetId="org.eclipse.ui.DefaultTextEditor"/>
    </extension>
       
@@ -19,7 +19,7 @@
 	      	class="org.eclipse.mylyn.internal.java.tasks.NewTaskFromJunitResultViewAction"
 	        icon="icons/etool16/task-new.gif"
 	        id="org.eclipse.mylyn.bugzilla.actions.newTaskFromJunitResultView"
-	        label="New Task from Failure..."
+	        label="%NewTaskFromJunitResultViewAction.label"
 	        menubarPath="org.eclipse.jdt.junit.ResultView"/>
       </viewerContribution>
    </extension>

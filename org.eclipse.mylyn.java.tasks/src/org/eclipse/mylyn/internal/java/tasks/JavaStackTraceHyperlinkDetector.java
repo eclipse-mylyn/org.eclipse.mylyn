@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.ui.AbstractTaskHyperlinkDetector;
  */
 public class JavaStackTraceHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 
-	private static final Pattern stackTracePattern = Pattern.compile("\\S*\\(([\\w\\$]*\\.java:\\d*)\\)",
+	private static final Pattern stackTracePattern = Pattern.compile("\\S*\\(([\\w\\$]*\\.java:\\d*)\\)", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE);
 
 	private static IRegion determineRegion(int textOffset, Matcher m, int group) {
