@@ -26,7 +26,7 @@ import org.eclipse.swt.graphics.Image;
 @SuppressWarnings("restriction")
 public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
-	public static final String LABEL_RELATION = "referenced by";
+	public static final String LABEL_RELATION = Messages.PdeContextLabelProvider_referenced_by;
 
 	@Override
 	protected Image getImage(IInteractionElement node) {

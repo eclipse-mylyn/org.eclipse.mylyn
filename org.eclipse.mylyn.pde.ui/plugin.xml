@@ -7,7 +7,7 @@
           class="org.eclipse.mylyn.internal.pde.ui.PdeUiBridge"
           contentType="plugin.xml"
           activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
-	      activeSearchLabel="XML Search"/>
+	      activeSearchLabel="%bridges.activeSearchLabel"/>
   </extension>
    <extension
          point="org.eclipse.mylyn.context.ui.startup">
@@ -19,14 +19,14 @@
    	<extension point="org.eclipse.mylyn.context.core.bridges">
 		<structureBridge
 	        class="org.eclipse.mylyn.internal.pde.ui.PdeStructureBridge"
-	        name="PDE Structure Bridge"
+	        name="%PdeStructureBridge.name"
 	        parentContentType="resource"/>
 	</extension>
 	
 	
     <extension
          id="apitools_javadoc_proposals"
-         name="PDE API Tools Proposals (Focused)"
+         name="%javaCompletionProposalComputer.name"
          point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
       <javaCompletionProposalComputer
             activate="true"
@@ -43,7 +43,7 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
-            name="Task Context Plug-in Test"
+            name="%TaskContextPdeJUnitLaunchConfiguration.name"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
             delegate="org.eclipse.mylyn.internal.pde.ui.junit.TaskContextPdeJUnitLaunchConfiguration"
             modes="run, debug"
@@ -60,11 +60,11 @@
             id="org.eclipse.mylyn.pde.junit.launchconfig.tabgroup">
          <launchMode
                perspective="org.eclipse.debug.ui.DebugPerspective"
-               description="Test suite automatically populated by elements in the task context."
+               description="%TaskContextPdeJUnitTabGroup.description"
                mode="debug">
          </launchMode>
          <launchMode
-               description="Test suite automatically populated by elements in the task context."
+               description="%TaskContextPdeJUnitTabGroup.description"
                mode="run">
          </launchMode>
       </launchConfigurationTabGroup>

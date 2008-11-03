@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,9 +62,9 @@ import org.eclipse.search.ui.text.Match;
 @SuppressWarnings("restriction")
 public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
-	public static final String SOURCE_ID = "org.eclipse.mylyn.xml.search.references";
+	public static final String SOURCE_ID = "org.eclipse.mylyn.xml.search.references"; //$NON-NLS-1$
 
-	public static final String NAME = "referenced by";
+	public static final String NAME = "referenced by"; //$NON-NLS-1$
 
 	public static final int DEFAULT_DEGREE = 3;
 
@@ -91,7 +91,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 	@Override
 	protected void findRelated(final IInteractionElement node, int degreeOfSeparation) {
-		if (!node.getContentType().equals("java")) {
+		if (!node.getContentType().equals("java")) { //$NON-NLS-1$
 			return;
 		}
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
@@ -122,7 +122,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 					// {
 					String handle = landmark.getHandleIdentifier();
 					IResource element = null;
-					int first = handle.indexOf(";");
+					int first = handle.indexOf(";"); //$NON-NLS-1$
 					String filename = handle;
 					if (first != -1) {
 						filename = handle.substring(0, first);
@@ -133,7 +133,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 						element = ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
 					} catch (Exception e) {
 						StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN,
-								"Scope creation failed", e));
+								"Scope creation failed", e)); //$NON-NLS-1$
 					}
 					l.add(element);
 				}
@@ -233,7 +233,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 												.getStructureBridge(f.getName());
 										String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
 										if (handle != null) {
-											String second = handle.substring(handle.indexOf(";"));
+											String second = handle.substring(handle.indexOf(";")); //$NON-NLS-1$
 
 											XmlNodeHelper xnode = new XmlNodeHelper(f.getFullPath().toString(), second);
 											nodeMap.put(m, xnode);
@@ -245,7 +245,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 										}
 									} catch (Exception e) {
 										StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN,
-												"Unable to create match", e));
+												"Unable to create match", e)); //$NON-NLS-1$
 									}
 								}
 							}
@@ -292,7 +292,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		if (m.getDeclaringType() == null) {
 			return ((IType) m).getFullyQualifiedName();
 		} else {
-			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName();
+			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName(); //$NON-NLS-1$
 		}
 	}
 
@@ -324,7 +324,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 			try {
 				// get the current page of the outline
 				Class<?> clazz = FileSearchQuery.class;
-				Field field = clazz.getDeclaredField("fResult");
+				Field field = clazz.getDeclaredField("fResult"); //$NON-NLS-1$
 				field.setAccessible(true);
 				FileSearchResult fResult = (FileSearchResult) field.get(this);
 				if (fResult == null) {
@@ -335,7 +335,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 				return fResult;
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN,
-						"Failed to get search result: " + e.getMessage()));
+						"Failed to get search result: " + e.getMessage())); //$NON-NLS-1$
 			}
 			return super.getSearchResult();
 		}
@@ -355,7 +355,8 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 				}
 				return Status.OK_STATUS;
 			} catch (Throwable t) {
-				return new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, 0, "Skipped XML search", null);
+				return new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, 0,
+						Messages.XmlJavaRelationProvider_Skipped_XML_search, null);
 			}
 		}
 

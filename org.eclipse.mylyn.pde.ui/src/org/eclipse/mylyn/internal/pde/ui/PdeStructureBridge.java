@@ -47,7 +47,7 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 @SuppressWarnings("restriction")
 public class PdeStructureBridge extends AbstractContextStructureBridge {
 
-	public final static String CONTENT_TYPE = "plugin.xml";
+	public final static String CONTENT_TYPE = "plugin.xml"; //$NON-NLS-1$
 
 	@Override
 	public String getContentType() {
@@ -56,7 +56,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getContentType(String elementHandle) {
-		if (elementHandle.endsWith(".xml")) {
+		if (elementHandle.endsWith(".xml")) { //$NON-NLS-1$
 			return parentContentType;
 		} else {
 			return CONTENT_TYPE;
@@ -79,7 +79,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				return getHandleIdentifier(parent);
 			} else {
 				// the parent is the plugin.xml file, so return that handle
-				int delimeterIndex = handle.indexOf(";");
+				int delimeterIndex = handle.indexOf(";"); //$NON-NLS-1$
 				if (delimeterIndex != -1) {
 					String parentHandle = handle.substring(0, delimeterIndex);
 					return parentHandle;
@@ -93,7 +93,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				return getHandleIdentifier(parent);
 			} else {
 				// the parent is the plugin.xml file, so return that handle
-				int delimeterIndex = handle.indexOf(";");
+				int delimeterIndex = handle.indexOf(";"); //$NON-NLS-1$
 				if (delimeterIndex != -1) {
 					String parentHandle = handle.substring(0, delimeterIndex);
 					return parentHandle;
@@ -118,8 +118,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 		if (handle == null) {
 			return null;
 		}
-		int first = handle.indexOf(";");
-		String filename = "";
+		int first = handle.indexOf(";"); //$NON-NLS-1$
+		String filename = ""; //$NON-NLS-1$
 		if (first == -1) {
 			AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
 			return parentBridge.getObjectForHandle(handle);
@@ -197,7 +197,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 						PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
 				return handle;
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get handle", e));
+				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get handle", e)); //$NON-NLS-1$
 			}
 		} else if (object instanceof PluginNode) {
 			PluginNode node = (PluginNode) object;
@@ -214,13 +214,13 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 						PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
 				return handle;
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get handle", e));
+				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get handle", e)); //$NON-NLS-1$
 			}
 
 		} else if (object instanceof File) {
 			// get the handle for the file if it is plugin.xml
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("plugin.xml")) {
+			if (file.getFullPath().toString().endsWith("plugin.xml")) { //$NON-NLS-1$
 				return file.getFullPath().toString();
 			}
 		}
@@ -231,19 +231,19 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 	public String getLabel(Object object) {
 		if (object instanceof PluginObjectNode) {
 			PluginObjectNode node = (PluginObjectNode) object;
-			String name = node.getXMLAttributeValue("name");
+			String name = node.getXMLAttributeValue("name"); //$NON-NLS-1$
 			if (name == null) {
 				name = node.getXMLTagName();
 			}
-			name = node.getModel().getUnderlyingResource().getName() + ": " + name;
+			name = node.getModel().getUnderlyingResource().getName() + ": " + name; //$NON-NLS-1$
 			return name;
 		} else if (object instanceof File) {
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("plugin.xml")) {
-				return "plugin.xml";
+			if (file.getFullPath().toString().endsWith("plugin.xml")) { //$NON-NLS-1$
+				return "plugin.xml"; //$NON-NLS-1$
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -265,12 +265,12 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				|| object instanceof PDEFormPage) {
 			return true;
 		} else if (object instanceof XmlNodeHelper) {
-			if (((XmlNodeHelper) object).getFilename().endsWith("plugin.xml")) {
+			if (((XmlNodeHelper) object).getFilename().endsWith("plugin.xml")) { //$NON-NLS-1$
 				return true;
 			}
 		} else if (object instanceof File) {
 			File file = (File) object;
-			if (file.getFullPath().toString().endsWith("plugin.xml")) {
+			if (file.getFullPath().toString().endsWith("plugin.xml")) { //$NON-NLS-1$
 				return true;
 			}
 		}
@@ -310,7 +310,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 			try {
 				if (markerResource instanceof IFile) {
 					IFile file = (IFile) markerResource;
-					if (file.getFullPath().toString().endsWith("plugin.xml")) {
+					if (file.getFullPath().toString().endsWith("plugin.xml")) { //$NON-NLS-1$
 						return file.getFullPath().toString();
 					} else {
 						return null;
@@ -319,13 +319,13 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				return null;
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN,
-						"Could not find element for: " + object));
+						"Could not find element for: " + object)); //$NON-NLS-1$
 				return null;
 			}
 		} else if (object instanceof IFile) {
 			try {
 				IFile file = (IFile) object;
-				if (file.getFullPath().toString().endsWith("plugin.xml")) {
+				if (file.getFullPath().toString().endsWith("plugin.xml")) { //$NON-NLS-1$
 					String content = XmlNodeHelper.getContents(file.getContents());
 					IDocument d = new Document(content);
 					PluginObjectNode node = PdeEditingMonitor.getNode(d, file, offset, false);
@@ -335,7 +335,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN,
-						"Unable to get handle for offset in object", e));
+						"Unable to get handle for offset in object", e)); //$NON-NLS-1$
 			}
 		}
 		return null;

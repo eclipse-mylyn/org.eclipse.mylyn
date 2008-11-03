@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn PDE Bridge
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.pde.ui;singleton:=true
 Bundle-Version: 3.1.0.qualifier
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -35,4 +35,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.internal.pde.ui;x-internal:=true,
  org.eclipse.mylyn.internal.pde.ui.junit;x-internal:=true
+Bundle-Localization: plugin
 

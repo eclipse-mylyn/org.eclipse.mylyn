@@ -103,7 +103,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						// fix a bug when there is a selection and the editor
 						// input is the manifest.mf file
 						// not the plugin.xml
-						if (fei.getFile().getFullPath().toString().toLowerCase(Locale.ENGLISH).endsWith("/manifest.mf")) {
+						if (fei.getFile().getFullPath().toString().toLowerCase(Locale.ENGLISH).endsWith("/manifest.mf")) { //$NON-NLS-1$
 							return;
 						}
 
@@ -124,7 +124,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN,
-							"Could not resolve selection", e));
+							"Could not resolve selection", e)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -136,7 +136,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 		}
 		String s = node.getXMLTagName();
 		for (IDocumentAttributeNode a : node.getNodeAttributes()) {
-			s += a.getAttributeName() + "=" + a.getAttributeValue();
+			s += a.getAttributeName() + "=" + a.getAttributeValue(); //$NON-NLS-1$
 		}
 		return s;
 	}
@@ -145,7 +145,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 	 * COPIED FROM ManifestSourcePage - from a getRangeElement body
 	 */
 	public static PluginObjectNode getNode(ManifestEditor editor, int offset, boolean hashCode) {
-		ManifestSourcePage page = (ManifestSourcePage) editor.findPage("plugin-context");
+		ManifestSourcePage page = (ManifestSourcePage) editor.findPage("plugin-context"); //$NON-NLS-1$
 		if (page != null) {
 			IPluginModelBase model = (IPluginModelBase) page.getInputContext().getModel();
 			PluginObjectNode node = (PluginObjectNode) PdeEditingMonitor.findNode(model.getPluginBase().getLibraries(),

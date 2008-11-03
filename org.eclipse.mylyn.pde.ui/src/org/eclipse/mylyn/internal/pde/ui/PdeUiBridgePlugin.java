@@ -30,7 +30,7 @@ public class PdeUiBridgePlugin extends Plugin {
 
 	}
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.pde.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.pde.ui"; //$NON-NLS-1$
 
 	private static PdeUiBridgePlugin INSTANCE;
 

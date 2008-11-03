@@ -71,8 +71,8 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 		// get the handle of the node
 		String handle = node.getHandleIdentifier();
 
-		int first = handle.indexOf(";");
-		String filename = "";
+		int first = handle.indexOf(";"); //$NON-NLS-1$
+		String filename = ""; //$NON-NLS-1$
 		if (first == -1) {
 			filename = handle;
 		} else {
@@ -90,7 +90,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 			// if the editor is null, we had a problem and should return
 			if (editor == null) {
 				StatusHandler.log(new Status(IStatus.WARNING, PdeUiBridgePlugin.ID_PLUGIN,
-						"Unable to open editor for file: " + filename));
+						"Unable to open editor for file: " + filename)); //$NON-NLS-1$
 				return;
 			}
 
@@ -152,7 +152,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 				IEditorPart part = reference.getEditor(false);
 				if (part != null) {
 					// HACK: find better way to get the filename other than the tooltip
-					if (("/" + part.getTitleToolTip()).equals(node.getHandleIdentifier())) {
+					if (("/" + part.getTitleToolTip()).equals(node.getHandleIdentifier())) { //$NON-NLS-1$
 						if (part instanceof FormEditor) {
 							((FormEditor) part).close(true);
 						} else if (part instanceof AbstractTextEditor) {
@@ -184,7 +184,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 						if (page instanceof SourceOutlinePage) {
 							// get the tree viewer for the outline
 							Class<?> clazz2 = page.getClass();
-							Field field2 = clazz2.getDeclaredField("viewer");
+							Field field2 = clazz2.getDeclaredField("viewer"); //$NON-NLS-1$
 							field2.setAccessible(true);
 							Object f2 = field2.get(page);
 							if (f2 != null && f2 instanceof TreeViewer) {
@@ -193,7 +193,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 						}
 					} catch (Exception e) {
 						StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN,
-								"Failed to get tree viewers", e));
+								"Failed to get tree viewers", e)); //$NON-NLS-1$
 						return null;
 					}
 				}
@@ -204,9 +204,9 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 				Class<?> clazz = PDEFormEditor.class;
 				Field field = null;
 				try {
-					field = clazz.getDeclaredField("formOutline");
+					field = clazz.getDeclaredField("formOutline"); //$NON-NLS-1$
 				} catch (NoSuchFieldException e) {
-					field = clazz.getDeclaredField("fFormOutline");
+					field = clazz.getDeclaredField("fFormOutline"); //$NON-NLS-1$
 				}
 				field.setAccessible(true);
 				Object f = field.get(editor);
@@ -215,9 +215,9 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 					Class<?> clazz2 = FormOutlinePage.class;
 					Field field2 = null;
 					try {
-						field2 = clazz2.getDeclaredField("treeViewer");
+						field2 = clazz2.getDeclaredField("treeViewer"); //$NON-NLS-1$
 					} catch (NoSuchFieldException e) {
-						field2 = clazz2.getDeclaredField("fTreeViewer");
+						field2 = clazz2.getDeclaredField("fTreeViewer"); //$NON-NLS-1$
 					}
 					field2.setAccessible(true);
 					Object f2 = field2.get(f);
@@ -227,7 +227,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 					}
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get PDE outline", e));
+				StatusHandler.log(new Status(IStatus.ERROR, PdeUiBridgePlugin.ID_PLUGIN, "Could not get PDE outline", e)); //$NON-NLS-1$
 				return Collections.emptyList();
 			}
 
