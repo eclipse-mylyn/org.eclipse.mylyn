@@ -26,7 +26,6 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskAttachmentHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -39,6 +38,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
@@ -78,8 +78,8 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 
 		/* Test attempt to upload a non-existent file */
 		String filePath = "/this/is/not/a/real-file";
-		BugzillaTaskAttachmentHandler.AttachmentPartSource source = new BugzillaTaskAttachmentHandler.AttachmentPartSource(
-				new FileTaskAttachmentSource(new File(filePath)));
+		TaskAttachmentPartSource source = new TaskAttachmentPartSource(
+				new FileTaskAttachmentSource(new File(filePath)), "real-file");
 		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
 		try {
 			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachmentMapper.getDescription(),
