@@ -52,7 +52,7 @@ public abstract class AbstractMonitorLog {
 			}
 			outputStream = new FileOutputStream(outputFile, true);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not log to file: "
+			StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN, "Could not log to file: " //$NON-NLS-1$
 					+ outputFile.getAbsolutePath(), e));
 		}
 	}
@@ -66,7 +66,7 @@ public abstract class AbstractMonitorLog {
 			started = false;
 		} catch (IOException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN,
-					"Could not close interaction event stream", e));
+					"Could not close interaction event stream", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -85,7 +85,7 @@ public abstract class AbstractMonitorLog {
 			this.outputFile = newFile;
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, IMonitorCoreConstants.ID_PLUGIN,
-					"Could not set logger output file", e));
+					"Could not set logger output file", e)); //$NON-NLS-1$
 		}
 		startMonitoring();
 		return newFile;

@@ -39,20 +39,20 @@ public class InteractionEventClassifier {
 
 	public static boolean isJavaEdit(InteractionEvent event) {
 		return event.getKind().equals(InteractionEvent.Kind.EDIT)
-				&& (event.getOriginId().contains("java") || event.getOriginId().contains("jdt.ui"));
+				&& (event.getOriginId().contains("java") || event.getOriginId().contains("jdt.ui")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static boolean isJDTEvent(InteractionEvent event) {
-		return (isEdit(event) || isSelection(event) || isCommand(event)) && getCleanOriginId(event).contains("jdt");
+		return (isEdit(event) || isSelection(event) || isCommand(event)) && getCleanOriginId(event).contains("jdt"); //$NON-NLS-1$
 	}
 
 	public static boolean isSelectionInEditor(InteractionEvent event) {
-		return event.getOriginId().contains("Editor") || event.getOriginId().contains("editor")
-				|| event.getOriginId().contains("source");
+		return event.getOriginId().contains("Editor") || event.getOriginId().contains("editor") //$NON-NLS-1$ //$NON-NLS-2$
+				|| event.getOriginId().contains("source"); //$NON-NLS-1$
 	}
 
 	public static String getCleanOriginId(InteractionEvent event) {
-		String cleanOriginId = "";
+		String cleanOriginId = ""; //$NON-NLS-1$
 		String originId = event.getOriginId();
 
 		if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
@@ -60,7 +60,7 @@ public class InteractionEventClassifier {
 				char curChar = originId.charAt(i);
 				if (!(curChar == '&')) {
 					if (Character.getType(curChar) == Character.CONTROL) {
-						cleanOriginId = cleanOriginId.concat(" ");
+						cleanOriginId = cleanOriginId.concat(" "); //$NON-NLS-1$
 					} else {
 						cleanOriginId = cleanOriginId.concat(String.valueOf(curChar));
 					}
@@ -79,7 +79,7 @@ public class InteractionEventClassifier {
 		timeInSeconds = timeInSeconds - (hours * 3600);
 		minutes = timeInSeconds / 60;
 		timeInSeconds = timeInSeconds - (minutes * 60);
-		return hours + "." + minutes;
+		return hours + "." + minutes; //$NON-NLS-1$
 	}
 
 }

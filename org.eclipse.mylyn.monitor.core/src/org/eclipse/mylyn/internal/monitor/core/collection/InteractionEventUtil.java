@@ -19,7 +19,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 public class InteractionEventUtil {
 
 	public static String getCleanOriginId(InteractionEvent event) {
-		String cleanOriginId = "";
+		String cleanOriginId = ""; //$NON-NLS-1$
 		String originId = event.getOriginId();
 
 		if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
@@ -27,7 +27,7 @@ public class InteractionEventUtil {
 				char curChar = originId.charAt(i);
 				if (!(curChar == '&')) {
 					if (Character.getType(curChar) == Character.CONTROL) {
-						cleanOriginId = cleanOriginId.concat(" ");
+						cleanOriginId = cleanOriginId.concat(" "); //$NON-NLS-1$
 					} else {
 						cleanOriginId = cleanOriginId.concat(String.valueOf(curChar));
 					}

@@ -85,23 +85,23 @@ public class InteractionEvent {
 		public String toString() {
 			switch (this) {
 			case SELECTION:
-				return "selection";
+				return "selection"; //$NON-NLS-1$
 			case EDIT:
-				return "edit";
+				return "edit"; //$NON-NLS-1$
 			case COMMAND:
-				return "command";
+				return "command"; //$NON-NLS-1$
 			case PREFERENCE:
-				return "preference";
+				return "preference"; //$NON-NLS-1$
 			case PREDICTION:
-				return "prediction";
+				return "prediction"; //$NON-NLS-1$
 			case PROPAGATION:
-				return "propagation";
+				return "propagation"; //$NON-NLS-1$
 			case MANIPULATION:
-				return "manipulation";
+				return "manipulation"; //$NON-NLS-1$
 			case ATTENTION:
-				return "attention";
+				return "attention"; //$NON-NLS-1$
 			default:
-				return "null";
+				return "null"; //$NON-NLS-1$
 			}
 		}
 
@@ -112,28 +112,28 @@ public class InteractionEvent {
 			if (string == null) {
 				return null;
 			}
-			if (string.equals("selection")) {
+			if (string.equals("selection")) { //$NON-NLS-1$
 				return SELECTION;
 			}
-			if (string.equals("edit")) {
+			if (string.equals("edit")) { //$NON-NLS-1$
 				return EDIT;
 			}
-			if (string.equals("command")) {
+			if (string.equals("command")) { //$NON-NLS-1$
 				return COMMAND;
 			}
-			if (string.equals("preference")) {
+			if (string.equals("preference")) { //$NON-NLS-1$
 				return PREFERENCE;
 			}
-			if (string.equals("prediction")) {
+			if (string.equals("prediction")) { //$NON-NLS-1$
 				return PREDICTION;
 			}
-			if (string.equals("propagation")) {
+			if (string.equals("propagation")) { //$NON-NLS-1$
 				return PROPAGATION;
 			}
-			if (string.equals("manipulation")) {
+			if (string.equals("manipulation")) { //$NON-NLS-1$
 				return MANIPULATION;
 			}
-			if (string.equals("attention")) {
+			if (string.equals("attention")) { //$NON-NLS-1$
 				return ATTENTION;
 			}
 			return null;
@@ -161,7 +161,7 @@ public class InteractionEvent {
 	/**
 	 * Use to specify an uknown identifier, e.g. for an originId.
 	 */
-	public static final String ID_UNKNOWN = "?";
+	public static final String ID_UNKNOWN = "?"; //$NON-NLS-1$
 
 	/**
 	 * For parameter description see this class's getters.
@@ -174,7 +174,7 @@ public class InteractionEvent {
 	 * For parameter description see this class's getters.
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation) {
-		this(kind, structureKind, handle, originId, navigatedRelation, "null", 1f);
+		this(kind, structureKind, handle, originId, navigatedRelation, "null", 1f); //$NON-NLS-1$
 	}
 
 	/**
@@ -182,14 +182,14 @@ public class InteractionEvent {
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, String navigatedRelation,
 			float interestContribution) {
-		this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution);
+		this(kind, structureKind, handle, originId, navigatedRelation, "null", interestContribution); //$NON-NLS-1$
 	}
 
 	/**
 	 * For parameter description see this class's getters.
 	 */
 	public static InteractionEvent makeCommand(String originId, String delta) {
-		return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1);
+		return new InteractionEvent(InteractionEvent.Kind.COMMAND, "null", "null", originId, "null", delta, 1); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
@@ -205,7 +205,7 @@ public class InteractionEvent {
 	 * For parameter description see this class's getters.
 	 */
 	public static InteractionEvent makePreference(String originId, String delta) {
-		return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "null", "null", originId, "null", delta, 1); // default
+		return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, "null", "null", originId, "null", delta, 1); // default //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		// contribution
 	}
 
@@ -213,7 +213,7 @@ public class InteractionEvent {
 	 * For parameter description see this class's getters.
 	 */
 	public InteractionEvent(Kind kind, String structureKind, String handle, String originId, float interestContribution) {
-		this(kind, structureKind, handle, originId, "null", "null", interestContribution); // default
+		this(kind, structureKind, handle, originId, "null", "null", interestContribution); // default //$NON-NLS-1$ //$NON-NLS-2$
 		// contribution
 	}
 
@@ -307,12 +307,12 @@ public class InteractionEvent {
 
 	@Override
 	public String toString() {
-		return "(date: " + date + ", kind: " + kind + ", sourceHandle: " + structureHandle + ", origin: " + originId
-				+ ", delta: " + delta + ")";
+		return "(date: " + date + ", kind: " + kind + ", sourceHandle: " + structureHandle + ", origin: " + originId //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ ", delta: " + delta + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public boolean isValidStructureHandle() {
-		return structureHandle != null && !structureHandle.equals("null") && !structureHandle.trim().equals(ID_UNKNOWN);
+		return structureHandle != null && !structureHandle.equals("null") && !structureHandle.trim().equals(ID_UNKNOWN); //$NON-NLS-1$
 	}
 
 	// TODO 4.0 change to getHandleIdentifier()

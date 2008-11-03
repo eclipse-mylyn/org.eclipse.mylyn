@@ -50,10 +50,10 @@ public class InteractionByTypeSummary {
 	}
 
 	public void printOut(Set<Integer> allUserIdsList) {
-		System.out.print("EventId");
+		System.out.print("EventId"); //$NON-NLS-1$
 		// Collections.sort(allUserIdsList);
 		for (Integer userId : allUserIdsList) {
-			System.out.print("\t" + userId);
+			System.out.print("\t" + userId); //$NON-NLS-1$
 		}
 		System.out.println();
 
@@ -62,9 +62,9 @@ public class InteractionByTypeSummary {
 			Set<Integer> userIdSet = usageMap.get(originId).keySet();
 			for (int userId : allUserIdsList) {
 				if (userIdSet.contains(userId)) {
-					System.out.print("\t1");
+					System.out.print("\t1"); //$NON-NLS-1$
 				} else {
-					System.out.print("\t0");
+					System.out.print("\t0"); //$NON-NLS-1$
 				}
 			}
 			System.out.println();

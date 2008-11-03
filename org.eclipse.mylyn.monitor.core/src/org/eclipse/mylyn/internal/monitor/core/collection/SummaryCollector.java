@@ -59,17 +59,17 @@ public class SummaryCollector implements IUsageCollector {
 	public List<String> getReport() {
 		List<String> summaries = new ArrayList<String>();
 
-		summaries.add("Start date: " + leastRecentDate + ", End date: " + mostRecentDate + "<br>");
+		summaries.add(Messages.SummaryCollector_Start_date_ + leastRecentDate + Messages.SummaryCollector_END_DATE + mostRecentDate + "<br>"); //$NON-NLS-1$
 
-		summaries.add("Number of events: " + numUserEvents + "<br>");
-		summaries.add("Number of commands: " + numCommands + "<br>");
-		summaries.add("Number of preference changes: " + numPreference + "<br>");
-		summaries.add("Number of selections: " + numSelections + "<br>");
+		summaries.add(Messages.SummaryCollector_Number_of_events_ + numUserEvents + "<br>"); //$NON-NLS-1$
+		summaries.add(Messages.SummaryCollector_Number_of_commands_ + numCommands + "<br>"); //$NON-NLS-1$
+		summaries.add(Messages.SummaryCollector_Number_of_preference_changes + numPreference + "<br>"); //$NON-NLS-1$
+		summaries.add(Messages.SummaryCollector_Number_of_selections_ + numSelections + "<br>"); //$NON-NLS-1$
 		return summaries;
 	}
 
 	public String getReportTitle() {
-		return "Summary";
+		return Messages.SummaryCollector_Summary;
 	}
 
 	public void exportAsCSVFile(String directory) {
@@ -80,12 +80,12 @@ public class SummaryCollector implements IUsageCollector {
 	public List<String> getPlainTextReport() {
 		List<String> summaries = new ArrayList<String>();
 
-		summaries.add("Start date: " + leastRecentDate + ", End date: " + mostRecentDate);
+		summaries.add(Messages.SummaryCollector_Start_date_ + leastRecentDate + Messages.SummaryCollector_END_DATE + mostRecentDate);
 
-		summaries.add("Number of events: " + numUserEvents);
-		summaries.add("Number of commands: " + numCommands);
-		summaries.add("Number of preference changes: " + numPreference);
-		summaries.add("Number of selections: " + numSelections);
+		summaries.add(Messages.SummaryCollector_Number_of_events_ + numUserEvents);
+		summaries.add(Messages.SummaryCollector_Number_of_commands_ + numCommands);
+		summaries.add(Messages.SummaryCollector_Number_of_preference_changes + numPreference);
+		summaries.add(Messages.SummaryCollector_Number_of_selections_ + numSelections);
 		return summaries;
 	}
 

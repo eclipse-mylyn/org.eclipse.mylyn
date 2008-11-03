@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,14 +46,14 @@ public class DataOverviewCollector implements IUsageCollector {
 
 	private static int endDatePosition = 1;
 
-	private String filePrefix = "";
+	private String filePrefix = ""; //$NON-NLS-1$
 
 	public DataOverviewCollector(String prefix) {
 		filePrefix = prefix;
 	}
 
 	public String getReportTitle() {
-		return "Data Overview";
+		return Messages.DataOverviewCollector_Data_Overview;
 	}
 
 	public void consumeEvent(InteractionEvent event, int userId) {
@@ -99,57 +100,58 @@ public class DataOverviewCollector implements IUsageCollector {
 
 	public List<String> getReport() {
 		List<String> report = new ArrayList<String>();
-		report.add("<h4>Data Overview</h4>");
-		report.add("Number of Users: " + interactionHistorySizes.keySet().size() + "<br>");
+		report.add(Messages.DataOverviewCollector__h4_Data_Overview_h4_);
+		report.add(Messages.DataOverviewCollector_Number_of_Users_ + interactionHistorySizes.keySet().size() + "<br>"); //$NON-NLS-1$
 		for (Map.Entry<Integer, Integer> entry : interactionHistorySizes.entrySet()) {
-			report.add(entry.getKey() + ": " + entry.getValue() + " events; ");
+			report.add(entry.getKey() + ": " + entry.getValue() + Messages.DataOverviewCollector_events); //$NON-NLS-1$
 			report.add(InteractionEventClassifier.formatDuration(interactionHistoryActiveDuration.get(entry.getKey()))
-					+ " active use; ");
+					+ Messages.DataOverviewCollector_active_use);
 			List<Date> dateRange = interactionHistoryRanges.get(entry.getKey());
 			long duration = dateRange.get(endDatePosition).getTime() - dateRange.get(startDatePosition).getTime();
-			report.add(dateRange.get(startDatePosition) + " to " + dateRange.get(endDatePosition) + ", a period of "
-					+ InteractionEventClassifier.formatDuration(duration) + " hours.");
+			report.add(MessageFormat.format(Messages.DataOverviewCollector_TO_PERIOD_OF_HOURS,
+					dateRange.get(startDatePosition), dateRange.get(endDatePosition),
+					InteractionEventClassifier.formatDuration(duration)));
 
-			report.add("<br><br>");
+			report.add("<br><br>"); //$NON-NLS-1$
 		}
 		return report;
 	}
 
 	public void exportAsCSVFile(String directory) {
 
-		String filename = directory + File.separator + filePrefix + "baseLine.csv";
+		String filename = directory + File.separator + filePrefix + "baseLine.csv"; //$NON-NLS-1$
 
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filename)));
 
 			// Write the header
-			writer.write("User");
-			writer.write(",");
-			writer.write("Events");
-			writer.write(",");
-			writer.write("Start");
-			writer.write(",");
-			writer.write("End");
-			writer.write(",");
-			writer.write("Active Use");
-			writer.write(",");
-			writer.write("Elapsed Use");
+			writer.write(Messages.DataOverviewCollector_CSV_USER);
+			writer.write(","); //$NON-NLS-1$
+			writer.write(Messages.DataOverviewCollector_CSV_EVENTS);
+			writer.write(","); //$NON-NLS-1$
+			writer.write(Messages.DataOverviewCollector_CSV_START);
+			writer.write(","); //$NON-NLS-1$
+			writer.write(Messages.DataOverviewCollector_CSV_END);
+			writer.write(","); //$NON-NLS-1$
+			writer.write(Messages.DataOverviewCollector_CSV_ACTIVE_USE);
+			writer.write(","); //$NON-NLS-1$
+			writer.write(Messages.DataOverviewCollector_CSV_ELAPSED_USE);
 			writer.newLine();
 
 			// Writer the rows
 			for (Map.Entry<Integer, Integer> entry : interactionHistorySizes.entrySet()) {
 				writer.write(entry.getKey().toString());
-				writer.write(",");
+				writer.write(","); //$NON-NLS-1$
 				writer.write(entry.getValue().toString());
-				writer.write(",");
+				writer.write(","); //$NON-NLS-1$
 				List<Date> dateRange = interactionHistoryRanges.get(entry.getKey());
 				writer.write(dateRange.get(startDatePosition).toString());
-				writer.write(",");
+				writer.write(","); //$NON-NLS-1$
 				writer.write(dateRange.get(endDatePosition).toString());
-				writer.write(",");
+				writer.write(","); //$NON-NLS-1$
 				long elapsed = interactionHistoryActiveDuration.get(entry.getKey());
 				writer.write(InteractionEventClassifier.formatDuration(elapsed));
-				writer.write(",");
+				writer.write(","); //$NON-NLS-1$
 				long duration = dateRange.get(endDatePosition).getTime() - dateRange.get(startDatePosition).getTime();
 				writer.write(InteractionEventClassifier.formatDuration(duration));
 				writer.newLine();
@@ -159,7 +161,7 @@ public class DataOverviewCollector implements IUsageCollector {
 			writer.close();
 
 		} catch (IOException e) {
-			System.err.println("Unable to write CVS file <" + filename + ">");
+			System.err.println("Unable to write CVS file <" + filename + ">"); //$NON-NLS-1$ //$NON-NLS-2$
 			e.printStackTrace(System.err);
 		}
 	}
@@ -204,16 +206,17 @@ public class DataOverviewCollector implements IUsageCollector {
 
 	public List<String> getPlainTextReport() {
 		List<String> report = new ArrayList<String>();
-		report.add("Data Overview");
-		report.add("Number of Users: " + interactionHistorySizes.keySet().size());
+		report.add(Messages.DataOverviewCollector_Data_Overview);
+		report.add(Messages.DataOverviewCollector_Number_of_Users_ + interactionHistorySizes.keySet().size());
 		for (Map.Entry<Integer, Integer> entry : interactionHistorySizes.entrySet()) {
-			report.add(entry.getKey() + ": " + entry.getValue() + " events; ");
+			report.add(entry.getKey() + ": " + entry.getValue() + Messages.DataOverviewCollector_events); //$NON-NLS-1$
 			report.add(InteractionEventClassifier.formatDuration(interactionHistoryActiveDuration.get(entry.getKey()))
-					+ " active use; ");
+					+ Messages.DataOverviewCollector_active_use);
 			List<Date> dateRange = interactionHistoryRanges.get(entry.getKey());
 			long duration = dateRange.get(endDatePosition).getTime() - dateRange.get(startDatePosition).getTime();
-			report.add(dateRange.get(startDatePosition) + " to " + dateRange.get(endDatePosition) + ", a period of "
-					+ InteractionEventClassifier.formatDuration(duration) + " hours.");
+			report.add(MessageFormat.format(Messages.DataOverviewCollector_TO_PERIOD_OF_HOURS,
+					dateRange.get(startDatePosition), dateRange.get(endDatePosition),
+					InteractionEventClassifier.formatDuration(duration)));
 
 		}
 		return report;

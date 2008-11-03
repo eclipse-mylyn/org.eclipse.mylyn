@@ -29,7 +29,7 @@ public class DelegatingUsageCollector implements IUsageCollector {
 
 	private List<IUsageCollector> delegates = new ArrayList<IUsageCollector>();
 
-	private String reportTitle = "";
+	private String reportTitle = ""; //$NON-NLS-1$
 
 	public List<IUsageCollector> getDelegates() {
 		return delegates;
@@ -48,7 +48,7 @@ public class DelegatingUsageCollector implements IUsageCollector {
 	public List<String> getReport() {
 		List<String> combinedReports = new ArrayList<String>();
 		for (IUsageCollector collector : delegates) {
-			combinedReports.add("<h3>" + collector.getReportTitle() + "</h3>");
+			combinedReports.add("<h3>" + collector.getReportTitle() + "</h3>"); //$NON-NLS-1$ //$NON-NLS-2$
 			combinedReports.addAll(collector.getReport());
 		}
 		return combinedReports;

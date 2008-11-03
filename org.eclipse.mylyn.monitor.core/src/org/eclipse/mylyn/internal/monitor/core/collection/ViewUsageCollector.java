@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,16 +69,16 @@ public class ViewUsageCollector implements IUsageCollector {
 		for (String view : normalViewSelections.keySet()) {
 			float viewUse = ((float) (normalViewSelections.get(view))) / numSelections;
 			String formattedViewUse = formatAsPercentage(viewUse);
-			String ending = "";
+			String ending = ""; //$NON-NLS-1$
 			if (html) {
-				ending = "<br>";
+				ending = "<br>"; //$NON-NLS-1$
 			}
-			viewUsage.add(formattedViewUse + ": " + view + " (" + normalViewSelections.get(view) + ")" + ending);
+			viewUsage.add(formattedViewUse + ": " + view + " (" + normalViewSelections.get(view) + ")" + ending); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		Collections.sort(viewUsage, new PercentUsageComparator());
 		int numViewsToReport = 0;
 		for (String viewUsageSummary : viewUsage) {
-			if (maxViewsToReport == -1 || numViewsToReport < maxViewsToReport || viewUsageSummary.contains("mylar")) {
+			if (maxViewsToReport == -1 || numViewsToReport < maxViewsToReport || viewUsageSummary.contains("mylar")) { //$NON-NLS-1$
 				summaries.add(viewUsageSummary);
 				numViewsToReport++;
 			}
@@ -87,21 +87,21 @@ public class ViewUsageCollector implements IUsageCollector {
 	}
 
 	private String formatAsPercentage(float viewUse) {
-		String formattedViewUse = ("" + viewUse * 100);
+		String formattedViewUse = ("" + viewUse * 100); //$NON-NLS-1$
 
 		// sometimes the floats are so small that formattedViewUsage ends up
 		// being
 		// something like 7.68334E-4, which would get formatted to 7.68% without
 		// this check
-		if (formattedViewUse.contains("E")) {
-			return "0.00%";
+		if (formattedViewUse.contains("E")) { //$NON-NLS-1$
+			return "0.00%"; //$NON-NLS-1$
 		}
 
 		int indexOf2ndDecimal = formattedViewUse.indexOf('.') + 3;
 		if (indexOf2ndDecimal <= formattedViewUse.length()) {
 			formattedViewUse = formattedViewUse.substring(0, indexOf2ndDecimal);
 		}
-		return formattedViewUse + "%";
+		return formattedViewUse + "%"; //$NON-NLS-1$
 	}
 
 	public List<String> getReport() {
@@ -113,7 +113,7 @@ public class ViewUsageCollector implements IUsageCollector {
 	}
 
 	public String getReportTitle() {
-		return "View Usage";
+		return Messages.ViewUsageCollector_View_Usage;
 	}
 
 	public void exportAsCSVFile(String directory) {

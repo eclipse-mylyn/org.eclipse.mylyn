@@ -42,8 +42,8 @@ public class InteractionEventSummary {
 	}
 
 	public InteractionEventSummary() {
-		type = "";
-		name = "";
+		type = ""; //$NON-NLS-1$
+		name = ""; //$NON-NLS-1$
 		usageCount = 0;
 	}
 
@@ -113,8 +113,8 @@ public class InteractionEventSummary {
 	}
 
 	public String getDelta() {
-		if ("null".equals(delta)) {
-			return "";
+		if ("null".equals(delta)) { //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
 		} else {
 			return delta;
 		}

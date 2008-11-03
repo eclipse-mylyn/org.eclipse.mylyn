@@ -42,7 +42,7 @@ public class CommandUsageCollector implements IUsageCollector {
 	}
 
 	public String getReportTitle() {
-		return "Command Usage";
+		return Messages.CommandUsageCollector_Command_Usage;
 	}
 
 	public void exportAsCSVFile(String directoryName) {

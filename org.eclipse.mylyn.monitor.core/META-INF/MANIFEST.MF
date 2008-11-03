@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Monitor Core
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.monitor.core;singleton:=true
 Bundle-Version: 3.1.0.qualifier
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.mylyn.internal.monitor.core;x-friends:="org.eclipse.mylyn.monitor.ui",
  org.eclipse.mylyn.internal.monitor.core.collection;x-friends:="org.eclipse.mylyn.monitor.ui",
@@ -11,3 +11,4 @@ Export-Package: org.eclipse.mylyn.internal.monitor.core;x-friends:="org.eclipse.
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.commons.core;bundle-version="[3.0.0,4.0.0)"
 Bundle-ClassPath: .
+Bundle-Localization: plugin
