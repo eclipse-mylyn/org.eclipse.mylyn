@@ -98,7 +98,8 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void acronym(String text, String definition) {
 		ensureOpenTopic();
-		// TODO: definition?
+		// TODO: definition? according to DITA 1.1 'term' is the right thing to use here, however DITA 1.1 has no provision for a glossary.
+		//       we may want to look at reference/refbody/simpletable to generate a glossary
 		writer.writeStartElement("term");
 		characters(text);
 		writer.writeEndElement();
@@ -184,8 +185,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 			elementName = "pre"; //$NON-NLS-1$
 			break;
 		case QUOTE:
-			// TODO: no equivalent in DITA?
-			elementName = "p"; //$NON-NLS-1$
+			elementName = "lq"; //$NON-NLS-1$
 			break;
 		case LIST_ITEM:
 			elementName = "li"; //$NON-NLS-1$
@@ -318,6 +318,9 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private void applyAttributes(Attributes attributes) {
 		if (attributes.getId() != null) {
 			writer.writeAttribute("id", attributes.getId()); //$NON-NLS-1$
+		}
+		if (attributes.getCssClass() != null) {
+			writer.writeAttribute("outputclass", attributes.getCssClass()); //$NON-NLS-1$
 		}
 	}
 
