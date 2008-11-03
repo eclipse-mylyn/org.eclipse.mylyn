@@ -71,7 +71,7 @@ public class MarkupToDitaTask extends MarkupTask {
 
 	private String topicDoctype;
 
-	private String topicFolder = "topics";
+	private String topicFolder = "topics"; //$NON-NLS-1$
 
 	private BreakStrategy topicStrategy = BreakStrategy.FIRST;
 

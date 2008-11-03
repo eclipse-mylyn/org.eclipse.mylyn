@@ -43,11 +43,11 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 
 	private String bookTitle;
 
-	private String doctype = "<!DOCTYPE bookmap PUBLIC \"-//OASIS//DTD DITA 1.1 BookMap//EN\"  \"http://docs.oasis-open.org/dita/v1.1/OS/dtd/bookmap.dtd\">";
+	private String doctype = "<!DOCTYPE bookmap PUBLIC \"-//OASIS//DTD DITA 1.1 BookMap//EN\"  \"http://docs.oasis-open.org/dita/v1.1/OS/dtd/bookmap.dtd\">"; //$NON-NLS-1$
 
 	private String topicDoctype;
 
-	private String topicFilenameSuffix = ".dita";
+	private String topicFilenameSuffix = ".dita"; //$NON-NLS-1$
 
 	private String topicFolder;
 
@@ -182,7 +182,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 			try {
 				currentTopicFile = computeFile(latestHeadingId);
 				currentTopicOut = new OutputStreamWriter(new BufferedOutputStream(
-						new FileOutputStream(currentTopicFile)), "utf-8");
+						new FileOutputStream(currentTopicFile)), "utf-8"); //$NON-NLS-1$
 			} catch (IOException e1) {
 				throw new IllegalStateException(e1);
 			}
@@ -192,9 +192,9 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 			if (topicFolder != null) {
 				relativeTopic = topicFolder + '/' + relativeTopic;
 			}
-			writer.writeEmptyElement("chapter");
-			writer.writeAttribute("href", relativeTopic);
-			titleText = "";
+			writer.writeEmptyElement("chapter"); //$NON-NLS-1$
+			writer.writeAttribute("href", relativeTopic); //$NON-NLS-1$
+			titleText = ""; //$NON-NLS-1$
 			mapEntryOpen = true;
 
 			currentTopic = new DitaTopicDocumentBuilder(currentTopicOut);
@@ -307,7 +307,7 @@ public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder imple
 		if (level <= topicBreakLevel) {
 			if (mapEntryOpen) {
 				mapEntryOpen = false;
-				writer.writeAttribute("navtitle", titleText);
+				writer.writeAttribute("navtitle", titleText); //$NON-NLS-1$
 				titleText = null;
 			}
 		}

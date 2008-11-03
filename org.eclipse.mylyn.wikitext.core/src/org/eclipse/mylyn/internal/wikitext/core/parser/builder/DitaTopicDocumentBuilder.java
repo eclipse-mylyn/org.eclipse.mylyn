@@ -35,7 +35,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  */
 public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
-	private static final String __TOPIC = "__topic";
+	private static final String __TOPIC = "__topic"; //$NON-NLS-1$
 
 	private static Set<Integer> entityReferenceToUnicode = new HashSet<Integer>();
 	static {
@@ -50,7 +50,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private final Stack<BlockDescription> blockDescriptions = new Stack<BlockDescription>();
 
-	private String doctype = "<!DOCTYPE topic PUBLIC \"-//OASIS//DTD DITA 1.1 Topic//EN\" \"http://docs.oasis-open.org/dita/v1.1/OS/dtd/topic.dtd\">";
+	private String doctype = "<!DOCTYPE topic PUBLIC \"-//OASIS//DTD DITA 1.1 Topic//EN\" \"http://docs.oasis-open.org/dita/v1.1/OS/dtd/topic.dtd\">"; //$NON-NLS-1$
 
 	private static class TopicInfo {
 		int headingLevel;
@@ -104,7 +104,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		ensureOpenTopic();
 		// TODO: definition? according to DITA 1.1 'term' is the right thing to use here, however DITA 1.1 has no provision for a glossary.
 		//       we may want to look at reference/refbody/simpletable to generate a glossary
-		writer.writeStartElement("term");
+		writer.writeStartElement("term"); //$NON-NLS-1$
 		characters(text);
 		writer.writeEndElement();
 	}
@@ -230,19 +230,19 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeStartElement(elementName);
 		switch (type) {
 		case INFORMATION:
-			writer.writeAttribute("type", "important");
+			writer.writeAttribute("type", "important"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case NOTE:
-			writer.writeAttribute("type", "note");
+			writer.writeAttribute("type", "note"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case WARNING:
-			writer.writeAttribute("type", "caution");
+			writer.writeAttribute("type", "caution"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case TIP:
-			writer.writeAttribute("type", "tip");
+			writer.writeAttribute("type", "tip"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case PANEL:
-			writer.writeAttribute("type", "other");
+			writer.writeAttribute("type", "other"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		}
 		applyAttributes(attributes);
@@ -256,7 +256,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (allowTitle && attributes.getTitle() != null) {
 			if (phraseTitle) {
 				writer.writeStartElement("ph"); //$NON-NLS-1$
-				writer.writeAttribute("outputclass", "title"); //$NON-NLS-1$
+				writer.writeAttribute("outputclass", "title"); //$NON-NLS-1$ //$NON-NLS-2$
 				writer.writeCharacters(attributes.getTitle());
 				writer.writeEndElement();
 			} else {
@@ -297,8 +297,8 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.writeStartDocument();
 		writer.writeDTD(doctype);
 		if (rootTitle != null) {
-			writer.writeStartElement("topic");
-			writer.writeStartElement("title");
+			writer.writeStartElement("topic"); //$NON-NLS-1$
+			writer.writeStartElement("title"); //$NON-NLS-1$
 			writer.writeCharacters(rootTitle);
 			writer.writeEndElement();
 		}
@@ -315,13 +315,13 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 			topicInfos.push(topicInfo);
 
-			writer.writeStartElement("topic");
+			writer.writeStartElement("topic"); //$NON-NLS-1$
 
 			if (attributes != null) {
 				applyAttributes(attributes);
 				attributes = null;
 			}
-			writer.writeStartElement("title");
+			writer.writeStartElement("title"); //$NON-NLS-1$
 		}
 	}
 
@@ -351,7 +351,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		case DELETED:
 			// no equivalent?
 			writer.writeStartElement("ph"); //$NON-NLS-1$
-			attributes.setCssClass(attributes.getCssClass() == null ? "deleted" : attributes.getCssClass() + " deleted");
+			attributes.setCssClass(attributes.getCssClass() == null ? "deleted" : attributes.getCssClass() + " deleted"); //$NON-NLS-1$ //$NON-NLS-2$
 			break;
 		case EMPHASIS:
 			writer.writeStartElement("i"); //$NON-NLS-1$
@@ -359,8 +359,8 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		case INSERTED:
 			// no equivalent?
 			writer.writeStartElement("ph"); //$NON-NLS-1$
-			attributes.setCssClass(attributes.getCssClass() == null ? "inserted" : attributes.getCssClass()
-					+ " inserted");
+			attributes.setCssClass(attributes.getCssClass() == null ? "inserted" : attributes.getCssClass() //$NON-NLS-1$
+					+ " inserted"); //$NON-NLS-1$
 			break;
 		case UNDERLINED:
 			writer.writeStartElement("u"); //$NON-NLS-1$
@@ -438,23 +438,23 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void endHeading() {
 		writer.writeEndElement(); // title
-		writer.writeStartElement("body");
+		writer.writeStartElement("body"); //$NON-NLS-1$
 	}
 
 	@Override
 	public void image(Attributes attributes, String url) {
 		ensureOpenTopic();
-		writer.writeEmptyElement("image");
-		writer.writeAttribute("href", url);
+		writer.writeEmptyElement("image"); //$NON-NLS-1$
+		writer.writeAttribute("href", url); //$NON-NLS-1$
 		applyImageAttributes(attributes);
 	}
 
 	@Override
 	public void imageLink(Attributes linkAttributes, Attributes imageAttributes, String href, String imageUrl) {
 		ensureOpenTopic();
-		writer.writeStartElement("xref");
-		writer.writeAttribute("href", computeDitaXref(href));
-		writer.writeAttribute("format", "html");
+		writer.writeStartElement("xref"); //$NON-NLS-1$
+		writer.writeAttribute("href", computeDitaXref(href)); //$NON-NLS-1$
+		writer.writeAttribute("format", "html"); //$NON-NLS-1$ //$NON-NLS-2$
 		image(imageAttributes, imageUrl);
 		writer.writeEndElement();
 	}
@@ -464,27 +464,27 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 		if (imageAttributes instanceof ImageAttributes) {
 			ImageAttributes attributes = (ImageAttributes) imageAttributes;
 			if (attributes.getAlt() != null) {
-				writer.writeAttribute("alt", attributes.getAlt());
+				writer.writeAttribute("alt", attributes.getAlt()); //$NON-NLS-1$
 			}
 			if (attributes.getHeight() > 0) {
-				writer.writeAttribute("height", Integer.toString(attributes.getHeight()));
+				writer.writeAttribute("height", Integer.toString(attributes.getHeight())); //$NON-NLS-1$
 			}
 			if (attributes.getWidth() > 0) {
-				writer.writeAttribute("width", Integer.toString(attributes.getWidth()));
+				writer.writeAttribute("width", Integer.toString(attributes.getWidth())); //$NON-NLS-1$
 			}
 			if (attributes.getAlign() != null) {
 				switch (attributes.getAlign()) {
 				case Left:
-					writer.writeAttribute("align", "center");
+					writer.writeAttribute("align", "center"); //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				case Right:
-					writer.writeAttribute("align", "right");
+					writer.writeAttribute("align", "right"); //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				case Center:
-					writer.writeAttribute("align", "center");
+					writer.writeAttribute("align", "center"); //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				}
-				writer.writeAttribute("placement", "break");
+				writer.writeAttribute("placement", "break"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -497,8 +497,8 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	@Override
 	public void link(Attributes attributes, String hrefOrHashName, String text) {
 		ensureOpenTopic();
-		writer.writeStartElement("xref");
-		writer.writeAttribute("href", computeDitaXref(hrefOrHashName));
+		writer.writeStartElement("xref"); //$NON-NLS-1$
+		writer.writeAttribute("href", computeDitaXref(hrefOrHashName)); //$NON-NLS-1$
 		if (text != null) {
 			characters(text);
 		}
@@ -562,7 +562,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * @return the href adjusted, or the original href if the given URL appears to be to non-document content
 	 */
 	private String computeDitaXref(String href) {
-		if (href.startsWith("#") && topicBreakLevel < Integer.MAX_VALUE) {
+		if (href.startsWith("#") && topicBreakLevel < Integer.MAX_VALUE) { //$NON-NLS-1$
 			if (outline != null) {
 				OutlineItem item = outline.findItemById(href.substring(1));
 				if (item != null) {
@@ -582,7 +582,7 @@ public class DitaTopicDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	public static String computeName(String headingId, String topicFilenameSuffix) {
-		String name = headingId == null ? __TOPIC : headingId.replaceAll("[^a-zA-Z0-9_-]", "-");
+		String name = headingId == null ? __TOPIC : headingId.replaceAll("[^a-zA-Z0-9_-]", "-"); //$NON-NLS-1$ //$NON-NLS-2$
 		name = name + topicFilenameSuffix;
 		return name;
 	}
