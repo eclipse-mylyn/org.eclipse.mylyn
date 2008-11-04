@@ -542,6 +542,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			setReflow(false);
 
 			editorComposite = form.getBody();
+			// TODO consider using TableWrapLayout, it makes resizing much faster
 			GridLayout editorLayout = new GridLayout();
 			editorComposite.setLayout(editorLayout);
 			editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
