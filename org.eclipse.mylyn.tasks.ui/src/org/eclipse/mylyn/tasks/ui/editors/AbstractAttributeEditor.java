@@ -43,6 +43,9 @@ public abstract class AbstractAttributeEditor {
 
 	private boolean readOnly;
 
+	/**
+	 * @since 3.0
+	 */
 	public AbstractAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		Assert.isNotNull(manager);
 		Assert.isNotNull(taskAttribute);
@@ -52,70 +55,121 @@ public abstract class AbstractAttributeEditor {
 		setReadOnly(taskAttribute.getMetaData().isReadOnly());
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected void attributeChanged() {
 		getModel().attributeChanged(getTaskAttribute());
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public abstract void createControl(Composite parent, FormToolkit toolkit);
 
+	/**
+	 * @since 3.0
+	 */
 	public void createLabelControl(Composite composite, FormToolkit toolkit) {
 		labelControl = toolkit.createLabel(composite, getLabel());
 		labelControl.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void dispose() {
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public TaskDataModel getModel() {
 		return manager;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected TaskAttributeMapper getAttributeMapper() {
 		return getModel().getTaskData().getAttributeMapper();
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public Control getControl() {
 		return control;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public String getLabel() {
 		String label = getAttributeMapper().getLabel(getTaskAttribute());
 		return TasksUiInternal.escapeLabelText(label);
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public Label getLabelControl() {
 		return labelControl;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public LayoutHint getLayoutHint() {
 		return layoutHint;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public TaskAttribute getTaskAttribute() {
 		return taskAttribute;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public boolean hasLabel() {
 		// TODO EDITOR
 		return true;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public boolean isDecorationEnabled() {
 		return decorationEnabled;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected void setControl(Control control) {
 		this.control = control;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setDecorationEnabled(boolean decorationEnabled) {
 		this.decorationEnabled = decorationEnabled;
 	}
 
+	/**
+	 * @since 3.1
+	 */
 	public void setLayoutHint(LayoutHint layoutHint) {
 		this.layoutHint = layoutHint;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void decorate(Color color) {
 		if (isDecorationEnabled()) {
 			if (manager.hasBeenRead() && manager.hasIncomingChanges(getTaskAttribute())) {
@@ -127,22 +181,34 @@ public abstract class AbstractAttributeEditor {
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected void decorateOutgoing(Color color) {
 		if (labelControl != null) {
 			labelControl.setText("*" + labelControl.getText());
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	protected void decorateIncoming(Color color) {
 		if (getControl() != null) {
 			getControl().setBackground(color);
 		}
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public boolean isReadOnly() {
 		return readOnly;
 	}
 
+	/**
+	 * @since 3.0
+	 */
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
 	}

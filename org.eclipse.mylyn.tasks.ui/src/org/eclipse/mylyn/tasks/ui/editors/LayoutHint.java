@@ -19,20 +19,38 @@ package org.eclipse.mylyn.tasks.ui.editors;
  */
 public class LayoutHint {
 
+	/**
+	 * @since 3.0
+	 */
 	public final static int DEFAULT_PRIORITY = 10;
 
+	/**
+	 * @since 3.0
+	 */
 	public enum ColumnSpan {
 		MULTIPLE, SINGLE
 	};
 
+	/**
+	 * @since 3.0
+	 */
 	public enum RowSpan {
 		MULTIPLE, SINGLE
 	};
 
+	/**
+	 * @since 3.0
+	 */
 	public RowSpan rowSpan;
 
+	/**
+	 * @since 3.0
+	 */
 	public ColumnSpan columnSpan;
 
+	/**
+	 * @since 3.0
+	 */
 	public LayoutHint(RowSpan rowHint, ColumnSpan columnHint) {
 		this.rowSpan = rowHint;
 		this.columnSpan = columnHint;
@@ -65,6 +83,8 @@ public class LayoutHint {
 	 * Returns a priority based on the size of the layout hint. The bigger the size the bigger the returned priority.
 	 * <p>
 	 * The priority is used to layout attribute editors.
+	 * 
+	 * @since 3.0
 	 */
 	public int getPriority() {
 		if (columnSpan == null || columnSpan == ColumnSpan.SINGLE) {
