@@ -439,6 +439,9 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		}
 
 		editorLayout.topControl = control;
+		if (editorComposite.getParent().getLayout() instanceof FillWidthLayout) {
+			((FillWidthLayout) editorComposite.getParent().getLayout()).flush();
+		}
 		editorComposite.layout();
 		control.setFocus();
 	}

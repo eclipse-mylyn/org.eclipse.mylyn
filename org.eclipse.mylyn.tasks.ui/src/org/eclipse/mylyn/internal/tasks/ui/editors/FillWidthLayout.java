@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Point;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.ui.forms.widgets.ILayoutExtension;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -32,7 +34,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * 
  * @author David Green
  */
-class FillWidthLayout extends Layout {
+class FillWidthLayout extends Layout implements ILayoutExtension {
 
 	private final int marginLeft;
 
@@ -98,7 +100,7 @@ class FillWidthLayout extends Layout {
 		if (Platform.OS_MACOSX.equals(Platform.getOS())) {
 			this.widthHintMargin = 15;
 		} else {
-			this.widthHintMargin = 20;
+			this.widthHintMargin = 18;
 		}
 	}
 
@@ -151,7 +153,6 @@ class FillWidthLayout extends Layout {
 		if (children.length == 0) {
 			return new Point(0, 0);
 		}
-
 		if (widthHint <= 0) {
 			widthHint = calculateWidthHint(composite);
 			if (widthHint < 300) {
@@ -174,8 +175,7 @@ class FillWidthLayout extends Layout {
 			lastWidthHint = widthHint;
 			lastComputedSize = new Point(resultX + horizontalMargin, resultY + marginTop + marginBottom);
 		}
-
-		return new Point(lastComputedSize.x, lastComputedSize.y);
+		return new Point(lastComputedSize.x, lastComputedSize.y + 1);
 	}
 
 	@Override
@@ -192,7 +192,6 @@ class FillWidthLayout extends Layout {
 		area.height -= (marginBottom + marginTop);
 
 		Control[] children = composite.getChildren();
-
 		for (Control control : children) {
 			control.setBounds(area);
 		}
@@ -215,6 +214,21 @@ class FillWidthLayout extends Layout {
 	 */
 	public void setLayoutAdvisor(Composite layoutAdvisor) {
 		this.layoutAdvisor = layoutAdvisor;
+	}
+
+	/**
+	 * Flushes all cached information about control sizes.
+	 */
+	public void flush() {
+		lastComputedSize = null;
+	}
+
+	public int computeMaximumWidth(Composite parent, boolean changed) {
+		return parent.getChildren()[0].computeSize(SWT.DEFAULT, 0).x;
+	}
+
+	public int computeMinimumWidth(Composite parent, boolean changed) {
+		return 0;
 	}
 
 }
