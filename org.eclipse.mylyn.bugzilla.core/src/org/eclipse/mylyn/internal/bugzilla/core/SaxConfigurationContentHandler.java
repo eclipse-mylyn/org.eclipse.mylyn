@@ -85,6 +85,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private static final String ELEMENT_TYPE = "type";
 
+	private static final String ELEMENT_TYPE_DESC = "type_desc";
+
+	private static final String ELEMENT_ENTER_BUG = "enter_bug";
+
 	private static final String ELEMENT_REQUESTABLE = "requestable";
 
 	private static final String ELEMENT_SPECIFICALLY_REQUESTABLE = "specifically_requestable";
@@ -158,6 +162,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private String currentSpecifically_requestable;
 
 	private String currentMultiplicable;
+
+	private String currentTypeDesc = "";
+
+	private String currentEnterBug = "";
 
 	private StringBuffer characters = new StringBuffer();
 
@@ -242,6 +250,11 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ELEMENT_FIELD)) {
 			state = state | IN_FIELD;
 			parseResource(attributes);
+			currentName = "";
+			currentDescription = "";
+			currentType = "";
+			currentTypeDesc = "";
+			currentEnterBug = "";
 		} else if (localName.equals(ELEMENT_FLAG_TYPES)) {
 			state = state | IN_FLAG_TYPES;
 		} else if (localName.equals(ELEMENT_FLAG_TYPE)) {
@@ -366,7 +379,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state & ~IN_FIELDS;
 		} else if (localName.equals(ELEMENT_FIELD)) {
 			if (currentName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
-				BugzillaCustomField newField = new BugzillaCustomField(currentDescription, currentName);
+				BugzillaCustomField newField = new BugzillaCustomField(currentDescription, currentName, currentType,
+						currentTypeDesc, currentEnterBug);
 				List<String> customOptionList = customOption.get(currentName);
 				if (customOptionList != null && !customOptionList.isEmpty()) {
 					newField.setOptions(customOptionList);
@@ -378,6 +392,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			currentDescription = characters.toString();
 		} else if (localName.equals(ELEMENT_TYPE)) {
 			currentType = characters.toString();
+		} else if (localName.equals(ELEMENT_TYPE_DESC)) {
+			currentTypeDesc = characters.toString();
+		} else if (localName.equals(ELEMENT_ENTER_BUG)) {
+			currentEnterBug = characters.toString();
 		} else if (localName.equals(ELEMENT_REQUESTABLE)) {
 			currentRequestable = characters.toString();
 		} else if (localName.equals(ELEMENT_SPECIFICALLY_REQUESTABLE)) {

@@ -982,8 +982,13 @@ public class BugzillaClient {
 			if (a.getId().equals(BugzillaAttribute.GROUP.getKey()) && a.getValue().length() > 0) {
 				groupSecurityEnabled = true;
 			}
-
-			if (a.getId() != null && a.getId().compareTo("") != 0) {
+			if (a.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
+				List<String> values = a.getValues();
+				int i = 0;
+				for (String string : values) {
+					fields.put(a.getId() + i++, new NameValuePair(a.getId(), string != null ? string : ""));
+				}
+			} else if (a.getId() != null && a.getId().compareTo("") != 0) {
 				String value = a.getValue();
 				if (a.getId().equals(BugzillaAttribute.DELTA_TS.getKey())) {
 					value = stripTimeZone(value);

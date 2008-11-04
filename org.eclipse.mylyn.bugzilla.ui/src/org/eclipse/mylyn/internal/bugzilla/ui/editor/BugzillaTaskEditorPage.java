@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -25,6 +26,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.mylyn.tasks.ui.editors.AttributeEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 
@@ -96,7 +98,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 	protected AttributeEditorFactory createAttributeEditorFactory() {
 		AttributeEditorFactory factory = new AttributeEditorFactory(getModel(), getTaskRepository(), getEditorSite()) {
 			@Override
-			public AbstractAttributeEditor createEditor(String type, TaskAttribute taskAttribute) {
+			public AbstractAttributeEditor createEditor(String type, final TaskAttribute taskAttribute) {
 				AbstractAttributeEditor editor;
 				if (IBugzillaConstants.EDITOR_TYPE_KEYWORDS.equals(type)) {
 					editor = new BugzillaKeywordAttributeEditor(getModel(), taskAttribute);
@@ -109,6 +111,16 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 					if (TaskAttribute.TYPE_BOOLEAN.equals(type)) {
 						editor.setDecorationEnabled(false);
 					}
+				}
+
+				if (editor != null && taskAttribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+					editor.setLayoutHint(new LayoutHint(editor.getLayoutHint()) {
+
+						@Override
+						public int getPriority() {
+							return super.getPriority() * 10;
+						}
+					});
 				}
 
 				return editor;

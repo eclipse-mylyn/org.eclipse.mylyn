@@ -70,7 +70,7 @@ public enum BugzillaAttribute {
 
 	DEADLINE("Due:", "deadline", TaskAttribute.TYPE_DATE, true, false),
 
-	DELTA_TS("Modified:", "delta_ts", TaskAttribute.TYPE_DATE, true, false),
+	DELTA_TS("Modified:", "delta_ts", TaskAttribute.TYPE_DATETIME, true, false),
 
 	DEPENDSON("Depends on (Subtasks):", "dependson", TaskAttribute.TYPE_TASK_DEPENDENCY, false, false),
 

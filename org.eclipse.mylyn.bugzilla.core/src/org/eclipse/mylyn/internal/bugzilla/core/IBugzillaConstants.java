@@ -174,6 +174,8 @@ public interface IBugzillaConstants {
 
 	static final String TEST_BUGZILLA_31_URL = "http://mylyn.eclipse.org/bugs31";
 
+	static final String TEST_BUGZILLA_32_URL = "http://mylyn.eclipse.org/bugs32";
+
 	// Default values for keys
 
 	static final String[] DEFAULT_STATUS_VALUES = { "Unconfirmed", "New", "Assigned", "Reopened", "Resolved",

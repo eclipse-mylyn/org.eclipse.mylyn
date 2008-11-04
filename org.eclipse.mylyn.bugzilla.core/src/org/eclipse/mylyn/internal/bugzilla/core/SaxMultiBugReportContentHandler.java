@@ -189,7 +189,32 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					atr.getMetaData().defaults().setLabel(desc).setReadOnly(false);
 					atr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 					atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
-					atr.getMetaData().setReadOnly(true);
+					switch (customField.getType()) {
+					case 1: // Free Text
+						atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+						break;
+					case 2: // Drop Down
+						atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+						break;
+					case 3: // Multiple-Selection Box
+						atr.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
+						break;
+					case 4: // Large Text Box
+						atr.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
+						break;
+					case 5: // Date/Time
+						atr.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
+						break;
+
+					default:
+						List<String> options = customField.getOptions();
+						if (options.size() > 0) {
+							atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+						} else {
+							atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+						}
+					}
+					atr.getMetaData().setReadOnly(false);
 					atr.setValue(parsedText);
 				}
 			} else {
@@ -374,11 +399,30 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					atr.getMetaData().defaults().setLabel(bugzillaCustomField.getDescription());
 					atr.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
 
-					List<String> options = bugzillaCustomField.getOptions();
-					if (options.size() > 0) {
-						atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
-					} else {
+					switch (bugzillaCustomField.getType()) {
+					case 1: // Free Text
 						atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+						break;
+					case 2: // Drop Down
+						atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+						break;
+					case 3: // Multiple-Selection Box
+						atr.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
+						break;
+					case 4: // Large Text Box
+						atr.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
+						break;
+					case 5: // Date/Time
+						atr.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
+						break;
+
+					default:
+						List<String> options = bugzillaCustomField.getOptions();
+						if (options.size() > 0) {
+							atr.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+						} else {
+							atr.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+						}
 					}
 					atr.getMetaData().setReadOnly(false);
 				}

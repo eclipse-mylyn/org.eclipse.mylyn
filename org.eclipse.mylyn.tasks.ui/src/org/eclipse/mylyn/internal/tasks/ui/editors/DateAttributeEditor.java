@@ -21,6 +21,9 @@ import org.eclipse.mylyn.internal.tasks.core.TaskActivityUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -45,6 +48,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 	public DateAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
+		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
 	}
 
 	@Override
@@ -64,9 +68,13 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 			layout.verticalSpacing = 2;
 			layout.horizontalSpacing = 2;
 			dateWithClearComposite.setLayout(layout);
-			datePicker = new DatePicker(dateWithClearComposite, SWT.FLAT, getTextValue(), false, 0);
+			datePicker = new DatePicker(dateWithClearComposite, SWT.FLAT, getTextValue(), showTime, 0);
 			datePicker.setFont(EditorUtil.TEXT_FONT);
-			datePicker.setDateFormat(EditorUtil.getDateFormat());
+			if (!showTime) {
+				datePicker.setDateFormat(EditorUtil.getDateFormat());
+			} else {
+				datePicker.setDateFormat(EditorUtil.getDateTimeFormat());
+			}
 			if (getValue() != null) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(getValue());

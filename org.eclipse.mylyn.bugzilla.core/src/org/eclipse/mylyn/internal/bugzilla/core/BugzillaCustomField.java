@@ -23,7 +23,8 @@ import java.util.List;
  */
 public class BugzillaCustomField implements Serializable {
 
-	private static final long serialVersionUID = 5703683576871326128L;
+	// old version	private static final long serialVersionUID = 5703683576871326128L;
+	private static final long serialVersionUID = 7273310489883205486L;
 
 	public static final String CUSTOM_FIELD_PREFIX = "cf_";
 
@@ -33,9 +34,27 @@ public class BugzillaCustomField implements Serializable {
 
 	private List<String> options = new ArrayList<String>();
 
-	public BugzillaCustomField(String description, String name) {
+	final private int type;
+
+	final private String typeDesc;
+
+	final private boolean enterBug;
+
+	public BugzillaCustomField(String description, String name, String type, String typeDesc, String enterBug) {
 		this.description = description;
 		this.name = name;
+
+		this.type = parseInt(type);
+		this.typeDesc = typeDesc;
+		this.enterBug = "1".equals(enterBug);
+	}
+
+	private int parseInt(String type) {
+		try {
+			return Integer.parseInt(type);
+		} catch (NumberFormatException e) {
+			return -1;
+		}
 	}
 
 	public String getName() {
@@ -57,4 +76,26 @@ public class BugzillaCustomField implements Serializable {
 	public void addOption(String option) {
 		this.options.add(option);
 	}
+
+	/*
+	* @since 3.0.2
+	*/
+	public int getType() {
+		return type;
+	}
+
+	/*
+	* @since 3.0.2
+	*/
+	public String getTypeDesc() {
+		return typeDesc;
+	}
+
+	/*
+	* @since 3.0.2
+	*/
+	public boolean isEnterBug() {
+		return enterBug;
+	}
+
 }

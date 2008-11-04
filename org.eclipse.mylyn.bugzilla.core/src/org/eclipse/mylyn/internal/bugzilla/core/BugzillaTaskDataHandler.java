@@ -144,7 +144,59 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 				updateAttribute(data, BugzillaAttribute.SHORT_DESC);
 			}
 		},
-		VERSION_CURRENT(4.5f) {
+		VERSION_4_5(4.5f) {
+			@Override
+			void migrate(TaskRepository repository, TaskData data) {
+				// migrate custom attributes
+				for (TaskAttribute attribute : data.getRoot().getAttributes().values()) {
+					if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+						RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
+
+						BugzillaCustomField customField = null;
+						String actName = attribute.getId();
+						for (BugzillaCustomField bugzillaCustomField : configuration.getCustomFields()) {
+							if (actName.equals(bugzillaCustomField.getName())) {
+								customField = bugzillaCustomField;
+								break;
+							}
+						}
+						if (customField != null) {
+							String desc = customField.getDescription();
+							attribute.getMetaData().defaults().setLabel(desc).setReadOnly(false);
+							attribute.getMetaData().setKind(TaskAttribute.KIND_DEFAULT);
+							attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+							switch (customField.getType()) {
+							case 1: // Free Text
+								attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+								break;
+							case 2: // Drop Down
+								attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+								break;
+							case 3: // Multiple-Selection Box
+								attribute.getMetaData().setType(TaskAttribute.TYPE_MULTI_SELECT);
+								break;
+							case 4: // Large Text Box
+								attribute.getMetaData().setType(TaskAttribute.TYPE_LONG_TEXT);
+								break;
+							case 5: // Date/Time
+								attribute.getMetaData().setType(TaskAttribute.TYPE_DATETIME);
+								break;
+
+							default:
+								List<String> options = customField.getOptions();
+								if (options.size() > 0) {
+									attribute.getMetaData().setType(TaskAttribute.TYPE_SINGLE_SELECT);
+								} else {
+									attribute.getMetaData().setType(TaskAttribute.TYPE_SHORT_TEXT);
+								}
+							}
+							attribute.getMetaData().setReadOnly(false);
+						}
+					}
+				}
+			}
+		},
+		VERSION_CURRENT(4.6f) {
 			@Override
 			void migrate(TaskRepository repository, TaskData data) {
 				data.setVersion(TaskDataVersion.VERSION_CURRENT.toString());

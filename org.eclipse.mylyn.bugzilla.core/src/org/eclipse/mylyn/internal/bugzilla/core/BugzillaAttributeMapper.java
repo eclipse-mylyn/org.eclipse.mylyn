@@ -41,6 +41,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 	private static final String deadline_format = DATE_FORMAT_3;
 
+	private static final String customAttribute_format = DATE_FORMAT_2;
+
 	/**
 	 * public for testing Bugzilla 2.18 uses DATE_FORMAT_1 but later versions use DATE_FORMAT_2 Using lowest common
 	 * denominator DATE_FORMAT_1
@@ -100,6 +102,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 				parsedDate = new SimpleDateFormat(attachment_creation_ts_format).parse(dateString);
 			} else if (attributeId.equals(BugzillaAttribute.DEADLINE.getKey())) {
 				parsedDate = new SimpleDateFormat(deadline_format).parse(dateString);
+			} else if (attributeId.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+				parsedDate = new SimpleDateFormat(customAttribute_format).parse(dateString);
 			}
 		} catch (ParseException e) {
 			return null;
@@ -125,6 +129,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 				dateString = new SimpleDateFormat(attachment_creation_ts_format).format(date);
 			} else if (attributeId.equals(BugzillaAttribute.DEADLINE.getKey())) {
 				dateString = new SimpleDateFormat(deadline_format).format(date);
+			} else if (attributeId.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+				dateString = new SimpleDateFormat(customAttribute_format).format(date);
 			}
 
 			if (dateString == null) {
@@ -281,6 +287,15 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 			return newAttachment.equals(oldAttachment);
 		}
 		return super.equals(newAttribute, oldAttribute);
+	}
+
+	@Override
+	public String getLabel(TaskAttribute taskAttribute) {
+		if (taskAttribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
+			return super.getLabel(taskAttribute) + ":";
+		} else {
+			return super.getLabel(taskAttribute);
+		}
 	}
 
 }

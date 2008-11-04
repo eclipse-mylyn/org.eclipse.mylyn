@@ -82,6 +82,10 @@ public class AttributeEditorFactory {
 			return new BooleanAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_DATE.equals(type)) {
 			return new DateAttributeEditor(model, taskAttribute);
+		} else if (TaskAttribute.TYPE_DATETIME.equals(type)) {
+			DateAttributeEditor editor = new DateAttributeEditor(model, taskAttribute);
+			editor.setShowTime(true);
+			return editor;
 		} else if (TaskAttribute.TYPE_PERSON.equals(type)) {
 			return new PersonAttributeEditor(model, taskAttribute);
 		} else if (TaskAttribute.TYPE_LONG_RICH_TEXT.equals(type)) {

@@ -14,6 +14,9 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -30,6 +33,7 @@ public class TextAttributeEditor extends AbstractAttributeEditor {
 
 	public TextAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
+		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
 	}
 
 	protected Text getText() {
