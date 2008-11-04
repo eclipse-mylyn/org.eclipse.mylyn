@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 /**
+ * A layout hint for attribute editors.
+ * 
  * @author Steffen Pingel
  * @since 3.0
  */
@@ -36,6 +38,34 @@ public class LayoutHint {
 		this.columnSpan = columnHint;
 	}
 
+	/**
+	 * Clones <code>source</code>. Constructs a layout hint with a priority of {@link #DEFAULT_PRIORITY}, if
+	 * <code>source</code> is null.
+	 * 
+	 * @param source
+	 *            the layout hint to clone or <code>null</code>
+	 * @since 3.1
+	 */
+	public LayoutHint(LayoutHint source) {
+		if (source != null) {
+			this.rowSpan = source.rowSpan;
+			this.columnSpan = source.columnSpan;
+		}
+	}
+
+	/**
+	 * Constructs a layout hint with a priority of {@link #DEFAULT_PRIORITY}.
+	 * 
+	 * @since 3.1
+	 */
+	public LayoutHint() {
+	}
+
+	/**
+	 * Returns a priority based on the size of the layout hint. The bigger the size the bigger the returned priority.
+	 * <p>
+	 * The priority is used to layout attribute editors.
+	 */
 	public int getPriority() {
 		if (columnSpan == null || columnSpan == ColumnSpan.SINGLE) {
 			if (rowSpan == null || rowSpan == RowSpan.SINGLE) {
