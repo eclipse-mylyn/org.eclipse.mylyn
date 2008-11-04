@@ -6,4 +6,4 @@ then
  exit 1
 fi
 
-sed 's/<antcall target=\"refresh\"\/>//' -i~ $1/features/org.eclipse.mylyn*/build.xml
+sed -i~ -e 's/<antcall target=\"refresh\"\/>//' $1/features/org.eclipse.mylyn*/build.xml
