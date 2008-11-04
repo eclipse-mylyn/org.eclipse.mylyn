@@ -86,7 +86,7 @@ public class TaskEditorExtensions {
 		init();
 		String id = taskRepository.getProperty(REPOSITORY_PROPERTY_EDITOR_EXTENSION);
 		if (id == null) {
-			// TODO 3.1 disabled until bug 244653 is resolved
+			// TODO 3.1 disabled until bug 253115 is resolved
 			//id = getDefaultTaskEditorExtensionId(taskRepository);
 		}
 		return id;
@@ -96,9 +96,27 @@ public class TaskEditorExtensions {
 		repository.setProperty(REPOSITORY_PROPERTY_EDITOR_EXTENSION, editorExtensionId);
 	}
 
+	/**
+	 * Get the default task editor extension id for the given task repository
+	 * 
+	 * @param taskRepository
+	 * @return the default task editor extension id or null if there is no default
+	 */
 	public static String getDefaultTaskEditorExtensionId(TaskRepository taskRepository) {
+		return getDefaultTaskEditorExtensionId(taskRepository.getConnectorKind());
+	}
+
+	/**
+	 * Get the default task editor extension id for the given kind of connector
+	 * 
+	 * @param connectorKind
+	 *            the kind of connector
+	 * 
+	 * @return the default task editor extension id or null if there is no default
+	 */
+	public static String getDefaultTaskEditorExtensionId(String connectorKind) {
 		init();
-		return associationByConnectorKind.get(taskRepository.getConnectorKind());
+		return associationByConnectorKind.get(connectorKind);
 	}
 
 	/**

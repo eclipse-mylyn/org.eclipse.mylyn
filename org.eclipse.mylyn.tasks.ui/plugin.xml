@@ -8,6 +8,7 @@
     <extension-point id="duplicateDetectors" name="duplicateDetectors" schema="schema/duplicateDetectors.exsd"/>
     <extension-point id="presentations" name="presentations" schema="schema/presentations.exsd"/>
     <extension-point id="taskEditorExtensions" name="Task Editor Extension" schema="schema/taskEditorExtensions.exsd"/>
+    <extension-point id="taskRepositoryPageContribution" name="Task Repository Page Contribution" schema="schema/taskRepositoryPageContribution.exsd"/>
 
     <extension
           point="org.eclipse.mylyn.context.core.bridges">

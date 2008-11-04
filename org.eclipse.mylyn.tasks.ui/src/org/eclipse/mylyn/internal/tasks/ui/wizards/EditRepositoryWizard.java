@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.RefactorRepositoryUrlOperation;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -72,7 +73,9 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 
 			repository.flushAuthenticationCredentials();
 
-			repository.setRepositoryUrl(newUrl);
+			if (!repository.getConnectorKind().equals(LocalRepositoryConnector.CONNECTOR_KIND)) {
+				repository.setRepositoryUrl(newUrl);
+			}
 			settingsPage.applyTo(repository);
 			if (oldUrl != null && newUrl != null && !oldUrl.equals(newUrl)) {
 				TasksUiPlugin.getRepositoryManager().notifyRepositoryUrlChanged(repository, oldUrl);
@@ -90,8 +93,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	@Override
 	public void addPages() {
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
-		// TODO 3.1 pass repository
-		settingsPage = connectorUi.getSettingsPage(null);
+		settingsPage = connectorUi.getSettingsPage(repository);
 		if (settingsPage instanceof AbstractRepositorySettingsPage) {
 			((AbstractRepositorySettingsPage) settingsPage).setRepository(repository);
 			((AbstractRepositorySettingsPage) settingsPage).setVersion(repository.getVersion());

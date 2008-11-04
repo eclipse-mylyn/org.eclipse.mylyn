@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
@@ -67,7 +66,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
@@ -78,8 +76,10 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Rob Elves
  * @author Steffen Pingel
  * @author Frank Becker
+ * @author David Green
+ * @since 2.0
  */
-public abstract class AbstractRepositorySettingsPage extends WizardPage implements ITaskRepositoryPage {
+public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage implements ITaskRepositoryPage {
 
 	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences";
 
@@ -123,6 +123,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 
 	protected StringFieldEditor proxyPasswordEditor;
 
+	// FIXME shadows declaration in super
 	protected TaskRepository repository;
 
 	private Button validateServerButton;
@@ -205,18 +206,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 
 	private Button disconnectedButton;
 
-	// TODO 3.1 make accessible to subclasses 
-	private FormToolkit toolkit;
-
 	/**
 	 * @since 3.0
 	 */
 	public AbstractRepositorySettingsPage(String title, String description, TaskRepository taskRepository) {
-		super(title);
-		this.repository = taskRepository;
+		super(title, description, taskRepository);
+		repository = taskRepository;
 		this.connector = TasksUi.getRepositoryManager().getRepositoryConnector(getConnectorKind());
-		setTitle(title);
-		setDescription(description);
 		setNeedsAnonymousLogin(false);
 		setNeedsEncoding(true);
 		setNeedsTimeZone(true);
@@ -228,20 +224,27 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public abstract String getConnectorKind();
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (toolkit != null) {
-			toolkit.dispose();
-			toolkit = null;
-		}
 	}
 
-	public void createControl(Composite parent) {
-		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
+	/**
+	 * @since 2.0
+	 */
+	@Override
+	protected void createContents(Composite parent) {
+		createSettingControls(parent);
+	}
 
+	/**
+	 * @since 2.0
+	 */
+	@Override
+	protected void createSettingControls(Composite parent) {
 		if (repository != null) {
 			originalUrl = repository.getRepositoryUrl();
 			AuthenticationCredentials oldCredentials = repository.getCredentials(AuthenticationType.REPOSITORY);
@@ -628,6 +631,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 
 		addStatusSection();
 
+		addContributionSection();
+
 		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
 		GridLayout managementLayout = new GridLayout(4, false);
 		managementLayout.marginHeight = 0;
@@ -701,7 +706,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 
 		updateHyperlinks();
 
-		setControl(compositeContainer);
 	}
 
 	private void addProxySection() {
@@ -855,6 +859,20 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		proxyExpComposite.setExpanded(!systemProxyButton.getSelection());
 	}
 
+	private void addContributionSection() {
+		Composite composite = toolkit.createComposite(compositeContainer);
+		GridDataFactory.fillDefaults().grab(true, false).span(2, SWT.DEFAULT).applyTo(composite);
+
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginWidth = 0;
+		layout.marginTop = -5;
+		composite.setLayout(layout);
+
+		composite.setBackground(compositeContainer.getBackground());
+
+		createContributionControls(composite);
+	}
+
 	private void addStatusSection() {
 		ExpandableComposite statusComposite = toolkit.createExpandableComposite(compositeContainer,
 				ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
@@ -912,6 +930,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setAnonymous(boolean selected) {
 		if (!needsAnonymousLogin) {
 			return;
@@ -937,6 +958,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setHttpAuth(boolean selected) {
 		if (!needsHttpAuth) {
 			return;
@@ -963,6 +987,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		return httpAuthButton.getSelection();
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setUseDefaultProxy(boolean selected) {
 		if (!needsProxy) {
 			return;
@@ -985,8 +1012,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		setProxyAuth(proxyAuthButton.getSelection());
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setProxyAuth(boolean selected) {
-
 		proxyAuthButton.setSelection(selected);
 		proxyAuthButton.setEnabled(!systemProxyButton.getSelection());
 		if (!selected) {
@@ -1039,8 +1068,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 	protected void repositoryTemplateSelected(RepositoryTemplate template) {
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected abstract void createAdditionalControls(Composite parent);
 
+	/**
+	 * @since 2.0
+	 */
 	protected abstract boolean isValidUrl(String name);
 
 	private void updateHyperlinks() {
@@ -1064,6 +1099,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getRepositoryLabel() {
 		return repositoryLabelEditor.getStringValue();
 	}
@@ -1075,14 +1113,23 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		return TaskRepositoryManager.stripSlashes(serverUrlCombo.getText());
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getUserName() {
 		return repositoryUserNameEditor.getStringValue();
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getPassword() {
 		return repositoryPasswordEditor.getStringValue();
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getHttpAuthUserId() {
 		if (needsHttpAuth()) {
 			return httpAuthUserNameEditor.getStringValue();
@@ -1091,6 +1138,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getHttpAuthPassword() {
 		if (needsHttpAuth()) {
 			return httpAuthPasswordEditor.getStringValue();
@@ -1099,6 +1149,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getProxyHostname() {
 		if (needsProxy()) {
 			return proxyHostnameEditor.getStringValue();
@@ -1107,6 +1160,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getProxyPort() {
 		if (needsProxy()) {
 			return proxyPortEditor.getStringValue();
@@ -1115,6 +1171,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public Boolean getUseDefaultProxy() {
 		if (needsProxy()) {
 			return systemProxyButton.getSelection();
@@ -1123,6 +1182,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getProxyUserName() {
 		if (needsProxy()) {
 			return proxyUserNameEditor.getStringValue();
@@ -1131,6 +1193,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getProxyPassword() {
 		if (needsProxy()) {
 			return proxyPasswordEditor.getStringValue();
@@ -1139,10 +1204,16 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void init(IWorkbench workbench) {
 		// ignore
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean isAnonymousAccess() {
 		if (anonymousButton != null) {
 			return anonymousButton.getSelection();
@@ -1191,7 +1262,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 
 		setErrorMessage(errorMessage);
-		return errorMessage == null;
+		return errorMessage == null && super.isPageComplete();
 	}
 
 	private String credentialsComplete() {
@@ -1206,6 +1277,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 				|| repositoryPasswordEditor.getStringValue().trim().equals("");
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected String isUniqueUrl(String urlString) {
 		if (!urlString.equals(originalUrl)) {
 			if (repositoryUrls == null) {
@@ -1223,11 +1297,17 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		return null;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	@Deprecated
 	public void setRepository(TaskRepository repository) {
 		this.repository = repository;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setVersion(String previousVersion) {
 		if (previousVersion == null) {
 			serverVersion = TaskRepository.NO_VERSION_SPECIFIED;
@@ -1236,14 +1316,23 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getVersion() {
 		return serverVersion;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public TaskRepository getRepository() {
 		return repository;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public String getCharacterEncoding() {
 		if (defaultEncoding == null) {
 			return null;
@@ -1260,6 +1349,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public TaskRepository createTaskRepository() {
 		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getRepositoryUrl());
 		applyTo(repository);
@@ -1269,6 +1361,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 	/**
 	 * @since 2.2
 	 */
+	@Override
 	public void applyTo(TaskRepository repository) {
 		repository.setVersion(getVersion());
 		if (needsEncoding()) {
@@ -1307,56 +1400,97 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 
 		repository.setOffline(disconnectedButton.getSelection());
+
+		super.applyTo(repository);
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public AbstractRepositoryConnector getConnector() {
 		return connector;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean needsEncoding() {
 		return needsEncoding;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean needsTimeZone() {
 		return needsTimeZone;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean needsAnonymousLogin() {
 		return needsAnonymousLogin;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean needsAdvanced() {
 		return needsAdvanced;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setNeedsEncoding(boolean needsEncoding) {
 		this.needsEncoding = needsEncoding;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setNeedsTimeZone(boolean needsTimeZone) {
 		this.needsTimeZone = needsTimeZone;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setNeedsAdvanced(boolean needsAdvanced) {
 		this.needsAdvanced = needsAdvanced;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean needsHttpAuth() {
 		return this.needsHttpAuth;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setNeedsHttpAuth(boolean needsHttpAuth) {
 		this.needsHttpAuth = needsHttpAuth;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setNeedsProxy(boolean needsProxy) {
 		this.needsProxy = needsProxy;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean needsProxy() {
 		return this.needsProxy;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public void setNeedsAnonymousLogin(boolean needsAnonymousLogin) {
 		this.needsAnonymousLogin = needsAnonymousLogin;
 	}
@@ -1365,21 +1499,36 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		this.needsValidation = needsValidation;
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	public boolean needsValidation() {
 		return needsValidation;
 	}
 
-	/** for testing */
+	/**
+	 * Public for testing.
+	 * 
+	 * @since 2.0
+	 */
 	public void setUrl(String url) {
 		serverUrlCombo.setText(url);
 	}
 
-	/** for testing */
+	/**
+	 * Public for testing.
+	 * 
+	 * @since 2.0
+	 */
 	public void setUserId(String id) {
 		repositoryUserNameEditor.setStringValue(id);
 	}
 
-	/** for testing */
+	/**
+	 * Public for testing.
+	 * 
+	 * @since 2.0
+	 */
 	public void setPassword(String pass) {
 		repositoryPasswordEditor.setStringValue(pass);
 	}
@@ -1413,6 +1562,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		}
 	}
 
+	/**
+	 * Validate settings provided by the {@link #getValidator(TaskRepository) validator}, typically the server settings.
+	 * 
+	 * @since 2.0
+	 */
 	protected void validateSettings() {
 		final Validator validator = getValidator(createTaskRepository());
 		if (validator == null) {
@@ -1453,6 +1607,17 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		getWizard().getContainer().updateButtons();
 	}
 
+	/**
+	 * @since 3.1
+	 */
+	@Override
+	protected IStatus validate() {
+		return null;
+	}
+
+	/**
+	 * @since 2.0
+	 */
 	protected void applyValidatorResult(Validator validator) {
 		IStatus status = validator.getStatus();
 		String message = status.getMessage();
@@ -1483,9 +1648,16 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage implemen
 		setErrorMessage(null);
 	}
 
+	/**
+	 * @since 2.0
+	 */
 	protected abstract Validator getValidator(TaskRepository repository);
 
-	// public for testing
+	/**
+	 * Public for testing.
+	 * 
+	 * @since 2.0
+	 */
 	public abstract class Validator {
 
 		private IStatus status;
