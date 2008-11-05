@@ -86,8 +86,7 @@ public class TaskEditorExtensions {
 		init();
 		String id = taskRepository.getProperty(REPOSITORY_PROPERTY_EDITOR_EXTENSION);
 		if (id == null) {
-			// TODO 3.1 disabled until bug 253115 is resolved
-			//id = getDefaultTaskEditorExtensionId(taskRepository);
+			id = getDefaultTaskEditorExtensionId(taskRepository);
 		}
 		return id;
 	}

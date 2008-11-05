@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.LocalRepositorySettingsPage;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -50,7 +51,7 @@ public class LocalRepositoryConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public ITaskRepositoryPage getSettingsPage(TaskRepository taskRepository) {
-		return null;
+		return new LocalRepositorySettingsPage(taskRepository);
 	}
 
 	@Override

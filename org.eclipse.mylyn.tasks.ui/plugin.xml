@@ -1781,4 +1781,11 @@
             type="org.eclipse.mylyn.tasks.core.TaskRepository">
       </propertyTester>
    </extension>
+    <extension
+          point="org.eclipse.mylyn.tasks.ui.taskRepositoryPageContribution">
+       <taskRepositoryPageContribution
+       		 id="org.eclipse.mylyn.tasks.ui.taskEditorExtensionSettings"
+             class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorExtensionSettingsContribution">
+       </taskRepositoryPageContribution>
+    </extension>
 </plugin>
