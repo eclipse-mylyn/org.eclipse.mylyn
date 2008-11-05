@@ -104,7 +104,7 @@ public class MarkupToDitaTask extends MarkupTask {
 		if (filenameFormat == null) {
 			switch (topicStrategy) {
 			case NONE:
-				filenameFormat = "$.dita"; //$NON-NLS-1$
+				filenameFormat = "$1.dita"; //$NON-NLS-1$
 				break;
 			default:
 				filenameFormat = "$1.ditamap"; //$NON-NLS-1$
