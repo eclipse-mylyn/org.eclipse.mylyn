@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.mylyn.releng.wikitext-standalone" default="all">
+    <description>
+     Enable standalone usage of WikiText by creating a download archive that may be used outside of Eclipse
+    </description>
+
+    <target name="all" description="description">
+    	<fail unless="wikitext.standalone.archive">Must define wikitext.standalone.archive</fail>
+    	<fail unless="wikitext.standalone.dir">Must define wikitext.standalone.dir</fail>
+    	<fail unless="wikitext.plugin.jars.location">Must define wikitext.plugin.jars.location</fail>
+    	<fail unless="wikitext.version">Must define wikitext.version</fail>
+    	<fail unless="buildDirectory">Must define buildDirectory</fail>
+    	
+        <zip destfile="${wikitext.standalone.archive}">
+        	<zipfileset prefix="${wikitext.standalone.dir}" dir="${wikitext.plugin.jars.location}">
+        		<include name="org.eclipse.mylyn.wikitext.*core*.jar"/>
+        		<exclude name="org.eclipse.mylyn.wikitext.*source*.jar"/>
+        	</zipfileset>
+        	<zipfileset prefix="${wikitext.standalone.dir}/docs" dir="${buildDirectory}/plugins/org.eclipse.mylyn.wikitext.ui/help">
+        		<include name="**/*"/>
+        	</zipfileset>
+        	<zipfileset prefix="${wikitext.standalone.dir}" dir="${buildDirectory}/features/org.eclipse.mylyn.wikitext_feature">
+        		<include name="license.html"/>
+        	</zipfileset>
+        </zip>
+    </target>
+
+
+</project>

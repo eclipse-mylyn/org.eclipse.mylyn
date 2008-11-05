@@ -176,6 +176,13 @@
 			<param name="ElementsTarget" value="incubatorElements" />
 			<param name="SiteName" value="incubator" />
 		</antcall>
+		<ant antfile="${base}/../wikitext-standalone.xml">
+			<property name="wikitext.standalone.archive" value="${buildDirectory}/incubatorUpdateSite/../mylyn-wikitext-standalone-${majorVersion}.${mylynQualifier}_incubation.zip"/>
+			<property name="wikitext.standalone.dir" value="mylyn-wikitext-standalone-${majorVersion}.${mylynQualifier}"/>
+			<property name="wikitext.plugin.jars.location" value="${buildDirectory}/incubatorUpdateSite/plugins"/>
+			<property name="buildDirectory" value="${buildDirectory}"/>
+			<property name="wikitext.version" value="${majorVersion}.${mylynQualifier}"/>
+		</ant>
 		<antcall target="generateUpdateSite">
 			<param name="UpdateSiteLocation" value="${buildDirectory}/allUpdateSite" />
 			<param name="SiteXmlFile" value="all-site.xml" />
