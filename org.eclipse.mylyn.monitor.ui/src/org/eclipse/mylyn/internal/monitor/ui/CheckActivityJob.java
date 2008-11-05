@@ -66,6 +66,10 @@ public class CheckActivityJob extends Job {
 		return Platform.isRunning() && !MonitorUiPlugin.getDefault().getWorkbench().isClosing();
 	}
 
+	/**
+	 * Uses a short interval when inactive. This makes event notifications more accurate when switching from an inactive
+	 * to an active state, e.g. to ensure lively updates of the UI.
+	 */
 	public void reschedule() {
 		schedule(active ? tick : tick / 6);
 	}
@@ -81,7 +85,7 @@ public class CheckActivityJob extends Job {
 					if (active) {
 						// time out
 						active = false;
-						callback.fireInactive();
+						callback.inactive();
 					}
 				} else {
 					if (!active) {
@@ -93,6 +97,7 @@ public class CheckActivityJob extends Job {
 							// if timeouts are disabled only the currentTime is relevant for tracking activity 
 							previousEventTime = currentTime;
 						}
+						callback.active();
 					} else {
 						// check if the activity internal is unreasonably long, it is likely that 
 						// the computer came back from sleep at worst difference should be tick * 2
@@ -105,7 +110,7 @@ public class CheckActivityJob extends Job {
 								} else {
 									// time out
 									active = false;
-									callback.fireInactive();
+									callback.inactive();
 								}
 							} else {
 								// if timeouts are disabled only the currentTime is relevant for tracking activity 

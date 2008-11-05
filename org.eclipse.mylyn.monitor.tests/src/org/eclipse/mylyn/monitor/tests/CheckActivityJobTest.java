@@ -185,18 +185,24 @@ public class CheckActivityJobTest extends TestCase {
 
 		private long startTime;
 
+		private boolean active;
+
 		public void addMonitoredActivityTime(long startTime, long endTime) {
 			this.startTime = startTime;
 			this.activeTime += endTime - startTime;
 			this.eventCount++;
 		}
 
-		public void fireInactive() {
+		public void inactive() {
 			this.inactive = true;
 		}
 
 		public long getLastEventTime() {
 			return this.lastEventTime;
+		}
+
+		public void active() {
+			this.active = true;
 		}
 
 	}

@@ -71,12 +71,16 @@ public class ActivityContextManager implements IActivityContextManager {
 				ActivityContextManager.this.addMonitoredActivityTime(localStartTime, currentTime);
 			}
 
-			public void fireInactive() {
+			public void inactive() {
 				ActivityContextManager.this.fireInactive();
 			}
 
 			public long getLastEventTime() {
 				return ActivityContextManager.this.getLastEventTime();
+			}
+
+			public void active() {
+				ActivityContextManager.this.fireActive();
 			}
 		});
 		checkJob.setSystem(true);
@@ -145,9 +149,6 @@ public class ActivityContextManager implements IActivityContextManager {
 				processWorkbenchEvent(origin, InteractionContextManager.ACTIVITY_STRUCTUREKIND_TIMING, handle, start,
 						end);
 			}
-			for (IUserAttentionListener attentionListener : attentionListeners) {
-				attentionListener.userAttentionGained();
-			}
 		}
 	}
 
@@ -180,6 +181,12 @@ public class ActivityContextManager implements IActivityContextManager {
 	private void fireInactive() {
 		for (IUserAttentionListener attentionListener : attentionListeners) {
 			attentionListener.userAttentionLost();
+		}
+	}
+
+	private void fireActive() {
+		for (IUserAttentionListener attentionListener : attentionListeners) {
+			attentionListener.userAttentionGained();
 		}
 	}
 

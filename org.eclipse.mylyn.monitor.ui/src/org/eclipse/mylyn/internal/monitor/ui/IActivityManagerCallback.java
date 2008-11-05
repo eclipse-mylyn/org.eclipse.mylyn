@@ -13,7 +13,9 @@ package org.eclipse.mylyn.internal.monitor.ui;
 
 public interface IActivityManagerCallback {
 
-	public abstract void fireInactive();
+	public abstract void inactive();
+
+	public abstract void active();
 
 	public abstract void addMonitoredActivityTime(long localStartTime, long currentTime);
 
