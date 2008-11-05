@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+	A sample Ant buildfile that converts Textile source files into DITA topics
+-->
+<project name="org.eclipse.mylyn.wikitext.core.examples.dita" default="all">
+
+	<!--
+	set these properties to reflect your configuration
+	
+	wikitext.standalone.dir - the folder containing the wikitext jars
+	content.source - the folder containing markup files to be converted
+	content.source.language - the expected markup language, for example 'Textile' or 'MediaWiki'
+	content.source.includes - the filename pattern to match source files to be converted
+	-->
+	<property name="wikitext.standalone.dir" value="${basedir}/../.."/>
+	<property name="content.source" value="content-src"/>
+	<property name="content.source.language" value="Textile"/>
+	<property name="content.source.includes" value="**/*.textile"/>
+
+	<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties">
+		<classpath>
+			<fileset dir="${wikitext.standalone.dir}">
+				<include name="*.jar"/>
+			</fileset>
+		</classpath>
+	</taskdef>
+	
+	<target name="all" depends="wikitext-to-dita">
+	</target>
+	
+	<target name="wikitext-to-dita" description="generate documentation to DITA from wiki text">
+		<mkdir dir="${content.source}/topics"/>
+		<wikitext-to-dita markupLanguage="${content.source.language}">
+			<fileset dir="${content.source}" includes="${content.source.includes}"/>
+		</wikitext-to-dita>
+		<mkdir dir="${content.source}/topics/images"/>
+		<copy todir="${content.source}/topics/images">
+			<fileset dir="${content.source}/images">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	</target>
+
+</project>
