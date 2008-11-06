@@ -590,7 +590,7 @@ public class MarkupEditor extends TextEditor {
 		}
 	}
 
-	protected MarkupLanguage getMarkupLanguage() {
+	public MarkupLanguage getMarkupLanguage() {
 		IDocument document = getDocumentProvider().getDocument(getEditorInput());
 		IDocumentPartitioner partitioner = document.getDocumentPartitioner();
 		MarkupLanguage markupLanguage = null;
