@@ -11,23 +11,14 @@
 
 package org.eclipse.mylyn.wikitext.core.util.anttask;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-
-import junit.framework.TestCase;
 
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
-public class MarkupToDitaTaskTest extends TestCase {
-
-	private File tempFile;
+public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 	private MarkupToDitaTask ditaTask;
 
@@ -36,37 +27,16 @@ public class MarkupToDitaTaskTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		tempFile = File.createTempFile(MarkupToDitaTaskTest.class.getSimpleName(), ".tmp");
-		tempFile.delete();
-		tempFile.mkdirs();
 
 		ditaTask = new MarkupToDitaTask();
 		ditaTask.setMarkupLanguage(TextileLanguage.class.getName());
 
-		topicsFolder = new File(tempFile, ditaTask.getTopicFolder());
+		topicsFolder = new File(tempFolder, ditaTask.getTopicFolder());
 		topicsFolder.mkdirs();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		delete(tempFile);
-	}
-
-	private void delete(File f) {
-		if (f.isDirectory()) {
-			File[] files = f.listFiles();
-			if (files != null) {
-				for (File child : files) {
-					delete(child);
-				}
-			}
-		}
-		f.delete();
-	}
-
 	private File createSimpleTextileMarkup() throws IOException {
-		File markupFile = new File(tempFile, "markup.textile");
+		File markupFile = new File(tempFolder, "markup.textile");
 		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
 		try {
 			writer.println("h1. First Heading");
@@ -87,7 +57,7 @@ public class MarkupToDitaTaskTest extends TestCase {
 	}
 
 	private File createTextileMarkupWithXref(int headingLevel) throws IOException {
-		File markupFile = new File(tempFile, "markup.textile");
+		File markupFile = new File(tempFolder, "markup.textile");
 		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
 		try {
 			writer.println("h" + headingLevel + "(#Id1). First Heading");
@@ -112,7 +82,7 @@ public class MarkupToDitaTaskTest extends TestCase {
 
 		listFiles();
 
-		File ditamapFile = new File(tempFile, "markup.ditamap");
+		File ditamapFile = new File(tempFolder, "markup.ditamap");
 		assertTrue(ditamapFile.exists());
 		File firstHeadingFile = new File(topicsFolder, "FirstHeading.dita");
 		assertTrue(firstHeadingFile.exists());
@@ -148,9 +118,9 @@ public class MarkupToDitaTaskTest extends TestCase {
 
 		listFiles();
 
-		File ditamapFile = new File(tempFile, "markup.ditamap");
+		File ditamapFile = new File(tempFolder, "markup.ditamap");
 		assertFalse(ditamapFile.exists());
-		File firstHeadingFile = new File(tempFile, "markup.dita");
+		File firstHeadingFile = new File(tempFolder, "markup.dita");
 		assertTrue(firstHeadingFile.exists());
 
 		String firstTopicContent = getContent(firstHeadingFile);
@@ -224,9 +194,9 @@ public class MarkupToDitaTaskTest extends TestCase {
 
 		listFiles();
 
-		File ditamapFile = new File(tempFile, "markup.ditamap");
+		File ditamapFile = new File(tempFolder, "markup.ditamap");
 		assertFalse(ditamapFile.exists());
-		File firstHeadingFile = new File(tempFile, "markup.dita");
+		File firstHeadingFile = new File(tempFolder, "markup.dita");
 		assertTrue(firstHeadingFile.exists());
 
 		String firstTopicContent = getContent(firstHeadingFile);
@@ -252,9 +222,9 @@ public class MarkupToDitaTaskTest extends TestCase {
 
 		listFiles();
 
-		File ditamapFile = new File(tempFile, "markup.ditamap");
+		File ditamapFile = new File(tempFolder, "markup.ditamap");
 		assertFalse(ditamapFile.exists());
-		File firstHeadingFile = new File(tempFile, "markup.dita");
+		File firstHeadingFile = new File(tempFolder, "markup.dita");
 		assertTrue(firstHeadingFile.exists());
 
 		String firstTopicContent = getContent(firstHeadingFile);
@@ -269,30 +239,4 @@ public class MarkupToDitaTaskTest extends TestCase {
 		assertTrue(firstTopicContent.contains("<xref href=\"#Id1\">ref to 1</xref>"));
 	}
 
-	private String getContent(File file) throws IOException {
-		Reader reader = new InputStreamReader(new BufferedInputStream(new FileInputStream(file)), "utf-8");
-		try {
-			StringWriter writer = new StringWriter();
-			int i;
-			while ((i = reader.read()) != -1) {
-				writer.write(i);
-			}
-			return writer.toString();
-		} finally {
-			reader.close();
-		}
-	}
-
-	private void listFiles() {
-		listFiles("", tempFile);
-	}
-
-	private void listFiles(String prefix, File dir) {
-		for (File file : dir.listFiles()) {
-			System.out.println(String.format("%s: %s", prefix + file.getName(), file.isFile() ? "File" : "Folder"));
-			if (file.isDirectory()) {
-				listFiles(prefix + file.getName() + "/", file);
-			}
-		}
-	}
 }

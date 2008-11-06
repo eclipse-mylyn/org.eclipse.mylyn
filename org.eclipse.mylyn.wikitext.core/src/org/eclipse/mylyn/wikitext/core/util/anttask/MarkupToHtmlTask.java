@@ -139,7 +139,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 			} catch (BuildException e) {
 				throw e;
 			} catch (Exception e) {
-				throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.12"), file, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(
+						String.format(Messages.getString("MarkupToHtmlTask.12"), file, e.getMessage()), e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -185,8 +186,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 			try {
 				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(htmlOutputFile)), "utf-8"); //$NON-NLS-1$
 			} catch (Exception e) {
-				throw new BuildException(
-						String.format(Messages.getString("MarkupToHtmlTask.16"), htmlOutputFile, e.getMessage()), e); //$NON-NLS-1$
+				throw new BuildException(String.format(
+						Messages.getString("MarkupToHtmlTask.16"), htmlOutputFile, e.getMessage()), e); //$NON-NLS-1$
 			}
 			try {
 				HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer, formatOutput);
@@ -215,6 +216,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 				splittingBuilder.setOutline(item);
 				splittingBuilder.setRootFile(htmlOutputFile);
 				splittingBuilder.setNavigationImages(navigationImages);
+				splittingBuilder.setFormatting(formatOutput);
 
 				MarkupParser parser = new MarkupParser();
 				parser.setMarkupLanaguage(markupLanguage);
@@ -255,7 +257,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 				r.close();
 			}
 		} catch (IOException e) {
-			throw new BuildException(String.format(Messages.getString("MarkupToHtmlTask.19"), inputFile, e.getMessage()), e); //$NON-NLS-1$
+			throw new BuildException(
+					String.format(Messages.getString("MarkupToHtmlTask.19"), inputFile, e.getMessage()), e); //$NON-NLS-1$
 		}
 		return w.toString();
 	}

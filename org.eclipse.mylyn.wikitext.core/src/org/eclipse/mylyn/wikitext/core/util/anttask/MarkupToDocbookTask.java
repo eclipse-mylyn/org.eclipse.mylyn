@@ -255,4 +255,12 @@ public class MarkupToDocbookTask extends MarkupTask {
 		this.overwrite = overwrite;
 	}
 
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
 }

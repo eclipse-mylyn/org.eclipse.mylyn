@@ -403,4 +403,11 @@ public class SplittingHtmlDocumentBuilder extends DocumentBuilder {
 		return navigationImages;
 	}
 
+	public void setFormatting(boolean formatting) {
+		this.formatting = formatting;
+	}
+
+	public boolean isFormatting() {
+		return formatting;
+	}
 }
