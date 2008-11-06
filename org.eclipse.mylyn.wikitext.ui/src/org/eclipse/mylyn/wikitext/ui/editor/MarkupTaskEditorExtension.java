@@ -22,6 +22,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.DefaultAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHover;
@@ -253,6 +254,16 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 			addRepositoryHyperlinkDetectorTargets(taskRepository, hyperlinkDetectorTargets);
 			return hyperlinkDetectorTargets;
 		}
+
+		@Override
+		public IReconciler getReconciler(ISourceViewer sourceViewer) {
+			if (sourceViewer.isEditable()) {
+				return super.getReconciler(sourceViewer);
+			} else {
+				return null;
+			}
+		}
+
 	}
 
 	protected static class TaskMarkupViewerConfiguration extends MarkupViewerConfiguration {
