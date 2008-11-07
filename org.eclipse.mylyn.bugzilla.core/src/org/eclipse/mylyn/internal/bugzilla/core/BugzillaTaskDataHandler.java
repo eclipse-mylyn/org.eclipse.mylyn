@@ -148,9 +148,14 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			@Override
 			void migrate(TaskRepository repository, TaskData data) {
 				// migrate custom attributes
+				RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
+
+				if (configuration == null) {
+					return;
+				}
+
 				for (TaskAttribute attribute : data.getRoot().getAttributes().values()) {
 					if (attribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
-						RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
 
 						BugzillaCustomField customField = null;
 						String actName = attribute.getId();
