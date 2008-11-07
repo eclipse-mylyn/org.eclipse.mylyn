@@ -56,6 +56,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private static final String LABEL_REPLY = "Reply";
 
+	/** Expandable composites are indented by 6 pixels by default. */
+	private static final int INDENT = -6;
+
 	protected Section section;
 
 	protected List<ExpandableComposite> commentComposites;
@@ -154,7 +157,6 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	protected void expandSection(final FormToolkit toolkit, final Section section, List<TaskAttribute> commentAttributes) {
 		Composite composite = toolkit.createComposite(section);
 		section.setClient(composite);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
 
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
@@ -184,7 +186,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			final TaskComment taskComment = new TaskComment(getModel().getTaskRepository(), getModel().getTask(),
 					commentAttribute);
 			getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
-			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT;
+			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT
+					| ExpandableComposite.COMPACT;
 			if (hasIncomingChanges) {
 				style |= ExpandableComposite.EXPANDED;
 			}
@@ -229,7 +232,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			commentComposite.setClient(commentTextComposite);
 			commentTextComposite.setLayout(new FillWidthLayout(EditorUtil.getLayoutAdvisor(getTaskEditorPage()), 15, 0,
 					0, 3));
-			commentTextComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			//commentTextComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			if (composite.getParent().getParent().getParent() instanceof Section) {
+				GridDataFactory.fillDefaults().grab(true, false).applyTo(commentComposite);
+			} else {
+				GridDataFactory.fillDefaults().grab(true, false).indent(INDENT, 0).applyTo(commentComposite);
+			}
 			commentComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override
 				public void expansionStateChanged(ExpansionEvent event) {
@@ -465,8 +473,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			groupSection.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
 		}
 		groupSection.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		// expandable composites are indented by 6 pixels by default
-		GridDataFactory.fillDefaults().grab(true, false).indent(-6, 0).applyTo(groupSection);
+		GridDataFactory.fillDefaults().grab(true, false).indent(2 * INDENT, 0).applyTo(groupSection);
 		groupSection.setText(commentGroup.getGroupName() + " (" + commentGroup.getCommentAttributes().size() + ")");
 
 		// create tool bar only for Current section
