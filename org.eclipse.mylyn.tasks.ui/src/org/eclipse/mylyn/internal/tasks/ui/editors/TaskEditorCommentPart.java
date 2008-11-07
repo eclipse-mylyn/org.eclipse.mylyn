@@ -71,6 +71,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private List<Section> subSections;
 
+	private boolean expandAllInProgress;
+
 	public TaskEditorCommentPart() {
 		setPartName("Comments");
 	}
@@ -188,7 +190,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			getTaskData().getAttributeMapper().updateTaskComment(taskComment, commentAttribute);
 			int style = ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT
 					| ExpandableComposite.COMPACT;
-			if (hasIncomingChanges) {
+			if (hasIncomingChanges || expandAllInProgress) {
 				style |= ExpandableComposite.EXPANDED;
 			}
 			final ExpandableComposite commentComposite = toolkit.createExpandableComposite(composite, style);
@@ -244,9 +246,10 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 					expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, event.getState());
 				}
 			});
-
 			if (hasIncomingChanges) {
 				commentComposite.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
+			}
+			if (commentComposite.isEnabled()) {
 				expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, true);
 			}
 
@@ -370,6 +373,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	protected void expandAllComments() {
 		try {
+			expandAllInProgress = true;
 			getTaskEditorPage().setReflow(false);
 
 			if (section != null) {
@@ -399,6 +403,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			}
 		} finally {
+			expandAllInProgress = false;
 			getTaskEditorPage().setReflow(true);
 		}
 		getTaskEditorPage().reflow();
@@ -464,9 +469,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 
 	private void createSubSection(final FormToolkit toolkit, final Composite parent, final CommentGroup commentGroup) {
 		int style = ExpandableComposite.TWISTIE | ExpandableComposite.SHORT_TITLE_BAR;
-//		if (commentGroup.hasIncoming()) {
-//			style |= ExpandableComposite.EXPANDED;
-//		}
+		if (/*commentGroup.hasIncoming() || */expandAllInProgress) {
+			style |= ExpandableComposite.EXPANDED;
+		}
 
 		final Section groupSection = toolkit.createSection(parent, style);
 		if (commentGroup.hasIncoming()) {
