@@ -334,7 +334,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		SourceViewer defaultEditor = new RepositoryTextViewer(taskRepository, parent, styles | SWT.WRAP);
 
 		RepositoryTextViewerConfiguration viewerConfig = new RepositoryTextViewerConfiguration(taskRepository,
-				isSpellCheckingEnabled());
+				isSpellCheckingEnabled() && !isReadOnly());
 		viewerConfig.setMode(getMode());
 		defaultEditor.configure(viewerConfig);
 
