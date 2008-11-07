@@ -133,9 +133,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		other.setEmitDtd(isEmitDtd());
 		other.setHtmlDtd(getHtmlDtd());
 		other.setHtmlNsUri(getHtmlNsUri());
+		other.setLinkRel(getLinkRel());
 		other.setTitle(getTitle());
 		other.setUseInlineStyles(isUseInlineStyles());
 		other.setSuppressBuiltInStyles(isSuppressBuiltInStyles());
+		other.setXhtmlStrict(xhtmlStrict);
 		if (stylesheets != null) {
 			for (Stylesheet stylesheet : stylesheets) {
 				other.stylesheets.add(stylesheet);
@@ -474,7 +476,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 						try {
 							css = readFully(stylesheet.file);
 						} catch (IOException e) {
-							throw new IllegalStateException(MessageFormat.format(Messages.getString("HtmlDocumentBuilder.4"), //$NON-NLS-1$
+							throw new IllegalStateException(MessageFormat.format(
+									Messages.getString("HtmlDocumentBuilder.4"), //$NON-NLS-1$
 									stylesheet.file), e);
 						}
 						writer.writeCharacters(css);
