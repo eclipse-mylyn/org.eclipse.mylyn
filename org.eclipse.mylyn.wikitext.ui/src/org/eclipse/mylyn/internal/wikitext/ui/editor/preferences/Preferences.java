@@ -77,7 +77,7 @@ public class Preferences {
 
 	private final Map<String, String> cssByBlockModifierType = new LinkedHashMap<String, String>();
 	{
-		cssByBlockModifierType.put(BLOCK_H1, "font-size: 150%; font-weight: bold;"); //$NON-NLS-1$
+		cssByBlockModifierType.put(BLOCK_H1, "font-size: 130%; font-weight: bold;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_H2, "font-size: 125%; font-weight: bold;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_H3, "font-size: 110%; font-weight: bold;"); //$NON-NLS-1$
 		cssByBlockModifierType.put(BLOCK_H4, "font-weight: bold;"); //$NON-NLS-1$
