@@ -31,15 +31,15 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
  */
 public class ErrorReporterManager {
 
-	private static final String EXTENSION_ID_ERROR_REPORTERS = "org.eclipse.mylyn.commons.core.errorReporters";
+	private static final String EXTENSION_ID_ERROR_REPORTERS = "org.eclipse.mylyn.commons.core.errorReporters"; //$NON-NLS-1$
 
-	private static final String ELEMENT_ERROR_REPORTER = "errorReporter";
+	private static final String ELEMENT_ERROR_REPORTER = "errorReporter"; //$NON-NLS-1$
 
 	private final List<AbstractErrorReporter> errorReporters = new CopyOnWriteArrayList<AbstractErrorReporter>();
 
 	private boolean readExtensions;
 
-	private static final String ELEMENT_CLASS = "class";
+	private static final String ELEMENT_CLASS = "class"; //$NON-NLS-1$
 
 	public ErrorReporterManager() {
 	}
@@ -110,12 +110,12 @@ public class ErrorReporterManager {
 				errorReporters.add((AbstractErrorReporter) object);
 			} else {
 				StatusHandler.log(new Status(IStatus.WARNING, ICommonsCoreConstants.ID_PLUGIN,
-						"Could not load error reporter extenstion: \"" + object.getClass().getCanonicalName() + "\""
-								+ " does not implement \"" + AbstractErrorReporter.class.getCanonicalName() + "\""));
+						"Could not load error reporter extenstion: \"" + object.getClass().getCanonicalName() + "\"" //$NON-NLS-1$ //$NON-NLS-2$
+								+ " does not implement \"" + AbstractErrorReporter.class.getCanonicalName() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, ICommonsCoreConstants.ID_PLUGIN,
-					"Could not load error reporter extension", e));
+					"Could not load error reporter extension", e)); //$NON-NLS-1$
 		}
 	}
 

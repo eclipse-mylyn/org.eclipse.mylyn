@@ -76,13 +76,13 @@ public class StatusHandler {
 
 	private static void dumpErrorToConsole(IStatus status) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[");
+		sb.append("["); //$NON-NLS-1$
 		Calendar now = Calendar.getInstance();
 		sb.append(DateUtil.getIsoFormattedDateTime(now));
-		sb.append("] ");
-		sb.append(status.toString() + ", ");
+		sb.append("] "); //$NON-NLS-1$
+		sb.append(status.toString() + ", "); //$NON-NLS-1$
 		if (status.getException() != null) {
-			sb.append("Exception:\n");
+			sb.append("Exception:\n"); //$NON-NLS-1$
 			sb.append(printStrackTrace(status.getException()));
 		}
 		System.err.println(sb.toString());

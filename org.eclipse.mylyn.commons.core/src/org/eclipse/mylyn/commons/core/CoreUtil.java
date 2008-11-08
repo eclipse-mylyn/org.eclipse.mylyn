@@ -25,13 +25,13 @@ public class CoreUtil {
 	public static final boolean TEST_MODE;
 
 	static {
-		String application = System.getProperty("eclipse.application", "");
+		String application = System.getProperty("eclipse.application", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		if (application.length() > 0) {
-			TEST_MODE = application.endsWith("testapplication");
+			TEST_MODE = application.endsWith("testapplication"); //$NON-NLS-1$
 		} else {
 			// eclipse 3.3 does not the eclipse.application property
-			String commands = System.getProperty("eclipse.commands", "");
-			TEST_MODE = commands.contains("testapplication\n");
+			String commands = System.getProperty("eclipse.commands", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			TEST_MODE = commands.contains("testapplication\n"); //$NON-NLS-1$
 		}
 	}
 

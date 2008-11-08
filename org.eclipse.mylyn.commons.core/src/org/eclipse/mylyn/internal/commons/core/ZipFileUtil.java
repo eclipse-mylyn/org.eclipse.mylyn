@@ -148,9 +148,9 @@ public class ZipFileUtil {
 			zipFile.delete();
 		}
 		if (rootPath == null) {
-			rootPath = "";
-		} else if (!rootPath.endsWith("\\") || !rootPath.endsWith("/")) {
-			rootPath += "/";
+			rootPath = ""; //$NON-NLS-1$
+		} else if (!rootPath.endsWith("\\") || !rootPath.endsWith("/")) { //$NON-NLS-1$ //$NON-NLS-2$
+			rootPath += "/"; //$NON-NLS-1$
 		}
 
 		ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
@@ -162,8 +162,8 @@ public class ZipFileUtil {
 					monitor.worked(1);
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN, "Could not add "
-						+ file.getName() + " to zip", e));
+				StatusHandler.log(new Status(IStatus.ERROR, ICommonsCoreConstants.ID_PLUGIN, "Could not add " //$NON-NLS-1$
+						+ file.getName() + " to zip", e)); //$NON-NLS-1$
 			}
 		}
 
@@ -184,10 +184,10 @@ public class ZipFileUtil {
 		FileInputStream in = new FileInputStream(file);
 
 		// Add ZIP entry to output stream.m
-		String path = "";
-		if (!rootPath.equals("")) {
-			rootPath = rootPath.replaceAll("\\\\", "/");
-			path = file.getAbsolutePath().replaceAll("\\\\", "/");
+		String path = ""; //$NON-NLS-1$
+		if (!rootPath.equals("")) { //$NON-NLS-1$
+			rootPath = rootPath.replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+			path = file.getAbsolutePath().replaceAll("\\\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
 			path = path.substring(rootPath.length());
 		} else {
 			path = file.getName();

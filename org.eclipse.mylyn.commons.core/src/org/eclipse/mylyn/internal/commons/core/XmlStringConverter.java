@@ -20,7 +20,7 @@ public class XmlStringConverter {
 	@Deprecated
 	public static String convertToXmlString(String s) {
 		if (s == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		StringBuffer res = new StringBuffer(s.length() + 20);
 		for (int i = 0; i < s.length(); ++i) {
@@ -89,21 +89,21 @@ public class XmlStringConverter {
 	}
 
 	private static char getReplacementForXml(String s) {
-		if (s.equals("lt")) {
+		if (s.equals("lt")) { //$NON-NLS-1$
 			return '<';
-		} else if (s.equals("gt")) {
+		} else if (s.equals("gt")) { //$NON-NLS-1$
 			return '>';
-		} else if (s.equals("quot")) {
+		} else if (s.equals("quot")) { //$NON-NLS-1$
 			return '"';
-		} else if (s.equals("apos")) {
+		} else if (s.equals("apos")) { //$NON-NLS-1$
 			return '\'';
-		} else if (s.equals("amp")) {
+		} else if (s.equals("amp")) { //$NON-NLS-1$
 			return '&';
-		} else if (s.equals("#x0D")) {
+		} else if (s.equals("#x0D")) { //$NON-NLS-1$
 			return '\r';
-		} else if (s.equals("#x0A")) {
+		} else if (s.equals("#x0A")) { //$NON-NLS-1$
 			return '\n';
-		} else if (s.equals("#x09")) {
+		} else if (s.equals("#x09")) { //$NON-NLS-1$
 			return '\u0009';
 		}
 		return 0;
