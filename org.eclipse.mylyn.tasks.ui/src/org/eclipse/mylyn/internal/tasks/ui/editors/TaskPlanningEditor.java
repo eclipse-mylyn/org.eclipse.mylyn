@@ -28,7 +28,6 @@ import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.commons.core.DateUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -763,8 +762,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		String elapsedTimeString = NO_TIME_ELAPSED;
 		try {
-			elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskActivityManager().getElapsedTime(
-					task), false);
+			elapsedTimeString = TasksUiInternal.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
+					.getElapsedTime(task), false);
 			if (elapsedTimeString.equals("")) {
 				elapsedTimeString = NO_TIME_ELAPSED;
 			}
@@ -788,7 +787,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 				if (task.equals(TaskPlanningEditor.this.task)) {
 					String elapsedTimeString = NO_TIME_ELAPSED;
 					try {
-						elapsedTimeString = DateUtil.getFormattedDuration(newElapsedTime, false);
+						elapsedTimeString = TasksUiInternal.getFormattedDuration(newElapsedTime, false);
 						if (elapsedTimeString.equals("")) {
 							elapsedTimeString = NO_TIME_ELAPSED;
 						}
