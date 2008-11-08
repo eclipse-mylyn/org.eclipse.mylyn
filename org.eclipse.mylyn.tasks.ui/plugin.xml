@@ -1724,7 +1724,7 @@
             class="org.eclipse.mylyn.internal.tasks.ui.util.TaskAttachmentPropertyTester"
             id="org.eclipse.mylyn.tasks.ui.propertyTester.task.attachment"
             namespace="org.eclipse.mylyn.task.attachment"
-            properties="isContext"
+            properties="isContext,hasUrl"
             type="org.eclipse.mylyn.tasks.core.ITaskAttachment">
       </propertyTester>
    </extension>

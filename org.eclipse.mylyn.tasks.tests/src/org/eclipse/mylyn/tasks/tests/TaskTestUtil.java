@@ -159,4 +159,8 @@ public class TaskTestUtil {
 				taskRepository.getRepositoryUrl(), taskId);
 	}
 
+	public static TaskData createMockTaskData(String taskId) {
+		return createTaskData(createMockRepository(), taskId);
+	}
+
 }

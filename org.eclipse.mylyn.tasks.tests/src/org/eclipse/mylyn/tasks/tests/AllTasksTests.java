@@ -14,6 +14,7 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskRelationHyperlinkDetectorTest;
 import org.eclipse.mylyn.tasks.tests.ui.editor.TaskEditorPartDescriptorTest;
@@ -74,6 +75,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskHyperlinkDetectorTest.class);
 		suite.addTestSuite(TaskRelationHyperlinkDetectorTest.class);
 		suite.addTestSuite(TaskEditorPartDescriptorTest.class);
+		suite.addTestSuite(TaskAttachmentPropertyTesterTest.class);
 
 		// XXX long running tests, put back?
 		//suite.addTestSuite(TaskDataImportTest.class);

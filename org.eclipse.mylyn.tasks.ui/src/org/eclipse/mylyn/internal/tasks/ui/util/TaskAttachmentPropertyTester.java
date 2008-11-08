@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Maarten Meijer - improvements for bug 252699
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
@@ -21,6 +22,8 @@ public class TaskAttachmentPropertyTester extends PropertyTester {
 
 	private static final String PROPERTY_IS_CONTEXT = "isContext";
 
+	private static final String PROPERTY_HAS_URL = "hasUrl";
+
 	private boolean equals(boolean value, Object expectedValue) {
 		return new Boolean(value).equals(expectedValue);
 	}
@@ -31,6 +34,10 @@ public class TaskAttachmentPropertyTester extends PropertyTester {
 			if (PROPERTY_IS_CONTEXT.equals(property)) {
 				return equals(AttachmentUtil.isContext(taskAttachment), expectedValue);
 			}
+			if (PROPERTY_HAS_URL.equals(property)) {
+				return equals(taskAttachment.getUrl() != null && taskAttachment.getUrl().length() > 0, expectedValue);
+			}
+
 		}
 		return false;
 	}
