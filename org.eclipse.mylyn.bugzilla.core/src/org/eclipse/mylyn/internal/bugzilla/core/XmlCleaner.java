@@ -11,6 +11,11 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
@@ -28,14 +33,13 @@ import org.eclipse.mylyn.commons.net.HtmlStreamTokenizer.Token;
  */
 public class XmlCleaner {
 
-	public static StringBuffer clean(Reader in) {
+	public static BufferedReader clean(Reader in, File tempFile) {
 
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
-		StringBuffer content = new StringBuffer();
-
-		// Hack since HtmlStreamTokenizer not familiar with xml tag.
-		content.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		try {
+			BufferedWriter content = new BufferedWriter(new FileWriter(tempFile));
+			// Hack since HtmlStreamTokenizer not familiar with xml tag.
+			content.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 
 				if (token.getType() == Token.TAG) {
@@ -53,12 +57,15 @@ public class XmlCleaner {
 					content.append(token.toString());
 				}
 			}
+			content.flush();
+			content.close();
+			return new BufferedReader(new FileReader(tempFile));
 		} catch (IOException e) {
 
 		} catch (ParseException e) {
 
 		}
-		return content;
+		return null;
 	}
 
 }

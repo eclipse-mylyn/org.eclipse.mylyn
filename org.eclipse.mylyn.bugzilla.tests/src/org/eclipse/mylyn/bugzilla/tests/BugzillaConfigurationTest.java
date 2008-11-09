@@ -12,9 +12,9 @@
 package org.eclipse.mylyn.bugzilla.tests;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -214,9 +214,13 @@ public class BugzillaConfigurationTest extends TestCase {
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(fileURL.getFile())));
 
 		if (true) {
-			StringBuffer result = XmlCleaner.clean(in);
-			StringReader strReader = new StringReader(result.toString());
-			in = new BufferedReader(strReader);
+			File tempFile = File.createTempFile("XmlCleaner-", "tmp");
+			tempFile.deleteOnExit();
+			in = XmlCleaner.clean(in, tempFile);
+			if (tempFile != null) {
+				tempFile.delete();
+			}
+
 		}
 
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();

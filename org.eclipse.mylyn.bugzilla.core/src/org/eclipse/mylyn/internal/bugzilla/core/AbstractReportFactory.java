@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,6 +51,7 @@ public class AbstractReportFactory {
 	 * @throws GeneralSecurityException
 	 */
 	protected void collectResults(DefaultHandler contentHandler, boolean clean) throws IOException {
+		File tempFile = null;
 
 		if (inStream == null) {
 			return;
@@ -80,9 +81,9 @@ public class AbstractReportFactory {
 		}
 
 		if (clean) {
-			StringBuffer result = XmlCleaner.clean(in);
-			StringReader strReader = new StringReader(result.toString());
-			in = new BufferedReader(strReader);
+			tempFile = File.createTempFile("XmlCleaner-", "tmp");
+			tempFile.deleteOnExit();
+			in = XmlCleaner.clean(in, tempFile);
 		}
 
 		try {
@@ -127,6 +128,12 @@ public class AbstractReportFactory {
 			// } else {
 			throw new IOException(e.getMessage());
 			// }
+		}
+
+		finally {
+			if (tempFile != null) {
+				tempFile.delete();
+			}
 		}
 	}
 
