@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.commons.ui;
 
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -19,6 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TreeItem;
 
 /**
  * @author Mik Kersten
@@ -31,6 +33,13 @@ public class SwtUtil {
 	public static final int FADE_IN_INCREMENT = 15;
 
 	public static final int FADE_OUT_INCREMENT = -20;
+
+	public static void collectItemData(TreeItem[] items, Set<Object> allVisible) {
+		for (TreeItem item : items) {
+			allVisible.add(item.getData());
+			collectItemData(item.getItems(), allVisible);
+		}
+	}
 
 	// TODO e3.4 get rid of reflection on 3.4 branch
 	public static boolean setAlpha(Shell shell, int value) {
