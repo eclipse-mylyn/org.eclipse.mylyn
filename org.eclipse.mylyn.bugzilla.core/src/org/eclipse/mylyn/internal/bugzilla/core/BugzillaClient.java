@@ -963,7 +963,8 @@ public class BugzillaClient {
 			} else if (a.getId().equals(BugzillaAttribute.REPORTER.getKey())
 					|| a.getId().equals(BugzillaAttribute.CC.getKey())
 					|| a.getId().equals(BugzillaAttribute.REMOVECC.getKey())
-					|| a.getId().equals(BugzillaAttribute.CREATION_TS.getKey())) {
+					|| a.getId().equals(BugzillaAttribute.CREATION_TS.getKey())
+					|| a.getId().equals(BugzillaAttribute.BUG_STATUS.getKey())) {
 				continue;
 			}
 
@@ -1004,61 +1005,144 @@ public class BugzillaClient {
 		}
 
 		// add the operation to the bug post
-		TaskAttribute attributeOperation = model.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
-		if (attributeOperation == null) {
-			fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, VAL_NONE));
+		String bugzillaVersion = null;
+		if (repositoryConfiguration != null) {
+			bugzillaVersion = repositoryConfiguration.getInstallVersion();
 		} else {
-			TaskAttribute originalOperation = model.getRoot().getAttribute(
-					TaskAttribute.PREFIX_OPERATION + attributeOperation.getValue());
-			if (originalOperation == null) {
-				// Work around for bug#241012
+			bugzillaVersion = "2.18";
+		}
+		if (bugzillaVersion.compareTo("3.2") < 0) {
+
+			TaskAttribute attributeOperation = model.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+			if (attributeOperation == null) {
 				fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, VAL_NONE));
 			} else {
-				String inputAttributeId = originalOperation.getMetaData().getValue(
-						TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+				TaskAttribute originalOperation = model.getRoot().getAttribute(
+						TaskAttribute.PREFIX_OPERATION + attributeOperation.getValue());
 				if (originalOperation == null) {
+					// Work around for bug#241012
 					fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, VAL_NONE));
-				} else if (inputAttributeId == null || inputAttributeId.equals("")) {
-					String sel = attributeOperation.getValue();
-					fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, sel));
 				} else {
-					fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, attributeOperation.getValue()));
-					TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
-							inputAttributeId);
-					if (inputAttribute != null) {
-						if (inputAttribute.getOptions().size() > 0) {
-							String sel = inputAttribute.getValue();
-							String knob = inputAttribute.getId();
-							if (knob.equals(BugzillaOperation.resolve.getInputId())) {
-								knob = BugzillaAttribute.RESOLUTION.getKey();
+					String inputAttributeId = originalOperation.getMetaData().getValue(
+							TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+					if (inputAttributeId == null || inputAttributeId.equals("")) {
+						String sel = attributeOperation.getValue();
+						fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, sel));
+					} else {
+						fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, attributeOperation.getValue()));
+						TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
+								inputAttributeId);
+						if (inputAttribute != null) {
+							if (inputAttribute.getOptions().size() > 0) {
+								String sel = inputAttribute.getValue();
+								String knob = inputAttribute.getId();
+								if (knob.equals(BugzillaOperation.resolve.getInputId())) {
+									knob = BugzillaAttribute.RESOLUTION.getKey();
+								}
+								fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
+							} else {
+								String sel = inputAttribute.getValue();
+								String knob = attributeOperation.getValue();
+								if (knob.equals(BugzillaOperation.reassign.toString())) {
+									knob = BugzillaAttribute.ASSIGNED_TO.getKey();
+								}
+								fields.put(knob, new NameValuePair(knob, sel));
 							}
-							fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
-						} else {
-							String sel = inputAttribute.getValue();
-							String knob = attributeOperation.getValue();
-							if (knob.equals(BugzillaOperation.reassign.toString())) {
-								knob = BugzillaAttribute.ASSIGNED_TO.getKey();
-							}
-							fields.put(knob, new NameValuePair(knob, sel));
 						}
 					}
 				}
+				if (model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW) != null
+						&& model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).getValue().length() > 0) {
+					fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getRoot().getMappedAttribute(
+							TaskAttribute.COMMENT_NEW).getValue()));
+				} else if (attributeOperation != null
+						&& attributeOperation.getValue().equals(BugzillaOperation.duplicate.toString())) {
+					// fix for bug#198677
+					fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, ""));
+				}
+			}
+		} else {
+			String fieldName = BugzillaAttribute.BUG_STATUS.getKey();
+			TaskAttribute attributeStatus = model.getRoot().getMappedAttribute(TaskAttribute.STATUS);
+			TaskAttribute attributeOperation = model.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+			if (attributeOperation == null) {
+				fields.put(fieldName, new NameValuePair(fieldName, attributeStatus.getValue()));
+			} else {
+				TaskAttribute originalOperation = model.getRoot().getAttribute(
+						TaskAttribute.PREFIX_OPERATION + attributeOperation.getValue());
+				if (originalOperation == null) {
+					// Work around for bug#241012
+					fields.put(fieldName, new NameValuePair(fieldName, attributeStatus.getValue()));
+				} else {
+					String inputAttributeId = originalOperation.getMetaData().getValue(
+							TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID);
+					if (originalOperation == null) {
+						fields.put(fieldName, new NameValuePair(fieldName, attributeStatus.getValue()));
+					} else {
+						String selOp = attributeOperation.getValue().toUpperCase();
+						if (selOp.equals("NONE")) {
+							selOp = attributeStatus.getValue();
+						}
+						if (selOp.equals("ACCEPT")) {
+							selOp = "ASSIGNED";
+						}
+						if (selOp.equals("RESOLVE")) {
+							selOp = "RESOLVED";
+						}
+						if (selOp.equals("VERIFY")) {
+							selOp = "VERIFIED";
+						}
+						if (selOp.equals("CLOSE")) {
+							selOp = "CLOSED";
+						}
+						if (selOp.equals("REOPEN")) {
+							selOp = "REOPENED";
+						}
+						if (selOp.equals("DUPLICATE")) {
+							selOp = "RESOLVED";
+							String knob = BugzillaAttribute.RESOLUTION.getKey();
+							fields.put(knob, new NameValuePair(knob, "DUPLICATE"));
+						}
+
+						fields.put(fieldName, new NameValuePair(fieldName, selOp));
+						if (inputAttributeId != null && !inputAttributeId.equals("")) {
+							TaskAttribute inputAttribute = attributeOperation.getTaskData().getRoot().getAttribute(
+									inputAttributeId);
+							if (inputAttribute != null) {
+								if (inputAttribute.getOptions().size() > 0) {
+									String sel = inputAttribute.getValue();
+									String knob = inputAttribute.getId();
+									if (knob.equals(BugzillaOperation.resolve.getInputId())) {
+										knob = BugzillaAttribute.RESOLUTION.getKey();
+									}
+									fields.put(knob, new NameValuePair(knob, inputAttribute.getOption(sel)));
+								} else {
+									String sel = inputAttribute.getValue();
+									String knob = attributeOperation.getValue();
+									if (knob.equals("duplicate")) {
+										knob = inputAttributeId;
+									}
+									if (knob.equals(BugzillaOperation.reassign.toString())) {
+										knob = BugzillaAttribute.ASSIGNED_TO.getKey();
+									}
+									fields.put(knob, new NameValuePair(knob, sel));
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW) != null
+					&& model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).getValue().length() > 0) {
+				fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getRoot().getMappedAttribute(
+						TaskAttribute.COMMENT_NEW).getValue()));
 			}
 		}
 
 		if (model.getRoot().getMappedAttribute(BugzillaAttribute.SHORT_DESC.getKey()) != null) {
 			fields.put(KEY_SHORT_DESC, new NameValuePair(KEY_SHORT_DESC, model.getRoot().getMappedAttribute(
 					BugzillaAttribute.SHORT_DESC.getKey()).getValue()));
-		}
-
-		if (model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW) != null
-				&& model.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW).getValue().length() > 0) {
-			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getRoot().getMappedAttribute(
-					TaskAttribute.COMMENT_NEW).getValue()));
-		} else if (attributeOperation != null
-				&& attributeOperation.getValue().equals(BugzillaOperation.duplicate.toString())) {
-			// fix for bug#198677
-			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, ""));
 		}
 
 		TaskAttribute attributeRemoveCC = model.getRoot().getMappedAttribute(BugzillaAttribute.REMOVECC.getKey());
