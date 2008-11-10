@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
@@ -78,6 +79,10 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		super.tearDown();
 		TaskTestUtil.resetTaskList();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+	}
+
+	protected void init32() {
+		init(IBugzillaConstants.TEST_BUGZILLA_32_URL);
 	}
 
 	protected void init31() {
@@ -153,9 +158,12 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		}
 	}
 
-	protected void submit(ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes) throws CoreException {
-		connector.getTaskDataHandler().postTaskData(repository, taskData, changedAttributes, new NullProgressMonitor());
+	protected RepositoryResponse submit(ITask task, TaskData taskData, Set<TaskAttribute> changedAttributes)
+			throws CoreException {
+		RepositoryResponse response = connector.getTaskDataHandler().postTaskData(repository, taskData,
+				changedAttributes, new NullProgressMonitor());
 		((AbstractTask) task).setSubmitting(true);
+		return response;
 	}
 
 	protected void synchAndAssertState(Set<AbstractTask> tasks, SynchronizationState state) {
