@@ -249,7 +249,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			if (hasIncomingChanges) {
 				commentComposite.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
 			}
-			if (commentComposite.isEnabled()) {
+			if (commentComposite.isExpanded()) {
 				expandComment(toolkit, commentTextComposite, buttonComposite, taskComment, true);
 			}
 
