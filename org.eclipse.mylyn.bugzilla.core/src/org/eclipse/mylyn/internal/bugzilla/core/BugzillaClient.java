@@ -43,7 +43,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
@@ -54,7 +53,6 @@ import org.apache.commons.httpclient.methods.multipart.PartBase;
 import org.apache.commons.httpclient.methods.multipart.PartSource;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.httpclient.util.IdleConnectionTimeoutThread;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -151,11 +149,6 @@ public class BugzillaClient {
 
 	private static final String ATTR_CHARSET = "charset";
 
-	private static IdleConnectionTimeoutThread idleConnectionTimeoutThread = new IdleConnectionTimeoutThread();
-	static {
-		idleConnectionTimeoutThread.start();
-	}
-
 	protected Proxy proxy = Proxy.NO_PROXY;
 
 	protected String username;
@@ -170,7 +163,7 @@ public class BugzillaClient {
 
 	private final Map<String, String> configParameters;
 
-	private final HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+	private final HttpClient httpClient = new HttpClient(WebUtil.getConnectionManager());
 
 	private boolean lastModifiedSupported = true;
 
@@ -196,14 +189,6 @@ public class BugzillaClient {
 		this.bugzillaLanguageSettings = languageSettings;
 		this.proxy = location.getProxyForHost(location.getUrl(), IProxyData.HTTP_PROXY_TYPE);
 		WebUtil.configureHttpClient(httpClient, USER_AGENT);
-
-		idleConnectionTimeoutThread.addConnectionManager(httpClient.getHttpConnectionManager());
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		shutdown();
-		idleConnectionTimeoutThread.removeConnectionManager(httpClient.getHttpConnectionManager());
 	}
 
 	public void validate(IProgressMonitor monitor) throws IOException, CoreException {
@@ -1573,10 +1558,6 @@ public class BugzillaClient {
 
 	public RepositoryConfiguration getRepositoryConfiguration() {
 		return repositoryConfiguration;
-	}
-
-	public void shutdown() {
-		((MultiThreadedHttpConnectionManager) httpClient.getHttpConnectionManager()).shutdown();
 	}
 
 	/**
