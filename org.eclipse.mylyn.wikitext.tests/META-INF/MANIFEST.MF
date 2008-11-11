@@ -46,9 +46,11 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.core.validation;x-internal:=
  org.eclipse.mylyn.wikitext.core.parser.outline,
  org.eclipse.mylyn.wikitext.core.parser.util,
  org.eclipse.mylyn.wikitext.core.util,
+ org.eclipse.mylyn.wikitext.core.util.anttask,
  org.eclipse.mylyn.wikitext.mediawiki.core,
  org.eclipse.mylyn.wikitext.tests,
  org.eclipse.mylyn.wikitext.textile.core,
  org.eclipse.mylyn.wikitext.tracwiki.core,
+ org.eclipse.mylyn.wikitext.ui,
  org.eclipse.mylyn.wikitext.ui.annotation
 Bundle-Localization: plugin
