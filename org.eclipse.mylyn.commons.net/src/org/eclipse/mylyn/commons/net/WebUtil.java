@@ -30,10 +30,12 @@ import javax.swing.text.html.HTML.Tag;
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -43,6 +45,7 @@ import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.apache.commons.httpclient.util.IdleConnectionTimeoutThread;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
@@ -78,26 +81,29 @@ public class WebUtil {
 
 	private static final int SOCKET_TIMEOUT = 3 * 60 * 1000;
 
-	private static final int POLL_TIMEOUT = 1000;
-
-	private static final int POLL_ATTEMPTS = SOCKET_TIMEOUT / POLL_TIMEOUT;
-
 	private static final int HTTP_PORT = 80;
 
 	private static final int HTTPS_PORT = 443;
 
-	private static final long POLL_INTERVAL = 1000;
+	private static final int POLL_INTERVAL = 1000;
+
+	private static final int POLL_ATTEMPTS = SOCKET_TIMEOUT / POLL_INTERVAL;
 
 	private static final String USER_AGENT_PREFIX;
 
 	private static final String USER_AGENT_POSTFIX;
 
-	private static final int BUFFER_SIZE = 1024;
+	private static final int BUFFER_SIZE = 4096;
 
 	/**
 	 * Do not block.
 	 */
 	private static final long CLOSE_TIMEOUT = -1;
+
+	/**
+	 * @see IdleConnectionTimeoutThread#setTimeoutInterval(long)
+	 */
+	private static final long CONNECTION_TIMEOUT_INTERVAL = 30 * 1000;
 
 	static {
 		initCommonsLoggingSettings();
@@ -145,6 +151,10 @@ public class WebUtil {
 
 		USER_AGENT = USER_AGENT_PREFIX + USER_AGENT_POSTFIX;
 	}
+
+	private static IdleConnectionTimeoutThread idleConnectionTimeoutThread;
+
+	private static MultiThreadedHttpConnectionManager connectionManager;
 
 	/**
 	 * @since 3.0
@@ -449,7 +459,7 @@ public class WebUtil {
 			throws IOException {
 		monitor = Policy.monitorFor(monitor);
 		return new PollingInputStream(new TimeoutInputStream(method.getResponseBodyAsStream(), BUFFER_SIZE,
-				SOCKET_TIMEOUT, CLOSE_TIMEOUT), POLL_ATTEMPTS, monitor);
+				POLL_INTERVAL, CLOSE_TIMEOUT), POLL_ATTEMPTS, monitor);
 	}
 
 	/**
@@ -630,6 +640,40 @@ public class WebUtil {
 	 */
 	public static void setProxyService(IProxyService proxyService) {
 		CommonsNetPlugin.setProxyService(proxyService);
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public synchronized static void addConnectionManager(HttpConnectionManager connectionManager) {
+		if (idleConnectionTimeoutThread == null) {
+			idleConnectionTimeoutThread = new IdleConnectionTimeoutThread();
+			idleConnectionTimeoutThread.setTimeoutInterval(CONNECTION_TIMEOUT_INTERVAL);
+			idleConnectionTimeoutThread.setConnectionTimeout(CONNNECT_TIMEOUT);
+			idleConnectionTimeoutThread.start();
+		}
+		idleConnectionTimeoutThread.addConnectionManager(connectionManager);
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public synchronized static HttpConnectionManager getConnectionManager() {
+		if (connectionManager == null) {
+			connectionManager = new MultiThreadedHttpConnectionManager();
+			addConnectionManager(connectionManager);
+		}
+		return connectionManager;
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public synchronized static void removeConnectionManager(HttpConnectionManager connectionManager) {
+		if (idleConnectionTimeoutThread == null) {
+			return;
+		}
+		idleConnectionTimeoutThread.removeConnectionManager(connectionManager);
 	}
 
 }
