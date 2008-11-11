@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,4 +66,13 @@ public class TracUtilTest extends TestCase {
 		assertEquals("milestone", filter.getFieldName());
 		assertEquals(Arrays.asList("0.1"), filter.getValues());
 	}
+
+	public void testEncodeUrl() {
+		assertEquals("encode", TracUtil.encodeUrl("encode"));
+		assertEquals("sp%20ace%20", TracUtil.encodeUrl("sp ace "));
+		assertEquals("%2B%2B", TracUtil.encodeUrl("++"));
+		assertEquals("%2520", TracUtil.encodeUrl("%20"));
+		assertEquals("%2Fslash", TracUtil.encodeUrl("/slash"));
+	}
+
 }

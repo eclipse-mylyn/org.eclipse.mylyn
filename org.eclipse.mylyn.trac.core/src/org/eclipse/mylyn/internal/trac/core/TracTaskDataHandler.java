@@ -200,7 +200,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 					mapper.setCreationDate(attachments[i].getCreated());
 				}
 				mapper.setUrl(repository.getRepositoryUrl() + ITracClient.TICKET_ATTACHMENT_URL + ticket.getId() + "/"
-						+ TracUtil.encode(attachments[i].getFilename()));
+						+ TracUtil.encodeUrl(attachments[i].getFilename()));
 				mapper.setAttachmentId(i + "");
 
 				TaskAttribute attribute = data.getRoot().createAttribute(TaskAttribute.PREFIX_ATTACHMENT + (i + 1));

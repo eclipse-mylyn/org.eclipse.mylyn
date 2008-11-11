@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     Jorrit Schippers - fix for bug 254862
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.trac.core.util;
@@ -82,9 +83,9 @@ public class TracUtil {
 				RepositoryStatus.ERROR_PERMISSION_DENIED, "Permission denied.");
 	}
 
-	public static String encode(String string) {
+	public static String encodeUrl(String string) {
 		try {
-			return URLEncoder.encode(string, ITracClient.CHARSET);
+			return URLEncoder.encode(string, ITracClient.CHARSET).replaceAll("\\+", "%20");
 		} catch (UnsupportedEncodingException e) {
 			return string;
 		}
