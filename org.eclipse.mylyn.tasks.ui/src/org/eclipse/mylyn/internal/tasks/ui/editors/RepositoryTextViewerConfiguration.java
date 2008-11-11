@@ -13,7 +13,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
@@ -21,14 +20,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
-import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
-import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
@@ -43,14 +38,10 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
-import org.eclipse.mylyn.internal.tasks.core.TaskList;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
+import org.eclipse.mylyn.tasks.ui.TaskHyperlinkPresenter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
@@ -173,8 +164,10 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 
 	@Override
 	public IHyperlinkPresenter getHyperlinkPresenter(final ISourceViewer sourceViewer) {
-		return new RepositoryTextViewerHyperlinkPresenter(JFaceResources.getColorRegistry().get(
-				JFacePreferences.ACTIVE_HYPERLINK_COLOR), sourceViewer);
+		if (fPreferenceStore == null) {
+			return new TaskHyperlinkPresenter(new RGB(0, 0, 255));
+		}
+		return new TaskHyperlinkPresenter(fPreferenceStore);
 	}
 
 	@Override
@@ -189,81 +182,6 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 		} else {
 			return null;
 		}
-	}
-
-	private final class RepositoryTextViewerHyperlinkPresenter extends DefaultHyperlinkPresenter {
-
-		private final ISourceViewer sourceViewer;
-
-		private IRegion activeRegion;
-
-		/**
-		 * Stores which task a tooltip is being displayed for. It is used to avoid having the same tooltip being set
-		 * multiple times while you move the mouse over a task hyperlink (bug#209409)
-		 */
-		private ITask currentTaskHyperlink;
-
-		private RepositoryTextViewerHyperlinkPresenter(Color color, ISourceViewer sourceViewer) {
-			super(color);
-			this.sourceViewer = sourceViewer;
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public void applyTextPresentation(TextPresentation textPresentation) {
-			super.applyTextPresentation(textPresentation);
-			if (activeRegion != null && currentTaskHyperlink != null && currentTaskHyperlink.isCompleted()) {
-				Iterator<StyleRange> styleRangeIterator = textPresentation.getAllStyleRangeIterator();
-				while (styleRangeIterator.hasNext()) {
-					StyleRange styleRange = styleRangeIterator.next();
-					if (activeRegion.getOffset() == styleRange.start && activeRegion.getLength() == styleRange.length) {
-						styleRange.strikeout = true;
-						break;
-					}
-				}
-			}
-		}
-
-		@Override
-		public void showHyperlinks(IHyperlink[] hyperlinks) {
-			activeRegion = null;
-			if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
-				TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
-
-				TaskList taskList = TasksUiPlugin.getTaskList();
-				String repositoryUrl = hyperlink.getRepository().getRepositoryUrl();
-
-				ITask task = taskList.getTask(repositoryUrl, hyperlink.getTaskId());
-				if (task == null) {
-					task = taskList.getTaskByKey(repositoryUrl, hyperlink.getTaskId());
-				}
-
-				if (task != null && task != currentTaskHyperlink) {
-					currentTaskHyperlink = task;
-					activeRegion = hyperlink.getHyperlinkRegion();
-					if (sourceViewer.getTextWidget() != null && !sourceViewer.getTextWidget().isDisposed()) {
-						if (task.getTaskKey() == null) {
-							sourceViewer.getTextWidget().setToolTipText(task.getSummary());
-						} else {
-							sourceViewer.getTextWidget().setToolTipText(task.getTaskKey() + ": " + task.getSummary());
-						}
-					}
-				}
-			}
-			super.showHyperlinks(hyperlinks);
-		}
-
-		@Override
-		public void hideHyperlinks() {
-			if (currentTaskHyperlink != null) {
-				if (sourceViewer.getTextWidget() != null && !sourceViewer.getTextWidget().isDisposed()) {
-					sourceViewer.getTextWidget().setToolTipText(null);
-				}
-				currentTaskHyperlink = null;
-			}
-			super.hideHyperlinks();
-		}
-
 	}
 
 	private static class RepositoryTextScanner extends RuleBasedScanner {
