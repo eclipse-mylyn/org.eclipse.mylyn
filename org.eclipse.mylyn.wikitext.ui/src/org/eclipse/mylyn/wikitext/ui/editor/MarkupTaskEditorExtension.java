@@ -17,9 +17,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -30,23 +28,19 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryCompletionProcessor;
-import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.util.PlatformUrlHyperlink;
 import org.eclipse.mylyn.internal.wikitext.ui.util.PreferenceStoreFacade;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector;
-import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
+import org.eclipse.mylyn.tasks.ui.TaskHyperlinkPresenter;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewer;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewerConfiguration;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
@@ -65,7 +59,7 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 /**
  * A task editor extension that uses a markup language to parse content. Provides a markup-aware source editor, and a
- * source viewer that displays markup in its indended formatter form.
+ * source viewer that displays markup in its intended formatted form.
  * 
  * @author David Green
  */
@@ -301,10 +295,9 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		@Override
 		public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
 			if (fPreferenceStore == null) {
-				return new TaskHyperlinkPresenter(sourceViewer, new RGB(0, 0, 255));
+				return new TaskHyperlinkPresenter(new RGB(0, 0, 255));
 			}
-
-			return new TaskHyperlinkPresenter(sourceViewer, fPreferenceStore);
+			return new TaskHyperlinkPresenter(fPreferenceStore);
 		}
 
 	}
@@ -322,87 +315,6 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 		};
 		hyperlinkDetectorTargets.put(ID_CONTEXT_EDITOR_TEXT, context);
 		hyperlinkDetectorTargets.put(ID_CONTEXT_EDITOR_TASK, context);
-	}
-
-	private static class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
-
-		private IRegion activeRegion;
-
-		/**
-		 * Stores which task a tooltip is being displayed for. It is used to avoid having the same tooltip being set
-		 * multiple times while you move the mouse over a task hyperlink (bug#209409)
-		 */
-		private ITask currentTaskHyperlink;
-
-		public TaskHyperlinkPresenter(ISourceViewer sourceViewer, IPreferenceStore store) {
-			super(store);
-			this.sourceViewer = sourceViewer;
-		}
-
-		public TaskHyperlinkPresenter(ISourceViewer sourceViewer, RGB color) {
-			super(color);
-			this.sourceViewer = sourceViewer;
-		}
-
-		private final ISourceViewer sourceViewer;
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public void applyTextPresentation(TextPresentation textPresentation) {
-			super.applyTextPresentation(textPresentation);
-			if (activeRegion != null && currentTaskHyperlink != null && currentTaskHyperlink.isCompleted()) {
-				Iterator<StyleRange> styleRangeIterator = textPresentation.getAllStyleRangeIterator();
-				while (styleRangeIterator.hasNext()) {
-					StyleRange styleRange = styleRangeIterator.next();
-					if (activeRegion.getOffset() == styleRange.start && activeRegion.getLength() == styleRange.length) {
-						styleRange.strikeout = true;
-						break;
-					}
-				}
-			}
-		}
-
-		@Override
-		public void showHyperlinks(IHyperlink[] hyperlinks) {
-			activeRegion = null;
-			if (hyperlinks != null && hyperlinks.length > 0 && hyperlinks[0] instanceof TaskHyperlink) {
-				TaskHyperlink hyperlink = (TaskHyperlink) hyperlinks[0];
-
-				ITask task = null;
-				try {
-					task = TasksUi.getRepositoryModel().getTask(hyperlink.getRepository(), hyperlink.getTaskId());
-				} catch (Exception e) {
-					// workaround for bug 251177
-					WikiTextUiPlugin.getDefault().log(e);
-				}
-
-				if (task != null && task != currentTaskHyperlink) {
-					currentTaskHyperlink = task;
-					activeRegion = hyperlink.getHyperlinkRegion();
-					Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
-					if (cursorControl != null) {
-						if (task.getTaskKey() == null) {
-							cursorControl.setToolTipText(task.getSummary());
-						} else {
-							cursorControl.setToolTipText(task.getTaskKey() + ": " + task.getSummary()); //$NON-NLS-1$
-						}
-					}
-				}
-			}
-			super.showHyperlinks(hyperlinks);
-		}
-
-		@Override
-		public void hideHyperlinks() {
-			if (currentTaskHyperlink != null) {
-				Control cursorControl = sourceViewer.getTextWidget().getDisplay().getCursorControl();
-				if (cursorControl != null) {
-					cursorControl.setToolTipText(null);
-				}
-				currentTaskHyperlink = null;
-			}
-			super.hideHyperlinks();
-		}
 	}
 
 	/**
