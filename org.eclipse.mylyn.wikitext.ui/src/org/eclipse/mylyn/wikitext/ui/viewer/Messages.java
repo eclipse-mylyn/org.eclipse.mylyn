@@ -14,7 +14,7 @@ package org.eclipse.mylyn.wikitext.ui.viewer;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class Messages {
+class Messages {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.wikitext.ui.viewer.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
