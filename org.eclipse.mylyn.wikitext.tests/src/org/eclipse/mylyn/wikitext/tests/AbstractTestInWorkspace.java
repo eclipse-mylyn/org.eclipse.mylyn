@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
+@HeadRequired
 public class AbstractTestInWorkspace extends TestCase {
 
 	private static boolean init = false;

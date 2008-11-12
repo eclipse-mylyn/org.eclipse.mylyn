@@ -21,11 +21,14 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
+import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.eclipse.mylyn.wikitext.tests.AbstractTestInWorkspace;
+import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -35,6 +38,7 @@ import org.eclipse.ui.ide.IDE;
  * 
  * @author dgreen
  */
+@HeadRequired
 public class FileTypesTest extends AbstractTestInWorkspace {
 
 	private IProject project;
@@ -50,6 +54,32 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 		file.create(createSimpleTextileContent(), false, new NullProgressMonitor());
 
 		editorAsserts(file, TextileLanguage.class);
+	}
+
+	public void testTextileFileTypeChangeIsSticky() throws CoreException {
+		IFile file = project.getFile("test.textile");
+		file.create(createSimpleTextileContent(), false, new NullProgressMonitor());
+
+		// open the editor
+		IWorkbenchPage workbenchPage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IEditorPart editor = IDE.openEditor(workbenchPage, file);
+		assertInstanceOf(MarkupEditor.class, editor);
+		MarkupEditor markupEditor = (MarkupEditor) editor;
+		assertInstanceOf(TextileLanguage.class, markupEditor.getMarkupLanguage());
+
+		// set the markup language
+		markupEditor.setMarkupLanguage(WikiTextPlugin.getDefault().getMarkupLanguage("MediaWiki"), true);
+		assertInstanceOf(MediaWikiLanguage.class, markupEditor.getMarkupLanguage());
+
+		// close the editor
+		workbenchPage.closeEditor(editor, false);
+
+		// open the editor
+		editor = IDE.openEditor(workbenchPage, file);
+		markupEditor = (MarkupEditor) editor;
+
+		// verify the language setting is the same
+		assertInstanceOf(MediaWikiLanguage.class, markupEditor.getMarkupLanguage());
 	}
 
 	public void testMediaWikiFileType() throws CoreException {

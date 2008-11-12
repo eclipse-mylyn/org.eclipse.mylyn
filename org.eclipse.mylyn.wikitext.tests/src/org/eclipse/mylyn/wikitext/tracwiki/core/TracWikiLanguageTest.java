@@ -111,7 +111,7 @@ public class TracWikiLanguageTest extends TestCase {
 					+ "\nfirst para\nfirst para line2\n\nsecond para\n\nthird para");
 			System.out.println(html);
 			assertTrue(Pattern.compile(
-					"<body><h" + x + ">heading text</h" + x
+					"<body><h" + x + " id=\"headingtext\">heading text</h" + x
 							+ "><p>first para\\s*first para line2</p><p>second para</p><p>third para</p></body>",
 					Pattern.MULTILINE).matcher(html).find());
 

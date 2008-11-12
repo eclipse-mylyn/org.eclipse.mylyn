@@ -16,8 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
-
 public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 
 	private MarkupToDitaTask ditaTask;
@@ -29,7 +27,7 @@ public class MarkupToDitaTaskTest extends AbstractTestAntTask {
 		super.setUp();
 
 		ditaTask = new MarkupToDitaTask();
-		ditaTask.setMarkupLanguage(TextileLanguage.class.getName());
+		ditaTask.setMarkupLanguage(languageName);
 
 		topicsFolder = new File(tempFolder, ditaTask.getTopicFolder());
 		topicsFolder.mkdirs();

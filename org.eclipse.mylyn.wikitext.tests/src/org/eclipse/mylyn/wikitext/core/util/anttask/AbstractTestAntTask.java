@@ -21,9 +21,14 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
+
 public class AbstractTestAntTask extends TestCase {
 
 	protected File tempFolder;
+
+	protected String languageName = computeLanguageName();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -31,6 +36,13 @@ public class AbstractTestAntTask extends TestCase {
 		tempFolder = File.createTempFile(getClass().getSimpleName(), ".tmp");
 		tempFolder.delete();
 		tempFolder.mkdirs();
+	}
+
+	private String computeLanguageName() {
+		if (ResourcesPlugin.getPlugin() == null) {
+			return TextileLanguage.class.getName();
+		}
+		return "Textile";
 	}
 
 	@Override

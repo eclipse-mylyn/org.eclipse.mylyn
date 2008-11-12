@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
-
 public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 	private MarkupToHtmlTask task;
@@ -28,7 +26,7 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		super.setUp();
 		task = createTask();
 		task.setFormatOutput(true);
-		task.setMarkupLanguage(TextileLanguage.class.getName());
+		task.setMarkupLanguage(languageName);
 	}
 
 	protected MarkupToHtmlTask createTask() {
