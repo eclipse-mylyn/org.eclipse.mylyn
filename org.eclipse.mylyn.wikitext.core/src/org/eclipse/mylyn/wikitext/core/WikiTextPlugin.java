@@ -90,6 +90,15 @@ public class WikiTextPlugin extends Plugin {
 			initializeMarkupLanguages();
 		}
 		Class<? extends MarkupLanguage> languageClass = languageByName.get(name);
+		if (languageClass == null) {
+			// if not found by name, attempt to lookup by class name. 
+			for (Class<? extends MarkupLanguage> clazz : languageByName.values()) {
+				if (clazz.getName().equals(name)) {
+					languageClass = clazz;
+					break;
+				}
+			}
+		}
 		if (languageClass != null) {
 			return instantiateMarkupLanguage(name, languageClass);
 		}
