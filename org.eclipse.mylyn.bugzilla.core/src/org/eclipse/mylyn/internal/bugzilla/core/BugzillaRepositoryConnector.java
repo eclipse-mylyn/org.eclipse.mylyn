@@ -29,8 +29,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
@@ -202,7 +202,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
+			monitor.beginTask("Checking for changed tasks", session.getTasks().size());
 
 			if (repository.getSynchronizationTimeStamp() == null) {
 				for (ITask task : session.getTasks()) {
@@ -232,7 +232,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
 				urlQueryString += newurlQueryString;
 				if (queryCounter >= 1000) {
-					queryForChanged(repository, changedTasks, urlQueryString, session);
+					queryForChanged(repository, changedTasks, urlQueryString, session, new SubProgressMonitor(monitor,
+							queryCounter));
 
 					queryCounter = 0;
 					urlQueryString = urlQueryBase + BUG_ID;
@@ -240,7 +241,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				}
 
 				if (!itr.hasNext() && queryCounter != 0) {
-					queryForChanged(repository, changedTasks, urlQueryString, session);
+					queryForChanged(repository, changedTasks, urlQueryString, session, new SubProgressMonitor(monitor,
+							queryCounter));
 				}
 			}
 
@@ -264,7 +266,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	 * TODO: clean up use of BugzillaTaskDataCollector
 	 */
 	private void queryForChanged(final TaskRepository repository, Set<ITask> changedTasks, String urlQueryString,
-			ISynchronizationSession context) throws UnsupportedEncodingException, CoreException {
+			ISynchronizationSession context, IProgressMonitor monitor) throws UnsupportedEncodingException,
+			CoreException {
 
 		HashMap<String, ITask> taskById = new HashMap<String, ITask>();
 		for (ITask task : context.getTasks()) {
@@ -283,7 +286,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		IRepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "");
 		query.setSummary("Query for changed tasks");
 		query.setUrl(urlQueryString);
-		performQuery(repository, query, collector, context, new NullProgressMonitor());
+		performQuery(repository, query, collector, context, monitor);
 
 		for (TaskData data : changedTaskData) {
 			ITask changedTask = taskById.get(data.getTaskId());
@@ -307,9 +310,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public IStatus performQuery(TaskRepository repository, final IRepositoryQuery query,
 			TaskDataCollector resultCollector, ISynchronizationSession event, IProgressMonitor monitor) {
+
+		monitor = Policy.monitorFor(monitor);
 		try {
 			monitor.beginTask("Running query", IProgressMonitor.UNKNOWN);
-			BugzillaClient client = getClientManager().getClient(repository, monitor);
+			BugzillaClient client = getClientManager().getClient(repository, new SubProgressMonitor(monitor, 1));
 			TaskAttributeMapper mapper = getTaskDataHandler().getAttributeMapper(repository);
 			boolean hitsReceived = client.getSearchHits(query, resultCollector, mapper, monitor);
 			if (!hitsReceived) {
