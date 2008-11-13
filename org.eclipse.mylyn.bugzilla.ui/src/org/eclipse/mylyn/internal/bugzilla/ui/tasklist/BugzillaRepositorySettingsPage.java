@@ -21,9 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
@@ -31,8 +29,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaLanguageSettings;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
-import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -40,7 +36,6 @@ import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -58,19 +53,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String TOOLTIP_AUTODETECTION_DISABLED = "Available once repository has been created.";
 
-	//private static final String TOOLTIP_CACHED_CONFIGURATION = "Use for repositories that explicitly state that they support this customization.";
-
-	//private static final String LABEL_CACHED_CONFIGURATION = "Cached configuration:";
-
 	private static final String LABEL_SHORT_LOGINS = "Local users enabled:";
 
-	public static final String LABEL_AUTOMATIC_VERSION = "Automatic (Use Validate Settings)";
+	private static final String LABEL_VERSION_NUMBER = "2.18 - 3.0";
 
 	private static final String TITLE = "Bugzilla Repository Settings";
 
-	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
-
-	protected Combo repositoryVersionCombo;
+	private static final String DESCRIPTION = "Supports Bugzilla " + LABEL_VERSION_NUMBER
+			+ "\nExample: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
 	protected Button autodetectPlatformOS;
 
@@ -79,8 +69,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	protected Combo defaultOSCombo;
 
 	private Button cleanQAContact;
-
-	//private Button cachedConfigButton;
 
 	private RepositoryConfiguration repositoryConfiguration = null;
 
@@ -103,7 +91,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		repositoryLabelEditor.setStringValue(template.label);
 		setUrl(template.repositoryUrl);
 		// setAnonymous(info.anonymous);
-		setBugzillaVersion(template.version);
 		if (template.characterEncoding != null) {
 			setEncoding(template.characterEncoding);
 		}
@@ -115,51 +102,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	protected void createAdditionalControls(Composite parent) {
 		addRepositoryTemplatesToServerUrlCombo();
 
-		Label repositoryVersionLabel = new Label(parent, SWT.NONE);
-		repositoryVersionLabel.setText("Repository version: ");
-		repositoryVersionCombo = new Combo(parent, SWT.READ_ONLY);
-
-		repositoryVersionCombo.add(LABEL_AUTOMATIC_VERSION);
-
-		for (BugzillaServerVersion version : BugzillaServerVersion.values()) {
-			repositoryVersionCombo.add(version.toString());
-		}
-		if (repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
-			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
-		} else {
-
-			int defaultIndex = repositoryVersionCombo.indexOf(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
-			if (defaultIndex != -1) {
-				repositoryVersionCombo.select(defaultIndex);
-				setVersion(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
-			} else {
-				defaultIndex = repositoryVersionCombo.getItemCount() - 1;
-			}
-			repositoryVersionCombo.select(defaultIndex);
-			setVersion(repositoryVersionCombo.getItem(defaultIndex));
-			isPageComplete();
-			if (getWizard() != null) {
-				getWizard().getContainer().updateButtons();
-			}
-		}
-
-		repositoryVersionCombo.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				if (repositoryVersionCombo.getSelectionIndex() >= 0) {
-					setVersion(repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
-					isPageComplete();
-					if (getWizard() != null) {
-						getWizard().getContainer().updateButtons();
-					}
-				}
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// ignore
-			}
-		});
-
 		Label shortLoginLabel = new Label(parent, SWT.NONE);
 		shortLoginLabel.setText(LABEL_SHORT_LOGINS);
 		cleanQAContact = new Button(parent, SWT.CHECK | SWT.LEFT);
@@ -167,19 +109,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
 			cleanQAContact.setSelection(shortLogin);
 		}
-
-//		Label cachedConfigLabel = new Label(parent, SWT.NONE);
-//		cachedConfigLabel.setText(LABEL_CACHED_CONFIGURATION);
-//		cachedConfigLabel.setToolTipText(TOOLTIP_CACHED_CONFIGURATION);
-//		cachedConfigButton = new Button(parent, SWT.CHECK | SWT.LEFT);
-//		if (repository != null) {
-//			boolean isCached = true;
-//			String oldTimestamp = repository.getProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP);
-//			if (oldTimestamp != null && oldTimestamp.equals(IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE)) {
-//				isCached = false;
-//			}
-//			cachedConfigButton.setSelection(isCached);
-//		}
 
 		if (null != repository) {
 			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository.getRepositoryUrl());
@@ -327,38 +256,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		defaultPlatformCombo.setEnabled(!autodetectPlatformOS.getSelection());
 	}
 
-	public void setBugzillaVersion(String version) {
-		if (version == null) {
-			repositoryVersionCombo.select(0);
-		} else {
-			int i = repositoryVersionCombo.indexOf(version.toString());
-			if (i != -1) {
-				repositoryVersionCombo.select(i);
-				setVersion(version);
-			} else {
-				for (IBugzillaConstants.BugzillaServerVersion serverVersion : IBugzillaConstants.BugzillaServerVersion.values()) {
-					if (version.startsWith(serverVersion.toString())) {
-						i = repositoryVersionCombo.indexOf(serverVersion.toString());
-						if (i != -1) {
-							repositoryVersionCombo.select(i);
-							setVersion(serverVersion.toString());
-							break;
-						}
-					}
-				}
-				if (i == -1) {
-					StatusHandler.log(new Status(IStatus.INFO, BugzillaUiPlugin.ID_PLUGIN,
-							"Could not resolve repository version: " + version));
-					i = repositoryVersionCombo.indexOf(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
-					if (i != -1) {
-						repositoryVersionCombo.select(i);
-						setVersion(IBugzillaConstants.SERVER_VERSION_DEFAULT.toString());
-					}
-				}
-			}
-		}
-	}
-
 	@Override
 	public void applyTo(TaskRepository repository) {
 		super.applyTo(repository);
@@ -366,12 +263,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				String.valueOf(cleanQAContact.getSelection()));
 		repository.setProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING, languageSettingCombo.getText());
 
-//		if (cachedConfigButton.getSelection()) {
-//			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP, "");
-//		} else {
-//			repository.setProperty(IBugzillaConstants.PROPERTY_CONFIGTIMESTAMP,
-//					IBugzillaConstants.TIMESTAMP_NOT_AVAILABLE);
-//		}
 		if (!autodetectPlatformOS.getSelection()) {
 			repository.setProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM,
 					String.valueOf(defaultPlatformCombo.getItem(defaultPlatformCombo.getSelectionIndex())));
@@ -381,18 +272,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_PLATFORM);
 			repository.removeProperty(IBugzillaConstants.BUGZILLA_DEF_OS);
 		}
-	}
-
-	@Override
-	public boolean isPageComplete() {
-		boolean erg = super.isPageComplete();
-		if (erg) {
-			if (getVersion().compareTo(LABEL_AUTOMATIC_VERSION) == 0) {
-				setErrorMessage("Validate Settings or select repository version under Additional Settings section.");
-				erg = false;
-			}
-		}
-		return erg;
 	}
 
 	@Override
@@ -409,32 +288,14 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	@Override
 	protected Validator getValidator(TaskRepository repository) {
-
-		if (repositoryVersionCombo.getSelectionIndex() != 0) {
-			return new BugzillaValidator(repository,
-					repositoryVersionCombo.getItem(repositoryVersionCombo.getSelectionIndex()));
-		} else {
-			return new BugzillaValidator(repository, null);
-		}
-	}
-
-	@Override
-	protected void applyValidatorResult(Validator validator) {
-		super.applyValidatorResult(validator);
-
-		if (((BugzillaValidator) validator).getResult() != null && ((BugzillaValidator) validator).getResult() != null) {
-			setBugzillaVersion(((BugzillaValidator) validator).getResult());
-		}
+		return new BugzillaValidator(repository);
 	}
 
 	public class BugzillaValidator extends Validator {
 
 		final TaskRepository repository;
 
-		private final String[] versions = new String[1];;
-
-		public BugzillaValidator(TaskRepository repository, String version) {
-			versions[0] = version;
+		public BugzillaValidator(TaskRepository repository) {
 			this.repository = repository;
 		}
 
@@ -473,26 +334,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 				BugzillaClient client = null;
 
-				boolean checkVersion = versions[0] == null;
-
-				if (versions != null) {
-					client = BugzillaClientFactory.createClient(repository);
-					client.validate(monitor);
-				}
-				if (checkVersion && client != null) {
-					RepositoryConfiguration config = client.getRepositoryConfiguration();
-					if (config != null) {
-						versions[0] = config.getInstallVersion();
-					}
-				}
-
+				client = BugzillaClientFactory.createClient(repository);
+				client.validate(monitor);
 			} finally {
 				monitor.done();
 			}
-		}
-
-		public String getResult() {
-			return versions[0];
 		}
 
 	}
