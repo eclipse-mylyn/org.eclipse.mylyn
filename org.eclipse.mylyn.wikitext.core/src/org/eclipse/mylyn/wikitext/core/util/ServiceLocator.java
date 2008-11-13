@@ -45,6 +45,8 @@ public class ServiceLocator {
 	 * 
 	 * @param classLoader
 	 *            the class loader to use when looking up services
+	 * 
+	 * @see #getInstance()
 	 */
 	public static ServiceLocator getInstance(ClassLoader classLoader) {
 		if (implementationClass != null) {
@@ -55,6 +57,19 @@ public class ServiceLocator {
 			}
 		}
 		return new ServiceLocator(classLoader);
+	}
+
+	/**
+	 * Get an instance of the service locator
+	 * 
+	 * @see #getInstance(ClassLoader)
+	 */
+	public static ServiceLocator getInstance() {
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		if (loader == null) {
+			ServiceLocator.class.getClassLoader();
+		}
+		return getInstance(loader);
 	}
 
 	/**
