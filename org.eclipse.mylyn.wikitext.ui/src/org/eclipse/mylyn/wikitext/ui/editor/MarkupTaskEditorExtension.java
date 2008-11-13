@@ -27,7 +27,6 @@ import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryCompletionProcessor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupSourceViewerConfiguration;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
@@ -36,6 +35,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.util.PreferenceStoreFacade;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlinkPresenter;
+import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.ui.viewer.MarkupViewer;
@@ -63,7 +63,6 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  * 
  * @author David Green
  */
-@SuppressWarnings("restriction")
 public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 
 	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor"; //$NON-NLS-1$
@@ -225,10 +224,8 @@ public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 
 		@Override
 		protected IContentAssistProcessor[] createContentAssistProcessors() {
-			// FIXME: remove usage of internal API
-//			IContentAssistProcessor processor = TasksUi.createContentAssistProcessor(taskRepository);
-//			return processor==null?null:new IContentAssistProcessor[] { processor };
-			return new IContentAssistProcessor[] { new RepositoryCompletionProcessor(taskRepository) };
+			IContentAssistProcessor processor = TasksUi.getUiFactory().createTaskContentAssistProcessor(taskRepository);
+			return processor == null ? null : new IContentAssistProcessor[] { processor };
 		}
 
 		@Override
