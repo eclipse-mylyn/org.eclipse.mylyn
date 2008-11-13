@@ -155,15 +155,15 @@ class FillWidthLayout extends Layout implements ILayoutExtension {
 		}
 		if (widthHint <= 0) {
 			widthHint = calculateWidthHint(composite);
-			if (widthHint < 300) {
-				widthHint = 300;
-			} else {
-				widthHint -= widthHintMargin;
-			}
+			widthHint -= widthHintMargin;
+		}
+
+		int horizontalMargin = marginLeft + marginRight;
+		if (widthHint < horizontalMargin) {
+			widthHint = horizontalMargin;
 		}
 
 		if (lastComputedSize == null || widthHint != lastWidthHint) {
-			int horizontalMargin = marginLeft + marginRight;
 			int resultX = 1;
 			int resultY = 1;
 			for (Control control : children) {
@@ -224,11 +224,21 @@ class FillWidthLayout extends Layout implements ILayoutExtension {
 	}
 
 	public int computeMaximumWidth(Composite parent, boolean changed) {
-		return parent.getChildren()[0].computeSize(SWT.DEFAULT, 0).x;
+		int width = marginLeft + marginRight;
+		Control[] children = parent.getChildren();
+		for (Control control : children) {
+			width = Math.max(control.computeSize(SWT.DEFAULT, 0, changed).x + marginLeft + marginRight, width);
+		}
+		return width;
 	}
 
 	public int computeMinimumWidth(Composite parent, boolean changed) {
-		return 0;
+		int width = marginLeft + marginRight;
+		Control[] children = parent.getChildren();
+		for (Control control : children) {
+			width = Math.max(control.computeSize(0, SWT.DEFAULT, changed).x + marginLeft + marginRight, width);
+		}
+		return width;
 	}
 
 }
