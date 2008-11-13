@@ -26,6 +26,7 @@
 			navigationImages="true"
 			helpPrefix="help">
 			<fileset dir="help" includes="**/*.textile"/>
+			<stylesheet file="${basedir}/help/styles/main.css"/>
 		</wikitext-to-eclipse-help>
 		
 		<!--
