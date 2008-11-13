@@ -75,6 +75,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.internal.forms.widgets.FormHeading;
 import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -187,6 +188,16 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		Menu menu = menuManager.createContextMenu(getContainer());
 		getContainer().setMenu(menu);
 		getEditorSite().registerContextMenu(menuManager, getEditorSite().getSelectionProvider(), false);
+
+		// install context menu on form heading and title
+		getHeaderForm().getForm().setMenu(menu);
+		Composite head = getHeaderForm().getForm().getForm().getHead();
+		if (head instanceof FormHeading) {
+			IMenuManager manager = ((FormHeading) head).getMenuManager();
+			if (manager instanceof MenuManager) {
+				configureContextMenuManager((MenuManager) manager);
+			}
+		}
 	}
 
 	/**
