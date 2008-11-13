@@ -34,8 +34,9 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -112,7 +113,7 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 		toolkit = new FormToolkit(TasksUiPlugin.getDefault().getFormColors(parent.getDisplay()));
 
 		compositeContainer = new Composite(parent, SWT.NULL);
-		GridLayout layout = new GridLayout(1, true);
+		Layout layout = new FillLayout();
 		compositeContainer.setLayout(layout);
 
 		createContents(compositeContainer);
