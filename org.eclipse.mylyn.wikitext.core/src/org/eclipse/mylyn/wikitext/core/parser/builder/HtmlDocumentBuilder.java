@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
@@ -43,6 +44,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * @author David Green
  */
 public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
+	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*"); //$NON-NLS-1$
 
 	private static final Map<SpanType, String> spanTypeToElementName = new HashMap<SpanType, String>();
 	static {
@@ -113,6 +115,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String linkRel;
 
+	private String prependImagePrefix;
+
 	public HtmlDocumentBuilder(Writer out) {
 		this(out, false);
 	}
@@ -138,7 +142,9 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		other.setUseInlineStyles(isUseInlineStyles());
 		other.setSuppressBuiltInStyles(isSuppressBuiltInStyles());
 		other.setXhtmlStrict(xhtmlStrict);
+		other.setPrependImagePrefix(prependImagePrefix);
 		if (stylesheets != null) {
+			other.stylesheets = new ArrayList<Stylesheet>();
 			for (Stylesheet stylesheet : stylesheets) {
 				other.stylesheets.add(stylesheet);
 			}
@@ -612,6 +618,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	public void image(Attributes attributes, String url) {
 		writer.writeEmptyElement(htmlNsUri, "img"); //$NON-NLS-1$
 		applyImageAttributes(attributes);
+		url = prependImageUrl(url);
 		writer.writeAttribute("src", makeUrlAbsolute(url)); //$NON-NLS-1$
 	}
 
@@ -850,8 +857,24 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		applyLinkAttributes(linkAttributes, href);
 		writer.writeEmptyElement(htmlNsUri, "img"); //$NON-NLS-1$
 		applyImageAttributes(imageAttributes);
+		imageUrl = prependImageUrl(imageUrl);
 		writer.writeAttribute("src", makeUrlAbsolute(imageUrl)); //$NON-NLS-1$
 		writer.writeEndElement(); // a
+	}
+
+	private String prependImageUrl(String imageUrl) {
+		if (prependImagePrefix == null || prependImagePrefix.length() == 0) {
+			return imageUrl;
+		}
+		if (ABSOLUTE_URL_PATTERN.matcher(imageUrl).matches()) {
+			return imageUrl;
+		}
+		String url = prependImagePrefix;
+		if (!prependImagePrefix.endsWith("/")) {
+			url += '/';
+		}
+		url += imageUrl;
+		return url;
 	}
 
 	@Override
@@ -916,6 +939,20 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	protected Reader getReader(File inputFile) throws FileNotFoundException {
 		return new FileReader(inputFile);
+	}
+
+	/**
+	 * if specified, the prefix is prepended to relative image urls.
+	 */
+	public void setPrependImagePrefix(String prependImagePrefix) {
+		this.prependImagePrefix = prependImagePrefix;
+	}
+
+	/**
+	 * if specified, the prefix is prepended to relative image urls.
+	 */
+	public String getPrependImagePrefix() {
+		return prependImagePrefix;
 	}
 
 }
