@@ -379,6 +379,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static RepositoryModel repositoryModel;
 
+	private static TasksUiFactory uiFactory;
+
 	private class TasksUiInitializationJob extends UIJob {
 
 		public TasksUiInitializationJob() {
@@ -1254,6 +1256,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	public static TaskListExternalizationParticipant getTaskListExternalizationParticipant() {
 		return taskListExternalizationParticipant;
+	}
+
+	public static TasksUiFactory getUiFactory() {
+		if (uiFactory == null) {
+			uiFactory = new TasksUiFactory();
+		}
+		return uiFactory;
 	}
 
 }

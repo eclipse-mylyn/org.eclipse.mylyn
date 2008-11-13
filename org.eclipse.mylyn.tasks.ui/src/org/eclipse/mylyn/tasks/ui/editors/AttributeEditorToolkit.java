@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,11 +14,13 @@ package org.eclipse.mylyn.tasks.ui.editors;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.commands.ActionHandler;
+import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.IControlContentAdapter;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
@@ -45,6 +47,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
@@ -139,7 +142,9 @@ public class AttributeEditorToolkit {
 				IContentProposalProvider contentProposalProvider = createContentProposalProvider(editor.getTaskAttribute());
 				ILabelProvider labelPropsalProvider = createLabelProposalProvider(editor.getTaskAttribute());
 				if (contentProposalProvider != null && labelPropsalProvider != null) {
-					ContentAssistCommandAdapter adapter = applyContentAssist(control, contentProposalProvider);
+					ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(control,
+							getContentAdapter(control), contentProposalProvider,
+							ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, new char[0], true);
 					adapter.setLabelProvider(labelPropsalProvider);
 					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 				}
@@ -161,7 +166,7 @@ public class AttributeEditorToolkit {
 				});
 			}
 			if (!editor.isReadOnly() && richTextEditor.getMode() == Mode.TASK_RELATION) {
-				applyContentAssist(viewer.getControl(), null);
+				installContentAssistControlDecoration(viewer.getControl());
 			}
 			installMenu(viewer.getControl());
 			EditorUtil.setTextViewer(editor.getControl(), viewer);
@@ -189,6 +194,15 @@ public class AttributeEditorToolkit {
 		editor.decorate(getColorIncoming());
 	}
 
+	private IControlContentAdapter getContentAdapter(Control control) {
+		if (control instanceof Combo) {
+			return new ComboContentAdapter();
+		} else if (control instanceof Text) {
+			return new TextContentAdapter();
+		}
+		return null;
+	}
+
 	private void installMenu(final Control control) {
 		if (menu != null) {
 			control.setMenu(menu);
@@ -209,10 +223,8 @@ public class AttributeEditorToolkit {
 	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
-	private ContentAssistCommandAdapter applyContentAssist(Control control, IContentProposalProvider proposalProvider) {
+	private ControlDecoration installContentAssistControlDecoration(Control control) {
 		ControlDecoration controlDecoration = new ControlDecoration(control, (SWT.TOP | SWT.LEFT));
-		controlDecoration.setMarginWidth(0);
-		controlDecoration.setShowHover(true);
 		controlDecoration.setShowOnlyOnFocus(true);
 		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault().getFieldDecoration(
 				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
@@ -220,14 +232,7 @@ public class AttributeEditorToolkit {
 		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
 		controlDecoration.setDescriptionText(NLS.bind("Content Assist Available ({0})",
 				bindingService.getBestActiveBindingFormattedFor(ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND)));
-
-		if (proposalProvider != null) {
-			TextContentAdapter textContentAdapter = new TextContentAdapter();
-			ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(control, textContentAdapter,
-					proposalProvider, ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND, new char[0]);
-			return adapter;
-		}
-		return null;
+		return controlDecoration;
 	}
 
 	private IHandler createActionHandler(final SourceViewer viewer, final int operation, String actionDefinitionId) {

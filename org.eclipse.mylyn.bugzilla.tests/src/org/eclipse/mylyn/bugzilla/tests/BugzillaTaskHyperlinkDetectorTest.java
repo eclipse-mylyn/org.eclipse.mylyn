@@ -13,13 +13,14 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskHyperlinkDetector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
@@ -61,13 +62,15 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 	private TaskRepository repository2;
 
-	private RepositoryTextViewer viewer;
+	private TextViewer viewer;
 
 	private String[] formats;
 
 	private TaskRepositoryManager repositoryManager;
 
 	private Shell shell;
+
+	protected TaskRepository activeRepository;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -78,14 +81,26 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		repository1 = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "repository_url1");
 		repository2 = new TaskRepository(BugzillaCorePlugin.CONNECTOR_KIND, "repository_url2");
 
+		detector.setContext(new IAdaptable() {
+			@SuppressWarnings("unchecked")
+			public Object getAdapter(Class adapter) {
+				return (adapter == TaskRepository.class) ? activeRepository : null;
+			}
+		});
+		setRepository(repository1);
+
 		shell = new Shell();
-		viewer = new RepositoryTextViewer(repository1, shell, SWT.NONE);
+		viewer = new TextViewer(shell, SWT.NONE);
 
 		repositoryManager = TasksUiPlugin.getRepositoryManager();
 		repositoryManager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		formats = new String[] { TASK_FORMAT_1, TASK_FORMAT_2, TASK_FORMAT_3, TASK_FORMAT_4, BUG_FORMAT_1,
 				BUG_FORMAT_2, BUG_FORMAT_3, BUG_FORMAT_4 };
+	}
+
+	private void setRepository(final TaskRepository repository) {
+		this.activeRepository = repository;
 	}
 
 	@Override
@@ -173,7 +188,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(0, testString.length());
-		viewer.setRepository(null);
+		setRepository(null);
 
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);
 		assertNull(links);
@@ -183,7 +198,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(0, testString.length());
-		viewer.setRepository(repository1);
+		setRepository(repository1);
 
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);
 		assertNotNull(links);
@@ -196,7 +211,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(0, testString.length());
-		viewer.setRepository(null);
+		setRepository(null);
 
 		repositoryManager.addRepository(repository1);
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);
@@ -210,7 +225,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(0, testString.length());
-		viewer.setRepository(repository1);
+		setRepository(repository1);
 		repositoryManager.addRepository(repository1);
 
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);
@@ -224,7 +239,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(0, testString.length());
-		viewer.setRepository(null);
+		setRepository(null);
 		repositoryManager.addRepository(repository1);
 		repositoryManager.addRepository(repository2);
 
@@ -241,7 +256,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		String testString = "bug 123";
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(0, testString.length());
-		viewer.setRepository(repository1);
+		setRepository(repository1);
 		repositoryManager.addRepository(repository1);
 		repositoryManager.addRepository(repository2);
 
@@ -256,7 +271,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 		String testString = "bug 123 bug 345";
 		viewer.setDocument(new Document(testString));
 		Region region = new Region(10, 0);
-		viewer.setRepository(repository1);
+		setRepository(repository1);
 		repositoryManager.addRepository(repository1);
 
 		IHyperlink[] links = detector.detectHyperlinks(viewer, region, true);

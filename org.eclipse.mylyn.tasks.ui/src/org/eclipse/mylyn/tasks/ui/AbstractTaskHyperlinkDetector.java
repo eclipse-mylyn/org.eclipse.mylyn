@@ -24,7 +24,6 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -148,11 +147,6 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 
 		IResource resource = (IResource) getAdapter(IResource.class);
 		if (resource == null) {
-			if (textViewer instanceof RepositoryTextViewer) {
-				RepositoryTextViewer viewer = (RepositoryTextViewer) textViewer;
-				return viewer.getRepository();
-			}
-
 			// use currently active editor (if any)
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (window != null) {
