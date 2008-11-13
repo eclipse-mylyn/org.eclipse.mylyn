@@ -149,12 +149,11 @@
 	</extension>
 	
 	<extension point="org.eclipse.help.toc">
-		<toc file="help/Mylyn WikiText User Guide-toc.xml" primary="false">
-		</toc>
-  <toc
-        file="toc.xml"
-        primary="false">
-  </toc>
+		<toc file="help/Mylyn WikiText User Guide-toc.xml" primary="false"/>
+		<toc file="help/devguide/WikiText Developer Guide-toc.xml" primary="false"/>
+		  <toc
+		        file="toc.xml"
+		        primary="false"/>
 	</extension>
  <extension
        point="org.eclipse.help.contexts">

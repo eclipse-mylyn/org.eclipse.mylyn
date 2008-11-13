@@ -39,7 +39,40 @@
 			<substitution expression="html&quot; link_to=&quot;../org.eclipse.mylyn.help.ui/toc.xml#additions&quot; "/>
 		</replaceregexp>
 		-->
+		<antcall target="test"/>
 	</target>
 
+	
+
+	<target name="test" description="verify that all of the HTML files are well-formed XML">
+		<echo level="info">
+Validating help content XML and HTML files: The Eclipse help system expects well-formed XML
+			
+If validation fails it is because either:
+			
+* the userguide source code is poorly formed, or
+* the WikiText MediaWiki parser has a bug
+			
+Problems with userguide source are usually caused by improper use of HTML markup in the MediaWiki source,
+or inadvertently starting a line with a space character (in MediaWiki this starts a preformatted block)
+		</echo>
+
+		<!-- 
+		Don't bother with DTD validation: we only care if the files are well-formed.
+		We therefore provide an empty DTD 
+		-->
+		<mkdir dir="__tmp"/>
+		<echo file="__tmp/__empty.dtd" message=""/>
+		<xmlvalidate lenient="true">
+			<fileset dir="help">
+				<include name="**/*.xml"/>
+			</fileset>
+			<fileset dir="help">
+				<include name="**/*.html"/>
+			</fileset>
+			<dtd publicid="-//W3C//DTD XHTML 1.0 Transitional//EN" location="${basedir}/__tmp/__empty.dtd"/>
+		</xmlvalidate>
+		<delete dir="__tmp"/>
+	</target>
 	
 </project>

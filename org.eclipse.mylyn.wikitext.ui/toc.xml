@@ -3,4 +3,7 @@
    <topic href="help/Mylyn WikiText User Guide.html" label="WikiText User Guide">
       <link toc="help/Mylyn WikiText User Guide-toc.xml"/>
    </topic>
+   <topic href="help/devguide/WikiText Developer Guide.html" label="WikiText Developer Guide">
+      <link toc="help/devguide/WikiText Developer Guide-toc.xml"/>
+   </topic>
 </toc>
