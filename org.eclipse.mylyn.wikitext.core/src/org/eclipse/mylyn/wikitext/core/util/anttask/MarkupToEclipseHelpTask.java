@@ -28,7 +28,7 @@ import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
  */
 public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 
-	private String xmlFilenameFormat = Messages.getString("MarkupToEclipseHelpTask.0"); //$NON-NLS-1$
+	private String xmlFilenameFormat = "$1-toc.xml"; //$NON-NLS-1$
 
 	private String helpPrefix;
 
@@ -50,7 +50,7 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 
 			Writer writer;
 			try {
-				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocOutputFile)), Messages.getString("MarkupToEclipseHelpTask.1")); //$NON-NLS-1$
+				writer = new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tocOutputFile)), "utf-8"); //$NON-NLS-1$
 			} catch (Exception e) {
 				throw new BuildException(String.format("Cannot write to file '%s': %s", tocOutputFile, e.getMessage()), //$NON-NLS-1$
 						e);
@@ -64,19 +64,23 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 					}
 				};
 				toEclipseToc.setHelpPrefix(helpPrefix);
+				System.out.println("Help: " + baseDir + " " + htmlOutputFile);
 				toEclipseToc.setBookTitle(title == null ? name : title);
 
 				String basePath = baseDir.getAbsolutePath().replace('\\', '/');
 				String outputFilePath = htmlOutputFile.getAbsolutePath().replace('\\', '/');
 				if (outputFilePath.startsWith(basePath)) {
 					String filePath = outputFilePath.substring(basePath.length());
-					if (filePath.startsWith(Messages.getString("MarkupToEclipseHelpTask.3"))) { //$NON-NLS-1$
+					if (filePath.startsWith("/")) { //$NON-NLS-1$
 						filePath = filePath.substring(1);
 					}
-					toEclipseToc.setHtmlFile(filePath);
-				} else {
-					toEclipseToc.setHtmlFile(htmlOutputFile.getName());
+					if (filePath.lastIndexOf('/') != -1) {
+						String relativePart = filePath.substring(0, filePath.lastIndexOf('/'));
+						toEclipseToc.setHelpPrefix(helpPrefix == null ? relativePart : helpPrefix + '/' + relativePart);
+					}
 				}
+
+				toEclipseToc.setHtmlFile(htmlOutputFile.getName());
 
 				String tocXml = toEclipseToc.createToc(item);
 
@@ -97,7 +101,7 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 	}
 
 	private File computeTocFile(File source, String name) {
-		return new File(source.getParentFile(), xmlFilenameFormat.replace(Messages.getString("MarkupToEclipseHelpTask.6"), name)); //$NON-NLS-1$
+		return new File(source.getParentFile(), xmlFilenameFormat.replace("$1", name)); //$NON-NLS-1$
 	}
 
 	/**

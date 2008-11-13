@@ -66,6 +66,8 @@ public class MarkupToHtmlTask extends MarkupTask {
 
 	protected boolean navigationImages = false;
 
+	protected String prependImagePrefix = null;
+
 	private boolean useInlineCssStyles = true;
 
 	private boolean suppressBuiltInCssStyles = false;
@@ -206,6 +208,7 @@ public class MarkupToHtmlTask extends MarkupTask {
 				builder.setUseInlineStyles(useInlineCssStyles);
 				builder.setSuppressBuiltInStyles(suppressBuiltInCssStyles);
 				builder.setLinkRel(linkRel);
+				builder.setPrependImagePrefix(prependImagePrefix);
 
 				SplittingStrategy splittingStrategy = multipleOutputFiles ? new DefaultSplittingStrategy()
 						: new NoSplittingStrategy();
@@ -441,4 +444,11 @@ public class MarkupToHtmlTask extends MarkupTask {
 		this.linkRel = linkRel;
 	}
 
+	public String getPrependImagePrefix() {
+		return prependImagePrefix;
+	}
+
+	public void setPrependImagePrefix(String prependImagePrefix) {
+		this.prependImagePrefix = prependImagePrefix;
+	}
 }
