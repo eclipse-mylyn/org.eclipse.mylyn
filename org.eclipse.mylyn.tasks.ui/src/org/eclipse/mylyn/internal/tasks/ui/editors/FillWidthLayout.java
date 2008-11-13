@@ -234,10 +234,10 @@ class FillWidthLayout extends Layout implements ILayoutExtension {
 
 	public int computeMinimumWidth(Composite parent, boolean changed) {
 		int width = marginLeft + marginRight;
-		Control[] children = parent.getChildren();
-		for (Control control : children) {
-			width = Math.max(control.computeSize(0, SWT.DEFAULT, changed).x + marginLeft + marginRight, width);
-		}
+//		Control[] children = parent.getChildren();
+//		for (Control control : children) {
+//			width = Math.max(control.computeSize(0, SWT.DEFAULT, changed).x + marginLeft + marginRight, width);
+//		}
 		return width;
 	}
 
