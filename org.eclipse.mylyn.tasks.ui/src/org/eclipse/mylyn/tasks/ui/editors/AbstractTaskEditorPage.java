@@ -1220,9 +1220,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			if (taskData != null) {
 				try {
 					setReflow(false);
-					// save menu
+					// prevent menu from being disposed when disposing control on the form during refresh
 					Menu menu = editorComposite.getMenu();
-					setMenu(editorComposite, null);
+					EditorUtil.setMenu(editorComposite, null);
 
 					// clear old controls and parts
 					for (Control control : editorComposite.getChildren()) {
@@ -1331,21 +1331,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	public void setFocus() {
 		if (lastFocusControl != null && !lastFocusControl.isDisposed()) {
 			lastFocusControl.setFocus();
-		}
-	}
-
-	/**
-	 * Used to prevent form menu from being disposed when disposing elements on the form during refresh
-	 */
-	private void setMenu(Composite comp, Menu menu) {
-		if (!comp.isDisposed()) {
-			comp.setMenu(menu);
-			for (Control child : comp.getChildren()) {
-				child.setMenu(menu);
-				if (child instanceof Composite) {
-					setMenu((Composite) child, menu);
-				}
-			}
 		}
 	}
 

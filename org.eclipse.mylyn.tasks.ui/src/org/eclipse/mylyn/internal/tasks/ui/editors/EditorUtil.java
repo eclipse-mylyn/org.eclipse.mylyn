@@ -35,6 +35,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.actions.ActionFactory;
@@ -402,6 +403,21 @@ public class EditorUtil {
 			layoutAdvisor = layoutAdvisor.getParent();
 		} while (!(layoutAdvisor instanceof CTabFolder));
 		return layoutAdvisor.getParent();
+	}
+
+	/**
+	 * Recursively sets the menu of all children of <code>composite</code>.
+	 */
+	public static void setMenu(Composite composite, Menu menu) {
+		if (!composite.isDisposed()) {
+			composite.setMenu(menu);
+			for (Control child : composite.getChildren()) {
+				child.setMenu(menu);
+				if (child instanceof Composite) {
+					setMenu((Composite) child, menu);
+				}
+			}
+		}
 	}
 
 }
