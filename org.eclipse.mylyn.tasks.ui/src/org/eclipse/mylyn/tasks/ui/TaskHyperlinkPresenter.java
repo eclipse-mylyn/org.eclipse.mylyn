@@ -70,11 +70,6 @@ public final class TaskHyperlinkPresenter extends DefaultHyperlinkPresenter {
 		return multiplePresenter != null;
 	}
 
-	@Override
-	public boolean canHideHyperlinks() {
-		return true;
-	}
-
 	@SuppressWarnings("unchecked")
 	private <T> void initMultipleHyperlinkSupport(Class<T> argClass, T arg) {
 		try {
