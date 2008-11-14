@@ -4,12 +4,20 @@
             Generate Eclipse help content for the Mylyn user guide
     </description>
 
-	<property name="mylyn.userguide.url.base" value="http://wiki.eclipse.org"/>
-	<property name="mylyn.wiki.url.base" value="${mylyn.userguide.url.base}/Mylyn"/>
-	<property name="mylyn.userguide.url.html" value="${mylyn.userguide.url.base}/Mylyn/User_Guide"/>
-	<property name="mylyn.userguide.url.xml" value="${mylyn.userguide.url.base}/Special:Export/Mylyn/User_Guide"/>
+	<property name="mylyn.help.doc.url.base" value="http://wiki.eclipse.org"/>
+	<property name="mylyn.wiki.url.base" value="${mylyn.help.doc.url.base}/Mylyn"/>
+	<property name="imageFolder" value="images"/>
 	
-	<path  id="tasks.classpath" path="bin"/>
+	<path id="tasks.classpath" path="bin"/>
+	<path id="wikitext.tasks.classpath">
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/@dot"/>
+		<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
+	</path>
+	
+	<taskdef classpathref="tasks.classpath" resource="org/eclipse/mylyn/internal/help/ui/anttask/tasks.properties"/>
+	<taskdef classpathref="wikitext.tasks.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties"/>
 	
 	<target name="init">
 		<mkdir dir="tmp"/>
@@ -20,53 +28,77 @@
 			<fileset dir="tmp"/>
 		</delete>
 	</target>
-	
-    <target name="all" depends="init" description="Generate Eclipse help content for the Mylyn user guide">
-        <get dest="tmp/userguide.xml" src="${mylyn.userguide.url.xml}"/>
-    	<get dest="tmp/userguide.html" src="${mylyn.userguide.url.html}"/>
-    	
-    	<taskdef classpathref="tasks.classpath" resource="org/eclipse/mylyn/internal/help/ui/anttask/tasks.properties"/>
-    	
-    	<copy todir="tmp">
-    		<fileset dir="images"/>
-    	</copy>
-    	<mediawiki-fetch-images src="tmp/userguide.html" dest="tmp" base="${mylyn.userguide.url.base}"/>
-    	
-    	<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties">
-			<classpath>
-				<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
-				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
-				<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/@dot"/>
-				<pathelement location="../org.eclipse.mylyn.wikitext.mediawiki.core/bin"/>
-			</classpath>
-		</taskdef>
 
-    	<xslt style="extract-markup.xsl" in="tmp/userguide.xml" out="tmp/Mylyn User Guide.mediawiki"/>
-		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage" 
-			multipleOutputFiles="true"
-			navigationImages="true"
-			helpPrefix="userguide"
-			internallinkpattern="${mylyn.wiki.url.base}/{0}"
-			validate="true"
-			failonvalidationerror="true">
-			<fileset dir="tmp" includes="**/*.mediawiki"/>
-		</wikitext-to-eclipse-help>
-    	
-		<copy todir="userguide" overwrite="true">
-			<fileset dir="tmp">
-				<include name="*.gif"/>
-				<include name="*.png"/>
-				<include name="*.html"/>
-				<include name="*toc.xml"/>
-				<exclude name="userguide.html"/>
-			</fileset>
-		</copy>
-    	<antcall target="test"/>
+    <target name="all" depends="init" description="Generate Eclipse help content for the Mylyn user guide">
+        <eclipse-wiki-to-help
+        	help.doc.filenamenoextension="Mylyn User Guide"
+        	help.doc.url.base="${mylyn.help.doc.url.base}"
+        	help.doc.url.html="${mylyn.help.doc.url.base}/Mylyn/User_Guide"
+        	help.doc.url.xml="${mylyn.help.doc.url.base}/Special:Export/Mylyn/User_Guide"
+        	help.imagefolder="${imageFolder}"
+        	targetfolder="userguide"
+        	wiki.url.base="${mylyn.help.doc.url.base}/Mylyn"/>
     </target>
+	
+	<macrodef name="eclipse-wiki-to-help">
+		<attribute name="help.doc.url.base"/>
+		<attribute name="wiki.url.base"/>
+		<attribute name="help.doc.url.html"/>
+		<attribute name="help.doc.url.xml"/>
+		<attribute name="help.doc.filenameNoExtension"/>
+		<attribute name="help.imageFolder"/>
+		<attribute name="targetFolder"/>
+		<sequential>
+			<get dest="tmp/help.doc.xml" src="@{help.doc.url.xml}"/>
+	    	<get dest="tmp/help.doc.html" src="@{help.doc.url.html}"/>
+	    	
+	    	<copy todir="tmp">
+	    		<fileset dir="images"/>
+	    	</copy>
+	    	<mediawiki-fetch-images src="tmp/help.doc.html" dest="tmp" base="@{help.doc.url.base}"/>
+	    	
+	    	<xslt style="extract-markup.xsl" in="tmp/help.doc.xml" out="tmp/@{help.doc.filenameNoExtension}.mediawiki"/>
+			<echo append="true" file="tmp/@{help.doc.filenameNoExtension}.mediawiki">
+
+= Updating This Document =
+
+This document is maintained in a collaborative wiki.  If you wish to update or modify this document please visit 
+@{help.doc.url.html}
+			</echo>
+			
+			<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage" 
+				multipleOutputFiles="true"
+				navigationImages="true"
+				helpPrefix="@{targetFolder}"
+				internallinkpattern="@{wiki.url.base}/{0}"
+				validate="true"
+				failonvalidationerror="true"
+				prependImagePrefix="${imageFolder}">
+				<fileset dir="tmp" includes="**/*.mediawiki"/>
+			</wikitext-to-eclipse-help>
+	    	
+	    	<mkdir dir="@{targetFolder}/${imageFolder}"/>
+			<copy todir="@{targetFolder}/${imageFolder}" overwrite="true">
+				<fileset dir="tmp">
+					<include name="*.gif"/>
+					<include name="*.png"/>
+				</fileset>
+			</copy>
+	    	<copy todir="@{targetFolder}" overwrite="true">
+				<fileset dir="tmp">
+					<include name="*.html"/>
+					<include name="*toc.xml"/>
+					<exclude name="help.doc.html"/>
+				</fileset>
+			</copy>
+	    	<antcall target="test"/>
+		</sequential>			
+	</macrodef>
+	
 
 	<target name="test" depends="init" description="verify that all of the HTML files are well-formed XML">
 		<echo level="info">
-Validating userguide XML and HTML files: The Eclipse help system expects well-formed XML
+Validating help content XML and HTML files: The Eclipse help system expects well-formed XML
 			
 If validation fails it is because either:
 			
