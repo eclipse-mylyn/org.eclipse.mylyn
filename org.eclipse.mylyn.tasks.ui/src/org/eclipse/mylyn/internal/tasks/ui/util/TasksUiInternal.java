@@ -422,6 +422,12 @@ public class TasksUiInternal {
 	}
 
 	public static void displayStatus(Shell shell, final String title, final IStatus status) {
+		// avoid blocking ui when in test mode
+		if (CoreUtil.TEST_MODE) {
+			StatusHandler.log(status);
+			return;
+		}
+
 		if (status.getCode() == RepositoryStatus.ERROR_INTERNAL) {
 			StatusHandler.fail(status);
 		} else {
