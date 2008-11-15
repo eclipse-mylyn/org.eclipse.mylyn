@@ -1,2 +1,278 @@
-<?xml version='1.0' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Mylyn User Guide - Task List</title></head><body><table class="navigation" style="width: 100%;" border="0" summary="navigation"><tr><th style="width: 100%" align="center" colspan="3">Task List</th></tr><tr><td style="width: 20%" align="left"><a href="Configuration.html" title="Configuration"><img alt="Previous" border="0" src="images/images/prev.gif"/></a></td><td style="width: 60%" align="center"></td><td style="width: 20%" align="right"><a href="Task-Repositories.html" title="Task Repositories"><img alt="Next" border="0" src="images/images/next.gif"/></a></td></tr><tr><td style="width: 20%" align="left" valign="top">Configuration</td><td style="width: 60%" align="center"></td><td style="width: 20%" align="right" valign="top">Task Repositories</td></tr></table><hr/><h1 id="TaskList">Task List</h1><h2 id="IconLegend">Icon Legend</h2><p>Please see the <a href="http://www.eclipse.org/mylyn/tips">Tips &amp; Tricks page</a>.</p><p>Open the UI Legend via the Task List view menu button located next to minimize button in top right corner of Task List view)</p><h2 id="TaskCreation">Task Creation</h2><p>There are several ways to create new tasks:</p><ul><li><i>Task List</i> toolbar item</li><li><i>Task List</i> context menu, which contains a new <i>Local Task</i> action that will create local tasks without briging up repository selection.   Shortcut is the Ins key, if available.</li><li><i>File -> New</i> or Alt+Shift+N, T (note that you may need to reset your perspective to have <i>Task</i> and <i>Query</i> automatically appear in the Alt+Shift+N menu).</li></ul><h2 id="IncomingChanges">Incoming Changes</h2><p>A blue arrow indicates that a task has changed in the repository. To quickly review the differences since the task was last read hover over the task or press F4 to display a tooltip. </p><p>To filter the task list to incoming changes and tasks scheduled for this week use the Focus on Workweek button in the toolbar. Another way to quickly find tasks with incoming changes is to use Alt+down in the Task List which jumps to the next task with an incoming change.</p><p>In addition the UI Experiments feature that is part of the Mylyn incubator contributes a task list presentation that only shows tasks with incoming changes.</p><h2 id="Scheduling">Scheduling</h2><p>Mylyn provides two kinds of dates for scheduling.</p><p><i>Scheduled Date</i></p><ul><li>A soft date intended for personal scheduling and can be easily deferred as priorities change.  Intended to be the date that you plan to start working on the task.</li><li>Once a task hits its start date it will turn red, indicating that the task should be activated and worked on.</li><li>If you schedule a task for <i>Today</i> it will turn blue instead of red and be scheduled for the end of your workday, as specified in <i>Preferences -> Task List</i>.  This is to help avoid needing to reschedule tasks throughout the workday.  At the end of the workday tasks will turn red.</li><li>When you schedule a task for "today" it will be scheduled for the</li></ul><p><i>Due Date</i></p><ul><li>A hard date he date that the task has to be completed by.  This is hard date and often related to external constraints such as deadlines.</li><li>If shared task repositories or calendaring tools are used due dates are synchronized in order to be visible to other team members.</li><li>A task with a due date has a small clock overlay that is blue before the date and red after.</li></ul><h2 id="WeeklyProgress">Weekly Progress</h2><p>When in <i>Focus on Workweek</i> mode (right-most toolbar button), the Task List will show a JUnit-style progress bar which indicates progress on the tasks scheduled for that week.  Each task that is scheduled for the week but not yet completed adds to the bar.  A task completed by you adds to the green progress in the bar.  Deferring a task to a future week will also add to the apparent progress because it will remove the task from the current week.  Mousing over the bar will indicate details about your progress, such as the number of tasks and hours completed.  To avoid the need for manual estimation by default every task is estimated for 1 hour, but if you have longer or shorter running tasks that week you can adjust the estimate in the task editor's <i>Planning</i> page to ensure that the progress bar is accurate.  </p><p>Note that when in <i>Focus on Workweek</i> mode the <i>Task List</i> will show each of the tasks scheduled for this week.  However, overdue tasks and those with incoming changes will also show, making the number of tasks visible not be a reliable indicator of progress on the tasks planned for the week.</p><p><img border="0" src="images/Weekly-progress.gif"/></p><h2 id="ProgressforCategories">Progress for Categories</h2><p>Categories show progress for the number of completed tasks.  </p><p><img border="0" src="images/Progress-categories.gif"/></p><h2 id="IncomingChanges2">Incoming Changes</h2><p>All comments added since your last reading of a repository task will be automatically expanded when a task with incoming changes is opened.  Incoming changes are retrieved with the background synchronization to avoid waiting for the server when opening.  Note that a background synchronization is still kicked off upon opening in case changes came in since the last scheduled synchronization.  Repository tasks can be explicitly marked as read or unread.</p><p><img border="0" src="images/Incoming-changes.gif"/></p><h2 id="TaskRepositoryIntegration">Task Repository Integration</h2><p>Task repositories are easy to add, and can be named via the <i>Task Repositories</i> view.  An icon decoration indicates the repository type.  A task repository can be associated with a project, enabling it to be used for actions such as resolving bug hyperlinks.  <b>Note:</b> you do not need to associate all of your projects with repositories after updating, since you will be prompted to do this when the associate is needed.</p><p><img border="0" src="images/Task-repository-integration.gif"/></p><p>After the Task Repository has been setup and associated with a project, you need to create a new query against that repository to pull down the task list.</p><p>See <a href="http://www.ibm.com/developerworks/java/library/j-mylyn1/#repositories">Task-focused programming with Mylyn, Part 1</a>, Querying a repository.</p><h2 id="OpenTaskdialog">Open Task dialog</h2><p>An <i>Open Type</i> style dialog is available for opening tasks (<code>Ctrl+F12</code>) and for activating tasks (<code>Ctrl+F9</code>).  The list is initially populated by recently active tasks.  The active task can also be deactivated via <code>Ctrl+Shift+F9</code>.  This can be used as a keyboard-only alternative for multi-tasking without the <i>Task List</i> view visible.  These actions appear in the <i>Navigate</i> menu.</p><p><img border="0" src="images/Open-task-dialog.gif"/></p><h2 id="OpenRepositoryTaskdialog">Open Repository Task dialog</h2><p>For tasks not available on <i>Task List</i> view, there is a <i>Open Repository Task</i> dialog (<code>Ctrl+Shift+F12</code>). On this case, the task can be opened by informing its ID and repository. This way the task will be retrieved from repository without being added to task list.</p><p>Optionally, you can add the remote task to task list, by checking the <i>Add to Task List category</i> option and informing the category where it will be inserted.</p><p>Multiple tasks can be added simultaneously by informing a sequence of IDs, separated by commas, e.g. "1,2,3".</p><h2 id="Repositorytaskattachments">Repository task attachments</h2><p>Repository task attachments (supported by the Bugzilla and Trac connectors) can be attached via drag-and-drop from both within the Eclipse workspace and from outside, and from text selections, which will invoke the attachment wizard. Attachments can be opened with a browser or corresponding editor.</p><p><img border="0" src="images/Repository-task-attachments.gif"/></p><h2 id="Hyperlinking">Hyperlinking</h2><p>In the task editor, comments that include text of the form bug#123 or task#123 or bug 123 will be hyperlinked. In order to support hyperlinks within other text editors such as code or txt files, the project that contains the file must be associated with a particular task repository. To do this, right click on the project > Properties > Task Repository and select the task repository used when working with this project. Then in the editors such as the java source editor or the default text editor, enter a reference such as bug#123. Ctrl+clicking on this text will open the bug in the rich editor.</p><h2 id="TaskListbackupandrestore">Task List backup and restore</h2><p><b>Where does Mylyn keep the task list?</b></p><p>By default Mylyn keeps your task list in &lt;workspace>/.mylyn/tasklist.xml.zip.  You can change this in the Mylyn Task List preferences (<i>Window -> Preferences -> Mylyn -> Task List -> Task Data</i>).</p><p><b>Where does Mylyn keep the task list backups?</b></p><p>By default, Mylyn keeps the task list backups in the <code>&lt;workspace>/.mylyn/backup</code> folder.
-The location of this file, as well as backup scheduling, can be changed in <i>Preferences -> Mylyn -> Tasks</i> in the <i>Task Data -> Backup</i> section.</p><p><b>How do I restore my task list from a backup?</b></p><p>Task and context data can be restored from a backup snapshot zip file via  <i>File -> Import -> Mylyn Task Data</i>.  By default backup snapshots are taken daily and kept for 30 days.</p><p><img border="0" src="images/Tasklist-restore.gif"/></p><p><b>Can I create manual backups?</b></p><p>Yes. Use <i>File -> Import/Export ->  Mylyn Task Data</i>.  </p><p><img border="0" src="images/mylar-tasklist-backup.gif"/></p><p><b>Note:</b>  uninstalling a connector will cause all of the queries and tasks of that kind to disappear from the Task List, but if you reinstall that connector they will reappear.</p><p><b>If the Task List is blank</b>, either Mylyn failed to install or update, or there was a problem reading the Task List.  By default Mylyn keeps your Task List in <code>&lt;workspace>/.mylyn/tasklist.xml</code>.  If you move workspaces, and have not changed the Mylyn data directory via the <i>Task List</i> preference page, the new location will be used when Eclipse restarts (hit <i>Restore Defaults</i> on that page to copy tasks back to the default location).  If your tasks disappear due to to a bug you can check the <code>.mylyn</code> folder for a <code>tasklist-backup.xml</code> file, which will contain the previously-saved list.</p><h2 id="ReportBugsfromErrorLog">Report Bugs from Error Log</h2><p>Bugs can created directly from events in the <i>Error Log</i> view.  This will create a new repository task editor with the summary and description populated with the error event's details.  If the Connector you are using does not have a rich editor, the event details will be placed into the clipboard so that you can paste them into the web-based editor that will be opened automatically.</p><p><img border="0" src="images/Report-bugs-error-log.gif"/></p><h2 id="AutomaticDuplicateDetection">Automatic Duplicate Detection</h2><p>The <i>Search for Duplicates</i> button on the <i>New Repository Task</i> editor encourages and facilitates finding similar bug reports before creating a new one.  Potential duplicates are displayed in the Search view which can be used to open a bug and comment or vote if a duplicate is found.  The current duplicate detection mechanism uses stack traces, either automatically inserted by the <i>Report as Bug</i> mechanism, or manually pasted into the <i>Description</i> area.  All descriptions and comments of bugs on the corresponding repository are included in the search.</p><p><img border="0" src="images/Automatic-duplicate-detection.gif"/></p><h2 id="SubmittingContexts">Submitting Contexts</h2><p>When submitting comments, contexts can be attached by selecting the corresponding check-box in the <i>Actions</i> section.</p><p><img border="0" src="images/Submitting-contexts.gif"/></p><h2 id="Keybindings">Keybindings</h2><table><tr><td>F2</td><td>rename</td></tr><tr><td>F4</td><td>show tooltip</td></tr><tr><td>F5</td><td>synchronize</td></tr><tr><td>Alt + Down</td><td>go to next unread</td></tr><tr><td>Alt + Up</td><td>go to previous unread</td></tr><tr><td>Alt + Shift + R</td><td>mark as read</td></tr><tr><td>Alt + Shift + U</td><td>mark as unread</td></tr><tr><td>Esc</td><td>hide tooltip</td></tr><tr><td>Enter</td><td>open task</td></tr><tr><td>Insert</td><td>new local task</td></tr><tr><td>Ctrl+C</td><td>Copy details</td></tr><tr><td>Ctrl+F</td><td>Find</td></tr></table><hr/><table class="navigation" style="width: 100%;" border="0" summary="navigation"><tr><td style="width: 20%" align="left"><a href="Configuration.html" title="Configuration"><img alt="Previous" border="0" src="images/images/prev.gif"/></a></td><td style="width: 60%" align="center"><a href="Mylyn User Guide.html" title="Mylyn User Guide"><img alt="Mylyn User Guide" border="0" src="images/images/home.gif"/></a></td><td style="width: 20%" align="right"><a href="Task-Repositories.html" title="Task Repositories"><img alt="Next" border="0" src="images/images/next.gif"/></a></td></tr><tr><td style="width: 20%" align="left" valign="top">Configuration</td><td style="width: 60%" align="center"></td><td style="width: 20%" align="right" valign="top">Task Repositories</td></tr></table></body></html>
+<?xml version='1.0' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Mylyn User Guide - Task List</title>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Task List</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Configuration.html" title="Configuration">
+						<img alt="Previous" border="0" src="images/images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Task-Repositories.html" title="Task Repositories">
+						<img alt="Next" border="0" src="images/images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Configuration</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Task Repositories</td>
+			</tr>
+		</table><hr/>
+		<h1 id="TaskList">Task List</h1>
+		<h2 id="IconLegend">Icon Legend</h2>
+		<p>Please see the 
+			<a href="http://www.eclipse.org/mylyn/tips">Tips &amp; Tricks page</a>.
+		</p>
+		<p>Open the UI Legend via the Task List view menu button located next to minimize button in top right corner of Task List view)</p>
+		<h2 id="TaskCreation">Task Creation</h2>
+		<p>There are several ways to create new tasks:</p>
+		<ul>
+			<li>
+				<i>Task List</i> toolbar item
+			</li>
+			<li>
+				<i>Task List</i> context menu, which contains a new 
+				<i>Local Task</i> action that will create local tasks without briging up repository selection.   Shortcut is the Ins key, if available.
+			</li>
+			<li>
+				<i>File -> New</i> or Alt+Shift+N, T (note that you may need to reset your perspective to have 
+				<i>Task</i> and 
+				<i>Query</i> automatically appear in the Alt+Shift+N menu).
+			</li>
+		</ul>
+		<h2 id="IncomingChanges">Incoming Changes</h2>
+		<p>A blue arrow indicates that a task has changed in the repository. To quickly review the differences since the task was last read hover over the task or press F4 to display a tooltip. </p>
+		<p>To filter the task list to incoming changes and tasks scheduled for this week use the Focus on Workweek button in the toolbar. Another way to quickly find tasks with incoming changes is to use Alt+down in the Task List which jumps to the next task with an incoming change.</p>
+		<p>In addition the UI Experiments feature that is part of the Mylyn incubator contributes a task list presentation that only shows tasks with incoming changes.</p>
+		<h2 id="Scheduling">Scheduling</h2>
+		<p>Mylyn provides two kinds of dates for scheduling.</p>
+		<p>
+			<i>Scheduled Date</i>
+		</p>
+		<ul>
+			<li>A soft date intended for personal scheduling and can be easily deferred as priorities change.  Intended to be the date that you plan to start working on the task.</li>
+			<li>Once a task hits its start date it will turn red, indicating that the task should be activated and worked on.</li>
+			<li>If you schedule a task for 
+				<i>Today</i> it will turn blue instead of red and be scheduled for the end of your workday, as specified in 
+				<i>Preferences -> Task List</i>.  This is to help avoid needing to reschedule tasks throughout the workday.  At the end of the workday tasks will turn red.
+			</li>
+			<li>When you schedule a task for "today" it will be scheduled for the</li>
+		</ul>
+		<p>
+			<i>Due Date</i>
+		</p>
+		<ul>
+			<li>A hard date he date that the task has to be completed by.  This is hard date and often related to external constraints such as deadlines.</li>
+			<li>If shared task repositories or calendaring tools are used due dates are synchronized in order to be visible to other team members.</li>
+			<li>A task with a due date has a small clock overlay that is blue before the date and red after.</li>
+		</ul>
+		<h2 id="WeeklyProgress">Weekly Progress</h2>
+		<p>When in 
+			<i>Focus on Workweek</i> mode (right-most toolbar button), the Task List will show a JUnit-style progress bar which indicates progress on the tasks scheduled for that week.  Each task that is scheduled for the week but not yet completed adds to the bar.  A task completed by you adds to the green progress in the bar.  Deferring a task to a future week will also add to the apparent progress because it will remove the task from the current week.  Mousing over the bar will indicate details about your progress, such as the number of tasks and hours completed.  To avoid the need for manual estimation by default every task is estimated for 1 hour, but if you have longer or shorter running tasks that week you can adjust the estimate in the task editor's 
+			<i>Planning</i> page to ensure that the progress bar is accurate.  
+		</p>
+		<p>Note that when in 
+			<i>Focus on Workweek</i> mode the 
+			<i>Task List</i> will show each of the tasks scheduled for this week.  However, overdue tasks and those with incoming changes will also show, making the number of tasks visible not be a reliable indicator of progress on the tasks planned for the week.
+		</p>
+		<p>
+			<img border="0" src="images/Weekly-progress.gif"/>
+		</p>
+		<h2 id="ProgressforCategories">Progress for Categories</h2>
+		<p>Categories show progress for the number of completed tasks.  </p>
+		<p>
+			<img border="0" src="images/Progress-categories.gif"/>
+		</p>
+		<h2 id="IncomingChanges2">Incoming Changes</h2>
+		<p>All comments added since your last reading of a repository task will be automatically expanded when a task with incoming changes is opened.  Incoming changes are retrieved with the background synchronization to avoid waiting for the server when opening.  Note that a background synchronization is still kicked off upon opening in case changes came in since the last scheduled synchronization.  Repository tasks can be explicitly marked as read or unread.</p>
+		<p>
+			<img border="0" src="images/Incoming-changes.gif"/>
+		</p>
+		<h2 id="TaskRepositoryIntegration">Task Repository Integration</h2>
+		<p>Task repositories are easy to add, and can be named via the 
+			<i>Task Repositories</i> view.  An icon decoration indicates the repository type.  A task repository can be associated with a project, enabling it to be used for actions such as resolving bug hyperlinks.  
+			<b>Note:</b> you do not need to associate all of your projects with repositories after updating, since you will be prompted to do this when the associate is needed.
+		</p>
+		<p>
+			<img border="0" src="images/Task-repository-integration.gif"/>
+		</p>
+		<p>After the Task Repository has been setup and associated with a project, you need to create a new query against that repository to pull down the task list.</p>
+		<p>See 
+			<a href="http://www.ibm.com/developerworks/java/library/j-mylyn1/#repositories">Task-focused programming with Mylyn, Part 1</a>, Querying a repository.
+		</p>
+		<h2 id="OpenTaskdialog">Open Task dialog</h2>
+		<p>An 
+			<i>Open Type</i> style dialog is available for opening tasks (<code>Ctrl+F12</code>) and for activating tasks (<code>Ctrl+F9</code>).  The list is initially populated by recently active tasks.  The active task can also be deactivated via <code>Ctrl+Shift+F9</code>.  This can be used as a keyboard-only alternative for multi-tasking without the 
+			<i>Task List</i> view visible.  These actions appear in the 
+			<i>Navigate</i> menu.
+		</p>
+		<p>
+			<img border="0" src="images/Open-task-dialog.gif"/>
+		</p>
+		<h2 id="OpenRepositoryTaskdialog">Open Repository Task dialog</h2>
+		<p>For tasks not available on 
+			<i>Task List</i> view, there is a 
+			<i>Open Repository Task</i> dialog (<code>Ctrl+Shift+F12</code>). On this case, the task can be opened by informing its ID and repository. This way the task will be retrieved from repository without being added to task list.
+		</p>
+		<p>Optionally, you can add the remote task to task list, by checking the 
+			<i>Add to Task List category</i> option and informing the category where it will be inserted.
+		</p>
+		<p>Multiple tasks can be added simultaneously by informing a sequence of IDs, separated by commas, e.g. "1,2,3".</p>
+		<h2 id="Repositorytaskattachments">Repository task attachments</h2>
+		<p>Repository task attachments (supported by the Bugzilla and Trac connectors) can be attached via drag-and-drop from both within the Eclipse workspace and from outside, and from text selections, which will invoke the attachment wizard. Attachments can be opened with a browser or corresponding editor.</p>
+		<p>
+			<img border="0" src="images/Repository-task-attachments.gif"/>
+		</p>
+		<h2 id="Hyperlinking">Hyperlinking</h2>
+		<p>In the task editor, comments that include text of the form bug#123 or task#123 or bug 123 will be hyperlinked. In order to support hyperlinks within other text editors such as code or txt files, the project that contains the file must be associated with a particular task repository. To do this, right click on the project > Properties > Task Repository and select the task repository used when working with this project. Then in the editors such as the java source editor or the default text editor, enter a reference such as bug#123. Ctrl+clicking on this text will open the bug in the rich editor.</p>
+		<h2 id="TaskListbackupandrestore">Task List backup and restore</h2>
+		<p>
+			<b>Where does Mylyn keep the task list?</b>
+		</p>
+		<p>By default Mylyn keeps your task list in &lt;workspace>/.mylyn/tasklist.xml.zip.  You can change this in the Mylyn Task List preferences (
+			<i>Window -> Preferences -> Mylyn -> Task List -> Task Data</i>).
+		</p>
+		<p>
+			<b>Where does Mylyn keep the task list backups?</b>
+		</p>
+		<p>By default, Mylyn keeps the task list backups in the <code>&lt;workspace>/.mylyn/backup</code> folder.
+			The location of this file, as well as backup scheduling, can be changed in 
+			<i>Preferences -> Mylyn -> Tasks</i> in the 
+			<i>Task Data -> Backup</i> section.
+		</p>
+		<p>
+			<b>How do I restore my task list from a backup?</b>
+		</p>
+		<p>Task and context data can be restored from a backup snapshot zip file via  
+			<i>File -> Import -> Mylyn Task Data</i>.  By default backup snapshots are taken daily and kept for 30 days.
+		</p>
+		<p>
+			<img border="0" src="images/Tasklist-restore.gif"/>
+		</p>
+		<p>
+			<b>Can I create manual backups?</b>
+		</p>
+		<p>Yes. Use 
+			<i>File -> Import/Export ->  Mylyn Task Data</i>.  
+		</p>
+		<p>
+			<img border="0" src="images/mylar-tasklist-backup.gif"/>
+		</p>
+		<p>
+			<b>Note:</b>  uninstalling a connector will cause all of the queries and tasks of that kind to disappear from the Task List, but if you reinstall that connector they will reappear.
+		</p>
+		<p>
+			<b>If the Task List is blank</b>, either Mylyn failed to install or update, or there was a problem reading the Task List.  By default Mylyn keeps your Task List in <code>&lt;workspace>/.mylyn/tasklist.xml</code>.  If you move workspaces, and have not changed the Mylyn data directory via the 
+			<i>Task List</i> preference page, the new location will be used when Eclipse restarts (hit 
+			<i>Restore Defaults</i> on that page to copy tasks back to the default location).  If your tasks disappear due to to a bug you can check the <code>.mylyn</code> folder for a <code>tasklist-backup.xml</code> file, which will contain the previously-saved list.
+		</p>
+		<h2 id="ReportBugsfromErrorLog">Report Bugs from Error Log</h2>
+		<p>Bugs can created directly from events in the 
+			<i>Error Log</i> view.  This will create a new repository task editor with the summary and description populated with the error event's details.  If the Connector you are using does not have a rich editor, the event details will be placed into the clipboard so that you can paste them into the web-based editor that will be opened automatically.
+		</p>
+		<p>
+			<img border="0" src="images/Report-bugs-error-log.gif"/>
+		</p>
+		<h2 id="AutomaticDuplicateDetection">Automatic Duplicate Detection</h2>
+		<p>The 
+			<i>Search for Duplicates</i> button on the 
+			<i>New Repository Task</i> editor encourages and facilitates finding similar bug reports before creating a new one.  Potential duplicates are displayed in the Search view which can be used to open a bug and comment or vote if a duplicate is found.  The current duplicate detection mechanism uses stack traces, either automatically inserted by the 
+			<i>Report as Bug</i> mechanism, or manually pasted into the 
+			<i>Description</i> area.  All descriptions and comments of bugs on the corresponding repository are included in the search.
+		</p>
+		<p>
+			<img border="0" src="images/Automatic-duplicate-detection.gif"/>
+		</p>
+		<h2 id="SubmittingContexts">Submitting Contexts</h2>
+		<p>When submitting comments, contexts can be attached by selecting the corresponding check-box in the 
+			<i>Actions</i> section.
+		</p>
+		<p>
+			<img border="0" src="images/Submitting-contexts.gif"/>
+		</p>
+		<h2 id="Keybindings">Keybindings</h2>
+		<table>
+			<tr>
+				<td>F2</td>
+				<td>rename</td>
+			</tr>
+			<tr>
+				<td>F4</td>
+				<td>show tooltip</td>
+			</tr>
+			<tr>
+				<td>F5</td>
+				<td>synchronize</td>
+			</tr>
+			<tr>
+				<td>Alt + Down</td>
+				<td>go to next unread</td>
+			</tr>
+			<tr>
+				<td>Alt + Up</td>
+				<td>go to previous unread</td>
+			</tr>
+			<tr>
+				<td>Alt + Shift + R</td>
+				<td>mark as read</td>
+			</tr>
+			<tr>
+				<td>Alt + Shift + U</td>
+				<td>mark as unread</td>
+			</tr>
+			<tr>
+				<td>Esc</td>
+				<td>hide tooltip</td>
+			</tr>
+			<tr>
+				<td>Enter</td>
+				<td>open task</td>
+			</tr>
+			<tr>
+				<td>Insert</td>
+				<td>new local task</td>
+			</tr>
+			<tr>
+				<td>Ctrl+C</td>
+				<td>Copy details</td>
+			</tr>
+			<tr>
+				<td>Ctrl+F</td>
+				<td>Find</td>
+			</tr>
+		</table><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Configuration.html" title="Configuration">
+						<img alt="Previous" border="0" src="images/images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Mylyn User Guide.html" title="Mylyn User Guide">
+						<img alt="Mylyn User Guide" border="0" src="images/images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Task-Repositories.html" title="Task Repositories">
+						<img alt="Next" border="0" src="images/images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Configuration</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Task Repositories</td>
+			</tr>
+		</table>
+	</body>
+</html>

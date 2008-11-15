@@ -73,7 +73,8 @@ This document is maintained in a collaborative wiki.  If you wish to update or m
 				internallinkpattern="@{wiki.url.base}/{0}"
 				validate="true"
 				failonvalidationerror="true"
-				prependImagePrefix="${imageFolder}">
+				prependImagePrefix="${imageFolder}"
+				formatoutput="true">
 				<fileset dir="tmp" includes="**/*.mediawiki"/>
 			</wikitext-to-eclipse-help>
 	    	

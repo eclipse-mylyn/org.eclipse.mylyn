@@ -1,2 +1,135 @@
-<?xml version='1.0' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Mylyn User Guide - Team Support</title></head><body><table class="navigation" style="width: 100%;" border="0" summary="navigation"><tr><th style="width: 100%" align="center" colspan="3">Team Support</th></tr><tr><td style="width: 20%" align="left"><a href="Task-Focused-UI.html" title="Task-Focused UI"><img alt="Previous" border="0" src="images/images/prev.gif"/></a></td><td style="width: 60%" align="center"></td><td style="width: 20%" align="right"><a href="Task-Repository-Connectors.html" title="Task Repository Connectors"><img alt="Next" border="0" src="images/images/next.gif"/></a></td></tr><tr><td style="width: 20%" align="left" valign="top">Task-Focused UI</td><td style="width: 60%" align="center"></td><td style="width: 20%" align="right" valign="top">Task Repository Connectors</td></tr></table><hr/><h1 id="TeamSupport">Team Support</h1><h2 id="ConfiguringtheSynchronizeviewforchangesets">Configuring the Synchronize view for change sets</h2><p>There are two modes for Eclipse's Change Sets support: the <b>models</b> mode (Eclipse 3.2 and later) and the <b>standard</b> mode.  These modes are unrelated to Mylyn and apply to both Mylyn's automated Change Sets and the ones you can created manually in Eclipse.  Note that not all tools may support both modes.  The instructions below are for the CVS support included with Mylyn.  Refer to the Mylyn integration documentation for your source control plug-in for additional instructions for Mylyn change set integration, if available.  </p><p>The <i>models</i> mode is toggled via <i>Synchronize View -> Preferences -> CVS -> Allow Models to participate in synchronizations</i>.  The Eclipse UI for <i>Change Sets</i> is not obvious so consider the following guidelines if you are having problems with it.</p><ul><li>Subclipse users: note that Subclipse 1.2.3 and later functions as if in the models mode described below, so the additional configuration step is not needed.</li></ul><p>If you are using the <b>standard</b> mode, <i>Change Sets</i> toolbar button will only appear if the <i>Synchronize</i> view is in <i>Incoming</i> or <i>Outgoing</i> mode, not in the combined <i>Incoming/Outgoing</i> mode.  This button must be pressed in order for change sets to appear.  For working with CVS two modes are indistinguishable beyond this limitation.  Subclipse only supports the standard mode.  If you <b>switch modes</b> you must re-create your synchronization via the <i>Synchronize...</i> button available from the first toolbar button on the <i>Synchronize</i> view.</p><p><img border="0" src="images/mylar-changesets-subclipse.gif"/></p><p>If you are using the <b>models</b> mode, which is <b>recommended</b> if available for your team provider, you will notice that the Mylyn Active Change Sets work show up with a decoration in the lower-right corner, and that you can view both incoming and outgoing change sets at the same time.  
-<!--However, note that there is a refresh problem with this mode (<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=142395">bug 142395</a>).  To work around it, if a Change Set you expect is missing or if you get a "There are no more Incoming/Outgoing changes" message in the view on startup, toggle the third toolbar button between <i>All Models</i> and <i>Change Sets</i>.  If that doesn't resolve it activate and deactivate the current task.--></p><ul><li><b>Note:</b> if you have enabled the <i>models</i> mode, but do not see the overlay icon visible in the screenshot below, it is because you are using an old non-models based synchronization.  Old synchronizations are not updated automatically when you switch modes so you must create a new one.</li></ul><p><img border="0" src="images/mylar-changesets-model-based.gif"/></p><h2 id="Automaticchangesets">Automatic change sets</h2><p>Operations such as <b>committing</b>, <b>updating</b>, and <b>patch creation</b> can all be performed on Mylyn's automatically managed <i>Change Sets</i>.  <code>Right+click</code> the change set node to get the corresponding <i>Team</i> menu.  Changed resources that are not a part of any task context will appear under the root of the <i>Synchronize</i> view.  If needed missing resources can be added to the task context <i>Change Set</i> via the <i>Synchronize</i> View by <code>right+clicking</code> the resource and selecting <i>Add to</i> and then selecting the corresponding task.</p><h2 id="Automaticcommitmessages">Automatic commit messages</h2><p>Mylyn will automatically generate commit messages for you when you use its Change Set support.  To modify the template go to <i>Window -> Preferences -> Mylyn -> Team -> Commit Comment Templates</i>.</p><p><img border="0" src="images/mylar-commit-tempates.gif"/></p><h2 id="Workingwithpatches">Working with patches</h2><p>When applying patches, the preferred scenario is to have a task context attached to the task along with the patch.  Since this is not always feasible, Mylyn provides an action in the popup menu of the <i>Synchronize</i> view that supports adding changed elements to the task context.  </p><ol><li>Activate the task containing the patch.</li><li>Apply the patch.  If yo uare using automatic change sets, this will cause the change set created by Mylyn to contain the outoing changes.  If it doesn't you can use the <i>Add to</i> action on the popup menu to add the elements to the corresponding change set. </li><li>Invoke the <i>Add to Task Context</i> action on the change set node, causing all of the changed files to be added to the task context.  You can also invoke this action on a selection one or more elements (e.g. files) in the view.</li></ol><p><img border="0" src="images/synchronize-view-add.gif"/></p><hr/><table class="navigation" style="width: 100%;" border="0" summary="navigation"><tr><td style="width: 20%" align="left"><a href="Task-Focused-UI.html" title="Task-Focused UI"><img alt="Previous" border="0" src="images/images/prev.gif"/></a></td><td style="width: 60%" align="center"><a href="Mylyn User Guide.html" title="Mylyn User Guide"><img alt="Mylyn User Guide" border="0" src="images/images/home.gif"/></a></td><td style="width: 20%" align="right"><a href="Task-Repository-Connectors.html" title="Task Repository Connectors"><img alt="Next" border="0" src="images/images/next.gif"/></a></td></tr><tr><td style="width: 20%" align="left" valign="top">Task-Focused UI</td><td style="width: 60%" align="center"></td><td style="width: 20%" align="right" valign="top">Task Repository Connectors</td></tr></table></body></html>
+<?xml version='1.0' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Mylyn User Guide - Team Support</title>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Team Support</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Task-Focused-UI.html" title="Task-Focused UI">
+						<img alt="Previous" border="0" src="images/images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Task-Repository-Connectors.html" title="Task Repository Connectors">
+						<img alt="Next" border="0" src="images/images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Task-Focused UI</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Task Repository Connectors</td>
+			</tr>
+		</table><hr/>
+		<h1 id="TeamSupport">Team Support</h1>
+		<h2 id="ConfiguringtheSynchronizeviewforchangesets">Configuring the Synchronize view for change sets</h2>
+		<p>There are two modes for Eclipse's Change Sets support: the 
+			<b>models</b> mode (Eclipse 3.2 and later) and the 
+			<b>standard</b> mode.  These modes are unrelated to Mylyn and apply to both Mylyn's automated Change Sets and the ones you can created manually in Eclipse.  Note that not all tools may support both modes.  The instructions below are for the CVS support included with Mylyn.  Refer to the Mylyn integration documentation for your source control plug-in for additional instructions for Mylyn change set integration, if available.  
+		</p>
+		<p>The 
+			<i>models</i> mode is toggled via 
+			<i>Synchronize View -> Preferences -> CVS -> Allow Models to participate in synchronizations</i>.  The Eclipse UI for 
+			<i>Change Sets</i> is not obvious so consider the following guidelines if you are having problems with it.
+		</p>
+		<ul>
+			<li>Subclipse users: note that Subclipse 1.2.3 and later functions as if in the models mode described below, so the additional configuration step is not needed.</li>
+		</ul>
+		<p>If you are using the 
+			<b>standard</b> mode, 
+			<i>Change Sets</i> toolbar button will only appear if the 
+			<i>Synchronize</i> view is in 
+			<i>Incoming</i> or 
+			<i>Outgoing</i> mode, not in the combined 
+			<i>Incoming/Outgoing</i> mode.  This button must be pressed in order for change sets to appear.  For working with CVS two modes are indistinguishable beyond this limitation.  Subclipse only supports the standard mode.  If you 
+			<b>switch modes</b> you must re-create your synchronization via the 
+			<i>Synchronize...</i> button available from the first toolbar button on the 
+			<i>Synchronize</i> view.
+		</p>
+		<p>
+			<img border="0" src="images/mylar-changesets-subclipse.gif"/>
+		</p>
+		<p>If you are using the 
+			<b>models</b> mode, which is 
+			<b>recommended</b> if available for your team provider, you will notice that the Mylyn Active Change Sets work show up with a decoration in the lower-right corner, and that you can view both incoming and outgoing change sets at the same time.  
+<!--			However, note that there is a refresh problem with this mode (
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=142395">bug 142395</a>).  To work around it, if a Change Set you expect is missing or if you get a "There are no more Incoming/Outgoing changes" message in the view on startup, toggle the third toolbar button between 
+			<i>All Models</i> and 
+			<i>Change Sets</i>.  If that doesn't resolve it activate and deactivate the current task.-->
+		</p>
+		<ul>
+			<li>
+				<b>Note:</b> if you have enabled the 
+				<i>models</i> mode, but do not see the overlay icon visible in the screenshot below, it is because you are using an old non-models based synchronization.  Old synchronizations are not updated automatically when you switch modes so you must create a new one.
+			</li>
+		</ul>
+		<p>
+			<img border="0" src="images/mylar-changesets-model-based.gif"/>
+		</p>
+		<h2 id="Automaticchangesets">Automatic change sets</h2>
+		<p>Operations such as 
+			<b>committing</b>, 
+			<b>updating</b>, and 
+			<b>patch creation</b> can all be performed on Mylyn's automatically managed 
+			<i>Change Sets</i>.  <code>Right+click</code> the change set node to get the corresponding 
+			<i>Team</i> menu.  Changed resources that are not a part of any task context will appear under the root of the 
+			<i>Synchronize</i> view.  If needed missing resources can be added to the task context 
+			<i>Change Set</i> via the 
+			<i>Synchronize</i> View by <code>right+clicking</code> the resource and selecting 
+			<i>Add to</i> and then selecting the corresponding task.
+		</p>
+		<h2 id="Automaticcommitmessages">Automatic commit messages</h2>
+		<p>Mylyn will automatically generate commit messages for you when you use its Change Set support.  To modify the template go to 
+			<i>Window -> Preferences -> Mylyn -> Team -> Commit Comment Templates</i>.
+		</p>
+		<p>
+			<img border="0" src="images/mylar-commit-tempates.gif"/>
+		</p>
+		<h2 id="Workingwithpatches">Working with patches</h2>
+		<p>When applying patches, the preferred scenario is to have a task context attached to the task along with the patch.  Since this is not always feasible, Mylyn provides an action in the popup menu of the 
+			<i>Synchronize</i> view that supports adding changed elements to the task context.  
+		</p>
+		<ol>
+			<li>Activate the task containing the patch.</li>
+			<li>Apply the patch.  If yo uare using automatic change sets, this will cause the change set created by Mylyn to contain the outoing changes.  If it doesn't you can use the 
+				<i>Add to</i> action on the popup menu to add the elements to the corresponding change set. 
+			</li>
+			<li>Invoke the 
+				<i>Add to Task Context</i> action on the change set node, causing all of the changed files to be added to the task context.  You can also invoke this action on a selection one or more elements (e.g. files) in the view.
+			</li>
+		</ol>
+		<p>
+			<img border="0" src="images/synchronize-view-add.gif"/>
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Task-Focused-UI.html" title="Task-Focused UI">
+						<img alt="Previous" border="0" src="images/images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Mylyn User Guide.html" title="Mylyn User Guide">
+						<img alt="Mylyn User Guide" border="0" src="images/images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Task-Repository-Connectors.html" title="Task Repository Connectors">
+						<img alt="Next" border="0" src="images/images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Task-Focused UI</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Task Repository Connectors</td>
+			</tr>
+		</table>
+	</body>
+</html>

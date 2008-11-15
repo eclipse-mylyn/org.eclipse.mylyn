@@ -1,6 +1,330 @@
-<?xml version='1.0' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Mylyn User Guide - Task Repository Connectors</title></head><body><table class="navigation" style="width: 100%;" border="0" summary="navigation"><tr><th style="width: 100%" align="center" colspan="3">Task Repository Connectors</th></tr><tr><td style="width: 20%" align="left"><a href="Team-Support.html" title="Team Support"><img alt="Previous" border="0" src="images/images/prev.gif"/></a></td><td style="width: 60%" align="center"></td><td style="width: 20%" align="right"><a href="Integration-with-other-tools.html" title="Integration with other tools"><img alt="Next" border="0" src="images/images/next.gif"/></a></td></tr><tr><td style="width: 20%" align="left" valign="top">Team Support</td><td style="width: 60%" align="center"></td><td style="width: 20%" align="right" valign="top">Integration with other tools</td></tr></table><hr/><h1 id="TaskRepositoryConnectors">Task Repository Connectors</h1><p>Mylyn allows you to collaborate on tasks via a shared task repository, also known as bug tracking systems.  In order to collaborate, you need to have a <b>Connector</b> to your particular repository.</p><p>Presently <a href="#Bugzilla_Connector">Bugzilla</a>, <a href="#JIRA_Connector">JIRA</a>, and <a href="#Trac_Connector">Trac</a> are supported. To connect to unsupported repositories, see <a href="#Generic_Web_Repository_Connector">Generic Web Repository Connectors</a>. <b>Also</b>, be sure to  <a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&amp;short_desc_type=anywordssubstr&amp;short_desc=%5Bconnector%5D&amp;product=Mylyn&amp;long_desc_type=allwordssubstr&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;status_whiteboard_type=allwordssubstr&amp;status_whiteboard=&amp;keywords_type=allwords&amp;keywords=&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;emailtype1=substring&amp;email1=&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=">vote for your favourite Connector</a> to see it supported earlier, or <a href="http://www.eclipse.org/mylyn/bugs.php">create a new bug</a> if your issue tracker is not listed.</p><h2 id="BugzillaConnector">Bugzilla Connector</h2><p>Once Mylyn is installed there are a few steps involved to get up and running.</p><ul><li>To access tasks (reports/issues) on a repository such as Bugzilla you must first set up a <i>Task Repository</i><ul><li>Navigate to <i>Window -> Show View -> Other -> Mylyn -> Task Repositories</i> to open the <i>Task Repositories</i> view. Task Repositories view can also be launched via the Task List view menu.</li><li>Launch the add repository wizard by pressing the add repository button located in the view's toolbar <img border="0" src="images/Mylar-add-repository.png"/>.</li><li>The first page of this wizard asks for the type of repository you wish to connect to (if you have installed multiple connectors). Select <i>Bugzilla</i> for example and press the <i>Next</i> button.</li><li>On the second page you can enter the repository's address and your login credentials. After filling in these details, press the <i>Validate</i> button to ensure the repository exists and your login credentials are valid. Once the settings validate you can finish the wizard. The repository you added will be shown in the <i>Task Repositories</i> view.</li></ul></li></ul><p><img title="Repository Configuration" alt="Repository Configuration" border="0" src="images/Mylar-repository-configuration.jpg"/></p><ul><li>Once the repository has been created, you may add queries to the Task List.<ul><li>In the <i>Task List</i> view right click anywhere in the list pane and select <i>New Query</i> from the context menu.</li><li>Choose the repository you added in the previous steps.</li><li>Enter query title and search criteria and then press <i>Finish</i>.</li><li>A query with the title you gave will appear in the Task List and will synchronize with the remote repository. If the query has hits they will appear within the query folder you've created.</li><li>Double click to open a hit. Double click on the query to edit the query parameters.</li><li>Click on the lightly shaded button (left of task icon) in the Task List to activate the task. Click again to deactivate.</li></ul></li></ul><p>See also <a href="http://wiki.eclipse.org/Mylyn/FAQ#Bugzilla_Connector" title="Mylyn/FAQ#Bugzilla_Connector">Bugzilla Connector Troubleshooting</a>.</p><h3 id="BugzillaTasks">Bugzilla Tasks</h3><ul><li>If the Bugzilla task's severity is "major", "blocker", or "critical", the task icon in the Task List will be decorated with a red dot.</li><li>If the Bugzilla task's severity is "enhancement" the task icon in the Task List will be decorated with a green triangle.</li><li>Tasks will be colored green in the task list if they were resolved today and are owned by you. Unfortuantely Bugzilla does not have a notion of a completion date so we simply check the last comment timestamp and assume it to be the completion date (see {{bug|215342}}).</li></ul><h3 id="Tipsforserveradministrators">Tips for server administrators</h3><p>Mylyn periodically checks config.cgi to retrieve the repository configuration.
-On Eclipse.org this resulted in heavy CPU Load for the regeneration and a big surge in band width use.</p><ul><li>This configuration seldom changes so can be cached and served from a file instead of being regenerated every time.  While the size of this file tends to be small when hosting less than a dozen projects, it can be large on repositories holding large numbers of projects, e.g. 900K on bugs.eclipse.org.</li><li>Generated bugzilla output contains a lot of unnecessary whitespace which can be trimmed before caching. For bugs.eclipse.org this reduces the file to about <em>660K</em>.</li><li>The remaining file contains a lot of redundancy so can be gzipped for further reduction.  On bugs.eclipse.org this leaves about <i>28K</i>, a considerable saving.</li></ul><p>Mylyn has been modified to accept gzip encoding on all requests, and will do content negotiation. See <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=205708">bug 205708</a>.</p><p><b>To add caching for your Bugzilla repository:</b></p><ul><li>Change the name of config.cgi to config-stock.cgi and get the caching code in a new config.cgi.</li><li>The current version of this caching config.cgi script is hosted at:</li></ul><pre> via CVS: :pserver:anonymous@dev.eclipse.org:/cvsroot/technology/org.eclipse.phoenix/infra-scripts/bugzilla/
+<?xml version='1.0' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Mylyn User Guide - Task Repository Connectors</title>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Task Repository Connectors</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Team-Support.html" title="Team Support">
+						<img alt="Previous" border="0" src="images/images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Integration-with-other-tools.html" title="Integration with other tools">
+						<img alt="Next" border="0" src="images/images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Team Support</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Integration with other tools</td>
+			</tr>
+		</table><hr/>
+		<h1 id="TaskRepositoryConnectors">Task Repository Connectors</h1>
+		<p>Mylyn allows you to collaborate on tasks via a shared task repository, also known as bug tracking systems.  In order to collaborate, you need to have a 
+			<b>Connector</b> to your particular repository.
+		</p>
+		<p>Presently 
+			<a href="#Bugzilla_Connector">Bugzilla</a>, 
+			<a href="#JIRA_Connector">JIRA</a>, and 
+			<a href="#Trac_Connector">Trac</a> are supported. To connect to unsupported repositories, see 
+			<a href="#Generic_Web_Repository_Connector">Generic Web Repository Connectors</a>. 
+			<b>Also</b>, be sure to  
+			<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&amp;short_desc_type=anywordssubstr&amp;short_desc=%5Bconnector%5D&amp;product=Mylyn&amp;long_desc_type=allwordssubstr&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;status_whiteboard_type=allwordssubstr&amp;status_whiteboard=&amp;keywords_type=allwords&amp;keywords=&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;emailtype1=substring&amp;email1=&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=">vote for your favourite Connector</a> to see it supported earlier, or 
+			<a href="http://www.eclipse.org/mylyn/bugs.php">create a new bug</a> if your issue tracker is not listed.
+		</p>
+		<h2 id="BugzillaConnector">Bugzilla Connector</h2>
+		<p>Once Mylyn is installed there are a few steps involved to get up and running.</p>
+		<ul>
+			<li>To access tasks (reports/issues) on a repository such as Bugzilla you must first set up a 
+				<i>Task Repository</i>
+				<ul>
+					<li>Navigate to 
+						<i>Window -> Show View -> Other -> Mylyn -> Task Repositories</i> to open the 
+						<i>Task Repositories</i> view. Task Repositories view can also be launched via the Task List view menu.
+					</li>
+					<li>Launch the add repository wizard by pressing the add repository button located in the view's toolbar 
+						<img border="0" src="images/Mylar-add-repository.png"/>.
+					</li>
+					<li>The first page of this wizard asks for the type of repository you wish to connect to (if you have installed multiple connectors). Select 
+						<i>Bugzilla</i> for example and press the 
+						<i>Next</i> button.
+					</li>
+					<li>On the second page you can enter the repository's address and your login credentials. After filling in these details, press the 
+						<i>Validate</i> button to ensure the repository exists and your login credentials are valid. Once the settings validate you can finish the wizard. The repository you added will be shown in the 
+						<i>Task Repositories</i> view.
+					</li>
+				</ul>
+			</li>
+		</ul>
+		<p>
+			<img title="Repository Configuration" alt="Repository Configuration" border="0" src="images/Mylar-repository-configuration.jpg"/>
+		</p>
+		<ul>
+			<li>Once the repository has been created, you may add queries to the Task List.
+				<ul>
+					<li>In the 
+						<i>Task List</i> view right click anywhere in the list pane and select 
+						<i>New Query</i> from the context menu.
+					</li>
+					<li>Choose the repository you added in the previous steps.</li>
+					<li>Enter query title and search criteria and then press 
+						<i>Finish</i>.
+					</li>
+					<li>A query with the title you gave will appear in the Task List and will synchronize with the remote repository. If the query has hits they will appear within the query folder you've created.</li>
+					<li>Double click to open a hit. Double click on the query to edit the query parameters.</li>
+					<li>Click on the lightly shaded button (left of task icon) in the Task List to activate the task. Click again to deactivate.</li>
+				</ul>
+			</li>
+		</ul>
+		<p>See also 
+			<a href="http://wiki.eclipse.org/Mylyn/FAQ#Bugzilla_Connector" title="Mylyn/FAQ#Bugzilla_Connector">Bugzilla Connector Troubleshooting</a>.
+		</p>
+		<h3 id="BugzillaTasks">Bugzilla Tasks</h3>
+		<ul>
+			<li>If the Bugzilla task's severity is "major", "blocker", or "critical", the task icon in the Task List will be decorated with a red dot.</li>
+			<li>If the Bugzilla task's severity is "enhancement" the task icon in the Task List will be decorated with a green triangle.</li>
+			<li>Tasks will be colored green in the task list if they were resolved today and are owned by you. Unfortuantely Bugzilla does not have a notion of a completion date so we simply check the last comment timestamp and assume it to be the completion date (see {{bug|215342}}).</li>
+		</ul>
+		<h3 id="Tipsforserveradministrators">Tips for server administrators</h3>
+		<p>Mylyn periodically checks config.cgi to retrieve the repository configuration.
+			On Eclipse.org this resulted in heavy CPU Load for the regeneration and a big surge in band width use.</p>
+		<ul>
+			<li>This configuration seldom changes so can be cached and served from a file instead of being regenerated every time.  While the size of this file tends to be small when hosting less than a dozen projects, it can be large on repositories holding large numbers of projects, e.g. 900K on bugs.eclipse.org.</li>
+			<li>Generated bugzilla output contains a lot of unnecessary whitespace which can be trimmed before caching. For bugs.eclipse.org this reduces the file to about <em>660K</em>.</li>
+			<li>The remaining file contains a lot of redundancy so can be gzipped for further reduction.  On bugs.eclipse.org this leaves about 
+				<i>28K</i>, a considerable saving.
+			</li>
+		</ul>
+		<p>Mylyn has been modified to accept gzip encoding on all requests, and will do content negotiation. See 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=205708">bug 205708</a>.
+		</p>
+		<p>
+			<b>To add caching for your Bugzilla repository:</b>
+		</p>
+		<ul>
+			<li>Change the name of config.cgi to config-stock.cgi and get the caching code in a new config.cgi.</li>
+			<li>The current version of this caching config.cgi script is hosted at:</li>
+		</ul>
+		<pre> via CVS: :pserver:anonymous@dev.eclipse.org:/cvsroot/technology/org.eclipse.phoenix/infra-scripts/bugzilla/
  or: http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.phoenix/infra-scripts/bugzilla/?root=Technology_Project
-</pre><ul><li>Modifications on this script are followed on <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=205416">bug 205416</a></li></ul><h2 id="TracConnector">Trac Connector</h2><p>The Trac connector offers two access methods:</p><ul><li><b>Trac 0.9 and later</b>: In this mode the standard Trac web interface is used for repository access. Tickets may be created and edited through a web browser.</li><li><b>XML-RPC Plugin</b> (Trac trunk): This requires the latest revision (1175) of the <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">XmlRpcPlugin</a> for Trac to be enabled for the accessed repository. The XmlRpcPlugin provides a remote interface to the Trac repository and is distributed separately from Trac (see <a href="http://trac.edgewall.org/ticket/217">#217</a>). Currently, Trac and the XmlRpcPlugin need to be installed from source. See these <a href="http://trac-hacks.org/wiki/XmlRpcPlugin#Installation">install instructions</a> for requirements and documentation.</li></ul><p>The Trac connector integrates Trac queries into the Task List. If you do not know your Trac repository version use the <i>Automatic</i> setting and click <i>Validate Settings</i>.</p><p><b>New Task Editor</b></p><p>A rich editor for creating new Trac tasks is available for repositories that use XML-RPC (see the  <a href="http://wiki.eclipse.org/index.php/Mylyn_FAQ">FAQ</a> for XML-RPC configuration instructions).</p><p><img border="0" src="images/Trac-editor-new.gif"/></p><p><b>Rich Editor, Attachments and Offline support</b></p><p>The Trac connector supports the rich task editor.  Attributes and comments can be viewed and edited offline, synchronization is done in the background, and attachments can be posted and retrieved.  </p><p>Task Context attachments are supported via the context menu actions in the Task List.  This support requires the Trac XML-RPC plug-in to be enabled and the integration will fall back to the web mode if it is not, (see:  <a href="http://wiki.eclipse.org/index.php/Mylyn_FAQ#Trac_Connector_troubleshooting">Trac Connector troubleshooting</a>).</p><p><img border="0" src="images/Trac-editor.gif"/></p><h2 id="JIRAConnector">JIRA Connector</h2><p>See <a href="http://confluence.atlassian.com/display/JIRAEXT/Mylyn">this page</a> for install instructions and additional screen shots. Note that the Mylyn JIRA connector requires at least JIRA version 3.3.3 and SOAP/RPC services have to be enabled on the server.</p><p><b>Rich Editor</b></p><p>The JIRA connector provides a rich editor, offline editing, and change notifications.</p><p><img border="0" src="images/Jira-editor.gif"/></p><p><b>Search Integration</b></p><p>Searching through JIRA repositories is integrated with the <i>Search</i> dialog.</p><p><img border="0" src="images/Jira-search.gif"/></p><p><b>Query</b></p><p>The JIRA query dialog has been streamlined into a single page.  Date range queries are now supported.</p><p><img border="0" src="images/Jira-query.gif"/></p><p>See also <a href="http://wiki.eclipse.org/Mylyn/Mylyn_FAQ#JIRA_Connector_troubleshooting" title="Mylyn_FAQ#JIRA_Connector_troubleshooting">JIRA Connector Troubleshooting</a>.</p><h2 id="GenericWebRepositoryConnector">Generic Web Repository Connector</h2><p>The generic web repository connector is NOT part of the default Mylyn install. You can install it from a separate extras update site. See <a href="http://www.eclipse.org/mylyn/downloads/">Mylyn download page</a> for more details.</p><p>The web connector allow to retrieve tasks from repositories that don't have rich connectors, but can show list of tasks on the web UI. Out of the box connector provides configuration templates for the following issue tracking systems:</p><ul><li>Google Code Hosting (<code>code.google.com</code>)</li><li>IssueZilla (<code>java.net, dev2dev, tigris.org</code>)</li><li>GForge (<code>objectweb.org</code>)</li><li>SourceForge (<code>sf.net</code>), see <a href="http://wiki.eclipse.org/Mylyn/Using_Sourceforge_with_Mylyn" title="Using Sourceforge with Mylyn">Using Sourceforge with Mylyn</a></li><li>Mantis (<code>www.futureware.biz/mantis</code>)</li><li>ChangeLogic (<code>changelogic.araneaframework.org</code>)</li><li>OTRS (<code>otrs.org</code>)</li><li>phpBB</li><li>vBulletin</li></ul><p>Lists of issues can be extracted from existing web pages using simple parsing configuration. Configuration can be also parametrized to make it easier to customize it for a specific project.</p><p>The parameters used for configuring project properties are typically substituted into the URLs used to access the repository. Substitution and matching rules can be edited under the <i>Advanced Configuration</i> section on both the <i>Repository Settings</i> page and the <i>Edit Query</i> page.</p><p>See <a href="http://wiki.eclipse.org/Mylyn/FAQ#Generic_Web_Repository_Connector" title="Mylyn/FAQ#Generic_Web_Repository_Connector">FAQ</a> for the troubleshooting tips.</p><p><b>For example</b>, consider the configuration steps for GlassFish project at <code>java.net</code>:</p><p><b>1.</b> Create new Generic web-based repository (in the Task Repository view). GlassFish is using IssueZilla and has a preconfigured template that can be selected by server url <i><a href="https://glassfish.dev.java.net/issues">https://glassfish.dev.java.net/issues</a></i>. You can also specify all fields manually in the <i>Advanced Configuration</i> section. For GlassFish the following settings are required:</p><ul><li>Task URL: <code>${serverUrl}/show_bug.cgi?id=</code></li><li>New Task URL: <code>${serverUrl}/enter_bug.cgi?issue_type=DEFECT</code></li><li>Query URL: <code>${serverUrl}/buglist.cgi?component=glassfish&amp;issue_status=NEW&amp;issue_status=STARTED&amp;issue_status=REOPENED&amp;order=Issue+Number</code></li><li>Query Pattern: <code>&lt;a href="show_bug.cgi\?id\=(.+?)">.+?&lt;span class="summary">(.+?)&lt;/span></code></li></ul><dl><dd><b>Note:</b> <i>Query Pattern</i> field should be a <code>regexp</code> with 1st matching group on <i>Issue ID</i> and 2nd on <i>Issue Description</i>. Alternatively, you could use named matching groups: ({Id}.+?), ({Description}.+?), ({Status}.+?), ({Owner}.+?) and ({Type}.+?), then they can appear in query <code>regexp</code> in an arbitrary order. The second option requires build 2.0.0v20070717 or later.</dd></dl><dl><dd><b>Note:</b> the above fields are using parameter substitution <code>${..}</code>. Variables <code>serverUrl, userId</code> and <code>password</code> are substituted from the values of corresponding fields of the repository preference page. In addition you can specify any arbitrary parameters and their values that will be also substituted into the template fields.</dd></dl><dl><dd><b>Note:</b> the SourceForge template included with connector assume that <i>single repository is used for all projects</i>. User should create multiple queries, and set project parameters at the query level. Because web connector don't support actions like "open repository task" there is really no need to create separate repositories per project and if you think about it that is how it work for connectors for Bugzilla and JIRA. However, it is still possible to setup separate repository per project using repository url like http://sourceforge.net/tracker/?group_id=172199 and accordingly updating derived urls is the advanced repository settings.</dd></dl><p><!-- TODO need login setup for above GlassFish example -->
-<b>For the web repository that require user to login, use advanced configuration in following way.</b> 
-<i>This configuration is for GForge, you might need to change it for other repositories</i>:</p><ul><li>Login Request URL - an address that form is using to submit login request: <code>${serverUrl}/account/login.php?return_to=&amp;form_loginname=${userId}&amp;form_pw=${password}&amp;login=Login <b>(POST)</b></code></li><li>Login Form URL - an address where login form is located <i>(only needed if server need a login token in the parameters of the Login Request URL)</i>: <code>${serverUrl}/account/login.php</code></li><li>Login Token Pattern - pattern to extract value of the <code>loginToken</code> parameter from the form page <i>(only needed if server need a login token in the parameters of the Login Request URL and Login Form URL is specified)</i>: <code>session_ser=(.+?)</code></li></ul><p><b>2.</b> Create a new query for the GlassFish task repository created above (either from popup context menu in the Task List view or using a "New..." wizard from File -> New... -> Other... menu).</p><ul><li><i>Query URL</i> and <i>Query Pattern</i> in the <i>Repository Preferences</i> are used as default query parameters and can be overwritten in <i>Advanced Configuration</i> section in <i>Query Preferences</i>. Custom parameter values can also be overridden here as well as new parameters for substitution into the specific query.</li></ul><ul><li>In the <i>Advanced Configuration</i> section of the "New Query" dialog, there is a "Preview" button. You can use it to test your query pattern.</li></ul><p><img border="0" src="images/Generic-web-repository-settings.gif"/></p><h2 id="XPlannerConnector">XPlanner Connector</h2><p>The XPlanner connector is currently in the Experimental state.  It supports XPlanner version .7.</p><p><b>Query</b></p><p>XPlanner Connector supports creating queries from your XPlanner repository.  You can select to create a query for your own in progress tasks (the default), or select projects or iterations or user stories from a list.  You can also select ones assigned to you, or all.  Currently you can choose to group the results by tasks or user stories.  If you group the results by tasks, this will result in a single query with the applicable tasks underneath it.  If you choose to group the results by user stories, this will result in multiple queries added to the task list, each one corresponding to a user story, with the applicable tasks underneath it:</p><p><img border="0" src="images/XPlannerQuery.jpg"/></p><p><b>Task Editor</b></p><p>A rich editor for editing XPlanner tasks is available.  It currently doesn't support all of the attributes you can change in XPlanner itself, but allows you to modify the basic ones necessary for XP development -- e.g. summary, description, estimated time. The attributes section of the editor displays an XPlanner-like view of the meaningful attributes, some of which are not editable.</p><p><img border="0" src="images/XPlannerTaskEditor.gif"/></p><p><b>User Story Editor</b></p><p>If you open an XPlanner element by id, using the "Open Repository Task by Key/ID" dialog, and that id is a user story id, you will see the read-only user story editor.  This editor is just useful for seeing the major details of a user story -- no items in it can be changed, since there is no really good mapping between a user story and a Mylyn task.</p><p><img border="0" src="images/XPlannerUserStoryEditor.gif"/></p><hr/><table class="navigation" style="width: 100%;" border="0" summary="navigation"><tr><td style="width: 20%" align="left"><a href="Team-Support.html" title="Team Support"><img alt="Previous" border="0" src="images/images/prev.gif"/></a></td><td style="width: 60%" align="center"><a href="Mylyn User Guide.html" title="Mylyn User Guide"><img alt="Mylyn User Guide" border="0" src="images/images/home.gif"/></a></td><td style="width: 20%" align="right"><a href="Integration-with-other-tools.html" title="Integration with other tools"><img alt="Next" border="0" src="images/images/next.gif"/></a></td></tr><tr><td style="width: 20%" align="left" valign="top">Team Support</td><td style="width: 60%" align="center"></td><td style="width: 20%" align="right" valign="top">Integration with other tools</td></tr></table></body></html>
+</pre>
+		<ul>
+			<li>Modifications on this script are followed on 
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=205416">bug 205416</a>
+			</li>
+		</ul>
+		<h2 id="TracConnector">Trac Connector</h2>
+		<p>The Trac connector offers two access methods:</p>
+		<ul>
+			<li>
+				<b>Trac 0.9 and later</b>: In this mode the standard Trac web interface is used for repository access. Tickets may be created and edited through a web browser.
+			</li>
+			<li>
+				<b>XML-RPC Plugin</b> (Trac trunk): This requires the latest revision (1175) of the 
+				<a href="http://trac-hacks.org/wiki/XmlRpcPlugin">XmlRpcPlugin</a> for Trac to be enabled for the accessed repository. The XmlRpcPlugin provides a remote interface to the Trac repository and is distributed separately from Trac (see 
+				<a href="http://trac.edgewall.org/ticket/217">#217</a>). Currently, Trac and the XmlRpcPlugin need to be installed from source. See these 
+				<a href="http://trac-hacks.org/wiki/XmlRpcPlugin#Installation">install instructions</a> for requirements and documentation.
+			</li>
+		</ul>
+		<p>The Trac connector integrates Trac queries into the Task List. If you do not know your Trac repository version use the 
+			<i>Automatic</i> setting and click 
+			<i>Validate Settings</i>.
+		</p>
+		<p>
+			<b>New Task Editor</b>
+		</p>
+		<p>A rich editor for creating new Trac tasks is available for repositories that use XML-RPC (see the  
+			<a href="http://wiki.eclipse.org/index.php/Mylyn_FAQ">FAQ</a> for XML-RPC configuration instructions).
+		</p>
+		<p>
+			<img border="0" src="images/Trac-editor-new.gif"/>
+		</p>
+		<p>
+			<b>Rich Editor, Attachments and Offline support</b>
+		</p>
+		<p>The Trac connector supports the rich task editor.  Attributes and comments can be viewed and edited offline, synchronization is done in the background, and attachments can be posted and retrieved.  </p>
+		<p>Task Context attachments are supported via the context menu actions in the Task List.  This support requires the Trac XML-RPC plug-in to be enabled and the integration will fall back to the web mode if it is not, (see:  
+			<a href="http://wiki.eclipse.org/index.php/Mylyn_FAQ#Trac_Connector_troubleshooting">Trac Connector troubleshooting</a>).
+		</p>
+		<p>
+			<img border="0" src="images/Trac-editor.gif"/>
+		</p>
+		<h2 id="JIRAConnector">JIRA Connector</h2>
+		<p>See 
+			<a href="http://confluence.atlassian.com/display/JIRAEXT/Mylyn">this page</a> for install instructions and additional screen shots. Note that the Mylyn JIRA connector requires at least JIRA version 3.3.3 and SOAP/RPC services have to be enabled on the server.
+		</p>
+		<p><b>Rich Editor</b></p>
+		<p>The JIRA connector provides a rich editor, offline editing, and change notifications.</p>
+		<p>
+			<img border="0" src="images/Jira-editor.gif"/>
+		</p>
+		<p><b>Search Integration</b></p>
+		<p>Searching through JIRA repositories is integrated with the 
+			<i>Search</i> dialog.
+		</p>
+		<p>
+			<img border="0" src="images/Jira-search.gif"/>
+		</p>
+		<p><b>Query</b></p>
+		<p>The JIRA query dialog has been streamlined into a single page.  Date range queries are now supported.</p>
+		<p>
+			<img border="0" src="images/Jira-query.gif"/>
+		</p>
+		<p>See also 
+			<a href="http://wiki.eclipse.org/Mylyn/Mylyn_FAQ#JIRA_Connector_troubleshooting" title="Mylyn_FAQ#JIRA_Connector_troubleshooting">JIRA Connector Troubleshooting</a>.
+		</p>
+		<h2 id="GenericWebRepositoryConnector">Generic Web Repository Connector</h2>
+		<p>The generic web repository connector is NOT part of the default Mylyn install. You can install it from a separate extras update site. See 
+			<a href="http://www.eclipse.org/mylyn/downloads/">Mylyn download page</a> for more details.
+		</p>
+		<p>The web connector allow to retrieve tasks from repositories that don't have rich connectors, but can show list of tasks on the web UI. Out of the box connector provides configuration templates for the following issue tracking systems:</p>
+		<ul>
+			<li>Google Code Hosting (<code>code.google.com</code>)</li>
+			<li>IssueZilla (<code>java.net, dev2dev, tigris.org</code>)</li>
+			<li>GForge (<code>objectweb.org</code>)</li>
+			<li>SourceForge (<code>sf.net</code>), see 
+				<a href="http://wiki.eclipse.org/Mylyn/Using_Sourceforge_with_Mylyn" title="Using Sourceforge with Mylyn">Using Sourceforge with Mylyn</a>
+			</li>
+			<li>Mantis (<code>www.futureware.biz/mantis</code>)</li>
+			<li>ChangeLogic (<code>changelogic.araneaframework.org</code>)</li>
+			<li>OTRS (<code>otrs.org</code>)</li>
+			<li>phpBB</li>
+			<li>vBulletin</li>
+		</ul>
+		<p>Lists of issues can be extracted from existing web pages using simple parsing configuration. Configuration can be also parametrized to make it easier to customize it for a specific project.</p>
+		<p>The parameters used for configuring project properties are typically substituted into the URLs used to access the repository. Substitution and matching rules can be edited under the 
+			<i>Advanced Configuration</i> section on both the 
+			<i>Repository Settings</i> page and the 
+			<i>Edit Query</i> page.
+		</p>
+		<p>See 
+			<a href="http://wiki.eclipse.org/Mylyn/FAQ#Generic_Web_Repository_Connector" title="Mylyn/FAQ#Generic_Web_Repository_Connector">FAQ</a> for the troubleshooting tips.
+		</p>
+		<p>
+			<b>For example</b>, consider the configuration steps for GlassFish project at <code>java.net</code>:
+		</p>
+		<p>
+			<b>1.</b> Create new Generic web-based repository (in the Task Repository view). GlassFish is using IssueZilla and has a preconfigured template that can be selected by server url 
+			<i>
+				<a href="https://glassfish.dev.java.net/issues">https://glassfish.dev.java.net/issues</a>
+			</i>. You can also specify all fields manually in the 
+			<i>Advanced Configuration</i> section. For GlassFish the following settings are required:
+		</p>
+		<ul>
+			<li>Task URL: <code>${serverUrl}/show_bug.cgi?id=</code></li>
+			<li>New Task URL: <code>${serverUrl}/enter_bug.cgi?issue_type=DEFECT</code></li>
+			<li>Query URL: <code>${serverUrl}/buglist.cgi?component=glassfish&amp;issue_status=NEW&amp;issue_status=STARTED&amp;issue_status=REOPENED&amp;order=Issue+Number</code></li>
+			<li>Query Pattern: <code>&lt;a href="show_bug.cgi\?id\=(.+?)">.+?&lt;span class="summary">(.+?)&lt;/span></code></li>
+		</ul>
+		<dl>
+			<dd>
+				<b>Note:</b> 
+				<i>Query Pattern</i> field should be a <code>regexp</code> with 1st matching group on 
+				<i>Issue ID</i> and 2nd on 
+				<i>Issue Description</i>. Alternatively, you could use named matching groups: ({Id}.+?), ({Description}.+?), ({Status}.+?), ({Owner}.+?) and ({Type}.+?), then they can appear in query <code>regexp</code> in an arbitrary order. The second option requires build 2.0.0v20070717 or later.
+			</dd>
+		</dl>
+		<dl>
+			<dd>
+				<b>Note:</b> the above fields are using parameter substitution <code>${..}</code>. Variables <code>serverUrl, userId</code> and <code>password</code> are substituted from the values of corresponding fields of the repository preference page. In addition you can specify any arbitrary parameters and their values that will be also substituted into the template fields.
+			</dd>
+		</dl>
+		<dl>
+			<dd>
+				<b>Note:</b> the SourceForge template included with connector assume that 
+				<i>single repository is used for all projects</i>. User should create multiple queries, and set project parameters at the query level. Because web connector don't support actions like "open repository task" there is really no need to create separate repositories per project and if you think about it that is how it work for connectors for Bugzilla and JIRA. However, it is still possible to setup separate repository per project using repository url like http://sourceforge.net/tracker/?group_id=172199 and accordingly updating derived urls is the advanced repository settings.
+			</dd>
+		</dl>
+		<p><!-- TODO need login setup for above GlassFish example -->
+
+			<b>For the web repository that require user to login, use advanced configuration in following way.</b> 
+<i>			This configuration is for GForge, you might need to change it for other repositories</i>:
+		</p>
+		<ul>
+			<li>Login Request URL - an address that form is using to submit login request: <code>${serverUrl}/account/login.php?return_to=&amp;form_loginname=${userId}&amp;form_pw=${password}&amp;login=Login 
+				<b>(POST)</b></code>
+			</li>
+			<li>Login Form URL - an address where login form is located 
+				<i>(only needed if server need a login token in the parameters of the Login Request URL)</i>: <code>${serverUrl}/account/login.php</code>
+			</li>
+			<li>Login Token Pattern - pattern to extract value of the <code>loginToken</code> parameter from the form page 
+				<i>(only needed if server need a login token in the parameters of the Login Request URL and Login Form URL is specified)</i>: <code>session_ser=(.+?)</code>
+			</li>
+		</ul>
+		<p>
+			<b>2.</b> Create a new query for the GlassFish task repository created above (either from popup context menu in the Task List view or using a "New..." wizard from File -> New... -> Other... menu).
+		</p>
+		<ul>
+			<li>
+				<i>Query URL</i> and 
+				<i>Query Pattern</i> in the 
+				<i>Repository Preferences</i> are used as default query parameters and can be overwritten in 
+				<i>Advanced Configuration</i> section in 
+				<i>Query Preferences</i>. Custom parameter values can also be overridden here as well as new parameters for substitution into the specific query.
+			</li>
+		</ul>
+		<ul>
+			<li>In the 
+				<i>Advanced Configuration</i> section of the "New Query" dialog, there is a "Preview" button. You can use it to test your query pattern.
+			</li>
+		</ul>
+		<p>
+			<img border="0" src="images/Generic-web-repository-settings.gif"/>
+		</p>
+		<h2 id="XPlannerConnector">XPlanner Connector</h2>
+		<p>The XPlanner connector is currently in the Experimental state.  It supports XPlanner version .7.</p>
+		<p>
+			<b>Query</b>
+		</p>
+		<p>XPlanner Connector supports creating queries from your XPlanner repository.  You can select to create a query for your own in progress tasks (the default), or select projects or iterations or user stories from a list.  You can also select ones assigned to you, or all.  Currently you can choose to group the results by tasks or user stories.  If you group the results by tasks, this will result in a single query with the applicable tasks underneath it.  If you choose to group the results by user stories, this will result in multiple queries added to the task list, each one corresponding to a user story, with the applicable tasks underneath it:</p>
+		<p>
+			<img border="0" src="images/XPlannerQuery.jpg"/>
+		</p>
+		<p>
+			<b>Task Editor</b>
+		</p>
+		<p>A rich editor for editing XPlanner tasks is available.  It currently doesn't support all of the attributes you can change in XPlanner itself, but allows you to modify the basic ones necessary for XP development -- e.g. summary, description, estimated time. The attributes section of the editor displays an XPlanner-like view of the meaningful attributes, some of which are not editable.</p>
+		<p>
+			<img border="0" src="images/XPlannerTaskEditor.gif"/>
+		</p>
+		<p>
+			<b>User Story Editor</b>
+		</p>
+		<p>If you open an XPlanner element by id, using the "Open Repository Task by Key/ID" dialog, and that id is a user story id, you will see the read-only user story editor.  This editor is just useful for seeing the major details of a user story -- no items in it can be changed, since there is no really good mapping between a user story and a Mylyn task.</p>
+		<p>
+			<img border="0" src="images/XPlannerUserStoryEditor.gif"/>
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Team-Support.html" title="Team Support">
+						<img alt="Previous" border="0" src="images/images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Mylyn User Guide.html" title="Mylyn User Guide">
+						<img alt="Mylyn User Guide" border="0" src="images/images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Integration-with-other-tools.html" title="Integration with other tools">
+						<img alt="Next" border="0" src="images/images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Team Support</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Integration with other tools</td>
+			</tr>
+		</table>
+	</body>
+</html>
