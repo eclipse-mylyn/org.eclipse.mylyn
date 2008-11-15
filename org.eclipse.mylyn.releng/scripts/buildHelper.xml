@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="buildHelper" default="" basedir=".">
+	<import file="getDependenciesHelper.xml"/>
+	
+	<target name="copy-maps-helper">
+		<copy todir="${build.home}/${eclipse.version}/maps">
+			<fileset dir="${basedir}/maps">
+				<include name="*.map"/>
+			</fileset>
+		</copy>
+		<delete>
+			<fileset dir="${build.home}/${eclipse.version}/maps" includes="mylyn*.map">
+				<exclude name="*${eclipse.version}.map"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="build-helper" depends="copy-maps-helper">
+    	<property name="timeout" value="3600000" />
+		<property name="application" value="org.eclipse.ant.core.antRunner" />
+    	<property name="eclipse.home" value="${eclipse.base}/sdk-${eclipse.version}/eclipse" />
+		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
+    	<path id="pde.build.script.id"> 
+    		<fileset dir="${eclipse.home}/plugins">
+            	<include name="org.eclipse.pde.build_*/scripts/build.xml"/>
+          	</fileset>
+    	</path> 
+    	<property name="pde.build.script" refid="pde.build.script.id"/>
+  	    <condition property="versionPostfix" value="e33" else="e3x"><equals arg1="${version}" arg2="3.3"/></condition>
+    	<property name="log" value="${build.results}/build-${eclipse.version}.log" />
+		
+		<echo message="Building ${eclipse.version}: output in ${log}" />
+    	<java fork="true" dir="." timeout="${timeout}" jvm="${jvm}" logError="true"
+			classname="org.eclipse.core.launcher.Main" output="${log}">
+	        <classpath>
+	    		<fileset dir="${eclipse.home}/plugins">
+	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
+	          	</fileset>
+	        </classpath>
+		    <arg line="-application ${application}"/>
+    		<arg line="-buildfile ${pde.build.script}"/>
+    		<arg line="-DbaseLocation=${eclipse.home}"/>    		
+    		<arg line="-Dbuilder=${basedir}/${eclipse.version}/config"/>
+    		<arg line="-DbuildDirectory=${build.home}/${eclipse.version}"/>
+    		<arg line="-DforceContextQualifier=${qualifier}-${versionPostfix}"/>
+    		<arg line="-DmylynQualifier=${qualifier}"/>
+    		<arg line="-DmajorVersion=${version}"/>
+		    <arg line="-consolelog"/>
+		    <jvmarg line="${vmargs}"/>
+		</java>
+    </target>
+	
+	<target name="run-tests-helper">
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+		<mkdir dir="${eclipse.home}/results" />
+		<exec executable="./run-tests-${eclipse.version}.sh">
+			<arg value="run" />
+		</exec>		
+	</target>
+
+	<target name="run-performance-tests-helper">
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+		<mkdir dir="${eclipse.home}/results" />
+		<exec executable="./run-tests-${eclipse.version}.sh">
+			<arg value="performance" />
+		</exec>		
+	</target>
+	
+	<target name="clean-build-helper">
+		<delete dir="${build.home}/${eclipse.version}" />
+	</target>
+
+	<target name="clean-tests-helper">
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+		<delete dir="${eclipse.home}/results" />
+		<delete failonerror="false">
+			<fileset dir="${eclipse.home}" includes="org*.xml" />
+		</delete>
+		<delete dir="${eclipse.home}/plugins/org.eclipse.mylyn.tests"/>
+	</target>
+
+	<target name="report-helper">
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+		<property name="results.home" value="${build.results}/${eclipse.version}" />
+		<mkdir dir="${results.home}" />
+		<xslt style="${basedir}/scripts/JUNIT.XSL" basedir="${eclipse.home}/results" includes="*.xml" destdir="${results.home}" />
+		<copy todir="${results.home}">
+			<fileset dir="${eclipse.home}/results" />
+		</copy>
+	</target>
+
+	<target name="publish-helper">
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+		<java jar="test-report.jar" failonerror="true" fork="true">
+			<classpath>
+				<pathelement location="test-report.jar" />
+				<pathelement path="${java.class.path}" />
+			</classpath>
+			<arg value="-in" />
+			<arg value="${eclipse.home}/results/org.eclipse.mylyn.tests.AllTests.xml" />
+			<arg value="-config" />
+			<arg value="repository.properties" />
+			<arg value="-build" />
+			<arg value="${qualifier}" />
+		</java>
+	</target>
+	
+	<target name="get-helper">
+		<property name="downloadsDir" value="${eclipse.base}"/> 
+
+		<!-- extract sdk for building -->
+		<basename property="file.sdk" file="${eclipse.url}"/>
+		<antcall target="getBundle">
+			<param name="file" value="${file.sdk}" />
+			<param name="url" value="${eclipse.url}"/>
+		</antcall>
+		<mkdir dir="${eclipse.base}/sdk-${eclipse.version}" />
+		<antcall target="unpackBundle">
+			<param name="file" value="${file.sdk}" />
+			<param name="unpackDest" value="${eclipse.base}/sdk-${eclipse.version}"/>
+			<param name="isUnpackedFile" value="${eclipse.base}/sdk-${eclipse.version}/eclipse"/>
+		</antcall>
+
+		<!-- extract sdk for testing and install test framework -->
+		<basename property="test.file" file="${eclipse.url.test}"/>
+		<antcall target="getBundle">
+			<param name="file" value="${test.file}" />
+			<param name="url" value="${eclipse.url.test}"/>
+		</antcall>
+		<mkdir dir="${eclipse.base}/test-${eclipse.version}" />
+		<antcall target="unpackBundle">
+			<param name="file" value="sdk-${eclipse.version}.tar.gz" />
+			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.version}"/>
+			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.version}/eclipse"/>
+		</antcall>
+		<antcall target="unpackBundle">
+			<param name="file" value="${test.file}" />
+			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.version}"/>
+			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.version}/eclipse/plugins/org.eclipse.test_3.2.0"/>
+		</antcall>
+	</target>
+
+</project>

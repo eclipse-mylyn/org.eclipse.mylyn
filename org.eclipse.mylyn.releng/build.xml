@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project name="testsuite" default="" basedir=".">
+<project name="mylyn" default="" basedir=".">
+	<import file="scripts/buildHelper.xml" />
+	<property file="defaults.properties" />
 	
-	<property name="BUILD_ROOT" value="." />
-	<property file="local.sh"/>
-
-	<property name="build" value="${QUALIFIER}" />
-
-	<property name="junit-report-output" value="./report/${build}" />
-	<property name="version" value="${MAJOR_VERSION}" />
-	<property name="build-home-3.3" value="./3.3" />
-	<property name="build-home-3.4" value="./3.4" />
-	<property name="build-home-3.5" value="./3.5" />
-	<property name="eclipse-home-3.3" value="${ECLIPSE_HOME_3_3}" />
-	<property name="eclipse-home-3.4" value="${ECLIPSE_HOME_3_4}" />
-	<property name="eclipse-home-3.5" value="${ECLIPSE_HOME_3_5}" />
-	<property name="eclipse-test-home-3.4" value="${ECLIPSE_TEST_HOME_3_4}" />
-	<property name="eclipse-test-home-3.3" value="${ECLIPSE_TEST_HOME_3_3}" />
-	<property name="jvm" value="${JAVA_HOME}/bin/java" />
-
+	<!-- base directory for eclipse sdk and eclipse test -->
+	<property name="eclipse.base" value="." />
 	
-	<target name="all" depends="test-clean">
+	<!-- working directory for building -->
+	<property name="build.home" value="${basedir}/build" />
+	
+	<!-- directory for build artifacts -->
+	<property name="build.results" value="${build.home}/results" />
+	
+	<!-- java sdk used for building -->
+	<property name="jvm" value="${eclipse.base}/jvm/bin/java" />
+
+	<property name="version" value="3.1.0" />
+	
+	<tstamp>
+		<format property="qualifier" pattern="'I'yyyyMMdd-HH0" locale="en,US" timezone="UTC"/>
+	</tstamp>
+	
+	<target name="init">
+		<echo message="qualifier=${qualifier}" file="timestamp.properties"/>
+		<echo message="Building Mylyn ${version}.${qualifier}" />
+		
+		<antcall target="forEach">
+			<param name="call" value="get-helper"/>
+		</antcall>		
+	</target>
+
+	<!--
+	<target name="all" depends="clean-tests">
 		<exec executable="./build-3.4.sh" />
 		<exec executable="./run-tests-3.4.sh">
 			<arg value="run" />
@@ -43,69 +54,79 @@
 		</exec>
 		<antcall target="report" />
 	</target>
-
-	<target name="clean">
-		<delete dir="${build-home-3.3}/build" />
-		<delete dir="${build-home-3.4}/build" />
-		<delete dir="${build-home-3.5}/build" />
+	-->
+	
+	<target name="all" depends="init,clean,build,run-tests,run-performance-tests">
+	</target>
+	
+	<target name="clean" depends="clean-tests">
+		<antcall target="forEach">
+			<param name="call" value="clean-build-helper"/>
+		</antcall>
 	</target>
 
-	<target name="test-clean">
-		<delete dir="${eclipse-test-home-3.3}/results" />
-		<delete>
-			<fileset dir="${eclipse-test-home-3.3}" includes="org*.xml" />
-		</delete>
-		<delete dir="${eclipse-test-home-3.3}/plugins/org.eclipse.mylyn.tests"/>
-		<mkdir dir="${eclipse-test-home-3.3}/results" />
-
-		<delete dir="${eclipse-test-home-3.4}/results" />
-		<delete>
-			<fileset dir="${eclipse-test-home-3.4}" includes="org*.xml" />
-		</delete>
-		<delete dir="${eclipse-test-home-3.4}/plugins/org.eclipse.mylyn.tests"/>
-		<mkdir dir="${eclipse-test-home-3.4}/results" />
+	<target name="clean-tests">
+		<antcall target="forEach">
+			<param name="call" value="clean-tests-helper"/>
+		</antcall>
 	</target>
 
 	<target name="report">
-		<mkdir dir="${junit-report-output}/e3.4" />
-		<xslt style="${eclipse-test-home-3.4}/dropins/eclipse/plugins/org.eclipse.test_3.2.0/JUNIT.XSL" basedir="${eclipse-test-home-3.4}/results" includes="*.xml" destdir="${junit-report-output}/e3.4" />
-		<copy todir="${junit-report-output}/e3.4">
-			<fileset dir="${eclipse-test-home-3.4}/results" />
-		</copy>
-
-		<mkdir dir="${junit-report-output}/e3.3" />
-		<xslt style="${eclipse-test-home-3.3}/plugins/org.eclipse.test_3.2.0/JUNIT.XSL" basedir="${eclipse-test-home-3.3}/results" includes="*.xml" destdir="${junit-report-output}/e3.3" />
-		<copy todir="${junit-report-output}/e3.3">
-			<fileset dir="${eclipse-test-home-3.3}/results" />
-		</copy>
+		<antcall target="forEach">
+			<param name="call" value="report-helper"/>
+		</antcall>
 	</target>
 
 	<target name="publish">
-		<java jar="test-report.jar" failonerror="true" fork="true" jvm="${jvm}">
-			<classpath>
-				<pathelement location="test-report.jar" />
-				<pathelement path="${java.class.path}" />
-			</classpath>
-			<arg value="-in" />
-			<arg value="${eclipse-test-home-3.4}/results/org.eclipse.mylyn.tests.AllTests.xml" />
-			<arg value="-config" />
-			<arg value="repository.properties" />
-			<arg value="-build" />
-			<arg value="${build}" />
-		</java>
+		<antcall target="publish-helper">
+			<param name="eclipse.version" value="3.4"/>
+		</antcall>
+	</target>
+
+	<target name="run-tests">
+		<antcall target="forEach">
+			<param name="call" value="run-tests-helper"/>
+		</antcall>
+	</target>
+
+	<target name="run-performance-tests">
+		<antcall target="forEach">
+			<param name="call" value="run-performance-tests-helper"/>
+		</antcall>
 	</target>
 
 	<target name="update-versions">
 		<replace dir="..">
 			<replacefilter 
 			    token="3.1.0.qualifier"
-				value="3.1.0.qualifier"/>
+				value="${version}.qualifier"/>
 			<replacefilter 
 			    token="3.1.0.mylynQualifier"
-				value="3.1.0.mylynQualifier"/>
+				value="${version}.mylynQualifier"/>
 			<include name="org.eclipse.mylyn*/**/MANIFEST.MF"/>
 			<include name="org.eclipse.mylyn*/**/feature.xml"/>
 		</replace>
+	</target>
+
+	<target name="build" depends="init">
+		<antcall target="forEach">
+			<param name="call" value="build-helper"/>
+		</antcall>
+	</target>
+	
+	<target name="forEach">
+		<antcall target="${call}">
+			<param name="eclipse.version" value="3.3"/>
+			<param name="eclipse.url" value="${eclipse.url.3.3}"/>
+		</antcall>
+		<antcall target="${call}">
+			<param name="eclipse.version" value="3.4"/>
+			<param name="eclipse.url" value="${eclipse.url.3.4}"/>
+		</antcall>
+		<antcall target="${call}">
+			<param name="eclipse.version" value="3.5"/>
+			<param name="eclipse.url" value="${eclipse.url.3.5}"/>
+		</antcall>
 	</target>
 	
 </project>
