@@ -1,0 +1,3 @@
+<project name="Build specific targets and properties" default="noDefault">
+	<import file="../customTargets.xml"/>
+</project>

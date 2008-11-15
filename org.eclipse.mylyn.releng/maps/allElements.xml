@@ -1,0 +1,3 @@
+<project name="allElements Delegator">
+	<import file="../allElements.xml"/>
+</project>

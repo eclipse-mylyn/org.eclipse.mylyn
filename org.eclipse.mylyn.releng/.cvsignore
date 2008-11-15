@@ -9,3 +9,7 @@ report
 credentials.properties
 repository.properties
 test-report.jar
+timestamp.properties
+build-results
+tools
+build

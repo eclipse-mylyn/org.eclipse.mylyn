@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="buildHelper" default="" basedir=".">
 	<import file="getDependenciesHelper.xml"/>
-	
+
+	<target name="forEach">
+		<antcall target="forEachCheck">
+			<param name="eclipse.version" value="3.3"/>
+			<param name="eclipse.url" value="${eclipse.url.3.3}"/>
+			<param name="condition" value="${skip3.3}"/>
+		</antcall>
+		<antcall target="forEachCheck">
+			<param name="eclipse.version" value="3.4"/>
+			<param name="eclipse.url" value="${eclipse.url.3.4}"/>
+			<param name="condition" value="${skip3.4}"/>
+		</antcall>
+		<antcall target="forEachCheck">
+			<param name="eclipse.version" value="3.5"/>
+			<param name="eclipse.url" value="${eclipse.url.3.5}"/>
+			<param name="condition" value="${skip3.5}"/>
+		</antcall>
+	</target>
+
+	<target name="forEachCheck">
+		<condition property="skip"><istrue value="${condition}"/></condition>
+		<antcall target="forEachCall" />
+	</target>
+
+	<target name="forEachCall" unless="skip">
+		<antcall target="${call}" />
+	</target>
+
 	<target name="copy-maps-helper">
 		<copy todir="${build.home}/${eclipse.version}/maps">
 			<fileset dir="${basedir}/maps">
@@ -30,8 +57,8 @@
     	<property name="log" value="${build.results}/build-${eclipse.version}.log" />
 		
 		<echo message="Building ${eclipse.version}: output in ${log}" />
-    	<java fork="true" dir="." timeout="${timeout}" jvm="${jvm}" logError="true"
-			classname="org.eclipse.core.launcher.Main" output="${log}">
+    	<java fork="true" dir="." timeout="${timeout}" logError="true" 
+    		classname="org.eclipse.core.launcher.Main" output="${log}">
 	        <classpath>
 	    		<fileset dir="${eclipse.home}/plugins">
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
@@ -40,7 +67,7 @@
 		    <arg line="-application ${application}"/>
     		<arg line="-buildfile ${pde.build.script}"/>
     		<arg line="-DbaseLocation=${eclipse.home}"/>    		
-    		<arg line="-Dbuilder=${basedir}/${eclipse.version}/config"/>
+    		<arg line="-Dbuilder=${basedir}/config/${eclipse.version}"/>
     		<arg line="-DbuildDirectory=${build.home}/${eclipse.version}"/>
     		<arg line="-DforceContextQualifier=${qualifier}-${versionPostfix}"/>
     		<arg line="-DmylynQualifier=${qualifier}"/>
@@ -105,7 +132,7 @@
 		</java>
 	</target>
 	
-	<target name="get-helper">
+	<target name="get-build-dependencies-helper">
 		<property name="downloadsDir" value="${eclipse.base}"/> 
 
 		<!-- extract sdk for building -->
@@ -120,11 +147,15 @@
 			<param name="unpackDest" value="${eclipse.base}/sdk-${eclipse.version}"/>
 			<param name="isUnpackedFile" value="${eclipse.base}/sdk-${eclipse.version}/eclipse"/>
 		</antcall>
+	</target>
+		
+	<target name="get-test-dependencies-helper" depends="get-build-dependencies-helper">
+		<property name="downloadsDir" value="${eclipse.base}"/> 
 
 		<!-- extract sdk for testing and install test framework -->
-		<basename property="test.file" file="${eclipse.url.test}"/>
+		<basename property="file.testframework" file="${eclipse.url.test}"/>
 		<antcall target="getBundle">
-			<param name="file" value="${test.file}" />
+			<param name="file" value="${file.testframework}" />
 			<param name="url" value="${eclipse.url.test}"/>
 		</antcall>
 		<mkdir dir="${eclipse.base}/test-${eclipse.version}" />
@@ -134,7 +165,7 @@
 			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.version}/eclipse"/>
 		</antcall>
 		<antcall target="unpackBundle">
-			<param name="file" value="${test.file}" />
+			<param name="file" value="${file.testframework}" />
 			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.version}"/>
 			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.version}/eclipse/plugins/org.eclipse.test_3.2.0"/>
 		</antcall>

@@ -1,0 +1,4 @@
+<project name="Build specific targets and properties" default="noDefault">
+	<property name="skipSDK" value="true" />
+	<import file="../customTargets.xml"/>
+</project>

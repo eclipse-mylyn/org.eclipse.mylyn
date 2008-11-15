@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site pack200="true">
+   <description url="http://download.eclipse.org/tools/mylyn/update/weekly/extras">
+      Mylyn Extras for Eclipse 3.3 and 3.4
+   </description>
+   <feature url="features/org.eclipse.mylyn.jira_feature_@core@.jar" id="org.eclipse.mylyn.jira_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.trac_feature_@core@.jar" id="org.eclipse.mylyn.trac_feature" version="@core@">
+      <category name="Integration"/>
+   </feature>
+   <feature url="features/org.eclipse.mylyn.extras_sdk_feature_@core@.jar" id="org.eclipse.mylyn.extras_sdk_feature" version="@core@">
+      <category name="SDK"/>
+   </feature>
+   <category-def name="Integration" label="Mylyn Integration"/>
+   <category-def name="SDK" label="Mylyn Plug-in Development"/>
+</site>

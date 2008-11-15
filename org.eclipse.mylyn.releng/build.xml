@@ -2,31 +2,31 @@
 <project name="mylyn" default="" basedir=".">
 	<import file="scripts/buildHelper.xml" />
 	<property file="defaults.properties" />
-	
-	<!-- base directory for eclipse sdk and eclipse test -->
-	<property name="eclipse.base" value="." />
-	
-	<!-- working directory for building -->
-	<property name="build.home" value="${basedir}/build" />
-	
-	<!-- directory for build artifacts -->
-	<property name="build.results" value="${build.home}/results" />
-	
-	<!-- java sdk used for building -->
-	<property name="jvm" value="${eclipse.base}/jvm/bin/java" />
 
 	<property name="version" value="3.1.0" />
 	
 	<tstamp>
-		<format property="qualifier" pattern="'I'yyyyMMdd-HH0" locale="en,US" timezone="UTC"/>
+		<format property="qualifier" pattern="'I'yyyyMMdd-HH00" locale="en,US" timezone="UTC"/>
 	</tstamp>
 	
 	<target name="init">
 		<echo message="qualifier=${qualifier}" file="timestamp.properties"/>
 		<echo message="Building Mylyn ${version}.${qualifier}" />
 		
+		<mkdir dir="${eclipse.base}"/>
+		<mkdir dir="${build.home}"/>
+		<mkdir dir="${build.results}"/>
+	</target>
+
+	<target name="init-build">		
 		<antcall target="forEach">
-			<param name="call" value="get-helper"/>
+			<param name="call" value="get-build-dependencies-helper"/>
+		</antcall>		
+	</target>
+
+	<target name="init-tests">		
+		<antcall target="forEach">
+			<param name="call" value="get-test-dependencies-helper"/>
 		</antcall>		
 	</target>
 
@@ -108,24 +108,9 @@
 		</replace>
 	</target>
 
-	<target name="build" depends="init">
+	<target name="build" depends="init,init-build">
 		<antcall target="forEach">
 			<param name="call" value="build-helper"/>
-		</antcall>
-	</target>
-	
-	<target name="forEach">
-		<antcall target="${call}">
-			<param name="eclipse.version" value="3.3"/>
-			<param name="eclipse.url" value="${eclipse.url.3.3}"/>
-		</antcall>
-		<antcall target="${call}">
-			<param name="eclipse.version" value="3.4"/>
-			<param name="eclipse.url" value="${eclipse.url.3.4}"/>
-		</antcall>
-		<antcall target="${call}">
-			<param name="eclipse.version" value="3.5"/>
-			<param name="eclipse.url" value="${eclipse.url.3.5}"/>
 		</antcall>
 	</target>
 	
