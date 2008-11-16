@@ -5,8 +5,13 @@
 	<property name="version" value="3.1.0" />
 
 	<import file="scripts/buildHelper.xml" />
+	<condition property="java.isVersion5OrHigher"><matches pattern="1.[56789].*" string="${java.version}"/></condition>
 
-	<target name="init-base">		
+	<target name="check-java" unless="java.isVersion5OrHigher">
+		<fail message="Java 1.5 or higher required (${java.version} detected)"/>
+	</target>
+	
+	<target name="init-base" depends="check-java">		
 		<mkdir dir="${eclipse.base}"/>
 		<mkdir dir="${build.home}"/>
 		<mkdir dir="${build.results}"/>
@@ -123,7 +128,7 @@
 		</antcall>
 	</target>
 
-	<target name="dist">
+	<target name="dist" depends="init">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		<copy todir="${dist.dir}/e3.3">
 			<fileset dir="${build.home}/3.3/standardUpdateSite"/>
@@ -182,9 +187,16 @@
 		<chmod perm="g+w">
 			<fileset dir="${target.dir}"/>
 		</chmod>
+		<!--
 		<chgrp group="${dist.group}">
 			<fileset dir="${target.dir}"/>
 		</chgrp>
+		-->
+		<exec command="/bin/chgrp" failonerror="false">
+			<arg value="-R"/>
+			<arg value="${dist.group}"/>
+			<arg value="${target.dir}"/>
+		</exec>
 	</target>
 
 	
