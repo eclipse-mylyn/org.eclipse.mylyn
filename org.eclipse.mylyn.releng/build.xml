@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="mylyn" default="" basedir=".">
 	<property file="defaults.properties" />
-	<property file="timestamp.properties" />
 
 	<property name="version" value="3.1.0" />
 
 	<import file="scripts/buildHelper.xml" />
-	
-	<target name="init">		
+
+	<target name="init-base">		
 		<mkdir dir="${eclipse.base}"/>
 		<mkdir dir="${build.home}"/>
 		<mkdir dir="${build.results}"/>
 	</target>
+		
+	<target name="init" depends="init-base">		
+		<property file="timestamp.properties" />
+		<echo message="Mylyn ${version}.${qualifier}" />
+	</target>
 
-	<target name="init-build">		
+	<target name="init-build" depends="init-base">		
 		<tstamp>
 			<format property="qualifier" pattern="'I'yyyyMMdd-HH00" locale="en,US" timezone="UTC"/>
 		</tstamp>
 		<echo message="qualifier=${qualifier}" file="timestamp.properties"/>
-		<echo message="Building Mylyn ${version}.${qualifier}" />
+		
 		<antcall target="forEach">
 			<param name="call" value="get-build-dependencies-helper"/>
 		</antcall>		
 	</target>
 
-	<target name="init-tests">		
+	<target name="init-tests" depends="init">		
 		<antcall target="forEach">
 			<param name="call" value="get-test-dependencies-helper"/>
 		</antcall>		
@@ -56,7 +60,7 @@
 	</target>
 	-->
 	
-	<target name="all" depends="init,clean,build,test,run-performance-tests">
+	<target name="all" depends="clean,build,tests,performance-tests">
 	</target>
 	
 	<target name="clean" depends="clean-tests">
@@ -71,19 +75,19 @@
 		</antcall>
 	</target>
 
-	<target name="report">
+	<target name="report" depends="init">
 		<antcall target="forEach">
 			<param name="call" value="report-helper"/>
 		</antcall>
 	</target>
 
-	<target name="publish">
+	<target name="publish" depends="init">
 		<antcall target="publish-helper">
 			<param name="eclipse.version" value="3.4"/>
 		</antcall>
 	</target>
 
-	<target name="test">
+	<target name="tests" depends="init-tests">
 		<!--
 		<antcall target="forEach">
 			<param name="call" value="run-tests-helper"/>
@@ -94,7 +98,7 @@
 		</antcall>
 	</target>
 
-	<target name="run-performance-tests">
+	<target name="performance-tests">
 		<antcall target="forEach">
 			<param name="call" value="run-performance-tests-helper"/>
 		</antcall>
@@ -113,7 +117,7 @@
 		</replace>
 	</target>
 
-	<target name="build" depends="init,init-build">
+	<target name="build" depends="init-build,init">
 		<antcall target="forEach">
 			<param name="call" value="build-helper"/>
 		</antcall>
@@ -137,6 +141,7 @@
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-e3.4.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-standard.zip" />
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-extras.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-extras.zip" />
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-incubator.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-incubator.zip" />
+		<copy tofile="${dist.dir}/mylyn-wikitext-standalone-${version}.${qualifier}_incubation.zip" file="${build.home}/3.4/mylyn-wikitext-standalone-${version}.${qualifier}_incubation.zip" />
 
 		<chmod perm="g+w">
 			<fileset dir="${dist.dir}" />
@@ -146,21 +151,34 @@
 		</chgrp>
 	</target>
 
-	<target name="weekly">
-		<antcall name="promote">
+	<target name="weekly" depends="build,dist">
+		<antcall target="promote">
 			<param name="target" value="weekly"/>
 		</antcall>
 	</target>
-	
+
+	<target name="dev" depends="build,dist">
+		<antcall target="promote">
+			<param name="target" value="dev"/>
+		</antcall>
+	</target>
+
 	<target name="promote">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		<property name="target.dir" value="${dist.home}/update/${target}" />
 		<delete dir="${target.dir}.old" />
-		<move file="${target.dir}" todir="${target.dir}.old"/>
+		<move file="${target.dir}" todir="${target.dir}.old" failonerror="false"/>
 		<copy todir="${target.dir}">
 			<fileset dir="${dist.dir}"/>
 		</copy>
 
+		<move todir="${target.dir}">
+			<fileset dir="${target.dir}">
+				<include name="*.zip"/>
+			</fileset>
+			<mapper type="regexp" from="(.*)${version}.${qualifier}(.*)" to="\1latest\2"/>
+		</move>
+		
 		<chmod perm="g+w">
 			<fileset dir="${target.dir}"/>
 		</chmod>
