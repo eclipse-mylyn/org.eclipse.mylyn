@@ -148,12 +148,9 @@
 		<copy tofile="${dist.dir}/mylyn-${version}.${qualifier}-incubator.zip" file="${build.home}/3.4/mylyn-${version}.${qualifier}-e3x-incubator.zip" />
 		<copy tofile="${dist.dir}/mylyn-wikitext-standalone-${version}.${qualifier}_incubation.zip" file="${build.home}/3.4/mylyn-wikitext-standalone-${version}.${qualifier}_incubation.zip" />
 
-		<chmod perm="g+w">
-			<fileset dir="${dist.dir}" />
-		</chmod>
-		<chgrp group="${dist.group}">
-			<fileset dir="${dist.dir}" />
-		</chgrp>
+		<antcall target="fix-permissions">
+			<param name="dir" value="${dist.dir}"/>
+		</antcall>
 	</target>
 
 	<target name="weekly" depends="build,dist">
@@ -184,19 +181,9 @@
 			<mapper type="regexp" from="(.*)${version}.${qualifier}(.*)" to="\1latest\2"/>
 		</move>
 		
-		<chmod perm="g+w">
-			<fileset dir="${target.dir}"/>
-		</chmod>
-		<!--
-		<chgrp group="${dist.group}">
-			<fileset dir="${target.dir}"/>
-		</chgrp>
-		-->
-		<exec command="/bin/chgrp" failonerror="false">
-			<arg value="-R"/>
-			<arg value="${dist.group}"/>
-			<arg value="${target.dir}"/>
-		</exec>
+		<antcall target="fix-permissions">
+			<param name="dir" value="${target.dir}"/>
+		</antcall>
 	</target>
 
 	
