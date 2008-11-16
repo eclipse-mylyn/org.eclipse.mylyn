@@ -5,7 +5,7 @@
 	<property name="version" value="3.1.0" />
 
 	<import file="scripts/buildHelper.xml" />
-	<condition property="java.isVersion5OrHigher"><matches pattern="1.[56789].*" string="${java.version}"/></condition>
+	<available classname="java.lang.Enum" property="java.isVersion5OrHigher"/>
 
 	<target name="check-java" unless="java.isVersion5OrHigher">
 		<fail message="Java 1.5 or higher required (${java.version} detected)"/>

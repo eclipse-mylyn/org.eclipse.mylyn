@@ -221,4 +221,21 @@
 		    <jvmarg line="${vmargs}"/>
 		</java>
     </target>
+
+	<target name="fix-permissions">
+		<chmod perm="g+w">
+			<fileset dir="${dir}"/>
+		</chmod>
+		<!--
+		<chgrp group="${dist.group}">
+			<fileset dir="${target.dir}"/>
+		</chgrp>
+		-->
+		<exec command="/bin/chgrp" failonerror="false">
+			<arg value="-R"/>
+			<arg value="${dist.group}"/>
+			<arg value="${dir}"/>
+		</exec>
+	</target>
+	
 </project>
