@@ -6,16 +6,19 @@
 		<antcall target="forEachCheck">
 			<param name="eclipse.version" value="3.3"/>
 			<param name="eclipse.url" value="${eclipse.url.3.3}"/>
+			<param name="eclipse.sdk.version" value="${eclipse.sdk.3.3}"/>
 			<param name="condition" value="${skip3.3}"/>
 		</antcall>
 		<antcall target="forEachCheck">
 			<param name="eclipse.version" value="3.4"/>
 			<param name="eclipse.url" value="${eclipse.url.3.4}"/>
+			<param name="eclipse.sdk.version" value="${eclipse.sdk.3.4}"/>
 			<param name="condition" value="${skip3.4}"/>
 		</antcall>
 		<antcall target="forEachCheck">
 			<param name="eclipse.version" value="3.5"/>
 			<param name="eclipse.url" value="${eclipse.url.3.5}"/>
+			<param name="eclipse.sdk.version" value="${eclipse.sdk.3.5}"/>
 			<param name="condition" value="${skip3.5}"/>
 		</antcall>
 	</target>
@@ -45,7 +48,7 @@
 	<target name="build-helper" depends="copy-maps-helper">
     	<property name="timeout" value="3600000" />
 		<property name="application" value="org.eclipse.ant.core.antRunner" />
-    	<property name="eclipse.home" value="${eclipse.base}/sdk-${eclipse.version}/eclipse" />
+    	<property name="eclipse.home" value="${eclipse.base}/sdk-${eclipse.sdk.version}/eclipse" />
 		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
     	<path id="pde.build.script.id"> 
     		<fileset dir="${eclipse.home}/plugins">
@@ -53,10 +56,11 @@
           	</fileset>
     	</path> 
     	<property name="pde.build.script" refid="pde.build.script.id"/>
-  	    <condition property="versionPostfix" value="e33" else="e3x"><equals arg1="${version}" arg2="3.3"/></condition>
+  	    <condition property="versionPostfix" value="e33" else="e3x"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
     	<property name="log" value="${build.results}/build-${eclipse.version}.log" />
 		
-		<echo message="Building ${eclipse.version}: output in ${log}" />
+		<echo message="Building ${version}.${qualifier}-${versionPostfix} on Eclipse ${eclipse.sdk.version}" />
+		<echo message="Output is logged to ${log}" />
     	<java fork="true" dir="." timeout="${timeout}" logError="true" 
     		classname="org.eclipse.core.launcher.Main" output="${log}">
 	        <classpath>
@@ -78,7 +82,7 @@
     </target>
 	
 	<target name="run-tests-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
 		<mkdir dir="${eclipse.home}/results" />
 		<exec executable="./run-tests-${eclipse.version}.sh">
 			<arg value="run" />
@@ -86,7 +90,7 @@
 	</target>
 
 	<target name="run-performance-tests-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
 		<mkdir dir="${eclipse.home}/results" />
 		<exec executable="./run-tests-${eclipse.version}.sh">
 			<arg value="performance" />
@@ -98,7 +102,7 @@
 	</target>
 
 	<target name="clean-tests-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
 		<delete dir="${eclipse.home}/results" />
 		<delete failonerror="false">
 			<fileset dir="${eclipse.home}" includes="org*.xml" />
@@ -107,7 +111,7 @@
 	</target>
 
 	<target name="report-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
 		<property name="results.home" value="${build.results}/${eclipse.version}" />
 		<mkdir dir="${results.home}" />
 		<xslt style="${basedir}/scripts/JUNIT.XSL" basedir="${eclipse.home}/results" includes="*.xml" destdir="${results.home}" />
@@ -117,7 +121,7 @@
 	</target>
 
 	<target name="publish-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.version}/eclipse" />
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
 		<java jar="test-report.jar" failonerror="true" fork="true">
 			<classpath>
 				<pathelement location="test-report.jar" />
@@ -141,11 +145,11 @@
 			<param name="file" value="${file.sdk}" />
 			<param name="url" value="${eclipse.url}"/>
 		</antcall>
-		<mkdir dir="${eclipse.base}/sdk-${eclipse.version}" />
+		<mkdir dir="${eclipse.base}/sdk-${eclipse.sdk.version}" />
 		<antcall target="unpackBundle">
 			<param name="file" value="${file.sdk}" />
-			<param name="unpackDest" value="${eclipse.base}/sdk-${eclipse.version}"/>
-			<param name="isUnpackedFile" value="${eclipse.base}/sdk-${eclipse.version}/eclipse"/>
+			<param name="unpackDest" value="${eclipse.base}/sdk-${eclipse.sdk.version}"/>
+			<param name="isUnpackedFile" value="${eclipse.base}/sdk-${eclipse.sdk.version}/eclipse"/>
 		</antcall>
 	</target>
 		
@@ -153,22 +157,68 @@
 		<property name="downloadsDir" value="${eclipse.base}"/> 
 
 		<!-- extract sdk for testing and install test framework -->
+		<basename property="file.sdk" file="${eclipse.url}"/>
 		<basename property="file.testframework" file="${eclipse.url.test}"/>
 		<antcall target="getBundle">
 			<param name="file" value="${file.testframework}" />
 			<param name="url" value="${eclipse.url.test}"/>
 		</antcall>
-		<mkdir dir="${eclipse.base}/test-${eclipse.version}" />
+		<mkdir dir="${eclipse.base}/test-${eclipse.sdk.version}" />
 		<antcall target="unpackBundle">
-			<param name="file" value="sdk-${eclipse.version}.tar.gz" />
-			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.version}"/>
-			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.version}/eclipse"/>
+			<param name="file" value="${file.sdk}" />
+			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.sdk.version}"/>
+			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse"/>
 		</antcall>
 		<antcall target="unpackBundle">
 			<param name="file" value="${file.testframework}" />
-			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.version}"/>
-			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.version}/eclipse/plugins/org.eclipse.test_3.2.0"/>
+			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.sdk.version}"/>
+			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse/plugins/org.eclipse.test_3.2.0"/>
 		</antcall>
 	</target>
 
+	<target name="install-tests-helper">
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
+		<delete dir="${eclipse.home}/dropins/mylyn" />
+		<mkdir dir="${eclipse.home}/dropins/mylyn" />
+		
+
+	</target>
+		
+	<target name="test-helper" depends="install-tests-helper">
+    	<property name="timeout" value="3600000" />
+		<property name="application" value="org.eclipse.ant.core.antRunner" />
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
+		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
+    	<path id="library.id"> 
+    		<fileset dir="${eclipse.home}/plugins">
+            	<include name="org.eclipse.test_*/test.xml"/>
+          	</fileset>
+    	</path> 
+    	<property name="library" refid="library.id"/>
+		<property name="script.test" value="dropins/mylyn/plugins/org.eclipse.mylyn.tests/test.xml" />
+    	<property name="log" value="${build.results}/build-${eclipse.version}.log" />
+		
+		<echo message="Testing ${version}.${qualifier}-${versionPostfix} on Eclipse ${eclipse.sdk.version}" />
+		<echo message="Output is logged to ${log}" />
+    	<java fork="true" dir="." timeout="${timeout}" logError="true" 
+    		classname="org.eclipse.core.launcher.Main" output="${log}">
+	        <classpath>
+	    		<fileset dir="${eclipse.home}/plugins">
+	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
+	          	</fileset>
+	        </classpath>
+		    <arg line="-application ${application}"/>
+    		<arg line="-buildfile ${script.test}"/>
+    		<arg line="-Declipse-home=${eclipse.home}"/>    		
+    		<arg line="-Dlibrary-file=${library}"/>
+    		<arg line="-D-DextraVMargs= \
+    	    -ea \
+    	    -Declipse.perf.dbloc=$BUILD_ROOT/derby \
+    	    -Declipse.perf.config=build=$QUALIFIER;config=$HOST-3.4;jvm=$JVM \
+    	    -Declipse.perf.assertAgainst=build=$ASSERT_QUALIFIER \
+    	    -Dmylyn.credentials=$BUILD_ROOT/credentials.properties" />
+		    <arg line="-consolelog"/>
+		    <jvmarg line="${vmargs}"/>
+		</java>
+    </target>
 </project>
