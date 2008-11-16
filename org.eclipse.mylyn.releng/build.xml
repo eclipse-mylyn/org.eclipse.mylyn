@@ -174,12 +174,19 @@
 			<fileset dir="${dist.dir}"/>
 		</copy>
 
+		<!-- not supported on build.eclipse.org
 		<move todir="${target.dir}">
 			<fileset dir="${target.dir}">
 				<include name="*.zip"/>
 			</fileset>
 			<mapper type="regexp" from="(.*)${version}.${qualifier}(.*)" to="\1latest\2"/>
 		</move>
+		-->
+		<move tofile="${target.dir}/mylyn-latest-e3.3.zip" file="${target.dir}/mylyn-${version}.${qualifier}-e3.3.zip" />
+		<move tofile="${target.dir}/mylyn-latest.${qualifier}-e3.4.zip" file="${target.dir}/mylyn-${version}.${qualifier}-e3.4.zip" />
+		<move tofile="${target.dir}/mylyn-latest-extras.zip" file="${target.dir}/mylyn-${version}.${qualifier}-extras.zip" />
+		<move tofile="${target.dir}/mylyn-latest-incubator.zip" file="${target.dir}/mylyn-${version}.${qualifier}-incubator.zip" />
+		<move tofile="${target.dir}/mylyn-wikitext-standalone-latest_incubation.zip" file="${target.dir}/mylyn-wikitext-standalone-${version}.${qualifier}_incubation.zip" />
 		
 		<antcall target="fix-permissions">
 			<param name="dir" value="${target.dir}"/>
