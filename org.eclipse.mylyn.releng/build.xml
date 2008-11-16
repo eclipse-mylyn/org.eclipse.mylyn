@@ -165,7 +165,7 @@
 		</antcall>
 	</target>
 
-	<target name="promote">
+	<target name="promote" depends="init">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		<property name="target.dir" value="${dist.home}/update/${target}" />
 		<delete dir="${target.dir}.old" />

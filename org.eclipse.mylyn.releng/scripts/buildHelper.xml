@@ -231,7 +231,7 @@
 			<fileset dir="${target.dir}"/>
 		</chgrp>
 		-->
-		<exec command="/bin/chgrp" failonerror="false">
+		<exec executable="/bin/chgrp" failonerror="false">
 			<arg value="-R"/>
 			<arg value="${dist.group}"/>
 			<arg value="${dir}"/>
