@@ -196,9 +196,9 @@
     	</path> 
     	<property name="library" refid="library.id"/>
 		<property name="script.test" value="dropins/mylyn/plugins/org.eclipse.mylyn.tests/test.xml" />
-    	<property name="log" value="${build.results}/build-${eclipse.version}.log" />
+    	<property name="log" value="${build.results}/test-${eclipse.version}.log" />
 		
-		<echo message="Testing ${version}.${qualifier}-${versionPostfix} on Eclipse ${eclipse.sdk.version}" />
+		<echo message="Testing ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
 		<echo message="Output is logged to ${log}" />
     	<java fork="true" dir="." timeout="${timeout}" logError="true" 
     		classname="org.eclipse.core.launcher.Main" output="${log}">

@@ -98,8 +98,10 @@
 			<param name="call" value="run-tests-helper"/>
 		</antcall>
 		-->
-		<antcall target="test-helper">
-			<param name="eclipse.version" value="3.4"/>
+		<antcall target="forEach">
+			<param name="call" value="test-helper"/>
+			<param name="skip3.3" value="true"/>
+			<param name="skip3.5" value="true"/>
 		</antcall>
 	</target>
 
