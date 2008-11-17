@@ -462,6 +462,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	protected Section section;
 
 	public TaskEditorCommentPart() {
+		this.commentGroupStrategy = new CommentGroupStrategy() {
+			@Override
+			protected boolean hasIncomingChanges(ITaskComment taskComment) {
+				return getModel().hasIncomingChanges(taskComment.getTaskAttribute());
+			}
+		};
 		setPartName("Comments");
 	}
 
@@ -603,16 +609,12 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		barManager.add(expandAllAction);
 	}
 
-	private CommentGroupStrategy getCommentGroupStrategy() {
-		if (commentGroupStrategy == null) {
-			commentGroupStrategy = new CommentGroupStrategy() {
-				@Override
-				protected boolean hasIncomingChanges(ITaskComment taskComment) {
-					return getModel().hasIncomingChanges(taskComment.getTaskAttribute());
-				}
-			};
-		}
+	public CommentGroupStrategy getCommentGroupStrategy() {
 		return commentGroupStrategy;
+	}
+
+	public void setCommentGroupStrategy(CommentGroupStrategy commentGroupStrategy) {
+		this.commentGroupStrategy = commentGroupStrategy;
 	}
 
 	private List<CommentGroupViewer> getCommentGroupViewers() {
