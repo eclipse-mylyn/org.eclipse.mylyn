@@ -1,1 +1,251 @@
-h1. OverviewThis document provides detailed information for software developers that wish to include or use WikiText as part of their application.For information about using WikiText please see the *WikiText User Guide*.h2. WikiText APIWikiText follows Eclipse conventions with respect to package naming.  Classes that appear in packages with @internal@ in their name are not intended for use externally.Most API classes have good javadoc.  When using WikiText classes, expect them to behave according to their javadoc.  If you find somewhere where the javadoc is not clear, please "file a bug":#IssueTracking.h2. How It WorksThe markup parser uses regular expressions to parse wiki markup, converting the markup to XHTML or other outputs depending on the configured @DocumentBuilder@.  See also "Markup Language Concepts":#MarkupLanguageConceptsh3. JFace ViewerThe WikiText JFace viewer extends the standard JFace source viewer. The WikiText JFace viewer uses the markup parser to convert the text to XHTML.  It then parses the XHTML and converts it to a standard unicode character sequence and a TextPresentation. It uses standard JFace techniques to apply styles to the rendered text and uses unicode character features such as newlines, tabs and bullet characters to make the text look as it is intended.As the wiki markup is converted to text with a TextPresentation an AnnotationModel is (optionally) constructed, such that the text viewer has access to annotations for the following:* Tags with id (from @<p id="some-id">@)* Anchor href (from @<a href="http://www.foo-bar.com">@)* Anchor name (from @<a name="foo-bar">@)* CSS classes* Titles (from @<acronym title="some title">@)The viewer can then present pop-ups (tool-tip hover information, for example), and handle in-document and out-of-document hyperlinks.The viewer implementation has the benefit of being lightweight compared to a browser and it supports standard viewer features such as text selection and clipboard copy.h4. JFace Viewer LimitationsThe following limitations apply to the JFace text-only markup rendering viewer. The limitations can be avoided by using the SWT Browser widget instead.Since the viewer is a text-only rendering solution for markup it cannot display advanced markup constructs such as tables.  Images can be displayed due to WikiText's custom painting.The viewer is also generally only useful for read-only usage, since the viewer does not maintain a mapping back to the original markup.Anchors (ie: hyperlinks) within the page are implemented. If you use footnotes, clicking on the footnote anchor will scroll the viewer to display the footnote text at the bottom.h2. Classpath and DependenciesWikiText is designed for use both within an Eclipse runtime, and stand-alone.h3. Within EclipseWikiText use within an Eclipse runtime is simple: simply add the desired WikiText bundles as dependencies to your plug-in project.  This is the recommended approach for Eclipse plug-ins and for RCP applications.h3. Stand-AloneStand-alone usage of WikiText is also possible.  To use WikiText outside of an Eclipse runtime, simply add the WikiText jar files to your classpath.  Note that stand-alone usage of WikiText is limited to the use of the markup parser framework and Ant tasks.Add the @org.eclipse.mylyn.wikitext.core*.jar@ to your classpath, and at least one the following language-specific jars:* @org.eclipse.mylyn.wikitext.confluence.core*.jar@* @org.eclipse.mylyn.wikitext.mediawiki.core*.jar@* @org.eclipse.mylyn.wikitext.textile.core*.jar@* @org.eclipse.mylyn.wikitext.tracwiki.core*.jar@* @org.eclipse.mylyn.wikitext.twiki.core*.jar@h1. Using The WikiText ParserWikiText provides a parser framework for parsing lightweight markup languages (wiki markup).  The parser framework can output HTML, DITA, DocBook, and Eclipse Help directly, or integrators can extend @DocumentBuilder@ to output other formats.h2. Simple ExampleTo convert Textile wiki markup to HTML:bc. MarkupParser markupParser = new MarkupParser();markupParser.setMarkupLanaguage(new TextileLanguage());String htmlContent = markupParser.parseToHtml(markupContent);To convert MediaWiki wiki markup to HTML:bc. MarkupParser markupParser = new MarkupParser();markupParser.setMarkupLanaguage(new MediaWikiLanguage());String htmlContent = markupParser.parseToHtml(markupContent);h3. ServiceLocatorYour code may need to handle multiple markup languages or you may wish to eliminate compile-time dependencies on a specific markup language.  The @ServiceLocator@ can obtain markup languages by name:bc. ServiceLocator.getInstance().getMarkupLanguage("Textile")Other markup languages can be obtained by changing @"Textile"@ to another markup language name.  Valid markup language names include:* Confluence* MediaWiki* Textile* TracWiki* TWikih2. Advanced Parser UsageThe @MarkupParser@ emits content to a @DocumentBuilder@ in order to create HTML or other output.  To control the output more closely instantiate the @DocumentBuilder@ of choice and configure it before it is used.  In this example the @HtmlDocumentBuilder@ is configured to avoid creating the @<html>@ and @<body>@ tags:bc.. StringWriter writer = new StringWriter();HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);// avoid the <html> and <body> tags builder.setEmitAsDocument(false);MarkupParser parser = new MarkupParser(new TextileLanguage());parser.setBuilder(builder);parser.parse(markupContent);String htmlContent = writer.toString();h2. Adding CSS to HTML OutputCSS stylesheets can be embedded directly or referenced within your HTML:bc.. HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);// Add a CSS stylesheet as <link type="text/css" rel="stylesheet" href="styles/test.css"/>builder.addCssStylesheet("styles/test.css");  // Add a CSS stylesheet as <style type="text/css">builder.addCssStylesheet(new File("/path/to/file.css"));h1. WikiText and the UIWikiText can be used to integrate wiki markup capabilities into your application user interface.h2. WikiText JFace ViewerWikiText provides a JFace @SourceViewer@ for displaying wiki markup without having to use a @Browser@ widget. bc.. MarkupViewer viewer = new MarkupViewer(parent, null, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);viewer.setMarkupLanguage(markupLanguage);MarkupViewerConfiguration configuration = new MarkupViewerConfiguration(viewer);viewer.configure(configuration);viewer.getTextWidget().setEditable(false);viewer.setMarkup(markup);h2. WikiText and BrowserWikiText can be used to display wiki markup in an SWT @Browser@ widget:bc.. Browser browser = new Browser(parent, SWT.NONE);MarkupParser markupParser = new MarkupParser();markupParser.setMarkupLanaguage(new TextileLanguage());String htmlContent = markupParser.parseToHtml(markupContent);		browser.setText(htmlContent);h1. Markup LanguagesMarkup languages are the core concept that WikiText uses to define a parser for specific wiki markup.  WikiText provides facilities for adding new markup languages or extending an existing one.  All markup languages in WikiText extend the @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@ class.h2. Extending an Existing Markup LanguageYou may wish to augment an existing markup language syntax with your own extensions.  With WikiText this is possible by subclassing an existing markup language.  Currently only @TextileLanguage@ and @MediaWikiLanguage@ are designed to be subclassed.If you plan on subclassing a markup language implementation, start by taking a look at @org.eclipse.mylyn.wikitext.textile.core.BugzillaTextileLanguage@.  You should also be familiar with "Markup Language Concepts":#MarkupLanguageConcepts.h2. New Markup LanguagesWikiText is designed to be extended to support new markup languages.  To add a markup language take the following steps:# Extend @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@ using one of the existing subclasses as an example# Add to your markup language class the blocks, phrases and replacement tokens that are to be part of your language (see "Markup Language Concepts":#MarkupLanguageConcepts below)# Add to your jar a Java service @META-INF/services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@# If it's to be used in Eclipse, register your markup language using the @org.eclipse.mylyn.wikitext.core.markupLanguage@ extension point. Other extension points that may be of interest to you:** @org.eclipse.core.contenttype.contentTypes@ declare your markup language content type** @org.eclipse.team.core.fileTypes@ ensure that team providers know that your file type is text** @org.eclipse.mylyn.wikitext.core.markupValidationRule@ provide markup validation to detect common problems in markupYou're most likely to be successful if you use one of the existing WikiText markup language plug-ins as an example.  A good starting point is the @org.eclipse.mylyn.wikitext.textile.core@ plug-in.If you plan to implement a markup language then you should be familiar with "Markup Language Concepts":#MarkupLanguageConcepts.h2. Markup Language UITo have a full featured UI for your markup language in Eclipse there are several additional extension points to be aware of:* @org.eclipse.mylyn.wikitext.ui.cheatSheet@ a way of associating help content for your markup language* @org.eclipse.mylyn.wikitext.ui.contentAssist@ a means of having content-assist for your markup language* @org.eclipse.mylyn.tasks.ui.taskEditorExtensions@ make your markup language contribute to the Mylyn task editorFor more information on these and other UI functions, take a look at the @org.eclipse.mylyn.wikitext.textile.ui@ plug-in.h2(#MarkupLanguageConcepts). Markup Language ConceptsEvery @MarkupLanguage@ declares its syntax in terms of blocks, phrases, and replacement tokens.  Though it is possible to create a markup language implementation that doesn't use these concepts, these are the building blocks of all markup languages implemented within WikiText.*Block*A block is a multi-line region of text.  Blocks are a way of 'chunking' a document, and loosely correspond to HTML concepts such as div, paragraph, list item, table cell, etc.Though blocks may start and end anywhere on a line, they usually start at the beginning of one line and end at the end of another line.  Blocks may not overlap with other blocks, and may not be nested within one another.*Phrase*A phrase is a single-line region of text.  Phrases are often used to apply styles such as underline or bold to a region of text.  Phrases are analogous to an HTML span.Phrases may not overlap but may be nested.  Phrases must start and end on the same line.  Phrases cannot span a block boundary.*Replacement Token*Replacement tokens are regions of text that are replaced with a corresponding element.  For example, tokens may replace things such as '==(c)==' with (c).  Replacement tokens can also be used to replace regions of text with the same text but semantic meaning, such as a hyperlink. Replacement tokens cannot span a phrase or block boundary.  Replacement tokens cannot be nested and must start and end on the same line. h3. Markup Language Implementation Tips# The order that blocks, phrases and replacement tokens are declared by your markup language affect the markup syntax.# When implementing a markup language, always ensure that there's one 'catch-all' block, usually the paragraph block.  It should be last in the list of blocks declared by your language.# Make extensive use of brief test cases that test for markup language syntax.  WikiText has over 430 JUnit tests which we've found to be invaluable in verifying the expected behavior.  Take a look at @TextileLanguageTest@ for an example of how to write tests for your markup language.# If in doubt, always use an existing WikiText markup language as an example.# Feel free to post questions to the Mylyn newsgroup.h1. ContributingWikiText is evolving as a direct result of user contributions.  Please feel free to contribute by* "posting a bug":#IssueTracking* "submitting a patch":#IssueTrackingFor more information about contributing please see the "Mylyn Contributor Reference":http://wiki.eclipse.org/index.php/Mylyn/Contributor_Reference.h2(#IssueTracking). Issue TrackingIssues are tracked in "Eclipse Bugzilla":https://bugs.eclipse.org/bugs/ under the *Mylyn* project, *WikiText* component.  Please feel free to submit bugs, enhancement requests and patches.
+h1. Overview
+
+This document provides detailed information for software developers that wish to include or use WikiText as part of their application.
+
+For information about using WikiText please see the *WikiText User Guide*.
+
+h2. WikiText API
+
+WikiText follows Eclipse conventions with respect to package naming.  Classes that appear in packages with @internal@ in their name are not intended for use externally.
+
+Most API classes have good javadoc.  When using WikiText classes, expect them to behave according to their javadoc.  If you find somewhere where the javadoc is not clear, please "file a bug":#IssueTracking.
+
+h2. How It Works
+
+The markup parser uses regular expressions to parse wiki markup, converting the markup to XHTML or other outputs depending on the configured @DocumentBuilder@.  See also "Markup Language Concepts":#MarkupLanguageConcepts
+
+h3. JFace Viewer
+
+The WikiText JFace viewer extends the standard JFace source viewer. The WikiText JFace viewer uses the markup parser to convert the text to XHTML.  It then parses the XHTML and converts it to a standard unicode character sequence and a TextPresentation. It uses standard JFace techniques to apply styles to the rendered text and uses unicode character features such as newlines, tabs and bullet characters to make the text look as it is intended.
+
+As the wiki markup is converted to text with a TextPresentation an AnnotationModel is (optionally) constructed, such that the text viewer has access to annotations for the following:
+
+* Tags with id (from @<p id="some-id">@)
+* Anchor href (from @<a href="http://www.foo-bar.com">@)
+* Anchor name (from @<a name="foo-bar">@)
+* CSS classes
+* Titles (from @<acronym title="some title">@)
+
+The viewer can then present pop-ups (tool-tip hover information, for example), and handle in-document and out-of-document hyperlinks.
+
+The viewer implementation has the benefit of being lightweight compared to a browser and it supports standard viewer features such as text selection and clipboard copy.
+
+h4. JFace Viewer Limitations
+
+The following limitations apply to the JFace text-only markup rendering viewer. The limitations can be avoided by using the SWT Browser widget instead.
+
+Since the viewer is a text-only rendering solution for markup it cannot display advanced markup constructs such as tables.  Images can be displayed due to WikiText's custom painting.
+
+The viewer is also generally only useful for read-only usage, since the viewer does not maintain a mapping back to the original markup.
+
+Anchors (ie: hyperlinks) within the page are implemented. If you use footnotes, clicking on the footnote anchor will scroll the viewer to display the footnote text at the bottom.
+
+h2. Classpath and Dependencies
+
+WikiText is designed for use both within an Eclipse runtime, and stand-alone.
+
+h3. Within Eclipse
+
+WikiText use within an Eclipse runtime is simple: simply add the desired WikiText bundles as dependencies to your plug-in project.  This is the recommended approach for Eclipse plug-ins and for RCP applications.
+
+h3. Stand-Alone
+
+Stand-alone usage of WikiText is also possible.  To use WikiText outside of an Eclipse runtime, simply add the WikiText jar files to your classpath.  Note that stand-alone usage of WikiText is limited to the use of the markup parser framework and Ant tasks.
+
+Add the @org.eclipse.mylyn.wikitext.core*.jar@ to your classpath, and at least one the following language-specific jars:
+
+* @org.eclipse.mylyn.wikitext.confluence.core*.jar@
+* @org.eclipse.mylyn.wikitext.mediawiki.core*.jar@
+* @org.eclipse.mylyn.wikitext.textile.core*.jar@
+* @org.eclipse.mylyn.wikitext.tracwiki.core*.jar@
+* @org.eclipse.mylyn.wikitext.twiki.core*.jar@
+
+h1. Using The WikiText Parser
+
+WikiText provides a parser framework for parsing lightweight markup languages (wiki markup).  The parser framework can output HTML, DITA, DocBook, and Eclipse Help directly, or integrators can extend @DocumentBuilder@ to output other formats.
+
+h2. Simple Example
+
+To convert Textile wiki markup to HTML:
+
+bc. 
+MarkupParser markupParser = new MarkupParser();
+markupParser.setMarkupLanaguage(new TextileLanguage());
+String htmlContent = markupParser.parseToHtml(markupContent);
+
+To convert MediaWiki wiki markup to HTML:
+
+bc. 
+MarkupParser markupParser = new MarkupParser();
+markupParser.setMarkupLanaguage(new MediaWikiLanguage());
+String htmlContent = markupParser.parseToHtml(markupContent);
+
+h3. ServiceLocator
+
+Your code may need to handle multiple markup languages or you may wish to eliminate compile-time dependencies on a specific markup language.  The @ServiceLocator@ can obtain markup languages by name:
+
+bc. 
+ServiceLocator.getInstance().getMarkupLanguage("Textile")
+
+Other markup languages can be obtained by changing @"Textile"@ to another markup language name.  Valid markup language names include:
+
+* Confluence
+* MediaWiki
+* Textile
+* TracWiki
+* TWiki
+
+h2. Advanced Parser Usage
+
+The @MarkupParser@ emits content to a @DocumentBuilder@ in order to create HTML or other output.  To control the output more closely instantiate the @DocumentBuilder@ of choice and configure it before it is used.  
+
+In this example the @HtmlDocumentBuilder@ is configured to avoid creating the @<html>@ and @<body>@ tags:
+
+bc.. 
+StringWriter writer = new StringWriter();
+
+HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
+// avoid the <html> and <body> tags 
+builder.setEmitAsDocument(false);
+
+MarkupParser parser = new MarkupParser(new TextileLanguage());
+parser.setBuilder(builder);
+parser.parse(markupContent);
+
+String htmlContent = writer.toString();
+
+h2. Adding CSS to HTML Output
+
+CSS stylesheets can be embedded directly or referenced within your HTML:
+
+bc.. 
+HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
+
+// Add a CSS stylesheet as <link type="text/css" rel="stylesheet" href="styles/test.css"/>
+builder.addCssStylesheet("styles/test.css");
+  
+// Add a CSS stylesheet as <style type="text/css">
+builder.addCssStylesheet(new File("/path/to/file.css"));
+
+h1. WikiText and the UI
+
+WikiText can be used to integrate wiki markup capabilities into your application user interface.
+
+h2. WikiText JFace Viewer
+
+WikiText provides a JFace @SourceViewer@ for displaying wiki markup without having to use a @Browser@ widget. 
+
+bc.. 
+MarkupViewer viewer = new MarkupViewer(parent, null, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+viewer.setMarkupLanguage(markupLanguage);
+
+MarkupViewerConfiguration configuration = new MarkupViewerConfiguration(viewer);
+viewer.configure(configuration);
+viewer.getTextWidget().setEditable(false);
+viewer.setMarkup(markup);
+
+h2. WikiText and Browser
+
+WikiText can be used to display wiki markup in an SWT @Browser@ widget:
+
+bc.. 
+Browser browser = new Browser(parent, SWT.NONE);
+
+MarkupParser markupParser = new MarkupParser();
+markupParser.setMarkupLanaguage(new TextileLanguage());
+String htmlContent = markupParser.parseToHtml(markupContent);
+		
+browser.setText(htmlContent);
+
+h1. Markup Languages
+
+Markup languages are the core concept that WikiText uses to define a parser for specific wiki markup.  WikiText provides facilities for adding new markup languages or extending an existing one.  All markup languages in WikiText extend the @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@ class.
+
+h2. Extending an Existing Markup Language
+
+You may wish to augment an existing markup language syntax with your own extensions.  With WikiText this is possible by subclassing an existing markup language.  Currently only @TextileLanguage@ and @MediaWikiLanguage@ are designed to be subclassed.
+
+If you plan on subclassing a markup language implementation, start by taking a look at @org.eclipse.mylyn.wikitext.textile.core.BugzillaTextileLanguage@.  You should also be familiar with "Markup Language Concepts":#MarkupLanguageConcepts.
+
+h2. New Markup Languages
+
+WikiText is designed to be extended to support new markup languages.  To add a markup language take the following steps:
+
+# Extend @org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@ using one of the existing subclasses as an example
+# Add to your markup language class the blocks, phrases and replacement tokens that are to be part of your language (see "Markup Language Concepts":#MarkupLanguageConcepts below)
+# Add to your jar a Java service @META-INF/services/org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage@
+# If it's to be used in Eclipse, register your markup language using the @org.eclipse.mylyn.wikitext.core.markupLanguage@ extension point. Other extension points that may be of interest to you:
+** @org.eclipse.core.contenttype.contentTypes@ declare your markup language content type
+** @org.eclipse.team.core.fileTypes@ ensure that team providers know that your file type is text
+** @org.eclipse.mylyn.wikitext.core.markupValidationRule@ provide markup validation to detect common problems in markup
+
+You're most likely to be successful if you use one of the existing WikiText markup language plug-ins as an example.  A good starting point is the @org.eclipse.mylyn.wikitext.textile.core@ plug-in.
+
+If you plan to implement a markup language then you should be familiar with "Markup Language Concepts":#MarkupLanguageConcepts.
+
+h2. Markup Language UI
+
+To have a full featured UI for your markup language in Eclipse there are several additional extension points to be aware of:
+
+* @org.eclipse.mylyn.wikitext.ui.cheatSheet@ a way of associating help content for your markup language
+* @org.eclipse.mylyn.wikitext.ui.contentAssist@ a means of having content-assist for your markup language
+* @org.eclipse.mylyn.tasks.ui.taskEditorExtensions@ make your markup language contribute to the Mylyn task editor
+
+For more information on these and other UI functions, take a look at the @org.eclipse.mylyn.wikitext.textile.ui@ plug-in.
+
+h2(#MarkupLanguageConcepts). Markup Language Concepts
+
+Every @MarkupLanguage@ declares its syntax in terms of blocks, phrases, and replacement tokens.  Though it is possible to create a markup language implementation that doesn't use these concepts, these are the building blocks of all markup languages implemented within WikiText.
+
+Take for example the following Textile markup:
+
+!images/markup-plain.png!
+
+*Block*
+
+A block is a multi-line region of text.  Blocks are a way of 'chunking' a document, and loosely correspond to HTML concepts such as div, paragraph, list item, table cell, etc.
+
+The example is composed of two blocks:
+!images/markup-blocks.png!
+
+Though blocks may start and end anywhere on a line, they usually start at the beginning of one line and end with a line delimiter.  Blocks may not overlap with other blocks, and may not be nested within one another.
+
+*Phrase*
+
+A phrase is a single-line region of text.  Phrases are often used to apply styles such as underline or bold to a region of text.  Phrases are analogous to an HTML span.
+
+The example shows phrases:
+!images/markup-phrases.png!
+
+Phrases may not overlap but may be nested.  Phrases must start and end on the same line.  Phrases cannot span a block boundary.
+
+*Replacement Token*
+
+Replacement tokens are regions of text that are replaced with a corresponding element.  For example, tokens may replace things such as '==(c)==' with (c).  Replacement tokens can also be used to replace regions of text with the same text but semantic meaning, such as a hyperlink. 
+
+The example has replacement tokens:
+
+!images/markup-tokens.png!
+
+Replacement tokens cannot span a phrase or block boundary.  Replacement tokens cannot be nested and must start and end on the same line. 
+
+h3. Markup Language Implementation Tips
+
+# The order that blocks, phrases and replacement tokens are declared by your markup language affect the markup syntax.
+# When implementing a markup language, always ensure that there's one 'catch-all' block, usually the paragraph block.  It should be last in the list of blocks declared by your language.
+# Make extensive use of brief test cases that test for markup language syntax.  WikiText has over 430 JUnit tests which we've found to be invaluable in verifying the expected behavior.  Take a look at @TextileLanguageTest@ for an example of how to write tests for your markup language.
+# If in doubt, always use an existing WikiText markup language as an example.
+# Feel free to post questions to the Mylyn newsgroup.
+
+h1. Contributing
+
+WikiText is evolving as a direct result of user contributions.  Please feel free to contribute by
+
+* "posting a bug":#IssueTracking
+* "submitting a patch":#IssueTracking
+
+For more information about contributing please see the "Mylyn Contributor Reference":http://wiki.eclipse.org/index.php/Mylyn/Contributor_Reference.
+
+h2(#IssueTracking). Issue Tracking
+
+Issues are tracked in "Eclipse Bugzilla":https://bugs.eclipse.org/bugs/ under the *Mylyn* project, *WikiText* component.  Please feel free to submit bugs, enhancement requests and patches.
