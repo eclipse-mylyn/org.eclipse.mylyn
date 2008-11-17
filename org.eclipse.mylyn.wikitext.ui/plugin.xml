@@ -161,4 +161,25 @@
           file="contextHelp.xml">
     </contexts>
  </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          locationURI="menu:help?before=group.assist">
+       <command
+             commandId="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
+             icon="icons/help.gif"
+             label="Markup Cheat Sheet"
+             style="push"
+             tooltip="show help for wiki markup syntax">
+          <visibleWhen>
+          	`<with variable="activeContexts">
+	            <iterate operator="or">
+	               <equals
+	                     value="org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"/>
+	            </iterate>
+         	</with>
+          </visibleWhen>
+       </command>
+    </menuContribution>
+ </extension>
 </plugin>
