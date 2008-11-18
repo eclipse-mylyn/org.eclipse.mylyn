@@ -76,6 +76,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskRelationHyperlinkDetectorTest.class);
 		suite.addTestSuite(TaskEditorPartDescriptorTest.class);
 		suite.addTestSuite(TaskAttachmentPropertyTesterTest.class);
+		suite.addTestSuite(CommentGroupStrategyTest.class);
 
 		// XXX long running tests, put back?
 		//suite.addTestSuite(TaskDataImportTest.class);

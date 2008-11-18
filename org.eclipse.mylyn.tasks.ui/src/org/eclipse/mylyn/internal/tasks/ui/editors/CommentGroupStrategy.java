@@ -27,11 +27,13 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public class CommentGroupStrategy {
 
-	private static final int MAX_CURRENT = 12;
-
-	private static final int MAX_RECENT = 20;
-
 	public static class CommentGroup {
+
+		public static final String CURRENT = "Current";
+
+		public static final String OLDER = "Older";
+
+		public static final String RECENT = "Recent";
 
 		private final List<ITaskComment> comments;
 
@@ -39,14 +41,10 @@ public class CommentGroupStrategy {
 
 		private final boolean incoming;
 
-		CommentGroup(String groupName, List<ITaskComment> comments, boolean incoming) {
+		public CommentGroup(String groupName, List<ITaskComment> comments, boolean incoming) {
 			this.groupName = groupName;
 			this.comments = comments;
 			this.incoming = incoming;
-		}
-
-		public boolean hasIncoming() {
-			return incoming;
 		}
 
 		public List<TaskAttribute> getCommentAttributes() {
@@ -65,14 +63,25 @@ public class CommentGroupStrategy {
 			return groupName;
 		}
 
+		public boolean hasIncoming() {
+			return incoming;
+		}
 	}
 
+	// public for testing
+	public static final int MAX_CURRENT = 12;
+
+	// public for testing
+	public static final int MAX_RECENT = 20;
+
 	/**
-	 * Groups comment according to "Older", "Recent" and "Current".
+	 * Groups comments according to "Older", "Recent" and "Current".
 	 * 
-	 * @param taskDataModel
-	 *            extracts groups of comment for the model
-	 * @return list of comment groups. Groups will be ignored if there are no comments under them.
+	 * @param comments
+	 *            a list of comments to be grouped
+	 * @param currentPersonId
+	 *            current login user id
+	 * @return a list of groups
 	 */
 	public List<CommentGroup> groupComments(List<ITaskComment> comments, String currentPersonId) {
 		if (comments.size() == 0) {
@@ -94,7 +103,7 @@ public class CommentGroupStrategy {
 		} else {
 			current = comments;
 		}
-		commentGroups.add(new CommentGroup("Current", current, hasIncomingChanges(current)));
+		commentGroups.add(new CommentGroup(CommentGroup.CURRENT, current, hasIncomingChanges(current)));
 
 		// recent
 		if (comments.size() > current.size()) {
@@ -102,19 +111,23 @@ public class CommentGroupStrategy {
 			int recentFromIndex = Math.max(recentToIndex - MAX_RECENT, 0);
 			List<ITaskComment> recent = new ArrayList<ITaskComment>(comments.subList(recentFromIndex, recentToIndex));
 			if (recent.size() > 0) {
-				commentGroups.add(new CommentGroup("Recent", recent, hasIncomingChanges(recent)));
+				commentGroups.add(new CommentGroup(CommentGroup.RECENT, recent, hasIncomingChanges(recent)));
 
 				// the rest goes to older
 				if (comments.size() > current.size() + recent.size()) {
 					int olderToIndex = comments.size() - current.size() - recent.size();
 					List<ITaskComment> older = new ArrayList<ITaskComment>(comments.subList(0, olderToIndex));
-					commentGroups.add(new CommentGroup("Older", older, hasIncomingChanges(older)));
+					commentGroups.add(new CommentGroup(CommentGroup.OLDER, older, hasIncomingChanges(older)));
 				}
 			}
 		}
 
 		Collections.reverse(commentGroups);
 		return commentGroups;
+	}
+
+	protected boolean hasIncomingChanges(ITaskComment taskComment) {
+		return false;
 	}
 
 	private boolean hasIncomingChanges(List<ITaskComment> comments) {
@@ -126,7 +139,8 @@ public class CommentGroupStrategy {
 		return false;
 	}
 
-	private boolean isCurrent(List<ITaskComment> current, ITaskComment comment, String currentPersonId) {
+	// public for testing
+	public boolean isCurrent(List<ITaskComment> current, ITaskComment comment, String currentPersonId) {
 		if (current.size() >= MAX_CURRENT) {
 			return false;
 		}
@@ -154,9 +168,4 @@ public class CommentGroupStrategy {
 
 		return true;
 	}
-
-	protected boolean hasIncomingChanges(ITaskComment taskComment) {
-		return false;
-	}
-
 }
