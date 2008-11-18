@@ -1,9 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Tasktop EULA
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://tasktop.com/legal
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 package org.eclipse.mylyn.internal.provisional.tasks.core;
 
@@ -28,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryLocationFactory;
 
 /**
  * @author Steffen Pingel
+ * @since 3.1
  */
 public abstract class RepositoryClientManager<T, C extends Serializable> implements IRepositoryListener {
 

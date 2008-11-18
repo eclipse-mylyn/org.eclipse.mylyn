@@ -28,7 +28,8 @@ Require-Bundle: org.eclipse.ui,
  org.apache.commons.logging;bundle-version="1.0.4"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylyn.internal.tasks.ui;x-internal:=true,
+Export-Package: org.eclipse.mylyn.internal.provisional.tasks.ui.wizards;x-internal:=true,
+ org.eclipse.mylyn.internal.tasks.ui;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.actions;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.commands;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.dialogs;x-internal:=true,
