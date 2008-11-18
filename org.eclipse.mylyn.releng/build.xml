@@ -195,13 +195,13 @@
 		</antcall>
 	</target>
 
-	<target name="weekly" depends="build,dist">
+	<target name="weekly" depends="clean,build,dist">
 		<antcall target="promote">
 			<param name="target" value="weekly"/>
 		</antcall>
 	</target>
 
-	<target name="dev" depends="build,dist">
+	<target name="dev" depends="clean,build,dist">
 		<antcall target="promote">
 			<param name="target" value="dev"/>
 		</antcall>
