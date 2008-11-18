@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="mylyn" default="" basedir=".">
+	<property file="local.properties" />
 	<property file="defaults.properties" />
 
 	<property name="version" value="3.1.0" />
@@ -130,7 +131,46 @@
 		</antcall>
 	</target>
 
-	<target name="dist" depends="init">
+	<target name="pack" depends="init">
+		<antcall target="forEach">
+			<param name="call" value="pack-sites"/>
+		</antcall>
+	</target>
+
+	<target name="pack-sites" depends="init">
+		<antcall target="pack-helper">
+			<param name="dir" value="${build.home}/${eclipse.version}/standardUpdateSite"/>
+		</antcall>
+		<antcall target="pack-helper">
+			<param name="dir" value="${build.home}/${eclipse.version}/extrasUpdateSite"/>
+		</antcall>
+		<antcall target="pack-helper">
+			<param name="dir" value="${build.home}/${eclipse.version}/incubatorUpdateSite"/>
+		</antcall>
+	</target>
+
+	<target name="generate-metadata" depends="init">
+		<antcall target="forEach">
+			<param name="call" value="generate-metadata-sites"/>
+		</antcall>
+	</target>
+
+	<target name="generate-metadata-sites" depends="init">
+		<antcall target="generate-metadata-helper">
+			<param name="dir" value="${build.home}/${eclipse.version}/standardUpdateSite"/>
+			<param name="name" value="Mylyn Weekly for Eclipse ${eclipse.version}"/>
+		</antcall>
+		<antcall target="generate-metadata-helper">
+			<param name="dir" value="${build.home}/${eclipse.version}/extrasUpdateSite"/>
+			<param name="name" value="Mylyn Weekly Extras"/>
+		</antcall>
+		<antcall target="generate-metadata-helper">
+			<param name="dir" value="${build.home}/${eclipse.version}/incubatorUpdateSite"/>
+			<param name="name" value="Mylyn Weekly Incubator"/>
+		</antcall>
+	</target>
+
+	<target name="dist" depends="init,pack,generate-metadata">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
 		<copy todir="${dist.dir}/e3.3">
 			<fileset dir="${build.home}/3.3/standardUpdateSite"/>

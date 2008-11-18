@@ -237,5 +237,63 @@
 			<arg value="${dir}"/>
 		</exec>
 	</target>
-	
+
+	<target name="pack-helper">
+    	<property name="timeout" value="3600000" />
+		<property name="application" value="org.eclipse.update.core.siteOptimizer" />
+    	<property name="eclipse.home" value="${eclipse.base}/sdk-${eclipse.sdk.3.4}/eclipse" />
+		<property name="vmargs" value=" -Xms40m -Xmx512m"/>    	
+    	<property name="log" value="${build.results}/pack-${eclipse.version}.log" />
+		
+		<echo message="Packing update site ${dir}" />
+		<echo message="Output is logged to ${log}" />
+    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="true" 
+    		classname="org.eclipse.core.launcher.Main" output="${log}">
+	        <classpath>
+	    		<fileset dir="${eclipse.home}/plugins">
+	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
+	          	</fileset>
+	        </classpath>
+		    <arg line="-consolelog"/>
+		    <arg line="-application ${application}"/>
+    		<arg line="-jarProcessor"/>
+    		<arg line="-verbose"/>    		
+    		<arg line="-processAll"/>
+    		<arg line="-repack"/>
+    		<arg line="-pack"/>
+    		<arg line="-outputDir ${dir}"/>
+    		<arg line="${dir}"/>
+		    <jvmarg line="${vmargs}"/>
+		</java>
+    </target>
+
+	<target name="generate-metadata-helper">
+    	<property name="timeout" value="3600000" />
+		<property name="application" value="org.eclipse.equinox.p2.metadata.generator.EclipseGenerator" />
+    	<property name="eclipse.home" value="${eclipse.base}/sdk-${eclipse.sdk.3.4}/eclipse" />
+		<property name="vmargs" value=" -Xms40m -Xmx512m"/>    	
+		
+		<echo message="Generating P2 meta-data for ${dir}" />
+    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="true" 
+    		classname="org.eclipse.core.launcher.Main">
+	        <classpath>
+	    		<fileset dir="${eclipse.home}/plugins">
+	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
+	          	</fileset>
+	        </classpath>
+		    <arg line="-consolelog"/>
+		    <arg line="-application ${application}"/>
+    		<arg line="-updateSite ${dir}"/>
+    		<arg line="-site file:${dir}/site.xml"/>    
+    		<arg line="-metadataRepository file:${dir}"/>
+    		<arg line="-metadataRepositoryName '${name}'"/>
+    		<arg line="-artifactRepository file:${dir}"/>
+    		<arg line="-artifactRepositoryName '${name}'"/>
+    		<arg line="-compress"/>
+    		<arg line="-reusePack200Files"/>
+    		<arg line="noDefaultIUs"/>
+		    <jvmarg line="${vmargs}"/>
+		</java>
+    </target>
+
 </project>
