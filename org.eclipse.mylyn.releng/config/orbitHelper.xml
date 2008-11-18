@@ -18,9 +18,9 @@
 			
 		<basename file="${path.full}" property="path.base"/>
 		
-		<jar destfile="${path.full}.jar">
+		<zip destfile="${path.full}.jar">
 			<fileset dir="${path.full}"></fileset>
-		</jar>		
+		</zip>		
 	</target>
 	
 	<target name="orbit-copy-bundles-helper">
