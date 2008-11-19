@@ -31,19 +31,16 @@ public class HeadlessTests extends TestCase {
 		final TestSuite testSuite = new TestSuite();
 		testSuite.setName("All Headless Tests");
 
+		// find all tests that meet the right criteria for running in a headless environment
 		new ClassTraversal().visitClasses(new Visitor() {
 			public void visit(Class<?> clazz) {
 				if (isQualifyingTestClass(clazz)) {
-					addTest(testSuite, clazz);
+					testSuite.addTest(new TestSuite(clazz));
 				}
 			}
 		});
 
 		return testSuite;
-	}
-
-	protected static void addTest(TestSuite testSuite, Class<?> clazz) {
-		testSuite.addTest(new TestSuite(clazz));
 	}
 
 	protected static boolean isQualifyingTestClass(Class<?> clazz) {
