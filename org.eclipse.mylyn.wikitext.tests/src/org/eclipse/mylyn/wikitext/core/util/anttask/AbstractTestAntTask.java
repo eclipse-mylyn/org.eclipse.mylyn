@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
-public class AbstractTestAntTask extends TestCase {
+public abstract class AbstractTestAntTask extends TestCase {
 
 	protected File tempFolder;
 

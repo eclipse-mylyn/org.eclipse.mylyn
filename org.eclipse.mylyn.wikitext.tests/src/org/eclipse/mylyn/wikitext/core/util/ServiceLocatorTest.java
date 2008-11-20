@@ -30,6 +30,8 @@ public class ServiceLocatorTest extends TestCase {
 	}
 
 	public void testKnownLanguage() {
+		// if this test fails it may be because it's run stand-alone and the Textile
+		// language is loaded from a folder instead of a jar file.
 		MarkupLanguage markupLanguage = locator.getMarkupLanguage("Textile");
 		assertNotNull(markupLanguage);
 	}

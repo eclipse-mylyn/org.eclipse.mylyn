@@ -29,7 +29,7 @@ public class HeadlessTests extends TestCase {
 
 	public static Test suite() {
 		final TestSuite testSuite = new TestSuite();
-		testSuite.setName("All Headless Tests");
+		testSuite.setName("All Headless Tests" + (inEclipse() ? " Stand-Alone" : " In Eclipse"));
 
 		// find all tests that meet the right criteria for running in a headless environment
 		new ClassTraversal().visitClasses(new Visitor() {
@@ -61,13 +61,15 @@ public class HeadlessTests extends TestCase {
 			return false;
 		}
 
-		final boolean inEclipse = WikiTextPlugin.getDefault() != null;
-
-		if (!inEclipse && clazz.getAnnotation(EclipseRuntimeRequired.class) != null) {
+		if (!inEclipse() && clazz.getAnnotation(EclipseRuntimeRequired.class) != null) {
 			return false;
 		}
 
 		return true;
+	}
+
+	private static boolean inEclipse() {
+		return WikiTextPlugin.getDefault() != null;
 	}
 
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="org.eclipse.mylyn.wikitext.tests" default="all">
+	<description>
+		A build script for running JUnit tests
+	</description>
+	
+	<property name="test.output" value="test-output"/>
+	<property name="eclipse.home" value="/Applications/eclipse"/>
+	
+	<target name="all" depends="clean, run-tests">
+	</target>
+
+	<target name="init">
+		<mkdir dir="${test.output}"/>
+	</target>
+			
+	<target name="clean" depends="init">
+		<delete includeemptydirs="true">
+			<fileset dir="${test.output}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="run-tests" depends="clean, init">
+		<path id="wikitext.tests.classpath">
+			<dirset dir="..">
+				<include name="org.eclipse.*/bin"/>
+				<include name="javax.*/bin"/>
+				<include name="org.apache.*/bin"/>
+			</dirset>
+		</path>
+
+		<junit printsummary="yes" haltonfailure="no" 
+			failureproperty="junit_test_failed" fork="true" forkmode="once" maxmemory="1024m">
+			<classpath>
+				<path refid="wikitext.tests.classpath"/>
+			</classpath>
+			<classpath>
+				<fileset dir="${eclipse.home}/plugins">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+			
+			<formatter type="xml" />
+			<test todir="${test.output}" name="org.eclipse.mylyn.wikitext.tests.HeadlessTests"/>
+		</junit>
+
+		<antcall target="test-report"/>
+	</target>
+	
+	<target name="test-report">
+
+		<junitreport todir="${test.output}">
+			<fileset dir="${test.output}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="noframes" todir="${test.output}" styledir="styles"/>
+		</junitreport>
+		
+		<echo>
+JUnit report published to ${test.output}
+		</echo>
+	</target>
+	
+</project>
