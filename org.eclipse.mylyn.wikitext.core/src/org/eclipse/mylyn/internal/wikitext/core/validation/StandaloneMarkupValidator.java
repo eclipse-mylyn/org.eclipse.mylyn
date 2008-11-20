@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -167,7 +169,10 @@ public class StandaloneMarkupValidator {
 				Document pluginXml = dbf.newDocumentBuilder().parse(in);
 
 				computeRules(markupLanguage, pluginXml);
-
+			} catch (SecurityException e) {
+				// ignore, we can get this during unit testing.  It can happen due to a digest mismatch for resources in a jar file.
+				Logger.getLogger(StandaloneMarkupValidator.class.getName()).log(Level.WARNING,
+						String.format("Ignoring plugin.xml due to security exception: %s", url), e);
 			} catch (SAXException e) {
 				throw new IllegalStateException(String.format("Cannot parse file %s", url), e); //$NON-NLS-1$
 			} catch (ParserConfigurationException e) {
