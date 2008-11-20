@@ -15,38 +15,27 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
- * A test case that runs all headless tests that are available on the classpath
+ * A test case that runs all UI tests that are available on the classpath
  * 
  * @author dgreen
  */
 @NoDiscovery
-public class HeadlessTests extends TestCase {
+public class UITests extends TestCase {
 
 	public static Test suite() {
-		boolean inEclipseRuntime = DiscoveryTestSuite.inEclipseRuntime();
-		final DiscoveryTestSuite testSuite = new DiscoveryTestSuite(new Filter(inEclipseRuntime));
-		testSuite.setName("All Headless Tests" + (inEclipseRuntime ? " Stand-Alone" : " In Eclipse"));
+		final DiscoveryTestSuite testSuite = new DiscoveryTestSuite(new Filter());
+		testSuite.setName("All UI Tests");
 		return testSuite;
 	}
 
 	private static class Filter implements ClassFilter {
-		private final boolean inEclipseRuntime;
-
-		public Filter(boolean inEclipseRuntime) {
-			this.inEclipseRuntime = inEclipseRuntime;
-		}
-
 		public boolean filter(Class<?> clazz) {
-			if (HeadlessTests.class == clazz) {
+			if (UITests.class == clazz) {
 				return true;
 			}
-			if (clazz.getAnnotation(HeadRequired.class) != null) {
+			if (clazz.getAnnotation(HeadRequired.class) == null) {
 				return true;
 			}
-			if (!inEclipseRuntime && clazz.getAnnotation(EclipseRuntimeRequired.class) != null) {
-				return true;
-			}
-
 			return false;
 		}
 	}
