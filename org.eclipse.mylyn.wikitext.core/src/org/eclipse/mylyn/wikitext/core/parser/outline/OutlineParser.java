@@ -69,7 +69,7 @@ public class OutlineParser {
 		}
 
 		markupLanguage.setFilterGenerativeContents(true);
-		markupLanguage.setBlocksOnly(true);
+		markupLanguage.setBlocksOnly(isBlocksOnly());
 		try {
 			OutlineBuilder outlineBuilder = (OutlineBuilder) createOutlineUpdater(root);
 			MarkupParser markupParser = new MarkupParser();
@@ -82,6 +82,14 @@ public class OutlineParser {
 		}
 
 		return root;
+	}
+
+	/**
+	 * normally outline parsing is performed only on blocks. Overriding classes may return false if they wish to process
+	 * all content.
+	 */
+	protected boolean isBlocksOnly() {
+		return true;
 	}
 
 	protected OutlineItem createOutlineItem(OutlineItem current, int level, String id, int offset, int length,
@@ -101,7 +109,7 @@ public class OutlineParser {
 
 		private StringBuilder buf;
 
-		private final IdGenerator idGenerator = new IdGenerator();
+		protected final IdGenerator idGenerator = new IdGenerator();
 
 		private int offset;
 

@@ -180,27 +180,6 @@ public abstract class DocumentBuilder {
 	public abstract void link(Attributes attributes, String hrefOrHashName, String text);
 
 	/**
-	 * Create a hyperlink to the given url
-	 * 
-	 * @param attributes
-	 *            the attributes of the link
-	 * @param hrefOrHashName
-	 *            the url (which may be internal to the page if prefixed with a hash '#')
-	 * @param text
-	 *            the text of the hyperlink
-	 * @param title
-	 *            the title or alternative text which is typically displayed on mouse hover
-	 * 
-	 * @deprecated please use {@link #link(Attributes, String, String)} instead and place the title in the
-	 *             {@link Attributes#getTitle() attributes title}.
-	 */
-	@Deprecated
-	public final void link(Attributes attributes, String hrefOrHashName, String text, String title) {
-		attributes.setTitle(title);
-		link(attributes, hrefOrHashName, text);
-	}
-
-	/**
 	 * Create a hyperlink whose visual representation is an image. Implementations must apply the attributes to the
 	 * image tag. For example, if the builder constructs HTML, the builder would emit
 	 * <code>&lt;a href="...">&lt;img src="..."/>&lt;/a></code>. In this case if the attributes define a css class then
@@ -241,19 +220,6 @@ public abstract class DocumentBuilder {
 	 */
 	public final void link(String hrefOrHashName, String text) {
 		link(new LinkAttributes(), hrefOrHashName, text);
-	}
-
-	/**
-	 * @see #link(Attributes, String, String, String)
-	 * 
-	 * @deprecated use {@link #link(Attributes, String, String)} instead and place the title in the
-	 *             {@link Attributes#getTitle() attributes title}.
-	 */
-	@Deprecated
-	public final void link(String hrefOrHashName, String text, String title) {
-		Attributes attributes = new LinkAttributes();
-		attributes.setTitle(title);
-		link(attributes, hrefOrHashName, text);
 	}
 
 	/**

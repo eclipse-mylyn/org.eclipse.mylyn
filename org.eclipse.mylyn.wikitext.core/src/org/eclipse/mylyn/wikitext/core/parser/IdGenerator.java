@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -76,6 +77,16 @@ public class IdGenerator {
 			id = template + (++suffix);
 		}
 		return id;
+	}
+
+	/**
+	 * get the set of anchor names that were either {@link #reserveId(String) reserved} or
+	 * {@link #newId(String, String) created}.
+	 * 
+	 * @return the set of names
+	 */
+	public Set<String> getAnchorNames() {
+		return Collections.unmodifiableSet(anchorNames);
 	}
 
 	private String convertToAnchor(String text) {

@@ -30,7 +30,9 @@
 	   point="org.eclipse.mylyn.wikitext.core.markupValidationRule">
 		<rule
 		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation.CommentValidationRule"
-		      markupLanguage="MediaWiki">
-		</rule>
+		      markupLanguage="MediaWiki"/>
+		<rule
+		      class="org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation.MediaWikiReferenceValidationRule"
+		      markupLanguage="MediaWiki"/>
 	 </extension>
 </plugin>

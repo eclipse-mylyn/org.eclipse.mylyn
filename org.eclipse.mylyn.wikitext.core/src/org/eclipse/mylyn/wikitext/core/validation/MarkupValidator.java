@@ -33,8 +33,8 @@ public class MarkupValidator {
 	}
 
 	public List<ValidationProblem> validate(IProgressMonitor monitor, String markup, int offset, int length) {
-		final int totalWork = length == 0 ? 1 : length * rules.size();
-		monitor.beginTask(Messages.getString("MarkupValidator.0"), totalWork);  //$NON-NLS-1$
+		final int totalWork = length == 0 || rules.isEmpty() ? 1 : rules.size();
+		monitor.beginTask(Messages.getString("MarkupValidator.0"), totalWork); //$NON-NLS-1$
 		try {
 			if (length == 0 || rules.isEmpty()) {
 				return Collections.emptyList();
@@ -46,20 +46,8 @@ public class MarkupValidator {
 			List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
 
 			for (ValidationRule rule : rules) {
-				int o = offset;
-				while (o < end) {
-					ValidationProblem problem = rule.findProblem(markup, o, length - (o - offset));
-					if (problem == null) {
-						break;
-					}
-					problems.add(problem);
-					int newO = problem.getOffset() + problem.getLength();
-					if (newO <= o) {
-						break;
-					}
-					monitor.worked(newO - o);
-					o = newO;
-				}
+				problems.addAll(rule.findProblems(markup, offset, length));
+				monitor.worked(1);
 			}
 			if (!problems.isEmpty()) {
 				Collections.sort(problems);

@@ -32,8 +32,10 @@
        point="org.eclipse.mylyn.wikitext.core.markupValidationRule">
     <rule
           class="org.eclipse.mylyn.internal.wikitext.twiki.core.validation.ListWhitespaceValidationRule"
-          markupLanguage="TWiki">
-    </rule>
+          markupLanguage="TWiki"/>
+    <rule
+          class="org.eclipse.mylyn.internal.wikitext.twiki.core.validation.TWikiReferenceValidationRule"
+          markupLanguage="TWiki"/>
  </extension>
 
 </plugin>

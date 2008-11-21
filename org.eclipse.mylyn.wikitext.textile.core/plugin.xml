@@ -34,6 +34,8 @@
 	<extension point="org.eclipse.mylyn.wikitext.core.markupValidationRule">
 		<rule markupLanguage="Textile"
 			class="org.eclipse.mylyn.internal.wikitext.textile.core.validation.BlockWhitespaceRule" />
+		<rule markupLanguage="Textile"
+			class="org.eclipse.mylyn.internal.wikitext.textile.core.validation.TextileReferenceValidationRule" />
 	</extension>
 	
 </plugin>

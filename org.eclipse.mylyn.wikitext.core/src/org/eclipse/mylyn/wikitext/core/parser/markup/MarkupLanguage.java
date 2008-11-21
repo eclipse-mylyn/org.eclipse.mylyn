@@ -233,18 +233,22 @@ public abstract class MarkupLanguage {
 		}
 		int offset = 0;
 		for (;;) {
-			PatternBasedElementProcessor patternBasedElement = getReplacementTokenSyntax().findPatternBasedElement(
-					text, offset);
-			if (patternBasedElement != null) {
-				int newOffset = patternBasedElement.getLineStartOffset();
+			PatternBasedElementProcessor tokenReplacement = getReplacementTokenSyntax().findPatternBasedElement(text,
+					offset);
+			if (tokenReplacement != null) {
+				int newOffset = tokenReplacement.getLineStartOffset();
 				if (offset < newOffset) {
 					String text2 = text.substring(offset, newOffset);
 					emitMarkupText(parser, state, text2);
 				}
-				patternBasedElement.setParser(parser);
-				patternBasedElement.setState(state);
-				patternBasedElement.emit();
-				offset = patternBasedElement.getLineEndOffset();
+				tokenReplacement.setParser(parser);
+				tokenReplacement.setState(state);
+
+				state.setLineCharacterOffset(state.getShift() + tokenReplacement.getLineStartOffset());
+				state.setLineSegmentEndOffset(state.getShift() + tokenReplacement.getLineEndOffset());
+
+				tokenReplacement.emit();
+				offset = tokenReplacement.getLineEndOffset();
 				if (offset >= text.length()) {
 					break;
 				}

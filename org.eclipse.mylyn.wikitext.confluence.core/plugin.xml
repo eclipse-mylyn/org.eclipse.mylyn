@@ -28,4 +28,10 @@
 		      type="text">
 		</fileTypes>
 	</extension>
+	<extension
+	   point="org.eclipse.mylyn.wikitext.core.markupValidationRule">
+		<rule
+	      class="org.eclipse.mylyn.internal.wikitext.confluence.validation.ConfluenceReferenceValidationRule"
+	      markupLanguage="Confluence"/>
+	</extension>
 </plugin>

@@ -109,19 +109,7 @@ public class StandaloneMarkupValidator {
 		List<ValidationProblem> problems = new ArrayList<ValidationProblem>();
 
 		for (ValidationRule rule : rules) {
-			int o = offset;
-			while (o < end) {
-				ValidationProblem problem = rule.findProblem(markup, o, length - (o - offset));
-				if (problem == null) {
-					break;
-				}
-				problems.add(problem);
-				int newO = problem.getOffset() + problem.getLength();
-				if (newO <= o) {
-					break;
-				}
-				o = newO;
-			}
+			problems.addAll(rule.findProblems(markup, offset, length));
 		}
 		if (!problems.isEmpty()) {
 			Collections.sort(problems);
