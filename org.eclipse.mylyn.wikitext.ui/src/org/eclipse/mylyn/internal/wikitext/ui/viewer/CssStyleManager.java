@@ -11,7 +11,11 @@
 package org.eclipse.mylyn.internal.wikitext.ui.viewer;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,15 +28,79 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 
 /**
- * 
+ * Interprets CSS styles and applies them to a default font and a {@link FontState}, creating a {@link StyleRange}.
  * 
  * @author David Green
  */
 public class CssStyleManager {
 
+	public static final String RULE_VERTICAL_ALIGN = "vertical-align"; //$NON-NLS-1$
+
+	public static final String RULE_TEXT_DECORATION = "text-decoration"; //$NON-NLS-1$
+
+	public static final String RULE_FONT_FAMILY = "font-family"; //$NON-NLS-1$
+
+	public static final String RULE_FONT_SIZE = "font-size"; //$NON-NLS-1$
+
+	public static final String RULE_FONT_WEIGHT = "font-weight"; //$NON-NLS-1$
+
+	public static final String RULE_FONT_STYLE = "font-style"; //$NON-NLS-1$
+
+	public static final String RULE_BACKGROUND_COLOR = "background-color"; //$NON-NLS-1$
+
+	public static final String RULE_COLOR = "color"; //$NON-NLS-1$
+
 	private static final int MIN_FONT_SIZE = 9;
 
 	private static final int MAX_FONT_SIZE = 50;
+
+	public static class CssRule {
+		/**
+		 * the name of the rule
+		 */
+		public final String name;
+
+		/**
+		 * the value of the rule
+		 */
+		public final String value;
+
+		/**
+		 * the offset at which the rule was declared
+		 */
+		public final int offset;
+
+		/**
+		 * the length of the rule declaration
+		 */
+		public final int length;
+
+		/**
+		 * the offset of the name of the rule
+		 */
+		public final int nameOffset;
+
+		/**
+		 * the offset of the value of the rule
+		 */
+		public final int valueOffset;
+
+		/**
+		 * true if the rule name is known to the CssStyleManager
+		 */
+		public final boolean knownRule;
+
+		private CssRule(String name, boolean knownRule, String value, int offset, int length, int nameOffset,
+				int valueOffset) {
+			this.name = name;
+			this.knownRule = knownRule;
+			this.value = value;
+			this.offset = offset;
+			this.length = length;
+			this.nameOffset = nameOffset;
+			this.valueOffset = valueOffset;
+		}
+	}
 
 	private static final Map<String, Integer> colorToRgb = new HashMap<String, Integer>();
 	static {
@@ -188,9 +256,21 @@ public class CssStyleManager {
 	static final Pattern cssRulePattern = Pattern.compile("(?:^|\\s?)([\\w-]+)\\s*:\\s*([^;]+)(;|$)", Pattern.MULTILINE //$NON-NLS-1$
 			| Pattern.DOTALL);
 
-	static final Pattern rgbPattern = Pattern.compile("rgb\\((\\d+),(\\d+),(\\d+)\\)"); //$NON-NLS-1$
+	static final Pattern rgbPattern = Pattern.compile("rgb\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*\\)"); //$NON-NLS-1$
 
 	private final Font defaultFont;
+
+	private final Map<String, RuleHandler> ruleNameToHandler = new HashMap<String, RuleHandler>();
+	{
+		register(new ColorRuleHandler());
+		register(new BackgroundColorRuleHandler());
+		register(new FontStyleRuleHandler());
+		register(new FontWeightRuleHandler());
+		register(new FontSizeRuleHandler());
+		register(new FontFamilyRuleHandler());
+		register(new TextDecorationRuleHandler());
+		register(new VerticalAlignRuleHandler());
+	}
 
 	public CssStyleManager(Font defaultFont) {
 		if (defaultFont == null) {
@@ -204,6 +284,10 @@ public class CssStyleManager {
 	 */
 	public CssStyleManager() {
 		defaultFont = null;
+	}
+
+	private void register(RuleHandler handler) {
+		ruleNameToHandler.put(handler.getRuleName(), handler);
 	}
 
 	public StyleRange createStyleRange(FontState fontState, int offset, int length) {
@@ -301,133 +385,241 @@ public class CssStyleManager {
 		return color;
 	}
 
+	public Iterator<CssRule> createRuleIterator(String cssStyles) {
+		return new CssRuleIterator(cssStyles);
+	}
+
+	public SortedSet<String> getRecognizedRuleNames() {
+		return new TreeSet<String>(ruleNameToHandler.keySet());
+	}
+
+	private class CssRuleIterator implements Iterator<CssRule> {
+		private final Matcher matcher;
+
+		private boolean hasNext;
+
+		public CssRuleIterator(String cssStyles) {
+			matcher = cssRulePattern.matcher(cssStyles);
+			hasNext = matcher.find();
+		}
+
+		public boolean hasNext() {
+			return hasNext;
+		}
+
+		public CssRule next() {
+			if (!hasNext) {
+				throw new NoSuchElementException();
+			}
+			int offset = matcher.start();
+			int length = matcher.end() - offset;
+			String ruleName = matcher.group(1);
+			int nameOffset = matcher.start(1);
+			String ruleValue = matcher.group(2).trim();
+			int valueOffset = matcher.start(2);
+			hasNext = matcher.find();
+			return new CssRule(ruleName, ruleNameToHandler.containsKey(ruleName), ruleValue, offset, length,
+					nameOffset, valueOffset);
+		}
+
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	private interface RuleHandler {
+		public String getRuleName();
+
+		public void process(CssRule rule, FontState fontState, FontState parentFontState);
+	}
+
+	private static class ColorRuleHandler implements RuleHandler {
+		public String getRuleName() {
+			return RULE_COLOR;
+		}
+
+		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
+			Integer rgb = cssColorRgb(rule.value);
+			if (rgb != null) {
+				fontState.foreground = toRGB(rgb);
+			}
+		}
+	}
+
+	private static class BackgroundColorRuleHandler implements RuleHandler {
+		public String getRuleName() {
+			return RULE_BACKGROUND_COLOR;
+		}
+
+		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
+			Integer rgb = cssColorRgb(rule.value);
+			if (rgb != null) {
+				fontState.background = toRGB(rgb);
+			}
+		}
+	}
+
+	private static class FontStyleRuleHandler implements RuleHandler {
+		public String getRuleName() {
+			return RULE_FONT_STYLE;
+		}
+
+		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
+			String[] parts = rule.value.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
+			for (String part : parts) {
+				if ("italic".equals(part)) { //$NON-NLS-1$
+					fontState.setItalic(true);
+				} else if ("bold".equals(part)) { //$NON-NLS-1$
+					fontState.setBold(true);
+				} else if ("normal".equals(part)) { //$NON-NLS-1$
+					fontState.setItalic(false);
+				}
+			}
+		}
+	}
+
+	private static class FontWeightRuleHandler implements RuleHandler {
+		public String getRuleName() {
+			return RULE_FONT_WEIGHT;
+		}
+
+		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
+			if ("bold".equals(rule.value) || "bolder".equals(rule.value)) { //$NON-NLS-1$ //$NON-NLS-2$
+				fontState.setBold(true);
+			} else if ("normal".equals(rule.value) || "lighter".equals(rule.value)) { //$NON-NLS-1$ //$NON-NLS-2$
+				fontState.setBold(false);
+			}
+		}
+	}
+
+	private class FontSizeRuleHandler implements RuleHandler {
+		public String getRuleName() {
+			return RULE_FONT_SIZE;
+		}
+
+		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
+			String cssFontSizeValue = rule.value;
+			if (cssFontSizeValue.endsWith("%")) { //$NON-NLS-1$
+				float defaultSize = defaultFont.getFontData()[0].getHeight();
+				try {
+					float percentage = Float.parseFloat(cssFontSizeValue.substring(0, cssFontSizeValue.length() - 1)) / 100f;
+					if (percentage > 0) {
+						fontState.size = percentage * defaultSize;
+					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+			} else if ("xx-small".equals(cssFontSizeValue)) { //$NON-NLS-1$
+				float defaultSize = defaultFont.getFontData()[0].getHeight();
+				fontState.size = defaultSize - (defaultSize * 0.6f);
+			} else if ("x-small".equals(cssFontSizeValue)) { //$NON-NLS-1$
+				float defaultSize = defaultFont.getFontData()[0].getHeight();
+				fontState.size = defaultSize - (defaultSize * 0.4f);
+			} else if ("small".equals(cssFontSizeValue)) { //$NON-NLS-1$
+				float defaultSize = defaultFont.getFontData()[0].getHeight();
+				fontState.size = defaultSize - (defaultSize * 0.2f);
+			} else if ("medium".equals(cssFontSizeValue)) { //$NON-NLS-1$
+				float defaultSize = defaultFont.getFontData()[0].getHeight();
+				fontState.size = defaultSize;
+			} else if ("large".equals(cssFontSizeValue)) { //$NON-NLS-1$
+				float defaultSize = defaultFont.getFontData()[0].getHeight();
+				fontState.size = defaultSize + (defaultSize * 0.2f);
+			} else if ("x-large".equals(cssFontSizeValue)) { //$NON-NLS-1$
+				float defaultSize = defaultFont.getFontData()[0].getHeight();
+				fontState.size = defaultSize + (defaultSize * 0.4f);
+			} else if ("xx-large".equals(cssFontSizeValue)) { //$NON-NLS-1$
+				float defaultSize = defaultFont.getFontData()[0].getHeight();
+				fontState.size = defaultSize + (defaultSize * 0.6f);
+			} else if ("larger".equals(cssFontSizeValue)) { //$NON-NLS-1$
+				fontState.size = parentFontState.size * 1.2f;
+			} else if ("smaller".equals(cssFontSizeValue)) { //$NON-NLS-1$
+				fontState.size = parentFontState.size - (parentFontState.size * 0.2f);
+			} else {
+				try {
+					if (cssFontSizeValue.endsWith("pt") || cssFontSizeValue.endsWith("px")) { //$NON-NLS-1$ //$NON-NLS-2$
+						cssFontSizeValue = cssFontSizeValue.substring(0, cssFontSizeValue.length() - 2);
+					}
+					float exactSize = Float.parseFloat(cssFontSizeValue);
+					if (exactSize > 0) {
+						fontState.size = exactSize;
+					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+			}
+			// prevent the font size from being unusable
+			fontState.size = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, fontState.size));
+		}
+	}
+
+	private static class FontFamilyRuleHandler implements RuleHandler {
+		public String getRuleName() {
+			return RULE_FONT_FAMILY;
+		}
+
+		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
+			String[] parts = rule.value.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
+			for (String part : parts) {
+				if ("monospace".equals(part) || "courier".equalsIgnoreCase(part) //$NON-NLS-1$ //$NON-NLS-2$ 
+						|| "courier new".equalsIgnoreCase(part)) { //$NON-NLS-1$
+					fontState.setFixedWidth(true);
+				} else {
+					fontState.setFixedWidth(false);
+				}
+			}
+		}
+	}
+
+	private static class TextDecorationRuleHandler implements RuleHandler {
+		public String getRuleName() {
+			return RULE_TEXT_DECORATION;
+		}
+
+		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
+			String[] parts = rule.value.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
+			for (String part : parts) {
+				if ("none".equals(part)) { //$NON-NLS-1$
+					fontState.setStrikethrough(false);
+					fontState.setUnderline(false);
+				} else if ("line-through".equals(part)) { //$NON-NLS-1$
+					fontState.setStrikethrough(true);
+				} else if ("underline".equals(part)) { //$NON-NLS-1$
+					fontState.setUnderline(true);
+				}
+			}
+		}
+	}
+
+	private static class VerticalAlignRuleHandler implements RuleHandler {
+		public String getRuleName() {
+			return RULE_VERTICAL_ALIGN;
+		}
+
+		public void process(CssRule rule, FontState fontState, FontState parentFontState) {
+			if ("super".equals(rule.value)) { //$NON-NLS-1$
+				fontState.setSuperscript(true);
+			} else if ("sub".equals(rule.value)) { //$NON-NLS-1$
+				fontState.setSubscript(true);
+			}
+		}
+	}
+
 	public void processCssStyles(FontState fontState, FontState parentFontState, String styleValue) {
 		if (styleValue == null) {
 			return;
 		}
-		Matcher matcher = cssRulePattern.matcher(styleValue);
-		while (matcher.find()) {
-			String ruleName = matcher.group(1);
-			String ruleValue = matcher.group(2);
-			ruleValue = ruleValue.trim();
-
-			if ("color".equals(ruleName)) { //$NON-NLS-1$
-				Integer rgb = cssColorRgb(ruleValue);
-				if (rgb != null) {
-					fontState.foreground = toRGB(rgb);
-				}
-			} else if ("background-color".equals(ruleName)) { //$NON-NLS-1$
-				Integer rgb = cssColorRgb(ruleValue);
-				if (rgb != null) {
-					fontState.background = toRGB(rgb);
-				}
-			} else if ("font-style".equals(ruleName)) { //$NON-NLS-1$
-				String[] parts = ruleValue.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
-				for (String part : parts) {
-					if ("italic".equals(part)) { //$NON-NLS-1$
-						fontState.setItalic(true);
-					} else if ("bold".equals(part)) { //$NON-NLS-1$
-						fontState.setBold(true);
-					} else if ("normal".equals(part)) { //$NON-NLS-1$
-						fontState.setItalic(false);
-					}
-				}
-			} else if ("font-weight".equals(ruleName)) { //$NON-NLS-1$
-				if ("bold".equals(ruleValue) || "bolder".equals(ruleValue)) { //$NON-NLS-1$ //$NON-NLS-2$
-					fontState.setBold(true);
-				} else if ("normal".equals(ruleValue) || "lighter".equals(ruleValue)) { //$NON-NLS-1$ //$NON-NLS-2$
-					fontState.setBold(false);
-				}
-			} else if ("font-size".equals(ruleName)) { //$NON-NLS-1$
-				updateFontSize(fontState, parentFontState, ruleValue);
-			} else if ("font-family".equals(ruleName)) { //$NON-NLS-1$
-				String[] parts = ruleValue.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
-				for (String part : parts) {
-					if ("monospace".equals(part) || "courier".equalsIgnoreCase(part) //$NON-NLS-1$ //$NON-NLS-2$
-							|| "courier new".equalsIgnoreCase(part)) { //$NON-NLS-1$
-						fontState.setFixedWidth(true);
-					} else {
-						fontState.setFixedWidth(false);
-					}
-				}
-			} else if ("text-decoration".equals(ruleName)) { //$NON-NLS-1$
-				String[] parts = ruleValue.split("((\\s+)|(\\s*,\\s*))"); //$NON-NLS-1$
-				for (String part : parts) {
-					if ("none".equals(part)) { //$NON-NLS-1$
-						fontState.setStrikethrough(false);
-						fontState.setUnderline(false);
-					} else if ("line-through".equals(part)) { //$NON-NLS-1$
-						fontState.setStrikethrough(true);
-					} else if ("underline".equals(part)) { //$NON-NLS-1$
-						fontState.setUnderline(true);
-					}
-				}
-			} else if ("vertical-align".equals(ruleName)) { //$NON-NLS-1$
-				if ("super".equals(ruleValue)) { //$NON-NLS-1$
-					fontState.setSuperscript(true);
-				} else if ("sub".equals(ruleValue)) { //$NON-NLS-1$
-					fontState.setSubscript(true);
-				}
+		Iterator<CssRule> ruleIterator = createRuleIterator(styleValue);
+		while (ruleIterator.hasNext()) {
+			CssRule rule = ruleIterator.next();
+			RuleHandler ruleHandler = ruleNameToHandler.get(rule.name);
+			if (ruleHandler != null) {
+				ruleHandler.process(rule, fontState, parentFontState);
 			}
 		}
 	}
 
-	private RGB toRGB(int rgb) {
+	private static RGB toRGB(int rgb) {
 		return new RGB((rgb & 0xFF0000) >> 16, (rgb & 0x00FF00) >> 8, (rgb & 0x0000FF));
-	}
-
-	private void updateFontSize(FontState fontState, FontState parentFontState, String cssFontSizeValue) {
-
-		if (cssFontSizeValue.endsWith("%")) { //$NON-NLS-1$
-			float defaultSize = defaultFont.getFontData()[0].getHeight();
-			try {
-				float percentage = Float.parseFloat(cssFontSizeValue.substring(0, cssFontSizeValue.length() - 1)) / 100f;
-				if (percentage > 0) {
-					fontState.size = percentage * defaultSize;
-				}
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-		} else if ("xx-small".equals(cssFontSizeValue)) { //$NON-NLS-1$
-			float defaultSize = defaultFont.getFontData()[0].getHeight();
-			fontState.size = defaultSize - (defaultSize * 0.6f);
-		} else if ("x-small".equals(cssFontSizeValue)) { //$NON-NLS-1$
-			float defaultSize = defaultFont.getFontData()[0].getHeight();
-			fontState.size = defaultSize - (defaultSize * 0.4f);
-		} else if ("small".equals(cssFontSizeValue)) { //$NON-NLS-1$
-			float defaultSize = defaultFont.getFontData()[0].getHeight();
-			fontState.size = defaultSize - (defaultSize * 0.2f);
-		} else if ("medium".equals(cssFontSizeValue)) { //$NON-NLS-1$
-			float defaultSize = defaultFont.getFontData()[0].getHeight();
-			fontState.size = defaultSize;
-		} else if ("large".equals(cssFontSizeValue)) { //$NON-NLS-1$
-			float defaultSize = defaultFont.getFontData()[0].getHeight();
-			fontState.size = defaultSize + (defaultSize * 0.2f);
-		} else if ("x-large".equals(cssFontSizeValue)) { //$NON-NLS-1$
-			float defaultSize = defaultFont.getFontData()[0].getHeight();
-			fontState.size = defaultSize + (defaultSize * 0.4f);
-		} else if ("xx-large".equals(cssFontSizeValue)) { //$NON-NLS-1$
-			float defaultSize = defaultFont.getFontData()[0].getHeight();
-			fontState.size = defaultSize + (defaultSize * 0.6f);
-		} else if ("larger".equals(cssFontSizeValue)) { //$NON-NLS-1$
-			fontState.size = parentFontState.size * 1.2f;
-		} else if ("smaller".equals(cssFontSizeValue)) { //$NON-NLS-1$
-			fontState.size = parentFontState.size - (parentFontState.size * 0.2f);
-		} else {
-			try {
-				if (cssFontSizeValue.endsWith("pt") || cssFontSizeValue.endsWith("px")) { //$NON-NLS-1$ //$NON-NLS-2$
-					cssFontSizeValue = cssFontSizeValue.substring(0, cssFontSizeValue.length() - 2);
-				}
-				float exactSize = Float.parseFloat(cssFontSizeValue);
-				if (exactSize > 0) {
-					fontState.size = exactSize;
-				}
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-		}
-		// prevent the font size from being unusable
-		fontState.size = Math.min(MAX_FONT_SIZE, Math.max(MIN_FONT_SIZE, fontState.size));
 	}
 
 	/**
@@ -438,7 +630,7 @@ public class CssStyleManager {
 	 * 
 	 * @return the RGB value or null if it cannot be determined.
 	 */
-	public Integer cssColorRgb(String cssColor) {
+	public static Integer cssColorRgb(String cssColor) {
 		Integer rgb = colorToRgb.get(cssColor.toLowerCase());
 		if (rgb == null) {
 			try {

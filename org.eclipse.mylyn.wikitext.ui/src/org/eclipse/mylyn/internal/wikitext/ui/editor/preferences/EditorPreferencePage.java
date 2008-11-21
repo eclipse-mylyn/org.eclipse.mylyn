@@ -14,8 +14,8 @@ import java.util.Map;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
+import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
@@ -52,9 +52,11 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 		group.setText(Messages.getString("EditorPreferencePage.1")); //$NON-NLS-1$
 		group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
+		CssStyleManager cssStyleManager = new CssStyleManager(getFont());
+
 		for (Map.Entry<String, String> ent : prefs.getCssByBlockModifierType().entrySet()) {
 			String preferenceKey = Preferences.toPreferenceKey(ent.getKey(), true);
-			addField(new StringFieldEditor(preferenceKey, ent.getKey(), group));
+			addField(new CssStyleFieldEditor(cssStyleManager, preferenceKey, ent.getKey(), group));
 		}
 
 		group = new Group(getFieldEditorParent(), SWT.NULL);
@@ -63,7 +65,7 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 
 		for (Map.Entry<String, String> ent : prefs.getCssByPhraseModifierType().entrySet()) {
 			String preferenceKey = Preferences.toPreferenceKey(ent.getKey(), false);
-			addField(new StringFieldEditor(preferenceKey, ent.getKey(), group));
+			addField(new CssStyleFieldEditor(cssStyleManager, preferenceKey, ent.getKey(), group));
 		}
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
 				WikiTextUiPlugin.getDefault().getPluginId() + ".preferences"); //$NON-NLS-1$
