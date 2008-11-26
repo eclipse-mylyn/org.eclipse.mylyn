@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
+ *     David Green - fix for bug 254806
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -31,42 +32,81 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.TextChangeListener;
+import org.eclipse.swt.custom.TextChangedEvent;
+import org.eclipse.swt.custom.TextChangingEvent;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
+/**
+ * @author Steffen Pingel
+ */
 public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private static final String KEY_OPERATION = "operation";
 
-	private class RadioButtonListener extends SelectionAdapter {
-
-		@Override
-		public void widgetSelected(SelectionEvent event) {
-			setSelectedRadionButton((Button) event.widget, true);
-		}
-
-	}
-
-	private class FocusListener extends FocusAdapter {
+	public class SelectButtonListener implements ModifyListener, VerifyListener, SelectionListener, FocusListener,
+			TextChangeListener {
 
 		private final Button button;
 
-		public FocusListener(Button button) {
+		public SelectButtonListener(Button button) {
 			this.button = button;
 		}
 
-		@Override
+		public void modifyText(ModifyEvent e) {
+			selected();
+		}
+
+		public void verifyText(VerifyEvent e) {
+			selected();
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			selected();
+		}
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+			selected();
+		}
+
 		public void focusGained(FocusEvent event) {
+			selected();
+		}
+
+		public void focusLost(FocusEvent e) {
+		}
+
+		public void textChanged(TextChangedEvent event) {
+			selected();
+		}
+
+		public void textSet(TextChangedEvent event) {
+			selected();
+		}
+
+		public void textChanging(TextChangingEvent event) {
+		}
+
+		private void selected() {
 			setSelectedRadionButton(button, true);
 		}
 
@@ -231,15 +271,31 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 			editor.createControl(composite, toolkit);
 			GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 			gd.horizontalSpan = 3;
-			if (editor.getControl() instanceof CCombo) {
+			Control editorControl = editor.getControl();
+			if (editorControl instanceof CCombo) {
 				// XXX combo boxes are too tall by default and wider than other controls
 				gd.heightHint = 20;
 				gd.widthHint = RADIO_OPTION_WIDTH;
 			} else {
 				gd.widthHint = RADIO_OPTION_WIDTH - 5;
 			}
-			editor.getControl().setLayoutData(gd);
-			editor.getControl().addFocusListener(new FocusListener(button));
+			editorControl.setLayoutData(gd);
+
+			// the following listeners are hooked up so that changes to something in the actions area
+			// will cause the corresponding radio button to become selected.  Note that we can't just use
+			// a focus listener due to bug 254806
+			if (editorControl instanceof CCombo) {
+				((CCombo) editorControl).addSelectionListener(new SelectButtonListener(button));
+			} else if (editorControl instanceof Text) {
+				((Text) editorControl).addModifyListener(new SelectButtonListener(button));
+				((Text) editorControl).addVerifyListener(new SelectButtonListener(button));
+			} else if (editorControl instanceof StyledText) {
+				((StyledText) editorControl).getContent().addTextChangeListener(new SelectButtonListener(button));
+			} else {
+				// last resort
+				editorControl.addFocusListener(new SelectButtonListener(button));
+			}
+
 			button.setData(KEY_ASSOCIATED_EDITOR, editor);
 			getTaskEditorPage().getAttributeEditorToolkit().adapt(editor);
 		}
@@ -265,7 +321,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 					radioData.horizontalSpan = 4;
 				}
 				button.setLayoutData(radioData);
-				button.addSelectionListener(new RadioButtonListener());
+				button.addSelectionListener(new SelectButtonListener(button));
 				operationButtons.add(button);
 				if (operation.equals(selectedOperation)) {
 					selectedButton = button;
