@@ -119,7 +119,8 @@ bc..
 	<target name="generate-help" depends="init" description="Generate Eclipse help from textile source">
 		<wikitext-to-eclipse-help markupLanguage="Textile" 
 			multipleOutputFiles="true"
-			navigationImages="true">
+			navigationImages="true"
+			helpPrefix="help">
 			<fileset dir="${basedir}">
     				<include name="help/*.textile"/>
 			</fileset>
@@ -158,9 +159,22 @@ The @markupLanguage@ attribute accepts any of the following values (depending on
 
 |_. Option |_. Usage |
 | @markupLanguage@ | The markup language to use, for example 'Textile', 'Confluence', 'MediaWiki', 'TracWiki', 'TWiki'. |
-| @validate@ | Indicate if the input file should be validated. |
-| @failOnValidationError@ | @true@ or @false@, default is true.  Indicate if validation errors should cause a build failure. |
-| @failOnValidationWarning@ | @true@ or @false@, default is false.  Indicate if validation warnings should cause a build failure. |
+| @validate@ | Indicate if the input file should be validated.  Default is @true@. |
+| @failOnValidationError@ | Indicate if validation errors should cause a build failure. @true@ or @false@, default is true.  |
+| @failOnValidationWarning@ | Indicate if validation warnings should cause a build failure. @true@ or @false@, default is false.  |
+
+*wikitext-to-html and wikitext-to-eclipse-help task options*
+
+|_. Option |_. Usage |
+| @title@ | Specify the title of the output document.  If unspecified, the title is the filename (without extension). |
+| @file@ | The source file.  Not required if a fileset is specified. |
+| @linkRel@ | The 'rel' value for HTML links. If specified the value is applied to all generated links. The default value is null. |
+| @multipleOutputFiles@ | Indicate if output should be generated to multiple output files (true/false).  Default is false. |
+| @formatOutput@ | Indicate if the output should be formatted (true/false). Default is false. |
+| @navigationImages@ | Indicate if navigation links should be images (true/false).  Only applicable for multi-file output.  Default is false. |
+| @prependImagePrefix@ | If specified, the prefix is prepended to relative image urls.  |
+| @overwrite@ | Indicate if output files should be overwritten.  The default is false.  When false output files are only overwritten if the output file timestamp is older than the markup source file. |
+| @helpPrefix@ | the prefix to URLs in the toc.xml, typically the relative path from the plugin to the help files (wikitext-to-eclipse-help only). For example, if the help file is in 'help/index.html' then the help prefix would be 'help' |
 
 h3. DocBook
 
@@ -175,6 +189,14 @@ bc.
 
 You can use WikiText first to convert your Textile markup to "DocBook":http://www.docbook.org then use the "DocBook XSL stylesheets":http://docbook.sourceforge.net/ to convert the DocBook to Eclpse help content, HTML, pdf or other formats.  For more information on using the DocBook XSL stylesheets please refer to the "DocBook XSL project":http://docbook.sourceforge.net/
 
+*wikitext-to-docbook task options* 
+
+|_. Option |_. Usage |
+| @bookTitle@ | Specify a specific book title.  If unspecified, the book title is the filename of the source file (without extension). |
+| @overwrite@ | @true@ or @false@, default is true.  Indicate if existing target files should be overwritten even if they are newer than the source file. |
+| @file@ | The source file.  Not required if a fileset is specified. |
+| @doctype@ | Overrides the DTD doctype to use in the output file. Optional. |
+
 h3. DITA
 
 WikiText can convert markup to "OASIS DITA":http://dita.xml.org.  The conversion can either be used to convert a single input file to a bookmap and multiple topics, or to a single topic.
@@ -187,10 +209,10 @@ WikiText conversion to DITA is performed using the @wikitext-to-dita@ task.  In 
 | @bookTitle@ | Specify a specific book title.  If unspecified, the book title is the filename of the source file (without extension). |
 | @overwrite@ | @true@ or @false@, default is true.  Indicate if existing target files should be overwritten even if they are newer than the source file. |
 | @file@ | the source file.  Optional, not required if a fileset is specified. |
-| @doctype@ | Optional.  Overrides the DTD doctype to use in the target bookmap. |
-| @topicDoctype@ | Optional.  Overrides the DTD doctype to use in the target topic files. |
-| @topicFolder@ | Optional, defaults to 'topics'.  The relative folder name to use for topic files when producing multiple output files. |
-| @topicStrategy@ | Optional, defaults to 'FIRST'.  Must be one of 'FIRST', 'LEVEL1' or 'NONE'.  Specify how multiple output files are generated.  'FIRST' indicates that multiple topic files are to be created, split at the level of the first heading encountered in the file.  'LEVEL1' indicates that multiple topic files are to be created, split one file for each level-1 heading encountered.  'NONE' indicates that multiple topic files are not to be created.  Only a single topic file is created, with no bookmap. |
+| @doctype@ | Overrides the DTD doctype to use in the target bookmap. Optional.  |
+| @topicDoctype@ | Overrides the DTD doctype to use in the target topic files. Optional.  |
+| @topicFolder@ | The relative folder name to use for topic files when producing multiple output files. Optional, defaults to 'topics'.  |
+| @topicStrategy@ | Specify how multiple output files are generated.  Optional, defaults to 'FIRST'.  Must be one of 'FIRST', 'LEVEL1' or 'NONE'.  'FIRST' indicates that multiple topic files are to be created, split at the level of the first heading encountered in the file.  'LEVEL1' indicates that multiple topic files are to be created, split one file for each level-1 heading encountered.  'NONE' indicates that multiple topic files are not to be created.  Only a single topic file is created, with no bookmap. |
 
 h4. wikitext-to-dita - Multiple Files Example
 
