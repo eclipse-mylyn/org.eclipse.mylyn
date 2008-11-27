@@ -260,7 +260,7 @@
 	        </classpath>
 		    <arg value="-consolelog"/>
 		    <arg value="-application"/>
-    		<arg value=" ${application}"/>
+    		<arg value="${application}"/>
     		<arg value="-jarProcessor"/>
     		<arg value="-verbose"/>    		
     		<arg value="-processAll"/>
@@ -289,7 +289,7 @@
 	        </classpath>
 		    <arg value="-consolelog"/>
 		    <arg value="-application"/>
-    		<arg value=" ${application}"/>
+    		<arg value="${application}"/>
     		<arg value="-updateSite"/>
     		<arg value="${dir}"/>
     		<arg value="-site"/>
