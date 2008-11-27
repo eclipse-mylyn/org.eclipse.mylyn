@@ -68,15 +68,17 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
-		    <arg line="-application ${application}"/>
-    		<arg line="-buildfile ${pde.build.script}"/>
-    		<arg line="-DbaseLocation=${eclipse.home}"/>    		
-    		<arg line="-Dbuilder=${basedir}/config/${eclipse.version}"/>
-    		<arg line="-DbuildDirectory=${build.home}/${eclipse.version}"/>
-    		<arg line="-DforceContextQualifier=${qualifier}-${versionPostfix}"/>
-    		<arg line="-DmylynQualifier=${qualifier}"/>
-    		<arg line="-DmajorVersion=${version}"/>
-		    <arg line="-consolelog"/>
+		    <arg value="-application"/>
+    		<arg value="${application}"/>
+    		<arg value="-buildfile"/>
+    		<arg value="${pde.build.script}"/>
+    		<arg value="-DbaseLocation=${eclipse.home}"/>    		
+    		<arg value="-Dbuilder=${basedir}/config/${eclipse.version}"/>
+    		<arg value="-DbuildDirectory=${build.home}/${eclipse.version}"/>
+    		<arg value="-DforceContextQualifier=${qualifier}-${versionPostfix}"/>
+    		<arg value="-DmylynQualifier=${qualifier}"/>
+    		<arg value="-DmajorVersion=${version}"/>
+		    <arg value="-consolelog"/>
 		    <jvmarg line="${vmargs}"/>
 		</java>
     </target>
@@ -207,17 +209,19 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
-		    <arg line="-application ${application}"/>
-    		<arg line="-buildfile ${script.test}"/>
-    		<arg line="-Declipse-home=${eclipse.home}"/>    		
-    		<arg line="-Dlibrary-file=${library}"/>
-    		<arg line="-D-DextraVMargs= \
+		    <arg value="-application"/>
+    		<arg value="${application}"/>
+    		<arg value="-buildfile"/>
+    		<arg value="${script.test}"/>
+    		<arg value="-Declipse-home=${eclipse.home}"/>    		
+    		<arg value="-Dlibrary-file=${library}"/>
+    		<arg value="-DextraVMargs= \
     	    -ea \
     	    -Declipse.perf.dbloc=$BUILD_ROOT/derby \
     	    -Declipse.perf.config=build=$QUALIFIER;config=$HOST-3.4;jvm=$JVM \
     	    -Declipse.perf.assertAgainst=build=$ASSERT_QUALIFIER \
     	    -Dmylyn.credentials=$BUILD_ROOT/credentials.properties" />
-		    <arg line="-consolelog"/>
+		    <arg value="-consolelog"/>
 		    <jvmarg line="${vmargs}"/>
 		</java>
     </target>
@@ -254,15 +258,17 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
-		    <arg line="-consolelog"/>
-		    <arg line="-application ${application}"/>
-    		<arg line="-jarProcessor"/>
-    		<arg line="-verbose"/>    		
-    		<arg line="-processAll"/>
-    		<arg line="-repack"/>
-    		<arg line="-pack"/>
-    		<arg line="-outputDir ${dir}"/>
-    		<arg line="${dir}"/>
+		    <arg value="-consolelog"/>
+		    <arg value="-application"/>
+    		<arg value=" ${application}"/>
+    		<arg value="-jarProcessor"/>
+    		<arg value="-verbose"/>    		
+    		<arg value="-processAll"/>
+    		<arg value="-repack"/>
+    		<arg value="-pack"/>
+    		<arg value="-outputDir"/>
+    		<arg value="${dir}"/>
+    		<arg value="${dir}"/>
 		    <jvmarg line="${vmargs}"/>
 		</java>
     </target>
@@ -281,17 +287,24 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
-		    <arg line="-consolelog"/>
-		    <arg line="-application ${application}"/>
-    		<arg line="-updateSite ${dir}"/>
-    		<arg line="-site file:${dir}/site.xml"/>    
-    		<arg line="-metadataRepository file:${dir}"/>
-    		<arg line="-metadataRepositoryName '${name}'"/>
-    		<arg line="-artifactRepository file:${dir}"/>
-    		<arg line="-artifactRepositoryName '${name}'"/>
-    		<arg line="-compress"/>
-    		<arg line="-reusePack200Files"/>
-    		<arg line="noDefaultIUs"/>
+		    <arg value="-consolelog"/>
+		    <arg value="-application"/>
+    		<arg value=" ${application}"/>
+    		<arg value="-updateSite"/>
+    		<arg value="${dir}"/>
+    		<arg value="-site"/>
+    		<arg value="file:${dir}/site.xml"/>
+    		<arg value="-metadataRepository"/>
+    		<arg value="file:${dir}"/>
+    		<arg value="-metadataRepositoryName"/>
+    		<arg value="${name}"/>
+    		<arg value="-artifactRepository"/>
+    		<arg value="file:${dir}"/>
+    		<arg value="-artifactRepositoryName"/>
+    		<arg value="${name}"/>
+    		<arg value="-compress"/>
+    		<arg value="-reusePack200Files"/>
+    		<arg value="noDefaultIUs"/>
 		    <jvmarg line="${vmargs}"/>
 		</java>
     </target>
