@@ -34,7 +34,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
+public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final AttachmentSizeFormatter sizeFormatter = AttachmentSizeFormatter.getInstance();
 
@@ -46,7 +46,7 @@ public class AttachmentTableLabelProvider2 extends ColumnLabelProvider {
 
 	private final AttributeEditorToolkit attributeEditorToolkit;
 
-	public AttachmentTableLabelProvider2(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
+	public AttachmentTableLabelProvider(TaskDataModel model, AttributeEditorToolkit attributeEditorToolkit) {
 		this.model = model;
 		this.attributeEditorToolkit = attributeEditorToolkit;
 	}

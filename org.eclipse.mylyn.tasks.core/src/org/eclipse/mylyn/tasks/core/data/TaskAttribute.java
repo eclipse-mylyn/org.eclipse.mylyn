@@ -194,6 +194,11 @@ public final class TaskAttribute {
 	public static final String TYPE_INTEGER = "integer";
 
 	/**
+	 * @since 3.1
+	 */
+	public static final String TYPE_LONG = "long";
+
+	/**
 	 * @since 3.0
 	 */
 	public static final String TYPE_LONG_RICH_TEXT = "longRichText";

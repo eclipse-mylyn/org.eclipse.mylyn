@@ -21,6 +21,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.OpenEvent;
@@ -127,8 +128,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			getTaskData().getAttributeMapper().updateTaskAttachment(taskAttachment, attribute);
 			attachmentList.add(taskAttachment);
 		}
-		attachmentsViewer.setContentProvider(new AttachmentsTableContentProvider2(attachmentList));
-		attachmentsViewer.setLabelProvider(new AttachmentTableLabelProvider2(getModel(),
+		attachmentsViewer.setContentProvider(new ArrayContentProvider());
+		attachmentsViewer.setLabelProvider(new AttachmentTableLabelProvider(getModel(),
 				getTaskEditorPage().getAttributeEditorToolkit()));
 		attachmentsViewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
@@ -140,7 +141,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 			}
 		});
 		attachmentsViewer.addSelectionChangedListener(getTaskEditorPage());
-		attachmentsViewer.setInput(getTaskData());
+		attachmentsViewer.setInput(attachmentList.toArray());
 
 		menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
