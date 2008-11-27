@@ -10,5 +10,6 @@ Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="[0.9.1,1.0.0)",
 Export-Package: org.eclipse.mylyn.internal.wikitext.confluence.core.block;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.confluence.core.phrase;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.confluence.core.token;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.confluence.validation;x-internal:=true,
  org.eclipse.mylyn.wikitext.confluence.core
 Bundle-Localization: plugin

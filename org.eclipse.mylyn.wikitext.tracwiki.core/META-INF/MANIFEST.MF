@@ -10,5 +10,6 @@ Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="[0.9.1,1.0.0)",
 Export-Package: org.eclipse.mylyn.internal.wikitext.tracwiki.core.block;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tracwiki.core.phrase;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.tracwiki.core.token;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.tracwiki.core.validation;x-internal:=true,
  org.eclipse.mylyn.wikitext.tracwiki.core
 Bundle-Localization: plugin
