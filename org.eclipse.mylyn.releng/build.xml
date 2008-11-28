@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="mylyn" default="" basedir=".">
+<project name="mylyn" default="all" basedir=".">
 	<property file="local.properties" />
 	<property file="defaults.properties" />
-
-	<property name="version" value="3.1.0" />
 
 	<import file="scripts/buildHelper.xml" />
 	<available classname="java.lang.Enum" property="java.isVersion5OrHigher"/>
@@ -40,32 +38,6 @@
 		</antcall>		
 	</target>
 
-	<!--
-	<target name="all" depends="clean-tests">
-		<exec executable="./build-3.4.sh" />
-		<exec executable="./run-tests-3.4.sh">
-			<arg value="run" />
-		</exec>
-		<antcall target="report" />
-		<exec executable="./run-tests-3.4.sh">
-			<arg value="performance" />
-		</exec>
-		<antcall target="report" />
-
-		<antcall target="publish" />
-
-		<exec executable="./build-3.3.sh" />
-		<exec executable="./run-tests-3.3.sh">
-			<arg value="run" />
-		</exec>
-		<antcall target="report" />
-		<exec executable="./run-tests-3.3.sh">
-			<arg value="performance" />
-		</exec>
-		<antcall target="report" />
-	</target>
-	-->
-	
 	<target name="all" depends="clean,build,tests,performance-tests">
 	</target>
 	
@@ -94,13 +66,15 @@
 	</target>
 
 	<target name="tests" depends="init-tests">
-		<!--
-		<antcall target="forEach">
-			<param name="call" value="run-tests-helper"/>
-		</antcall>
-		-->
 		<antcall target="forEach">
 			<param name="call" value="test-helper"/>
+			<param name="test.target" value="run"/>
+		</antcall>
+	</target>
+
+	<target name="package" depends="init">
+		<antcall target="forEach">
+			<param name="call" value="package-helper"/>
 			<param name="skip3.3" value="true"/>
 			<param name="skip3.5" value="true"/>
 		</antcall>
@@ -108,7 +82,8 @@
 
 	<target name="performance-tests">
 		<antcall target="forEach">
-			<param name="call" value="run-performance-tests-helper"/>
+			<param name="call" value="test-helper"/>
+			<param name="test.target" value="performance"/>
 		</antcall>
 	</target>
 

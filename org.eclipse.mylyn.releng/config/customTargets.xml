@@ -187,7 +187,7 @@
 			<param name="ElementsTarget" value="allElements" />
 			<param name="SiteName" value="all" />
 		</antcall>
-		<ant antfile="${builder}/../../wikitext-standalone.xml">
+		<ant antfile="${builder}/../wikitext-standalone.xml">
 			<property name="wikitext.standalone.archive" value="${buildDirectory}/incubatorUpdateSite/../mylyn-wikitext-standalone-${majorVersion}.${mylynQualifier}_incubation.zip"/>
 			<property name="wikitext.standalone.dir" value="mylyn-wikitext-standalone-${majorVersion}.${mylynQualifier}"/>
 			<property name="wikitext.plugin.jars.location" value="${buildDirectory}/incubatorUpdateSite/plugins"/>

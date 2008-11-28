@@ -1,4 +1,4 @@
-<project name="Build specific targets and properties" default="noDefault">
+<project name="Build specific targets and properties for Eclispe 3.3" default="noDefault">
 	<property name="skipSDK" value="true" />
 	<import file="../customTargets.xml"/>
 </project>

@@ -25,6 +25,7 @@
 
 	<target name="forEachCheck">
 		<condition property="skip"><istrue value="${condition}"/></condition>
+		<condition property="hasP2"><not><equals arg1="${eclipse.version}" arg2="3.3"/></not></condition>
 		<antcall target="forEachCall" />
 	</target>
 
@@ -61,7 +62,7 @@
 		
 		<echo message="Building ${version}.${qualifier}-${versionPostfix} on Eclipse ${eclipse.sdk.version}" />
 		<echo message="Output is logged to ${log}" />
-    	<java fork="true" dir="." timeout="${timeout}" logError="true" 
+    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="true"  
     		classname="org.eclipse.core.launcher.Main" output="${log}">
 	        <classpath>
 	    		<fileset dir="${eclipse.home}/plugins">
@@ -82,22 +83,6 @@
 		    <jvmarg line="${vmargs}"/>
 		</java>
     </target>
-	
-	<target name="run-tests-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<mkdir dir="${eclipse.home}/results" />
-		<exec executable="./run-tests-${eclipse.version}.sh">
-			<arg value="run" />
-		</exec>		
-	</target>
-
-	<target name="run-performance-tests-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<mkdir dir="${eclipse.home}/results" />
-		<exec executable="./run-tests-${eclipse.version}.sh">
-			<arg value="performance" />
-		</exec>		
-	</target>
 	
 	<target name="clean-build-helper">
 		<delete dir="${build.home}/${eclipse.version}" />
@@ -132,7 +117,7 @@
 			<arg value="-in" />
 			<arg value="${eclipse.home}/results/org.eclipse.mylyn.tests.AllTests.xml" />
 			<arg value="-config" />
-			<arg value="repository.properties" />
+			<arg value="${build.config}" />
 			<arg value="-build" />
 			<arg value="${qualifier}" />
 		</java>
@@ -180,12 +165,22 @@
 
 	<target name="install-tests-helper">
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<delete dir="${eclipse.home}/dropins/mylyn" />
-		<mkdir dir="${eclipse.home}/dropins/mylyn" />
+  	    <condition property="install.dir" value="${eclipse.home}" else="${eclipse.home}/dropins/test"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
 		
+		<delete failonerror="false">
+			<fileset dir="${install.dir}">
+				<include name="features/org.eclipse.mylyn*/**"/>
+				<include name="plugins/org.eclipse.mylyn*/**"/>
+			</fileset>
+		</delete>
 
+		<unzip dest="${install.dir}">
+			<fileset dir="${build.home}/${eclipse.version}/dist">
+				<include name="*.zip"/>
+			</fileset>
+		</unzip>
 	</target>
-		
+
 	<target name="test-helper" depends="install-tests-helper">
     	<property name="timeout" value="3600000" />
 		<property name="application" value="org.eclipse.ant.core.antRunner" />
@@ -193,17 +188,16 @@
 		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
     	<path id="library.id"> 
     		<fileset dir="${eclipse.home}/plugins">
-            	<include name="org.eclipse.test_*/test.xml"/>
+            	<include name="org.eclipse.test_*/library.xml"/>
           	</fileset>
     	</path> 
     	<property name="library" refid="library.id"/>
-		<property name="script.test" value="dropins/mylyn/plugins/org.eclipse.mylyn.tests/test.xml" />
+		<condition property="script.test" value="${eclipse.home}/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml" else="${eclipse.home}/dropins/test/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
     	<property name="log" value="${build.results}/test-${eclipse.version}.log" />
 		
 		<echo message="Testing ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
-		<echo message="Output is logged to ${log}" />
     	<java fork="true" dir="." timeout="${timeout}" logError="true" 
-    		classname="org.eclipse.core.launcher.Main" output="${log}">
+    		classname="org.eclipse.core.launcher.Main">
 	        <classpath>
 	    		<fileset dir="${eclipse.home}/plugins">
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
@@ -213,17 +207,25 @@
     		<arg value="${application}"/>
     		<arg value="-buildfile"/>
     		<arg value="${script.test}"/>
+    		<arg value="-Dos=${build.os}"/>
+    		<arg value="-Dws=${build.ws}"/>
+    		<arg value="-Darch=${build.arch}"/>
     		<arg value="-Declipse-home=${eclipse.home}"/>    		
     		<arg value="-Dlibrary-file=${library}"/>
-    		<arg value="-DextraVMargs= \
-    	    -ea \
-    	    -Declipse.perf.dbloc=$BUILD_ROOT/derby \
-    	    -Declipse.perf.config=build=$QUALIFIER;config=$HOST-3.4;jvm=$JVM \
-    	    -Declipse.perf.assertAgainst=build=$ASSERT_QUALIFIER \
-    	    -Dmylyn.credentials=$BUILD_ROOT/credentials.properties" />
+    		<arg value="-DextraVMargs= 
+    	    -ea 
+    	    -Declipse.perf.dbloc=${build.db} 
+    	    -Declipse.perf.config=build=${qualifier};config=${build.host}-${eclipse.version};jvm=${java.version}
+    	    -Declipse.perf.assertAgainst=build=${build.assertAgainst}
+    	    -Dmylyn.credentials=${build.credentials}" />
 		    <arg value="-consolelog"/>
+    		<arg value="${test.target}"/>
 		    <jvmarg line="${vmargs}"/>
 		</java>
+		
+		<copy todir="${build.results}/test-${eclipse.version}">
+			<fileset dir="${eclipse.home}/results"/>
+		</copy>
     </target>
 
 	<target name="fix-permissions">
@@ -309,4 +311,35 @@
 		</java>
     </target>
 
+	<target name="package-helper">
+    	<property name="timeout" value="3600000" />
+		<property name="application" value="org.eclipse.ant.core.antRunner" />
+    	<property name="eclipse.home" value="${eclipse.base}/sdk-${eclipse.sdk.version}/eclipse" />
+		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
+    	<path id="pde.build.script.id"> 
+    		<fileset dir="${eclipse.home}/plugins">
+            	<include name="org.eclipse.pde.build_*/scripts/package.xml"/>
+          	</fileset>
+    	</path> 
+    	<property name="pde.build.script" refid="pde.build.script.id"/>
+    	<property name="log" value="${build.results}/package-${eclipse.version}.log" />
+		
+		<echo message="Packaging ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
+		<echo message="Output is logged to ${log}" />
+    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="true"  
+    		classname="org.eclipse.core.launcher.Main">
+	        <classpath>
+	    		<fileset dir="${eclipse.home}/plugins">
+	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
+	          	</fileset>
+	        </classpath>
+		    <arg value="-application"/>
+    		<arg value="${application}"/>
+    		<arg value="-buildfile"/>
+    		<arg value="${pde.build.script}"/>
+    		<arg value="-DpackagingInfo=${basedir}/packager"/>    		
+		    <arg value="-consolelog"/>
+		    <jvmarg line="${vmargs}"/>
+		</java>
+    </target>
 </project>
