@@ -69,8 +69,14 @@
 
 	<target name="tests" depends="init-tests">
 		<antcall target="forEach">
-			<param name="call" value="test-helper"/>
+			<param name="call" value="tests-helper"/>
 			<param name="test.target" value="run"/>
+		</antcall>
+	</target>
+
+	<target name="standalone-tests" depends="init">
+		<antcall target="forEach">
+			<param name="call" value="standalone-tests-helper"/>
 		</antcall>
 	</target>
 
@@ -80,9 +86,9 @@
 		</antcall>
 	</target>
 
-	<target name="performance-tests">
+	<target name="performance-tests" depends="init-tests">
 		<antcall target="forEach">
-			<param name="call" value="test-helper"/>
+			<param name="call" value="tests-helper"/>
 			<param name="test.target" value="performance"/>
 		</antcall>
 	</target>

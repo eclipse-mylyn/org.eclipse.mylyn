@@ -179,11 +179,12 @@
 		<unzip dest="${install.dir}">
 			<fileset dir="${build.home}/${eclipse.version}/dist">
 				<include name="*.zip"/>
+				<exclude name="*sdk*"/>
 			</fileset>
 		</unzip>
 	</target>
 
-	<target name="test-helper" depends="install-tests-helper">
+	<target name="tests-helper" depends="install-tests-helper">
     	<property name="timeout" value="3600000" />
 		<property name="application" value="org.eclipse.ant.core.antRunner" />
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
@@ -197,7 +198,7 @@
 		<condition property="script.test" value="${eclipse.home}/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml" else="${eclipse.home}/dropins/test/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
     	<property name="log" value="${build.results}/test-${test.target}-${eclipse.version}.log" />
 		
-		<echo message="Testing ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
+		<echo message="Testing ${version}.${qualifier} on Eclipse ${eclipse.sdk.version} with ${test.target}" />
     	<java fork="true" dir="." timeout="${timeout}" logError="true" 
     		classname="org.eclipse.core.launcher.Main">
 	        <classpath>
@@ -230,6 +231,50 @@
 		</copy>
     </target>
 
+	<target name="standalone-tests-helper">
+    	<property name="install.dir" value="${build.home}/standalone-tests" />
+		<delete dir="${install.dir}"/>
+		<antcall target="install-tests-helper"/>
+		
+    	<property name="timeout" value="3600000" />
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
+		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
+    	<property name="log" value="${build.results}/test-standalone-${eclipse.version}.log" />
+		<path id="tests.classpath">
+			<fileset dir="${install.dir}">
+				<include name="plugins/*.jar"/>
+				<include name="plugins/*/*.jar"/>
+			</fileset>
+			<dirset dir="${install.dir}/plugins">
+				<include name="*"/>
+			</dirset>
+			<fileset dir="${eclipse.home}/plugins">
+				<include name="org.junit_*/junit.jar"/>
+				<!--
+				<include name="org.eclipse.core.jobs_*.jar"/>
+				<include name="org.eclipse.core.net_*.jar"/>
+				<include name="org.eclipse.core.runtime_*.jar"/>
+				<include name="org.eclipse.equinox.common_*.jar"/>
+				<include name="org.eclipse.osgi_*.jar"/>
+				-->
+				<include name="*.jar"/>				
+			</fileset>
+		</path>
+		
+		<mkdir dir="${build.results}/test-standalone-${eclipse.version}"/>
+		
+		<echo message="Testing standalone ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
+		<junit printsummary="yes" haltonfailure="no" 
+			failureproperty="junit_test_failed" fork="true" forkmode="once" maxmemory="256m">
+			<classpath>
+				<path refid="tests.classpath"/>
+			</classpath>
+			<formatter type="xml" />
+			<test todir="${build.results}/test-standalone-${eclipse.version}" name="org.eclipse.mylyn.tests.AllStandaloneTests"/>
+			<test todir="${build.results}/test-standalone-${eclipse.version}" name="org.eclipse.mylyn.wikitext.tests.HeadlessTests"/>
+		</junit>
+    </target>
+	
 	<target name="fix-permissions">
 		<chmod perm="g+w">
 			<fileset dir="${dir}"/>
