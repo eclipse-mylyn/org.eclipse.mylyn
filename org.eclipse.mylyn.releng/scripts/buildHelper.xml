@@ -109,15 +109,17 @@
 
 	<target name="publish-helper">
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<java jar="test-report.jar" failonerror="true" fork="true">
+		<java jar="${build.reporter.jar}" failonerror="false" fork="true" jdk="${build.reporter.jdk}">
+<!--
 			<classpath>
-				<pathelement location="test-report.jar" />
+				<pathelement location="${build.reporter}" />
 				<pathelement path="${java.class.path}" />
 			</classpath>
+-->
 			<arg value="-in" />
 			<arg value="${eclipse.home}/results/org.eclipse.mylyn.tests.AllTests.xml" />
 			<arg value="-config" />
-			<arg value="${build.config}" />
+			<arg value="${build.reporter.config}" />
 			<arg value="-build" />
 			<arg value="${qualifier}" />
 		</java>
@@ -193,7 +195,7 @@
     	</path> 
     	<property name="library" refid="library.id"/>
 		<condition property="script.test" value="${eclipse.home}/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml" else="${eclipse.home}/dropins/test/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
-    	<property name="log" value="${build.results}/test-${eclipse.version}.log" />
+    	<property name="log" value="${build.results}/test-${test.target}-${eclipse.version}.log" />
 		
 		<echo message="Testing ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
     	<java fork="true" dir="." timeout="${timeout}" logError="true" 
