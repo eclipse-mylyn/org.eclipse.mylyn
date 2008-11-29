@@ -60,8 +60,10 @@
 	</target>
 
 	<target name="publish" depends="init">
-		<antcall target="publish-helper">
-			<param name="eclipse.version" value="3.4"/>
+		<antcall target="forEach">
+			<param name="call" value="publish-helper"/>
+			<param name="skip3.3" value="true"/>
+			<param name="skip3.5" value="true"/>
 		</antcall>
 	</target>
 
@@ -75,8 +77,6 @@
 	<target name="package" depends="init">
 		<antcall target="forEach">
 			<param name="call" value="package-helper"/>
-			<param name="skip3.3" value="true"/>
-			<param name="skip3.5" value="true"/>
 		</antcall>
 	</target>
 

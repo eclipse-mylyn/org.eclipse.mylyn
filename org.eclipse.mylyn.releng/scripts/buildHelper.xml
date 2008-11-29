@@ -109,7 +109,7 @@
 
 	<target name="publish-helper">
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<java jar="${build.reporter.jar}" failonerror="false" fork="true" jdk="${build.reporter.jdk}">
+		<java jar="${build.reporter.jar}" failonerror="false" fork="true" jvm="${build.reporter.jvm}">
 <!--
 			<classpath>
 				<pathelement location="${build.reporter}" />
