@@ -3,9 +3,13 @@
 	<property file="local.properties" />
 	<property file="defaults.properties" />
 
+    <condition property="skip3.3"><not><contains string="${eclipse}" substring="3.3"/></not></condition>
+    <condition property="skip3.4"><not><contains string="${eclipse}" substring="3.4"/></not></condition>
+    <condition property="skip3.5"><not><contains string="${eclipse}" substring="3.5"/></not></condition>
+
 	<import file="scripts/buildHelper.xml" />
 	<available classname="java.lang.Enum" property="java.isVersion5OrHigher"/>
-
+	
 	<target name="check-java" unless="java.isVersion5OrHigher">
 		<fail message="Java 1.5 or higher required (${java.version} detected)"/>
 	</target>

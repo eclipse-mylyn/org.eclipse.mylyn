@@ -98,13 +98,18 @@
 	</target>
 
 	<target name="report-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<property name="results.home" value="${build.results}/${eclipse.version}" />
+		<property name="results.home" value="${build.results}/test-${eclipse.version}" />
 		<mkdir dir="${results.home}" />
-		<xslt style="${basedir}/scripts/JUNIT.XSL" basedir="${eclipse.home}/results" includes="*.xml" destdir="${results.home}" />
-		<copy todir="${results.home}">
-			<fileset dir="${eclipse.home}/results" />
-		</copy>
+		
+		<xslt style="${basedir}/scripts/JUNIT.XSL" basedir="${results.home}" includes="org*.xml" destdir="${results.home}" />
+
+		<junitreport todir="${results.home}" >
+			<fileset dir="${results.home}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="noframes" todir="${results.home}"/>
+		</junitreport>
+		<move file="${results.home}/junit-noframes.html" tofile="${results.home}/standalone-tests.html"/>
 	</target>
 
 	<target name="publish-helper">
@@ -198,7 +203,7 @@
 		<condition property="script.test" value="${eclipse.home}/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml" else="${eclipse.home}/dropins/test/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
     	<property name="log" value="${build.results}/test-${test.target}-${eclipse.version}.log" />
 		
-		<echo message="Testing ${version}.${qualifier} on Eclipse ${eclipse.sdk.version} with ${test.target}" />
+		<echo message="Testing ${test.target} ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
     	<java fork="true" dir="." timeout="${timeout}" logError="true" 
     		classname="org.eclipse.core.launcher.Main">
 	        <classpath>
@@ -261,7 +266,8 @@
 			</fileset>
 		</path>
 		
-		<mkdir dir="${build.results}/test-standalone-${eclipse.version}"/>
+		<property name="output.dir" value="${build.results}/test-${eclipse.version}"/>
+		<mkdir dir="${output.dir}"/>
 		
 		<echo message="Testing standalone ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
 		<junit printsummary="yes" haltonfailure="no" 
@@ -270,8 +276,8 @@
 				<path refid="tests.classpath"/>
 			</classpath>
 			<formatter type="xml" />
-			<test todir="${build.results}/test-standalone-${eclipse.version}" name="org.eclipse.mylyn.tests.AllStandaloneTests"/>
-			<test todir="${build.results}/test-standalone-${eclipse.version}" name="org.eclipse.mylyn.wikitext.tests.HeadlessTests"/>
+			<test todir="${output.dir}" name="org.eclipse.mylyn.tests.AllStandaloneTests"/>
+			<test todir="${output.dir}" name="org.eclipse.mylyn.wikitext.tests.HeadlessTests"/>
 		</junit>
     </target>
 	
