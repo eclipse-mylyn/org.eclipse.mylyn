@@ -109,7 +109,43 @@
 			<report format="noframes" todir="${results.home}"/>
 		</junitreport>
 		<move file="${results.home}/junit-noframes.html" tofile="${results.home}/standalone-tests.html"/>
+		
+		<antcall target="performance-report-helper"/>
 	</target>
+
+	<target name="performance-report-helper">
+    	<property name="timeout" value="3600000" />
+		<property name="application" value="org.eclipse.test.performance.ui.resultGenerator" />
+    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
+		<property name="vmargs" value="-Xms40m -Xmx256m"/>    	
+		
+		<echo message="Creating performance test report for ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
+    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="true" 
+    		classname="org.eclipse.core.launcher.Main">
+	        <classpath>
+	    		<fileset dir="${eclipse.home}/plugins">
+	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
+	          	</fileset>
+	        </classpath>
+		    <arg value="-consolelog"/>
+		    <arg value="-application"/>
+    		<arg value="${application}"/>
+    		<arg value="-Declipse.perf.dbloc=${build.db}"/>
+    		<arg value="-baseline"/>
+    		<arg value="${build.baseline}"/>
+    		<arg value="-current"/>
+    		<arg value="${qualifier}"/>
+    		<arg value="-config"/>
+    		<arg value="${build.host}-${eclipse.version}"/>
+    		<arg value="-jvm"/>
+    		<arg value="${java.version}"/>
+    		<arg value="${build.results}/test-${eclipse.version}"/>
+    		<arg value="-print"/>
+    		<arg value="-scenario.patter"/>
+    		<arg value="org.eclipse.mylyn%"/>
+    		<jvmarg line="${vmargs}"/>
+		</java>
+    </target>
 
 	<target name="publish-helper">
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
@@ -150,23 +186,38 @@
 		<property name="downloadsDir" value="${eclipse.base}"/> 
 
 		<!-- extract sdk for testing and install test framework -->
-		<basename property="file.sdk" file="${eclipse.url}"/>
-		<basename property="file.testframework" file="${eclipse.url.test}"/>
-		<antcall target="getBundle">
-			<param name="file" value="${file.testframework}" />
-			<param name="url" value="${eclipse.url.test}"/>
-		</antcall>
 		<mkdir dir="${eclipse.base}/test-${eclipse.sdk.version}" />
+		
+		<basename property="file.sdk" file="${eclipse.url}"/>
 		<antcall target="unpackBundle">
 			<param name="file" value="${file.sdk}" />
 			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.sdk.version}"/>
 			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse"/>
+		</antcall>
+
+		<basename property="file.testframework" file="${eclipse.url.test}"/>
+		<antcall target="getBundle">
+			<param name="file" value="${file.testframework}" />
+			<param name="url" value="${eclipse.url.test}"/>
 		</antcall>
 		<antcall target="unpackBundle">
 			<param name="file" value="${file.testframework}" />
 			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.sdk.version}"/>
 			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse/plugins/org.eclipse.test_3.2.0"/>
 		</antcall>
+
+		<basename property="file.derby" file="${eclipse.url.derby}"/>
+		<antcall target="getBundle">
+			<param name="file" value="${file.derby}" />
+			<param name="url" value="${eclipse.url.derby}"/>
+		</antcall>
+		<antcall target="unpackBundle">
+			<param name="file" value="${file.derby}" />
+			<param name="unpackDest" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse"/>
+			<param name="isUnpackedFile" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse/plugins/org.apache.derby.core_10.4.2"/>
+		</antcall>
+		<replaceregexp file="${eclipse.base}/test-${eclipse.sdk.version}/eclipse/plugins/org.apache.derby.core_10.4.2/plugin.xml"
+			match="org.apache.derby.core" replace="org.apache.derby" byline="true"/>
 	</target>
 
 	<target name="install-tests-helper">
@@ -211,6 +262,7 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
+    		<arg value="-clean"/>
 		    <arg value="-application"/>
     		<arg value="${application}"/>
     		<arg value="-buildfile"/>
