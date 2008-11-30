@@ -149,20 +149,36 @@
     </target>
 
 	<target name="publish-helper">
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
+		<antcall target="publish-helper-run">
+			<param name="file" value="org.eclipse.mylyn.tests.AllTests.xml"/>
+			<param name="tag" value="[e${eclipse.version}][dflt]"/>
+		</antcall>
+		<antcall target="publish-helper-run">
+			<param name="file" value="org.eclipse.mylyn.tests.AllPerformanceTests.xml"/>
+			<param name="tag" value="[e${eclipse.version}][perf]"/>
+		</antcall>
+		<antcall target="publish-helper-run">
+			<param name="file" value="TEST-*.xml"/>
+			<param name="tag" value="[e${eclipse.version}][stdl]"/>
+		</antcall>
+	</target>
+		
+	<target name="publish-helper-run">
+    	<path id="file.id"> 
+    		<fileset dir="${build.results}/test-${eclipse.version}">
+            	<include name="${file}"/>
+          	</fileset>
+    	</path> 
+    	<property name="file.path" refid="file.id"/>
+		
 		<java jar="${build.reporter.jar}" failonerror="false" fork="true" jvm="${build.reporter.jvm}">
-<!--
-			<classpath>
-				<pathelement location="${build.reporter}" />
-				<pathelement path="${java.class.path}" />
-			</classpath>
--->
-			<arg value="-in" />
-			<arg value="${eclipse.home}/results/org.eclipse.mylyn.tests.AllTests.xml" />
 			<arg value="-config" />
 			<arg value="${build.reporter.config}" />
 			<arg value="-build" />
-			<arg value="${qualifier}" />
+			<arg value="${qualifier}"/>
+			<arg value="-tag"/>
+			<arg value="${tag}"/>
+			<arg value="${file.path}" />
 		</java>
 	</target>
 	
