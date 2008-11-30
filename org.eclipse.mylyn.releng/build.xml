@@ -22,18 +22,22 @@
 		<mkdir dir="${build.home}"/>
 		<mkdir dir="${build.results}"/>
 	</target>
+
+	<target name="init-timestamp" unless="qualifier">
+		<tstamp>
+			<format property="qualifier" pattern="'I'yyyyMMdd-HH00" locale="en,US" timezone="UTC"/>
+		</tstamp>
+		<echo message="qualifier=${qualifier}" file="${build.timestamp}"/>
+	</target>
 		
 	<target name="init" depends="init-base">		
-		<property file="timestamp.properties" />
+		<property file="${build.timestamp}" />
+		<antcall target="init-timestamp"/>
+		<property file="${build.timestamp}" />
 		<echo message="Building ${version}.${qualifier}" />
 	</target>
 
 	<target name="init-build" depends="init-base">		
-		<tstamp>
-			<format property="qualifier" pattern="'I'yyyyMMdd-HH00" locale="en,US" timezone="UTC"/>
-		</tstamp>
-		<echo message="qualifier=${qualifier}" file="timestamp.properties"/>
-		
 		<antcall target="forEach">
 			<param name="call" value="get-build-dependencies-helper"/>
 		</antcall>		
@@ -46,6 +50,7 @@
 	</target>
 
 	<target name="clean" depends="clean-build,clean-tests,clean-results">
+		<delete file="${build.timestamp}"/>
 	</target>
 
 	<target name="clean-build">
