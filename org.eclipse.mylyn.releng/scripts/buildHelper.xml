@@ -173,13 +173,13 @@
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
   	    <condition property="install.dir" value="${eclipse.home}" else="${eclipse.home}/dropins/test"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
 		
-		<delete failonerror="false">
+		<delete failonerror="false" includeemptydirs="true">
 			<fileset dir="${install.dir}">
-				<include name="features/org.eclipse.mylyn**"/>
-				<include name="plugins/org.eclipse.mylyn**"/>
+				<include name="features/org.eclipse.mylyn*/**"/>
+				<include name="plugins/org.eclipse.mylyn*/**"/>
 			</fileset>
 		</delete>
-
+	
 		<unzip dest="${install.dir}">
 			<fileset dir="${build.home}/${eclipse.version}/dist">
 				<include name="*.zip"/>
