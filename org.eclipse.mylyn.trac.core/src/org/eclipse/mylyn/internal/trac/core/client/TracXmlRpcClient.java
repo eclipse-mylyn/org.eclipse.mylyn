@@ -1037,4 +1037,8 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		return (String) call(monitor, "wiki.putAttachmentEx", pageName, fileName, description, data, replace);
 	}
 
+	public void deleteTicket(int ticketId, IProgressMonitor monitor) throws TracException {
+		call(monitor, "ticket.delete", ticketId);
+	}
+
 }

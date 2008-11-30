@@ -788,4 +788,8 @@ public class TracWebClient extends AbstractTracClient {
 		throw new UnsupportedOperationException();
 	}
 
+	public void deleteTicket(int ticketId, IProgressMonitor monitor) throws TracException {
+		throw new UnsupportedOperationException();
+	}
+
 }
