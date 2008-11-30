@@ -117,6 +117,8 @@
 		<replace dir="${buildDirectory}/features" value="${majorVersion}.${mylynQualifier}" token="${majorVersion}.mylynQualifier">
 			<include name="**/feature.xml" />
 		</replace>
+		<patch patchfile="${builder}/../org.eclipse.test.performance.diff"
+			dir="${buildDirectory}/plugins/org.eclipse.test.performance" strip="0"/>
 	</target>
 
 	<!-- ===================================================================== -->

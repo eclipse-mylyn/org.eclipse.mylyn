@@ -139,9 +139,10 @@
     		<arg value="${build.host}-${eclipse.version}"/>
     		<arg value="-jvm"/>
     		<arg value="${java.version}"/>
-    		<arg value="${build.results}/test-${eclipse.version}"/>
+    		<arg value="-output"/>
+    		<arg value="${build.results}/performance-${eclipse.version}"/>
     		<arg value="-print"/>
-    		<arg value="-scenario.patter"/>
+    		<arg value="-scenario.pattern"/>
     		<arg value="org.eclipse.mylyn%"/>
     		<jvmarg line="${vmargs}"/>
 		</java>
@@ -230,13 +231,21 @@
 				<include name="plugins/org.eclipse.mylyn*/**"/>
 			</fileset>
 		</delete>
-	
+
+		<!-- replace performance plug-in with patched version from o.e.m.test feature -->
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${eclipse.home}">
+				<include name="plugins/org.eclipse.test.performance*/**"/>
+			</fileset>
+		</delete>
+
 		<unzip dest="${install.dir}">
 			<fileset dir="${build.home}/${eclipse.version}/dist">
 				<include name="*.zip"/>
 				<exclude name="*sdk*"/>
 			</fileset>
 		</unzip>
+
 	</target>
 
 	<target name="tests-helper" depends="install-tests-helper">

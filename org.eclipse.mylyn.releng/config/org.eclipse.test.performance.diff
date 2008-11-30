@@ -1,0 +1,29 @@
+### Eclipse Workspace Patch 1.0
+#P org.eclipse.test.performance
+Index: src/org/eclipse/test/internal/performance/results/DB_Results.java
+===================================================================
+RCS file: /cvsroot/eclipse/org.eclipse.test.performance/src/org/eclipse/test/internal/performance/results/DB_Results.java,v
+retrieving revision 1.10
+diff -u -r1.10 DB_Results.java
+--- src/org/eclipse/test/internal/performance/results/DB_Results.java	28 Nov 2008 17:12:02 -0000	1.10
++++ src/org/eclipse/test/internal/performance/results/DB_Results.java	30 Nov 2008 06:53:52 -0000
+@@ -131,6 +131,7 @@
+ 		"org.eclipse.jdt.text", //$NON-NLS-1$
+ 		"org.eclipse.jdt.ui", //$NON-NLS-1$
+ 		"org.eclipse.jface", //$NON-NLS-1$
++		"org.eclipse.mylyn", //$NON-NLS-1$
+ 		"org.eclipse.osgi", //$NON-NLS-1$
+ 		"org.eclipse.pde.api.tools", //$NON-NLS-1$
+ 		"org.eclipse.pde.ui", //$NON-NLS-1$
+@@ -582,9 +583,9 @@
+ 			storeConfig(tokenizer.nextToken()); 	// 'eclipseperfwin2_R3.3'
+ 			tokenizer.nextToken();												// 'jvm'
+ 			String vmName = tokenizer.nextToken();					// 'sun'
+-			if (vmName.equals(SUPPORTED_VMS[0])) {
++//			if (vmName.equals(SUPPORTED_VMS[0])) {
+ 				storeBuildName(buildName);
+-			}
++//			}
+ 		}
+ 		System.arraycopy(BUILDS, 0, BUILDS = new String[BUILDS_LENGTH], 0, BUILDS_LENGTH);
+ 		for (int i=0; i<MAX_CONFIGS; i++) {
