@@ -175,8 +175,8 @@
 		
 		<delete failonerror="false">
 			<fileset dir="${install.dir}">
-				<include name="features/org.eclipse.mylyn*/**"/>
-				<include name="plugins/org.eclipse.mylyn*/**"/>
+				<include name="features/org.eclipse.mylyn**"/>
+				<include name="plugins/org.eclipse.mylyn**"/>
 			</fileset>
 		</delete>
 
@@ -202,9 +202,10 @@
 		<condition property="script.test" value="${eclipse.home}/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml" else="${eclipse.home}/dropins/test/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
     	<property name="log" value="${build.results}/test-${test.target}-${eclipse.version}.log" />
 		
-		<echo message="Testing ${test.target} ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
-    	<java fork="true" dir="." timeout="${timeout}" logError="true" 
-    		classname="org.eclipse.core.launcher.Main">
+		<echo message="Testing ${test.target} against ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
+		<echo message="Output is logged to ${log}" />
+    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="true" 
+    		classname="org.eclipse.core.launcher.Main" output="${log}">
 	        <classpath>
 	    		<fileset dir="${eclipse.home}/plugins">
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
@@ -225,7 +226,6 @@
     	    -Declipse.perf.config=build=${qualifier};config=${build.host}-${eclipse.version};jvm=${java.version}
     	    -Declipse.perf.assertAgainst=build=${build.assertAgainst}
     	    -Dmylyn.credentials=${build.credentials}" />
-		    <arg value="-consolelog"/>
     		<arg value="${test.target}"/>
 		    <jvmarg line="${vmargs}"/>
 		</java>
