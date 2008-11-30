@@ -78,7 +78,10 @@
 		</antcall>
 	</target>
 
-	<target name="tests" depends="init-tests">
+	<target name="tests" depends="standalone-tests,eclipse-tests,performance-tests">
+	</target>
+
+	<target name="eclipse-tests" depends="init-tests">
 		<antcall target="forEach">
 			<param name="call" value="tests-helper"/>
 			<param name="test.target" value="run"/>
@@ -91,16 +94,16 @@
 		</antcall>
 	</target>
 
-	<target name="package" depends="init">
-		<antcall target="forEach">
-			<param name="call" value="package-helper"/>
-		</antcall>
-	</target>
-
 	<target name="performance-tests" depends="init-tests">
 		<antcall target="forEach">
 			<param name="call" value="tests-helper"/>
 			<param name="test.target" value="performance"/>
+		</antcall>
+	</target>
+
+	<target name="package" depends="init">
+		<antcall target="forEach">
+			<param name="call" value="package-helper"/>
 		</antcall>
 	</target>
 
