@@ -175,9 +175,12 @@
 		
 		<delete failonerror="false">
 			<fileset dir="${install.dir}">
-				<include name="features/org.eclipse.mylyn**"/>
-				<include name="plugins/org.eclipse.mylyn**"/>
+				<include name="plugins/org.eclipse.mylyn*"/>
 			</fileset>
+			<dirset dir="${install.dir}">
+				<include name="features/org.eclipse.mylyn*"/>
+				<include name="plugins/org.eclipse.mylyn*"/>
+			</dirset>
 		</delete>
 
 		<unzip dest="${install.dir}">
