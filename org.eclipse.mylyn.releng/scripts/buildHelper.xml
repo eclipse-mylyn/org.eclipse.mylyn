@@ -3,34 +3,33 @@
 	<import file="getDependenciesHelper.xml"/>
 
 	<target name="forEach">
-		<antcall target="forEachCheck">
+		<antcall target="e3.3"/>
+		<antcall target="e3.4"/>
+		<antcall target="e3.5"/>
+	</target>
+
+	<target name="e3.3" unless="skip3.3">
+		<antcall target="${call}">
 			<param name="eclipse.version" value="3.3"/>
 			<param name="eclipse.url" value="${eclipse.url.3.3}"/>
 			<param name="eclipse.sdk.version" value="${eclipse.sdk.3.3}"/>
-			<param name="condition" value="${skip3.3}"/>
 		</antcall>
-		<antcall target="forEachCheck">
+	</target>
+
+	<target name="e3.4" unless="skip3.4">
+		<antcall target="${call}">
 			<param name="eclipse.version" value="3.4"/>
 			<param name="eclipse.url" value="${eclipse.url.3.4}"/>
 			<param name="eclipse.sdk.version" value="${eclipse.sdk.3.4}"/>
-			<param name="condition" value="${skip3.4}"/>
 		</antcall>
-		<antcall target="forEachCheck">
+	</target>
+		
+	<target name="e3.5" unless="skip3.5">
+		<antcall target="${call}">
 			<param name="eclipse.version" value="3.5"/>
 			<param name="eclipse.url" value="${eclipse.url.3.5}"/>
 			<param name="eclipse.sdk.version" value="${eclipse.sdk.3.5}"/>
-			<param name="condition" value="${skip3.5}"/>
 		</antcall>
-	</target>
-
-	<target name="forEachCheck">
-		<condition property="skip"><istrue value="${condition}"/></condition>
-		<condition property="hasP2"><not><equals arg1="${eclipse.version}" arg2="3.3"/></not></condition>
-		<antcall target="forEachCall" />
-	</target>
-
-	<target name="forEachCall" unless="skip">
-		<antcall target="${call}" />
 	</target>
 
 	<target name="copy-maps-helper">
