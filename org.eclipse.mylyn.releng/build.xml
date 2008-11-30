@@ -10,6 +10,9 @@
 	<import file="scripts/buildHelper.xml" />
 	<available classname="java.lang.Enum" property="java.isVersion5OrHigher"/>
 	
+	<target name="all" depends="clean,build,tests,performance-tests">
+	</target>
+
 	<target name="check-java" unless="java.isVersion5OrHigher">
 		<fail message="Java 1.5 or higher required (${java.version} detected)"/>
 	</target>
@@ -22,7 +25,7 @@
 		
 	<target name="init" depends="init-base">		
 		<property file="timestamp.properties" />
-		<echo message="Mylyn ${version}.${qualifier}" />
+		<echo message="Building ${version}.${qualifier}" />
 	</target>
 
 	<target name="init-build" depends="init-base">		
@@ -42,13 +45,17 @@
 		</antcall>		
 	</target>
 
-	<target name="all" depends="clean,build,tests,performance-tests">
+	<target name="clean" depends="clean-build,clean-tests,clean-results">
 	</target>
-	
-	<target name="clean" depends="clean-tests">
+
+	<target name="clean-build">
 		<antcall target="forEach">
 			<param name="call" value="clean-build-helper"/>
 		</antcall>
+	</target>
+
+	<target name="clean-results">
+		<delete dir="${build.results}"/>
 	</target>
 
 	<target name="clean-tests">
