@@ -7,6 +7,7 @@
       </appinfo>
       <documentation>
          An extension to the Mylyn task editor that can provide viewing and editing controls that are markup-aware.
+This extension provides a means to register such extensions, and to associate those extensions with a specific connector kind.
       </documentation>
    </annotation>
 
@@ -117,7 +118,7 @@
          <meta.section type="since"/>
       </appinfo>
       <documentation>
-         3.0
+         3.1
       </documentation>
    </annotation>
 
@@ -126,7 +127,27 @@
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         [Enter extension point usage example here.]
+         To register a task editor extension:
+
+   &lt;extension
+         point=&quot;org.eclipse.mylyn.tasks.ui.taskEditorExtensions&quot;&gt;
+      &lt;taskEditorExtension
+            class=&quot;org.eclipse.mylyn.internal.wikitext.textile.ui.editors.TextileTaskEditorExtension&quot;
+            id=&quot;org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtension&quot;
+            name=&quot;%taskEditorExtension.name.0&quot;&gt;
+      &lt;/taskEditorExtension&gt;
+   &lt;/extension&gt;
+
+To make a task editor extension the default for a specific connector kind:
+
+   &lt;extension
+         point=&quot;org.eclipse.mylyn.tasks.ui.taskEditorExtensions&quot;&gt;
+      &lt;repositoryAssociation
+            connectorKind=&quot;local&quot;
+            taskEditorExtension=&quot;org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtension&quot;&gt;
+      &lt;/repositoryAssociation&gt;
+   &lt;/extension&gt;
+
       </documentation>
    </annotation>
 
