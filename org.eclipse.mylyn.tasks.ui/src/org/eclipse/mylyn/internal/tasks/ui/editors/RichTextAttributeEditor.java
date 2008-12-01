@@ -9,6 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *     Raphael Ackermann - spell checking support on bug 195514
  *     Jingwen Ou - extensibility improvements
+ *     David Green - fix for bug 256702 
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
@@ -381,7 +382,12 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 
 		// construct as needed
 		if (previewViewer == null) {
-			previewViewer = extension.createViewer(taskRepository, editorComposite, style);
+			// previewer should always have a vertical scroll bar if it's editable
+			int previewViewerStyle = style;
+			if (getEditorViewer() != null) {
+				previewViewerStyle |= SWT.V_SCROLL;
+			}
+			previewViewer = extension.createViewer(taskRepository, editorComposite, previewViewerStyle);
 			configure(previewViewer, true);
 			// adapt maximize action
 			previewViewer.getControl().setData(EditorUtil.KEY_TOGGLE_TO_MAXIMIZE_ACTION,
