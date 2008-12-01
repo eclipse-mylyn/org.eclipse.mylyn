@@ -17,10 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.security.GeneralSecurityException;
 
-import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -88,23 +86,8 @@ public class AbstractReportFactory {
 
 		try {
 			final XMLReader reader = XMLReaderFactory.createXMLReader();
+			reader.setFeature("http://xml.org/sax/features/validation", false);
 			reader.setContentHandler(contentHandler);
-
-			EntityResolver resolver = new EntityResolver() {
-
-				public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-					// The default resolver will try to resolve the dtd via
-					// URLConnection. Since we
-					// don't have need of entity resolving
-					// currently, we just supply a dummy (empty) resource for
-					// each request...
-					InputSource source = new InputSource();
-					source.setCharacterStream(new StringReader(""));
-					return source;
-				}
-			};
-
-			reader.setEntityResolver(resolver);
 			reader.setErrorHandler(new ErrorHandler() {
 
 				public void error(SAXParseException exception) throws SAXException {
@@ -121,13 +104,7 @@ public class AbstractReportFactory {
 			});
 			reader.parse(new InputSource(in));
 		} catch (SAXException e) {
-			// if
-			// (e.getMessage().equals(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD))
-			// {
-			// throw new LoginException(e.getMessage());
-			// } else {
 			throw new IOException(e.getMessage());
-			// }
 		}
 
 		finally {
@@ -136,5 +113,4 @@ public class AbstractReportFactory {
 			}
 		}
 	}
-
 }
