@@ -88,6 +88,22 @@ public class AbstractReportFactory {
 			final XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setFeature("http://xml.org/sax/features/validation", false);
 			reader.setContentHandler(contentHandler);
+
+			EntityResolver resolver = new EntityResolver() {
+
+				public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+					// The default resolver will try to resolve the dtd via
+					// URLConnection. Since we
+					// don't have need of entity resolving
+					// currently, we just supply a dummy (empty) resource for
+					// each request...
+					InputSource source = new InputSource();
+					source.setCharacterStream(new StringReader(""));
+					return source;
+				}
+			};
+
+			reader.setEntityResolver(resolver);
 			reader.setErrorHandler(new ErrorHandler() {
 
 				public void error(SAXParseException exception) throws SAXException {
