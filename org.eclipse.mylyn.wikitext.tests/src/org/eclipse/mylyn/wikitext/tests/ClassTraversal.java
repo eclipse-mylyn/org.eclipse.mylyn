@@ -83,6 +83,10 @@ public class ClassTraversal {
 						Class<?> clazz;
 						try {
 							clazz = Class.forName(fqn, true, loader);
+						} catch (LinkageError e) {
+							// see bug 255568 comment 11
+							// can't load the class, so skip it.
+							continue;
 						} catch (Exception e) {
 							// can't load the class, so skip it.
 							continue;
