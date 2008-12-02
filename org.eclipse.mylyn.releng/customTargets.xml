@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+	<target name="preBuild">
+		<delete>
+			<fileset dir="${build.home}/${eclipse.version}/maps" includes="mylyn*.map">
+				<exclude name="*${eclipse.version}.map"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="preTestInstall">	
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${install.dir}">
+				<include name="features/org.eclipse.mylyn*/**"/>
+				<include name="plugins/org.eclipse.mylyn*/**"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="postReport">
+		<junitreport todir="${results.home}" >
+			<fileset dir="${results.home}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="noframes" todir="${results.home}"/>
+		</junitreport>
+		<move file="${results.home}/junit-noframes.html" tofile="${results.home}/standalone-tests.html"/>
+	</target>
+	
+</project>

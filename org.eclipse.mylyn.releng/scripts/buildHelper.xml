@@ -1,6 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="buildHelper" default="" basedir=".">
+<project name="buildHelper" default="all" basedir=".">
 	<import file="getDependenciesHelper.xml"/>
+
+	<available classname="java.lang.Enum" property="java.isVersion5OrHigher"/>
+
+    <condition property="skip3.3"><not><contains string="${eclipse}" substring="3.3"/></not></condition>
+    <condition property="skip3.4"><not><contains string="${eclipse}" substring="3.4"/></not></condition>
+    <condition property="skip3.5"><not><contains string="${eclipse}" substring="3.5"/></not></condition>
+
+	<available property="customTargets" file="${basedir}/../customTargets.xml" value="${builder}/customTargets.xml"/>
+	<property name="customTargets" location="${basedir}/scripts/customTargets.xml"/>
+
+	<!-- ===================================================================== -->
+	<!-- Top-level targets -->
+	<!-- ===================================================================== -->
+
+	<target name="all" depends="clean,build,tests">
+	</target>
+
+	<target name="clean" depends="clean-build,clean-tests,clean-results">
+		<delete file="${build.timestamp}"/>
+	</target>
+
+	<target name="clean-build">
+		<antcall target="forEach">
+			<param name="call" value="clean-build-helper"/>
+		</antcall>
+	</target>
+
+	<target name="clean-results">
+		<delete dir="${build.results}"/>
+	</target>
+
+	<target name="clean-tests">
+		<antcall target="forEach">
+			<param name="call" value="clean-tests-helper"/>
+		</antcall>
+	</target>
+
+	<target name="build" depends="init-build,init">
+		<antcall target="forEach">
+			<param name="call" value="build-helper"/>
+		</antcall>
+	</target>
+
+	<target name="tests" depends="eclipse-tests,performance-tests">
+	</target>
+
+	<target name="eclipse-tests" depends="init-tests">
+		<antcall target="forEach">
+			<param name="call" value="tests-helper"/>
+			<param name="test.target" value="run"/>
+		</antcall>
+	</target>
+
+	<target name="performance-tests" depends="init-tests">
+		<antcall target="forEach">
+			<param name="call" value="tests-helper"/>
+			<param name="test.target" value="performance"/>
+		</antcall>
+	</target>
+
+	<target name="package" depends="init">
+		<antcall target="forEach">
+			<param name="call" value="package-helper"/>
+		</antcall>
+	</target>
+
+	<target name="report" depends="init">
+		<antcall target="forEach">
+			<param name="call" value="report-helper"/>
+		</antcall>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Helper targets -->
+	<!-- ===================================================================== -->
+
+	<target name="check-java" unless="java.isVersion5OrHigher">
+		<fail message="Java 1.5 or higher required (${java.version} detected)"/>
+	</target>
+	
+	<target name="init-base" depends="check-java">		
+		<mkdir dir="${eclipse.base}"/>
+		<mkdir dir="${build.home}"/>
+		<mkdir dir="${build.results}"/>
+	</target>
+
+	<target name="init-timestamp" unless="qualifier">
+		<tstamp>
+			<format property="qualifier" pattern="'I'yyyyMMdd-HH00" locale="en,US" timezone="UTC"/>
+		</tstamp>
+		<echo message="qualifier=${qualifier}" file="${build.timestamp}"/>
+	</target>
+
+	<target name="init-build" depends="init-base">		
+		<antcall target="forEach">
+			<param name="call" value="get-build-dependencies-helper"/>
+		</antcall>		
+	</target>
+
+	<target name="init-tests" depends="init">		
+		<antcall target="forEach">
+			<param name="call" value="get-test-dependencies-helper"/>
+		</antcall>		
+	</target>
+
+	<target name="init" depends="init-base">		
+		<property file="${build.timestamp}" />
+		<antcall target="init-timestamp"/>
+		<property file="${build.timestamp}" />
+		<echo message="Building ${version}.${qualifier}" />
+	</target>
 
 	<target name="forEach">
 		<antcall target="e3.3"/>
@@ -38,14 +149,11 @@
 				<include name="*.map"/>
 			</fileset>
 		</copy>
-		<delete>
-			<fileset dir="${build.home}/${eclipse.version}/maps" includes="mylyn*.map">
-				<exclude name="*${eclipse.version}.map"/>
-			</fileset>
-		</delete>
 	</target>
 
 	<target name="build-helper" depends="copy-maps-helper">
+		<ant antfile="${customTargets}" target="preBuild" />
+		
     	<property name="timeout" value="3600000" />
 		<property name="application" value="org.eclipse.ant.core.antRunner" />
     	<property name="eclipse.home" value="${eclipse.base}/sdk-${eclipse.sdk.version}/eclipse" />
@@ -56,10 +164,11 @@
           	</fileset>
     	</path> 
     	<property name="pde.build.script" refid="pde.build.script.id"/>
-  	    <condition property="versionPostfix" value="e33" else="e3x"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
+		<property name="build.forceContextQualifier" value="${qualifier}" />
+		<property name="build.extraBuildArgs" value="" />
     	<property name="log" value="${build.results}/build-${eclipse.version}.log" />
 		
-		<echo message="Building ${version}.${qualifier}-${versionPostfix} on Eclipse ${eclipse.sdk.version}" />
+		<echo message="Building ${version}.${build.forceContextQualifier} on Eclipse ${eclipse.sdk.version}" />
 		<echo message="Output is logged to ${log}" />
     	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="true"  
     		classname="org.eclipse.core.launcher.Main" output="${log}">
@@ -68,6 +177,8 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
+		    <jvmarg line="${vmargs}"/>
+		    <arg value="-consolelog"/>
 		    <arg value="-application"/>
     		<arg value="${application}"/>
     		<arg value="-buildfile"/>
@@ -75,11 +186,9 @@
     		<arg value="-DbaseLocation=${eclipse.home}"/>    		
     		<arg value="-Dbuilder=${basedir}/config/${eclipse.version}"/>
     		<arg value="-DbuildDirectory=${build.home}/${eclipse.version}"/>
-    		<arg value="-DforceContextQualifier=${qualifier}-${versionPostfix}"/>
-    		<arg value="-DmylynQualifier=${qualifier}"/>
+    		<arg value="-DforceContextQualifier=${build.forceContextQualifier}"/>
     		<arg value="-DmajorVersion=${version}"/>
-		    <arg value="-consolelog"/>
-		    <jvmarg line="${vmargs}"/>
+    		<arg value="${build.extraBuildArgs}"/>
 		</java>
     </target>
 	
@@ -91,9 +200,8 @@
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
 		<delete dir="${eclipse.home}/results" />
 		<delete failonerror="false">
-			<fileset dir="${eclipse.home}" includes="org*.xml" />
+			<fileset dir="${eclipse.home}" includes="*tests*.xml" />
 		</delete>
-		<delete dir="${eclipse.home}/plugins/org.eclipse.mylyn.tests"/>
 	</target>
 
 	<target name="report-helper">
@@ -101,16 +209,10 @@
 		<mkdir dir="${results.home}" />
 		
 		<xslt style="${basedir}/scripts/JUNIT.XSL" basedir="${results.home}" includes="org*.xml" destdir="${results.home}" />
-
-		<junitreport todir="${results.home}" >
-			<fileset dir="${results.home}">
-				<include name="TEST-*.xml" />
-			</fileset>
-			<report format="noframes" todir="${results.home}"/>
-		</junitreport>
-		<move file="${results.home}/junit-noframes.html" tofile="${results.home}/standalone-tests.html"/>
 		
 		<antcall target="performance-report-helper"/>
+		
+		<ant antfile="${customTargets}" target="postReport" />
 	</target>
 
 	<target name="performance-report-helper">
@@ -127,6 +229,7 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
+    		<jvmarg line="${vmargs}"/>
 		    <arg value="-consolelog"/>
 		    <arg value="-application"/>
     		<arg value="${application}"/>
@@ -143,45 +246,10 @@
     		<arg value="${build.results}/performance-${eclipse.version}"/>
     		<arg value="-print"/>
     		<arg value="-scenario.pattern"/>
-    		<arg value="org.eclipse.mylyn%"/>
-    		<jvmarg line="${vmargs}"/>
+    		<arg value="${build.scenario}%"/>
 		</java>
     </target>
 
-	<target name="publish-helper">
-		<antcall target="publish-helper-run">
-			<param name="file" value="org.eclipse.mylyn.tests.AllTests.xml"/>
-			<param name="tag" value="[e${eclipse.version}][dflt]"/>
-		</antcall>
-		<antcall target="publish-helper-run">
-			<param name="file" value="org.eclipse.mylyn.tests.AllPerformanceTests.xml"/>
-			<param name="tag" value="[e${eclipse.version}][perf]"/>
-		</antcall>
-		<antcall target="publish-helper-run">
-			<param name="file" value="TEST-*.xml"/>
-			<param name="tag" value="[e${eclipse.version}][stdl]"/>
-		</antcall>
-	</target>
-		
-	<target name="publish-helper-run">
-    	<path id="file.id"> 
-    		<fileset dir="${build.results}/test-${eclipse.version}">
-            	<include name="${file}"/>
-          	</fileset>
-    	</path> 
-    	<property name="file.path" refid="file.id"/>
-		
-		<java jar="${build.reporter.jar}" failonerror="false" fork="true" jvm="${build.reporter.jvm}">
-			<arg value="-config" />
-			<arg value="${build.reporter.config}" />
-			<arg value="-build" />
-			<arg value="${qualifier}"/>
-			<arg value="-tag"/>
-			<arg value="${tag}"/>
-			<arg value="${file.path}" />
-		</java>
-	</target>
-	
 	<target name="get-build-dependencies-helper">
 		<property name="downloadsDir" value="${eclipse.base}"/> 
 
@@ -241,14 +309,9 @@
     	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
   	    <condition property="install.dir" value="${eclipse.home}" else="${eclipse.home}/dropins/test"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
 		
-		<delete failonerror="false" includeemptydirs="true">
-			<fileset dir="${install.dir}">
-				<include name="features/org.eclipse.mylyn*/**"/>
-				<include name="plugins/org.eclipse.mylyn*/**"/>
-			</fileset>
-		</delete>
+		<ant antfile="${customTargets}" target="preTestInstall" />
 
-		<!-- replace performance plug-in with patched version from o.e.m.test feature -->
+		<!-- replace performance plug-in with patched version from test feature -->
 		<delete failonerror="false" includeemptydirs="true">
 			<fileset dir="${eclipse.home}">
 				<include name="plugins/org.eclipse.test.performance*/**"/>
@@ -275,7 +338,7 @@
           	</fileset>
     	</path> 
     	<property name="library" refid="library.id"/>
-		<condition property="script.test" value="${eclipse.home}/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml" else="${eclipse.home}/dropins/test/plugins/org.eclipse.mylyn.tests_0.0.0/test.xml"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
+		<condition property="script.test" value="${eclipse.home}/plugins/${build.testxml}" else="${eclipse.home}/dropins/test/plugins/${build.testxml}"><equals arg1="${eclipse.version}" arg2="3.3"/></condition>
     	<property name="log" value="${build.results}/test-${test.target}-${eclipse.version}.log" />
 		
 		<echo message="Testing ${test.target} against ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
@@ -287,6 +350,7 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
+		    <jvmarg line="${vmargs}"/>
     		<arg value="-clean"/>
 		    <arg value="-application"/>
     		<arg value="${application}"/>
@@ -302,59 +366,13 @@
     	    -Declipse.perf.dbloc=${build.db} 
     	    -Declipse.perf.config=build=${qualifier};config=${build.host}-${eclipse.version};jvm=${java.version}
     	    -Declipse.perf.assertAgainst=build=${build.assertAgainst}
-    	    -Dmylyn.credentials=${build.credentials}" />
+    	    ${build.extraTestArgs}" />
     		<arg value="${test.target}"/>
-		    <jvmarg line="${vmargs}"/>
 		</java>
 		
 		<copy todir="${build.results}/test-${eclipse.version}">
 			<fileset dir="${eclipse.home}/results"/>
 		</copy>
-    </target>
-
-	<target name="standalone-tests-helper">
-    	<property name="install.dir" value="${build.home}/standalone-tests" />
-		<delete dir="${install.dir}"/>
-		<antcall target="install-tests-helper"/>
-		
-    	<property name="timeout" value="3600000" />
-    	<property name="eclipse.home" value="${eclipse.base}/test-${eclipse.sdk.version}/eclipse" />
-		<property name="vmargs" value=" -Xms40m -Xmx256m"/>    	
-    	<property name="log" value="${build.results}/test-standalone-${eclipse.version}.log" />
-		<path id="tests.classpath">
-			<fileset dir="${install.dir}">
-				<include name="plugins/*.jar"/>
-				<include name="plugins/*/*.jar"/>
-			</fileset>
-			<dirset dir="${install.dir}/plugins">
-				<include name="*"/>
-			</dirset>
-			<fileset dir="${eclipse.home}/plugins">
-				<include name="org.junit_*/junit.jar"/>
-				<!--
-				<include name="org.eclipse.core.jobs_*.jar"/>
-				<include name="org.eclipse.core.net_*.jar"/>
-				<include name="org.eclipse.core.runtime_*.jar"/>
-				<include name="org.eclipse.equinox.common_*.jar"/>
-				<include name="org.eclipse.osgi_*.jar"/>
-				-->
-				<include name="*.jar"/>				
-			</fileset>
-		</path>
-		
-		<property name="output.dir" value="${build.results}/test-${eclipse.version}"/>
-		<mkdir dir="${output.dir}"/>
-		
-		<echo message="Testing standalone ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
-		<junit printsummary="yes" haltonfailure="no" 
-			failureproperty="junit_test_failed" fork="true" forkmode="once" maxmemory="256m">
-			<classpath>
-				<path refid="tests.classpath"/>
-			</classpath>
-			<formatter type="xml" />
-			<test todir="${output.dir}" name="org.eclipse.mylyn.tests.AllStandaloneTests"/>
-			<test todir="${output.dir}" name="org.eclipse.mylyn.wikitext.tests.HeadlessTests"/>
-		</junit>
     </target>
 	
 	<target name="fix-permissions">
@@ -389,6 +407,7 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
+		    <jvmarg line="${vmargs}"/>
 		    <arg value="-consolelog"/>
 		    <arg value="-application"/>
     		<arg value="${application}"/>
@@ -400,7 +419,6 @@
     		<arg value="-outputDir"/>
     		<arg value="${dir}"/>
     		<arg value="${dir}"/>
-		    <jvmarg line="${vmargs}"/>
 		</java>
     </target>
 
@@ -418,6 +436,7 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
+		    <jvmarg line="${vmargs}"/>
 		    <arg value="-consolelog"/>
 		    <arg value="-application"/>
     		<arg value="${application}"/>
@@ -436,7 +455,6 @@
     		<arg value="-compress"/>
     		<arg value="-reusePack200Files"/>
     		<arg value="noDefaultIUs"/>
-		    <jvmarg line="${vmargs}"/>
 		</java>
     </target>
 
@@ -462,13 +480,14 @@
 	            	<include name="org.eclipse.equinox.launcher_*.jar"/>
 	          	</fileset>
 	        </classpath>
+		    <jvmarg line="${vmargs}"/>
+		    <arg value="-consolelog"/>
 		    <arg value="-application"/>
     		<arg value="${application}"/>
     		<arg value="-buildfile"/>
     		<arg value="${pde.build.script}"/>
     		<arg value="-DpackagingInfo=${basedir}/packager"/>    		
-		    <arg value="-consolelog"/>
-		    <jvmarg line="${vmargs}"/>
 		</java>
     </target>
+	
 </project>
