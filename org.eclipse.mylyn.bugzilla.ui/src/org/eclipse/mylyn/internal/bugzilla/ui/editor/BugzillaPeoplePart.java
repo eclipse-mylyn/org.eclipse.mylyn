@@ -66,6 +66,10 @@ public class BugzillaPeoplePart extends AbstractTaskEditorPart {
 		peopleComposite.setLayout(layout);
 
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_ASSIGNED));
+		TaskAttribute assignee = getTaskData().getRoot().getAttribute(BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey());
+		if (assignee != null) {
+			addAttribute(peopleComposite, toolkit, assignee);
+		}
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(TaskAttribute.USER_REPORTER));
 		addAttribute(peopleComposite, toolkit, getTaskData().getRoot().getMappedAttribute(
 				BugzillaAttribute.QA_CONTACT.getKey()));

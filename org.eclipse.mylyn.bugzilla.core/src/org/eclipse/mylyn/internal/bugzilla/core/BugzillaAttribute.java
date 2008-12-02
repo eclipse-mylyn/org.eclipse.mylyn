@@ -114,8 +114,7 @@ public enum BugzillaAttribute {
 
 	REMAINING_TIME("Remaining:", "remaining_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
 
-	SET_DEFAULT_ASSIGNEE("Reassign to default assignee", "set_default_assignee", TaskAttribute.TYPE_OPERATION, false,
-			false),
+	SET_DEFAULT_ASSIGNEE("Reset assignee to default", "set_default_assignee", TaskAttribute.TYPE_BOOLEAN, true, false),
 
 	SHORT_DESC("Summary:", "short_desc", TaskAttribute.TYPE_SHORT_RICH_TEXT, true, false),
 
