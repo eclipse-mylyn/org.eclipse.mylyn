@@ -28,12 +28,17 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
+import org.eclipse.mylyn.internal.tasks.core.TaskAttachment;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResult;
+import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.TaskMapping;
@@ -54,6 +59,199 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
+//testReassign Bugs
+//Version	BugNr	assigned				reporter
+//2.22	92		user@mylar.eclipse.org	tests@mylar.eclipse.org
+//3.0		 5		tests@mylar.eclipse.org	tests2@mylar.eclipse.org
+//3.1		 1		rob.elves@eclipse.org	tests@mylar.eclipse.org
+
+//XXX: restore
+	public void testReassign222() throws CoreException {
+		init222();
+		String taskNumber = "92";
+		doReassignOld(taskNumber, "user@mylar.eclipse.org");
+	}
+
+	public void testReassign30() throws CoreException {
+		init30();
+		String taskNumber = "5";
+		doReassignOld(taskNumber, "tests@mylyn.eclipse.org");
+	}
+
+	public void testReassign31() throws CoreException {
+		init31();
+		String taskNumber = "1";
+
+		// Get the task
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskMapper mapper = new TaskMapper(taskData);
+
+		if (mapper.getOwner().equals("rob.elves@eclipse.org")) {
+			assertEquals("rob.elves@eclipse.org", mapper.getOwner());
+			reassingToUser31(task, taskData);
+			task = generateLocalTaskAndDownload(taskNumber);
+			assertNotNull(task);
+			model = createModel(task);
+			taskData = model.getTaskData();
+			assertNotNull(taskData);
+			mapper = new TaskMapper(taskData);
+			assertEquals("tests2@mylyn.eclipse.org", mapper.getOwner());
+
+			reassignToDefault31(task, taskData);
+			task = generateLocalTaskAndDownload(taskNumber);
+			assertNotNull(task);
+			model = createModel(task);
+			taskData = model.getTaskData();
+			assertNotNull(taskData);
+			mapper = new TaskMapper(taskData);
+			assertEquals("rob.elves@eclipse.org", mapper.getOwner());
+		} else if (mapper.getOwner().equals("tests2@mylyn.eclipse.org")) {
+			assertEquals("tests2@mylyn.eclipse.org", mapper.getOwner());
+			reassignToDefault31(task, taskData);
+			task = generateLocalTaskAndDownload(taskNumber);
+			assertNotNull(task);
+			model = createModel(task);
+			taskData = model.getTaskData();
+			assertNotNull(taskData);
+			mapper = new TaskMapper(taskData);
+			assertEquals("rob.elves@eclipse.org", mapper.getOwner());
+
+			reassingToUser31(task, taskData);
+			task = generateLocalTaskAndDownload(taskNumber);
+			assertNotNull(task);
+			model = createModel(task);
+			taskData = model.getTaskData();
+			assertNotNull(taskData);
+			mapper = new TaskMapper(taskData);
+			assertEquals("tests2@mylyn.eclipse.org", mapper.getOwner());
+		} else {
+			fail("Bug with unexpected user assigned");
+		}
+	}
+
+	private void reassignToDefault31(ITask task, TaskData taskData) throws CoreException {
+		// Modify it (reassignbycomponent)
+		String newCommentText = "BugzillaRepositoryClientTest.testReassign31(): reassignbycomponent "
+				+ (new Date()).toString();
+		TaskAttribute comment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		comment.setValue(newCommentText);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		changed.add(comment);
+
+		TaskAttribute assignee = taskData.getRoot().getAttribute(BugzillaAttribute.SET_DEFAULT_ASSIGNEE.getKey());
+		assignee.setValue("1");
+		changed.add(assignee);
+		// Submit changes
+		submit(task, taskData, changed);
+	}
+
+	private void reassingToUser31(ITask task, TaskData taskData) throws CoreException {
+		// Modify it (reassign to tests2@mylyn.eclipse.org)
+		String newCommentText = "BugzillaRepositoryClientTest.testReassign31(): reassign " + (new Date()).toString();
+		TaskAttribute comment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		comment.setValue(newCommentText);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		changed.add(comment);
+
+		TaskAttribute assignedAttribute = taskData.getRoot().getAttribute(BugzillaAttribute.ASSIGNED_TO.getKey());
+		assignedAttribute.setValue("tests2@mylyn.eclipse.org");
+		changed.add(assignedAttribute);
+
+		// Submit changes
+		submit(task, taskData, null);
+	}
+
+	private void doReassignOld(String taskNumber, String defaultAssignee) throws CoreException {
+		// Get the task
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskMapper mapper = new TaskMapper(taskData);
+
+		if (mapper.getOwner().equals(defaultAssignee)) {
+			assertEquals(defaultAssignee, mapper.getOwner());
+			reassingToUserOld(task, taskData);
+			task = generateLocalTaskAndDownload(taskNumber);
+			assertNotNull(task);
+			model = createModel(task);
+			taskData = model.getTaskData();
+			assertNotNull(taskData);
+			mapper = new TaskMapper(taskData);
+			assertEquals("tests2@mylyn.eclipse.org", mapper.getOwner());
+
+			reassignToDefaultOld(task, taskData);
+			task = generateLocalTaskAndDownload(taskNumber);
+			assertNotNull(task);
+			model = createModel(task);
+			taskData = model.getTaskData();
+			assertNotNull(taskData);
+			mapper = new TaskMapper(taskData);
+			assertEquals(defaultAssignee, mapper.getOwner());
+		} else if (mapper.getOwner().equals("tests2@mylyn.eclipse.org")) {
+			assertEquals("tests2@mylyn.eclipse.org", mapper.getOwner());
+			reassignToDefaultOld(task, taskData);
+			task = generateLocalTaskAndDownload(taskNumber);
+			assertNotNull(task);
+			model = createModel(task);
+			taskData = model.getTaskData();
+			assertNotNull(taskData);
+			mapper = new TaskMapper(taskData);
+			assertEquals(defaultAssignee, mapper.getOwner());
+
+			reassingToUserOld(task, taskData);
+			task = generateLocalTaskAndDownload(taskNumber);
+			assertNotNull(task);
+			model = createModel(task);
+			taskData = model.getTaskData();
+			assertNotNull(taskData);
+			mapper = new TaskMapper(taskData);
+			assertEquals("tests2@mylyn.eclipse.org", mapper.getOwner());
+		} else {
+			fail("Bug with unexpected user assigned");
+		}
+	}
+
+	private void reassignToDefaultOld(ITask task, TaskData taskData) throws CoreException {
+		// Modify it (reassignbycomponent)
+		String newCommentText = "BugzillaRepositoryClientTest.testReassignOld(): reassignbycomponent "
+				+ (new Date()).toString();
+		TaskAttribute comment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		comment.setValue(newCommentText);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		changed.add(comment);
+		TaskAttribute selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.reassignbycomponent.toString(),
+				BugzillaOperation.reassignbycomponent.getLabel());
+		changed.add(selectedOperationAttribute);
+
+		// Submit changes
+		submit(task, taskData, null);
+	}
+
+	private void reassingToUserOld(ITask task, TaskData taskData) throws CoreException {
+		// Modify it (reassign to tests2@mylyn.eclipse.org)
+		String newCommentText = "BugzillaRepositoryClientTest.testReassignOld(): reassign " + (new Date()).toString();
+		TaskAttribute comment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
+		comment.setValue(newCommentText);
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		changed.add(comment);
+		TaskAttribute selectedOperationAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.OPERATION);
+		TaskOperation.applyTo(selectedOperationAttribute, BugzillaOperation.reassign.toString(),
+				BugzillaOperation.reassign.getLabel());
+		TaskAttribute assignedAttribute = taskData.getRoot().getAttribute("reassignInput");
+		assignedAttribute.setValue("tests2@mylyn.eclipse.org");
+		changed.add(selectedOperationAttribute);
+		changed.add(assignedAttribute);
+
+		// Submit changes
+		submit(task, taskData, null);
+	}
 
 	/*
 	 * Test for the following State transformation
@@ -391,8 +589,6 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 		TaskData taskData = workingCopy.getLocalData();
 		assertNotNull(taskData);
 
-//		TasksUiPlugin.getTaskList().addTask(task);
-
 		String newCommentText = "BugzillaRepositoryClientTest.testMidAirCollision(): test " + (new Date()).toString();
 		TaskAttribute attrNewComment = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		attrNewComment.setValue(newCommentText);
@@ -524,4 +720,137 @@ public class BugzillaRepositoryConnectorTest2 extends AbstractBugzillaTest {
 			assertTrue(task.getSynchronizationState() == SynchronizationState.INCOMING);
 		}
 	}
+
+	ITask fruitTask;
+
+	TaskData fruitTaskData;
+
+	private void setFruitValueTo(String newValue) throws CoreException {
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		TaskAttribute cf_fruit = fruitTaskData.getRoot().getAttribute("cf_fruit");
+		cf_fruit.setValue(newValue);
+		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_fruit").getValue());
+		changed.add(cf_fruit);
+		submit(fruitTask, fruitTaskData, changed);
+		TasksUiInternal.synchronizeTask(connector, fruitTask, true, null);
+		fruitTaskData = TasksUiPlugin.getTaskDataManager().getTaskData(repository, fruitTask.getTaskId());
+		assertEquals(newValue, fruitTaskData.getRoot().getAttribute("cf_fruit").getValue());
+
+	}
+
+	public void testCustomFields() throws Exception {
+		init(IBugzillaConstants.TEST_BUGZILLA_303_URL);
+
+		String taskNumber = "1";
+
+		// Get the task
+		fruitTask = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(fruitTask);
+		TaskDataModel model = createModel(fruitTask);
+		fruitTaskData = model.getTaskData();
+		assertNotNull(fruitTaskData);
+
+		if (fruitTaskData.getRoot().getAttribute("cf_fruit").getValue().equals("---")) {
+			setFruitValueTo("apple");
+			setFruitValueTo("orange");
+			setFruitValueTo("---");
+		} else if (fruitTaskData.getRoot().getAttribute("cf_fruit").getValue().equals("apple")) {
+			setFruitValueTo("orange");
+			setFruitValueTo("apple");
+			setFruitValueTo("---");
+		} else if (fruitTaskData.getRoot().getAttribute("cf_fruit").getValue().equals("orange")) {
+			setFruitValueTo("apple");
+			setFruitValueTo("orange");
+			setFruitValueTo("---");
+		}
+		if (fruitTask != null) {
+			fruitTask = null;
+		}
+		if (fruitTaskData != null) {
+			fruitTaskData = null;
+		}
+	}
+
+	public void testAnonymousRepositoryAccess() throws Exception {
+		init218();
+		assertNotNull(repository);
+		AuthenticationCredentials anonymousCreds = new AuthenticationCredentials("", "");
+		repository.setCredentials(AuthenticationType.REPOSITORY, anonymousCreds, false);
+		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChanged(repository);
+		// test anonymous task retrieval
+		ITask task = this.generateLocalTaskAndDownload("2");
+		assertNotNull(task);
+
+		// // test anonymous query (note that this demonstrates query via
+		// eclipse search (ui)
+
+		String queryUrl = "http://mylyn.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
+		IRepositoryQuery bugzillaQuery = TasksUi.getRepositoryModel().createRepositoryQuery(repository);
+		bugzillaQuery.setUrl(queryUrl);
+		SearchHitCollector collector = new SearchHitCollector(taskList, repository, bugzillaQuery);
+		RepositorySearchResult result = (RepositorySearchResult) collector.getSearchResult();
+
+		collector.run(new NullProgressMonitor());
+		assertEquals(2, result.getElements().length);
+
+		for (Object element : result.getElements()) {
+			assertEquals(true, element instanceof ITask);
+			ITask hit = (ITask) element;
+			assertTrue(hit.getSummary().contains("search-match-test"));
+		}
+
+		// test anonymous update of configuration
+		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false, null);
+		assertNotNull(config);
+		assertTrue(config.getComponents().size() > 0);
+	}
+
+	public void testUpdate() throws Exception {
+		init222();
+		String taskNumber = "3";
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+		TasksUi.getTaskDataManager().discardEdits(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+
+		assertEquals("search-match-test 2", task.getSummary());
+		assertEquals("TestProduct", task.getAttribute(TaskAttribute.PRODUCT));
+		assertEquals("P1", task.getPriority());
+		assertEquals("blocker", task.getAttribute(BugzillaAttribute.BUG_SEVERITY.getKey()));
+		assertEquals("nhapke@cs.ubc.ca", task.getOwner());
+		assertFalse(task.isCompleted());
+		assertEquals("http://mylyn.eclipse.org/bugs222/show_bug.cgi?id=3", task.getUrl());
+	}
+
+	/**
+	 * Ensure obsoletes and patches are marked as such by the parser.
+	 */
+	public void testAttachmentAttributes() throws Exception {
+		init222();
+		String taskNumber = "19";
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+
+		boolean isPatch[] = { false, true, false, false, false, false, false, true, false, false, false };
+		boolean isObsolete[] = { false, true, false, true, false, false, false, false, false, false, false };
+
+		int index = 0;
+		for (TaskAttribute attribute : taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT)) {
+			assertTrue(validateAttachmentAttributes(model, attribute, isPatch[index], isObsolete[index]));
+			index++;
+		}
+	}
+
+	private boolean validateAttachmentAttributes(TaskDataModel model, TaskAttribute taskAttribute, boolean isPatch,
+			boolean isObsolete) {
+		TaskAttachment taskAttachment = new TaskAttachment(model.getTaskRepository(), model.getTask(), taskAttribute);
+		model.getTaskData().getAttributeMapper().updateTaskAttachment(taskAttachment, taskAttribute);
+		return (taskAttachment.isPatch() == isPatch) && (taskAttachment.isDeprecated() == isObsolete);
+	}
+
 }
