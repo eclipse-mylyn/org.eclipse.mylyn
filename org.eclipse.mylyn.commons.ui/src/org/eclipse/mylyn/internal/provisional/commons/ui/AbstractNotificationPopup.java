@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.mylyn.internal.commons.ui.NotificationPopupColors;
 import org.eclipse.mylyn.internal.commons.ui.SwtUtil;
 import org.eclipse.mylyn.internal.commons.ui.SwtUtil.FadeJob;
@@ -56,9 +57,9 @@ public abstract class AbstractNotificationPopup extends Window {
 
 	private static final int TITLE_HEIGHT = 24;
 
-	private static final String LABEL_NOTIFICATION = "Notification";
+	private static final String LABEL_NOTIFICATION = Messages.AbstractNotificationPopup_Notification;
 
-	private static final String LABEL_JOB_CLOSE = "Close Notification Job";
+	private static final String LABEL_JOB_CLOSE = Messages.AbstractNotificationPopup_Close_Notification_Job;
 
 	private static final int MAX_WIDTH = 400;
 
@@ -156,11 +157,11 @@ public abstract class AbstractNotificationPopup extends Window {
 		IProduct product = Platform.getProduct();
 		if (product != null) {
 			String productName = product.getName();
-			String LABEL_SDK = "SDK";
+			String LABEL_SDK = "SDK"; //$NON-NLS-1$
 			if (productName.endsWith(LABEL_SDK)) {
 				productName = productName.substring(0, productName.length() - LABEL_SDK.length());
 			}
-			return productName + " " + LABEL_NOTIFICATION;
+			return productName + " " + LABEL_NOTIFICATION; //$NON-NLS-1$
 		} else {
 			return LABEL_NOTIFICATION;
 		}

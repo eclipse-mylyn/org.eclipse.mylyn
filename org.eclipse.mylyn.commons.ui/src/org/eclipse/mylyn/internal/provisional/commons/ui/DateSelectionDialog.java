@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePickerPanel.DateSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -34,7 +35,7 @@ public class DateSelectionDialog extends Dialog {
 
 	private Date selectedDate = null;
 
-	private String title = "Date Selection";
+	private String title = Messages.DateSelectionDialog_Date_Selection;
 
 	private final Calendar initialCalendar = Calendar.getInstance();
 
@@ -71,6 +72,7 @@ public class DateSelectionDialog extends Dialog {
 
 		datePanel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
+		applyDialogFont(datePanel);
 		return datePanel;
 	}
 
@@ -81,7 +83,7 @@ public class DateSelectionDialog extends Dialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.CLIENT_ID + 1, "Clear", false);
+		createButton(parent, IDialogConstants.CLIENT_ID + 1, Messages.DateSelectionDialog_Clear, false);
 		super.createButtonsForButtonBar(parent);
 	}
 

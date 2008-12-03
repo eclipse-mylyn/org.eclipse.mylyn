@@ -20,10 +20,10 @@ public class SubstringPatternFilter extends PatternFilter {
 
 	@Override
 	public void setPattern(String patternString) {
-		if (patternString == null || patternString.startsWith("*")) {
+		if (patternString == null || patternString.startsWith("*")) { //$NON-NLS-1$
 			super.setPattern(patternString);
 		} else {
-			super.setPattern("*" + patternString);
+			super.setPattern("*" + patternString); //$NON-NLS-1$
 		}
 	}
 }

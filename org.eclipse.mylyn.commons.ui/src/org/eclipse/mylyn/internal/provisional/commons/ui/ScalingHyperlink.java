@@ -92,7 +92,7 @@ public class ScalingHyperlink extends ImageHyperlink {
 		if (gc.textExtent(t).x > width) {
 			for (int i = t.length(); i > 0; i--) {
 				String test = t.substring(0, i);
-				test = test + "...";
+				test = test + "..."; //$NON-NLS-1$
 				if (gc.textExtent(test).x < width) {
 					returnText = test;
 					break;

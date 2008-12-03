@@ -19,7 +19,7 @@ import org.osgi.framework.BundleContext;
  */
 public class CommonsUiPlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.commons.ui"; //$NON-NLS-1$
 
 	private static CommonsUiPlugin plugin;
 

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
+import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -31,7 +32,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractRetrieveTitleFromUrlJob extends Job {
 
-	public static final String LABEL_TITLE = "Retrieving summary from URL";
+	public static final String LABEL_TITLE = Messages.AbstractRetrieveTitleFromUrlJob_Retrieving_summary_from_URL;
 
 	private volatile String pageTitle;
 
@@ -62,7 +63,7 @@ public abstract class AbstractRetrieveTitleFromUrlJob extends Job {
 				});
 			}
 		} catch (IOException e) {
-			return new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Retrieving summary from URL failed", e);
+			return new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Retrieving summary from URL failed", e); //$NON-NLS-1$
 		}
 		return Status.OK_STATUS;
 	}

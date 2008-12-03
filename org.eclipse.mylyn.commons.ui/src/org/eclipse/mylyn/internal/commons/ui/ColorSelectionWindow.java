@@ -83,7 +83,7 @@ public class ColorSelectionWindow extends Window {
 		colors[15] = createColorCanvas(colorComposite, new RGB(255, 255, 255));
 
 		Button closeButton = new Button(parent, SWT.PUSH);
-		closeButton.setText("&Close");
+		closeButton.setText(Messages.ColorSelectionWindow_Close);
 		closeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		closeButton.addSelectionListener(new SelectionAdapter() {
 

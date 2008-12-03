@@ -32,6 +32,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.commons.ui.ColorSelectionWindow;
+import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.ViewForm;
@@ -154,10 +155,10 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 	private EditorAction currentAction = EditorAction.CROPPING;
 
 	public ScreenshotCreationPage() {
-		super("ScreenShotAttachment");
-		setTitle("Capture Screenshot");
-		setDescription("After capturing, you can crop the image and make drawings on it. This window will not be captured. "
-				+ "Note that you can continue to interact with the workbench in order to set up the screenshot.");
+		super("ScreenShotAttachment"); //$NON-NLS-1$
+		setTitle(Messages.ScreenshotCreationPage_CAPTURE_SCRRENSHOT);
+		setDescription(Messages.ScreenshotCreationPage_After_capturing
+				+ Messages.ScreenshotCreationPage_NOTE_THAT_YOU_CONTINUTE);
 	}
 
 	public void createControl(Composite parent) {
@@ -171,7 +172,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 
 		// TODO: need disabled versions of all toolbar icons
 		ToolBarManager tbm = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL | SWT.RIGHT);
-		captureAction = new Action("&Capture Desktop", IAction.AS_PUSH_BUTTON) {
+		captureAction = new Action(Messages.ScreenshotCreationPage_Capture_Desktop_C, IAction.AS_PUSH_BUTTON) {
 
 			private boolean isFirstCapture = true;
 
@@ -190,7 +191,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 			}
 
 		};
-		captureAction.setToolTipText("Capture Desktop");
+		captureAction.setToolTipText(Messages.ScreenshotCreationPage_Capture_Desktop);
 		captureAction.setImageDescriptor(ImageDescriptor.createFromImage(CommonImages.getImage(CommonImages.IMAGE_CAPTURE)));
 
 //		captureDelayedButton = new Button(buttonsComposite, SWT.PUSH);
@@ -226,19 +227,19 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 //			}
 //		});
 
-		fitAction = new Action("", IAction.AS_CHECK_BOX) {
+		fitAction = new Action("", IAction.AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				refreshCanvasSize();
 			}
 		};
-		fitAction.setToolTipText("Fit Image");
-		fitAction.setText("&Fit Image");
+		fitAction.setToolTipText(Messages.ScreenshotCreationPage_Fit_Image);
+		fitAction.setText(Messages.ScreenshotCreationPage_Fit_Image_F);
 		fitAction.setImageDescriptor(ImageDescriptor.createFromImage(CommonImages.getImage(CommonImages.IMAGE_FIT)));
 		fitAction.setChecked(true);
 		fitAction.setEnabled(false);
 
-		cropAction = new Action("C&rop", IAction.AS_RADIO_BUTTON) {
+		cropAction = new Action(Messages.ScreenshotCreationPage_Crop_R, IAction.AS_RADIO_BUTTON) {
 			@Override
 			public void run() {
 				currentAction = EditorAction.CROPPING;
@@ -248,11 +249,11 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 				canvas.redraw();
 			}
 		};
-		cropAction.setToolTipText("Crop");
+		cropAction.setToolTipText(Messages.ScreenshotCreationPage_Crop);
 		cropAction.setImageDescriptor(CommonImages.CUT);
 		cropAction.setEnabled(false);
 
-		markAction = new Action("&Annotate", IAction.AS_RADIO_BUTTON) {
+		markAction = new Action(Messages.ScreenshotCreationPage_Annotate, IAction.AS_RADIO_BUTTON) {
 			@Override
 			public void run() {
 				currentAction = EditorAction.MARKING;
@@ -262,12 +263,12 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 				canvas.redraw();
 			}
 		};
-		markAction.setToolTipText("Draw annotations on screenshot image");
+		markAction.setToolTipText(Messages.ScreenshotCreationPage_DRAW_ANNOTATION_ON_SCREENSHOT_IMAGE);
 		markAction.setImageDescriptor(CommonImages.EDIT);
 //		markAction.setDisabledImageDescriptor(ImageDescriptor.createFromFile(getClass(), "mark_disabled.gif"));
 		markAction.setEnabled(false);
 
-		colorAction = new Action("", IAction.AS_DROP_DOWN_MENU) {
+		colorAction = new Action("", IAction.AS_DROP_DOWN_MENU) { //$NON-NLS-1$
 			@Override
 			public void runWithEvent(final Event e) {
 				final ColorSelectionWindow colorWindow = new ColorSelectionWindow(getControl().getShell()) {
@@ -291,12 +292,12 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 				}
 			}
 		};
-		colorAction.setToolTipText("Change pen color");
+		colorAction.setToolTipText(Messages.ScreenshotCreationPage_Change_pen_color);
 		colorIcon = new Image(getShell().getDisplay(), 16, 16);
 		setMarkColor(new RGB(255, 85, 85));
 		colorAction.setEnabled(false);
 
-		clearAction = new Action("C&lear Annotations", IAction.AS_PUSH_BUTTON) {
+		clearAction = new Action(Messages.ScreenshotCreationPage_Clear_Annotations, IAction.AS_PUSH_BUTTON) {
 			@Override
 			public void run() {
 				clearAction.setEnabled(false);
@@ -305,7 +306,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 				setImageDirty(true);
 			}
 		};
-		clearAction.setToolTipText("Clear all annotations made on screenshot image");
+		clearAction.setToolTipText(Messages.ScreenshotCreationPage_Clear_all_annotations_made_on_screenshot_image);
 		clearAction.setImageDescriptor(CommonImages.CLEAR);
 		clearAction.setEnabled(false);
 
@@ -457,7 +458,7 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 		wizardShell.setVisible(false);
 
 		// this code needs to run asynchronously to allow the workbench to refresh before the screen is captured  
-		UIJob job = new UIJob("Capturing Screenshot") {
+		UIJob job = new UIJob("Capturing Screenshot") { //$NON-NLS-1$
 
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {

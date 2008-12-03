@@ -20,6 +20,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin;
+import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -38,7 +39,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 
 	private static final int filterWidth = 69;
 
-	public static final String LABEL_FIND = " Find:";
+	public static final String LABEL_FIND = Messages.AbstractFilteredTree_Find;
 
 	private Job refreshJob;
 
@@ -61,15 +62,15 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 		super(parent, treeStyle, filter);
 		Field refreshField;
 		try {
-			refreshField = FilteredTree.class.getDeclaredField("refreshJob");
+			refreshField = FilteredTree.class.getDeclaredField("refreshJob"); //$NON-NLS-1$
 			refreshField.setAccessible(true);
 			refreshJob = (Job) refreshField.get(this);
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob);
 		} catch (Exception e) {
 			CommonsUiPlugin.getDefault().getLog().log(
-					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Could not get refresh job", e));
+					new Status(IStatus.ERROR, CommonsUiPlugin.ID_PLUGIN, "Could not get refresh job", e)); //$NON-NLS-1$
 		}
-		setInitialText("");
+		setInitialText(""); //$NON-NLS-1$
 	}
 
 	@Override
@@ -125,7 +126,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.character == SWT.ESC) {
-					setFilterText("");
+					setFilterText(""); //$NON-NLS-1$
 				}
 			}
 		});
@@ -164,7 +165,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 				}
 			};
 
-			clearTextAction.setToolTipText("Clear");
+			clearTextAction.setToolTipText(Messages.AbstractFilteredTree_Clear);
 			clearTextAction.setImageDescriptor(CommonImages.FIND_CLEAR);
 			clearTextAction.setDisabledImageDescriptor(CommonImages.FIND_CLEAR_DISABLED);
 			filterToolBar.add(clearTextAction);

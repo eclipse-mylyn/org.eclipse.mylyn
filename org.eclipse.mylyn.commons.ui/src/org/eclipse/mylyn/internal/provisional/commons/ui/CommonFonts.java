@@ -55,13 +55,13 @@ public class CommonFonts {
 			FontData data = new FontData(defaultData[0].getName(), defaultData[0].getHeight(),
 					defaultData[0].getStyle());
 
-			if ("win32".equals(SWT.getPlatform())) {
+			if ("win32".equals(SWT.getPlatform())) { //$NON-NLS-1$
 				// NOTE: Windows only, for: data.data.lfStrikeOut = 1;
 				try {
-					Field dataField = data.getClass().getDeclaredField("data");
+					Field dataField = data.getClass().getDeclaredField("data"); //$NON-NLS-1$
 					Object dataObject = dataField.get(data);
 					Class<?> clazz = dataObject.getClass().getSuperclass();
-					Field strikeOutFiled = clazz.getDeclaredField("lfStrikeOut");
+					Field strikeOutFiled = clazz.getDeclaredField("lfStrikeOut"); //$NON-NLS-1$
 					strikeOutFiled.set(dataObject, (byte) 1);
 					CommonFonts.STRIKETHROUGH = new Font(Display.getCurrent(), data);
 				} catch (Throwable t) {

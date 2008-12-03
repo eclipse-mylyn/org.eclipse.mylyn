@@ -17,27 +17,27 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
  */
 public class CommonThemes {
 
-	public static final String COLOR_INCOMING_BACKGROUND = "org.eclipse.mylyn.tasks.ui.colors.incoming.background";
+	public static final String COLOR_INCOMING_BACKGROUND = "org.eclipse.mylyn.tasks.ui.colors.incoming.background"; //$NON-NLS-1$
 
-	public static final String COLOR_SCHEDULED_PAST = "org.eclipse.mylyn.tasks.ui.colors.foreground.past.scheduled";
+	public static final String COLOR_SCHEDULED_PAST = "org.eclipse.mylyn.tasks.ui.colors.foreground.past.scheduled"; //$NON-NLS-1$
 
-	public static final String COLOR_OVERDUE = "org.eclipse.mylyn.tasks.ui.colors.foreground.past.due";
+	public static final String COLOR_OVERDUE = "org.eclipse.mylyn.tasks.ui.colors.foreground.past.due"; //$NON-NLS-1$
 
-	public static final String COLOR_SCHEDULED_THIS_WEEK = "org.eclipse.mylyn.tasks.ui.colors.foreground.thisweek.scheduled";
+	public static final String COLOR_SCHEDULED_THIS_WEEK = "org.eclipse.mylyn.tasks.ui.colors.foreground.thisweek.scheduled"; //$NON-NLS-1$
 
-	public static final String COLOR_COMPLETED = "org.eclipse.mylyn.tasks.ui.colors.foreground.completed";
+	public static final String COLOR_COMPLETED = "org.eclipse.mylyn.tasks.ui.colors.foreground.completed"; //$NON-NLS-1$
 
-	public static final String COLOR_SCHEDULED_TODAY = "org.eclipse.mylyn.tasks.ui.colors.foreground.today.scheduled";
+	public static final String COLOR_SCHEDULED_TODAY = "org.eclipse.mylyn.tasks.ui.colors.foreground.today.scheduled"; //$NON-NLS-1$
 
-	public static final String COLOR_COMPLETED_TODAY = "org.eclipse.mylyn.tasks.ui.colors.foreground.today.completed";
+	public static final String COLOR_COMPLETED_TODAY = "org.eclipse.mylyn.tasks.ui.colors.foreground.today.completed"; //$NON-NLS-1$
 
-	public static final String COLOR_CATEGORY_GRADIENT_START = "org.eclipse.mylyn.tasks.ui.colors.category.gradient.start";
+	public static final String COLOR_CATEGORY_GRADIENT_START = "org.eclipse.mylyn.tasks.ui.colors.category.gradient.start"; //$NON-NLS-1$
 
-	public static final String COLOR_CATEGORY_GRADIENT_END = "org.eclipse.mylyn.tasks.ui.colors.category.gradient.end";
+	public static final String COLOR_CATEGORY_GRADIENT_END = "org.eclipse.mylyn.tasks.ui.colors.category.gradient.end"; //$NON-NLS-1$
 
 	public static final String COLOR_CATEGORY = COLOR_CATEGORY_GRADIENT_END;
 
-	public static final String FONT_EDITOR_COMMENT = "org.eclipse.mylyn.tasks.ui.fonts.task.editor.comment";
+	public static final String FONT_EDITOR_COMMENT = "org.eclipse.mylyn.tasks.ui.fonts.task.editor.comment"; //$NON-NLS-1$
 
 	public static boolean isCommonTheme(String property) {
 		if (property == null) {

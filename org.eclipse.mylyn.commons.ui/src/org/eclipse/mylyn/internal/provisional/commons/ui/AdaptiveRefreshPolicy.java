@@ -33,7 +33,7 @@ public class AdaptiveRefreshPolicy {
 
 	private final Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
 
-	private String oldText = "";
+	private String oldText = ""; //$NON-NLS-1$
 
 	protected Job refreshJob;
 

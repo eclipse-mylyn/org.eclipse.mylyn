@@ -45,7 +45,7 @@ public class SwtUtil {
 	public static boolean setAlpha(Shell shell, int value) {
 		Method method = null;
 		try {
-			method = shell.getClass().getMethod("setAlpha", new Class[] { int.class });
+			method = shell.getClass().getMethod("setAlpha", new Class[] { int.class }); //$NON-NLS-1$
 			method.setAccessible(true);
 			//shell.setAlpha(value);
 			method.invoke(shell, new Object[] { value });
@@ -60,7 +60,7 @@ public class SwtUtil {
 	public static int getAlpha(Shell shell) {
 		Method method = null;
 		try {
-			method = shell.getClass().getMethod("getAlpha");
+			method = shell.getClass().getMethod("getAlpha"); //$NON-NLS-1$
 			method.setAccessible(true);
 			return (Integer) method.invoke(shell);
 		} catch (Exception e) {
@@ -83,7 +83,7 @@ public class SwtUtil {
 	// TODO e3.4 get rid of reflection on 3.4 branch
 	public static void fade(Shell shell, boolean fadeIn, int increment, int speed) {
 		try {
-			Method method = shell.getClass().getMethod("setAlpha", new Class[] { int.class });
+			Method method = shell.getClass().getMethod("setAlpha", new Class[] { int.class }); //$NON-NLS-1$
 			method.setAccessible(true);
 
 			if (fadeIn) {
@@ -131,12 +131,12 @@ public class SwtUtil {
 		private final IFadeListener fadeListener;
 
 		public FadeJob(Shell shell, int increment, long delay, IFadeListener fadeListener) {
-			super("Fading");
+			super(Messages.SwtUtil_Fading);
 			if (increment < -255 || increment == 0 || increment > 255) {
-				throw new IllegalArgumentException("-255 <= increment <= 255 && increment != 0");
+				throw new IllegalArgumentException("-255 <= increment <= 255 && increment != 0"); //$NON-NLS-1$
 			}
 			if (delay < 1) {
-				throw new IllegalArgumentException("delay must be > 0");
+				throw new IllegalArgumentException("delay must be > 0"); //$NON-NLS-1$
 			}
 			this.currentAlpha = getAlpha(shell);
 			this.shell = shell;

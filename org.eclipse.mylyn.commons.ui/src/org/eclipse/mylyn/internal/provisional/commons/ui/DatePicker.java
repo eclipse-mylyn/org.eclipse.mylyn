@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.commons.ui.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -50,9 +51,9 @@ import org.eclipse.ui.PlatformUI;
  */
 public class DatePicker extends Composite {
 
-	public final static String TITLE_DIALOG = "Choose Date";
+	public final static String TITLE_DIALOG = Messages.DatePicker_Choose_Date;
 
-	public static final String LABEL_CHOOSE = "Choose Date";
+	public static final String LABEL_CHOOSE = Messages.DatePicker_Choose_Date;
 
 	private Text dateText;
 
