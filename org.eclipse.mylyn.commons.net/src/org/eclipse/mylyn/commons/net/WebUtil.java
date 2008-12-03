@@ -109,43 +109,43 @@ public class WebUtil {
 		initCommonsLoggingSettings();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("Mylyn");
+		sb.append("Mylyn"); //$NON-NLS-1$
 		sb.append(getBundleVersion(CommonsNetPlugin.getDefault()));
 
 		USER_AGENT_PREFIX = sb.toString();
 		sb.setLength(0);
 
-		if (System.getProperty("org.osgi.framework.vendor") != null) {
-			sb.append(" ");
-			sb.append(System.getProperty("org.osgi.framework.vendor"));
-			sb.append(stripQualifier(System.getProperty("osgi.framework.version")));
+		if (System.getProperty("org.osgi.framework.vendor") != null) { //$NON-NLS-1$
+			sb.append(" "); //$NON-NLS-1$
+			sb.append(System.getProperty("org.osgi.framework.vendor")); //$NON-NLS-1$
+			sb.append(stripQualifier(System.getProperty("osgi.framework.version"))); //$NON-NLS-1$
 
-			if (System.getProperty("eclipse.product") != null) {
-				sb.append(" (");
-				sb.append(System.getProperty("eclipse.product"));
-				sb.append(")");
+			if (System.getProperty("eclipse.product") != null) { //$NON-NLS-1$
+				sb.append(" ("); //$NON-NLS-1$
+				sb.append(System.getProperty("eclipse.product")); //$NON-NLS-1$
+				sb.append(")"); //$NON-NLS-1$
 			}
 		}
 
-		sb.append(" ");
-		sb.append(DefaultHttpParams.getDefaultParams().getParameter(HttpMethodParams.USER_AGENT).toString().split("-")[1]);
+		sb.append(" "); //$NON-NLS-1$
+		sb.append(DefaultHttpParams.getDefaultParams().getParameter(HttpMethodParams.USER_AGENT).toString().split("-")[1]); //$NON-NLS-1$
 
-		sb.append(" Java/");
-		sb.append(System.getProperty("java.version"));
-		sb.append(" (");
-		sb.append(System.getProperty("java.vendor").split(" ")[0]);
-		sb.append(") ");
+		sb.append(" Java/"); //$NON-NLS-1$
+		sb.append(System.getProperty("java.version")); //$NON-NLS-1$
+		sb.append(" ("); //$NON-NLS-1$
+		sb.append(System.getProperty("java.vendor").split(" ")[0]); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append(") "); //$NON-NLS-1$
 
-		sb.append(System.getProperty("os.name"));
-		sb.append("/");
-		sb.append(System.getProperty("os.version"));
-		sb.append(" (");
-		sb.append(System.getProperty("os.arch"));
-		if (System.getProperty("osgi.nl") != null) {
-			sb.append("; ");
-			sb.append(System.getProperty("osgi.nl"));
+		sb.append(System.getProperty("os.name")); //$NON-NLS-1$
+		sb.append("/"); //$NON-NLS-1$
+		sb.append(System.getProperty("os.version")); //$NON-NLS-1$
+		sb.append(" ("); //$NON-NLS-1$
+		sb.append(System.getProperty("os.arch")); //$NON-NLS-1$
+		if (System.getProperty("osgi.nl") != null) { //$NON-NLS-1$
+			sb.append("; "); //$NON-NLS-1$
+			sb.append(System.getProperty("osgi.nl")); //$NON-NLS-1$
 		}
-		sb.append(")");
+		sb.append(")"); //$NON-NLS-1$
 
 		USER_AGENT_POSTFIX = sb.toString();
 
@@ -253,11 +253,11 @@ public class WebUtil {
 
 		if (WebUtil.isRepositoryHttps(url)) {
 			ProtocolSocketFactory socketFactory = new PollingSslProtocolSocketFactory(monitor);
-			Protocol protocol = new Protocol("https", socketFactory, port);
+			Protocol protocol = new Protocol("https", socketFactory, port); //$NON-NLS-1$
 			hostConfiguration.setHost(host, port, protocol);
 		} else {
 			ProtocolSocketFactory socketFactory = new PollingProtocolSocketFactory(monitor);
-			Protocol protocol = new Protocol("http", socketFactory, port);
+			Protocol protocol = new Protocol("http", socketFactory, port); //$NON-NLS-1$
 			hostConfiguration.setHost(host, port, protocol);
 		}
 
@@ -347,11 +347,11 @@ public class WebUtil {
 
 	private static String getBundleVersion(Plugin plugin) {
 		if (null == plugin) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
-		Object bundleVersion = plugin.getBundle().getHeaders().get("Bundle-Version");
+		Object bundleVersion = plugin.getBundle().getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 		if (null == bundleVersion) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		return stripQualifier((String) bundleVersion);
 	}
@@ -364,7 +364,7 @@ public class WebUtil {
 	}
 
 	static Credentials getCredentials(final String username, final String password, final InetAddress address) {
-		int i = username.indexOf("\\");
+		int i = username.indexOf("\\"); //$NON-NLS-1$
 		if (i > 0 && i < username.length() - 1 && address != null) {
 			return new NTCredentials(username.substring(i + 1), password, address.getHostName(), username.substring(0,
 					i));
@@ -378,7 +378,7 @@ public class WebUtil {
 	 */
 	public static String getHost(String repositoryUrl) {
 		String result = repositoryUrl;
-		int colonSlashSlash = repositoryUrl.indexOf("://");
+		int colonSlashSlash = repositoryUrl.indexOf("://"); //$NON-NLS-1$
 
 		if (colonSlashSlash >= 0) {
 			result = repositoryUrl.substring(colonSlashSlash + 3);
@@ -409,7 +409,7 @@ public class WebUtil {
 	public static Credentials getHttpClientCredentials(AuthenticationCredentials credentials, String host) {
 		String username = credentials.getUserName();
 		String password = credentials.getPassword();
-		int i = username.indexOf("\\");
+		int i = username.indexOf("\\"); //$NON-NLS-1$
 		if (i > 0 && i < username.length() - 1 && host != null) {
 			return new NTCredentials(username.substring(i + 1), password, host, username.substring(0, i));
 		} else {
@@ -421,8 +421,8 @@ public class WebUtil {
 	 * @since 2.0
 	 */
 	public static int getPort(String repositoryUrl) {
-		int colonSlashSlash = repositoryUrl.indexOf("://");
-		int firstSlash = repositoryUrl.indexOf("/", colonSlashSlash + 3);
+		int colonSlashSlash = repositoryUrl.indexOf("://"); //$NON-NLS-1$
+		int firstSlash = repositoryUrl.indexOf("/", colonSlashSlash + 3); //$NON-NLS-1$
 		int colonPort = repositoryUrl.indexOf(':', colonSlashSlash + 1);
 		if (firstSlash == -1) {
 			firstSlash = repositoryUrl.length();
@@ -445,11 +445,11 @@ public class WebUtil {
 	 * @since 2.0
 	 */
 	public static String getRequestPath(String repositoryUrl) {
-		int colonSlashSlash = repositoryUrl.indexOf("://");
+		int colonSlashSlash = repositoryUrl.indexOf("://"); //$NON-NLS-1$
 		int requestPath = repositoryUrl.indexOf('/', colonSlashSlash + 3);
 
 		if (requestPath < 0) {
-			return "";
+			return ""; //$NON-NLS-1$
 		} else {
 			return repositoryUrl.substring(requestPath);
 		}
@@ -481,10 +481,10 @@ public class WebUtil {
 	public static String getTitleFromUrl(AbstractWebLocation location, IProgressMonitor monitor) throws IOException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN);
+			monitor.beginTask("Retrieving " + location.getUrl(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
 			HttpClient client = new HttpClient();
-			WebUtil.configureHttpClient(client, "");
+			WebUtil.configureHttpClient(client, ""); //$NON-NLS-1$
 
 			GetMethod method = new GetMethod(location.getUrl());
 			try {
@@ -501,14 +501,14 @@ public class WebUtil {
 									HtmlTag tag = (HtmlTag) token.getValue();
 									if (tag.getTagType() == Tag.TITLE) {
 										String text = getText(tokenizer);
-										text = text.replaceAll("\n", "");
-										text = text.replaceAll("\\s+", " ");
+										text = text.replaceAll("\n", ""); //$NON-NLS-1$ //$NON-NLS-2$
+										text = text.replaceAll("\\s+", " "); //$NON-NLS-1$ //$NON-NLS-2$
 										return text.trim();
 									}
 								}
 							}
 						} catch (ParseException e) {
-							throw new IOException("Error reading url");
+							throw new IOException("Error reading url"); //$NON-NLS-1$
 						}
 					} finally {
 						in.close();
@@ -558,7 +558,7 @@ public class WebUtil {
 		if (product != null && product.length() > 0) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(USER_AGENT_PREFIX);
-			sb.append(" ");
+			sb.append(" "); //$NON-NLS-1$
 			sb.append(product);
 			sb.append(USER_AGENT_POSTFIX);
 			return sb.toString();
@@ -592,10 +592,10 @@ public class WebUtil {
 	 * </p>
 	 */
 	private static void initCommonsLoggingSettings() {
-		defaultSystemProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-		defaultSystemProperty("org.apache.commons.logging.simplelog.defaultlog", "off");
-		defaultSystemProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
-		defaultSystemProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
+		defaultSystemProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog"); //$NON-NLS-1$ //$NON-NLS-2$
+		defaultSystemProperty("org.apache.commons.logging.simplelog.defaultlog", "off"); //$NON-NLS-1$ //$NON-NLS-2$
+		defaultSystemProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off"); //$NON-NLS-1$ //$NON-NLS-2$
+		defaultSystemProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private static void defaultSystemProperty(String key, String defaultValue) {
@@ -605,24 +605,24 @@ public class WebUtil {
 	}
 
 	private static boolean isRepositoryHttps(String repositoryUrl) {
-		return repositoryUrl.matches("https.*");
+		return repositoryUrl.matches("https.*"); //$NON-NLS-1$
 	}
 
 	private static String stripQualifier(String longVersion) {
 		if (longVersion == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
-		String parts[] = longVersion.split("\\.");
+		String parts[] = longVersion.split("\\."); //$NON-NLS-1$
 		StringBuilder version = new StringBuilder();
 		if (parts.length > 0) {
-			version.append("/");
+			version.append("/"); //$NON-NLS-1$
 			version.append(parts[0]);
 			if (parts.length > 1) {
-				version.append(".");
+				version.append("."); //$NON-NLS-1$
 				version.append(parts[1]);
 				if (parts.length > 2) {
-					version.append(".");
+					version.append("."); //$NON-NLS-1$
 					version.append(parts[2]);
 				}
 			}

@@ -113,14 +113,14 @@ public class HtmlTag {
 	 */
 	public void setTagName(String s) throws IllegalArgumentException {
 		if (s == null || s.length() == 0) {
-			throw new IllegalArgumentException("Empty tag name");
+			throw new IllegalArgumentException("Empty tag name"); //$NON-NLS-1$
 		}
 		if (s.charAt(0) == '/') {
 			isEndTag = true;
 			s = s.substring(1);
 		}
 		if (s.length() == 0) {
-			throw new IllegalArgumentException("Empty tag name");
+			throw new IllegalArgumentException("Empty tag name"); //$NON-NLS-1$
 		}
 		tagName = s;
 		tagType = tags.get(s.toUpperCase(Locale.ENGLISH));
@@ -171,10 +171,10 @@ public class HtmlTag {
 		Iterator<String> attributeValues = attributes.values().iterator();
 		while (attributeNames.hasNext()) {
 			String attributeName = attributeNames.next();
-			if (attributeName.compareTo("href") == 0 || attributeName.compareTo("src") == 0) {
+			if (attributeName.compareTo("href") == 0 || attributeName.compareTo("src") == 0) { //$NON-NLS-1$ //$NON-NLS-2$
 				String target = attributeValues.next();
-				if (!target.endsWith(".jpg") && !target.endsWith(".gif") && !target.endsWith(".css")
-						&& !target.endsWith(".js") && !target.startsWith("mailto") && target.lastIndexOf("#") == -1
+				if (!target.endsWith(".jpg") && !target.endsWith(".gif") && !target.endsWith(".css") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						&& !target.endsWith(".js") && !target.startsWith("mailto") && target.lastIndexOf("#") == -1 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						&& target.length() > 0) {
 
 					for (int i = 0; i < target.length(); i++) {
@@ -188,9 +188,9 @@ public class HtmlTag {
 					}
 					target = target.replace('\\', '/');
 
-					if (target.startsWith("news:") || (target.indexOf("://") != -1 && target.length() >= 7)) {
+					if (target.startsWith("news:") || (target.indexOf("://") != -1 && target.length() >= 7)) { //$NON-NLS-1$ //$NON-NLS-2$
 						// Absolute URL
-						if (target.substring(0, 7).compareToIgnoreCase("http://") == 0) {
+						if (target.substring(0, 7).compareToIgnoreCase("http://") == 0) { //$NON-NLS-1$
 							sb.append(target);
 						}
 					} else {
@@ -209,23 +209,23 @@ public class HtmlTag {
 						if (lastSep >= 0) {
 							baseDir = baseDir.substring(0, lastSep);
 						}
-						while (baseDir.length() > 1 && baseDir.endsWith("/.")) {
+						while (baseDir.length() > 1 && baseDir.endsWith("/.")) { //$NON-NLS-1$
 							baseDir = baseDir.substring(0, baseDir.length() - 2);
 						}
 
-						if (target.startsWith("//")) {
-							sb.append(baseUrl.getProtocol() + ":" + target);
-						} else if (target.startsWith("/")) {
-							sb.append(baseUrl.getProtocol() + "://" + baseUrl.getHost() + target);
+						if (target.startsWith("//")) { //$NON-NLS-1$
+							sb.append(baseUrl.getProtocol() + ":" + target); //$NON-NLS-1$
+						} else if (target.startsWith("/")) { //$NON-NLS-1$
+							sb.append(baseUrl.getProtocol() + "://" + baseUrl.getHost() + target); //$NON-NLS-1$
 						} else {
-							while (target.startsWith("../")) {
+							while (target.startsWith("../")) { //$NON-NLS-1$
 								if (baseDir.length() > 0) {
 									// can't go above root
-									baseDir = baseDir.substring(0, baseDir.lastIndexOf("/"));
+									baseDir = baseDir.substring(0, baseDir.lastIndexOf("/")); //$NON-NLS-1$
 								}
 								target = target.substring(3);
 							}
-							sb.append(baseUrl.getProtocol() + "://" + baseUrl.getHost() + baseDir + "/" + target);
+							sb.append(baseUrl.getProtocol() + "://" + baseUrl.getHost() + baseDir + "/" + target); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					}
 				}
@@ -252,7 +252,7 @@ public class HtmlTag {
 			sb.append(' ');
 			sb.append(name);
 			String value = values.next();
-			sb.append("=\"");
+			sb.append("=\""); //$NON-NLS-1$
 			if (value.length() > 0) {
 				sb.append(value);
 			}
@@ -272,11 +272,11 @@ public class HtmlTag {
 	public static class Type extends Tag {
 		public static final Tag UNKNOWN = new Tag();
 
-		public static final Tag THEAD = new Type("THEAD");
+		public static final Tag THEAD = new Type("THEAD"); //$NON-NLS-1$
 
-		public static final Tag DOCTYPE = new Type("!DOCTYPE");
+		public static final Tag DOCTYPE = new Type("!DOCTYPE"); //$NON-NLS-1$
 
-		public static final Tag LABEL = new Type("LABEL");
+		public static final Tag LABEL = new Type("LABEL"); //$NON-NLS-1$
 
 		private Type(String name) {
 			super(name);
@@ -286,81 +286,81 @@ public class HtmlTag {
 	private static HashMap<String, Tag> tags;
 	static {
 		tags = new HashMap<String, Tag>();
-		tags.put("A", Tag.A);
-		tags.put("ADDRESS", Tag.ADDRESS);
-		tags.put("APPLET", Tag.APPLET);
-		tags.put("AREA", Tag.AREA);
-		tags.put("B", Tag.B);
-		tags.put("BASE", Tag.BASE);
-		tags.put("BASEFONT", Tag.BASEFONT);
-		tags.put("BIG", Tag.BIG);
-		tags.put("BLOCKQUOTE", Tag.BLOCKQUOTE);
-		tags.put("BODY", Tag.BODY);
-		tags.put("BR", Tag.BR);
-		tags.put("CAPTION", Tag.CAPTION);
-		tags.put("CENTER", Tag.CENTER);
-		tags.put("CITE", Tag.CITE);
-		tags.put("CODE", Tag.CODE);
-		tags.put("DD", Tag.DD);
-		tags.put("DFN", Tag.DFN);
-		tags.put("DIR", Tag.DIR);
-		tags.put("DIV", Tag.DIV);
-		tags.put("DL", Tag.DL);
-		tags.put("!DOCTYPE", Type.DOCTYPE);
-		tags.put("DT", Tag.DT);
-		tags.put("EM", Tag.EM);
-		tags.put("FONT", Tag.FONT);
-		tags.put("FORM", Tag.FORM);
-		tags.put("FRAME", Tag.FRAME);
-		tags.put("FRAMESET", Tag.FRAMESET);
-		tags.put("H1", Tag.H1);
-		tags.put("H2", Tag.H2);
-		tags.put("H3", Tag.H3);
-		tags.put("H4", Tag.H4);
-		tags.put("H5", Tag.H5);
-		tags.put("H6", Tag.H6);
-		tags.put("HEAD", Tag.HEAD);
-		tags.put("HTML", Tag.HTML);
-		tags.put("HR", Tag.HR);
-		tags.put("I", Tag.I);
-		tags.put("IMG", Tag.IMG);
-		tags.put("INPUT", Tag.INPUT);
-		tags.put("ISINDEX", Tag.ISINDEX);
-		tags.put("KBD", Tag.KBD);
-		tags.put("LI", Tag.LI);
-		tags.put("LABEL", Type.LABEL);
-		tags.put("LINK", Tag.LINK);
-		tags.put("MAP", Tag.MAP);
-		tags.put("MENU", Tag.MENU);
-		tags.put("META", Tag.META);
-		tags.put("NOFRAMES", Tag.NOFRAMES);
-		tags.put("OBJECT", Tag.OBJECT);
-		tags.put("OL", Tag.OL);
-		tags.put("OPTION", Tag.OPTION);
-		tags.put("P", Tag.P);
-		tags.put("PARAM", Tag.PARAM);
-		tags.put("PRE", Tag.PRE);
-		tags.put("S", Tag.S);
-		tags.put("SAMP", Tag.SAMP);
-		tags.put("SCRIPT", Tag.SCRIPT);
-		tags.put("SELECT", Tag.SELECT);
-		tags.put("SMALL", Tag.SMALL);
-		tags.put("SPAN", Tag.SPAN);
-		tags.put("STRONG", Tag.STRONG);
-		tags.put("STYLE", Tag.STYLE);
-		tags.put("SUB", Tag.SUB);
-		tags.put("SUP", Tag.SUP);
-		tags.put("TABLE", Tag.TABLE);
-		tags.put("TD", Tag.TD);
-		tags.put("TEXTAREA", Tag.TEXTAREA);
-		tags.put("TH", Tag.TH);
-		tags.put("THEAD", Type.THEAD);
-		tags.put("TITLE", Tag.TITLE);
-		tags.put("TR", Tag.TR);
-		tags.put("TT", Tag.TT);
-		tags.put("U", Tag.U);
-		tags.put("UL", Tag.UL);
-		tags.put("VAR", Tag.VAR);
+		tags.put("A", Tag.A); //$NON-NLS-1$
+		tags.put("ADDRESS", Tag.ADDRESS); //$NON-NLS-1$
+		tags.put("APPLET", Tag.APPLET); //$NON-NLS-1$
+		tags.put("AREA", Tag.AREA); //$NON-NLS-1$
+		tags.put("B", Tag.B); //$NON-NLS-1$
+		tags.put("BASE", Tag.BASE); //$NON-NLS-1$
+		tags.put("BASEFONT", Tag.BASEFONT); //$NON-NLS-1$
+		tags.put("BIG", Tag.BIG); //$NON-NLS-1$
+		tags.put("BLOCKQUOTE", Tag.BLOCKQUOTE); //$NON-NLS-1$
+		tags.put("BODY", Tag.BODY); //$NON-NLS-1$
+		tags.put("BR", Tag.BR); //$NON-NLS-1$
+		tags.put("CAPTION", Tag.CAPTION); //$NON-NLS-1$
+		tags.put("CENTER", Tag.CENTER); //$NON-NLS-1$
+		tags.put("CITE", Tag.CITE); //$NON-NLS-1$
+		tags.put("CODE", Tag.CODE); //$NON-NLS-1$
+		tags.put("DD", Tag.DD); //$NON-NLS-1$
+		tags.put("DFN", Tag.DFN); //$NON-NLS-1$
+		tags.put("DIR", Tag.DIR); //$NON-NLS-1$
+		tags.put("DIV", Tag.DIV); //$NON-NLS-1$
+		tags.put("DL", Tag.DL); //$NON-NLS-1$
+		tags.put("!DOCTYPE", Type.DOCTYPE); //$NON-NLS-1$
+		tags.put("DT", Tag.DT); //$NON-NLS-1$
+		tags.put("EM", Tag.EM); //$NON-NLS-1$
+		tags.put("FONT", Tag.FONT); //$NON-NLS-1$
+		tags.put("FORM", Tag.FORM); //$NON-NLS-1$
+		tags.put("FRAME", Tag.FRAME); //$NON-NLS-1$
+		tags.put("FRAMESET", Tag.FRAMESET); //$NON-NLS-1$
+		tags.put("H1", Tag.H1); //$NON-NLS-1$
+		tags.put("H2", Tag.H2); //$NON-NLS-1$
+		tags.put("H3", Tag.H3); //$NON-NLS-1$
+		tags.put("H4", Tag.H4); //$NON-NLS-1$
+		tags.put("H5", Tag.H5); //$NON-NLS-1$
+		tags.put("H6", Tag.H6); //$NON-NLS-1$
+		tags.put("HEAD", Tag.HEAD); //$NON-NLS-1$
+		tags.put("HTML", Tag.HTML); //$NON-NLS-1$
+		tags.put("HR", Tag.HR); //$NON-NLS-1$
+		tags.put("I", Tag.I); //$NON-NLS-1$
+		tags.put("IMG", Tag.IMG); //$NON-NLS-1$
+		tags.put("INPUT", Tag.INPUT); //$NON-NLS-1$
+		tags.put("ISINDEX", Tag.ISINDEX); //$NON-NLS-1$
+		tags.put("KBD", Tag.KBD); //$NON-NLS-1$
+		tags.put("LI", Tag.LI); //$NON-NLS-1$
+		tags.put("LABEL", Type.LABEL); //$NON-NLS-1$
+		tags.put("LINK", Tag.LINK); //$NON-NLS-1$
+		tags.put("MAP", Tag.MAP); //$NON-NLS-1$
+		tags.put("MENU", Tag.MENU); //$NON-NLS-1$
+		tags.put("META", Tag.META); //$NON-NLS-1$
+		tags.put("NOFRAMES", Tag.NOFRAMES); //$NON-NLS-1$
+		tags.put("OBJECT", Tag.OBJECT); //$NON-NLS-1$
+		tags.put("OL", Tag.OL); //$NON-NLS-1$
+		tags.put("OPTION", Tag.OPTION); //$NON-NLS-1$
+		tags.put("P", Tag.P); //$NON-NLS-1$
+		tags.put("PARAM", Tag.PARAM); //$NON-NLS-1$
+		tags.put("PRE", Tag.PRE); //$NON-NLS-1$
+		tags.put("S", Tag.S); //$NON-NLS-1$
+		tags.put("SAMP", Tag.SAMP); //$NON-NLS-1$
+		tags.put("SCRIPT", Tag.SCRIPT); //$NON-NLS-1$
+		tags.put("SELECT", Tag.SELECT); //$NON-NLS-1$
+		tags.put("SMALL", Tag.SMALL); //$NON-NLS-1$
+		tags.put("SPAN", Tag.SPAN); //$NON-NLS-1$
+		tags.put("STRONG", Tag.STRONG); //$NON-NLS-1$
+		tags.put("STYLE", Tag.STYLE); //$NON-NLS-1$
+		tags.put("SUB", Tag.SUB); //$NON-NLS-1$
+		tags.put("SUP", Tag.SUP); //$NON-NLS-1$
+		tags.put("TABLE", Tag.TABLE); //$NON-NLS-1$
+		tags.put("TD", Tag.TD); //$NON-NLS-1$
+		tags.put("TEXTAREA", Tag.TEXTAREA); //$NON-NLS-1$
+		tags.put("TH", Tag.TH); //$NON-NLS-1$
+		tags.put("THEAD", Type.THEAD); //$NON-NLS-1$
+		tags.put("TITLE", Tag.TITLE); //$NON-NLS-1$
+		tags.put("TR", Tag.TR); //$NON-NLS-1$
+		tags.put("TT", Tag.TT); //$NON-NLS-1$
+		tags.put("U", Tag.U); //$NON-NLS-1$
+		tags.put("UL", Tag.UL); //$NON-NLS-1$
+		tags.put("VAR", Tag.VAR); //$NON-NLS-1$
 	}
 
 	public void setSelfTerminating(boolean terminating) {

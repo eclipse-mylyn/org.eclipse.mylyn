@@ -22,9 +22,9 @@ import java.net.SocketAddress;
  */
 public class AuthenticatedProxy extends Proxy {
 
-	private String userName = "";
+	private String userName = ""; //$NON-NLS-1$
 
-	private String password = "";
+	private String password = ""; //$NON-NLS-1$
 
 	public AuthenticatedProxy(Type type, SocketAddress sa, String userName, String password) {
 		super(type, sa);

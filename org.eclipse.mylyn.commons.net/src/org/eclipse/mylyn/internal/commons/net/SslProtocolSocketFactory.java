@@ -40,11 +40,11 @@ import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 // TODO merge with PollingSslProtocolSocketFactory
 public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
-	private static final String KEY_STORE = "javax.net.ssl.keyStore";
+	private static final String KEY_STORE = "javax.net.ssl.keyStore"; //$NON-NLS-1$
 
-	private static final String KEY_STORE_TYPE = "javax.net.ssl.keyStoreType";
+	private static final String KEY_STORE_TYPE = "javax.net.ssl.keyStoreType"; //$NON-NLS-1$
 
-	private static final String KEY_STORE_PASSWORD = "javax.net.ssl.keyStorePassword";
+	private static final String KEY_STORE_PASSWORD = "javax.net.ssl.keyStorePassword"; //$NON-NLS-1$
 
 	static SslProtocolSocketFactory factory = new SslProtocolSocketFactory();
 
@@ -68,18 +68,18 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 				keyManagerFactory.init(keyStore, password);
 				keymanagers = keyManagerFactory.getKeyManagers();
 			} catch (Exception e) {
-				CommonsNetPlugin.log(0, "Could not initialize keystore", e);
+				CommonsNetPlugin.log(0, "Could not initialize keystore", e); //$NON-NLS-1$
 			}
 		}
 
 		hasKeyManager = keymanagers != null;
 
 		try {
-			SSLContext sslContext = SSLContext.getInstance("SSL");
+			SSLContext sslContext = SSLContext.getInstance("SSL"); //$NON-NLS-1$
 			sslContext.init(keymanagers, new TrustManager[] { new TrustAllTrustManager() }, null);
 			this.socketFactory = sslContext.getSocketFactory();
 		} catch (Exception e) {
-			CommonsNetPlugin.log(0, "Could not initialize SSL context", e);
+			CommonsNetPlugin.log(0, "Could not initialize SSL context", e); //$NON-NLS-1$
 		}
 	}
 
@@ -88,7 +88,7 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 	 */
 	public SSLSocketFactory getSocketFactory() throws IOException {
 		if (socketFactory == null) {
-			throw new IOException("Could not initialize SSL context");
+			throw new IOException("Could not initialize SSL context"); //$NON-NLS-1$
 		}
 		return socketFactory;
 	}
@@ -105,7 +105,7 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 	public Socket createSocket(String remoteHost, int remotePort, InetAddress clientHost, int clientPort,
 			HttpConnectionParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
 		if (params == null) {
-			throw new IllegalArgumentException("Parameters may not be null");
+			throw new IllegalArgumentException("Parameters may not be null"); //$NON-NLS-1$
 		}
 
 		int timeout = params.getConnectionTimeout();

@@ -41,10 +41,10 @@ public class WebClientLog extends SimpleLog {
 	 */
 	public static void initCommonsLoggingSettings() {
 		// remove?
-		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-		System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "off");
-		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
-		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "off"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// FIXME this does not work with the commons logging Orbit bundle which does not see the WebClientLog class
 		// Update our assigned logger to use custom WebClientLog

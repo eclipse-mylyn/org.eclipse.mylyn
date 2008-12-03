@@ -50,7 +50,7 @@ public class PollingProtocolSocketFactory implements ProtocolSocketFactory {
 	public Socket createSocket(String host, int port, InetAddress localAddress, int localPort,
 			HttpConnectionParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
 		if (params == null) {
-			throw new IllegalArgumentException("Parameters may not be null");
+			throw new IllegalArgumentException("Parameters may not be null"); //$NON-NLS-1$
 		}
 
 		int timeout = params.getConnectionTimeout();

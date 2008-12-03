@@ -49,7 +49,7 @@ public class WebClientUtil {
 	 */
 	public static final String USER_AGENT;
 
-	public static final String CONTENT_ENCODING_GZIP = "gzip";
+	public static final String CONTENT_ENCODING_GZIP = "gzip"; //$NON-NLS-1$
 
 	public static final int CONNNECT_TIMEOUT = 60000;
 
@@ -71,19 +71,19 @@ public class WebClientUtil {
 
 	private static String stripQualifier(String longVersion) {
 		if (longVersion == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
-		String parts[] = longVersion.split("\\.");
+		String parts[] = longVersion.split("\\."); //$NON-NLS-1$
 		StringBuilder version = new StringBuilder();
 		if (parts.length > 0) {
-			version.append("/");
+			version.append("/"); //$NON-NLS-1$
 			version.append(parts[0]);
 			if (parts.length > 1) {
-				version.append(".");
+				version.append("."); //$NON-NLS-1$
 				version.append(parts[1]);
 				if (parts.length > 2) {
-					version.append(".");
+					version.append("."); //$NON-NLS-1$
 					version.append(parts[2]);
 				}
 			}
@@ -94,11 +94,11 @@ public class WebClientUtil {
 
 	private static String getBundleVersion(Plugin plugin) {
 		if (null == plugin) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
-		Object bundleVersion = plugin.getBundle().getHeaders().get("Bundle-Version");
+		Object bundleVersion = plugin.getBundle().getHeaders().get("Bundle-Version"); //$NON-NLS-1$
 		if (null == bundleVersion) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		return stripQualifier((String) bundleVersion);
 	}
@@ -107,43 +107,43 @@ public class WebClientUtil {
 		initCommonsLoggingSettings();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("Mylyn");
+		sb.append("Mylyn"); //$NON-NLS-1$
 		sb.append(getBundleVersion(CommonsNetPlugin.getDefault()));
 
 		USER_AGENT_PREFIX = sb.toString();
 		sb.setLength(0);
 
-		if (System.getProperty("org.osgi.framework.vendor") != null) {
-			sb.append(" ");
-			sb.append(System.getProperty("org.osgi.framework.vendor"));
-			sb.append(stripQualifier(System.getProperty("osgi.framework.version")));
+		if (System.getProperty("org.osgi.framework.vendor") != null) { //$NON-NLS-1$
+			sb.append(" "); //$NON-NLS-1$
+			sb.append(System.getProperty("org.osgi.framework.vendor")); //$NON-NLS-1$
+			sb.append(stripQualifier(System.getProperty("osgi.framework.version"))); //$NON-NLS-1$
 
-			if (System.getProperty("eclipse.product") != null) {
-				sb.append(" (");
-				sb.append(System.getProperty("eclipse.product"));
-				sb.append(")");
+			if (System.getProperty("eclipse.product") != null) { //$NON-NLS-1$
+				sb.append(" ("); //$NON-NLS-1$
+				sb.append(System.getProperty("eclipse.product")); //$NON-NLS-1$
+				sb.append(")"); //$NON-NLS-1$
 			}
 		}
 
-		sb.append(" ");
-		sb.append(DefaultHttpParams.getDefaultParams().getParameter(HttpMethodParams.USER_AGENT).toString().split("-")[1]);
+		sb.append(" "); //$NON-NLS-1$
+		sb.append(DefaultHttpParams.getDefaultParams().getParameter(HttpMethodParams.USER_AGENT).toString().split("-")[1]); //$NON-NLS-1$
 
-		sb.append(" Java/");
-		sb.append(System.getProperty("java.version"));
-		sb.append(" (");
-		sb.append(System.getProperty("java.vendor").split(" ")[0]);
-		sb.append(") ");
+		sb.append(" Java/"); //$NON-NLS-1$
+		sb.append(System.getProperty("java.version")); //$NON-NLS-1$
+		sb.append(" ("); //$NON-NLS-1$
+		sb.append(System.getProperty("java.vendor").split(" ")[0]); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append(") "); //$NON-NLS-1$
 
-		sb.append(System.getProperty("os.name"));
-		sb.append("/");
-		sb.append(System.getProperty("os.version"));
-		sb.append(" (");
-		sb.append(System.getProperty("os.arch"));
-		if (System.getProperty("osgi.nl") != null) {
-			sb.append("; ");
-			sb.append(System.getProperty("osgi.nl"));
+		sb.append(System.getProperty("os.name")); //$NON-NLS-1$
+		sb.append("/"); //$NON-NLS-1$
+		sb.append(System.getProperty("os.version")); //$NON-NLS-1$
+		sb.append(" ("); //$NON-NLS-1$
+		sb.append(System.getProperty("os.arch")); //$NON-NLS-1$
+		if (System.getProperty("osgi.nl") != null) { //$NON-NLS-1$
+			sb.append("; "); //$NON-NLS-1$
+			sb.append(System.getProperty("osgi.nl")); //$NON-NLS-1$
 		}
-		sb.append(")");
+		sb.append(")"); //$NON-NLS-1$
 
 		USER_AGENT_POSTFIX = sb.toString();
 
@@ -152,10 +152,10 @@ public class WebClientUtil {
 
 	public static void initCommonsLoggingSettings() {
 		// Remove?
-		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-		System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "off");
-		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
-		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.defaultlog", "off"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// FIXME this does not work with the commons logging Orbit bundle which does not see the WebClientLog class
 		// Update our assigned logger to use custom WebClientLog
@@ -189,12 +189,12 @@ public class WebClientUtil {
 	}
 
 	static boolean isRepositoryHttps(String repositoryUrl) {
-		return repositoryUrl.matches("https.*");
+		return repositoryUrl.matches("https.*"); //$NON-NLS-1$
 	}
 
 	public static int getPort(String repositoryUrl) {
-		int colonSlashSlash = repositoryUrl.indexOf("://");
-		int firstSlash = repositoryUrl.indexOf("/", colonSlashSlash + 3);
+		int colonSlashSlash = repositoryUrl.indexOf("://"); //$NON-NLS-1$
+		int firstSlash = repositoryUrl.indexOf("/", colonSlashSlash + 3); //$NON-NLS-1$
 		int colonPort = repositoryUrl.indexOf(':', colonSlashSlash + 1);
 		if (firstSlash == -1) {
 			firstSlash = repositoryUrl.length();
@@ -215,7 +215,7 @@ public class WebClientUtil {
 
 	public static String getDomain(String repositoryUrl) {
 		String result = repositoryUrl;
-		int colonSlashSlash = repositoryUrl.indexOf("://");
+		int colonSlashSlash = repositoryUrl.indexOf("://"); //$NON-NLS-1$
 
 		if (colonSlashSlash >= 0) {
 			result = repositoryUrl.substring(colonSlashSlash + 3);
@@ -241,11 +241,11 @@ public class WebClientUtil {
 	}
 
 	public static String getRequestPath(String repositoryUrl) {
-		int colonSlashSlash = repositoryUrl.indexOf("://");
+		int colonSlashSlash = repositoryUrl.indexOf("://"); //$NON-NLS-1$
 		int requestPath = repositoryUrl.indexOf('/', colonSlashSlash + 3);
 
 		if (requestPath < 0) {
-			return "";
+			return ""; //$NON-NLS-1$
 		} else {
 			return repositoryUrl.substring(requestPath);
 		}
@@ -286,12 +286,12 @@ public class WebClientUtil {
 		}
 
 		if (WebClientUtil.isRepositoryHttps(repositoryUrl)) {
-			Protocol acceptAllSsl = new Protocol("https",
+			Protocol acceptAllSsl = new Protocol("https", //$NON-NLS-1$
 					(ProtocolSocketFactory) SslProtocolSocketFactory.getInstance(),
 					WebClientUtil.getPort(repositoryUrl));
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl), acceptAllSsl);
-			Protocol.registerProtocol("https", acceptAllSsl);
+			Protocol.registerProtocol("https", acceptAllSsl); //$NON-NLS-1$
 		} else {
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl));
@@ -303,7 +303,7 @@ public class WebClientUtil {
 	}
 
 	private static Credentials getCredentials(final String username, final String password, final InetAddress address) {
-		int i = username.indexOf("\\");
+		int i = username.indexOf("\\"); //$NON-NLS-1$
 		if (i > 0 && i < username.length() - 1 && address != null) {
 			return new NTCredentials(username.substring(i + 1), password, address.getHostName(), username.substring(0,
 					i));
@@ -318,7 +318,7 @@ public class WebClientUtil {
 	public static Credentials getHttpClientCredentials(AuthenticationCredentials credentials, String host) {
 		String username = credentials.getUserName();
 		String password = credentials.getPassword();
-		int i = username.indexOf("\\");
+		int i = username.indexOf("\\"); //$NON-NLS-1$
 		if (i > 0 && i < username.length() - 1 && host != null) {
 			return new NTCredentials(username.substring(i + 1), password, host, username.substring(0, i));
 		} else {
@@ -388,13 +388,13 @@ public class WebClientUtil {
 			// service.getProxyDataForHost(getDomain(url),
 			// IProxyData.SOCKS_PROXY_TYPE);
 
-			if (url.startsWith("https")) {
+			if (url.startsWith("https")) { //$NON-NLS-1$
 				if (httpsProxy != null) {
 					proxyDataInUse = httpsProxy;
 				} else if (httpProxy != null) {
 					proxyDataInUse = httpProxy;
 				}
-			} else if (url.startsWith("http")) {
+			} else if (url.startsWith("http")) { //$NON-NLS-1$
 				if (httpProxy != null) {
 					proxyDataInUse = httpProxy;
 				}
@@ -484,12 +484,12 @@ public class WebClientUtil {
 		}
 
 		if (WebClientUtil.isRepositoryHttps(url)) {
-			Protocol acceptAllSsl = new Protocol("https",
+			Protocol acceptAllSsl = new Protocol("https", //$NON-NLS-1$
 					(ProtocolSocketFactory) SslProtocolSocketFactory.getInstance(), port);
 			client.getHostConfiguration().setHost(host, port, acceptAllSsl);
 
 			// globally register handler, unfortunately Axis requires this
-			Protocol.registerProtocol("https", acceptAllSsl);
+			Protocol.registerProtocol("https", acceptAllSsl); //$NON-NLS-1$
 		} else {
 			client.getHostConfiguration().setHost(host, port);
 		}
@@ -554,7 +554,7 @@ public class WebClientUtil {
 		if (product != null && product.length() > 0) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(USER_AGENT_PREFIX);
-			sb.append(" ");
+			sb.append(" "); //$NON-NLS-1$
 			sb.append(product);
 			sb.append(USER_AGENT_POSTFIX);
 			return sb.toString();

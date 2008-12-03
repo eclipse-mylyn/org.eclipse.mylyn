@@ -33,7 +33,7 @@ import org.osgi.util.tracker.ServiceTracker;
  */
 public class CommonsNetPlugin extends Plugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.web.core";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.web.core"; //$NON-NLS-1$
 
 	private static CommonsNetPlugin INSTANCE;
 
