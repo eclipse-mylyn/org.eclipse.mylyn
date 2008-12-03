@@ -38,9 +38,9 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 	private final Set<String> actionSetsToSuppress = new HashSet<String>();
 
 	public ContextPerspectiveManager() {
-		actionSetsToSuppress.add("org.eclipse.ui.edit.text.actionSet.annotationNavigation");
-		actionSetsToSuppress.add("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo");
-		actionSetsToSuppress.add("org.eclipse.ui.externaltools.ExternalToolsSet");
+		actionSetsToSuppress.add("org.eclipse.ui.edit.text.actionSet.annotationNavigation"); //$NON-NLS-1$
+		actionSetsToSuppress.add("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"); //$NON-NLS-1$
+		actionSetsToSuppress.add("org.eclipse.ui.externaltools.ExternalToolsSet"); //$NON-NLS-1$
 	}
 
 	public void addManagedPerspective(String id) {
@@ -87,7 +87,7 @@ public class ContextPerspectiveManager implements ITaskActivationListener, IPers
 
 	private void showPerspective(String perspectiveId) {
 		if (perspectiveId != null
-				&& !"".equals(perspectiveId)
+				&& !"".equals(perspectiveId) //$NON-NLS-1$
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES)) {
 			IWorkbenchWindow launchingWindow = MonitorUi.getLaunchingWorkbenchWindow();

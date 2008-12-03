@@ -32,13 +32,11 @@ import org.eclipse.ui.PlatformUI;
 @Deprecated
 public class ContextCopyAction extends TaskContextAction {
 
-	private static final String TITLE_DIALOG = "Copy Context";
-
-	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.copy.context.to";
+	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.copy.context.to"; //$NON-NLS-1$
 
 	public ContextCopyAction() {
-		setText("Copy to...");
-		setToolTipText("Copy Task Context to...");
+		setText(Messages.ContextCopyAction_Copy_to_);
+		setToolTipText(Messages.ContextCopyAction_Copy_Task_Context_to_);
 		setId(ID_ACTION);
 		setImageDescriptor(TasksUiImages.CONTEXT_TRANSFER);
 	}
@@ -59,7 +57,7 @@ public class ContextCopyAction extends TaskContextAction {
 	public void run(ITask sourceTask) {
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TITLE_DIALOG, "No source task selected.");
+					Messages.ContextCopyAction_Copy_Context, Messages.ContextCopyAction_No_source_task_selected);
 			return;
 		}
 
@@ -67,8 +65,8 @@ public class ContextCopyAction extends TaskContextAction {
 				.getActiveWorkbenchWindow()
 				.getShell());
 		dialog.setNeedsCreateTask(false);
-		dialog.setTitle("Select Target Task");
-		dialog.setMessage("&Select the target task (? = any character, * = any String):");
+		dialog.setTitle(Messages.ContextCopyAction_Select_Target_Task);
+		dialog.setMessage(Messages.ContextCopyAction_Select_the_target_task__);
 
 		if (dialog.open() != Window.OK) {
 			return;
@@ -81,20 +79,20 @@ public class ContextCopyAction extends TaskContextAction {
 			TasksUi.getTaskActivityManager().deactivateActiveTask();
 			if (targetTask.equals(sourceTask)) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						TITLE_DIALOG, "Target task can not be the same as source task.");
+						Messages.ContextCopyAction_Copy_Context, Messages.ContextCopyAction_Target_task_can_not_be_the_same_as_source_task);
 			} else {
 				IInteractionContext context = ContextCore.getContextStore().cloneContext(
 						sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
 				if (context == null) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							TITLE_DIALOG, "Source task does not have a context.");
+							Messages.ContextCopyAction_Copy_Context, Messages.ContextCopyAction_Source_task_does_not_have_a_context);
 				} else {
 					TasksUi.getTaskActivityManager().activateTask(targetTask);
 				}
 			}
 		} else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TITLE_DIALOG, "No target task selected.");
+					Messages.ContextCopyAction_Copy_Context, Messages.ContextCopyAction_No_target_task_selected);
 		}
 	}
 }

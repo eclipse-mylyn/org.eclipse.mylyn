@@ -41,7 +41,7 @@ public class UiUtil {
 	}
 
 	public static void displayInterestManipulationFailure() {
-		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Mylyn Interest Manipulation",
-				"Not a valid landmark, select an element within this resource instead.");
+		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.UiUtil_Mylyn_Interest_Manipulation,
+				Messages.UiUtil_Not_a_valid_landmark);
 	}
 }

@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
@@ -44,16 +45,6 @@ import org.eclipse.swt.widgets.Text;
 @SuppressWarnings( { "restriction" })
 public class ContextRetrieveWizardPage extends WizardPage {
 
-	private static final String TITLE = "Select context";
-
-	private static final String DESCRIPTION = "Select a context to retrieve from table below.";
-
-	private static final String COLUMN_COMMENT = "Description";
-
-	private static final String COLUMN_AUTHOR = "Author";
-
-	private static final String COLUMN_DATE = "Date";
-
 	private final TaskRepository repository;
 
 	private final ITask task;
@@ -63,11 +54,11 @@ public class ContextRetrieveWizardPage extends WizardPage {
 	private ITaskAttachment selectedContextAttachment;
 
 	protected ContextRetrieveWizardPage(TaskRepository repository, ITask task) {
-		super(TITLE);
+		super(Messages.ContextRetrieveWizardPage_Select_context);
 		this.repository = repository;
 		this.task = task;
-		setDescription(DESCRIPTION);
-		setTitle(TITLE);
+		setDescription(Messages.ContextRetrieveWizardPage_SELECT_A_CONTEXT_TO_RETTRIEVE_FROM_TABLE_BELOW);
+		setTitle(Messages.ContextRetrieveWizardPage_Select_context);
 	}
 
 	public void createControl(Composite parent) {
@@ -75,7 +66,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		composite.setLayout(new GridLayout(1, false));
 
 		Text summary = new Text(composite, SWT.NONE);
-		summary.setText("Task: " + labelProvider.getText(task));
+		summary.setText(Messages.ContextRetrieveWizardPage_Task_ + labelProvider.getText(task));
 		summary.setEditable(false);
 		// new Label(composite, SWT.NONE).setText("Repository: " +
 		// repository.getUrl());
@@ -139,11 +130,11 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 		TableColumn[] columns = new TableColumn[3];
 		columns[0] = new TableColumn(contextTable, SWT.LEFT);
-		columns[0].setText(COLUMN_DATE);
+		columns[0].setText(Messages.ContextRetrieveWizardPage_Date);
 		columns[1] = new TableColumn(contextTable, SWT.LEFT);
-		columns[1].setText(COLUMN_AUTHOR);
+		columns[1].setText(Messages.ContextRetrieveWizardPage_Author);
 		columns[2] = new TableColumn(contextTable, SWT.CENTER);
-		columns[2].setText(COLUMN_COMMENT);
+		columns[2].setText(Messages.ContextRetrieveWizardPage_Description);
 
 		for (ITaskAttachment attachment : contextAttachments) {
 			TableItem item = new TableItem(contextTable, SWT.NONE);

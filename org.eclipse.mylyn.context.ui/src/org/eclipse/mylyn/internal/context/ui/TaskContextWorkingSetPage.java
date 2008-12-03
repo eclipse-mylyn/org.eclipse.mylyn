@@ -37,14 +37,14 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 
 	private IWorkingSet workingSet;
 
-	public static final String WORKING_SET_NAME = "Task Context (for search)";
+	public static final String WORKING_SET_NAME = Messages.TaskContextWorkingSetPage_TASK_CONTEXT_FOR_SEARCH;
 
 	public TaskContextWorkingSetPage() {
-		super("org.eclipse.mylyn.monitor.ui.workingSetPage", "Mylyn Task Context Working Set",
-				AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.context.ui",
-						"icons/wizban/banner-prefs.gif"));
-		setDescription("Create the Mylyn Task Context working set.  It will be updated automatically to contain\n"
-				+ "all of the resources related to the active task.");
+		super(
+				"org.eclipse.mylyn.monitor.ui.workingSetPage", Messages.TaskContextWorkingSetPage_Mylyn_Task_Context_Working_Set, //$NON-NLS-1$
+				AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.context.ui", //$NON-NLS-1$
+						"icons/wizban/banner-prefs.gif")); //$NON-NLS-1$
+		setDescription(Messages.TaskContextWorkingSetPage_CREATE_THE_MYLYN_CONTEXT_WORKING_SET);
 	}
 
 	public void createControl(Composite parent) {
@@ -56,7 +56,7 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 		setControl(composite);
 
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText("Name");
+		label.setText(Messages.TaskContextWorkingSetPage_Name);
 		GridData gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
@@ -68,18 +68,18 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 		workingSetNameText.setText(WORKING_SET_NAME);
 
 		label = new Label(composite, SWT.WRAP);
-		label.setText("");
+		label.setText(""); //$NON-NLS-1$
 		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
 		label = new Label(composite, SWT.WRAP);
-		label.setText("NOTE: this working set should only be used for searches.  Do not select it in the Package Explorer.");
+		label.setText(Messages.TaskContextWorkingSetPage_NOTE_THIS_WORKING_SET_SHOULD_ONLY_BE_USED_FOR_SEARCHS);
 		label.setFont(CommonFonts.BOLD);
 		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
 		label = new Label(composite, SWT.WRAP);
-		label.setText("");
+		label.setText(""); //$NON-NLS-1$
 		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
@@ -120,7 +120,7 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 		String workingSetName = workingSetNameText.getText();
 		IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 		if (workingSetManager.getWorkingSet(workingSetName) != null) {
-			setErrorMessage("Cannot create another Active Taskscape Working Set");
+			setErrorMessage(Messages.TaskContextWorkingSetPage_Cannot_create_another_Active_Taskscape_Working_Set);
 			return false;
 		} else {
 			return true;

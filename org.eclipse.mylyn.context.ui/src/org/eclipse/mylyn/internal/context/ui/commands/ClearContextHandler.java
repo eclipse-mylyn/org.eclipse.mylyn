@@ -29,8 +29,8 @@ public class ClearContextHandler extends AbstractTaskHandler {
 	protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {
 		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
-				.getShell(), "Confirm clear context",
-				"Clear the context for the selected task?  This cannot be undone.");
+				.getShell(), Messages.ClearContextHandler_Confirm_clear_context,
+				Messages.ClearContextHandler_CLEAR_THE_CONTEXT_THE_FOR_SELECTED_TASK);
 		if (!deleteConfirmed) {
 			return;
 		}

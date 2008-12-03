@@ -231,7 +231,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 				refreshViewer(nodesToRefresh, updateLabels, viewer);
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not refresh viewer", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not refresh viewer", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -246,7 +246,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		}
 		FocusedViewerDelayedRefreshJob job = refreshJobs.get(viewer);
 		if (job == null) {
-			job = new FocusedViewerDelayedRefreshJob(viewer, "refresh viewer", minor);
+			job = new FocusedViewerDelayedRefreshJob(viewer, "refresh viewer", minor); //$NON-NLS-1$
 			refreshJobs.put(viewer, job);
 		}
 		job.refreshElements(nodesToRefresh.toArray());

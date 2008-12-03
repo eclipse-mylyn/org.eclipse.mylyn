@@ -94,7 +94,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-							"Could not toggle focus action on view: " + getPartForAction(), e));
+							"Could not toggle focus action on view: " + getPartForAction(), e)); //$NON-NLS-1$
 				}
 			}
 		});

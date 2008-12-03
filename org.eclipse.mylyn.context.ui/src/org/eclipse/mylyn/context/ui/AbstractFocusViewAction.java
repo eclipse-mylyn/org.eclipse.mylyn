@@ -36,6 +36,7 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.Messages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.monitor.ui.MonitorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -65,9 +66,7 @@ import org.eclipse.ui.PlatformUI;
 public abstract class AbstractFocusViewAction extends Action implements IViewActionDelegate, IActionDelegate2,
 		ISelectionListener {
 
-	private static final String ACTION_LABEL = "Apply Mylyn";
-
-	public static final String PREF_ID_PREFIX = "org.eclipse.mylyn.ui.interest.filter.";
+	public static final String PREF_ID_PREFIX = "org.eclipse.mylyn.ui.interest.filter."; //$NON-NLS-1$
 
 	private static Map<IViewPart, AbstractFocusViewAction> partMap = new WeakHashMap<IViewPart, AbstractFocusViewAction>();
 
@@ -168,7 +167,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 								viewer.addFilter(filter);
 							} catch (Throwable t) {
 								StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-										"Failed to restore filter: " + filter, t));
+										"Failed to restore filter: " + filter, t)); //$NON-NLS-1$
 							}
 						}
 					}
@@ -197,7 +196,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 					// ignore, could be called from the Configure Perspective dialog, see bug 2308532
 				}
 			} else {
-				throw new RuntimeException("error: viewPart is null");
+				throw new RuntimeException("error: viewPart is null"); //$NON-NLS-1$
 			}
 		}
 		return viewPart;
@@ -210,8 +209,8 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		this.manageViewer = manageViewer;
 		this.manageFilters = manageFilters;
 		this.manageLinking = manageLinking;
-		setText(ACTION_LABEL);
-		setToolTipText(ACTION_LABEL);
+		setText(Messages.AbstractFocusViewAction_Apply_Mylyn);
+		setToolTipText(Messages.AbstractFocusViewAction_Apply_Mylyn);
 		setImageDescriptor(TasksUiImages.CONTEXT_FOCUS);
 		PlatformUI.getWorkbench().addWorkbenchListener(WORKBENCH_LISTENER);
 		ContextCore.getContextManager().addListener(CONTEXT_LISTENER);
@@ -306,7 +305,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"Could not install viewer manager on: " + globalPrefId, t));
+					"Could not install viewer manager on: " + globalPrefId, t)); //$NON-NLS-1$
 		} finally {
 			if (!wasPaused) {
 				ContextCore.getContextManager().setContextCapturePaused(false);
@@ -445,7 +444,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"Could not determine preserved filters", e));
+					"Could not determine preserved filters", e)); //$NON-NLS-1$
 			return Collections.emptySet();
 		}
 	}
@@ -454,7 +453,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		if (viewer == null) {
 			// FIXME Assert.isNotNull(viewer)
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"The viewer to install interest filter is null", new Exception()));
+					"The viewer to install interest filter is null", new Exception())); //$NON-NLS-1$
 			return false;
 		} else if (viewer.getControl().isDisposed() && manageViewer) {
 			// TODO: do this with part listener, not lazily?
@@ -486,7 +485,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			return true;
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"Could not install viewer filter on: " + globalPrefId, t));
+					"Could not install viewer filter on: " + globalPrefId, t)); //$NON-NLS-1$
 		} finally {
 			viewer.getControl().setRedraw(true);
 			internalSuppressExpandAll = false;
@@ -498,7 +497,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		if (viewer == null) {
 			// FIXME Assert.isNotNull(viewer)
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"The viewer to uninstall interest filter is null", new Exception()));
+					"The viewer to uninstall interest filter is null", new Exception())); //$NON-NLS-1$
 			return;
 		} else if (viewer.getControl().isDisposed()) {
 			// TODO: do this with part listener, not lazily?
@@ -526,7 +525,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"Could not uninstall interest viewer filter on: " + globalPrefId, t));
+					"Could not uninstall interest viewer filter on: " + globalPrefId, t)); //$NON-NLS-1$
 		} finally {
 			viewer.getControl().setRedraw(true);
 		}
@@ -547,7 +546,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	 * @since 3.0
 	 */
 	protected String getEmptyViewMessage() {
-//		return "Unfocus or Alt+click to access elements";
-		return "Empty task context, unfocus or Alt+click";
+		return Messages.AbstractFocusViewAction_Empty_task_context;
 	}
 }

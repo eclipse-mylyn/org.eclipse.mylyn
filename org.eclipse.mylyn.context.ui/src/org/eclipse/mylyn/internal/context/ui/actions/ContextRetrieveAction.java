@@ -41,11 +41,11 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 
 	private AbstractTask task;
 
-	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.retrieve";
+	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.retrieve"; //$NON-NLS-1$
 
 	public ContextRetrieveAction() {
-		setText("Retrieve...");
-		setToolTipText("Retrieve Task Context");
+		setText(Messages.ContextRetrieveAction_Retrieve_);
+		setToolTipText(Messages.ContextRetrieveAction_Retrieve_Task_Context);
 		setId(ID_ACTION);
 		setImageDescriptor(TasksUiImages.CONTEXT_RETRIEVE);
 	}

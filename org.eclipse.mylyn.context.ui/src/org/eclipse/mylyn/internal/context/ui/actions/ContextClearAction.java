@@ -30,13 +30,13 @@ import org.eclipse.ui.PlatformUI;
 @Deprecated
 public class ContextClearAction extends TaskContextAction {
 
-	public static final String ID = "org.eclipse.mylyn.ui.clear.context";
+	public static final String ID = "org.eclipse.mylyn.ui.clear.context"; //$NON-NLS-1$
 
-	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.clear";
+	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.clear"; //$NON-NLS-1$
 
 	public ContextClearAction() {
-		setText("Clear");
-		setToolTipText("Clear");
+		setText(Messages.ContextClearAction_Clear);
+		setToolTipText(Messages.ContextClearAction_Clear);
 		setId(ID_ACTION);
 		setImageDescriptor(TasksUiImages.CONTEXT_CLEAR);
 	}
@@ -60,8 +60,8 @@ public class ContextClearAction extends TaskContextAction {
 	public boolean run(ITask task) {
 		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
-				.getShell(), "Confirm clear context",
-				"Clear the context for the selected task?  This cannot be undone.");
+				.getShell(), Messages.ContextClearAction_Confirm_clear_context,
+				Messages.ContextClearAction_Clear_the_context_for_the_selected_task);
 		if (!deleteConfirmed) {
 			return false;
 		}

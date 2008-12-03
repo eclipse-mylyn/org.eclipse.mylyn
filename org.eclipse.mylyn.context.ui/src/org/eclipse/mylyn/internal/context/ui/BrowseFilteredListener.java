@@ -135,7 +135,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 					final Object unfiltered = filter.getTemporarilyUnfiltered();
 					if (unfiltered != null) {
 						// NOTE: delaying refresh to ensure double click is handled, see bug 208702
-						new UIJob("") {
+						new UIJob("") { //$NON-NLS-1$
 							@Override
 							public IStatus runInUIThread(IProgressMonitor monitor) {
 								filter.resetTemporarilyUnfiltered();

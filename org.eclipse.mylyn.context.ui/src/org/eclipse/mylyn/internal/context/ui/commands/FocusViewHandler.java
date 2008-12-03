@@ -25,7 +25,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class FocusViewHandler extends AbstractHandler {
 
-	private static final String PARAMETER_VIEW_ID = "viewId";
+	private static final String PARAMETER_VIEW_ID = "viewId"; //$NON-NLS-1$
 
 	private AbstractFocusViewAction applyAction = null;
 

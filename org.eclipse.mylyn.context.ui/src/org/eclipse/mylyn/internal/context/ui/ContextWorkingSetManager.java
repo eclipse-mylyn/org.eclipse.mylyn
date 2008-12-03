@@ -133,7 +133,7 @@ public class ContextWorkingSetManager implements IWorkingSetUpdater {
 			// HACK comparing extension to string
 			// No need to add bugzilla resources to the taskscape
 			// search...really slow and eclipese doesn't know about them
-			if (bridge.getContentType().equals("bugzilla")) {
+			if (bridge.getContentType().equals("bugzilla")) { //$NON-NLS-1$
 				continue;
 			}
 

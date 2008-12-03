@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class TaskStructureBridge extends AbstractContextStructureBridge {
 
-	public static final String CONTENT_TYPE = "meta/task";
+	public static final String CONTENT_TYPE = "meta/task"; //$NON-NLS-1$
 
 	@Override
 	public String getContentType() {

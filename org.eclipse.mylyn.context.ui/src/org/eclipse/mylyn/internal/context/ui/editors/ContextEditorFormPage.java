@@ -85,7 +85,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private static final int SCALE_STEPS = 14;
 
-	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context";
+	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context"; //$NON-NLS-1$
 
 	private ScrolledForm form;
 
@@ -215,7 +215,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private void createActionsSection(Composite composite) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
-		section.setText("Actions");
+		section.setText(Messages.ContextEditorFormPage_Actions);
 
 		section.setLayout(new GridLayout());
 		GridData sectionGridData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
@@ -227,7 +227,7 @@ public class ContextEditorFormPage extends FormPage {
 		sectionClient.setLayout(new GridLayout(2, false));
 		sectionClient.setLayoutData(new GridData());
 
-		Label label = toolkit.createLabel(sectionClient, "");
+		Label label = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		label.setImage(CommonImages.getImage(CommonImages.FILTER));
 
 		doiScale = new Scale(sectionClient, SWT.FLAT);
@@ -253,10 +253,10 @@ public class ContextEditorFormPage extends FormPage {
 			doiScale.setEnabled(false);
 		}
 
-		Label attachImage = toolkit.createLabel(sectionClient, "");
+		Label attachImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		attachImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 		attachImage.setEnabled(task != null);
-		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, "Attach context...", SWT.NONE);
+		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Attach_context_, SWT.NONE);
 		attachHyperlink.setEnabled(task != null);
 		attachHyperlink.addMouseListener(new MouseListener() {
 
@@ -273,10 +273,10 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
-		Label retrieveImage = toolkit.createLabel(sectionClient, "");
+		Label retrieveImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		retrieveImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_RETRIEVE));
 		retrieveImage.setEnabled(task != null);
-		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Retrieve Context...", SWT.NONE);
+		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
 		retrieveHyperlink.setEnabled(task != null);
 		retrieveHyperlink.addMouseListener(new MouseListener() {
 
@@ -293,9 +293,9 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
-		Label copyImage = toolkit.createLabel(sectionClient, "");
+		Label copyImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		copyImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_COPY));
-		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient, "Copy Context to...", SWT.NONE);
+		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Copy_Context_to_, SWT.NONE);
 		copyHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
@@ -407,7 +407,7 @@ public class ContextEditorFormPage extends FormPage {
 			return;
 		}
 		if (refreshJob == null) {
-			refreshJob = new ContextEditorDelayedRefreshJob(commonViewer, "refresh viewer");
+			refreshJob = new ContextEditorDelayedRefreshJob(commonViewer, "refresh viewer"); //$NON-NLS-1$
 		}
 	}
 
@@ -420,7 +420,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private void createDisplaySection(Composite composite) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
-		section.setText("Elements");
+		section.setText(Messages.ContextEditorFormPage_Elements);
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite sectionClient = toolkit.createComposite(section);
@@ -445,7 +445,7 @@ public class ContextEditorFormPage extends FormPage {
 			createViewer(sectionClient);
 		} else {
 			sectionClient.setLayout(new GridLayout());
-			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Activate task to edit context",
+			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Activate_task_to_edit_context,
 					SWT.NONE);
 			retrieveHyperlink.addMouseListener(new MouseListener() {
 
@@ -488,7 +488,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	public static void forceFlatLayoutOfJavaContent(CommonViewer commonViewer) {
 		INavigatorContentExtension javaContent = commonViewer.getNavigatorContentService().getContentExtensionById(
-				"org.eclipse.jdt.java.ui.javaContent");
+				"org.eclipse.jdt.java.ui.javaContent"); //$NON-NLS-1$
 		if (javaContent != null) {
 			ITreeContentProvider treeContentProvider = javaContent.getContentProvider();
 			// TODO: find a sane way of doing this, perhaps via AbstractContextUiBridge, should be:
@@ -499,11 +499,11 @@ public class ContextEditorFormPage extends FormPage {
 			// }
 			try {
 				Class<?> clazz = treeContentProvider.getClass().getSuperclass();
-				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class });
+				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class }); //$NON-NLS-1$
 				method.invoke(treeContentProvider, new Object[] { true });
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						"Could not set flat layout on Java content provider", e));
+						"Could not set flat layout on Java content provider", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -515,7 +515,7 @@ public class ContextEditorFormPage extends FormPage {
 	}
 
 	private void hookContextMenu() {
-		MenuManager menuManager = new MenuManager("#PopupMenu");
+		MenuManager menuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {

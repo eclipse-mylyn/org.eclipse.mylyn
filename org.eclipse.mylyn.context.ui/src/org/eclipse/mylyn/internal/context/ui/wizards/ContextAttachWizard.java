@@ -25,8 +25,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 @SuppressWarnings( { "restriction" })
 public class ContextAttachWizard extends Wizard {
 
-	private static final String TITLE = "Attach Context";
-
 	private final TaskRepository repository;
 
 	private final ITask task;
@@ -37,7 +35,7 @@ public class ContextAttachWizard extends Wizard {
 		this.repository = TasksUi.getRepositoryManager()
 				.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		this.task = task;
-		setWindowTitle(TITLE);
+		setWindowTitle(Messages.ContextAttachWizard_Attach_Context);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_CONTEXT);
 		setNeedsProgressMonitor(true);
 	}

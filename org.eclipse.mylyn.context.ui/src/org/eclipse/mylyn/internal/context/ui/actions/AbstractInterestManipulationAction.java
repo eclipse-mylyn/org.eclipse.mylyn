@@ -33,11 +33,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractInterestManipulationAction implements IViewActionDelegate, IWorkbenchWindowActionDelegate {
 
-	private static final String LABEL_SHELL = "Interest Manipulation";
-
-	private static final String MESSAGE_NO_CONTEXT = "No task context is active, or element not found in context";
-
-	public static final String SOURCE_ID = "org.eclipse.mylyn.ui.interest.user";
+	public static final String SOURCE_ID = "org.eclipse.mylyn.ui.interest.user"; //$NON-NLS-1$
 
 	protected IViewPart view;
 
@@ -71,7 +67,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 
 	public void run(IAction action) {
 		if (!ContextCore.getContextManager().isContextActive()) {
-			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_SHELL, MESSAGE_NO_CONTEXT);
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.AbstractInterestManipulationAction_Interest_Manipulation, Messages.AbstractInterestManipulationAction_No_task_context_is_active);
 			return;
 		}
 
@@ -113,7 +109,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 					UiUtil.displayInterestManipulationFailure();
 				}
 			} else {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_SHELL, MESSAGE_NO_CONTEXT);
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.AbstractInterestManipulationAction_Interest_Manipulation, Messages.AbstractInterestManipulationAction_No_task_context_is_active);
 			}
 		}
 	}

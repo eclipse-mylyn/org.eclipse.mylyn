@@ -88,7 +88,7 @@ public class InterestFilter extends ViewerFilter {
 				return isInteresting(element);
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Interest filter failed on viewer: "
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Interest filter failed on viewer: " //$NON-NLS-1$
 					+ viewer.getClass(), t));
 		}
 		return false;

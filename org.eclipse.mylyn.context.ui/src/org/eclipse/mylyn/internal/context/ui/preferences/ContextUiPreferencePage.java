@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
-import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -52,8 +51,8 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	public ContextUiPreferencePage() {
 		super();
 		setPreferenceStore(ContextUiPlugin.getDefault().getPreferenceStore());
-		setTitle("Context");
-		setDescription("Configure the Task-Focused UI management and automation.");
+		setTitle(Messages.ContextUiPreferencePage_Context);
+		setDescription(Messages.ContextUiPreferencePage_CONFIGURE_TASK_FOCUSED_UI_MANAGEMENT_AND_AUTOMATION);
 	}
 
 	@Override
@@ -155,47 +154,46 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		Group groupViews = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		groupViews.setLayout(new GridLayout(1, false));
 		groupViews.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		groupViews.setText("Views");
+		groupViews.setText(Messages.ContextUiPreferencePage_Views);
 
 		autoFocusNavigatorsButton = new Button(groupViews, SWT.CHECK);
-		autoFocusNavigatorsButton.setText("Auto focus navigator views on task activation");
+		autoFocusNavigatorsButton.setText(Messages.ContextUiPreferencePage_Auto_focus_navigator_views_on_task_activation);
 		autoFocusNavigatorsButton.setSelection(getPreferenceStore().getBoolean(
 				IContextUiPreferenceContstants.AUTO_FOCUS_NAVIGATORS));
 
 		manageExpansionButton = new Button(groupViews, SWT.CHECK);
-		manageExpansionButton.setText("Auto expand tree views when focused");
+		manageExpansionButton.setText(Messages.ContextUiPreferencePage_Auto_expand_tree_views_when_focused);
 		manageExpansionButton.setSelection(getPreferenceStore().getBoolean(
 				IContextUiPreferenceContstants.AUTO_MANAGE_EXPANSION));
 
 		Group groupEditors = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		groupEditors.setLayout(new GridLayout(1, false));
 		groupEditors.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		groupEditors.setText("Editors");
+		groupEditors.setText(Messages.ContextUiPreferencePage_Editors);
 
 		manageEditorsButton = new Button(groupEditors, SWT.CHECK);
-		manageEditorsButton.setText("Manage open editors to match task context");
+		manageEditorsButton.setText(Messages.ContextUiPreferencePage_Manage_open_editors_to_match_task_context);
 		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(
 				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS));
 
-		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
-			String message = "<a>''{0}''</a> \"" + prefName + "\" will be toggled with activation";
-			new PreferenceLinkArea(groupEditors, SWT.NONE, "org.eclipse.ui.preferencePages.Editors", message,
+			String message = "<a>''{0}''</a> \"" + Messages.ContextUiPreferencePage_will_be_toggled_with_activation; //$NON-NLS-1$
+			new PreferenceLinkArea(groupEditors, SWT.NONE, "org.eclipse.ui.preferencePages.Editors", message, //$NON-NLS-1$
 					(IWorkbenchPreferenceContainer) getContainer(), null);
 		}
 
 		mapCloseToRemoveButton = new Button(groupEditors, SWT.CHECK);
-		mapCloseToRemoveButton.setText("Remove file from context when editor is closed");
+		mapCloseToRemoveButton.setText(Messages.ContextUiPreferencePage_Remove_file_from_context_when_editor_is_closed);
 		mapCloseToRemoveButton.setSelection(getPreferenceStore().getBoolean(
 				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE));
 
 		Group groupPerspectives = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		groupPerspectives.setLayout(new GridLayout(1, false));
 		groupPerspectives.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		groupPerspectives.setText("Perspectives");
+		groupPerspectives.setText(Messages.ContextUiPreferencePage_Perspectives);
 
 		managePerspectivesButton = new Button(groupPerspectives, SWT.CHECK);
-		managePerspectivesButton.setText("Open last used perspective on task activation");
+		managePerspectivesButton.setText(Messages.ContextUiPreferencePage_Open_last_used_perspective_on_task_activation);
 		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(
 				IContextUiPreferenceContstants.AUTO_MANAGE_PERSPECTIVES));
 

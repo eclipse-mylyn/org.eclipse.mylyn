@@ -30,16 +30,16 @@
         objectClass="org.eclipse.mylyn.context.core.IInteractionElement">
         <!-- TODO 3.1: remove? -->
      	<action  
-  		  	label="Mark Less Interesting" 
-	  		tooltip="Mark selected element as uninteresting"
+  		  	label="%InterestDecrementAction.label" 
+	  		tooltip="%InterestDecrementAction.tooltip"
 	  		menubarPath="additions" 
 	  		id="org.eclipse.mylyn.context.ui.actions.interest.decrement" 
 	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="*"/>
 	    <action  
-  		  	label="Mark as Landmark" 
-	  		tooltip="Make selected element a landmark"
+  		  	label="%InterestIncrementAction.label" 
+	  		tooltip="%InterestIncrementAction.tooltip"
 	  		menubarPath="additions" 
 	  		id="org.eclipse.mylyn.context.ui.actions.interest.increment" 
 	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
@@ -111,7 +111,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            name="Context"
+            name="%ContextUiPreferencePage.name"
             class="org.eclipse.mylyn.internal.context.ui.preferences.ContextUiPreferencePage"
             id="org.eclipse.mylyn.context.ui.preferences"
             category="org.eclipse.mylyn.tasks.ui.preferences">
@@ -122,7 +122,7 @@
    <extension
    		point="org.eclipse.ui.keywords">
       <keyword
-            label="mylyn context focus focused"
+            label="%keywords.label"
             id="org.eclipse.mylyn.context.ui.keywords"/>
    </extension>
  
@@ -180,8 +180,8 @@
    <extension
        	 point="org.eclipse.ui.actionSets">
    	  <actionSet
-            label="Task Context"
-            description="Task Context"
+            label="%actionSet.label"
+            description="%actionSet.description"
             visible="true"
             id="org.eclipse.mylyn.context.ui.actionSet">
          <!--
@@ -204,7 +204,7 @@
 		 -->
 	     <action
                definitionId="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
-               label="Quick Context View"
+               label="%OpenQuickContextPopupDialogAction.label"
                class="org.eclipse.mylyn.internal.context.ui.actions.OpenQuickContextPopupDialogAction"
                menubarPath="navigate/showIn"
                id="org.eclipse.mylyn.context.ui.actions.open.context.dialog">
@@ -214,62 +214,62 @@
                               
    <extension point="org.eclipse.ui.commands">
       <category
-            name="Focused UI"
-            description="Task-Focused Interface"
+            name="%commands.category.name"
+            description="%commands.category.description"
             id="org.eclipse.mylyn.context.ui.commands">
       </category>
       <command
-            name="Make Landmark"
-            description="Make Landmark"
+            name="%commands.interest.increment.name"
+            description="%commands.interest.increment.description"
             id="org.eclipse.mylyn.context.ui.commands.interest.increment"
             categoryId="org.eclipse.mylyn.context.ui.commands">
       </command>
       <command
-            name="Make Less Interesting"
-            description="Make Less Interesting"
+            name="%commands.interest.decrement.name"
+            description="%commands.interest.decrement.description"
             id="org.eclipse.mylyn.context.ui.commands.interest.decrement"
             categoryId="org.eclipse.mylyn.context.ui.commands">
       </command>
       <command
-            name="Show Context Quick View"
-            description="Show Context Quick View"
+            name="%commands.open.context.dialog.name"
+            description="%commands.open.context.dialog.description"
             id="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
             categoryId="org.eclipse.mylyn.context.ui.commands">
       </command>
       <command
             defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.FocusViewHandler"
             id="org.eclipse.mylyn.context.ui.commands.focus.view"
-            name="Focus View">
+            name="%commands.FocusViewHandler.name">
          <commandParameter
                id="viewId"
-               name="View ID to Focus"
+               name="%commands.FocusViewHandler.commandParameter.name"
                optional="false">
          </commandParameter>
       </command>
       <command
             categoryId="org.eclipse.mylyn.context.ui.commands"
             id="org.eclipse.mylyn.context.ui.commands.task.attachContext"
-            name="Attach Context">
+            name="%commands.task.attachContext.name">
       </command>
       <command
             categoryId="org.eclipse.mylyn.context.ui.commands"
             id="org.eclipse.mylyn.context.ui.commands.task.retrieveContext"
-            name="Retrieve Context">
+            name="%commands.task.retrieveContext.name">
       </command>
       <command
             categoryId="org.eclipse.mylyn.context.ui.commands"
             id="org.eclipse.mylyn.context.ui.commands.task.copyContext"
-            name="Copy Context">
+            name="%commands.task.copyContext.name">
       </command>
       <command
             categoryId="org.eclipse.mylyn.context.ui.commands"
             id="org.eclipse.mylyn.context.ui.commands.task.clearContext"
-            name="Clear Context">
+            name="%commands.task.clearContext.name">
       </command>
       <command
             categoryId="org.eclipse.mylyn.context.ui.commands"
             id="org.eclipse.mylyn.context.ui.commands.attachment.retrieveContext"
-            name="Retrieve Context Attachment">
+            name="%commands.attachment.retrieveContext.name">
       </command>
    </extension>
      
@@ -294,12 +294,12 @@
    <extension point="org.eclipse.ui.decorators">
       <decorator
             lightweight="true"
-            label="Task Context Decorator"
+            label="%InterestDecoratorLightweight.label"
             class="org.eclipse.mylyn.internal.context.ui.InterestDecoratorLightweight"
             state="true"
             id="org.eclipse.mylyn.context.ui.decorator.interest">
          <description>
-			Decorates the labels of elements to indicate whether they are a part of the task context.
+			%InterestDecoratorLightweight.description
 		 </description>
          <enablement>
             <objectClass name="java.lang.Object"/>
@@ -316,11 +316,11 @@
            enablesFor="*"
            icon="icons/eview16/focus-tasklist.gif"
            id="org.eclipse.mylyn.context.ui.actions.tasklist.focus"
-           label="Focus on Workweek"
+           label="%FocusTaskListAction.label"
            menubarPath="additions"
            style="toggle"
            toolbarPath="context"
-           tooltip="Focus on Workweek"/> 
+           tooltip="%FocusTaskListAction.tooltip"/> 
   	</viewContribution>
 	<viewContribution 
 		id="org.eclipse.mylyn.context.ui.outline.contribution" 
@@ -331,11 +331,11 @@
            enablesFor="*"
            icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.context.ui.contentOutline.focus"
-           label="Focus on Active Task"
+           label="%FocusOutlineAction.label"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)">
+           tooltip="%FocusOutlineAction.tooltip">
         <enablement>
            <systemProperty
                  name="org.eclipse.mylyn.context.core.context.active"
@@ -351,7 +351,7 @@
           locationURI="popup:org.eclipse.ui.popup.any?after=operations">
        <menu
              id="org.eclipse.mylyn.context.ui.menu.task.context"
-             label="Context">
+             label="%menu.task.context.label">
           <visibleWhen
                 checkEnabled="false">
              <and>
@@ -372,13 +372,13 @@
           <command
                 commandId="org.eclipse.mylyn.context.ui.commands.task.attachContext"
                 icon="icons/etool16/context-attach.gif"
-                label="Attach..."
+                label="%commands.task.attachContext.label"
                 style="push">
           </command>
           <command
                 commandId="org.eclipse.mylyn.context.ui.commands.task.retrieveContext"
                 icon="icons/etool16/context-retrieve.gif"
-                label="Retrieve..."
+                label="%commands.task.retrieveContext.label"
                 style="push">
           </command>
           <separator
@@ -388,13 +388,13 @@
           <command
                 commandId="org.eclipse.mylyn.context.ui.commands.task.copyContext"
                 icon="icons/elcl16/context-transfer.gif"
-                label="Copy to..."
+                label="%commands.task.copyContext.label"
                 style="push">
           </command>
           <command
                 commandId="org.eclipse.mylyn.context.ui.commands.task.clearContext"
                 icon="icons/elcl16/context-clear.gif"
-                label="Clear"
+                label="%commands.task.clearContext.label"
                 style="push">
           </command>
           <separator
@@ -407,7 +407,7 @@
        <command
              commandId="org.eclipse.mylyn.context.ui.commands.attachment.retrieveContext"
              icon="icons/etool16/context-retrieve.gif"
-             label="Retrieve Context"
+             label="%commands.attachment.retrieveContext.label"
              style="push">
           <visibleWhen
                 checkEnabled="false">

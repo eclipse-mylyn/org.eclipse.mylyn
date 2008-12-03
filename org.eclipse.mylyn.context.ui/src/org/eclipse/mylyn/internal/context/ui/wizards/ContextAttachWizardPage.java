@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.ui.wizards;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -28,10 +29,6 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ContextAttachWizardPage extends WizardPage {
 
-	private static final String TITLE = "Enter comment";
-
-	private static final String DESCRIPTION = "Attaches local context to repository task";
-
 	private final TaskRepository repository;
 
 	private final ITask task;
@@ -39,11 +36,11 @@ public class ContextAttachWizardPage extends WizardPage {
 	private Text commentText;
 
 	protected ContextAttachWizardPage(TaskRepository repository, ITask task) {
-		super(TITLE);
+		super(Messages.ContextAttachWizardPage_Enter_comment);
 		this.repository = repository;
 		this.task = task;
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
+		setTitle(Messages.ContextAttachWizardPage_Enter_comment);
+		setDescription(Messages.ContextAttachWizardPage_Attaches_local_context_to_repository_task);
 	}
 
 	public void createControl(Composite parent) {
@@ -51,13 +48,13 @@ public class ContextAttachWizardPage extends WizardPage {
 		composite.setLayout(new GridLayout());
 
 		Text summary = new Text(composite, SWT.NONE);
-		summary.setText("Task: " + task.getSummary());
+		summary.setText(Messages.ContextAttachWizardPage_Task_ + task.getSummary());
 		summary.setEditable(false);
 		Text repositoryText = new Text(composite, SWT.NONE);
-		repositoryText.setText("Repository: " + repository.getRepositoryUrl());
+		repositoryText.setText(Messages.ContextAttachWizardPage_Repository_ + repository.getRepositoryUrl());
 		repositoryText.setEditable(false);
 
-		new Label(composite, SWT.NONE).setText("Comment: ");
+		new Label(composite, SWT.NONE).setText(Messages.ContextAttachWizardPage_Comment_);
 		commentText = new Text(composite, SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP);
 		commentText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 

@@ -62,19 +62,19 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public class ContextEditorManager extends AbstractContextListener {
 
-	private static final String PREFS_PREFIX = "editors.task.";
+	private static final String PREFS_PREFIX = "editors.task."; //$NON-NLS-1$
 
-	private static final String KEY_CONTEXT_EDITORS = "ContextOpenEditors";
+	private static final String KEY_CONTEXT_EDITORS = "ContextOpenEditors"; //$NON-NLS-1$
 
-	private static final String KEY_MONITORED_WINDOW_OPEN_EDITORS = "MonitoredWindowOpenEditors";
+	private static final String KEY_MONITORED_WINDOW_OPEN_EDITORS = "MonitoredWindowOpenEditors"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_CLASS = "class";
+	private static final String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_NUMER = "number";
+	private static final String ATTRIBUTE_NUMER = "number"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_IS_LAUNCHING = "isLaunching";
+	private static final String ATTRIBUTE_IS_LAUNCHING = "isLaunching"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_IS_ACTIVE = "isActive";
+	private static final String ATTRIBUTE_IS_ACTIVE = "isActive"; //$NON-NLS-1$
 
 	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(
 			IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
@@ -82,7 +82,7 @@ public class ContextEditorManager extends AbstractContextListener {
 	private final IPreferenceStore preferenceStore;
 
 	public ContextEditorManager() {
-		preferenceStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.mylyn.resources.ui");
+		preferenceStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.mylyn.resources.ui"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class ContextEditorManager extends AbstractContextListener {
 				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				try {
 					mementoString = readEditorMemento(context);
-					if (mementoString != null && !mementoString.trim().equals("")) {
+					if (mementoString != null && !mementoString.trim().equals("")) { //$NON-NLS-1$
 						IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
 						IMemento[] children = memento.getChildren(KEY_MONITORED_WINDOW_OPEN_EDITORS);
 						if (children.length > 0) {
@@ -125,7 +125,7 @@ public class ContextEditorManager extends AbstractContextListener {
 					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-							"Could not restore all editors, memento: \"" + mementoString + "\"", e));
+							"Could not restore all editors, memento: \"" + mementoString + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				activeWindow.setActivePage(activeWindow.getActivePage());
 				IInteractionElement activeNode = context.getActiveNode();
@@ -134,7 +134,7 @@ public class ContextEditorManager extends AbstractContextListener {
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						"Failed to open editors on activation", e));
+						"Failed to open editors on activation", e)); //$NON-NLS-1$
 			} finally {
 				ContextCore.getContextManager().setContextCapturePaused(false);
 			}
@@ -145,7 +145,7 @@ public class ContextEditorManager extends AbstractContextListener {
 
 		String windowToRestoreClassName = memento.getString(ATTRIBUTE_CLASS);
 		if (windowToRestoreClassName == null) {
-			windowToRestoreClassName = "";
+			windowToRestoreClassName = ""; //$NON-NLS-1$
 		}
 		Integer windowToRestorenumber = memento.getInteger(ATTRIBUTE_NUMER);
 		if (windowToRestorenumber == null) {
@@ -188,7 +188,7 @@ public class ContextEditorManager extends AbstractContextListener {
 
 		if (shouldRestoreActiveWindowToActive && shouldRestoreUnknownWindowToActive) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"Unable to find window to restore memento to.", new Exception()));
+					"Unable to find window to restore memento to.", new Exception())); //$NON-NLS-1$
 		}
 
 		// we dont have a window that will work, so don't restore the editors
@@ -223,8 +223,8 @@ public class ContextEditorManager extends AbstractContextListener {
 				}
 				memento.putInteger(ATTRIBUTE_NUMER, number);
 				// TODO e3.4 replace by memento.putBoolean()
-				memento.putString(ATTRIBUTE_IS_LAUNCHING, (window == launchingWindow) ? "true" : "false");
-				memento.putString(ATTRIBUTE_IS_ACTIVE, (window == activeWindow) ? "true" : "false");
+				memento.putString(ATTRIBUTE_IS_LAUNCHING, (window == launchingWindow) ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+				memento.putString(ATTRIBUTE_IS_ACTIVE, (window == activeWindow) ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
 				((WorkbenchPage) window.getActivePage()).getEditorManager().saveState(memento);
 			}
 			// TODO: avoid storing with preferences due to bloat?
@@ -233,7 +233,7 @@ public class ContextEditorManager extends AbstractContextListener {
 				rootMemento.save(writer);
 				writeEditorMemento(context, writer.getBuffer().toString());
 			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not store editor state",
+				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not store editor state", //$NON-NLS-1$
 						e));
 			}
 
@@ -261,7 +261,7 @@ public class ContextEditorManager extends AbstractContextListener {
 			memento.save(writer);
 			writeEditorMemento(context, writer.getBuffer().toString());
 		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not store editor state", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not store editor state", e)); //$NON-NLS-1$
 		}
 
 		Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
@@ -278,7 +278,7 @@ public class ContextEditorManager extends AbstractContextListener {
 		final ArrayList visibleEditors = new ArrayList(5);
 		final IEditorReference activeEditor[] = new IEditorReference[1];
 		final MultiStatus result = new MultiStatus(PlatformUI.PLUGIN_ID, IStatus.OK,
-				WorkbenchMessages.EditorManager_problemsRestoringEditors, null);
+				"", null); //$NON-NLS-1$
 
 		try {
 			IMemento[] editorMementos = memento.getChildren(IWorkbenchConstants.TAG_EDITOR);
@@ -310,7 +310,7 @@ public class ContextEditorManager extends AbstractContextListener {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not restore editors", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not restore editors", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -345,7 +345,7 @@ public class ContextEditorManager extends AbstractContextListener {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not auto close editor", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -368,7 +368,7 @@ public class ContextEditorManager extends AbstractContextListener {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not auto close editor", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
 		}
 	}
 

@@ -28,13 +28,13 @@ import org.eclipse.ui.PlatformUI;
  */
 public class CopyContextHandler extends AbstractTaskHandler {
 
-	private static final String TITLE_DIALOG = "Copy Context";
+	private static final String TITLE_DIALOG = Messages.CopyContextHandler_Copy_Context;
 
 	@Override
 	protected void execute(ExecutionEvent event, ITask sourceTask) throws ExecutionException {
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TITLE_DIALOG, "No source task selected.");
+					TITLE_DIALOG, Messages.CopyContextHandler_No_source_task_selected);
 			return;
 		}
 
@@ -42,8 +42,8 @@ public class CopyContextHandler extends AbstractTaskHandler {
 				.getActiveWorkbenchWindow()
 				.getShell());
 		dialog.setNeedsCreateTask(false);
-		dialog.setTitle("Select Target Task");
-		dialog.setMessage("&Select the target task (? = any character, * = any String):");
+		dialog.setTitle(Messages.CopyContextHandler_Select_Target_Task);
+		dialog.setMessage(Messages.CopyContextHandler_Select_the_target_task__);
 
 		if (dialog.open() != Window.OK) {
 			return;
@@ -56,20 +56,20 @@ public class CopyContextHandler extends AbstractTaskHandler {
 			TasksUi.getTaskActivityManager().deactivateActiveTask();
 			if (targetTask.equals(sourceTask)) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						TITLE_DIALOG, "Target task can not be the same as source task.");
+						TITLE_DIALOG, Messages.CopyContextHandler_TARGET_TASK_CON_NOT_BE_THE_SAME_AS_SOURCE_TASK);
 			} else {
 				IInteractionContext context = ContextCore.getContextStore().cloneContext(
 						sourceTask.getHandleIdentifier(), targetTask.getHandleIdentifier());
 				if (context == null) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							TITLE_DIALOG, "Source task does not have a context.");
+							TITLE_DIALOG, Messages.CopyContextHandler_SOURCE_TASK_DOES_HAVE_A_CONTEXT);
 				} else {
 					TasksUi.getTaskActivityManager().activateTask(targetTask);
 				}
 			}
 		} else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TITLE_DIALOG, "No target task selected.");
+					TITLE_DIALOG, Messages.CopyContextHandler_No_target_task_selected);
 		}
 	}
 

@@ -43,11 +43,11 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 
 	private ITask task;
 
-	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.attach";
+	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.attach"; //$NON-NLS-1$
 
 	public ContextAttachAction() {
-		setText("Attach...");
-		setToolTipText("Attach Task Context");
+		setText(Messages.ContextAttachAction_Attach_);
+		setToolTipText(Messages.ContextAttachAction_Attach_Task_Context);
 		setId(ID_ACTION);
 		setImageDescriptor(TasksUiImages.CONTEXT_ATTACH);
 	}
@@ -72,7 +72,8 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 	public void run(ITask task) {
 		if (task.getSynchronizationState() != SynchronizationState.SYNCHRONIZED) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Context Attachment", "Task must be synchronized before attaching context");
+					Messages.ContextAttachAction_Context_Attachment,
+					Messages.ContextAttachAction_Task_must_be_synchronized_before_attaching_context);
 			return;
 		}
 

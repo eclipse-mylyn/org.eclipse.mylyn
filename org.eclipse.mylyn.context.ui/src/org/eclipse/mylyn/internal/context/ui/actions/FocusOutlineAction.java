@@ -37,7 +37,7 @@ import org.eclipse.ui.PlatformUI;
 public class FocusOutlineAction extends AbstractFocusViewAction {
 
 	// TODO: move or delete?
-	public static final String ID_CONTENT_OUTLINE = "org.eclipse.ui.views.ContentOutline";
+	public static final String ID_CONTENT_OUTLINE = "org.eclipse.ui.views.ContentOutline"; //$NON-NLS-1$
 
 	public FocusOutlineAction() {
 		super(new InterestFilter(), true, false, false);

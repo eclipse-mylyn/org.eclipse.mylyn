@@ -26,8 +26,6 @@ import org.eclipse.ui.forms.editor.IFormPage;
  */
 public class ContextPageFactory extends AbstractTaskEditorPageFactory {
 
-	private static final String LABEL = "Context";
-
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
 		return true;
@@ -35,7 +33,7 @@ public class ContextPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public IFormPage createPage(TaskEditor parentEditor) {
-		return new ContextEditorFormPage(parentEditor, ContextUiPlugin.ID_CONTEXT_PAGE, LABEL);
+		return new ContextEditorFormPage(parentEditor, ContextUiPlugin.ID_CONTEXT_PAGE, Messages.ContextPageFactory_Context);
 	}
 
 	@Override
@@ -50,7 +48,7 @@ public class ContextPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public String getPageText() {
-		return LABEL;
+		return Messages.ContextPageFactory_Context;
 	}
 
 }

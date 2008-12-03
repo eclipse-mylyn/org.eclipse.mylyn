@@ -75,7 +75,7 @@ import org.osgi.framework.BundleContext;
  */
 public class ContextUiPlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.context.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.context.ui"; //$NON-NLS-1$
 
 	private class ContextActivationListener extends AbstractContextListener {
 
@@ -121,12 +121,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		@Override
 		protected String getText(IInteractionElement node) {
-			return "? " + node;
+			return "? " + node; //$NON-NLS-1$
 		}
 
 		@Override
 		protected String getText(IInteractionRelation edge) {
-			return "? " + edge;
+			return "? " + edge; //$NON-NLS-1$
 		}
 
 		@Override
@@ -136,7 +136,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		@Override
 		protected String getTextForObject(Object node) {
-			return "? " + node;
+			return "? " + node; //$NON-NLS-1$
 		}
 
 	};
@@ -194,7 +194,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				if (org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil.hasContextAttachment(task)) {
 					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
-							.getShell(), "Task Activation", "No local task context exists.  Retrieve from repository?");
+							.getShell(), Messages.ContextUiPlugin_Task_Activation, Messages.ContextUiPlugin_No_local_task_context_exists);
 					if (getRemote) {
 						new org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction().run(task);
 					}
@@ -207,7 +207,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private ContextEditorManager editorManager;
 
-	public static String ID_CONTEXT_PAGE = "org.eclipse.mylyn.context.ui.editor.context";
+	public static String ID_CONTEXT_PAGE = "org.eclipse.mylyn.context.ui.editor.context"; //$NON-NLS-1$
 
 	public ContextUiPlugin() {
 		INSTANCE = this;
@@ -234,7 +234,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				lazyStart(workbench);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, super.getBundle().getSymbolicName(), IStatus.ERROR,
-						"Could not lazy start context plug-in", t));
+						"Could not lazy start context plug-in", t)); //$NON-NLS-1$
 			}
 			if (TasksUi.getTaskActivityManager() != null) {
 				ContextCore.getContextManager().removeListener(contextActivationListener);
@@ -259,7 +259,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			editorManager = new ContextEditorManager();
 			ContextCore.getContextManager().addListener(editorManager);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed",
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Context UI initialization failed", //$NON-NLS-1$
 					e));
 		}
 
@@ -285,7 +285,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			viewerManager.forceReferesh();
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-					"Could not initialize focused viewers", e));
+					"Could not initialize focused viewers", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -431,27 +431,27 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		private static boolean extensionsRead = false;
 
-		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylyn.context.ui.bridges";
+		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylyn.context.ui.bridges"; //$NON-NLS-1$
 
-		public static final String ELEMENT_UI_BRIDGE = "uiBridge";
+		public static final String ELEMENT_UI_BRIDGE = "uiBridge"; //$NON-NLS-1$
 
-		public static final String ELEMENT_PRESERVED_FILTERS = "preservedFilters";
+		public static final String ELEMENT_PRESERVED_FILTERS = "preservedFilters"; //$NON-NLS-1$
 
-		public static final String ELEMENT_VIEW_ID = "viewId";
+		public static final String ELEMENT_VIEW_ID = "viewId"; //$NON-NLS-1$
 
-		public static final String ELEMENT_ID = "id";
+		public static final String ELEMENT_ID = "id"; //$NON-NLS-1$
 
-		public static final String ELEMENT_FILTER = "filter";
+		public static final String ELEMENT_FILTER = "filter"; //$NON-NLS-1$
 
-		public static final String ELEMENT_CLASS = "class";
+		public static final String ELEMENT_CLASS = "class"; //$NON-NLS-1$
 
-		public static final String ELEMENT_UI_CONTEXT_LABEL_PROVIDER = "labelProvider";
+		public static final String ELEMENT_UI_CONTEXT_LABEL_PROVIDER = "labelProvider"; //$NON-NLS-1$
 
-		public static final String ELEMENT_UI_BRIDGE_CONTENT_TYPE = "contentType";
+		public static final String ELEMENT_UI_BRIDGE_CONTENT_TYPE = "contentType"; //$NON-NLS-1$
 
-		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON = "activeSearchIcon";
+		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON = "activeSearchIcon"; //$NON-NLS-1$
 
-		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL = "activeSearchLabel";
+		public static final String ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL = "activeSearchLabel"; //$NON-NLS-1$
 
 		public static void initExtensions() {
 			if (!extensionsRead) {
@@ -483,12 +483,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 							(ILabelProvider) provider);
 				} else {
 					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-							"Could not load label provider: " + provider.getClass().getCanonicalName()
-									+ " must implement " + ILabelProvider.class.getCanonicalName()));
+							"Could not load label provider: " + provider.getClass().getCanonicalName() //$NON-NLS-1$
+									+ " must implement " + ILabelProvider.class.getCanonicalName())); //$NON-NLS-1$
 				}
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						"Could not load label provider extension", e));
+						"Could not load label provider extension", e)); //$NON-NLS-1$
 			}
 		}
 
@@ -531,24 +531,24 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					}
 
 				} else {
-					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not load bridge: "
-							+ bridge.getClass().getCanonicalName() + " must implement "
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not load bridge: " //$NON-NLS-1$
+							+ bridge.getClass().getCanonicalName() + " must implement " //$NON-NLS-1$
 							+ AbstractContextUiBridge.class.getCanonicalName()));
 				}
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						"Could not load bridge extension", e));
+						"Could not load bridge extension", e)); //$NON-NLS-1$
 			}
 		}
 	}
 
 	static class UiStartupExtensionPointReader {
 
-		private static final String EXTENSION_ID_STARTUP = "org.eclipse.mylyn.context.ui.startup";
+		private static final String EXTENSION_ID_STARTUP = "org.eclipse.mylyn.context.ui.startup"; //$NON-NLS-1$
 
-		private static final String ELEMENT_STARTUP = "startup";
+		private static final String ELEMENT_STARTUP = "startup"; //$NON-NLS-1$
 
-		private static final String ELEMENT_CLASS = "class";
+		private static final String ELEMENT_CLASS = "class"; //$NON-NLS-1$
 
 		public static void runStartupExtensions() {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -568,8 +568,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			try {
 				Object object = WorkbenchPlugin.createExtension(configurationElement, ELEMENT_CLASS);
 				if (!(object instanceof IContextUiStartup)) {
-					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not : "
-							+ object.getClass().getCanonicalName() + " must implement "
+					StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Could not : " //$NON-NLS-1$
+							+ object.getClass().getCanonicalName() + " must implement " //$NON-NLS-1$
 							+ AbstractContextStructureBridge.class.getCanonicalName()));
 					return;
 				}
@@ -578,7 +578,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				startup.lazyStartup();
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN,
-						"Could not load startup extension", e));
+						"Could not load startup extension", e)); //$NON-NLS-1$
 			}
 		}
 

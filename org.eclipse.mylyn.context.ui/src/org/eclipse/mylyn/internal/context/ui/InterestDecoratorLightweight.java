@@ -74,7 +74,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Decoration failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ContextUiPlugin.ID_PLUGIN, "Decoration failed", e)); //$NON-NLS-1$
 		}
 	}
 

@@ -16,20 +16,20 @@ package org.eclipse.mylyn.internal.context.ui;
  */
 public interface IContextUiPreferenceContstants {
 
-	public static final String AUTO_MANAGE_EDITOR_CLOSE = "org.eclipse.mylyn.context.ui.close.action.manage";
+	public static final String AUTO_MANAGE_EDITOR_CLOSE = "org.eclipse.mylyn.context.ui.close.action.manage"; //$NON-NLS-1$
 
-	public static final String AUTO_MANAGE_EDITOR_CLOSE_WARNING = "org.eclipse.mylyn.context.ui.close.action.manage.warning";
+	public static final String AUTO_MANAGE_EDITOR_CLOSE_WARNING = "org.eclipse.mylyn.context.ui.close.action.manage.warning"; //$NON-NLS-1$
 
-	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylyn.context.ui.editors.auto.manage";
+	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylyn.context.ui.editors.auto.manage"; //$NON-NLS-1$
 
-	public static final String AUTO_MANAGE_PERSPECTIVES = "org.eclipse.mylyn.ide.ui.perspectives.auto.manage";
+	public static final String AUTO_MANAGE_PERSPECTIVES = "org.eclipse.mylyn.ide.ui.perspectives.auto.manage"; //$NON-NLS-1$
 
-	public static final String AUTO_MANAGE_EXPANSION = "org.eclipse.mylyn.ide.ui.expansion.auto.manage";
+	public static final String AUTO_MANAGE_EXPANSION = "org.eclipse.mylyn.ide.ui.expansion.auto.manage"; //$NON-NLS-1$
 
-	public static final String AUTO_FOCUS_NAVIGATORS = "org.eclipse.mylyn.context.ui.navigators.filter.auto.enable";
+	public static final String AUTO_FOCUS_NAVIGATORS = "org.eclipse.mylyn.context.ui.navigators.filter.auto.enable"; //$NON-NLS-1$
 
-	public static final String PERSPECTIVE_NO_ACTIVE_TASK = "org.eclipse.mylyn.ui.perspectives.task.none";
+	public static final String PERSPECTIVE_NO_ACTIVE_TASK = "org.eclipse.mylyn.ui.perspectives.task.none"; //$NON-NLS-1$
 
-	public static final String PREFIX_TASK_TO_PERSPECTIVE = "org.eclipse.mylyn.ui.perspectives.task.";
+	public static final String PREFIX_TASK_TO_PERSPECTIVE = "org.eclipse.mylyn.ui.perspectives.task."; //$NON-NLS-1$
 
 }

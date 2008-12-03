@@ -60,7 +60,7 @@ import org.eclipse.ui.navigator.CommonViewer;
 public class QuickContextPopupDialog extends PopupDialog implements IInformationControl, IInformationControlExtension,
 		IInformationControlExtension2, DisposeListener {
 
-	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context.quick";
+	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context.quick"; //$NON-NLS-1$
 
 	private CommonViewer commonViewer;
 
@@ -77,7 +77,7 @@ public class QuickContextPopupDialog extends PopupDialog implements IInformation
 	// TODO e3.4 move to new api
 	@SuppressWarnings("deprecation")
 	public QuickContextPopupDialog(Shell parent) {
-		super(parent, SWT.RESIZE, true, true, true, true, null, "Task Context");
+		super(parent, SWT.RESIZE, true, true, true, true, null, Messages.QuickContextPopupDialog_Task_Context);
 		create();
 	}
 

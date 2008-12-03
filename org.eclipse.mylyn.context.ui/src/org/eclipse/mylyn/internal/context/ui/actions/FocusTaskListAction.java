@@ -166,7 +166,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 	}
 
 	public void filterTextChanged(final String text) {
-		if (isChecked() && (text == null || "".equals(text))) {
+		if (isChecked() && (text == null || "".equals(text))) { //$NON-NLS-1$
 			IViewPart part = FocusTaskListAction.super.getPartForAction();
 			if (part instanceof TaskListView) {
 				((TaskListView) part).getViewer().expandAll();
@@ -176,6 +176,6 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 
 	@Override
 	protected String getEmptyViewMessage() {
-		return "No tasks scheduled for this week";
+		return Messages.FocusTaskListAction_No_tasks_scheduled_for_this_week;
 	}
 }
