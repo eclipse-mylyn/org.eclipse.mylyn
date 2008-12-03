@@ -17,7 +17,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
@@ -25,6 +24,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskElementLabelProvider;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -66,7 +66,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		composite.setLayout(new GridLayout(1, false));
 
 		Text summary = new Text(composite, SWT.NONE);
-		summary.setText(Messages.ContextRetrieveWizardPage_Task_ + labelProvider.getText(task));
+		summary.setText(NLS.bind(Messages.ContextRetrieveWizardPage_Task, labelProvider.getText(task)));
 		summary.setEditable(false);
 		// new Label(composite, SWT.NONE).setText("Repository: " +
 		// repository.getUrl());

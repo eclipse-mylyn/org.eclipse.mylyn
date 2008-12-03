@@ -49,5 +49,5 @@ public class Messages extends NLS {
 
 	public static String ContextRetrieveWizardPage_SELECT_A_CONTEXT_TO_RETTRIEVE_FROM_TABLE_BELOW;
 
-	public static String ContextRetrieveWizardPage_Task_;
+	public static String ContextRetrieveWizardPage_Task;
 }
