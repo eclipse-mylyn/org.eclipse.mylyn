@@ -42,13 +42,11 @@ import org.eclipse.ui.internal.ObjectPluginAction;
  */
 public class AddToTaskContextAction extends Action implements IViewActionDelegate {
 
-	private static final String LABEL = "Add to Task Context";
-
 	private ISelection selection;
 
 	public AddToTaskContextAction() {
-		setText(LABEL);
-		setToolTipText(LABEL);
+		setText(Messages.AddToTaskContextAction_Add_to_Task_Context);
+		setToolTipText(Messages.AddToTaskContextAction_Add_to_Task_Context);
 		setImageDescriptor(TasksUiImages.CONTEXT_ADD);
 	}
 
@@ -74,8 +72,8 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 
 	private void run(StructuredSelection selection) {
 		if (!ContextCore.getContextManager().isContextActive()) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), LABEL,
-					"Activate a task to add resources.");
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.AddToTaskContextAction_Add_to_Task_Context,
+					Messages.AddToTaskContextAction_ACTIVATE_TASK_TO_ADD_RESOURCES);
 		}
 
 		Object element = selection.getFirstElement();
@@ -113,8 +111,8 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 		if (!resourcesToAdd.isEmpty()) {
 			ResourcesUi.addResourceToContext(resourcesToAdd, InteractionEvent.Kind.SELECTION);
 		} else {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), LABEL,
-					"No resources to add.");
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.AddToTaskContextAction_Add_to_Task_Context,
+					Messages.AddToTaskContextAction_No_resources_to_add);
 		}
 	}
 

@@ -33,13 +33,13 @@ import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
  */
 public class FocusedTeamExtensionPointReader {
 
-	private static final String ATTR_CLASS = "class";
+	private static final String ATTR_CLASS = "class"; //$NON-NLS-1$
 
-	private static final String ELEM_ACTIVE_CHANGE_SET_PROVIDER = "activeChangeSetProvider";
+	private static final String ELEM_ACTIVE_CHANGE_SET_PROVIDER = "activeChangeSetProvider"; //$NON-NLS-1$
 
-	private static final String ELEM_CHANGE_SET_MANAGER = "contextChangeSetManager";
+	private static final String ELEM_CHANGE_SET_MANAGER = "contextChangeSetManager"; //$NON-NLS-1$
 
-	private static final String EXT_POINT_TEAM_REPOSITORY_PROVIDER = "changeSets";
+	private static final String EXT_POINT_TEAM_REPOSITORY_PROVIDER = "changeSets"; //$NON-NLS-1$
 
 	public void readExtensions() {
 		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamUiPlugin.ID_PLUGIN,
@@ -56,7 +56,7 @@ public class FocusedTeamExtensionPointReader {
 					} catch (CoreException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 								MessageFormat.format(
-										"Error while initializing repository contribution {0} from plugin {1}.",
+										"Error while initializing repository contribution {0} from plugin {1}.", //$NON-NLS-1$
 										element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));
 					}
 				}
@@ -73,7 +73,7 @@ public class FocusedTeamExtensionPointReader {
 					} catch (CoreException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
 								MessageFormat.format(
-										"Error while initializing repository contribution {0} from plugin {1}.",
+										"Error while initializing repository contribution {0} from plugin {1}.", //$NON-NLS-1$
 										element.getAttribute(ATTR_CLASS), element.getContributor().getName()), e));
 					}
 				}

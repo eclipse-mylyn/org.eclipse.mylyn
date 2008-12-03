@@ -103,12 +103,12 @@ public class ProjectTeamPage extends PropertyPage {
 				setPropertiesEnabled(useProjectSettings.getSelection());
 			}
 		});
-		useProjectSettings.setText("Enable project specific settings");
+		useProjectSettings.setText(Messages.ProjectTeamPage_Enable_project_specific_settings);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(useProjectSettings);
 
 		configurationHyperlink = new Hyperlink(composite, SWT.NONE);
 		configurationHyperlink.setUnderlined(true);
-		configurationHyperlink.setText("Configure workspace");
+		configurationHyperlink.setText(Messages.ProjectTeamPage_Configure_workspace);
 		configurationHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 
 			@Override
@@ -151,9 +151,9 @@ public class ProjectTeamPage extends PropertyPage {
 		propertiesComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 		label = new Label(propertiesComposite, SWT.NONE);
-		label.setText("Commit Comment Template");
+		label.setText(Messages.ProjectTeamPage_Commit_Comment_Template);
 
-		String completedTemplate = ""; //getPreferenceStore().getString(FocusedTeamUiPlugin.COMMIT_TEMPLATE);
+		String completedTemplate = ""; //getPreferenceStore().getString(FocusedTeamUiPlugin.COMMIT_TEMPLATE); //$NON-NLS-1$
 		commitTemplateText = addTemplateField(propertiesComposite, completedTemplate,
 				new TemplateHandlerContentProposalProvider());
 	}

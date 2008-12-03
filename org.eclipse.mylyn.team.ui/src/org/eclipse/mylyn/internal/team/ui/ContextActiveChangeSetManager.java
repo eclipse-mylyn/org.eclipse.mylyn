@@ -49,9 +49,9 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	private final List<IContextChangeSet> activeChangeSets = new ArrayList<IContextChangeSet>();
 
-	private static final String LABEL_NO_TASK = "<No Active Task>";
+	private static final String LABEL_NO_TASK = "<No Active Task>"; //$NON-NLS-1$
 
-	private static final String HANDLE_NO_TASK = "org.eclipse.mylyn.team.ui.inactive.proxy";
+	private static final String HANDLE_NO_TASK = "org.eclipse.mylyn.team.ui.inactive.proxy"; //$NON-NLS-1$
 
 	private final Map<ActiveChangeSetManager, ActiveChangeSet> noTaskSetMap = new HashMap<ActiveChangeSetManager, ActiveChangeSet>();;
 
@@ -170,7 +170,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 							}
 						} catch (Exception e) {
 							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
-									"Could not restore change set", e));
+									"Could not restore change set", e)); //$NON-NLS-1$
 						}
 					}
 				}
@@ -224,7 +224,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Could not update change set", e));
+			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, "Could not update change set", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -305,7 +305,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
-						"Could not manipulate change set resources", e));
+						"Could not manipulate change set resources", e)); //$NON-NLS-1$
 			}
 		}
 	}

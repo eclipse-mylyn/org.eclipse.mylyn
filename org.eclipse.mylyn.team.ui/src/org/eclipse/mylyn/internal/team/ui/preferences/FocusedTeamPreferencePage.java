@@ -35,7 +35,7 @@ import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
  */
 public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-	public final static String PAGE_ID = "org.eclipse.mylyn.team.ui.ui.preferences";
+	public final static String PAGE_ID = "org.eclipse.mylyn.team.ui.ui.preferences"; //$NON-NLS-1$
 
 	private Button manageChangeSets;
 
@@ -94,18 +94,18 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 
 	private void createChangeSetGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Change Set Management");
+		group.setText(Messages.FocusedTeamPreferencePage_Change_Set_Management);
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		manageChangeSets = new Button(group, SWT.CHECK);
-		manageChangeSets.setText("Automatically create and manage with task context");
+		manageChangeSets.setText(Messages.FocusedTeamPreferencePage_Automatically_create_and_manage_with_task_context);
 		manageChangeSets.setSelection(getPreferenceStore().getBoolean(FocusedTeamUiPlugin.CHANGE_SET_MANAGE));
 	}
 
 	private void createCommitGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Commit Comment Template");
+		group.setText(Messages.FocusedTeamPreferencePage_Commit_Comment_Template);
 		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 

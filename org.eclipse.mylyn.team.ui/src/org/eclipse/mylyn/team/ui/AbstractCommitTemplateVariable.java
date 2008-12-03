@@ -26,7 +26,7 @@ public abstract class AbstractCommitTemplateVariable {
 	protected String recognizedKeyword;
 
 	public String getDescription() {
-		return description != null ? description : "Handler for '" + recognizedKeyword + "'";
+		return description != null ? description : "Handler for '" + recognizedKeyword + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void setDescription(String description) {

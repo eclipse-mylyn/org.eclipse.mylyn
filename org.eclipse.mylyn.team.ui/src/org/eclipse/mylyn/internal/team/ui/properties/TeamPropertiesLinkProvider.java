@@ -31,7 +31,7 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public class TeamPropertiesLinkProvider {
 
-	private static final String PROJECT_COMMIT_COMMENT_TEMPLATE = "commit.comment.template";
+	private static final String PROJECT_COMMIT_COMMENT_TEMPLATE = "commit.comment.template"; //$NON-NLS-1$
 
 	public TeamPropertiesLinkProvider() {
 	}
@@ -72,7 +72,7 @@ public class TeamPropertiesLinkProvider {
 				return true;
 			} catch (BackingStoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
-						"Failed to save commit comment template for project", e));
+						"Failed to save commit comment template for project", e)); //$NON-NLS-1$
 			}
 		}
 		return false;

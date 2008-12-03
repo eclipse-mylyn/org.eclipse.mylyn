@@ -32,11 +32,6 @@ import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
  */
 public class CommitTemplateVariables {
 
-	// TODO refactor completion labels
-	private static final String LABEL_INCOMPLETE = "Incomplete";
-
-	private static final String LABEL_COMPLETE = "Complete";
-
 	private static String implode(List<String> list, String separator) {
 		if (list == null) {
 			return null;
@@ -146,9 +141,9 @@ public class CommitTemplateVariables {
 			}
 			if (task != null) {
 				if (task.isCompleted()) {
-					return LABEL_COMPLETE;
+					return Messages.CommitTemplateVariables_Complete;
 				} else {
-					return LABEL_INCOMPLETE;
+					return Messages.CommitTemplateVariables_Incomplete;
 				}
 			}
 			return null;
@@ -161,7 +156,7 @@ public class CommitTemplateVariables {
 			ITaskMapping taskMapping = getTaskMapping(task);
 			if (taskMapping != null) {
 				List<String> list = taskMapping.getCc();
-				return implode(list, ", ");
+				return implode(list, ", "); //$NON-NLS-1$
 			}
 			return null;
 		}
@@ -173,7 +168,7 @@ public class CommitTemplateVariables {
 			ITaskMapping taskMapping = getTaskMapping(task);
 			if (taskMapping != null) {
 				List<String> list = getTaskMapping(task).getKeywords();
-				return implode(list, ", ");
+				return implode(list, ", "); //$NON-NLS-1$
 			}
 			return null;
 		}
@@ -197,7 +192,7 @@ public class CommitTemplateVariables {
 			if (taskMapping != null) {
 				return getTaskMapping(task).getSummary();
 			}
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -207,7 +202,7 @@ public class CommitTemplateVariables {
 			if (task != null) {
 				return task.getSummary();
 			}
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -240,7 +235,7 @@ public class CommitTemplateVariables {
 			if (task instanceof AbstractTask) {
 				return ((AbstractTask) task).getNotes();
 			} else {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		}
 	}

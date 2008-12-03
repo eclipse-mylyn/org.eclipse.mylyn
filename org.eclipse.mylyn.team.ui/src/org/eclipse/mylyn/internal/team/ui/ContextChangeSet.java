@@ -51,9 +51,9 @@ import org.osgi.service.prefs.Preferences;
 public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/implements IAdaptable, IContextChangeSet {
 
 	// HACK: copied from super
-	private static final String CTX_TITLE = "title";
+	private static final String CTX_TITLE = "title"; //$NON-NLS-1$
 
-	public static final String SOURCE_ID = "org.eclipse.mylyn.java.context.changeset.add";
+	public static final String SOURCE_ID = "org.eclipse.mylyn.java.context.changeset.add"; //$NON-NLS-1$
 
 	private boolean suppressInterestContribution = false;
 
@@ -85,7 +85,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 	}
 
 	private String getTitleForPersistance() {
-		return getTitle() + " (" + task.getHandleIdentifier() + ")";
+		return getTitle() + " (" + task.getHandleIdentifier() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static String getHandleFromPersistedTitle(String title) {
@@ -135,8 +135,8 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 			if (unmatchedRepositoryFound) {
 				proceed = MessageDialog.openQuestion(
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						"Mylyn Change Set Management",
-						"You are attempting to commit a resource which is not associated with the selected task repository.  Proceed with creating the commit message?");
+						Messages.ContextChangeSet_Mylyn_Change_Set_Management,
+						Messages.ContextChangeSet_ATTEMPTING_TO_COMMIT_RESOURCE);
 			}
 		}
 
@@ -147,7 +147,7 @@ public class ContextChangeSet extends ActiveChangeSet/*CVSActiveChangeSet*/imple
 			}
 			return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 

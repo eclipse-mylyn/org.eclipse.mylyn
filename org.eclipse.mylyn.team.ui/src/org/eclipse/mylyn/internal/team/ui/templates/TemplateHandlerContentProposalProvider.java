@@ -64,12 +64,12 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 		}
 
 		private void initPrefix() {
-			prefix = "";
+			prefix = ""; //$NON-NLS-1$
 			String beforePosition = contents.substring(0, position);
-			if (beforePosition.endsWith("$")) {
-				prefix = "$";
+			if (beforePosition.endsWith("$")) { //$NON-NLS-1$
+				prefix = "$"; //$NON-NLS-1$
 			} else {
-				int start = beforePosition.lastIndexOf("${");
+				int start = beforePosition.lastIndexOf("${"); //$NON-NLS-1$
 				if (start >= 0) {
 					int end = contents.indexOf('}', start);
 					if (end >= position) {
@@ -80,7 +80,7 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 		}
 
 		private String getMatch(String keyword) {
-			String wholeProposal = "${" + keyword + "}";
+			String wholeProposal = "${" + keyword + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 			if (wholeProposal.startsWith(prefix)) {
 				return wholeProposal.substring(prefix.length());
 			}
@@ -123,7 +123,7 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 			}
 
 			public String getLabel() {
-				return "${" + keyword + "}";
+				return "${" + keyword + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

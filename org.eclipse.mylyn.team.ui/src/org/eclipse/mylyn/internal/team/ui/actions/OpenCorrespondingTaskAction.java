@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,11 +59,11 @@ import org.eclipse.ui.internal.ObjectPluginAction;
  */
 public class OpenCorrespondingTaskAction extends Action implements IViewActionDelegate {
 
-	private static final String LABEL = "Open Corresponding Task";
+	private static final String LABEL = Messages.OpenCorrespondingTaskAction_Open_Corresponding_Task;
 
-	private static final String PREFIX_HTTP = "http://";
+	private static final String PREFIX_HTTP = "http://"; //$NON-NLS-1$
 
-	private static final String PREFIX_HTTPS = "https://";
+	private static final String PREFIX_HTTPS = "https://"; //$NON-NLS-1$
 
 	private ISelection selection;
 
@@ -97,7 +97,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 	private void run(StructuredSelection selection) {
 		final Object element = selection.getFirstElement();
 
-		Job job = new OpenCorrespondingTaskJob("Opening Corresponding Task", element);
+		Job job = new OpenCorrespondingTaskJob(Messages.OpenCorrespondingTaskAction_Opening_Corresponding_Task, element);
 		job.schedule();
 	}
 
@@ -236,9 +236,9 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 	}
 
 	public static String getTaskIdFromLegacy07Label(String comment) {
-		String PREFIX_DELIM = ":";
-		String PREFIX_START_1 = "Progress on:";
-		String PREFIX_START_2 = "Completed:";
+		String PREFIX_DELIM = ":"; //$NON-NLS-1$
+		String PREFIX_START_1 = Messages.OpenCorrespondingTaskAction_Progress_on;
+		String PREFIX_START_2 = Messages.OpenCorrespondingTaskAction_Completed;
 		String usedPrefix = PREFIX_START_1;
 		int firstDelimIndex = comment.indexOf(PREFIX_START_1);
 		if (firstDelimIndex == -1) {
@@ -325,8 +325,9 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					boolean openDialog = MessageDialog.openQuestion(window.getShell(), "Open Task",
-							"Unable to match task. Open Repository Task dialog?");
+					boolean openDialog = MessageDialog.openQuestion(window.getShell(),
+							Messages.OpenCorrespondingTaskAction_Open_Task,
+							Messages.OpenCorrespondingTaskAction_Unable_to_match_task);
 					if (openDialog) {
 						new OpenRepositoryTask().run(null);
 					}

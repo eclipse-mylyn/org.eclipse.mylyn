@@ -35,15 +35,15 @@ import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
  */
 public class CommitTemplateManager {
 
-	private static final String ATTR_CLASS = "class";
+	private static final String ATTR_CLASS = "class"; //$NON-NLS-1$
 
-	private static final String ATTR_DESCRIPTION = "description";
+	private static final String ATTR_DESCRIPTION = "description"; //$NON-NLS-1$
 
-	private static final String ATTR_RECOGNIZED_KEYWORD = "recognizedKeyword";
+	private static final String ATTR_RECOGNIZED_KEYWORD = "recognizedKeyword"; //$NON-NLS-1$
 
-	private static final String ELEM_TEMPLATE_HANDLER = "templateVariable";
+	private static final String ELEM_TEMPLATE_HANDLER = "templateVariable"; //$NON-NLS-1$
 
-	private static final String EXT_POINT_TEMPLATE_HANDLERS = "commitTemplates";
+	private static final String EXT_POINT_TEMPLATE_HANDLERS = "commitTemplates"; //$NON-NLS-1$
 
 	public String generateComment(ITask task, String template) {
 		return processKeywords(task, template);
@@ -80,30 +80,30 @@ public class CommitTemplateManager {
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
-					"Problem while parsing task id from comment", e));
+					"Problem while parsing task id from comment", e)); //$NON-NLS-1$
 		}
 
 		return null;
 	}
 
 	public String getTaskIdRegEx(String template) {
-		final String META_CHARS = " $()*+.< [\\]^{|}";
-		final String TASK_ID_PLACEHOLDER = "\uffff";
-		final String KEYWORD_PLACEHOLDER = "\ufffe";
+		final String META_CHARS = " $()*+.< [\\]^{|}"; //$NON-NLS-1$
+		final String TASK_ID_PLACEHOLDER = "\uffff"; //$NON-NLS-1$
+		final String KEYWORD_PLACEHOLDER = "\ufffe"; //$NON-NLS-1$
 
-		template = template.replaceFirst("\\$\\{task\\.id\\}", TASK_ID_PLACEHOLDER);
-		template = template.replaceFirst("\\$\\{task\\.key\\}", TASK_ID_PLACEHOLDER);
+		template = template.replaceFirst("\\$\\{task\\.id\\}", TASK_ID_PLACEHOLDER); //$NON-NLS-1$
+		template = template.replaceFirst("\\$\\{task\\.key\\}", TASK_ID_PLACEHOLDER); //$NON-NLS-1$
 		template = replaceKeywords(template, KEYWORD_PLACEHOLDER);
 		template = quoteChars(template, META_CHARS);
-		template = template.replaceFirst(TASK_ID_PLACEHOLDER, "(\\\\d+)");
-		template = template.replaceAll(KEYWORD_PLACEHOLDER, ".*");
+		template = template.replaceFirst(TASK_ID_PLACEHOLDER, "(\\\\d+)"); //$NON-NLS-1$
+		template = template.replaceAll(KEYWORD_PLACEHOLDER, ".*"); //$NON-NLS-1$
 		return template;
 	}
 
 	private String replaceKeywords(String str, String placeholder) {
 		String[] recognizedKeywords = getRecognizedKeywords();
 		for (String keyword : recognizedKeywords) {
-			str = str.replaceAll("\\$\\{" + keyword + "\\}", placeholder);
+			str = str.replaceAll("\\$\\{" + keyword + "\\}", placeholder); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return str;
 	}
@@ -171,7 +171,7 @@ public class CommitTemplateManager {
 	}
 
 	private String processKeywords(ITask task, String template) {
-		String[] segments = template.split("\\$\\{");
+		String[] segments = template.split("\\$\\{"); //$NON-NLS-1$
 		Stack<String> evaluated = new Stack<String>();
 		evaluated.add(segments[0]);
 
@@ -211,7 +211,7 @@ public class CommitTemplateManager {
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
-					"Problem while dispatching to template handler for: " + keyword, e));
+					"Problem while dispatching to template handler for: " + keyword, e)); //$NON-NLS-1$
 		}
 
 		return null;
@@ -236,7 +236,7 @@ public class CommitTemplateManager {
 							}
 						} catch (Exception e) {
 							String msg = MessageFormat.format(
-									"Error while processing template handler contribution {0} from plugin {1}.",
+									Messages.CommitTemplateManager_Error_while_processing_template_handler_contribution_X_from_plugin_X,
 									element.getAttribute(ATTR_CLASS), element.getContributor().getName());
 							StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN, msg, e));
 						}

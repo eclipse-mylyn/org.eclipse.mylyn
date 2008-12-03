@@ -37,7 +37,7 @@ import org.osgi.framework.BundleContext;
  */
 public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.team.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.team.ui"; //$NON-NLS-1$
 
 	private static FocusedTeamUiPlugin INSTANCE;
 
@@ -47,15 +47,15 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 
 	private CommitTemplateManager commitTemplateManager;
 
-	public static final String CHANGE_SET_MANAGE = "org.eclipse.mylyn.team.changesets.manage";
+	public static final String CHANGE_SET_MANAGE = "org.eclipse.mylyn.team.changesets.manage"; //$NON-NLS-1$
 
-	public static final String COMMIT_TEMPLATE = "org.eclipse.mylyn.team.commit.template";
+	public static final String COMMIT_TEMPLATE = "org.eclipse.mylyn.team.commit.template"; //$NON-NLS-1$
 
-	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description} \n${task.url}";
+	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description} \n${task.url}"; //$NON-NLS-1$
 
-	private static final String OLD_DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \n${task.url}";
+	private static final String OLD_DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \n${task.url}"; //$NON-NLS-1$
 
-	private static final String OLD_DEFAULT_COMMIT_TEMPLATE2 = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \r\n${task.url}";
+	private static final String OLD_DEFAULT_COMMIT_TEMPLATE2 = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \r\n${task.url}"; //$NON-NLS-1$
 
 	public static class FocusedTeamUiStartup implements IStartup {
 
@@ -87,7 +87,7 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin {
 					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, FocusedTeamUiPlugin.ID_PLUGIN,
-							"Mylyn Team start failed", e));
+							"Mylyn Team start failed", e)); //$NON-NLS-1$
 				}
 			}
 		});

@@ -35,7 +35,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class ApplyPatchAction extends BaseSelectionListenerAction implements IViewActionDelegate {
 
 	public ApplyPatchAction() {
-		super("Apply Patch");
+		super(Messages.ApplyPatchAction_Apply_Patch);
 	}
 
 	protected ApplyPatchAction(String text) {
@@ -57,7 +57,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 				try {
 					storage = TaskAttachmentStorage.create(attachment);
 				} catch (CoreException e) {
-					TasksUiInternal.displayStatus("Error Retrieving Context", e.getStatus());
+					TasksUiInternal.displayStatus(Messages.ApplyPatchAction_Error_Retrieving_Context, e.getStatus());
 					return;
 				}
 				ApplyPatchOperation op = new ApplyPatchOperation(PlatformUI.getWorkbench()
