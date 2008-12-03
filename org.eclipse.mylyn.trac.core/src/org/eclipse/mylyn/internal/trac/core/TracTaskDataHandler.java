@@ -199,9 +199,9 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 					}
 					mapper.setCreationDate(attachments[i].getCreated());
 				}
-				mapper.setUrl(repository.getRepositoryUrl() + ITracClient.TICKET_ATTACHMENT_URL + ticket.getId() + "/"
+				mapper.setUrl(repository.getRepositoryUrl() + ITracClient.TICKET_ATTACHMENT_URL + ticket.getId() + "/" //$NON-NLS-1$
 						+ TracUtil.encodeUrl(attachments[i].getFilename()));
-				mapper.setAttachmentId(i + "");
+				mapper.setAttachmentId(i + ""); //$NON-NLS-1$
 
 				TaskAttribute attribute = data.getRoot().createAttribute(TaskAttribute.PREFIX_ATTACHMENT + (i + 1));
 				mapper.applyTo(attribute);

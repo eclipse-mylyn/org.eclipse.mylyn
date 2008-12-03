@@ -1034,11 +1034,11 @@ public class TracXmlRpcClient extends AbstractTracClient implements ITracWikiCli
 		} catch (IOException e) {
 			throw new TracException(e);
 		}
-		return (String) call(monitor, "wiki.putAttachmentEx", pageName, fileName, description, data, replace);
+		return (String) call(monitor, "wiki.putAttachmentEx", pageName, fileName, description, data, replace); //$NON-NLS-1$
 	}
 
 	public void deleteTicket(int ticketId, IProgressMonitor monitor) throws TracException {
-		call(monitor, "ticket.delete", ticketId);
+		call(monitor, "ticket.delete", ticketId); //$NON-NLS-1$
 	}
 
 }

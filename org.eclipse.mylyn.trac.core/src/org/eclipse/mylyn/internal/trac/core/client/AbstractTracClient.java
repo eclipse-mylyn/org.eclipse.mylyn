@@ -41,9 +41,9 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
  */
 public abstract class AbstractTracClient implements ITracClient {
 
-	protected static final String USER_AGENT = "TracConnector";
+	protected static final String USER_AGENT = "TracConnector"; //$NON-NLS-1$
 
-	private static final String LOGIN_COOKIE_NAME = "trac_auth";
+	private static final String LOGIN_COOKIE_NAME = "trac_auth"; //$NON-NLS-1$
 
 	protected final String repositoryUrl;
 
