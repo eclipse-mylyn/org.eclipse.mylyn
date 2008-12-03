@@ -95,22 +95,22 @@ public class TracSearch {
 	public String toQuery() {
 		StringBuilder sb = new StringBuilder();
 		if (orderBy != null) {
-			sb.append("&order=");
+			sb.append("&order="); //$NON-NLS-1$
 			sb.append(orderBy);
 			if (!ascending) {
-				sb.append("&desc=1");
+				sb.append("&desc=1"); //$NON-NLS-1$
 			}
 		}
 		for (TracSearchFilter filter : filterByFieldName.values()) {
-			sb.append("&");
+			sb.append("&"); //$NON-NLS-1$
 			sb.append(filter.getFieldName());
 			sb.append(filter.getOperator().getQueryValue());
-			sb.append("=");
+			sb.append("="); //$NON-NLS-1$
 			List<String> values = filter.getValues();
 			for (Iterator<String> it = values.iterator(); it.hasNext();) {
 				sb.append(it.next());
 				if (it.hasNext()) {
-					sb.append("|");
+					sb.append("|"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -125,28 +125,28 @@ public class TracSearch {
 	public String toUrl() {
 		StringBuilder sb = new StringBuilder();
 		if (orderBy != null) {
-			sb.append("&order=");
+			sb.append("&order="); //$NON-NLS-1$
 			sb.append(orderBy);
 			if (!ascending) {
-				sb.append("&desc=1");
+				sb.append("&desc=1"); //$NON-NLS-1$
 			}
 		} else if (filterByFieldName.isEmpty()) {
 			// TODO figure out why search must be ordered when logged in (otherwise
 			// no results will be returned)
-			sb.append("&order=id");
+			sb.append("&order=id"); //$NON-NLS-1$
 		}
 
 		for (TracSearchFilter filter : filterByFieldName.values()) {
 			for (String value : filter.getValues()) {
-				sb.append("&");
+				sb.append("&"); //$NON-NLS-1$
 				sb.append(filter.getFieldName());
-				sb.append("=");
+				sb.append("="); //$NON-NLS-1$
 				try {
 					sb.append(URLEncoder.encode(filter.getOperator().getQueryValue(), ITracClient.CHARSET));
 					sb.append(URLEncoder.encode(value, ITracClient.CHARSET));
 				} catch (UnsupportedEncodingException e) {
 					StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
-							"Unexpected exception while decoding URL", e));
+							"Unexpected exception while decoding URL", e)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -154,27 +154,27 @@ public class TracSearch {
 	}
 
 	public void fromUrl(String url) {
-		StringTokenizer t = new StringTokenizer(url, "&");
+		StringTokenizer t = new StringTokenizer(url, "&"); //$NON-NLS-1$
 		while (t.hasMoreTokens()) {
 			String token = t.nextToken();
-			int i = token.indexOf("=");
+			int i = token.indexOf("="); //$NON-NLS-1$
 			if (i != -1) {
 				try {
 					String key = URLDecoder.decode(token.substring(0, i), ITracClient.CHARSET);
 					String value = URLDecoder.decode(token.substring(i + 1), ITracClient.CHARSET);
 
-					if ("order".equals(key)) {
+					if ("order".equals(key)) { //$NON-NLS-1$
 						setOrderBy(value);
-					} else if ("desc".equals(key)) {
-						setAscending(!"1".equals(value));
-					} else if ("group".equals(key) || "groupdesc".equals(key) || "verbose".equals(key)) {
+					} else if ("desc".equals(key)) { //$NON-NLS-1$
+						setAscending(!"1".equals(value)); //$NON-NLS-1$
+					} else if ("group".equals(key) || "groupdesc".equals(key) || "verbose".equals(key)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						// ignore these parameters
 					} else {
 						addFilter(key, value);
 					}
 				} catch (UnsupportedEncodingException e) {
 					StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
-							"Unexpected exception while decoding URL", e));
+							"Unexpected exception while decoding URL", e)); //$NON-NLS-1$
 				}
 			}
 		}

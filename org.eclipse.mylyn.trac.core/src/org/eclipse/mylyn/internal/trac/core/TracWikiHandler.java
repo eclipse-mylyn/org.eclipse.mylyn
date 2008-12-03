@@ -37,7 +37,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 
 	@Override
 	public String[] downloadAllPageNames(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
-		monitor.beginTask("Download Wiki Page Names", IProgressMonitor.UNKNOWN);
+		monitor.beginTask(Messages.TracWikiHandler_Download_Wiki_Page_Names, IProgressMonitor.UNKNOWN);
 		try {
 			String[] names = getTracWikiClient(repository).getAllWikiPageNames(monitor);
 			return names;
@@ -51,7 +51,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 	@Override
 	public TracWikiPage getWikiPage(TaskRepository repository, String pageName, IProgressMonitor monitor)
 			throws CoreException {
-		monitor.beginTask("Download Wiki Page", IProgressMonitor.UNKNOWN);
+		monitor.beginTask(Messages.TracWikiHandler_Download_Wiki_Page, IProgressMonitor.UNKNOWN);
 		try {
 			TracWikiPage page = getTracWikiClient(repository).getWikiPage(pageName, monitor);
 			return page;
@@ -65,19 +65,19 @@ public class TracWikiHandler extends AbstractWikiHandler {
 	@Override
 	public void postWikiPage(TaskRepository repository, TracWikiPage newPage, IProgressMonitor monitor)
 			throws CoreException {
-		monitor.beginTask("Upload Wiki Page", IProgressMonitor.UNKNOWN);
+		monitor.beginTask(Messages.TracWikiHandler_Upload_Wiki_Page, IProgressMonitor.UNKNOWN);
 		try {
 			String pageName = newPage.getPageInfo().getPageName();
 			String content = newPage.getContent();
 			Map<String, Object> attributes = new HashMap<String, Object>();
-			attributes.put("comment", newPage.getPageInfo().getComment());
-			attributes.put("author", newPage.getPageInfo().getAuthor());
+			attributes.put("comment", newPage.getPageInfo().getComment()); //$NON-NLS-1$
+			attributes.put("author", newPage.getPageInfo().getAuthor()); //$NON-NLS-1$
 			boolean success = getTracWikiClient(repository).putWikipage(pageName, content, attributes, monitor);
 			if (success) {
 				return;
 			} else {
 				throw new CoreException(TracCorePlugin.toStatus(new TracException(
-						"Failed to upload wiki page. No further information available."), repository));
+						"Failed to upload wiki page. No further information available."), repository)); //$NON-NLS-1$
 			}
 		} catch (TracException e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
@@ -89,7 +89,7 @@ public class TracWikiHandler extends AbstractWikiHandler {
 	@Override
 	public TracWikiPageInfo[] getPageHistory(TaskRepository repository, String pageName, IProgressMonitor monitor)
 			throws CoreException {
-		monitor.beginTask("Retrieve Wiki Page History", IProgressMonitor.UNKNOWN);
+		monitor.beginTask(Messages.TracWikiHandler_Retrieve_Wiki_Page_History, IProgressMonitor.UNKNOWN);
 		try {
 			TracWikiPageInfo[] versions = getTracWikiClient(repository).getWikiPageInfoAllVersions(pageName, monitor);
 			return versions;
@@ -105,8 +105,8 @@ public class TracWikiHandler extends AbstractWikiHandler {
 		if (client instanceof ITracWikiClient) {
 			return (ITracWikiClient) client;
 		} else {
-			throw new TracException("The access mode of " + repository.toString()
-					+ " does not support Wiki page editting.");
+			throw new TracException("The access mode of " + repository.toString() //$NON-NLS-1$
+					+ " does not support Wiki page editting."); //$NON-NLS-1$
 		}
 	}
 

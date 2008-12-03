@@ -46,8 +46,8 @@ public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 		String filename = mapper.getFileName();
 		if (filename == null || filename.length() == 0) {
 			throw new CoreException(new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR,
-					TracCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, "Attachment download from "
-							+ repository.getRepositoryUrl() + " failed, missing attachment filename."));
+					TracCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, "Attachment download from " //$NON-NLS-1$
+							+ repository.getRepositoryUrl() + " failed, missing attachment filename.")); //$NON-NLS-1$
 		}
 
 		try {
@@ -67,7 +67,7 @@ public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
 			throw new CoreException(new RepositoryStatus(repository.getRepositoryUrl(), IStatus.INFO,
 					TracCorePlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY,
-					"Attachments are not supported by this repository access type"));
+					"Attachments are not supported by this repository access type")); //$NON-NLS-1$
 		}
 
 		String filename = source.getName();
@@ -82,12 +82,12 @@ public class TracAttachmentHandler extends AbstractTaskAttachmentHandler {
 			}
 		}
 		if (description == null) {
-			description = "";
+			description = ""; //$NON-NLS-1$
 		}
 
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Uploading attachment", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.TracAttachmentHandler_Uploading_attachment, IProgressMonitor.UNKNOWN);
 			try {
 				ITracClient client = connector.getClientManager().getTracClient(repository);
 				int id = Integer.parseInt(task.getTaskId());

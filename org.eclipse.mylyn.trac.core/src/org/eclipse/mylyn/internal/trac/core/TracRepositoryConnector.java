@@ -65,13 +65,13 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (type == null) {
 				return null;
 			}
-			if (type.equals("Defect")) {
+			if (type.equals("Defect")) { //$NON-NLS-1$
 				return DEFECT;
 			}
-			if (type.equals("Enhancement")) {
+			if (type.equals("Enhancement")) { //$NON-NLS-1$
 				return ENHANCEMENT;
 			}
-			if (type.equals("Task")) {
+			if (type.equals("Task")) { //$NON-NLS-1$
 				return TASK;
 			}
 			return null;
@@ -81,13 +81,13 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (type == null) {
 				return null;
 			}
-			if (type.equals("defect")) {
+			if (type.equals("defect")) { //$NON-NLS-1$
 				return DEFECT;
 			}
-			if (type.equals("enhancement")) {
+			if (type.equals("enhancement")) { //$NON-NLS-1$
 				return ENHANCEMENT;
 			}
-			if (type.equals("task")) {
+			if (type.equals("task")) { //$NON-NLS-1$
 				return TASK;
 			}
 			return null;
@@ -97,13 +97,13 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		public String toString() {
 			switch (this) {
 			case DEFECT:
-				return "Defect";
+				return "Defect"; //$NON-NLS-1$
 			case ENHANCEMENT:
-				return "Enhancement";
+				return "Enhancement"; //$NON-NLS-1$
 			case TASK:
-				return "Task";
+				return "Task"; //$NON-NLS-1$
 			default:
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		}
 
@@ -116,16 +116,16 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (status == null) {
 				return null;
 			}
-			if (status.equals("new")) {
+			if (status.equals("new")) { //$NON-NLS-1$
 				return NEW;
 			}
-			if (status.equals("assigned")) {
+			if (status.equals("assigned")) { //$NON-NLS-1$
 				return ASSIGNED;
 			}
-			if (status.equals("reopened")) {
+			if (status.equals("reopened")) { //$NON-NLS-1$
 				return REOPENED;
 			}
-			if (status.equals("closed")) {
+			if (status.equals("closed")) { //$NON-NLS-1$
 				return CLOSED;
 			}
 			return null;
@@ -134,15 +134,15 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		public String toStatusString() {
 			switch (this) {
 			case NEW:
-				return "new";
+				return "new"; //$NON-NLS-1$
 			case ASSIGNED:
-				return "assigned";
+				return "assigned"; //$NON-NLS-1$
 			case REOPENED:
-				return "reopened";
+				return "reopened"; //$NON-NLS-1$
 			case CLOSED:
-				return "closed";
+				return "closed"; //$NON-NLS-1$
 			default:
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		}
 
@@ -150,15 +150,15 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		public String toString() {
 			switch (this) {
 			case NEW:
-				return "New";
+				return "New"; //$NON-NLS-1$
 			case ASSIGNED:
-				return "Assigned";
+				return "Assigned"; //$NON-NLS-1$
 			case REOPENED:
-				return "Reopened";
+				return "Reopened"; //$NON-NLS-1$
 			case CLOSED:
-				return "Closed";
+				return "Closed"; //$NON-NLS-1$
 			default:
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		}
 
@@ -171,19 +171,19 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			if (priority == null) {
 				return null;
 			}
-			if (priority.equals("blocker")) {
+			if (priority.equals("blocker")) { //$NON-NLS-1$
 				return BLOCKER;
 			}
-			if (priority.equals("critical")) {
+			if (priority.equals("critical")) { //$NON-NLS-1$
 				return CRITICAL;
 			}
-			if (priority.equals("major")) {
+			if (priority.equals("major")) { //$NON-NLS-1$
 				return MAJOR;
 			}
-			if (priority.equals("minor")) {
+			if (priority.equals("minor")) { //$NON-NLS-1$
 				return MINOR;
 			}
-			if (priority.equals("trivial")) {
+			if (priority.equals("trivial")) { //$NON-NLS-1$
 				return TRIVIAL;
 			}
 			return null;
@@ -210,30 +210,30 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		public String toString() {
 			switch (this) {
 			case BLOCKER:
-				return "blocker";
+				return "blocker"; //$NON-NLS-1$
 			case CRITICAL:
-				return "critical";
+				return "critical"; //$NON-NLS-1$
 			case MAJOR:
-				return "major";
+				return "major"; //$NON-NLS-1$
 			case MINOR:
-				return "minor";
+				return "minor"; //$NON-NLS-1$
 			case TRIVIAL:
-				return "trivial";
+				return "trivial"; //$NON-NLS-1$
 			default:
 				return null;
 			}
 		}
 	}
 
-	private final static String CLIENT_LABEL = "Trac (supports 0.9 or 0.10 through Web and XML-RPC)";
+	private final static String CLIENT_LABEL = Messages.TracRepositoryConnector_TRAC_SUPPORTS_0_9_OR_0_10_THROUGH_WEB_AND_XML_RPC;
 
 	private final static Date DEFAULT_COMPLETION_DATE = new Date(0);
 
 	private static int TASK_PRIORITY_LEVELS = 5;
 
-	public static final String TASK_KEY_SUPPORTS_SUBTASKS = "SupportsSubtasks";
+	public static final String TASK_KEY_SUPPORTS_SUBTASKS = "SupportsSubtasks"; //$NON-NLS-1$
 
-	public static final String TASK_KEY_UPDATE_DATE = "UpdateDate";
+	public static final String TASK_KEY_UPDATE_DATE = "UpdateDate"; //$NON-NLS-1$
 
 	public static String getDisplayUsername(TaskRepository repository) {
 		AuthenticationCredentials credentials = repository.getCredentials(AuthenticationType.REPOSITORY);
@@ -273,7 +273,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			return Integer.parseInt(taskId);
 		} catch (NumberFormatException e) {
 			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.ID_PLUGIN, IStatus.OK,
-					"Invalid ticket id: " + taskId, e));
+					"Invalid ticket id: " + taskId, e)); //$NON-NLS-1$
 		}
 	}
 
@@ -291,7 +291,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		if (attribute != null) {
 			return attribute.getValue();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -408,7 +408,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskIdPrefix() {
-		return "#";
+		return "#"; //$NON-NLS-1$
 	}
 
 	public TaskRepositoryLocationFactory getTaskRepositoryLocationFactory() {
@@ -437,12 +437,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public IStatus performQuery(TaskRepository repository, IRepositoryQuery query, TaskDataCollector resultCollector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Querying repository", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.TracRepositoryConnector_Querying_repository, IProgressMonitor.UNKNOWN);
 
 			TracSearch search = TracUtil.toTracSearch(query);
 			if (search == null) {
 				return new RepositoryStatus(repository.getRepositoryUrl(), IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_REPOSITORY, "The query is invalid: \"" + query.getUrl() + "\"");
+						RepositoryStatus.ERROR_REPOSITORY, "The query is invalid: \"" + query.getUrl() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			ITracClient client;
@@ -463,7 +463,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 								taskById.put(task.getTaskId(), task);
 							}
 						}
-						ITask task = taskById.get(ticket.getId() + "");
+						ITask task = taskById.get(ticket.getId() + ""); //$NON-NLS-1$
 						if (task != null && hasTaskChanged(repository, task, taskData)) {
 							session.markStale(task);
 						}
@@ -483,11 +483,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
-			monitor.beginTask("", 1);
+			monitor.beginTask("", 1); //$NON-NLS-1$
 			if (event.isFullSynchronization() && event.getStatus() == null) {
 				Date date = getSynchronizationTimestamp(event);
 				if (date != null) {
-					event.getTaskRepository().setSynchronizationTimeStamp(TracUtil.toTracTime(date) + "");
+					event.getTaskRepository().setSynchronizationTimeStamp(TracUtil.toTracTime(date) + ""); //$NON-NLS-1$
 				}
 			}
 		} finally {
@@ -512,7 +512,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public void preSynchronization(ISynchronizationSession session, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.TracRepositoryConnector_Getting_changed_tasks, IProgressMonitor.UNKNOWN);
 
 			if (!session.isFullSynchronization()) {
 				return;
@@ -604,7 +604,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			client.updateAttributes(monitor, true);
 		} catch (Exception e) {
 			throw new CoreException(RepositoryStatus.createStatus(repository.getRepositoryUrl(), IStatus.WARNING,
-					TracCorePlugin.ID_PLUGIN, "Could not update attributes"));
+					TracCorePlugin.ID_PLUGIN, "Could not update attributes")); //$NON-NLS-1$
 		}
 	}
 
@@ -626,7 +626,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		task.setAttribute(TASK_KEY_SUPPORTS_SUBTASKS, Boolean.toString(taskDataHandler.supportsSubtasks(taskData)));
 		if (!taskData.isPartial()) {
 			Date date = task.getModificationDate();
-			task.setAttribute(TASK_KEY_UPDATE_DATE, (date != null) ? TracUtil.toTracTime(date) + "" : null);
+			task.setAttribute(TASK_KEY_UPDATE_DATE, (date != null) ? TracUtil.toTracTime(date) + "" : null); //$NON-NLS-1$
 		}
 	}
 
@@ -650,7 +650,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		TaskAttribute attribute = taskData.getRoot().getAttribute(TracTaskDataHandler.ATTRIBUTE_BLOCKED_BY);
 		if (attribute != null) {
 			List<TaskRelation> result = new ArrayList<TaskRelation>();
-			StringTokenizer t = new StringTokenizer(attribute.getValue(), ", ");
+			StringTokenizer t = new StringTokenizer(attribute.getValue(), ", "); //$NON-NLS-1$
 			while (t.hasMoreTokens()) {
 				result.add(TaskRelation.subtask(t.nextToken()));
 			}

@@ -51,9 +51,9 @@ public interface ITracClient {
 		public String toString() {
 			switch (this) {
 			case TRAC_0_9:
-				return "Web (Trac 0.9 or 0.10)";
+				return "Web (Trac 0.9 or 0.10)"; //$NON-NLS-1$
 			case XML_RPC:
-				return "XML-RPC Plugin (Rev. " + TracXmlRpcClient.REQUIRED_REVISION + ")";
+				return "XML-RPC Plugin (Rev. " + TracXmlRpcClient.REQUIRED_REVISION + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			default:
 				return null;
 			}
@@ -61,37 +61,37 @@ public interface ITracClient {
 
 	}
 
-	public static final String CHARSET = "UTF-8";
+	public static final String CHARSET = "UTF-8"; //$NON-NLS-1$
 
-	public static final String TIME_ZONE = "UTC";
+	public static final String TIME_ZONE = "UTC"; //$NON-NLS-1$
 
-	public static final String LOGIN_URL = "/login";
+	public static final String LOGIN_URL = "/login"; //$NON-NLS-1$
 
-	public static final String QUERY_URL = "/query?format=tab";
+	public static final String QUERY_URL = "/query?format=tab"; //$NON-NLS-1$
 
-	public static final String TICKET_URL = "/ticket/";
+	public static final String TICKET_URL = "/ticket/"; //$NON-NLS-1$
 
-	public static final String NEW_TICKET_URL = "/newticket";
+	public static final String NEW_TICKET_URL = "/newticket"; //$NON-NLS-1$
 
-	public static final String CUSTOM_QUERY_URL = "/query";
+	public static final String CUSTOM_QUERY_URL = "/query"; //$NON-NLS-1$
 
-	public static final String TICKET_ATTACHMENT_URL = "/attachment/ticket/";
+	public static final String TICKET_ATTACHMENT_URL = "/attachment/ticket/"; //$NON-NLS-1$
 
-	public static final String DEFAULT_USERNAME = "anonymous";
+	public static final String DEFAULT_USERNAME = "anonymous"; //$NON-NLS-1$
 
-	public static final String WIKI_URL = "/wiki/";
+	public static final String WIKI_URL = "/wiki/"; //$NON-NLS-1$
 
-	public static final String REPORT_URL = "/report/";
+	public static final String REPORT_URL = "/report/"; //$NON-NLS-1$
 
-	public static final String CHANGESET_URL = "/changeset/";
+	public static final String CHANGESET_URL = "/changeset/"; //$NON-NLS-1$
 
-	public static final String REVISION_LOG_URL = "/log/";
+	public static final String REVISION_LOG_URL = "/log/"; //$NON-NLS-1$
 
-	public static final String MILESTONE_URL = "/milestone/";
+	public static final String MILESTONE_URL = "/milestone/"; //$NON-NLS-1$
 
-	public static final String BROWSER_URL = "/browser/";
+	public static final String BROWSER_URL = "/browser/"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_URL = "/attachment/ticket/";
+	public static final String ATTACHMENT_URL = "/attachment/ticket/"; //$NON-NLS-1$
 
 	/**
 	 * Gets ticket with <code>id</code> from repository.

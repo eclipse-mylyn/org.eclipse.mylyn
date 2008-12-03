@@ -25,15 +25,15 @@ public class TracTicketField implements Serializable {
 
 		public static Type fromString(String value) {
 			value = value.toLowerCase();
-			if ("text".equals(value)) {
+			if ("text".equals(value)) { //$NON-NLS-1$
 				return TEXT;
-			} else if ("checkbox".equals(value)) {
+			} else if ("checkbox".equals(value)) { //$NON-NLS-1$
 				return CHECKBOX;
-			} else if ("select".equals(value)) {
+			} else if ("select".equals(value)) { //$NON-NLS-1$
 				return SELECT;
-			} else if ("radio".equals(value)) {
+			} else if ("radio".equals(value)) { //$NON-NLS-1$
 				return RADIO;
-			} else if ("textarea".equals(value)) {
+			} else if ("textarea".equals(value)) { //$NON-NLS-1$
 				return TEXTAREA;
 			}
 			return TEXT;

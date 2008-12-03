@@ -71,7 +71,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 		public TracHttpClientTransport(XmlRpcClient client, HttpClient httpClient, AbstractWebLocation location,
 				HttpMethodInterceptor interceptor) {
-			super(client, "");
+			super(client, ""); //$NON-NLS-1$
 			this.httpClient = httpClient;
 			this.location = location;
 			this.interceptor = interceptor;
@@ -96,15 +96,15 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			try {
 				return method.getResponseBodyAsStream();
 			} catch (HttpException e) {
-				throw new XmlRpcClientException("Error in HTTP transport: " + e.getMessage(), e);
+				throw new XmlRpcClientException("Error in HTTP transport: " + e.getMessage(), e); //$NON-NLS-1$
 			} catch (IOException e) {
-				throw new XmlRpcClientException("I/O error in server communication: " + e.getMessage(), e);
+				throw new XmlRpcClientException("I/O error in server communication: " + e.getMessage(), e); //$NON-NLS-1$
 			}
 		}
 
 		@Override
 		protected String getUserAgent() {
-			return WebUtil.getUserAgent("");
+			return WebUtil.getUserAgent(""); //$NON-NLS-1$
 		}
 
 		@Override
@@ -141,7 +141,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 		@Override
 		protected boolean isResponseGzipCompressed(XmlRpcStreamRequestConfig config) {
-			Header header = method.getResponseHeader("Content-Encoding");
+			Header header = method.getResponseHeader("Content-Encoding"); //$NON-NLS-1$
 			return header != null && HttpUtil.isUsingGzipEncoding(header.getValue());
 		}
 
@@ -168,7 +168,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 				}
 
 				public String getContentType() {
-					return "text/xml";
+					return "text/xml"; //$NON-NLS-1$
 				}
 
 				public boolean isRepeatable() {
@@ -216,10 +216,10 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 				if (t instanceof XmlRpcException) {
 					throw (XmlRpcException) t;
 				} else {
-					throw new XmlRpcException("Unexpected exception: " + t.getMessage(), t);
+					throw new XmlRpcException("Unexpected exception: " + t.getMessage(), t); //$NON-NLS-1$
 				}
 			} catch (IOException e) {
-				throw new XmlRpcException("I/O error while communicating with HTTP server: " + e.getMessage(), e);
+				throw new XmlRpcException("I/O error while communicating with HTTP server: " + e.getMessage(), e); //$NON-NLS-1$
 			}
 		}
 
@@ -230,12 +230,12 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 		private static final long serialVersionUID = 9032521978140685830L;
 
 		public TracHttpException(int responseCode) {
-			super(responseCode, "HTTP Error " + responseCode);
+			super(responseCode, "HTTP Error " + responseCode); //$NON-NLS-1$
 		}
 
 	}
 
-	protected static final String USER_AGENT = "TracConnector Apache XML-RPC/3.0";
+	protected static final String USER_AGENT = "TracConnector Apache XML-RPC/3.0"; //$NON-NLS-1$
 
 	private final XmlRpcClient xmlRpcClient;
 

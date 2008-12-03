@@ -24,40 +24,40 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public enum TracAttribute {
 
-	CC(Key.CC, "CC:", TaskAttribute.USER_CC, TaskAttribute.TYPE_SHORT_TEXT, Flag.PEOPLE),
+	CC(Key.CC, Messages.TracAttribute_CC, TaskAttribute.USER_CC, TaskAttribute.TYPE_SHORT_TEXT, Flag.PEOPLE),
 
-	CHANGE_TIME(Key.CHANGE_TIME, "Last Modification:", TaskAttribute.DATE_MODIFICATION, TaskAttribute.TYPE_DATE,
+	CHANGE_TIME(Key.CHANGE_TIME, Messages.TracAttribute_Last_Modification, TaskAttribute.DATE_MODIFICATION, TaskAttribute.TYPE_DATE,
 			Flag.READ_ONLY),
 
-	COMPONENT(Key.COMPONENT, "Component:", TaskAttribute.PRODUCT, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
+	COMPONENT(Key.COMPONENT, Messages.TracAttribute_Component, TaskAttribute.PRODUCT, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
-	DESCRIPTION(Key.DESCRIPTION, "Description:", TaskAttribute.DESCRIPTION, TaskAttribute.TYPE_LONG_RICH_TEXT),
+	DESCRIPTION(Key.DESCRIPTION, Messages.TracAttribute_Description, TaskAttribute.DESCRIPTION, TaskAttribute.TYPE_LONG_RICH_TEXT),
 
-	ID(Key.ID, "ID:", TaskAttribute.TASK_KEY, TaskAttribute.TYPE_SHORT_TEXT, Flag.PEOPLE),
+	ID(Key.ID, Messages.TracAttribute_ID, TaskAttribute.TASK_KEY, TaskAttribute.TYPE_SHORT_TEXT, Flag.PEOPLE),
 
-	KEYWORDS(Key.KEYWORDS, "Keywords:", TaskAttribute.KEYWORDS, TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE),
+	KEYWORDS(Key.KEYWORDS, Messages.TracAttribute_Keywords, TaskAttribute.KEYWORDS, TaskAttribute.TYPE_SHORT_TEXT, Flag.ATTRIBUTE),
 
-	MILESTONE(Key.MILESTONE, "Milestone:", null, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
+	MILESTONE(Key.MILESTONE, Messages.TracAttribute_Milestone, null, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
-	OWNER(Key.OWNER, "Assigned to:", TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, Flag.PEOPLE),
+	OWNER(Key.OWNER, Messages.TracAttribute_Assigned_to, TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, Flag.PEOPLE),
 
-	PRIORITY(Key.PRIORITY, "Priority:", TaskAttribute.PRIORITY, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
+	PRIORITY(Key.PRIORITY, Messages.TracAttribute_Priority, TaskAttribute.PRIORITY, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
-	REPORTER(Key.REPORTER, "Reporter:", TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, Flag.READ_ONLY),
+	REPORTER(Key.REPORTER, Messages.TracAttribute_Reporter, TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, Flag.READ_ONLY),
 
-	RESOLUTION(Key.RESOLUTION, "Resolution:", TaskAttribute.RESOLUTION, TaskAttribute.TYPE_SINGLE_SELECT),
+	RESOLUTION(Key.RESOLUTION, Messages.TracAttribute_Resolution, TaskAttribute.RESOLUTION, TaskAttribute.TYPE_SINGLE_SELECT),
 
-	SEVERITY(Key.SEVERITY, "Severity:", null, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
+	SEVERITY(Key.SEVERITY, Messages.TracAttribute_Severity, null, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
-	STATUS(Key.STATUS, "Status:", TaskAttribute.STATUS, TaskAttribute.TYPE_SHORT_TEXT),
+	STATUS(Key.STATUS, Messages.TracAttribute_Status, TaskAttribute.STATUS, TaskAttribute.TYPE_SHORT_TEXT),
 
-	SUMMARY(Key.SUMMARY, "Summary:", TaskAttribute.SUMMARY, TaskAttribute.TYPE_SHORT_RICH_TEXT),
+	SUMMARY(Key.SUMMARY, Messages.TracAttribute_Summary, TaskAttribute.SUMMARY, TaskAttribute.TYPE_SHORT_RICH_TEXT),
 
-	TIME(Key.TIME, "Created:", TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATE, Flag.READ_ONLY),
+	TIME(Key.TIME, Messages.TracAttribute_Created, TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATE, Flag.READ_ONLY),
 
-	TYPE(Key.TYPE, "Type:", TaskAttribute.TASK_KIND, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
+	TYPE(Key.TYPE, Messages.TracAttribute_Type, TaskAttribute.TASK_KIND, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE),
 
-	VERSION(Key.VERSION, "Version:", null, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
+	VERSION(Key.VERSION, Messages.TracAttribute_Version, null, TaskAttribute.TYPE_SINGLE_SELECT, Flag.ATTRIBUTE);
 
 	static Map<String, TracAttribute> attributeByTracKey = new HashMap<String, TracAttribute>();
 

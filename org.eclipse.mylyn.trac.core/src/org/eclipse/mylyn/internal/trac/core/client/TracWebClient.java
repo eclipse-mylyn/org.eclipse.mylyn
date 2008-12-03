@@ -222,35 +222,35 @@ public class TracWebClient extends AbstractTracClient {
 					if (token.getType() == Token.TAG) {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						if (tag.getTagType() == Tag.TD) {
-							String headers = tag.getAttribute("headers");
-							if ("h_component".equals(headers)) {
+							String headers = tag.getAttribute("headers"); //$NON-NLS-1$
+							if ("h_component".equals(headers)) { //$NON-NLS-1$
 								ticket.putBuiltinValue(Key.COMPONENT, getText(tokenizer));
-							} else if ("h_milestone".equals(headers)) {
+							} else if ("h_milestone".equals(headers)) { //$NON-NLS-1$
 								ticket.putBuiltinValue(Key.MILESTONE, getText(tokenizer));
-							} else if ("h_priority".equals(headers)) {
+							} else if ("h_priority".equals(headers)) { //$NON-NLS-1$
 								ticket.putBuiltinValue(Key.PRIORITY, getText(tokenizer));
-							} else if ("h_severity".equals(headers)) {
+							} else if ("h_severity".equals(headers)) { //$NON-NLS-1$
 								ticket.putBuiltinValue(Key.SEVERITY, getText(tokenizer));
-							} else if ("h_version".equals(headers)) {
+							} else if ("h_version".equals(headers)) { //$NON-NLS-1$
 								ticket.putBuiltinValue(Key.VERSION, getText(tokenizer));
-							} else if ("h_keywords".equals(headers)) {
+							} else if ("h_keywords".equals(headers)) { //$NON-NLS-1$
 								ticket.putBuiltinValue(Key.KEYWORDS, getText(tokenizer));
-							} else if ("h_cc".equals(headers)) {
+							} else if ("h_cc".equals(headers)) { //$NON-NLS-1$
 								ticket.putBuiltinValue(Key.CC, getText(tokenizer));
-							} else if ("h_owner".equals(headers)) {
+							} else if ("h_owner".equals(headers)) { //$NON-NLS-1$
 								ticket.putBuiltinValue(Key.OWNER, getText(tokenizer));
-							} else if ("h_reporter".equals(headers)) {
+							} else if ("h_reporter".equals(headers)) { //$NON-NLS-1$
 								ticket.putBuiltinValue(Key.REPORTER, getText(tokenizer));
 							}
 							// TODO handle custom fields
 						} else if (tag.getTagType() == Tag.H2
-								&& ("summary".equals(tag.getAttribute("class")) || "summary searchable".equals(tag.getAttribute("class")))) {
+								&& ("summary".equals(tag.getAttribute("class")) || "summary searchable".equals(tag.getAttribute("class")))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 							ticket.putBuiltinValue(Key.SUMMARY, getText(tokenizer));
-						} else if (tag.getTagType() == Tag.H3 && "status".equals(tag.getAttribute("class"))) {
+						} else if (tag.getTagType() == Tag.H3 && "status".equals(tag.getAttribute("class"))) { //$NON-NLS-1$ //$NON-NLS-2$
 							String text = getStrongText(tokenizer);
 							if (text.length() > 0) {
 								// Trac 0.9 format: status / status (resolution)
-								int i = text.indexOf(" (");
+								int i = text.indexOf(" ("); //$NON-NLS-1$
 								if (i != -1) {
 									ticket.putBuiltinValue(Key.STATUS, text.substring(0, i));
 									ticket.putBuiltinValue(Key.RESOLUTION, text.substring(i + 2, text.length() - 1));
@@ -259,12 +259,12 @@ public class TracWebClient extends AbstractTracClient {
 								}
 							}
 						} else if (tag.getTagType() == Tag.SPAN) {
-							String clazz = tag.getAttribute("class");
-							if ("status".equals(clazz)) {
+							String clazz = tag.getAttribute("class"); //$NON-NLS-1$
+							if ("status".equals(clazz)) { //$NON-NLS-1$
 								// Trac 0.10 format: (status type) / (status type: resolution)
 								String text = getText(tokenizer);
-								if (text.startsWith("(") && text.endsWith(")")) {
-									StringTokenizer t = new StringTokenizer(text.substring(1, text.length() - 1), " :");
+								if (text.startsWith("(") && text.endsWith(")")) { //$NON-NLS-1$ //$NON-NLS-2$
+									StringTokenizer t = new StringTokenizer(text.substring(1, text.length() - 1), " :"); //$NON-NLS-1$
 									if (t.hasMoreTokens()) {
 										ticket.putBuiltinValue(Key.STATUS, t.nextToken());
 									}
@@ -313,7 +313,7 @@ public class TracWebClient extends AbstractTracClient {
 				if (line == null) {
 					throw new InvalidTicketException();
 				}
-				StringTokenizer t = new StringTokenizer(line, "\t");
+				StringTokenizer t = new StringTokenizer(line, "\t"); //$NON-NLS-1$
 				Key[] fields = new Key[t.countTokens()];
 				for (int i = 0; i < fields.length; i++) {
 					fields[i] = Key.fromKey(t.nextToken());
@@ -321,7 +321,7 @@ public class TracWebClient extends AbstractTracClient {
 
 				// create a ticket for each following line of output
 				while ((line = reader.readLine()) != null) {
-					t = new StringTokenizer(line, "\t");
+					t = new StringTokenizer(line, "\t"); //$NON-NLS-1$
 					TracTicket ticket = new TracTicket();
 					for (int i = 0; i < fields.length && t.hasMoreTokens(); i++) {
 						if (fields[i] != null) {
@@ -337,7 +337,7 @@ public class TracWebClient extends AbstractTracClient {
 								}
 							} catch (NumberFormatException e) {
 								StatusHandler.log(new Status(IStatus.WARNING, TracCorePlugin.ID_PLUGIN,
-										"Error parsing response: '" + line + "'", e));
+										"Error parsing response: '" + line + "'", e)); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						}
 					}
@@ -364,8 +364,8 @@ public class TracWebClient extends AbstractTracClient {
 	 * Trac has sepcial encoding rules for the returned output: None is represented by "--".
 	 */
 	private String parseTicketValue(String value) {
-		if ("--".equals(value)) {
-			return "";
+		if ("--".equals(value)) { //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -386,7 +386,7 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	public void validate(IProgressMonitor monitor) throws TracException {
-		GetMethod method = connect(repositoryUrl + "/", monitor);
+		GetMethod method = connect(repositoryUrl + "/", monitor); //$NON-NLS-1$
 		try {
 			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 			try {
@@ -401,26 +401,26 @@ public class TracWebClient extends AbstractTracClient {
 					if (token.getType() == Token.TAG) {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						if (tag.getTagType() == Tag.DIV) {
-							String id = tag.getAttribute("id");
-							inFooter = !tag.isEndTag() && "footer".equals(id);
+							String id = tag.getAttribute("id"); //$NON-NLS-1$
+							inFooter = !tag.isEndTag() && "footer".equals(id); //$NON-NLS-1$
 						} else if (tag.getTagType() == Tag.STRONG && inFooter) {
 							version = getText(tokenizer);
 						} else if (tag.getTagType() == Tag.A) {
-							String id = tag.getAttribute("id");
-							if ("tracpowered".equals(id)) {
+							String id = tag.getAttribute("id"); //$NON-NLS-1$
+							if ("tracpowered".equals(id)) { //$NON-NLS-1$
 								valid = true;
 							}
 						}
 					}
 				}
 
-				if (version != null && !(version.startsWith("Trac 0.9") || version.startsWith("Trac 0.10"))) {
-					throw new TracException("The Trac version " + version
-							+ " is unsupported. Please use version 0.9.x or 0.10.x.");
+				if (version != null && !(version.startsWith("Trac 0.9") || version.startsWith("Trac 0.10"))) { //$NON-NLS-1$ //$NON-NLS-2$
+					throw new TracException("The Trac version " + version //$NON-NLS-1$
+							+ " is unsupported. Please use version 0.9.x or 0.10.x."); //$NON-NLS-1$
 				}
 
 				if (!valid) {
-					throw new TracException("Not a valid Trac repository");
+					throw new TracException("Not a valid Trac repository"); //$NON-NLS-1$
 				}
 			} finally {
 				in.close();
@@ -436,7 +436,7 @@ public class TracWebClient extends AbstractTracClient {
 
 	@Override
 	public void updateAttributes(IProgressMonitor monitor) throws TracException {
-		monitor.beginTask("Updating attributes", IProgressMonitor.UNKNOWN);
+		monitor.beginTask(Messages.TracWebClient_Updating_attributes, IProgressMonitor.UNKNOWN);
 
 		GetMethod method = connect(repositoryUrl + ITracClient.CUSTOM_QUERY_URL, monitor);
 		try {
@@ -453,7 +453,7 @@ public class TracWebClient extends AbstractTracClient {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						if (tag.getTagType() == Tag.SCRIPT) {
 							String text = getText(tokenizer).trim();
-							if (text.startsWith("var properties=")) {
+							if (text.startsWith("var properties=")) { //$NON-NLS-1$
 								parseAttributes(text);
 							}
 						}
@@ -493,28 +493,28 @@ public class TracWebClient extends AbstractTracClient {
 			switch (tokenType) {
 			case StreamTokenizer.TT_WORD:
 				if (state == AttributeState.IN_LIST) {
-					if ("component".equals(t.sval)) {
+					if ("component".equals(t.sval)) { //$NON-NLS-1$
 						data.components = new ArrayList<TracComponent>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.components.add(new TracComponent(value));
 							}
 						};
-					} else if ("milestone".equals(t.sval)) {
+					} else if ("milestone".equals(t.sval)) { //$NON-NLS-1$
 						data.milestones = new ArrayList<TracMilestone>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.milestones.add(new TracMilestone(value));
 							}
 						};
-					} else if ("priority".equals(t.sval)) {
+					} else if ("priority".equals(t.sval)) { //$NON-NLS-1$
 						data.priorities = new ArrayList<TracPriority>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.priorities.add(new TracPriority(value, data.priorities.size() + 1));
 							}
 						};
-					} else if ("resolution".equals(t.sval)) {
+					} else if ("resolution".equals(t.sval)) { //$NON-NLS-1$
 						data.ticketResolutions = new ArrayList<TracTicketResolution>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
@@ -522,28 +522,28 @@ public class TracWebClient extends AbstractTracClient {
 										data.ticketResolutions.size() + 1));
 							}
 						};
-					} else if ("severity".equals(t.sval)) {
+					} else if ("severity".equals(t.sval)) { //$NON-NLS-1$
 						data.severities = new ArrayList<TracSeverity>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.severities.add(new TracSeverity(value, data.severities.size() + 1));
 							}
 						};
-					} else if ("status".equals(t.sval)) {
+					} else if ("status".equals(t.sval)) { //$NON-NLS-1$
 						data.ticketStatus = new ArrayList<TracTicketStatus>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.ticketStatus.add(new TracTicketStatus(value, data.ticketStatus.size() + 1));
 							}
 						};
-					} else if ("type".equals(t.sval)) {
+					} else if ("type".equals(t.sval)) { //$NON-NLS-1$
 						data.ticketTypes = new ArrayList<TracTicketType>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.ticketTypes.add(new TracTicketType(value, data.ticketTypes.size() + 1));
 							}
 						};
-					} else if ("version".equals(t.sval)) {
+					} else if ("version".equals(t.sval)) { //$NON-NLS-1$
 						data.versions = new ArrayList<TracVersion>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
@@ -558,7 +558,7 @@ public class TracWebClient extends AbstractTracClient {
 				}
 				break;
 			case '"':
-				if (state == AttributeState.IN_ATTRIBUTE_VALUE_LIST && "options".equals(attributeType)) {
+				if (state == AttributeState.IN_ATTRIBUTE_VALUE_LIST && "options".equals(attributeType)) { //$NON-NLS-1$
 					if (attributeFactory != null) {
 						attributeFactory.addAttribute(t.sval);
 					}
@@ -590,7 +590,7 @@ public class TracWebClient extends AbstractTracClient {
 				} else if (state == AttributeState.IN_LIST) {
 					state = AttributeState.IN_ATTRIBUTE_KEY;
 				} else {
-					throw new IOException("Error parsing attributes: unexpected token '{'");
+					throw new IOException("Error parsing attributes: unexpected token '{'"); //$NON-NLS-1$
 				}
 				break;
 			case '}':
@@ -599,7 +599,7 @@ public class TracWebClient extends AbstractTracClient {
 				} else if (state == AttributeState.IN_LIST) {
 					state = AttributeState.INIT;
 				} else {
-					throw new IOException("Error parsing attributes: unexpected token '}'");
+					throw new IOException("Error parsing attributes: unexpected token '}'"); //$NON-NLS-1$
 				}
 				break;
 			}
@@ -607,7 +607,7 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	public void updateAttributesNewTicketPage(IProgressMonitor monitor) throws TracException {
-		monitor.beginTask("Updating attributes", IProgressMonitor.UNKNOWN);
+		monitor.beginTask(Messages.TracWebClient_Updating_attributes, IProgressMonitor.UNKNOWN);
 
 		GetMethod method = connect(repositoryUrl + ITracClient.NEW_TICKET_URL, monitor);
 		try {
@@ -623,38 +623,38 @@ public class TracWebClient extends AbstractTracClient {
 					if (token.getType() == Token.TAG) {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						if (tag.getTagType() == Tag.SELECT) {
-							String name = tag.getAttribute("id");
-							if ("component".equals(name)) {
+							String name = tag.getAttribute("id"); //$NON-NLS-1$
+							if ("component".equals(name)) { //$NON-NLS-1$
 								List<String> values = getOptionValues(tokenizer);
 								data.components = new ArrayList<TracComponent>(values.size());
 								for (String value : values) {
 									data.components.add(new TracComponent(value));
 								}
-							} else if ("milestone".equals(name)) {
+							} else if ("milestone".equals(name)) { //$NON-NLS-1$
 								List<String> values = getOptionValues(tokenizer);
 								data.milestones = new ArrayList<TracMilestone>(values.size());
 								for (String value : values) {
 									data.milestones.add(new TracMilestone(value));
 								}
-							} else if ("priority".equals(name)) {
+							} else if ("priority".equals(name)) { //$NON-NLS-1$
 								List<String> values = getOptionValues(tokenizer);
 								data.priorities = new ArrayList<TracPriority>(values.size());
 								for (int i = 0; i < values.size(); i++) {
 									data.priorities.add(new TracPriority(values.get(i), i + 1));
 								}
-							} else if ("severity".equals(name)) {
+							} else if ("severity".equals(name)) { //$NON-NLS-1$
 								List<String> values = getOptionValues(tokenizer);
 								data.severities = new ArrayList<TracSeverity>(values.size());
 								for (int i = 0; i < values.size(); i++) {
 									data.severities.add(new TracSeverity(values.get(i), i + 1));
 								}
-							} else if ("type".equals(name)) {
+							} else if ("type".equals(name)) { //$NON-NLS-1$
 								List<String> values = getOptionValues(tokenizer);
 								data.ticketTypes = new ArrayList<TracTicketType>(values.size());
 								for (int i = 0; i < values.size(); i++) {
 									data.ticketTypes.add(new TracTicketType(values.get(i), i + 1));
 								}
-							} else if ("version".equals(name)) {
+							} else if ("version".equals(name)) { //$NON-NLS-1$
 								List<String> values = getOptionValues(tokenizer);
 								data.versions = new ArrayList<TracVersion>(values.size());
 								for (String value : values) {
@@ -680,17 +680,17 @@ public class TracWebClient extends AbstractTracClient {
 
 	private void addResolutionAndStatus() {
 		data.ticketResolutions = new ArrayList<TracTicketResolution>(5);
-		data.ticketResolutions.add(new TracTicketResolution("fixed", 1));
-		data.ticketResolutions.add(new TracTicketResolution("invalid", 2));
-		data.ticketResolutions.add(new TracTicketResolution("wontfix", 3));
-		data.ticketResolutions.add(new TracTicketResolution("duplicate", 4));
-		data.ticketResolutions.add(new TracTicketResolution("worksforme", 5));
+		data.ticketResolutions.add(new TracTicketResolution("fixed", 1)); //$NON-NLS-1$
+		data.ticketResolutions.add(new TracTicketResolution("invalid", 2)); //$NON-NLS-1$
+		data.ticketResolutions.add(new TracTicketResolution("wontfix", 3)); //$NON-NLS-1$
+		data.ticketResolutions.add(new TracTicketResolution("duplicate", 4)); //$NON-NLS-1$
+		data.ticketResolutions.add(new TracTicketResolution("worksforme", 5)); //$NON-NLS-1$
 
 		data.ticketStatus = new ArrayList<TracTicketStatus>(4);
-		data.ticketStatus.add(new TracTicketStatus("new", 1));
-		data.ticketStatus.add(new TracTicketStatus("assigned", 2));
-		data.ticketStatus.add(new TracTicketStatus("reopened", 3));
-		data.ticketStatus.add(new TracTicketStatus("closed", 4));
+		data.ticketStatus.add(new TracTicketStatus("new", 1)); //$NON-NLS-1$
+		data.ticketStatus.add(new TracTicketStatus("assigned", 2)); //$NON-NLS-1$
+		data.ticketStatus.add(new TracTicketStatus("reopened", 3)); //$NON-NLS-1$
+		data.ticketStatus.add(new TracTicketStatus("closed", 4)); //$NON-NLS-1$
 	}
 
 	private List<String> getOptionValues(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
@@ -716,7 +716,7 @@ public class TracWebClient extends AbstractTracClient {
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 			if (token.getType() == Token.TEXT) {
 				sb.append(token.toString().trim());
-				sb.append(" ");
+				sb.append(" "); //$NON-NLS-1$
 			} else if (token.getType() == Token.COMMENT) {
 				// ignore
 			} else {
@@ -741,11 +741,11 @@ public class TracWebClient extends AbstractTracClient {
 				break;
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public InputStream getAttachmentData(int id, String filename, IProgressMonitor monitor) throws TracException {
-		GetMethod method = connect(repositoryUrl + ITracClient.ATTACHMENT_URL + id + "/" + filename + "?format=raw",
+		GetMethod method = connect(repositoryUrl + ITracClient.ATTACHMENT_URL + id + "/" + filename + "?format=raw", //$NON-NLS-1$ //$NON-NLS-2$
 				monitor);
 		try {
 			// the receiver is responsible for closing the stream which will
@@ -759,19 +759,19 @@ public class TracWebClient extends AbstractTracClient {
 
 	public void putAttachmentData(int id, String name, String description, InputStream in, IProgressMonitor monitor)
 			throws TracException {
-		throw new TracException("Unsupported operation");
+		throw new TracException("Unsupported operation"); //$NON-NLS-1$
 	}
 
 	public void deleteAttachment(int ticketId, String filename, IProgressMonitor monitor) throws TracException {
-		throw new TracException("Unsupported operation");
+		throw new TracException("Unsupported operation"); //$NON-NLS-1$
 	}
 
 	public int createTicket(TracTicket ticket, IProgressMonitor monitor) throws TracException {
-		throw new TracException("Unsupported operation");
+		throw new TracException("Unsupported operation"); //$NON-NLS-1$
 	}
 
 	public void updateTicket(TracTicket ticket, String comment, IProgressMonitor monitor) throws TracException {
-		throw new TracException("Unsupported operation");
+		throw new TracException("Unsupported operation"); //$NON-NLS-1$
 	}
 
 	public Set<Integer> getChangedTickets(Date since, IProgressMonitor monitor) throws TracException {

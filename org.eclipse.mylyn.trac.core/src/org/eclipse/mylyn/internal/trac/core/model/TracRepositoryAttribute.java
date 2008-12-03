@@ -40,7 +40,7 @@ public class TracRepositoryAttribute implements Serializable {
 	@Override
 	public String toString() {
 		// FIXME serialization can restore null values here
-		return (name != null) ? name : "";
+		return (name != null) ? name : ""; //$NON-NLS-1$
 	}
 
 }

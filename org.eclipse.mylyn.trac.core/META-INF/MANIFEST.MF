@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Trac Connector Core
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.trac.core;singleton:=true
 Bundle-Version: 3.1.0.qualifier
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.context.core;bundle-version="[3.0.0,4.0.0)",
  org.eclipse.mylyn.tasks.core;bundle-version="[3.0.0,4.0.0)",
@@ -17,3 +17,4 @@ Export-Package: org.eclipse.mylyn.internal.trac.core;x-friends:="org.eclipse.myl
  org.eclipse.mylyn.internal.trac.core.util;x-friends:="org.eclipse.mylyn.trac.ui"
 Bundle-Activator: org.eclipse.mylyn.internal.trac.core.TracCorePlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Localization: plugin

@@ -30,9 +30,9 @@ public class TracAttributeMapper extends TaskAttributeMapper {
 		READ_ONLY, ATTRIBUTE, PEOPLE
 	};
 
-	public static final String NEW_CC = "task.common.newcc";
+	public static final String NEW_CC = "task.common.newcc"; //$NON-NLS-1$
 
-	public static final String REMOVE_CC = "task.common.removecc";
+	public static final String REMOVE_CC = "task.common.removecc"; //$NON-NLS-1$
 
 	public static final EnumSet<Flag> NO_FLAGS = EnumSet.noneOf(Flag.class);
 
@@ -67,7 +67,7 @@ public class TracAttributeMapper extends TaskAttributeMapper {
 		if (date == null) {
 			attribute.clearValues();
 		} else {
-			attribute.setValue(TracUtil.toTracTime(date) + "");
+			attribute.setValue(TracUtil.toTracTime(date) + ""); //$NON-NLS-1$
 		}
 	}
 

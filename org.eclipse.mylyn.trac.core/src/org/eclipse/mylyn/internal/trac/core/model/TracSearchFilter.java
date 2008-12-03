@@ -25,8 +25,8 @@ import java.util.List;
 public class TracSearchFilter {
 
 	public enum CompareOperator {
-		CONTAINS("~"), CONTAINS_NOT("!~"), BEGINS_WITH("^"), NOT_BEGINS_WITH("!^"), ENDS_WITH("$"), NOT_ENDS_WITH("!$"), IS(
-				""), IS_NOT("!");
+		CONTAINS("~"), CONTAINS_NOT("!~"), BEGINS_WITH("^"), NOT_BEGINS_WITH("!^"), ENDS_WITH("$"), NOT_ENDS_WITH("!$"), IS( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+				""), IS_NOT("!"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		public static CompareOperator fromUrl(String value) {
 			for (CompareOperator operator : values()) {
@@ -55,21 +55,21 @@ public class TracSearchFilter {
 		public String toString() {
 			switch (this) {
 			case CONTAINS:
-				return "contains";
+				return "contains"; //$NON-NLS-1$
 			case CONTAINS_NOT:
-				return "does not contain";
+				return "does not contain"; //$NON-NLS-1$
 			case BEGINS_WITH:
-				return "begins with";
+				return "begins with"; //$NON-NLS-1$
 			case NOT_BEGINS_WITH:
-				return "does not begin with";
+				return "does not begin with"; //$NON-NLS-1$
 			case ENDS_WITH:
-				return "ends with";
+				return "ends with"; //$NON-NLS-1$
 			case NOT_ENDS_WITH:
-				return "does not end with";
+				return "does not end with"; //$NON-NLS-1$
 			case IS_NOT:
-				return "is not";
+				return "is not"; //$NON-NLS-1$
 			default:
-				return "is";
+				return "is"; //$NON-NLS-1$
 			}
 		}
 

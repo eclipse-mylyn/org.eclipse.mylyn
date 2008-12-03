@@ -80,12 +80,12 @@ public class TracUtil {
 
 	public static IStatus createPermissionDeniedError(String repositoryUrl, String pluginId) {
 		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
-				RepositoryStatus.ERROR_PERMISSION_DENIED, "Permission denied.");
+				RepositoryStatus.ERROR_PERMISSION_DENIED, Messages.getString("TracUtil.Permission_denied")); //$NON-NLS-1$
 	}
 
 	public static String encodeUrl(String string) {
 		try {
-			return URLEncoder.encode(string, ITracClient.CHARSET).replaceAll("\\+", "%20");
+			return URLEncoder.encode(string, ITracClient.CHARSET).replaceAll("\\+", "%20"); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (UnsupportedEncodingException e) {
 			return string;
 		}

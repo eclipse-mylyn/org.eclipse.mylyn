@@ -83,7 +83,7 @@ public class TracComment {
 
 	@Override
 	public String toString() {
-		return "[" + field + "] " + author + ": " + oldValue + " -> " + newValue;
+		return "[" + field + "] " + author + ": " + oldValue + " -> " + newValue; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 }

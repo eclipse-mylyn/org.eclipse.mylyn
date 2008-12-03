@@ -75,7 +75,7 @@ public class TracWikiPageInfo {
 
 	@Override
 	public String toString() {
-		return pageName + ": version " + version + " by " + author + " last modified at " + lastModified;
+		return pageName + ": version " + version + " by " + author + " last modified at " + lastModified; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 }

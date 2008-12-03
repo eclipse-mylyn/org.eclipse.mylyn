@@ -91,9 +91,9 @@ public abstract class AbstractTracClient implements ITracClient {
 		PostMethod post = new PostMethod(WebUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		post.setFollowRedirects(false);
 		String formToken = getFormToken(httpClient);
-		NameValuePair[] data = { new NameValuePair("referer", ""),
-				new NameValuePair("user", credentials.getUserName()),
-				new NameValuePair("password", credentials.getPassword()), new NameValuePair("__FORM_TOKEN", formToken) };
+		NameValuePair[] data = { new NameValuePair("referer", ""), //$NON-NLS-1$ //$NON-NLS-2$
+				new NameValuePair("user", credentials.getUserName()), //$NON-NLS-1$
+				new NameValuePair("password", credentials.getPassword()), new NameValuePair("__FORM_TOKEN", formToken) }; //$NON-NLS-1$ //$NON-NLS-2$
 
 		post.setRequestBody(data);
 		try {
@@ -110,11 +110,11 @@ public abstract class AbstractTracClient implements ITracClient {
 	private String getFormToken(HttpClient httpClient) {
 		Cookie[] cookies = httpClient.getState().getCookies();
 		for (Cookie cookie : cookies) {
-			if ("trac_form_token".equals(cookie.getName())) {
+			if ("trac_form_token".equals(cookie.getName())) { //$NON-NLS-1$
 				return cookie.getValue();
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -188,18 +188,18 @@ public abstract class AbstractTracClient implements ITracClient {
 	}
 
 	public String[] getDefaultTicketResolutions() {
-		return new String[] { "fixed", "invalid", "wontfix", "duplicate", "worksforme" };
+		return new String[] { "fixed", "invalid", "wontfix", "duplicate", "worksforme" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 
 	public String[] getDefaultTicketActions(String status) {
-		if ("new".equals(status)) {
-			return new String[] { "leave", "resolve", "reassign", "accept" };
-		} else if ("assigned".equals(status)) {
-			return new String[] { "leave", "resolve", "reassign" };
-		} else if ("reopened".equals(status)) {
-			return new String[] { "leave", "resolve", "reassign" };
-		} else if ("closed".equals(status)) {
-			return new String[] { "leave", "reopen" };
+		if ("new".equals(status)) { //$NON-NLS-1$
+			return new String[] { "leave", "resolve", "reassign", "accept" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		} else if ("assigned".equals(status)) { //$NON-NLS-1$
+			return new String[] { "leave", "resolve", "reassign" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} else if ("reopened".equals(status)) { //$NON-NLS-1$
+			return new String[] { "leave", "resolve", "reassign" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} else if ("closed".equals(status)) { //$NON-NLS-1$
+			return new String[] { "leave", "reopen" }; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
 	}

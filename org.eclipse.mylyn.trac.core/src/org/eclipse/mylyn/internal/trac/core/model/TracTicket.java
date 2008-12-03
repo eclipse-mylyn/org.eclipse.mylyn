@@ -32,10 +32,10 @@ public class TracTicket {
 	 * @author Steffen Pingel
 	 */
 	public enum Key {
-		CC("cc"), CHANGE_TIME("changetime"), COMPONENT("component"), DESCRIPTION("description"), ID("id"), KEYWORDS(
-				"keywords"), MILESTONE("milestone"), OWNER("owner"), PRIORITY("priority"), REPORTER("reporter"), RESOLUTION(
-				"resolution"), STATUS("status"), SEVERITY("severity"), SUMMARY("summary"), TIME("time"), TYPE("type"), VERSION(
-				"version");
+		CC("cc"), CHANGE_TIME("changetime"), COMPONENT("component"), DESCRIPTION("description"), ID("id"), KEYWORDS( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+				"keywords"), MILESTONE("milestone"), OWNER("owner"), PRIORITY("priority"), REPORTER("reporter"), RESOLUTION( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+				"resolution"), STATUS("status"), SEVERITY("severity"), SUMMARY("summary"), TIME("time"), TYPE("type"), VERSION( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+				"version"); //$NON-NLS-1$
 
 		public static Key fromKey(String name) {
 			for (Key key : Key.values()) {
@@ -166,8 +166,8 @@ public class TracTicket {
 		} else if (value != null) {
 			putCustomValue(keyName, value);
 		} else {
-			throw new InvalidTicketException("Expected string value for custom key '" + keyName + "', got '" + value
-					+ "'");
+			throw new InvalidTicketException("Expected string value for custom key '" + keyName + "', got '" + value //$NON-NLS-1$ //$NON-NLS-2$
+					+ "'"); //$NON-NLS-1$
 		}
 		return true;
 	}

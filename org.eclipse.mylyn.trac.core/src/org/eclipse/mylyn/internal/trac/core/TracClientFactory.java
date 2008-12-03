@@ -34,7 +34,7 @@ public class TracClientFactory {
 			return new TracXmlRpcClient(location, version);
 		}
 
-		throw new RuntimeException("Invalid repository version: " + version);
+		throw new RuntimeException("Invalid repository version: " + version); //$NON-NLS-1$
 	}
 
 	/**
