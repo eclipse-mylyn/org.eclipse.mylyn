@@ -256,7 +256,8 @@ public class ContextEditorFormPage extends FormPage {
 		Label attachImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		attachImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 		attachImage.setEnabled(task != null);
-		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Attach_context_, SWT.NONE);
+		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient,
+				Messages.ContextEditorFormPage_Attach_context_, SWT.NONE);
 		attachHyperlink.setEnabled(task != null);
 		attachHyperlink.addMouseListener(new MouseListener() {
 
@@ -276,7 +277,8 @@ public class ContextEditorFormPage extends FormPage {
 		Label retrieveImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		retrieveImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_RETRIEVE));
 		retrieveImage.setEnabled(task != null);
-		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
+		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient,
+				Messages.ContextEditorFormPage_Retrieve_Context_, SWT.NONE);
 		retrieveHyperlink.setEnabled(task != null);
 		retrieveHyperlink.addMouseListener(new MouseListener() {
 
@@ -295,7 +297,8 @@ public class ContextEditorFormPage extends FormPage {
 
 		Label copyImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		copyImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_COPY));
-		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Copy_Context_to_, SWT.NONE);
+		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient,
+				Messages.ContextEditorFormPage_Copy_Context_to_, SWT.NONE);
 		copyHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
@@ -311,9 +314,10 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
-		Label clearImage = toolkit.createLabel(sectionClient, "");
+		Label clearImage = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		clearImage.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_CLEAR));
-		Hyperlink clearHyperlink = toolkit.createHyperlink(sectionClient, "Remove All...", SWT.NONE);
+		Hyperlink clearHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_RemoveAll,
+				SWT.NONE);
 		clearHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
@@ -329,15 +333,16 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
-		Label removeInvisble = toolkit.createLabel(sectionClient, "");
+		Label removeInvisble = toolkit.createLabel(sectionClient, ""); //$NON-NLS-1$
 		removeInvisble.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_CLEAR));
-		Hyperlink removeInvisibleLink = toolkit.createHyperlink(sectionClient, "Remove Invisible...", SWT.NONE);
+		Hyperlink removeInvisibleLink = toolkit.createHyperlink(sectionClient,
+				Messages.ContextEditorFormPage_Remove_Invisible_, SWT.NONE);
 		removeInvisibleLink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
 				boolean confirmed = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(),
-						"Remove Invisible",
-						"Remove every element not visible from the task context? This cannot be undone.");
+						Messages.ContextEditorFormPage_Remove_Invisible,
+						Messages.ContextEditorFormPage_Remove_every_element_not_visible);
 				if (confirmed) {
 					Set<Object> allVisible = new HashSet<Object>();
 					SwtUtil.collectItemData(commonViewer.getTree().getItems(), allVisible);
@@ -363,8 +368,9 @@ public class ContextEditorFormPage extends FormPage {
 							ContextCore.getContextManager().deleteElement(interactionElement);
 						}
 					} else {
-						MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Remove Invisible",
-								"No context active.");
+						MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+								Messages.ContextEditorFormPage_Remove_Invisible,
+								Messages.ContextEditorFormPage_No_context_active);
 					}
 				}
 			}
@@ -445,8 +451,8 @@ public class ContextEditorFormPage extends FormPage {
 			createViewer(sectionClient);
 		} else {
 			sectionClient.setLayout(new GridLayout());
-			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, Messages.ContextEditorFormPage_Activate_task_to_edit_context,
-					SWT.NONE);
+			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient,
+					Messages.ContextEditorFormPage_Activate_task_to_edit_context, SWT.NONE);
 			retrieveHyperlink.addMouseListener(new MouseListener() {
 
 				public void mouseUp(MouseEvent e) {
