@@ -216,7 +216,7 @@ public class TracWebClient extends AbstractTracClient {
 
 			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, method.getResponseCharSet()));
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 					if (token.getType() == Token.TAG) {
@@ -303,7 +303,7 @@ public class TracWebClient extends AbstractTracClient {
 		try {
 			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, method.getResponseCharSet()));
 				String line;
 
 				Map<String, String> constantValues = getExactMatchValues(query);
@@ -390,7 +390,7 @@ public class TracWebClient extends AbstractTracClient {
 		try {
 			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, method.getResponseCharSet()));
 
 				boolean inFooter = false;
 				boolean valid = false;
@@ -442,7 +442,7 @@ public class TracWebClient extends AbstractTracClient {
 		try {
 			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, method.getResponseCharSet()));
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 					if (monitor.isCanceled()) {
@@ -613,7 +613,7 @@ public class TracWebClient extends AbstractTracClient {
 		try {
 			InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 			try {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in, ITracClient.CHARSET));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, method.getResponseCharSet()));
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 					if (monitor.isCanceled()) {
