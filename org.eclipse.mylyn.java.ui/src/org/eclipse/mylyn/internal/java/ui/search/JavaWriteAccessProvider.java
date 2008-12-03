@@ -20,9 +20,9 @@ import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
  */
 public class JavaWriteAccessProvider extends AbstractJavaRelationProvider {
 
-	public static final String ID = ID_GENERIC + ".writeaccess";
+	public static final String ID = ID_GENERIC + ".writeaccess"; //$NON-NLS-1$
 
-	public static final String NAME = "written by";
+	public static final String NAME = "written by"; //$NON-NLS-1$
 
 	public JavaWriteAccessProvider() {
 		super(JavaStructureBridge.CONTENT_TYPE, ID);

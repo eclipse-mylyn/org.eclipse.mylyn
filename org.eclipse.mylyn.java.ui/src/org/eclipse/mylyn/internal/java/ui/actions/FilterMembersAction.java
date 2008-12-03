@@ -26,7 +26,7 @@ import org.eclipse.ui.IViewPart;
  */
 public class FilterMembersAction extends Action implements IViewActionDelegate {
 
-	public static final String PREF_ID = "org.eclipse.mylyn.java.ui.explorer.filter.members";
+	public static final String PREF_ID = "org.eclipse.mylyn.java.ui.explorer.filter.members"; //$NON-NLS-1$
 
 	public FilterMembersAction() {
 		super();

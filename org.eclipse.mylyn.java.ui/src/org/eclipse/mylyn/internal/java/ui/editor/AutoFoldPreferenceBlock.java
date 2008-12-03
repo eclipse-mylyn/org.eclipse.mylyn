@@ -46,7 +46,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 			inner.setLayout(layout);
 
 			Label label = new Label(inner, SWT.LEFT);
-			label.setText("Elements of low interest will be automatically folded.");
+			label.setText(Messages.AutoFoldPreferenceBlock_Elements_of_low_interest_will_be_automatically_folded);
 
 			// Label label= new Label(inner, SWT.LEFT);
 			// label.setText( "collapse.title"); //$NON-NLS-1$
@@ -77,7 +77,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 			return inner;
 		} catch (Throwable t) {
 			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					"Could not create folding preferences page", t));
+					"Could not create folding preferences page", t)); //$NON-NLS-1$
 		}
 		return null;
 	}

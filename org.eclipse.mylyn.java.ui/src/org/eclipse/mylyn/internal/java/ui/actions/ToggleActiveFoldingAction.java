@@ -39,7 +39,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 	public ToggleActiveFoldingAction() {
 		super();
 		INSTANCE = this;
-		setText("Active folding");
+		setText(Messages.ToggleActiveFoldingAction_Active_folding);
 		setImageDescriptor(TasksUiImages.CONTEXT_FOCUS);
 	}
 
@@ -62,7 +62,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 			JavaUiBridgePlugin.getDefault().getPreferenceStore().setValue(JavaUiBridgePlugin.AUTO_FOLDING_ENABLED, on);
 		} catch (Throwable t) {
 			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					"Could not enable editor management", t));
+					"Could not enable editor management", t)); //$NON-NLS-1$
 		}
 	}
 

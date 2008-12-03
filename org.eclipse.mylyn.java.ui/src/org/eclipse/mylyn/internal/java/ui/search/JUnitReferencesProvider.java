@@ -22,9 +22,9 @@ import org.eclipse.mylyn.internal.java.ui.junit.InteractionContextTestUtil;
  */
 public class JUnitReferencesProvider extends AbstractJavaRelationProvider {
 
-	public static final String ID = ID_GENERIC + ".junitreferences";
+	public static final String ID = ID_GENERIC + ".junitreferences"; //$NON-NLS-1$
 
-	public static final String NAME = "tested by";
+	public static final String NAME = "tested by"; //$NON-NLS-1$
 
 	public JUnitReferencesProvider() {
 		super(JavaStructureBridge.CONTENT_TYPE, ID);
@@ -36,7 +36,7 @@ public class JUnitReferencesProvider extends AbstractJavaRelationProvider {
 			IMethod method = (IMethod) element;
 			boolean isTestMethod = false;
 			boolean isTestCase = false;
-			if (method.getElementName().startsWith("test")) {
+			if (method.getElementName().startsWith("test")) { //$NON-NLS-1$
 				isTestMethod = true;
 			}
 

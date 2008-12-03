@@ -39,7 +39,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
  */
 public class LandmarkMarkerManager extends AbstractContextListener {
 
-	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark";
+	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark"; //$NON-NLS-1$
 
 	private final Map<IInteractionElement, Long> markerMap = new HashMap<IInteractionElement, Long>();
 
@@ -73,7 +73,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 			}
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					"Could not update landmark markers", t));
+					"Could not update landmark markers", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -98,7 +98,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 								if (marker != null && range != null) {
 									marker.setAttribute(IMarker.CHAR_START, range.getOffset());
 									marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
-									marker.setAttribute(IMarker.MESSAGE, "Mylyn Landmark");
+									marker.setAttribute(IMarker.MESSAGE, "Mylyn Landmark"); //$NON-NLS-1$
 									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 									markerMap.put(node, marker.getId());
 								}
@@ -108,10 +108,10 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 					}
 				} catch (JavaModelException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-							"Could not update marker", e));
+							"Could not update marker", e)); //$NON-NLS-1$
 				} catch (CoreException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-							"Could not update marker", e));
+							"Could not update marker", e)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -146,7 +146,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 								} catch (NullPointerException e) {
 									// FIXME avoid NPE
 									StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-											"Could not update marker", e));
+											"Could not update marker", e)); //$NON-NLS-1$
 								}
 							}
 						}
@@ -156,7 +156,7 @@ public class LandmarkMarkerManager extends AbstractContextListener {
 					// ignore the Java Model errors
 				} catch (CoreException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-							"Could not update landmark marker", e));
+							"Could not update landmark marker", e)); //$NON-NLS-1$
 				}
 			}
 		}

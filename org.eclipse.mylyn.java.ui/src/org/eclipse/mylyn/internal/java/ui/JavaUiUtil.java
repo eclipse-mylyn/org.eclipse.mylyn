@@ -52,19 +52,19 @@ public class JavaUiUtil {
 
 	private static final Point SMALL_SIZE = new Point(16, 16);
 
-	private static final String SEPARATOR_CODEASSIST = "\0";
+	private static final String SEPARATOR_CODEASSIST = "\0"; //$NON-NLS-1$
 
-	public static final String ASSIST_MYLYN_TYPE = "org.eclipse.mylyn.java.javaTypeProposalCategory";
+	public static final String ASSIST_MYLYN_TYPE = "org.eclipse.mylyn.java.javaTypeProposalCategory"; //$NON-NLS-1$
 
-	public static final String ASSIST_MYLYN_NOTYPE = "org.eclipse.mylyn.java.javaNoTypeProposalCategory";
+	public static final String ASSIST_MYLYN_NOTYPE = "org.eclipse.mylyn.java.javaNoTypeProposalCategory"; //$NON-NLS-1$
 
-	public static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory";
+	public static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory"; //$NON-NLS-1$
 
-	public static final String ASSIST_JDT_NOTYPE = "org.eclipse.jdt.ui.javaNoTypeProposalCategory";
+	public static final String ASSIST_JDT_NOTYPE = "org.eclipse.jdt.ui.javaNoTypeProposalCategory"; //$NON-NLS-1$
 
-	public static final String ASSIST_JDT_TEMPLATE = "org.eclipse.jdt.ui.templateProposalCategory";
+	public static final String ASSIST_JDT_TEMPLATE = "org.eclipse.jdt.ui.templateProposalCategory"; //$NON-NLS-1$
 
-	public static final String ASSIST_MYLYN_TEMPLATE = "org.eclipse.mylyn.java.templateProposalCategory";
+	public static final String ASSIST_MYLYN_TEMPLATE = "org.eclipse.mylyn.java.templateProposalCategory"; //$NON-NLS-1$
 
 	public static boolean isDefaultAssistActive(String computerId) {
 		Set<String> disabledIds = getDisabledIds(JavaPlugin.getDefault().getPreferenceStore());
@@ -88,7 +88,7 @@ public class JavaUiUtil {
 			disabledIds.remove(ASSIST_MYLYN_TYPE);
 			disabledIds.remove(ASSIST_MYLYN_TEMPLATE);
 		}
-		String newValue = "";
+		String newValue = ""; //$NON-NLS-1$
 		for (String id : disabledIds) {
 			newValue += id + SEPARATOR_CODEASSIST;
 		}
@@ -121,7 +121,7 @@ public class JavaUiUtil {
 			ICompilationUnit cu = null;
 			if (res instanceof IFile) {
 				IFile file = (IFile) res;
-				if (file.getFileExtension().equals("java")) { // TODO:
+				if (file.getFileExtension().equals("java")) { // TODO: //$NON-NLS-1$
 					// instanceof
 					// instead?
 					cu = JavaCore.createCompilationUnitFrom(file);
@@ -137,11 +137,11 @@ public class JavaUiUtil {
 			}
 		} catch (JavaModelException ex) {
 			if (!ex.isDoesNotExist()) {
-				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-2$ //$NON-NLS-1$
+				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not find element for: "
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not find element for: " //$NON-NLS-1$
 					+ marker, t));
 			return null;
 		}
@@ -163,7 +163,7 @@ public class JavaUiUtil {
 		if (m.getDeclaringType() == null) {
 			return ((IType) m).getFullyQualifiedName();
 		} else {
-			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName();
+			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName(); //$NON-NLS-1$
 		}
 	}
 

@@ -33,7 +33,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
  */
 public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
-	public final static String CONTENT_TYPE = "java/debug";
+	public final static String CONTENT_TYPE = "java/debug"; //$NON-NLS-1$
 
 	private final JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
 
@@ -129,7 +129,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getLabel(Object object) {
-		return "" + object;
+		return "" + object; //$NON-NLS-1$
 	}
 
 	@Override

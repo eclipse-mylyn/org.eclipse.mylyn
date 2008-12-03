@@ -36,19 +36,19 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction implements IWorkbenchWindowActionDelegate {
 
-	private final String packageViewerWrapperClassName = "org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper";
+	private final String packageViewerWrapperClassName = "org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper"; //$NON-NLS-1$
 
-	private final String[] viewNames = { "org.eclipse.jdt.ui.MembersView", "org.eclipse.jdt.ui.PackagesView",
-			"org.eclipse.jdt.ui.TypesView" };
+	private final String[] viewNames = { "org.eclipse.jdt.ui.MembersView", "org.eclipse.jdt.ui.PackagesView", //$NON-NLS-1$ //$NON-NLS-2$
+			"org.eclipse.jdt.ui.TypesView" }; //$NON-NLS-1$
 
-	private final String[] classNames = { "org.eclipse.jdt.internal.ui.browsing.MembersView",
-			"org.eclipse.jdt.internal.ui.browsing.PackagesView", "org.eclipse.jdt.internal.ui.browsing.TypesView" };
+	private final String[] classNames = { "org.eclipse.jdt.internal.ui.browsing.MembersView", //$NON-NLS-1$
+			"org.eclipse.jdt.internal.ui.browsing.PackagesView", "org.eclipse.jdt.internal.ui.browsing.TypesView" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private IWorkbenchWindow initWindow;
 
 	public FocusBrowsingPerspectiveAction() {
 		super(new InterestFilter(), true, true, false);
-		globalPrefId = PREF_ID_PREFIX + "javaBrowsing";
+		globalPrefId = PREF_ID_PREFIX + "javaBrowsing"; //$NON-NLS-1$
 	}
 
 	public void init(IWorkbenchWindow window) {
@@ -86,19 +86,19 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 				if (view != null) {
 					try {
 						Class<?> clazz = sub.getSuperclass();
-						Method method = clazz.getDeclaredMethod("getViewer", new Class[] {});
+						Method method = clazz.getDeclaredMethod("getViewer", new Class[] {}); //$NON-NLS-1$
 						method.setAccessible(true);
 
 						// TODO: weird since the packagesView uses a viewer that
 						// wraps another viewer
-						if (id.compareTo("org.eclipse.jdt.ui.PackagesView") != 0) {
+						if (id.compareTo("org.eclipse.jdt.ui.PackagesView") != 0) { //$NON-NLS-1$
 							return (StructuredViewer) method.invoke(sub.cast(view), new Object[] {});
 						} else {
 							StructuredViewer viewer = (StructuredViewer) method.invoke(sub.cast(view), new Object[] {});
 							if (viewer != null
 									&& viewer.getClass().getCanonicalName().compareTo(packageViewerWrapperClassName) == 0) {
 								clazz = viewer.getClass();
-								method = clazz.getDeclaredMethod("getViewer", new Class[] {});
+								method = clazz.getDeclaredMethod("getViewer", new Class[] {}); //$NON-NLS-1$
 								method.setAccessible(true);
 								return (StructuredViewer) method.invoke(viewer, new Object[] {});
 							} else {
@@ -106,8 +106,8 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 							}
 						}
 					} catch (Exception e) {
-						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get \""
-								+ id + "\" view tree viewer", e));
+						StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get \"" //$NON-NLS-1$
+								+ id + "\" view tree viewer", e)); //$NON-NLS-1$
 						return null;
 					}
 				} else {
@@ -116,8 +116,8 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get \"" + id
-					+ "\" view tree viewer", e));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get \"" + id //$NON-NLS-1$
+					+ "\" view tree viewer", e)); //$NON-NLS-1$
 		}
 		return null;
 	}

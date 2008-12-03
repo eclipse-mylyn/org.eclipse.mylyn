@@ -10,11 +10,11 @@
 	       point="org.eclipse.mylyn.context.core.bridges">
 	    <structureBridge
            class="org.eclipse.mylyn.internal.java.ui.JavaStructureBridge"
-           name="Java Structure Bridge"
+           name="%JavaStructureBridge.name"
            parentContentType="resource"/>
      <structureBridge
            class="org.eclipse.mylyn.internal.java.ui.JavaDebugStructureBridge"
-           name="Java Debug Structure Bridge"/>
+           name="%JavaDebugStructureBridge.name"/>
     </extension>
 	   
 	<extension point="org.eclipse.mylyn.context.ui.bridges">
@@ -22,7 +22,7 @@
 	          class="org.eclipse.mylyn.internal.java.ui.JavaUiBridge"
 	          contentType="java"
 	          activeSearchIcon="icons/elcl16/edge-ref-java.gif"
-           	  activeSearchLabel="Java Search"/>
+           	  activeSearchLabel="%JavaUiBridge.activeSearch.label"/>
         <preservedFilters
             viewId="org.eclipse.jdt.ui.PackageExplorer">
        	 	<filter
@@ -79,21 +79,21 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaNoTypeProposalCategory"
-		name="Other Java Proposals (Focused)">
+		name="%javaCompletionProposalComputer.javaNoTypeProposalCategory.name">
 		<proposalCategory
 			icon="icons/elcl16/proposals-other.gif"/>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeProposalCategory"
-		name="Type Proposals (Focused)">
+		name="%javaCompletionProposalComputer.javaNoTypeProposalCategory.name">
 		<proposalCategory
 			icon="icons/elcl16/proposals-type.gif"/>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="templateProposalCategory"
-		name="Template Proposals (Focused)">
+		name="%javaCompletionProposalComputer.templateProposalCategory.name">
 		<proposalCategory
 			icon="/icons/elcl16/templateprop_co.gif"/>
 	</extension>
@@ -166,7 +166,7 @@
 	<extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            name="Task Context Test"
+            name="%TaskContextJUnitLaunchConfiguration.name"
             delegate="org.eclipse.mylyn.internal.java.ui.junit.TaskContextJUnitLaunchConfiguration"
             modes="run, debug"
             id="org.eclipse.mylyn.java.junit.launchconfig"
@@ -200,11 +200,11 @@
             id="org.eclipse.mylyn.java.junit.launchconfig.tabgroup">
          <launchMode
                perspective="org.eclipse.debug.ui.DebugPerspective"
-               description="Test suite automatically populated by elements in the task context."
+               description="%TaskContextJUnitTabGroup.description"
                mode="debug">
          </launchMode>
          <launchMode
-               description="Test suite automatically populated by elements in the task context."
+               description="%TaskContextJUnitTabGroup.description"
                mode="run">
          </launchMode>
       </launchConfigurationTabGroup>
@@ -220,11 +220,11 @@
            enablesFor="*"
            icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.java.actions.focus.packageExplorer"
-           label="Focus on Active Task"
+           label="%FocusPackageExplorerAction.label"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)">
+           tooltip="%FocusPackageExplorerAction.tooltip">
         <enablement>
            <systemProperty
                  name="org.eclipse.mylyn.context.core.context.active"
@@ -247,11 +247,11 @@
             enablesFor="*"
             icon="icons/elcl16/focus.gif"
             id="org.eclipse.mylyn.java.ui.actions.focus.markers.breakpoints"
-            label="Focus on Active Task"
+            label="%FocusBreakpointsViewAction.label"
             menubarPath="mylyn"
             style="toggle"
             toolbarPath="mylyn"
-            tooltip="Focus on Active Task">
+            tooltip="%FocusBreakpointsViewAction.tooltip">
       </action>
    	</viewContribution> 
  		
@@ -264,11 +264,11 @@
            enablesFor="*"
            icon="icons/elcl16/focus.gif"
            id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
-           label="Focus on Active Task (Experimental)"
+           label="%FocusDebugViewAction.label"
            menubarPath="mylyn"
            style="toggle"
            toolbarPath="mylyn"
-           tooltip="Focus on Active Task (Experimental)">
+           tooltip="%FocusDebugViewAction.tooltip">
         <enablement>
            <systemProperty
                  name="org.eclipse.mylyn.context.core.context.active"
@@ -291,9 +291,9 @@
            enablesFor="*"
            icon="icons/elcl16/interest-increase.gif"
            id="org.eclipse.mylyn.java.ui.interest.increase.element"
-           label="Mark as Landmark"
+           label="%InterestIncrementAction.label"
            menubarPath="group.reorganize"
-           tooltip="Mark the selected element as a landmark">
+           tooltip="%InterestIncrementAction.tooltip">
      </action>
      <visibility>
      	<and>
@@ -317,9 +317,9 @@
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
             id="org.eclipse.mylyn.java.ui.interest.remove.element"
-            label="Remove from Context"
+            label="%InterestDecrementAction.label"
             menubarPath="group.reorganize"
-            tooltip="Mark selected element as uninteresting">
+            tooltip="%InterestDecrementAction.tooltip">
       </action>
       <visibility>
       		<and>
@@ -358,7 +358,7 @@
               enablesFor="1"
               icon="icons/etool16/browse-filtered.gif"
               id="org.eclipse.mylyn.java.ui.action.browse.filtered"
-              label="Show Filtered Children (Alt+click)"
+              label="%ShowFilteredChildrenAction.label"
               menubarPath="group.reorganize">
         </action>
         <visibility>
@@ -373,17 +373,17 @@
   <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.java.actionSet"
-            label="Java Task Context"
+            label="%actionSet.label"
             visible="false">
   		<action
           class="org.eclipse.mylyn.internal.java.ui.actions.ToggleActiveFoldingAction"
           definitionId="org.eclipse.mylyn.java.ui.editor.folding.auto"
           icon="icons/elcl16/interest-folding.gif"
           id="org.eclipse.mylyn.java.ui.editor.folding.auto"
-          label="Focus Editor on Active Task"
+          label="%ToggleActiveFoldingAction.label"
           style="toggle"
           toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
-          tooltip="Automatically Fold Uninteresting Elements">
+          tooltip="%ToggleActiveFoldingAction.tooltip">
       	</action> 
       	<!--
         <action
@@ -412,15 +412,15 @@
    <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.java.actionSet.browsing"
-            label="Java Browsing Task Context"
+            label="%actionSet.browsing.label"
             visible="false"> 
 	    <action
            class="org.eclipse.mylyn.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
            id="org.eclipse.mylyn.java.ui.actions.ApplyMylynToBrowsingPerspectiveAction"
            style="toggle"
-	       label="Focus Browsing Perspective" 
+	       label="%FocusBrowsingPerspectiveAction.label" 
 	       icon="icons/elcl16/focus-browsing.gif"
-	       tooltip="Focus Java Browsing Views on Active Task"
+	       tooltip="%FocusBrowsingPerspectiveAction.tooltip"
 	       toolbarPath="mylyn"
 	       enablesFor="*">
 	    </action>
@@ -445,9 +445,9 @@
    <extension point="org.eclipse.jdt.ui.javaElementFilters">
         <filter
             targetId="org.eclipse.jdt.ui.PackageExplorer"
-            name="Java Members"
+            name="%JavaDeclarationsFilter.name"
             enabled="false"
-            description="Java Declarations Filter"
+            description="%JavaDeclarationsFilter.description"
             class="org.eclipse.mylyn.internal.java.ui.JavaDeclarationsFilter"
             id="org.eclipse.mylyn.java.ui.MembersFilter">
    		</filter>
@@ -470,15 +470,15 @@
 
    <extension point="org.eclipse.ui.commands">
       <category
-            name="Java Context"
-            description="Java Task-Focused Interface Commands"
+            name="%commands.category.name"
+            description="%commands.category.description"
             id="org.eclipse.mylyn.java.ui.commands">
       </category>
 	  <command
          categoryId="org.eclipse.mylyn.java.ui.commands"
-         description="Toggle Active Folding"
+         description="%command.folding.auto.description"
          id="org.eclipse.mylyn.java.ui.editor.folding.auto"
-         name="Toggle Active Folding">
+         name="%command.folding.auto.name">
       </command>
     </extension>
     <!--

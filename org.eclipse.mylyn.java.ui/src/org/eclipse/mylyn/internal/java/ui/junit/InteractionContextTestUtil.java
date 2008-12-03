@@ -51,7 +51,7 @@ public class InteractionContextTestUtil {
 
 		IJavaProject javaProject = null;
 		for (IType type : contextTestCases) {
-			IProjectNature nature = type.getJavaProject().getProject().getNature("org.eclipse.pde.PluginNature");
+			IProjectNature nature = type.getJavaProject().getProject().getNature("org.eclipse.pde.PluginNature"); //$NON-NLS-1$
 			if (nature != null) {
 				// HACK: might want another project
 				javaProject = type.getJavaProject();
@@ -101,7 +101,7 @@ public class InteractionContextTestUtil {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not add all test types", e));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not add all test types", e)); //$NON-NLS-1$
 		}
 		return testTypes;
 	}
@@ -119,7 +119,7 @@ public class InteractionContextTestUtil {
 			hierarchy = type.newSupertypeHierarchy(null);
 			IType[] supertypes = hierarchy.getAllSuperclasses(type);
 			for (IType supertype : supertypes) {
-				if (supertype.getFullyQualifiedName().equals("junit.framework.TestCase")) {
+				if (supertype.getFullyQualifiedName().equals("junit.framework.TestCase")) { //$NON-NLS-1$
 					return true;
 				}
 			}

@@ -147,7 +147,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 			// ignore, fine to fail to resolve an element if the model is not up-to-date
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					"Failed to update model based on selection", t));
+					"Failed to update model based on selection", t)); //$NON-NLS-1$
 		}
 	}
 

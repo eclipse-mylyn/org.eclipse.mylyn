@@ -47,10 +47,10 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 
 	public JavaUiBridge() {
 		try {
-			javaOutlineField = JavaOutlinePage.class.getDeclaredField("fOutlineViewer");
+			javaOutlineField = JavaOutlinePage.class.getDeclaredField("fOutlineViewer"); //$NON-NLS-1$
 			javaOutlineField.setAccessible(true);
 		} catch (Exception e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get outline viewer",
+			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get outline viewer", //$NON-NLS-1$
 					e));
 		}
 	}
@@ -65,7 +65,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 			IEditorPart part = JavaUI.openInEditor(javaElement);
 			JavaUI.revealInEditor(part, javaElement);
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not open editor for: "
+			StatusHandler.fail(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not open editor for: " //$NON-NLS-1$
 					+ node, t));
 		}
 	}
@@ -91,7 +91,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not auto close editor", t));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -126,7 +126,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 					viewers.add((TreeViewer) javaOutlineField.get(page));
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-							"Could not get outline viewer", e));
+							"Could not get outline viewer", e)); //$NON-NLS-1$
 				}
 			}
 		}

@@ -20,9 +20,9 @@ import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
  */
 public class JavaImplementorsProvider extends AbstractJavaRelationProvider {
 
-	public static final String ID = ID_GENERIC + ".implementors";
+	public static final String ID = ID_GENERIC + ".implementors"; //$NON-NLS-1$
 
-	public static final String NAME = "implemented by";
+	public static final String NAME = "implemented by"; //$NON-NLS-1$
 
 	public JavaImplementorsProvider() {
 		super(JavaStructureBridge.CONTENT_TYPE, ID);

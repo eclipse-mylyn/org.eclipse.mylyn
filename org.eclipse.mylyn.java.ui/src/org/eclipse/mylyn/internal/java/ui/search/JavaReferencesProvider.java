@@ -21,9 +21,9 @@ import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
  */
 public class JavaReferencesProvider extends AbstractJavaRelationProvider {
 
-	public static final String ID = ID_GENERIC + ".references";
+	public static final String ID = ID_GENERIC + ".references"; //$NON-NLS-1$
 
-	public static final String NAME = "referenced by";
+	public static final String NAME = "referenced by"; //$NON-NLS-1$
 
 	public JavaReferencesProvider() {
 		super(JavaStructureBridge.CONTENT_TYPE, ID);
@@ -36,7 +36,7 @@ public class JavaReferencesProvider extends AbstractJavaRelationProvider {
 		}
 		if (element instanceof IMethod) {
 			IMethod method = (IMethod) element;
-			if (method.getElementName().startsWith("test")) {
+			if (method.getElementName().startsWith("test")) { //$NON-NLS-1$
 				return false; // HACK
 			} else {
 				return true;

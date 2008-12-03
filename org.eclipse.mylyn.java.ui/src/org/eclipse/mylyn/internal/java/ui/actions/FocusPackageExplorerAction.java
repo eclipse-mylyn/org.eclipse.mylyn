@@ -106,7 +106,7 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 				if (item instanceof ActionContributionItem) {
 					ActionContributionItem actionItem = (ActionContributionItem) item;
 					// TODO: file bug asking for extensibility
-					if (actionItem.getAction().getClass().getSimpleName().equals("ShowFilterDialogAction")) {
+					if (actionItem.getAction().getClass().getSimpleName().equals("ShowFilterDialogAction")) { //$NON-NLS-1$
 						actionItem.getAction().setEnabled(enabled);
 					}
 				}

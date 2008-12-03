@@ -76,7 +76,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Delta update failed", t));
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Delta update failed", t)); //$NON-NLS-1$
 		}
 	}
 

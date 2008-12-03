@@ -60,9 +60,9 @@ import org.eclipse.search2.internal.ui.InternalSearchUI;
 @SuppressWarnings("restriction")
 public abstract class AbstractJavaRelationProvider extends AbstractRelationProvider {
 
-	public static final String ID_GENERIC = "org.eclipse.mylyn.java.relation";
+	public static final String ID_GENERIC = "org.eclipse.mylyn.java.relation"; //$NON-NLS-1$
 
-	public static final String NAME = "Java relationships";
+	public static final String NAME = "Java relationships"; //$NON-NLS-1$
 
 	private static final int DEFAULT_DEGREE = 2;
 
@@ -95,7 +95,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			return;
 		}
 		if (node.getContentType() == null) {
-			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN, "Null content type for: "
+			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN, "Null content type for: " //$NON-NLS-1$
 					+ node));
 			return;
 		}
@@ -204,7 +204,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		} else {
 			if (interesting.getContentType() == null) {
 				// TODO: remove
-				StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN, "Null content type for: "
+				StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN, "Null content type for: " //$NON-NLS-1$
 						+ interesting.getHandleIdentifier()));
 				return false;
 			} else {
@@ -297,7 +297,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		}
 
 		QuerySpecification specs = new ElementQuerySpecification(javaElement, limitTo, scope,
-				"Mylyn degree of separation: " + degreeOfSeparation);
+				Messages.AbstractJavaRelationProvider_Mylyn_degree_of_separation + degreeOfSeparation);
 
 		return new JavaSearchOperation(specs);
 	}
@@ -353,11 +353,11 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				}
 				return runStatus;
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Java search failed", t));
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Java search failed", t)); //$NON-NLS-1$
 			}
 
 			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, IStatus.OK,
-					"could not run Java search", null);
+					Messages.AbstractJavaRelationProvider_could_not_run_Java_search, null);
 			notifySearchCompleted(null);
 			return status;
 		}

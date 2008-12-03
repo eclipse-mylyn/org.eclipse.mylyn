@@ -20,9 +20,9 @@ import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
  */
 public class JavaReadAccessProvider extends AbstractJavaRelationProvider {
 
-	public static final String ID = ID_GENERIC + ".readaccess";
+	public static final String ID = ID_GENERIC + ".readaccess"; //$NON-NLS-1$
 
-	public static final String NAME = "read by";
+	public static final String NAME = "read by"; //$NON-NLS-1$
 
 	public JavaReadAccessProvider() {
 		super(JavaStructureBridge.CONTENT_TYPE, ID);

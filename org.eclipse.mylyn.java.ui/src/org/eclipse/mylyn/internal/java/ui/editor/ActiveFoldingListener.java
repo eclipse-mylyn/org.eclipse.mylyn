@@ -74,12 +74,12 @@ public class ActiveFoldingListener extends AbstractContextListener {
 				updater = (IJavaFoldingStructureProviderExtension) adapter;
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-						"Could not install active folding on provider: " + adapter + ", must extend "
+						"Could not install active folding on provider: " + adapter + ", must extend " //$NON-NLS-1$ //$NON-NLS-2$
 								+ IJavaFoldingStructureProviderExtension.class.getName()));
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					"Could not install auto folding, reflection denied", e));
+					"Could not install auto folding, reflection denied", e)); //$NON-NLS-1$
 		}
 		updateFolding();
 	}
@@ -122,7 +122,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 					updater.expandElements(toExpand.toArray(new IJavaElement[toExpand.size()]));
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not update folding", e));
+				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
 			}
 		}
 	}

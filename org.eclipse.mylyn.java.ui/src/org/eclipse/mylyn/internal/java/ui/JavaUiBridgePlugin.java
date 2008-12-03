@@ -39,9 +39,9 @@ import org.osgi.framework.BundleContext;
  */
 public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.java.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.java.ui"; //$NON-NLS-1$
 
-	public static final String AUTO_FOLDING_ENABLED = "org.eclipse.mylyn.context.ui.editor.folding.enabled";
+	public static final String AUTO_FOLDING_ENABLED = "org.eclipse.mylyn.context.ui.editor.folding.enabled"; //$NON-NLS-1$
 
 	private static JavaUiBridgePlugin INSTANCE;
 
@@ -55,7 +55,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener;
 
-	private static final String MYLYN_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9";
+	private static final String MYLYN_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9"; //$NON-NLS-1$
 
 	public JavaUiBridgePlugin() {
 	}
@@ -74,7 +74,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		if (getPreferenceStore().getBoolean(MYLYN_FIRST_RUN)) {
 			getPreferenceStore().setValue(MYLYN_FIRST_RUN, false);
 
-			new UIJob("Initialize Content Assist") {
+			new UIJob("Initialize Content Assist") { //$NON-NLS-1$
 
 				@Override
 				public IStatus runInUIThread(IProgressMonitor monitor) {
@@ -102,7 +102,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		} catch (Throwable t) {
 			// FIXME review error message
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					"Could not install type history manager: incompatible Eclipse version", t));
+					"Could not install type history manager: incompatible Eclipse version", t)); //$NON-NLS-1$
 		}
 	}
 

@@ -60,7 +60,7 @@ public class TypeHistoryManager extends AbstractContextListener {
 				}
 			} catch (JavaModelException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-						"Failed to update history for a type", e));
+						"Failed to update history for a type", e)); //$NON-NLS-1$
 			}
 		}
 	}

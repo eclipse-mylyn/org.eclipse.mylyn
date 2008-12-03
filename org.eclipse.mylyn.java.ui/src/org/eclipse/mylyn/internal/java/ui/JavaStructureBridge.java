@@ -53,7 +53,7 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
  */
 public class JavaStructureBridge extends AbstractContextStructureBridge {
 
-	public final static String CONTENT_TYPE = "java";
+	public final static String CONTENT_TYPE = "java"; //$NON-NLS-1$
 
 	@Override
 	public String getContentType() {
@@ -113,7 +113,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(ContextCore.CONTENT_TYPE_RESOURCE);
 					return parentBridge.getChildHandles(handle);
 				} catch (Exception e) {
-					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get children",
+					StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not get children", //$NON-NLS-1$
 							e));
 				}
 			}
@@ -127,7 +127,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			return JavaCore.create(handle);
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.WARNING, JavaUiBridgePlugin.ID_PLUGIN,
-					"Could not create java element for handle: " + handle, t));
+					"Could not create java element for handle: " + handle, t)); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -158,7 +158,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	private String getWtpElementHandle(Object object) {
 		Class<?> objectClass = object.getClass();
 		try {
-			Method getProjectMethod = objectClass.getMethod("getProject", new Class[0]);
+			Method getProjectMethod = objectClass.getMethod("getProject", new Class[0]); //$NON-NLS-1$
 			Object javaProject = getProjectMethod.invoke(object, new Object[0]);
 			if (javaProject instanceof IJavaProject) {
 				return ((IJavaElement) javaProject).getHandleIdentifier();
@@ -172,7 +172,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 
 	private boolean isWtpClass(Object object) {
 		try {
-			return object != null && object.getClass().getSimpleName().equals("CompressedJavaProject");
+			return object != null && object.getClass().getSimpleName().equals("CompressedJavaProject"); //$NON-NLS-1$
 		} catch (Throwable t) {
 			// could have malformed name, see bug 165065
 			return false;
@@ -184,7 +184,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		if (object instanceof IJavaElement) {
 			return ((IJavaElement) object).getElementName();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -280,7 +280,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			if (resource instanceof IFile) {
 				IFile file = (IFile) resource;
 				// TODO: get rid of file extension check
-				if (file.getFileExtension().equals("java")) {
+				if (file.getFileExtension().equals("java")) { //$NON-NLS-1$
 					compilationUnit = JavaCore.createCompilationUnitFrom(file);
 				} else {
 					return null;
@@ -324,11 +324,11 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			}
 		} catch (JavaModelException ex) {
 			if (!ex.isDoesNotExist()) {
-				ExceptionHandler.handle(ex, "error", "could not find java element");
+				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return null;
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not find element for: "
+			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not find element for: " //$NON-NLS-1$
 					+ marker, t));
 			return null;
 		}

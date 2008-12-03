@@ -39,9 +39,9 @@ public class FocusedJavaProposalProcessor {
 
 	private static final int RELEVANCE_IMPLICIT_INTEREST = 300;
 
-	private static final String IDENTIFIER_THIS = "this";
+	private static final String IDENTIFIER_THIS = "this"; //$NON-NLS-1$
 
-	public static final String LABEL_SEPARATOR = " -------------------------------------------- ";
+	public static final String LABEL_SEPARATOR = " -------------------------------------------- "; //$NON-NLS-1$
 
 	public static final FocusedProposalSeparator PROPOSAL_SEPARATOR = new FocusedProposalSeparator();
 
@@ -108,7 +108,7 @@ public class FocusedJavaProposalProcessor {
 			}
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN,
-					"Failed to project interest onto propsals", t));
+					"Failed to project interest onto propsals", t)); //$NON-NLS-1$
 			return proposals;
 		}
 	}
@@ -139,7 +139,7 @@ public class FocusedJavaProposalProcessor {
 
 	static class FocusedProposalSeparator extends JavaCompletionProposal {
 		public FocusedProposalSeparator() {
-			super("", 0, 0, CommonImages.getImage(CommonImages.SEPARATOR_LIST), LABEL_SEPARATOR,
+			super("", 0, 0, CommonImages.getImage(CommonImages.SEPARATOR_LIST), LABEL_SEPARATOR, //$NON-NLS-1$
 					FocusedJavaProposalProcessor.THRESHOLD_INTEREST);
 		}
 	}

@@ -31,15 +31,13 @@ import org.eclipse.swt.widgets.Label;
  */
 public class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 
-	private static final String DESCRIPTION = "Subclasses of TestCase in the active task context automatically added to suite.";
-
 	private boolean isPdeMode = false;
 
 	private final Image image;
 
 	public TaskContextJUnitMainTab(boolean isPdeMode) {
 		this.isPdeMode = isPdeMode;
-		image = JavaUiBridgePlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
+		image = JavaUiBridgePlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage(); //$NON-NLS-1$
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 		gd.horizontalSpan = 3;
 		label.setLayoutData(gd);
 
-		label.setText(DESCRIPTION);
+		label.setText(Messages.TaskContextJUnitMainTab_SUBCLASSES_OF_TESTCASE_AUTOMATICALLY_ADD_TO_SUITE);
 	}
 
 	@Override
@@ -89,7 +87,7 @@ public class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 
 	@Override
 	public String getName() {
-		return "JUnit";
+		return "JUnit"; //$NON-NLS-1$
 	}
 
 	@Override
