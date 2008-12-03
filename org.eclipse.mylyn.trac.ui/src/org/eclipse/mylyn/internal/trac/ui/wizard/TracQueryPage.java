@@ -61,12 +61,6 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class TracQueryPage extends AbstractRepositoryQueryPage {
 
-	private static final String TITLE = "Enter query parameters";
-
-	private static final String DESCRIPTION = "If attributes are blank or stale press the Update button.";
-
-	private static final String TITLE_QUERY_TITLE = "Query Title:";
-
 	private Text titleText;
 
 	private static final int PRODUCT_HEIGHT = 60;
@@ -75,7 +69,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 
 	protected final static String PAGE_NAME = "TracSearchPage"; //$NON-NLS-1$
 
-	private static final String SEARCH_URL_ID = PAGE_NAME + ".SEARCHURL";
+	private static final String SEARCH_URL_ID = PAGE_NAME + ".SEARCHURL"; //$NON-NLS-1$
 
 	protected Combo summaryText = null;
 
@@ -114,9 +108,9 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 	// private UserSearchField ccField;
 
 	public TracQueryPage(TaskRepository repository, IRepositoryQuery query) {
-		super(TITLE, repository, query);
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
+		super(Messages.TracQueryPage_Enter_query_parameters, repository, query);
+		setTitle(Messages.TracQueryPage_Enter_query_parameters);
+		setDescription(Messages.TracQueryPage_If_attributes_are_blank_or_stale_press_the_Update_button);
 	}
 
 	public TracQueryPage(TaskRepository repository) {
@@ -136,14 +130,14 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 
 		createTitleGroup(control);
 
-		summaryField = new TextSearchField("summary");
-		summaryField.createControls(control, "Summary");
+		summaryField = new TextSearchField("summary"); //$NON-NLS-1$
+		summaryField.createControls(control, Messages.TracQueryPage_Summary);
 
-		descriptionField = new TextSearchField("description");
-		descriptionField.createControls(control, "Description");
+		descriptionField = new TextSearchField("description"); //$NON-NLS-1$
+		descriptionField.createControls(control, Messages.TracQueryPage_Description);
 
-		keywordsField = new TextSearchField("keywords");
-		keywordsField.createControls(control, "Keywords");
+		keywordsField = new TextSearchField("keywords"); //$NON-NLS-1$
+		keywordsField.createControls(control, Messages.TracQueryPage_Keywords);
 
 		createOptionsGroup(control);
 
@@ -173,7 +167,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 				field.setFilter(filter);
 			} else {
 				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.ID_PLUGIN,
-						"Ignoring invalid search filter: " + filter));
+						"Ignoring invalid search filter: " + filter)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -184,7 +178,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 		}
 
 		Label titleLabel = new Label(control, SWT.NONE);
-		titleLabel.setText(TITLE_QUERY_TITLE);
+		titleLabel.setText(Messages.TracQueryPage_Query_Title);
 
 		titleText = new Text(control, SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
@@ -236,21 +230,21 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 		group.setLayoutData(gd);
 
 		Label label = new Label(group, SWT.LEFT);
-		label.setText("Component");
+		label.setText(Messages.TracQueryPage_Component);
 
 		label = new Label(group, SWT.LEFT);
-		label.setText("Version");
+		label.setText(Messages.TracQueryPage_Version);
 
 		label = new Label(group, SWT.LEFT);
-		label.setText("Milestone");
+		label.setText(Messages.TracQueryPage_Milestone);
 
-		componentField = new ListSearchField("component");
+		componentField = new ListSearchField("component"); //$NON-NLS-1$
 		componentField.createControls(group, PRODUCT_HEIGHT);
 
-		versionField = new ListSearchField("version");
+		versionField = new ListSearchField("version"); //$NON-NLS-1$
 		versionField.createControls(group, PRODUCT_HEIGHT);
 
-		milestoneField = new ListSearchField("milestone");
+		milestoneField = new ListSearchField("milestone"); //$NON-NLS-1$
 		milestoneField.createControls(group, PRODUCT_HEIGHT);
 
 		return group;
@@ -269,27 +263,27 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 		group.setLayoutData(gd);
 
 		Label label = new Label(group, SWT.LEFT);
-		label.setText("Status");
+		label.setText(Messages.TracQueryPage_Status);
 
 		label = new Label(group, SWT.LEFT);
-		label.setText("Resolution");
+		label.setText(Messages.TracQueryPage_Resolution);
 
 		label = new Label(group, SWT.LEFT);
-		label.setText("Type");
+		label.setText(Messages.TracQueryPage_Type);
 
 		label = new Label(group, SWT.LEFT);
-		label.setText("Priority");
+		label.setText(Messages.TracQueryPage_Priority);
 
-		statusField = new ListSearchField("status");
+		statusField = new ListSearchField("status"); //$NON-NLS-1$
 		statusField.createControls(group, STATUS_HEIGHT);
 
-		resolutionField = new ListSearchField("resolution");
+		resolutionField = new ListSearchField("resolution"); //$NON-NLS-1$
 		resolutionField.createControls(group, STATUS_HEIGHT);
 
-		typeField = new ListSearchField("type");
+		typeField = new ListSearchField("type"); //$NON-NLS-1$
 		typeField.createControls(group, STATUS_HEIGHT);
 
-		priorityField = new ListSearchField("priority");
+		priorityField = new ListSearchField("priority"); //$NON-NLS-1$
 		priorityField.createControls(group, STATUS_HEIGHT);
 
 		return group;
@@ -302,7 +296,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		updateButton = new Button(group, SWT.PUSH);
-		updateButton.setText("Update Attributes from Repository");
+		updateButton.setText(Messages.TracQueryPage_Update_Attributes_from_Repository);
 		updateButton.setLayoutData(new GridData());
 		updateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -310,8 +304,8 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 				if (getTaskRepository() != null) {
 					updateAttributesFromRepository(true);
 				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Update Attributes Failed",
-							"No repository available, please add one using the Task Repositories view.");
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.TracQueryPage_Update_Attributes_Failed,
+							Messages.TracQueryPage_No_repository_available);
 				}
 			}
 		});
@@ -470,7 +464,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 
 	private boolean restoreWidgetValues() {
 		IDialogSettings settings = getDialogSettings();
-		String repoId = "." + getTaskRepository().getRepositoryUrl();
+		String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
 
 		String searchUrl = settings.get(SEARCH_URL_ID + repoId);
 		if (searchUrl == null) {
@@ -483,7 +477,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public void saveState() {
-		String repoId = "." + getTaskRepository().getRepositoryUrl();
+		String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
 		IDialogSettings settings = getDialogSettings();
 		settings.put(SEARCH_URL_ID + repoId, getTracSearch().toUrl());
 	}
@@ -684,18 +678,18 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 
 			textField = new TextSearchField(null);
 
-			new UserSelectionSearchField("owner", 0);
+			new UserSelectionSearchField("owner", 0); //$NON-NLS-1$
 
-			new UserSelectionSearchField("reporter", 1);
+			new UserSelectionSearchField("reporter", 1); //$NON-NLS-1$
 
-			new UserSelectionSearchField("cc", 2);
+			new UserSelectionSearchField("cc", 2); //$NON-NLS-1$
 		}
 
 		public void createControls(Composite parent) {
 			userCombo = new Combo(parent, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
-			userCombo.add("Owner");
-			userCombo.add("Reporter");
-			userCombo.add("CC");
+			userCombo.add(Messages.TracQueryPage_Owner);
+			userCombo.add(Messages.TracQueryPage_Reporter);
+			userCombo.add(Messages.TracQueryPage_CC);
 			userCombo.select(0);
 
 			textField.createControls(parent, null);

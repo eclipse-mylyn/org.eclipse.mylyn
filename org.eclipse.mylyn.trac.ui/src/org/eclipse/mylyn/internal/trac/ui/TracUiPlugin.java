@@ -23,7 +23,7 @@ import org.osgi.framework.BundleContext;
  */
 public class TracUiPlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.trac.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.trac.ui"; //$NON-NLS-1$
 
 	private static TracUiPlugin plugin;
 

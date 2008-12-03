@@ -49,11 +49,11 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TracFilterQueryPage extends AbstractRepositoryQueryPage {
 
-	private static final String TITLE = "New Trac Query";
+	private static final String TITLE = Messages.TracFilterQueryPage_New_Trac_Query;
 
-	private static final String DESCRIPTION = "Add search filters to define query.";
+	private static final String DESCRIPTION = Messages.TracFilterQueryPage_Add_search_filters_to_define_query;
 
-	private static final String TITLE_QUERY_TITLE = "Query Title";
+	private static final String TITLE_QUERY_TITLE = Messages.TracFilterQueryPage_Query_Title;
 
 	private Text titleText;
 
@@ -118,7 +118,7 @@ public class TracFilterQueryPage extends AbstractRepositoryQueryPage {
 				showSearchField(field, filter);
 			} else {
 				StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.ID_PLUGIN,
-						"Ignoring invalid search filter: " + filter));
+						"Ignoring invalid search filter: " + filter)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -144,26 +144,26 @@ public class TracFilterQueryPage extends AbstractRepositoryQueryPage {
 		composite.setLayoutData(gd);
 
 		Label label = new Label(composite, SWT.LEFT);
-		label.setText("Select to add filter: ");
+		label.setText(Messages.TracFilterQueryPage_Select_to_add_filter);
 
 		// condition
 		final Combo filterCombo = new Combo(composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 
 		searchFields = new ArrayList<SearchField>();
-		searchFields.add(new TextSearchField("summary", "Summary"));
-		searchFields.add(new TextSearchField("reporter", "Reporter"));
-		searchFields.add(new TextSearchField("owner", "Owner"));
-		searchFields.add(new TextSearchField("type", "Type"));
-		searchFields.add(new TextSearchField("status", "Status"));
-		searchFields.add(new TextSearchField("priority", "Priority"));
-		searchFields.add(new TextSearchField("milestone", "Milestone"));
-		searchFields.add(new TextSearchField("component", "Component"));
-		searchFields.add(new TextSearchField("version", "Version"));
-		searchFields.add(new TextSearchField("resoution", "Resolution"));
-		searchFields.add(new TextSearchField("keywords", "Keywords"));
-		searchFields.add(new TextSearchField("cc", "CC"));
+		searchFields.add(new TextSearchField("summary", Messages.TracFilterQueryPage_Summary)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("reporter", Messages.TracFilterQueryPage_Reporter)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("owner", Messages.TracFilterQueryPage_Owner)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("type", Messages.TracFilterQueryPage_Type)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("status", Messages.TracFilterQueryPage_Status)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("priority", Messages.TracFilterQueryPage_Priority)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("milestone", Messages.TracFilterQueryPage_Milestone)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("component", Messages.TracFilterQueryPage_Component)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("version", Messages.TracFilterQueryPage_Version)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("resoution", Messages.TracFilterQueryPage_Resolution)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("keywords", Messages.TracFilterQueryPage_Keywords)); //$NON-NLS-1$
+		searchFields.add(new TextSearchField("cc", Messages.TracFilterQueryPage_CC)); //$NON-NLS-1$
 
-		filterCombo.add("");
+		filterCombo.add(""); //$NON-NLS-1$
 		for (SearchField field : searchFields) {
 			filterCombo.add(field.getDisplayName());
 		}
@@ -173,7 +173,7 @@ public class TracFilterQueryPage extends AbstractRepositoryQueryPage {
 				if (filterCombo.getText().length() > 0) {
 					SearchField field = searchFields.get(filterCombo.getSelectionIndex() - 1);
 					showSearchField(field, null);
-					filterCombo.setText("");
+					filterCombo.setText(""); //$NON-NLS-1$
 				}
 			}
 		});
@@ -368,7 +368,7 @@ public class TracFilterQueryPage extends AbstractRepositoryQueryPage {
 
 			public void createControl(Composite parent) {
 				label = new Label(parent, SWT.LEFT);
-				label.setText(getDisplayName() + ": ");
+				label.setText(getDisplayName() + ": "); //$NON-NLS-1$
 
 				conditionCombo = new Combo(parent, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 				for (CompareOperator op : compareOperators) {
@@ -385,7 +385,7 @@ public class TracFilterQueryPage extends AbstractRepositoryQueryPage {
 				gd.horizontalAlignment = SWT.END;
 				gd.horizontalSpan = 2;
 				label.setLayoutData(gd);
-				label.setText("or");
+				label.setText(Messages.TracFilterQueryPage_or);
 
 				createSearchTextAndRemoveButton(parent);
 
@@ -400,7 +400,7 @@ public class TracFilterQueryPage extends AbstractRepositoryQueryPage {
 				searchText.setLayoutData(gd);
 
 				removeButton = new Button(parent, SWT.PUSH);
-				removeButton.setText("-");
+				removeButton.setText("-"); //$NON-NLS-1$
 				removeButton.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {

@@ -27,13 +27,13 @@ import org.w3c.dom.Element;
  */
 public class TracTaskListMigrator extends AbstractTaskListMigrator {
 
-	private static final String KEY_TRAC = "Trac";
+	private static final String KEY_TRAC = "Trac"; //$NON-NLS-1$
 
 	private static final String KEY_TRAC_TASK = KEY_TRAC + KEY_TASK;
 
 	private static final String KEY_TRAC_QUERY = KEY_TRAC + KEY_QUERY;
 
-	private static final String KEY_SUPPORTS_SUBTASKS = "SupportsSubtasks";
+	private static final String KEY_SUPPORTS_SUBTASKS = "SupportsSubtasks"; //$NON-NLS-1$
 
 	@Override
 	public String getConnectorKind() {

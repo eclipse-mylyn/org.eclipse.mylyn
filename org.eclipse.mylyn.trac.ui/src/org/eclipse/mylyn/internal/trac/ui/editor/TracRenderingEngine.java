@@ -33,7 +33,7 @@ public class TracRenderingEngine extends AbstractRenderingEngine {
 	 */
 	@Override
 	public String renderAsHtml(TaskRepository repository, String text, IProgressMonitor monitor) throws CoreException {
-		monitor.beginTask("Render HTML Preview", IProgressMonitor.UNKNOWN);
+		monitor.beginTask("Render HTML Preview", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 		try {
 			ITracClient client = TracCorePlugin.getDefault()
 					.getConnector()
@@ -46,24 +46,24 @@ public class TracRenderingEngine extends AbstractRenderingEngine {
 					throw new OperationCanceledException();
 				}
 
-				String htmlHeader = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"
-						+ "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">"
-						+ "<head>"
-						+ "<link rel=\"stylesheet\" href=\"REPOSITORY_URL/chrome/common/css/trac.css\" type=\"text/css\" />"
-						+ "<link rel=\"stylesheet\" href=\"REPOSITORY_URL/chrome/common/css/wiki.css\" type=\"text/css\" />"
-						+ "<link rel=\"icon\" href=\"REPOSITORY_URL/chrome/common/trac.ico\" type=\"image/x-icon\" />"
-						+ "<link rel=\"shortcut icon\" href=\"EPOSITORY_URL/chrome/common/trac.ico\" type=\"image/x-icon\" />"
-						+ "<style type=\"text/css\">body {background: #f4f4f4 url(REPOSITORY_URL/chrome/common/draft.png);margin: 0;padding: 0;}</style>"
-						+ "</head>";
-				String htmlBody = "<body> " + htmlText + "</body>";
-				String htmlFooter = "</html>";
+				String htmlHeader = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" //$NON-NLS-1$
+						+ "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">" //$NON-NLS-1$
+						+ "<head>" //$NON-NLS-1$
+						+ "<link rel=\"stylesheet\" href=\"REPOSITORY_URL/chrome/common/css/trac.css\" type=\"text/css\" />" //$NON-NLS-1$
+						+ "<link rel=\"stylesheet\" href=\"REPOSITORY_URL/chrome/common/css/wiki.css\" type=\"text/css\" />" //$NON-NLS-1$
+						+ "<link rel=\"icon\" href=\"REPOSITORY_URL/chrome/common/trac.ico\" type=\"image/x-icon\" />" //$NON-NLS-1$
+						+ "<link rel=\"shortcut icon\" href=\"EPOSITORY_URL/chrome/common/trac.ico\" type=\"image/x-icon\" />" //$NON-NLS-1$
+						+ "<style type=\"text/css\">body {background: #f4f4f4 url(REPOSITORY_URL/chrome/common/draft.png);margin: 0;padding: 0;}</style>" //$NON-NLS-1$
+						+ "</head>"; //$NON-NLS-1$
+				String htmlBody = "<body> " + htmlText + "</body>"; //$NON-NLS-1$ //$NON-NLS-2$
+				String htmlFooter = "</html>"; //$NON-NLS-1$
 
-				String html = htmlHeader.replace("REPOSITORY_URL", repository.getRepositoryUrl()) + htmlBody
+				String html = htmlHeader.replace("REPOSITORY_URL", repository.getRepositoryUrl()) + htmlBody //$NON-NLS-1$
 						+ htmlFooter;
 				return html;
 			} else {
 				throw new CoreException(TracCorePlugin.toStatus(new TracException(
-						"Preview is available only in XML-RPC access mode"), repository));
+						"Preview is available only in XML-RPC access mode"), repository)); //$NON-NLS-1$
 			}
 		} catch (TracException e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));

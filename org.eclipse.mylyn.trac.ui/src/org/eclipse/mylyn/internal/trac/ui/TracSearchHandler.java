@@ -32,7 +32,7 @@ public class TracSearchHandler extends AbstractSearchHandler {
 	@Override
 	public boolean queryForText(TaskRepository taskRepository, IRepositoryQuery query, TaskData taskData,
 			String searchString) {
-		TracSearchFilter filter = new TracSearchFilter("description");
+		TracSearchFilter filter = new TracSearchFilter("description"); //$NON-NLS-1$
 		filter.setOperator(CompareOperator.CONTAINS);
 		filter.addValue(searchString);
 

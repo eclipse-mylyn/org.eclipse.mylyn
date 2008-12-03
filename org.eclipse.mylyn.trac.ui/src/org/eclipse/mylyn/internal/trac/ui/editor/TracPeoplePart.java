@@ -33,7 +33,7 @@ public class TracPeoplePart extends AbstractTaskEditorPart {
 	private static final int COLUMN_MARGIN = 5;
 
 	public TracPeoplePart() {
-		setPartName("People");
+		setPartName(Messages.TracPeoplePart_People);
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
@@ -69,8 +69,8 @@ public class TracPeoplePart extends AbstractTaskEditorPart {
 		TaskAttribute removeCc = getTaskData().getRoot().getMappedAttribute(TracAttributeMapper.REMOVE_CC);
 		if (cc != null && removeCc != null) {
 			addAttribute(peopleComposite, toolkit, cc);
-			toolkit.createLabel(peopleComposite, "");
-			Label label = toolkit.createLabel(peopleComposite, "(Select to remove)");
+			toolkit.createLabel(peopleComposite, ""); //$NON-NLS-1$
+			Label label = toolkit.createLabel(peopleComposite, Messages.TracPeoplePart__Select_to_remove_);
 			GridDataFactory.fillDefaults().indent(0, 5).align(SWT.CENTER, SWT.CENTER).applyTo(label);
 		}
 

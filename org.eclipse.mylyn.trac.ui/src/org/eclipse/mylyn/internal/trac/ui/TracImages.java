@@ -23,13 +23,13 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class TracImages {
 
-	private static final URL baseURL = TracUiPlugin.getDefault().getBundle().getEntry("/icons/");
+	private static final URL baseURL = TracUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
 
-	public static final String T_VIEW = "eview16";
+	public static final String T_VIEW = "eview16"; //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_DEFECT = create(T_VIEW, "overlay-critical.gif");
+	public static final ImageDescriptor OVERLAY_DEFECT = create(T_VIEW, "overlay-critical.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_ENHANCEMENT = create(T_VIEW, "overlay-enhancement.gif");
+	public static final ImageDescriptor OVERLAY_ENHANCEMENT = create(T_VIEW, "overlay-enhancement.gif"); //$NON-NLS-1$
 
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
@@ -45,7 +45,7 @@ public class TracImages {
 		}
 
 		StringBuilder buffer = new StringBuilder(prefix);
-		if (prefix != "") {
+		if (prefix != "") { //$NON-NLS-1$
 			buffer.append('/');
 		}
 		buffer.append(name);

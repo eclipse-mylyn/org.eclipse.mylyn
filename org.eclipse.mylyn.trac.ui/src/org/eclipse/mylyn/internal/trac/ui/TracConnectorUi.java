@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.ITaskSearchPage;
 import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.NewWebTaskWizard;
 import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Mik Kersten
@@ -55,7 +56,7 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public String getTaskKindLabel(ITask repositoryTask) {
-		return "Ticket";
+		return Messages.TracConnectorUi_Ticket;
 	}
 
 	@Override
@@ -120,14 +121,13 @@ public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getReplyText(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
 		if (taskComment == null) {
-			return "Replying to [ticket:" + task.getTaskKey() + " " + task.getOwner() + "]:";
+			return NLS.bind(Messages.TracConnectorUi_Replying_to__ticket_X_X_, task.getTaskKey(), task.getOwner());
 		} else if (includeTask) {
-			return "Replying to [comment:ticket:" + task.getTaskKey() + ":" + taskComment.getNumber() + " "
-					+ taskComment.getAuthor().getPersonId() + "]:";
+			return NLS.bind(Messages.TracConnectorUi_Replying_to__comment_ticket_X_X_X_, new Object[] {
+					task.getTaskKey(), taskComment.getNumber(), taskComment.getAuthor().getPersonId() });
 		} else {
-			return "Replying to [comment:" + taskComment.getNumber() + " " + taskComment.getAuthor().getPersonId()
-					+ "]:";
+			return NLS.bind(Messages.TracConnectorUi_Replying_to__comment_X_X_, taskComment.getNumber(),
+					taskComment.getAuthor().getPersonId());
 		}
 	}
-
 }

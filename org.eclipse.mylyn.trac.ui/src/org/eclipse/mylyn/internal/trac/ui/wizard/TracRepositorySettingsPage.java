@@ -43,9 +43,9 @@ import org.eclipse.swt.widgets.Label;
  */
 public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
-	private static final String TITLE = "Trac Repository Settings";
+	private static final String TITLE = Messages.TracRepositorySettingsPage_Trac_Repository_Settings;
 
-	private static final String DESCRIPTION = "Example: http://trac.edgewall.org";
+	private static final String DESCRIPTION = Messages.TracRepositorySettingsPage_EXAMPLE_HTTP_TRAC_EDGEWALL_ORG;
 
 	private Combo accessTypeCombo;
 
@@ -80,10 +80,10 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		addRepositoryTemplatesToServerUrlCombo();
 
 		Label accessTypeLabel = new Label(parent, SWT.NONE);
-		accessTypeLabel.setText("Access Type: ");
+		accessTypeLabel.setText(Messages.TracRepositorySettingsPage_Access_Type_);
 		accessTypeCombo = new Combo(parent, SWT.READ_ONLY);
 
-		accessTypeCombo.add("Automatic (Use Validate Settings)");
+		accessTypeCombo.add(Messages.TracRepositorySettingsPage_Automatic__Use_Validate_Settings_);
 		versions = Version.values();
 		for (Version version : versions) {
 			accessTypeCombo.add(version.toString());
@@ -115,7 +115,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	@Override
 	protected boolean isValidUrl(String name) {
-		if ((name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) && !name.endsWith("/")) {
+		if ((name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) && !name.endsWith("/")) { //$NON-NLS-1$
 			try {
 				new URL(name);
 				return true;
@@ -185,11 +185,11 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 						TracUiPlugin.ID_PLUGIN, INVALID_LOGIN));
 			} catch (TracPermissionDeniedException e) {
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
-						TracUiPlugin.ID_PLUGIN, "Insufficient permissions for selected access type."));
+						TracUiPlugin.ID_PLUGIN, "Insufficient permissions for selected access type.")); //$NON-NLS-1$
 			} catch (TracException e) {
-				String message = "No Trac repository found at url";
+				String message = Messages.TracRepositorySettingsPage_No_Trac_repository_found_at_url;
 				if (e.getMessage() != null) {
-					message += ": " + e.getMessage();
+					message += ": " + e.getMessage(); //$NON-NLS-1$
 				}
 				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
 						TracUiPlugin.ID_PLUGIN, message));
@@ -218,7 +218,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 						if (e instanceof TracPermissionDeniedException) {
 							setStatus(RepositoryStatus.createStatus(repositoryUrl, IStatus.INFO,
 									TracUiPlugin.ID_PLUGIN,
-									"Authentication credentials are valid. Note: Insufficient permissions for XML-RPC access, falling back to web access."));
+									Messages.TracRepositorySettingsPage_Authentication_credentials_are_valid));
 						}
 					} catch (TracLoginException e2) {
 						throw e;

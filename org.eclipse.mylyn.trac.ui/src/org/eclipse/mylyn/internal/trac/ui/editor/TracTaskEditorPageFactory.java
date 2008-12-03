@@ -47,7 +47,7 @@ public class TracTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 		} else if (TracRepositoryConnector.hasRichEditor(input.getTaskRepository())) {
 			return new TracTaskEditorPage(parentEditor);
 		} else {
-			return new BrowserFormPage(parentEditor, "Browser");
+			return new BrowserFormPage(parentEditor, Messages.TracTaskEditorPageFactory_Browser);
 		}
 	}
 
@@ -66,7 +66,7 @@ public class TracTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public String getPageText() {
-		return "Trac";
+		return "Trac"; //$NON-NLS-1$
 	}
 
 	@Override

@@ -36,41 +36,41 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
  */
 public class TracHyperlinkUtil {
 
-	static Pattern ticketPattern = createPattern("(ticket:|#)(\\d+)");
+	static Pattern ticketPattern = createPattern("(ticket:|#)(\\d+)"); //$NON-NLS-1$
 
-	static Pattern commentPattern = createPattern("comment:ticket:(\\d+):(\\d+)");
+	static Pattern commentPattern = createPattern("comment:ticket:(\\d+):(\\d+)"); //$NON-NLS-1$
 
-	static Pattern reportPattern1 = createPattern("report:(\\d+)");
+	static Pattern reportPattern1 = createPattern("report:(\\d+)"); //$NON-NLS-1$
 
-	static Pattern reportPattern2 = createPattern("\\{(\\d+)\\}");
+	static Pattern reportPattern2 = createPattern("\\{(\\d+)\\}"); //$NON-NLS-1$
 
-	static Pattern changesetPattern1 = createPattern("(r|changeset:)(\\d+)(/\\w+)?");
+	static Pattern changesetPattern1 = createPattern("(r|changeset:)(\\d+)(/\\w+)?"); //$NON-NLS-1$
 
-	static Pattern changesetPattern2 = createPattern("\\[(\\d+)(/\\w+)?\\]");
+	static Pattern changesetPattern2 = createPattern("\\[(\\d+)(/\\w+)?\\]"); //$NON-NLS-1$
 
-	static Pattern revisionLogPattern1 = createPattern("r(\\d+):(\\d+)");
+	static Pattern revisionLogPattern1 = createPattern("r(\\d+):(\\d+)"); //$NON-NLS-1$
 
-	static Pattern revisionLogPattern2 = createPattern("\\[(\\d+):(\\d+)\\]");
+	static Pattern revisionLogPattern2 = createPattern("\\[(\\d+):(\\d+)\\]"); //$NON-NLS-1$
 
-	static Pattern revisionLogPattern3 = createPattern("log:(\\w+)?@(\\d+):(\\d+)");
+	static Pattern revisionLogPattern3 = createPattern("log:(\\w+)?@(\\d+):(\\d+)"); //$NON-NLS-1$
 
-	static Pattern diffPattern1 = createPattern("diff:@(\\d+):(\\d+)");
+	static Pattern diffPattern1 = createPattern("diff:@(\\d+):(\\d+)"); //$NON-NLS-1$
 
-	static Pattern diffPattern2 = createPattern("diff:([\\w\\./-]+)(@(\\d+))?//([\\w\\./-]+)(@(\\d+))?");
+	static Pattern diffPattern2 = createPattern("diff:([\\w\\./-]+)(@(\\d+))?//([\\w\\./-]+)(@(\\d+))?"); //$NON-NLS-1$
 
-	static Pattern wikiPattern1 = createPattern("wiki:(\\w+)");
+	static Pattern wikiPattern1 = createPattern("wiki:(\\w+)"); //$NON-NLS-1$
 
-	static Pattern wikiPattern2 = Pattern.compile("(?<![!.a-z])[A-Z][a-z0-9]+[A-Z]\\w*");
+	static Pattern wikiPattern2 = Pattern.compile("(?<![!.a-z])[A-Z][a-z0-9]+[A-Z]\\w*"); //$NON-NLS-1$
 
-	static Pattern milestonePattern = createPattern("milestone:([\\w\\.]+)");
+	static Pattern milestonePattern = createPattern("milestone:([\\w\\.]+)"); //$NON-NLS-1$
 
-	static Pattern attachmentPattern = createPattern("attachment:ticket:(\\d+):([\\w\\.]+)");
+	static Pattern attachmentPattern = createPattern("attachment:ticket:(\\d+):([\\w\\.]+)"); //$NON-NLS-1$
 
-	static Pattern filesPattern = createPattern("source:/*([\\w\\./\\-_]+)(@(\\d+)(#L(\\d+))?)?");
+	static Pattern filesPattern = createPattern("source:/*([\\w\\./\\-_]+)(@(\\d+)(#L(\\d+))?)?"); //$NON-NLS-1$
 
 	private static Pattern createPattern(String regexp) {
 		// hyperlink patterns prefixed with "!" are not links
-		return Pattern.compile("(?<!!)" + regexp);
+		return Pattern.compile("(?<!!)" + regexp); //$NON-NLS-1$
 	}
 
 	/**
@@ -156,8 +156,8 @@ public class TracHyperlinkUtil {
 			if (isInRegion(offsetInText, m)) {
 				String rev = m.group(1);
 				String stopRev = m.group(2);
-				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev
-						+ "&stop_rev=" + stopRev;
+				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev //$NON-NLS-1$
+						+ "&stop_rev=" + stopRev; //$NON-NLS-1$
 				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
@@ -167,8 +167,8 @@ public class TracHyperlinkUtil {
 			if (isInRegion(offsetInText, m)) {
 				String rev = m.group(1);
 				String stopRev = m.group(2);
-				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev
-						+ "&stop_rev=" + stopRev;
+				String url = repository.getRepositoryUrl() + ITracClient.REVISION_LOG_URL + "?rev=" + rev //$NON-NLS-1$
+						+ "&stop_rev=" + stopRev; //$NON-NLS-1$
 				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
@@ -183,7 +183,7 @@ public class TracHyperlinkUtil {
 				if (branch != null) {
 					url += branch;
 				}
-				url += "?rev=" + rev + "&stop_rev=" + stopRev;
+				url += "?rev=" + rev + "&stop_rev=" + stopRev; //$NON-NLS-1$ //$NON-NLS-2$
 				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
@@ -220,7 +220,7 @@ public class TracHyperlinkUtil {
 				String old_rev = m.group(1);
 				String new_rev = m.group(2);
 				String url = repository.getRepositoryUrl() + ITracClient.CHANGESET_URL;
-				url += "?new=" + new_rev + "&old=" + old_rev;
+				url += "?new=" + new_rev + "&old=" + old_rev; //$NON-NLS-1$ //$NON-NLS-2$
 				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
 		}
@@ -234,17 +234,17 @@ public class TracHyperlinkUtil {
 				String new_rev = m.group(6);
 				String url = repository.getRepositoryUrl() + ITracClient.CHANGESET_URL;
 				try {
-					url += "?new_path=" + URLEncoder.encode(new_path, "UTF-8");
-					url += "&old_path=" + URLEncoder.encode(old_path, "UTF-8");
+					url += "?new_path=" + URLEncoder.encode(new_path, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
+					url += "&old_path=" + URLEncoder.encode(old_path, "UTF-8"); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch (UnsupportedEncodingException e) {
-					StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.ID_PLUGIN, "Unexcpected exception", e));
+					StatusHandler.log(new Status(IStatus.WARNING, TracUiPlugin.ID_PLUGIN, "Unexcpected exception", e)); //$NON-NLS-1$
 					continue;
 				}
 				if (new_rev != null) {
-					url += "&new=" + new_rev;
+					url += "&new=" + new_rev; //$NON-NLS-1$
 				}
 				if (old_rev != null) {
-					url += "&old=" + old_rev;
+					url += "&old=" + old_rev; //$NON-NLS-1$
 				}
 				links.add(new WebHyperlink(determineRegion(textOffset, m), url));
 			}
@@ -294,9 +294,9 @@ public class TracHyperlinkUtil {
 				String line = m.group(5);
 				String url = repository.getRepositoryUrl() + ITracClient.BROWSER_URL + filename;
 				if (rev != null) {
-					url += "?rev=" + rev;
+					url += "?rev=" + rev; //$NON-NLS-1$
 					if (line != null) {
-						url += "#L" + line;
+						url += "#L" + line; //$NON-NLS-1$
 					}
 				}
 				links.add(new WebHyperlink(determineRegion(textOffset, m), url));

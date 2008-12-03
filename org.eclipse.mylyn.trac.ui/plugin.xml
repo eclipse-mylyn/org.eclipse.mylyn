@@ -3,17 +3,17 @@
 <plugin>
    <extension
          id="org.eclipse.mylyn.trac.repository"
-         name="Trac Repository"
+         name="%repository.name"
          point="org.eclipse.mylyn.tasks.ui.repositories">
       <connectorCore
             class="org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector"
             id="trac"
-            name="Trac Connector Core"/>
+            name="%TracRepositoryConnector.name"/>
       <connectorUi
             brandingIcon="icons/eview16/trac-icon.gif"
             class="org.eclipse.mylyn.internal.trac.ui.TracConnectorUi"
             id="trac"
-            name="Trac Connector UI"
+            name="%TracConnectorUi.name"
             overlayIcon="icons/eview16/overlay-trac.gif"/>
       <taskListMigrator
             class="org.eclipse.mylyn.internal.trac.ui.TracTaskListMigrator">
@@ -41,7 +41,7 @@
       <hyperlinkDetector            
             class="org.eclipse.mylyn.internal.trac.ui.TracHyperlinkDetector"
             id="org.eclipse.mylyn.trac.ui.hyperlinksDetectors.Trac"
-            name="Trac Links"
+            name="%TracHyperlinkDetector.name"
             targetId="org.eclipse.mylyn.tasks.ui.TaskEditor">
       </hyperlinkDetector>
    </extension>
