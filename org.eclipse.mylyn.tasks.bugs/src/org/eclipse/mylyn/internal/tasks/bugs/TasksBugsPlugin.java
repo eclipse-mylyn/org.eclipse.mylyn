@@ -52,7 +52,7 @@ public class TasksBugsPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.bugs";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.bugs"; //$NON-NLS-1$
 
 	private static TasksBugsPlugin INSTANCE;
 

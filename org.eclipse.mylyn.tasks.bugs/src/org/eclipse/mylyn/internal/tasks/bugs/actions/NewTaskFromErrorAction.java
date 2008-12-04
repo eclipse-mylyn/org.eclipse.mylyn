@@ -31,7 +31,7 @@ import org.eclipse.ui.internal.views.log.LogSession;
  */
 public class NewTaskFromErrorAction implements IObjectActionDelegate {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.ui.repositories.actions.create";
+	public static final String ID = "org.eclipse.mylyn.tasklist.ui.repositories.actions.create"; //$NON-NLS-1$
 
 	private LogEntry entry;
 
@@ -46,16 +46,16 @@ public class NewTaskFromErrorAction implements IObjectActionDelegate {
 	 *            Indicates if it should include subentries, if the {@link LogEntry} have any
 	 */
 	private void buildDescriptionFromLogEntry(LogEntry entry, StringBuilder sb, boolean includeChildren) {
-		sb.append("\n\n-- Error Log --\nDate: ");
+		sb.append(Messages.NewTaskFromErrorAction_ERROR_LOG_DATE);
 		sb.append(entry.getDate());
-		sb.append("\nMessage: ");
+		sb.append(Messages.NewTaskFromErrorAction_MESSGAE);
 		sb.append(entry.getMessage());
-		sb.append("\nSeverity: " + entry.getSeverityText());
-		sb.append("\nPlugin ID: ");
+		sb.append(Messages.NewTaskFromErrorAction_SEVERITY + entry.getSeverityText());
+		sb.append(Messages.NewTaskFromErrorAction_PLUGIN_ID);
 		sb.append(entry.getPluginId());
-		sb.append("\nStack Trace:\n");
+		sb.append(Messages.NewTaskFromErrorAction_STACK_TRACE);
 		if (entry.getStack() == null) {
-			sb.append("no stack trace available");
+			sb.append(Messages.NewTaskFromErrorAction_no_stack_trace_available);
 		} else {
 			sb.append(entry.getStack());
 		}

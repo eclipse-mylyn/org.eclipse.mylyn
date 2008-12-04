@@ -78,7 +78,7 @@ public class TaskErrorReporter {
 			taskData = mapper.createTaskData(null);
 			TasksUiInternal.createAndOpenNewTask(taskData);
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Unexpected error reporting error",
+			StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Unexpected error reporting error", //$NON-NLS-1$
 					e));
 		}
 	}

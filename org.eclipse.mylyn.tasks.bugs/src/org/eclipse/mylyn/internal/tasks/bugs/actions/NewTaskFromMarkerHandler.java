@@ -35,7 +35,8 @@ public class NewTaskFromMarkerHandler extends MarkerViewHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IMarker[] markers = getSelectedMarkers(event);
 		if (markers.length == 0 || markers[0] == null) {
-			MessageDialog.openInformation(null, "New Task from Marker", "No marker selected.");
+			MessageDialog.openInformation(null, Messages.NewTaskFromMarkerHandler_New_Task_from_Marker,
+					Messages.NewTaskFromMarkerHandler_No_marker_selected);
 			return null;
 		}
 		final IMarker marker = markers[0];
@@ -46,12 +47,12 @@ public class NewTaskFromMarkerHandler extends MarkerViewHandler {
 				StringBuilder sb = new StringBuilder();
 				try {
 					MarkerType type = MarkerTypesModel.getInstance().getType(marker.getType());
-					sb.append(type.getLabel() + ": ");
+					sb.append(type.getLabel() + ": "); //$NON-NLS-1$
 				} catch (CoreException e) {
 					// ignore
 				}
 
-				return sb.toString() + marker.getAttribute("message", "");
+				return sb.toString() + marker.getAttribute("message", ""); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			@Override
@@ -67,11 +68,12 @@ public class NewTaskFromMarkerHandler extends MarkerViewHandler {
 
 	private String buildDescriptionFromMarkerItem(IMarker marker) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Resource: " + marker.getResource().getFullPath().removeLastSegments(1).toString().substring(1) + "/"
+		sb.append(Messages.NewTaskFromMarkerHandler_Resource_
+				+ marker.getResource().getFullPath().removeLastSegments(1).toString().substring(1) + "/" //$NON-NLS-1$
 				+ marker.getResource().getName());
 		int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, -1);
 		if (lineNumber != -1) {
-			sb.append("\nLocation: line " + lineNumber);
+			sb.append(Messages.NewTaskFromMarkerHandler_LOCATION_LINE + lineNumber);
 		}
 		return sb.toString();
 	}

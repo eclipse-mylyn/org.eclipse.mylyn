@@ -31,16 +31,16 @@ import org.osgi.framework.Bundle;
 public class DefaultTaskContributor extends AbstractTaskContributor {
 
 	public void appendErrorDetails(StringBuilder sb, IStatus status, Date date) {
-		sb.append("\n\n-- Error Details --");
+		sb.append(Messages.DefaultTaskContributor_Error_DETAILS);
 		if (date != null) {
-			sb.append("\nDate: ");
+			sb.append(Messages.DefaultTaskContributor_DATE);
 			sb.append(date);
 		}
-		sb.append("\nMessage: ");
+		sb.append(Messages.DefaultTaskContributor_MESSAGE);
 		sb.append(status.getMessage());
-		sb.append("\nSeverity: ");
+		sb.append(Messages.DefaultTaskContributor_SEVERITY);
 		sb.append(getSeverityText(status.getSeverity()));
-		sb.append("\nPlugin: ");
+		sb.append(Messages.DefaultTaskContributor_PLUGIN);
 		sb.append(status.getPlugin());
 	}
 
@@ -54,26 +54,26 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 	public String getDescription(IStatus status) {
 		if (status instanceof FeatureStatus) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("\n\n\n");
-			sb.append("-- Installed Features and Plug-ins --\n");
+			sb.append("\n\n\n"); //$NON-NLS-1$
+			sb.append(Messages.DefaultTaskContributor_INSTALLED_FEATURES_AND_PLUGINS);
 			IBundleGroup[] bundleGroups = ((FeatureStatus) status).getBundleGroup();
 			for (IBundleGroup bundleGroup : bundleGroups) {
 				sb.append(bundleGroup.getIdentifier());
-				sb.append(" ");
+				sb.append(" "); //$NON-NLS-1$
 				sb.append(bundleGroup.getVersion());
-				sb.append("\n");
+				sb.append("\n"); //$NON-NLS-1$
 
 				Bundle[] bundles = bundleGroup.getBundles();
 				if (bundles != null) {
 					for (Bundle bundle : bundles) {
-						sb.append("  ");
+						sb.append("  "); //$NON-NLS-1$
 						sb.append(bundle.getSymbolicName());
-						String version = (String) bundle.getHeaders().get("Bundle-Version");
+						String version = (String) bundle.getHeaders().get(Messages.DefaultTaskContributor_Bundle_Version);
 						if (version != null) {
-							sb.append(" ");
+							sb.append(" "); //$NON-NLS-1$
 							sb.append(version);
 						}
-						sb.append("\n");
+						sb.append("\n"); //$NON-NLS-1$
 					}
 				}
 			}
@@ -83,11 +83,11 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 			StringBuilder sb = new StringBuilder();
 			appendErrorDetails(sb, errorLogStatus, errorLogStatus.getDate());
 			if (errorLogStatus.getLogSessionData() != null) {
-				sb.append("\nSession Data:\n");
+				sb.append(Messages.DefaultTaskContributor_SESSION_DATA);
 				sb.append(errorLogStatus.getLogSessionData());
 			}
 			if (errorLogStatus.getStack() != null) {
-				sb.append("\nException Stack Trace:\n");
+				sb.append(Messages.DefaultTaskContributor_EXCEPTION_STACK_TRACE);
 				sb.append(errorLogStatus.getStack());
 			}
 			return sb.toString();
@@ -95,7 +95,7 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 			StringBuilder sb = new StringBuilder();
 			appendErrorDetails(sb, status, new Date());
 			if (status.getException() != null) {
-				sb.append("\nException Stack Trace:\n");
+				sb.append(Messages.DefaultTaskContributor_EXCEPTION_STACK_TRACE);
 				StringWriter writer = new StringWriter();
 				status.getException().printStackTrace(new PrintWriter(writer));
 				sb.append(writer.getBuffer());
@@ -112,13 +112,13 @@ public class DefaultTaskContributor extends AbstractTaskContributor {
 	private String getSeverityText(int severity) {
 		switch (severity) {
 		case IStatus.ERROR:
-			return "Error";
+			return Messages.DefaultTaskContributor_Error;
 		case IStatus.WARNING:
-			return "Warning";
+			return Messages.DefaultTaskContributor_Warning;
 		case IStatus.INFO:
-			return "Info";
+			return Messages.DefaultTaskContributor_Info;
 		case IStatus.OK:
-			return "OK";
+			return Messages.DefaultTaskContributor_OK;
 		}
 		return "?"; //$NON-NLS-1$
 	}

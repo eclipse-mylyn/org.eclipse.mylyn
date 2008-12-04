@@ -15,7 +15,7 @@
 		         icon="icons/etool16/task-repository-new.gif"
 		         menubarPath="org.eclipse.pde.runtime.LogView"
 		         id="org.eclipse.mylyn.tasklist.actions.newTaskFromErrorLog"
-		         label="Report as Bug">
+		         label="%NewTaskFromErrorAction.label">
              </action>
         </objectContribution>
    </extension>
@@ -23,16 +23,16 @@
    <extension point="org.eclipse.ui.actionSets">
 		<actionSet
             id="org.eclipse.mylyn.doc.actionSet"
-            label="Tasks Help"
+            label="%actionSet.label"
             visible="true"> 
         <action
               class="org.eclipse.mylyn.internal.tasks.bugs.actions.ReportBugAction"
               icon="icons/etool16/report-bug.gif"
               id="org.eclipse.mylyn.tasks.ui.bug.report"
-              label="Report Bug or Enhancement..."
+              label="%ReportBugAction.label"
               menubarPath="help/helpStart"
               style="push"
-              tooltip="Report Bug or Enhancement"/> 
+              tooltip="%ReportBugAction.tooltip"/> 
     	</actionSet>
    </extension>
   
@@ -69,9 +69,9 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            description="Report as Bug from Marker"
+            description="%commands.newTaskFromMarker.description"
             id="org.eclipse.mylyn.tasks.bugs.commands.newTaskFromMarker"
-            name="New Task from Marker...">
+            name="%commands.newTaskFromMarker.name">
       </command>
    </extension>
  
@@ -82,7 +82,7 @@
             <command
                   commandId="org.eclipse.mylyn.tasks.bugs.commands.newTaskFromMarker"
                   icon="icons/etool16/task-new.gif"
-                  mnemonic="New Task from Marker"
+                  mnemonic="%commands.newTaskFromMarker.mnemonic"
                   style="push">
               <visibleWhen
                     checkEnabled="true">
@@ -96,7 +96,7 @@
       <errorReporter
             class="org.eclipse.mylyn.internal.tasks.bugs.TasksBugsPlugin$BugReporter"
             id="org.eclipse.mylyn.tasks.bugs.taskReporter"
-            label="Report Bug">
+            label="%BugReporter.label">
       </errorReporter>
    </extension>
   

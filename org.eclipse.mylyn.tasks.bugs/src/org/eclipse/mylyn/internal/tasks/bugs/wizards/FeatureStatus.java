@@ -23,7 +23,7 @@ public class FeatureStatus extends Status {
 	private final IBundleGroup[] bundleGroups;
 
 	public FeatureStatus(String id, IBundleGroup[] bundleGroups) {
-		super(IStatus.INFO, id, "");
+		super(IStatus.INFO, id, ""); //$NON-NLS-1$
 		this.bundleGroups = bundleGroups;
 	}
 

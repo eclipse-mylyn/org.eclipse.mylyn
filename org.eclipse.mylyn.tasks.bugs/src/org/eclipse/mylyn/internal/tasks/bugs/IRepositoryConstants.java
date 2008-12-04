@@ -17,26 +17,26 @@ package org.eclipse.mylyn.internal.tasks.bugs;
 public class IRepositoryConstants {
 
 	@Deprecated
-	public static final String BRANDING = "branding";
+	public static final String BRANDING = "branding"; //$NON-NLS-1$
 
-	public static final String COMPONENT = "component";
+	public static final String COMPONENT = "component"; //$NON-NLS-1$
 
-	public static final String CONNECTOR_KIND = "repositoryKind";
+	public static final String CONNECTOR_KIND = "repositoryKind"; //$NON-NLS-1$
 
-	public static final String DESCRIPTION = "description";
+	public static final String DESCRIPTION = "description"; //$NON-NLS-1$
 
-	public static final String PRODUCT = "product";
+	public static final String PRODUCT = "product"; //$NON-NLS-1$
 
-	public static final String PRODUCT_CATEGORY = "productCategory";
+	public static final String PRODUCT_CATEGORY = "productCategory"; //$NON-NLS-1$
 
-	public static final String PRODUCT_DESCRIPTION = "productDescription";
+	public static final String PRODUCT_DESCRIPTION = "productDescription"; //$NON-NLS-1$
 
-	public static final String PRODUCT_NAME = "productName";
+	public static final String PRODUCT_NAME = "productName"; //$NON-NLS-1$
 
-	public static final String PRODUCT_TITLE = "productTitle";
+	public static final String PRODUCT_TITLE = "productTitle"; //$NON-NLS-1$
 
-	public static final String REPOSITORY_KIND = "repositoryKind";
+	public static final String REPOSITORY_KIND = "repositoryKind"; //$NON-NLS-1$
 
-	public static final String REPOSITORY_URL = "repositoryUrl";
+	public static final String REPOSITORY_URL = "repositoryUrl"; //$NON-NLS-1$
 
 }

@@ -31,14 +31,14 @@ public class ReportBugOrEnhancementWizard extends Wizard {
 	public ReportBugOrEnhancementWizard() {
 		setForcePreviousAndNextButtons(true);
 		setNeedsProgressMonitor(false);
-		setWindowTitle("Report Bug or Enhancement");
+		setWindowTitle(Messages.ReportBugOrEnhancementWizard_Report_Bug_or_Enhancement);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
 	@Override
 	public void addPages() {
 		manager = new PluginRepositoryMappingManager();
-		selectProductPage = new SelectProductPage("selectBundleGroupProvider", manager);
+		selectProductPage = new SelectProductPage("selectBundleGroupProvider", manager); //$NON-NLS-1$
 		addPage(selectProductPage);
 	}
 

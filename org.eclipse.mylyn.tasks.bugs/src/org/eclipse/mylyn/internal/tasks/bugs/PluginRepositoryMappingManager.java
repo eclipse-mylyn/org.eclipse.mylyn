@@ -33,27 +33,27 @@ public class PluginRepositoryMappingManager {
 	private static final String[] MAPPING_CHILD_ELEMENTS = new String[] { IRepositoryConstants.PRODUCT,
 			IRepositoryConstants.COMPONENT };
 
-	private static final String EXTENSION_ID_PLUGIN_REPOSITORY_MAPPING = "org.eclipse.mylyn.tasks.bugs.pluginRepositoryMappings";
+	private static final String EXTENSION_ID_PLUGIN_REPOSITORY_MAPPING = "org.eclipse.mylyn.tasks.bugs.pluginRepositoryMappings"; //$NON-NLS-1$
 
-	private static final String ELEMENT_MAPPING = "mapping";
+	private static final String ELEMENT_MAPPING = "mapping"; //$NON-NLS-1$
 
-	private static final String ELEMENT_BRANDING = "branding";
+	private static final String ELEMENT_BRANDING = "branding"; //$NON-NLS-1$
 
-	private static final String ELEMENT_REPOSITORY = "repository";
+	private static final String ELEMENT_REPOSITORY = "repository"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_PLUGIN_ID_PREFIX = "pluginIdPrefix";
+	private static final String ATTRIBUTE_PLUGIN_ID_PREFIX = "pluginIdPrefix"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_REPOSITORY_URL = "url";
+	private static final String ATTRIBUTE_REPOSITORY_URL = "url"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_REPOSITORY_KIND = "kind";
+	private static final String ATTRIBUTE_REPOSITORY_KIND = "kind"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_BRANDING_NAME = "name";
+	private static final String ATTRIBUTE_BRANDING_NAME = "name"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_BRANDING_DESCRIPTION = "description";
+	private static final String ATTRIBUTE_BRANDING_DESCRIPTION = "description"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_BRANDING_CATEGORY = "category";
+	private static final String ATTRIBUTE_BRANDING_CATEGORY = "category"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_VALUE = "value";
+	private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 
 	private TreeMap<String, PluginRepositoryMapping> mappingByPrefix;
 
@@ -80,14 +80,14 @@ public class PluginRepositoryMappingManager {
 		}
 		// branding
 		for (IConfigurationElement attributeElement : element.getChildren(ELEMENT_BRANDING)) {
-			attributes.put("brandingName", attributeElement.getAttribute(ATTRIBUTE_BRANDING_NAME));
+			attributes.put("brandingName", attributeElement.getAttribute(ATTRIBUTE_BRANDING_NAME)); //$NON-NLS-1$
 			String description = attributeElement.getAttribute(ATTRIBUTE_BRANDING_DESCRIPTION);
 			if (description != null) {
-				attributes.put("brandingDescription", description);
+				attributes.put("brandingDescription", description); //$NON-NLS-1$
 			}
 			String category = attributeElement.getAttribute(ATTRIBUTE_BRANDING_CATEGORY);
 			if (category != null) {
-				attributes.put("brandingCategory", category);
+				attributes.put("brandingCategory", category); //$NON-NLS-1$
 			}
 		}
 
@@ -97,9 +97,9 @@ public class PluginRepositoryMappingManager {
 			pluginRepositoryMapping.addPrefix(pluginIdPrefix);
 			addPluginRepositoryMapping(pluginRepositoryMapping);
 		} else {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Missing attributes in "
-					+ EXTENSION_ID_PLUGIN_REPOSITORY_MAPPING + " extension for id \"" + ATTRIBUTE_PLUGIN_ID_PREFIX
-					+ "\""));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksBugsPlugin.ID_PLUGIN, "Missing attributes in " //$NON-NLS-1$
+					+ EXTENSION_ID_PLUGIN_REPOSITORY_MAPPING + " extension for id \"" + ATTRIBUTE_PLUGIN_ID_PREFIX //$NON-NLS-1$
+					+ "\"")); //$NON-NLS-1$
 		}
 	}
 

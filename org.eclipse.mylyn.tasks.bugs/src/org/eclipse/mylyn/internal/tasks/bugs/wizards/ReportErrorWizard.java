@@ -37,7 +37,7 @@ public class ReportErrorWizard extends Wizard {
 		this.taskErrorReporter = taskErrorReporter;
 		this.status = status;
 		this.mapper = taskErrorReporter.preProcess(status);
-		setWindowTitle("Report as Bug");
+		setWindowTitle(Messages.ReportErrorWizard_Report_as_Bug);
 	}
 
 	@Override
