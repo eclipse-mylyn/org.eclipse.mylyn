@@ -25,7 +25,8 @@ public class HeadlessTests extends TestCase {
 	public static Test suite() {
 		boolean inEclipseRuntime = DiscoveryTestSuite.inEclipseRuntime();
 		final DiscoveryTestSuite testSuite = new DiscoveryTestSuite(new Filter(inEclipseRuntime));
-		testSuite.setName("All Headless Tests" + (inEclipseRuntime ? " Stand-Alone" : " In Eclipse"));
+		testSuite.setName("Test for org.eclipse.mylyn.wikitext.tests Headless Tests"
+				+ (inEclipseRuntime ? " Stand-Alone" : " In Eclipse"));
 		return testSuite;
 	}
 
