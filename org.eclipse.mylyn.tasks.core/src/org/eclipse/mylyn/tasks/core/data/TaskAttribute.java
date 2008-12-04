@@ -32,227 +32,227 @@ public final class TaskAttribute {
 	/**
 	 * Boolean attribute. If true, repository user needs to be added to the cc list.
 	 */
-	public static final String ADD_SELF_CC = "task.common.addselfcc";
+	public static final String ADD_SELF_CC = "task.common.addselfcc"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_AUTHOR = "task.common.attachment.author";
+	public static final String ATTACHMENT_AUTHOR = "task.common.attachment.author"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_CONTENT_TYPE = "task.common.attachment.ctype";
+	public static final String ATTACHMENT_CONTENT_TYPE = "task.common.attachment.ctype"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_DATE = "task.common.attachment.date";
+	public static final String ATTACHMENT_DATE = "task.common.attachment.date"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_DESCRIPTION = "task.common.attachment.description";
+	public static final String ATTACHMENT_DESCRIPTION = "task.common.attachment.description"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_FILENAME = "filename";
+	public static final String ATTACHMENT_FILENAME = "filename"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_ID = "task.common.attachment.id";
+	public static final String ATTACHMENT_ID = "task.common.attachment.id"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_IS_DEPRECATED = "task.common.attachment.deprecated";
+	public static final String ATTACHMENT_IS_DEPRECATED = "task.common.attachment.deprecated"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_IS_PATCH = "task.common.attachment.patch";
+	public static final String ATTACHMENT_IS_PATCH = "task.common.attachment.patch"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_SIZE = "task.common.attachment.size";
+	public static final String ATTACHMENT_SIZE = "task.common.attachment.size"; //$NON-NLS-1$
 
-	public static final String ATTACHMENT_URL = "task.common.attachment.url";
+	public static final String ATTACHMENT_URL = "task.common.attachment.url"; //$NON-NLS-1$
 
-	public static final String COMMENT_ATTACHMENT_ID = "task.common.comment.attachment.id";
+	public static final String COMMENT_ATTACHMENT_ID = "task.common.comment.attachment.id"; //$NON-NLS-1$
 
-	public static final String COMMENT_AUTHOR = "task.common.comment.author";
+	public static final String COMMENT_AUTHOR = "task.common.comment.author"; //$NON-NLS-1$
 
 	@Deprecated
-	public static final String COMMENT_AUTHOR_NAME = "task.common.comment.author.name";
+	public static final String COMMENT_AUTHOR_NAME = "task.common.comment.author.name"; //$NON-NLS-1$
 
-	public static final String COMMENT_DATE = "task.common.comment.date";
+	public static final String COMMENT_DATE = "task.common.comment.date"; //$NON-NLS-1$
 
-	public static final String COMMENT_HAS_ATTACHMENT = "task.common.comment.attachment";
+	public static final String COMMENT_HAS_ATTACHMENT = "task.common.comment.attachment"; //$NON-NLS-1$
 
-	public static final String COMMENT_NEW = "task.common.comment.new";
-
-	/**
-	 * @since 3.0
-	 */
-	public static final String COMMENT_NUMBER = "task.common.comment.number";
-
-	public static final String COMMENT_TEXT = "task.common.comment.text";
-
-	public static final String COMMENT_URL = "task.common.comment.url";
+	public static final String COMMENT_NEW = "task.common.comment.new"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String COMPONENT = "task.common.component";
+	public static final String COMMENT_NUMBER = "task.common.comment.number"; //$NON-NLS-1$
+
+	public static final String COMMENT_TEXT = "task.common.comment.text"; //$NON-NLS-1$
+
+	public static final String COMMENT_URL = "task.common.comment.url"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String DATE_COMPLETION = "task.common.date.completed";
-
-	public static final String DATE_CREATION = "task.common.date.created";
+	public static final String COMPONENT = "task.common.component"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String DATE_DUE = "task.common.date.due";
+	public static final String DATE_COMPLETION = "task.common.date.completed"; //$NON-NLS-1$
 
-	public static final String DATE_MODIFICATION = "task.common.date.modified";
+	public static final String DATE_CREATION = "task.common.date.created"; //$NON-NLS-1$
 
-	public static final String DESCRIPTION = "task.common.description";
+	/**
+	 * @since 3.0
+	 */
+	public static final String DATE_DUE = "task.common.date.due"; //$NON-NLS-1$
 
-	public static final String KEYWORDS = "task.common.keywords";
+	public static final String DATE_MODIFICATION = "task.common.date.modified"; //$NON-NLS-1$
 
-	public static final String KIND_DEFAULT = "task.common.kind.default";
+	public static final String DESCRIPTION = "task.common.description"; //$NON-NLS-1$
 
-	public static final String KIND_OPERATION = "task.common.kind.operation";
+	public static final String KEYWORDS = "task.common.keywords"; //$NON-NLS-1$
 
-	public static final String KIND_PEOPLE = "task.common.kind.people";
+	public static final String KIND_DEFAULT = "task.common.kind.default"; //$NON-NLS-1$
+
+	public static final String KIND_OPERATION = "task.common.kind.operation"; //$NON-NLS-1$
+
+	public static final String KIND_PEOPLE = "task.common.kind.people"; //$NON-NLS-1$
 
 	//public static final String META_SHOW_IN_ATTRIBUTES_SECTION = "task.meta.showInTaskEditorAttributesSection";
 
-	public static final String META_ASSOCIATED_ATTRIBUTE_ID = "task.meta.associated.attribute";
+	public static final String META_ASSOCIATED_ATTRIBUTE_ID = "task.meta.associated.attribute"; //$NON-NLS-1$
 
-	public static final String META_ATTRIBUTE_KIND = "task.meta.attributeKind";
+	public static final String META_ATTRIBUTE_KIND = "task.meta.attributeKind"; //$NON-NLS-1$
 
-	public static final String META_ATTRIBUTE_TYPE = "task.meta.type";
+	public static final String META_ATTRIBUTE_TYPE = "task.meta.type"; //$NON-NLS-1$
 
-	public static final String META_DEFAULT_OPTION = "task.meta.defaultOption";
+	public static final String META_DEFAULT_OPTION = "task.meta.defaultOption"; //$NON-NLS-1$
 
 //	public static final String META_DETAIL_LEVEL = "task.meta.detailLevel";
 
-	public static final String META_LABEL = "task.meta.label";
+	public static final String META_LABEL = "task.meta.label"; //$NON-NLS-1$
 
-	public static final String META_READ_ONLY = "task.meta.readOnly";
+	public static final String META_READ_ONLY = "task.meta.readOnly"; //$NON-NLS-1$
 
-	public static final String NEW_ATTACHMENT = "task.common.new.attachment";
+	public static final String NEW_ATTACHMENT = "task.common.new.attachment"; //$NON-NLS-1$
 
 	// XXX merge with USER_CC
 	//public static final String NEW_CC = "task.common.newcc";
 
-	public static final String OPERATION = "task.common.operation";
+	public static final String OPERATION = "task.common.operation"; //$NON-NLS-1$
 
-	public static final String PERSON_NAME = "task.common.person.name";
+	public static final String PERSON_NAME = "task.common.person.name"; //$NON-NLS-1$
 
-	public static final String PREFIX_ATTACHMENT = "task.common.attachment-";
+	public static final String PREFIX_ATTACHMENT = "task.common.attachment-"; //$NON-NLS-1$
 
-	public static final String PREFIX_COMMENT = "task.common.comment-";
+	public static final String PREFIX_COMMENT = "task.common.comment-"; //$NON-NLS-1$
 
 	// XXX merge with USER_CC
 	//public static final String REMOVE_CC = "task.common.removecc";
 
-	public static final String PREFIX_OPERATION = "task.common.operation-";
+	public static final String PREFIX_OPERATION = "task.common.operation-"; //$NON-NLS-1$
 
-	public static final String PRIORITY = "task.common.priority";
+	public static final String PRIORITY = "task.common.priority"; //$NON-NLS-1$
 
-	public static final String PRODUCT = "task.common.product";
+	public static final String PRODUCT = "task.common.product"; //$NON-NLS-1$
 
-	public static final String RESOLUTION = "task.common.resolution";
+	public static final String RESOLUTION = "task.common.resolution"; //$NON-NLS-1$
 
-	public static final String STATUS = "task.common.status";
+	public static final String STATUS = "task.common.status"; //$NON-NLS-1$
 
-	public static final String SUMMARY = "task.common.summary";
+	public static final String SUMMARY = "task.common.summary"; //$NON-NLS-1$
 
-	public static final String TASK_KEY = "task.common.key";
+	public static final String TASK_KEY = "task.common.key"; //$NON-NLS-1$
 
-	public static final String TASK_KIND = "task.common.kind";
-
-	/**
-	 * @since 3.0
-	 */
-	public static final String TASK_URL = "task.common.url";
+	public static final String TASK_KIND = "task.common.kind"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_ATTACHMENT = "attachment";
+	public static final String TASK_URL = "task.common.url"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_BOOLEAN = "boolean";
+	public static final String TYPE_ATTACHMENT = "attachment"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_COMMENT = "comment";
+	public static final String TYPE_BOOLEAN = "boolean"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_CONTAINER = "container";
+	public static final String TYPE_COMMENT = "comment"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_DATE = "date";
+	public static final String TYPE_CONTAINER = "container"; //$NON-NLS-1$
+
+	/**
+	 * @since 3.0
+	 */
+	public static final String TYPE_DATE = "date"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.1
 	 */
-	public static final String TYPE_DATETIME = "dateTime";
+	public static final String TYPE_DATETIME = "dateTime"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_INTEGER = "integer";
+	public static final String TYPE_INTEGER = "integer"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.1
 	 */
-	public static final String TYPE_LONG = "long";
+	public static final String TYPE_LONG = "long"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_LONG_RICH_TEXT = "longRichText";
+	public static final String TYPE_LONG_RICH_TEXT = "longRichText"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_LONG_TEXT = "longText";
+	public static final String TYPE_LONG_TEXT = "longText"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_MULTI_SELECT = "multiSelect";
+	public static final String TYPE_MULTI_SELECT = "multiSelect"; //$NON-NLS-1$
 
-	public static final String TYPE_OPERATION = "operation";
-
-	/**
-	 * @since 3.0
-	 */
-	public static final String TYPE_PERSON = "person";
+	public static final String TYPE_OPERATION = "operation"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_SHORT_RICH_TEXT = "shortRichText";
+	public static final String TYPE_PERSON = "person"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_SHORT_TEXT = "shortText";
+	public static final String TYPE_SHORT_RICH_TEXT = "shortRichText"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_SINGLE_SELECT = "singleSelect";
+	public static final String TYPE_SHORT_TEXT = "shortText"; //$NON-NLS-1$
 
 	/**
 	 * @since 3.0
 	 */
-	public static final String TYPE_TASK_DEPENDENCY = "taskDepenedency";
+	public static final String TYPE_SINGLE_SELECT = "singleSelect"; //$NON-NLS-1$
 
-	public static final String TYPE_URL = "url";
+	/**
+	 * @since 3.0
+	 */
+	public static final String TYPE_TASK_DEPENDENCY = "taskDepenedency"; //$NON-NLS-1$
 
-	public static final String USER_ASSIGNED = "task.common.user.assigned";
+	public static final String TYPE_URL = "url"; //$NON-NLS-1$
+
+	public static final String USER_ASSIGNED = "task.common.user.assigned"; //$NON-NLS-1$
 
 	@Deprecated
-	public static final String USER_ASSIGNED_NAME = "task.common.user.assigned.name";
+	public static final String USER_ASSIGNED_NAME = "task.common.user.assigned.name"; //$NON-NLS-1$
 
-	public static final String USER_CC = "task.common.user.cc";
+	public static final String USER_CC = "task.common.user.cc"; //$NON-NLS-1$
 
-	public static final String USER_REPORTER = "task.common.user.reporter";
+	public static final String USER_REPORTER = "task.common.user.reporter"; //$NON-NLS-1$
 
 	@Deprecated
-	public static final String USER_REPORTER_NAME = "task.common.user.reporter.name";
+	public static final String USER_REPORTER_NAME = "task.common.user.reporter.name"; //$NON-NLS-1$
 
 	private Map<String, TaskAttribute> attributeById;
 
