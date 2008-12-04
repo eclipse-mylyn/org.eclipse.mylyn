@@ -52,7 +52,7 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 	public SubmitTaskAttachmentJob(TaskDataManager taskDataManager, AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, ITask task, AbstractTaskAttachmentSource source, String comment,
 			TaskAttribute attachmentAttribute) {
-		super("Submitting Attachment");
+		super("Submitting Attachment"); //$NON-NLS-1$
 		this.taskDataManager = taskDataManager;
 		this.connector = connector;
 		this.taskRepository = taskRepository;
@@ -77,16 +77,16 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 		final AbstractTaskAttachmentHandler attachmentHandler = connector.getTaskAttachmentHandler();
 		if (attachmentHandler == null) {
 			error = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"The task repository does not support attachments.");
+					"The task repository does not support attachments."); //$NON-NLS-1$
 			return Status.OK_STATUS;
 		}
 		try {
-			monitor.beginTask("Submitting attachment", 2 * (1 + getSubmitJobListeners().length) * 100);
-			monitor.subTask("Sending data");
+			monitor.beginTask(Messages.SubmitTaskAttachmentJob_Submitting_attachment, 2 * (1 + getSubmitJobListeners().length) * 100);
+			monitor.subTask(Messages.SubmitTaskAttachmentJob_Sending_data);
 			attachmentHandler.postContent(taskRepository, task, source, comment, attachmentAttribute,
 					Policy.subMonitorFor(monitor, 100));
 			fireTaskSubmitted(monitor);
-			monitor.subTask("Updating task");
+			monitor.subTask(Messages.SubmitTaskAttachmentJob_Updating_task);
 			TaskData taskData = connector.getTaskData(taskRepository, task.getTaskId(), Policy.subMonitorFor(monitor,
 					100));
 			taskDataManager.putUpdatedTaskData(task, taskData, true);

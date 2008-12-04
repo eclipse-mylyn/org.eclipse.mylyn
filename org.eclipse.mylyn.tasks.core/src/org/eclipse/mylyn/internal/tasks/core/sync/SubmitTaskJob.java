@@ -56,7 +56,7 @@ public class SubmitTaskJob extends SubmitJob {
 
 	public SubmitTaskJob(TaskDataManager taskDataManager, AbstractRepositoryConnector connector,
 			TaskRepository taskRepository, ITask task, TaskData taskData, Set<TaskAttribute> oldAttributes) {
-		super("Submitting Task");
+		super("Submitting Task"); //$NON-NLS-1$
 		this.taskDataManager = taskDataManager;
 		this.connector = connector;
 		this.taskRepository = taskRepository;
@@ -68,23 +68,23 @@ public class SubmitTaskJob extends SubmitJob {
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Submitting task", 2 * (1 + getSubmitJobListeners().length) * 100);
+			monitor.beginTask(Messages.SubmitTaskJob_Submitting_task, 2 * (1 + getSubmitJobListeners().length) * 100);
 
 			// post task data
 			AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
-			monitor.subTask("Sending data");
+			monitor.subTask(Messages.SubmitTaskJob_Sending_data);
 			response = taskDataHandler.postTaskData(taskRepository, taskData, oldAttributes, Policy.subMonitorFor(
 					monitor, 100));
 			if (response == null || response.getTaskId() == null) {
 				throw new CoreException(new RepositoryStatus(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
 						RepositoryStatus.ERROR_INTERNAL,
-						"Task could not be created. No additional information was provided by the connector."));
+						"Task could not be created. No additional information was provided by the connector.")); //$NON-NLS-1$
 			}
 			fireTaskSubmitted(monitor);
 
 			// update task in task list
 			String taskId = response.getTaskId();
-			monitor.subTask("Receiving data");
+			monitor.subTask(Messages.SubmitTaskJob_Receiving_data);
 			TaskData updatedTaskData = connector.getTaskData(taskRepository, taskId, Policy.subMonitorFor(monitor, 100));
 			task = createTask(monitor, updatedTaskData);
 			taskDataManager.putSubmittedTaskData(task, updatedTaskData);
@@ -95,8 +95,8 @@ public class SubmitTaskJob extends SubmitJob {
 			return Status.CANCEL_STATUS;
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Unexpected error during task submission", e));
-			errorStatus = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Unexpected error: "
+					"Unexpected error during task submission", e)); //$NON-NLS-1$
+			errorStatus = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Unexpected error: " //$NON-NLS-1$
 					+ e.getMessage(), e);
 		} finally {
 			monitor.done();

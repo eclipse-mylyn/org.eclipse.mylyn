@@ -27,15 +27,15 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  */
 public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
-	public static final String REPOSITORY_LABEL = "Local";
+	public static final String REPOSITORY_LABEL = Messages.LocalRepositoryConnector_Local;
 
-	public static final String CONNECTOR_KIND = "local";
+	public static final String CONNECTOR_KIND = "local"; //$NON-NLS-1$
 
-	public static final String REPOSITORY_URL = "local";
+	public static final String REPOSITORY_URL = "local"; //$NON-NLS-1$
 
-	public static final String REPOSITORY_VERSION = "1";
+	public static final String REPOSITORY_VERSION = "1"; //$NON-NLS-1$
 
-	public static final String DEFAULT_SUMMARY = "New Task";
+	public static final String DEFAULT_SUMMARY = Messages.LocalRepositoryConnector_New_Task;
 
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
@@ -49,7 +49,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getLabel() {
-		return "Local Task Repository";
+		return Messages.LocalRepositoryConnector_Local_Task_Repository;
 	}
 
 	@Override

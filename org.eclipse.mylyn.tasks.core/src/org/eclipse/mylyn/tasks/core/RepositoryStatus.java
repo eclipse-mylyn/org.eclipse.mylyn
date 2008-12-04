@@ -70,7 +70,7 @@ public class RepositoryStatus extends Status {
 		super(severity, pluginId, code, message, e);
 
 		if (repositoryUrl == null) {
-			throw new IllegalArgumentException("repositoryUrl must not be null");
+			throw new IllegalArgumentException("repositoryUrl must not be null"); //$NON-NLS-1$
 		}
 
 		this.repositoryUrl = repositoryUrl;
@@ -96,7 +96,7 @@ public class RepositoryStatus extends Status {
 	@Override
 	public String getMessage() {
 		String message = super.getMessage();
-		if (message != null && !"".equals(message)) {
+		if (message != null && !"".equals(message)) { //$NON-NLS-1$
 			return message;
 		}
 
@@ -108,12 +108,12 @@ public class RepositoryStatus extends Status {
 			return exception.toString();
 		}
 
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override
 	protected void setMessage(String message) {
-		super.setMessage((message != null) ? message : "");
+		super.setMessage((message != null) ? message : ""); //$NON-NLS-1$
 	}
 
 	protected void setHtmlMessage(String htmlMessage) {
@@ -139,7 +139,7 @@ public class RepositoryStatus extends Status {
 	public static RepositoryStatus createHtmlStatus(int severity, String pluginId, int code, String message,
 			String htmlMessage) {
 		if (htmlMessage == null) {
-			throw new IllegalArgumentException("htmlMessage must not be null");
+			throw new IllegalArgumentException("htmlMessage must not be null"); //$NON-NLS-1$
 		}
 
 		RepositoryStatus status = new RepositoryStatus(severity, pluginId, code, message);
@@ -157,13 +157,13 @@ public class RepositoryStatus extends Status {
 
 	public static RepositoryStatus createLoginError(String repositoryUrl, String pluginId) {
 		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, pluginId, RepositoryStatus.ERROR_REPOSITORY_LOGIN,
-				NLS.bind("Unable to login to {0}. Please validate credentials via Task Repositories view.",
+				NLS.bind("Unable to login to {0}. Please validate credentials via Task Repositories view.", //$NON-NLS-1$
 						repositoryUrl));
 	}
 
 	public static RepositoryStatus createNotFoundError(String repositoryUrl, String pluginId) {
 		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, pluginId,
-				RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND, NLS.bind("Repository {0} could not be found.",
+				RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND, NLS.bind("Repository {0} could not be found.", //$NON-NLS-1$
 						repositoryUrl));
 	}
 
@@ -174,20 +174,20 @@ public class RepositoryStatus extends Status {
 				pluginId,
 				RepositoryStatus.REPOSITORY_COLLISION,
 				NLS.bind(
-						"Mid-air collision occurred while submitting to {0}.\n\nSynchronize task and re-submit changes.",
+						"Mid-air collision occurred while submitting to {0}.\n\nSynchronize task and re-submit changes.", //$NON-NLS-1$
 						repositoryUrl));
 	}
 
 	public static RepositoryStatus createCommentRequiredError(String repositoryUrl, String pluginId) {
 		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, pluginId,
 				RepositoryStatus.REPOSITORY_COMMENT_REQUIRED,
-				"You have to specify a new comment when making this change. Please comment on the reason for this change.");
+				"You have to specify a new comment when making this change. Please comment on the reason for this change."); //$NON-NLS-1$
 	}
 
 	public static RepositoryStatus createHtmlStatus(String repositoryUrl, int severity, String pluginId, int code,
 			String message, String htmlMessage) {
 		if (htmlMessage == null) {
-			throw new IllegalArgumentException("htmlMessage must not be null");
+			throw new IllegalArgumentException("htmlMessage must not be null"); //$NON-NLS-1$
 		}
 
 		RepositoryStatus status = new RepositoryStatus(repositoryUrl, severity, pluginId, code, message);

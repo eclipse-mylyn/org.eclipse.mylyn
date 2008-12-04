@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.externalization;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -62,7 +63,7 @@ public class ExternalizationManager {
 	}
 
 	private ExternalizationJob createJob() {
-		ExternalizationJob job = new ExternalizationJob("Task List Save Job");
+		ExternalizationJob job = new ExternalizationJob(Messages.ExternalizationManager_Task_List_Save_Job);
 		job.setUser(false);
 		job.setSystem(true);
 		return job;
@@ -89,7 +90,7 @@ public class ExternalizationManager {
 
 			if (statusList.size() > 0) {
 				loadStatus = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, IStatus.ERROR,
-						statusList.toArray(new IStatus[0]), "Failed to load Task List", null);
+						statusList.toArray(new IStatus[0]), "Failed to load Task List", null); //$NON-NLS-1$
 			}
 			return loadStatus;
 		} finally {
@@ -108,7 +109,7 @@ public class ExternalizationManager {
 					if (e instanceof CoreException) {
 						result[0] = ((CoreException) e).getStatus();
 					} else {
-						result[0] = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Load participant failed",
+						result[0] = new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Load participant failed", //$NON-NLS-1$
 								e);
 					}
 				}
@@ -148,7 +149,7 @@ public class ExternalizationManager {
 			saveJob.join();
 		} catch (InterruptedException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Task List save on shutdown canceled.", e));
+					"Task List save on shutdown canceled.", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -190,17 +191,18 @@ public class ExternalizationManager {
 			switch (context.getKind()) {
 			case SAVE:
 				try {
-					monitor.beginTask("Saving...", externalizationParticipants.size());
+					monitor.beginTask(Messages.ExternalizationManager_Saving_, externalizationParticipants.size());
 					for (IExternalizationParticipant participant : externalizationParticipants) {
 						ISchedulingRule rule = participant.getSchedulingRule();
 						if (forceSave || participant.isDirty()) {
 							try {
 								Job.getJobManager().beginRule(rule, monitor);
-								monitor.setTaskName("Saving " + participant.getDescription());
+								monitor.setTaskName(MessageFormat.format(Messages.ExternalizationManager_Saving_X,
+										participant.getDescription()));
 								participant.execute(context, new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 							} catch (CoreException e) {
 								StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-										"Save failed for " + participant.getDescription(), e));
+										"Save failed for " + participant.getDescription(), e)); //$NON-NLS-1$
 							} finally {
 								Job.getJobManager().endRule(rule);
 							}
@@ -213,7 +215,7 @@ public class ExternalizationManager {
 				break;
 			default:
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Unsupported externalization kind: " + context.getKind()));
+						"Unsupported externalization kind: " + context.getKind())); //$NON-NLS-1$
 			}
 			return Status.OK_STATUS;
 		}

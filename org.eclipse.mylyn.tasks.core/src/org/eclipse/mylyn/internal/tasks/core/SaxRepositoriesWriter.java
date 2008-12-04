@@ -52,7 +52,7 @@ public class SaxRepositoriesWriter {
 
 	public void writeRepositoriesToStream(Collection<TaskRepository> repositories) throws IOException {
 		if (outputStream == null) {
-			IOException ioe = new IOException("OutputStream not set");
+			IOException ioe = new IOException("OutputStream not set"); //$NON-NLS-1$
 			throw ioe;
 		}
 
@@ -62,7 +62,7 @@ public class SaxRepositoriesWriter {
 					new SAXSource(new RepositoriesWriter(), new TaskRepositoriesInputSource(repositories)),
 					new StreamResult(outputStream));
 		} catch (TransformerException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write repositories",
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write repositories", //$NON-NLS-1$
 					e));
 			throw new IOException(e.getMessage());
 		}
@@ -148,17 +148,17 @@ public class SaxRepositoriesWriter {
 		@SuppressWarnings( { "deprecation", "restriction" })
 		public void parse(InputSource input) throws IOException, SAXException {
 			if (!(input instanceof TaskRepositoriesInputSource)) {
-				throw new SAXException("Can only parse writable input sources");
+				throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
 			}
 
 			Collection<TaskRepository> repositories = ((TaskRepositoriesInputSource) input).getRepositories();
 
 			handler.startDocument();
 			AttributesImpl rootAttributes = new AttributesImpl();
-			rootAttributes.addAttribute("", TaskRepositoriesExternalizer.ATTRIBUTE_VERSION,
-					TaskRepositoriesExternalizer.ATTRIBUTE_VERSION, "", "1");
+			rootAttributes.addAttribute("", TaskRepositoriesExternalizer.ATTRIBUTE_VERSION, //$NON-NLS-1$
+					TaskRepositoriesExternalizer.ATTRIBUTE_VERSION, "", "1"); //$NON-NLS-1$ //$NON-NLS-2$
 
-			handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES,
+			handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES, //$NON-NLS-1$
 					TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES, rootAttributes);
 
 			for (TaskRepository repository : new ArrayList<TaskRepository>(repositories)) {
@@ -166,27 +166,27 @@ public class SaxRepositoriesWriter {
 				AttributesImpl ieAttributes = new AttributesImpl();
 				for (String key : repository.getProperties().keySet()) {
 					ieAttributes.addAttribute(
-							"",
+							"", //$NON-NLS-1$
 							key,
 							key,
-							"",
+							"", //$NON-NLS-1$
 							org.eclipse.mylyn.internal.commons.core.XmlStringConverter.convertToXmlString(repository.getProperties()
 									.get(key)));
 				}
 
-				handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY,
+				handler.startElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY, //$NON-NLS-1$
 						TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY, ieAttributes);
-				handler.endElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY,
+				handler.endElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY, //$NON-NLS-1$
 						TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY);
 			}
-			handler.endElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES,
+			handler.endElement("", TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES, //$NON-NLS-1$
 					TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORIES);
 
 			handler.endDocument();
 		}
 
 		public void parse(String systemId) throws IOException, SAXException {
-			throw new SAXException("Can only parse writable input sources");
+			throw new SAXException("Can only parse writable input sources"); //$NON-NLS-1$
 		}
 
 	}

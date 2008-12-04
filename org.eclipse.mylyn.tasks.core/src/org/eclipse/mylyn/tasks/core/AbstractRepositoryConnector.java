@@ -98,12 +98,12 @@ public abstract class AbstractRepositoryConnector {
 			return null;
 		}
 
-		int i = label.indexOf("(");
+		int i = label.indexOf("("); //$NON-NLS-1$
 		if (i != -1) {
 			return label.substring(0, i).trim();
 		}
 
-		i = label.indexOf(" ");
+		i = label.indexOf(" "); //$NON-NLS-1$
 		if (i != -1) {
 			return label.substring(0, i).trim();
 		}
@@ -140,7 +140,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Used for referring to the task in the UI.
 	 */
 	public String getTaskIdPrefix() {
-		return "task";
+		return "task"; //$NON-NLS-1$
 	}
 
 	/**
@@ -227,7 +227,7 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
-			monitor.beginTask("", 1);
+			monitor.beginTask("", 1); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
@@ -240,7 +240,7 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public void preSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
-			monitor.beginTask("", 1);
+			monitor.beginTask("", 1); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}

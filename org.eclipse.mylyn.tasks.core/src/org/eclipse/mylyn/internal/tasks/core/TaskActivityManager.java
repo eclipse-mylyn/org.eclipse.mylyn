@@ -175,7 +175,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 					listener.elapsedTimeUpdated(task, getElapsedTime(task));
 				} catch (Throwable t) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Task activity listener failed: \"" + listener + "\"", t));
+							"Task activity listener failed: \"" + listener + "\"", t)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -287,7 +287,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 				listener.elapsedTimeUpdated(task, totalElapsed);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Task activity listener failed: \"" + listener + "\"", t));
+						"Task activity listener failed: \"" + listener + "\"", t)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -401,7 +401,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 				listener.preTaskActivated(task);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Task activity listener failed: " + listener, t));
+						"Task activity listener failed: " + listener, t)); //$NON-NLS-1$
 			}
 		}
 
@@ -413,7 +413,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 				listener.taskActivated(task);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Task activity listener failed: " + listener, t));
+						"Task activity listener failed: " + listener, t)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -436,7 +436,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 					listener.preTaskDeactivated(task);
 				} catch (Throwable t) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Notification failed for: " + listener, t));
+							"Notification failed for: " + listener, t)); //$NON-NLS-1$
 				}
 			}
 
@@ -448,7 +448,7 @@ public class TaskActivityManager implements ITaskActivityManager {
 					listener.taskDeactivated(task);
 				} catch (Throwable t) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Notification failed for: " + listener, t));
+							"Notification failed for: " + listener, t)); //$NON-NLS-1$
 				}
 			}
 		} else {

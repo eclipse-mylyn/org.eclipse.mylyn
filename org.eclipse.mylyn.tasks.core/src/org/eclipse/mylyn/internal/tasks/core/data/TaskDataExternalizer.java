@@ -56,13 +56,13 @@ public class TaskDataExternalizer {
 		String connectorKind = taskDataState.getConnectorKind();
 		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(connectorKind);
 		if (connector == null) {
-			throw new IOException("No repository connector for kind \"" + connectorKind + "\" found");
+			throw new IOException("No repository connector for kind \"" + connectorKind + "\" found"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		String repositoryUrl = taskDataState.getRepositoryUrl();
 		final TaskRepository taskRepository = taskRepositoryManager.getRepository(connectorKind, repositoryUrl);
 		if (taskRepository == null) {
-			throw new IOException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\"");
+			throw new IOException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		final AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
@@ -103,7 +103,7 @@ public class TaskDataExternalizer {
 			return taskDataState;
 		} catch (SAXException e) {
 			//e.printStackTrace();
-			throw new IOException("Error parsing task data: " + e.getMessage());
+			throw new IOException("Error parsing task data: " + e.getMessage()); //$NON-NLS-1$
 		}
 	}
 
@@ -112,15 +112,15 @@ public class TaskDataExternalizer {
 			SAXTransformerFactory transformerFactory = (SAXTransformerFactory) TransformerFactory.newInstance();
 			TransformerHandler handler = transformerFactory.newTransformerHandler();
 			Transformer serializer = handler.getTransformer();
-			serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-			serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+			serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
+			serializer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
 			handler.setResult(new StreamResult(out));
 			TaskDataStateWriter writer = new TaskDataStateWriter(handler);
 			writer.write(state);
 		} catch (TransformerException e) {
-			throw new IOException("Error writing task data" + e.getMessageAndLocation());
+			throw new IOException("Error writing task data" + e.getMessageAndLocation()); //$NON-NLS-1$
 		} catch (SAXException e) {
-			throw new IOException("Error writing task data" + e.getMessage());
+			throw new IOException("Error writing task data" + e.getMessage()); //$NON-NLS-1$
 		}
 	}
 

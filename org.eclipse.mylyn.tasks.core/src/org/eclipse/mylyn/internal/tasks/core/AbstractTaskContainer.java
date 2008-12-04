@@ -31,7 +31,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
  */
 public abstract class AbstractTaskContainer extends PlatformObject implements IRepositoryElement, ITaskContainer {
 
-	private String handleIdentifier = "";
+	private String handleIdentifier = ""; //$NON-NLS-1$
 
 	private final Collection<ITask> children = new CopyOnWriteArrayList<ITask>();
 
@@ -147,7 +147,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IR
 
 	@Override
 	public String toString() {
-		return "container: " + handleIdentifier;
+		return "container: " + handleIdentifier; //$NON-NLS-1$
 	}
 
 	public String getPriority() {

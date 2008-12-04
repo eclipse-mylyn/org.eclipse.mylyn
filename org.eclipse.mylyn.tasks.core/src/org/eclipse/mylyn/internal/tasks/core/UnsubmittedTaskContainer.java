@@ -17,12 +17,12 @@ package org.eclipse.mylyn.internal.tasks.core;
  */
 public class UnsubmittedTaskContainer extends AutomaticRepositoryTaskContainer {
 
-	private static final String LABEL = "Unsubmitted";
+	private static final String LABEL = Messages.UnsubmittedTaskContainer_Unsubmitted;
 
-	private static final String HANDLE = "unsubmitted";
+	private static final String HANDLE = "unsubmitted"; //$NON-NLS-1$
 
 	public UnsubmittedTaskContainer(String connectorKind, String repositoryUrl) {
-		super(repositoryUrl + "-" + HANDLE, connectorKind, repositoryUrl);
+		super(repositoryUrl + "-" + HANDLE, connectorKind, repositoryUrl); //$NON-NLS-1$
 	}
 
 	@Override

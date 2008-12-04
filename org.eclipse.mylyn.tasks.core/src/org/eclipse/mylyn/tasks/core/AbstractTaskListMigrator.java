@@ -21,11 +21,11 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractTaskListMigrator {
 
-	public static final String KEY_QUERY = "Query";
+	public static final String KEY_QUERY = "Query"; //$NON-NLS-1$
 
-	public static final String KEY_TASK = "Task";
+	public static final String KEY_TASK = "Task"; //$NON-NLS-1$
 
-	public static final String KEY_LAST_MOD_DATE = "LastModified";
+	public static final String KEY_LAST_MOD_DATE = "LastModified"; //$NON-NLS-1$
 
 	public abstract String getTaskElementName();
 

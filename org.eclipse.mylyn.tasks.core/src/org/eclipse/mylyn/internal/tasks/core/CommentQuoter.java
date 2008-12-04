@@ -49,10 +49,10 @@ public class CommentQuoter {
 	public String quote(String text) {
 		StringBuilder sb = new StringBuilder(text.length() + text.length() / lineSize);
 
-		String[] lines = text.split("\n");
+		String[] lines = text.split("\n"); //$NON-NLS-1$
 		for (String line : lines) {
-			if (line.trim().equals("")) {
-				sb.append("> \n");
+			if (line.trim().equals("")) { //$NON-NLS-1$
+				sb.append("> \n"); //$NON-NLS-1$
 				continue;
 			}
 
@@ -83,10 +83,10 @@ public class CommentQuoter {
 					// Extract the substring and recalculate the next search
 					// start point
 					String wrappedLine = line.substring(pos, wrapPos).trim();
-					sb.append("> " + wrappedLine + "\n");
+					sb.append("> " + wrappedLine + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 					pos = wrapPos + 1;
 				} else {
-					sb.append("> " + line.substring(pos).trim() + "\n");
+					sb.append("> " + line.substring(pos).trim() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				}
 			}

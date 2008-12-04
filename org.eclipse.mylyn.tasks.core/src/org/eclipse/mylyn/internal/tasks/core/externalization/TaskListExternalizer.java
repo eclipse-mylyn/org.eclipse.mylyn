@@ -61,31 +61,31 @@ import org.w3c.dom.NodeList;
  */
 public class TaskListExternalizer {
 
-	private static final String ERROR_TASKLIST_READ = "Failed to load Task List";
+	private static final String ERROR_TASKLIST_READ = "Failed to load Task List"; //$NON-NLS-1$
 
-	private static final String TRANSFORM_PROPERTY_VERSION = "version";
+	private static final String TRANSFORM_PROPERTY_VERSION = "version"; //$NON-NLS-1$
 
 	// May 2007: There was a bug when reading in 1.1
 	// Result was an infinite loop within the parser
-	private static final String XML_VERSION = "1.0";
+	private static final String XML_VERSION = "1.0"; //$NON-NLS-1$
 
-	public static final String ATTRIBUTE_VERSION = "Version";
+	public static final String ATTRIBUTE_VERSION = "Version"; //$NON-NLS-1$
 
-	public static final String ELEMENT_TASK_LIST = "TaskList";
+	public static final String ELEMENT_TASK_LIST = "TaskList"; //$NON-NLS-1$
 
 	// Mylyn 3.0
-	private static final String VALUE_VERSION = "2.0";
+	private static final String VALUE_VERSION = "2.0"; //$NON-NLS-1$
 
 	// Mylyn 2.3.2
 	//private static final String VALUE_VERSION_1_0_1 = "1.0.1";
 
-	private static final String VALUE_VERSION_1_0_0 = "1.0.0";
+	private static final String VALUE_VERSION_1_0_0 = "1.0.0"; //$NON-NLS-1$
 
 	private final DelegatingTaskExternalizer delegatingExternalizer;
 
 	private final List<Node> orphanedNodes = new ArrayList<Node>();
 
-	private String readVersion = "";
+	private String readVersion = ""; //$NON-NLS-1$
 
 	public TaskListExternalizer(RepositoryModel repositoryModel, IRepositoryManager repositoryManager) {
 		this.delegatingExternalizer = new DelegatingTaskExternalizer(repositoryModel, repositoryManager);
@@ -116,7 +116,7 @@ public class TaskListExternalizer {
 				outStream.close();
 			}
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Saving Task List failed",
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Saving Task List failed", //$NON-NLS-1$
 					e));
 		}
 	}
@@ -168,7 +168,7 @@ public class TaskListExternalizer {
 			xformer.setOutputProperty(TRANSFORM_PROPERTY_VERSION, XML_VERSION);
 			xformer.transform(source, result);
 		} catch (TransformerException e) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed write task list",
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed write task list", //$NON-NLS-1$
 					e));
 		}
 	}
@@ -181,18 +181,18 @@ public class TaskListExternalizer {
 			return db.newDocument();
 		} catch (ParserConfigurationException e) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Failed to create document", e));
+					"Failed to create document", e)); //$NON-NLS-1$
 		}
 	}
 
 	public void readTaskList(TaskList taskList, File inFile) throws CoreException {
 		if (!inFile.exists()) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Task list file not found \"" + inFile.getAbsolutePath() + "\""));
+					"Task list file not found \"" + inFile.getAbsolutePath() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (inFile.length() == 0) {
 			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Task list file contains no data \"" + inFile.getAbsolutePath() + "\""));
+					"Task list file contains no data \"" + inFile.getAbsolutePath() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		delegatingExternalizer.reset();
@@ -202,8 +202,8 @@ public class TaskListExternalizer {
 		Element root = doc.getDocumentElement();
 		readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 		if (readVersion.equals(VALUE_VERSION_1_0_0)) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task list version \""
-					+ readVersion + "\" not supported"));
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task list version \"" //$NON-NLS-1$
+					+ readVersion + "\" not supported")); //$NON-NLS-1$
 		}
 
 		NodeList list = root.getChildNodes();
@@ -294,7 +294,7 @@ public class TaskListExternalizer {
 				}
 				if (entry == null) {
 					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Task list file contains no entry for the task list"));
+							"Task list file contains no entry for the task list")); //$NON-NLS-1$
 				}
 			} else {
 				in = new FileInputStream(inputFile);
@@ -311,7 +311,7 @@ public class TaskListExternalizer {
 					in.close();
 				} catch (IOException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Failed to close task list", e));
+							"Failed to close task list", e)); //$NON-NLS-1$
 				}
 			}
 		}

@@ -59,7 +59,7 @@ public class RepositoryPerson implements IRepositoryPerson {
 		if (getName() == null) {
 			return getPersonId();
 		} else {
-			return getName() + " <" + getPersonId() + ">";
+			return getName() + " <" + getPersonId() + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

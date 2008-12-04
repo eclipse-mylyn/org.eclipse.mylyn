@@ -185,12 +185,12 @@ public class ScheduledTaskContainer extends AbstractTaskContainer {
 
 	@Override
 	public String getPriority() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getUrl() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override

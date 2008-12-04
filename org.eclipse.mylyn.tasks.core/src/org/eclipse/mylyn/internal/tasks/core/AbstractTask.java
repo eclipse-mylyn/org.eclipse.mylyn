@@ -32,7 +32,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public abstract class AbstractTask extends AbstractTaskContainer implements ITask {
 
-	public static final String DEFAULT_TASK_KIND = "task";
+	public static final String DEFAULT_TASK_KIND = "task"; //$NON-NLS-1$
 
 	private String repositoryUrl;
 
@@ -80,7 +80,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	private Date dueDate = null;
 
-	private String notes = "";
+	private String notes = ""; //$NON-NLS-1$
 
 	private int estimatedTimeHours = 1;
 
@@ -168,7 +168,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (!areEqual(this.owner, owner)) {
 			String oldValue = this.owner;
 			this.owner = owner;
-			firePropertyChange("owner", oldValue, owner);
+			firePropertyChange("owner", oldValue, owner); //$NON-NLS-1$
 		}
 	}
 
@@ -193,7 +193,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 
 	@Override
 	public final void setHandleIdentifier(String handleIdentifier) {
-		throw new RuntimeException("Cannot set the handle identifier of a task, set repository URL instead.");
+		throw new RuntimeException("Cannot set the handle identifier of a task, set repository URL instead."); //$NON-NLS-1$
 	}
 
 	public final void setRepositoryUrl(String repositoryUrl) {
@@ -271,14 +271,14 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (!areEqual(this.priority, priority)) {
 			String oldValue = this.priority;
 			this.priority = priority;
-			firePropertyChange("priority", oldValue, priority);
+			firePropertyChange("priority", oldValue, priority); //$NON-NLS-1$
 		}
 	}
 
 	public String getNotes() {
 		// TODO: removed check for null once xml updated.
 		if (notes == null) {
-			notes = "";
+			notes = ""; //$NON-NLS-1$
 		}
 		return notes;
 	}
@@ -348,7 +348,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (!areEqual(this.creationDate, creationDate)) {
 			Date oldValue = this.creationDate;
 			this.creationDate = creationDate;
-			firePropertyChange("creationDate", oldValue, creationDate);
+			firePropertyChange("creationDate", oldValue, creationDate); //$NON-NLS-1$
 		}
 	}
 
@@ -357,7 +357,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (!areEqual(this.summary, summary)) {
 			String oldValue = this.summary;
 			this.summary = summary;
-			firePropertyChange("summary", oldValue, summary);
+			firePropertyChange("summary", oldValue, summary); //$NON-NLS-1$
 		}
 	}
 
@@ -365,7 +365,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (!areEqual(this.completionDate, completionDate)) {
 			Date oldValue = this.completionDate;
 			this.completionDate = completionDate;
-			firePropertyChange("completionDate", oldValue, completionDate);
+			firePropertyChange("completionDate", oldValue, completionDate); //$NON-NLS-1$
 		}
 	}
 
@@ -414,7 +414,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (!areEqual(this.taskKind, taskKind)) {
 			String oldValue = this.taskKind;
 			this.taskKind = taskKind;
-			firePropertyChange("taskKind", oldValue, taskKind);
+			firePropertyChange("taskKind", oldValue, taskKind); //$NON-NLS-1$
 		}
 	}
 
@@ -431,7 +431,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (!areEqual(this.dueDate, date)) {
 			Date oldValue = this.dueDate;
 			this.dueDate = date;
-			firePropertyChange("dueDate", oldValue, date);
+			firePropertyChange("dueDate", oldValue, date); //$NON-NLS-1$
 		}
 	}
 
@@ -453,7 +453,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (!areEqual(this.modificationDate, modificationDate)) {
 			Date oldValue = this.modificationDate;
 			this.modificationDate = modificationDate;
-			firePropertyChange("modificationDate", oldValue, modificationDate);
+			firePropertyChange("modificationDate", oldValue, modificationDate); //$NON-NLS-1$
 		}
 	}
 
@@ -469,7 +469,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		if (!areEqual(this.taskKey, taskKey)) {
 			String oldValue = this.taskKey;
 			this.taskKey = taskKey;
-			firePropertyChange("taskKey", oldValue, taskKey);
+			firePropertyChange("taskKey", oldValue, taskKey); //$NON-NLS-1$
 		}
 	}
 
@@ -506,7 +506,7 @@ public abstract class AbstractTask extends AbstractTaskContainer implements ITas
 		String oldValue = getUrl();
 		if (!areEqual(oldValue, url)) {
 			super.setUrl(url);
-			firePropertyChange("url", oldValue, url);
+			firePropertyChange("url", oldValue, url); //$NON-NLS-1$
 		}
 	}
 

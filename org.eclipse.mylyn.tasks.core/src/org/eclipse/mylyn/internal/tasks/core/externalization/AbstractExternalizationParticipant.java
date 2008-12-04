@@ -30,7 +30,7 @@ import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
  */
 public abstract class AbstractExternalizationParticipant implements IExternalizationParticipant {
 
-	public static final String SNAPSHOT_PREFIX = ".";
+	public static final String SNAPSHOT_PREFIX = "."; //$NON-NLS-1$
 
 	public abstract void load(File sourceFile, IProgressMonitor monitor) throws CoreException;
 
@@ -86,8 +86,8 @@ public abstract class AbstractExternalizationParticipant implements IExternaliza
 			if (dataFile != null) {
 				File backup = new File(dataFile.getParentFile(), SNAPSHOT_PREFIX + dataFile.getName());
 				if (backup.exists()) {
-					StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Failed to load "
-							+ dataFile.getName() + ", restoring from snapshot", e));
+					StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Failed to load " //$NON-NLS-1$
+							+ dataFile.getName() + ", restoring from snapshot", e)); //$NON-NLS-1$
 					load(backup, monitor);
 					return true;
 				}

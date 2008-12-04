@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -79,7 +80,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	public SynchronizeTasksJob(ITaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<ITask> tasks) {
-		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
+		super("Synchronizing Tasks (" + tasks.size() + " tasks)"); //$NON-NLS-1$ //$NON-NLS-2$
 		this.taskList = taskList;
 		this.taskDataManager = synchronizationManager;
 		this.tasksModel = tasksModel;
@@ -92,7 +93,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	public SynchronizeTasksJob(ITaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, IRepositoryManager repositoryManager, Set<ITask> tasks) {
-		super("Synchronizing Tasks (" + tasks.size() + " tasks)");
+		super("Synchronizing Tasks (" + tasks.size() + " tasks)"); //$NON-NLS-1$ //$NON-NLS-2$
 		this.taskList = taskList;
 		this.taskDataManager = synchronizationManager;
 		this.tasksModel = tasksModel;
@@ -107,7 +108,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		try {
 			if (taskRepository == null) {
 				try {
-					monitor.beginTask("Processing", allTasks.size() * 100);
+					monitor.beginTask(Messages.SynchronizeTasksJob_Processing, allTasks.size() * 100);
 					// group tasks by repository
 					Map<TaskRepository, Set<ITask>> tasksByRepository = new HashMap<TaskRepository, Set<ITask>>();
 					for (ITask task : allTasks) {
@@ -122,7 +123,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 					}
 					// synchronize tasks for each repositories
 					for (TaskRepository taskRepository : tasksByRepository.keySet()) {
-						setName("Synchronizing Tasks (" + taskRepository.getRepositoryLabel() + ")");
+						setName(MessageFormat.format(Messages.SynchronizeTasksJob_Synchronizing_Tasks__X_,
+								taskRepository.getRepositoryLabel()));
 						this.taskRepository = taskRepository;
 						Set<ITask> repositoryTasks = tasksByRepository.get(taskRepository);
 						run(repositoryTasks, new SubProgressMonitor(monitor, repositoryTasks.size() * 100));
@@ -166,7 +168,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 								task = synchronizeTask(monitor, relation.getTaskId());
 							} catch (CoreException e) {
 								StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-										"Synchronization failed", e));
+										"Synchronization failed", e)); //$NON-NLS-1$
 							}
 						} else {
 							removedChildTasks.remove(task);
@@ -187,7 +189,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private void runInternal(Set<ITask> tasks, IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Processing", tasks.size() * 100);
+			monitor.beginTask(Messages.SynchronizeTasksJob_Processing, tasks.size() * 100);
 			if (canGetMultiTaskData(taskRepository)) {
 				try {
 					for (ITask task : tasks) {
@@ -213,7 +215,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
@@ -225,7 +227,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 	}
 
 	private void synchronizeTask(IProgressMonitor monitor, ITask task) throws CoreException {
-		monitor.subTask("Receiving task " + task.getSummary());
+		monitor.subTask(MessageFormat.format(Messages.SynchronizeTasksJob_Receiving_task_X, task.getSummary()));
 		resetStatus(task);
 		if (!isUser()) {
 			monitor = Policy.backgroundMonitorFor(monitor);
@@ -237,11 +239,11 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 			return;
 		}
 		throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-				"Connector failed to return task data for task \"" + task + "\""));
+				"Connector failed to return task data for task \"" + task + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private ITask synchronizeTask(IProgressMonitor monitor, String taskId) throws CoreException {
-		monitor.subTask("Receiving task " + taskId);
+		monitor.subTask(MessageFormat.format(Messages.SynchronizeTasksJob_Receiving_task_X, taskId));
 		if (!isUser()) {
 			monitor = Policy.backgroundMonitorFor(monitor);
 		}
@@ -252,7 +254,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		}
 
 		throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-				"Connector failed to return task data for task \"" + taskId + "\""));
+				"Connector failed to return task data for task \"" + taskId + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void resetStatus(ITask task) {
@@ -262,7 +264,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	private void synchronizeTasks(IProgressMonitor monitor, final TaskRepository repository, Set<ITask> tasks)
 			throws CoreException {
-		monitor.subTask("Receiving " + tasks.size() + " tasks from " + repository.getRepositoryLabel());
+		monitor.subTask(MessageFormat.format(Messages.SynchronizeTasksJob_Receiving_X_tasks_from_X, tasks.size(),
+				repository.getRepositoryLabel()));
 
 		final Map<String, ITask> idToTask = new HashMap<String, ITask>();
 		for (ITask task : tasks) {

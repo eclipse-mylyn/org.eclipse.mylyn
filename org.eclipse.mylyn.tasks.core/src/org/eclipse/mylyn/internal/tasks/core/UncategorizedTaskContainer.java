@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
  */
 public class UncategorizedTaskContainer extends AbstractTaskCategory {
 
-	public static final String LABEL = "Uncategorized";
+	public static final String LABEL = Messages.UncategorizedTaskContainer_Uncategorized;
 
 	public static final String HANDLE = LABEL;
 

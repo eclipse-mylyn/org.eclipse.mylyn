@@ -20,29 +20,29 @@ public interface ITasksCoreConstants {
 
 	public static final int MAX_SUBTASK_DEPTH = 10;
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.core";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.core"; //$NON-NLS-1$
 
-	public static final String OLD_TASK_LIST_FILE = "tasklist.xml";
+	public static final String OLD_TASK_LIST_FILE = "tasklist.xml"; //$NON-NLS-1$
 
-	public static final String FILENAME_ENCODING = "UTF-8";
+	public static final String FILENAME_ENCODING = "UTF-8"; //$NON-NLS-1$
 
-	public static final String OLD_PREFIX_TASKLIST = "tasklist";
+	public static final String OLD_PREFIX_TASKLIST = "tasklist"; //$NON-NLS-1$
 
-	public static final String PREFIX_TASKS = "tasks";
+	public static final String PREFIX_TASKS = "tasks"; //$NON-NLS-1$
 
-	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
+	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup"; //$NON-NLS-1$
 
-	public static final String FILE_EXTENSION = ".xml.zip";
+	public static final String FILE_EXTENSION = ".xml.zip"; //$NON-NLS-1$
 
-	public static final String OLD_FILENAME_TIMESTAMP_FORMAT = "yyyy-MM-dd";
+	public static final String OLD_FILENAME_TIMESTAMP_FORMAT = "yyyy-MM-dd"; //$NON-NLS-1$
 
-	public static final String FILENAME_TIMESTAMP_FORMAT = "yyyy-MM-dd-HHmmss";
+	public static final String FILENAME_TIMESTAMP_FORMAT = "yyyy-MM-dd-HHmmss"; //$NON-NLS-1$
 
 	public static final String OLD_M_2_TASKLIST_FILENAME = OLD_PREFIX_TASKLIST + FILE_EXTENSION;
 
 	public static final String DEFAULT_TASK_LIST_FILE = PREFIX_TASKS + FILE_EXTENSION;
 
-	public static final String CONTEXTS_DIRECTORY = "contexts";
+	public static final String CONTEXTS_DIRECTORY = "contexts"; //$NON-NLS-1$
 
 	public static final ActivityContextSchedulingRule ACTIVITY_SCHEDULING_RULE = new ActivityContextSchedulingRule();
 
@@ -50,9 +50,9 @@ public interface ITasksCoreConstants {
 
 	public static final ISchedulingRule ROOT_SCHEDULING_RULE = new RootSchedulingRule();
 
-	public static final String ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL = "outgoingNewRepositoryUrl";
+	public static final String ATTRIBUTE_OUTGOING_NEW_REPOSITORY_URL = "outgoingNewRepositoryUrl"; //$NON-NLS-1$
 
-	public static final String ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND = "outgoingNewConnectorKind";
+	public static final String ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND = "outgoingNewConnectorKind"; //$NON-NLS-1$
 
 	static class ActivityContextSchedulingRule extends RootSchedulingRule {
 		@Override
@@ -96,8 +96,8 @@ public interface ITasksCoreConstants {
 		}
 	}
 
-	public static final String PROPERTY_ACTIVATE_TASK = "org.eclipse.mylyn.activateTask";
+	public static final String PROPERTY_ACTIVATE_TASK = "org.eclipse.mylyn.activateTask"; //$NON-NLS-1$
 
-	public static final String PROPERTY_LINK_PROVIDER_TIMEOUT = "org.eclipse.mylyn.linkProviderTimeout";
+	public static final String PROPERTY_LINK_PROVIDER_TIMEOUT = "org.eclipse.mylyn.linkProviderTimeout"; //$NON-NLS-1$
 
 }

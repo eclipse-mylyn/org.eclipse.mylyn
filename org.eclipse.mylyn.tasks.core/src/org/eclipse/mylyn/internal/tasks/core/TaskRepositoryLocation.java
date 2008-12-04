@@ -42,8 +42,8 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 		if (!taskRepository.isDefaultProxyEnabled()) {
 			String proxyHost = taskRepository.getProperty(TaskRepository.PROXY_HOSTNAME);
 			String proxyPort = taskRepository.getProperty(TaskRepository.PROXY_PORT);
-			String proxyUsername = "";
-			String proxyPassword = "";
+			String proxyUsername = ""; //$NON-NLS-1$
+			String proxyPassword = ""; //$NON-NLS-1$
 			AuthenticationCredentials credentials = taskRepository.getCredentials(AuthenticationType.PROXY);
 			if (proxyHost != null && proxyHost.length() > 0 && credentials != null) {
 				proxyUsername = credentials.getUserName();

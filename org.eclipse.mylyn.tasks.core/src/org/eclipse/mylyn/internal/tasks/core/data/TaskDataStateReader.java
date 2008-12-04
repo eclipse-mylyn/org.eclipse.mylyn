@@ -54,7 +54,7 @@ public class TaskDataStateReader extends DefaultHandler {
 			attribute = createAttribute(parentAttribute, TaskAttribute.PREFIX_ATTACHMENT + ++id);
 			attribute.getMetaData().defaults().setReadOnly(true).setType(TaskAttribute.TYPE_ATTACHMENT);
 			// the actual attachment id is stored in a child node an correctly set in end() 
-			attribute.setValue(id + "");
+			attribute.setValue(id + ""); //$NON-NLS-1$
 
 			TaskAttribute child = createAttribute(attribute, TaskAttribute.ATTACHMENT_AUTHOR);
 			child.setValue(getValue(attributes, ITaskDataConstants.ATTRIBUTE_CREATOR));
@@ -384,11 +384,11 @@ public class TaskDataStateReader extends DefaultHandler {
 			super(null, ITaskDataConstants.ELEMENT_TASK_STATE);
 			this.version = version;
 
-			if ("1.0".equals(version)) {
+			if ("1.0".equals(version)) { //$NON-NLS-1$
 				addElementHandler(new TaskDataHandler10(this, ITaskDataConstants.ELEMENT_NEW_DATA));
 				addElementHandler(new TaskDataHandler10(this, ITaskDataConstants.ELEMENT_OLD_DATA));
 				addElementHandler(new TaskDataHandler10(this, ITaskDataConstants.ELEMENT_EDITS_DATA));
-			} else if ("2.0".equals(version)) {
+			} else if ("2.0".equals(version)) { //$NON-NLS-1$
 				addElementHandler(new TaskDataHandler20(this, ITaskDataConstants.ELEMENT_NEW_DATA));
 				addElementHandler(new TaskDataHandler20(this, ITaskDataConstants.ELEMENT_OLD_DATA));
 				addElementHandler(new TaskDataHandler20(this, ITaskDataConstants.ELEMENT_EDITS_DATA));
@@ -445,7 +445,7 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		@Override
 		protected void start(String uri, String localName, String name, Attributes attributes) throws SAXException {
-			if ("2.0".equals(version)) {
+			if ("2.0".equals(version)) { //$NON-NLS-1$
 				String connectorKind = getValue(attributes, ITaskDataConstants.ATTRIBUTE_CONNECTOR_KIND);
 				String repositoryUrl = getValue(attributes, ITaskDataConstants.ATTRIBUTE_REPOSITORY_URL);
 				String taskId = getValue(attributes, ITaskDataConstants.ATTRIBUTE_TASK_ID);
@@ -501,9 +501,9 @@ public class TaskDataStateReader extends DefaultHandler {
 
 		private final TaskAttribute attribute;
 
-		private String key = "";
+		private String key = ""; //$NON-NLS-1$
 
-		private String value = "";
+		private String value = ""; //$NON-NLS-1$
 
 		public MapHandler20(ElementHandler parent, TaskAttribute attribute, String elementName) {
 			super(parent, elementName);
@@ -517,8 +517,8 @@ public class TaskDataStateReader extends DefaultHandler {
 			} else if (ITaskDataConstants.ELEMENT_META.equals(getElementName())) {
 				attribute.getMetaData().putValue(key, value);
 			}
-			key = "";
-			value = "";
+			key = ""; //$NON-NLS-1$
+			value = ""; //$NON-NLS-1$
 		}
 
 		@Override
@@ -589,12 +589,12 @@ public class TaskDataStateReader extends DefaultHandler {
 	private TaskAttributeMapper getAttributeMapper(String connectorKind, String repositoryUrl) throws SAXException {
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(connectorKind);
 		if (connector == null) {
-			throw new SAXException("No repository connector for kind \"" + connectorKind + "\" found");
+			throw new SAXException("No repository connector for kind \"" + connectorKind + "\" found"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		TaskRepository taskRepository = repositoryManager.getRepository(connectorKind, repositoryUrl);
 		if (taskRepository == null) {
-			throw new SAXException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\"");
+			throw new SAXException("Repository \"" + repositoryUrl + "\" not found for kind \"" + connectorKind + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		final TaskAttributeMapper attributeMapper;

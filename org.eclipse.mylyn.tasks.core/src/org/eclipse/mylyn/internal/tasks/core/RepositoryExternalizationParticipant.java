@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public class RepositoryExternalizationParticipant extends AbstractExternalizationParticipant implements
 		IRepositoryListener {
 
-	private static final String DESCRIPTION = "Task Repositories";
+	private static final String DESCRIPTION = Messages.RepositoryExternalizationParticipant_Task_Repositories;
 
 	private final TaskRepositoryManager repositoryManager;
 

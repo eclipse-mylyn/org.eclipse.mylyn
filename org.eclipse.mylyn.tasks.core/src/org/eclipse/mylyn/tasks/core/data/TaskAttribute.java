@@ -288,7 +288,7 @@ public final class TaskAttribute {
 		Assert.isNotNull(taskData);
 		this.parentAttribute = null;
 		this.taskData = taskData;
-		this.attributeId = "root";
+		this.attributeId = "root"; //$NON-NLS-1$
 		this.values = new ArrayList<String>(1);
 	}
 
@@ -447,7 +447,7 @@ public final class TaskAttribute {
 		if (values.size() > 0) {
 			return values.get(0);
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -521,17 +521,17 @@ public final class TaskAttribute {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		toString(sb, "");
+		toString(sb, ""); //$NON-NLS-1$
 		return sb.toString();
 	}
 
 	private void toString(StringBuilder sb, String prefix) {
 		sb.append(prefix);
-		sb.append("TaskAttribute[id=" + attributeId + ",values=" + values + ",options=" + optionByKey + ",metaData="
-				+ metaData + "]\n");
+		sb.append("TaskAttribute[id=" + attributeId + ",values=" + values + ",options=" + optionByKey + ",metaData=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ metaData + "]\n"); //$NON-NLS-1$
 		if (attributeById != null) {
 			for (TaskAttribute child : attributeById.values()) {
-				child.toString(sb, prefix + " ");
+				child.toString(sb, prefix + " "); //$NON-NLS-1$
 			}
 		}
 	}

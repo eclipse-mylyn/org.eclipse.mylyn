@@ -50,15 +50,15 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class TaskDataManager implements ITaskDataManager {
 
-	private static final String ENCODING_UTF_8 = "UTF-8";
+	private static final String ENCODING_UTF_8 = "UTF-8"; //$NON-NLS-1$
 
-	private static final String EXTENSION = ".zip";
+	private static final String EXTENSION = ".zip"; //$NON-NLS-1$
 
-	private static final String FOLDER_TASKS = "tasks";
+	private static final String FOLDER_TASKS = "tasks"; //$NON-NLS-1$
 
-	private static final String FOLDER_DATA = "offline";
+	private static final String FOLDER_DATA = "offline"; //$NON-NLS-1$
 
-	private static final String FOLDER_TASKS_1_0 = "offline";
+	private static final String FOLDER_TASKS_1_0 = "offline"; //$NON-NLS-1$
 
 	private String dataPath;
 
@@ -114,8 +114,8 @@ public class TaskDataManager implements ITaskDataManager {
 				final File file = getMigratedFile(task, kind);
 				final TaskDataState state = taskDataStore.getTaskDataState(file);
 				if (state == null) {
-					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task data at \""
-							+ file + "\" not found"));
+					throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Task data at \"" //$NON-NLS-1$
+							+ file + "\" not found")); //$NON-NLS-1$
 				}
 				if (task.isMarkReadPending()) {
 					state.setLastReadData(state.getRepositoryData());
@@ -308,7 +308,7 @@ public class TaskDataManager implements ITaskDataManager {
 //			String pathName = task.getConnectorKind() + "-"
 //					+ URLEncoder.encode(task.getRepositoryUrl(), ENCODING_UTF_8);
 //			String fileName = kind + "-" + URLEncoder.encode(task.getTaskId(), ENCODING_UTF_8) + EXTENSION;
-		String repositoryPath = task.getConnectorKind() + "-" + encode(repositoryUrl);
+		String repositoryPath = task.getConnectorKind() + "-" + encode(repositoryUrl); //$NON-NLS-1$
 		String fileName = encode(task.getTaskId()) + EXTENSION;
 		File path = new File(dataPath + File.separator + FOLDER_TASKS + File.separator + repositoryPath
 				+ File.separator + FOLDER_DATA);
@@ -322,7 +322,7 @@ public class TaskDataManager implements ITaskDataManager {
 			if (c >= '0' && c <= '9' || c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '.') {
 				sb.append(c);
 			} else {
-				sb.append("%" + Integer.toHexString(c).toUpperCase());
+				sb.append("%" + Integer.toHexString(c).toUpperCase()); //$NON-NLS-1$
 			}
 		}
 		return sb.toString();
@@ -458,7 +458,7 @@ public class TaskDataManager implements ITaskDataManager {
 			});
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Unexpected error while marking task read", e));
+					"Unexpected error while marking task read", e)); //$NON-NLS-1$
 		}
 		taskList.notifyElementChanged(task);
 	}

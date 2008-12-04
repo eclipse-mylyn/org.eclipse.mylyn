@@ -34,7 +34,7 @@ public abstract class AutomaticRepositoryTaskContainer extends AbstractTaskCateg
 
 	@Override
 	public String getSummary() {
-		return getSummaryLabel() + " [" + getRepositoryUrl() + "]";
+		return getSummaryLabel() + " [" + getRepositoryUrl() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public abstract class AutomaticRepositoryTaskContainer extends AbstractTaskCateg
 	 */
 	public void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
-		this.setHandleIdentifier(repositoryUrl + "-" + getHandleSuffix());
+		this.setHandleIdentifier(repositoryUrl + "-" + getHandleSuffix()); //$NON-NLS-1$
 	}
 
 }

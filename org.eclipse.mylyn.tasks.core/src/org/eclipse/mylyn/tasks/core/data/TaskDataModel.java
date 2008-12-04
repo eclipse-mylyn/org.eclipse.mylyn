@@ -72,7 +72,7 @@ public class TaskDataModel {
 	public void attributeChanged(TaskAttribute attribute) {
 		if (attribute.getParentAttribute() != getTaskData().getRoot()) {
 			throw new RuntimeException(
-					"Editing is only supported for attributes that are attached to the root of task data");
+					"Editing is only supported for attributes that are attached to the root of task data"); //$NON-NLS-1$
 		}
 
 		unsavedChangedAttributes.add(attribute);
@@ -83,7 +83,7 @@ public class TaskDataModel {
 			for (final TaskDataModelListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e));
+						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
 					}
 
 					public void run() throws Exception {

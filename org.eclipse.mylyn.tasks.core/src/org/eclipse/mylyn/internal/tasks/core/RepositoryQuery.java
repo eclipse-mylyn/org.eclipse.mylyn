@@ -29,7 +29,7 @@ public class RepositoryQuery extends AbstractTaskContainer implements IRepositor
 
 	private final String connectorKind;
 
-	protected String lastSynchronizedStamp = "<never>";
+	protected String lastSynchronizedStamp = "<never>"; //$NON-NLS-1$
 
 	protected String repositoryUrl;
 

@@ -17,24 +17,24 @@ package org.eclipse.mylyn.internal.tasks.core;
  */
 public interface IRepositoryConstants {
 
-	public static final String OLD_PROPERTY_SYNCTIME = "synctime";
+	public static final String OLD_PROPERTY_SYNCTIME = "synctime"; //$NON-NLS-1$
 
-	public static final String PROPERTY_SYNCTIMESTAMP = "lastsynctimestamp";
+	public static final String PROPERTY_SYNCTIMESTAMP = "lastsynctimestamp"; //$NON-NLS-1$
 
-	public static final String PROPERTY_TIMEZONE = "timezone";
+	public static final String PROPERTY_TIMEZONE = "timezone"; //$NON-NLS-1$
 
-	public static final String PROPERTY_ENCODING = "encoding";
+	public static final String PROPERTY_ENCODING = "encoding"; //$NON-NLS-1$
 
-	public static final String PROPERTY_VERSION = "version";
+	public static final String PROPERTY_VERSION = "version"; //$NON-NLS-1$
 
-	public static final String PROPERTY_CONNECTOR_KIND = "kind";
+	public static final String PROPERTY_CONNECTOR_KIND = "kind"; //$NON-NLS-1$
 
-	public static final String PROPERTY_URL = "url";
+	public static final String PROPERTY_URL = "url"; //$NON-NLS-1$
 
-	public static final String PROPERTY_LABEL = "label";
+	public static final String PROPERTY_LABEL = "label"; //$NON-NLS-1$
 
-	public static final String PROPERTY_DELIM = ":";
+	public static final String PROPERTY_DELIM = ":"; //$NON-NLS-1$
 
-	public static final String KIND_UNKNOWN = "<unknown>";
+	public static final String KIND_UNKNOWN = "<unknown>"; //$NON-NLS-1$
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Set;
 
@@ -50,7 +51,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	public SynchronizeRepositoriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			IRepositoryManager repositoryManager, Set<TaskRepository> repositories) {
-		super("Synchronizing Task List");
+		super(Messages.SynchronizeRepositoriesJob_Synchronizing_Task_List);
 		this.taskList = taskList;
 		this.taskDataManager = taskDataManager;
 		this.tasksModel = tasksModel;
@@ -61,7 +62,7 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Processing", repositories.size() * 100);
+			monitor.beginTask(Messages.SynchronizeRepositoriesJob_Processing, repositories.size() * 100);
 
 			for (TaskRepository repository : repositories) {
 				if (monitor.isCanceled()) {
@@ -73,7 +74,8 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 					continue;
 				}
 
-				monitor.setTaskName("Processing " + repository.getRepositoryLabel());
+				monitor.setTaskName(MessageFormat.format(Messages.SynchronizeRepositoriesJob_Processing_,
+						repository.getRepositoryLabel()));
 
 				final AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
 				Set<RepositoryQuery> queries = taskList.getRepositoryQueries(repository.getRepositoryUrl());
@@ -136,14 +138,16 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
-			monitor.beginTask("Updating repository configuration for " + repository.getRepositoryUrl(), 100);
+			monitor.beginTask(MessageFormat.format(
+					Messages.SynchronizeRepositoriesJob_Updating_repository_configuration_for_X,
+					repository.getRepositoryUrl()), 100);
 			if (connector.isRepositoryConfigurationStale(repository, monitor)) {
 				connector.updateRepositoryConfiguration(repository, monitor);
 				repository.setConfigurationDate(new Date());
 			}
 		} catch (CoreException e) {
 			repository.setStatus(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Updating of repository configuration failed", e));
+					"Updating of repository configuration failed", e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}

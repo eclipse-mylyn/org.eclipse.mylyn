@@ -36,7 +36,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public class TaskListExternalizationParticipant extends AbstractExternalizationParticipant implements
 		IExternalizationParticipant, ITaskListChangeListener, ITaskActivationListener {
 
-	private static final String DESCRIPTION = "Task List";
+	private static final String DESCRIPTION = Messages.TaskListExternalizationParticipant_Task_List;
 
 	private final ExternalizationManager manager;
 

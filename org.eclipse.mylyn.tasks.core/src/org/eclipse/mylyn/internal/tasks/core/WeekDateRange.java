@@ -20,13 +20,13 @@ import java.util.List;
  */
 public class WeekDateRange extends DateRange {
 
-	private static final String DESCRIPTION_WEEK_AFTER_NEXT = "Two Weeks";
+	private static final String DESCRIPTION_WEEK_AFTER_NEXT = Messages.WeekDateRange_Two_Weeks;
 
-	private static final String DESCRIPTION_PREVIOUS_WEEK = "Previous Week";
+	private static final String DESCRIPTION_PREVIOUS_WEEK = Messages.WeekDateRange_Previous_Week;
 
-	private static final String DESCRIPTION_THIS_WEEK = "This Week";
+	private static final String DESCRIPTION_THIS_WEEK = Messages.WeekDateRange_This_Week;
 
-	private static final String DESCRIPTION_NEXT_WEEK = "Next Week";
+	private static final String DESCRIPTION_NEXT_WEEK = Messages.WeekDateRange_Next_Week;
 
 	private final List<DayDateRange> days = new ArrayList<DayDateRange>();
 
@@ -157,7 +157,7 @@ public class WeekDateRange extends DateRange {
 				}
 			}
 		}
-		throw new IllegalArgumentException("Valid day values are 1 - 7");
+		throw new IllegalArgumentException("Valid day values are 1 - 7"); //$NON-NLS-1$
 	}
 
 	public static boolean isWeekRange(Calendar calStart, Calendar calEnd) {

@@ -79,102 +79,102 @@ public final class DelegatingTaskExternalizer {
 
 	static final String DEFAULT_PRIORITY = PriorityLevel.P3.toString();
 
-	static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.S z";
+	static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.S z"; //$NON-NLS-1$
 
-	static final String KEY_NOTIFIED_INCOMING = "NotifiedIncoming";
+	static final String KEY_NOTIFIED_INCOMING = "NotifiedIncoming"; //$NON-NLS-1$
 
-	public static final String KEY_NAME = "Name";
+	public static final String KEY_NAME = "Name"; //$NON-NLS-1$
 
-	public static final String KEY_LABEL = "Label";
+	public static final String KEY_LABEL = "Label"; //$NON-NLS-1$
 
-	public static final String KEY_QUERY = "Query";
+	public static final String KEY_QUERY = "Query"; //$NON-NLS-1$
 
-	public static final String KEY_QUERY_STRING = "QueryString";
+	public static final String KEY_QUERY_STRING = "QueryString"; //$NON-NLS-1$
 
-	static final String KEY_HANDLE = "Handle";
+	static final String KEY_HANDLE = "Handle"; //$NON-NLS-1$
 
-	public static final String KEY_REPOSITORY_URL = "RepositoryUrl";
+	public static final String KEY_REPOSITORY_URL = "RepositoryUrl"; //$NON-NLS-1$
 
-	public static final String KEY_CATEGORY = "Category";
+	public static final String KEY_CATEGORY = "Category"; //$NON-NLS-1$
 
-	static final String VAL_ROOT = "Root";
+	static final String VAL_ROOT = "Root"; //$NON-NLS-1$
 
-	static final String KEY_SUBTASK = "SubTask";
+	static final String KEY_SUBTASK = "SubTask"; //$NON-NLS-1$
 
-	static final String KEY_KIND = "Kind";
+	static final String KEY_KIND = "Kind"; //$NON-NLS-1$
 
-	static final String KEY_TASK_CATEGORY = "Task" + KEY_CATEGORY;
+	static final String KEY_TASK_CATEGORY = "Task" + KEY_CATEGORY; //$NON-NLS-1$
 
-	static final String KEY_LINK = "Link";
+	static final String KEY_LINK = "Link"; //$NON-NLS-1$
 
-	static final String KEY_PLAN = "Plan";
+	static final String KEY_PLAN = "Plan"; //$NON-NLS-1$
 
-	static final String KEY_TIME_ESTIMATED = "Estimated";
+	static final String KEY_TIME_ESTIMATED = "Estimated"; //$NON-NLS-1$
 
-	static final String KEY_ISSUEURL = "IssueURL";
+	static final String KEY_ISSUEURL = "IssueURL"; //$NON-NLS-1$
 
-	static final String KEY_NOTES = "Notes";
+	static final String KEY_NOTES = "Notes"; //$NON-NLS-1$
 
-	static final String KEY_ACTIVE = "Active";
+	static final String KEY_ACTIVE = "Active"; //$NON-NLS-1$
 
-	static final String KEY_PRIORITY = "Priority";
+	static final String KEY_PRIORITY = "Priority"; //$NON-NLS-1$
 
-	static final String KEY_PATH = "Path";
+	static final String KEY_PATH = "Path"; //$NON-NLS-1$
 
-	static final String VAL_FALSE = "false";
+	static final String VAL_FALSE = "false"; //$NON-NLS-1$
 
-	static final String VAL_TRUE = "true";
+	static final String VAL_TRUE = "true"; //$NON-NLS-1$
 
-	static final String KEY_DATE_END = "EndDate";
+	static final String KEY_DATE_END = "EndDate"; //$NON-NLS-1$
 
-	static final String KEY_QUERY_HIT = "QueryHit";
+	static final String KEY_QUERY_HIT = "QueryHit"; //$NON-NLS-1$
 
-	static final String KEY_TASK_REFERENCE = "TaskReference";
+	static final String KEY_TASK_REFERENCE = "TaskReference"; //$NON-NLS-1$
 
-	static final String KEY_DATE_CREATION = "CreationDate";
+	static final String KEY_DATE_CREATION = "CreationDate"; //$NON-NLS-1$
 
-	static final String KEY_DATE_REMINDER = "ReminderDate";
+	static final String KEY_DATE_REMINDER = "ReminderDate"; //$NON-NLS-1$
 
-	static final String KEY_DATE_SCHEDULED_START = "ScheduledStartDate";
+	static final String KEY_DATE_SCHEDULED_START = "ScheduledStartDate"; //$NON-NLS-1$
 
-	static final String KEY_DATE_SCHEDULED_END = "ScheduledEndDate";
+	static final String KEY_DATE_SCHEDULED_END = "ScheduledEndDate"; //$NON-NLS-1$
 
-	static final String KEY_DATE_MODIFICATION = "ModificationDate";
+	static final String KEY_DATE_MODIFICATION = "ModificationDate"; //$NON-NLS-1$
 
-	static final String KEY_DATE_DUE = "DueDate";
+	static final String KEY_DATE_DUE = "DueDate"; //$NON-NLS-1$
 
-	static final String KEY_REMINDED = "Reminded";
+	static final String KEY_REMINDED = "Reminded"; //$NON-NLS-1$
 
-	static final String KEY_FLOATING = "Floating";
+	static final String KEY_FLOATING = "Floating"; //$NON-NLS-1$
 
 	/**
 	 * This element holds the date stamp recorded upon last transition to a synchronized state.
 	 */
-	static final String KEY_LAST_MOD_DATE = "LastModified";
+	static final String KEY_LAST_MOD_DATE = "LastModified"; //$NON-NLS-1$
 
-	static final String KEY_DIRTY = "Dirty";
+	static final String KEY_DIRTY = "Dirty"; //$NON-NLS-1$
 
-	static final String KEY_SYNC_STATE = "offlineSyncState";
+	static final String KEY_SYNC_STATE = "offlineSyncState"; //$NON-NLS-1$
 
-	static final String KEY_OWNER = "Owner";
+	static final String KEY_OWNER = "Owner"; //$NON-NLS-1$
 
-	static final String KEY_MARK_READ_PENDING = "MarkReadPending";
+	static final String KEY_MARK_READ_PENDING = "MarkReadPending"; //$NON-NLS-1$
 
-	static final String KEY_STALE = "Stale";
+	static final String KEY_STALE = "Stale"; //$NON-NLS-1$
 
-	static final String KEY_CONNECTOR_KIND = "ConnectorKind";
+	static final String KEY_CONNECTOR_KIND = "ConnectorKind"; //$NON-NLS-1$
 
-	static final String KEY_TASK_ID = "TaskId";
+	static final String KEY_TASK_ID = "TaskId"; //$NON-NLS-1$
 
-	public static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp";
+	public static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp"; //$NON-NLS-1$
 
-	static final String NODE_ATTRIBUTE = "Attribute";
+	static final String NODE_ATTRIBUTE = "Attribute"; //$NON-NLS-1$
 
-	static final String NODE_QUERY = "Query";
+	static final String NODE_QUERY = "Query"; //$NON-NLS-1$
 
-	static final String NODE_TASK = "Task";
+	static final String NODE_TASK = "Task"; //$NON-NLS-1$
 
-	static final String KEY_KEY = "Key";
+	static final String KEY_KEY = "Key"; //$NON-NLS-1$
 
 	// 2.0 -> 3.0 migration holds tasks to category handles 
 	private final Map<AbstractTask, String> parentCategoryMap;
@@ -221,7 +221,7 @@ public final class DelegatingTaskExternalizer {
 		if (task.getClass() == TaskTask.class || task instanceof LocalTask) {
 			node = doc.createElement(NODE_TASK);
 		} else {
-			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "No externalizer for task: " + task));
+			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "No externalizer for task: " + task)); //$NON-NLS-1$
 			return null;
 		}
 
@@ -247,7 +247,7 @@ public final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_ISSUEURL, task.getUrl());
 		}
 		node.setAttribute(KEY_NOTES, stripControlCharacters(task.getNotes()));
-		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimatedTimeHours());
+		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimatedTimeHours()); //$NON-NLS-1$
 		node.setAttribute(KEY_DATE_END, formatExternDate(task.getCompletionDate()));
 		node.setAttribute(KEY_DATE_CREATION, formatExternDate(task.getCreationDate()));
 		node.setAttribute(KEY_DATE_MODIFICATION, formatExternDate(task.getModificationDate()));
@@ -333,7 +333,7 @@ public final class DelegatingTaskExternalizer {
 					tasklist.addTask(subTask, task);
 				} else {
 					errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-							"Failed to add subtask with handle \"" + handle + "\" to \"" + task + "\""));
+							"Failed to add subtask with handle \"" + handle + "\" to \"" + task + "\"")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			}
 		}
@@ -342,14 +342,14 @@ public final class DelegatingTaskExternalizer {
 	@SuppressWarnings( { "deprecation", "restriction" })
 	private String stripControlCharacters(String text) {
 		if (text == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		return org.eclipse.mylyn.internal.commons.core.XmlStringConverter.cleanXmlString(text);
 	}
 
 	private String formatExternDate(Date date) {
 		if (date == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		String f = DATE_FORMAT;
 		SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
@@ -358,7 +358,7 @@ public final class DelegatingTaskExternalizer {
 
 	private String formatExternCalendar(Calendar date) {
 		if (date == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		String f = DATE_FORMAT;
 		SimpleDateFormat format = new SimpleDateFormat(f, Locale.ENGLISH);
@@ -379,11 +379,11 @@ public final class DelegatingTaskExternalizer {
 				category = new TaskCategory(handle, name);
 				taskList.addCategory((TaskCategory) category);
 			} else if (!UncategorizedTaskContainer.HANDLE.equals(handle)) {
-				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category with handle \"" + name
-						+ "\" already exists in task list"));
+				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category with handle \"" + name //$NON-NLS-1$
+						+ "\" already exists in task list")); //$NON-NLS-1$
 			}
 		} else {
-			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category is missing name attribute"));
+			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Category is missing name attribute")); //$NON-NLS-1$
 			// LEGACY: registry categories did not have names
 			// category = taskList.getArchiveContainer();
 			// a null category will now go into appropriate orphaned category
@@ -399,7 +399,7 @@ public final class DelegatingTaskExternalizer {
 		String handle;
 		String taskId;
 		String repositoryUrl;
-		String summary = "";
+		String summary = ""; //$NON-NLS-1$
 		final Element element = (Element) node;
 		if (element.hasAttribute(KEY_REPOSITORY_URL) && element.hasAttribute(KEY_TASK_ID)
 				&& element.hasAttribute(KEY_HANDLE)) {
@@ -411,7 +411,7 @@ public final class DelegatingTaskExternalizer {
 			repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
 			taskId = RepositoryTaskHandleUtil.getTaskId(handle);
 		} else {
-			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Task is missing handle attribute"));
+			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Task is missing handle attribute")); //$NON-NLS-1$
 			return null;
 		}
 		if (element.hasAttribute(KEY_LABEL)) {
@@ -438,7 +438,7 @@ public final class DelegatingTaskExternalizer {
 		if (task != null) {
 			if (repositoryManager.getRepositoryConnector(task.getConnectorKind()) == null) {
 				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-						"Missing connector for task with kind \"" + task.getConnectorKind() + "\""));
+						"Missing connector for task with kind \"" + task.getConnectorKind() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 				return null;
 			}
 
@@ -456,7 +456,7 @@ public final class DelegatingTaskExternalizer {
 
 					public void handleException(Throwable e) {
 						errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-								"Task migration failed for task \"" + finalTask + "\"", e));
+								"Task migration failed for task \"" + finalTask + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 					public void run() throws Exception {
@@ -467,8 +467,8 @@ public final class DelegatingTaskExternalizer {
 			}
 			return task;
 		} else {
-			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Missing connector for task node \""
-					+ node.getNodeName() + "\""));
+			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Missing connector for task node \"" //$NON-NLS-1$
+					+ node.getNodeName() + "\"")); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -516,12 +516,12 @@ public final class DelegatingTaskExternalizer {
 		if (element.hasAttribute(KEY_ISSUEURL)) {
 			task.setUrl(element.getAttribute(KEY_ISSUEURL));
 		} else {
-			task.setUrl("");
+			task.setUrl(""); //$NON-NLS-1$
 		}
 		if (element.hasAttribute(KEY_NOTES)) {
 			task.setNotes(element.getAttribute(KEY_NOTES));
 		} else {
-			task.setNotes("");
+			task.setNotes(""); //$NON-NLS-1$
 		}
 		if (element.hasAttribute(KEY_TIME_ESTIMATED)) {
 			String est = element.getAttribute(KEY_TIME_ESTIMATED);
@@ -610,7 +610,7 @@ public final class DelegatingTaskExternalizer {
 		if (element.hasAttribute(KEY_REPOSITORY_URL)) {
 			task.setRepositoryUrl(element.getAttribute(KEY_REPOSITORY_URL));
 		}
-		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
+		if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) { //$NON-NLS-1$
 			task.setLastReadTimeStamp(element.getAttribute(KEY_LAST_MOD_DATE));
 		}
 		if (element.hasAttribute(KEY_OWNER)) {
@@ -639,7 +639,7 @@ public final class DelegatingTaskExternalizer {
 
 	private Date getDateFromString(String dateString) {
 		Date date = null;
-		if ("".equals(dateString)) {
+		if ("".equals(dateString)) { //$NON-NLS-1$
 			return null;
 		}
 		String formatString = DATE_FORMAT;
@@ -647,8 +647,8 @@ public final class DelegatingTaskExternalizer {
 		try {
 			date = format.parse(dateString);
 		} catch (ParseException e) {
-			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Could not parse date \""
-					+ dateString + "\"", e));
+			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Could not parse date \"" //$NON-NLS-1$
+					+ dateString + "\"", e)); //$NON-NLS-1$
 		}
 		return date;
 	}
@@ -663,7 +663,7 @@ public final class DelegatingTaskExternalizer {
 			node = doc.createElement(NODE_QUERY);
 		} else {
 			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-					"Missing factory to externalize query \"" + query + "\""));
+					"Missing factory to externalize query \"" + query + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			return null;
 		}
 
@@ -726,12 +726,12 @@ public final class DelegatingTaskExternalizer {
 		if (query != null) {
 			if (repositoryManager.getRepositoryConnector(query.getConnectorKind()) == null) {
 				errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-						"Missing connector for query with kind \"" + query.getConnectorKind() + "\""));
+						"Missing connector for query with kind \"" + query.getConnectorKind() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 				return null;
 			}
 
 			if (element.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null
-					&& !element.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
+					&& !element.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) { //$NON-NLS-1$
 				query.setLastSynchronizedStamp(element.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
 			}
 			String handle = element.getAttribute(DelegatingTaskExternalizer.KEY_HANDLE);
@@ -747,7 +747,7 @@ public final class DelegatingTaskExternalizer {
 
 					public void handleException(Throwable e) {
 						errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-								"Query migration failed for query \"" + finalQuery + "\"", e));
+								"Query migration failed for query \"" + finalQuery + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 					public void run() throws Exception {
@@ -758,8 +758,8 @@ public final class DelegatingTaskExternalizer {
 			}
 			return query;
 		} else {
-			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Missing connector for query node \""
-					+ node.getNodeName() + "\""));
+			errors.add(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, "Missing connector for query node \"" //$NON-NLS-1$
+					+ node.getNodeName() + "\"")); //$NON-NLS-1$
 			return null;
 		}
 	}
@@ -797,7 +797,7 @@ public final class DelegatingTaskExternalizer {
 	public Status getErrorStatus() {
 		if (errors.size() > 0) {
 			return new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, errors.toArray(new IStatus[0]),
-					"Problems encounted while externalizing task list", null);
+					"Problems encounted while externalizing task list", null); //$NON-NLS-1$
 		}
 		return null;
 	}

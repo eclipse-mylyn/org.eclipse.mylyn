@@ -84,7 +84,7 @@ class ElementHandler extends DefaultHandler {
 	protected String getOptionalValue(Attributes attributes, String name) throws SAXException {
 		String value = attributes.getValue(name);
 		if (value == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -96,7 +96,7 @@ class ElementHandler extends DefaultHandler {
 	protected String getValue(Attributes attributes, String name) throws SAXException {
 		String value = attributes.getValue(name);
 		if (value == null) {
-			throw new SAXException("Missing required attribute \"" + name + "\"");
+			throw new SAXException("Missing required attribute \"" + name + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return value;
 	}

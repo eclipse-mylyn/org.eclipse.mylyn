@@ -45,32 +45,32 @@ public class DayDateRange extends DateRange {
 		endNextWeek.add(Calendar.DAY_OF_YEAR, 7);
 		boolean isNextWeek = TaskActivityUtil.getNextWeek().includes(this) && this.before(endNextWeek);
 		if (isThisWeek || (useDayOfWeekForNextWeek && isNextWeek)) {
-			String day = "";
+			String day = ""; //$NON-NLS-1$
 			switch (getStartDate().get(Calendar.DAY_OF_WEEK)) {
 			case Calendar.MONDAY:
-				day = "Monday";
+				day = Messages.DayDateRange_Monday;
 				break;
 			case Calendar.TUESDAY:
-				day = "Tuesday";
+				day = Messages.DayDateRange_Tuesday;
 				break;
 			case Calendar.WEDNESDAY:
-				day = "Wednesday";
+				day = Messages.DayDateRange_Wednesday;
 				break;
 			case Calendar.THURSDAY:
-				day = "Thursday";
+				day = Messages.DayDateRange_Thursday;
 				break;
 			case Calendar.FRIDAY:
-				day = "Friday";
+				day = Messages.DayDateRange_Friday;
 				break;
 			case Calendar.SATURDAY:
-				day = "Saturday";
+				day = Messages.DayDateRange_Saturday;
 				break;
 			case Calendar.SUNDAY:
-				day = "Sunday";
+				day = Messages.DayDateRange_Sunday;
 				break;
 			}
 			if (isPresent()) {
-				return day + " - Today";
+				return day + Messages.DayDateRange___Today;
 			} else {
 				return day;
 			}

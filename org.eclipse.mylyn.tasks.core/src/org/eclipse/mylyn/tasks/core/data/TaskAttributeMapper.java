@@ -181,10 +181,10 @@ public class TaskAttributeMapper {
 	public String getValueLabel(TaskAttribute taskAttribute) {
 		List<String> labels = getValueLabels(taskAttribute);
 		StringBuilder sb = new StringBuilder();
-		String sep = "";
+		String sep = ""; //$NON-NLS-1$
 		for (String value : labels) {
 			sb.append(sep).append(value);
-			sep = ", ";
+			sep = ", "; //$NON-NLS-1$
 		}
 		return sb.toString();
 	}

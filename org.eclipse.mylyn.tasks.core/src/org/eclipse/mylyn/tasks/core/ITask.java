@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.tasks.core;
 
 import java.util.Date;
+
+import org.eclipse.mylyn.internal.tasks.core.Messages;
 
 /**
  * @author Mik Kersten
@@ -78,17 +80,17 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 		public String toString() {
 			switch (this) {
 			case P1:
-				return "P1";
+				return "P1"; //$NON-NLS-1$
 			case P2:
-				return "P2";
+				return "P2"; //$NON-NLS-1$
 			case P3:
-				return "P3";
+				return "P3"; //$NON-NLS-1$
 			case P4:
-				return "P4";
+				return "P4"; //$NON-NLS-1$
 			case P5:
-				return "P5";
+				return "P5"; //$NON-NLS-1$
 			default:
-				return "P3";
+				return "P3"; //$NON-NLS-1$
 			}
 		}
 
@@ -98,17 +100,17 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 		public String getDescription() {
 			switch (this) {
 			case P1:
-				return "Very High";
+				return Messages.PriorityLevel_Very_High;
 			case P2:
-				return "High";
+				return Messages.PriorityLevel_High;
 			case P3:
-				return "Normal";
+				return Messages.PriorityLevel_Normal;
 			case P4:
-				return "Low";
+				return Messages.PriorityLevel_Low;
 			case P5:
-				return "Very Low";
+				return Messages.PriorityLevel_Very_Low;
 			default:
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		}
 
@@ -138,19 +140,19 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 		 * @since 3.0
 		 */
 		public static PriorityLevel fromString(String string) {
-			if ("P1".equals(string)) {
+			if ("P1".equals(string)) { //$NON-NLS-1$
 				return P1;
 			}
-			if ("P2".equals(string)) {
+			if ("P2".equals(string)) { //$NON-NLS-1$
 				return P2;
 			}
-			if ("P3".equals(string)) {
+			if ("P3".equals(string)) { //$NON-NLS-1$
 				return P3;
 			}
-			if ("P4".equals(string)) {
+			if ("P4".equals(string)) { //$NON-NLS-1$
 				return P4;
 			}
-			if ("P5".equals(string)) {
+			if ("P5".equals(string)) { //$NON-NLS-1$
 				return P5;
 			}
 			return getDefault();
@@ -163,19 +165,19 @@ public interface ITask extends IRepositoryElement, IAttributeContainer {
 			if (string == null) {
 				return null;
 			}
-			if (string.equals("Very High")) {
+			if (string.equals(Messages.PriorityLevel_Very_High)) {
 				return P1;
 			}
-			if (string.equals("High")) {
+			if (string.equals(Messages.PriorityLevel_High)) {
 				return P2;
 			}
-			if (string.equals("Normal")) {
+			if (string.equals(Messages.PriorityLevel_Normal)) {
 				return P3;
 			}
-			if (string.equals("Low")) {
+			if (string.equals(Messages.PriorityLevel_Low)) {
 				return P4;
 			}
-			if (string.equals("Very Low")) {
+			if (string.equals(Messages.PriorityLevel_Very_Low)) {
 				return P5;
 			}
 			return getDefault();

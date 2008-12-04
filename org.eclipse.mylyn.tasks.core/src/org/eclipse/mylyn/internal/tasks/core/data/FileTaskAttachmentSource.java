@@ -31,27 +31,27 @@ import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
  */
 public class FileTaskAttachmentSource extends AbstractTaskAttachmentSource {
 
-	public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+	public static final String APPLICATION_OCTET_STREAM = "application/octet-stream"; //$NON-NLS-1$
 
 	private static Map<String, String> extensions2Types;
 
 	static {
 		extensions2Types = new HashMap<String, String>();
-		extensions2Types.put("txt", "text/plain");
-		extensions2Types.put("html", "text/html");
-		extensions2Types.put("htm", "text/html");
-		extensions2Types.put("jpg", "image/jpeg");
-		extensions2Types.put("jpeg", "image/jpeg");
-		extensions2Types.put("gif", "image/gif");
-		extensions2Types.put("png", "image/png");
-		extensions2Types.put("xml", "application/xml");
-		extensions2Types.put("zip", APPLICATION_OCTET_STREAM);
-		extensions2Types.put("tar", APPLICATION_OCTET_STREAM);
-		extensions2Types.put("gz", APPLICATION_OCTET_STREAM);
+		extensions2Types.put("txt", "text/plain"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("html", "text/html"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("htm", "text/html"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("jpg", "image/jpeg"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("jpeg", "image/jpeg"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("gif", "image/gif"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("png", "image/png"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("xml", "application/xml"); //$NON-NLS-1$ //$NON-NLS-2$
+		extensions2Types.put("zip", APPLICATION_OCTET_STREAM); //$NON-NLS-1$
+		extensions2Types.put("tar", APPLICATION_OCTET_STREAM); //$NON-NLS-1$
+		extensions2Types.put("gz", APPLICATION_OCTET_STREAM); //$NON-NLS-1$
 	}
 
 	public static String getContentTypeFromFilename(String fileName) {
-		int index = fileName.lastIndexOf(".");
+		int index = fileName.lastIndexOf("."); //$NON-NLS-1$
 		if (index > 0 && index < fileName.length()) {
 			String ext = fileName.substring(index + 1);
 			String type = extensions2Types.get(ext.toLowerCase(Locale.ENGLISH));

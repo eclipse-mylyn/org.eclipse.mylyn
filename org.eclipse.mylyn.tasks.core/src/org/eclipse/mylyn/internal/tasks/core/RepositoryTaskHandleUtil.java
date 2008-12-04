@@ -16,13 +16,13 @@ package org.eclipse.mylyn.internal.tasks.core;
  */
 public class RepositoryTaskHandleUtil {
 
-	public static final String HANDLE_DELIM = "-";
+	public static final String HANDLE_DELIM = "-"; //$NON-NLS-1$
 
-	private static final String MISSING_REPOSITORY = "norepository";
+	private static final String MISSING_REPOSITORY = "norepository"; //$NON-NLS-1$
 
 	public static String getHandle(String repositoryUrl, String taskId) {
 		if (!isValidTaskId(taskId)) {
-			throw new RuntimeException("invalid handle for task, can not contain: " + HANDLE_DELIM + ", was: " + taskId);
+			throw new RuntimeException("invalid handle for task, can not contain: " + HANDLE_DELIM + ", was: " + taskId); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		if (repositoryUrl == null) {

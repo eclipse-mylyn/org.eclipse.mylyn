@@ -59,17 +59,17 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryPerson;
 @SuppressWarnings("deprecation")
 public final class TaskRepository extends PlatformObject {
 
-	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
+	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8"; //$NON-NLS-1$
 
-	private static final String USERNAME = ".username";
+	private static final String USERNAME = ".username"; //$NON-NLS-1$
 
-	private static final String PASSWORD = ".password";
+	private static final String PASSWORD = ".password"; //$NON-NLS-1$
 
-	private static final String SAVE_PASSWORD = ".savePassword";
+	private static final String SAVE_PASSWORD = ".savePassword"; //$NON-NLS-1$
 
-	private static final String ENABLED = ".enabled";
+	private static final String ENABLED = ".enabled"; //$NON-NLS-1$
 
-	private static final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories";
+	private static final String AUTH_REPOSITORY = "org.eclipse.mylyn.tasklist.repositories"; //$NON-NLS-1$
 
 	// transient
 	private IStatus errorStatus = null;
@@ -89,9 +89,9 @@ public final class TaskRepository extends PlatformObject {
 	public static final String AUTH_USERNAME = AUTH_REPOSITORY + USERNAME;
 
 	@Deprecated
-	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylyn.tasklist.repositories.anonymous";
+	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylyn.tasklist.repositories.anonymous"; //$NON-NLS-1$
 
-	private static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth";
+	private static final String AUTH_HTTP = "org.eclipse.mylyn.tasklist.repositories.httpauth"; //$NON-NLS-1$
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
@@ -107,23 +107,23 @@ public final class TaskRepository extends PlatformObject {
 	@Deprecated
 	public static final String AUTH_HTTP_USERNAME = AUTH_HTTP + USERNAME;
 
-	public static final String NO_VERSION_SPECIFIED = "unknown";
+	public static final String NO_VERSION_SPECIFIED = "unknown"; //$NON-NLS-1$
 
-	private static final String AUTH_SCHEME = "Basic";
+	private static final String AUTH_SCHEME = "Basic"; //$NON-NLS-1$
 
-	private static final String AUTH_REALM = "";
+	private static final String AUTH_REALM = ""; //$NON-NLS-1$
 
 	private static final URL DEFAULT_URL;
 
-	private static final String PROPERTY_CONFIG_TIMESTAMP = "org.eclipse.mylyn.tasklist.repositories.configuration.timestamp";
+	private static final String PROPERTY_CONFIG_TIMESTAMP = "org.eclipse.mylyn.tasklist.repositories.configuration.timestamp"; //$NON-NLS-1$
 
-	public static final String PROXY_USEDEFAULT = "org.eclipse.mylyn.tasklist.repositories.proxy.usedefault";
+	public static final String PROXY_USEDEFAULT = "org.eclipse.mylyn.tasklist.repositories.proxy.usedefault"; //$NON-NLS-1$
 
-	public static final String PROXY_HOSTNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.hostname";
+	public static final String PROXY_HOSTNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.hostname"; //$NON-NLS-1$
 
-	public static final String PROXY_PORT = "org.eclipse.mylyn.tasklist.repositories.proxy.port";
+	public static final String PROXY_PORT = "org.eclipse.mylyn.tasklist.repositories.proxy.port"; //$NON-NLS-1$
 
-	private static final String AUTH_PROXY = "org.eclipse.mylyn.tasklist.repositories.proxy";
+	private static final String AUTH_PROXY = "org.eclipse.mylyn.tasklist.repositories.proxy"; //$NON-NLS-1$
 
 	/**
 	 * @deprecated use {@link #setCredentials(AuthenticationType, AuthenticationCredentials, boolean)} to access
@@ -139,7 +139,7 @@ public final class TaskRepository extends PlatformObject {
 	@Deprecated
 	public static final String PROXY_PASSWORD = AUTH_PROXY + PASSWORD;
 
-	public static final String OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline";
+	public static final String OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline"; //$NON-NLS-1$
 
 	// HACK: Lock used to work around race condition in
 	// Platform.add/get/flushAuthorizationInfo()
@@ -153,7 +153,7 @@ public final class TaskRepository extends PlatformObject {
 	static {
 		URL url = null;
 		try {
-			url = new URL("http://eclipse.org/mylyn");
+			url = new URL("http://eclipse.org/mylyn"); //$NON-NLS-1$
 		} catch (Exception ex) {
 			// TODO ?
 		}
@@ -169,7 +169,7 @@ public final class TaskRepository extends PlatformObject {
 		case REPOSITORY:
 			return AUTH_REPOSITORY;
 		}
-		throw new IllegalArgumentException("Unknown authentication type: " + type);
+		throw new IllegalArgumentException("Unknown authentication type: " + type); //$NON-NLS-1$
 	}
 
 	private boolean isCachedUserName;
@@ -251,7 +251,7 @@ public final class TaskRepository extends PlatformObject {
 				}
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Could not set authorization credentials", e));
+						"Could not set authorization credentials", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -298,7 +298,7 @@ public final class TaskRepository extends PlatformObject {
 			} catch (CoreException e) {
 				// FIXME propagate exception?
 				StatusHandler.fail(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Could not flush authorization credentials", e));
+						"Could not flush authorization credentials", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -314,7 +314,7 @@ public final class TaskRepository extends PlatformObject {
 					return Platform.getAuthorizationInfo(DEFAULT_URL, getRepositoryUrl(), AUTH_SCHEME);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Could not retrieve authorization credentials", e));
+							"Could not retrieve authorization credentials", e)); //$NON-NLS-1$
 				}
 			} else {
 				Map<String, String> headlessCreds = credentials.get(getRepositoryUrl());
@@ -335,7 +335,7 @@ public final class TaskRepository extends PlatformObject {
 
 	public String getCharacterEncoding() {
 		final String encoding = properties.get(IRepositoryConstants.PROPERTY_ENCODING);
-		return encoding == null || "".equals(encoding) ? DEFAULT_CHARACTER_ENCODING : encoding;
+		return encoding == null || "".equals(encoding) ? DEFAULT_CHARACTER_ENCODING : encoding; //$NON-NLS-1$
 	}
 
 	/**
@@ -379,22 +379,22 @@ public final class TaskRepository extends PlatformObject {
 		String key = getKeyPrefix(authType);
 
 		String enabled = getProperty(key + ENABLED);
-		if (enabled == null || "true".equals(enabled)) {
+		if (enabled == null || "true".equals(enabled)) { //$NON-NLS-1$
 			String userName = getAuthInfo(key + USERNAME);
 			String password;
 
 			String savePassword = getProperty(key + SAVE_PASSWORD);
-			if (savePassword != null && "true".equals(savePassword)) {
+			if (savePassword != null && "true".equals(savePassword)) { //$NON-NLS-1$
 				password = getAuthInfo(key + PASSWORD);
 			} else {
 				password = transientProperties.get(key + PASSWORD);
 			}
 
 			if (userName == null) {
-				userName = "";
+				userName = ""; //$NON-NLS-1$
 			}
 			if (password == null) {
-				password = "";
+				password = ""; //$NON-NLS-1$
 			}
 
 			if (enabled == null && userName.length() == 0) {
@@ -504,7 +504,7 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	public boolean getSavePassword(AuthenticationType authType) {
 		String value = getProperty(getKeyPrefix(authType) + SAVE_PASSWORD);
-		return value != null && "true".equals(value);
+		return value != null && "true".equals(value); //$NON-NLS-1$
 	}
 
 	public String getSynchronizationTimeStamp() {
@@ -513,7 +513,7 @@ public final class TaskRepository extends PlatformObject {
 
 	public String getTimeZoneId() {
 		final String timeZoneId = properties.get(IRepositoryConstants.PROPERTY_TIMEZONE);
-		return timeZoneId == null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId;
+		return timeZoneId == null || "".equals(timeZoneId) ? TimeZone.getDefault().getID() : timeZoneId; //$NON-NLS-1$
 	}
 
 	public String getUrl() {
@@ -549,7 +549,7 @@ public final class TaskRepository extends PlatformObject {
 
 	public String getVersion() {
 		final String version = properties.get(IRepositoryConstants.PROPERTY_VERSION);
-		return version == null || "".equals(version) ? NO_VERSION_SPECIFIED : version;
+		return version == null || "".equals(version) ? NO_VERSION_SPECIFIED : version; //$NON-NLS-1$
 	}
 
 	/**
@@ -577,7 +577,7 @@ public final class TaskRepository extends PlatformObject {
 	 */
 	@Deprecated
 	public boolean isAnonymous() {
-		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN));
+		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN)); //$NON-NLS-1$
 	}
 
 	public boolean isBugRepository() {
@@ -588,11 +588,11 @@ public final class TaskRepository extends PlatformObject {
 	 * Use platform proxy settings
 	 */
 	public boolean isDefaultProxyEnabled() {
-		return "true".equals(getProperty(PROXY_USEDEFAULT));
+		return "true".equals(getProperty(PROXY_USEDEFAULT)); //$NON-NLS-1$
 	}
 
 	public boolean isOffline() {
-		return getProperty(OFFLINE) != null && "true".equals(getProperty(OFFLINE));
+		return getProperty(OFFLINE) != null && "true".equals(getProperty(OFFLINE)); //$NON-NLS-1$
 	}
 
 	public void removeProperty(String key) {
@@ -649,7 +649,7 @@ public final class TaskRepository extends PlatformObject {
 		if (credentials == null) {
 			setProperty(key + ENABLED, String.valueOf(false));
 			transientProperties.remove(key + PASSWORD);
-			setCredentialsInternal("", "", key + USERNAME, key + PASSWORD);
+			setCredentialsInternal("", "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			setProperty(key + ENABLED, String.valueOf(true));
 			if (savePassword) {
@@ -657,7 +657,7 @@ public final class TaskRepository extends PlatformObject {
 						+ PASSWORD);
 				transientProperties.remove(key + PASSWORD);
 			} else {
-				setCredentialsInternal(credentials.getUserName(), "", key + USERNAME, key + PASSWORD);
+				setCredentialsInternal(credentials.getUserName(), "", key + USERNAME, key + PASSWORD); //$NON-NLS-1$
 				transientProperties.put(key + PASSWORD, credentials.getPassword());
 			}
 		}

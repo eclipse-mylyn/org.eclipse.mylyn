@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -107,7 +108,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 			try {
 				session.putTaskData(task, taskData);
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to save task", e));
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Failed to save task", e)); //$NON-NLS-1$
 			}
 			taskList.addTask(task, repositoryQuery);
 			resultCount++;
@@ -123,7 +124,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	}
 
-	public static final String MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
+	public static final String MAX_HITS_REACHED = Messages.SynchronizeQueriesJob_Max_allowed_number_of_hits_returned_exceeded;
 
 	private final AbstractRepositoryConnector connector;
 
@@ -141,7 +142,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	public SynchronizeQueriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<RepositoryQuery> queries) {
-		super("Synchronizing Queries (" + repository.getRepositoryLabel() + ")");
+		super(Messages.SynchronizeQueriesJob_Synchronizing_Queries + " (" + repository.getRepositoryLabel() + ")"); //$NON-NLS-2$ //$NON-NLS-3$
 		this.taskList = taskList;
 		this.taskDataManager = taskDataManager;
 		this.tasksModel = tasksModel;
@@ -154,7 +155,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask("Processing", 20 + queries.size() * 20 + 40 + 10);
+			monitor.beginTask(Messages.SynchronizeQueriesJob_Processing, 20 + queries.size() * 20 + 40 + 10);
 
 			Set<ITask> allTasks;
 			if (!isFullSynchronization()) {
@@ -232,14 +233,14 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 					}
 					statuses.addAll(job.getStatuses());
 				}
-				monitor.subTask("Receiving related tasks");
+				monitor.subTask(Messages.SynchronizeQueriesJob_Receiving_related_tasks);
 				job.synchronizedTaskRelations(monitor, relationsByTaskId);
 				monitor.worked(10);
 
 				session.setChangedTasks(tasksToBeSynchronized);
 				if (statuses.size() > 0) {
 					Status status = new MultiStatus(ITasksCoreConstants.ID_PLUGIN, 0, statuses.toArray(new IStatus[0]),
-							"Query synchronization failed", null);
+							"Query synchronization failed", null); //$NON-NLS-1$
 					session.setStatus(status);
 				}
 
@@ -251,7 +252,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		} catch (OperationCanceledException e) {
 			return Status.CANCEL_STATUS;
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Synchronization failed", e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
@@ -261,7 +262,8 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 	private void synchronizeQueries(IProgressMonitor monitor, SynchronizationSession session) {
 		for (RepositoryQuery repositoryQuery : queries) {
 			Policy.checkCanceled(monitor);
-			monitor.subTask("Synchronizing query " + repositoryQuery.getSummary());
+			monitor.subTask(MessageFormat.format(Messages.SynchronizeQueriesJob_Synchronizing_query_X,
+					repositoryQuery.getSummary()));
 			synchronizeQuery(repositoryQuery, session, new SubProgressMonitor(monitor, 20));
 		}
 	}
@@ -269,7 +271,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 	private boolean postSynchronization(SynchronizationSession event, IProgressMonitor monitor) {
 		try {
 			Policy.checkCanceled(monitor);
-			monitor.subTask("Updating repository state");
+			monitor.subTask(Messages.SynchronizeQueriesJob_Updating_repository_state);
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
@@ -284,7 +286,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 	private boolean preSynchronization(ISynchronizationSession event, IProgressMonitor monitor) {
 		try {
 			Policy.checkCanceled(monitor);
-			monitor.subTask("Querying repository");
+			monitor.subTask(Messages.SynchronizeQueriesJob_Querying_repository);
 			if (!isUser()) {
 				monitor = Policy.backgroundMonitorFor(monitor);
 			}
@@ -308,7 +310,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 		IStatus result = connector.performQuery(repository, repositoryQuery, collector, event, monitor);
 		if (result == null || result.isOK()) {
 			if (collector.getResultCount() >= TaskDataCollector.MAX_HITS) {
-				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, MAX_HITS_REACHED + "\n"
+				StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN, MAX_HITS_REACHED + "\n" //$NON-NLS-1$
 						+ repositoryQuery.getSummary()));
 			}
 
@@ -317,7 +319,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				taskList.removeFromContainer(repositoryQuery, removedChildren);
 			}
 
-			repositoryQuery.setLastSynchronizedStamp(new SimpleDateFormat("MMM d, H:mm:ss").format(new Date()));
+			repositoryQuery.setLastSynchronizedStamp(new SimpleDateFormat("MMM d, H:mm:ss").format(new Date())); //$NON-NLS-1$
 		} else if (result.getSeverity() == IStatus.CANCEL) {
 			throw new OperationCanceledException();
 		} else {

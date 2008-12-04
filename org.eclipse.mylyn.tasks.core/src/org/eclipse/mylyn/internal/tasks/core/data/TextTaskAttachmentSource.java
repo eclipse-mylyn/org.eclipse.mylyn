@@ -33,12 +33,12 @@ public class TextTaskAttachmentSource extends AbstractTaskAttachmentSource {
 
 	@Override
 	public String getContentType() {
-		return "text/plain";
+		return "text/plain"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getDescription() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class TextTaskAttachmentSource extends AbstractTaskAttachmentSource {
 
 	@Override
 	public String getName() {
-		return "clipboard.txt";
+		return "clipboard.txt"; //$NON-NLS-1$
 	}
 
 	@Override

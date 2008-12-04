@@ -45,11 +45,11 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class TaskRepositoryManager implements IRepositoryManager {
 
-	public static final String OLD_REPOSITORIES_FILE = "repositories.xml";
+	public static final String OLD_REPOSITORIES_FILE = "repositories.xml"; //$NON-NLS-1$
 
-	public static final String DEFAULT_REPOSITORIES_FILE = "repositories.xml.zip";
+	public static final String DEFAULT_REPOSITORIES_FILE = "repositories.xml.zip"; //$NON-NLS-1$
 
-	public static final String PREF_REPOSITORIES = "org.eclipse.mylyn.tasklist.repositories.";
+	public static final String PREF_REPOSITORIES = "org.eclipse.mylyn.tasklist.repositories."; //$NON-NLS-1$
 
 	private final Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<String, AbstractRepositoryConnector>();
 
@@ -59,9 +59,9 @@ public class TaskRepositoryManager implements IRepositoryManager {
 
 	private final Set<TaskRepository> orphanedRepositories = new HashSet<TaskRepository>();
 
-	public static final String MESSAGE_NO_REPOSITORY = "No repository available, please add one using the Task Repositories view.";
+	public static final String MESSAGE_NO_REPOSITORY = Messages.TaskRepositoryManager_No_repository_available;
 
-	public static final String PREFIX_LOCAL = "local-";
+	public static final String PREFIX_LOCAL = "local-"; //$NON-NLS-1$
 
 	private final PropertyChangeListener PROPERTY_CHANGE_LISTENER = new PropertyChangeListener() {
 
@@ -317,7 +317,7 @@ public class TaskRepositoryManager implements IRepositoryManager {
 			File repositoriesFile = new File(destinationPath);
 			externalizer.writeRepositoriesToXML(repositoriesToWrite, repositoriesFile);
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not save repositories", t));
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not save repositories", t)); //$NON-NLS-1$
 			return false;
 		}
 		return true;

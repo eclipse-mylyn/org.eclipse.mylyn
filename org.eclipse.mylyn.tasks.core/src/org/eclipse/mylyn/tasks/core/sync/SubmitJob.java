@@ -99,7 +99,7 @@ public abstract class SubmitJob extends TaskJob {
 			for (final SubmitJobListener listener : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e));
+						StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Listener failed", e)); //$NON-NLS-1$
 					}
 
 					public void run() throws Exception {

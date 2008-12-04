@@ -34,7 +34,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class TaskDataStore {
 
-	private static final String FILE_NAME_INTERNAL = "data.xml";
+	private static final String FILE_NAME_INTERNAL = "data.xml"; //$NON-NLS-1$
 
 	private final TaskDataExternalizer externalizer;
 
@@ -79,7 +79,7 @@ public class TaskDataStore {
 						new Status(
 								IStatus.ERROR,
 								ITasksCoreConstants.ID_PLUGIN,
-								"Reading of existing task data failed. Forcing synchronization will override outgoing changes.",
+								"Reading of existing task data failed. Forcing synchronization will override outgoing changes.", //$NON-NLS-1$
 								e));
 			}
 		}
@@ -119,7 +119,7 @@ public class TaskDataStore {
 			}
 			return null;
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading task data",
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading task data", //$NON-NLS-1$
 					e));
 		}
 	}
@@ -138,7 +138,7 @@ public class TaskDataStore {
 				out.close();
 			}
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error writing task data",
+			throw new CoreException(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error writing task data", //$NON-NLS-1$
 					e));
 		}
 	}

@@ -19,12 +19,12 @@ package org.eclipse.mylyn.internal.tasks.core;
  */
 public class UnmatchedTaskContainer extends AutomaticRepositoryTaskContainer {
 
-	public static final String LABEL = "Unmatched";
+	public static final String LABEL = Messages.UnmatchedTaskContainer_Unmatched;
 
-	public static final String HANDLE = "orphans";
+	public static final String HANDLE = "orphans"; //$NON-NLS-1$
 
 	public UnmatchedTaskContainer(String connectorKind, String repositoryUrl) {
-		super(repositoryUrl + "-" + HANDLE, connectorKind, repositoryUrl);
+		super(repositoryUrl + "-" + HANDLE, connectorKind, repositoryUrl); //$NON-NLS-1$
 	}
 
 	@Override

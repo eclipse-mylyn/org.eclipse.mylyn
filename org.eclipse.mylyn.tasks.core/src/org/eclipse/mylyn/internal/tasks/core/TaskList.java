@@ -44,7 +44,7 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
  */
 public class TaskList implements ITaskList {
 
-	private static String DEFAULT_HANDLE_PREFIX = "handle-";
+	private static String DEFAULT_HANDLE_PREFIX = "handle-"; //$NON-NLS-1$
 
 	private static ILock lock = Job.getJobManager().newLock();
 
@@ -77,8 +77,8 @@ public class TaskList implements ITaskList {
 		try {
 			lock();
 			if (categories.containsKey(category.getHandleIdentifier())) {
-				throw new IllegalArgumentException("Handle " + category.getHandleIdentifier()
-						+ " already exists in task list");
+				throw new IllegalArgumentException("Handle " + category.getHandleIdentifier() //$NON-NLS-1$
+						+ " already exists in task list"); //$NON-NLS-1$
 			}
 			categories.put(category.getHandleIdentifier(), category);
 			delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.ADDED));
@@ -113,8 +113,8 @@ public class TaskList implements ITaskList {
 		try {
 			lock();
 			if (queries.containsKey(query.getHandleIdentifier())) {
-				throw new IllegalArgumentException("Handle " + query.getHandleIdentifier()
-						+ " already exists in task list");
+				throw new IllegalArgumentException("Handle " + query.getHandleIdentifier() //$NON-NLS-1$
+						+ " already exists in task list"); //$NON-NLS-1$
 			}
 			queries.put(query.getHandleIdentifier(), query);
 			delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.ADDED));
@@ -259,7 +259,7 @@ public class TaskList implements ITaskList {
 			try {
 				listener.containersChanged(Collections.unmodifiableSet(deltasToFire));
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Notification failed for: "
+				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Notification failed for: " //$NON-NLS-1$
 						+ listener, t));
 			}
 		}
@@ -428,7 +428,7 @@ public class TaskList implements ITaskList {
 			UnmatchedTaskContainer orphans = repositoryOrphansMap.get(repositoryUrl);
 			if (orphans == null) {
 				StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-						"Failed to find unmatched container for repository \"" + repositoryUrl + "\""));
+						"Failed to find unmatched container for repository \"" + repositoryUrl + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return orphans;
 		}
@@ -462,8 +462,8 @@ public class TaskList implements ITaskList {
 		}
 
 		if (result == null) {
-			throw new IllegalArgumentException("Element " + taskListElement.getHandleIdentifier()
-					+ " does not exist in the task list.");
+			throw new IllegalArgumentException("Element " + taskListElement.getHandleIdentifier() //$NON-NLS-1$
+					+ " does not exist in the task list."); //$NON-NLS-1$
 		} else {
 			return result;
 		}
@@ -708,7 +708,7 @@ public class TaskList implements ITaskList {
 					return handle;
 				}
 			}
-			throw new RuntimeException("No more unique handles for task list");
+			throw new RuntimeException("No more unique handles for task list"); //$NON-NLS-1$
 		} finally {
 			unlock();
 		}

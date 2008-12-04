@@ -16,7 +16,7 @@ package org.eclipse.mylyn.internal.tasks.core;
  */
 public class LocalTask extends AbstractTask {
 
-	public static final String SYNC_DATE_NOW = "now";
+	public static final String SYNC_DATE_NOW = "now"; //$NON-NLS-1$
 
 	public LocalTask(String taskId, String summary) {
 		super(LocalRepositoryConnector.REPOSITORY_URL, taskId, summary);

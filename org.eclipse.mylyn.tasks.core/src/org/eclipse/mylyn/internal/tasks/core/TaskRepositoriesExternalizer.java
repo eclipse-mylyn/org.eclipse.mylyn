@@ -39,11 +39,11 @@ public class TaskRepositoriesExternalizer {
 
 	private final SaxRepositoriesWriter writer = new SaxRepositoriesWriter();
 
-	public static final String ELEMENT_TASK_REPOSITORIES = "TaskRepositories";
+	public static final String ELEMENT_TASK_REPOSITORIES = "TaskRepositories"; //$NON-NLS-1$
 
-	public static final String ELEMENT_TASK_REPOSITORY = "TaskRepository";
+	public static final String ELEMENT_TASK_REPOSITORY = "TaskRepository"; //$NON-NLS-1$
 
-	public static final String ATTRIBUTE_VERSION = "OutputVersion";
+	public static final String ATTRIBUTE_VERSION = "OutputVersion"; //$NON-NLS-1$
 
 	public void writeRepositoriesToXML(Collection<TaskRepository> repositories, File file) {
 		ZipOutputStream outputStream = null;
@@ -57,14 +57,14 @@ public class TaskRepositoriesExternalizer {
 			outputStream.close();
 
 		} catch (IOException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write: "
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not write: " //$NON-NLS-1$
 					+ file.getAbsolutePath(), e));
 		} finally {
 			if (outputStream != null) {
 				try {
 					outputStream.close();
 				} catch (IOException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not close: "
+					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Could not close: " //$NON-NLS-1$
 							+ file.getAbsolutePath(), e));
 				}
 			}
@@ -117,8 +117,8 @@ public class TaskRepositoriesExternalizer {
 			reader.parse(new InputSource(inputStream));
 			return contentHandler.getRepositories();
 		} catch (Throwable e) {
-			file.renameTo(new File(file.getAbsolutePath() + "-save"));
-			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading context file", e));
+			file.renameTo(new File(file.getAbsolutePath() + "-save")); //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN, "Error reading context file", e)); //$NON-NLS-1$
 			return null;
 		} finally {
 			if (inputStream != null) {
@@ -126,7 +126,7 @@ public class TaskRepositoriesExternalizer {
 					inputStream.close();
 				} catch (IOException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Error closing context file", e));
+							"Error closing context file", e)); //$NON-NLS-1$
 				}
 			}
 		}
