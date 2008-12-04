@@ -20,6 +20,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -36,8 +37,6 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  */
 public class RepositoryQueryWizard extends Wizard {
 
-	private static final String TITLE = "Edit Repository Query";
-
 	private final TaskRepository repository;
 
 	/**
@@ -47,7 +46,7 @@ public class RepositoryQueryWizard extends Wizard {
 		Assert.isNotNull(repository);
 		this.repository = repository;
 		setNeedsProgressMonitor(true);
-		setWindowTitle(TITLE);
+		setWindowTitle(Messages.RepositoryQueryWizard_Edit_Repository_Query);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
@@ -65,7 +64,7 @@ public class RepositoryQueryWizard extends Wizard {
 		IWizardPage currentPage = getContainer().getCurrentPage();
 		if (!(currentPage instanceof AbstractRepositoryQueryPage)) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Current wizard page does not extends AbstractRepositoryQueryPage"));
+					"Current wizard page does not extends AbstractRepositoryQueryPage")); //$NON-NLS-1$
 			return false;
 		}
 

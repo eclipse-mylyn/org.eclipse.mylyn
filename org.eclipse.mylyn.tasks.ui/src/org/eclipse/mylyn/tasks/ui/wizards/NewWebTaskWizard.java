@@ -15,6 +15,7 @@ package org.eclipse.mylyn.tasks.ui.wizards;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewWebTaskPage;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -50,7 +51,7 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 		this.newTaskUrl = newTaskUrl;
 		this.taskSelection = taskSelection;
 
-		setWindowTitle("New Task");
+		setWindowTitle(Messages.NewWebTaskWizard_New_Task);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
@@ -83,14 +84,11 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 		String description = taskSelection.getDescription();
 
 		Clipboard clipboard = new Clipboard(getShell().getDisplay());
-		clipboard.setContents(new Object[] { summary + "\n" + description },
+		clipboard.setContents(new Object[] { summary + "\n" + description }, //$NON-NLS-1$
 				new Transfer[] { TextTransfer.getInstance() });
 
-		MessageDialog.openInformation(
-				getShell(),
-				"New Task",
-				"This connector does not provide a rich task editor for creating tasks.\n\n"
-						+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
+		MessageDialog.openInformation(getShell(), Messages.NewWebTaskWizard_New_Task,
+				Messages.NewWebTaskWizard_This_connector_does_not_provide_a_rich_task_editor_for_creating_tasks);
 	}
 
 }

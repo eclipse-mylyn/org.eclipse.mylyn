@@ -379,6 +379,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static TasksUiFactory uiFactory;
 
+	public static String LABEL_VIEW_REPOSITORIES = Messages.TasksUiPlugin_Task_Repositories;
+
 	private class TasksUiInitializationJob extends UIJob {
 
 		public TasksUiInitializationJob() {

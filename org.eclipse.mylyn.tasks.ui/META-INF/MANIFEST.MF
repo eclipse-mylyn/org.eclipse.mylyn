@@ -27,7 +27,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.monitor.core;bundle-version="[3.0.0,4.0.0)",
  org.apache.commons.logging;bundle-version="1.0.4"
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Export-Package: org.eclipse.mylyn.internal.provisional.tasks.ui.wizards;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui;x-internal:=true,
  org.eclipse.mylyn.internal.tasks.ui.actions;x-internal:=true,

@@ -25,6 +25,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -109,10 +110,11 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 			getContainer().run(true, true, runnable);
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				TasksUiInternal.displayStatus("Error creating new task", ((CoreException) e.getCause()).getStatus());
+				TasksUiInternal.displayStatus(Messages.NewTaskWizard_Error_creating_new_task,
+						((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error creating new task",
-						e.getCause()));
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						Messages.NewTaskWizard_Error_creating_new_task, e.getCause()));
 			}
 			return false;
 		} catch (InterruptedException e) {
@@ -123,9 +125,9 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 			TasksUiInternal.createAndOpenNewTask(taskData[0]);
 			return true;
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open new task", e));
-			TasksUiInternal.displayStatus("Create Task", new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Failed to create new task: " + e.getMessage()));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open new task", e)); //$NON-NLS-1$
+			TasksUiInternal.displayStatus(Messages.NewTaskWizard_Create_Task, new Status(IStatus.ERROR,
+					TasksUiPlugin.ID_PLUGIN, Messages.NewTaskWizard_Failed_to_create_new_task_ + e.getMessage()));
 			return false;
 		}
 	}

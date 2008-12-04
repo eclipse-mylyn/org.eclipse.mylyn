@@ -36,6 +36,7 @@ import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTemplateManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -81,23 +82,23 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  */
 public abstract class AbstractRepositorySettingsPage extends AbstractTaskRepositoryPage implements ITaskRepositoryPage {
 
-	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences";
+	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
 
-	protected static final String LABEL_REPOSITORY_LABEL = "Label: ";
+	protected static final String LABEL_REPOSITORY_LABEL = Messages.AbstractRepositorySettingsPage_Label_;
 
-	protected static final String LABEL_SERVER = "Server: ";
+	protected static final String LABEL_SERVER = Messages.AbstractRepositorySettingsPage_Server_;
 
-	protected static final String LABEL_USER = "User ID: ";
+	protected static final String LABEL_USER = Messages.AbstractRepositorySettingsPage_User_ID_;
 
-	protected static final String LABEL_PASSWORD = "Password: ";
+	protected static final String LABEL_PASSWORD = Messages.AbstractRepositorySettingsPage_Password_;
 
-	protected static final String URL_PREFIX_HTTPS = "https://";
+	protected static final String URL_PREFIX_HTTPS = "https://"; //$NON-NLS-1$
 
-	protected static final String URL_PREFIX_HTTP = "http://";
+	protected static final String URL_PREFIX_HTTP = "http://"; //$NON-NLS-1$
 
-	protected static final String INVALID_REPOSITORY_URL = "Repository url is invalid.";
+	protected static final String INVALID_REPOSITORY_URL = Messages.AbstractRepositorySettingsPage_Repository_url_is_invalid;
 
-	protected static final String INVALID_LOGIN = "Unable to authenticate with repository. Login credentials invalid.";
+	protected static final String INVALID_LOGIN = Messages.AbstractRepositorySettingsPage_Unable_to_authenticate_with_repository;
 
 	protected AbstractRepositoryConnector connector;
 
@@ -182,15 +183,15 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private Button systemProxyButton;
 
-	private String oldProxyUsername = "";
+	private String oldProxyUsername = ""; //$NON-NLS-1$
 
-	private String oldProxyPassword = "";
+	private String oldProxyPassword = ""; //$NON-NLS-1$
 
 	// private Button proxyAuthButton;
 
-	private String oldProxyHostname = "";
+	private String oldProxyHostname = ""; //$NON-NLS-1$
 
-	private String oldProxyPort = "";
+	private String oldProxyPort = ""; //$NON-NLS-1$
 
 	private Button proxyAuthButton;
 
@@ -252,8 +253,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				oldUsername = oldCredentials.getUserName();
 				oldPassword = oldCredentials.getPassword();
 			} else {
-				oldUsername = "";
-				oldPassword = "";
+				oldUsername = ""; //$NON-NLS-1$
+				oldPassword = ""; //$NON-NLS-1$
 			}
 
 			AuthenticationCredentials oldHttpCredentials = repository.getCredentials(AuthenticationType.HTTP);
@@ -268,10 +269,10 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			oldProxyHostname = repository.getProperty(TaskRepository.PROXY_HOSTNAME);
 			oldProxyPort = repository.getProperty(TaskRepository.PROXY_PORT);
 			if (oldProxyHostname == null) {
-				oldProxyHostname = "";
+				oldProxyHostname = ""; //$NON-NLS-1$
 			}
 			if (oldProxyPort == null) {
-				oldProxyPort = "";
+				oldProxyPort = ""; //$NON-NLS-1$
 			}
 
 			AuthenticationCredentials oldProxyCredentials = repository.getCredentials(AuthenticationType.PROXY);
@@ -284,8 +285,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 
 		} else {
-			oldUsername = "";
-			oldPassword = "";
+			oldUsername = ""; //$NON-NLS-1$
+			oldPassword = ""; //$NON-NLS-1$
 			oldHttpAuthPassword = null;
 			oldHttpAuthUserId = null;
 		}
@@ -321,7 +322,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).grab(true, false).applyTo(serverUrlCombo);
 
-		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED,
+		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
 
 			@Override
@@ -344,7 +345,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			anonymousButton = new Button(compositeContainer, SWT.CHECK);
 			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(anonymousButton);
 
-			anonymousButton.setText("Anonymous Access");
+			anonymousButton.setText(Messages.AbstractRepositorySettingsPage_Anonymous_Access);
 			anonymousButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -354,7 +355,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			});
 		}
 
-		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED,
+		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
 
 			@Override
@@ -372,7 +373,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		};
 
-		repositoryPasswordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED,
+		repositoryPasswordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				compositeContainer) {
 
 			@Override
@@ -392,7 +393,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		savePasswordButton = new Button(compositeContainer, SWT.CHECK);
 		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(savePasswordButton);
-		savePasswordButton.setText("Save Password");
+		savePasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Password);
 
 		if (repository != null) {
 			try {
@@ -408,11 +409,11 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					repositoryUserNameEditor.setStringValue(credentials.getUserName());
 					repositoryPasswordEditor.setStringValue(credentials.getPassword());
 				} else {
-					repositoryUserNameEditor.setStringValue("");
-					repositoryPasswordEditor.setStringValue("");
+					repositoryUserNameEditor.setStringValue(""); //$NON-NLS-1$
+					repositoryPasswordEditor.setStringValue(""); //$NON-NLS-1$
 				}
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set field value", t));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set field value", t)); //$NON-NLS-1$
 			}
 		}
 
@@ -462,7 +463,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			advancedExpComposite.setLayoutData(gridData_2);
 			advancedExpComposite.setFont(compositeContainer.getFont());
 			advancedExpComposite.setBackground(compositeContainer.getBackground());
-			advancedExpComposite.setText("Additional Settings");
+			advancedExpComposite.setText(Messages.AbstractRepositorySettingsPage_Additional_Settings);
 			advancedExpComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override
 				public void expansionStateChanged(ExpansionEvent e) {
@@ -484,7 +485,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 			if (needsEncoding()) {
 				Label encodingLabel = new Label(advancedComp, SWT.HORIZONTAL);
-				encodingLabel.setText("Character encoding:");
+				encodingLabel.setText(Messages.AbstractRepositorySettingsPage_Character_encoding);
 				GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.TOP).applyTo(encodingLabel);
 
 				Composite encodingContainer = new Composite(advancedComp, SWT.NONE);
@@ -495,11 +496,12 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 				defaultEncoding = new Button(encodingContainer, SWT.RADIO);
 				defaultEncoding.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-				defaultEncoding.setText("Default (" + TaskRepository.DEFAULT_CHARACTER_ENCODING + ")");
+				defaultEncoding.setText(Messages.AbstractRepositorySettingsPage_Default__
+						+ TaskRepository.DEFAULT_CHARACTER_ENCODING + ")"); //$NON-NLS-1$
 				defaultEncoding.setSelection(true);
 
 				otherEncoding = new Button(encodingContainer, SWT.RADIO);
-				otherEncoding.setText("Other:");
+				otherEncoding.setText(Messages.AbstractRepositorySettingsPage_Other);
 				otherEncodingCombo = new Combo(encodingContainer, SWT.READ_ONLY);
 				for (String encoding : Charset.availableCharsets().keySet()) {
 					if (!encoding.equals(TaskRepository.DEFAULT_CHARACTER_ENCODING)) {
@@ -541,7 +543,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 						}
 					} catch (Throwable t) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Could not set field value", t));
+								"Could not set field value", t)); //$NON-NLS-1$
 					}
 				}
 			}
@@ -556,7 +558,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			httpAuthExpComposite.setLayoutData(gridData_2);
 			httpAuthExpComposite.setFont(compositeContainer.getFont());
 			httpAuthExpComposite.setBackground(compositeContainer.getBackground());
-			httpAuthExpComposite.setText("Http Authentication");
+			httpAuthExpComposite.setText(Messages.AbstractRepositorySettingsPage_Http_Authentication);
 			httpAuthExpComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override
 				public void expansionStateChanged(ExpansionEvent e) {
@@ -577,7 +579,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
 			GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
 
-			httpAuthButton.setText("Enabled");
+			httpAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enabled);
 
 			httpAuthButton.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent e) {
@@ -589,7 +591,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				}
 			});
 
-			httpAuthUserNameEditor = new StringFieldEditor("", "User ID: ", StringFieldEditor.UNLIMITED, httpAuthComp) {
+			httpAuthUserNameEditor = new StringFieldEditor(
+					"", Messages.AbstractRepositorySettingsPage_User_ID_, StringFieldEditor.UNLIMITED, httpAuthComp) { //$NON-NLS-1$
 
 				@Override
 				protected boolean doCheckState() {
@@ -604,13 +607,14 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 					}
 				}
 			};
-			httpAuthPasswordEditor = new RepositoryStringFieldEditor("", "Password: ", StringFieldEditor.UNLIMITED,
+			httpAuthPasswordEditor = new RepositoryStringFieldEditor(
+					"", Messages.AbstractRepositorySettingsPage_Password_, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 					httpAuthComp);
 			((RepositoryStringFieldEditor) httpAuthPasswordEditor).getTextControl().setEchoChar('*');
 
 			saveHttpPasswordButton = new Button(httpAuthComp, SWT.CHECK);
 			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(saveHttpPasswordButton);
-			saveHttpPasswordButton.setText("Save Http Password");
+			saveHttpPasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Http_Password);
 
 			httpAuthUserNameEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
 			httpAuthPasswordEditor.setEnabled(httpAuthButton.getSelection(), httpAuthComp);
@@ -644,7 +648,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (needsValidation()) {
 			validateServerButton = new Button(managementComposite, SWT.PUSH);
 			GridDataFactory.swtDefaults().span(2, SWT.DEFAULT).grab(false, false).applyTo(validateServerButton);
-			validateServerButton.setText("Validate Settings");
+			validateServerButton.setText(Messages.AbstractRepositorySettingsPage_Validate_Settings);
 			validateServerButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL));
 			validateServerButton.addSelectionListener(new SelectionAdapter() {
 
@@ -655,7 +659,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			});
 		}
 
-		createAccountHyperlink = toolkit.createHyperlink(managementComposite, "Create new account", SWT.NONE);
+		createAccountHyperlink = toolkit.createHyperlink(managementComposite,
+				Messages.AbstractRepositorySettingsPage_Create_new_account, SWT.NONE);
 		createAccountHyperlink.setBackground(managementComposite.getBackground());
 		createAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -675,7 +680,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
-		manageAccountHyperlink = toolkit.createHyperlink(managementComposite, "Change account settings", SWT.NONE);
+		manageAccountHyperlink = toolkit.createHyperlink(managementComposite,
+				Messages.AbstractRepositorySettingsPage_Change_account_settings, SWT.NONE);
 		manageAccountHyperlink.setBackground(managementComposite.getBackground());
 		manageAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -718,7 +724,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		proxyExpComposite.setLayoutData(gridData_2);
 		proxyExpComposite.setFont(compositeContainer.getFont());
 		proxyExpComposite.setBackground(compositeContainer.getBackground());
-		proxyExpComposite.setText("Proxy Server Configuration");
+		proxyExpComposite.setText(Messages.AbstractRepositorySettingsPage_Proxy_Server_Configuration);
 		proxyExpComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
@@ -745,8 +751,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		systemProxyButton = new Button(settingsComposite, SWT.CHECK);
 		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(settingsComposite);
 
-		systemProxyButton.setText("Use global Network Connections preferences");
-		Hyperlink changeProxySettingsLink = toolkit.createHyperlink(settingsComposite, "Change Settings", SWT.NULL);
+		systemProxyButton.setText(Messages.AbstractRepositorySettingsPage_Use_global_Network_Connections_preferences);
+		Hyperlink changeProxySettingsLink = toolkit.createHyperlink(settingsComposite,
+				Messages.AbstractRepositorySettingsPage_Change_Settings, SWT.NULL);
 		changeProxySettingsLink.setBackground(compositeContainer.getBackground());
 		changeProxySettingsLink.addHyperlinkListener(new IHyperlinkListener() {
 
@@ -775,7 +782,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
-		proxyHostnameEditor = new StringFieldEditor("", "Proxy host address: ", StringFieldEditor.UNLIMITED,
+		proxyHostnameEditor = new StringFieldEditor(
+				"", Messages.AbstractRepositorySettingsPage_Proxy_host_address_, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				proxyAuthComp) {
 
 			@Override
@@ -793,7 +801,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		};
 		proxyHostnameEditor.setStringValue(oldProxyHostname);
 
-		proxyPortEditor = new RepositoryStringFieldEditor("", "Proxy host port: ", StringFieldEditor.UNLIMITED,
+		proxyPortEditor = new RepositoryStringFieldEditor(
+				"", Messages.AbstractRepositorySettingsPage_Proxy_host_port_, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				proxyAuthComp);
 
 		proxyPortEditor.setStringValue(oldProxyPort);
@@ -806,7 +815,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		proxyAuthButton = new Button(proxyAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(proxyAuthButton);
 
-		proxyAuthButton.setText("Enable proxy authentication");
+		proxyAuthButton.setText(Messages.AbstractRepositorySettingsPage_Enable_proxy_authentication);
 		proxyAuthButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				setProxyAuth(proxyAuthButton.getSelection());
@@ -817,7 +826,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 		});
 
-		proxyUserNameEditor = new StringFieldEditor("", "User ID: ", StringFieldEditor.UNLIMITED, proxyAuthComp) {
+		proxyUserNameEditor = new StringFieldEditor(
+				"", Messages.AbstractRepositorySettingsPage_User_ID_, StringFieldEditor.UNLIMITED, proxyAuthComp) { //$NON-NLS-1$
 
 			@Override
 			protected boolean doCheckState() {
@@ -832,7 +842,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				}
 			}
 		};
-		proxyPasswordEditor = new RepositoryStringFieldEditor("", "Password: ", StringFieldEditor.UNLIMITED,
+		proxyPasswordEditor = new RepositoryStringFieldEditor(
+				"", Messages.AbstractRepositorySettingsPage_Password_, StringFieldEditor.UNLIMITED, //$NON-NLS-1$
 				proxyAuthComp);
 		((RepositoryStringFieldEditor) proxyPasswordEditor).getTextControl().setEchoChar('*');
 
@@ -844,7 +855,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		saveProxyPasswordButton = new Button(proxyAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(saveProxyPasswordButton);
-		saveProxyPasswordButton.setText("Save Proxy Password");
+		saveProxyPasswordButton.setText(Messages.AbstractRepositorySettingsPage_Save_Proxy_Password);
 		saveProxyPasswordButton.setEnabled(proxyAuthButton.getSelection());
 
 		if (repository != null) {
@@ -882,7 +893,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		statusComposite.setLayoutData(gd);
 		statusComposite.setFont(compositeContainer.getFont());
 		statusComposite.setBackground(compositeContainer.getBackground());
-		statusComposite.setText("Status");
+		statusComposite.setText(Messages.AbstractRepositorySettingsPage_Status);
 		statusComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
@@ -900,7 +911,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		statusComposite.setClient(composite);
 
 		disconnectedButton = new Button(composite, SWT.CHECK);
-		disconnectedButton.setText("Disconnected");
+		disconnectedButton.setText(Messages.AbstractRepositorySettingsPage_Disconnected);
 		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(disconnectedButton);
 		disconnectedButton.setSelection(repository != null ? repository.isOffline() : false);
 		statusComposite.setExpanded(disconnectedButton.getSelection());
@@ -943,8 +954,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (selected) {
 			oldUsername = repositoryUserNameEditor.getStringValue();
 			oldPassword = (repositoryPasswordEditor).getStringValue();
-			repositoryUserNameEditor.setStringValue("");
-			repositoryPasswordEditor.setStringValue("");
+			repositoryUserNameEditor.setStringValue(""); //$NON-NLS-1$
+			repositoryPasswordEditor.setStringValue(""); //$NON-NLS-1$
 		} else {
 			repositoryUserNameEditor.setStringValue(oldUsername);
 			repositoryPasswordEditor.setStringValue(oldPassword);
@@ -1134,7 +1145,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (needsHttpAuth()) {
 			return httpAuthUserNameEditor.getStringValue();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -1145,7 +1156,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (needsHttpAuth()) {
 			return httpAuthPasswordEditor.getStringValue();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -1156,7 +1167,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (needsProxy()) {
 			return proxyHostnameEditor.getStringValue();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -1167,7 +1178,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (needsProxy()) {
 			return proxyPortEditor.getStringValue();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -1189,7 +1200,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (needsProxy()) {
 			return proxyUserNameEditor.getStringValue();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -1200,7 +1211,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		if (needsProxy()) {
 			return proxyPasswordEditor.getStringValue();
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -1238,7 +1249,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 				super.refreshValidState();
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Problem refreshing password field", e));
+						"Problem refreshing password field", e)); //$NON-NLS-1$
 			}
 		}
 
@@ -1255,7 +1266,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		String url = getRepositoryUrl();
 		errorMessage = isUniqueUrl(url);
 		if (errorMessage == null && !isValidUrl(url)) {
-			errorMessage = "Enter a valid server url";
+			errorMessage = Messages.AbstractRepositorySettingsPage_Enter_a_valid_server_url;
 		}
 		if (errorMessage == null) {
 			errorMessage = credentialsComplete();
@@ -1267,14 +1278,14 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 	private String credentialsComplete() {
 		if ((!needsAnonymousLogin() || !anonymousButton.getSelection()) && isMissingCredentials()) {
-			return "Repository user name and password must not be blank";
+			return Messages.AbstractRepositorySettingsPage_Repository_user_name_and_password_must_not_be_blank;
 		}
 		return null;
 	}
 
 	private boolean isMissingCredentials() {
-		return repositoryUserNameEditor.getStringValue().trim().equals("")
-				|| repositoryPasswordEditor.getStringValue().trim().equals("");
+		return repositoryUserNameEditor.getStringValue().trim().equals("") //$NON-NLS-1$
+				|| repositoryPasswordEditor.getStringValue().trim().equals(""); //$NON-NLS-1$
 	}
 
 	/**
@@ -1291,7 +1302,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			}
 
 			if (repositoryUrls.contains(urlString)) {
-				return "Repository already exists.";
+				return Messages.AbstractRepositorySettingsPage_Repository_already_exists;
 			}
 		}
 		return null;
@@ -1576,7 +1587,8 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		try {
 			getWizard().getContainer().run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
+					monitor.beginTask(Messages.AbstractRepositorySettingsPage_Validating_server_settings,
+							IProgressMonitor.UNKNOWN);
 					try {
 						validator.run(monitor);
 						if (validator.getStatus() == null) {
@@ -1596,7 +1608,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 			});
 		} catch (InvocationTargetException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Internal error validating repository", e.getCause()));
+					Messages.AbstractRepositorySettingsPage_Internal_error_validating_repository, e.getCause()));
 			return;
 		} catch (InterruptedException e) {
 			// canceled
@@ -1628,9 +1640,9 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		case IStatus.OK:
 			if (status == Status.OK_STATUS) {
 				if (getUserName().length() > 0) {
-					message = "Authentication credentials are valid.";
+					message = Messages.AbstractRepositorySettingsPage_Authentication_credentials_are_valid;
 				} else {
-					message = "Repository is valid.";
+					message = Messages.AbstractRepositorySettingsPage_Repository_is_valid;
 				}
 			}
 			setMessage(message, IMessageProvider.INFORMATION);

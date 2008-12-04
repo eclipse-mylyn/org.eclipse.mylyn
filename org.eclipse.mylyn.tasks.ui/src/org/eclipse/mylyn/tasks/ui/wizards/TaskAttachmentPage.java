@@ -20,6 +20,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.data.FileTaskAttachmentSource;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentModel;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -51,12 +52,12 @@ public class TaskAttachmentPage extends WizardPage {
 
 	static {
 		contentTypes = new LinkedList<String>();
-		contentTypes.add("text/plain");
-		contentTypes.add("text/html");
-		contentTypes.add("application/xml");
-		contentTypes.add("image/gif");
-		contentTypes.add("image/jpeg");
-		contentTypes.add("image/png");
+		contentTypes.add("text/plain"); //$NON-NLS-1$
+		contentTypes.add("text/html"); //$NON-NLS-1$
+		contentTypes.add("application/xml"); //$NON-NLS-1$
+		contentTypes.add("image/gif"); //$NON-NLS-1$
+		contentTypes.add("image/jpeg"); //$NON-NLS-1$
+		contentTypes.add("image/png"); //$NON-NLS-1$
 		contentTypes.add(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
 	}
 
@@ -81,10 +82,10 @@ public class TaskAttachmentPage extends WizardPage {
 	private boolean first = true;
 
 	public TaskAttachmentPage(TaskAttachmentModel model) {
-		super("AttachmentDetails");
+		super("AttachmentDetails"); //$NON-NLS-1$
 		this.model = model;
 		this.taskAttachment = TaskAttachmentMapper.createFrom(model.getAttribute());
-		setTitle("Attachment Details");
+		setTitle("Attachment Details"); //$NON-NLS-1$
 		setNeedsDescription(true);
 	}
 
@@ -98,12 +99,12 @@ public class TaskAttachmentPage extends WizardPage {
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setLayout(new GridLayout(3, false));
 
-		new Label(composite, SWT.NONE).setText("File");
+		new Label(composite, SWT.NONE).setText(Messages.TaskAttachmentPage_File);
 		fileNameText = new Text(composite, SWT.BORDER);
 		fileNameText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 
 		if (needsDescription) {
-			new Label(composite, SWT.NONE).setText("Description");
+			new Label(composite, SWT.NONE).setText(Messages.TaskAttachmentPage_Description);
 			descriptionText = new Text(composite, SWT.BORDER);
 			descriptionText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
 			descriptionText.addModifyListener(new ModifyListener() {
@@ -117,7 +118,7 @@ public class TaskAttachmentPage extends WizardPage {
 
 		Label label = new Label(composite, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false));
-		label.setText("Comment");
+		label.setText(Messages.TaskAttachmentPage_Comment);
 		commentText = new Text(composite, SWT.V_SCROLL | SWT.BORDER | SWT.WRAP);
 		commentText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		commentText.addModifyListener(new ModifyListener() {
@@ -127,7 +128,7 @@ public class TaskAttachmentPage extends WizardPage {
 
 		});
 
-		new Label(composite, SWT.NONE).setText("Content Type");// .setBackground(parent.getBackground());
+		new Label(composite, SWT.NONE).setText(Messages.TaskAttachmentPage_Content_Type);// .setBackground(parent.getBackground());
 
 		contentTypeList = new Combo(composite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
 		contentTypeList.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
@@ -158,14 +159,14 @@ public class TaskAttachmentPage extends WizardPage {
 
 		isPatchButton = new Button(composite, SWT.CHECK);
 		isPatchButton.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
-		isPatchButton.setText("Patch");
+		isPatchButton.setText(Messages.TaskAttachmentPage_Patch);
 
 		// TODO: is there a better way to pad?
 		new Label(composite, SWT.NONE);
 
 		attachContextButton = new Button(composite, SWT.CHECK);
 		attachContextButton.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
-		attachContextButton.setText("Attach Context");
+		attachContextButton.setText(Messages.TaskAttachmentPage_ATTACHE_CONTEXT);
 		attachContextButton.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 		attachContextButton.setEnabled(ContextCore.getContextManager()
 				.hasContext(model.getTask().getHandleIdentifier()));
@@ -225,14 +226,14 @@ public class TaskAttachmentPage extends WizardPage {
 
 	private void validate() {
 		apply();
-		if (fileNameText != null && "".equals(fileNameText.getText().trim())) {
-			setMessage("Enter a file name");
+		if (fileNameText != null && "".equals(fileNameText.getText().trim())) { //$NON-NLS-1$
+			setMessage(Messages.TaskAttachmentPage_Enter_a_file_name);
 			setPageComplete(false);
-		} else if (descriptionText != null && "".equals(descriptionText.getText().trim())) {
-			setMessage("Enter a description");
+		} else if (descriptionText != null && "".equals(descriptionText.getText().trim())) { //$NON-NLS-1$
+			setMessage(Messages.TaskAttachmentPage_Enter_a_description);
 			setPageComplete(false);
 		} else {
-			setMessage("Verify the content type of the attachment");
+			setMessage(Messages.TaskAttachmentPage_Verify_the_content_type_of_the_attachment);
 			setPageComplete(true);
 		}
 	}
@@ -267,7 +268,7 @@ public class TaskAttachmentPage extends WizardPage {
 	private void setFilePath(String path) {
 		fileNameText.setText(path);
 		taskAttachment.setFileName(path);
-		if (path.endsWith(".patch")) {
+		if (path.endsWith(".patch")) { //$NON-NLS-1$
 			isPatchButton.setSelection(true);
 			taskAttachment.setPatch(true);
 			if (attachContextButton.isEnabled()) {

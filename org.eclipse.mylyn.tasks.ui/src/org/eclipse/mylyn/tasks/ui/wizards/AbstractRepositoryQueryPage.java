@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -37,10 +38,6 @@ import org.eclipse.swt.widgets.Control;
  */
 public abstract class AbstractRepositoryQueryPage extends WizardPage implements ITaskSearchPage {
 
-	private static final String TITLE = "Enter query parameters";
-
-	private static final String DESCRIPTION = "If attributes are blank or stale press the Update button.";
-
 	private ITaskSearchPageContainer searchContainer;
 
 	private final TaskRepository taskRepository;
@@ -52,8 +49,8 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		Assert.isNotNull(taskRepository);
 		this.taskRepository = taskRepository;
 		this.query = query;
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
+		setTitle(Messages.AbstractRepositoryQueryPage_Enter_query_parameters);
+		setDescription(Messages.AbstractRepositoryQueryPage_If_attributes_are_blank_or_stale_press_the_Update_button);
 		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		setPageComplete(false);
 	}
@@ -71,8 +68,8 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 	@Override
 	public boolean isPageComplete() {
 		String queryTitle = getQueryTitle();
-		if (queryTitle == null || queryTitle.equals("")) {
-			setErrorMessage("Please specify a title for the query.");
+		if (queryTitle == null || queryTitle.equals("")) { //$NON-NLS-1$
+			setErrorMessage(Messages.AbstractRepositoryQueryPage_Please_specify_a_title_for_the_query);
 			return false;
 		} else {
 			Set<RepositoryQuery> queries = TasksUiInternal.getTaskList().getQueries();
@@ -88,14 +85,14 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 			for (AbstractTaskCategory category : categories) {
 				if (queryTitle.equals(category.getSummary())) {
-					setErrorMessage("A category with this name already exists, please choose another name.");
+					setErrorMessage(Messages.AbstractRepositoryQueryPage_A_category_with_this_name_already_exists);
 					return false;
 				}
 			}
 			for (RepositoryQuery repositoryQuery : queries) {
 				if (query == null || !query.equals(repositoryQuery)) {
 					if (queryTitle.equals(repositoryQuery.getSummary())) {
-						setErrorMessage("A query with this name already exists, please choose another name.");
+						setErrorMessage(Messages.AbstractRepositoryQueryPage_A_query_with_this_name_already_exists);
 						return false;
 					}
 				}
