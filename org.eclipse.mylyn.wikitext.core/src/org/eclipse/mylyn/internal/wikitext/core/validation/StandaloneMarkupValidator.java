@@ -160,7 +160,7 @@ public class StandaloneMarkupValidator {
 			} catch (SecurityException e) {
 				// ignore, we can get this during unit testing.  It can happen due to a digest mismatch for resources in a jar file.
 				Logger.getLogger(StandaloneMarkupValidator.class.getName()).log(Level.WARNING,
-						String.format("Ignoring plugin.xml due to security exception: %s", url), e);
+						String.format("Ignoring plugin.xml due to security exception: %s", url), e); //$NON-NLS-1$
 			} catch (SAXException e) {
 				throw new IllegalStateException(String.format("Cannot parse file %s", url), e); //$NON-NLS-1$
 			} catch (ParserConfigurationException e) {

@@ -64,7 +64,7 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 					}
 				};
 				toEclipseToc.setHelpPrefix(helpPrefix);
-				System.out.println("Help: " + baseDir + " " + htmlOutputFile);
+				System.out.println("Help: " + baseDir + " " + htmlOutputFile); //$NON-NLS-1$//$NON-NLS-2$
 				toEclipseToc.setBookTitle(title == null ? name : title);
 
 				String basePath = baseDir.getAbsolutePath().replace('\\', '/');

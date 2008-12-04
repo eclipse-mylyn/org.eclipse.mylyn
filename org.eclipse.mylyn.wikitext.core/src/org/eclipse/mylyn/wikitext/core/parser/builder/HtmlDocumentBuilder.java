@@ -870,7 +870,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			return imageUrl;
 		}
 		String url = prependImagePrefix;
-		if (!prependImagePrefix.endsWith("/")) {
+		if (!prependImagePrefix.endsWith("/")) { //$NON-NLS-1$
 			url += '/';
 		}
 		url += imageUrl;

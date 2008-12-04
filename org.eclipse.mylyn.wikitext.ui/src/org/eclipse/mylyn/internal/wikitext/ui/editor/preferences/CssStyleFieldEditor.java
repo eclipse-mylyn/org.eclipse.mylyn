@@ -74,7 +74,7 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 						|| CssStyleManager.RULE_BACKGROUND_COLOR.equals(rule.name)) {
 					Integer rgb = CssStyleManager.cssColorRgb(rule.value);
 					if (rgb == null) {
-						setErrorMessage(MessageFormat.format("Invalid color ''{0}''", rule.value));
+						setErrorMessage(MessageFormat.format(Messages.getString("CssStyleFieldEditor.3"), rule.value)); //$NON-NLS-1$
 						return false;
 					}
 				}
