@@ -50,14 +50,14 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 	}
 
 	public void testTextileFileType() throws CoreException {
-		IFile file = project.getFile("test.textile");
+		IFile file = project.getFile("test.textile"); //$NON-NLS-1$
 		file.create(createSimpleTextileContent(), false, new NullProgressMonitor());
 
 		editorAsserts(file, TextileLanguage.class);
 	}
 
 	public void testTextileFileTypeChangeIsSticky() throws CoreException {
-		IFile file = project.getFile("test.textile");
+		IFile file = project.getFile("test.textile"); //$NON-NLS-1$
 		file.create(createSimpleTextileContent(), false, new NullProgressMonitor());
 
 		// open the editor
@@ -68,7 +68,7 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 		assertInstanceOf(TextileLanguage.class, markupEditor.getMarkupLanguage());
 
 		// set the markup language
-		markupEditor.setMarkupLanguage(WikiTextPlugin.getDefault().getMarkupLanguage("MediaWiki"), true);
+		markupEditor.setMarkupLanguage(WikiTextPlugin.getDefault().getMarkupLanguage("MediaWiki"), true); //$NON-NLS-1$
 		assertInstanceOf(MediaWikiLanguage.class, markupEditor.getMarkupLanguage());
 
 		// close the editor
@@ -83,28 +83,28 @@ public class FileTypesTest extends AbstractTestInWorkspace {
 	}
 
 	public void testMediaWikiFileType() throws CoreException {
-		IFile file = project.getFile("test.mediawiki");
+		IFile file = project.getFile("test.mediawiki"); //$NON-NLS-1$
 		file.create(createSimpleMediaWikiContent(), false, new NullProgressMonitor());
 
 		editorAsserts(file, MediaWikiLanguage.class);
 	}
 
 	public void testTracWikiFileType() throws CoreException {
-		IFile file = project.getFile("test.tracwiki");
+		IFile file = project.getFile("test.tracwiki"); //$NON-NLS-1$
 		file.create(createSimpleMediaWikiContent(), false, new NullProgressMonitor());
 
 		editorAsserts(file, TracWikiLanguage.class);
 	}
 
 	public void testTWikiFileType() throws CoreException {
-		IFile file = project.getFile("test.twiki");
+		IFile file = project.getFile("test.twiki"); //$NON-NLS-1$
 		file.create(createSimpleMediaWikiContent(), false, new NullProgressMonitor());
 
 		editorAsserts(file, TWikiLanguage.class);
 	}
 
 	public void testConfluenceFileType() throws CoreException {
-		IFile file = project.getFile("test.confluence");
+		IFile file = project.getFile("test.confluence"); //$NON-NLS-1$
 		file.create(createSimpleMediaWikiContent(), false, new NullProgressMonitor());
 
 		editorAsserts(file, ConfluenceLanguage.class);

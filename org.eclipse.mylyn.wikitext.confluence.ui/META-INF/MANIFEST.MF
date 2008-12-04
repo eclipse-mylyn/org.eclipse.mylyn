@@ -9,3 +9,4 @@ Require-Bundle: org.eclipse.mylyn.wikitext.core;bundle-version="[0.9.2,1.0.0)",
  org.eclipse.mylyn.wikitext.confluence.core;bundle-version="[0.9.2,1.0.0)",
  org.eclipse.mylyn.wikitext.ui;bundle-version="[0.9.2,1.0.0)"
 Bundle-Localization: plugin
+Export-Package: org.eclipse.mylyn.internal.wikitext.confluence.ui;x-internal:=true

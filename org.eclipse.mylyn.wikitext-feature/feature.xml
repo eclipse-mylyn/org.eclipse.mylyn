@@ -124,7 +124,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylyn.wikitext.ui.tasks"
+         id="org.eclipse.mylyn.wikitext.tasks.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
