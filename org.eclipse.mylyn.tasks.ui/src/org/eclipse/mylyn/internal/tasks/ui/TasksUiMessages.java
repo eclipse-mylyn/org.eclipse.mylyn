@@ -16,6 +16,6 @@ package org.eclipse.mylyn.internal.tasks.ui;
  */
 public class TasksUiMessages {
 
-	public static final String DIALOG_EDITOR = "Task Editor";
+	public static final String DIALOG_EDITOR = Messages.TasksUiMessages_Task_Editor;
 
 }

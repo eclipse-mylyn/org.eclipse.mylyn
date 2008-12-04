@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
  */
 public class CategorizedPresentation extends AbstractTaskListPresentation {
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.categorized";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.categorized"; //$NON-NLS-1$
 
 	public CategorizedPresentation() {
 		super(ID);

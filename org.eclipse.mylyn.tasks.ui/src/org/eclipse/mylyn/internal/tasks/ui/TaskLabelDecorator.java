@@ -47,12 +47,12 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 				if (taskRepository.getRepositoryUrl().equals(taskRepository.getRepositoryLabel())) {
 					try {
 						URL url = new URL(repositoryUrl);
-						decoration.addSuffix("   [" + url.getHost() + "]");
+						decoration.addSuffix("   [" + url.getHost() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 					} catch (MalformedURLException e) {
-						decoration.addSuffix("   [ <unknown host> ]");
+						decoration.addSuffix(Messages.TaskLabelDecorator____unknown_host___);
 					}
 				} else {
-					decoration.addSuffix("   [" + taskRepository.getRepositoryLabel() + "]");
+					decoration.addSuffix("   [" + taskRepository.getRepositoryLabel() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		} else if (element instanceof ITask) {

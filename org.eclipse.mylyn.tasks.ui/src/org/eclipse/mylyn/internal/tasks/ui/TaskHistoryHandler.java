@@ -46,7 +46,7 @@ public class TaskHistoryHandler extends AbstractHandler implements IElementUpdat
 				if (window != null) {
 					ICommandService commandService = (ICommandService) window.getService(ICommandService.class);
 					if (commandService != null) {
-						final Command command = commandService.getCommand("org.eclipse.mylyn.ui.context.capture.pause.command");
+						final Command command = commandService.getCommand("org.eclipse.mylyn.ui.context.capture.pause.command"); //$NON-NLS-1$
 						if (command != null) {
 							SafeRunner.run(new SafeRunnable() {
 								public void run() throws Exception {

@@ -30,7 +30,7 @@ public class TaskTransfer extends ByteArrayTransfer {
 
 	private static final TaskTransfer INSTANCE = new TaskTransfer();
 
-	private static final String TYPE_NAME = "task-transfer-format:" + System.currentTimeMillis() + ":"
+	private static final String TYPE_NAME = "task-transfer-format:" + System.currentTimeMillis() + ":" //$NON-NLS-1$ //$NON-NLS-2$
 			+ INSTANCE.hashCode();
 
 	private static final int TYPEID = registerType(TYPE_NAME);

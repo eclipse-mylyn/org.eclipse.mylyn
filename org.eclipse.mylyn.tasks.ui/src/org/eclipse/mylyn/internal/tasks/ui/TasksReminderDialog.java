@@ -48,19 +48,13 @@ public class TasksReminderDialog extends Dialog {
 
 	private TableViewer tableViewer = null;
 
-	private final String[] columnNames = new String[] { "Description", "Priority", "Reminder Day" };
+	private final String[] columnNames = new String[] { Messages.TasksReminderDialog_Description, Messages.TasksReminderDialog_Priority, Messages.TasksReminderDialog_Reminder_Day };
 
 	private static final int DISMISS_ALL_ID = 200;
 
 	private static final int DISMISS_ID = 201;
 
 	private static final int SNOOZE_ID = 202;
-
-	private static final String DISMISS_ALL_LABEL = "Dismiss All";
-
-	private static final String DISMISS_LABEL = "Dismiss Selected";
-
-	private static final String SNOOZE_ALL_LABEL = "Remind tommorrow";
 
 	private static long DAY = 24 * 3600 * 1000;
 
@@ -73,7 +67,7 @@ public class TasksReminderDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		shell.setText("Reminders");
+		shell.setText(Messages.TasksReminderDialog_Reminders);
 	}
 
 	@Override
@@ -96,9 +90,9 @@ public class TasksReminderDialog extends Dialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, DISMISS_ALL_ID, DISMISS_ALL_LABEL, false);
-		createButton(parent, DISMISS_ID, DISMISS_LABEL, false);
-		createButton(parent, SNOOZE_ID, SNOOZE_ALL_LABEL, true);
+		createButton(parent, DISMISS_ALL_ID, Messages.TasksReminderDialog_Dismiss_All, false);
+		createButton(parent, DISMISS_ID, Messages.TasksReminderDialog_Dismiss_Selected, false);
+		createButton(parent, SNOOZE_ID, Messages.TasksReminderDialog_Remind_tommorrow, true);
 	}
 
 	private void createTable(Composite parent) {

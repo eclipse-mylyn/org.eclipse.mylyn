@@ -120,7 +120,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 				}
 			});
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e)); //$NON-NLS-1$
 		}
 		taskList.notifySynchronizationStateChanged(task);
 		return job;
@@ -128,12 +128,12 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	public TaskJob createUpdateRepositoryConfigurationJob(final AbstractRepositoryConnector connector,
 			final TaskRepository taskRepository) {
-		TaskJob updateJob = new TaskJob("Refreshing repository configuration") {
+		TaskJob updateJob = new TaskJob(Messages.TaskJobFactory_Refreshing_repository_configuration) {
 			private IStatus error;
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Receiving configuration", IProgressMonitor.UNKNOWN);
+				monitor.beginTask(Messages.TaskJobFactory_Receiving_configuration, IProgressMonitor.UNKNOWN);
 				try {
 					try {
 						connector.updateRepositoryConfiguration(taskRepository, monitor);
@@ -173,7 +173,7 @@ public class TaskJobFactory implements ITaskJobFactory {
 				}
 			});
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e)); //$NON-NLS-1$
 		}
 		taskList.notifySynchronizationStateChanged(task);
 		job.setUser(true);

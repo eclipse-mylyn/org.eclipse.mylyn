@@ -21,7 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskScheduleContentProvider;
  */
 public class ScheduledPresentation extends AbstractTaskListPresentation {
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.scheduled";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.scheduled"; //$NON-NLS-1$
 
 	public ScheduledPresentation() {
 		super(ID);

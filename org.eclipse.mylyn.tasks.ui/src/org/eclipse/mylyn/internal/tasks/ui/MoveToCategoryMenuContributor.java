@@ -35,10 +35,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  */
 public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor {
 
-	private static final String LABEL = "Move to";
-
 	public MenuManager getSubMenuManager(final List<IRepositoryElement> selectedElements) {
-		final MenuManager subMenuManager = new MenuManager(LABEL);
+		final MenuManager subMenuManager = new MenuManager(Messages.MoveToCategoryMenuContributor_Move_to);
 
 		// Compute selected tasks
 		List<AbstractTask> selectedTasks = new ArrayList<AbstractTask>(selectedElements.size());
@@ -103,7 +101,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 			index = text.lastIndexOf('@');
 		}
 		if (index >= 0) {
-			return text.concat("@");
+			return text.concat("@"); //$NON-NLS-1$
 		}
 		return text;
 	}

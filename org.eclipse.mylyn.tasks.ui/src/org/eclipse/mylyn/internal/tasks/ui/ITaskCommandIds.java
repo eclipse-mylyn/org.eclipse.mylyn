@@ -18,14 +18,14 @@ package org.eclipse.mylyn.internal.tasks.ui;
  */
 public interface ITaskCommandIds {
 
-	public static final String OPEN_TASK = "org.eclipse.mylyn.tasks.ui.command.openTask";
+	public static final String OPEN_TASK = "org.eclipse.mylyn.tasks.ui.command.openTask"; //$NON-NLS-1$
 
-	public static final String OPEN_TASK_REMOTE = "org.eclipse.mylyn.tasks.ui.command.openRemoteTask";
+	public static final String OPEN_TASK_REMOTE = "org.eclipse.mylyn.tasks.ui.command.openRemoteTask"; //$NON-NLS-1$
 
-	public static final String ACTIVATE_TASK = "org.eclipse.mylyn.tasks.ui.command.activateTask";
+	public static final String ACTIVATE_TASK = "org.eclipse.mylyn.tasks.ui.command.activateTask"; //$NON-NLS-1$
 
-	public static final String DEACTIVATE_TASK = "org.eclipse.mylyn.tasks.ui.command.deactivateAllTasks";
+	public static final String DEACTIVATE_TASK = "org.eclipse.mylyn.tasks.ui.command.deactivateAllTasks"; //$NON-NLS-1$
 
-	public static final String ADD_TASK_REPOSITORY = "org.eclipse.mylyn.tasks.ui.command.addTaskRepository";
+	public static final String ADD_TASK_REPOSITORY = "org.eclipse.mylyn.tasks.ui.command.addTaskRepository"; //$NON-NLS-1$
 
 }

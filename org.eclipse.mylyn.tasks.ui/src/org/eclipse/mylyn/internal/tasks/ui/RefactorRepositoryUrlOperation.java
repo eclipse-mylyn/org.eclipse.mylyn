@@ -52,7 +52,7 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 		}
 		try {
 			//TasksUiPlugin.getTaskListManager().deactivateAllTasks();
-			monitor.beginTask("Repository URL update", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.RefactorRepositoryUrlOperation_Repository_URL_update, IProgressMonitor.UNKNOWN);
 			refactorOfflineHandles(oldUrl, newUrl);
 			getTaskList().refactorRepositoryUrl(oldUrl, newUrl);
 			refactorMetaContextHandles(oldUrl, newUrl);
@@ -71,7 +71,7 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 			File[] files = dataDir.listFiles();
 			if (files != null) {
 				for (File file : dataDir.listFiles()) {
-					int dotIndex = file.getName().lastIndexOf(".xml");
+					int dotIndex = file.getName().lastIndexOf(".xml"); //$NON-NLS-1$
 					if (dotIndex != -1) {
 						String storedHandle;
 						try {
@@ -89,7 +89,7 @@ public class RefactorRepositoryUrlOperation extends TaskListModifyOperation {
 							}
 						} catch (Exception e) {
 							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									"Could not move context file: " + file.getName(), e));
+									"Could not move context file: " + file.getName(), e)); //$NON-NLS-1$
 						}
 					}
 				}

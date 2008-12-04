@@ -62,7 +62,7 @@ public class ActivityExternalizationParticipant extends AbstractExternalizationP
 
 	@Override
 	public String getDescription() {
-		return "Activity Context";
+		return Messages.ActivityExternalizationParticipant_Activity_Context;
 	}
 
 	@Override

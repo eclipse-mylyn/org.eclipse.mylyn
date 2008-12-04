@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -45,7 +47,7 @@ public class OpenRepositoryTaskJob extends Job {
 
 	public OpenRepositoryTaskJob(String repositoryKind, String repositoryUrl, String taskId, String taskUrl,
 			IWorkbenchPage page) {
-		super("Opening repository task " + taskId);
+		super(MessageFormat.format(Messages.OpenRepositoryTaskJob_Opening_repository_task_X, taskId));
 
 		this.repositoryKind = repositoryKind;
 		this.taskId = taskId;
@@ -64,14 +66,18 @@ public class OpenRepositoryTaskJob extends Job {
 
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
-		monitor.beginTask("Opening Remote Task", 10);
+		monitor.beginTask(Messages.OpenRepositoryTaskJob_Opening_Remote_Task, 10);
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 		if (repository == null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(null, "Repository Not Found",
-							"Could not find repository configuration for " + repositoryUrl
-									+ ". \nPlease set up repository via " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".");
+					MessageDialog.openError(null, Messages.OpenRepositoryTaskJob_Repository_Not_Found,
+							MessageFormat.format(
+									Messages.OpenRepositoryTaskJob_Could_not_find_repository_configuration_for_X,
+									repositoryUrl)
+									+ "\n" + //$NON-NLS-1$
+									MessageFormat.format(Messages.OpenRepositoryTaskJob_Please_set_up_repository_via_X,
+											Messages.TasksUiPlugin_Task_Repositories));
 					TasksUiUtil.openUrl(taskUrl);
 				}
 
@@ -100,7 +106,7 @@ public class OpenRepositoryTaskJob extends Job {
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					TasksUiInternal.displayStatus("Unable to open task", e.getStatus());
+					TasksUiInternal.displayStatus(Messages.OpenRepositoryTaskJob_Unable_to_open_task, e.getStatus());
 				}
 			});
 		} finally {

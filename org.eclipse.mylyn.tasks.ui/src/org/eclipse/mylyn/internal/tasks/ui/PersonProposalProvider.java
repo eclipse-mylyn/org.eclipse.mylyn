@@ -84,7 +84,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 		// retrieve subset of the tree set using key range
 		SortedSet<String> addressSet = getAddressSet();
-		if (!searchText.equals("")) {
+		if (!searchText.equals("")) { //$NON-NLS-1$
 			searchText = searchText.toLowerCase();
 			char[] nextWord = searchText.toCharArray();
 			nextWord[searchText.length() - 1]++;

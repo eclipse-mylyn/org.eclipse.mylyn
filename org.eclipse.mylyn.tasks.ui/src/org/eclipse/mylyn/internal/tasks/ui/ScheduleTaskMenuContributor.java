@@ -37,14 +37,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
-	private static final String LABEL_REMINDER = "Schedule for";
-
-	private static final String LABEL_FUTURE = "Future";
-
-	private static final String LABEL_CALENDAR = "Choose Date...";
-
-	private static final String LABEL_NOT_SCHEDULED = "Not Scheduled";
-
 	private AbstractTask singleTaskSelection;
 
 	private final List<IRepositoryElement> taskListElementsToSchedule = new ArrayList<IRepositoryElement>();
@@ -53,7 +45,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		singleTaskSelection = null;
 		taskListElementsToSchedule.clear();
 
-		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
+		final MenuManager subMenuManager = new MenuManager(Messages.ScheduleTaskMenuContributor_Schedule_for);
 
 		if (selectedElements.size() == 1) {
 			IRepositoryElement selectedElement = selectedElements.get(0);
@@ -75,7 +67,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 					// ignore
 				}
 			};
-			action.setText("Cannot schedule completed tasks");
+			action.setText(Messages.ScheduleTaskMenuContributor_Cannot_schedule_completed_tasks);
 			action.setEnabled(false);
 			subMenuManager.add(action);
 			return subMenuManager;
@@ -145,7 +137,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 					}
 				};
 				action.setChecked(true);
-				action.setText(LABEL_FUTURE);
+				action.setText(Messages.ScheduleTaskMenuContributor_Future);
 				subMenuManager.add(action);
 			}
 		}
@@ -176,7 +168,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				}
 			}
 		};
-		action.setText(LABEL_CALENDAR);
+		action.setText(Messages.ScheduleTaskMenuContributor_Choose_Date_);
 		action.setEnabled(canSchedule());
 		subMenuManager.add(action);
 
@@ -186,7 +178,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				setScheduledDate(null);
 			}
 		};
-		action.setText(LABEL_NOT_SCHEDULED);
+		action.setText(Messages.ScheduleTaskMenuContributor_Not_Scheduled);
 		action.setChecked(false);
 		if (singleTaskSelection != null) {
 			if (getScheduledForDate(singleTaskSelection) == null) {

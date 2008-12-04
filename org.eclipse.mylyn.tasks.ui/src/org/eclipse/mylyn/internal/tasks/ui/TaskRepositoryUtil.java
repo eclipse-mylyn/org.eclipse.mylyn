@@ -28,7 +28,7 @@ public class TaskRepositoryUtil {
 	public static boolean isAddAutomaticallyDisabled(String repositoryUrl) {
 		String deletedTemplates = TasksUiPlugin.getDefault().getPreferenceStore().getString(
 				ITasksUiPreferenceConstants.TEMPLATES_DELETED);
-		String[] templateUrls = deletedTemplates.split("\\" + ITasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM);
+		String[] templateUrls = deletedTemplates.split("\\" + ITasksUiPreferenceConstants.TEMPLATES_DELETED_DELIM); //$NON-NLS-1$
 		for (String deletedUrl : templateUrls) {
 			if (deletedUrl.equalsIgnoreCase(repositoryUrl)) {
 				return true;

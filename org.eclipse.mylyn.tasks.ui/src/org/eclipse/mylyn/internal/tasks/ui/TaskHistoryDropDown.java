@@ -54,8 +54,8 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			dialogAction = action;
 			dialogAction.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 
-			setText("Activate Task...");
-			setToolTipText("Activate Task...");
+			setText(Messages.TaskHistoryDropDown_Activate_Task_);
+			setToolTipText(Messages.TaskHistoryDropDown_Activate_Task_);
 			setEnabled(true);
 			setChecked(false);
 			setImageDescriptor(null);
@@ -71,8 +71,8 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 	private class DeactivateTaskAction extends Action {
 
 		public DeactivateTaskAction() {
-			setText("Deactivate Task");
-			setToolTipText("Deactivate Task");
+			setText(Messages.TaskHistoryDropDown_Deactivate_Task);
+			setToolTipText(Messages.TaskHistoryDropDown_Deactivate_Task);
 			setEnabled(true);
 			setChecked(false);
 			setImageDescriptor(null);
@@ -103,7 +103,7 @@ public class TaskHistoryDropDown extends CompoundContributionItem {
 			targetTask = task;
 			String taskDescription = task.getSummary();
 			if (taskDescription.length() > MAX_LABEL_LENGTH) {
-				taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH - 3) + "...";
+				taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH - 3) + "..."; //$NON-NLS-1$
 			}
 			setText(taskDescription);
 			setEnabled(true);

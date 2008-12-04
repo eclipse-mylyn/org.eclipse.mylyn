@@ -139,11 +139,11 @@ public class TaskRepositoryLocationUi extends TaskRepositoryLocation {
 
 		private String getDefaultMessage() {
 			if (AuthenticationType.REPOSITORY.equals(authType)) {
-				return "Enter repository password";
+				return Messages.TaskRepositoryLocationUi_Enter_repository_password;
 			} else if (AuthenticationType.HTTP.equals(authType)) {
-				return "Enter HTTP password";
+				return Messages.TaskRepositoryLocationUi_Enter_HTTP_password;
 			} else if (AuthenticationType.PROXY.equals(authType)) {
-				return "Enter proxy password";
+				return Messages.TaskRepositoryLocationUi_Enter_proxy_password;
 			}
 			return null;
 		}

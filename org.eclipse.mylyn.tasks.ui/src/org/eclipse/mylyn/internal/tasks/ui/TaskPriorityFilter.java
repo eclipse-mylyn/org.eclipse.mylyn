@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.ITask.PriorityLevel;
  */
 public class TaskPriorityFilter extends AbstractTaskListFilter {
 
-	private static final String PRIORITY_PREFIX = "P";
+	private static final String PRIORITY_PREFIX = "P"; //$NON-NLS-1$
 
 	private String priorityLevel = PriorityLevel.P5.toString();
 

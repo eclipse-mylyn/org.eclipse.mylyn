@@ -117,13 +117,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private static final int DEFAULT_LINK_PROVIDER_TIMEOUT = 5 * 1000;
 
-	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.ui"; //$NON-NLS-1$
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.ui";
+	private static final String DIRECTORY_METADATA = ".metadata"; //$NON-NLS-1$
 
-	private static final String DIRECTORY_METADATA = ".metadata";
-
-	private static final String NAME_DATA_DIR = ".mylyn";
+	private static final String NAME_DATA_DIR = ".mylyn"; //$NON-NLS-1$
 
 	private static final char DEFAULT_PATH_SEPARATOR = '/';
 
@@ -177,7 +175,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private final List<AbstractSearchHandler> searchHandlers = new ArrayList<AbstractSearchHandler>();
 
-	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient"));
+	private static final boolean DEBUG_HTTPCLIENT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.mylyn.tasks.ui/debug/httpclient")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	// XXX reconsider if this is necessary
 	public static class TasksUiStartup implements IStartup {
@@ -199,13 +197,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		public String toString() {
 			switch (this) {
 			case ONE_HOUR:
-				return "1 hour";
+				return "1 hour"; //$NON-NLS-1$
 			case THREE_HOURS:
-				return "3 hours";
+				return "3 hours"; //$NON-NLS-1$
 			case DAY:
-				return "1 day";
+				return "1 day"; //$NON-NLS-1$
 			default:
-				return "3 hours";
+				return "3 hours"; //$NON-NLS-1$
 			}
 		}
 
@@ -213,13 +211,13 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			if (string == null) {
 				return null;
 			}
-			if (string.equals("1 hour")) {
+			if (string.equals("1 hour")) { //$NON-NLS-1$
 				return ONE_HOUR;
 			}
-			if (string.equals("3 hours")) {
+			if (string.equals("3 hours")) { //$NON-NLS-1$
 				return THREE_HOURS;
 			}
-			if (string.equals("1 day")) {
+			if (string.equals("1 day")) { //$NON-NLS-1$
 				return DAY;
 			}
 			return null;
@@ -343,7 +341,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 					try {
 						setDataDirectory((String) event.getNewValue(), new NullProgressMonitor(), false);
 					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Unable to load from task data folder",
+						StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Unable to load from task data folder", //$NON-NLS-1$
 								e));
 					}
 				}
@@ -384,7 +382,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private class TasksUiInitializationJob extends UIJob {
 
 		public TasksUiInitializationJob() {
-			super("Initializing Task List");
+			super(Messages.TasksUiPlugin_Initializing_Task_List);
 			setSystem(true);
 		}
 
@@ -392,7 +390,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		public IStatus runInUIThread(IProgressMonitor monitor) {
 			// NOTE: failure in one part of the initialization should
 			// not prevent others
-			monitor.beginTask("Initializing Task List", 5);
+			monitor.beginTask("Initializing Task List", 5); //$NON-NLS-1$
 			try {
 				// Needs to run after workbench is loaded because it
 				// relies on images.
@@ -419,7 +417,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				//taskActivityMonitor.reloadActivityTime();
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not initialize task activity", t));
+						"Could not initialize task activity", t)); //$NON-NLS-1$
 			}
 			monitor.worked(1);
 
@@ -433,7 +431,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not initialize notifications", t));
+						"Could not initialize notifications", t)); //$NON-NLS-1$
 			}
 			monitor.worked(1);
 
@@ -445,7 +443,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				updateSynchronizationScheduler(true);
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not initialize task list backup and synchronization", t));
+						"Could not initialize task list backup and synchronization", t)); //$NON-NLS-1$
 			}
 			monitor.worked(1);
 
@@ -464,11 +462,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				taskEditorBloatManager.install(PlatformUI.getWorkbench());
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not finish Tasks UI initialization", t));
+						"Could not finish Tasks UI initialization", t)); //$NON-NLS-1$
 			} finally {
 				monitor.done();
 			}
-			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null);
+			return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null); //$NON-NLS-1$
 		}
 	}
 
@@ -600,7 +598,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			loadDataSources();
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list initialization failed", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list initialization failed", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -650,7 +648,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 						}
 					} catch (Throwable t) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Could not load repository template", t));
+								"Could not load repository template", t)); //$NON-NLS-1$
 					}
 				}
 			}
@@ -715,7 +713,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Task list stop terminated abnormally", e));
+					"Task list stop terminated abnormally", e)); //$NON-NLS-1$
 		} finally {
 			super.stop(context);
 		}
@@ -778,7 +776,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
-					monitor.beginTask("Load Data Directory", IProgressMonitor.UNKNOWN);
+					monitor.beginTask(Messages.TasksUiPlugin_Load_Data_Directory, IProgressMonitor.UNKNOWN);
 					if (save) {
 						externalizationManager.save(false);
 					}
@@ -807,7 +805,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 				setDirectoryRunnable.run(new NullProgressMonitor());
 			}
 		} catch (InvocationTargetException e) {
-			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to set data directory",
+			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to set data directory", //$NON-NLS-1$
 					e.getCause()));
 		} catch (InterruptedException e) {
 			throw new OperationCanceledException();
@@ -836,7 +834,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			SafeRunner.run(new ISafeRunnable() {
 
 				public void handleException(Throwable exception) {
-					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Listener failed: "
+					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Listener failed: " //$NON-NLS-1$
 							+ listener.getClass(), exception));
 				}
 
@@ -868,7 +866,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		store.setDefault(ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED, true);
 
 		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
-		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000));
+		store.setDefault(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000)); //$NON-NLS-1$
 
 		//store.setDefault(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
 		store.setDefault(ITasksUiPreferenceConstants.BACKUP_MAXFILES, 20);
@@ -1085,7 +1083,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e));
+							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
 				public void run() throws Exception {
@@ -1105,7 +1103,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e));
+							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
 				public void run() throws Exception {
@@ -1136,7 +1134,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			SafeRunner.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e));
+							"Task repository link provider failed: \"" + linkProvider.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 
 				public void run() throws Exception {
@@ -1160,7 +1158,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		long timeout;
 		try {
 			timeout = Long.parseLong(System.getProperty(ITasksCoreConstants.PROPERTY_LINK_PROVIDER_TIMEOUT,
-					DEFAULT_LINK_PROVIDER_TIMEOUT + ""));
+					DEFAULT_LINK_PROVIDER_TIMEOUT + "")); //$NON-NLS-1$
 		} catch (NumberFormatException e) {
 			timeout = DEFAULT_LINK_PROVIDER_TIMEOUT;
 		}
@@ -1170,8 +1168,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			final TaskRepository[] repository = new TaskRepository[1];
 			SafeRunnable.run(new ISafeRunnable() {
 				public void handleException(Throwable e) {
-					StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Task repository link provider failed: \""
-							+ linkProvider.getId() + "\"", e));
+					StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Task repository link provider failed: \"" //$NON-NLS-1$
+							+ linkProvider.getId() + "\"", e)); //$NON-NLS-1$
 				}
 
 				public void run() throws Exception {
@@ -1188,8 +1186,8 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		}
 		if (!defectiveLinkProviders.isEmpty()) {
 			repositoryLinkProviders.removeAll(defectiveLinkProviders);
-			StatusHandler.log(new Status(IStatus.WARNING, ID_PLUGIN, "Repository link provider took over " + timeout
-					+ " ms to execute and was timed out: \"" + defectiveLinkProviders + "\""));
+			StatusHandler.log(new Status(IStatus.WARNING, ID_PLUGIN, "Repository link provider took over " + timeout //$NON-NLS-1$
+					+ " ms to execute and was timed out: \"" + defectiveLinkProviders + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
 	}

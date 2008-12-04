@@ -42,16 +42,16 @@ public class TaskHyperlink extends ScalingHyperlink {
 		if (task != null) {
 			if ((getStyle() & SWT.SHORT) != 0) {
 				setText(task.getTaskKey());
-				setToolTipText(task.getTaskKey() + ": " + task.getSummary());
+				setToolTipText(task.getTaskKey() + ": " + task.getSummary()); //$NON-NLS-1$
 				setStrikeThrough(task.isCompleted());
 			} else {
 				setText(task.getSummary());
-				setToolTipText("");
+				setToolTipText(""); //$NON-NLS-1$
 				setStrikeThrough(false);
 			}
 		} else {
-			setText("");
-			setToolTipText("");
+			setText(""); //$NON-NLS-1$
+			setToolTipText(""); //$NON-NLS-1$
 			setStrikeThrough(false);
 		}
 		setUnderlined(false);

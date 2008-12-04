@@ -55,7 +55,7 @@ public class AddExistingTaskJob extends Job {
 	}
 
 	public AddExistingTaskJob(TaskRepository repository, String taskId, AbstractTaskCategory taskContainer) {
-		super(MessageFormat.format("Adding task: \"{0}\"...", taskId));
+		super(MessageFormat.format(Messages.AddExistingTaskJob_Adding_task_X_, taskId));
 		this.repository = repository;
 		this.taskId = taskId;
 		this.taskContainer = taskContainer;

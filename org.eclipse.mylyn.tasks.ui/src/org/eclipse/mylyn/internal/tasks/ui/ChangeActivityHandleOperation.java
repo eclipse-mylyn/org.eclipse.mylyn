@@ -42,7 +42,7 @@ public class ChangeActivityHandleOperation extends TaskListModifyOperation {
 			return;
 		}
 		try {
-			monitor.beginTask("Activity migration", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.ChangeActivityHandleOperation_Activity_migration, IProgressMonitor.UNKNOWN);
 			refactorMetaContextHandles(oldHandle, newHandle);
 			TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
 		} finally {

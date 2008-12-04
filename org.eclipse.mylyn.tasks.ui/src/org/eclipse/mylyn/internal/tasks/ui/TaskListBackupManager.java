@@ -48,23 +48,17 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class TaskListBackupManager implements IPropertyChangeListener {
 
-	private static final String OLD_MYLYN_2_BACKUP_FILE_PREFIX = "mylyndata-";
+	private static final String OLD_MYLYN_2_BACKUP_FILE_PREFIX = "mylyndata-"; //$NON-NLS-1$
 
 	// Mylyn 3.0 Backup file name
-	private static final String BACKUP_FILE_PREFIX = "mylyn-v3-data-";
+	private static final String BACKUP_FILE_PREFIX = "mylyn-v3-data-"; //$NON-NLS-1$
 
-	private static final Pattern MYLYN_BACKUP_REGEXP = Pattern.compile("^(" + BACKUP_FILE_PREFIX + ")?("
-			+ OLD_MYLYN_2_BACKUP_FILE_PREFIX + ")?");
+	private static final Pattern MYLYN_BACKUP_REGEXP = Pattern.compile("^(" + BACKUP_FILE_PREFIX + ")?(" //$NON-NLS-1$ //$NON-NLS-2$
+			+ OLD_MYLYN_2_BACKUP_FILE_PREFIX + ")?"); //$NON-NLS-1$
 
-	private static final Pattern DATE_FORMAT_OLD = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+	private static final Pattern DATE_FORMAT_OLD = Pattern.compile("\\d{4}-\\d{2}-\\d{2}"); //$NON-NLS-1$
 
-	private static final Pattern DATE_FORMAT = Pattern.compile("\\d{4}-\\d{2}-\\d{2}-\\d{6}");
-
-	private static final String TITLE_TASKLIST_BACKUP = "Tasklist Backup";
-
-	private static final String BACKUP_JOB_NAME = "Scheduled task data backup";
-
-	public static final String BACKUP_FAILURE_MESSAGE = "Could not backup task data. Check backup preferences.\n";
+	private static final Pattern DATE_FORMAT = Pattern.compile("\\d{4}-\\d{2}-\\d{2}-\\d{6}"); //$NON-NLS-1$
 
 	private static final long SECOND = 1000;
 
@@ -93,7 +87,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	public static String getBackupFileName() {
 		SimpleDateFormat format = new SimpleDateFormat(ITasksCoreConstants.FILENAME_TIMESTAMP_FORMAT, Locale.ENGLISH);
 		String date = format.format(new Date());
-		String backupFileName = BACKUP_FILE_PREFIX + date + ".zip";
+		String backupFileName = BACKUP_FILE_PREFIX + date + ".zip"; //$NON-NLS-1$
 		return backupFileName;
 	}
 
@@ -128,7 +122,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			} catch (InterruptedException e) {
 				// ignore
 			} catch (InvocationTargetException e) {
-				MessageDialog.openError(null, TITLE_TASKLIST_BACKUP, BACKUP_FAILURE_MESSAGE);
+				MessageDialog.openError(null, Messages.TaskListBackupManager_Tasklist_Backup, Messages.TaskListBackupManager_Could_not_backup_task_data);
 			}
 
 		}
@@ -255,7 +249,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 		final TaskDataExportOperation backupJob;
 
 		public ExportJob(String destination, String filename) {
-			super(BACKUP_JOB_NAME);
+			super(Messages.TaskListBackupManager_Scheduled_task_data_backup);
 
 			backupJob = new TaskDataExportOperation(destination, true, true, false, true, filename,
 					new HashSet<AbstractTask>());
@@ -268,8 +262,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 					backupJob.run(monitor);
 				}
 			} catch (InvocationTargetException e) {
-				MessageDialog.openError(null, BACKUP_JOB_NAME,
-						"Error occured during scheduled tasklist backup.\nCheck settings on Tasklist preferences page.");
+				MessageDialog.openError(null, Messages.TaskListBackupManager_Scheduled_task_data_backup,
+						Messages.TaskListBackupManager_Error_occured_during_scheduled_tasklist_backup);
 			} catch (InterruptedException e) {
 				return Status.CANCEL_STATUS;
 			}

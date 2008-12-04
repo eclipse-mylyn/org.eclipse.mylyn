@@ -65,9 +65,9 @@ import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
  */
 public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
-	public static String ID_CONTAINER = "org.eclipse.mylyn.tasks.ui.trim.container";
+	public static String ID_CONTAINER = "org.eclipse.mylyn.tasks.ui.trim.container"; //$NON-NLS-1$
 
-	public static String ID_CONTROL = "org.eclipse.mylyn.tasks.ui.trim.control";
+	public static String ID_CONTROL = "org.eclipse.mylyn.tasks.ui.trim.control"; //$NON-NLS-1$
 
 	private Composite composite = null;
 
@@ -176,7 +176,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Composite createStatusComposite(final Composite container) {
 		GC gc = new GC(container);
-		p = gc.textExtent("WWWWWWWWWWWWWWW");
+		p = gc.textExtent("WWWWWWWWWWWWWWW"); //$NON-NLS-1$
 		gc.dispose();
 
 		activeTaskLabel = new TaskHyperlink(container, SWT.RIGHT);
@@ -186,7 +186,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		gridData.minimumWidth = p.x;
 		gridData.horizontalIndent = 0;
 		activeTaskLabel.setLayoutData(gridData);
-		activeTaskLabel.setText("<no task active>");
+		activeTaskLabel.setText(Messages.TaskTrimWidget__no_task_active_);
 
 		activeTask = TasksUi.getTaskActivityManager().getActiveTask();
 		if (activeTask != null) {
@@ -234,7 +234,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	}
 
 	private void hookContextMenu() {
-		menuManager = new MenuManager("#PopupMenu");
+		menuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
@@ -337,9 +337,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			return;
 		}
 
-		activeTaskLabel.setText("<no active task>");
+		activeTaskLabel.setText(Messages.TaskTrimWidget__no_active_task_);
 		activeTaskLabel.setUnderlined(false);
-		activeTaskLabel.setToolTipText("");
+		activeTaskLabel.setToolTipText(""); //$NON-NLS-1$
 	}
 
 //	// From PerspectiveBarContributionItem

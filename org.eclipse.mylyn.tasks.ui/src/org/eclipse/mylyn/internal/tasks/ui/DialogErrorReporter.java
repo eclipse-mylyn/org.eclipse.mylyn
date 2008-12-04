@@ -25,10 +25,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class DialogErrorReporter extends AbstractErrorReporter {
 
-	private static final String ERROR_MESSAGE = "Please report the following error at:\n"
-			+ "http://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylyn\n\n"
-			+ "Or via the popup menu in the Error Log view (see Window -> Show View)";
-
 	private boolean errorDialogOpen;
 
 	@Override
@@ -49,7 +45,7 @@ public class DialogErrorReporter extends AbstractErrorReporter {
 								if (!errorDialogOpen) {
 									errorDialogOpen = true;
 									Shell shell = Display.getDefault().getActiveShell();
-									ErrorDialog.openError(shell, "Mylyn Error", ERROR_MESSAGE, status);
+									ErrorDialog.openError(shell, Messages.DialogErrorReporter_Mylyn_Error, Messages.DialogErrorReporter_Please_report_the_following_error_at, status);
 								}
 							} finally {
 								errorDialogOpen = false;

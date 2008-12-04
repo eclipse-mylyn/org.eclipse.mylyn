@@ -38,8 +38,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListNotificationManager implements IPropertyChangeListener {
 
-	private static final String OPEN_NOTIFICATION_JOB = "Open Notification Job";
-
 	private static final long DELAY_OPEN = 5 * 1000;
 
 	private static final boolean runSystem = true;
@@ -54,7 +52,7 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	private final WeakHashMap<Object, Object> cancelledTokens = new WeakHashMap<Object, Object>();
 
-	private final Job openJob = new Job(OPEN_NOTIFICATION_JOB) {
+	private final Job openJob = new Job(Messages.TaskListNotificationManager_Open_Notification_Job) {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try {

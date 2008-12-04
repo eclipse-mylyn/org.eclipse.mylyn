@@ -77,7 +77,7 @@ public class TaskActivityMonitor {
 					}
 				}
 			} else if (event.getKind().equals(InteractionEvent.Kind.ATTENTION)) {
-				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) {
+				if ((event.getDelta().equals("added") || event.getDelta().equals("add"))) { //$NON-NLS-1$ //$NON-NLS-2$
 					if (event.getDate().getTime() > 0 && event.getEndDate().getTime() > 0) {
 						if (event.getStructureKind()
 								.equals(InteractionContextManager.ACTIVITY_STRUCTUREKIND_WORKINGSET)) {
@@ -95,7 +95,7 @@ public class TaskActivityMonitor {
 							}
 						}
 					}
-				} else if (event.getDelta().equals("removed")) {
+				} else if (event.getDelta().equals("removed")) { //$NON-NLS-1$
 					ITask task = taskList.getTask(event.getStructureHandle());
 					if (task != null) {
 						taskActivityManager.removeElapsedTime(task, event.getDate(), event.getEndDate());
@@ -104,7 +104,7 @@ public class TaskActivityMonitor {
 			}
 		} catch (Throwable t) {
 			StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-					"Error parsing interaction event", t));
+					"Error parsing interaction event", t)); //$NON-NLS-1$
 		}
 		return false;
 	}

@@ -73,15 +73,13 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
  */
 public class TaskSearchPage extends DialogPage implements ISearchPage {
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.search.page";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.search.page"; //$NON-NLS-1$
 
-	private static final String PAGE_KEY = "page";
+	private static final String PAGE_KEY = "page"; //$NON-NLS-1$
 
-	private static final String TITLE_REPOSITORY_SEARCH = "Repository Search";
+	private static final String PAGE_NAME = "TaskSearchPage"; //$NON-NLS-1$
 
-	private static final String PAGE_NAME = "TaskSearchPage";
-
-	private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
+	private static final String STORE_REPO_ID = PAGE_NAME + ".REPO"; //$NON-NLS-1$
 
 	private Combo repositoryCombo;
 
@@ -111,7 +109,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			boolean openSuccessful = TasksUiUtil.openTask(repository, key);
 			if (!openSuccessful) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						"Task Search", "No task found matching key: " + key);
+						Messages.TaskSearchPage_Task_Search, Messages.TaskSearchPage_No_task_found_matching_key_ + key);
 			}
 			return openSuccessful;
 		} else {
@@ -163,7 +161,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		group.setLayoutData(gd);
 
 		Label label = new Label(group, SWT.NONE);
-		label.setText("Se&lect Repository: ");
+		label.setText(Messages.TaskSearchPage_Select_Repository_);
 
 		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		repositoryCombo.addSelectionListener(new SelectionAdapter() {
@@ -173,10 +171,10 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			}
 		});
 		label = new Label(group, SWT.NONE);
-		label.setText("  ");
+		label.setText("  "); //$NON-NLS-1$
 
 		Label labelKey = new Label(group, SWT.NONE);
-		labelKey.setText("Task Key/ID: ");
+		labelKey.setText(Messages.TaskSearchPage_Task_Key_ID);
 		keyText = new Text(group, SWT.BORDER);
 		keyText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 
@@ -208,7 +206,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				keyText.setText("");
+				keyText.setText(""); //$NON-NLS-1$
 				updatePageEnablement();
 			}
 		});
@@ -255,16 +253,16 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			searchPage.setContainer(taskSearchPageContainer);
 			searchPage.createControl(fParentComposite);
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Error occurred while constructing search page for " + repository.getRepositoryUrl() + " ["
-							+ repository.getConnectorKind() + "]", e));
+					"Error occurred while constructing search page for " + repository.getRepositoryUrl() + " [" //$NON-NLS-1$ //$NON-NLS-2$
+							+ repository.getConnectorKind() + "]", e)); //$NON-NLS-1$
 			searchPage.getControl().setData(PAGE_KEY, searchPage);
 			return searchPage.getControl();
 		}
 
 		// XXX: work around for initial search page size issue bug#198493
 		IDialogSettings searchDialogSettings = SearchPlugin.getDefault().getDialogSettingsSection(
-				"DialogBounds_SearchDialog");
-		if (searchDialogSettings.get("DIALOG_WIDTH") == null) {
+				"DialogBounds_SearchDialog"); //$NON-NLS-1$
+		if (searchDialogSettings.get("DIALOG_WIDTH") == null) { //$NON-NLS-1$
 			fParentComposite.getParent().getShell().pack();
 		}
 		pageWrapper.setData(PAGE_KEY, searchPage);
@@ -382,7 +380,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 							searchableRepositories.get(x));
 				}
 				if (repositoryUrls.length == 0) {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), TITLE_REPOSITORY_SEARCH,
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.TaskSearchPage_Repository_Search,
 							TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 				} else {
 					String selectRepo = settings.get(STORE_REPO_ID);
@@ -526,12 +524,12 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	private class DeadSearchPage extends AbstractRepositoryQueryPage {
 
 		public DeadSearchPage(TaskRepository rep) {
-			super("Search page error", rep);
+			super("Search page error", rep); //$NON-NLS-1$
 		}
 
 		public void createControl(Composite parent) {
 			Hyperlink hyperlink = new Hyperlink(parent, SWT.NONE);
-			hyperlink.setText("ERROR: Unable to present query page, ensure repository configuration is valid and retry");
+			hyperlink.setText(Messages.TaskSearchPage_ERROR_Unable_to_present_query_page);
 			hyperlink.setUnderlined(true);
 			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
@@ -581,7 +579,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	private class NoSearchPage extends AbstractRepositoryQueryPage {
 
 		public NoSearchPage(TaskRepository rep) {
-			super("No search page", rep);
+			super("No search page", rep); //$NON-NLS-1$
 		}
 
 		public void createControl(Composite parent) {
