@@ -24,7 +24,7 @@ import org.osgi.framework.Bundle;
 /**
  * A utility for visiting Mylyn classes available on the classpath.
  * 
- * @author dgreen
+ * @author David Green
  */
 public class ClassTraversal {
 	public void visitClasses(Visitor visitor) {

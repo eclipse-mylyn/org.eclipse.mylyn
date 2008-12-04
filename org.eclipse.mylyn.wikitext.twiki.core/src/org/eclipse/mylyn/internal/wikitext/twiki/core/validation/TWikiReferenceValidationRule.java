@@ -11,9 +11,9 @@
 
 package org.eclipse.mylyn.internal.wikitext.twiki.core.validation;
 
-import org.eclipse.mylyn.internal.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.validation.DocumentLocalReferenceValidationRule;
+import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 public class TWikiReferenceValidationRule extends DocumentLocalReferenceValidationRule {
 

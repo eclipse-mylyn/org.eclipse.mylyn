@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.mylyn.wikitext.core.markupLanguage">
       <language
-            class="org.eclipse.mylyn.internal.wikitext.twiki.core.TWikiLanguage"
+            class="org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage"
             name="TWiki" 
             fileExtensions="twiki">
       </language>

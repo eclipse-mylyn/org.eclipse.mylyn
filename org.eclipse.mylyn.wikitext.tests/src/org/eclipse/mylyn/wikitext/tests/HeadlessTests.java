@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 /**
  * A test case that runs all headless tests that are available on the classpath
  * 
- * @author dgreen
+ * @author David Green
  */
 @NoDiscovery
 public class HeadlessTests extends TestCase {

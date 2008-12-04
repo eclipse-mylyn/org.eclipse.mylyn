@@ -43,6 +43,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.AnnotationHyperlinkDetector;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.TextHover;
 import org.eclipse.mylyn.wikitext.ui.annotation.TitleAnnotation;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
@@ -126,6 +127,8 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 	private final HtmlViewer viewer;
 
 	private TextPresentation textPresentation;
+
+	private boolean disableHyperlinkModifiers = true;
 
 	public HtmlViewerConfiguration(HtmlViewer viewer) {
 		super(getDefaultPreferenceStore());
@@ -283,5 +286,33 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 			textPresentation = textPresentationCopy;
 		}
 		this.textPresentation = textPresentation;
+	}
+
+	@Override
+	public int getHyperlinkStateMask(ISourceViewer sourceViewer) {
+		if (disableHyperlinkModifiers) {
+			return SWT.NONE;
+		}
+		return super.getHyperlinkStateMask(sourceViewer);
+	}
+
+	/**
+	 * Indicate if hyperlink modifiers are disabled. When disabled (the default) no keyboard modifiers are required to
+	 * activate hyperlinks when clicking.
+	 * 
+	 * @see #getHyperlinkStateMask(ISourceViewer)
+	 */
+	public boolean isDisableHyperlinkModifiers() {
+		return disableHyperlinkModifiers;
+	}
+
+	/**
+	 * Indicate if hyperlink modifiers are disabled. When disabled (the default) no keyboard modifiers are required to
+	 * activate hyperlinks when clicking.
+	 * 
+	 * @see #getHyperlinkStateMask(ISourceViewer)
+	 */
+	public void setDisableHyperlinkModifiers(boolean disableHyperlinkModifiers) {
+		this.disableHyperlinkModifiers = disableHyperlinkModifiers;
 	}
 }

@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.wikitext_feature"
       label="%featureName"
-      version="0.9.1.qualifier"
+      version="0.9.2.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.mylyn">
 
@@ -36,12 +36,6 @@
       <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.help"/>
-      <import plugin="org.eclipse.mylyn.wikitext.core" version="0.9.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.wikitext.confluence.core" version="0.9.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.wikitext.ui" version="0.9.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.wikitext.mediawiki.core" version="0.9.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.wikitext.textile.core" version="0.9.0" match="compatible"/>
-      <import plugin="org.eclipse.mylyn.wikitext.tracwiki.core" version="0.9.0" match="compatible"/>
       <import feature="org.eclipse.mylyn_feature" version="3.0.2.I20080816" match="compatible"/>
    </requires>
 
@@ -129,4 +123,10 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.mylyn.wikitext.ui.tasks"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 </feature>

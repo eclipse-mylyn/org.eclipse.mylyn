@@ -20,7 +20,7 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem.Severity;
 /**
  * a test markup validation rule that creates errors for text matching "ERROR" or "WARNING".
  * 
- * @author dgreen
+ * @author David Green
  */
 public class TestMarkupValidationRule extends ValidationRule {
 

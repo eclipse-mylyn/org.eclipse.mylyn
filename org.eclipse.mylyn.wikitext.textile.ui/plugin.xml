@@ -60,26 +60,5 @@
          
       </templates>
    </extension>
-   <extension
-         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
-      <taskEditorExtension
-            class="org.eclipse.mylyn.internal.wikitext.textile.ui.editors.TextileTaskEditorExtension"
-            id="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtension"
-            name="%taskEditorExtension.name.0">
-      </taskEditorExtension>
-      <taskEditorExtension
-            class="org.eclipse.mylyn.internal.wikitext.textile.ui.editors.BugzillaTaskEditorExtension"
-            id="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtensionBugzilla"
-            name="%taskEditorExtension.name.1">
-      </taskEditorExtension>
-      <repositoryAssociation
-            connectorKind="bugzilla"
-            taskEditorExtension="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtensionBugzilla">
-      </repositoryAssociation>
-      <repositoryAssociation
-            connectorKind="local"
-            taskEditorExtension="org.eclipse.mylyn.wikitext.textile.core.ui.taskEditorExtension">
-      </repositoryAssociation>
-   </extension>
 
 </plugin>

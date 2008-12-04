@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.twiki.core.block;
 
-import org.eclipse.mylyn.internal.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 /**
  * Matches any text

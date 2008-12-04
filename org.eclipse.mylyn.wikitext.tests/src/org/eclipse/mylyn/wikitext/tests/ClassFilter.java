@@ -14,7 +14,7 @@ package org.eclipse.mylyn.wikitext.tests;
 /**
  * a means of filtering a class
  * 
- * @author dgreen
+ * @author David Green
  */
 public interface ClassFilter {
 

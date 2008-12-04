@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.twiki.core.token;
 
-import org.eclipse.mylyn.internal.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.ImageAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 /**
  * Token that replaces <code>%ICON{"<icon type>"}%</code> with the appropriate image tag.

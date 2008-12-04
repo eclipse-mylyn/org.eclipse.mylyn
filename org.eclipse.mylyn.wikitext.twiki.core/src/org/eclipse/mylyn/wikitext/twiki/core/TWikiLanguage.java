@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.twiki.core;
+package org.eclipse.mylyn.wikitext.twiki.core;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

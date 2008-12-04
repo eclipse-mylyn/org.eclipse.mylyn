@@ -11,7 +11,12 @@
 package org.eclipse.mylyn.wikitext.core.util;
 
 /**
- * 
+ * A means of writing XML content to a stream. Modeled after StAX with some small differences, notably:
+ * <ul>
+ * <li>StAX is only available in Java 6</li>
+ * <li>The methods of this API only throw unchecked exceptions</li>
+ * <li>This API provides a means for writing unescaped XML</li>
+ * </ul>
  * 
  * @author David Green
  */

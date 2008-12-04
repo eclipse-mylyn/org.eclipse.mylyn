@@ -13,9 +13,9 @@ package org.eclipse.mylyn.internal.wikitext.twiki.core.token;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.mylyn.internal.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 /**
  * Tokens that represent links, as follows: <code>[[link]]</code>

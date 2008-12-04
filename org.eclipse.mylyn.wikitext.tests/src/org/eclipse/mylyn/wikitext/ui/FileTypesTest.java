@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
@@ -27,6 +26,7 @@ import org.eclipse.mylyn.wikitext.tests.AbstractTestInWorkspace;
 import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.eclipse.mylyn.wikitext.tracwiki.core.TracWikiLanguage;
+import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -36,7 +36,7 @@ import org.eclipse.ui.ide.IDE;
 /**
  * A test that runs in the Eclipse UI that verifies that registered file types make sense.
  * 
- * @author dgreen
+ * @author David Green
  */
 @HeadRequired
 public class FileTypesTest extends AbstractTestInWorkspace {

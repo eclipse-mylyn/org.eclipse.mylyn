@@ -1,8 +1,8 @@
 package org.eclipse.mylyn.internal.wikitext.twiki.core.phrase;
 
-import org.eclipse.mylyn.internal.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
+import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 public class AutoLinkSwitchPhraseModifier extends PatternBasedElement {
 

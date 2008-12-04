@@ -51,7 +51,7 @@ public abstract class AbstractTestApplication {
 
 		CTabFolder folder = new CTabFolder(shell, SWT.BORDER);
 
-		createJTextileViewer(folder);
+		createWikiTextViewer(folder);
 		createBrowser(folder);
 		createMarkupSourceViewer(folder);
 		createHtmlSourceViewer(folder);
@@ -171,7 +171,7 @@ public abstract class AbstractTestApplication {
 
 	protected abstract MarkupLanguage createMarkupLanguage();
 
-	private void createJTextileViewer(CTabFolder folder) {
+	private void createWikiTextViewer(CTabFolder folder) {
 		CTabItem viewerItem = new CTabItem(folder, SWT.NONE);
 		viewerItem.setText("WikiText Viewer");
 

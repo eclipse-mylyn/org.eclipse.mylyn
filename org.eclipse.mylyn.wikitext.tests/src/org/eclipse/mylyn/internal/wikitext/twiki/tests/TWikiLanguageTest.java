@@ -2,8 +2,8 @@ package org.eclipse.mylyn.internal.wikitext.twiki.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.wikitext.twiki.core.TWikiLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage;
 
 public class TWikiLanguageTest extends TestCase {
 

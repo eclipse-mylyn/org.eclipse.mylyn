@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-<extension
+	<extension
          point="org.eclipse.mylyn.wikitext.ui.cheatSheet">
       <content
             contentLanguage="MediaWiki"
@@ -33,14 +33,6 @@
          <template name="** " description="%template.description.12" content="\n** ${text}\n** ${text2}\n\n" block="true"/>
          <template name=";: " description="%template.description.13" content="\n; ${text} : ${definition}\n; ${text2} : ${definition2}\n\n" block="true"/>
       </templates>
-   </extension>
-   <extension
-         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
-      <taskEditorExtension
-            class="org.eclipse.mylyn.internal.wikitext.mediawiki.ui.editors.TaskEditorExtension"
-            id="org.eclipse.mylyn.internal.wikitext.mediawiki.ui.taskEditorExtension"
-            name="%taskEditorExtension.name.0">
-      </taskEditorExtension>
    </extension>
 
 </plugin>

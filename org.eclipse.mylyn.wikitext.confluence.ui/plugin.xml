@@ -2,20 +2,6 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.mylyn.tasks.ui.taskEditorExtensions">
-      <taskEditorExtension
-            class="org.eclipse.mylyn.internal.wikitext.confluence.ui.editors.TaskEditorExtension"
-            id="org.eclipse.mylyn.wikitext.confluence.ui.taskEditorExtension"
-            name="%taskEditorExtension.name.0">
-      </taskEditorExtension>
-      <repositoryAssociation
-            connectorKind="jira"
-            taskEditorExtension="org.eclipse.mylyn.wikitext.confluence.ui.taskEditorExtension">
-      </repositoryAssociation>
-   </extension>
-
-
-   <extension
          point="org.eclipse.mylyn.wikitext.ui.contentAssist">
       
       <templates
