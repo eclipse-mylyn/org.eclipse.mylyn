@@ -2,17 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.tests;singleton:=true
-Bundle-Version: 0.9.2.qualifier
+Bundle-Version: 0.9.3.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.junit;bundle-version="3.8.2",
- org.eclipse.mylyn.wikitext.core;bundle-version="[0.9.2,1.0.0)",
- org.eclipse.mylyn.wikitext.textile.core;bundle-version="[0.9.2,1.0.0)",
- org.eclipse.mylyn.wikitext.confluence.core;bundle-version="[0.9.2,1.0.0)",
- org.eclipse.mylyn.wikitext.mediawiki.core;bundle-version="[0.9.2,1.0.0)",
- org.eclipse.mylyn.wikitext.tracwiki.core;bundle-version="[0.9.2,1.0.0)",
+ org.eclipse.mylyn.wikitext.core;bundle-version="[0.9.3,1.0.0)",
+ org.eclipse.mylyn.wikitext.textile.core;bundle-version="[0.9.3,1.0.0)",
+ org.eclipse.mylyn.wikitext.confluence.core;bundle-version="[0.9.3,1.0.0)",
+ org.eclipse.mylyn.wikitext.mediawiki.core;bundle-version="[0.9.3,1.0.0)",
+ org.eclipse.mylyn.wikitext.tracwiki.core;bundle-version="[0.9.3,1.0.0)",
  org.eclipse.mylyn.wikitext.twiki.core;bundle-version="0.9.0",
- org.eclipse.mylyn.wikitext.ui;bundle-version="[0.9.2,1.0.0)",
+ org.eclipse.mylyn.wikitext.ui;bundle-version="[0.9.3,1.0.0)",
  org.eclipse.ui,
  org.eclipse.ui.editors,
  org.eclipse.core.runtime,
