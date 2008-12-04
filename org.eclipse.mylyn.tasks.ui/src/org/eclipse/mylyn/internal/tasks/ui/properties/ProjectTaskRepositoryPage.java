@@ -164,7 +164,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 	private void initialize() {
 		project = (IProject) getElement().getAdapter(IResource.class);
 		noDefaultAndApplyButton();
-		setDescription("Select a task repository to associate with this project below:");
+		setDescription(Messages.ProjectTaskRepositoryPage_Select_a_task_repository_to_associate_with_this_project_below);
 	}
 
 	@Override

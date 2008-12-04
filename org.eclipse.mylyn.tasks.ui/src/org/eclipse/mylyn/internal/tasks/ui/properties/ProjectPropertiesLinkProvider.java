@@ -32,11 +32,11 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkProvider {
 
-	private static final String PROPERTY_PREFIX = "project.repository";
+	private static final String PROPERTY_PREFIX = "project.repository"; //$NON-NLS-1$
 
-	private static final String PROJECT_REPOSITORY_KIND = PROPERTY_PREFIX + ".kind";
+	private static final String PROJECT_REPOSITORY_KIND = PROPERTY_PREFIX + ".kind"; //$NON-NLS-1$
 
-	private static final String PROJECT_REPOSITORY_URL = PROPERTY_PREFIX + ".url";
+	private static final String PROJECT_REPOSITORY_URL = PROPERTY_PREFIX + ".url"; //$NON-NLS-1$
 
 	@Override
 	public TaskRepository getTaskRepository(IResource resource, IRepositoryManager repositoryManager) {
@@ -48,8 +48,8 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 		IScopeContext projectScope = new ProjectScope(project);
 		IEclipsePreferences projectNode = projectScope.getNode(TasksUiPlugin.ID_PLUGIN);
 		if (projectNode != null) {
-			String kind = projectNode.get(PROJECT_REPOSITORY_KIND, "");
-			String urlString = projectNode.get(PROJECT_REPOSITORY_URL, "");
+			String kind = projectNode.get(PROJECT_REPOSITORY_KIND, ""); //$NON-NLS-1$
+			String urlString = projectNode.get(PROJECT_REPOSITORY_URL, ""); //$NON-NLS-1$
 			return repositoryManager.getRepository(kind, urlString);
 		}
 		return null;
@@ -83,7 +83,7 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 				return true;
 			} catch (BackingStoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to save task repository to project association preference", e));
+						"Failed to save task repository to project association preference", e)); //$NON-NLS-1$
 			}
 		}
 		return false;
