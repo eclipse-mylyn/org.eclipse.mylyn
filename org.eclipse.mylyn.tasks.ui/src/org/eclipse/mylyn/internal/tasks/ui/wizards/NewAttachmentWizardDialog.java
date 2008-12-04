@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class NewAttachmentWizardDialog extends WizardDialog {
 
-	private static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "PatchWizard";
+	private static final String ATTACHMENT_WIZARD_SETTINGS_SECTION = "PatchWizard"; //$NON-NLS-1$
 
 	public NewAttachmentWizardDialog(Shell parent, IWizard wizard, boolean modal) {
 		super(parent, wizard);

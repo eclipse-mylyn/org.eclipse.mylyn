@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,16 +42,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class TaskDataExportWizardPage extends WizardPage {
 
-	private static final String LABEL_TASK_LIST = "Task List";
-
-	private static final String LABEL_TASK_CONTEXTS = "Task Contexts";
-
-	private static final String LABEL_ACTIVITY_HISTORY = "Task Activity History";
-
-	protected final static String PAGE_TITLE = "Export Mylyn Task Data";
-
-	public final static String PAGE_NAME = PAGE_TITLE;
-
 	private Button taskListCheckBox = null;
 
 	private Button taskActivationHistoryCheckBox = null;
@@ -67,29 +57,29 @@ public class TaskDataExportWizardPage extends WizardPage {
 	private Button overwriteCheckBox = null;
 
 	// Key values for the dialog settings object
-	private final static String SETTINGS_SAVED = "Settings saved";
+	private final static String SETTINGS_SAVED = "Settings saved"; //$NON-NLS-1$
 
-	private final static String TASKLIST_SETTING = "TaskList setting";
+	private final static String TASKLIST_SETTING = "TaskList setting"; //$NON-NLS-1$
 
-	private final static String ACTIVATION_HISTORY_SETTING = "Activation history setting";
+	private final static String ACTIVATION_HISTORY_SETTING = "Activation history setting"; //$NON-NLS-1$
 
-	private final static String CONTEXTS_SETTING = "Contexts setting";
+	private final static String CONTEXTS_SETTING = "Contexts setting"; //$NON-NLS-1$
 
-	private final static String DEST_DIR_SETTING = "Destination directory setting";
+	private final static String DEST_DIR_SETTING = "Destination directory setting"; //$NON-NLS-1$
 
-	private final static String OVERWRITE_SETTING = "Overwrite setting";
+	private final static String OVERWRITE_SETTING = "Overwrite setting"; //$NON-NLS-1$
 
 	// private final static String ZIP_SETTING = "Zip Setting";
 
 	public TaskDataExportWizardPage() {
-		super("org.eclipse.mylyn.tasklist.exportPage", PAGE_TITLE, AbstractUIPlugin.imageDescriptorFromPlugin(
-				TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-export.gif"));
+		super("org.eclipse.mylyn.tasklist.exportPage", Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data, AbstractUIPlugin.imageDescriptorFromPlugin( //$NON-NLS-1$
+				TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-export.gif")); //$NON-NLS-1$
 		setPageComplete(false);
 	}
 
 	@Override
 	public String getName() {
-		return PAGE_NAME;
+		return Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data;
 	}
 
 	/**
@@ -105,7 +95,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 			// zipCheckBox = createCheckBox(container, "Export to zip file: " +
 			// TaskDataExportWizard.getZipFileName());
-			overwriteCheckBox = createCheckBox(container, "Overwrite existing files without warning");
+			overwriteCheckBox = createCheckBox(container, Messages.TaskDataExportWizardPage_Overwrite_existing_files_without_warning);
 
 			initSettings();
 
@@ -114,7 +104,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 			setPageComplete(validate());
 		} catch (RuntimeException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not create export wizard page", e));
+					"Could not create export wizard page", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -127,11 +117,11 @@ public class TaskDataExportWizardPage extends WizardPage {
 		group.setLayout(gl);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayoutData(gridData);
-		group.setText("Select data to export:");
+		group.setText(Messages.TaskDataExportWizardPage_Select_data_to_export);
 
-		taskListCheckBox = createCheckBox(group, LABEL_TASK_LIST);
-		taskActivationHistoryCheckBox = createCheckBox(group, LABEL_ACTIVITY_HISTORY);
-		taskContextsCheckBox = createCheckBox(group, LABEL_TASK_CONTEXTS);
+		taskListCheckBox = createCheckBox(group, Messages.TaskDataExportWizardPage_Task_List);
+		taskActivationHistoryCheckBox = createCheckBox(group, Messages.TaskDataExportWizardPage_Task_Activity_History);
+		taskContextsCheckBox = createCheckBox(group, Messages.TaskDataExportWizardPage_Task_Contexts);
 	}
 
 	/**
@@ -139,16 +129,16 @@ public class TaskDataExportWizardPage extends WizardPage {
 	 */
 	private void createExportDirectoryControl(Composite parent) {
 		Group destDirGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		destDirGroup.setText("Export destination");
+		destDirGroup.setText(Messages.TaskDataExportWizardPage_Export_destination);
 		destDirGroup.setLayout(new GridLayout(3, false));
 		destDirGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		new Label(destDirGroup, SWT.NONE).setText("File:");
+		new Label(destDirGroup, SWT.NONE).setText(Messages.TaskDataExportWizardPage_File);
 		Label l = new Label(destDirGroup, SWT.NONE);
 		l.setText(TaskListBackupManager.getBackupFileName());
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		l.setLayoutData(gd);
-		new Label(destDirGroup, SWT.NONE).setText("Folder:");
+		new Label(destDirGroup, SWT.NONE).setText(Messages.TaskDataExportWizardPage_Folder);
 
 		destDirText = new Text(destDirGroup, SWT.BORDER);
 		destDirText.setEditable(false);
@@ -160,18 +150,18 @@ public class TaskDataExportWizardPage extends WizardPage {
 		});
 
 		browseButton = new Button(destDirGroup, SWT.PUSH);
-		browseButton.setText("Browse...");
+		browseButton.setText(Messages.TaskDataExportWizardPage_Browse_);
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
-				dialog.setText("Folder Selection");
-				dialog.setMessage("Specify the destination folder for task data");
+				dialog.setText(Messages.TaskDataExportWizardPage_Folder_Selection);
+				dialog.setMessage(Messages.TaskDataExportWizardPage_Specify_the_destination_folder_for_task_data);
 				String dir = destDirText.getText();
 				dialog.setFilterPath(dir);
 				dir = dialog.open();
 				controlChanged();
-				if (dir == null || dir.equals("")) {
+				if (dir == null || dir.equals("")) { //$NON-NLS-1$
 					return;
 				}
 				destDirText.setText(dir);
@@ -190,7 +180,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 			taskListCheckBox.setSelection(true);
 			taskActivationHistoryCheckBox.setSelection(true);
 			taskContextsCheckBox.setSelection(true);
-			destDirText.setText("");
+			destDirText.setText(""); //$NON-NLS-1$
 			overwriteCheckBox.setSelection(true);
 			// zipCheckBox.setSelection(false);
 		} else {
@@ -255,13 +245,13 @@ public class TaskDataExportWizardPage extends WizardPage {
 		// Check that at least one type of data has been selected
 		if (!taskListCheckBox.getSelection() && !taskActivationHistoryCheckBox.getSelection()
 				&& !taskContextsCheckBox.getSelection()) {
-			setMessage("Please select which task data to export", IStatus.WARNING);
+			setMessage(Messages.TaskDataExportWizardPage_Please_select_which_task_data_to_export, IStatus.WARNING);
 			return false;
 		}
 
 		// Check that a destination dir has been specified
-		if (destDirText.getText().equals("")) {
-			setMessage("Please choose an export destination", IStatus.WARNING);
+		if (destDirText.getText().equals("")) { //$NON-NLS-1$
+			setMessage(Messages.TaskDataExportWizardPage_Please_choose_an_export_destination, IStatus.WARNING);
 			return false;
 		}
 

@@ -66,7 +66,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
-import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
@@ -77,10 +76,6 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * @author Mik Kersten
  */
 public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
-
-	private static final String LABEL_RESOURCES = "Resources";
-
-	private static final String LABEL_TASKS = "Tasks";
 
 	private final static int SIZING_SELECTION_WIDGET_WIDTH = 50;
 
@@ -147,8 +142,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 					}
 				}
 				resourcesRepositoriesContainers.addAll(unmappedProjects);
-				tasksContainer = new ElementCategory(LABEL_TASKS, taskRepositoriesContainers);
-				resourcesContainer = new ElementCategory(LABEL_RESOURCES, resourcesRepositoriesContainers);
+				tasksContainer = new ElementCategory(Messages.TaskWorkingSetPage_Tasks, taskRepositoriesContainers);
+				resourcesContainer = new ElementCategory(Messages.TaskWorkingSetPage_Resources, resourcesRepositoriesContainers);
 				return new Object[] { tasksContainer, resourcesContainer };
 			} else if (parentElement instanceof TaskRepository) {
 				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
@@ -307,9 +302,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				return -1;
 			} else if (e2 instanceof TaskRepository || e2 instanceof TaskRepositoryProjectMapping) {
 				return 1;
-			} else if (e1 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
+			} else if (e1 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(Messages.TaskWorkingSetPage_Tasks)) {
 				return -1;
-			} else if (e2 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
+			} else if (e2 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(Messages.TaskWorkingSetPage_Tasks)) {
 				return 1;
 			} else {
 				return super.compare(viewer, e1, e2);
@@ -318,9 +313,9 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	public TaskWorkingSetPage() {
-		super("taskWorkingSetPage", "Select Working Set Elements", null);
-		setDescription("" + "When this Working Set is selected views will be filtered just to show only\n"
-				+ "these elements if the Window Working Set is enabled in the view (default).");
+		super("taskWorkingSetPage", Messages.TaskWorkingSetPage_Select_Working_Set_Elements, null); //$NON-NLS-1$
+		setDescription("" + Messages.TaskWorkingSetPage_When_this_Working_Set_is_selected_views_will_be_filtered_just_to_show_only //$NON-NLS-1$
+				+ Messages.TaskWorkingSetPage_these_elements_is_enabled_in_the_view);
 		setImageDescriptor(TasksUiImages.BANNER_WORKING_SET);
 	}
 
@@ -402,7 +397,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IIDEHelpContextIds.WORKING_SET_RESOURCE_PAGE);
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_message);
+		label.setText(""); //$NON-NLS-1$
 		label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.VERTICAL_ALIGN_CENTER));
 
@@ -417,7 +412,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		// text.setBackground(FieldAssistColors.getRequiredFieldBackgroundColor(text));
 
 		label = new Label(composite, SWT.WRAP);
-		label.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_label_tree);
+		label.setText(""); //$NON-NLS-1$
 		label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.VERTICAL_ALIGN_CENTER));
 
@@ -462,8 +457,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 
 		Button selectAllButton = new Button(buttonComposite, SWT.PUSH);
-		selectAllButton.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_selectAll_label);
-		selectAllButton.setToolTipText(IDEWorkbenchMessages.ResourceWorkingSetPage_selectAll_toolTip);
+		selectAllButton.setText(Messages.TaskWorkingSetPage_Select_All);
+		selectAllButton.setToolTipText(""); //$NON-NLS-1$
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
@@ -474,8 +469,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		setButtonLayoutData(selectAllButton);
 
 		Button deselectAllButton = new Button(buttonComposite, SWT.PUSH);
-		deselectAllButton.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_deselectAll_label);
-		deselectAllButton.setToolTipText(IDEWorkbenchMessages.ResourceWorkingSetPage_deselectAll_toolTip);
+		deselectAllButton.setText(Messages.TaskWorkingSetPage_Deselect_All);
+		deselectAllButton.setToolTipText(""); //$NON-NLS-1$
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
@@ -555,24 +550,24 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		String newText = text.getText();
 
 		if (!newText.equals(newText.trim())) {
-			errorMessage = "The name must not have a leading or trailing whitespace.";
+			errorMessage = Messages.TaskWorkingSetPage_The_name_must_not_have_a_leading_or_trailing_whitespace;
 		} else if (firstCheck) {
 			firstCheck = false;
 			return;
 		}
 		if ("".equals(newText)) { //$NON-NLS-1$
-			errorMessage = "The name must not be empty.";
+			errorMessage = Messages.TaskWorkingSetPage_The_name_must_not_be_empty;
 		}
 		if (errorMessage == null && (workingSet == null || !newText.equals(workingSet.getName()))) {
 			IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 			for (IWorkingSet workingSet2 : workingSets) {
 				if (newText.equals(workingSet2.getName())) {
-					errorMessage = "A working set with the same name already exists.";
+					errorMessage = Messages.TaskWorkingSetPage_A_working_set_with_the_same_name_already_exists;
 				}
 			}
 		}
 		if (treeViewer.getCheckedElements().length == 0) {
-			infoMessage = "No categories/queries selected.";
+			infoMessage = Messages.TaskWorkingSetPage_No_categories_queries_selected;
 		}
 		setMessage(infoMessage, INFORMATION);
 		setErrorMessage(errorMessage);

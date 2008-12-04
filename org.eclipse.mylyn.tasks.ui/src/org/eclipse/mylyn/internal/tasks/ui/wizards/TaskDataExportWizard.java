@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.IStatus;
@@ -46,9 +47,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	/**
 	 * The name of the dialog store's section associated with the task data export wizard
 	 */
-	private final static String SETTINGS_SECTION = "org.eclipse.mylyn.tasklist.ui.exportWizard";
-
-	private final static String WINDOW_TITLE = "Export";
+	private final static String SETTINGS_SECTION = "org.eclipse.mylyn.tasklist.ui.exportWizard"; //$NON-NLS-1$
 
 	private TaskDataExportWizardPage exportPage = null;
 
@@ -56,7 +55,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		IDialogSettings masterSettings = TasksUiPlugin.getDefault().getDialogSettings();
 		setDialogSettings(getSettingsSection(masterSettings));
 		setNeedsProgressMonitor(true);
-		setWindowTitle(WINDOW_TITLE);
+		setWindowTitle(Messages.TaskDataExportWizard_Export);
 	}
 
 	/**
@@ -104,7 +103,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		if (!destDirFile.exists() || !destDirFile.isDirectory()) {
 			// This should never happen
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not export data because specified location does not exist or is not a folder",
+					"Could not export data because specified location does not exist or is not a folder", //$NON-NLS-1$
 					new Exception()));
 			return false;
 		}
@@ -121,23 +120,26 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 
 			if (zip) {
 				if (destZipFile.exists()) {
-					if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "The zip file "
-							+ destZipFile.getPath() + " already exists. Do you want to overwrite it?")) {
+					if (!MessageDialog.openConfirm(getShell(), Messages.TaskDataExportWizard_Confirm_File_Replace,
+							MessageFormat.format(Messages.TaskDataExportWizard_The_zip_file_X_already_exists,
+									destZipFile.getPath()))) {
 						return false;
 					}
 				}
 			} else {
 				if (exportPage.exportTaskList() && destTaskListFile.exists()) {
-					if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace", "The task list file "
-							+ destTaskListFile.getPath() + " already exists. Do you want to overwrite it?")) {
+					if (!MessageDialog.openConfirm(getShell(), Messages.TaskDataExportWizard_Confirm_File_Replace,
+							MessageFormat.format(Messages.TaskDataExportWizard_The_task_list_file_X_already_exists,
+									destTaskListFile.getPath()))) {
 						return false;
 					}
 				}
 
 				if (exportPage.exportActivationHistory() && destActivationHistoryFile.exists()) {
-					if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace",
-							"The task activation history file " + destActivationHistoryFile.getPath()
-									+ " already exists. Do you want to overwrite it?")) {
+					if (!MessageDialog.openConfirm(getShell(), Messages.TaskDataExportWizard_Confirm_File_Replace,
+							MessageFormat.format(
+									Messages.TaskDataExportWizard_The_task_activation_history_file_X_already_exists,
+									destActivationHistoryFile.getPath()))) {
 						return false;
 					}
 				}
@@ -148,9 +150,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 								task.getHandleIdentifier());
 						File destTaskFile = new File(destDir + File.separator + contextFile.getName());
 						if (destTaskFile.exists()) {
-							if (!MessageDialog.openConfirm(getShell(), "Confirm File Replace",
-									"Task context files already exist in " + destDir
-											+ ". Do you want to overwrite them?")) {
+							if (!MessageDialog.openConfirm(getShell(),
+									Messages.TaskDataExportWizard_Confirm_File_Replace, MessageFormat.format(
+											Messages.TaskDataExportWizard_Task_context_files_already_exist_in_X, destDir))) {
 								return false;
 							} else {
 								break;
@@ -172,9 +174,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			// TODO use the wizard's progress service or IProgressService.busyCursorWhile(): bug 210710 
 			service.run(true, false, job);
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not export files", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not export files", e)); //$NON-NLS-1$
 		} catch (InterruptedException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not export files", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not export files", e)); //$NON-NLS-1$
 		}
 
 		exportPage.saveSettings();

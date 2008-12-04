@@ -24,10 +24,8 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
  */
 public class NewQueryWizard extends MultiRepositoryAwareWizard {
 
-	private static final String TITLE = "New Repository Query";
-
 	public NewQueryWizard() {
-		super(new SelectRepositoryPageForNewQuery(), TITLE);
+		super(new SelectRepositoryPageForNewQuery(), Messages.NewQueryWizard_New_Repository_Query);
 	}
 
 	private static final class SelectRepositoryPageForNewQuery extends SelectRepositoryPage {

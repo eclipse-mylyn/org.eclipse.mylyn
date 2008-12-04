@@ -12,9 +12,12 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
+import java.text.MessageFormat;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylyn.internal.tasks.ui.Messages;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -59,14 +62,14 @@ public final class TaskHyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return "Open Task " + taskId + " in " + repository.getRepositoryLabel();
+		return MessageFormat.format(Messages.TaskHyperlink_Open_Task_X_in_X, taskId, repository.getRepositoryLabel());
 	}
 
 	public void open() {
 		if (repository != null) {
 			TasksUiUtil.openTask(repository, taskId);
 		} else {
-			MessageDialog.openError(null, "Mylyn", "Could not determine repository for report");
+			MessageDialog.openError(null, "Mylyn", Messages.TaskHyperlink_Could_not_determine_repository_for_report); //$NON-NLS-1$
 		}
 	}
 

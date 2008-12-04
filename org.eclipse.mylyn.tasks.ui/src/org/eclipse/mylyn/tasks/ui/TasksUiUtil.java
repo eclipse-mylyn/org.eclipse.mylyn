@@ -34,6 +34,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiMessages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
@@ -180,15 +181,15 @@ public class TasksUiUtil {
 			}
 		}
 		if (page == null) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \"" + input
-					+ "\": no active workbench window"));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \"" + input //$NON-NLS-1$
+					+ "\": no active workbench window")); //$NON-NLS-1$
 			return null;
 		}
 		try {
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Open for editor failed: " + input
-					+ ", taskId: " + editorId, e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Open for editor failed: " + input //$NON-NLS-1$
+					+ ", taskId: " + editorId, e)); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -307,8 +308,8 @@ public class TasksUiUtil {
 				}
 			}
 		} else {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \""
-					+ task.getSummary() + "\": no active workbench window"));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \"" //$NON-NLS-1$
+					+ task.getSummary() + "\": no active workbench window")); //$NON-NLS-1$
 		}
 		return false;
 	}
@@ -414,7 +415,7 @@ public class TasksUiUtil {
 		Collection<AbstractTask> tasks = TasksUiPlugin.getTaskList().getAllTasks();
 		for (AbstractTask task : tasks) {
 			String currUrl = task.getUrl();
-			if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) {
+			if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) { //$NON-NLS-1$
 				return task;
 			}
 		}
@@ -442,7 +443,7 @@ public class TasksUiUtil {
 							repository.getRepositoryUrl(), taskId);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Internal error while opening repository task", e));
+							"Internal error while opening repository task", e)); //$NON-NLS-1$
 				}
 			}
 		}
@@ -470,7 +471,7 @@ public class TasksUiUtil {
 					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 					support.getExternalBrowser().openURL(url);
 				} catch (Exception e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task url", e));
+					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task url", e)); //$NON-NLS-1$
 				}
 			} else {
 				IWebBrowser browser = null;
@@ -483,20 +484,20 @@ public class TasksUiUtil {
 							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
 				}
 
-				String generatedId = "org.eclipse.mylyn.web.browser-" + Calendar.getInstance().getTimeInMillis();
+				String generatedId = "org.eclipse.mylyn.web.browser-" + Calendar.getInstance().getTimeInMillis(); //$NON-NLS-1$
 				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
 				browser.openURL(url);
 			}
 		} catch (PartInitException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
-					"Browser could not be initiated");
+			MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.TasksUiUtil_Browser_init_error,
+					Messages.TasksUiUtil_Browser_could_not_be_initiated);
 		} catch (MalformedURLException e) {
-			if (location != null && location.trim().equals("")) {
+			if (location != null && location.trim().equals("")) { //$NON-NLS-1$
 				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR,
-						"No URL to open." + location);
+						Messages.TasksUiUtil_No_URL_to_open + location);
 			} else {
 				MessageDialog.openInformation(Display.getDefault().getActiveShell(), TasksUiMessages.DIALOG_EDITOR,
-						"Could not open URL: " + location);
+						Messages.TasksUiUtil_Could_not_open_URL_ + location);
 			}
 		}
 	}
@@ -527,7 +528,7 @@ public class TasksUiUtil {
 		try {
 			return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(TaskListView.ID);
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not show Task List view", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not show Task List view", e)); //$NON-NLS-1$
 			return null;
 		}
 	}

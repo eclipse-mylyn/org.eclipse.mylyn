@@ -52,26 +52,22 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
-	private final static String SETTINGS_SECTION = "org.eclipse.mylyn.tasklist.ui.importWizard";
-
-	private final static String WINDOW_TITLE = "Import";
-
 	private TaskDataImportWizardPage importPage = null;
 
 	public TaskDataImportWizard() {
 		IDialogSettings masterSettings = TasksUiPlugin.getDefault().getDialogSettings();
 		setDialogSettings(getSettingsSection(masterSettings));
 		setNeedsProgressMonitor(true);
-		setWindowTitle(WINDOW_TITLE);
+		setWindowTitle(Messages.TaskDataImportWizard_Import);
 	}
 
 	/**
 	 * Finds or creates a dialog settings section that is used to make the dialog control settings persistent
 	 */
 	public IDialogSettings getSettingsSection(IDialogSettings master) {
-		IDialogSettings settings = master.getSection(SETTINGS_SECTION);
+		IDialogSettings settings = master.getSection("org.eclipse.mylyn.tasklist.ui.importWizard");
 		if (settings == null) {
-			settings = master.addNewSection(SETTINGS_SECTION);
+			settings = master.addNewSection("org.eclipse.mylyn.tasklist.ui.importWizard");
 		}
 		return settings;
 	}
@@ -112,7 +108,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		sourceZipFile = new File(sourceZip);
 
 		if (!sourceZipFile.exists()) {
-			MessageDialog.openError(getShell(), "File not found", sourceZipFile.toString() + " could not be found.");
+			MessageDialog.openError(getShell(), Messages.TaskDataImportWizard_File_not_found, sourceZipFile.toString()
+					+ Messages.TaskDataImportWizard_could_not_be_found);
 			return false;
 		}
 
@@ -151,7 +148,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				}
 				if (!importPage.importTaskContexts()
 						&& entry.getName().matches(
-								".*-\\d*" + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
+								".*-\\d*" + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) { //$NON-NLS-1$ //$NON-NLS-2$
 					continue;
 				}
 
@@ -159,8 +156,8 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 						+ entry.getName());
 
 				if (!overwrite && destContextFile.exists()) {
-					if (MessageDialog.openConfirm(getShell(), "File exists!", "Overwrite existing file?\n"
-							+ destContextFile.getName())) {
+					if (MessageDialog.openConfirm(getShell(), Messages.TaskDataImportWizard_File_exists_,
+							Messages.TaskDataImportWizard_Overwrite_existing_file_ + destContextFile.getName())) {
 						zipFilesToExtract.add(entry);
 					} else {
 						// no overwrite
@@ -172,7 +169,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			}
 
 		} catch (IOException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e)); //$NON-NLS-1$
 		}
 
 		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile, sourceRepositoriesFile,
@@ -188,7 +185,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				service.run(true, true, job);
 			}
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not import files", e)); //$NON-NLS-1$
 		} catch (InterruptedException e) {
 			// User cancelled
 		}
@@ -200,9 +197,9 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	/** Job that performs the file copying and zipping */
 	class FileCopyJob implements IRunnableWithProgress {
 
-		private static final String PREFIX_BACKUP = ".backup-";
+		private static final String PREFIX_BACKUP = ".backup-"; //$NON-NLS-1$
 
-		private static final String JOB_LABEL = "Importing Data";
+		private/*static*/final String JOB_LABEL = Messages.TaskDataImportWizard_Importing_Data;
 
 		private File sourceZipFile = null;
 
@@ -224,7 +221,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE, monitor);
 
 				if (!sourceZipFile.exists()) {
-					throw new InvocationTargetException(new IOException("Source file does not exist."));
+					throw new InvocationTargetException(new IOException("Source file does not exist.")); //$NON-NLS-1$
 				}
 
 				if (monitor.isCanceled()) {
@@ -279,8 +276,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				try {
 					TasksUiPlugin.getDefault().reloadDataDirectory();
 				} catch (CoreException e) {
-					TasksUiInternal.displayStatus("Import Error: Please retry importing or use alternate source",
-							e.getStatus());
+					TasksUiInternal.displayStatus(Messages.TaskDataImportWizard_Import_Error, e.getStatus());
 				}
 			}
 		});

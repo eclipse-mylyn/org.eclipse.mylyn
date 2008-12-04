@@ -28,11 +28,10 @@ import org.eclipse.swt.widgets.Text;
 public class NewWebTaskPage extends WizardPage {
 
 	public NewWebTaskPage(ITaskMapping taskSelection) {
-		super("New Task");
+		super(Messages.NewWebTaskPage_New_Task);
 
-		setTitle("Create via Web Browser");
-		setDescription("This will open a web browser that can be used to create a new task.\n"
-				+ "NOTE: you may need to log in via the web UI.");
+		setTitle(Messages.NewWebTaskPage_Create_via_Web_Browser);
+		setDescription(Messages.NewWebTaskPage_This_will_open_a_web_browser_that_can_be_used_to_create_a_new_task);
 
 		// TODO display selection 
 	}
@@ -40,7 +39,7 @@ public class NewWebTaskPage extends WizardPage {
 	public void createControl(Composite parent) {
 		Text text = new Text(parent, SWT.WRAP);
 		text.setEditable(false);
-		text.setText("Once submitted synchronize queries or add the task to a category.\n");
+		text.setText(Messages.NewWebTaskPage_Once_submitted_synchronize_queries_or_add_the_task_to_a_category);
 		setControl(text);
 	}
 

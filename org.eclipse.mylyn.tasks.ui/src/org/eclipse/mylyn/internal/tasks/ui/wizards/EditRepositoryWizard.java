@@ -35,8 +35,6 @@ import org.eclipse.ui.IWorkbench;
  */
 public class EditRepositoryWizard extends Wizard implements INewWizard {
 
-	private static final String TITLE = "Properties for Task Repository";
-
 	private ITaskRepositoryPage settingsPage;
 
 	private final TaskRepository repository;
@@ -45,7 +43,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 		this.repository = repository;
 		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_SETTINGS);
-		setWindowTitle(TITLE);
+		setWindowTitle(Messages.EditRepositoryWizard_Properties_for_Task_Repository);
 	}
 
 	/**
@@ -64,7 +62,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 					getContainer().run(true, false, operation);
 				} catch (InvocationTargetException e) {
 					StatusHandler.fail(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-							"Failed to refactor repository urls"));
+							Messages.EditRepositoryWizard_Failed_to_refactor_repository_urls));
 					return false;
 				} catch (InterruptedException e) {
 					// should not get here

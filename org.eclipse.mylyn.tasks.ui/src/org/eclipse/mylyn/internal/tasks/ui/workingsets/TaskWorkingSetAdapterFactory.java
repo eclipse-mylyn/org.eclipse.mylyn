@@ -25,7 +25,7 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class TaskWorkingSetAdapterFactory implements IAdapterFactory {
 
-	private static final String TASK_ELEMENT_FACTORY_ID = "org.eclipse.mylyn.tasks.ui.workingSets.elementFactory";
+	private static final String TASK_ELEMENT_FACTORY_ID = "org.eclipse.mylyn.tasks.ui.workingSets.elementFactory"; //$NON-NLS-1$
 
 	@SuppressWarnings("unchecked")
 	private static final Class[] ADAPTER_TYPES = new Class[] { IPersistableElement.class };

@@ -46,7 +46,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener, IResourceChangeListener {
 
-	public static String ID_TASK_WORKING_SET = "org.eclipse.mylyn.tasks.ui.workingSet";
+	public static String ID_TASK_WORKING_SET = "org.eclipse.mylyn.tasks.ui.workingSet"; //$NON-NLS-1$
 
 	private final List<IWorkingSet> workingSets = new CopyOnWriteArrayList<IWorkingSet>();
 

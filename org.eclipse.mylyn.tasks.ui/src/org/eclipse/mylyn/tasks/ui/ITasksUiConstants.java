@@ -18,14 +18,14 @@ package org.eclipse.mylyn.tasks.ui;
  */
 public interface ITasksUiConstants {
 
-	public static final String ID_COMMAND_MARK_TASK_UNREAD = "org.eclipse.mylyn.tasks.ui.command.markTaskUnread";
+	public static final String ID_COMMAND_MARK_TASK_UNREAD = "org.eclipse.mylyn.tasks.ui.command.markTaskUnread"; //$NON-NLS-1$
 
-	public static final String ID_COMMAND_MARK_TASK_READ = "org.eclipse.mylyn.tasks.ui.command.markTaskRead";
+	public static final String ID_COMMAND_MARK_TASK_READ = "org.eclipse.mylyn.tasks.ui.command.markTaskRead"; //$NON-NLS-1$
 
-	public static final String ID_PAGE_PLANNING = "org.eclipse.mylyn.tasks.ui.pageFactory.Planning";
+	public static final String ID_PAGE_PLANNING = "org.eclipse.mylyn.tasks.ui.pageFactory.Planning"; //$NON-NLS-1$
 
-	public static final String ID_PERSPECTIVE_PLANNING = "org.eclipse.mylyn.tasks.ui.perspectives.planning";
+	public static final String ID_PERSPECTIVE_PLANNING = "org.eclipse.mylyn.tasks.ui.perspectives.planning"; //$NON-NLS-1$
 
-	public static final String ID_PREFERENCES_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
+	public static final String ID_PREFERENCES_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts"; //$NON-NLS-1$
 
 }

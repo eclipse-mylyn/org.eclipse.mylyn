@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -61,11 +62,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
-	private static final String DESCRIPTION = "Add new repositories using the " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
-			+ " view.\n" + "If a repository is missing it does not support the requested operation.";
-
-	private static final String TITLE = "Select a repository";
-
 	private TableViewer viewer;
 
 	protected MultiRepositoryAwareWizard wizard;
@@ -88,10 +84,11 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 	}
 
 	public SelectRepositoryPage(ITaskRepositoryFilter taskRepositoryFilter) {
-		super(TITLE);
+		super(Messages.SelectRepositoryPage_Select_a_repository);
 
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
+		setTitle(Messages.SelectRepositoryPage_Select_a_repository);
+		setDescription(MessageFormat.format(Messages.SelectRepositoryPage_Add_new_repositories_using_the_X_view,
+				org.eclipse.mylyn.internal.tasks.ui.Messages.TasksUiPlugin_Task_Repositories));
 
 		this.taskRepositoryFilter = taskRepositoryFilter;
 		this.repositories = getTaskRepositories();

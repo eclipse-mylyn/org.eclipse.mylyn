@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -59,7 +60,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		wizard = new TaskDataExportWizard();
 		wizard.addPages();
 		wizard.createPageControls(new Shell());
-		wizardPage = (TaskDataExportWizardPage) wizard.getPage(TaskDataExportWizardPage.PAGE_NAME);
+		wizardPage = (TaskDataExportWizardPage) wizard.getPage(Messages.TaskDataExportWizardPage_Export_Mylyn_Task_Data);
 		assertNotNull(wizardPage);
 
 		// Create test export destination directory

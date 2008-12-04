@@ -34,10 +34,10 @@ public abstract class AbstractTaskRepositoryLinkProvider implements IExecutableE
 	private int order;
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) {
-		id = config.getAttribute("id");
-		name = config.getAttribute("name");
+		id = config.getAttribute("id"); //$NON-NLS-1$
+		name = config.getAttribute("name"); //$NON-NLS-1$
 		try {
-			order = Integer.parseInt(config.getAttribute("order"));
+			order = Integer.parseInt(config.getAttribute("order")); //$NON-NLS-1$
 		} catch (NumberFormatException ex) {
 			order = DEFAULT_ORDER;
 		}

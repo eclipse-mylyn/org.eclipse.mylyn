@@ -43,7 +43,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		wizard = new TaskDataImportWizard();
 		wizard.addPages();
 		wizard.createPageControls(new Shell());
-		wizardPage = (TaskDataImportWizardPage) wizard.getPage(TaskDataImportWizardPage.PAGE_NAME);
+		wizardPage = (TaskDataImportWizardPage) wizard.getPage("org.eclipse.mylyn.tasklist.importPage");
 		assertNotNull(wizardPage);
 
 		TaskTestUtil.resetTaskListAndRepositories();

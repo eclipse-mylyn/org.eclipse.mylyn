@@ -74,16 +74,12 @@ import org.eclipse.ui.views.navigator.ResourceComparator;
  * <p>
  * Based on org.eclipse.compare.internal.InputPatchPage.
  */
-public class InputAttachmentSourcePage2 extends WizardPage {
+public class AttachmentSourcePage extends WizardPage {
 
 	// constants
 	protected static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
 	protected static final int COMBO_HISTORY_LENGTH = 5;
-
-	public static final String CLIPBOARD_LABEL = "<Clipboard>";
-
-	public static final String SCREENSHOT_LABEL = "<Screenshot>";
 
 	// input constants
 	protected final static int CLIPBOARD = 1;
@@ -125,11 +121,11 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 
 	private final TaskAttachmentModel model;
 
-	public InputAttachmentSourcePage2(TaskAttachmentModel model) {
-		super("InputAttachmentPage");
+	public AttachmentSourcePage(TaskAttachmentModel model) {
+		super("InputAttachmentPage"); //$NON-NLS-1$
 		this.model = model;
-		setTitle("Select attachment source");
-		setDescription("Clipboard supports text and image attachments only.");
+		setTitle(Messages.AttachmentSourcePage_Select_attachment_source);
+		setDescription(Messages.AttachmentSourcePage_Clipboard_supports_text_and_image_attachments_only);
 		// setMessage("Please select the source for the attachment");
 	}
 
@@ -152,7 +148,7 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 
 	public String getAttachmentName() {
 		if (getInputMethod() == CLIPBOARD) {
-			return CLIPBOARD_LABEL;
+			return Messages.AttachmentSourcePage__Clipboard_;
 		} else if (getInputMethod() == WORKSPACE) {
 			return getResources(treeViewer.getSelection())[0].getFullPath().toOSString();
 		}
@@ -219,16 +215,16 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 		// new row
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		useFileButton = new Button(composite, SWT.RADIO);
-		useFileButton.setText("File");
+		useFileButton.setText(Messages.AttachmentSourcePage_File);
 
 		fileNameField = new Combo(composite, SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = SIZING_TEXT_FIELD_WIDTH;
 		fileNameField.setLayoutData(gd);
-		fileNameField.setText("");
+		fileNameField.setText(""); //$NON-NLS-1$
 
 		fileBrowseButton = new Button(composite, SWT.PUSH);
-		fileBrowseButton.setText("Browse...");
+		fileBrowseButton.setText(Messages.AttachmentSourcePage_Browse_);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		int widthHint = convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
 		Point minSize = fileBrowseButton.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
@@ -239,13 +235,13 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 3;
 		useClipboardButton = new Button(composite, SWT.RADIO);
-		useClipboardButton.setText("Clipboard");
+		useClipboardButton.setText(Messages.AttachmentSourcePage_Clipboard);
 		useClipboardButton.setLayoutData(gd);
 		useClipboardButton.setSelection(initUseClipboard);
 
 		// new row
 		useWorkspaceButton = new Button(composite, SWT.RADIO);
-		useWorkspaceButton.setText("Workspace");
+		useWorkspaceButton.setText(Messages.AttachmentSourcePage_Workspace);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		useWorkspaceButton.setLayoutData(gd);
 
@@ -364,7 +360,7 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 		newComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		workspaceSelectLabel = new Label(newComp, SWT.LEFT);
-		workspaceSelectLabel.setText("Select the location of the attachment");
+		workspaceSelectLabel.setText(Messages.AttachmentSourcePage_Select_the_location_of_the_attachment);
 
 		treeViewer = new TreeViewer(newComp, SWT.BORDER);
 		treeViewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -388,7 +384,7 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 			if (ClipboardTaskAttachmentSource.isSupportedType(getControl().getDisplay())) {
 				attachmentFound = true;
 			} else {
-				error = "Clipboard contains an unsupported data";
+				error = Messages.AttachmentSourcePage_Clipboard_contains_an_unsupported_data;
 			}
 		} else if (inputMethod == SCREENSHOT) {
 			attachmentFound = true;
@@ -398,24 +394,24 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 				File file = new File(path);
 				attachmentFound = file.exists() && file.isFile() && file.length() > 0;
 				if (!attachmentFound) {
-					error = "Cannot locate attachment file";
+					error = Messages.AttachmentSourcePage_Cannot_locate_attachment_file;
 				}
 			} else {
-				error = "No file name";
+				error = Messages.AttachmentSourcePage_No_file_name;
 			}
 		} else if (inputMethod == WORKSPACE) {
 			// Get the selected attachment file (tree will only allow for one
 			// selection)
 			IResource[] resources = getResources(treeViewer.getSelection());
 			if (resources == null || resources.length <= 0) {
-				error = "No file name";
+				error = Messages.AttachmentSourcePage_No_file_name;
 			} else {
 				IResource attachmentFile = resources[0];
 				if (attachmentFile != null && attachmentFile.getType() == IResource.FILE) {
 					File actualFile = attachmentFile.getRawLocation().toFile();
 					attachmentFound = actualFile.exists() && actualFile.isFile() && actualFile.length() > 0;
 					if (!attachmentFound) {
-						error = "Cannot locate attachment file";
+						error = Messages.AttachmentSourcePage_Cannot_locate_attachment_file;
 					}
 				}
 			}
@@ -520,9 +516,9 @@ public class InputAttachmentSourcePage2 extends WizardPage {
 	public String getAbsoluteAttachmentPath() {
 		switch (getInputMethod()) {
 		case CLIPBOARD:
-			return CLIPBOARD_LABEL;
+			return Messages.AttachmentSourcePage__Clipboard_;
 		case SCREENSHOT:
-			return SCREENSHOT_LABEL;
+			return Messages.AttachmentSourcePage__Screenshot_;
 		case WORKSPACE:
 			IResource[] resources = getResources(treeViewer.getSelection());
 			if (resources.length > 0 && resources[0].getRawLocation() != null) {

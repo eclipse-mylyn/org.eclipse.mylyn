@@ -29,134 +29,134 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TasksUiImages {
 
-	private static final URL baseURL = TasksUiPlugin.getDefault().getBundle().getEntry("/icons/");
+	private static final URL baseURL = TasksUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
 
-	private static final String VIEW = "eview16";
+	private static final String VIEW = "eview16"; //$NON-NLS-1$
 
-	private static final String TOOL = "etool16";
+	private static final String TOOL = "etool16"; //$NON-NLS-1$
 
-	private static final String OBJ = "obj16";
+	private static final String OBJ = "obj16"; //$NON-NLS-1$
 
-	private static final String WIZBAN = "wizban";
+	private static final String WIZBAN = "wizban"; //$NON-NLS-1$
 
 	// Tasks and Task List elements
 
-	public static final ImageDescriptor TASK = create(TOOL, "task.gif");
+	public static final ImageDescriptor TASK = create(TOOL, "task.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_COMPLETE = create(TOOL, "task-complete.gif");
+	public static final ImageDescriptor TASK_COMPLETE = create(TOOL, "task-complete.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_INCOMPLETE = create(TOOL, "task-incomplete.gif");
+	public static final ImageDescriptor TASK_INCOMPLETE = create(TOOL, "task-incomplete.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_COMPLETED = create(TOOL, "task-completed.gif");
+	public static final ImageDescriptor TASK_COMPLETED = create(TOOL, "task-completed.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_NOTES = create(TOOL, "task-notes.gif");
+	public static final ImageDescriptor TASK_NOTES = create(TOOL, "task-notes.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_NEW = create(TOOL, "task-new.gif");
+	public static final ImageDescriptor TASK_NEW = create(TOOL, "task-new.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_NEW_SUB = create(TOOL, "sub-task-new.gif");
+	public static final ImageDescriptor TASK_NEW_SUB = create(TOOL, "sub-task-new.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_REPOSITORY_HISTORY = create(TOOL, "task-repository-history.gif");
+	public static final ImageDescriptor TASK_REPOSITORY_HISTORY = create(TOOL, "task-repository-history.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_REMOTE = create(TOOL, "task-remote.gif");
+	public static final ImageDescriptor TASK_REMOTE = create(TOOL, "task-remote.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_WORKING_SET = create(TOOL, "open-task.gif");
+	public static final ImageDescriptor TASK_WORKING_SET = create(TOOL, "open-task.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASKS_VIEW = create("eview16", "task-list.gif");
+	public static final ImageDescriptor TASKS_VIEW = create("eview16", "task-list.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final ImageDescriptor TASK_ATTACHMENT_PATCH = create(OBJ, "attachment-patch.gif");
+	public static final ImageDescriptor TASK_ATTACHMENT_PATCH = create(OBJ, "attachment-patch.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_RETRIEVE = create(TOOL, "task-retrieve.gif");
+	public static final ImageDescriptor TASK_RETRIEVE = create(TOOL, "task-retrieve.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_REPOSITORY = create(TOOL, "task-repository.gif");
+	public static final ImageDescriptor TASK_REPOSITORY = create(TOOL, "task-repository.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(TOOL, "task-repository-new.gif");
+	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(TOOL, "task-repository-new.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CATEGORY = create(TOOL, "category.gif");
+	public static final ImageDescriptor CATEGORY = create(TOOL, "category.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CATEGORY_NEW = create(TOOL, "category-new.gif");
+	public static final ImageDescriptor CATEGORY_NEW = create(TOOL, "category-new.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CATEGORY_UNCATEGORIZED = create(TOOL, "category-archive.gif");
+	public static final ImageDescriptor CATEGORY_UNCATEGORIZED = create(TOOL, "category-archive.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor QUERY = create(TOOL, "query.gif");
+	public static final ImageDescriptor QUERY = create(TOOL, "query.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor QUERY_NEW = create(TOOL, "query-new.gif");
+	public static final ImageDescriptor QUERY_NEW = create(TOOL, "query-new.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor QUERY_UNMATCHED = create(TOOL, "query-unmatched.png");
+	public static final ImageDescriptor QUERY_UNMATCHED = create(TOOL, "query-unmatched.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
+	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static final ImageDescriptor REPOSITORY_OFFLINE = ImageDescriptor.createWithFlags(TasksUiImages.REPOSITORY,
 			SWT.IMAGE_GRAY);
 
-	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE_SMALL = create(TOOL, "repository-synchronize-small.png");
+	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE_SMALL = create(TOOL, "repository-synchronize-small.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(TOOL, "repository-synchronize.gif");
+	public static final ImageDescriptor REPOSITORY_SYNCHRONIZE = create(TOOL, "repository-synchronize.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REPOSITORY_SUBMIT = create(TOOL, "repository-submit.gif");
+	public static final ImageDescriptor REPOSITORY_SUBMIT = create(TOOL, "repository-submit.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REPOSITORY_SMALL = create(OBJ, "repository-small.gif");
+	public static final ImageDescriptor REPOSITORY_SMALL = create(OBJ, "repository-small.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "repository-new.gif");
+	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "repository-new.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final ImageDescriptor REPOSITORIES_VIEW = create("eview16", "repositories.gif");
+	public static final ImageDescriptor REPOSITORIES_VIEW = create("eview16", "repositories.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	// Context and activation
 
-	public static final ImageDescriptor CONTEXT_ACTIVE = create(TOOL, "task-active.gif");
+	public static final ImageDescriptor CONTEXT_ACTIVE = create(TOOL, "task-active.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_ACTIVE_CENTERED = create(TOOL, "task-active-centered.gif");
+	public static final ImageDescriptor CONTEXT_ACTIVE_CENTERED = create(TOOL, "task-active-centered.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_INACTIVE_EMPTY = create(TOOL, "task-inactive.gif");
+	public static final ImageDescriptor CONTEXT_INACTIVE_EMPTY = create(TOOL, "task-inactive.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_INACTIVE = create(TOOL, "task-context.gif");
+	public static final ImageDescriptor CONTEXT_INACTIVE = create(TOOL, "task-context.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_FOCUS = create(VIEW, "focus.gif");
+	public static final ImageDescriptor CONTEXT_FOCUS = create(VIEW, "focus.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_ATTACH = create(TOOL, "context-attach.gif");
+	public static final ImageDescriptor CONTEXT_ATTACH = create(TOOL, "context-attach.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_RETRIEVE = create(TOOL, "context-retrieve.gif");
+	public static final ImageDescriptor CONTEXT_RETRIEVE = create(TOOL, "context-retrieve.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_TRANSFER = create(TOOL, "context-transfer.gif");
+	public static final ImageDescriptor CONTEXT_TRANSFER = create(TOOL, "context-transfer.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_CLEAR = create(TOOL, "context-clear.gif");
+	public static final ImageDescriptor CONTEXT_CLEAR = create(TOOL, "context-clear.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_HISTORY_PREVIOUS = create(TOOL, "navigate-previous.gif");
+	public static final ImageDescriptor CONTEXT_HISTORY_PREVIOUS = create(TOOL, "navigate-previous.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_HISTORY_PREVIOUS_PAUSE = create(TOOL, "navigate-previous-pause.gif");
+	public static final ImageDescriptor CONTEXT_HISTORY_PREVIOUS_PAUSE = create(TOOL, "navigate-previous-pause.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_HISTORY_PREVIOUS_ACTIVE = create(TOOL, "navigate-previous-active.gif");
+	public static final ImageDescriptor CONTEXT_HISTORY_PREVIOUS_ACTIVE = create(TOOL, "navigate-previous-active.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_HISTORY_NEXT = create(TOOL, "navigate-next.gif");
+	public static final ImageDescriptor CONTEXT_HISTORY_NEXT = create(TOOL, "navigate-next.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_CAPTURE_PAUSE = create(TOOL, "capture-pause.gif");
+	public static final ImageDescriptor CONTEXT_CAPTURE_PAUSE = create(TOOL, "capture-pause.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_ADD = create(TOOL, "context-add.gif");
+	public static final ImageDescriptor CONTEXT_ADD = create(TOOL, "context-add.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor CONTEXT_COPY = create(TOOL, "context-transfer.gif");
+	public static final ImageDescriptor CONTEXT_COPY = create(TOOL, "context-transfer.gif"); //$NON-NLS-1$
 
 	// Comments and collaboration
 
-	public static final ImageDescriptor COMMENT = create(TOOL, "comment.gif");
+	public static final ImageDescriptor COMMENT = create(TOOL, "comment.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor COMMENT_SORT_DOWN = create(TOOL, "sort-down.gif");
+	public static final ImageDescriptor COMMENT_SORT_DOWN = create(TOOL, "sort-down.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor COMMENT_SORT_UP = create(TOOL, "sort-up.gif");
+	public static final ImageDescriptor COMMENT_SORT_UP = create(TOOL, "sort-up.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor COMMENT_SORT_DOWN_GRAY = create(TOOL, "sort-down-gray.gif");
+	public static final ImageDescriptor COMMENT_SORT_DOWN_GRAY = create(TOOL, "sort-down-gray.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor COMMENT_SORT_UP_GRAY = create(TOOL, "sort-up-gray.gif");
+	public static final ImageDescriptor COMMENT_SORT_UP_GRAY = create(TOOL, "sort-up-gray.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor COMMENT_REPLY = create(TOOL, "reply.gif");
+	public static final ImageDescriptor COMMENT_REPLY = create(TOOL, "reply.gif"); //$NON-NLS-1$
 
 	// Wizard banners
 
-	public static final ImageDescriptor BANNER_REPOSITORY = create(WIZBAN, "banner-repository.gif");
+	public static final ImageDescriptor BANNER_REPOSITORY = create(WIZBAN, "banner-repository.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BANNER_REPOSITORY_SETTINGS = create(WIZBAN, "banner-repository-settings.gif");
+	public static final ImageDescriptor BANNER_REPOSITORY_SETTINGS = create(WIZBAN, "banner-repository-settings.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(WIZBAN, "banner-repository-context.gif");
+	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(WIZBAN, "banner-repository-context.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BANNER_WORKING_SET = create(WIZBAN, "workset_wiz.png");
+	public static final ImageDescriptor BANNER_WORKING_SET = create(WIZBAN, "workset_wiz.png"); //$NON-NLS-1$
 
 	public static Image getImageForPriority(PriorityLevel priorityLevel) {
 		if (priorityLevel == null) {

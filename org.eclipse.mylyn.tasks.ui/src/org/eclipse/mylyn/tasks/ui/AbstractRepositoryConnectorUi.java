@@ -21,6 +21,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.mylyn.internal.tasks.ui.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -44,7 +45,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.TaskAttachmentPage;
  */
 public abstract class AbstractRepositoryConnectorUi {
 
-	private static final String LABEL_TASK_DEFAULT = "Task";
+	private static final String LABEL_TASK_DEFAULT = Messages.AbstractRepositoryConnectorUi_Task;
 
 	private final boolean customNotificationHandling = false;
 

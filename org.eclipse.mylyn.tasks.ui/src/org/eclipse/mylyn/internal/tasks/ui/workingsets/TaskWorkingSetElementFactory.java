@@ -32,9 +32,9 @@ import org.eclipse.ui.IMemento;
  */
 public class TaskWorkingSetElementFactory implements IElementFactory {
 
-	static final String HANDLE_TASK = "handle.task";
+	static final String HANDLE_TASK = "handle.task"; //$NON-NLS-1$
 
-	static final String HANDLE_PROJECT = "handle.project";
+	static final String HANDLE_PROJECT = "handle.project"; //$NON-NLS-1$
 
 	public IAdaptable createElement(IMemento memento) {
 		String taskHandle = memento.getString(HANDLE_TASK);
@@ -56,7 +56,7 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 				}
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not not determine project for handle: " + projectHandle, t));
+						"Could not not determine project for handle: " + projectHandle, t)); //$NON-NLS-1$
 			}
 		}
 		// prior to mylyn 3.0.2 task handles and project handles were identical
@@ -68,7 +68,7 @@ public class TaskWorkingSetElementFactory implements IElementFactory {
 				}
 			} catch (Throwable t) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not not determine project for handle: " + taskHandle, t));
+						"Could not not determine project for handle: " + taskHandle, t)); //$NON-NLS-1$
 			}
 		}
 		return null;

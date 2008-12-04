@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,16 +61,15 @@ import org.eclipse.swt.widgets.Text;
  * @author Jeff Pound
  * @author Steffen Pingel
  */
-// TODO 3.1 rename to PreviewAttachmentPage
-public class PreviewAttachmentPage2 extends WizardPage {
+public class AttachmentPreviewPage extends WizardPage {
 
-	private static final String DESCRIPTION = "Review the attachment before submitting";
+	private static final String DESCRIPTION = Messages.AttachmentPreviewPage_Review_the_attachment_before_submitting;
 
 	protected static final int MAX_TEXT_SIZE = 50000;
 
-	private static final String PAGE_NAME = "PreviewAttachmentPage";
+	private static final String PAGE_NAME = "PreviewAttachmentPage"; //$NON-NLS-1$
 
-	private static final String TITLE = "Attachment Preview";
+	private static final String TITLE = Messages.AttachmentPreviewPage_Attachment_Preview;
 
 	private final Set<String> imageTypes;
 
@@ -83,22 +83,22 @@ public class PreviewAttachmentPage2 extends WizardPage {
 
 	private Composite contentComposite;
 
-	public PreviewAttachmentPage2(TaskAttachmentModel model) {
+	public AttachmentPreviewPage(TaskAttachmentModel model) {
 		super(PAGE_NAME);
 		this.model = model;
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
 
 		textTypes = new HashSet<String>();
-		textTypes.add("text/plain");
-		textTypes.add("text/html");
-		textTypes.add("text/html");
-		textTypes.add("application/xml");
+		textTypes.add("text/plain"); //$NON-NLS-1$
+		textTypes.add("text/html"); //$NON-NLS-1$
+		textTypes.add("text/html"); //$NON-NLS-1$
+		textTypes.add("application/xml"); //$NON-NLS-1$
 
 		imageTypes = new HashSet<String>();
-		imageTypes.add("image/jpeg");
-		imageTypes.add("image/gif");
-		imageTypes.add("image/png");
+		imageTypes.add("image/jpeg"); //$NON-NLS-1$
+		imageTypes.add("image/gif"); //$NON-NLS-1$
+		imageTypes.add("image/png"); //$NON-NLS-1$
 	}
 
 	private void adjustScrollbars(Rectangle imgSize) {
@@ -127,7 +127,7 @@ public class PreviewAttachmentPage2 extends WizardPage {
 		contentComposite.setLayout(new GridLayout());
 
 		runInBackgroundButton = new Button(composite, SWT.CHECK);
-		runInBackgroundButton.setText("Run in background");
+		runInBackgroundButton.setText(Messages.AttachmentPreviewPage_Run_in_background);
 	}
 
 	@Override
@@ -167,8 +167,9 @@ public class PreviewAttachmentPage2 extends WizardPage {
 		if (taskAttachment.getFileName() != null) {
 			name = taskAttachment.getFileName();
 		}
-		label.setText("Attaching File '" + name + "'\nA preview the type '" + model.getContentType()
-				+ "' is currently not available");
+		label.setText(MessageFormat.format(
+				Messages.AttachmentPreviewPage_A_preview_the_type_X_is_currently_not_available, name,
+				model.getContentType()));
 	}
 
 	private void createImagePreview(Composite composite, final Image bufferedImage) {
@@ -221,7 +222,7 @@ public class PreviewAttachmentPage2 extends WizardPage {
 			getContainer().run(true, false, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						monitor.beginTask("Preparing preview", IProgressMonitor.UNKNOWN);
+						monitor.beginTask(Messages.AttachmentPreviewPage_Preparing_preview, IProgressMonitor.UNKNOWN);
 						final InputStream in = model.getSource().createInputStream(monitor);
 						try {
 							if (isTextAttachment()) {
@@ -231,7 +232,7 @@ public class PreviewAttachmentPage2 extends WizardPage {
 								while ((line = reader.readLine()) != null && content.length() < MAX_TEXT_SIZE
 										&& !monitor.isCanceled()) {
 									content.append(line);
-									content.append("\n");
+									content.append("\n"); //$NON-NLS-1$
 								}
 								result[0] = content.toString();
 							} else if (isImageAttachment()) {
@@ -259,7 +260,7 @@ public class PreviewAttachmentPage2 extends WizardPage {
 								in.close();
 							} catch (IOException e) {
 								StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-										"Failed to close file", e));
+										"Failed to close file", e)); //$NON-NLS-1$
 							}
 						}
 					} catch (CoreException e) {
@@ -270,8 +271,8 @@ public class PreviewAttachmentPage2 extends WizardPage {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error generating preview", e));
-			createErrorPreview(composite, "Could not create preview");
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error generating preview", e)); //$NON-NLS-1$
+			createErrorPreview(composite, Messages.AttachmentPreviewPage_Could_not_create_preview);
 			return null;
 		} catch (InterruptedException e) {
 			return null;

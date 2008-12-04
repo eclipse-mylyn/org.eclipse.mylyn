@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,8 +98,8 @@ public class TaskAttachmentWizard extends Wizard {
 
 			transfers = new ArrayList<Transfer>();
 			try {
-				Class<?> clazz = Class.forName("org.eclipse.swt.dnd.ImageTransfer");
-				Method method = clazz.getMethod("getInstance");
+				Class<?> clazz = Class.forName("org.eclipse.swt.dnd.ImageTransfer"); //$NON-NLS-1$
+				Method method = clazz.getMethod("getInstance"); //$NON-NLS-1$
 				if (method != null) {
 					transfers.add((Transfer) method.invoke(null));
 				}
@@ -136,17 +136,17 @@ public class TaskAttachmentWizard extends Wizard {
 			if (bytes != null) {
 				return new ByteArrayInputStream(data);
 			}
-			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Invalid content type."));
+			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Invalid content type.")); //$NON-NLS-1$
 		}
 
 		@Override
 		public String getContentType() {
 			if (contents instanceof String) {
-				return "text/plain";
+				return "text/plain"; //$NON-NLS-1$
 			} else if (contents instanceof ImageData) {
-				return "image/png";
+				return "image/png"; //$NON-NLS-1$
 			}
-			return "application/octet-stream";
+			return "application/octet-stream"; //$NON-NLS-1$
 		}
 
 		@Override
@@ -178,11 +178,11 @@ public class TaskAttachmentWizard extends Wizard {
 		@Override
 		public String getName() {
 			if (contents instanceof String) {
-				return "clipboard.txt";
+				return "clipboard.txt"; //$NON-NLS-1$
 			} else if (contents instanceof ImageData) {
-				return "clipboard.png";
+				return "clipboard.png"; //$NON-NLS-1$
 			}
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		@Override
@@ -209,7 +209,7 @@ public class TaskAttachmentWizard extends Wizard {
 					Image image = page.createImage();
 					page.setImageDirty(false);
 					try {
-						file = File.createTempFile("screenshot", ".png");
+						file = File.createTempFile("screenshot", ".png"); //$NON-NLS-1$ //$NON-NLS-2$
 						file.deleteOnExit();
 						ImageLoader loader = new ImageLoader();
 						loader.data = new ImageData[] { image.getImageData() };
@@ -232,12 +232,12 @@ public class TaskAttachmentWizard extends Wizard {
 
 		@Override
 		public String getContentType() {
-			return "image/png";
+			return "image/png"; //$NON-NLS-1$
 		}
 
 		@Override
 		public String getDescription() {
-			return "Screenshot";
+			return Messages.TaskAttachmentWizard_Screenshot;
 		}
 
 		@Override
@@ -247,7 +247,7 @@ public class TaskAttachmentWizard extends Wizard {
 
 		@Override
 		public String getName() {
-			return "screenshot.png";
+			return "screenshot.png"; //$NON-NLS-1$
 		}
 
 		@Override
@@ -261,7 +261,7 @@ public class TaskAttachmentWizard extends Wizard {
 		DEFAULT, SCREENSHOT
 	}
 
-	private static final String DIALOG_SETTINGS_KEY = "AttachmentWizard";
+	private static final String DIALOG_SETTINGS_KEY = "AttachmentWizard"; //$NON-NLS-1$
 
 	private final AbstractRepositoryConnector connector;
 
@@ -271,7 +271,7 @@ public class TaskAttachmentWizard extends Wizard {
 
 	private final TaskAttachmentModel model;
 
-	private PreviewAttachmentPage2 previewPage;
+	private AttachmentPreviewPage previewPage;
 
 	public TaskAttachmentWizard(TaskRepository taskRepository, ITask task, TaskAttribute taskAttachment) {
 		Assert.isNotNull(taskRepository);
@@ -291,7 +291,7 @@ public class TaskAttachmentWizard extends Wizard {
 				model.setSource(new ImageSource(page));
 				addPage(page);
 			} else {
-				addPage(new InputAttachmentSourcePage2(model));
+				addPage(new AttachmentSourcePage(model));
 			}
 		}
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(model.getTaskRepository()
@@ -299,7 +299,7 @@ public class TaskAttachmentWizard extends Wizard {
 		editPage = connectorUi.getTaskAttachmentPage(model);
 		addPage(editPage);
 
-		previewPage = new PreviewAttachmentPage2(model);
+		previewPage = new AttachmentPreviewPage(model);
 		addPage(previewPage);
 	}
 
@@ -317,14 +317,14 @@ public class TaskAttachmentWizard extends Wizard {
 
 	private void handleDone(SubmitJob job) {
 		if (job.getStatus() != null) {
-			TasksUiInternal.displayStatus("Attachment Failed", job.getStatus());
+			TasksUiInternal.displayStatus(Messages.TaskAttachmentWizard_Attachment_Failed, job.getStatus());
 		}
 	}
 
 	@Override
 	public boolean canFinish() {
 		// InputAttachmentSourcePage relies on getNextPage() being called, do not allow wizard to finish on first page
-		if (getContainer() != null && getContainer().getCurrentPage() instanceof InputAttachmentSourcePage2) {
+		if (getContainer() != null && getContainer().getCurrentPage() instanceof AttachmentSourcePage) {
 			return false;
 		}
 		return super.canFinish();
@@ -345,7 +345,7 @@ public class TaskAttachmentWizard extends Wizard {
 			@Override
 			public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
 				if (attachContext) {
-					monitor.subTask("Attaching context");
+					monitor.subTask(Messages.TaskAttachmentWizard_Attaching_context);
 					AttachmentUtil.postContext(connector, model.getTaskRepository(), model.getTask(), null, null,
 							monitor);
 				}
@@ -397,7 +397,7 @@ public class TaskAttachmentWizard extends Wizard {
 			handleDone(job);
 			return job.getStatus() == null;
 		} catch (InvocationTargetException e) {
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unexpected error", e)); //$NON-NLS-1$
 			return false;
 		} catch (InterruptedException e) {
 			// canceled
@@ -408,10 +408,10 @@ public class TaskAttachmentWizard extends Wizard {
 	public void setMode(Mode mode) {
 		this.mode = mode;
 		if (mode == Mode.SCREENSHOT) {
-			setWindowTitle("Attach Screenshot");
+			setWindowTitle(Messages.TaskAttachmentWizard_Attach_Screenshot);
 			setDefaultPageImageDescriptor(CommonImages.BANNER_SCREENSHOT);
 		} else {
-			setWindowTitle("Add Attachment");
+			setWindowTitle(Messages.TaskAttachmentWizard_Add_Attachment);
 			setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		}
 	}

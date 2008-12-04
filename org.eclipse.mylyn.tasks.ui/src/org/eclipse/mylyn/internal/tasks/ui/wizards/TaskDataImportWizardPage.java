@@ -50,16 +50,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class TaskDataImportWizardPage extends WizardPage {
 
-	private static final String LABEL_IMPORT_ZIP = "From zip file";
-
-	private static final String LABEL_IMPORT_BACKUP = "From snapshot";
-
-	private final static String PAGE_TITLE = "Import Task Data";
-
-	private static final String MESSAGE_WARNING = "Importing overwrites current tasks and repositories.  Consider exporting first.";
-
-	public final static String PAGE_NAME = PAGE_TITLE;
-
 	private Button taskListCheckBox = null;
 
 	private Button taskActivationHistoryCheckBox = null;
@@ -79,34 +69,31 @@ public class TaskDataImportWizardPage extends WizardPage {
 	private Table backupFilesTable;
 
 	// Key values for the dialog settings object
-	private final static String SETTINGS_SAVED = "Import Settings saved";
+	private final static String SETTINGS_SAVED = Messages.TaskDataImportWizardPage_Import_Settings_saved;
 
-	private final static String TASKLIST_SETTING = "Import TaskList setting";
+	private final static String TASKLIST_SETTING = Messages.TaskDataImportWizardPage_Import_TaskList_setting;
 
-	private final static String ACTIVATION_HISTORY_SETTING = "Import Activation history setting";
+	private final static String ACTIVATION_HISTORY_SETTING = Messages.TaskDataImportWizardPage_Import_Activation_history_setting;
 
-	private final static String CONTEXTS_SETTING = "Import Contexts setting";
+	private final static String CONTEXTS_SETTING = Messages.TaskDataImportWizardPage_Import_Contexts_setting;
 
-	private final static String SOURCE_ZIP_SETTING = "Import Source zip file setting";
+	private final static String SOURCE_ZIP_SETTING = Messages.TaskDataImportWizardPage_Import_Source_zip_file_setting;
 
-	private final static String OVERWRITE_SETTING = "Import Overwrite setting";
+	private final static String OVERWRITE_SETTING = Messages.TaskDataImportWizardPage_Import_Overwrite_setting;
 
-	private final static String IMPORT_ZIPMETHOD_SETTING = "Import method zip";
+	private final static String IMPORT_ZIPMETHOD_SETTING = Messages.TaskDataImportWizardPage_Import_method_zip;
 
-	private final static String IMPORT_BACKUPMETHOD_SETTING = "Import method backup";
+	private final static String IMPORT_BACKUPMETHOD_SETTING = Messages.TaskDataImportWizardPage_Import_method_backup;
 
 	public TaskDataImportWizardPage() {
-		super("org.eclipse.mylyn.tasklist.importPage", PAGE_TITLE, AbstractUIPlugin.imageDescriptorFromPlugin(
-				TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-import.gif"));
+		super(
+				"org.eclipse.mylyn.tasklist.importPage", Messages.TaskDataImportWizardPage_Import_Task_Data, AbstractUIPlugin.imageDescriptorFromPlugin( //$NON-NLS-1$
+						TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-import.gif")); //$NON-NLS-1$
 		setPageComplete(false);
-		setMessage(MESSAGE_WARNING, IMessageProvider.WARNING);
+		setMessage(Messages.TaskDataImportWizardPage_Importing_overwrites_current_tasks_and_repositories,
+				IMessageProvider.WARNING);
 		setImageDescriptor(CommonImages.BANNER_IMPORT);
-		setTitle("Restore tasks from history");
-	}
-
-	@Override
-	public String getName() {
-		return PAGE_NAME;
+		setTitle(Messages.TaskDataImportWizardPage_Restore_tasks_from_history);
 	}
 
 	public void createControl(Composite parent) {
@@ -124,7 +111,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 			setPageComplete(validate());
 		} catch (RuntimeException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not create import wizard page", e));
+					Messages.TaskDataImportWizardPage_Could_not_create_import_wizard_page, e));
 		}
 	}
 
@@ -157,12 +144,13 @@ public class TaskDataImportWizardPage extends WizardPage {
 		GridLayout gl = new GridLayout(2, true);
 		group.setLayout(gl);
 		GridDataFactory.fillDefaults().grab(true, false).span(3, SWT.DEFAULT).applyTo(group);
-		group.setText("Select data to import:");
+		group.setText(Messages.TaskDataImportWizardPage_Select_data_to_import);
 
-		taskListCheckBox = createCheckBox(group, "Task List and Repositories");
-		taskActivationHistoryCheckBox = createCheckBox(group, "Task Activity History");
-		taskContextsCheckBox = createCheckBox(group, "Task Contexts");
-		overwriteCheckBox = createCheckBox(group, "Overwrite existing files without warning");
+		taskListCheckBox = createCheckBox(group, Messages.TaskDataImportWizardPage_Task_List_and_Repositories);
+		taskActivationHistoryCheckBox = createCheckBox(group, Messages.TaskDataImportWizardPage_Task_Activity_History);
+		taskContextsCheckBox = createCheckBox(group, Messages.TaskDataImportWizardPage_Task_Contexts);
+		overwriteCheckBox = createCheckBox(group,
+				Messages.TaskDataImportWizardPage_Overwrite_existing_files_without_warning);
 	}
 
 	/**
@@ -171,7 +159,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 	private void createImportFromZipControl(Composite parent) {
 
 		importViaZipButton = new Button(parent, SWT.RADIO);
-		importViaZipButton.setText(LABEL_IMPORT_ZIP);
+		importViaZipButton.setText(Messages.TaskDataImportWizardPage_From_zip_file);
 
 		sourceZipText = new Text(parent, SWT.BORDER);
 		sourceZipText.setEditable(true);
@@ -183,17 +171,17 @@ public class TaskDataImportWizardPage extends WizardPage {
 		});
 
 		browseButtonZip = new Button(parent, SWT.PUSH);
-		browseButtonZip.setText("Browse...");
+		browseButtonZip.setText(Messages.TaskDataImportWizardPage_Browse_);
 		browseButtonZip.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(getShell());
-				dialog.setText("Zip File Selection");
+				dialog.setText(Messages.TaskDataImportWizardPage_Zip_File_Selection);
 				// dialog.setText("Specify the source zip file for task data");
 				String dir = sourceZipText.getText();
 				dialog.setFilterPath(dir);
 				dir = dialog.open();
-				if (dir == null || dir.equals("")) {
+				if (dir == null || dir.equals("")) { //$NON-NLS-1$
 					return;
 				}
 				sourceZipText.setText(dir);
@@ -205,7 +193,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 	private void createImportFromBackupControl(Composite container) {
 
 		importViaBackupButton = new Button(container, SWT.RADIO);
-		importViaBackupButton.setText(LABEL_IMPORT_BACKUP);
+		importViaBackupButton.setText(Messages.TaskDataImportWizardPage_From_snapshot);
 		addBackupFileView(container);
 	}
 
@@ -342,7 +330,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 				&& !taskContextsCheckBox.getSelection()) {
 			return false;
 		}
-		if (importViaZipButton.getSelection() && sourceZipText.getText().equals("")) {
+		if (importViaZipButton.getSelection() && sourceZipText.getText().equals("")) { //$NON-NLS-1$
 			return false;
 		}
 		if (importViaBackupButton.getSelection() && backupFilesTable.getSelection().length == 0) {
@@ -359,7 +347,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 				return (String) (backupFilesTable.getSelection()[0].getData());
 			}
 		}
-		return "<unspecified>";
+		return Messages.TaskDataImportWizardPage__unspecified_;
 	}
 
 	/** True if the user wants to import the task list */

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,10 +36,6 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class SelectRepositoryConnectorPage extends WizardPage {
 
-	private static final String DESCRIPTION = "You can connect to an existing account using one of the installed connectors.";
-
-	private static final String TITLE = "Select a task repository type";
-
 	private TableViewer viewer;
 
 	private AbstractRepositoryConnector connector;
@@ -65,9 +61,9 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 	}
 
 	public SelectRepositoryConnectorPage() {
-		super(TITLE);
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
+		super(Messages.SelectRepositoryConnectorPage_Select_a_task_repository_type);
+		setTitle(Messages.SelectRepositoryConnectorPage_Select_a_task_repository_type);
+		setDescription(Messages.SelectRepositoryConnectorPage_You_can_connect_to_an_existing_account_using_one_of_the_installed_connectors);
 	}
 
 	@Override
