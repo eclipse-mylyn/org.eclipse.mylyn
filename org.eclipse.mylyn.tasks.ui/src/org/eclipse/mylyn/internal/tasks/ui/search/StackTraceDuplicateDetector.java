@@ -42,7 +42,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 		if (attribute == null) {
 			attribute = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 		}
-		return (attribute != null) ? attribute.getTaskData().getAttributeMapper().getValueLabel(attribute) : "";
+		return (attribute != null) ? attribute.getTaskData().getAttributeMapper().getValueLabel(attribute) : ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 		String searchString = getStackTraceFromDescription(description);
 		if (searchString == null) {
 			throw new CoreException(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-					"Unable to locate a stack trace in the description text."));
+					"Unable to locate a stack trace in the description text.")); //$NON-NLS-1$
 		}
 
 		IRepositoryQuery query = TasksUi.getRepositoryModel().createRepositoryQuery(taskRepository);
@@ -70,8 +70,8 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 			return null;
 		}
 
-		String punct = "!\"#$%&'\\(\\)*+,-./:;\\<=\\>?@\\[\\]^_`\\{|\\}~\n";
-		String lineRegex = " *at\\s+[\\w" + punct + "]+ ?\\(.*\\) *\n?";
+		String punct = "!\"#$%&'\\(\\)*+,-./:;\\<=\\>?@\\[\\]^_`\\{|\\}~\n"; //$NON-NLS-1$
+		String lineRegex = " *at\\s+[\\w" + punct + "]+ ?\\(.*\\) *\n?"; //$NON-NLS-1$ //$NON-NLS-2$
 		Pattern tracePattern = Pattern.compile(lineRegex);
 		Matcher match = tracePattern.matcher(description);
 
@@ -99,7 +99,7 @@ public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 			}
 
 			// locate the exception line index
-			stackStart = description.substring(0, index - 1).lastIndexOf("\n");
+			stackStart = description.substring(0, index - 1).lastIndexOf("\n"); //$NON-NLS-1$
 			stackStart = (stackStart == -1) ? 0 : stackStart + 1;
 
 			stackTrace = description.substring(stackStart, lastEnd);

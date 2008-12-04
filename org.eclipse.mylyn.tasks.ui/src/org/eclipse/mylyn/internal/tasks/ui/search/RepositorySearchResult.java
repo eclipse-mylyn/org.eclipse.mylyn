@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
+import java.text.MessageFormat;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.search.internal.ui.SearchPluginImages;
 import org.eclipse.search.ui.ISearchQuery;
@@ -68,7 +70,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	 * @return The singular label
 	 */
 	protected String getSingularLabel() {
-		return "Task search - 1 match";
+		return Messages.RepositorySearchResult_Task_search_1_match;
 	}
 
 	/**
@@ -77,7 +79,7 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 	 * @return The plural label
 	 */
 	protected String getPluralLabel() {
-		return "Task search - " + getMatchCount() + " matches";
+		return MessageFormat.format(Messages.RepositorySearchResult_Task_search_X_matches, getMatchCount());
 	}
 
 	public String getTooltip() {

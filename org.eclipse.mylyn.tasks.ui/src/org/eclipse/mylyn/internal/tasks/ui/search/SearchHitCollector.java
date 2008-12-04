@@ -41,10 +41,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class SearchHitCollector extends TaskDataCollector implements ISearchQuery {
 
-	private static final String LABEL_MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
-
-	private static final String QUERYING_REPOSITORY = "Querying Repository...";
-
 	private final ITaskList taskList;
 
 	private final TaskRepository repository;
@@ -84,7 +80,7 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 	}
 
 	public String getLabel() {
-		return QUERYING_REPOSITORY;
+		return Messages.SearchHitCollector_Querying_Repository_;
 	}
 
 	public boolean canRerun() {
@@ -105,7 +101,7 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 		aboutToStart();
 
 		if (monitor.isCanceled()) {
-			throw new OperationCanceledException("Search cancelled");
+			throw new OperationCanceledException(Messages.SearchHitCollector_Search_cancelled);
 		}
 		connector = TasksUi.getRepositoryManager().getRepositoryConnector(repositoryQuery.getConnectorKind());
 		if (connector != null) {
@@ -113,23 +109,23 @@ public class SearchHitCollector extends TaskDataCollector implements ISearchQuer
 			if (!status.isOK()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						TasksUiInternal.displayStatus("Search failed", status);
+						TasksUiInternal.displayStatus(Messages.SearchHitCollector_Search_failed, status);
 					}
 				});
 			} else {
 				if (searchResult.getMatchCount() >= TaskDataCollector.MAX_HITS) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							TasksUiInternal.displayStatus("Search returned maximum number of hits",
+							TasksUiInternal.displayStatus(Messages.SearchHitCollector_Search_returned_maximum_number_of_hits,
 									RepositoryStatus.createStatus(repository.getRepositoryUrl(), IStatus.WARNING,
-											TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
+											TasksUiPlugin.ID_PLUGIN, Messages.SearchHitCollector_Max_allowed_number_of_hits_returned_exceeded));
 						}
 					});
 				}
 			}
 		} else {
 			return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, IStatus.OK,
-					"Repository connector could not be found", null);
+					Messages.SearchHitCollector_Repository_connector_could_not_be_found, null);
 		}
 
 		return Status.OK_STATUS;

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
+
+import java.text.MessageFormat;
 
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -49,9 +51,12 @@ public class SearchResultsLabelProvider extends TaskElementLabelProvider {
 				}
 			}
 			if (filtered > 0) {
-				return super.getText(object) + " (" + (children.length - filtered) + " of " + children.length + ")";
+				return super.getText(object)
+						+ " (" //$NON-NLS-1$ 
+						+ MessageFormat.format(Messages.SearchResultsLabelProvider_OF, (children.length - filtered),
+								children.length) + ")"; //$NON-NLS-1$ 
 			} else {
-				return super.getText(object) + " (" + children.length + ")";
+				return super.getText(object) + " (" + children.length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else {
 			return super.getText(object);

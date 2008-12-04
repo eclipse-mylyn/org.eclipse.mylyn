@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
+
+import java.text.MessageFormat;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -72,8 +74,9 @@ public class CreateQueryFromSearchAction extends Action {
 					IRepositoryQuery query = searchHitCollector.getRepositoryQuery();
 					InputDialog dialog = new InputDialog(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
-							.getShell(), "Create Query", "Name of query to be added to the " + TaskListView.LABEL_VIEW
-							+ ": ", "", null);
+							.getShell(), Messages.CreateQueryFromSearchAction_CLEAR_QUERY, MessageFormat.format(
+							Messages.CreateQueryFromSearchAction_Name_of_query_to_be_added_to_the_X, TaskListView.LABEL_VIEW)
+							+ ": ", "", null); //$NON-NLS-1$ //$NON-NLS-2$
 					int dialogResult = dialog.open();
 					if (dialogResult == Window.OK) {
 						query.setSummary(dialog.getValue());

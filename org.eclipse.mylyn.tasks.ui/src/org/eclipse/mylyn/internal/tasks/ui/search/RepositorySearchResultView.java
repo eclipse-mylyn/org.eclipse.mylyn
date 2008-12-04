@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.search;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -46,7 +47,6 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
-import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
@@ -173,28 +173,31 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		// Only use the table layout.
 		super(FLAG_LAYOUT_TREE);
 
-		sortByPriorityAction = new SearchResultSortAction("Task Priority", this, ORDER_PRIORITY);
-		sortByDescriptionAction = new SearchResultSortAction("Task Summary", this, ORDER_DESCRIPTION);
+		sortByPriorityAction = new SearchResultSortAction(Messages.RepositorySearchResultView_Task_Priority, this,
+				ORDER_PRIORITY);
+		sortByDescriptionAction = new SearchResultSortAction(Messages.RepositorySearchResultView_Task_Summary, this,
+				ORDER_DESCRIPTION);
 		currentSortOrder = ORDER_DEFAULT;
 
-		openInEditorAction = new OpenSearchResultAction("Open in Editor", this);
-		addTaskListAction = new CreateQueryFromSearchAction("Create Query from Search...", this);
+		openInEditorAction = new OpenSearchResultAction(Messages.RepositorySearchResultView_Open_in_Editor, this);
+		addTaskListAction = new CreateQueryFromSearchAction(
+				Messages.RepositorySearchResultView_Create_Query_from_Search_, this);
 		refineSearchAction = new OpenTaskSearchAction();
-		refineSearchAction.setText("Refine Search...");
+		refineSearchAction.setText(Messages.RepositorySearchResultView_Refine_Search_);
 
 		groupingActions = new ArrayList<GroupingAction>();
-		new GroupingAction("Group By Owner", GroupBy.OWNER);
+		new GroupingAction(Messages.RepositorySearchResultView_Group_By_Owner, GroupBy.OWNER);
 		//new GroupingAction("Group By Complete", GroupBy.COMPLETION);
 
 		filterActions = new ArrayList<FilteringAction>();
-		new FilteringAction("Filter Completed Tasks", new ViewerFilter() {
+		new FilteringAction(Messages.RepositorySearchResultView_Filter_Completed_Tasks, new ViewerFilter() {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				if (element instanceof ITask) {
 					return !((ITask) element).isCompleted();
 				} else if (element instanceof TaskGroup) {
 					TaskGroup taskGroup = (TaskGroup) element;
-					return taskGroup.getHandleIdentifier().equals("group-incompleteIncomplete");
+					return taskGroup.getHandleIdentifier().equals("group-incompleteIncomplete"); //$NON-NLS-1$
 				}
 				return true;
 			}
@@ -359,7 +362,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	@Override
 	protected void fillContextMenu(IMenuManager menuManager) {
 		super.fillContextMenu(menuManager);
-		MenuManager sortMenuManager = new MenuManager(SearchMessages.SortDropDownAction_label);
+		MenuManager sortMenuManager = new MenuManager(""); //$NON-NLS-1$
 		sortMenuManager.add(sortByPriorityAction);
 		sortMenuManager.add(sortByDescriptionAction);
 
@@ -380,7 +383,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, refineSearchAction);
 
 		// HACK: this should be a contribution
-		final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW + " Category");
+		final MenuManager subMenuManager = new MenuManager(MessageFormat.format(
+				Messages.RepositorySearchResultView_Add_to_X_Category, TaskListView.LABEL_VIEW));
 		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiInternal.getTaskList()
 				.getCategories());
 

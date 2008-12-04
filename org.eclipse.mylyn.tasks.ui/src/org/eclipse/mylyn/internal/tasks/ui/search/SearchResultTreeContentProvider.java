@@ -98,7 +98,7 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 				AbstractTask task = ((AbstractTask) object);
 				String owner = task.getOwner();
 				if (owner == null) {
-					owner = "<unknown>";
+					owner = Messages.SearchResultTreeContentProvider__unknown_;
 				}
 				Person person = owners.get(owner);
 				if (person == null) {
@@ -109,16 +109,16 @@ public class SearchResultTreeContentProvider extends SearchResultContentProvider
 
 				TaskGroup completeIncomplete = null;
 				if (task.isCompleted()) {
-					completeIncomplete = completeState.get("Complete");
+					completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Complete);
 					if (completeIncomplete == null) {
-						completeIncomplete = new TaskGroup("group-complete", "Complete", GroupBy.COMPLETION.name());
-						completeState.put("Complete", completeIncomplete);
+						completeIncomplete = new TaskGroup("group-complete", Messages.SearchResultTreeContentProvider_Complete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
+						completeState.put(Messages.SearchResultTreeContentProvider_Complete, completeIncomplete);
 					}
 				} else {
-					completeIncomplete = completeState.get("Incomplete");
+					completeIncomplete = completeState.get(Messages.SearchResultTreeContentProvider_Incomplete);
 					if (completeIncomplete == null) {
-						completeIncomplete = new TaskGroup("group-incomplete", "Incomplete", GroupBy.COMPLETION.name());
-						completeState.put("Incomplete", completeIncomplete);
+						completeIncomplete = new TaskGroup("group-incomplete", Messages.SearchResultTreeContentProvider_Incomplete, GroupBy.COMPLETION.name()); //$NON-NLS-1$
+						completeState.put(Messages.SearchResultTreeContentProvider_Incomplete, completeIncomplete);
 					}
 				}
 				completeIncomplete.internalAddChild(task);
