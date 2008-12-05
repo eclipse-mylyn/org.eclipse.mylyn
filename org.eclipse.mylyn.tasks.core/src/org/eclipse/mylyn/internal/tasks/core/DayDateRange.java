@@ -13,6 +13,8 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Calendar;
 
+import org.eclipse.mylyn.internal.provisional.commons.core.CommonMessages;
+
 /**
  * @author Rob Elves
  */
@@ -48,25 +50,25 @@ public class DayDateRange extends DateRange {
 			String day = ""; //$NON-NLS-1$
 			switch (getStartDate().get(Calendar.DAY_OF_WEEK)) {
 			case Calendar.MONDAY:
-				day = Messages.DayDateRange_Monday;
+				day = CommonMessages.Monday;
 				break;
 			case Calendar.TUESDAY:
-				day = Messages.DayDateRange_Tuesday;
+				day = CommonMessages.Tuesday;
 				break;
 			case Calendar.WEDNESDAY:
-				day = Messages.DayDateRange_Wednesday;
+				day = CommonMessages.Wednesday;
 				break;
 			case Calendar.THURSDAY:
-				day = Messages.DayDateRange_Thursday;
+				day = CommonMessages.Thursday;
 				break;
 			case Calendar.FRIDAY:
-				day = Messages.DayDateRange_Friday;
+				day = CommonMessages.Friday;
 				break;
 			case Calendar.SATURDAY:
-				day = Messages.DayDateRange_Saturday;
+				day = CommonMessages.Saturday;
 				break;
 			case Calendar.SUNDAY:
-				day = Messages.DayDateRange_Sunday;
+				day = CommonMessages.Sunday;
 				break;
 			}
 			if (isPresent()) {

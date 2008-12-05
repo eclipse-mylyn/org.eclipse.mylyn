@@ -25,17 +25,12 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String DayDateRange_Friday;
-	public static String DayDateRange_Monday;
-	public static String DayDateRange_Saturday;
-	public static String DayDateRange_Sunday;
-	public static String DayDateRange_Thursday;
 	public static String DayDateRange___Today;
-	public static String DayDateRange_Tuesday;
-	public static String DayDateRange_Wednesday;
 
 	public static String LocalRepositoryConnector_Local;
+
 	public static String LocalRepositoryConnector_Local_Task_Repository;
+
 	public static String LocalRepositoryConnector_New_Task;
 
 	public static String RepositoryExternalizationParticipant_Task_Repositories;
@@ -49,14 +44,21 @@ public class Messages extends NLS {
 	public static String UnsubmittedTaskContainer_Unsubmitted;
 
 	public static String WeekDateRange_Next_Week;
+
 	public static String WeekDateRange_Previous_Week;
+
 	public static String WeekDateRange_This_Week;
+
 	public static String WeekDateRange_Two_Weeks;
-	
+
 	public static String PriorityLevel_High;
+
 	public static String PriorityLevel_Low;
+
 	public static String PriorityLevel_Normal;
+
 	public static String PriorityLevel_Very_High;
+
 	public static String PriorityLevel_Very_Low;
-	
+
 }

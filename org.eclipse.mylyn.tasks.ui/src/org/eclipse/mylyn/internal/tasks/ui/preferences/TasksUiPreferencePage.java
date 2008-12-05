@@ -23,6 +23,7 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.monitor.ui.ActivityContextManager;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.internal.provisional.commons.core.CommonMessages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
@@ -65,37 +66,11 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-	private static final String LABEL_FRIDAY = "Friday";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.preferences"; //$NON-NLS-1$
 
-	private static final String LABEL_THURSDAY = "Thursday";
+	private static final String FORWARDSLASH = "/"; //$NON-NLS-1$
 
-	private static final String LABEL_WEDNESDAY = "Wednesday";
-
-	private static final String LABEL_TUESDAY = "Tuesday";
-
-	private static final String LABEL_MONDAY = "Monday";
-
-	private static final String LABEL_SUNDAY = "Sunday";
-
-	private static final String LABEL_SATURDAY = "Saturday";
-
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.preferences";
-
-	private static final String FOLDER_SELECTION_MESSAGE = "Specify the folder for tasks";
-
-	private static final String TITLE_FOLDER_SELECTION = "Folder Selection";
-
-	private static final String LABEL_ACTIVITY_TIMEOUT = "Stop time accumulation after";
-
-	private static final String LABEL_ACTIVITY_TIMEOUT2 = "minutes of inactivity.";
-
-	private static final String GROUP_WORK_WEEK_LABEL = "Scheduling";
-
-	private static final String GROUP_TASK_TIMING = "Task Timing";
-
-	private static final String FORWARDSLASH = "/";
-
-	private static final String BACKSLASH_MULTI = "\\\\";
+	private static final String BACKSLASH_MULTI = "\\\\"; //$NON-NLS-1$
 
 	private static final int MS_MINUTES = 60 * 1000;
 
@@ -139,8 +114,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		container.setLayout(layout);
 
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
-			String message = "See <a>''{0}''</a> for configuring Task List colors.";
-			new PreferenceLinkArea(container, SWT.NONE, "org.eclipse.ui.preferencePages.ColorsAndFonts", message,
+			String message = Messages.TasksUiPreferencePage_See_X_for_configuring_Task_List_colors;
+			new PreferenceLinkArea(container, SWT.NONE, "org.eclipse.ui.preferencePages.ColorsAndFonts", message, //$NON-NLS-1$
 					(IWorkbenchPreferenceContainer) getContainer(), null);
 		}
 
@@ -160,7 +135,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		Hyperlink link = new Hyperlink(container, SWT.NULL);
 		link.setForeground(CommonColors.HYPERLINK_WIDGET);
 		link.setUnderlined(true);
-		link.setText("Use the Restore dialog to recover missing tasks");
+		link.setText(Messages.TasksUiPreferencePage_Use_the_Restore_dialog_to_recover_missing_tasks);
 		link.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
@@ -184,7 +159,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		advancedComposite.setFont(container.getFont());
 		advancedComposite.setBackground(container.getBackground());
-		advancedComposite.setText("Advanced");
+		advancedComposite.setText(Messages.TasksUiPreferencePage_Advanced);
 		advancedComposite.setLayout(new GridLayout(1, false));
 		advancedComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		advancedComposite.addExpansionListener(new ExpansionAdapter() {
@@ -215,7 +190,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				enableBackgroundSynch.getSelection());
 		long miliseconds = 60000 * Long.parseLong(synchScheduleTime.getText());
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS,
-				"" + miliseconds);
+				"" + miliseconds); //$NON-NLS-1$
 
 		getPreferenceStore().setValue(ITasksUiPreferenceConstants.WEEK_START_DAY, getWeekStartValue());
 		//getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
@@ -237,8 +212,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				} catch (CoreException e) {
 					exception = e;
 					StatusHandler.log(e.getStatus());
-					MessageDialog.openError(getShell(), "Task Data Directory Error",
-							"Error applying Task List data directory changes. The previous setting will be restored.");
+					MessageDialog.openError(getShell(), Messages.TasksUiPreferencePage_Task_Data_Directory_Error,
+							Messages.TasksUiPreferencePage_Error_applying_Task_List_data_directory_changes);
 
 				} catch (OperationCanceledException ce) {
 					exception = ce;
@@ -321,7 +296,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		long miliseconds = getPreferenceStore().getDefaultLong(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
-		synchScheduleTime.setText("" + minutes);
+		synchScheduleTime.setText("" + minutes); //$NON-NLS-1$
 		weekStartCombo.select(getPreferenceStore().getDefaultInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 		//	hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 //		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
@@ -336,7 +311,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private void createTaskRefreshScheduleGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Synchronization");
+		group.setText(Messages.TasksUiPreferencePage_Synchronization);
 		GridLayout gridLayout = new GridLayout(1, false);
 		group.setLayout(gridLayout);
 
@@ -347,7 +322,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		gridLayout.marginHeight = 0;
 		enableSynch.setLayout(gridLayout);
 		enableBackgroundSynch = new Button(enableSynch, SWT.CHECK);
-		enableBackgroundSynch.setText("Synchronize with repositories every");
+		enableBackgroundSynch.setText(Messages.TasksUiPreferencePage_Synchronize_with_repositories_every);
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		enableBackgroundSynch.addSelectionListener(new SelectionListener() {
@@ -369,10 +344,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		});
 		Label label = new Label(enableSynch, SWT.NONE);
-		label.setText("minutes");
+		label.setText(Messages.TasksUiPreferencePage_minutes);
 
 		notificationEnabledButton = new Button(group, SWT.CHECK);
-		notificationEnabledButton.setText("Display notifications for overdue tasks and incoming changes");
+		notificationEnabledButton.setText(Messages.TasksUiPreferencePage_Display_notifications_for_overdue_tasks_and_incoming_changes);
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 
@@ -383,19 +358,19 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		container.setLayout(new GridLayout(3, false));
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		container.setText("Task Editing");
+		container.setText(Messages.TasksUiPreferencePage_Task_Editing);
 		useRichEditor = new Button(container, SWT.RADIO);
-		useRichEditor.setText("Rich Editor (Recommended)");
+		useRichEditor.setText(Messages.TasksUiPreferencePage_Rich_Editor__Recommended_);
 		useRichEditor.setSelection(getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 		useWebBrowser = new Button(container, SWT.RADIO);
-		useWebBrowser.setText("Web Browser");
+		useWebBrowser.setText(Messages.TasksUiPreferencePage_Web_Browser);
 		useWebBrowser.setSelection(!getPreferenceStore().getBoolean(ITasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 	}
 
 	private void createTaskDataControl(Composite parent) {
 
 		Group taskDataGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		taskDataGroup.setText("Task Data");
+		taskDataGroup.setText(Messages.TasksUiPreferencePage_Task_Data);
 		taskDataGroup.setLayout(new GridLayout(1, false));
 		taskDataGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -407,7 +382,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		dataDirComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label label = new Label(dataDirComposite, SWT.NULL);
-		label.setText("Data directory: ");
+		label.setText(Messages.TasksUiPreferencePage_Data_directory_);
 
 		String taskDirectory = TasksUiPlugin.getDefault().getDataDirectory();
 		taskDirectory = taskDirectory.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
@@ -417,20 +392,20 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		taskDirectoryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		browse = new Button(dataDirComposite, SWT.TRAIL);
-		browse.setText("Browse...");
+		browse.setText(Messages.TasksUiPreferencePage_Browse_);
 		browse.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
-				dialog.setText(TITLE_FOLDER_SELECTION);
-				dialog.setMessage(FOLDER_SELECTION_MESSAGE);
+				dialog.setText(Messages.TasksUiPreferencePage_Folder_Selection);
+				dialog.setMessage(Messages.TasksUiPreferencePage_Specify_the_folder_for_tasks);
 				String dir = taskDirectoryText.getText();
 				dir = dir.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
 				dialog.setFilterPath(dir);
 
 				dir = dialog.open();
-				if (dir == null || dir.equals("")) {
+				if (dir == null || dir.equals("")) { //$NON-NLS-1$
 					return;
 				}
 				dir = dir.replaceAll(BACKSLASH_MULTI, FORWARDSLASH);
@@ -490,24 +465,24 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private void createSchedulingGroup(Composite container) {
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
-		group.setText(GROUP_WORK_WEEK_LABEL);
+		group.setText(Messages.TasksUiPreferencePage_Scheduling);
 		group.setLayout(new GridLayout(5, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label weekStartLabel = new Label(group, SWT.NONE);
-		weekStartLabel.setText("Week Start:");
+		weekStartLabel.setText(Messages.TasksUiPreferencePage_Week_Start);
 		weekStartCombo = new Combo(group, SWT.READ_ONLY);
 		// Note: Calendar.SUNDAY = 1
 //		weekStartCombo.add(LABEL_SUNDAY);
 //		weekStartCombo.add(LABEL_MONDAY);
 //		weekStartCombo.add(LABEL_SATURDAY);
-		weekStartCombo.add(LABEL_SUNDAY);
-		weekStartCombo.add(LABEL_MONDAY);
-		weekStartCombo.add(LABEL_TUESDAY);
-		weekStartCombo.add(LABEL_WEDNESDAY);
-		weekStartCombo.add(LABEL_THURSDAY);
-		weekStartCombo.add(LABEL_FRIDAY);
-		weekStartCombo.add(LABEL_SATURDAY);
+		weekStartCombo.add(CommonMessages.Sunday);
+		weekStartCombo.add(CommonMessages.Monday);
+		weekStartCombo.add(CommonMessages.Tuesday);
+		weekStartCombo.add(CommonMessages.Wednesday);
+		weekStartCombo.add(CommonMessages.Thursday);
+		weekStartCombo.add(CommonMessages.Friday);
+		weekStartCombo.add(CommonMessages.Saturday);
 		weekStartCombo.select(getPreferenceStore().getInt(ITasksUiPreferenceConstants.WEEK_START_DAY) - 1);
 
 //		 Label workWeekBeginLabel = new Label(group, SWT.NONE);
@@ -579,7 +554,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private void createTaskActivityGroup(Composite container) {
 		Group group = new Group(container, SWT.SHADOW_ETCHED_IN);
-		group.setText(GROUP_TASK_TIMING);
+		group.setText(Messages.TasksUiPreferencePage_Task_Timing);
 		group.setLayout(new GridLayout(3, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -587,9 +562,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				ActivityContextManager.ACTIVITY_TIMEOUT_ENABLED);
 
 		timeoutEnabledButton = new Button(group, SWT.CHECK);
-		timeoutEnabledButton.setText("Enable inactivity timeouts");
+		timeoutEnabledButton.setText(Messages.TasksUiPreferencePage_Enable_inactivity_timeouts);
 		timeoutEnabledButton.setSelection(timeoutEnabled);
-		timeoutEnabledButton.setToolTipText("If disabled, time accumulates while a task is active with no timeout due to inactivity.");
+		timeoutEnabledButton.setToolTipText(Messages.TasksUiPreferencePage_If_disabled);
 		timeoutEnabledButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -599,7 +574,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		GridDataFactory.swtDefaults().span(3, 1).applyTo(timeoutEnabledButton);
 
 		Label timeoutLabel = new Label(group, SWT.NONE);
-		timeoutLabel.setText(LABEL_ACTIVITY_TIMEOUT);
+		timeoutLabel.setText(Messages.TasksUiPreferencePage_Stop_time_accumulation_after);
 		timeoutMinutes = new Spinner(group, SWT.BORDER);
 		timeoutMinutes.setDigits(0);
 		timeoutMinutes.setIncrement(5);
@@ -619,7 +594,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		});
 
 		timeoutLabel = new Label(group, SWT.NONE);
-		timeoutLabel.setText(LABEL_ACTIVITY_TIMEOUT2);
+		timeoutLabel.setText(Messages.TasksUiPreferencePage_minutes_of_inactivity);
 
 //		Label spacer = new Label(group, SWT.NONE);
 //		GridDataFactory.fillDefaults().hint(40, SWT.DEFAULT).applyTo(spacer);
@@ -735,10 +710,10 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			try {
 				long number = Long.parseLong(synchScheduleTime.getText());
 				if (number <= 0) {
-					errorMessage = "Synchronize schedule time must be > 0";
+					errorMessage = Messages.TasksUiPreferencePage_Synchronize_schedule_time_must_be_GT_0;
 				}
 			} catch (NumberFormatException e) {
-				errorMessage = "Synchronize schedule time must be valid integer";
+				errorMessage = Messages.TasksUiPreferencePage_Synchronize_schedule_time_must_be_valid_integer;
 			}
 		}
 
@@ -759,7 +734,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		long miliseconds = getPreferenceStore().getLong(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
-		return "" + minutes;
+		return "" + minutes; //$NON-NLS-1$
 	}
 
 	private void checkForExistingTasklist(String dir) {
@@ -768,9 +743,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 			MessageDialog dialogConfirm = new MessageDialog(
 					null,
-					"Confirm Task List data directory change",
+					Messages.TasksUiPreferencePage_Confirm_Task_List_data_directory_change,
 					null,
-					"A new empty Task List will be created in the chosen directory if one does not already exists. Your previous directory and its contents will not be deleted.\n\nProceed?",
+					Messages.TasksUiPreferencePage_A_new_empty_Task_List_will_be_created_in_the_chosen_directory_if_one_does_not_already_exists,
 					MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL },
 					IDialogConstants.CANCEL_ID);
 			taskDataDirectoryAction = dialogConfirm.open();
@@ -780,8 +755,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			}
 
 		} else {
-			MessageDialog.openWarning(getControl().getShell(), "Change data directory",
-					"Destination folder does not exist.");
+			MessageDialog.openWarning(getControl().getShell(), Messages.TasksUiPreferencePage_Change_data_directory,
+					Messages.TasksUiPreferencePage_Destination_folder_does_not_exist);
 		}
 	}
 
