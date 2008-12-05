@@ -11,10 +11,10 @@
 
 package org.eclipse.mylyn.internal.context.ui.wizards;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -48,7 +48,7 @@ public class ContextAttachWizardPage extends WizardPage {
 		composite.setLayout(new GridLayout());
 
 		Text summary = new Text(composite, SWT.NONE);
-		summary.setText(Messages.ContextAttachWizardPage_Task_ + task.getSummary());
+		summary.setText(NLS.bind(Messages.ContextAttachWizardPage_Task, task.getSummary()));
 		summary.setEditable(false);
 		Text repositoryText = new Text(composite, SWT.NONE);
 		repositoryText.setText(Messages.ContextAttachWizardPage_Repository_ + repository.getRepositoryUrl());

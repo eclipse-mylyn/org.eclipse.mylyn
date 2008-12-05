@@ -35,7 +35,7 @@ public class Messages extends NLS {
 
 	public static String ContextAttachWizardPage_Repository_;
 
-	public static String ContextAttachWizardPage_Task_;
+	public static String ContextAttachWizardPage_Task;
 
 	public static String ContextRetrieveWizard_Retrieve_Context;
 
