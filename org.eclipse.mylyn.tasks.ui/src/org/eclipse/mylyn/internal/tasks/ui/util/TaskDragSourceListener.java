@@ -48,7 +48,7 @@ import org.eclipse.swt.dnd.TextTransfer;
  */
 public class TaskDragSourceListener extends DragSourceAdapter {
 
-	static final String DELIM = ", ";
+	static final String DELIM = ", "; //$NON-NLS-1$
 
 	private IStructuredSelection structuredSelection;
 
@@ -85,7 +85,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 
 	private List<File> createTaskFiles(IStructuredSelection selection) {
 		// prepare temporary directory 
-		File tempDir = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "temp");
+		File tempDir = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "temp"); //$NON-NLS-1$
 		if (!tempDir.exists()) {
 			tempDir.mkdirs();
 		}
@@ -125,7 +125,7 @@ public class TaskDragSourceListener extends DragSourceAdapter {
 			return taskFiles;
 		} catch (IOException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Cannot create a temp query file for Drag&Drop", e));
+					"Cannot create a temp query file for Drag&Drop", e)); //$NON-NLS-1$
 			return null;
 		}
 	}

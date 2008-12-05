@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ public class CopyAttachmentToClipboardJob extends Job {
 	private final ITaskAttachment attachment;
 
 	public CopyAttachmentToClipboardJob(ITaskAttachment attachment) {
-		super("Copying Attachment to Clipboard");
+		super(Messages.CopyAttachmentToClipboardJob_Copying_Attachment_to_Clipboard);
 		this.attachment = attachment;
 	}
 
@@ -42,12 +42,13 @@ public class CopyAttachmentToClipboardJob extends Job {
 		try {
 			AttachmentUtil.downloadAttachment(attachment, out, monitor);
 		} catch (final CoreException e) {
-			TasksUiInternal.asyncDisplayStatus("Copy Attachment to Clipboard", e.getStatus());
+			TasksUiInternal.asyncDisplayStatus(Messages.CopyAttachmentToClipboardJob_Copy_Attachment_to_Clipboard,
+					e.getStatus());
 			return Status.OK_STATUS;
 		}
 
 		String contents = new String(out.toByteArray());
-		contents = contents.replaceAll("\r\n|\n", System.getProperty("line.separator"));
+		contents = contents.replaceAll("\r\n|\n", System.getProperty("line.separator")); //$NON-NLS-1$ //$NON-NLS-2$
 		copyToClipboard(contents);
 
 		return Status.OK_STATUS;

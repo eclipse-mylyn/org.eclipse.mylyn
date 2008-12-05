@@ -47,85 +47,85 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class TasksUiExtensionReader {
 
-	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.repositories";
+	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.repositories"; //$NON-NLS-1$
 
-	public static final String EXTENSION_REPOSITORY_LINKS_PROVIDERS = "org.eclipse.mylyn.tasks.ui.projectLinkProviders";
+	public static final String EXTENSION_REPOSITORY_LINKS_PROVIDERS = "org.eclipse.mylyn.tasks.ui.projectLinkProviders"; //$NON-NLS-1$
 
-	public static final String EXTENSION_TEMPLATES = "org.eclipse.mylyn.tasks.core.templates";
+	public static final String EXTENSION_TEMPLATES = "org.eclipse.mylyn.tasks.core.templates"; //$NON-NLS-1$
 
-	public static final String EXTENSION_TMPL_REPOSITORY = "repository";
+	public static final String EXTENSION_TMPL_REPOSITORY = "repository"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_LABEL = "label";
+	public static final String ELMNT_TMPL_LABEL = "label"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_URLREPOSITORY = "urlRepository";
+	public static final String ELMNT_TMPL_URLREPOSITORY = "urlRepository"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_REPOSITORYKIND = "repositoryKind";
+	public static final String ELMNT_TMPL_REPOSITORYKIND = "repositoryKind"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_CHARACTERENCODING = "characterEncoding";
+	public static final String ELMNT_TMPL_CHARACTERENCODING = "characterEncoding"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_ANONYMOUS = "anonymous";
+	public static final String ELMNT_TMPL_ANONYMOUS = "anonymous"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_VERSION = "version";
+	public static final String ELMNT_TMPL_VERSION = "version"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_URLNEWTASK = "urlNewTask";
+	public static final String ELMNT_TMPL_URLNEWTASK = "urlNewTask"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_URLTASK = "urlTask";
+	public static final String ELMNT_TMPL_URLTASK = "urlTask"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_URLTASKQUERY = "urlTaskQuery";
+	public static final String ELMNT_TMPL_URLTASKQUERY = "urlTaskQuery"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_NEWACCOUNTURL = "urlNewAccount";
+	public static final String ELMNT_TMPL_NEWACCOUNTURL = "urlNewAccount"; //$NON-NLS-1$
 
-	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically";
+	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically"; //$NON-NLS-1$
 
-	public static final String ELMNT_REPOSITORY_CONNECTOR = "connectorCore";
+	public static final String ELMNT_REPOSITORY_CONNECTOR = "connectorCore"; //$NON-NLS-1$
 
-	public static final String ELMNT_REPOSITORY_LINK_PROVIDER = "linkProvider";
+	public static final String ELMNT_REPOSITORY_LINK_PROVIDER = "linkProvider"; //$NON-NLS-1$
 
-	public static final String ELMNT_REPOSITORY_UI = "connectorUi";
+	public static final String ELMNT_REPOSITORY_UI = "connectorUi"; //$NON-NLS-1$
 
-	public static final String ELMNT_MIGRATOR = "taskListMigrator";
+	public static final String ELMNT_MIGRATOR = "taskListMigrator"; //$NON-NLS-1$
 
-	public static final String ATTR_BRANDING_ICON = "brandingIcon";
+	public static final String ATTR_BRANDING_ICON = "brandingIcon"; //$NON-NLS-1$
 
-	public static final String ATTR_OVERLAY_ICON = "overlayIcon";
+	public static final String ATTR_OVERLAY_ICON = "overlayIcon"; //$NON-NLS-1$
 
-	public static final String ELMNT_TYPE = "type";
+	public static final String ELMNT_TYPE = "type"; //$NON-NLS-1$
 
-	public static final String ELMNT_QUERY_PAGE = "queryPage";
+	public static final String ELMNT_QUERY_PAGE = "queryPage"; //$NON-NLS-1$
 
-	public static final String ELMNT_SETTINGS_PAGE = "settingsPage";
+	public static final String ELMNT_SETTINGS_PAGE = "settingsPage"; //$NON-NLS-1$
 
-	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylyn.tasks.ui.actions";
+	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylyn.tasks.ui.actions"; //$NON-NLS-1$
 
-	public static final String ATTR_ACTION_CONTRIBUTOR_CLASS = "taskHandlerClass";
+	public static final String ATTR_ACTION_CONTRIBUTOR_CLASS = "taskHandlerClass"; //$NON-NLS-1$
 
-	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu";
+	public static final String DYNAMIC_POPUP_ELEMENT = "dynamicPopupMenu"; //$NON-NLS-1$
 
-	public static final String ATTR_CLASS = "class";
+	public static final String ATTR_CLASS = "class"; //$NON-NLS-1$
 
-	public static final String ATTR_MENU_PATH = "menuPath";
+	public static final String ATTR_MENU_PATH = "menuPath"; //$NON-NLS-1$
 
-	public static final String EXTENSION_EDITORS = "org.eclipse.mylyn.tasks.ui.editors";
+	public static final String EXTENSION_EDITORS = "org.eclipse.mylyn.tasks.ui.editors"; //$NON-NLS-1$
 
-	public static final String ELMNT_TASK_EDITOR_PAGE_FACTORY = "pageFactory";
+	public static final String ELMNT_TASK_EDITOR_PAGE_FACTORY = "pageFactory"; //$NON-NLS-1$
 
-	public static final String EXTENSION_DUPLICATE_DETECTORS = "org.eclipse.mylyn.tasks.ui.duplicateDetectors";
+	public static final String EXTENSION_DUPLICATE_DETECTORS = "org.eclipse.mylyn.tasks.ui.duplicateDetectors"; //$NON-NLS-1$
 
-	public static final String ELMNT_DUPLICATE_DETECTOR = "detector";
+	public static final String ELMNT_DUPLICATE_DETECTOR = "detector"; //$NON-NLS-1$
 
-	public static final String ATTR_NAME = "name";
+	public static final String ATTR_NAME = "name"; //$NON-NLS-1$
 
-	public static final String ATTR_KIND = "kind";
+	public static final String ATTR_KIND = "kind"; //$NON-NLS-1$
 
-	private static final String EXTENSION_PRESENTATIONS = "org.eclipse.mylyn.tasks.ui.presentations";
+	private static final String EXTENSION_PRESENTATIONS = "org.eclipse.mylyn.tasks.ui.presentations"; //$NON-NLS-1$
 
-	public static final String ELMNT_PRESENTATION = "presentation";
+	public static final String ELMNT_PRESENTATION = "presentation"; //$NON-NLS-1$
 
-	public static final String ATTR_ICON = "icon";
+	public static final String ATTR_ICON = "icon"; //$NON-NLS-1$
 
-	public static final String ATTR_PRIMARY = "primary";
+	public static final String ATTR_PRIMARY = "primary"; //$NON-NLS-1$
 
-	public static final String ATTR_ID = "id";
+	public static final String ATTR_ID = "id"; //$NON-NLS-1$
 
 	private static boolean coreExtensionsRead = false;
 
@@ -248,14 +248,14 @@ public class TasksUiExtensionReader {
 			presentation.setName(name);
 
 			String primary = element.getAttribute(ATTR_PRIMARY);
-			if (primary != null && primary.equals("true")) {
+			if (primary != null && primary.equals("true")) { //$NON-NLS-1$
 				presentation.setPrimary(true);
 			}
 
 			TaskListView.addPresentation(presentation);
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load presentation extension", e));
+					"Could not load presentation extension", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -269,10 +269,10 @@ public class TasksUiExtensionReader {
 				TasksUiPlugin.getDefault().addDuplicateDetector(duplicateDetector);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load duplicate detector " + obj.getClass().getCanonicalName()));
+						"Could not load duplicate detector " + obj.getClass().getCanonicalName())); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load duplicate detector", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load duplicate detector", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -284,19 +284,19 @@ public class TasksUiExtensionReader {
 						(AbstractTaskRepositoryLinkProvider) repositoryLinkProvider);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load repository link provider "
+						"Could not load repository link provider " //$NON-NLS-1$
 								+ repositoryLinkProvider.getClass().getCanonicalName()));
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load repository link provider", e));
+					"Could not load repository link provider", e)); //$NON-NLS-1$
 		}
 	}
 
 	private static void readTaskEditorPageFactory(IConfigurationElement element) {
 		String id = element.getAttribute(ATTR_ID);
 		if (id == null) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Editor page factory must specify id"));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Editor page factory must specify id")); //$NON-NLS-1$
 			return;
 		}
 
@@ -308,11 +308,11 @@ public class TasksUiExtensionReader {
 				TasksUiPlugin.getDefault().addTaskEditorPageFactory(editorPageFactory);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load editor page factory " + item.getClass().getCanonicalName() + " must implement "
+						"Could not load editor page factory " + item.getClass().getCanonicalName() + " must implement " //$NON-NLS-1$ //$NON-NLS-2$
 								+ AbstractTaskEditorPageFactory.class.getCanonicalName()));
 			}
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load page editor factory",
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load page editor factory", //$NON-NLS-1$
 					e));
 		}
 	}
@@ -324,11 +324,11 @@ public class TasksUiExtensionReader {
 				AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) connectorCore;
 				TasksUiPlugin.getRepositoryManager().addRepositoryConnector(repositoryConnector);
 			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core "
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core " //$NON-NLS-1$
 						+ connectorCore.getClass().getCanonicalName()));
 			}
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector core", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -357,11 +357,11 @@ public class TasksUiExtensionReader {
 					}
 				}
 			} else {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui "
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui " //$NON-NLS-1$
 						+ connectorUiObject.getClass().getCanonicalName()));
 			}
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load connector ui", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -388,16 +388,16 @@ public class TasksUiExtensionReader {
 			TasksUiPlugin.getRepositoryTemplateManager().addTemplate(repKind, template);
 
 			for (IConfigurationElement configElement : element.getChildren()) {
-				String name = configElement.getAttribute("name");
-				String value = configElement.getAttribute("value");
-				if (name != null && !name.equals("") && value != null) {
+				String name = configElement.getAttribute("name"); //$NON-NLS-1$
+				String value = configElement.getAttribute("value"); //$NON-NLS-1$
+				if (name != null && !name.equals("") && value != null) { //$NON-NLS-1$
 					template.addAttribute(name, value);
 				}
 			}
 		} else {
 			// TODO change error message to include hints about the cause of the error 
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load repository template extension " + element.getName()));
+					"Could not load repository template extension " + element.getName())); //$NON-NLS-1$
 		}
 	}
 
@@ -410,12 +410,12 @@ public class TasksUiExtensionReader {
 						(IDynamicSubMenuContributor) dynamicPopupContributor);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load dynamic popup menu: " + dynamicPopupContributor.getClass().getCanonicalName()
-								+ " must implement " + IDynamicSubMenuContributor.class.getCanonicalName()));
+						"Could not load dynamic popup menu: " + dynamicPopupContributor.getClass().getCanonicalName() //$NON-NLS-1$
+								+ " must implement " + IDynamicSubMenuContributor.class.getCanonicalName())); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load dynamic popup menu extension", e));
+					"Could not load dynamic popup menu extension", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -427,12 +427,12 @@ public class TasksUiExtensionReader {
 				migrators.add(migrator);
 			} else {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not load task list migrator migrator: " + migratorObject.getClass().getCanonicalName()
-								+ " must implement " + AbstractTaskListMigrator.class.getCanonicalName()));
+						"Could not load task list migrator migrator: " + migratorObject.getClass().getCanonicalName() //$NON-NLS-1$
+								+ " must implement " + AbstractTaskListMigrator.class.getCanonicalName())); //$NON-NLS-1$
 			}
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load task list migrator extension", e));
+					"Could not load task list migrator extension", e)); //$NON-NLS-1$
 		}
 	}
 

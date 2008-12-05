@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,24 +34,18 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TasksUiMenus {
 
-	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
+	private static final String ATTACHMENT_DEFAULT_NAME = "attachment"; //$NON-NLS-1$
 
-	private static final String CTYPE_ZIP = "zip";
+	private static final String CTYPE_ZIP = "zip"; //$NON-NLS-1$
 
-	private static final String CTYPE_OCTET_STREAM = "octet-stream";
+	private static final String CTYPE_OCTET_STREAM = "octet-stream"; //$NON-NLS-1$
 
-	private static final String CTYPE_TEXT = "text";
+	private static final String CTYPE_TEXT = "text"; //$NON-NLS-1$
 
-	private static final String CTYPE_HTML = "html";
-
-	private static final String LABEL_COPY_URL_TO_CLIPBOARD = "Copy &URL";
-
-	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy Contents";
-
-	private static final String LABEL_SAVE = "Save...";
+	private static final String CTYPE_HTML = "html"; //$NON-NLS-1$
 
 	public static void fillTaskAttachmentMenu(IMenuManager manager) {
-		final Action saveAction = new Action(LABEL_SAVE) {
+		final Action saveAction = new Action(Messages.TasksUiMenus_Save_) {
 			@Override
 			public void run() {
 				ITaskAttachment attachment = getSelectedAttachment();
@@ -63,18 +57,18 @@ public class TasksUiMenus {
 				FileDialog fileChooser = new FileDialog(TasksUiInternal.getShell(), SWT.SAVE);
 				String fname = attachment.getFileName();
 				// default name if none is found
-				if (fname.equals("")) {
+				if (fname.equals("")) { //$NON-NLS-1$
 					String ctype = attachment.getContentType();
 					if (ctype.endsWith(CTYPE_HTML)) {
-						fname = ATTACHMENT_DEFAULT_NAME + ".html";
+						fname = ATTACHMENT_DEFAULT_NAME + ".html"; //$NON-NLS-1$
 					} else if (ctype.startsWith(CTYPE_TEXT)) {
-						fname = ATTACHMENT_DEFAULT_NAME + ".txt";
+						fname = ATTACHMENT_DEFAULT_NAME + ".txt"; //$NON-NLS-1$
 					} else if (ctype.endsWith(CTYPE_OCTET_STREAM)) {
 						fname = ATTACHMENT_DEFAULT_NAME;
 					} else if (ctype.endsWith(CTYPE_ZIP)) {
-						fname = ATTACHMENT_DEFAULT_NAME + "." + CTYPE_ZIP;
+						fname = ATTACHMENT_DEFAULT_NAME + "." + CTYPE_ZIP; //$NON-NLS-1$
 					} else {
-						fname = ATTACHMENT_DEFAULT_NAME + "." + ctype.substring(ctype.indexOf("/") + 1);
+						fname = ATTACHMENT_DEFAULT_NAME + "." + ctype.substring(ctype.indexOf("/") + 1); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
 				fileChooser.setFileName(fname);
@@ -86,8 +80,9 @@ public class TasksUiMenus {
 
 				File file = new File(filePath);
 				if (file.exists()) {
-					if (!MessageDialog.openConfirm(TasksUiInternal.getShell(), "File exists!",
-							"Overwrite existing file?\n" + file.getName())) {
+					if (!MessageDialog.openConfirm(TasksUiInternal.getShell(),
+							Messages.TasksUiMenus_File_exists_,
+							Messages.TasksUiMenus_Overwrite_existing_file_ + file.getName())) {
 						return;
 					}
 				}
@@ -98,7 +93,7 @@ public class TasksUiMenus {
 			}
 		};
 
-		final Action copyURLToClipAction = new Action(LABEL_COPY_URL_TO_CLIPBOARD) {
+		final Action copyURLToClipAction = new Action(Messages.TasksUiMenus_Copy_URL) {
 			@Override
 			public void run() {
 				ITaskAttachment attachment = getSelectedAttachment();
@@ -111,7 +106,7 @@ public class TasksUiMenus {
 			}
 		};
 
-		final Action copyToClipAction = new Action(LABEL_COPY_TO_CLIPBOARD) {
+		final Action copyToClipAction = new Action(Messages.TasksUiMenus_Copy_Contents) {
 			@Override
 			public void run() {
 				ITaskAttachment attachment = getSelectedAttachment();
@@ -123,8 +118,8 @@ public class TasksUiMenus {
 			}
 		};
 
-		manager.add(new Separator("group.open"));
-		manager.add(new Separator("group.save"));
+		manager.add(new Separator("group.open")); //$NON-NLS-1$
+		manager.add(new Separator("group.save")); //$NON-NLS-1$
 		manager.add(saveAction);
 		manager.add(copyURLToClipAction);
 		manager.add(copyToClipAction);

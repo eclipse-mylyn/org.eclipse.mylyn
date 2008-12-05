@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.util;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -109,8 +110,6 @@ import org.eclipse.ui.PlatformUI;
  * @author Steffen Pingel
  */
 public class TasksUiInternal {
-
-	private static final String LABEL_CREATE_TASK = "Create Task";
 
 	// TODO e3.4 replace with SWT.NO_SCROLL constant
 	public static final int SWT_NO_SCROLL = 1 << 4;
@@ -219,8 +218,9 @@ public class TasksUiInternal {
 						task.getRepositoryUrl());
 				if (repository == null) {
 					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"No repository found for task. Please create repository in "
-									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + "."));
+							"No repository found for task. Please create repository in " //$NON-NLS-1$
+									+ org.eclipse.mylyn.internal.tasks.ui.Messages.TasksUiPlugin_Task_Repositories
+									+ ".")); //$NON-NLS-1$
 					return;
 				}
 
@@ -276,7 +276,8 @@ public class TasksUiInternal {
 				if (job.getStatus() != null) {
 					Display display = PlatformUI.getWorkbench().getDisplay();
 					if (!display.isDisposed()) {
-						TasksUiInternal.displayStatus("Configuration Refresh Failed", job.getStatus());
+						TasksUiInternal.displayStatus(Messages.TasksUiInternal_Configuration_Refresh_Failed,
+								job.getStatus());
 					}
 				}
 			}
@@ -318,7 +319,8 @@ public class TasksUiInternal {
 				@Override
 				public void done(IJobChangeEvent event) {
 					if (query.getStatus() != null) {
-						TasksUiInternal.asyncDisplayStatus("Query Synchronization Failed", query.getStatus());
+						TasksUiInternal.asyncDisplayStatus(Messages.TasksUiInternal_Query_Synchronization_Failed,
+								query.getStatus());
 					}
 				}
 			});
@@ -390,7 +392,7 @@ public class TasksUiInternal {
 				@Override
 				public void done(IJobChangeEvent event) {
 					if (task instanceof AbstractTask && ((AbstractTask) task).getStatus() != null) {
-						TasksUiInternal.asyncDisplayStatus("Task Synchronization Failed",
+						TasksUiInternal.asyncDisplayStatus(Messages.TasksUiInternal_Task_Synchronization_Failed,
 								((AbstractTask) task).getStatus());
 					}
 				}
@@ -485,7 +487,7 @@ public class TasksUiInternal {
 			summary = LocalRepositoryConnector.DEFAULT_SUMMARY;
 		}
 		TaskList taskList = TasksUiPlugin.getTaskList();
-		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary);
+		LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), summary); //$NON-NLS-1$
 		newTask.setPriority(PriorityLevel.P3.toString());
 		TasksUiInternal.getTaskList().addTask(newTask);
 		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
@@ -513,9 +515,9 @@ public class TasksUiInternal {
 			taskList.addTask(newTask, view.getDrilledIntoCategory());
 		} else {
 			if (view != null && view.getDrilledIntoCategory() != null) {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), LABEL_CREATE_TASK,
-						"The new task will be added to the " + UncategorizedTaskContainer.LABEL
-								+ " container, since tasks can not be added to a query.");
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.TasksUiInternal_Create_Task,
+						MessageFormat.format(Messages.TasksUiInternal_The_new_task_will_be_added_to_the_X_container,
+								UncategorizedTaskContainer.LABEL));
 			}
 			taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
 		}
@@ -560,7 +562,7 @@ public class TasksUiInternal {
 				}
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open query dialog", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open query dialog", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -578,7 +580,7 @@ public class TasksUiInternal {
 	}
 
 	public static boolean isValidUrl(String url) {
-		if (url != null && !url.equals("") && !url.equals("http://") && !url.equals("https://")) {
+		if (url != null && !url.equals("") && !url.equals("http://") && !url.equals("https://")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			try {
 				new URL(url);
 				return true;
@@ -624,9 +626,9 @@ public class TasksUiInternal {
 
 			try {
 				if (taskList.getTask(loadedTask.getHandleIdentifier()) != null) {
-					boolean confirmed = MessageDialog.openConfirm(shell, "Import Task", "Task '"
-							+ loadedTask.getSummary()
-							+ "' already exists. Do you want to override it's context with the source?");
+					boolean confirmed = MessageDialog.openConfirm(shell, Messages.TasksUiInternal_INPORT_TASK,
+							Messages.TasksUiInternal_Task + loadedTask.getSummary()
+									+ Messages.TasksUiInternal_already_exists);
 					if (confirmed) {
 						ContextCore.getContextStore().importContext(loadedTask.getHandleIdentifier(), zipFile);
 					}
@@ -636,7 +638,7 @@ public class TasksUiInternal {
 				}
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-						"Task context not found for import", e));
+						"Task context not found for import", e)); //$NON-NLS-1$
 			}
 		}
 
@@ -727,7 +729,7 @@ public class TasksUiInternal {
 		AbstractTaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		TaskAttributeMapper mapper = taskDataHandler.getAttributeMapper(taskRepository);
 		TaskData taskData = new TaskData(mapper, taskRepository.getConnectorKind(), taskRepository.getRepositoryUrl(),
-				"");
+				""); //$NON-NLS-1$
 		taskDataHandler.initializeTaskData(taskRepository, taskData, initializationData, monitor);
 		if (selectionData != null) {
 			connector.getTaskMapping(taskData).merge(selectionData);
@@ -813,8 +815,8 @@ public class TasksUiInternal {
 			}
 			return opened;
 		} else {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \""
-					+ task.getSummary() + "\": no active workbench window"));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Unable to open editor for \"" //$NON-NLS-1$
+					+ task.getSummary() + "\": no active workbench window")); //$NON-NLS-1$
 		}
 		return false;
 	}
@@ -823,7 +825,7 @@ public class TasksUiInternal {
 	 * Returns text masking the &amp;-character from decoration as an accelerator in SWT labels.
 	 */
 	public static String escapeLabelText(String text) {
-		return (text != null) ? text.replace("&", "&&") : null; // mask & from SWT
+		return (text != null) ? text.replace("&", "&&") : null; // mask & from SWT //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static void preservingSelection(final TreeViewer viewer, Runnable runnable) {

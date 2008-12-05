@@ -21,23 +21,23 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class TaskPropertyTester extends PropertyTester {
 
-	private static final String PROPERTY_CAN_GET_ATTACHEMNT = "canGetAttachment";
+	private static final String PROPERTY_CAN_GET_ATTACHEMNT = "canGetAttachment"; //$NON-NLS-1$
 
-	private static final String PROPERTY_CAN_POST_ATTACHMENT = "canPostAttachment";
+	private static final String PROPERTY_CAN_POST_ATTACHMENT = "canPostAttachment"; //$NON-NLS-1$
 
-	private static final String PROPERTY_CONNECTOR_KIND = "connectorKind";
+	private static final String PROPERTY_CONNECTOR_KIND = "connectorKind"; //$NON-NLS-1$
 
-	private static final String PROPERTY_HAS_EDITS = "hasEdits";
+	private static final String PROPERTY_HAS_EDITS = "hasEdits"; //$NON-NLS-1$
 
-	private static final String PROPERTY_HAS_LOCAL_CONTEXT = "hasLocalContext";
+	private static final String PROPERTY_HAS_LOCAL_CONTEXT = "hasLocalContext"; //$NON-NLS-1$
 
-	private static final String PROPERTY_HAS_REPOSITORY_CONTEXT = "hasRepositoryContext";
+	private static final String PROPERTY_HAS_REPOSITORY_CONTEXT = "hasRepositoryContext"; //$NON-NLS-1$
 
-	private static final String PROPERTY_IS_COMPLETED = "isCompleted";
+	private static final String PROPERTY_IS_COMPLETED = "isCompleted"; //$NON-NLS-1$
 
-	private static final String PROPERTY_IS_LOCAL = "isLocal";
+	private static final String PROPERTY_IS_LOCAL = "isLocal"; //$NON-NLS-1$
 
-	private static final String PROPERTY_LOCAL_COMPLETION_STATE = "hasLocalCompletionState";
+	private static final String PROPERTY_LOCAL_COMPLETION_STATE = "hasLocalCompletionState"; //$NON-NLS-1$
 
 	private boolean equals(boolean value, Object expectedValue) {
 		return new Boolean(value).equals(expectedValue);

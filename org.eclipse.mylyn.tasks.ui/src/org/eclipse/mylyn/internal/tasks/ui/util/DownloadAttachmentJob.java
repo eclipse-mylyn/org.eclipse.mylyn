@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ public class DownloadAttachmentJob extends Job {
 	private final File targetFile;
 
 	public DownloadAttachmentJob(ITaskAttachment attachment, File targetFile) {
-		super("Downloading Attachment");
+		super(Messages.DownloadAttachmentJob_Downloading_Attachment);
 		this.attachment = attachment;
 		this.targetFile = targetFile;
 	}
@@ -53,11 +53,12 @@ public class DownloadAttachmentJob extends Job {
 				}
 			} catch (IOException e) {
 				throw new CoreException(new RepositoryStatus(attachment.getTaskRepository(), IStatus.ERROR,
-						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error writing attachment: "
+						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error writing attachment: " //$NON-NLS-1$
 								+ e.getMessage(), e));
 			}
 		} catch (final CoreException e) {
-			TasksUiInternal.asyncDisplayStatus("Copy Attachment to Clipboard", e.getStatus());
+			TasksUiInternal.asyncDisplayStatus(Messages.DownloadAttachmentJob_Copy_Attachment_to_Clipboard,
+					e.getStatus());
 			return Status.OK_STATUS;
 		}
 

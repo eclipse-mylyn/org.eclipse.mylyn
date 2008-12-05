@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class TaskRepositoryPropertyTester extends PropertyTester {
 
-	private static final String PROPERTY_CONNECTOR_KIND = "connectorKind";
+	private static final String PROPERTY_CONNECTOR_KIND = "connectorKind"; //$NON-NLS-1$
 
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (receiver instanceof TaskRepository) {

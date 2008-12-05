@@ -52,7 +52,7 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class TaskDataExportOperation implements IRunnableWithProgress {
 
-	private static final String JOB_LABEL = "Exporting Mylyn Task Data";
+	private static final String JOB_LABEL = "Exporting Mylyn Task Data"; //$NON-NLS-1$
 
 	private final boolean zip;
 
@@ -136,7 +136,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 						}
 						if (!copy(sourceRepositoriesFile, destRepositoriesFile)) {
 							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									"Could not export repositories file", new Exception()));
+									"Could not export repositories file", new Exception())); //$NON-NLS-1$
 						}
 						monitor.worked(1);
 					}
@@ -160,7 +160,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 						}
 						if (!copy(sourceTaskListFile, destTaskListFile)) {
 							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									"Could not export task list file", new Exception()));
+									"Could not export task list file", new Exception())); //$NON-NLS-1$
 						}
 						monitor.worked(1);
 					}
@@ -193,7 +193,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 				} catch (RuntimeException e) {
 					// FIXME what is caught here?
 					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-							"Could not export activity history context file", e));
+							"Could not export activity history context file", e)); //$NON-NLS-1$
 				}
 			}
 
@@ -223,10 +223,10 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 							destTaskFile.delete();
 						}
 						if (!copy(sourceTaskContextFile, destTaskFile) && !errorDisplayed) {
-							Exception e = new Exception("Export Exception: " + sourceTaskContextFile.getPath() + " -> "
+							Exception e = new Exception("Export Exception: " + sourceTaskContextFile.getPath() + " -> " //$NON-NLS-1$ //$NON-NLS-2$
 									+ destTaskFile.getPath());
 							StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									"Could not export one or more task context files", e));
+									"Could not export one or more task context files", e)); //$NON-NLS-1$
 							errorDisplayed = true;
 						}
 						monitor.worked(1);
@@ -243,7 +243,7 @@ public class TaskDataExportOperation implements IRunnableWithProgress {
 					ZipFileUtil.createZipFile(destZipFile, filesToZip, TasksUiPlugin.getDefault().getDataDirectory(),
 							monitor);
 				} catch (Exception e) {
-					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create zip file",
+					StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create zip file", //$NON-NLS-1$
 							e));
 				}
 			}

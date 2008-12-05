@@ -88,21 +88,21 @@ import org.xml.sax.SAXException;
 @Deprecated
 public class TaskListElementImporter {
 
-	private static final String TRANSFORM_PROPERTY_VERSION = "version";
+	private static final String TRANSFORM_PROPERTY_VERSION = "version"; //$NON-NLS-1$
 
 	// May 2007: There was a bug when reading in 1.1
 	// Result was an infinite loop within the parser
-	private static final String XML_VERSION = "1.0";
+	private static final String XML_VERSION = "1.0"; //$NON-NLS-1$
 
-	public static final String ATTRIBUTE_VERSION = "Version";
+	public static final String ATTRIBUTE_VERSION = "Version"; //$NON-NLS-1$
 
-	public static final String ELEMENT_TASK_LIST = "TaskList";
+	public static final String ELEMENT_TASK_LIST = "TaskList"; //$NON-NLS-1$
 
-	private static final String VALUE_VERSION = "1.0.1";
+	private static final String VALUE_VERSION = "1.0.1"; //$NON-NLS-1$
 
-	private static final String VALUE_VERSION_1_0_0 = "1.0.0";
+	private static final String VALUE_VERSION_1_0_0 = "1.0.0"; //$NON-NLS-1$
 
-	private static final String FILE_SUFFIX_SAVE = "save.xml";
+	private static final String FILE_SUFFIX_SAVE = "save.xml"; //$NON-NLS-1$
 
 	private DelegatingTaskExternalizer delegatingExternalizer;
 
@@ -112,13 +112,13 @@ public class TaskListElementImporter {
 
 	private final List<Node> orphanedQueryNodes = new ArrayList<Node>();
 
-	private String readVersion = "";
+	private String readVersion = ""; //$NON-NLS-1$
 
 	private boolean hasCaughtException = false;
 
 	private final TaskRepositoryManager repositoryManager;
 
-	private static final String MESSAGE_RESTORE = "Could not read task list.  Consider restoring via File -> Import -> Mylyn Task Data";
+	private static final String MESSAGE_RESTORE = Messages.TaskListElementImporter_Could_not_read_task_list;
 
 	public TaskListElementImporter(TaskRepositoryManager repositoryManager, RepositoryModel repositoryModel) {
 		this.repositoryManager = repositoryManager;
@@ -139,7 +139,7 @@ public class TaskListElementImporter {
 				outStream.close();
 			}
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -167,7 +167,7 @@ public class TaskListElementImporter {
 				delegatingExternalizer.createQueryElement(query, doc, root);
 			} catch (Throwable t) {
 				// FIXME use log?
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Did not externalize: "
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Did not externalize: " //$NON-NLS-1$
 						+ query.getSummary(), t));
 			}
 		}
@@ -258,7 +258,7 @@ public class TaskListElementImporter {
 			}
 			Document doc = openAsDOM(inFile, false);
 			if (doc == null) {
-				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));
+				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML")); //$NON-NLS-1$
 				return;
 			}
 			Element root = doc.getDocumentElement();
@@ -266,8 +266,8 @@ public class TaskListElementImporter {
 
 			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
 				// make an error? propagate exception?
-				StatusHandler.log(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN, "Task list version \""
-						+ readVersion + "\" not supported"));
+				StatusHandler.log(new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN, "Task list version \"" //$NON-NLS-1$
+						+ readVersion + "\" not supported")); //$NON-NLS-1$
 			} else {
 				NodeList list = root.getChildNodes();
 
@@ -358,7 +358,7 @@ public class TaskListElementImporter {
 			doc = db.newDocument();
 		} catch (ParserConfigurationException e) {
 			// FIXME propagate exception?
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create document", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create document", e)); //$NON-NLS-1$
 			return doc;
 		}
 
@@ -446,7 +446,7 @@ public class TaskListElementImporter {
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException pce) {
 			inputFile.renameTo(new File(inputFile.getName() + FILE_SUFFIX_SAVE));
-			IOException ioe = new IOException("Failed to load XML file");
+			IOException ioe = new IOException("Failed to load XML file"); //$NON-NLS-1$
 			ioe.initCause(pce);
 			throw ioe;
 		}
@@ -476,10 +476,10 @@ public class TaskListElementImporter {
 		} catch (SAXException se) {
 			// TODO: Use TaskListBackupManager to attempt restore from backup
 			if (propagateException) {
-				throw new IOException("The task list format is invalid");
+				throw new IOException("The task list format is invalid"); //$NON-NLS-1$
 			} else {
-				MessageDialog.openWarning(null, "Mylyn task list corrupt",
-						"Unable to read the Mylyn task list. Please restore from previous backup via File > Import > Mylyn Task Data");
+				MessageDialog.openWarning(null, Messages.TaskListElementImporter_Mylyn_task_list_corrupt,
+						Messages.TaskListElementImporter_Unable_to_read_the_Mylyn_task_list);
 			}
 		}
 		return document;
@@ -490,13 +490,14 @@ public class TaskListElementImporter {
 		String name = inFile.getAbsolutePath();
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat();
-		sdf.applyPattern("yy-MM-dd-ss");
-		name = name.substring(0, name.lastIndexOf('.')) + "-failed-" + sdf.format(date) + ".zip";
+		sdf.applyPattern("yy-MM-dd-ss"); //$NON-NLS-1$
+		name = name.substring(0, name.lastIndexOf('.')) + Messages.TaskListElementImporter__failed_ + sdf.format(date)
+				+ ".zip"; //$NON-NLS-1$
 		File save = new File(name);
 		if (save.exists()) {
 			if (!save.delete()) {
 				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-						"Unable to delete old backup tasklist file"));
+						"Unable to delete old backup tasklist file")); //$NON-NLS-1$
 				return;
 			}
 		}
@@ -506,7 +507,7 @@ public class TaskListElementImporter {
 		if (child == null) {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, MESSAGE_RESTORE, e));
 		} else {
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Tasks may have been lost from "
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Tasks may have been lost from " //$NON-NLS-1$
 					+ child.getNodeName(), e));
 		}
 	}
@@ -552,7 +553,7 @@ public class TaskListElementImporter {
 				repositoriesExternalizer.writeRepositories(repositories, outputStream);
 				outputStream.close();
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list could not be found", e));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list could not be found", e)); //$NON-NLS-1$
 			}
 		}
 		return;
@@ -572,7 +573,7 @@ public class TaskListElementImporter {
 			try {
 				delegatingExternalizer.createQueryElement(query, doc, root);
 			} catch (Throwable t) {
-				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Did not externalize: "
+				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Did not externalize: " //$NON-NLS-1$
 						+ query.getSummary(), t));
 				return null;
 			}
@@ -582,12 +583,12 @@ public class TaskListElementImporter {
 
 	public List<RepositoryQuery> readQueries(File inFile) throws IOException {
 		if (!inFile.exists()) {
-			throw new FileNotFoundException("File does not exist: " + inFile);
+			throw new FileNotFoundException("File does not exist: " + inFile); //$NON-NLS-1$
 		}
 
 		Document doc = openAsDOM(inFile, true);
 		if (doc == null) {
-			throw new IOException("TaskList was not well formed XML");
+			throw new IOException("TaskList was not well formed XML"); //$NON-NLS-1$
 		}
 		return readQueryDocument(doc);
 	}
@@ -616,13 +617,13 @@ public class TaskListElementImporter {
 					}
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-							"Tasks may have been lost from " + child.getNodeName(), e));
+							"Tasks may have been lost from " + child.getNodeName(), e)); //$NON-NLS-1$
 				}
 			}
 		} else {
 			// FIXME propagate error?
-			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Version \"" + readVersion
-					+ "\" not supported"));
+			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Version \"" + readVersion //$NON-NLS-1$
+					+ "\" not supported")); //$NON-NLS-1$
 		}
 
 		return queries;
@@ -640,7 +641,7 @@ public class TaskListElementImporter {
 		try {
 			writeTask(task, new FileOutputStream(outFile));
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -672,7 +673,7 @@ public class TaskListElementImporter {
 
 			outputStream.close();
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task data was not written", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -684,7 +685,7 @@ public class TaskListElementImporter {
 			}
 			Document doc = openAsDOM(inFile, false);
 			if (doc == null) {
-				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML"));
+				handleException(inFile, null, new TaskExternalizationException("TaskList was not well formed XML")); //$NON-NLS-1$
 				return tasks;
 			}
 
@@ -708,13 +709,13 @@ public class TaskListElementImporter {
 						}
 					} catch (Exception e) {
 						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-								"Tasks may have been lost from " + child.getNodeName(), e));
+								"Tasks may have been lost from " + child.getNodeName(), e)); //$NON-NLS-1$
 					}
 				}
 			} else {
 				// FIXME propagate error?
-				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Version \"" + readVersion
-						+ "\" not supported"));
+				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Version \"" + readVersion //$NON-NLS-1$
+						+ "\" not supported")); //$NON-NLS-1$
 			}
 		} catch (Exception e) {
 			handleException(inFile, null, e);

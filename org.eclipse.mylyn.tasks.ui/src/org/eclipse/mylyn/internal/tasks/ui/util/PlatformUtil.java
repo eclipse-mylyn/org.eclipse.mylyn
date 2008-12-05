@@ -31,7 +31,7 @@ public class PlatformUtil {
 					extension = extension.substring(j);
 				}
 			}
-			extensions[i] = "*" + extension;
+			extensions[i] = "*" + extension; //$NON-NLS-1$
 		}
 		return extensions;
 	}

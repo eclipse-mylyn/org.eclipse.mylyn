@@ -56,13 +56,13 @@ public class AttachmentUtil {
 
 	protected static final int BUFFER_SIZE = 1024;
 
-	public static final String CONTEXT_DESCRIPTION = "mylyn/context/zip";
+	public static final String CONTEXT_DESCRIPTION = "mylyn/context/zip"; //$NON-NLS-1$
 
-	private static final String CONTEXT_DESCRIPTION_LEGACY = "mylar/context/zip";
+	private static final String CONTEXT_DESCRIPTION_LEGACY = "mylar/context/zip"; //$NON-NLS-1$
 
-	private static final String CONTEXT_FILENAME = "mylyn-context.zip";
+	private static final String CONTEXT_FILENAME = "mylyn-context.zip"; //$NON-NLS-1$
 
-	private static final String CONTEXT_CONTENT_TYPE = "application/octet-stream";
+	private static final String CONTEXT_CONTENT_TYPE = "application/octet-stream"; //$NON-NLS-1$
 
 	public static boolean postContext(AbstractRepositoryConnector connector, TaskRepository repository, ITask task,
 			String comment, TaskAttribute attribute, IProgressMonitor monitor) throws CoreException {
@@ -111,8 +111,6 @@ public class AttachmentUtil {
 		return contextAttachments.size() > 0;
 	}
 
-	private static final String TITLE_DIALOG = "Mylyn Information";
-
 	public static boolean downloadContext(final ITask task, final ITaskAttachment attachment,
 			final IRunnableContext context) {
 		if (task.isActive()) {
@@ -136,16 +134,16 @@ public class AttachmentUtil {
 					} catch (IOException e) {
 						throw new InvocationTargetException(
 								new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-										RepositoryStatus.ERROR_IO, "Error writing to context file", e)));
+										RepositoryStatus.ERROR_IO, "Error writing to context file", e))); //$NON-NLS-1$
 					}
 				}
 			});
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				TasksUiInternal.displayStatus(TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
+				TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, ((CoreException) e.getCause()).getStatus());
 			} else {
 				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Unexpected error while retrieving context", e));
+						"Unexpected error while retrieving context", e)); //$NON-NLS-1$
 			}
 			return false;
 		} catch (InterruptedException ignored) {
@@ -162,8 +160,8 @@ public class AttachmentUtil {
 		ContextCorePlugin.getContextStore().saveActiveContext();
 		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
 		if (!sourceContextFile.exists()) {
-			TasksUiInternal.displayStatus(TITLE_DIALOG, new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"The context is empty."));
+			TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					Messages.AttachmentUtil_The_context_is_empty));
 			return false;
 		}
 
@@ -185,14 +183,14 @@ public class AttachmentUtil {
 			});
 		} catch (InvocationTargetException e) {
 			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Unexpected error while attaching context", e));
+					"Unexpected error while attaching context", e)); //$NON-NLS-1$
 			return false;
 		} catch (InterruptedException ignored) {
 			// canceled
 			return false;
 		}
 		if (submitJob.getStatus() != null) {
-			TasksUiInternal.displayStatus(TITLE_DIALOG, submitJob.getStatus());
+			TasksUiInternal.displayStatus(Messages.AttachmentUtil_Mylyn_Information, submitJob.getStatus());
 			return false;
 		}
 		return true;
@@ -235,14 +233,14 @@ public class AttachmentUtil {
 	public static void downloadAttachment(ITaskAttachment attachment, OutputStream out, IProgressMonitor monitor)
 			throws CoreException {
 		try {
-			monitor.beginTask("Downloading attachment", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.AttachmentUtil_Downloading_attachment, IProgressMonitor.UNKNOWN);
 
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					attachment.getConnectorKind());
 			AbstractTaskAttachmentHandler handler = connector.getTaskAttachmentHandler();
 			if (handler == null) {
 				throw new CoreException(new RepositoryStatus(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_INTERNAL, "The repository does not support attachments."));
+						RepositoryStatus.ERROR_INTERNAL, "The repository does not support attachments.")); //$NON-NLS-1$
 			}
 
 			InputStream in = handler.getContent(attachment.getTaskRepository(), attachment.getTask(),
@@ -259,14 +257,14 @@ public class AttachmentUtil {
 				}
 			} catch (IOException e) {
 				throw new CoreException(new RepositoryStatus(attachment.getTaskRepository(), IStatus.ERROR,
-						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error reading attachment: "
+						TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO, "IO error reading attachment: " //$NON-NLS-1$
 								+ e.getMessage(), e));
 			} finally {
 				try {
 					in.close();
 				} catch (IOException e) {
 					StatusHandler.log(new Status(IStatus.ERROR, ITasksCoreConstants.ID_PLUGIN,
-							"Error closing attachment stream", e));
+							"Error closing attachment stream", e)); //$NON-NLS-1$
 				}
 			}
 		} finally {
