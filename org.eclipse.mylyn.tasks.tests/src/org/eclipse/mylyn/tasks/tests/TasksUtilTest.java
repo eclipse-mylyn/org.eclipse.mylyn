@@ -24,10 +24,24 @@ public class TasksUtilTest extends TestCase {
 		assertEquals("", TasksUtil.encode(""));
 	}
 
+	public void testDecodeInvalid() {
+		try {
+			String s = TasksUtil.decode("abc-123");
+			fail("Expected IllegalArgumentException, got '" + s + "'");
+		} catch (IllegalArgumentException e) {
+		}
+		try {
+			String s = TasksUtil.decode("%Z_");
+			fail("Expected IllegalArgumentException, got '" + s + "'");
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
 	public void testEncode() {
 		assertEquals("abc", TasksUtil.decode("abc"));
 		assertEquals("-", TasksUtil.decode("%2D_"));
 		assertEquals("abc-123", TasksUtil.decode("abc%2D_123"));
+		assertEquals("abc-123", TasksUtil.decode(TasksUtil.decode(TasksUtil.encode(TasksUtil.encode("abc-123")))));
 	}
 
 }

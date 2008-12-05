@@ -44,6 +44,8 @@ public class TasksUtil {
 					throw new IllegalArgumentException("Invalid escape code in '" + text + "'");
 				}
 				escaped = !escaped;
+			} else {
+				throw new IllegalArgumentException("Unexpected character '" + c + "' in '" + text + "'");
 			}
 		}
 		return sb.toString();
