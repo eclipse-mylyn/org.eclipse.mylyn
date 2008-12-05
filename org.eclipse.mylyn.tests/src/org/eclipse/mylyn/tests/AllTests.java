@@ -51,6 +51,7 @@ public class AllTests {
 		suite.addTest(AllJiraTests.suite());
 		suite.addTest(AllTracTests.suite());
 		suite.addTest(AllXPlannerTests.suite());
+		suite.addTest(org.eclipse.mylyn.wikitext.tests.HeadlessTests.suite());
 		return suite;
 	}
 }
