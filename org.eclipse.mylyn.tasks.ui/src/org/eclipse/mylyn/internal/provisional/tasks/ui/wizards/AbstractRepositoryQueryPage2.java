@@ -50,15 +50,21 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 	private Button updateButton;
 
-	private boolean firstTime;
+	private boolean firstTime = true;
 
 	private final AbstractRepositoryConnector connector;
+
+	private boolean needsRepositoryConfiguration = true;
 
 	public AbstractRepositoryQueryPage2(String pageName, TaskRepository repository, IRepositoryQuery query) {
 		super(pageName, repository, query);
 		this.connector = TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
 		setTitle("Enter query parameters");
 		setDescription("If attributes are blank or stale press the Update button.");
+	}
+
+	public void setNeedsRepositoryConfiguration(boolean needsRepositoryConfiguration) {
+		this.needsRepositoryConfiguration = needsRepositoryConfiguration;
 	}
 
 	public void createControl(Composite parent) {
@@ -78,7 +84,9 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		innerComposite.setLayout(new FillLayout());
 		createPageContent(innerComposite);
 
-		createUpdateButton(composite);
+		if (needsRepositoryConfiguration) {
+			createUpdateButton(composite);
+		}
 
 		if (getQuery() != null) {
 			titleText.setText(getQuery().getSummary());
@@ -145,7 +153,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 
 		if (visible && firstTime) {
 			firstTime = false;
-			if (!hasRepositoryConfiguration()) {
+			if (!hasRepositoryConfiguration() && needsRepositoryConfiguration) {
 				// delay the execution so the dialog's progress bar is visible
 				// when the attributes are updated
 				Display.getDefault().asyncExec(new Runnable() {
@@ -165,7 +173,9 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	}
 
 	private void initializePage() {
-		updateAttributesFromRepository(false);
+		if (needsRepositoryConfiguration) {
+			updateAttributesFromRepository(false);
+		}
 		boolean restored = (getQuery() != null);
 		if (inSearchContainer()) {
 			restored |= restoreState(null);
