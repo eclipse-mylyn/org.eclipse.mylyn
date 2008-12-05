@@ -43,6 +43,7 @@ public class TasksUtil {
 				} catch (NumberFormatException e) {
 					throw new IllegalArgumentException("Invalid escape code in '" + text + "'");
 				}
+				escaped = !escaped;
 			}
 		}
 		return sb.toString();
