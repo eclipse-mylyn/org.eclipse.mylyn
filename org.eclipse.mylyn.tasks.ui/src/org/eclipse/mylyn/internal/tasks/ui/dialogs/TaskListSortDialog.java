@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,11 +46,11 @@ public class TaskListSortDialog extends SelectionDialog {
 	public TaskListSortDialog(IShellProvider parentShell, TaskListView taskListView) {
 		super(parentShell.getShell());
 		propertyText = new String[3];
-		propertyText[0] = "Priority";
-		propertyText[1] = "Summary";
-		propertyText[2] = "Date Created";
+		propertyText[0] = Messages.TaskListSortDialog_Priority;
+		propertyText[1] = Messages.TaskListSortDialog_Summary;
+		propertyText[2] = Messages.TaskListSortDialog_Date_Created;
 		this.taskListView = taskListView;
-		setTitle(TaskListView.LABEL_VIEW + " Sorting");
+		setTitle(TaskListView.LABEL_VIEW + Messages.TaskListSortDialog_Sorting);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class TaskListSortDialog extends SelectionDialog {
 		prioritiesArea.setLayout(new GridLayout(3, false));
 
 		Label sortByLabel = new Label(prioritiesArea, SWT.NULL);
-		sortByLabel.setText("Sort order:");
+		sortByLabel.setText(Messages.TaskListSortDialog_Sort_order);
 		GridData data = new GridData();
 		data.horizontalSpan = 3;
 		sortByLabel.setLayoutData(data);
@@ -75,14 +75,14 @@ public class TaskListSortDialog extends SelectionDialog {
 		for (int i = 0; i < 2; i++) {
 			final int index = i;
 			Label numberLabel = new Label(prioritiesArea, SWT.NULL);
-			numberLabel.setText("" + (i + 1) + ".");
+			numberLabel.setText("" + (i + 1) + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			priorityCombos[i] = new Combo(prioritiesArea, SWT.READ_ONLY);
 			priorityCombos[i].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			Composite directionGroup = new Composite(prioritiesArea, SWT.NONE);
 			directionGroup.setLayout(new GridLayout(2, false));
 			ascendingButtons[i] = new Button(directionGroup, SWT.RADIO);
-			ascendingButtons[i].setText("Ascending");
+			ascendingButtons[i].setText(Messages.TaskListSortDialog_Ascending);
 			ascendingButtons[i].addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -90,7 +90,7 @@ public class TaskListSortDialog extends SelectionDialog {
 				}
 			});
 			descendingButtons[i] = new Button(directionGroup, SWT.RADIO);
-			descendingButtons[i].setText("Descending");
+			descendingButtons[i].setText(Messages.TaskListSortDialog_Descending);
 			descendingButtons[i].addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -191,18 +191,32 @@ public class TaskListSortDialog extends SelectionDialog {
 		b[0] = taskListView.getSorter().getSortDirection();
 		b[1] = taskListView.getSorter().getSortDirection2();
 		updateUI(a, b);
+
+		applyDialogFont(composite);
 		return composite;
 	}
 
 	@Override
 	protected void okPressed() {
 		if (isDirty()) {
-			taskListView.getSorter().setSortByIndex(
-					SortByIndex.valueOf(priorityCombos[0].getItem(priorityCombos[0].getSelectionIndex()).replace(' ',
-							'_').toUpperCase()));
-			taskListView.getSorter().setSortByIndex2(
-					SortByIndex.valueOf(priorityCombos[1].getItem(priorityCombos[1].getSelectionIndex()).replace(' ',
-							'_').toUpperCase()));
+			String select;
+			select = priorityCombos[0].getItem(priorityCombos[0].getSelectionIndex());
+			if (propertyText[0].equals(select)) {
+				taskListView.getSorter().setSortByIndex(SortByIndex.PRIORITY);
+			} else if (propertyText[1].equals(select)) {
+				taskListView.getSorter().setSortByIndex(SortByIndex.SUMMARY);
+			} else {
+				taskListView.getSorter().setSortByIndex(SortByIndex.DATE_CREATED);
+			}
+			select = priorityCombos[1].getItem(priorityCombos[1].getSelectionIndex());
+			if (propertyText[0].equals(select)) {
+				taskListView.getSorter().setSortByIndex2(SortByIndex.PRIORITY);
+			} else if (propertyText[1].equals(select)) {
+				taskListView.getSorter().setSortByIndex2(SortByIndex.SUMMARY);
+			} else {
+				taskListView.getSorter().setSortByIndex2(SortByIndex.DATE_CREATED);
+			}
+
 			if (descendingButtons[0].getSelection()) {
 				taskListView.getSorter().setSortDirection(-1);
 			} else {

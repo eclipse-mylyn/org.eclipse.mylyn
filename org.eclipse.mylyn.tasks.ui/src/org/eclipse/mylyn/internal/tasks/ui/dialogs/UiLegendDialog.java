@@ -77,7 +77,7 @@ public class UiLegendDialog extends PopupDialog {
 	protected Control createDialogArea(Composite parent) {
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
-		form.setText(UiLegendControl.TITLE);
+		form.setText(Messages.UiLegendControl_Tasks_UI_Legend);
 		form.getToolBarManager().add(new CloseDialogAction());
 		form.getToolBarManager().update(true);
 		form.getBody().setLayout(new TableWrapLayout());
@@ -93,7 +93,7 @@ public class UiLegendDialog extends PopupDialog {
 
 		private CloseDialogAction() {
 			setImageDescriptor(CommonImages.NOTIFICATION_CLOSE);
-			setText("Close Dialog");
+			setText(Messages.UiLegendDialog_Close_Dialog);
 		}
 
 		@Override

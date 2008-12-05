@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -111,12 +111,12 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		Composite area = (Composite) super.createDialogArea(parent);
 
 		Label idLabel = new Label(area, SWT.NULL);
-		idLabel.setText("Enter Key/&ID (use comma for multiple): ");
+		idLabel.setText(Messages.RemoteTaskSelectionDialog_Enter_Key_ID__use_comma_for_multiple_);
 		idText = new Text(area, SWT.BORDER);
 		idText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 		Label matchingTasksLabel = new Label(area, SWT.NONE);
-		matchingTasksLabel.setText("&Matching tasks:");
+		matchingTasksLabel.setText(Messages.RemoteTaskSelectionDialog_Matching_tasks);
 		tasksViewer = new TableViewer(area, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		tasksViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 200).create());
 		tasksViewer.setLabelProvider(new DecoratingLabelProvider(new TaskElementLabelProvider(true),
@@ -179,7 +179,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		repositoriesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
 
 		Label repositoriesLabel = new Label(repositoriesComposite, SWT.NONE);
-		repositoriesLabel.setText("&Select a task repository:");
+		repositoriesLabel.setText(Messages.RemoteTaskSelectionDialog_Select_a_task_repository);
 
 		repositoriesViewer = new ComboViewer(repositoriesComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		repositoriesViewer.setLabelProvider(new TaskRepositoryLabelProvider());
@@ -200,7 +200,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		});
 
 		Button addRepositoryButton = new Button(repositoriesComposite, SWT.NONE);
-		addRepositoryButton.setText("&Add...");
+		addRepositoryButton.setText(Messages.RemoteTaskSelectionDialog_Add_);
 		addRepositoryButton.setEnabled(TasksUiPlugin.getRepositoryManager().hasUserManagedRepositoryConnectors());
 		addRepositoryButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -219,7 +219,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		addToTaskListComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
 		addToTaskListCheck = new Button(addToTaskListComposite, SWT.CHECK);
-		addToTaskListCheck.setText("Add to Task &List category:");
+		addToTaskListCheck.setText(Messages.RemoteTaskSelectionDialog_Add_to_Task_List_category);
 
 		categoryViewer = new ComboViewer(addToTaskListComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		categoryViewer.setContentProvider(new ArrayContentProvider());
@@ -265,15 +265,17 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 	}
 
 	private void validate() {
-		if (idText.getText().trim().equals("")) {
-			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0, "Enter a valid task ID", null));
+		if (idText.getText().trim().equals("")) { //$NON-NLS-1$
+			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0,
+					Messages.RemoteTaskSelectionDialog_Enter_a_valid_task_ID, null));
 			return;
 		}
 		if (tasksViewer.getSelection().isEmpty() && repositoriesViewer.getSelection().isEmpty()) {
-			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0, "Select a task or repository", null));
+			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0,
+					Messages.RemoteTaskSelectionDialog_Select_a_task_or_repository, null));
 			return;
 		}
-		updateStatus(new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, 0, "", null));
+		updateStatus(new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, 0, "", null)); //$NON-NLS-1$
 	}
 
 	private String[] selectedIds;
@@ -323,7 +325,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 	}
 
 	private void computeIds() {
-		selectedIds = idText.getText().split(",");
+		selectedIds = idText.getText().split(","); //$NON-NLS-1$
 		for (String id : selectedIds) {
 			id = id.trim();
 		}

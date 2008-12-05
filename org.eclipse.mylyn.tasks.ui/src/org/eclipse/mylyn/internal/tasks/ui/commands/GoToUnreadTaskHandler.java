@@ -30,9 +30,9 @@ import org.eclipse.swt.widgets.TreeItem;
  */
 public abstract class GoToUnreadTaskHandler extends AbstractTaskListViewHandler {
 
-	public static final String ID_NEXT = "org.eclipse.mylyn.tasklist.actions.goToNextUnread";
+	public static final String ID_NEXT = "org.eclipse.mylyn.tasklist.actions.goToNextUnread"; //$NON-NLS-1$
 
-	public static final String ID_PREVIOUS = "org.eclipse.mylyn.tasklist.actions.goToPreviousUnread";
+	public static final String ID_PREVIOUS = "org.eclipse.mylyn.tasklist.actions.goToPreviousUnread"; //$NON-NLS-1$
 
 	private Direction direction = Direction.DOWN;
 

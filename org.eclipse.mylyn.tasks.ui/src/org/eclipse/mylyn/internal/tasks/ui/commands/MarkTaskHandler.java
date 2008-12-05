@@ -40,7 +40,7 @@ public abstract class MarkTaskHandler extends AbstractTaskHandler {
 
 	public static class MarkTaskCompleteHandler extends AbstractTaskHandler {
 
-		public static final String ID_COMMAND = "org.eclipse.mylyn.tasks.ui.command.markTaskComplete";
+		public static final String ID_COMMAND = "org.eclipse.mylyn.tasks.ui.command.markTaskComplete"; //$NON-NLS-1$
 
 		@Override
 		protected void execute(ExecutionEvent event, ITask task) throws ExecutionException {

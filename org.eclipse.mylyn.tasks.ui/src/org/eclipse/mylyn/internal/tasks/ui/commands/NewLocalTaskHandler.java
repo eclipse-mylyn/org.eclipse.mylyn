@@ -36,9 +36,9 @@ public class NewLocalTaskHandler extends AbstractHandler {
 				TaskListView taskListView = (TaskListView) part;
 				NewTaskAction action = new NewTaskAction();
 				try {
-					action.setInitializationData(null, null, "local");
+					action.setInitializationData(null, null, "local"); //$NON-NLS-1$
 				} catch (CoreException e) {
-					throw new ExecutionException("Could not create local task", e);
+					throw new ExecutionException(Messages.NewLocalTaskHandler_Could_not_create_local_task, e);
 				}
 				action.selectionChanged(action, taskListView.getViewer().getSelection());
 				if (action.isEnabled()) {

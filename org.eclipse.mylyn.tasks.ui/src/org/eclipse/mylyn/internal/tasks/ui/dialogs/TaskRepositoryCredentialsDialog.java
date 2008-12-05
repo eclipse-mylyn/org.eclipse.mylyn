@@ -46,15 +46,15 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 
-	private static final String DIALOG_TITLE = "Enter Credentials";
+	private static final String DIALOG_TITLE = Messages.TaskRepositoryCredentialsDialog_Enter_Credentials;
 
-	private static final String IMAGE_FILE_KEYLOCK = "icons/wizban/secur_role_wiz.gif";
+	private static final String IMAGE_FILE_KEYLOCK = "icons/wizban/secur_role_wiz.gif"; //$NON-NLS-1$
 
 	public static final int TASK_REPOSITORY_CHANGED = 1000;
 
-	private static final String MESSAGE = "Enter repository credentials";
+	private static final String MESSAGE = Messages.TaskRepositoryCredentialsDialog_Enter_repository_credentials;
 
-	private static final String TITLE = "Repository Authentication";
+	private static final String TITLE = Messages.TaskRepositoryCredentialsDialog_Repository_Authentication;
 
 	public static TaskRepositoryCredentialsDialog createDialog(Shell shell) {
 		return new TaskRepositoryCredentialsDialog(shell);
@@ -64,13 +64,13 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 
 	private String message;
 
-	private String password = "";
+	private String password = ""; //$NON-NLS-1$
 
 	private boolean savePassword;
 
 	private TaskRepository taskRepository;
 
-	private String username = "";
+	private String username = ""; //$NON-NLS-1$
 
 	private TaskRepositoryCredentialsDialog(Shell parentShell) {
 		super(parentShell);
@@ -90,7 +90,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Link link = new Link(composite, SWT.WRAP);
-		link.setText("<a href=\"properties\">Open Repository Properties</a> to disable background synchronization by disconnecting the repository.");
+		link.setText(Messages.TaskRepositoryCredentialsDialog_HTML_Open_Repository_Properties);
 		link.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -126,13 +126,13 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 			label.setImage(TasksUiPlugin.getDefault().getBrandingIcon(taskRepository.getConnectorKind()));
 
 			label = new Label(labelComposite, SWT.NONE);
-			label.setText("Task Repository:");
+			label.setText(Messages.TaskRepositoryCredentialsDialog_Task_Repository);
 
 			label = new Label(labelComposite, SWT.NONE);
 			label.setText(taskRepository.getRepositoryLabel());
 		}
 
-		new Label(composite, SWT.NONE).setText("&User ID:");
+		new Label(composite, SWT.NONE).setText(Messages.TaskRepositoryCredentialsDialog_User_ID);
 
 		final Text usernameField = new Text(composite, SWT.BORDER);
 		usernameField.addModifyListener(new ModifyListener() {
@@ -150,7 +150,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 				.grab(true, false)
 				.applyTo(usernameField);
 
-		new Label(composite, SWT.NONE).setText("&Password:");
+		new Label(composite, SWT.NONE).setText(Messages.TaskRepositoryCredentialsDialog_Password);
 
 		final Text passwordField = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 		passwordField.addModifyListener(new ModifyListener() {
@@ -169,7 +169,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 				.applyTo(passwordField);
 
 		final Button savePasswordButton = new Button(composite, SWT.CHECK);
-		savePasswordButton.setText("&Save Password");
+		savePasswordButton.setText(Messages.TaskRepositoryCredentialsDialog_Save_Password);
 		savePasswordButton.setSelection(savePassword);
 		savePasswordButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -192,7 +192,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 			AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 					taskRepository.getConnectorKind());
 			if (connector != null) {
-				setTitle(connector.getShortLabel() + " " + TITLE);
+				setTitle(connector.getShortLabel() + " " + TITLE); //$NON-NLS-1$
 			}
 		}
 
@@ -241,7 +241,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		label.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_BEGINNING));
 
 		label = new Label(composite, SWT.WRAP);
-		label.setText("Saved passwords are stored on your computer in a file that is difficult, but not impossible, for an intruder to read.");
+		label.setText(Messages.TaskRepositoryCredentialsDialog_Saved_passwords_are_stored_that_is_difficult);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).hint(
 				convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT).grab(true,
 				false).applyTo(label);

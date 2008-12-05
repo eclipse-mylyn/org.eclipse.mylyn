@@ -33,12 +33,12 @@ public class AddTaskRepositoryHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Shell shell = HandlerUtil.getActiveShell(event);
 		if (shell != null && !shell.isDisposed()) {
-			String connectorKind = event.getParameter("connectorKind");
+			String connectorKind = event.getParameter("connectorKind"); //$NON-NLS-1$
 			NewRepositoryWizard repositoryWizard = new NewRepositoryWizard(connectorKind);
 
 			WizardDialog repositoryDialog = new WizardDialog(shell, repositoryWizard);
 			repositoryDialog.create();
-			repositoryDialog.getShell().setText("Add Task Repository");
+			repositoryDialog.getShell().setText(Messages.AddTaskRepositoryHandler_Add_Task_Repository);
 			repositoryDialog.setBlockOnOpen(true);
 			repositoryDialog.open();
 			if (repositoryDialog.getReturnCode() == Window.OK) {

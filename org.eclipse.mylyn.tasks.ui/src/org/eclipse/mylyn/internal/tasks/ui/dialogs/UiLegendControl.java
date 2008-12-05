@@ -54,8 +54,6 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class UiLegendControl extends Composite {
 
-	public static final String TITLE = "Tasks UI Legend";
-
 	private final FormToolkit toolkit;
 
 	private Window window = null;
@@ -178,7 +176,7 @@ public class UiLegendControl extends Composite {
 
 	private void createTasksSection(Composite parent) {
 		Section tasksSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		tasksSection.setText("Tasks");
+		tasksSection.setText(Messages.UiLegendControl_Tasks);
 		tasksSection.setLayout(new TableWrapLayout());
 		tasksSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
@@ -195,26 +193,26 @@ public class UiLegendControl extends Composite {
 		tasksSection.setClient(tasksClient);
 
 		Label imageLabel;
-		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel = toolkit.createLabel(tasksClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
-		toolkit.createLabel(tasksClient, "Task");
+		toolkit.createLabel(tasksClient, Messages.UiLegendControl_Task);
 
-		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel = toolkit.createLabel(tasksClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CATEGORY));
-		toolkit.createLabel(tasksClient, "Category");
+		toolkit.createLabel(tasksClient, Messages.UiLegendControl_Category);
 
-		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel = toolkit.createLabel(tasksClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.QUERY));
-		toolkit.createLabel(tasksClient, "Query");
+		toolkit.createLabel(tasksClient, Messages.UiLegendControl_Query);
 
-		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel = toolkit.createLabel(tasksClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.CALENDAR));
-		toolkit.createLabel(tasksClient, "Date range");
+		toolkit.createLabel(tasksClient, Messages.UiLegendControl_Date_range);
 
-		imageLabel = toolkit.createLabel(tasksClient, "");
+		imageLabel = toolkit.createLabel(tasksClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.BLANK));
 
-		Hyperlink openView = toolkit.createHyperlink(tasksClient, "Open Task List...", SWT.WRAP);
+		Hyperlink openView = toolkit.createHyperlink(tasksClient, Messages.UiLegendControl_Open_Task_List_, SWT.WRAP);
 		openView.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkActivated(HyperlinkEvent e) {
 				close();
@@ -233,7 +231,7 @@ public class UiLegendControl extends Composite {
 
 	private void createPrioritiesSection(Composite parent) {
 		Section prioritiesSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		prioritiesSection.setText("Priorities");
+		prioritiesSection.setText(Messages.UiLegendControl_Priorities);
 		prioritiesSection.setLayout(new TableWrapLayout());
 		prioritiesSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
@@ -250,30 +248,30 @@ public class UiLegendControl extends Composite {
 		prioritiesSection.setClient(prioritiesClient);
 
 		Label imageLabel;
-		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel = toolkit.createLabel(prioritiesClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_1));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P1.getDescription());
 
-		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel = toolkit.createLabel(prioritiesClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_2));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P2.getDescription());
 
-		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel = toolkit.createLabel(prioritiesClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_3));
-		toolkit.createLabel(prioritiesClient, PriorityLevel.P3.getDescription() + " (default)");
+		toolkit.createLabel(prioritiesClient, PriorityLevel.P3.getDescription() + Messages.UiLegendControl__default_);
 
-		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel = toolkit.createLabel(prioritiesClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_4));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P4.getDescription());
 
-		imageLabel = toolkit.createLabel(prioritiesClient, "");
+		imageLabel = toolkit.createLabel(prioritiesClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.PRIORITY_5));
 		toolkit.createLabel(prioritiesClient, PriorityLevel.P5.getDescription());
 	}
 
 	private void createActivitySection(Composite parent) {
 		Section activitySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		activitySection.setText("Task Activity");
+		activitySection.setText(Messages.UiLegendControl_Task_Activity);
 		activitySection.setLayout(new TableWrapLayout());
 		activitySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
@@ -289,15 +287,15 @@ public class UiLegendControl extends Composite {
 		activityClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		activitySection.setClient(activityClient);
 
-		Label imageLabel = toolkit.createLabel(activityClient, "");
+		Label imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
-		Label labelToday = toolkit.createLabel(activityClient, "Scheduled for today");
+		Label labelToday = toolkit.createLabel(activityClient, Messages.UiLegendControl_Scheduled_for_today);
 		labelToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 				CommonThemes.COLOR_SCHEDULED_TODAY));
 
-		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
-		Label labelOverdue = toolkit.createLabel(activityClient, "Past scheduled date");
+		Label labelOverdue = toolkit.createLabel(activityClient, Messages.UiLegendControl_Past_scheduled_date);
 		labelOverdue.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 				CommonThemes.COLOR_SCHEDULED_PAST));
 
@@ -308,34 +306,34 @@ public class UiLegendControl extends Composite {
 // labelThisWeek.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 // TaskListColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED));
 
-		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
-		Label labelCompleted = toolkit.createLabel(activityClient, "Completed");
+		Label labelCompleted = toolkit.createLabel(activityClient, Messages.UiLegendControl_Completed);
 		labelCompleted.setFont(CommonFonts.STRIKETHROUGH);
 // labelCompleted.setForeground(TaskListColorsAndFonts.COLOR_TASK_COMPLETED);
 		labelCompleted.setForeground(themeManager.getCurrentTheme()
 				.getColorRegistry()
 				.get(CommonThemes.COLOR_COMPLETED));
 
-		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.TASK));
-		Label labelCompletedToday = toolkit.createLabel(activityClient, "Completed today");
+		Label labelCompletedToday = toolkit.createLabel(activityClient, Messages.UiLegendControl_Completed_today);
 		labelCompletedToday.setFont(CommonFonts.STRIKETHROUGH);
 		labelCompletedToday.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
 				CommonThemes.COLOR_COMPLETED_TODAY));
 
-		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_DUE));
-		toolkit.createLabel(activityClient, "Has due date");
+		toolkit.createLabel(activityClient, Messages.UiLegendControl_Has_due_date);
 
-		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_DATE_OVERDUE));
-		Label textLabel = toolkit.createLabel(activityClient, "Past Due date");
+		Label textLabel = toolkit.createLabel(activityClient, Messages.UiLegendControl_Past_Due_date);
 		textLabel.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_OVERDUE));
 
-		imageLabel = toolkit.createLabel(activityClient, "");
+		imageLabel = toolkit.createLabel(activityClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.BLANK));
-		Hyperlink adjust = toolkit.createHyperlink(activityClient, "Adjust Colors and Fonts...", SWT.WRAP);
+		Hyperlink adjust = toolkit.createHyperlink(activityClient, Messages.UiLegendControl_Adjust_Colors_and_Fonts_, SWT.WRAP);
 		adjust.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkActivated(HyperlinkEvent e) {
 				PreferenceDialog dlg = PreferencesUtil.createPreferenceDialogOn(PlatformUI.getWorkbench()
@@ -357,7 +355,7 @@ public class UiLegendControl extends Composite {
 
 	private void createContextSection(Composite parent) {
 		Section contextSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		contextSection.setText("Task Context");
+		contextSection.setText(Messages.UiLegendControl_Task_Context);
 		contextSection.setLayout(new TableWrapLayout());
 		contextSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
@@ -374,26 +372,26 @@ public class UiLegendControl extends Composite {
 		contextSection.setClient(contextClient);
 
 		Label imageLabel;
-		imageLabel = toolkit.createLabel(contextClient, "");
+		imageLabel = toolkit.createLabel(contextClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_FOCUS));
-		toolkit.createLabel(contextClient, "Focus view on active task");
+		toolkit.createLabel(contextClient, Messages.UiLegendControl_Focus_view_on_active_task);
 
-		imageLabel = toolkit.createLabel(contextClient, "");
+		imageLabel = toolkit.createLabel(contextClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE_EMPTY));
-		toolkit.createLabel(contextClient, "Inactive task with no context");
+		toolkit.createLabel(contextClient, Messages.UiLegendControl_Inactive_task_with_no_context);
 
-		imageLabel = toolkit.createLabel(contextClient, "");
+		imageLabel = toolkit.createLabel(contextClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_INACTIVE));
-		toolkit.createLabel(contextClient, "Inactive task with context");
+		toolkit.createLabel(contextClient, Messages.UiLegendControl_Inactive_task_with_context);
 
-		imageLabel = toolkit.createLabel(contextClient, "");
+		imageLabel = toolkit.createLabel(contextClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ACTIVE));
-		toolkit.createLabel(contextClient, "Active task");
+		toolkit.createLabel(contextClient, Messages.UiLegendControl_Active_task);
 	}
 
 	private void createSynchronizationSection(Composite parent) {
 		Section synchroSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		synchroSection.setText("Synchronization");
+		synchroSection.setText(Messages.UiLegendControl_Synchronization);
 		synchroSection.setLayout(new TableWrapLayout());
 		synchroSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
@@ -410,29 +408,29 @@ public class UiLegendControl extends Composite {
 		synchroSection.setClient(synchroClient);
 
 		Label imageLabel;
-		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel = toolkit.createLabel(synchroClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING_NEW));
-		toolkit.createLabel(synchroClient, "New task, open to view");
+		toolkit.createLabel(synchroClient, Messages.UiLegendControl_New_task);
 
-		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel = toolkit.createLabel(synchroClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_INCOMMING));
-		toolkit.createLabel(synchroClient, "Incoming changes, open to view");
+		toolkit.createLabel(synchroClient, Messages.UiLegendControl_Incoming_changes);
 
-		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel = toolkit.createLabel(synchroClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_OUTGOING));
-		toolkit.createLabel(synchroClient, "Outgoing changes");
+		toolkit.createLabel(synchroClient, Messages.UiLegendControl_Outgoing_changes);
 
-		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel = toolkit.createLabel(synchroClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_OUTGOING_NEW));
-		toolkit.createLabel(synchroClient, "Unsubmitted outgoing changes");
+		toolkit.createLabel(synchroClient, Messages.UiLegendControl_Unsubmitted_outgoing_changes);
 
-		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel = toolkit.createLabel(synchroClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_WARNING));
-		toolkit.createLabel(synchroClient, "Synchronization failed, mouse over for details");
+		toolkit.createLabel(synchroClient, Messages.UiLegendControl_Synchronization_failed);
 
-		imageLabel = toolkit.createLabel(synchroClient, "");
+		imageLabel = toolkit.createLabel(synchroClient, ""); //$NON-NLS-1$
 		imageLabel.setImage(CommonImages.getImage(CommonImages.OVERLAY_SYNC_CONFLICT));
-		toolkit.createLabel(synchroClient, "Conflicting changes, need to synchronize");
+		toolkit.createLabel(synchroClient, Messages.UiLegendControl_Conflicting_changes);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -494,14 +492,14 @@ public class UiLegendControl extends Composite {
 
 		Label imageLabel;
 		for (LegendElement element : elements) {
-			imageLabel = toolkit.createLabel(connectorClient, "");
+			imageLabel = toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
 			imageLabel.setImage(element.getImage());
 			toolkit.createLabel(connectorClient, element.getLabel());
 		}
 
 		if (elements.size() < 4) {
-			imageLabel = toolkit.createLabel(connectorClient, "");
-			toolkit.createLabel(connectorClient, "");
+			imageLabel = toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
+			toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
 		}
 	}
 
@@ -531,14 +529,14 @@ public class UiLegendControl extends Composite {
 
 		Label imageLabel;
 		for (IRepositoryElement taskListElement : elements) {
-			imageLabel = toolkit.createLabel(connectorClient, "");
+			imageLabel = toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
 			imageLabel.setImage(labelProvider.getImage(taskListElement));
 			toolkit.createLabel(connectorClient, taskListElement.getSummary());
 		}
 
 		if (elements.size() < 4) {
-			imageLabel = toolkit.createLabel(connectorClient, "");
-			toolkit.createLabel(connectorClient, "");
+			imageLabel = toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
+			toolkit.createLabel(connectorClient, ""); //$NON-NLS-1$
 		}
 	}
 
@@ -555,11 +553,11 @@ public class UiLegendControl extends Composite {
 		hyperlinkClient.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
 		Hyperlink gettingStartedLink = toolkit.createHyperlink(hyperlinkClient,
-				"Also see the Getting Started documentation online", SWT.WRAP);
+				Messages.UiLegendControl_Also_see_the_Getting_Started_documentation_online, SWT.WRAP);
 		gettingStartedLink.addHyperlinkListener(new IHyperlinkListener() {
 			public void linkActivated(HyperlinkEvent e) {
 				close();
-				TasksUiUtil.openUrl("http://www.eclipse.org/mylyn/start/");
+				TasksUiUtil.openUrl(Messages.UiLegendControl_http_www_eclipse_org_mylyn_start);
 			}
 
 			public void linkEntered(HyperlinkEvent e) {

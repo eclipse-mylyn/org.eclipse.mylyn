@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.commands;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -47,7 +48,7 @@ public class OpenTaskAttachmentInDefaultEditorHandler extends AbstractHandler {
 						IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 						page = window.getActivePage();
 						if (page == null) {
-							throw new ExecutionException("No active workbench page");
+							throw new ExecutionException("No active workbench page"); //$NON-NLS-1$
 						}
 					}
 					openAttachment(page, (ITaskAttachment) item);
@@ -61,13 +62,15 @@ public class OpenTaskAttachmentInDefaultEditorHandler extends AbstractHandler {
 		TaskAttachmentEditorInput input = new TaskAttachmentEditorInput(attachment);
 		IEditorDescriptor description = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(input.getName());
 		if (description == null) {
-			TasksUiInternal.displayStatus("Open Attachment Failed", new Status(IStatus.WARNING,
-					TasksUiPlugin.ID_PLUGIN, "No default editor for \"" + input.getName() + "\" found"));
+			TasksUiInternal.displayStatus(Messages.OpenTaskAttachmentInDefaultEditorHandler_Open_Attachment_Failed,
+					new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, MessageFormat.format(
+							Messages.OpenTaskAttachmentInDefaultEditorHandler_No_default_editor_for_X_found,
+							input.getName())));
 		} else {
 			try {
 				page.openEditor(input, description.getId());
 			} catch (PartInitException e) {
-				throw new ExecutionException("Failed to open editor", e);
+				throw new ExecutionException(Messages.OpenTaskAttachmentInDefaultEditorHandler_Failed_to_open_editor, e);
 			}
 		}
 	}

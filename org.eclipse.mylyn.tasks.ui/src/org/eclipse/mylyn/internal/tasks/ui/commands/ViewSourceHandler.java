@@ -71,7 +71,7 @@ public class ViewSourceHandler extends AbstractHandler implements IElementUpdate
 		return false;
 	}
 
-	public static final String VIEW_SOURCE_ACTION = "viewSourceAction";
+	public static final String VIEW_SOURCE_ACTION = "viewSourceAction"; //$NON-NLS-1$
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchSite site = HandlerUtil.getActiveSite(event);
