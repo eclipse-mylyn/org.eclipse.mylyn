@@ -39,7 +39,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
  */
 public class TaskListNotificationPopup extends AbstractNotificationPopup {
 
-	private static final String NOTIFICATIONS_HIDDEN = "more, Open Task List to view";
+	private static final String NOTIFICATIONS_HIDDEN = Messages.TaskListNotificationPopup_more;
 
 	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 4;
 
@@ -85,7 +85,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 								notificationLabelIcon.setToolTipText(null);
 							}
 						});
-						notificationLabelIcon.setToolTipText("Mark Task Read");
+						notificationLabelIcon.setToolTipText(Messages.TaskListNotificationPopup_Mark_Task_Read);
 					}
 				}
 
@@ -117,7 +117,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				if (notification.getDescription() != null) {
 					descriptionText = notification.getDescription();
 				}
-				if (descriptionText != null && !descriptionText.trim().equals("")) {
+				if (descriptionText != null && !descriptionText.trim().equals("")) { //$NON-NLS-1$
 					Label descriptionLabel = new Label(notificationComposite, SWT.NO_FOCUS);
 					descriptionLabel.setText(descriptionText);
 					descriptionLabel.setBackground(parent.getBackground());
@@ -128,7 +128,7 @@ public class TaskListNotificationPopup extends AbstractNotificationPopup {
 				TaskHyperlink remainingHyperlink = new TaskHyperlink(notificationComposite, SWT.NO_FOCUS);
 				remainingHyperlink.setBackground(parent.getBackground());
 
-				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN);
+				remainingHyperlink.setText(numNotificationsRemain + " " + NOTIFICATIONS_HIDDEN); //$NON-NLS-1$
 				GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(remainingHyperlink);
 				remainingHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 					@Override

@@ -36,7 +36,7 @@ public class TaskListNotificationReminder extends TaskListNotification {
 	@Override
 	public int compareTo(AbstractNotification anotherNotification) throws ClassCastException {
 		if (!(anotherNotification != null)) {
-			throw new ClassCastException("A ITaskListNotification object expected.");
+			throw new ClassCastException("A ITaskListNotification object expected."); //$NON-NLS-1$
 		}
 		Date anotherDate = (anotherNotification).getDate();
 		if (date != null && anotherDate != null) {

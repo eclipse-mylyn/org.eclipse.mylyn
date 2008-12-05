@@ -54,7 +54,7 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 	public TaskListNotification getNotification(ITask task, Object token) {
 		if (task.getSynchronizationState() == SynchronizationState.INCOMING_NEW) {
 			TaskListNotification notification = new TaskListNotification(task, token);
-			notification.setDescription("New unread task");
+			notification.setDescription(Messages.TaskListNotifier_New_unread_task);
 			return notification;
 		} else if (task.getSynchronizationState() == SynchronizationState.INCOMING) {
 			TaskDataDiff diff = getDiff(task);
@@ -77,8 +77,8 @@ public class TaskListNotifier implements ITaskDataManagerListener, ITaskListNoti
 				return diff;
 			}
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to get task data for task: \""
-					+ task + "\"", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to get task data for task: \"" //$NON-NLS-1$
+					+ task + "\"", e)); //$NON-NLS-1$
 		}
 		return null;
 	}

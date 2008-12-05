@@ -127,16 +127,16 @@ public class TaskDataDiff {
 	// TODO implement trim based on text width
 	public String toString(int maxWidth) {
 		StringBuilder sb = new StringBuilder();
-		String sep = "";
+		String sep = ""; //$NON-NLS-1$
 		// append first comment
 		int newCommentCount = newComments.size();
 		if (newCommentCount > 0) {
 			ITaskComment comment = newComments.iterator().next();
 			sb.append(TaskDiffUtil.trim(TaskDiffUtil.commentToString(comment), 60));
 			if (newCommentCount > 1) {
-				sb.append(" (" + (newCommentCount - 1) + " more)");
+				sb.append(" (" + (newCommentCount - 1) + Messages.TaskDataDiff_more_); //$NON-NLS-1$
 			}
-			sep = "\n";
+			sep = "\n"; //$NON-NLS-1$
 		}
 		// append changed attributes		
 		int n = 0;
@@ -144,16 +144,16 @@ public class TaskDataDiff {
 			String label = attributeDiff.getLabel();
 			if (label != null) {
 				sb.append(sep);
-				sb.append(" ");
+				sb.append(" "); //$NON-NLS-1$
 				sb.append(label);
-				sb.append(" ");
+				sb.append(" "); //$NON-NLS-1$
 				sb.append(TaskDiffUtil.trim(TaskDiffUtil.listToString(attributeDiff.getRemovedValues()), 28));
-				sb.append(" -> ");
+				sb.append(" -> "); //$NON-NLS-1$
 				sb.append(TaskDiffUtil.trim(TaskDiffUtil.listToString(attributeDiff.getAddedValues()), 28));
 				if (++n == MAX_CHANGED_ATTRIBUTES) {
 					break;
 				}
-				sep = "\n";
+				sep = "\n"; //$NON-NLS-1$
 			}
 		}
 		return sb.toString();

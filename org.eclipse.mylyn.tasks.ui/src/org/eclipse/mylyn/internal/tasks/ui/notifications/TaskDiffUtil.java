@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.notifications;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
@@ -31,16 +32,15 @@ public class TaskDiffUtil {
 
 	public static String commentToString(ITaskComment comment) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Comment by ");
-		sb.append(personToString(comment.getAuthor()));
-		sb.append(": ");
+		sb.append(MessageFormat.format(Messages.TaskDiffUtil_Comment_by_X, personToString(comment.getAuthor())));
+		sb.append(": "); //$NON-NLS-1$
 		sb.append(cleanCommentText(comment.getText()));
 		return sb.toString();
 	}
 
 	private static String personToString(IRepositoryPerson author) {
 		if (author == null) {
-			return "Unknown";
+			return Messages.TaskDiffUtil_Unknown;
 		} else if (author.getName() != null) {
 			return author.getName();
 		}
@@ -48,32 +48,32 @@ public class TaskDiffUtil {
 	}
 
 	public static String cleanCommentText(String value) {
-		String text = "";
-		String[] lines = value.split("\n");
+		String text = ""; //$NON-NLS-1$
+		String[] lines = value.split("\n"); //$NON-NLS-1$
 		boolean attachment = false;
 		boolean needSeparator = false;
 		for (String line : lines) {
 			// skip comments and info lines
 			if (attachment) {
-				text += " attachment: " + line;
+				text += Messages.TaskDiffUtil_attachment + line;
 				needSeparator = true;
 				attachment = false;
-			} else if (line.startsWith(">") //
-					|| line.matches("^\\s*\\(In reply to comment.*")) {
+			} else if (line.startsWith(">") // //$NON-NLS-1$
+					|| line.matches("^\\s*\\(In reply to comment.*")) { //$NON-NLS-1$
 				needSeparator = true;
 				continue;
-			} else if (line.startsWith("Created an attachment (id=")) {
+			} else if (line.startsWith("Created an attachment (id=")) { //$NON-NLS-1$
 				attachment = true;
 			} else {
 				if (needSeparator) {
-					if (!text.matches(".*\\p{Punct}\\s*")) {
+					if (!text.matches(".*\\p{Punct}\\s*")) { //$NON-NLS-1$
 						text = text.trim();
 						if (text.length() > 0) {
-							text += ".";
+							text += "."; //$NON-NLS-1$
 						}
 					}
 				}
-				text += " " + line;
+				text += " " + line; //$NON-NLS-1$
 				attachment = false;
 				needSeparator = false;
 			}
@@ -83,14 +83,14 @@ public class TaskDiffUtil {
 
 	public static String listToString(List<String> values) {
 		if (values == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		for (String value : values) {
 			if (!first) {
-				sb.append(", ");
+				sb.append(", "); //$NON-NLS-1$
 			} else {
 				first = false;
 			}
@@ -100,12 +100,12 @@ public class TaskDiffUtil {
 	}
 
 	public static String foldSpaces(String value) {
-		return value.replaceAll("\\s+", " ").trim();
+		return value.replaceAll("\\s", " ").trim(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static String trim(String value, int length) {
 		if (value.length() > length) {
-			value = value.substring(0, length - 3) + "...";
+			value = value.substring(0, length - 3) + "..."; //$NON-NLS-1$
 		}
 		return value;
 	}
@@ -173,7 +173,7 @@ public class TaskDiffUtil {
 		if (gc.textExtent(text).x > maxWidth) {
 			for (int i = text.length(); i > 0; i--) {
 				String subString = text.substring(0, i);
-				subString = subString + "...";
+				subString = subString + "..."; //$NON-NLS-1$
 				if (gc.textExtent(subString).x < maxWidth) {
 					returnText = subString;
 					break;
