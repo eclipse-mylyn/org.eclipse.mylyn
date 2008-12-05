@@ -72,7 +72,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 	private Composite attributesComposite;
 
 	public TaskEditorAttributePart() {
-		setPartName("Attributes");
+		setPartName(Messages.TaskEditorAttributePart_Attributes);
 	}
 
 	private void createAttributeControls(Composite attributesComposite, FormToolkit toolkit, int columnCount) {
@@ -85,7 +85,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 				currentPriority = priority;
 				if (currentColumn > 1) {
 					while (currentColumn <= columnCount) {
-						getManagedForm().getToolkit().createLabel(attributesComposite, "");
+						getManagedForm().getToolkit().createLabel(attributesComposite, ""); //$NON-NLS-1$
 						currentColumn++;
 					}
 					currentColumn = 1;
@@ -207,7 +207,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 								getTaskEditorPage().showEditorBusy(false);
 								if (job.getStatus() != null) {
 									getTaskEditorPage().getTaskEditor().setStatus(
-											"Updating of repository configuration failed", "Update Failed",
+											Messages.TaskEditorAttributePart_Updating_of_repository_configuration_failed, Messages.TaskEditorAttributePart_Update_Failed,
 											job.getStatus());
 								} else {
 									getTaskEditorPage().refreshFormContent();
@@ -247,7 +247,7 @@ public class TaskEditorAttributePart extends AbstractTaskEditorPart {
 		};
 		repositoryConfigRefresh.setImageDescriptor(TasksUiImages.REPOSITORY_SYNCHRONIZE_SMALL);
 		repositoryConfigRefresh.selectionChanged(new StructuredSelection(getTaskEditorPage().getTaskRepository()));
-		repositoryConfigRefresh.setToolTipText("Refresh Attributes");
+		repositoryConfigRefresh.setToolTipText(Messages.TaskEditorAttributePart_Refresh_Attributes);
 		toolBar.add(repositoryConfigRefresh);
 	}
 

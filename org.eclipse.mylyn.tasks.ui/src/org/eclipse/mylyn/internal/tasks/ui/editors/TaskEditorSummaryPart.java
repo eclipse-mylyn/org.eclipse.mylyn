@@ -39,7 +39,7 @@ public class TaskEditorSummaryPart extends AbstractTaskEditorPart {
 	private AbstractAttributeEditor summaryEditor;
 
 	public TaskEditorSummaryPart() {
-		setPartName("Summary");
+		setPartName(Messages.TaskEditorSummaryPart_Summary);
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {

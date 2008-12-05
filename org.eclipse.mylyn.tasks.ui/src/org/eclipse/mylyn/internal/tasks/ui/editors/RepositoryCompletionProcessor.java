@@ -58,7 +58,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 	private class ProposalComputer {
 
-		public static final String LABEL_SEPARATOR = " -------------------------------------------- ";
+		public static final String LABEL_SEPARATOR = " -------------------------------------------- "; //$NON-NLS-1$
 
 		private final Set<ITask> addedTasks = new HashSet<ITask>();
 
@@ -135,8 +135,8 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		private boolean containsPrefix(ITask task) {
-			String searchTest = getTaskPrefix(task) + " " + labelProvider.getText(task);
-			String[] tokens = searchTest.split("\\s");
+			String searchTest = getTaskPrefix(task) + " " + labelProvider.getText(task); //$NON-NLS-1$
+			String[] tokens = searchTest.split("\\s"); //$NON-NLS-1$
 			for (String token : tokens) {
 				if (token.toLowerCase().startsWith(prefix)) {
 					return true;
@@ -146,7 +146,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		}
 
 		private CompletionProposal createSeparator() {
-			return new CompletionProposal("", offset, 0, 0, CommonImages.getImage(CommonImages.SEPARATOR_LIST),
+			return new CompletionProposal("", offset, 0, 0, CommonImages.getImage(CommonImages.SEPARATOR_LIST), //$NON-NLS-1$
 					LABEL_SEPARATOR, null, null);
 		}
 
@@ -158,7 +158,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 			int i = offset;
 			IDocument document = viewer.getDocument();
 			if (i > document.getLength()) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 
 			try {
@@ -172,7 +172,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 
 				return document.get(i, offset - i);
 			} catch (BadLocationException e) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		}
 
@@ -320,7 +320,7 @@ public class RepositoryCompletionProcessor implements IContentAssistProcessor {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getConnector(task.getConnectorKind());
 		String prefix = connector.getTaskIdPrefix();
 		// FIXME work around for Trac "#" prefix
-		return (prefix.length() > 1) ? prefix + " " : prefix;
+		return (prefix.length() > 1) ? prefix + " " : prefix; //$NON-NLS-1$
 	}
 
 }

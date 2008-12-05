@@ -66,7 +66,7 @@ public class BrowserPreviewViewer {
 					return;
 				}
 
-				if (event.location != null && !event.location.startsWith("about")) {
+				if (event.location != null && !event.location.startsWith("about")) { //$NON-NLS-1$
 					event.doit = false;
 					IHyperlink link = new TaskUrlHyperlink(
 							new Region(0, 0)/* a fake region just to make constructor happy */, event.location);
@@ -90,10 +90,10 @@ public class BrowserPreviewViewer {
 			private final String sourceText;
 
 			public PreviewWikiJob(String sourceText) {
-				super("Formatting Wiki Text");
+				super(Messages.BrowserPreviewViewer_Formatting_Wiki_Text);
 
 				if (sourceText == null) {
-					throw new IllegalArgumentException("source text must not be null");
+					throw new IllegalArgumentException("source text must not be null"); //$NON-NLS-1$
 				}
 
 				this.sourceText = sourceText;
@@ -111,7 +111,7 @@ public class BrowserPreviewViewer {
 			protected IStatus run(IProgressMonitor monitor) {
 				if (renderingEngine == null) {
 					jobStatus = new RepositoryStatus(taskRepository, IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-							RepositoryStatus.ERROR_INTERNAL, "The repository does not support HTML preview.");
+							RepositoryStatus.ERROR_INTERNAL, Messages.BrowserPreviewViewer_The_repository_does_not_support_HTML_preview);
 					return Status.OK_STATUS;
 				}
 
@@ -144,7 +144,7 @@ public class BrowserPreviewViewer {
 					} else {
 						browser.getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								TasksUiInternal.displayStatus("Error", job.getStatus());
+								TasksUiInternal.displayStatus(Messages.BrowserPreviewViewer_Error, job.getStatus());
 								// TODO 3.1 error handling
 								//getAttributeEditorManager().setMessage(job.getStatus().getMessage(), IMessageProvider.ERROR);
 							}
@@ -162,7 +162,7 @@ public class BrowserPreviewViewer {
 	private void setText(Browser browser, String html) {
 		try {
 			ignoreLocationEvents = true;
-			browser.setText((html != null) ? html : "");
+			browser.setText((html != null) ? html : ""); //$NON-NLS-1$
 		} finally {
 			ignoreLocationEvents = false;
 		}
@@ -170,7 +170,7 @@ public class BrowserPreviewViewer {
 	}
 
 	public void update(String value) {
-		setText(browser, "Loading preview...");
+		setText(browser, Messages.BrowserPreviewViewer_Loading_preview_);
 		previewWiki(browser, value);
 	}
 

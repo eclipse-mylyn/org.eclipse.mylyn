@@ -65,6 +65,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewSubTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskAttachmentDropListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionPart;
@@ -231,7 +232,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						operation.run(new NullProgressMonitor());
 					} catch (InvocationTargetException e) {
 						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-								"Failed to migrate activity to new task", e.getCause()));
+								"Failed to migrate activity to new task", e.getCause())); //$NON-NLS-1$
 					} catch (InterruptedException e) {
 						// ignore
 					}
@@ -249,7 +250,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						TasksUiPlugin.getTaskDataManager().deleteTaskData(oldTask);
 					} catch (CoreException e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Failed to delete task data", e));
+								"Failed to delete task data", e)); //$NON-NLS-1$
 					}
 
 					if (active) {
@@ -280,7 +281,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		@Override
 		public void taskSubmitted(SubmitJobEvent event, IProgressMonitor monitor) throws CoreException {
 			if (!getModel().getTaskData().isNew() && attachContext) {
-				AttachmentUtil.postContext(connector, getModel().getTaskRepository(), task, "", null, monitor);
+				AttachmentUtil.postContext(connector, getModel().getTaskRepository(), task, "", null, monitor); //$NON-NLS-1$
 			}
 		}
 
@@ -348,7 +349,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						// automatically refresh if the user has not made any changes and there is no chance of missing incomings
 						refreshFormContent();
 					} else {
-						getTaskEditor().setMessage("Task has incoming changes", IMessageProvider.WARNING,
+						getTaskEditor().setMessage(
+								Messages.AbstractTaskEditorPage_Task_has_incoming_changes, IMessageProvider.WARNING,
 								new HyperlinkAdapter() {
 									@Override
 									public void linkActivated(HyperlinkEvent e) {
@@ -368,39 +370,39 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		}
 	};
 
-	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
+	private static final String ERROR_NOCONNECTIVITY = Messages.AbstractTaskEditorPage_Unable_to_submit_at_this_time;
 
-	public static final String ID_PART_ACTIONS = "org.eclipse.mylyn.tasks.ui.editors.parts.actions";
+	public static final String ID_PART_ACTIONS = "org.eclipse.mylyn.tasks.ui.editors.parts.actions"; //$NON-NLS-1$
 
-	public static final String ID_PART_ATTACHMENTS = "org.eclipse.mylyn.tasks.ui.editors.parts.attachments";
+	public static final String ID_PART_ATTACHMENTS = "org.eclipse.mylyn.tasks.ui.editors.parts.attachments"; //$NON-NLS-1$
 
-	public static final String ID_PART_ATTRIBUTES = "org.eclipse.mylyn.tasks.ui.editors.parts.attributes";
+	public static final String ID_PART_ATTRIBUTES = "org.eclipse.mylyn.tasks.ui.editors.parts.attributes"; //$NON-NLS-1$
 
-	public static final String ID_PART_COMMENTS = "org.eclipse.mylyn.tasks.ui.editors.parts.comments";
+	public static final String ID_PART_COMMENTS = "org.eclipse.mylyn.tasks.ui.editors.parts.comments"; //$NON-NLS-1$
 
-	public static final String ID_PART_DESCRIPTION = "org.eclipse.mylyn.tasks.ui.editors.parts.descriptions";
+	public static final String ID_PART_DESCRIPTION = "org.eclipse.mylyn.tasks.ui.editors.parts.descriptions"; //$NON-NLS-1$
 
-	public static final String ID_PART_NEW_COMMENT = "org.eclipse.mylyn.tasks.ui.editors.parts.newComment";
+	public static final String ID_PART_NEW_COMMENT = "org.eclipse.mylyn.tasks.ui.editors.parts.newComment"; //$NON-NLS-1$
 
-	public static final String ID_PART_PEOPLE = "org.eclipse.mylyn.tasks.ui.editors.parts.people";
+	public static final String ID_PART_PEOPLE = "org.eclipse.mylyn.tasks.ui.editors.parts.people"; //$NON-NLS-1$
 
-	public static final String ID_PART_PLANNING = "org.eclipse.mylyn.tasks.ui.editors.parts.planning";
+	public static final String ID_PART_PLANNING = "org.eclipse.mylyn.tasks.ui.editors.parts.planning"; //$NON-NLS-1$
 
-	public static final String ID_PART_SUMMARY = "org.eclipse.mylyn.tasks.ui.editors.parts.summary";
+	public static final String ID_PART_SUMMARY = "org.eclipse.mylyn.tasks.ui.editors.parts.summary"; //$NON-NLS-1$
 
-	public static final String PATH_ACTIONS = "actions";
+	public static final String PATH_ACTIONS = "actions"; //$NON-NLS-1$
 
-	public static final String PATH_ATTACHMENTS = "attachments";
+	public static final String PATH_ATTACHMENTS = "attachments"; //$NON-NLS-1$
 
-	public static final String PATH_ATTRIBUTES = "attributes";
+	public static final String PATH_ATTRIBUTES = "attributes"; //$NON-NLS-1$
 
-	public static final String PATH_COMMENTS = "comments";
+	public static final String PATH_COMMENTS = "comments"; //$NON-NLS-1$
 
-	public static final String PATH_HEADER = "header";
+	public static final String PATH_HEADER = "header"; //$NON-NLS-1$
 
-	public static final String PATH_PEOPLE = "people";
+	public static final String PATH_PEOPLE = "people"; //$NON-NLS-1$
 
-	public static final String PATH_PLANNING = "planning";
+	public static final String PATH_PLANNING = "planning"; //$NON-NLS-1$
 
 //	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.page";
 
@@ -450,7 +452,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	// TODO 3.1 define constructor for setting id and label
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
-		super(editor, "id", "label");
+		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
 		Assert.isNotNull(connectorKind);
 		this.connectorKind = connectorKind;
 		this.reflow = true;
@@ -557,7 +559,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(getConnectorKind());
 			if (connectorUi == null) {
-				getTaskEditor().setMessage("Synchronize to update editor contents", IMessageProvider.INFORMATION,
+				getTaskEditor().setMessage(
+						Messages.AbstractTaskEditorPage_Synchronize_to_update_editor_contents, IMessageProvider.INFORMATION,
 						new HyperlinkAdapter() {
 							@Override
 							public void linkActivated(HyperlinkEvent e) {
@@ -749,7 +752,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				SafeRunner.run(new ISafeRunnable() {
 					public void handleException(Throwable e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Error creating task editor part: \"" + descriptor.getId() + "\"", e));
+								"Error creating task editor part: \"" + descriptor.getId() + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 					public void run() throws Exception {
@@ -787,13 +790,15 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		try {
 			model.save(monitor);
 		} catch (final CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving task", e));
-			getTaskEditor().setMessage("Could not save task", IMessageProvider.ERROR, new HyperlinkAdapter() {
-				@Override
-				public void linkActivated(HyperlinkEvent event) {
-					TasksUiInternal.displayStatus("Save failed", e.getStatus());
-				}
-			});
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving task", e)); //$NON-NLS-1$
+			getTaskEditor().setMessage(
+					Messages.AbstractTaskEditorPage_Could_not_save_task, IMessageProvider.ERROR, new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent event) {
+							TasksUiInternal.displayStatus(
+									Messages.AbstractTaskEditorPage_Save_failed, e.getStatus());
+						}
+					});
 		}
 
 		// update the summary of unsubmitted repository tasks
@@ -808,7 +813,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				TasksUiPlugin.getTaskList().notifyElementChanged(task);
 			} catch (CoreException e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to set summary for task \"" + task + "\"", e));
+						"Failed to set summary for task \"" + task + "\"", e)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -839,7 +844,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		final TaskRepository taskRepository = (model != null) ? getModel().getTaskRepository() : null;
 		if (taskRepository != null) {
-			ControlContribution repositoryLabelControl = new ControlContribution("Title") {
+			ControlContribution repositoryLabelControl = new ControlContribution(
+					Messages.AbstractTaskEditorPage_Title) {
 				@Override
 				protected Control createControl(Composite parent) {
 					FormToolkit toolkit = getTaskEditor().getHeaderForm().getToolkit();
@@ -847,8 +853,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					composite.setLayout(new RowLayout());
 					composite.setBackground(null);
 					String label = taskRepository.getRepositoryLabel();
-					if (label.indexOf("//") != -1) {
-						label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2));
+					if (label.indexOf("//") != -1) { //$NON-NLS-1$
+						label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
 					}
 
 					Hyperlink link = new Hyperlink(composite, SWT.NONE);
@@ -909,7 +915,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						};
 
 						historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
-						historyAction.setToolTipText("History");
+						historyAction.setToolTipText(Messages.AbstractTaskEditorPage_History);
 						toolBarManager.add(historyAction);
 					}
 				}
@@ -924,7 +930,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					};
 
 					openBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
-					openBrowserAction.setToolTipText("Open with Web Browser");
+					openBrowserAction.setToolTipText(Messages.AbstractTaskEditorPage_Open_with_Web_Browser);
 					toolBarManager.add(openBrowserAction);
 				}
 			}
@@ -1073,7 +1079,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		if (form != null && !form.isDisposed()) {
 			final IStatus status = job.getStatus();
 			if (status.getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
-				TasksUiInternal.displayStatus("Comment required", status);
+				TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Comment_required, status);
 				AbstractTaskEditorPart newCommentPart = getPart(ID_PART_NEW_COMMENT);
 				if (newCommentPart != null) {
 					newCommentPart.setFocus();
@@ -1087,14 +1093,15 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				if (status.getCode() == RepositoryStatus.ERROR_IO) {
 					message = ERROR_NOCONNECTIVITY;
 				} else if (status.getMessage().length() > 0) {
-					message = "Submit failed: " + status.getMessage();
+					message = Messages.AbstractTaskEditorPage_Submit_failed_ + status.getMessage();
 				} else {
-					message = "Submit failed";
+					message = Messages.AbstractTaskEditorPage_Submit_failed;
 				}
 				getTaskEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
-						TasksUiInternal.displayStatus("Submit failed", status);
+						TasksUiInternal.displayStatus(
+								Messages.AbstractTaskEditorPage_Submit_failed, status);
 					}
 				});
 			}
@@ -1131,8 +1138,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			});
 
 		} catch (final CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error opening task", e));
-			getTaskEditor().setStatus("Error opening task", "Open failed", e.getStatus());
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error opening task", e)); //$NON-NLS-1$
+			getTaskEditor().setStatus(
+					Messages.AbstractTaskEditorPage_Error_opening_task, Messages.AbstractTaskEditorPage_Open_failed, e.getStatus());
 		}
 	}
 
@@ -1264,7 +1272,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			refreshDisabled = true;
 			model.refresh(null);
 		} catch (CoreException e) {
-			getTaskEditor().setMessage("Failed to read task data: " + e.getMessage(), IMessageProvider.ERROR);
+			getTaskEditor().setMessage(
+					Messages.AbstractTaskEditorPage_Failed_to_read_task_data_ + e.getMessage(), IMessageProvider.ERROR);
 			taskData = null;
 			return;
 		} finally {
@@ -1408,7 +1417,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private void updateHeaderMessage() {
 		if (taskData == null) {
-			getTaskEditor().setMessage("Synchronize to retrieve task data", IMessageProvider.WARNING,
+			getTaskEditor().setMessage(
+					Messages.AbstractTaskEditorPage_Synchronize_to_retrieve_task_data, IMessageProvider.WARNING,
 					new HyperlinkAdapter() {
 						@Override
 						public void linkActivated(HyperlinkEvent e) {

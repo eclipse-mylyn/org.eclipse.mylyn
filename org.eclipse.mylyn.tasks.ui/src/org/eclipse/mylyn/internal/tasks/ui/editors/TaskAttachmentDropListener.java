@@ -96,7 +96,7 @@ public class TaskAttachmentDropListener implements DropTargetListener {
 				NewAttachmentWizardDialog dialog = EditorUtil.openNewAttachmentWizard(page, null,
 						new FileTaskAttachmentSource(file));
 				if (files.length > 1) {
-					dialog.setMessage("Note that only the first file dragged will be attached.",
+					dialog.setMessage(Messages.TaskAttachmentDropListener_Note_that_only_the_first_file_dragged_will_be_attached,
 							IMessageProvider.WARNING);
 				}
 			}

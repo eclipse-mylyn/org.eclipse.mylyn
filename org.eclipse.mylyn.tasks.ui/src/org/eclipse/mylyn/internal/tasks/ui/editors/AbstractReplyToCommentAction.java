@@ -24,8 +24,6 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
  */
 public abstract class AbstractReplyToCommentAction extends Action {
 
-	private static final String LABEL_REPLY = "Reply";
-
 	private final AbstractTaskEditorPage editor;
 
 	private final ITaskComment taskComment;
@@ -34,7 +32,7 @@ public abstract class AbstractReplyToCommentAction extends Action {
 		this.editor = editor;
 		this.taskComment = taskComment;
 		setImageDescriptor(TasksUiImages.COMMENT_REPLY);
-		setToolTipText(LABEL_REPLY);
+		setToolTipText(Messages.AbstractReplyToCommentAction_Reply);
 	}
 
 	protected abstract String getReplyText();
@@ -49,7 +47,7 @@ public abstract class AbstractReplyToCommentAction extends Action {
 		String reference = connectorUi.getReplyText(editor.getTaskRepository(), editor.getTask(), taskComment, false);
 		StringBuilder sb = new StringBuilder();
 		sb.append(reference);
-		sb.append("\n");
+		sb.append("\n"); //$NON-NLS-1$
 		if (text != null) {
 			CommentQuoter quoter = new CommentQuoter();
 			sb.append(quoter.quote(text));

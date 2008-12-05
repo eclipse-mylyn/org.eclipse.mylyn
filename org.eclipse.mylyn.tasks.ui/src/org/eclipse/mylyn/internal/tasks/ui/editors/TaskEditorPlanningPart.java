@@ -59,12 +59,6 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
-	private static final String CLEAR = "Clear";
-
-	private static final String NO_TIME_ELAPSED = "0 seconds";
-
-	private static final String RESET = "Reset";
-
 	private static final int CONTROL_WIDTH = 135;
 
 	private DatePicker dueDatePicker;
@@ -118,7 +112,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	};
 
 	public TaskEditorPlanningPart() {
-		setPartName("Personal Planning");
+		setPartName(Messages.TaskEditorPlanningPart_Personal_Planning);
 	}
 
 	@Override
@@ -152,9 +146,9 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	}
 
 	private void createActualTime(FormToolkit toolkit, Composite parent) {
-		Label label = toolkit.createLabel(parent, "Active:");
+		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Active);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		label.setToolTipText("Time working on this task");
+		label.setToolTipText(Messages.TaskEditorPlanningPart_Time_working_on_this_task);
 
 		Composite nameValueComp = createComposite(parent, 2, toolkit);
 
@@ -168,13 +162,13 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
 		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
-		resetActivityTimeButton.setToolTipText(RESET);
+		resetActivityTimeButton.setToolTipText(Messages.TaskEditorPlanningPart_Reset);
 		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
 
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				if (MessageDialog.openConfirm(getControl().getShell(), "Confirm Activity Time Deletion",
-						"Do you wish to reset your activity time on this task?\n\nThis will take immediate affect and can not be undone.")) {
+				if (MessageDialog.openConfirm(getControl().getShell(), Messages.TaskEditorPlanningPart_Confirm_Activity_Time_Deletion,
+						Messages.TaskEditorPlanningPart_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
 					MonitorUi.getActivityContextManager().removeActivityTime(task.getHandleIdentifier(), 0l,
 							System.currentTimeMillis());
 				}
@@ -185,8 +179,8 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	private void updateElapsedTime() {
 		String elapsedTimeString = DateUtil.getFormattedDurationShort(TasksUiPlugin.getTaskActivityManager()
 				.getElapsedTime(task));
-		if (elapsedTimeString.equals("")) {
-			elapsedTimeString = NO_TIME_ELAPSED;
+		if (elapsedTimeString.equals("")) { //$NON-NLS-1$
+			elapsedTimeString = Messages.TaskEditorPlanningPart_0_SECOUNDS;
 		}
 		elapsedTimeText.setText(elapsedTimeString);
 	}
@@ -229,7 +223,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	}
 
 	private void createDueDatePicker(FormToolkit toolkit, Composite parent) {
-		Label label = toolkit.createLabel(parent, "Due:");
+		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Due);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		Composite composite = createComposite(parent, 2, toolkit);
@@ -254,7 +248,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(composite, SWT.NONE);
 		clearDueDate.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
-		clearDueDate.setToolTipText(CLEAR);
+		clearDueDate.setToolTipText(Messages.TaskEditorPlanningPart_Clear);
 		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
@@ -265,7 +259,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	}
 
 	private void createEstimatedTime(FormToolkit toolkit, Composite parent) {
-		Label label = toolkit.createLabel(parent, "Estimated:");
+		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Estimated);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		Composite composite = createComposite(parent, 2, toolkit);
@@ -288,7 +282,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 		ImageHyperlink clearEstimated = toolkit.createImageHyperlink(composite, SWT.NONE);
 		clearEstimated.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
-		clearEstimated.setToolTipText("Clear");
+		clearEstimated.setToolTipText(Messages.TaskEditorPlanningPart_Clear);
 		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
@@ -300,7 +294,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 	}
 
 	private void createScheduledDatePicker(FormToolkit toolkit, Composite parent) {
-		Label label = toolkit.createLabel(parent, "Scheduled:");
+		Label label = toolkit.createLabel(parent, Messages.TaskEditorPlanningPart_Scheduled);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		Composite composite = createComposite(parent, 2, toolkit);
@@ -324,7 +318,7 @@ public class TaskEditorPlanningPart extends AbstractTaskEditorPart {
 
 		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(composite, SWT.NONE);
 		clearScheduledDate.setImage(CommonImages.getImage(CommonImages.FIND_CLEAR));
-		clearScheduledDate.setToolTipText(CLEAR);
+		clearScheduledDate.setToolTipText(Messages.TaskEditorPlanningPart_Clear);
 		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {

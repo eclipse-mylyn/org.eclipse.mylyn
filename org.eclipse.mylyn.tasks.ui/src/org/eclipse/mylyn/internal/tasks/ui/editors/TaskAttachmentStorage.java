@@ -37,15 +37,15 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 
-	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
+	private static final String ATTACHMENT_DEFAULT_NAME = "attachment"; //$NON-NLS-1$
 
-	private static final String CTYPE_ZIP = "zip";
+	private static final String CTYPE_ZIP = "zip"; //$NON-NLS-1$
 
-	private static final String CTYPE_OCTET_STREAM = "octet-stream";
+	private static final String CTYPE_OCTET_STREAM = "octet-stream"; //$NON-NLS-1$
 
-	private static final String CTYPE_TEXT = "text";
+	private static final String CTYPE_TEXT = "text"; //$NON-NLS-1$
 
-	private static final String CTYPE_HTML = "html";
+	private static final String CTYPE_HTML = "html"; //$NON-NLS-1$
 
 	private final TaskRepository taskRepository;
 
@@ -67,7 +67,7 @@ public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 		Assert.isNotNull(attachment);
 		TaskAttribute taskAttribute = attachment.getTaskAttribute();
 		if (taskAttribute == null) {
-			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to find attachment: "
+			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to find attachment: " //$NON-NLS-1$
 					+ attachment.getUrl()));
 		}
 		return new TaskAttachmentStorage(attachment.getTaskRepository(), attachment.getTask(), taskAttribute,
@@ -78,23 +78,23 @@ public class TaskAttachmentStorage extends PlatformObject implements IStorage {
 		String name = attachment.getFileName();
 		// if no filename is set, make one up with the proper extension so
 		// we can support opening in that filetype's default editor
-		if (name == null || "".equals(name)) {
+		if (name == null || "".equals(name)) { //$NON-NLS-1$
 			String ctype = attachment.getContentType();
 			if (ctype.endsWith(CTYPE_HTML)) {
-				name = ATTACHMENT_DEFAULT_NAME + ".html";
+				name = ATTACHMENT_DEFAULT_NAME + ".html"; //$NON-NLS-1$
 			} else if (ctype.startsWith(CTYPE_TEXT)) {
-				name = ATTACHMENT_DEFAULT_NAME + ".txt";
+				name = ATTACHMENT_DEFAULT_NAME + ".txt"; //$NON-NLS-1$
 			} else if (ctype.endsWith(CTYPE_OCTET_STREAM)) {
 				name = ATTACHMENT_DEFAULT_NAME;
 			} else if (ctype.endsWith(CTYPE_ZIP)) {
-				name = ATTACHMENT_DEFAULT_NAME + "." + CTYPE_ZIP;
+				name = ATTACHMENT_DEFAULT_NAME + "." + CTYPE_ZIP; //$NON-NLS-1$
 			} else {
-				name = ATTACHMENT_DEFAULT_NAME + "." + ctype.substring(ctype.indexOf("/") + 1);
+				name = ATTACHMENT_DEFAULT_NAME + "." + ctype.substring(ctype.indexOf("/") + 1); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		// treat .patch files as text files
-		if (name.endsWith(".patch")) {
-			name += ".txt";
+		if (name.endsWith(".patch")) { //$NON-NLS-1$
+			name += ".txt"; //$NON-NLS-1$
 		}
 		return name;
 	}

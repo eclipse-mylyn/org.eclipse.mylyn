@@ -46,9 +46,9 @@ public class SingleSelectionAttributeEditor extends AbstractAttributeEditor {
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			String label = getValueLabel();
-			if ("".equals(label)) {
+			if ("".equals(label)) { //$NON-NLS-1$
 				// if set to the empty string the label will use 64px on GTK 
-				text.setText(" ");
+				text.setText(" "); //$NON-NLS-1$
 			} else {
 				text.setText(label);
 			}

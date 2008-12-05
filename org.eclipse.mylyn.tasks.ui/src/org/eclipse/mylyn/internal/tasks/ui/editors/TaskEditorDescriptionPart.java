@@ -49,12 +49,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 
-	private static final String LABEL_SEARCH_DUPS = "Search";
-
-	private static final String LABEL_SELECT_DETECTOR = "Duplicate Detection";
-
 	public TaskEditorDescriptionPart() {
-		setPartName("Description");
+		setPartName(Messages.TaskEditorDescriptionPart_Description);
 	}
 
 	private void addDuplicateDetection(Composite composite, FormToolkit toolkit) {
@@ -68,7 +64,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 				style |= ExpandableComposite.EXPANDED;
 			}
 			Section duplicatesSection = toolkit.createSection(composite, style);
-			duplicatesSection.setText(LABEL_SELECT_DETECTOR);
+			duplicatesSection.setText(Messages.TaskEditorDescriptionPart_Duplicate_Detection);
 			duplicatesSection.setLayout(new GridLayout());
 			GridDataFactory.fillDefaults().indent(SWT.DEFAULT, 15).applyTo(duplicatesSection);
 			Composite relatedBugsComposite = toolkit.createComposite(duplicatesSection);
@@ -76,7 +72,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 			relatedBugsComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 			duplicatesSection.setClient(relatedBugsComposite);
 			Label duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
-			duplicateDetectorLabel.setText("Detector:");
+			duplicateDetectorLabel.setText(Messages.TaskEditorDescriptionPart_Detector);
 
 			final CCombo duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(duplicateDetectorChooser, false, false);
@@ -101,7 +97,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 			duplicateDetectorChooser.setData(allCollectors);
 
 			if (allCollectors.size() > 0) {
-				Button searchForDuplicates = toolkit.createButton(relatedBugsComposite, LABEL_SEARCH_DUPS, SWT.NONE);
+				Button searchForDuplicates = toolkit.createButton(relatedBugsComposite, Messages.TaskEditorDescriptionPart_Search, SWT.NONE);
 				GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
 				searchForDuplicates.addListener(SWT.Selection, new Listener() {
@@ -141,7 +137,7 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 	}
 
 	protected IRepositoryQuery getDuplicateQuery(String name) throws CoreException {
-		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
+		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name; //$NON-NLS-1$ //$NON-NLS-2$
 		for (AbstractDuplicateDetector detector : getDuplicateSearchCollectorsList()) {
 			if (detector.getName().equals(duplicateDetectorName)) {
 				return detector.getDuplicatesQuery(getTaskEditorPage().getTaskRepository(), getTaskData());
@@ -180,11 +176,11 @@ public class TaskEditorDescriptionPart extends TaskEditorRichTextPart {
 						getTaskEditorPage().getTaskRepository(), duplicatesQuery);
 				NewSearchUI.runQueryInBackground(collector);
 			} else {
-				TasksUiInternal.displayStatus("Duplicate Detection Failed", new Status(IStatus.ERROR,
-						TasksUiPlugin.ID_PLUGIN, "The duplicate detector did not return a valid query."));
+				TasksUiInternal.displayStatus(Messages.TaskEditorDescriptionPart_Duplicate_Detection_Failed, new Status(IStatus.ERROR,
+						TasksUiPlugin.ID_PLUGIN, Messages.TaskEditorDescriptionPart_The_duplicate_detector_did_not_return_a_valid_query));
 			}
 		} catch (CoreException e) {
-			TasksUiInternal.displayStatus("Duplicate Detection Failed", e.getStatus());
+			TasksUiInternal.displayStatus(Messages.TaskEditorDescriptionPart_Duplicate_Detection_Failed, e.getStatus());
 		}
 	}
 

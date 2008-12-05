@@ -53,9 +53,9 @@ public class EditorUtil {
 //
 //	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
 
-	static final String KEY_MARKER = "marker";
+	static final String KEY_MARKER = "marker"; //$NON-NLS-1$
 
-	static final String KEY_TEXT_VIEWER = "textViewer";
+	static final String KEY_TEXT_VIEWER = "textViewer"; //$NON-NLS-1$
 
 	public static final int MAXIMUM_HEIGHT = 140;
 
@@ -64,7 +64,7 @@ public class EditorUtil {
 	// XXX why is this required?
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
 
-	public static final String KEY_TOGGLE_TO_MAXIMIZE_ACTION = "maximizeAction";
+	public static final String KEY_TOGGLE_TO_MAXIMIZE_ACTION = "maximizeAction"; //$NON-NLS-1$
 
 	static boolean canDoGlobalAction(String actionId, TextViewer textViewer) {
 		if (actionId.equals(ActionFactory.CUT.getId())) {
@@ -348,7 +348,7 @@ public class EditorUtil {
 		if (comp.isExpanded() != expanded) {
 			Method method = null;
 			try {
-				method = ExpandableComposite.class.getDeclaredMethod("programmaticToggleState");
+				method = ExpandableComposite.class.getDeclaredMethod("programmaticToggleState"); //$NON-NLS-1$
 				method.setAccessible(true);
 				method.invoke(comp);
 			} catch (Exception e) {

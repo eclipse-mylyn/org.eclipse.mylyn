@@ -29,11 +29,11 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
  */
 public class TaskEditorOutlineNode {
 
-	public static final String LABEL_COMMENTS = "Comments";
+	public static final String LABEL_COMMENTS = Messages.TaskEditorOutlineNode_Comments;
 
-	public static final String LABEL_DESCRIPTION = "Description";
+	public static final String LABEL_DESCRIPTION = Messages.TaskEditorOutlineNode_Description;
 
-	public static final String LABEL_NEW_COMMENT = "New Comment";
+	public static final String LABEL_NEW_COMMENT = Messages.TaskEditorOutlineNode_New_Comment;
 
 	private static TaskEditorOutlineNode createNode(TaskData taskData, String attributeId, String label) {
 		TaskAttribute taskAttribute = taskData.getRoot().getMappedAttribute(attributeId);
@@ -54,16 +54,16 @@ public class TaskEditorOutlineNode {
 				taskAttribute.getTaskData().getAttributeMapper().updateTaskComment(taskComment, taskAttribute);
 				StringBuilder sb = new StringBuilder();
 				sb.append(taskComment.getNumber());
-				sb.append(": ");
+				sb.append(": "); //$NON-NLS-1$
 				IRepositoryPerson author = taskComment.getAuthor();
 				if (author != null) {
 					sb.append(author.toString());
 				}
 				Date creationDate = taskComment.getCreationDate();
 				if (creationDate != null) {
-					sb.append(" (");
+					sb.append(" ("); //$NON-NLS-1$
 					sb.append(EditorUtil.formatDateTime(creationDate));
-					sb.append(")");
+					sb.append(")"); //$NON-NLS-1$
 				}
 				TaskEditorOutlineNode node = new TaskEditorOutlineNode(sb.toString(), taskAttribute);
 				node.setTaskComment(taskComment);
@@ -79,7 +79,7 @@ public class TaskEditorOutlineNode {
 	public static TaskEditorOutlineNode parse(TaskData taskData) {
 		TaskEditorOutlineNode rootNode = createNode(taskData, TaskAttribute.SUMMARY, null);
 		if (rootNode == null) {
-			rootNode = new TaskEditorOutlineNode("Task " + taskData.getTaskId());
+			rootNode = new TaskEditorOutlineNode(Messages.TaskEditorOutlineNode_Task_ + taskData.getTaskId());
 		}
 		addNode(rootNode, taskData, TaskAttribute.DESCRIPTION, LABEL_DESCRIPTION);
 		List<TaskAttribute> comments = taskData.getAttributeMapper().getAttributesByType(taskData,

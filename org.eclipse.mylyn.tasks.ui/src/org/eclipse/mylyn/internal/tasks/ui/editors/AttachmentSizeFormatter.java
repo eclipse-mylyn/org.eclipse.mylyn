@@ -42,7 +42,7 @@ public class AttachmentSizeFormatter {
 	/**
 	 * Default value returned by this formatter when the size is unparseable, contain errors, etc.
 	 */
-	public static final String UNKNOWN_SIZE = "-";
+	public static final String UNKNOWN_SIZE = "-"; //$NON-NLS-1$
 
 	public final static AttachmentSizeFormatter getInstance() {
 		return new AttachmentSizeFormatter();
@@ -76,25 +76,25 @@ public class AttachmentSizeFormatter {
 		if (size < 1024) {
 			// format as byte
 			if (size == 1) {
-				return "1 byte";
+				return Messages.AttachmentSizeFormatter_1_byte;
 			}
-			DecimalFormat fmt = new DecimalFormat("0 bytes");
+			DecimalFormat fmt = new DecimalFormat(Messages.AttachmentSizeFormatter_0_bytes);
 			return fmt.format(size);
 		} else if (size >= 1024 && size <= 1048575) {
 			// format as KB
 			double formattedValue = size / 1024.0;
-			decimalFormat.applyPattern("0.00 KB");
+			decimalFormat.applyPattern(Messages.AttachmentSizeFormatter_0_KB);
 			return decimalFormat.format(formattedValue);
 		} else if (size >= 1048576 && size <= 1073741823) {
 			// format as MB
 			double formattedValue = size / 1048576.0;
-			decimalFormat.applyPattern("0.00 MB");
+			decimalFormat.applyPattern(Messages.AttachmentSizeFormatter_0_MB);
 			return decimalFormat.format(formattedValue);
 		}
 
 		// format as GB
 		double formattedValue = size / 1073741824.0;
-		decimalFormat.applyPattern("0.00 GB");
+		decimalFormat.applyPattern(Messages.AttachmentSizeFormatter_0_GB);
 		return decimalFormat.format(formattedValue);
 	}
 

@@ -37,7 +37,7 @@ public class PlanningPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public String getPageText() {
-		return "Planning";
+		return Messages.PlanningPageFactory_Planning;
 	}
 
 	@Override

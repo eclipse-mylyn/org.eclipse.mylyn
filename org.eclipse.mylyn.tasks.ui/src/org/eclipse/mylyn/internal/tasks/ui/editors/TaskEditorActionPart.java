@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -114,11 +115,9 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private static final int DEFAULT_FIELD_WIDTH = 150;
 
-	private static final String LABEL_BUTTON_SUBMIT = "Submit";
-
 	private static final int RADIO_OPTION_WIDTH = 120;
 
-	private static final String KEY_ASSOCIATED_EDITOR = "associatedEditor";
+	private static final String KEY_ASSOCIATED_EDITOR = "associatedEditor"; //$NON-NLS-1$
 
 	private List<Button> operationButtons;
 
@@ -137,11 +136,12 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	private TaskAttribute selectedOperationAttribute;
 
 	public TaskEditorActionPart() {
-		setPartName("Actions");
+		setPartName(Messages.TaskEditorActionPart_Actions);
 	}
 
 	protected void addAttachContextButton(Composite buttonComposite, FormToolkit toolkit) {
-		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
+		attachContextButton = toolkit.createButton(buttonComposite, Messages.TaskEditorActionPart_Attach_Context,
+				SWT.CHECK);
 		attachContextButton.setImage(CommonImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 	}
 
@@ -153,7 +153,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 * @param toolkit
 	 */
 	private void createActionButtons(Composite buttonComposite, FormToolkit toolkit) {
-		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
+		submitButton = toolkit.createButton(buttonComposite, Messages.TaskEditorActionPart_Submit, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButtonData.widthHint = 100;
 		submitButton.setImage(CommonImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
@@ -166,7 +166,7 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 		setSubmitEnabled(true);
 
-		toolkit.createLabel(buttonComposite, "    ");
+		toolkit.createLabel(buttonComposite, "    "); //$NON-NLS-1$
 
 		if (!getTaskData().isNew()) {
 			addAttachContextButton(buttonComposite, toolkit);
@@ -180,7 +180,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 	 * @param toolkit
 	 */
 	private void createCategoryChooser(Composite buttonComposite, FormToolkit toolkit) {
-		addToCategory = getManagedForm().getToolkit().createButton(buttonComposite, "Add to Category", SWT.CHECK);
+		addToCategory = getManagedForm().getToolkit().createButton(buttonComposite,
+				Messages.TaskEditorActionPart_Add_to_Category, SWT.CHECK);
 		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 		categoryChooser.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
@@ -355,7 +356,8 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		if (submitButton != null && !submitButton.isDisposed()) {
 			submitButton.setEnabled(enabled);
 			if (enabled) {
-				submitButton.setToolTipText("Submit to " + getTaskEditorPage().getTaskRepository().getRepositoryUrl());
+				submitButton.setToolTipText(MessageFormat.format(Messages.TaskEditorActionPart_Submit_to_X,
+						getTaskEditorPage().getTaskRepository().getRepositoryUrl()));
 			}
 		}
 	}

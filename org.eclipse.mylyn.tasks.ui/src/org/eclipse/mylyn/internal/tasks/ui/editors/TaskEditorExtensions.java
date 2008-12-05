@@ -29,7 +29,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
  */
 public class TaskEditorExtensions {
 
-	public static final String REPOSITORY_PROPERTY_EDITOR_EXTENSION = "editorExtension";
+	public static final String REPOSITORY_PROPERTY_EDITOR_EXTENSION = "editorExtension"; //$NON-NLS-1$
 
 	private static Map<String, RegisteredTaskEditorExtension> extensionsById = new HashMap<String, RegisteredTaskEditorExtension>();
 
@@ -47,7 +47,7 @@ public class TaskEditorExtensions {
 		RegisteredTaskEditorExtension previous = extensionsById.put(id, new RegisteredTaskEditorExtension(extension,
 				id, name));
 		if (previous != null) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Duplicate taskEditorExtension id="
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Duplicate taskEditorExtension id=" //$NON-NLS-1$
 					+ id, null));
 		}
 	}
@@ -59,7 +59,7 @@ public class TaskEditorExtensions {
 		String previous = associationByConnectorKind.put(connectorKind, extensionId);
 		if (previous != null) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, String.format(
-					"Duplicate association for repository %s: %s replaces %s", connectorKind, extensionId, previous),
+					"Duplicate association for repository %s: %s replaces %s", connectorKind, extensionId, previous), //$NON-NLS-1$
 					null));
 		}
 	}

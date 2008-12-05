@@ -131,7 +131,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		if (task != null) {
 			String taskKey = task.getTaskKey();
 			if (taskKey != null) {
-				return truncate(taskKey + ": " + toolTipText);
+				return truncate(taskKey + ": " + toolTipText); //$NON-NLS-1$
 			}
 		}
 		return truncate(toolTipText);
@@ -197,7 +197,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		if (description == null || description.length() <= MAX_LABEL_LENGTH) {
 			return description;
 		} else {
-			return description.substring(0, MAX_LABEL_LENGTH) + "...";
+			return description.substring(0, MAX_LABEL_LENGTH) + "..."; //$NON-NLS-1$
 		}
 	}
 

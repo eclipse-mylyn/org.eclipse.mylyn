@@ -48,6 +48,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @author Steffen Pingel
  * @deprecated replaced by {@link BrowserPreviewViewer}
  */
+// TODO 3.1 remove class
 @Deprecated
 public class PreviewAttributeEditor extends AbstractAttributeEditor {
 
@@ -81,7 +82,7 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 					return;
 				}
 
-				if (event.location != null && !event.location.startsWith("about")) {
+				if (event.location != null && !event.location.startsWith("about")) { //$NON-NLS-1$
 					event.doit = false;
 					IHyperlink link = new TaskUrlHyperlink(
 							new Region(0, 0)/* a fake region just to make constructor happy */, event.location);
@@ -146,9 +147,9 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 		// in this object and the method parameters, and this method is reused by both the
 		// description section and new comments section.
 		new Object() {
-			private static final String LABEL_BUTTON_EDIT = "Edit";
+			private/*static*/final String LABEL_BUTTON_EDIT = Messages.PreviewAttributeEditor_Edit;
 
-			private static final String LABEL_BUTTON_PREVIEW = "Preview";
+			private/*static*/final String LABEL_BUTTON_PREVIEW = Messages.PreviewAttributeEditor_Preview;
 
 			private int buttonState = 0;
 
@@ -170,7 +171,7 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 
 						buttonState = ++buttonState % 2;
 						if (buttonState == 1) {
-							setText(previewBrowser, "Loading preview...");
+							setText(previewBrowser, Messages.PreviewAttributeEditor_Loading_preview_);
 							previewWiki(previewBrowser, editor.getTextWidget().getText());
 						}
 						previewButton.setText(buttonState == 0 ? LABEL_BUTTON_PREVIEW : LABEL_BUTTON_EDIT);
@@ -192,10 +193,10 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 			private final String sourceText;
 
 			public PreviewWikiJob(String sourceText) {
-				super("Formatting Wiki Text");
+				super(Messages.PreviewAttributeEditor_Formatting_Wiki_Text);
 
 				if (sourceText == null) {
-					throw new IllegalArgumentException("source text must not be null");
+					throw new IllegalArgumentException("source text must not be null"); //$NON-NLS-1$
 				}
 
 				this.sourceText = sourceText;
@@ -213,7 +214,7 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 			protected IStatus run(IProgressMonitor monitor) {
 				if (renderingEngine == null) {
 					jobStatus = new RepositoryStatus(taskRepository, IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-							RepositoryStatus.ERROR_INTERNAL, "The repository does not support HTML preview.");
+							RepositoryStatus.ERROR_INTERNAL, "The repository does not support HTML preview."); //$NON-NLS-1$
 					return Status.OK_STATUS;
 				}
 
@@ -246,7 +247,7 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 					} else {
 						getControl().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								TasksUiInternal.displayStatus("Error", job.getStatus());
+								TasksUiInternal.displayStatus(Messages.PreviewAttributeEditor_Error, job.getStatus());
 								// TODO EDITOR error handling
 								//getAttributeEditorManager().setMessage(job.getStatus().getMessage(), IMessageProvider.ERROR);
 							}
@@ -264,7 +265,7 @@ public class PreviewAttributeEditor extends AbstractAttributeEditor {
 	private void setText(Browser browser, String html) {
 		try {
 			ignoreLocationEvents = true;
-			browser.setText((html != null) ? html : "");
+			browser.setText((html != null) ? html : ""); //$NON-NLS-1$
 		} finally {
 			ignoreLocationEvents = false;
 		}

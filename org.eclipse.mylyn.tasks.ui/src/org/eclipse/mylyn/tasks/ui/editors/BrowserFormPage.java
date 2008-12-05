@@ -38,7 +38,7 @@ import org.eclipse.ui.internal.browser.IBrowserViewerContainer;
  */
 public class BrowserFormPage extends FormPage {
 
-	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editor.browser";
+	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editor.browser"; //$NON-NLS-1$
 
 	private BrowserViewer browserViewer;
 
@@ -76,11 +76,11 @@ public class BrowserFormPage extends FormPage {
 			}
 		} catch (SWTError e) {
 			// TODO review error handling
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create browser page: "
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create browser page: " //$NON-NLS-1$
 					+ e.getMessage(), e));
 		} catch (RuntimeException e) {
 			// TODO review error handling
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create browser page", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not create browser page", e)); //$NON-NLS-1$
 		}
 	}
 

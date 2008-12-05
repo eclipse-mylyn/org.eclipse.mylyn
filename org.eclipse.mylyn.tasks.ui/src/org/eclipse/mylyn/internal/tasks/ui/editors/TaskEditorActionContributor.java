@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -143,7 +144,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		selectAllAction.setEnabled(true);
 
 		findAction = new GlobalAction(ActionFactory.FIND.getId());
-		findAction.setText("Find");
+		findAction.setText(Messages.TaskEditorActionContributor_Find);
 		findAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.FIND_REPLACE);
 		findAction.setImageDescriptor(CommonImages.FIND);
 	}
@@ -175,7 +176,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			addClipboardActions(manager);
 		}
 		if (editor.getTaskEditorInput() == null) {
-			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
+			final MenuManager subMenuManager = new MenuManager(MessageFormat.format(
+					Messages.TaskEditorActionContributor_Add_to_X, TaskListView.LABEL_VIEW));
 			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiInternal.getTaskList()
 					.getCategories());
 			Collections.sort(categories);

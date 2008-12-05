@@ -35,7 +35,7 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class CategoryEditor extends EditorPart {
 
-	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.category";
+	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.category"; //$NON-NLS-1$
 
 	private Text url;
 
@@ -92,7 +92,7 @@ public class CategoryEditor extends EditorPart {
 
 	private void createSummarySection(Composite parent, FormToolkit toolkit) {
 		Section summarySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		summarySection.setText("Category Summary");
+		summarySection.setText(Messages.CategoryEditor_Category_Summary);
 		summarySection.setLayout(new TableWrapLayout());
 		summarySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
@@ -108,14 +108,14 @@ public class CategoryEditor extends EditorPart {
 			}
 		};
 
-		toolkit.createLabel(summaryContainer, "Description: ", SWT.NULL);
+		toolkit.createLabel(summaryContainer, Messages.CategoryEditor_Description_, SWT.NULL);
 //		lblDescription.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		description = toolkit.createText(summaryContainer, input.getCategoryName(), SWT.FLAT);
 		description.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		description.setData(FormToolkit.KEY_DRAW_BORDER);
 		description.addModifyListener(modifyListener);
 
-		toolkit.createLabel(summaryContainer, "URL: ", SWT.NONE);
+		toolkit.createLabel(summaryContainer, Messages.CategoryEditor_URL_, SWT.NONE);
 //		lblUrl.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		url = toolkit.createText(summaryContainer, input.getUrl(), SWT.FLAT);
 		url.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));

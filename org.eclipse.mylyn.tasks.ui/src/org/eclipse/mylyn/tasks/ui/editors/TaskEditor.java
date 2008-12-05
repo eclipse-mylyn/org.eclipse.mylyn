@@ -45,6 +45,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.ToggleTaskActivationAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.internal.tasks.ui.util.SelectionProviderAdapter;
@@ -85,7 +86,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public class TaskEditor extends SharedHeaderFormEditor {
 
-	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
+	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task"; //$NON-NLS-1$
 
 	private ToggleTaskActivationAction activateAction;
 
@@ -163,7 +164,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				}
 			} catch (Exception e) {
 				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not create editor via factory: " + factory, e));
+						"Could not create editor via factory: " + factory, e)); //$NON-NLS-1$
 			}
 		}
 
@@ -333,7 +334,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		if (!(input instanceof TaskEditorInput)) {
-			throw new PartInitException("Invalid editor input \"" + input.getClass() + "\"");
+			throw new PartInitException("Invalid editor input \"" + input.getClass() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		super.init(site, input);
@@ -534,13 +535,13 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					public void run() {
 						TaskList taskList = TasksUiPlugin.getTaskList();
 						if (taskList.getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
-							setMessage("Task added to the Uncategorized container", IMessageProvider.INFORMATION);
+							setMessage(Messages.TaskEditor_Task_added_to_the_Uncategorized_container, IMessageProvider.INFORMATION);
 						}
 						super.run();
 					}
 				};
 			}
-			toolBarManager.add(new Separator("activation"));
+			toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
 			toolBarManager.add(activateAction);
 		}
 
@@ -562,17 +563,17 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private void updateHeaderLabel(ITask task) {
 		if (task instanceof LocalTask) {
-			getHeaderForm().getForm().setText("Task: " + task.getSummary());
+			getHeaderForm().getForm().setText(Messages.TaskEditor_Task_ + task.getSummary());
 		} else {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(task.getConnectorKind());
-			String kindLabel = "";
+			String kindLabel = ""; //$NON-NLS-1$
 			if (connectorUi != null) {
 				kindLabel = connectorUi.getTaskKindLabel(task);
 			}
 
 			String idLabel = task.getTaskKey();
 			if (idLabel != null) {
-				getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
+				getHeaderForm().getForm().setText(kindLabel + " " + idLabel); //$NON-NLS-1$
 			} else {
 				getHeaderForm().getForm().setText(kindLabel);
 			}

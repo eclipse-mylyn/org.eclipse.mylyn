@@ -506,7 +506,7 @@ public class TaskFormPage extends FormPage {
 
 		public String getTypeLabel(Annotation annotation) {
 			if (annotation instanceof ErrorAnnotation) {
-				return "Errors";
+				return Messages.TaskFormPage_Errors;
 			}
 
 			return null;
@@ -570,7 +570,7 @@ public class TaskFormPage extends FormPage {
 			StringBuffer total = new StringBuffer();
 			for (int x = 0; x < all.size(); x++) {
 				String str = all.get(x);
-				total.append(" " + str + (x == (all.size() - 1) ? "" : "\n"));
+				total.append(" " + str + (x == (all.size() - 1) ? "" : "\n")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 
 			return total.toString();
@@ -587,7 +587,7 @@ public class TaskFormPage extends FormPage {
 
 	public static class ErrorAnnotation extends Annotation {
 
-		public static String ERROR_TYPE = "spelling.error";
+		public static String ERROR_TYPE = "spelling.error"; //$NON-NLS-1$
 
 		// ProblemAnnotation.SPELLING_ANNOTATION_TYPE;
 

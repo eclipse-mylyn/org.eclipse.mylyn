@@ -28,9 +28,9 @@ import org.eclipse.ui.IMemento;
  */
 public class TaskEditorInputFactory implements IElementFactory {
 
-	public static final String TAG_TASK_HANDLE = "taskHandle";
+	public static final String TAG_TASK_HANDLE = "taskHandle"; //$NON-NLS-1$
 
-	public static final String ID_FACTORY = "org.eclipse.mylyn.tasks.ui.elementFactories.task.editor";
+	public static final String ID_FACTORY = "org.eclipse.mylyn.tasks.ui.elementFactories.task.editor"; //$NON-NLS-1$
 
 	public IAdaptable createElement(IMemento memento) {
 		String handle = memento.getString(TAG_TASK_HANDLE);
@@ -41,13 +41,13 @@ public class TaskEditorInputFactory implements IElementFactory {
 			if (taskRepository != null) {
 				return new TaskEditorInput(taskRepository, task);
 			} else {
-				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Repository for connector kind "
-						+ task.getConnectorKind() + " with url " + task.getRepositoryUrl() + " cannont be found."));
+				StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "Repository for connector kind " //$NON-NLS-1$
+						+ task.getConnectorKind() + " with url " + task.getRepositoryUrl() + " cannont be found.")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} else {
 			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"Failed to restore task editor: Task with handle \"" + handle
-							+ "\" could not be found in task list."));
+					"Failed to restore task editor: Task with handle \"" + handle //$NON-NLS-1$
+							+ "\" could not be found in task list.")); //$NON-NLS-1$
 		}
 		return null;
 	}

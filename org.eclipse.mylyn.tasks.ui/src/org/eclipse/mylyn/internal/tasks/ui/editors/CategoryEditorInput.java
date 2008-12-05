@@ -37,7 +37,7 @@ public class CategoryEditorInput implements IEditorInput {
 	}
 
 	public String getName() {
-		return "Category Editor";
+		return Messages.CategoryEditorInput_Category_Editor;
 	}
 
 	public IPersistableElement getPersistable() {
@@ -45,7 +45,7 @@ public class CategoryEditorInput implements IEditorInput {
 	}
 
 	public String getToolTipText() {
-		return "Category Editor";
+		return Messages.CategoryEditorInput_Category_Editor;
 	}
 
 	@SuppressWarnings("unchecked")

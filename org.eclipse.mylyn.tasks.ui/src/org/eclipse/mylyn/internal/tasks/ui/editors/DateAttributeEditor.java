@@ -102,7 +102,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 
 			ImageHyperlink clearDeadlineDate = toolkit.createImageHyperlink(dateWithClearComposite, SWT.NONE);
 			clearDeadlineDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
-			clearDeadlineDate.setToolTipText("Clear");
+			clearDeadlineDate.setToolTipText(Messages.DateAttributeEditor_Clear);
 			clearDeadlineDate.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
@@ -137,7 +137,7 @@ public class DateAttributeEditor extends AbstractAttributeEditor {
 				return EditorUtil.formatDate(date);
 			}
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 

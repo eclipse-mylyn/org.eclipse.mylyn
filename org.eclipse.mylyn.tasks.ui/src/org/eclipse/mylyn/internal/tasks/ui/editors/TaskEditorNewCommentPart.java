@@ -21,7 +21,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 public class TaskEditorNewCommentPart extends TaskEditorRichTextPart {
 
 	public TaskEditorNewCommentPart() {
-		setPartName("New Comment");
+		setPartName(Messages.TaskEditorNewCommentPart_New_Comment);
 		setSectionStyle(ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED);
 		setExpandVertically(true);
 	}

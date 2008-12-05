@@ -56,9 +56,9 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 		URL, TASK, TASK_RELATION, DEFAULT
 	}
 
-	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor";
+	private static final String ID_CONTEXT_EDITOR_TASK = "org.eclipse.mylyn.tasks.ui.TaskEditor"; //$NON-NLS-1$
 
-	private static final String ID_CONTEXT_EDITOR_TEXT = "org.eclipse.ui.DefaultTextEditor";
+	private static final String ID_CONTEXT_EDITOR_TEXT = "org.eclipse.ui.DefaultTextEditor"; //$NON-NLS-1$
 
 	private RepositoryTextScanner scanner;
 
@@ -191,22 +191,22 @@ public class RepositoryTextViewerConfiguration extends TextSourceViewerConfigura
 					JFacePreferences.ACTIVE_HYPERLINK_COLOR)));
 			IToken quoteToken = new Token(new TextAttribute(CommonColors.TEXT_QUOTED));
 			IRule[] rules = new IRule[16];
-			rules[0] = (new SingleLineRule("http://", " ", bugToken));
-			rules[1] = (new SingleLineRule("https://", " ", bugToken));
-			rules[2] = (new SingleLineRule("bug#", " ", bugToken));
-			rules[3] = (new SingleLineRule("bug#", "", bugToken));
-			rules[4] = (new SingleLineRule("bug #", "", bugToken));
-			rules[5] = (new SingleLineRule("http://", "\n", bugToken));
-			rules[6] = (new SingleLineRule("https://", "\n", bugToken));
-			rules[7] = (new SingleLineRule("task#", " ", bugToken));
-			rules[8] = (new MultiLineRule("task#", "\n", bugToken));
-			rules[9] = (new MultiLineRule("task# ", " ", bugToken));
-			rules[10] = (new SingleLineRule("task #", "\n", bugToken));
-			rules[11] = (new SingleLineRule("*** This bug has been ", "***", bugToken));
-			rules[12] = (new SingleLineRule("http://", "", bugToken));
-			rules[13] = (new SingleLineRule("https://", "", bugToken));
-			rules[14] = (new MultiLineRule("task #", " ", bugToken));
-			SingleLineRule quoteRule = new SingleLineRule(">", null, quoteToken, (char) 0, true);
+			rules[0] = (new SingleLineRule("http://", " ", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[1] = (new SingleLineRule("https://", " ", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[2] = (new SingleLineRule("bug#", " ", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[3] = (new SingleLineRule("bug#", "", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[4] = (new SingleLineRule("bug #", "", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[5] = (new SingleLineRule("http://", "\n", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[6] = (new SingleLineRule("https://", "\n", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[7] = (new SingleLineRule("task#", " ", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[8] = (new MultiLineRule("task#", "\n", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[9] = (new MultiLineRule("task# ", " ", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[10] = (new SingleLineRule("task #", "\n", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[11] = (new SingleLineRule("*** This bug has been ", "***", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[12] = (new SingleLineRule("http://", "", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[13] = (new SingleLineRule("https://", "", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			rules[14] = (new MultiLineRule("task #", " ", bugToken)); //$NON-NLS-1$ //$NON-NLS-2$
+			SingleLineRule quoteRule = new SingleLineRule(">", null, quoteToken, (char) 0, true); //$NON-NLS-1$
 			quoteRule.setColumnConstraint(0);
 			rules[15] = quoteRule;
 			setRules(rules);

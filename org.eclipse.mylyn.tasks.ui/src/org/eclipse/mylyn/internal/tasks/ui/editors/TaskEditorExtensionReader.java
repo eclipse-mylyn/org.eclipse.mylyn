@@ -28,17 +28,17 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorExtension;
  */
 public class TaskEditorExtensionReader {
 
-	private static final String CONNECTOR_KIND = "connectorKind";
+	private static final String CONNECTOR_KIND = "connectorKind"; //$NON-NLS-1$
 
-	public static final String ATTR_ID = "id";
+	public static final String ATTR_ID = "id"; //$NON-NLS-1$
 
-	public static final String ATTR_NAME = "name";
+	public static final String ATTR_NAME = "name"; //$NON-NLS-1$
 
-	public static final String EXTENSION_TASK_EDITOR_EXTENSIONS = "org.eclipse.mylyn.tasks.ui.taskEditorExtensions";
+	public static final String EXTENSION_TASK_EDITOR_EXTENSIONS = "org.eclipse.mylyn.tasks.ui.taskEditorExtensions"; //$NON-NLS-1$
 
-	private static final String REPOSITORY_ASSOCIATION = "repositoryAssociation";
+	private static final String REPOSITORY_ASSOCIATION = "repositoryAssociation"; //$NON-NLS-1$
 
-	private static final String TASK_EDITOR_EXTENSION = "taskEditorExtension";
+	private static final String TASK_EDITOR_EXTENSION = "taskEditorExtension"; //$NON-NLS-1$
 
 	public static void initExtensions() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -61,13 +61,13 @@ public class TaskEditorExtensionReader {
 		try {
 			String id = element.getAttribute(ATTR_ID);
 			String name = element.getAttribute(ATTR_NAME);
-			AbstractTaskEditorExtension extension = (AbstractTaskEditorExtension) element.createExecutableExtension("class");
+			AbstractTaskEditorExtension extension = (AbstractTaskEditorExtension) element.createExecutableExtension("class"); //$NON-NLS-1$
 			TaskEditorExtensions.addTaskEditorExtension(id, name, extension);
 		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load taskEditorExtension",
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load taskEditorExtension", //$NON-NLS-1$
 					e));
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load taskEditorExtension",
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load taskEditorExtension", //$NON-NLS-1$
 					e));
 		}
 	}
@@ -79,7 +79,7 @@ public class TaskEditorExtensionReader {
 			TaskEditorExtensions.addRepositoryAssociation(repository, taskEditorExtension);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not load repositoryAssociation", e));
+					"Could not load repositoryAssociation", e)); //$NON-NLS-1$
 		}
 	}
 

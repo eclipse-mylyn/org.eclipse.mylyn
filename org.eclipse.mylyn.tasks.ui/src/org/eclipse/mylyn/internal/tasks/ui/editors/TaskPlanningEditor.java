@@ -97,29 +97,29 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskPlanningEditor extends TaskFormPage {
 
-	private static final String RESET = "Reset";
+	private static final String RESET = Messages.TaskPlanningEditor_Reset;
 
 	private static final int WIDTH_SUMMARY = 500;
 
 	private static final int NOTES_MINSIZE = 100;
 
-	private static final String CLEAR = "Clear";
+	private static final String CLEAR = Messages.TaskPlanningEditor_Clear;
 
-	private static final String LABEL_DUE = "Due:";
+	private static final String LABEL_DUE = Messages.TaskPlanningEditor_Due;
 
-	private static final String LABEL_SCHEDULE = "Scheduled for:";
+	private static final String LABEL_SCHEDULE = Messages.TaskPlanningEditor_Scheduled_for;
 
-	public static final String LABEL_INCOMPLETE = "Incomplete";
+	public static final String LABEL_INCOMPLETE = Messages.TaskPlanningEditor_Incomplete;
 
-	public static final String LABEL_COMPLETE = "Complete";
+	public static final String LABEL_COMPLETE = Messages.TaskPlanningEditor_Complete;
 
-	private static final String LABEL_PLAN = "Personal Planning";
+	private static final String LABEL_PLAN = Messages.TaskPlanningEditor_Personal_Planning;
 
-	private static final String NO_TIME_ELAPSED = "0 seconds";
+	private static final String NO_TIME_ELAPSED = Messages.TaskPlanningEditor_0_seconds;
 
 	// private static final String LABEL_OVERVIEW = "Task Info";
 
-	private static final String LABEL_NOTES = "Notes";
+	private static final String LABEL_NOTES = Messages.TaskPlanningEditor_Notes;
 
 	private DatePicker dueDatePicker;
 
@@ -129,7 +129,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private Composite editorComposite;
 
-	protected static final String CONTEXT_MENU_ID = "#MylynPlanningEditor";
+	protected static final String CONTEXT_MENU_ID = "#MylynPlanningEditor"; //$NON-NLS-1$
 
 	private Text endDate;
 
@@ -183,7 +183,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private ITaskActivityListener timingListener;
 
 	public TaskPlanningEditor(TaskEditor editor) {
-		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, "Planning");
+		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, Messages.TaskPlanningEditor_Planning);
 		this.parentEditor = editor;
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
@@ -420,7 +420,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		GridLayout nameValueLayout = new GridLayout(2, false);
 		nameValueLayout.marginHeight = 3;
 		nameValueComp.setLayout(nameValueLayout);
-		toolkit.createLabel(nameValueComp, "Priority:").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Priority).setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		priorityCombo = new CCombo(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
 		toolkit.adapt(priorityCombo, false, false);
 		priorityCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -452,7 +452,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		nameValueComp = toolkit.createComposite(statusComposite);
 		nameValueComp.setLayout(new GridLayout(2, false));
-		toolkit.createLabel(nameValueComp, "Status:").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Status).setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		statusCombo = new CCombo(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
 		toolkit.adapt(statusCombo, true, true);
 		statusCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -478,14 +478,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		Date creationDate = task.getCreationDate();
 		String creationDateString = (creationDate != null) ? DateFormat.getDateInstance(DateFormat.LONG).format(
-				creationDate) : "";
-		addNameValueComp(statusComposite, "Created:", creationDateString, SWT.FLAT | SWT.READ_ONLY);
+				creationDate) : ""; //$NON-NLS-1$
+		addNameValueComp(statusComposite, Messages.TaskPlanningEditor_Created, creationDateString, SWT.FLAT | SWT.READ_ONLY);
 
-		String completionDateString = "";
+		String completionDateString = ""; //$NON-NLS-1$
 		if (task.isCompleted()) {
 			completionDateString = getTaskDateString(task);
 		}
-		endDate = addNameValueComp(statusComposite, "Completed:", completionDateString, SWT.FLAT | SWT.READ_ONLY);
+		endDate = addNameValueComp(statusComposite, Messages.TaskPlanningEditor_Completed, completionDateString, SWT.FLAT | SWT.READ_ONLY);
 		// URL
 		Composite urlComposite = toolkit.createComposite(parent);
 		GridLayout urlLayout = new GridLayout(4, false);
@@ -495,7 +495,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		urlComposite.setLayout(urlLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(urlComposite);
 
-		Label label = toolkit.createLabel(urlComposite, "URL:");
+		Label label = toolkit.createLabel(urlComposite, Messages.TaskPlanningEditor_URL);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		issueReportURL = toolkit.createText(urlComposite, task.getUrl(), SWT.FLAT);
 		issueReportURL.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -512,7 +512,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		getDescLink = toolkit.createImageHyperlink(urlComposite, SWT.NONE);
 		getDescLink.setImage(CommonImages.getImage(TasksUiImages.TASK_RETRIEVE));
-		getDescLink.setToolTipText("Retrieve task description from URL");
+		getDescLink.setToolTipText(Messages.TaskPlanningEditor_Retrieve_task_description_from_URL);
 		getDescLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		setButtonStatus();
 
@@ -541,7 +541,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		openUrlLink = toolkit.createImageHyperlink(urlComposite, SWT.NONE);
 		openUrlLink.setImage(CommonImages.getImage(CommonImages.BROWSER_SMALL));
-		openUrlLink.setToolTipText("Open with Web Browser");
+		openUrlLink.setToolTipText(Messages.TaskPlanningEditor_Open_with_Web_Browser);
 		openUrlLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		openUrlLink.addHyperlinkListener(new IHyperlinkListener() {
 
@@ -583,7 +583,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	protected void setButtonStatus() {
 		String url = issueReportURL.getText();
 
-		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
+		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) { //$NON-NLS-1$ //$NON-NLS-2$
 			// String defaultPrefix =
 			// ContextCore.getPreferenceStore().getString(
 			// TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
@@ -719,7 +719,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Estimated time
 		nameValueComp = makeComposite(sectionClient, 3);
-		label = toolkit.createLabel(nameValueComp, "Estimated hours:");
+		label = toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Estimated_hours);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		estimated = new Spinner(nameValueComp, SWT.FLAT);
@@ -820,8 +820,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (MessageDialog.openConfirm(TaskPlanningEditor.this.getSite().getShell(),
-						"Confirm Activity Time Deletion",
-						"Do you wish to reset your activity time on this task?\n\nThis will take immediate affect and can not be undone.")) {
+						Messages.TaskPlanningEditor_Confirm_Activity_Time_Deletion,
+						Messages.TaskPlanningEditor_Do_you_wish_to_reset_your_activity_time_on_this_task_)) {
 					MonitorUi.getActivityContextManager().removeActivityTime(task.getHandleIdentifier(), 0l,
 							System.currentTimeMillis());
 				}
@@ -898,18 +898,18 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private String getTaskDateString(ITask task) {
 
 		if (task == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		if (task.getCompletionDate() == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
-		String completionDateString = "";
+		String completionDateString = ""; //$NON-NLS-1$
 		try {
 			completionDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCompletionDate());
 		} catch (RuntimeException e) {
 			// FIXME what exception is caught here?
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format date", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format date", e)); //$NON-NLS-1$
 			return completionDateString;
 		}
 		return completionDateString;
@@ -925,7 +925,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	@Override
 	public String toString() {
-		return "(info editor for task: " + task + ")";
+		return Messages.TaskPlanningEditor__info_editor_for_task_ + task + ")"; //$NON-NLS-1$
 	}
 
 	/** for testing - should cause dirty state */

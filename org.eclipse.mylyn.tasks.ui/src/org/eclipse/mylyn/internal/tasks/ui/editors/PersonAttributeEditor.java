@@ -30,7 +30,7 @@ public class PersonAttributeEditor extends TextAttributeEditor {
 		if (repositoryPerson != null) {
 			return (isReadOnly()) ? repositoryPerson.toString() : repositoryPerson.getPersonId();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override

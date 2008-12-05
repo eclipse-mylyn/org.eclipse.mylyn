@@ -31,7 +31,7 @@ import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
  */
 public class TaskRelationHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 
-	private static Pattern HYPERLINK_PATTERN = Pattern.compile("([^\\s,]+)");
+	private static Pattern HYPERLINK_PATTERN = Pattern.compile("([^\\s,]+)"); //$NON-NLS-1$
 
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
@@ -76,12 +76,12 @@ public class TaskRelationHyperlinkDetector extends AbstractTaskHyperlinkDetector
 		int i = offset;
 		IDocument document = viewer.getDocument();
 		if (i > document.getLength()) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		try {
 			if (isSeparator(document.getChar(i))) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			while (i > 0) {
 				char ch = document.getChar(i - 1);
@@ -92,7 +92,7 @@ public class TaskRelationHyperlinkDetector extends AbstractTaskHyperlinkDetector
 			}
 			return document.get(i, offset - i);
 		} catch (BadLocationException e) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -101,12 +101,12 @@ public class TaskRelationHyperlinkDetector extends AbstractTaskHyperlinkDetector
 		IDocument document = viewer.getDocument();
 		int length = document.getLength();
 		if (i > length) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		try {
 			if (isSeparator(document.getChar(i))) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			while (i < length - 1) {
 				char ch = document.getChar(i + 1);
@@ -118,7 +118,7 @@ public class TaskRelationHyperlinkDetector extends AbstractTaskHyperlinkDetector
 			return document.get(offset, i - offset + 1);
 		} catch (BadLocationException e) {
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	private boolean isSeparator(char ch) {

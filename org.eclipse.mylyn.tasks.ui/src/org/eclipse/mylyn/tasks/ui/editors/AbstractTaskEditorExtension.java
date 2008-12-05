@@ -28,7 +28,7 @@ public abstract class AbstractTaskEditorExtension {
 	/**
 	 * The key to access the {@link TaskRepository} property that stores the URL of an associated wiki.
 	 */
-	public static final String INTERNAL_WIKI_LINK_PATTERN = "wikiLinkPattern";
+	public static final String INTERNAL_WIKI_LINK_PATTERN = "wikiLinkPattern"; //$NON-NLS-1$
 
 	/**
 	 * Creates a source viewer that can be used to view content in the task editor. The source viewer should be

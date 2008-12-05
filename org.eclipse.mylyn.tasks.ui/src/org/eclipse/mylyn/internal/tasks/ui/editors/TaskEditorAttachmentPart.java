@@ -63,9 +63,9 @@ import org.eclipse.ui.internal.WorkbenchImages;
  */
 public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
-	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments";
+	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments"; //$NON-NLS-1$
 
-	private final String[] attachmentsColumns = { "Name", "Description", /*"Type", */"Size", "Creator", "Created" };
+	private final String[] attachmentsColumns = { Messages.TaskEditorAttachmentPart_Name, Messages.TaskEditorAttachmentPart_Description, /*"Type", */Messages.TaskEditorAttachmentPart_Size, Messages.TaskEditorAttachmentPart_Creator, Messages.TaskEditorAttachmentPart_Created }; //$NON-NLS-1$
 
 	private final int[] attachmentsColumnWidths = { 130, 150, /*100,*/70, 100, 100 };
 
@@ -78,7 +78,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 	private Composite attachmentsComposite;
 
 	public TaskEditorAttachmentPart() {
-		setPartName("Attachments");
+		setPartName(Messages.TaskEditorAttachmentPart_Attachments);
 	}
 
 	private void createAttachmentTable(FormToolkit toolkit, final Composite attachmentsComposite) {
@@ -160,7 +160,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentControlsComposite.setLayout(new GridLayout(2, false));
 		attachmentControlsComposite.setLayoutData(new GridData(GridData.BEGINNING));
 
-		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, "Attach...", SWT.PUSH);
+		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, Messages.TaskEditorAttachmentPart_Attach_, SWT.PUSH);
 		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
 		attachFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -170,7 +170,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		});
 		getTaskEditorPage().registerDefaultDropListener(attachFileButton);
 
-		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, "Attach Screenshot...",
+		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, Messages.TaskEditorAttachmentPart_Attach__Screenshot,
 				SWT.PUSH);
 		attachScreenshotButton.setImage(CommonImages.getImage(CommonImages.IMAGE_CAPTURE));
 		attachScreenshotButton.addSelectionListener(new SelectionAdapter() {
@@ -187,7 +187,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		initialize();
 
 		final Section section = createSection(parent, toolkit, hasIncoming);
-		section.setText(getPartName() + " (" + attachments.size() + ")");
+		section.setText(getPartName() + " (" + attachments.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (hasIncoming) {
 			expandSection(toolkit, section);
 		} else {
@@ -214,7 +214,7 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		if (attachments.size() > 0) {
 			createAttachmentTable(toolkit, attachmentsComposite);
 		} else {
-			Label label = toolkit.createLabel(attachmentsComposite, "No attachments");
+			Label label = toolkit.createLabel(attachmentsComposite, Messages.TaskEditorAttachmentPart_No_attachments);
 			getTaskEditorPage().registerDefaultDropListener(label);
 		}
 

@@ -96,7 +96,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 	public class ViewSourceAction extends Action {
 
 		public ViewSourceAction() {
-			super("Viewer Source", SWT.TOGGLE);
+			super(Messages.RichTextAttributeEditor_Viewer_Source, SWT.TOGGLE);
 			setChecked(false);
 		}
 

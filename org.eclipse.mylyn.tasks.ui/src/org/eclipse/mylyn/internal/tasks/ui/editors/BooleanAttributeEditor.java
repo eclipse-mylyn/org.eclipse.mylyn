@@ -46,7 +46,7 @@ public class BooleanAttributeEditor extends AbstractAttributeEditor {
 
 	@Override
 	public String getLabel() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public boolean getValue() {

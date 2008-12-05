@@ -64,7 +64,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 		StringBuilder strBuilder = new StringBuilder();
 		String oldText = editor.getViewer().getDocument().get();
 		if (strBuilder.length() != 0) {
-			strBuilder.append("\n");
+			strBuilder.append("\n"); //$NON-NLS-1$
 		}
 		strBuilder.append(oldText);
 		strBuilder.append(text);
@@ -96,10 +96,10 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 			if (attributEditor != null) {
 				clazz = attributEditor.getClass().getName();
 			} else {
-				clazz = "<null>";
+				clazz = "<null>"; //$NON-NLS-1$
 			}
 			StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
-					"Expected an instance of RichTextAttributeEditor, got \"" + clazz + "\""));
+					"Expected an instance of RichTextAttributeEditor, got \"" + clazz + "\"")); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 
@@ -216,16 +216,16 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 
 	private class ToggleToMaximizePartAction extends Action {
 
-		private static final String COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.maximizePart";
+		private static final String COMMAND_ID = "org.eclipse.mylyn.tasks.ui.command.maximizePart"; //$NON-NLS-1$
 
-		private static final String MAXIMIZE = "Maximize";
+		private/*static*/final String MAXIMIZE = Messages.TaskEditorRichTextPart_Maximize;
 
 		private static final int SECTION_HEADER_HEIGHT = 50;
 
 		private int originalHeight = -1;
 
 		public ToggleToMaximizePartAction() {
-			super("", SWT.TOGGLE);
+			super("", SWT.TOGGLE); //$NON-NLS-1$
 			setImageDescriptor(CommonImages.PART_MAXIMIZE);
 			setToolTipText(MAXIMIZE);
 			setActionDefinitionId(COMMAND_ID);
@@ -272,7 +272,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 	@Override
 	protected void fillToolBar(ToolBarManager manager) {
 		if (getEditor().hasPreview()) {
-			togglePreviewAction = new Action("", SWT.TOGGLE) {
+			togglePreviewAction = new Action("", SWT.TOGGLE) { //$NON-NLS-1$
 				@Override
 				public void run() {
 					if (isChecked()) {
@@ -287,12 +287,12 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 				}
 			};
 			togglePreviewAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
-			togglePreviewAction.setToolTipText("Preview");
+			togglePreviewAction.setToolTipText(Messages.TaskEditorRichTextPart_Preview);
 			togglePreviewAction.setChecked(false);
 			manager.add(togglePreviewAction);
 		}
 		if (getEditor().hasBrowser()) {
-			toggleBrowserAction = new Action("", SWT.TOGGLE) {
+			toggleBrowserAction = new Action("", SWT.TOGGLE) { //$NON-NLS-1$
 				@Override
 				public void run() {
 					if (isChecked()) {
@@ -307,7 +307,7 @@ public class TaskEditorRichTextPart extends AbstractTaskEditorPart {
 				}
 			};
 			toggleBrowserAction.setImageDescriptor(CommonImages.PREVIEW_WEB);
-			toggleBrowserAction.setToolTipText("Browser Preview");
+			toggleBrowserAction.setToolTipText(Messages.TaskEditorRichTextPart_Browser_Preview);
 			toggleBrowserAction.setChecked(false);
 			manager.add(toggleBrowserAction);
 		}

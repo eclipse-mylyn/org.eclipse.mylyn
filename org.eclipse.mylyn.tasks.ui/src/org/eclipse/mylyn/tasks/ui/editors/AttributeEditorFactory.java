@@ -140,7 +140,7 @@ public class AttributeEditorFactory {
 			return editor;
 		}
 
-		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\"");
+		throw new IllegalArgumentException("Unsupported editor type: \"" + type + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

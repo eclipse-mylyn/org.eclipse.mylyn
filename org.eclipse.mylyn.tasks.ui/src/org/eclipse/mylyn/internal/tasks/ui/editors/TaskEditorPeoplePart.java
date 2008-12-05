@@ -29,7 +29,7 @@ public class TaskEditorPeoplePart extends AbstractTaskEditorPart {
 	private static final int COLUMN_MARGIN = 5;
 
 	public TaskEditorPeoplePart() {
-		setPartName("People");
+		setPartName(Messages.TaskEditorPeoplePart_People);
 	}
 
 	private void addAttribute(Composite composite, FormToolkit toolkit, TaskAttribute attribute) {
