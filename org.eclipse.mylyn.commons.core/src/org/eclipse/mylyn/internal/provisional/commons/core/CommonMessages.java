@@ -15,7 +15,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class CommonMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.provisional.commons.core"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.provisional.commons.core.messages"; //$NON-NLS-1$
 
 	static {
 		// load message values from bundle file
