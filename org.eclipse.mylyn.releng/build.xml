@@ -198,6 +198,9 @@
 	</target>
 	
 	<target name="galileo" depends="weekly,sign">
+		<antcall target="promote-main">
+			<param name="target" value="galileo"/>
+		</antcall>
 	</target>
 
 	<target name="promote" depends="init">
@@ -228,6 +231,21 @@
 		</antcall>
 	</target>
 
+	<target name="promote-main" depends="init">
+		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
+		<property name="target.dir" value="${dist.home}/update/${target}" />
+
+		<copy todir="${target.dir}">
+			<fileset dir="${dist.dir}">
+				<include name="mylyn-${version}.${qualifier}-e3.4.zip"/>
+			</fileset>
+			<fileset dir="${dist.dir}/e3.4"/>
+		</copy>
+		
+		<antcall target="fix-permissions">
+			<param name="dir" value="${target.dir}"/>
+		</antcall>
+	</target>
 
 	<target name="update-versions">
 		<fail message="Use -DoldVersion=x.y.z to set old version." unless="oldVersion"/>
