@@ -21,7 +21,7 @@ import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
 /**
  * @author Mik Kersten
  */
-public class AllStandaloneTests {
+public class AllHeadlessStandaloneTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests not requiring Eclipse Workbench");

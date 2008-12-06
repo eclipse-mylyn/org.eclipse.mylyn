@@ -5,7 +5,7 @@
 
 	<import file="scripts/buildHelper.xml" />
 	
-	<target name="all" depends="clean,build,tests,performance-tests">
+	<target name="all" depends="clean,build,standalone-tests,tests,performance-tests">
 	</target>
 
 	<target name="build" depends="init-build,init">
@@ -20,9 +20,6 @@
 			<param name="build.extraBuildArgs" value="-DmylynQualifier=${qualifier}"/>
 			<param name="build.forceContextQualifier" value="${qualifier}-${versionPostfix}"/>			
 		</antcall>		
-	</target>
-
-	<target name="tests" depends="standalone-tests,eclipse-tests,performance-tests">
 	</target>
 
 	<target name="standalone-tests" depends="init">
