@@ -3,8 +3,8 @@
 
 	<target name="preBuild">
 		<delete>
-			<fileset dir="${build.home}/${eclipse.version}/maps" includes="mylyn*.map">
-				<exclude name="*${eclipse.version}.map"/>
+			<fileset dir="${build.home}/${build.target}/maps" includes="mylyn*.map">
+				<exclude name="*${build.target}.map"/>
 			</fileset>
 		</delete>
 	</target>
