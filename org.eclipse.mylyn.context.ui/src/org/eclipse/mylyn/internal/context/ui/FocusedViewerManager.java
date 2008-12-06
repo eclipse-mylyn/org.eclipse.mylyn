@@ -235,7 +235,7 @@ public class FocusedViewerManager extends AbstractContextListener implements ISe
 		}
 	}
 
-	private void refreshViewer(final Set<IInteractionElement> nodesToRefresh, final boolean minor,
+	public void refreshViewer(final Set<IInteractionElement> nodesToRefresh, final boolean minor,
 			StructuredViewer viewer) {
 
 		Map<StructuredViewer, FocusedViewerDelayedRefreshJob> refreshJobs = null;
