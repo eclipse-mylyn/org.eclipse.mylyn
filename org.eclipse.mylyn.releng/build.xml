@@ -72,7 +72,6 @@
 			</classpath>
 			<formatter type="xml" />
 			<test todir="${output.dir}" name="org.eclipse.mylyn.tests.AllStandaloneTests"/>
-			<test todir="${output.dir}" name="org.eclipse.mylyn.wikitext.tests.HeadlessTests"/>
 		</junit>
     </target>
 
