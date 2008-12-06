@@ -71,7 +71,7 @@
 				<path refid="tests.classpath"/>
 			</classpath>
 			<formatter type="xml" />
-			<test todir="${output.dir}" name="org.eclipse.mylyn.tests.AllStandaloneTests"/>
+			<test todir="${output.dir}" name="org.eclipse.mylyn.tests.AllHeadlessStandaloneTests"/>
 		</junit>
     </target>
 
