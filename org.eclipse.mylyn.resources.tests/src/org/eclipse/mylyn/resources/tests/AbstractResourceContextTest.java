@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.resources.tests;
 
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
@@ -53,7 +54,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		context.reset();
 		manager.internalActivateContext(context);
 		ContextUiPlugin.getViewerManager().setSyncRefreshMode(true);
-		navigator = (ResourceNavigator) openView(IdeUiUtil.ID_NAVIGATOR);
+		navigator = (ResourceNavigator) TestUtil.openView(IdeUiUtil.ID_NAVIGATOR);
 		assertNotNull(navigator);
 	}
 

@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.tests.UiTestUtil;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
@@ -43,7 +44,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		view = openView(FocusOutlineAction.ID_CONTENT_OUTLINE);
+		view = TestUtil.openView(FocusOutlineAction.ID_CONTENT_OUTLINE);
 		assertNotNull(view);
 		assertNotNull(ContextUiPlugin.getDefault());
 		assertNotNull(JavaUiBridgePlugin.getDefault());
@@ -58,7 +59,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 	@SuppressWarnings("deprecation")
 	public void testContents() throws JavaModelException, PartInitException {
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
-		openView("org.eclipse.ui.views.ContentOutline");
+		TestUtil.openView("org.eclipse.ui.views.ContentOutline");
 		JavaUI.openInEditor(m1);
 
 		// FocusOutlineAction.getDefault().update(true);

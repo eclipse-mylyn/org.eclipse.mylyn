@@ -22,6 +22,9 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
 import org.eclipse.mylyn.internal.monitor.ui.MonitorUiPlugin;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
@@ -134,6 +137,10 @@ public class TestUtil {
 
 		ContextCore.getContextManager().activateContext("startup");
 		ContextCore.getContextManager().deactivateContext("startup");
+	}
+
+	public static IViewPart openView(String id) throws PartInitException {
+		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(id);
 	}
 
 }

@@ -17,9 +17,6 @@ import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -85,9 +82,5 @@ public abstract class AbstractContextTest extends TestCase {
 
 	protected boolean compareTaskscapeEquality(IInteractionContext t1, IInteractionContext t2) {
 		return false;
-	}
-
-	protected IViewPart openView(String id) throws PartInitException {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(id);
 	}
 }
