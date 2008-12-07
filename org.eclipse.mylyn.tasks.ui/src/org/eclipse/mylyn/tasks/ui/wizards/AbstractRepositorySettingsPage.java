@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -712,6 +713,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 
 		updateHyperlinks();
 
+		Dialog.applyDialogFont(compositeContainer);
 	}
 
 	private void addProxySection() {

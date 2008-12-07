@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.swt.SWT;
@@ -41,6 +42,7 @@ public class NewWebTaskPage extends WizardPage {
 		text.setEditable(false);
 		text.setText(Messages.NewWebTaskPage_Once_submitted_synchronize_queries_or_add_the_task_to_a_category);
 		setControl(text);
+		Dialog.applyDialogFont(text);
 	}
 
 }

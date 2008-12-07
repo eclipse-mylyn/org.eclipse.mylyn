@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
@@ -222,6 +223,8 @@ public class TaskAttachmentPage extends WizardPage {
 		} else {
 			commentText.setFocus();
 		}
+
+		Dialog.applyDialogFont(composite);
 	}
 
 	private void validate() {

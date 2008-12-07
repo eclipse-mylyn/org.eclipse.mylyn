@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -143,6 +144,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		createRepositoryGroup(fParentComposite);
 		createSeparator(fParentComposite);
 		this.setControl(fParentComposite);
+
+		Dialog.applyDialogFont(fParentComposite);
 	}
 
 	private void createSeparator(Composite parent) {
@@ -380,8 +383,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 							searchableRepositories.get(x));
 				}
 				if (repositoryUrls.length == 0) {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.TaskSearchPage_Repository_Search,
-							TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+							Messages.TaskSearchPage_Repository_Search, TaskRepositoryManager.MESSAGE_NO_REPOSITORY);
 				} else {
 					String selectRepo = settings.get(STORE_REPO_ID);
 					if (selectRepo != null && repositoryCombo.indexOf(selectRepo) > -1) {
@@ -585,6 +588,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		public void createControl(Composite parent) {
 			Composite composite = new Composite(parent, SWT.NONE);
 			composite.setLayout(new GridLayout());
+			Dialog.applyDialogFont(composite);
 			setControl(composite);
 		}
 

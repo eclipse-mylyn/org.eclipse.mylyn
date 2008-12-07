@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -99,6 +100,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 			initSettings();
 
+			Dialog.applyDialogFont(container);
 			setControl(container);
 
 			setPageComplete(validate());

@@ -17,6 +17,7 @@ import java.util.SortedMap;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -107,6 +108,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 			createImportFromBackupControl(container);
 			addRadioListeners();
 			initSettings();
+			Dialog.applyDialogFont(container);
 			setControl(container);
 			setPageComplete(validate());
 		} catch (RuntimeException e) {

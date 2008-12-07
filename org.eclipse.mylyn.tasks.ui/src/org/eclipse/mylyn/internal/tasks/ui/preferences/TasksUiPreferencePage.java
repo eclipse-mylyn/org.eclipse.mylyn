@@ -128,6 +128,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		createLinks(container);
 
 		updateRefreshGroupEnablements();
+		applyDialogFont(container);
 		return container;
 	}
 

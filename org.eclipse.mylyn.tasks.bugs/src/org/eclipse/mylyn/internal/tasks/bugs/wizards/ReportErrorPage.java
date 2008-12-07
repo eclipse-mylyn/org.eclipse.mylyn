@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.bugs.wizards;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.bugs.AttributeTaskMapper;
@@ -102,6 +103,7 @@ public class ReportErrorPage extends WizardPage {
 			taskRepository = null;
 		}
 		setControl(composite);
+		Dialog.applyDialogFont(composite);
 	}
 
 	@Override

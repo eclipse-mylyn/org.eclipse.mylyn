@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -151,6 +152,7 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 			}
 		}
 
+		Dialog.applyDialogFont(control);
 		setControl(control);
 	}
 
@@ -304,7 +306,8 @@ public class TracQueryPage extends AbstractRepositoryQueryPage {
 				if (getTaskRepository() != null) {
 					updateAttributesFromRepository(true);
 				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.TracQueryPage_Update_Attributes_Failed,
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+							Messages.TracQueryPage_Update_Attributes_Failed,
 							Messages.TracQueryPage_No_repository_available);
 				}
 			}

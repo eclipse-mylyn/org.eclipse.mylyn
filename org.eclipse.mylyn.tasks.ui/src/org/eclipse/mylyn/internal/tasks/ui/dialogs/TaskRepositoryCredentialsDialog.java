@@ -207,6 +207,7 @@ public class TaskRepositoryCredentialsDialog extends TitleAreaDialog {
 		} else {
 			super.setMessage(MESSAGE);
 		}
+		applyDialogFont(control);
 		return control;
 	}
 

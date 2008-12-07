@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -138,6 +139,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			}
 		});
 
+		Dialog.applyDialogFont(container);
 		setControl(container);
 	}
 

@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -98,6 +99,7 @@ public class SelectRepositoryConnectorPage extends WizardPage {
 			}
 		});
 
+		Dialog.applyDialogFont(container);
 		setControl(container);
 	}
 

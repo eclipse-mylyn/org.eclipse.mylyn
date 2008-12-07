@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IBundleGroup;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -146,6 +147,7 @@ public class SelectFeaturePage extends WizardPage {
 		viewer.setSorter(new ViewerSorter());
 
 		setControl(container);
+		Dialog.applyDialogFont(container);
 	}
 
 	@Override
