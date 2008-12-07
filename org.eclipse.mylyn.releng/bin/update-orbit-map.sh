@@ -6,7 +6,7 @@ then
  exit 1
 fi
 
-BUILD_ROOT=$(cd $(dirname $0); pwd)
+BUILD_ROOT=$(cd $(dirname $0)/..; pwd)
 MAP=$BUILD_ROOT/maps/orbit.map
 TMPMAP=$BUILD_ROOT/orbit.map
 TMP=$BUILD_ROOT/orbit-all.map

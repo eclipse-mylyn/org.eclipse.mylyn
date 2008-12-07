@@ -122,26 +122,30 @@
 	<target name="publish-helper">
 		<antcall target="publish-helper-run">
 			<param name="file" value="org.eclipse.mylyn.tests.AllTests.xml"/>
-			<param name="tag" value="[e${build.target}][dflt]"/>
+			<param name="tag" value="[e${build.target}]"/>
 		</antcall>
 		<antcall target="publish-helper-run">
 			<param name="file" value="org.eclipse.mylyn.tests.AllPerformanceTests.xml"/>
-			<param name="tag" value="[e${build.target}][perf]"/>
+			<param name="tag" value="[e${build.target}-perf]"/>
 		</antcall>
 		<antcall target="publish-helper-run">
 			<param name="file" value="TEST-*.xml"/>
-			<param name="tag" value="[e${build.target}][stdl]"/>
+			<param name="tag" value="[stdl]"/>
 		</antcall>
 	</target>
 		
 	<target name="publish-helper-run">
     	<path id="file.id"> 
-    		<fileset dir="${build.results}/test-${build.target}">
+    		<fileset dir="${build.results}/test-${eclipse.version}">
             	<include name="${file}"/>
           	</fileset>
     	</path> 
     	<property name="file.path" refid="file.id"/>
-		
+		<condition property="file.available"><not><equals arg1="${file.path}" arg2="" trim="true"/></not></condition>
+		<antcall target="publish-helper-report"/>
+	</target>
+	
+	<target name="publish-helper-report" if="file.availalbe">
 		<java jar="${build.reporter.jar}" failonerror="false" fork="true" jvm="${build.reporter.jvm}">
 			<arg value="-config" />
 			<arg value="${build.reporter.config}" />
@@ -180,13 +184,13 @@
 
 	<target name="weekly" depends="clean,build,dist">
 		<antcall target="promote">
-			<param name="target" value="weekly"/>
+			<param name="todir" value="weekly"/>
 		</antcall>
 	</target>
 
 	<target name="dev" depends="clean,build,dist">
 		<antcall target="promote">
-			<param name="target" value="dev"/>
+			<param name="todir" value="dev"/>
 		</antcall>
 	</target>
 
@@ -199,13 +203,13 @@
 	
 	<target name="galileo" depends="weekly,sign">
 		<antcall target="promote-main">
-			<param name="target" value="galileo"/>
+			<param name="todir" value="galileo"/>
 		</antcall>
 	</target>
 
 	<target name="promote" depends="init">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
-		<property name="target.dir" value="${dist.home}/update/${target}" />
+		<property name="target.dir" value="${dist.home}/update/${todir}" />
 		<delete dir="${target.dir}.old" />
 		<move file="${target.dir}" todir="${target.dir}.old" failonerror="false"/>
 		<copy todir="${target.dir}">
@@ -233,7 +237,7 @@
 
 	<target name="promote-main" depends="init">
 		<property name="dist.dir" value="${dist.home}/update-archive/${version}/${qualifier}" />
-		<property name="target.dir" value="${dist.home}/update/${target}" />
+		<property name="target.dir" value="${dist.home}/update/${todir}" />
 
 		<copy todir="${target.dir}">
 			<fileset dir="${dist.dir}">

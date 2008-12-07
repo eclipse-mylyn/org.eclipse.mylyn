@@ -244,7 +244,7 @@
 		<property name="vmargs" value="-Xms40m -Xmx256m"/>    	
 		
 		<echo message="Creating performance test report for ${version}.${qualifier} on Eclipse ${eclipse.sdk.version}" />
-    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="true" 
+    	<java fork="true" dir="." timeout="${timeout}" logError="true" failonerror="false" 
     		classname="org.eclipse.core.launcher.Main">
 	        <classpath>
 	    		<fileset dir="${eclipse.home}/plugins">
