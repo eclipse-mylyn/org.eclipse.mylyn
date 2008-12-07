@@ -29,12 +29,6 @@ public class Messages extends NLS {
 
 	public static String EditRepositoryWizard_Properties_for_Task_Repository;
 
-	public static String ExistingTaskWizardPage_Enter_Key_ID;
-
-	public static String ExistingTaskWizardPage_Enter_Task_ID;
-
-	public static String ExistingTaskWizardPage_Provide_the_identifier_for_the_task;
-
 	public static String AttachmentSourcePage__Clipboard_;
 
 	public static String AttachmentSourcePage__Screenshot_;
