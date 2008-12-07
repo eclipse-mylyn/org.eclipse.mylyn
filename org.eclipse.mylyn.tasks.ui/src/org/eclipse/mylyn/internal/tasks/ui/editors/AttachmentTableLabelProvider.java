@@ -40,7 +40,7 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 
 	private final IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
-	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" };
+	private static final String[] IMAGE_EXTENSIONS = { "jpg", "gif", "png", "tiff", "tif", "bmp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 	private final TaskDataModel model;
 
@@ -83,27 +83,27 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 		switch (columnIndex) {
 		case 0:
 			if (AttachmentUtil.isContext(attachment)) {
-				return " Task Context";
+				return Messages.AttachmentTableLabelProvider_Task_Context;
 			} else if (attachment.isPatch()) {
-				return " Patch";
+				return Messages.AttachmentTableLabelProvider_Patch;
 			} else {
-				return " " + attachment.getFileName();
+				return " " + attachment.getFileName(); //$NON-NLS-1$
 			}
 		case 1:
 			return attachment.getDescription();
 		case 2:
 			Long length = attachment.getLength();
 			if (length < 0) {
-				return "-";
+				return "-"; //$NON-NLS-1$
 			}
 			return sizeFormatter.format(length);
 		case 3:
-			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : "";
+			return (attachment.getAuthor() != null) ? attachment.getAuthor().toString() : ""; //$NON-NLS-1$
 		case 4:
 			return (attachment.getCreationDate() != null) ? EditorUtil.formatDateTime(attachment.getCreationDate())
-					: "";
+					: ""; //$NON-NLS-1$
 		}
-		return "unrecognized column";
+		return "unrecognized column"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -140,11 +140,11 @@ public class AttachmentTableLabelProvider extends ColumnLabelProvider {
 	public String getToolTipText(Object element) {
 		ITaskAttachment attachment = (ITaskAttachment) element;
 		StringBuilder sb = new StringBuilder();
-		sb.append("File: ");
+		sb.append(Messages.AttachmentTableLabelProvider_File_);
 		sb.append(attachment.getFileName());
 		if (attachment.getContentType() != null) {
-			sb.append("\n");
-			sb.append("Type: ");
+			sb.append("\n"); //$NON-NLS-1$
+			sb.append(Messages.AttachmentTableLabelProvider_Type_);
 			sb.append(attachment.getContentType());
 		}
 		return sb.toString();

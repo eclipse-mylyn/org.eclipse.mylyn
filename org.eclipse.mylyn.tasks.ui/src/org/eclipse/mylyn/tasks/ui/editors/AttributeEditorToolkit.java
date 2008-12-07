@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
+import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RichTextAttributeEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -230,7 +231,7 @@ public class AttributeEditorToolkit {
 				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 		controlDecoration.setImage(contentProposalImage.getImage());
 		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
-		controlDecoration.setDescriptionText(NLS.bind("Content Assist Available ({0})",
+		controlDecoration.setDescriptionText(NLS.bind(Messages.AttributeEditorToolkit_Content_Assist_Available__X_,
 				bindingService.getBestActiveBindingFormattedFor(ContentAssistCommandAdapter.CONTENT_PROPOSAL_COMMAND)));
 		return controlDecoration;
 	}

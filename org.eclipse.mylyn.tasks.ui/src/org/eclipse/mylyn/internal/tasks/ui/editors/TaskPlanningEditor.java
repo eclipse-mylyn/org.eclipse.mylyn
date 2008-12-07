@@ -420,7 +420,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		GridLayout nameValueLayout = new GridLayout(2, false);
 		nameValueLayout.marginHeight = 3;
 		nameValueComp.setLayout(nameValueLayout);
-		toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Priority).setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Priority).setForeground(
+				toolkit.getColors().getColor(IFormColors.TITLE));
 		priorityCombo = new CCombo(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
 		toolkit.adapt(priorityCombo, false, false);
 		priorityCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -452,7 +453,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		nameValueComp = toolkit.createComposite(statusComposite);
 		nameValueComp.setLayout(new GridLayout(2, false));
-		toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Status).setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Status).setForeground(
+				toolkit.getColors().getColor(IFormColors.TITLE));
 		statusCombo = new CCombo(nameValueComp, SWT.FLAT | SWT.READ_ONLY);
 		toolkit.adapt(statusCombo, true, true);
 		statusCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -479,13 +481,15 @@ public class TaskPlanningEditor extends TaskFormPage {
 		Date creationDate = task.getCreationDate();
 		String creationDateString = (creationDate != null) ? DateFormat.getDateInstance(DateFormat.LONG).format(
 				creationDate) : ""; //$NON-NLS-1$
-		addNameValueComp(statusComposite, Messages.TaskPlanningEditor_Created, creationDateString, SWT.FLAT | SWT.READ_ONLY);
+		addNameValueComp(statusComposite, Messages.TaskPlanningEditor_Created, creationDateString, SWT.FLAT
+				| SWT.READ_ONLY);
 
 		String completionDateString = ""; //$NON-NLS-1$
 		if (task.isCompleted()) {
 			completionDateString = getTaskDateString(task);
 		}
-		endDate = addNameValueComp(statusComposite, Messages.TaskPlanningEditor_Completed, completionDateString, SWT.FLAT | SWT.READ_ONLY);
+		endDate = addNameValueComp(statusComposite, Messages.TaskPlanningEditor_Completed, completionDateString,
+				SWT.FLAT | SWT.READ_ONLY);
 		// URL
 		Composite urlComposite = toolkit.createComposite(parent);
 		GridLayout urlLayout = new GridLayout(4, false);
@@ -756,20 +760,20 @@ public class TaskPlanningEditor extends TaskFormPage {
 		nameValueComp = makeComposite(sectionClient, 3);
 		GridDataFactory.fillDefaults().applyTo(nameValueComp);
 
-		label = toolkit.createLabel(nameValueComp, "Active:");
+		label = toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Active);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		label.setToolTipText("Time working on this task");
+		label.setToolTipText(Messages.TaskPlanningEditor_Time_working_on_this_task);
 
 		String elapsedTimeString = NO_TIME_ELAPSED;
 		try {
 			elapsedTimeString = TasksUiInternal.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
 					.getElapsedTime(task), false);
-			if (elapsedTimeString.equals("")) {
+			if (elapsedTimeString.equals("")) { //$NON-NLS-1$
 				elapsedTimeString = NO_TIME_ELAPSED;
 			}
 		} catch (RuntimeException e) {
 			// FIXME what exception is caught here?
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format elapsed time", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not format elapsed time", e)); //$NON-NLS-1$
 		}
 
 		final Text elapsedTimeText = toolkit.createText(nameValueComp, elapsedTimeString);
@@ -788,13 +792,13 @@ public class TaskPlanningEditor extends TaskFormPage {
 					String elapsedTimeString = NO_TIME_ELAPSED;
 					try {
 						elapsedTimeString = TasksUiInternal.getFormattedDuration(newElapsedTime, false);
-						if (elapsedTimeString.equals("")) {
+						if (elapsedTimeString.equals("")) { //$NON-NLS-1$
 							elapsedTimeString = NO_TIME_ELAPSED;
 						}
 
 					} catch (RuntimeException e) {
 						StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Could not format elapsed time", e));
+								"Could not format elapsed time", e)); //$NON-NLS-1$
 					}
 					final String elapsedString = elapsedTimeString;
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

@@ -20,9 +20,9 @@ import org.eclipse.mylyn.tasks.core.ITaskAttachment;
  */
 public class TaskAttachmentPropertyTester extends PropertyTester {
 
-	private static final String PROPERTY_IS_CONTEXT = "isContext";
+	private static final String PROPERTY_IS_CONTEXT = "isContext"; //$NON-NLS-1$
 
-	private static final String PROPERTY_HAS_URL = "hasUrl";
+	private static final String PROPERTY_HAS_URL = "hasUrl"; //$NON-NLS-1$
 
 	private boolean equals(boolean value, Object expectedValue) {
 		return new Boolean(value).equals(expectedValue);

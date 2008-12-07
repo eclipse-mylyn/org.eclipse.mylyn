@@ -62,7 +62,7 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
-	private static final String KEY_OPERATION = "operation";
+	private static final String KEY_OPERATION = "operation"; //$NON-NLS-1$
 
 	public class SelectButtonListener implements ModifyListener, VerifyListener, SelectionListener, FocusListener,
 			TextChangeListener {

@@ -45,15 +45,7 @@ public class Messages extends NLS {
 
 	public static String AttachmentTableLabelProvider_unrecognized_column;
 
-	public static String AttachmentTableLabelProvider2_File_;
-
-	public static String AttachmentTableLabelProvider2_Patch;
-
-	public static String AttachmentTableLabelProvider2_Task_Context;
-
-	public static String AttachmentTableLabelProvider2_Type_;
-
-	public static String AttachmentTableLabelProvider2_unrecognized_column;
+	public static String AttachmentTableLabelProvider_Type_;
 
 	public static String BrowserPreviewViewer_Error;
 
@@ -147,17 +139,15 @@ public class Messages extends NLS {
 
 	public static String TaskEditorAttributePart_Updating_of_repository_configuration_failed;
 
-	public static String TaskEditorCommentPart_Collapse_All_Comments;
+	public static String TaskEditorCommentPart_0;
 
-	public static String TaskEditorCommentPart_Collapse_All_Current_Comments;
+	public static String TaskEditorCommentPart_1;
+
+	public static String TaskEditorCommentPart_Collapse_Comments;
 
 	public static String TaskEditorCommentPart_Comments;
 
-	public static String TaskEditorCommentPart_Current;
-
-	public static String TaskEditorCommentPart_Expand_All_Comments;
-
-	public static String TaskEditorCommentPart_Expand_All_Current_Comments;
+	public static String TaskEditorCommentPart_Expand_Comments;
 
 	public static String TaskEditorCommentPart_Reply;
 

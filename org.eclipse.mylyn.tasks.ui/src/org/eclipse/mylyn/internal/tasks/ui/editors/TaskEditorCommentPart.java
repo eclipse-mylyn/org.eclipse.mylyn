@@ -101,7 +101,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				groupSection.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
 			}
 			groupSection.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-			groupSection.setText(commentGroup.getGroupName() + " (" + commentGroup.getCommentAttributes().size() + ")");
+			groupSection.setText(commentGroup.getGroupName() + Messages.TaskEditorCommentPart_0 + commentGroup.getCommentAttributes().size() + Messages.TaskEditorCommentPart_1); //$NON-NLS-2$
 
 			if (groupSection.isExpanded()) {
 				Composite composite = createCommentViewers(groupSection, toolkit);
@@ -378,7 +378,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			StringBuilder sb = new StringBuilder();
 			if (taskComment.getNumber() >= 0) {
 				sb.append(taskComment.getNumber());
-				sb.append(": ");
+				sb.append(": "); //$NON-NLS-1$
 			}
 			if (author != null) {
 				if (author.getName() != null) {
@@ -389,7 +389,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				}
 			}
 			if (taskComment.getCreationDate() != null) {
-				sb.append(", ");
+				sb.append(", "); //$NON-NLS-1$
 				sb.append(EditorUtil.formatDateTime(taskComment.getCreationDate()));
 			}
 			formHyperlink.setText(sb.toString());
@@ -445,9 +445,9 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 	/** Expandable composites are indented by 6 pixels by default. */
 	private static final int INDENT = -6;
 
-	private static final String KEY_EDITOR = "viewer";
+	private static final String KEY_EDITOR = "viewer"; //$NON-NLS-1$
 
-	private static final String LABEL_REPLY = "Reply";
+	private static final String LABEL_REPLY = Messages.TaskEditorCommentPart_Reply;
 
 	private List<TaskAttribute> commentAttributes;
 
@@ -468,7 +468,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				return getModel().hasIncomingChanges(taskComment.getTaskAttribute());
 			}
 		};
-		setPartName("Comments");
+		setPartName(Messages.TaskEditorCommentPart_Comments);
 	}
 
 	private void collapseAllComments() {
@@ -506,7 +506,7 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 		initialize();
 
 		section = createSection(parent, toolkit, hasIncoming);
-		section.setText(section.getText() + " (" + commentAttributes.size() + ")");
+		section.setText(section.getText() + " (" + commentAttributes.size() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (commentAttributes.isEmpty()) {
 			section.setEnabled(false);
@@ -588,24 +588,24 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 			return;
 		}
 
-		Action collapseAllAction = new Action("") {
+		Action collapseAllAction = new Action("") { //$NON-NLS-1$
 			@Override
 			public void run() {
 				collapseAllComments();
 			}
 		};
 		collapseAllAction.setImageDescriptor(CommonImages.COLLAPSE_ALL_SMALL);
-		collapseAllAction.setToolTipText("Collapse Comments");
+		collapseAllAction.setToolTipText(Messages.TaskEditorCommentPart_Collapse_Comments);
 		barManager.add(collapseAllAction);
 
-		Action expandAllAction = new Action("") {
+		Action expandAllAction = new Action("") { //$NON-NLS-1$
 			@Override
 			public void run() {
 				expandAllComments();
 			}
 		};
 		expandAllAction.setImageDescriptor(CommonImages.EXPAND_ALL_SMALL);
-		expandAllAction.setToolTipText("Expand Comments");
+		expandAllAction.setToolTipText(Messages.TaskEditorCommentPart_Expand_Comments);
 		barManager.add(expandAllAction);
 	}
 

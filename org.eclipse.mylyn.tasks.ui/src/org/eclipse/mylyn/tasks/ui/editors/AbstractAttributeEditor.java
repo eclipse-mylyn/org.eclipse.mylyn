@@ -186,7 +186,7 @@ public abstract class AbstractAttributeEditor {
 	 */
 	protected void decorateOutgoing(Color color) {
 		if (labelControl != null) {
-			labelControl.setText("*" + labelControl.getText());
+			labelControl.setText("*" + labelControl.getText()); //$NON-NLS-1$
 		}
 	}
 
