@@ -151,7 +151,7 @@
 		<antcall target="publish-helper-report"/>
 	</target>
 	
-	<target name="publish-helper-report" if="file.availalbe">
+	<target name="publish-helper-report" if="file.available">
 		<java jar="${build.reporter.jar}" failonerror="false" fork="true" jvm="${build.reporter.jvm}">
 			<arg value="-config" />
 			<arg value="${build.reporter.config}" />
