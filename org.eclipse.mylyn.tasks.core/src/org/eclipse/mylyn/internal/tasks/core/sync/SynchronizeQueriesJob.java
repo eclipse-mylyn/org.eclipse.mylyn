@@ -142,7 +142,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 
 	public SynchronizeQueriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository repository, Set<RepositoryQuery> queries) {
-		super(Messages.SynchronizeQueriesJob_Synchronizing_Queries + " (" + repository.getRepositoryLabel() + ")"); //$NON-NLS-2$ //$NON-NLS-3$
+		super(Messages.SynchronizeQueriesJob_Synchronizing_Queries + " (" + repository.getRepositoryLabel() + ")"); //$NON-NLS-1$//$NON-NLS-2$
 		this.taskList = taskList;
 		this.taskDataManager = taskDataManager;
 		this.tasksModel = tasksModel;

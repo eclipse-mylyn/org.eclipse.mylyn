@@ -101,7 +101,8 @@ public class TaskEditorCommentPart extends AbstractTaskEditorPart {
 				groupSection.setBackground(getTaskEditorPage().getAttributeEditorToolkit().getColorIncoming());
 			}
 			groupSection.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-			groupSection.setText(commentGroup.getGroupName() + Messages.TaskEditorCommentPart_0 + commentGroup.getCommentAttributes().size() + Messages.TaskEditorCommentPart_1); //$NON-NLS-2$
+			groupSection.setText(commentGroup.getGroupName() + Messages.TaskEditorCommentPart_0
+					+ commentGroup.getCommentAttributes().size() + Messages.TaskEditorCommentPart_1);
 
 			if (groupSection.isExpanded()) {
 				Composite composite = createCommentViewers(groupSection, toolkit);

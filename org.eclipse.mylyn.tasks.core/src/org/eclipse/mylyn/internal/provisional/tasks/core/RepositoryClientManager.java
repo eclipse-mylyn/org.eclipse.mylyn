@@ -110,7 +110,7 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 			}
 		} catch (Throwable e) {
 			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-					"The respository configuration cache could not be read", e));
+					"The respository configuration cache could not be read", e)); //$NON-NLS-1$
 		} finally {
 			if (in != null) {
 				try {
@@ -138,7 +138,7 @@ public abstract class RepositoryClientManager<T, C extends Serializable> impleme
 			}
 		} catch (IOException e) {
 			StatusHandler.log(new Status(IStatus.WARNING, ITasksCoreConstants.ID_PLUGIN,
-					"The respository configuration cache could not be written", e));
+					"The respository configuration cache could not be written", e)); //$NON-NLS-1$
 		} finally {
 			if (out != null) {
 				try {

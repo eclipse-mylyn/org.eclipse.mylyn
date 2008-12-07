@@ -65,7 +65,9 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 
 	private static final String ID_POPUP_MENU = "org.eclipse.mylyn.tasks.ui.editor.menu.attachments"; //$NON-NLS-1$
 
-	private final String[] attachmentsColumns = { Messages.TaskEditorAttachmentPart_Name, Messages.TaskEditorAttachmentPart_Description, /*"Type", */Messages.TaskEditorAttachmentPart_Size, Messages.TaskEditorAttachmentPart_Creator, Messages.TaskEditorAttachmentPart_Created }; //$NON-NLS-1$
+	private final String[] attachmentsColumns = { Messages.TaskEditorAttachmentPart_Name,
+			Messages.TaskEditorAttachmentPart_Description, /*"Type", */Messages.TaskEditorAttachmentPart_Size,
+			Messages.TaskEditorAttachmentPart_Creator, Messages.TaskEditorAttachmentPart_Created };
 
 	private final int[] attachmentsColumnWidths = { 130, 150, /*100,*/70, 100, 100 };
 
@@ -160,7 +162,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		attachmentControlsComposite.setLayout(new GridLayout(2, false));
 		attachmentControlsComposite.setLayoutData(new GridData(GridData.BEGINNING));
 
-		Button attachFileButton = toolkit.createButton(attachmentControlsComposite, Messages.TaskEditorAttachmentPart_Attach_, SWT.PUSH);
+		Button attachFileButton = toolkit.createButton(attachmentControlsComposite,
+				Messages.TaskEditorAttachmentPart_Attach_, SWT.PUSH);
 		attachFileButton.setImage(WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE));
 		attachFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -170,8 +173,8 @@ public class TaskEditorAttachmentPart extends AbstractTaskEditorPart {
 		});
 		getTaskEditorPage().registerDefaultDropListener(attachFileButton);
 
-		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite, Messages.TaskEditorAttachmentPart_Attach__Screenshot,
-				SWT.PUSH);
+		Button attachScreenshotButton = toolkit.createButton(attachmentControlsComposite,
+				Messages.TaskEditorAttachmentPart_Attach__Screenshot, SWT.PUSH);
 		attachScreenshotButton.setImage(CommonImages.getImage(CommonImages.IMAGE_CAPTURE));
 		attachScreenshotButton.addSelectionListener(new SelectionAdapter() {
 			@Override
