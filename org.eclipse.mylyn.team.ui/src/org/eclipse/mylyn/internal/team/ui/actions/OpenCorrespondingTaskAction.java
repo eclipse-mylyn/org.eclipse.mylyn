@@ -30,7 +30,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
@@ -329,7 +329,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 							Messages.OpenCorrespondingTaskAction_Open_Task,
 							Messages.OpenCorrespondingTaskAction_Unable_to_match_task);
 					if (openDialog) {
-						new OpenRepositoryTask().run(null);
+						new OpenRepositoryTaskAction().run(null);
 					}
 				}
 			});
