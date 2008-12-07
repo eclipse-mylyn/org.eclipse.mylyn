@@ -95,7 +95,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	private class DeselectWorkingSetAction extends Action {
 
 		public DeselectWorkingSetAction() {
-			super("&Deselect Working Set", IAction.AS_PUSH_BUTTON);
+			super(Messages.TaskSelectionDialog_Deselect_Working_Set, IAction.AS_PUSH_BUTTON);
 		}
 
 		@Override
@@ -107,7 +107,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	private class EditWorkingSetAction extends Action {
 
 		public EditWorkingSetAction() {
-			super("&Edit Active Working Set...", IAction.AS_PUSH_BUTTON);
+			super(Messages.TaskSelectionDialog_Edit_Active_Working_Set_, IAction.AS_PUSH_BUTTON);
 		}
 
 		@Override
@@ -126,10 +126,10 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		private final IWorkingSet workingSet;
 
 		public FilterWorkingSetAction(IWorkingSet workingSet, int shortcutKeyNumber) {
-			super("", IAction.AS_RADIO_BUTTON);
+			super("", IAction.AS_RADIO_BUTTON); //$NON-NLS-1$
 			this.workingSet = workingSet;
 			if (shortcutKeyNumber >= 1 && shortcutKeyNumber <= 9) {
-				setText("&" + String.valueOf(shortcutKeyNumber) + " " + workingSet.getLabel());
+				setText("&" + String.valueOf(shortcutKeyNumber) + " " + workingSet.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				setText(workingSet.getLabel());
 			}
@@ -145,7 +145,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	private class SelectWorkingSetAction extends Action {
 
 		public SelectWorkingSetAction() {
-			super("Select &Working Set...", IAction.AS_PUSH_BUTTON);
+			super(Messages.TaskSelectionDialog_Select_Working_Set_, IAction.AS_PUSH_BUTTON);
 		}
 
 		@Override
@@ -171,7 +171,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	private class ShowCompletedTasksAction extends Action {
 
 		public ShowCompletedTasksAction() {
-			super("Show &Completed Tasks", IAction.AS_CHECK_BOX);
+			super(Messages.TaskSelectionDialog_Show_Completed_Tasks, IAction.AS_CHECK_BOX);
 		}
 
 		@Override
@@ -276,7 +276,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		public TasksFilter(boolean showCompletedTasks, IWorkingSet selectedWorkingSet) {
 			super(new SearchPattern());
 			// Little hack to force always a match inside any part of task text
-			patternMatcher.setPattern("*" + patternMatcher.getPattern());
+			patternMatcher.setPattern("*" + patternMatcher.getPattern()); //$NON-NLS-1$
 			this.showCompletedTasks = showCompletedTasks;
 
 			elements = new HashSet<AbstractTaskContainer>();
@@ -362,15 +362,15 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 
 	private static final int CREATE_ID = SEARCH_ID + 1;
 
-	private static final String IS_USING_WINDOW_WORKING_SET_SETTING = "IsUsingWindowWorkingSet";
+	private static final String IS_USING_WINDOW_WORKING_SET_SETTING = "IsUsingWindowWorkingSet"; //$NON-NLS-1$
 
-	private static final String OPEN_IN_BROWSER_SETTING = "OpenInBrowser";
+	private static final String OPEN_IN_BROWSER_SETTING = "OpenInBrowser"; //$NON-NLS-1$
 
-	private static final String SHOW_COMPLETED_TASKS_SETTING = "ShowCompletedTasks";
+	private static final String SHOW_COMPLETED_TASKS_SETTING = "ShowCompletedTasks"; //$NON-NLS-1$
 
-	private static final String TASK_SELECTION_DIALOG_SECTION = "TaskSelectionDialogSection";
+	private static final String TASK_SELECTION_DIALOG_SECTION = "TaskSelectionDialogSection"; //$NON-NLS-1$
 
-	private static final String WORKING_SET_NAME_SETTING = "WorkingSetName";
+	private static final String WORKING_SET_NAME_SETTING = "WorkingSetName"; //$NON-NLS-1$
 
 	/**
 	 * Caches all tasks; populated at first access
@@ -443,7 +443,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 //				.getDecoratorManager()
 //				.getLabelDecorator()));
 		setDetailsLabelProvider(new TaskDetailLabelProvider());
-		setSeparatorLabel(TaskListView.LABEL_VIEW + " matches");
+		setSeparatorLabel(TaskListView.LABEL_VIEW + Messages.TaskSelectionDialog__matches);
 
 		// If there is a text selection, use it as the initial filter
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -491,7 +491,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			createHelpControl(composite);
 		}
 		if (needsCreateTask) {
-			createTaskButton = createButton(composite, CREATE_ID, "&New Task...", true);
+			createTaskButton = createButton(composite, CREATE_ID, Messages.TaskSelectionDialog_New_Task_, true);
 			createTaskButton.addSelectionListener(new SelectionListener() {
 
 				public void widgetDefaultSelected(SelectionEvent e) {
@@ -524,7 +524,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		composite.setLayoutData(GridDataFactory.fillDefaults().create());
 
 		openInBrowserCheck = new Button(composite, SWT.CHECK);
-		openInBrowserCheck.setText("Open with &Browser");
+		openInBrowserCheck.setText(Messages.TaskSelectionDialog_Open_with_Browser);
 		openInBrowserCheck.setSelection(openInBrowser);
 
 		ImageHyperlink openHyperlink = new ImageHyperlink(composite, SWT.NONE);
@@ -552,7 +552,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 	@Override
 	protected void fillContentProvider(AbstractContentProvider contentProvider, ItemsFilter itemsFilter,
 			IProgressMonitor progressMonitor) throws CoreException {
-		progressMonitor.beginTask("Search for tasks", 100);
+		progressMonitor.beginTask(Messages.TaskSelectionDialog_Search_for_tasks, 100);
 
 		if (allTasks == null) {
 			allTasks = new HashSet<AbstractTask>();
@@ -562,7 +562,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		progressMonitor.worked(10);
 
 		SubProgressMonitor subMonitor = new SubProgressMonitor(progressMonitor, 90);
-		subMonitor.beginTask("Scanning tasks", allTasks.size());
+		subMonitor.beginTask(Messages.TaskSelectionDialog_Scanning_tasks, allTasks.size());
 		for (ITask task : allTasks) {
 			contentProvider.add(task, itemsFilter);
 			subMonitor.worked(1);
@@ -584,7 +584,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		menuManager.add(deselectAction);
 		final EditWorkingSetAction editAction = new EditWorkingSetAction();
 		menuManager.add(editAction);
-		menuManager.add(new Separator("lruActions"));
+		menuManager.add(new Separator("lruActions")); //$NON-NLS-1$
 		final FilterWorkingSetAction windowWorkingSetAction = new FilterWorkingSetAction(windowWorkingSet, 1);
 		menuManager.add(windowWorkingSetAction);
 
@@ -614,7 +614,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 						}
 						ActionContributionItem ci = new ActionContributionItem(action);
 						lruActions.add(ci);
-						manager.appendToGroup("lruActions", ci);
+						manager.appendToGroup("lruActions", ci); //$NON-NLS-1$
 					}
 				}
 				windowWorkingSetAction.setChecked(windowWorkingSet.equals(selectedWorkingSet));
@@ -632,7 +632,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 			section.put(OPEN_IN_BROWSER_SETTING, false);
 			section.put(SHOW_COMPLETED_TASKS_SETTING, true);
 			section.put(IS_USING_WINDOW_WORKING_SET_SETTING, true);
-			section.put(WORKING_SET_NAME_SETTING, "");
+			section.put(WORKING_SET_NAME_SETTING, ""); //$NON-NLS-1$
 		}
 		return section;
 	}
@@ -710,7 +710,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		settings.put(SHOW_COMPLETED_TASKS_SETTING, showCompletedTasks);
 		settings.put(IS_USING_WINDOW_WORKING_SET_SETTING, selectedWorkingSet == windowWorkingSet);
 		if (selectedWorkingSet == null) {
-			settings.put(WORKING_SET_NAME_SETTING, "");
+			settings.put(WORKING_SET_NAME_SETTING, ""); //$NON-NLS-1$
 		} else {
 			settings.put(WORKING_SET_NAME_SETTING, selectedWorkingSet.getName());
 		}
@@ -722,7 +722,7 @@ public class TaskSelectionDialog extends FilteredItemsSelectionDialog {
 		if (item instanceof ITask) {
 			return Status.OK_STATUS;
 		}
-		return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Selected item is not a task");
+		return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, Messages.TaskSelectionDialog_Selected_item_is_not_a_task);
 	}
 
 }

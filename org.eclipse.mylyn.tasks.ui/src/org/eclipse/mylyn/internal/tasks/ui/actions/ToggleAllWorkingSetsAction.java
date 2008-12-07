@@ -31,7 +31,7 @@ public class ToggleAllWorkingSetsAction extends Action {
 	private final IWorkbenchWindow window;
 
 	public ToggleAllWorkingSetsAction(IWorkbenchWindow window) {
-		super("Show All", IAction.AS_CHECK_BOX);
+		super(Messages.ToggleAllWorkingSetsAction_Show_All, IAction.AS_CHECK_BOX);
 		super.setChecked(TaskWorkingSetUpdater.areNoTaskWorkingSetsEnabled());
 		this.window = window;
 	}

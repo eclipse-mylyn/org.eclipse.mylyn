@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewTaskAction extends Action implements IViewActionDelegate, IExecutableExtension {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.ui.repositories.actions.create";
+	public static final String ID = "org.eclipse.mylyn.tasklist.ui.repositories.actions.create"; //$NON-NLS-1$
 
 	private boolean skipRepositoryPage = false;
 
@@ -61,10 +61,10 @@ public class NewTaskAction extends Action implements IViewActionDelegate, IExecu
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
-		if ("skipFirstPage".equals(data)) {
+		if ("skipFirstPage".equals(data)) { //$NON-NLS-1$
 			this.skipRepositoryPage = true;
 		}
-		if ("local".equals(data)) {
+		if ("local".equals(data)) { //$NON-NLS-1$
 			this.localTask = true;
 		}
 	}

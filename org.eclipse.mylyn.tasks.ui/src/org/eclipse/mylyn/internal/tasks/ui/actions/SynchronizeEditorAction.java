@@ -29,15 +29,11 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 
-	private static final String LABEL = "Synchronize";
-
-	private static final String TOOLTIP = "Synchronize Incoming Changes";
-
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.synchronize.editor";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.synchronize.editor"; //$NON-NLS-1$
 
 	public SynchronizeEditorAction() {
-		super(LABEL);
-		setToolTipText(TOOLTIP);
+		super(Messages.SynchronizeEditorAction_Synchronize);
+		setToolTipText(Messages.SynchronizeEditorAction_Synchronize_Incoming_Changes);
 		setId(ID);
 		setImageDescriptor(CommonImages.REFRESH_SMALL);
 		// setAccelerator(SWT.MOD1 + 'r');

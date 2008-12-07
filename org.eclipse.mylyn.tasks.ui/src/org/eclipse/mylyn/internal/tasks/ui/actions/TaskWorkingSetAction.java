@@ -45,7 +45,6 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetEditWizard;
-import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.WorkingSetComparator;
 import org.eclipse.ui.internal.dialogs.WorkingSetFilter;
@@ -59,16 +58,13 @@ import org.eclipse.ui.internal.dialogs.WorkingSetLabelProvider;
  */
 public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
-	public static final String LABEL_SETS_NONE = "All";
+	public static final String LABEL_SETS_NONE = Messages.TaskWorkingSetAction_All;
 
-	public static String TASK_WORKING_SET_TEXT_LABEL = "Select and Edit Working Sets";
-
-	private Menu dropDownMenu = null;
+	private Menu dropDownMenu;
 
 	public TaskWorkingSetAction() {
-		super();
-		setText("Sets");
-		setToolTipText(TASK_WORKING_SET_TEXT_LABEL);
+		setText(Messages.TaskWorkingSetAction_Sets);
+		setToolTipText(Messages.TaskWorkingSetAction_Select_and_Edit_Working_Sets);
 		setImageDescriptor(TasksUiImages.TASK_WORKING_SET);
 		setEnabled(true);
 		setMenuCreator(this);
@@ -174,7 +170,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	private class ManageWorkingSetsAction extends Action {
 		ManageWorkingSetsAction() {
-			super(WorkbenchMessages.Edit);
+			super(""); //$NON-NLS-1$
 		}
 
 		@Override
@@ -187,7 +183,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 	protected class ToggleEnableAllSetsAction extends Action {
 
 		ToggleEnableAllSetsAction() {
-			super("Deselect All", IAction.AS_CHECK_BOX);
+			super(Messages.TaskWorkingSetAction_Deselect_All, IAction.AS_CHECK_BOX);
 //			setImageDescriptor(TasksUiImages.TASK_WORKING_SET);
 //			setChecked(!areAllTaskWorkingSetsEnabled());
 		}
@@ -240,8 +236,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			setShellStyle(getShellStyle() | SWT.RESIZE);
 			this.window = window;
 			//setTitle(WorkbenchMessages.WorkingSetSelectionDialog_title_multiSelect);
-			setTitle(TASK_WORKING_SET_TEXT_LABEL);
-			setMessage(WorkbenchMessages.WorkingSetSelectionDialog_message_multiSelect);
+			setTitle(Messages.TaskWorkingSetAction_Select_and_Edit_Working_Sets);
+			setMessage(""); //$NON-NLS-1$
 
 			if (workingSetIds == null || workingSetIds.length == 0) {
 				taskWorkingSetIds = null;

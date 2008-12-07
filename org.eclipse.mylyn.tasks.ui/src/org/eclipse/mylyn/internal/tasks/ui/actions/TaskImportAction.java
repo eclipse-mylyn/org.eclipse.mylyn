@@ -56,9 +56,10 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 	public void run() {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		FileDialog dialog = new FileDialog(shell);
-		dialog.setText("Import Mylyn Tasks");
+		dialog.setText(Messages.TaskImportAction_Import_Mylyn_Tasks);
 		dialog.setFilterExtensions(PlatformUtil.getFilterExtensions(ITasksCoreConstants.FILE_EXTENSION));
-		dialog.setFilterNames(new String[] { "Mylyn Tasks (*" + ITasksCoreConstants.FILE_EXTENSION + ")" });
+		dialog.setFilterNames(new String[] { Messages.TaskImportAction_Mylyn_Tasks
+				+ " (*" + ITasksCoreConstants.FILE_EXTENSION + ")" }); //$NON-NLS-1$ //$NON-NLS-2$
 
 		String path = dialog.open();
 		if (path != null) {
@@ -70,8 +71,8 @@ public class TaskImportAction extends Action implements IViewActionDelegate {
 					TasksUiInternal.importTasks(readTasks, repositories, file, shell);
 //					refreshTaskListView();
 				} else {
-					MessageDialog.openError(shell, "Task Import Error",
-							"The specified file is not an exported task. Please, check that you have provided the correct file.");
+					MessageDialog.openError(shell, Messages.TaskImportAction_Task_Import_Error,
+							Messages.TaskImportAction_The_specified_file_is_not_an_exported_task);
 					return;
 				}
 			}

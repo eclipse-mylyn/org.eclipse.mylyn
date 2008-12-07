@@ -26,11 +26,11 @@ import org.eclipse.ui.IViewPart;
  */
 public class TaskActivateAction extends Action implements IViewActionDelegate {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.context.activate";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.context.activate"; //$NON-NLS-1$
 
 	public TaskActivateAction() {
 		setId(ID);
-		setText("Activate");
+		setText(Messages.TaskActivateAction_Activate);
 		setImageDescriptor(TasksUiImages.CONTEXT_ACTIVE_CENTERED);
 	}
 

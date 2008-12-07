@@ -35,8 +35,8 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 	@Override
 	public void run(IAction action) {
 		TaskSelectionDialog dlg = new TaskSelectionDialog(window.getShell());
-		dlg.setTitle("Open Task");
-		dlg.setMessage("&Select a task to open (? = any character, * = any String):");
+		dlg.setTitle(Messages.OpenTaskAction_Open_Task);
+		dlg.setMessage(Messages.OpenTaskAction_Select_a_task_to_open__);
 		dlg.setShowExtendedOpeningOptions(true);
 
 		if (dlg.open() != Window.OK) {

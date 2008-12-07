@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,29 +80,29 @@ public class QueryExportAction extends Action implements IViewActionDelegate {
 	public void run(List<RepositoryQuery> queries) {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		FileDialog dialog = new FileDialog(shell, SWT.PRIMARY_MODAL | SWT.SAVE);
-		dialog.setFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION });
+		dialog.setFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION }); //$NON-NLS-1$
 		if (queries.size() == 1) {
 			dialog.setFileName(queries.get(0).getHandleIdentifier() + ITasksCoreConstants.FILE_EXTENSION);
 		} else {
-			String fomratString = "yyyy-MM-dd";
+			String fomratString = "yyyy-MM-dd"; //$NON-NLS-1$
 			SimpleDateFormat format = new SimpleDateFormat(fomratString, Locale.ENGLISH);
 			String date = format.format(new Date());
-			dialog.setFileName(date + "-exported-queries" + ITasksCoreConstants.FILE_EXTENSION);
+			dialog.setFileName(date + "-exported-queries" + ITasksCoreConstants.FILE_EXTENSION); //$NON-NLS-1$
 		}
 
 		String path = dialog.open();
 		if (path != null) {
 			File file = new File(path);
 			if (file.isDirectory()) {
-				MessageDialog.openError(shell, "Query Export Error",
-						"Could not export query because specified location is a folder");
+				MessageDialog.openError(shell, Messages.QueryExportAction_Query_Export_Error,
+						Messages.QueryExportAction_Could_not_export_query_because_specified_location_is_a_folder);
 				return;
 			}
 
 			// Prompt the user to confirm if save operation will cause an overwrite
 			if (file.exists()) {
-				if (!MessageDialog.openConfirm(shell, "Confirm File Replace", "The file " + file.getPath()
-						+ " already exists. Do you want to overwrite it?")) {
+				if (!MessageDialog.openConfirm(shell, Messages.QueryExportAction_Confirm_File_Replace,
+						MessageFormat.format(Messages.QueryExportAction_The_file_X_already_exists, file.getPath()))) {
 					return;
 				}
 			}

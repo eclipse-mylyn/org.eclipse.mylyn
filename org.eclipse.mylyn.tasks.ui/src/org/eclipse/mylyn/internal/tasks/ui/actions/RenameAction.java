@@ -25,14 +25,12 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class RenameAction extends BaseSelectionListenerAction {
 
-	private static final String LABEL_NAME = "Rename";
-
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.rename";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.rename"; //$NON-NLS-1$
 
 	private final TaskListView view;
 
 	public RenameAction(TaskListView view) {
-		super(LABEL_NAME);
+		super(Messages.RenameAction_Rename);
 		this.view = view;
 		setId(ID);
 		setAccelerator(SWT.F2);

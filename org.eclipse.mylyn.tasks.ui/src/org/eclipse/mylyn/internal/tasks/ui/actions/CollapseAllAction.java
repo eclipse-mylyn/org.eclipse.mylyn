@@ -20,18 +20,16 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
  */
 public class CollapseAllAction extends Action {
 
-	private static final String LABEL = "Collapse All";
-
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.collapse.all";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.collapse.all"; //$NON-NLS-1$
 
 	private final TaskListView taskListView;
 
 	public CollapseAllAction(TaskListView taskListView) {
-		super(LABEL);
+		super(Messages.CollapseAllAction_Collapse_All);
 		this.taskListView = taskListView;
 		setId(ID);
-		setText(LABEL);
-		setToolTipText(LABEL);
+		setText(Messages.CollapseAllAction_Collapse_All);
+		setToolTipText(Messages.CollapseAllAction_Collapse_All);
 		setImageDescriptor(CommonImages.COLLAPSE_ALL);
 	}
 

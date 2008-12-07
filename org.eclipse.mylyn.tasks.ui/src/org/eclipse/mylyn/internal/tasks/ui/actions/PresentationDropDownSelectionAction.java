@@ -28,9 +28,7 @@ import org.eclipse.swt.widgets.Menu;
  */
 public class PresentationDropDownSelectionAction extends Action implements IMenuCreator {
 
-	private static final String LABEL_NAME = "Task Presentation";
-
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.presentationselection";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.presentationselection"; //$NON-NLS-1$
 
 	private final TaskListView view;
 
@@ -40,8 +38,8 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 		super();
 		this.view = view;
 		setMenuCreator(this);
-		setText(LABEL_NAME);
-		setToolTipText(LABEL_NAME);
+		setText(Messages.PresentationDropDownSelectionAction_Task_Presentation);
+		setToolTipText(Messages.PresentationDropDownSelectionAction_Task_Presentation);
 		setId(ID);
 		setEnabled(true);
 		setImageDescriptor(CommonImages.PRESENTATION);

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,14 +40,12 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class CloneTaskAction extends BaseSelectionListenerAction implements IViewActionDelegate {
 
-	private static final String LABEL = "Clone This Task";
-
-	private static final String ID = "org.eclipse.mylyn.tasklist.actions.clone";
+	private static final String ID = "org.eclipse.mylyn.tasklist.actions.clone"; //$NON-NLS-1$
 
 	protected ISelection selection;
 
 	public CloneTaskAction() {
-		super(LABEL);
+		super(Messages.CloneTaskAction_Clone_This_Task);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.TASK_NEW);
 		setAccelerator(SWT.MOD1 + 'd');
@@ -69,11 +67,11 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 			if (selectedObject instanceof AbstractTask) {
 				AbstractTask task = (AbstractTask) selectedObject;
 
-				String description = "Cloned from: " + CopyTaskDetailsAction.getTextForTask(task);
+				String description = Messages.CloneTaskAction_Cloned_from_ + CopyTaskDetailsAction.getTextForTask(task);
 				if (task instanceof LocalTask) {
 					String notes = task.getNotes();
-					if (!"".equals(notes)) {
-						description += "\n\n" + notes;
+					if (!"".equals(notes)) { //$NON-NLS-1$
+						description += "\n\n" + notes; //$NON-NLS-1$
 					}
 				}
 
@@ -84,7 +82,7 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 				try {
 					taskData = TasksUi.getTaskDataManager().getTaskData(task);
 				} catch (CoreException e) {
-					TasksUiInternal.displayStatus("Clone Task Failed", e.getStatus());
+					TasksUiInternal.displayStatus(Messages.CloneTaskAction_Clone_Task_Failed, e.getStatus());
 					continue;
 				}
 
@@ -92,7 +90,7 @@ public class CloneTaskAction extends BaseSelectionListenerAction implements IVie
 					AbstractRepositoryConnector connector = TasksUi.getRepositoryConnector(taskData.getConnectorKind());
 					ITaskMapping mapping = connector.getTaskMapping(taskData);
 					if (mapping.getDescription() != null) {
-						((DefaultTaskMapping) taskSelection).setDescription(description + "\n\n"
+						((DefaultTaskMapping) taskSelection).setDescription(description + "\n\n" //$NON-NLS-1$
 								+ mapping.getDescription());
 					}
 					mapping.merge(taskSelection);

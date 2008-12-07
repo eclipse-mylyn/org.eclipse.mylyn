@@ -559,7 +559,7 @@
             </enablement>   
          </action>
          <action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTaskAction"
                definitionId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
                icon="icons/etool16/open-repository-task.gif"
                id="org.eclipse.mylyn.tasks.ui.open.task.remote"
@@ -908,7 +908,7 @@
 	          tooltip="%ActivateTaskHistoryDropDownAction.tooltip">
       	</action>       
       	<action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTaskAction"
                definitionId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
                icon="icons/etool16/open-repository-task.gif"
                id="org.eclipse.mylyn.tasks.ui.open.task.remote"

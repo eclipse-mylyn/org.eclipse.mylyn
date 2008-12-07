@@ -20,13 +20,11 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
  */
 public class SynchronizeAutomaticallyAction extends Action {
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.synchronize.background";
-
-	private static final String LABEL = "Synchronize Automatically";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.synchronize.background"; //$NON-NLS-1$
 
 	public SynchronizeAutomaticallyAction() {
-		setText(LABEL);
-		setToolTipText(LABEL);
+		setText(Messages.SynchronizeAutomaticallyAction_Synchronize_Automatically);
+		setToolTipText(Messages.SynchronizeAutomaticallyAction_Synchronize_Automatically);
 		setId(ID);
 		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));

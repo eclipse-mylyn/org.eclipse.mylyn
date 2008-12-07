@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,10 +46,10 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
  */
 public class DeleteAction extends Action {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.delete";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.delete"; //$NON-NLS-1$
 
 	public DeleteAction() {
-		setText("Delete");
+		setText(Messages.DeleteAction_Delete);
 		setId(ID);
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
@@ -62,7 +62,7 @@ public class DeleteAction extends Action {
 	}
 
 	protected void doDelete(List<?> toDelete) {
-		String elements = "";
+		String elements = ""; //$NON-NLS-1$
 		int i = 0;
 		for (Object object : toDelete) {
 			if (object instanceof UnmatchedTaskContainer) {
@@ -73,10 +73,10 @@ public class DeleteAction extends Action {
 			if (i < 20) {
 				// TODO this action should be based on the action enablement and check if the container is user managed or not
 				if (object instanceof IRepositoryElement) {
-					elements += "    " + ((IRepositoryElement) object).getSummary() + "\n";
+					elements += "    " + ((IRepositoryElement) object).getSummary() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} else {
-				elements += "...";
+				elements += "..."; //$NON-NLS-1$
 				break;
 			}
 		}
@@ -87,33 +87,30 @@ public class DeleteAction extends Action {
 			Object object = toDelete.get(0);
 			if (object instanceof ITask) {
 				if (((AbstractTask) object).isLocal()) {
-					message = "Permanently delete the task listed below?";
+					message = Messages.DeleteAction_Permanently_delete_the_task_listed_below;
 				} else {
-					message = "Delete the planning information and context for the repository task?  The server"
-							+ " copy will not be deleted and the task will remain in queries that match it.";
+					message = Messages.DeleteAction_Delete_the_planning_information_and_context_for_the_repository_task;
 				}
 			} else if (object instanceof TaskCategory) {
-				message = "Permanently delete the category?  Local tasks will be moved to the Uncategorized folder. Repository tasks will be moved to the Unmatched folder.";
+				message = Messages.DeleteAction_Permanently_delete_the_category;
 			} else if (object instanceof IRepositoryQuery) {
-				message = "Permanently delete the query?  Contained tasks will be moved to the Unmatched folder.";
+				message = Messages.DeleteAction_Permanently_delete_the_query;
 			} else if (object instanceof UnmatchedTaskContainer) {
-				message = "Delete the planning information and context of all unmatched tasks?  The server"
-						+ " copy of these tasks will not be deleted and the task will remain in queries that match it.";
+				message = Messages.DeleteAction_Delete_the_planning_information_and_context_of_all_unmatched_tasks;
 			} else if (object instanceof UnsubmittedTaskContainer) {
-				message = "Delete all of the unsubmitted tasks?";
+				message = Messages.DeleteAction_Delete_all_of_the_unsubmitted_tasks;
 			} else {
-				message = "Permanently delete the element listed below?";
+				message = Messages.DeleteAction_Permanently_delete_the_element_listed_below;
 			}
 		} else {
-			message = "Delete the elements listed below?  If categories or queries are selected contained tasks"
-					+ " will not be deleted.  Contexts will be deleted for selected tasks.";
+			message = Messages.DeleteAction_Delete_the_elements_listed_below;
 		}
 
-		message += "\n\n" + elements;
+		message += "\n\n" + elements; //$NON-NLS-1$
 
 		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
-				.getShell(), "Confirm Delete", message);
+				.getShell(), Messages.DeleteAction_Confirm_Delete, message);
 		if (!deleteConfirmed) {
 			return;
 		}
@@ -131,7 +128,7 @@ public class DeleteAction extends Action {
 				try {
 					TasksUiPlugin.getTaskDataManager().deleteTaskData(task);
 				} catch (CoreException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to delete task data",
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to delete task data", //$NON-NLS-1$
 							e));
 				}
 				ContextCore.getContextManager().deleteContext(task.getHandleIdentifier());
@@ -170,7 +167,7 @@ public class DeleteAction extends Action {
 				}
 			} else {
 				MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						"Delete failed", "Nothing selected.");
+						Messages.DeleteAction_Delete_failed, Messages.DeleteAction_Nothing_selected);
 				return;
 			}
 		}

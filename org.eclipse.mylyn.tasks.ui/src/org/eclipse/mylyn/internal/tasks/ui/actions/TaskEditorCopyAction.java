@@ -21,7 +21,7 @@ import org.eclipse.jface.action.Action;
 public class TaskEditorCopyAction extends Action {
 
 	public TaskEditorCopyAction() {
-		setText("TaskInfoEditor.copy.text");
+		setText("TaskInfoEditor.copy.text"); //$NON-NLS-1$
 	}
 
 	@Override

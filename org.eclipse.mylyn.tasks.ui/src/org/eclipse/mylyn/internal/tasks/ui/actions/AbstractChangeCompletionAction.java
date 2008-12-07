@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -38,18 +39,19 @@ public class AbstractChangeCompletionAction extends Action {
 	}
 
 	protected String generateMessage(List<AbstractTask> toComplete, String status) {
-		String message = "Mark selected local tasks " + status + "?\n\n";
+		String message = MessageFormat.format(Messages.AbstractChangeCompletionAction_Mark_selected_local_tasks_X, status)
+				+ "\n\n"; //$NON-NLS-1$
 		int i = 0;
 		for (ITask task : toComplete) {
 			i++;
 			if (i < 20) {
-				message += "    ";
+				message += "    "; //$NON-NLS-1$
 				if (task.getTaskKey() != null) {
-					message += task.getTaskKey() + ": ";
+					message += task.getTaskKey() + ": "; //$NON-NLS-1$
 				}
-				message += task.getSummary() + "\n";
+				message += task.getSummary() + "\n"; //$NON-NLS-1$
 			} else {
-				message += "...";
+				message += "..."; //$NON-NLS-1$
 				break;
 			}
 		}

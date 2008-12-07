@@ -52,17 +52,13 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class NewSubTaskAction extends Action implements IViewActionDelegate, IExecutableExtension {
 
-	private static final String TOOLTIP = "Create a new subtask";
-
-	private static final String LABEL = "Subtask";
-
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.new.subtask";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.new.subtask"; //$NON-NLS-1$
 
 	private AbstractTask selectedTask;
 
 	public NewSubTaskAction() {
-		super(LABEL);
-		setToolTipText(TOOLTIP);
+		super(Messages.NewSubTaskAction_Subtask);
+		setToolTipText(Messages.NewSubTaskAction_Create_a_new_subtask);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.TASK_NEW_SUB);
 	}
@@ -76,7 +72,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		if (selectedTask instanceof LocalTask) {
 			// XXX code copied from NewLocalTaskWizard.performFinish() and TaskListManager.createNewLocalTask()
 			TaskList taskList = TasksUiPlugin.getTaskList();
-			LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(),
+			LocalTask newTask = new LocalTask("" + taskList.getNextLocalTaskId(), //$NON-NLS-1$
 					LocalRepositoryConnector.DEFAULT_SUMMARY);
 			newTask.setPriority(PriorityLevel.P3.toString());
 			TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
@@ -92,9 +88,10 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			try {
 				TasksUiInternal.createAndOpenNewTask(taskData);
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open new sub task", e));
-				TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.ERROR,
-						TasksUiPlugin.ID_PLUGIN, "Failed to create new sub task: " + e.getMessage()));
+				StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to open new sub task", e)); //$NON-NLS-1$
+				TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask, new Status(
+						IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+						Messages.NewSubTaskAction_Failed_to_create_new_sub_task_ + e.getMessage()));
 			}
 		}
 	}
@@ -111,11 +108,12 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			parentTaskData = TasksUi.getTaskDataManager().getTaskData(selectedTask);
 		} catch (CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Could not retrieve task data for task: " + selectedTask.getUrl(), e));
+					"Could not retrieve task data for task:" + selectedTask.getUrl(), e)); //$NON-NLS-1$
 		}
 		if (parentTaskData == null) {
-			TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.WARNING,
-					TasksUiPlugin.ID_PLUGIN, "Could not retrieve task data for task: " + selectedTask.getUrl()));
+			TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask, new Status(
+					IStatus.WARNING, TasksUiPlugin.ID_PLUGIN,
+					Messages.NewSubTaskAction_Could_not_retrieve_task_data_for_task_ + selectedTask.getUrl()));
 			return null;
 		}
 
@@ -127,7 +125,7 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 		final TaskData selectedTaskData = parentTaskData;
 		final TaskAttributeMapper attributeMapper = taskDataHandler.getAttributeMapper(taskRepository);
 		final TaskData taskData = new TaskData(attributeMapper, taskRepository.getConnectorKind(),
-				taskRepository.getRepositoryUrl(), "");
+				taskRepository.getRepositoryUrl(), ""); //$NON-NLS-1$
 		final boolean[] result = new boolean[1];
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		try {
@@ -143,10 +141,12 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			});
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				TasksUiInternal.displayStatus("Unable to create subtask", ((CoreException) e.getCause()).getStatus());
+				TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask,
+						((CoreException) e.getCause()).getStatus());
 			} else {
 				StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Could not initialize sub task data for task: " + selectedTask.getUrl(), e));
+						Messages.NewSubTaskAction_Could_not_initialize_sub_task_data_for_task_ + selectedTask.getUrl(),
+						e));
 			}
 			return null;
 		} catch (InterruptedException e) {
@@ -158,8 +158,9 @@ public class NewSubTaskAction extends Action implements IViewActionDelegate, IEx
 			// open editor
 			return taskData;
 		} else {
-			TasksUiInternal.displayStatus("Unable to create subtask", new Status(IStatus.INFO, TasksUiPlugin.ID_PLUGIN,
-					"The connector does not support creating subtasks for this task"));
+			TasksUiInternal.displayStatus(Messages.NewSubTaskAction_Unable_to_create_subtask, new Status(IStatus.INFO,
+					TasksUiPlugin.ID_PLUGIN,
+					Messages.NewSubTaskAction_The_connector_does_not_support_creating_subtasks_for_this_task));
 		}
 		return null;
 	}

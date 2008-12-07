@@ -54,7 +54,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 	private ISelection currentSelection;
 
 	public CompareAttachmentsAction() {
-		super("Compare Attachments");
+		super(Messages.CompareAttachmentsAction_Compare_Attachments);
 	}
 
 	protected CompareAttachmentsAction(String text) {
@@ -87,7 +87,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 
 					@Override
 					public String getTitle() {
-						return "Compare (" + attachment1.getFileName() + " - " + attachment2.getFileName() + ")";
+						return Messages.CompareAttachmentsAction_Compare__ + attachment1.getFileName() + " - " + attachment2.getFileName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 					@Override
@@ -104,7 +104,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 		}
 	}
 
-	private static final String[] IMAGE_EXTENSIONS = { ".jpg", ".gif", ".png", ".tiff", ".tif", ".bmp" };
+	private static final String[] IMAGE_EXTENSIONS = { ".jpg", ".gif", ".png", ".tiff", ".tif", ".bmp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 	private Image getImage(ITaskAttachment attachment) {
 		if (AttachmentUtil.isContext(attachment)) {
@@ -141,7 +141,7 @@ public class CompareAttachmentsAction extends BaseSelectionListenerAction implem
 			TaskAttribute attachmentAttribute = attachment.getTaskAttribute();
 			if (attachmentAttribute == null) {
 				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-						"Failed to find attachment: " + attachment.getUrl()));
+						Messages.CompareAttachmentsAction_Failed_to_find_attachment + attachment.getUrl()));
 			}
 			TaskRepository taskRepository = attachment.getTaskRepository();
 			ITask task = attachment.getTask();

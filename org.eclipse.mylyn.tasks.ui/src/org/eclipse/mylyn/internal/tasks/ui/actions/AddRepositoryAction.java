@@ -36,15 +36,13 @@ import org.eclipse.ui.handlers.IHandlerService;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-// TODO 3.1 rename to AddTaskRepositoryAction
 public class AddRepositoryAction extends Action {
 
-	private static final String PREF_ADD_QUERY = "org.eclipse.mylyn.internal.tasks.add.query";
+	private static final String PREF_ADD_QUERY = "org.eclipse.mylyn.internal.tasks.add.query"; //$NON-NLS-1$
 
-	// TODO externalize and move to messages class
-	public static final String TITLE = "Add Task Repository";
+	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.add"; //$NON-NLS-1$
 
-	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.add";
+	public static final String TITLE = Messages.AddRepositoryAction_Add_Task_Repository;
 
 	private boolean promptToAddQuery = true;
 
@@ -92,9 +90,10 @@ public class AddRepositoryAction extends Action {
 		IPreferenceStore preferenceStore = TasksUiPlugin.getDefault().getPreferenceStore();
 		if (!preferenceStore.getBoolean(PREF_ADD_QUERY)) {
 			Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-			MessageDialogWithToggle messageDialog = MessageDialogWithToggle.openYesNoQuestion(shell, "Add new query",
-					"Would you like to add a query to the Task List for this repository?", "Do not show again", false,
-					preferenceStore, PREF_ADD_QUERY);
+			MessageDialogWithToggle messageDialog = MessageDialogWithToggle.openYesNoQuestion(shell,
+					Messages.AddRepositoryAction_Add_new_query,
+					Messages.AddRepositoryAction_Add_a_query_to_the_Task_List,
+					Messages.AddRepositoryAction_Do_not_show_again, false, preferenceStore, PREF_ADD_QUERY);
 			preferenceStore.setValue(PREF_ADD_QUERY, messageDialog.getToggleState());
 			if (messageDialog.getReturnCode() == IDialogConstants.YES_ID) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());

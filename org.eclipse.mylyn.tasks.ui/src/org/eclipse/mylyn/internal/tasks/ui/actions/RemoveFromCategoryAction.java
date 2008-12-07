@@ -29,15 +29,13 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class RemoveFromCategoryAction extends Action {
 
-	private static final String LABEL = "Remove From Category";
-
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.remove";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.remove"; //$NON-NLS-1$
 
 	private final TaskListView view;
 
 	public RemoveFromCategoryAction(TaskListView view) {
 		this.view = view;
-		setText(LABEL);
+		setText(Messages.RemoveFromCategoryAction_Remove_From_Category);
 		setId(ID);
 		setImageDescriptor(CommonImages.REMOVE);
 	}

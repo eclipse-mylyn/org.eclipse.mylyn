@@ -31,10 +31,10 @@ import org.eclipse.ui.IViewPart;
  */
 public class RefreshRepositoryTasksAction extends AbstractTaskRepositoryAction implements IViewActionDelegate {
 
-	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.refreshAllTasks";
+	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.refreshAllTasks"; //$NON-NLS-1$
 
 	public RefreshRepositoryTasksAction() {
-		super("Refresh All Tasks");
+		super(Messages.RefreshRepositoryTasksAction_Refresh_All_Tasks);
 		setId(ID);
 		setEnabled(false);
 	}

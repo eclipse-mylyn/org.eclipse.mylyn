@@ -37,8 +37,8 @@ public class ActivateTaskDialogAction extends ActionDelegate implements IWorkben
 	@Override
 	public void run(IAction action) {
 		TaskSelectionDialog dlg = new TaskSelectionDialog(window.getShell());
-		dlg.setTitle("Activate Task");
-		dlg.setMessage("&Select a task to activate (? = any character, * = any String):");
+		dlg.setTitle(Messages.ActivateTaskDialogAction_Activate_Task);
+		dlg.setMessage(Messages.ActivateTaskDialogAction_Select_a_task_to_activate__);
 
 		if (dlg.open() != Window.OK) {
 			return;

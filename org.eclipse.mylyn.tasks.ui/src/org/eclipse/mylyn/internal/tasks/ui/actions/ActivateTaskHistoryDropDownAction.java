@@ -34,9 +34,7 @@ import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
  */
 public class ActivateTaskHistoryDropDownAction extends Action implements IWorkbenchWindowPulldownDelegate, IMenuCreator {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.navigate.previous";
-
-	private static final String LABEL = "Activate Previous Task";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.navigate.previous"; //$NON-NLS-1$
 
 	private Menu dropDownMenu;
 
@@ -47,8 +45,8 @@ public class ActivateTaskHistoryDropDownAction extends Action implements IWorkbe
 	public ActivateTaskHistoryDropDownAction() {
 		this.taskHistory = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
 		this.taskHistoryDropDown = new TaskHistoryDropDown(null, taskHistory);
-		setText(LABEL);
-		setToolTipText(LABEL);
+		setText(Messages.ActivateTaskHistoryDropDownAction_Activate_Previous_Task);
+		setToolTipText(Messages.ActivateTaskHistoryDropDownAction_Activate_Previous_Task);
 		setId(ID);
 		setEnabled(true);
 		setImageDescriptor(TasksUiImages.CONTEXT_HISTORY_PREVIOUS);

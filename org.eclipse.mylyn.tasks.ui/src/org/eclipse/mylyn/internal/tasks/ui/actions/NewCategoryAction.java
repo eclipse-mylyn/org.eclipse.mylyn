@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,11 +34,11 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewCategoryAction extends Action implements IViewActionDelegate {
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.create.category";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.create.category"; //$NON-NLS-1$
 
 	public NewCategoryAction() {
-		setText("New Category...");
-		setToolTipText("New Category...");
+		setText(Messages.NewCategoryAction_New_Category_);
+		setToolTipText(Messages.NewCategoryAction_New_Category_);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.CATEGORY_NEW);
 	}
@@ -57,7 +57,7 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 
 	public TaskCategory createCategory() {
 		InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-				"Enter name", "Enter a name for the Category: ", "", null);
+				Messages.NewCategoryAction_Enter_name, Messages.NewCategoryAction_Enter_a_name_for_the_Category, "", null); //$NON-NLS-1$
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
 			String name = dialog.getValue();
@@ -67,14 +67,16 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 			for (AbstractTaskCategory category : categories) {
 				if (name != null && name.equals(category.getSummary())) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"New Category", "A category with this name already exists, please choose another name.");
+							Messages.NewCategoryAction_New_Category,
+							Messages.NewCategoryAction_A_category_with_this_name_already_exists);
 					return null;
 				}
 			}
 			for (RepositoryQuery query : queries) {
 				if (name != null && name.equals(query.getSummary())) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"New Category", "A query with this name already exists, please choose another name.");
+							Messages.NewCategoryAction_New_Category,
+							Messages.NewCategoryAction_A_query_with_this_name_already_exists);
 					return null;
 				}
 			}

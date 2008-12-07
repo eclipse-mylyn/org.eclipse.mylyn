@@ -24,7 +24,7 @@ public class TaskListSortAction extends Action {
 	private final TaskListSortDialog dialog;
 
 	public TaskListSortAction(IWorkbenchPartSite site, TaskListView taskListView) {
-		super("Sort...");
+		super(Messages.TaskListSortAction_Sort_);
 		setEnabled(true);
 		dialog = new TaskListSortDialog(site, taskListView);
 	}

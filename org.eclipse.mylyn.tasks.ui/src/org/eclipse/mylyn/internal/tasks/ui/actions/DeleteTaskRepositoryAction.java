@@ -40,10 +40,10 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
  */
 public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 
-	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.delete";
+	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.delete"; //$NON-NLS-1$
 
 	public DeleteTaskRepositoryAction() {
-		super("Delete Repository");
+		super(Messages.DeleteTaskRepositoryAction_Delete_Repository);
 		setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 		setId(ID);
 		setEnabled(false);
@@ -60,7 +60,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 
 			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow()
-					.getShell(), "Confirm Delete", "Delete the selected task repositories?");
+					.getShell(), Messages.DeleteTaskRepositoryAction_Confirm_Delete, Messages.DeleteTaskRepositoryAction_Delete_the_selected_task_repositories);
 			if (deleteConfirmed) {
 				IStructuredSelection selection = getStructuredSelection();
 
@@ -115,8 +115,8 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 
 				if (repositoriesInUse.size() > 0) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"Repository In Use",
-							"One or more of the selected repositories is being used by a query or a task and can not be deleted.");
+							Messages.DeleteTaskRepositoryAction_Repository_In_Use,
+							Messages.DeleteTaskRepositoryAction_Repository_In_Use_MESSAGE);
 				}
 			}
 		} catch (Exception e) {

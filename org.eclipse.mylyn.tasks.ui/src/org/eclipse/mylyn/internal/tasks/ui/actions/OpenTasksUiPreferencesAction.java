@@ -22,13 +22,11 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  */
 public class OpenTasksUiPreferencesAction extends Action {
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.preferences.open";
-
-	private static final String LABEL = "Preferences...";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.preferences.open"; //$NON-NLS-1$
 
 	public OpenTasksUiPreferencesAction() {
-		setText(LABEL);
-		setToolTipText(LABEL);
+		setText(Messages.OpenTasksUiPreferencesAction_Preferences_);
+		setToolTipText(Messages.OpenTasksUiPreferencesAction_Preferences_);
 		setId(ID);
 	}
 

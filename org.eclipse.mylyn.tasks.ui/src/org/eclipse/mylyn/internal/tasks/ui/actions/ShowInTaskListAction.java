@@ -24,7 +24,7 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 public class ShowInTaskListAction extends BaseSelectionListenerAction {
 
 	public ShowInTaskListAction() {
-		super("&Show In Task List");
+		super(Messages.ShowInTaskListAction_Show_In_Task_List);
 	}
 
 	@Override

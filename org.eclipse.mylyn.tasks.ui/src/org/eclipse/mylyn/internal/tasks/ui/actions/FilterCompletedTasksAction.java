@@ -22,16 +22,14 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
  */
 public class FilterCompletedTasksAction extends Action {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.completed";
-
-	private static final String LABEL = "Filter Completed Tasks";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.completed"; //$NON-NLS-1$
 
 	private final TaskListView view;
 
 	public FilterCompletedTasksAction(TaskListView view) {
 		this.view = view;
-		setText(LABEL);
-		setToolTipText(LABEL);
+		setText(Messages.FilterCompletedTasksAction_Filter_Completed_Tasks);
+		setToolTipText(Messages.FilterCompletedTasksAction_Filter_Completed_Tasks);
 		setId(ID);
 		setImageDescriptor(CommonImages.FILTER_COMPLETE);
 		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().contains(

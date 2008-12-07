@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,14 +28,14 @@ import org.eclipse.swt.widgets.Event;
  */
 public class OpenTaskListElementAction extends Action {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.open";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.open"; //$NON-NLS-1$
 
 	private final TreeViewer viewer;
 
 	public OpenTaskListElementAction(TreeViewer view) {
 		this.viewer = view;
-		setText("Open");
-		setToolTipText("Open Task List Element");
+		setText(Messages.OpenTaskListElementAction_Open);
+		setToolTipText(Messages.OpenTaskListElementAction_Open_Task_List_Element);
 		setId(ID);
 	}
 

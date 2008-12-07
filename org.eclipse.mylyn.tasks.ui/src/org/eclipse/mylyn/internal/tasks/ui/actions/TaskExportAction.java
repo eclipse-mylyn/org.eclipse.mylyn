@@ -84,7 +84,7 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 		if (tasks.size() == 1) {
 			// open FileDialog
 			FileDialog dialog = new FileDialog(shell, SWT.PRIMARY_MODAL | SWT.SAVE);
-			dialog.setFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION });
+			dialog.setFilterExtensions(new String[] { "*" + ITasksCoreConstants.FILE_EXTENSION }); //$NON-NLS-1$
 
 			AbstractTask task = tasks.get(0);
 
@@ -94,8 +94,8 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 			if (path != null) {
 				File file = new File(path);
 				if (file.isDirectory()) {
-					MessageDialog.openError(shell, "Task Export Error",
-							"Could not export task because specified location is a folder");
+					MessageDialog.openError(shell, Messages.TaskExportAction_Task_Export_Error,
+							Messages.TaskExportAction_Could_not_export_task_because_specified_location_is_a_folder);
 					return;
 				}
 				taskFiles.put(task, file);
@@ -116,8 +116,8 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 
 			// Prompt the user to confirm if save operation will cause an overwrite
 			if (file.exists()) {
-				if (!MessageDialog.openQuestion(shell, "Confirm File Replace", "The file " + file.getPath()
-						+ " already exists. Do you want to overwrite it?")) {
+				if (!MessageDialog.openQuestion(shell, Messages.TaskExportAction_Confirm_File_Replace, Messages.TaskExportAction_FILE + file.getPath()
+						+ Messages.TaskExportAction_already_exists)) {
 					continue;
 				}
 			}
@@ -131,7 +131,7 @@ public class TaskExportAction extends Action implements IViewActionDelegate {
 		if (fileName.length() > 50) {
 			fileName = fileName.substring(0, 50);
 		}
-		fileName = task.getTaskId() + " - " + fileName + ITasksCoreConstants.FILE_EXTENSION;
+		fileName = task.getTaskId() + " - " + fileName + ITasksCoreConstants.FILE_EXTENSION; //$NON-NLS-1$
 		return fileName;
 	}
 

@@ -33,9 +33,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
  */
 public class ClearOutgoingAction extends Action {
 
-	private static final String ACTION_NAME = "Clear outgoing";
-
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.discard";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.discard"; //$NON-NLS-1$
 
 	private final List<IRepositoryElement> selectedElements;
 
@@ -43,8 +41,8 @@ public class ClearOutgoingAction extends Action {
 
 	public ClearOutgoingAction(List<IRepositoryElement> selectedElements) {
 		this.selectedElements = selectedElements;
-		setText(ACTION_NAME);
-		setToolTipText(ACTION_NAME);
+		setText(Messages.ClearOutgoingAction_Clear_outgoing);
+		setToolTipText(Messages.ClearOutgoingAction_Clear_outgoing);
 		setImageDescriptor(CommonImages.CLEAR);
 		setId(ID);
 		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof ITask)) {
@@ -78,7 +76,9 @@ public class ClearOutgoingAction extends Action {
 		}
 		if (toClear.size() > 0) {
 			AbstractTask task = toClear.get(0);
-			boolean confirm = MessageDialog.openConfirm(null, "Confirm discard", "Discard all outgoing changes?\n\n"
+			boolean confirm = MessageDialog.openConfirm(
+					null,
+					Messages.ClearOutgoingAction_Confirm_discard, Messages.ClearOutgoingAction_Discard_all_outgoing_changes_ + "\n\n" //$NON-NLS-1$
 					+ task.getSummary());
 			if (confirm) {
 				if (taskEditorPage != null) {
@@ -87,7 +87,8 @@ public class ClearOutgoingAction extends Action {
 				try {
 					TasksUi.getTaskDataManager().discardEdits(task);
 				} catch (CoreException e) {
-					TasksUiInternal.displayStatus("Clear outgoing failed", e.getStatus());
+					TasksUiInternal.displayStatus(
+							Messages.ClearOutgoingAction_Clear_outgoing_failed, e.getStatus());
 				}
 			}
 		}

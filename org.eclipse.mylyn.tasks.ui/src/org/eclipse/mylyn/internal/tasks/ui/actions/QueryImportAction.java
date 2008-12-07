@@ -64,9 +64,10 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 	public void run() {
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		FileDialog dialog = new FileDialog(shell);
-		dialog.setText("Import Mylyn Query");
+		dialog.setText(Messages.QueryImportAction_Import_Mylyn_Query);
 		dialog.setFilterExtensions(PlatformUtil.getFilterExtensions(ITasksCoreConstants.FILE_EXTENSION));
-		dialog.setFilterNames(new String[] { "Mylyn Queries (*" + ITasksCoreConstants.FILE_EXTENSION + ")" });
+		dialog.setFilterNames(new String[] { Messages.QueryImportAction_Mylyn_Queries
+				+ " (*" + ITasksCoreConstants.FILE_EXTENSION + ")" }); //$NON-NLS-1$ //$NON-NLS-2$
 
 		String path = dialog.open();
 		if (path != null) {
@@ -78,12 +79,12 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 					if (queries.size() > 0) {
 						importQueries(queries, repositories, shell);
 					} else {
-						MessageDialog.openError(shell, "Query Import Error",
-								"The specified file is not an exported query. Please, check that you have provided the correct file.");
+						MessageDialog.openError(shell, Messages.QueryImportAction_Query_Import_Error,
+								Messages.QueryImportAction_The_specified_file_is_not_an_exported_query);
 					}
 				} catch (IOException e) {
-					MessageDialog.openError(shell, "Query Import Error",
-							"The specified file is not an exported query. Please, check that you have provided the correct file.");
+					MessageDialog.openError(shell, Messages.QueryImportAction_Query_Import_Error,
+							Messages.QueryImportAction_The_specified_file_is_not_an_exported_query);
 				}
 			}
 		}
@@ -100,21 +101,21 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 		List<RepositoryQuery> badQueries = insertQueries(queries);
 
 		// notify user about importing
-		String message = "The following queries were imported successfully: ";
+		String message = Messages.QueryImportAction_The_following_queries_were_imported_successfully;
 		for (RepositoryQuery imported : queries) {
 			if (!badQueries.contains(imported)) {
-				message += "\n" + imported.getHandleIdentifier();
+				message += "\n" + imported.getHandleIdentifier(); //$NON-NLS-1$
 			}
 		}
 
 		if (badQueries.size() > 0) {
-			message += "\n\n These queries were not imported, since their repository was not found: ";
+			message += "\n\n " + Messages.QueryImportAction_These_queries_were_not_imported; //$NON-NLS-1$
 			for (RepositoryQuery bad : badQueries) {
-				message += "\n" + bad.getHandleIdentifier();
+				message += "\n" + bad.getHandleIdentifier(); //$NON-NLS-1$
 			}
 		}
 
-		MessageDialog.openInformation(shell, "Query Import Completed", message);
+		MessageDialog.openInformation(shell, Messages.QueryImportAction_Query_Import_Completed, message);
 	}
 
 	/**
@@ -164,7 +165,7 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 	 * @since 2.1
 	 */
 	public static String resolveIdentifiersConflict(RepositoryQuery query) {
-		String patternStr = "\\[(\\d+)\\]$"; // all string that end with [x], where x is a number
+		String patternStr = "\\[(\\d+)\\]$"; // all string that end with [x], where x is a number //$NON-NLS-1$
 		Pattern pattern = Pattern.compile(patternStr);
 
 		// resolve name conflict
@@ -184,9 +185,9 @@ public class QueryImportAction extends Action implements IViewActionDelegate {
 				// increment index
 				int index = Integer.parseInt(matcher.group(1));
 				index++;
-				handle = matcher.replaceAll("[" + index + "]");
+				handle = matcher.replaceAll("[" + index + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				handle += "[1]";
+				handle += "[1]"; //$NON-NLS-1$
 			}
 		}
 

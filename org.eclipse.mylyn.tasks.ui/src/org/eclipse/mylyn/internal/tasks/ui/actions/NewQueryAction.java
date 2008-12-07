@@ -99,7 +99,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate, IExec
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
-		if ("skipFirstPage".equals(data)) {
+		if ("skipFirstPage".equals(data)) { //$NON-NLS-1$
 			this.skipRepositoryPage = true;
 		}
 	}

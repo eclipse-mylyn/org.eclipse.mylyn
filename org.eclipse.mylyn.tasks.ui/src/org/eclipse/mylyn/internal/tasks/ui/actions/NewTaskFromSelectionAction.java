@@ -32,14 +32,12 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewTaskFromSelectionAction extends Action {
 
-	private static final String LABEL = "New Task from Selection";
-
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.newTaskFromSelection";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.newTaskFromSelection"; //$NON-NLS-1$
 
 	private ITaskMapping taskMapping;
 
 	public NewTaskFromSelectionAction() {
-		super(LABEL);
+		super(Messages.NewTaskFromSelectionAction_New_Task_from_Selection);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.TASK_NEW);
 	}
@@ -55,7 +53,7 @@ public class NewTaskFromSelectionAction extends Action {
 	@Override
 	public void run() {
 		if (taskMapping == null) {
-			MessageDialog.openError(null, LABEL, "Nothing selected to create task from.");
+			MessageDialog.openError(null, Messages.NewTaskFromSelectionAction_New_Task_from_Selection, Messages.NewTaskFromSelectionAction_Nothing_selected_to_create_task_from);
 			return;
 		}
 
@@ -122,18 +120,18 @@ public class NewTaskFromSelectionAction extends Action {
 			if (element instanceof ITaskComment) {
 				ITaskComment comment = (ITaskComment) element;
 				final StringBuilder sb = new StringBuilder();
-				sb.append("\n-- Created from Comment --");
+				sb.append("\n" + Messages.NewTaskFromSelectionAction____Created_from_Comment___); //$NON-NLS-1$
 				if (comment.getUrl() == null) {
-					sb.append("\nURL: ");
+					sb.append("\n" + Messages.NewTaskFromSelectionAction_URL_); //$NON-NLS-1$
 					sb.append(comment.getTask().getUrl());
-					sb.append("\nComment: ");
+					sb.append("\n" + Messages.NewTaskFromSelectionAction_Comment_); //$NON-NLS-1$
 					sb.append(comment.getNumber());
 				} else {
-					sb.append("\nURL: ");
+					sb.append("\n" + Messages.NewTaskFromSelectionAction_URL_); //$NON-NLS-1$
 					sb.append(comment.getUrl());
 				}
 
-				sb.append("\n\n");
+				sb.append("\n\n"); //$NON-NLS-1$
 				sb.append(comment.getText());
 				taskMapping = new TaskMapping() {
 					@Override

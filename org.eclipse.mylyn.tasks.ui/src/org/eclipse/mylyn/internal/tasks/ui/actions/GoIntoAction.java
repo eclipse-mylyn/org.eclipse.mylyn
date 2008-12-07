@@ -24,14 +24,12 @@ import org.eclipse.ui.IViewPart;
  */
 public class GoIntoAction extends Action implements IViewActionDelegate {
 
-	private static final String LABEL = "Go Into";
-
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.view.go.into";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.view.go.into"; //$NON-NLS-1$
 
 	public GoIntoAction() {
 		setId(ID);
-		setText(LABEL);
-		setToolTipText(LABEL);
+		setText(Messages.GoIntoAction_Go_Into);
+		setToolTipText(Messages.GoIntoAction_Go_Into);
 		setImageDescriptor(CommonImages.GO_INTO);
 	}
 
@@ -42,7 +40,7 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 	@Override
 	public void run() {
 		if (TaskListView.getFromActivePerspective() != null) {
-			TaskListView.getFromActivePerspective().getFilteredTree().setFilterText("");
+			TaskListView.getFromActivePerspective().getFilteredTree().setFilterText(""); //$NON-NLS-1$
 			TaskListView.getFromActivePerspective().goIntoCategory();
 		}
 	}

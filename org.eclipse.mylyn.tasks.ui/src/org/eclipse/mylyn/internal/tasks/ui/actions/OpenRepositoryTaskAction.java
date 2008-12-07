@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,16 +33,15 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Mik Kersten
  */
-// TODO 3.1 rename to OpenRepositoryTaskAction
-public class OpenRepositoryTask extends Action implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
+public class OpenRepositoryTaskAction extends Action implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
-	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylyn.tasks.ui.open.remote";
+	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylyn.tasks.ui.open.remote"; //$NON-NLS-1$
 
 	public void run(IAction action) {
 		RemoteTaskSelectionDialog dlg = new RemoteTaskSelectionDialog(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow()
 				.getShell());
-		dlg.setTitle("Open Repository Task");
+		dlg.setTitle(Messages.OpenRepositoryTask_Open_Repository_Task);
 
 		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings dlgSettings = settings.getSection(OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS);
@@ -99,7 +98,8 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 			}
 			if (!openSuccessful) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						"Open Task", "Could not find matching repository task.");
+						Messages.OpenRepositoryTask_Open_Task,
+						Messages.OpenRepositoryTask_Could_not_find_matching_repository_task);
 			}
 		}
 	}

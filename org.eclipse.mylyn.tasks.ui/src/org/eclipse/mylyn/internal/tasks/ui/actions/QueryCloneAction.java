@@ -75,7 +75,7 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 	public void run(RepositoryQuery selectedQuery) {
 		if (selectedQuery == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Clone Query", "No query selected.");
+					Messages.QueryCloneAction_Clone_Query, Messages.QueryCloneAction_No_query_selected);
 			return;
 		}
 
@@ -93,8 +93,8 @@ public class QueryCloneAction extends Action implements IViewActionDelegate {
 			}
 		} else {
 			// cannot happen
-			TasksUiInternal.displayStatus("Clone Query Failes", new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Query cloning did not succeeded."));
+			TasksUiInternal.displayStatus(Messages.QueryCloneAction_Clone_Query_Failes, new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
+					Messages.QueryCloneAction_Query_cloning_did_not_succeeded));
 		}
 	}
 

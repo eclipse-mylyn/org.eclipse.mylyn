@@ -23,11 +23,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  */
 public class ToggleTaskActivationAction extends Action implements ITaskActivationListener {
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.task.activation.toggle";
-
-	private static final String LABEL_ACTIVATE = "Activate Task";
-
-	private static final String LABEL_DEACTIVATE = "Deactivate Task";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.task.activation.toggle"; //$NON-NLS-1$
 
 	private final ITask task;
 
@@ -53,11 +49,11 @@ public class ToggleTaskActivationAction extends Action implements ITaskActivatio
 	private void update() {
 		setChecked(task.isActive());
 		if (task.isActive()) {
-			setText(LABEL_DEACTIVATE);
-			setToolTipText(LABEL_DEACTIVATE);
+			setText(Messages.ToggleTaskActivationAction_Deactivate_Task);
+			setToolTipText(Messages.ToggleTaskActivationAction_Deactivate_Task);
 		} else {
-			setText(LABEL_ACTIVATE);
-			setToolTipText(LABEL_ACTIVATE);
+			setText(Messages.ToggleTaskActivationAction_Activate_Task);
+			setToolTipText(Messages.ToggleTaskActivationAction_Activate_Task);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,11 +21,11 @@ import org.eclipse.ui.part.DrillDownAdapter;
  */
 public class GoUpAction extends Action {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.view.go.up";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.view.go.up"; //$NON-NLS-1$
 
 	public GoUpAction(DrillDownAdapter drillDownAdapter) {
-		setText("Go Up To Root");
-		setToolTipText("Go Up To Root");
+		setText(Messages.GoUpAction_Go_Up_To_Root);
+		setToolTipText(Messages.GoUpAction_Go_Up_To_Root);
 		setId(ID);
 		setImageDescriptor(CommonImages.GO_UP);
 	}

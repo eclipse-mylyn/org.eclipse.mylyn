@@ -22,16 +22,14 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
  */
 public class GroupSubTasksAction extends Action {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.subtasks";
-
-	private static final String LABEL = "Group Subtasks";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.filter.subtasks"; //$NON-NLS-1$
 
 	private final TaskListView view;
 
 	public GroupSubTasksAction(TaskListView view) {
 		this.view = view;
-		setText(LABEL);
-		setToolTipText(LABEL);
+		setText(Messages.GroupSubTasksAction_Group_Subtasks);
+		setToolTipText(Messages.GroupSubTasksAction_Group_Subtasks);
 		setId(ID);
 		// setImageDescriptor(TasksUiImages.FILTER_COMPLETE);
 		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(

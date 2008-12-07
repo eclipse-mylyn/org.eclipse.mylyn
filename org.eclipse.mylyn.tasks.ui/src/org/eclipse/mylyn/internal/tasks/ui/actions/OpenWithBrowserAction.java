@@ -26,13 +26,11 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 
-	private static final String LABEL = "Open with Browser";
-
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.open.browser";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.open.browser"; //$NON-NLS-1$
 
 	public OpenWithBrowserAction() {
-		super(LABEL);
-		setToolTipText(LABEL);
+		super(Messages.OpenWithBrowserAction_Open_with_Browser);
+		setToolTipText(Messages.OpenWithBrowserAction_Open_with_Browser);
 		setId(ID);
 	}
 

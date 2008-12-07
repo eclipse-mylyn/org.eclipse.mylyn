@@ -32,17 +32,15 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
-	private static final String LABEL = "Copy Details";
-
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.copy";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.copy"; //$NON-NLS-1$
 
 	private final Clipboard clipboard;
 
-	private static String lineSeparator = System.getProperty("line.separator", "\n");
+	private static String lineSeparator = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public CopyTaskDetailsAction() {
-		super(LABEL);
-		setToolTipText(LABEL);
+		super(Messages.CopyTaskDetailsAction_Copy_Details);
+		setToolTipText(Messages.CopyTaskDetailsAction_Copy_Details);
 		setId(ID);
 		setImageDescriptor(CommonImages.COPY);
 		// FIXME the clipboard is not disposed
@@ -75,7 +73,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			AbstractTask task = (AbstractTask) object;
 			if (task.getTaskKey() != null) {
 				sb.append(task.getTaskKey());
-				sb.append(": ");
+				sb.append(": "); //$NON-NLS-1$
 			}
 
 			sb.append(task.getSummary());

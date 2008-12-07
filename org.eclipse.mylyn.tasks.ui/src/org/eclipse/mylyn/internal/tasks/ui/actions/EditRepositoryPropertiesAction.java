@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,14 +23,12 @@ import org.eclipse.ui.IViewPart;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-@Deprecated
-// TODO 3.1 remove class
 public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction implements IViewActionDelegate {
 
-	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.properties";
+	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.properties"; //$NON-NLS-1$
 
 	public EditRepositoryPropertiesAction() {
-		super("Properties");
+		super(Messages.EditRepositoryPropertiesAction_Properties);
 		setId(ID);
 		setEnabled(false);
 	}

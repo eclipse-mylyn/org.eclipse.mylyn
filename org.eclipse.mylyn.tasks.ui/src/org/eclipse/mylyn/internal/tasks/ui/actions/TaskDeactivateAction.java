@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,11 +26,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
  */
 public class TaskDeactivateAction extends Action {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.actions.context.deactivate";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.context.deactivate"; //$NON-NLS-1$
 
 	public TaskDeactivateAction() {
 		setId(ID);
-		setText("Deactivate");
+		setText(Messages.TaskDeactivateAction_Deactivate);
 		setImageDescriptor(TasksUiImages.CONTEXT_INACTIVE_EMPTY);
 	}
 
@@ -41,7 +41,7 @@ public class TaskDeactivateAction extends Action {
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-					"Closing task editor on task deactivation failed", e));
+					"Closing task editor on task deactivation failed", e)); //$NON-NLS-1$
 		}
 	}
 
