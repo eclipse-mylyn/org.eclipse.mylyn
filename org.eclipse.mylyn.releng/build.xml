@@ -142,7 +142,7 @@
 	
 	<target name="publish-helper-run">
     	<path id="file.id"> 
-    		<fileset dir="${build.results}/test-${eclipse.version}">
+    		<fileset dir="${build.results}/test-${build.target}">
             	<include name="${file}"/>
           	</fileset>
     	</path> 
