@@ -40,9 +40,9 @@ public class TaskRepositoriesSorter extends ViewerSorter {
 			if (!t1.getConnectorKind().equals(t2.getConnectorKind())) {
 				return (t1.getConnectorKind()).compareTo(t2.getConnectorKind());
 			} else {
-				if ((label1 == null || label1.equals("")) && label2 != null) {
+				if ((label1 == null || label1.equals("")) && label2 != null) { //$NON-NLS-1$
 					return 1;
-				} else if (label1 != null && (label2 == null || label2.equals(""))) {
+				} else if (label1 != null && (label2 == null || label2.equals(""))) { //$NON-NLS-1$
 					return -1;
 				} else if (label1 != null && label2 != null) {
 					return label1.compareTo(label2);

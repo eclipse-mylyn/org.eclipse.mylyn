@@ -84,7 +84,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			containers.add(nextWeekContainer);
 
 			ScheduledTaskContainer twoWeeksContainer = new ScheduledTaskContainer(taskActivityManager, week.next()
-					.next(), "Two Weeks");
+					.next(), Messages.TaskScheduleContentProvider_Two_Weeks);
 			containers.add(twoWeeksContainer);
 
 			containers.add(unscheduled);
@@ -95,7 +95,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 			endDate.add(Calendar.YEAR, 4999);
 			DateRange future = new DateRange(startDate, endDate);
 
-			ScheduledTaskContainer futureContainer = new ScheduledTaskContainer(taskActivityManager, future, "Future");
+			ScheduledTaskContainer futureContainer = new ScheduledTaskContainer(taskActivityManager, future, Messages.TaskScheduleContentProvider_Future);
 			containers.add(futureContainer);
 
 			return applyFilter(containers).toArray();
@@ -194,7 +194,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider impleme
 		private final TaskActivityManager activityManager;
 
 		public Unscheduled(TaskActivityManager activityManager, DateRange range) {
-			super(activityManager, range, "Unscheduled");
+			super(activityManager, range, Messages.TaskScheduleContentProvider_Unscheduled);
 			this.activityManager = activityManager;
 		}
 

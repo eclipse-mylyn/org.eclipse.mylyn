@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -74,13 +75,7 @@ import org.eclipse.ui.internal.ObjectActionContributorManager;
  */
 public class TaskListFilteredTree extends AbstractFilteredTree {
 
-	private static final String LABEL_ACTIVE_NONE = "Activate...  ";
-
-	private static final String LABEL_SETS_EDIT = "Edit Task Working Sets...";
-
-	private static final String LABEL_SETS_MULTIPLE = "<multiple>";
-
-	public static final String LABEL_SEARCH = "Search repository for key or summary...";
+	public static final String LABEL_SEARCH = Messages.TaskListFilteredTree_Search_repository_for_key_or_summary_;
 
 	private TaskHyperlink workingSetLink;
 
@@ -123,7 +118,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	private void hookContextMenu() {
-		activeTaskMenuManager = new MenuManager("#PopupMenu");
+		activeTaskMenuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		activeTaskMenuManager.setRemoveAllWhenShown(true);
 		activeTaskMenuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
@@ -255,9 +250,13 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
 					taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
 
-					taskProgressBar.setToolTipText("Workweek Progress" + "\n     Estimated hours: " + completeTime
-							+ " of " + (completeTime + incompleteTime) + " estimated" + "\n     Scheduled tasks: "
-							+ completeTasks + " of " + totalTasks + " scheduled");
+					taskProgressBar.setToolTipText(Messages.TaskListFilteredTree_Workweek_Progress
+							+ "\n" //$NON-NLS-1$
+							+ MessageFormat.format(Messages.TaskListFilteredTree_Estimated_hours, completeTime,
+									completeTime + incompleteTime)
+							+ "\n" //$NON-NLS-1$
+							+ MessageFormat.format(Messages.TaskListFilteredTree_Scheduled_tasks, completeTasks,
+									totalTasks));
 				}
 			}
 		});
@@ -267,7 +266,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	protected Composite createActiveWorkingSetComposite(Composite container) {
 		final ImageHyperlink workingSetButton = new ImageHyperlink(container, SWT.FLAT);
 		workingSetButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
-		workingSetButton.setToolTipText("Select Working Set");
+		workingSetButton.setToolTipText(Messages.TaskListFilteredTree_Select_Working_Set);
 
 		workingSetLink = new TaskHyperlink(container, SWT.LEFT);
 		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
@@ -308,7 +307,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	protected Composite createActiveTaskComposite(final Composite container) {
 		final ImageHyperlink activeTaskButton = new ImageHyperlink(container, SWT.LEFT);// SWT.ARROW | SWT.RIGHT);
 		activeTaskButton.setImage(CommonImages.getImage(CommonImages.TOOLBAR_ARROW_RIGHT));
-		activeTaskButton.setToolTipText("Select Active Task");
+		activeTaskButton.setToolTipText(Messages.TaskListFilteredTree_Select_Active_Task);
 
 		activeTaskLink = new TaskHyperlink(container, SWT.LEFT);
 
@@ -340,9 +339,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		};
 		TasksUiInternal.getTaskList().addChangeListener(changeListener);
 
-		activeTaskLink.setText(LABEL_ACTIVE_NONE);
+		activeTaskLink.setText(Messages.TaskListFilteredTree_Activate);
 		// avoid having the Hyperlink class show a native tooltip when it shortens the text which would overlap with the task list tooltip 
-		activeTaskLink.setToolTipText("");
+		activeTaskLink.setToolTipText(""); //$NON-NLS-1$
 
 		taskListToolTip = new TaskListToolTip(activeTaskLink);
 
@@ -415,7 +414,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	@Override
 	protected void textChanged() {
 		super.textChanged();
-		if (getFilterString() != null && !getFilterString().trim().equals("")) {
+		if (getFilterString() != null && !getFilterString().trim().equals("")) { //$NON-NLS-1$
 			setShowSearch(true);
 		} else {
 			setShowSearch(false);
@@ -431,17 +430,17 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		if (activeSets.size() == 0) {
 			workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
-			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
+			workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
 			currentWorkingSet = null;
 		} else if (activeSets.size() > 1) {
-			workingSetLink.setText(LABEL_SETS_MULTIPLE);
-			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
+			workingSetLink.setText(Messages.TaskListFilteredTree__multiple_);
+			workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
 			currentWorkingSet = null;
 		} else {
 			Object[] array = activeSets.toArray();
 			IWorkingSet workingSet = (IWorkingSet) array[0];
 			workingSetLink.setText(workingSet.getLabel());
-			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
+			workingSetLink.setToolTipText(Messages.TaskListFilteredTree_Edit_Task_Working_Sets_);
 			currentWorkingSet = workingSet;
 		}
 		filterComposite.layout();
@@ -470,8 +469,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		}
 
 		activeTaskLink.setTask(null);
-		activeTaskLink.setText(LABEL_ACTIVE_NONE);
-		activeTaskLink.setToolTipText("");
+		activeTaskLink.setText(Messages.TaskListFilteredTree_Activate);
+		activeTaskLink.setToolTipText(""); //$NON-NLS-1$
 
 		filterComposite.layout();
 	}

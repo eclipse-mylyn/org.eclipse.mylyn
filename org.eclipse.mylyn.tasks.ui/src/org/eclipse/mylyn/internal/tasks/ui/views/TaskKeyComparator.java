@@ -21,11 +21,11 @@ import java.util.regex.Pattern;
  */
 public class TaskKeyComparator implements Comparator<String[]> {
 
-	private static final String MODULE_TASK_PATTERN = "(?:([A-Za-z]*[:_\\-]?)(\\d+))?";
+	private static final String MODULE_TASK_PATTERN = "(?:([A-Za-z]*[:_\\-]?)(\\d+))?"; //$NON-NLS-1$
 
 	private static final Pattern ID_PATTERN = Pattern.compile(MODULE_TASK_PATTERN);
 
-	public static final Pattern PATTERN = Pattern.compile(MODULE_TASK_PATTERN + "(.*)");
+	public static final Pattern PATTERN = Pattern.compile(MODULE_TASK_PATTERN + "(.*)"); //$NON-NLS-1$
 
 	public int compare2(String o1, String o2) {
 		String[] a1 = split(o1);

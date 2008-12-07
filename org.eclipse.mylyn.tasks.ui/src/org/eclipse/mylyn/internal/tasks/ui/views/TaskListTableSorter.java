@@ -64,8 +64,8 @@ public class TaskListTableSorter extends ViewerSorter {
 	public void setColumn(String column) {
 		if (view.isFocusedMode()) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					"Task Sorting",
-					"Manual sorting is disabled in focused mode, sort order will not take effect until focused mode is disabled.");
+					Messages.TaskListTableSorter_Task_Sorting,
+					Messages.TaskListTableSorter_Manual_sorting_is_disabled_in_focused_mode);
 		}
 	}
 
@@ -246,7 +246,7 @@ public class TaskListTableSorter extends ViewerSorter {
 	 * @return String array[component, taskId, summary]
 	 */
 	public static String[] getSortableFromElement(IRepositoryElement element) {
-		final String a[] = new String[] { "", null, element.getSummary() };
+		final String a[] = new String[] { "", null, element.getSummary() }; //$NON-NLS-1$
 
 		if (element instanceof ITask) {
 			ITask task1 = (ITask) element;

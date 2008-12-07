@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.DisconnectRepositoryAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
@@ -61,7 +62,7 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 			StringBuilder label = new StringBuilder();
 			label.append(repository.getRepositoryLabel());
 			if (repository.isOffline()) {
-				label.append(" [" + DisconnectRepositoryAction.LABEL + "]");
+				label.append(" [" + DisconnectRepositoryAction.LABEL + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			return label.toString();
 		} else if (object instanceof AbstractRepositoryConnector) {

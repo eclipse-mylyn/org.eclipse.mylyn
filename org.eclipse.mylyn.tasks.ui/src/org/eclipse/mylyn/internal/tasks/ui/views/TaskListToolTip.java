@@ -86,7 +86,7 @@ public class TaskListToolTip extends ToolTip {
 	private final static int X_SHIFT;
 
 	static {
-		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform())) {
+		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform())) { //$NON-NLS-1$ //$NON-NLS-2$
 			X_SHIFT = -26;
 		} else {
 			X_SHIFT = -23;
@@ -155,17 +155,17 @@ public class TaskListToolTip extends ToolTip {
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
 			Calendar start = ((ScheduledTaskContainer) element).getDateRange().getStartDate();
-			sb.append("  [");
+			sb.append("  ["); //$NON-NLS-1$
 			sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
-			sb.append("]");
+			sb.append("]"); //$NON-NLS-1$
 			return sb.toString();
 		} else if (element instanceof IRepositoryQuery) {
 			IRepositoryQuery query = (IRepositoryQuery) element;
 			StringBuilder sb = new StringBuilder();
 			sb.append(element.getSummary());
-			sb.append("  [");
+			sb.append("  ["); //$NON-NLS-1$
 			sb.append(getRepositoryLabel(query.getConnectorKind(), query.getRepositoryUrl()));
-			sb.append("]");
+			sb.append("]"); //$NON-NLS-1$
 			return sb.toString();
 		} else {
 			return new TaskElementLabelProvider(false).getText(element);
@@ -185,13 +185,13 @@ public class TaskListToolTip extends ToolTip {
 				}
 			}
 			StringBuilder sb = new StringBuilder();
-			sb.append("Estimate: ");
+			sb.append(Messages.TaskListToolTip_Estimate_);
 			sb.append(estimateTotal);
-			sb.append(" hours");
-			sb.append("\n");
-			sb.append("Elapsed: ");
+			sb.append(Messages.TaskListToolTip_hours);
+			sb.append("\n"); //$NON-NLS-1$
+			sb.append(Messages.TaskListToolTip_Elapsed_);
 			sb.append(DateUtil.getFormattedDurationShort(elapsedTotal));
-			sb.append("\n");
+			sb.append("\n"); //$NON-NLS-1$
 			return sb.toString();
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
@@ -204,21 +204,21 @@ public class TaskListToolTip extends ToolTip {
 			}
 			String key = task.getTaskKey();
 			if (key != null) {
-				sb.append(" ");
+				sb.append(" "); //$NON-NLS-1$
 				sb.append(key);
 			}
 			String taskKind = task.getTaskKind();
 			if (taskKind != null && taskKind.length() > 0 && !taskKind.equals(kindLabel)) {
-				sb.append(" (");
+				sb.append(" ("); //$NON-NLS-1$
 				sb.append(taskKind);
-				sb.append(") ");
+				sb.append(") "); //$NON-NLS-1$
 			}
-			sb.append(", ");
+			sb.append(", "); //$NON-NLS-1$
 			sb.append(task.getPriority());
-			sb.append("  [");
+			sb.append("  ["); //$NON-NLS-1$
 			sb.append(getRepositoryLabel(task.getConnectorKind(), task.getRepositoryUrl()));
-			sb.append("]");
-			sb.append("\n");
+			sb.append("]"); //$NON-NLS-1$
+			sb.append("\n"); //$NON-NLS-1$
 			return sb.toString();
 		} else {
 			return null;
@@ -229,12 +229,12 @@ public class TaskListToolTip extends ToolTip {
 		TaskRepository repository = TasksUi.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 		if (repository != null) {
 			String label = repository.getRepositoryLabel();
-			if (label.indexOf("//") != -1) {
-				return label.substring((repository.getRepositoryUrl().indexOf("//") + 2));
+			if (label.indexOf("//") != -1) { //$NON-NLS-1$
+				return label.substring((repository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
 			}
-			return label + "";
+			return label + ""; //$NON-NLS-1$
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	private String getActivityText(IRepositoryElement element) {
@@ -267,16 +267,16 @@ public class TaskListToolTip extends ToolTip {
 
 			Date dueDate = task.getDueDate();
 			if (dueDate != null) {
-				sb.append("Due: ");
-				sb.append(new SimpleDateFormat("E").format(dueDate)).append(", ");
+				sb.append(Messages.TaskListToolTip_Due_);
+				sb.append(new SimpleDateFormat("E").format(dueDate)).append(", "); //$NON-NLS-1$ //$NON-NLS-2$
 				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(dueDate));
-				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate)).append(')');
+				sb.append(" (").append(DateFormat.getTimeInstance(DateFormat.SHORT).format(dueDate)).append(')'); //$NON-NLS-1$
 				sb.append('\n');
 			}
 
 			DateRange scheduledDate = task.getScheduledForDate();
 			if (scheduledDate != null) {
-				sb.append("Scheduled: ");
+				sb.append(Messages.TaskListToolTip_Scheduled_);
 				sb.append(scheduledDate.toString());
 //				sb.append(new SimpleDateFormat("E").format(scheduledDate)).append(", ");
 //				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(scheduledDate));
@@ -285,9 +285,9 @@ public class TaskListToolTip extends ToolTip {
 
 			long elapsed = TasksUiPlugin.getTaskActivityManager().getElapsedTime(task);
 			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
-			sb.append("Elapsed: ");
+			sb.append(Messages.TaskListToolTip_Elapsed_);
 			sb.append(elapsedTimeString);
-			sb.append("\n");
+			sb.append("\n"); //$NON-NLS-1$
 
 			return sb.toString();
 		}
@@ -327,7 +327,7 @@ public class TaskListToolTip extends ToolTip {
 			StringBuilder sb = new StringBuilder();
 			sb.append(status.getMessage());
 			if (status instanceof RepositoryStatus && ((RepositoryStatus) status).isHtmlMessage()) {
-				sb.append(" Please synchronize manually for full error message.");
+				sb.append(Messages.TaskListToolTip_Please_synchronize_manually_for_full_error_message);
 			}
 			return sb.toString();
 		}
@@ -361,7 +361,8 @@ public class TaskListToolTip extends ToolTip {
 				}
 			}
 
-			String text = "Total: " + total + " (Complete: " + completed + ", Incomplete: " + (total - completed) + ")";
+			String text = Messages.TaskListToolTip_Total_ + total + Messages.TaskListToolTip__Complete_ + completed
+					+ Messages.TaskListToolTip_Incomplete + (total - completed) + ")"; //$NON-NLS-1$
 			return new ProgressData(completed, total, text);
 		} else {
 			return null;
@@ -553,7 +554,7 @@ public class TaskListToolTip extends ToolTip {
 							}
 						}
 						if (!hasIncoming) {
-							return "Some incoming elements may be filtered,\nfocus the view to see all incomings";
+							return Messages.TaskListToolTip_Some_incoming_elements_may_be_filtered;
 						}
 					}
 				}
@@ -561,9 +562,9 @@ public class TaskListToolTip extends ToolTip {
 			// if has incoming but no top level children have incoming, suggest incoming tasks may be filtered
 		}
 		if (element instanceof UncategorizedTaskContainer) {
-			return "Automatic container for all local tasks\nwith no category set";
+			return Messages.TaskListToolTip_Automatic_container_for_all_local_tasks;
 		} else if (element instanceof UnmatchedTaskContainer) {
-			return "Automatic container for repository tasks\nnot matched by any query";
+			return Messages.TaskListToolTip_Automatic_container_for_repository_tasks;
 		}
 		return null;
 	}
@@ -583,14 +584,14 @@ public class TaskListToolTip extends ToolTip {
 		if (element instanceof IRepositoryQuery) {
 			String syncStamp = ((RepositoryQuery) element).getLastSynchronizedTimeStamp();
 			if (syncStamp != null) {
-				return "Synchronized: " + syncStamp;
+				return Messages.TaskListToolTip_Synchronized + syncStamp;
 			}
 		}
 		return null;
 	}
 
 	private String removeTrailingNewline(String text) {
-		if (text.endsWith("\n")) {
+		if (text.endsWith("\n")) { //$NON-NLS-1$
 			return text.substring(0, text.length() - 1);
 		}
 		return text;

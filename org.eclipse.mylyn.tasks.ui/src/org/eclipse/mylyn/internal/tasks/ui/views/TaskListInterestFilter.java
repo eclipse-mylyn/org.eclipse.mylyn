@@ -69,7 +69,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Interest filter failed", t));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Interest filter failed", t)); //$NON-NLS-1$
 		}
 		return false;
 	}

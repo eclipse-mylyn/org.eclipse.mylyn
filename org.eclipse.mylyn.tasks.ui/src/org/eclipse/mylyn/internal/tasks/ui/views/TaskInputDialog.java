@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Ken Sueda and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,23 +49,19 @@ import org.eclipse.swt.widgets.Text;
  */
 public class TaskInputDialog extends Dialog {
 
-	public static final String LABEL_SHELL = "New Task";
+	private String taskName = ""; //$NON-NLS-1$
 
-	private static final String LABEL_DESCRIPTION = "Description:";
+	private String priority = "P3"; //$NON-NLS-1$
 
-	private String taskName = "";
+	private String taskURL = "http://"; //$NON-NLS-1$
 
-	private String priority = "P3";
+	private Date reminderDate;
 
-	private String taskURL = "http://";
+	private Text taskNameTextWidget;
 
-	private Date reminderDate = null;
+	private Text issueURLTextWidget;
 
-	Text taskNameTextWidget = null;
-
-	private Text issueURLTextWidget = null;
-
-	private Button getDescButton = null;
+	private Button getDescButton;
 
 	public TaskInputDialog(Shell parentShell) {
 		super(parentShell);
@@ -82,7 +78,7 @@ public class TaskInputDialog extends Dialog {
 		composite.setLayoutData(data);
 
 		Label taskNameLabel = new Label(composite, SWT.WRAP);
-		taskNameLabel.setText(LABEL_DESCRIPTION);
+		taskNameLabel.setText(Messages.TaskInputDialog_Description);
 		taskNameLabel.setFont(parent.getFont());
 
 		taskNameTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
@@ -136,7 +132,7 @@ public class TaskInputDialog extends Dialog {
 		});
 
 		Button removeReminder = new Button(composite, SWT.PUSH | SWT.CENTER);
-		removeReminder.setText("Clear");
+		removeReminder.setText(Messages.TaskInputDialog_Clear);
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -152,7 +148,7 @@ public class TaskInputDialog extends Dialog {
 //		scheduledForDate.setLayoutData(datePickerGD);
 
 		Label urlLabel = new Label(composite, SWT.WRAP);
-		urlLabel.setText("Web Link:");
+		urlLabel.setText(Messages.TaskInputDialog_Web_Link);
 		urlLabel.setFont(parent.getFont());
 
 		issueURLTextWidget = new Text(composite, SWT.SINGLE | SWT.BORDER);
@@ -163,7 +159,7 @@ public class TaskInputDialog extends Dialog {
 		issueURLTextWidget.setLayoutData(urlData);
 
 		getDescButton = new Button(composite, SWT.PUSH);
-		getDescButton.setText("Get Description");
+		getDescButton.setText(Messages.TaskInputDialog_Get_Description);
 		getDescButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		setButtonStatus();
 
@@ -195,7 +191,7 @@ public class TaskInputDialog extends Dialog {
 	protected void setButtonStatus() {
 		String url = issueURLTextWidget.getText();
 
-		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) {
+		if (url.length() > 10 && (url.startsWith("http://") || url.startsWith("https://"))) { //$NON-NLS-1$ //$NON-NLS-2$
 //			String defaultPrefix = ContextCore.getPreferenceStore().getString(
 //					TaskListPreferenceConstants.DEFAULT_URL_PREFIX);
 //			if (url.equals(defaultPrefix)) {
@@ -215,7 +211,7 @@ public class TaskInputDialog extends Dialog {
 	protected String getDefaultIssueUrl() {
 
 		String clipboardText = getClipboardText();
-		if ((clipboardText.startsWith("http://") || clipboardText.startsWith("https://") && clipboardText.length() > 10)) {
+		if ((clipboardText.startsWith("http://") || clipboardText.startsWith("https://") && clipboardText.length() > 10)) { //$NON-NLS-1$ //$NON-NLS-2$
 			return clipboardText;
 		} else {
 			return taskURL;
@@ -241,7 +237,7 @@ public class TaskInputDialog extends Dialog {
 			job.schedule();
 		} catch (RuntimeException e) {
 			// FIXME which exception is caught here?
-			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task web page", e));
+			StatusHandler.fail(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task web page", e)); //$NON-NLS-1$
 		}
 	}
 
@@ -255,7 +251,7 @@ public class TaskInputDialog extends Dialog {
 		if (contents != null) {
 			return contents;
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -289,6 +285,6 @@ public class TaskInputDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		shell.setText(LABEL_SHELL);
+		shell.setText(Messages.TaskInputDialog_New_Task);
 	}
 }

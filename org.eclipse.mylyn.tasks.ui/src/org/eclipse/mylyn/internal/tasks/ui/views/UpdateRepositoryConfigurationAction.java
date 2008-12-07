@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,10 +33,10 @@ import org.eclipse.ui.PlatformUI;
  */
 public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryAction {
 
-	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.reset";
+	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.reset"; //$NON-NLS-1$
 
 	public UpdateRepositoryConfigurationAction() {
-		super("Update Repository Configuration");
+		super(Messages.UpdateRepositoryConfigurationAction_Update_Repository_Configuration);
 		setId(ID);
 		setEnabled(false);
 	}
@@ -51,7 +51,7 @@ public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryA
 					final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(repository.getConnectorKind());
 					if (connector != null) {
-						final String jobName = "Updating repository configuration for " + repository.getRepositoryUrl();
+						final String jobName = Messages.UpdateRepositoryConfigurationAction_Updating_repository_configuration_for_ + repository.getRepositoryUrl();
 						Job updateJob = new Job(jobName) {
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {
@@ -80,7 +80,9 @@ public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryA
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					TasksUiInternal.displayStatus("Error updating repository configuration", e.getStatus());
+					TasksUiInternal.displayStatus(
+							Messages.UpdateRepositoryConfigurationAction_Error_updating_repository_configuration,
+							e.getStatus());
 				}
 			});
 		}

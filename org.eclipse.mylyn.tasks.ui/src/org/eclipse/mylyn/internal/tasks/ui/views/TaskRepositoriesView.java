@@ -31,6 +31,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.DisconnectRepositoryAction;
 import org.eclipse.mylyn.tasks.core.IRepositoryListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -54,7 +55,7 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
  */
 public class TaskRepositoriesView extends ViewPart {
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.repositories";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.repositories"; //$NON-NLS-1$
 
 	private TableViewer viewer;
 
@@ -196,7 +197,7 @@ public class TaskRepositoriesView extends ViewPart {
 						service.executeCommand(IWorkbenchActionDefinitionIds.PROPERTIES, null);
 					} catch (Exception e) {
 						StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-								"Opening repository properties failed", e));
+								"Opening repository properties failed", e)); //$NON-NLS-1$
 					}
 				}
 			}
@@ -223,7 +224,7 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer.addSelectionChangedListener(deleteRepositoryAction);
 
 		resetConfigurationAction = new UpdateRepositoryConfigurationAction();
-		resetConfigurationAction.setActionDefinitionId("org.eclipse.ui.file.refresh");
+		resetConfigurationAction.setActionDefinitionId("org.eclipse.ui.file.refresh"); //$NON-NLS-1$
 		viewer.addSelectionChangedListener(resetConfigurationAction);
 
 		offlineAction = new DisconnectRepositoryAction();
@@ -231,7 +232,7 @@ public class TaskRepositoriesView extends ViewPart {
 	}
 
 	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
+		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
@@ -260,10 +261,10 @@ public class TaskRepositoriesView extends ViewPart {
 		manager.add(resetConfigurationAction);
 		manager.add(new Separator());
 		manager.add(offlineAction);
-		manager.add(new Separator("repository"));
+		manager.add(new Separator("repository")); //$NON-NLS-1$
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator());
-		manager.add(new Separator("properties"));
+		manager.add(new Separator("properties")); //$NON-NLS-1$
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {

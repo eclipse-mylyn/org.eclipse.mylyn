@@ -31,8 +31,6 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 	 */
 	private final TaskListView taskListView;
 
-	private static final String FILTER_PRIORITY_LABEL = "Filter Priority Lower Than";
-
 	private Action priority1;
 
 	private Action priority2;
@@ -48,8 +46,8 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 	public PriorityDropDownAction(TaskListView taskListView) {
 		super();
 		this.taskListView = taskListView;
-		setText(FILTER_PRIORITY_LABEL);
-		setToolTipText(FILTER_PRIORITY_LABEL);
+		setText(Messages.PriorityDropDownAction_Filter_Priority_Lower_Than);
+		setToolTipText(Messages.PriorityDropDownAction_Filter_Priority_Lower_Than);
 		setImageDescriptor(CommonImages.FILTER_PRIORITY);
 		setMenuCreator(this);
 	}
@@ -80,7 +78,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 	}
 
 	public void addActionsToMenu() {
-		priority1 = new Action("", AS_CHECK_BOX) {
+		priority1 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,
@@ -94,7 +92,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		ActionContributionItem item = new ActionContributionItem(priority1);
 		item.fill(dropDownMenu, -1);
 
-		priority2 = new Action("", AS_CHECK_BOX) {
+		priority2 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,
@@ -108,7 +106,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		item = new ActionContributionItem(priority2);
 		item.fill(dropDownMenu, -1);
 
-		priority3 = new Action("", AS_CHECK_BOX) {
+		priority3 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,
@@ -122,7 +120,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		item = new ActionContributionItem(priority3);
 		item.fill(dropDownMenu, -1);
 
-		priority4 = new Action("", AS_CHECK_BOX) {
+		priority4 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,
@@ -136,7 +134,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		item = new ActionContributionItem(priority4);
 		item.fill(dropDownMenu, -1);
 
-		priority5 = new Action("", AS_CHECK_BOX) {
+		priority5 = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(ITasksUiPreferenceConstants.FILTER_PRIORITY,

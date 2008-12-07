@@ -40,7 +40,7 @@ class TaskListCellModifier implements ICellModifier {
 	TaskListCellModifier(TaskListView taskListView) {
 		this.taskListView = taskListView;
 
-		if (SWT.getPlatform().equals("gtk")) {
+		if (SWT.getPlatform().equals("gtk")) { //$NON-NLS-1$
 			disableActivateForParentTasks = true;
 		}
 	}
@@ -58,15 +58,15 @@ class TaskListCellModifier implements ICellModifier {
 				case 0:
 					return taskListElement.getSummary();
 				case 1:
-					return "";
+					return ""; //$NON-NLS-1$
 				case 2:
-					return "";
+					return ""; //$NON-NLS-1$
 				}
 			}
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, e.getMessage(), e));
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public void modify(Object element, String property, Object value) {

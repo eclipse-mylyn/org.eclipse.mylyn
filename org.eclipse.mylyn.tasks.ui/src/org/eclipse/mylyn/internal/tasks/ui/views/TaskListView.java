@@ -35,7 +35,6 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -58,7 +57,6 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
@@ -244,7 +242,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						}
 					}
 				} catch (SWTException e) {
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to refresh viewer: "
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to refresh viewer: " //$NON-NLS-1$
 							+ viewer, e));
 				}
 			}
@@ -292,45 +290,43 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	// TODO e3.4 replace with SWT.NO_SCROLL constant
 	public static final int SWT_NO_SCROLL = 1 << 4;
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.tasks";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.tasks"; //$NON-NLS-1$
 
-	public static final String LABEL_VIEW = "Task List";
+	public static final String LABEL_VIEW = Messages.TaskListView_Task_List;
 
-	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection";
+	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection"; //$NON-NLS-1$
 
-	private static final String MEMENTO_KEY_SORTER = "sorter";
+	private static final String MEMENTO_KEY_SORTER = "sorter"; //$NON-NLS-1$
 
-	private static final String MEMENTO_KEY_SORTER2 = "sorter2";
+	private static final String MEMENTO_KEY_SORTER2 = "sorter2"; //$NON-NLS-1$
 
-	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex";
+	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex"; //$NON-NLS-1$
 
-	private static final String MEMENTO_SORT_INDEX = "org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex";
+	private static final String MEMENTO_SORT_INDEX = "org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex"; //$NON-NLS-1$
 
-	private static final String MEMENTO_LINK_WITH_EDITOR = "linkWithEditor";
+	private static final String MEMENTO_LINK_WITH_EDITOR = "linkWithEditor"; //$NON-NLS-1$
 
-	private static final String MEMENTO_PRESENTATION = "presentation";
+	private static final String MEMENTO_PRESENTATION = "presentation"; //$NON-NLS-1$
 
-	private static final String ID_SEPARATOR_NEW = "new";
+	private static final String ID_SEPARATOR_NEW = "new"; //$NON-NLS-1$
 
-	public static final String ID_SEPARATOR_OPERATIONS = "operations";
+	public static final String ID_SEPARATOR_OPERATIONS = "operations"; //$NON-NLS-1$
 
-	public static final String ID_SEPARATOR_CONTEXT = "context";
+	public static final String ID_SEPARATOR_CONTEXT = "context"; //$NON-NLS-1$
 
-	public static final String ID_SEPARATOR_TASKS = "tasks";
+	public static final String ID_SEPARATOR_TASKS = "tasks"; //$NON-NLS-1$
 
-	private static final String ID_SEPARATOR_FILTERS = "filters";
+	private static final String ID_SEPARATOR_FILTERS = "filters"; //$NON-NLS-1$
 
-	private static final String ID_SEPARATOR_REPOSITORY = "repository";
+	private static final String ID_SEPARATOR_REPOSITORY = "repository"; //$NON-NLS-1$
 
-	private static final String ID_SEPARATOR_PROPERTIES = "properties";
+	private static final String ID_SEPARATOR_PROPERTIES = "properties"; //$NON-NLS-1$
 
-	public static final String ID_SEPARATOR_NAVIGATE = "navigate";
+	public static final String ID_SEPARATOR_NAVIGATE = "navigate"; //$NON-NLS-1$
 
-	private static final String LABEL_NO_TASKS = "no task active";
+	private static final String LABEL_NO_TASKS = "no task active"; //$NON-NLS-1$
 
 	private final static int SIZE_MAX_SELECTION_HISTORY = 10;
-
-	private static final String PART_NAME = "Task List";
 
 	static final String[] PRIORITY_LEVELS = { PriorityLevel.P1.toString(), PriorityLevel.P2.toString(),
 			PriorityLevel.P3.toString(), PriorityLevel.P4.toString(), PriorityLevel.P5.toString() };
@@ -409,7 +405,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private final Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
-	protected String[] columnNames = new String[] { "Summary" };
+	protected String[] columnNames = new String[] { Messages.TaskListView_Summary };
 
 	protected int[] columnWidths = new int[] { 200 };
 
@@ -650,8 +646,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
 				} catch (Exception e) {
 					categoryGradientStart = getViewer().getTree().getParent().getBackground();
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set color: " + red
-							+ ", " + green + ", " + blue, e));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set color: " + red //$NON-NLS-1$
+							+ ", " + green + ", " + blue, e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				red = Math.max(0, (int) (parentBackground.getRed() / GRADIENT_BOTTOM));
 				green = Math.max(0, (int) (parentBackground.getGreen() / GRADIENT_BOTTOM));
@@ -663,8 +659,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 				} catch (Exception e) {
 					categoryGradientStart = getViewer().getTree().getParent().getBackground();
-					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set color: " + red
-							+ ", " + green + ", " + blue, e));
+					StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not set color: " + red //$NON-NLS-1$
+							+ ", " + green + ", " + blue, e)); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
@@ -728,18 +724,18 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		if (task != null) {
-			setTitleToolTip(PART_NAME + " (" + task.getSummary() + ")");
+			setTitleToolTip(LABEL_VIEW + " (" + task.getSummary() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (shouldSetDescription) {
 				setContentDescription(task.getSummary());
 			} else {
-				setContentDescription("");
+				setContentDescription(""); //$NON-NLS-1$
 			}
 		} else {
-			setTitleToolTip(PART_NAME);
+			setTitleToolTip(LABEL_VIEW);
 			if (shouldSetDescription) {
 				setContentDescription(LABEL_NO_TASKS);
 			} else {
-				setContentDescription("");
+				setContentDescription(""); //$NON-NLS-1$
 			}
 		}
 	}
@@ -877,7 +873,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
-		getViewer().getTree().setToolTipText("");
+		getViewer().getTree().setToolTipText(""); //$NON-NLS-1$
 
 		filteredTree.getFilterControl().addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -887,7 +883,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		getViewer().getTree().setHeaderVisible(false);
 		getViewer().setUseHashlookup(true);
-		refreshJob = new TaskListRefreshJob(getViewer(), "Task List Refresh");
+		refreshJob = new TaskListRefreshJob(getViewer(), "Task List Refresh"); //$NON-NLS-1$
 
 		configureColumns(columnNames, columnWidths);
 
@@ -1079,8 +1075,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	public void applyPresentation(AbstractTaskListPresentation presentation) {
 		try {
 			getViewer().getControl().setRedraw(false);
-			if (!filteredTree.getFilterControl().getText().equals("")) {
-				filteredTree.getFilterControl().setText("");
+			if (!filteredTree.getFilterControl().getText().equals("")) { //$NON-NLS-1$
+				filteredTree.getFilterControl().setText(""); //$NON-NLS-1$
 			}
 			AbstractTaskListContentProvider contentProvider = presentation.getContentProvider(this);
 			getViewer().setContentProvider(contentProvider);
@@ -1199,7 +1195,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void hookContextMenu() {
-		MenuManager menuManager = new MenuManager("#PopupMenu");
+		MenuManager menuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
@@ -1300,7 +1296,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					SafeRunnable.run(new ISafeRunnable() {
 						public void handleException(Throwable e) {
 							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
-									"Menu contributor failed"));
+									"Menu contributor failed")); //$NON-NLS-1$
 						}
 
 						public void run() throws Exception {
@@ -1365,7 +1361,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			EditRepositoryPropertiesAction repositoryPropertiesAction = new EditRepositoryPropertiesAction();
 			repositoryPropertiesAction.selectionChanged(new StructuredSelection(element));
 			if (repositoryPropertiesAction.isEnabled()) {
-				MenuManager subMenu = new MenuManager("Repository");
+				MenuManager subMenu = new MenuManager(Messages.TaskListView_Repository);
 				manager.add(subMenu);
 
 				UpdateRepositoryConfigurationAction resetRepositoryConfigurationAction = new UpdateRepositoryConfigurationAction();
@@ -1514,17 +1510,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filteredTree.getViewer().getControl().setFocus();
 	}
 
-	public String getBugIdFromUser() {
-		InputDialog dialog = new InputDialog(getSite().getWorkbenchWindow().getShell(), "Enter Bugzilla ID",
-				"Enter the Bugzilla ID: ", "", null);
-		int dialogResult = dialog.open();
-		if (dialogResult == Window.OK) {
-			return dialog.getValue();
-		} else {
-			return null;
-		}
-	}
-
 	public void refresh(boolean expandIfFocused) {
 		if (expandIfFocused && isFocusedMode()) {
 			try {
@@ -1657,11 +1642,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		if (isPaused) {
 			statusLineManager.setMessage(CommonImages.getImage(TasksUiImages.TASKS_VIEW),
-					"Mylyn context capture paused");
-			setPartName("(paused) " + PART_NAME);
+					Messages.TaskListView_Mylyn_context_capture_paused);
+			setPartName(Messages.TaskListView__paused_ + LABEL_VIEW);
 		} else {
-			statusLineManager.setMessage("");
-			setPartName(PART_NAME);
+			statusLineManager.setMessage(""); //$NON-NLS-1$
+			setPartName(LABEL_VIEW);
 		}
 	}
 

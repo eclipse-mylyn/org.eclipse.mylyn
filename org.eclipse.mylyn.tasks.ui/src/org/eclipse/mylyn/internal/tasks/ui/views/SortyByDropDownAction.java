@@ -27,7 +27,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 
 	private final TaskListView taskListView;
 
-	private static final String LABEL = "Sort by";
+	private static final String LABEL = Messages.SortyByDropDownAction_Sort_by;
 
 	private Action byPriority;
 
@@ -71,7 +71,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 	}
 
 	public void addActionsToMenu() {
-		byPriority = new Action("", AS_CHECK_BOX) {
+		byPriority = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				taskListView.getSorter().setSortByIndex(SortByIndex.PRIORITY);
@@ -81,11 +81,11 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 			}
 		};
 		byPriority.setEnabled(true);
-		byPriority.setText("Priority");
+		byPriority.setText(Messages.SortyByDropDownAction_Priority);
 		byPriority.setImageDescriptor(CommonImages.PRIORITY_1);
 		new ActionContributionItem(byPriority).fill(dropDownMenu, -1);
 
-		bySummary = new Action("", AS_CHECK_BOX) {
+		bySummary = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				taskListView.getSorter().setSortByIndex(SortByIndex.SUMMARY);
@@ -95,10 +95,10 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 			}
 		};
 		bySummary.setEnabled(true);
-		bySummary.setText("Summary");
+		bySummary.setText(Messages.SortyByDropDownAction_Summary);
 		new ActionContributionItem(bySummary).fill(dropDownMenu, -1);
 
-		byDateCreated = new Action("", AS_CHECK_BOX) {
+		byDateCreated = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				taskListView.getSorter().setSortByIndex(SortByIndex.DATE_CREATED);
@@ -108,13 +108,13 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 			}
 		};
 		byDateCreated.setEnabled(true);
-		byDateCreated.setText("Date Created");
+		byDateCreated.setText(Messages.SortyByDropDownAction_Date_Created);
 		byDateCreated.setImageDescriptor(CommonImages.CALENDAR_SMALL);
 		new ActionContributionItem(byDateCreated).fill(dropDownMenu, -1);
 
 		new Separator().fill(dropDownMenu, -1);
 
-		Action reverse = new Action("", AS_CHECK_BOX) {
+		Action reverse = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				taskListView.getSorter().setSortDirection(taskListView.getSorter().getSortDirection() * -1);
@@ -122,7 +122,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 			}
 		};
 		reverse.setEnabled(true);
-		reverse.setText("Descending");
+		reverse.setText(Messages.SortyByDropDownAction_Descending);
 		reverse.setChecked(taskListView.getSorter().getSortDirection() < 0);
 		new ActionContributionItem(reverse).fill(dropDownMenu, -1);
 

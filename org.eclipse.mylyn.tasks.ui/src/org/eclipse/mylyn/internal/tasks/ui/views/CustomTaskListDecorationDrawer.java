@@ -81,10 +81,10 @@ class CustomTaskListDecorationDrawer implements Listener {
 		useStrikethroughForCompleted = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
 				ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED);
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
-		if (SWT.getPlatform().equals("gtk")) {
+		if (SWT.getPlatform().equals("gtk")) { //$NON-NLS-1$
 			this.platformSpecificSquish = 8;
 			this.tweakClipping = true;
-		} else if (SWT.getPlatform().equals("carbon")) {
+		} else if (SWT.getPlatform().equals("carbon")) { //$NON-NLS-1$
 			this.platformSpecificSquish = 3;
 			this.tweakClipping = false;
 		} else {

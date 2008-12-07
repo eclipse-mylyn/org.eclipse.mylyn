@@ -137,9 +137,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 							repositories.addAll(TasksUiPlugin.getTaskListWriter().readRepositories(file));
 						}
 					} catch (IOException e) {
-						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "The specified file \""
+						StatusHandler.log(new Status(IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, "The specified file \"" //$NON-NLS-1$
 								+ file.getName()
-								+ "\" is not an exported query. Please, check that you have provided the correct file."));
+								+ "\" is not an exported query. Please, check that you have provided the correct file.")); //$NON-NLS-1$
 //						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 //							public void run() {
 //								MessageDialog.openError(null, "Query Import Error",
@@ -234,10 +234,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	 * @return true if string is a http(s) url
 	 */
 	public boolean isUrl(Object data) {
-		String uri = "";
+		String uri = ""; //$NON-NLS-1$
 		if (data instanceof String) {
 			uri = (String) data;
-			if ((uri.startsWith("http://") || uri.startsWith("https://"))) {
+			if ((uri.startsWith("http://") || uri.startsWith("https://"))) { //$NON-NLS-1$ //$NON-NLS-2$
 				return true;
 			}
 		}
@@ -254,10 +254,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			return false;
 		}
 
-		String[] urlTransfer = ((String) data).split("\n");
+		String[] urlTransfer = ((String) data).split("\n"); //$NON-NLS-1$
 
-		String url = "";
-		String urlTitle = "<retrieving from URL>";
+		String url = ""; //$NON-NLS-1$
+		String urlTitle = Messages.TaskListDropAdapter__retrieving_from_URL_;
 
 		if (urlTransfer.length > 0) {
 			url = urlTransfer[0];
@@ -365,7 +365,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			job.schedule();
 		} catch (RuntimeException e) {
 			// FIXME what exception is caught here?
-			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task web page", e));
+			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not open task web page", e)); //$NON-NLS-1$
 		}
 	}
 }
