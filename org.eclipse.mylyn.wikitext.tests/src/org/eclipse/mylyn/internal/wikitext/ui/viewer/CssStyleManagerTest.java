@@ -15,6 +15,7 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager.CssRule;
+import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.swt.graphics.RGB;
 
 /**
@@ -22,6 +23,7 @@ import org.eclipse.swt.graphics.RGB;
  * 
  * @author David Green
  */
+@HeadRequired
 public class CssStyleManagerTest extends TestCase {
 
 	private CssStyleManager cssStyleManager;

@@ -12,11 +12,14 @@ package org.eclipse.mylyn.wikitext.ui.annotation;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.wikitext.tests.HeadRequired;
+
 /**
  * 
  * 
  * @author David Green
  */
+@HeadRequired
 public class ClassAnnotationTest extends TestCase {
 
 	public void testSimple() {

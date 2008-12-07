@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.tests.HeadRequired;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -26,6 +27,7 @@ import org.xml.sax.SAXException;
  * 
  * @author David Green
  */
+@HeadRequired
 public class HtmlTextPresentationParserTest extends TestCase {
 
 	private HtmlTextPresentationParser parser;
