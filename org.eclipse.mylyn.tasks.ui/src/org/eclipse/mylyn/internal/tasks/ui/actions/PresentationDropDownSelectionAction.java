@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Menu;
 
 /**
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class PresentationDropDownSelectionAction extends Action implements IMenuCreator {
 
@@ -32,10 +33,9 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 
 	private final TaskListView view;
 
-	protected Menu dropDownMenu = null;
+	private Menu dropDownMenu;
 
 	public PresentationDropDownSelectionAction(TaskListView view) {
-		super();
 		this.view = view;
 		setMenuCreator(this);
 		setText(Messages.PresentationDropDownSelectionAction_Task_Presentation);
@@ -45,7 +45,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 		setImageDescriptor(CommonImages.PRESENTATION);
 	}
 
-	protected void addActionsToMenu() {
+	private void addActionsToMenu() {
 		for (AbstractTaskListPresentation presentation : TaskListView.getPresentations()) {
 			if (presentation.isPrimary()) {
 				PresentationSelectionAction action = new PresentationSelectionAction(presentation);
@@ -79,8 +79,25 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 	public void run() {
 		AbstractTaskListPresentation current = view.getCurrentPresentation();
 		List<AbstractTaskListPresentation> all = TaskListView.getPresentations();
+		int size = all.size();
+		if (size == 0) {
+			return;
+		}
+
+		// cycle between primary presentations
 		int index = all.indexOf(current) + 1;
-		if (index < all.size()) {
+		for (int i = 0; i < size; i++) {
+			AbstractTaskListPresentation presentation = all.get(index % size);
+			if (presentation.isPrimary()) {
+				view.applyPresentation(presentation);
+				return;
+			}
+			index++;
+		}
+
+		// fall back to next presentation in list
+		index = all.indexOf(current) + 1;
+		if (index < size) {
 			view.applyPresentation(all.get(index));
 		} else {
 			view.applyPresentation(all.get(0));
