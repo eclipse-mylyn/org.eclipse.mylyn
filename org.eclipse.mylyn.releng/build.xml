@@ -117,6 +117,9 @@
 			<param name="skip3.3" value="true"/>
 			<param name="skip3.5" value="true"/>
 		</antcall>
+		<antcall target="for-each-target">
+			<param name="call" value="publish-helper-standalone"/>
+		</antcall>
 	</target>
 
 	<target name="publish-helper">
@@ -128,12 +131,15 @@
 			<param name="file" value="org.eclipse.mylyn.tests.AllPerformanceTests.xml"/>
 			<param name="tag" value="[e${build.target}-perf]"/>
 		</antcall>
+	</target>
+
+	<target name="publish-helper-standalone">
 		<antcall target="publish-helper-run">
 			<param name="file" value="TEST-*.xml"/>
 			<param name="tag" value="[stdl]"/>
 		</antcall>
 	</target>
-		
+	
 	<target name="publish-helper-run">
     	<path id="file.id"> 
     		<fileset dir="${build.results}/test-${eclipse.version}">
