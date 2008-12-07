@@ -28,6 +28,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
@@ -356,6 +357,8 @@ public class ScreenshotCreationPage extends WizardPage implements IImageCreator 
 		vf.setTopLeft(tbm.createControl(vf));
 		vf.setContent(scrolledComposite);
 		registerMouseListeners();
+
+		Dialog.applyDialogFont(vf);
 	}
 
 	private ActionContributionItem createAndConfigureCI(IAction action) {
