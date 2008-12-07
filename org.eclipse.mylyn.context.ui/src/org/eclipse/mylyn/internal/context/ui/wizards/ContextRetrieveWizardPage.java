@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryPerson;
@@ -159,6 +160,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 			getWizard().getContainer().updateButtons();
 		}
 		contextTable.setFocus();
+		Dialog.applyDialogFont(composite);
 	}
 
 	public ITaskAttachment getSelectedContext() {

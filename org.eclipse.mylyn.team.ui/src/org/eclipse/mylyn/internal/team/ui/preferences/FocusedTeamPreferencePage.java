@@ -54,6 +54,7 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 
 		createChangeSetGroup(container);
 		createCommitGroup(container);
+		applyDialogFont(container);
 		return container;
 	}
 

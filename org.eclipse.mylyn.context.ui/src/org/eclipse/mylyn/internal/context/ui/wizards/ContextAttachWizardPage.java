@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.ui.wizards;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -70,6 +71,7 @@ public class ContextAttachWizardPage extends WizardPage {
 
 		setControl(composite);
 		commentText.setFocus();
+		Dialog.applyDialogFont(composite);
 	}
 
 	public String getComment() {

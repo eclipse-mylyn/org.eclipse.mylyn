@@ -65,6 +65,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		createUiManagementSection(entryTable);
 //		createExclusionFilterControl(entryTable);
 
+		applyDialogFont(entryTable);
 		return entryTable;
 	}
 
