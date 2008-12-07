@@ -21,7 +21,7 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 public abstract class AbstractTestAntTask extends TestCase {
@@ -39,7 +39,7 @@ public abstract class AbstractTestAntTask extends TestCase {
 	}
 
 	private String computeLanguageName() {
-		if (ResourcesPlugin.getPlugin() == null) {
+		if (WikiTextPlugin.getDefault() == null) {
 			return TextileLanguage.class.getName();
 		}
 		return "Textile";
