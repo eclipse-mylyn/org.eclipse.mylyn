@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.wikitext.ui.viewer.annotation;
 
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.mylyn.wikitext.ui.annotation.AnchorHrefAnnotation;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -25,6 +26,8 @@ public class ImageAnnotation extends Annotation {
 	private Image image;
 
 	private final String url;
+
+	private AnchorHrefAnnotation hyperlnkAnnotation;
 
 	/**
 	 * @param url
@@ -52,5 +55,13 @@ public class ImageAnnotation extends Annotation {
 
 	public String getUrl() {
 		return url;
+	}
+
+	public void setAnchorHrefAnnotation(AnchorHrefAnnotation hyperlnkAnnotation) {
+		this.hyperlnkAnnotation = hyperlnkAnnotation;
+	}
+
+	public AnchorHrefAnnotation getHyperlnkAnnotation() {
+		return hyperlnkAnnotation;
 	}
 }

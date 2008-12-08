@@ -179,15 +179,18 @@ public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 	@SuppressWarnings("unchecked")
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		AnnotationHyperlinkDetector annotationHyperlinkDetector = createAnnotationHyperlinkDetector();
+		sourceViewer.getTextWidget().setData(AnnotationHyperlinkDetector.class.getName(), annotationHyperlinkDetector);
+
 		if (sourceViewer == null || fPreferenceStore == null) {
-			return new IHyperlinkDetector[] { createAnnotationHyperlinkDetector() };
+			return new IHyperlinkDetector[] { annotationHyperlinkDetector };
 		}
 		HyperlinkDetectorRegistry registry = EditorsUI.getHyperlinkDetectorRegistry();
 		HyperlinkDetectorDescriptor[] descriptors = registry.getHyperlinkDetectorDescriptors();
 		Map<String, IAdaptable> targets = getHyperlinkDetectorTargets(sourceViewer);
 
 		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>(8);
-		detectors.add(createAnnotationHyperlinkDetector());
+		detectors.add(annotationHyperlinkDetector);
 
 		for (Map.Entry<String, IAdaptable> target : targets.entrySet()) {
 			String targetId = target.getKey();

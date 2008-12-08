@@ -34,6 +34,7 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextPresentation;
+import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.AnnotationPainter;
@@ -49,7 +50,11 @@ import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -60,6 +65,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
 /**
+ * Manages all aspects of image download/display in an {@link HtmlViewer}.
+ * 
  * Manages the download of images for viewing in an {@link HtmlViewer}, and creates appropriate space for their display.
  * 
  * Downloads image data in a background thread, instantiates the corresopnding images, and ensures that enough vertical
@@ -74,6 +81,32 @@ import org.eclipse.swt.widgets.Event;
  * 
  */
 public class ImageManager implements ITextInputListener, DisposeListener, IDocumentListener, ISelectionChangedListener {
+	private class HyperlinkMouseListener implements MouseMoveListener, MouseListener {
+		public void mouseEnter(MouseEvent e) {
+			// ignore
+		}
+
+		public void mouseExit(MouseEvent e) {
+			disarm();
+		}
+
+		public void mouseMove(MouseEvent e) {
+			adjust(e);
+		}
+
+		public void mouseDoubleClick(MouseEvent e) {
+			// ignore
+		}
+
+		public void mouseDown(MouseEvent e) {
+			// ignore
+		}
+
+		public void mouseUp(MouseEvent e) {
+			clicked(e);
+		}
+	}
+
 	private final HtmlViewer viewer;
 
 	private final Display display;
@@ -88,6 +121,12 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 
 	private final AnnotationPainter painter;
 
+	private boolean armed = false;
+
+	private Cursor cursor;
+
+	private Cursor previousCursor;
+
 	public ImageManager(HtmlViewer viewer, ImageCache imageCache, AnnotationPainter painter) {
 		this.viewer = viewer;
 		this.painter = painter;
@@ -101,6 +140,90 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 		}
 		viewer.addSelectionChangedListener(this);
 		viewer.addPostSelectionChangedListener(this);
+
+		// bug 257868 support image hyperlinks
+		HyperlinkMouseListener mouseListener = new HyperlinkMouseListener();
+		viewer.getTextWidget().addMouseMoveListener(mouseListener);
+		viewer.getTextWidget().addMouseListener(mouseListener);
+
+	}
+
+	private IHyperlink getHyperlink(MouseEvent e) {
+		// bug 257868 support image hyperlinks
+		if (annotations.isEmpty()) {
+			return null;
+		}
+		Point point = new Point(e.x, e.y);
+		for (ImageAnnotation annotation : annotations) {
+			if (annotation.getHyperlnkAnnotation() == null) {
+				continue;
+			}
+			Rectangle region = getRegion(annotation);
+			if (region != null) {
+				if (region.contains(point)) {
+					AnnotationHyperlinkDetector detector = (AnnotationHyperlinkDetector) viewer.getTextWidget()
+							.getData(AnnotationHyperlinkDetector.class.getName());
+					if (detector != null) {
+						IHyperlink hyperlink = detector.createHyperlink(viewer, viewer.getAnnotationModel(),
+								annotation.getHyperlnkAnnotation());
+						return hyperlink;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public void clicked(MouseEvent e) {
+		IHyperlink hyperlink = getHyperlink(e);
+		if (hyperlink != null) {
+			disarm();
+			hyperlink.open();
+		}
+	}
+
+	/**
+	 * get the widget-relative region of the given annotation
+	 * 
+	 * @return the region, or null if it is unknown
+	 */
+	private Rectangle getRegion(ImageAnnotation annotation) {
+		if (annotation.getImage() == null) {
+			return null;
+		}
+		Position position = viewer.getAnnotationModel().getPosition(annotation);
+		Point locationAtOffset = viewer.getTextWidget().getLocationAtOffset(position.offset);
+		Rectangle bounds = annotation.getImage().getBounds();
+		Rectangle rectange = new Rectangle(locationAtOffset.x, locationAtOffset.y, bounds.width, bounds.height);
+		return rectange;
+	}
+
+	void adjust(MouseEvent e) {
+		IHyperlink hyperlink = getHyperlink(e);
+		if (hyperlink == null) {
+			disarm();
+		} else {
+			// always arm here even if already armed, otherwise the cursor
+			// setting interacts poorly with other things that set the cursor.
+			armed = true;
+			Cursor currentCursor = viewer.getTextWidget().getCursor();
+			if (cursor == null || currentCursor != cursor) {
+				previousCursor = currentCursor;
+				if (cursor == null) {
+					cursor = new Cursor(viewer.getTextWidget().getDisplay(), SWT.CURSOR_HAND);
+				}
+				viewer.getTextWidget().setCursor(cursor);
+			}
+		}
+	}
+
+	void disarm() {
+		if (armed) {
+			if (previousCursor != null) {
+				viewer.getTextWidget().setCursor(previousCursor);
+			}
+			armed = false;
+		}
 	}
 
 	public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
@@ -156,6 +279,10 @@ public class ImageManager implements ITextInputListener, DisposeListener, IDocum
 	}
 
 	public void widgetDisposed(DisposeEvent e) {
+		if (cursor != null) {
+			cursor.dispose();
+			cursor = null;
+		}
 		stop();
 	}
 

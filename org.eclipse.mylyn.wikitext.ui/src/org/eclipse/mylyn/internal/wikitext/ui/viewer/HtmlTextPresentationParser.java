@@ -716,7 +716,27 @@ public class HtmlTextPresentationParser {
 			} else if ("img".equals(localName) && enableImages) { //$NON-NLS-1$
 				String url = atts.getValue("src"); //$NON-NLS-1$
 				if (url != null && url.trim().length() > 0) {
-					elementState.addAnnotation(new ImageAnnotation(url.trim(), imageCache.getMissingImage()));
+					ImageAnnotation imageAnnotation = new ImageAnnotation(url.trim(), imageCache.getMissingImage());
+					elementState.addAnnotation(imageAnnotation);
+
+					// bug 257868: hook up hyperlinks to images
+					ElementState imageAnnotationAncestorState = elementState;
+					while (imageAnnotationAncestorState != null) {
+
+						if (imageAnnotationAncestorState.annotations != null) {
+							for (Annotation annotation : imageAnnotationAncestorState.annotations) {
+								if (annotation instanceof AnchorHrefAnnotation) {
+									imageAnnotation.setAnchorHrefAnnotation((AnchorHrefAnnotation) annotation);
+									break;
+								}
+							}
+						}
+						if (imageAnnotation.getHyperlnkAnnotation() != null) {
+							break;
+						}
+
+						imageAnnotationAncestorState = imageAnnotationAncestorState.parent;
+					}
 				}
 			}
 		}
