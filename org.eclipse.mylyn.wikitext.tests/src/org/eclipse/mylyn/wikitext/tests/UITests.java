@@ -24,7 +24,7 @@ public class UITests extends TestCase {
 
 	public static Test suite() {
 		final DiscoveryTestSuite testSuite = new DiscoveryTestSuite(new Filter());
-		testSuite.setName("All UI Tests");
+		testSuite.setName("Test for org.eclipse.mylyn.wikitext.tests UI Tests");
 		return testSuite;
 	}
 
