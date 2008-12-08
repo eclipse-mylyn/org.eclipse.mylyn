@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
@@ -51,7 +52,9 @@ public class UpdateRepositoryConfigurationAction extends AbstractTaskRepositoryA
 					final AbstractRepositoryConnector connector = TasksUi.getRepositoryManager()
 							.getRepositoryConnector(repository.getConnectorKind());
 					if (connector != null) {
-						final String jobName = Messages.UpdateRepositoryConfigurationAction_Updating_repository_configuration_for_ + repository.getRepositoryUrl();
+						final String jobName = MessageFormat.format(
+								Messages.UpdateRepositoryConfigurationAction_Updating_repository_configuration_for_X,
+								repository.getRepositoryUrl());
 						Job updateJob = new Job(jobName) {
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {

@@ -34,11 +34,11 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class TaskEditorExtensionSettingsContribution extends AbstractTaskRepositoryPageContribution {
 
-	private static final String LABEL_NONE = "Plain Text";
+	private static final String LABEL_NONE = Messages.TaskEditorExtensionSettingsContribution_Plain_Text;
 
-	private static final String LABEL_DEFAULT_SUFFIX = " (default)";
+	private static final String LABEL_DEFAULT_SUFFIX = Messages.TaskEditorExtensionSettingsContribution__default_;
 
-	private static final String DATA_EDITOR_EXTENSION = "editorExtension";
+	private static final String DATA_EDITOR_EXTENSION = "editorExtension"; //$NON-NLS-1$
 
 	private final SelectionListener listener = new SelectionAdapter() {
 		@Override
@@ -51,12 +51,12 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 	private String selectedExtensionId;
 
 	public TaskEditorExtensionSettingsContribution() {
-		super("Editor", "Select the capabilities of the the task editor");
+		super(Messages.TaskEditorExtensionSettingsContribution_Editor, Messages.TaskEditorExtensionSettingsContribution_Select_the_capabilities_of_the_task_editor);
 	}
 
 	@Override
 	public void applyTo(TaskRepository repository) {
-		TaskEditorExtensions.setTaskEditorExtensionId(repository, selectedExtensionId == null ? "none"
+		TaskEditorExtensions.setTaskEditorExtensionId(repository, selectedExtensionId == null ? "none" //$NON-NLS-1$
 				: selectedExtensionId);
 	}
 

@@ -32,6 +32,7 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.Messages;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -265,8 +266,8 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	 * Returns a status if there is a message to display, otherwise null.
 	 */
 	private IStatus computeValidation() {
-		final MultiStatus cumulativeResult = new MultiStatus(TasksUiPlugin.ID_PLUGIN, IStatus.OK, "Validation failed",
-				null);
+		final MultiStatus cumulativeResult = new MultiStatus(TasksUiPlugin.ID_PLUGIN, IStatus.OK,
+				Messages.AbstractTaskRepositoryPage_Validation_failed, null);
 
 		// validate the page
 		IStatus result = validate();

@@ -855,31 +855,31 @@ public class TasksUiInternal {
 		// final long SECOND = 1000;
 		final long MIN = 60;
 		final long HOUR = MIN * 60;
-		String formatted = "";
+		String formatted = ""; //$NON-NLS-1$
 
-		String hour = "";
-		String min = "";
-		String sec = "";
+		String hour = ""; //$NON-NLS-1$
+		String min = ""; //$NON-NLS-1$
+		String sec = ""; //$NON-NLS-1$
 		if (seconds >= HOUR) {
 			hours = seconds / HOUR;
 			if (hours == 1) {
-				hour = hours + " hour ";
+				hour = hours + Messages.TasksUiInternal__hour_;
 			} else if (hours > 1) {
-				hour = hours + " hours ";
+				hour = hours + Messages.TasksUiInternal__hours_;
 			}
 			seconds -= hours * HOUR;
 
 			minutes = seconds / MIN;
 			if (minutes == 1) {
-				min = minutes + " minute ";
+				min = minutes + Messages.TasksUiInternal__minute_;
 			} else if (minutes != 1) {
-				min = minutes + " minutes ";
+				min = minutes + Messages.TasksUiInternal__minutes_;
 			}
 			seconds -= minutes * MIN;
 			if (seconds == 1) {
-				sec = seconds + " second";
+				sec = seconds + Messages.TasksUiInternal__second;
 			} else if (seconds > 1) {
-				sec = seconds + " seconds";
+				sec = seconds + Messages.TasksUiInternal__seconds;
 			}
 			formatted += hour + min;
 			if (includeSeconds) {
@@ -888,15 +888,15 @@ public class TasksUiInternal {
 		} else if (seconds >= MIN) {
 			minutes = seconds / MIN;
 			if (minutes == 1) {
-				min = minutes + " minute ";
+				min = minutes + Messages.TasksUiInternal__minute_;
 			} else if (minutes != 1) {
-				min = minutes + " minutes ";
+				min = minutes + Messages.TasksUiInternal__minutes_;
 			}
 			seconds -= minutes * MIN;
 			if (seconds == 1) {
-				sec = seconds + " second";
+				sec = seconds + Messages.TasksUiInternal__second;
 			} else if (seconds > 1) {
-				sec = seconds + " seconds";
+				sec = seconds + Messages.TasksUiInternal__seconds;
 			}
 			formatted += min;
 			if (includeSeconds) {
@@ -904,9 +904,9 @@ public class TasksUiInternal {
 			}
 		} else {
 			if (seconds == 1) {
-				sec = seconds + " second";
+				sec = seconds + Messages.TasksUiInternal__second;
 			} else if (seconds > 1) {
-				sec = seconds + " seconds";
+				sec = seconds + Messages.TasksUiInternal__seconds;
 			}
 			if (includeSeconds) {
 				formatted += sec;

@@ -69,6 +69,18 @@ public class Messages extends NLS {
 
 	public static String TasksUiInternal_Task_Synchronization_Failed;
 
+	public static String TasksUiInternal__hour_;
+
+	public static String TasksUiInternal__hours_;
+
+	public static String TasksUiInternal__minute_;
+
+	public static String TasksUiInternal__minutes_;
+
+	public static String TasksUiInternal__second;
+
+	public static String TasksUiInternal__seconds;
+
 	public static String TasksUiMenus_Copy_Contents;
 
 	public static String TasksUiMenus_Copy_URL;

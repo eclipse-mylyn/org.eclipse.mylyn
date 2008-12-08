@@ -119,5 +119,5 @@ public class Messages extends NLS {
 
 	public static String UpdateRepositoryConfigurationAction_Update_Repository_Configuration;
 
-	public static String UpdateRepositoryConfigurationAction_Updating_repository_configuration_for_;
+	public static String UpdateRepositoryConfigurationAction_Updating_repository_configuration_for_X;
 }

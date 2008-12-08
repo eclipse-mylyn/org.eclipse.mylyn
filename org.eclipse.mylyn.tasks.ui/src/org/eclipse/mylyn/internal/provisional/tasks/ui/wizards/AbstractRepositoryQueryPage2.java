@@ -60,8 +60,8 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	public AbstractRepositoryQueryPage2(String pageName, TaskRepository repository, IRepositoryQuery query) {
 		super(pageName, repository, query);
 		this.connector = TasksUi.getRepositoryConnector(getTaskRepository().getConnectorKind());
-		setTitle("Enter query parameters");
-		setDescription("If attributes are blank or stale press the Update button.");
+		setTitle(Messages.AbstractRepositoryQueryPage2_Enter_query_parameters);
+		setDescription(Messages.AbstractRepositoryQueryPage2_If_attributes_are_blank_or_stale_press_the_Update_button);
 	}
 
 	public void setNeedsRepositoryConfiguration(boolean needsRepositoryConfiguration) {
@@ -106,7 +106,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		}
 
 		Label titleLabel = new Label(control, SWT.NONE);
-		titleLabel.setText("&Title:");
+		titleLabel.setText(Messages.AbstractRepositoryQueryPage2__Title_);
 
 		titleText = new Text(control, SWT.BORDER);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).applyTo(titleText);
@@ -128,7 +128,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, false).span(2, 1).applyTo(composite);
 
 		updateButton = new Button(composite, SWT.PUSH);
-		updateButton.setText("&Refresh From Repository");
+		updateButton.setText(Messages.AbstractRepositoryQueryPage2__Refresh_From_Repository);
 		updateButton.setLayoutData(new GridData());
 		updateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -136,8 +136,8 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 				if (getTaskRepository() != null) {
 					updateAttributesFromRepository(true);
 				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Update Attributes Failed",
-							"No repository available, please add one using the Task Repositories view.");
+					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.AbstractRepositoryQueryPage2_Update_Attributes_Failed,
+							Messages.AbstractRepositoryQueryPage2_No_repository_available_please_add_one_using_the_Task_Repositories_view);
 				}
 			}
 		});
@@ -239,7 +239,7 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 		if (titleText != null && titleText.getText().length() > 0) {
 			return true;
 		}
-		setMessage("Enter a title");
+		setMessage(Messages.AbstractRepositoryQueryPage2_Enter_a_title);
 		return false;
 	}
 

@@ -290,4 +290,12 @@ public class Messages extends NLS {
 	public static String TaskEditor_Task_;
 
 	public static String TaskEditor_Task_added_to_the_Uncategorized_container;
+
+	public static String TaskEditorExtensionSettingsContribution__default_;
+
+	public static String TaskEditorExtensionSettingsContribution_Editor;
+
+	public static String TaskEditorExtensionSettingsContribution_Plain_Text;
+
+	public static String TaskEditorExtensionSettingsContribution_Select_the_capabilities_of_the_task_editor;
 }

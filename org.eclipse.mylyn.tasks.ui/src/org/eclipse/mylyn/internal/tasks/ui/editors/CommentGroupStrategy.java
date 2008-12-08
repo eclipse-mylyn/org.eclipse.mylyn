@@ -29,11 +29,11 @@ public class CommentGroupStrategy {
 
 	public static class CommentGroup {
 
-		public static final String CURRENT = "Current";
+		public static final String CURRENT = Messages.CommentGroupStrategy_Current;
 
-		public static final String OLDER = "Older";
+		public static final String OLDER = Messages.CommentGroupStrategy_Older;
 
-		public static final String RECENT = "Recent";
+		public static final String RECENT = Messages.CommentGroupStrategy_Recent;
 
 		private final List<ITaskComment> comments;
 
