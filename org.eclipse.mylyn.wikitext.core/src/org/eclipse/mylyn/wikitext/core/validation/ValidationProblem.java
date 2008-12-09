@@ -19,11 +19,16 @@ package org.eclipse.mylyn.wikitext.core.validation;
  * @author David Green
  */
 public class ValidationProblem implements Comparable<ValidationProblem> {
+	/**
+	 * The default marker id for a WikiText validation problem.
+	 */
+	public static final String DEFAULT_MARKER_ID = "org.eclipse.mylyn.wikitext.core.validation.problem";//$NON-NLS-1$
+
 	public enum Severity {
 		WARNING, ERROR
 	}
 
-	private String markerId = "org.eclipse.mylyn.wikitext.core.validation.problem"; //$NON-NLS-1$
+	private String markerId = DEFAULT_MARKER_ID;
 
 	private Severity severity;
 

@@ -24,7 +24,8 @@ import java.util.regex.Pattern;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 
 /**
- * A service locator for use both inside and outside of an Eclipse environment.
+ * A service locator for use both inside and outside of an Eclipse environment. Provides access to markup languages by
+ * name.
  * 
  * @author David Green
  */

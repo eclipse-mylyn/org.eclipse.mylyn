@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.wikitext.core;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -33,9 +34,15 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 import org.osgi.framework.BundleContext;
 
 /**
+ * The WikiText plug-in class. Use only in an Eclipse runtime environment. Stand-alone programs should use the
+ * {@link ServiceLocator} instead.
  * 
+ * Should not be instantiated directly, instead use {@link #getDefault()}.
  * 
  * @author David Green
+ * 
+ * @see #getDefault()
+ * @see ServiceLocator
  */
 public class WikiTextPlugin extends Plugin {
 
@@ -48,6 +55,8 @@ public class WikiTextPlugin extends Plugin {
 	private SortedMap<String, Class<? extends MarkupLanguage>> languageByName;
 
 	private Map<String, Class<? extends MarkupLanguage>> languageByFileExtension;
+
+	private Map<Class<? extends MarkupLanguage>, String> languageNameByLanguage;
 
 	private Map<String, String> languageExtensionByLanguage;
 
@@ -119,6 +128,41 @@ public class WikiTextPlugin extends Plugin {
 	}
 
 	/**
+	 * Get a markup language name for a file. A markup language is selected based on the registered languages and their
+	 * expected file extensions.
+	 * 
+	 * @param name
+	 *            the name of the file for which a markup language is desired
+	 * 
+	 * @return the markup language name, or null if no markup language is registered for the specified file name
+	 * 
+	 * @see #getMarkupLanguageForFilename(String)
+	 */
+	public String getMarkupLanguageNameForFilename(String name) {
+		if (languageByFileExtension == null) {
+			initializeMarkupLanguages();
+		}
+		int lastIndexOfDot = name.lastIndexOf('.');
+		String extension = lastIndexOfDot == -1 ? name : name.substring(lastIndexOfDot + 1);
+		Class<? extends MarkupLanguage> languageClass = languageByFileExtension.get(extension);
+		if (languageClass != null) {
+			return languageNameByLanguage.get(languageClass);
+		}
+		return null;
+	}
+
+	/**
+	 * Get the file extensions that are registered for markup languages. File extensions are specified without the
+	 * leading dot.
+	 */
+	public Set<String> getMarkupFileExtensions() {
+		if (languageByFileExtension == null) {
+			initializeMarkupLanguages();
+		}
+		return Collections.unmodifiableSet(languageByFileExtension.keySet());
+	}
+
+	/**
 	 * Get a markup language for a file. A markup language is selected based on the registered languages and their
 	 * expected file extensions.
 	 * 
@@ -126,6 +170,8 @@ public class WikiTextPlugin extends Plugin {
 	 *            the name of the file for which a markup language is desired
 	 * 
 	 * @return the markup language, or null if no markup language is registered for the specified file name
+	 * 
+	 * @see #getMarkupLanguageForFilename(String)
 	 */
 	public MarkupLanguage getMarkupLanguageForFilename(String name) {
 		if (languageByFileExtension == null) {
@@ -148,7 +194,7 @@ public class WikiTextPlugin extends Plugin {
 	}
 
 	/**
-	 * Get the names of all markup languages
+	 * Get the names of all known markup languages
 	 * 
 	 * @see #getMarkupLanguage(String)
 	 */
@@ -263,6 +309,7 @@ public class WikiTextPlugin extends Plugin {
 				SortedMap<String, Class<? extends MarkupLanguage>> markupLanguageByName = new TreeMap<String, Class<? extends MarkupLanguage>>();
 				Map<String, Class<? extends MarkupLanguage>> languageByFileExtension = new HashMap<String, Class<? extends MarkupLanguage>>();
 				Map<String, String> languageExtensionByLanguage = new HashMap<String, String>();
+				Map<Class<? extends MarkupLanguage>, String> languageNameByLanguage = new HashMap<Class<? extends MarkupLanguage>, String>();
 
 				IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(getPluginId(),
 						EXTENSION_MARKUP_LANGUAGE);
@@ -300,6 +347,8 @@ public class WikiTextPlugin extends Plugin {
 										name, element.getDeclaringExtension().getContributor().getName(), name));
 								markupLanguageByName.put(name, previous);
 								continue;
+							} else {
+								languageNameByLanguage.put(d.getClass(), name);
 							}
 						}
 						if (extendsLanguage != null) {
@@ -328,6 +377,7 @@ public class WikiTextPlugin extends Plugin {
 				this.languageByFileExtension = languageByFileExtension;
 				this.languageByName = markupLanguageByName;
 				this.languageExtensionByLanguage = languageExtensionByLanguage;
+				this.languageNameByLanguage = languageNameByLanguage;
 			}
 		}
 	}
