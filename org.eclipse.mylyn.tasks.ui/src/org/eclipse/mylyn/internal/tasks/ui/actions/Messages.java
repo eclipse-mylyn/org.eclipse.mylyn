@@ -295,6 +295,8 @@ public class Messages extends NLS {
 
 	public static String TaskWorkingSetAction_Deselect_All;
 
+	public static String TaskWorkingSetAction_Edit_Label;
+
 	public static String TaskWorkingSetAction_Select_and_Edit_Working_Sets;
 
 	public static String TaskWorkingSetAction_Sets;

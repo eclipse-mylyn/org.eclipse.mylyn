@@ -170,7 +170,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	private class ManageWorkingSetsAction extends Action {
 		ManageWorkingSetsAction() {
-			super(""); //$NON-NLS-1$
+			super(Messages.TaskWorkingSetAction_Edit_Label);
 		}
 
 		@Override
