@@ -68,6 +68,14 @@ Note that the content of the cheat-sheet will vary according to the markup langu
 
 !images/editor-cheat-sheet.png!
 
+h2. Project Settings
+
+WikiText project settings may be configured from the project properties dialog.
+
+!images/project-settings.png!
+
+Selecting *Enable validation* causes WikiText to validate wiki markup files in your project.  This is done as part of the project build process, so it helps to have automatic building enabled (==<b>Preferences-&gt;Workspace-&gt;Build Automatically</b>==).  Validation is performed on all resources that match a wiki markup file extension.  In addition validation includes any files for which the "markup language setting":#SwitchingMarkupLanguages was set even if the file doesn't have a registered wiki markup file extension.
+
 h1. Task Editor Integration
 
 WikiText extends Mylyn to provide a markup-aware task editor.  With WikiText installed, Mylyn can render wiki markup as intended, provide markup-specific syntax highlighting, content-assist, validation, and a cheat-sheet for wiki markup syntax.

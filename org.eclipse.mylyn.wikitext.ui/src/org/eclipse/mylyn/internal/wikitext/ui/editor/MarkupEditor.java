@@ -556,16 +556,31 @@ public class MarkupEditor extends TextEditor {
 	 * @return the markup language preference, or null if it was not set or could not be loaded.
 	 */
 	public static MarkupLanguage loadMarkupLanguagePreference(IFile file) {
-		try {
-			String languageName = file.getPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault()
-					.getPluginId(), MarkupEditor.MARKUP_LANGUAGE));
-			if (languageName != null) {
-				return WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
-			}
-		} catch (CoreException e) {
-			WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.getString("MarkupEditor.0"), e); //$NON-NLS-1$
+		String languageName = getMarkupLanguagePreference(file);
+		if (languageName != null) {
+			return WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
 		}
 		return null;
+	}
+
+	/**
+	 * lookup the markup language preference of a file based on the persisted preference.
+	 * 
+	 * @param file
+	 *            the file for which the preference should be looked up
+	 * 
+	 * @return the markup language name, or null if no preference exists
+	 */
+	public static String getMarkupLanguagePreference(IFile file) {
+		String languageName;
+		try {
+			languageName = file.getPersistentProperty(new QualifiedName(WikiTextUiPlugin.getDefault().getPluginId(),
+					MarkupEditor.MARKUP_LANGUAGE));
+		} catch (CoreException e) {
+			WikiTextUiPlugin.getDefault().log(IStatus.ERROR, Messages.getString("MarkupEditor.0"), e); //$NON-NLS-1$
+			return null;
+		}
+		return languageName;
 	}
 
 	private void storeMarkupLanguagePreference(MarkupLanguage markupLanguage) {

@@ -182,4 +182,33 @@
        </command>
     </menuContribution>
  </extension>
+ <extension
+       id="wikiTextNature"
+       name="WikiText Nature"
+       point="org.eclipse.core.resources.natures">
+    <runtime>
+       <run
+             class="org.eclipse.mylyn.internal.wikitext.ui.WikiTextNature">
+       </run>
+    </runtime>
+ </extension>
+ <extension
+       id="wikiTextValidationBuilder"
+       name="WikiText Validation"
+       point="org.eclipse.core.resources.builders">
+    <builder>
+       <run
+             class="org.eclipse.mylyn.internal.wikitext.ui.validation.ValidationProjectBuilder">
+       </run>
+    </builder>
+ </extension>
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          class="org.eclipse.mylyn.internal.wikitext.ui.properties.ProjectPropertyPage"
+          id="org.eclipse.mylyn.wikitext.ui.projectProperties"
+          name="WikiText"
+          objectClass="org.eclipse.core.resources.IProject">
+    </page>
+ </extension>
 </plugin>

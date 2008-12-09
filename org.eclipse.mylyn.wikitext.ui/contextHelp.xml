@@ -9,4 +9,7 @@
    <context id="preferences" title="Preferences">
       <topic href="help/Preferences.html" label="WikiText Preferences"/>
    </context>
+   <context id="projectSettings" title="Project Settings">
+      <topic href="help/Getting-Started.html#ProjectSettings" label="Project Settings"/>
+   </context>
 </contexts>
