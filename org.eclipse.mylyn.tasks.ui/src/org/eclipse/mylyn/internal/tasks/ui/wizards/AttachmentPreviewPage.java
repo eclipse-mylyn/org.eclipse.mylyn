@@ -63,13 +63,9 @@ import org.eclipse.swt.widgets.Text;
  */
 public class AttachmentPreviewPage extends WizardPage {
 
-	private static final String DESCRIPTION = Messages.AttachmentPreviewPage_Review_the_attachment_before_submitting;
-
 	protected static final int MAX_TEXT_SIZE = 50000;
 
 	private static final String PAGE_NAME = "PreviewAttachmentPage"; //$NON-NLS-1$
-
-	private static final String TITLE = Messages.AttachmentPreviewPage_Attachment_Preview;
 
 	private final Set<String> imageTypes;
 
@@ -86,8 +82,8 @@ public class AttachmentPreviewPage extends WizardPage {
 	public AttachmentPreviewPage(TaskAttachmentModel model) {
 		super(PAGE_NAME);
 		this.model = model;
-		setTitle(TITLE);
-		setDescription(DESCRIPTION);
+		setTitle(Messages.AttachmentPreviewPage_Attachment_Preview);
+		setDescription(Messages.AttachmentPreviewPage_Review_the_attachment_before_submitting);
 
 		textTypes = new HashSet<String>();
 		textTypes.add("text/plain"); //$NON-NLS-1$
