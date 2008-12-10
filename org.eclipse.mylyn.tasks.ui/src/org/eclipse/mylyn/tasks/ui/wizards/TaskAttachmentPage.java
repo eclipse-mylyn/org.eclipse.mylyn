@@ -86,7 +86,7 @@ public class TaskAttachmentPage extends WizardPage {
 		super("AttachmentDetails"); //$NON-NLS-1$
 		this.model = model;
 		this.taskAttachment = TaskAttachmentMapper.createFrom(model.getAttribute());
-		setTitle("Attachment Details"); //$NON-NLS-1$
+		setTitle(Messages.TaskAttachmentPage_Attachment_Details);
 		setNeedsDescription(true);
 	}
 

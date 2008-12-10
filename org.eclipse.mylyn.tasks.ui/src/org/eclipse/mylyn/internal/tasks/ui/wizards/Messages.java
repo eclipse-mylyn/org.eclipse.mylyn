@@ -299,6 +299,8 @@ public class Messages extends NLS {
 
 	public static String TaskAttachmentPage_ATTACHE_CONTEXT;
 
+	public static String TaskAttachmentPage_Attachment_Details;
+
 	public static String TaskAttachmentPage_Comment;
 
 	public static String TaskAttachmentPage_Content_Type;
