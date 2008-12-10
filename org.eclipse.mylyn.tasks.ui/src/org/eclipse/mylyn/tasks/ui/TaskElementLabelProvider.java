@@ -257,7 +257,11 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	public Font getFont(Object element) {
 		if (element instanceof AbstractTask) {
 			if (((AbstractTask) element).isSynchronizing()) {
-				return CommonFonts.ITALIC;
+				if (((AbstractTask) element).isActive()) {
+					return CommonFonts.BOLD_ITALIC;
+				} else {
+					return CommonFonts.ITALIC;
+				}
 			}
 		}
 
