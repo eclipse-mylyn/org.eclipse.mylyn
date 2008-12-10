@@ -362,7 +362,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	@Override
 	protected void fillContextMenu(IMenuManager menuManager) {
 		super.fillContextMenu(menuManager);
-		MenuManager sortMenuManager = new MenuManager(""); //$NON-NLS-1$
+		MenuManager sortMenuManager = new MenuManager(Messages.RepositorySearchResultView_Sort_by);
 		sortMenuManager.add(sortByPriorityAction);
 		sortMenuManager.add(sortByDescriptionAction);
 

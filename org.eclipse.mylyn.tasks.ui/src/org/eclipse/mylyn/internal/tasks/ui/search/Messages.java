@@ -47,6 +47,8 @@ public class Messages extends NLS {
 
 	public static String RepositorySearchResultView_Refine_Search_;
 
+	public static String RepositorySearchResultView_Sort_by;
+
 	public static String RepositorySearchResultView_Task_Priority;
 
 	public static String RepositorySearchResultView_Task_Summary;
