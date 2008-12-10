@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.provisional.commons.ui;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -28,6 +29,8 @@ public class CommonFonts {
 	public static Font BOLD;
 
 	public static Font ITALIC;
+
+	public static Font BOLD_ITALIC;
 
 	public static Font STRIKETHROUGH = null;
 
@@ -48,6 +51,7 @@ public class CommonFonts {
 	private static void init() {
 		BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 		ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
+		BOLD_ITALIC = new Font(Display.getCurrent(), getModifiedFontData(ITALIC.getFontData(), SWT.BOLD | SWT.ITALIC));
 
 		Font defaultFont = JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT);
 		FontData[] defaultData = defaultFont.getFontData();
@@ -83,7 +87,20 @@ public class CommonFonts {
 	public static void dispose() {
 		if (CommonFonts.STRIKETHROUGH != null && !CommonFonts.STRIKETHROUGH.isDisposed()) {
 			CommonFonts.STRIKETHROUGH.dispose();
+			CommonFonts.BOLD_ITALIC.dispose();
 		}
 	}
 
+	/**
+	 * Copied from {@link FontRegistry}
+	 */
+	private static FontData[] getModifiedFontData(FontData[] baseData, int style) {
+		FontData[] styleData = new FontData[baseData.length];
+		for (int i = 0; i < styleData.length; i++) {
+			FontData base = baseData[i];
+			styleData[i] = new FontData(base.getName(), base.getHeight(), base.getStyle() | style);
+		}
+
+		return styleData;
+	}
 }
