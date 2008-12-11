@@ -19,6 +19,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
+import java.net.Proxy.Type;
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -665,6 +666,40 @@ public class WebUtil {
 			return;
 		}
 		idleConnectionTimeoutThread.removeConnectionManager(connectionManager);
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public static Proxy getProxy(String host, Proxy.Type proxyType) {
+		IProxyService service = CommonsNetPlugin.getProxyService();
+		if (service != null && service.isProxiesEnabled()) {
+			IProxyData data = service.getProxyDataForHost(host, getPlatformProxyType(proxyType));
+			if (data != null && data.getHost() != null) {
+				String proxyHost = data.getHost();
+				int proxyPort = data.getPort();
+				// change the IProxyData default port to the Java default port
+				if (proxyPort == -1) {
+					proxyPort = 0;
+				}
+
+				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+				if (data.isRequiresAuthentication()) {
+					return new AuthenticatedProxy(proxyType, sockAddr, data.getUserId(), data.getPassword());
+				} else {
+					return new Proxy(proxyType, sockAddr);
+				}
+			}
+		}
+		return null;
+	}
+
+//	private static Type getJavaProxyType(String type) {
+//		return (IProxyData.SOCKS_PROXY_TYPE.equals(type)) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
+//	}
+
+	private static String getPlatformProxyType(Type type) {
+		return type == Type.SOCKS ? IProxyData.SOCKS_PROXY_TYPE : IProxyData.HTTP_PROXY_TYPE;
 	}
 
 }

@@ -42,6 +42,38 @@ import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
  */
 public class WebUtilTest extends TestCase {
 
+	private class StubProgressMonitor implements IProgressMonitor {
+
+		private volatile boolean canceled;
+
+		public void beginTask(String name, int totalWork) {
+		}
+
+		public void done() {
+		}
+
+		public void internalWorked(double work) {
+		}
+
+		public boolean isCanceled() {
+			return canceled;
+		}
+
+		public void setCanceled(boolean value) {
+			this.canceled = value;
+		}
+
+		public void setTaskName(String name) {
+		}
+
+		public void subTask(String name) {
+		}
+
+		public void worked(int work) {
+		}
+
+	}
+
 	private TestProxy testProxy;
 
 	private HttpClient client;
@@ -189,6 +221,8 @@ public class WebUtilTest extends TestCase {
 		String url = "https://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		AbstractWebLocation location = new WebLocation(url, null, null, null);
 		HostConfiguration hostConfiguration = WebUtil.createHostConfiguration(client, location, null);
+
+		testProxy.setCloseOnConnect(true);
 
 		GetMethod method = new GetMethod("/");
 		try {
@@ -500,36 +534,10 @@ public class WebUtilTest extends TestCase {
 		assertNull(WebUtil.getTitleFromUrl(new WebLocation(url), null));
 	}
 
-	private class StubProgressMonitor implements IProgressMonitor {
-
-		private volatile boolean canceled;
-
-		public void beginTask(String name, int totalWork) {
-		}
-
-		public void done() {
-		}
-
-		public void internalWorked(double work) {
-		}
-
-		public boolean isCanceled() {
-			return canceled;
-		}
-
-		public void setCanceled(boolean value) {
-			this.canceled = value;
-		}
-
-		public void setTaskName(String name) {
-		}
-
-		public void subTask(String name) {
-		}
-
-		public void worked(int work) {
-		}
-
+	public void testGetPlatformProxy() {
+		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.HTTP));
+		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.DIRECT));
+		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.SOCKS));
 	}
 
 }

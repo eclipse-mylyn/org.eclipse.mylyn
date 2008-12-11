@@ -129,6 +129,8 @@ public class TestProxy implements Runnable {
 
 	private boolean waitForResponse;
 
+	private boolean closeOnConnect;
+
 	public TestProxy() {
 		this(0);
 	}
@@ -172,7 +174,7 @@ public class TestProxy implements Runnable {
 
 	private void handleConnection(Socket socket) {
 		try {
-			while (!stopped) {
+			while (!closeOnConnect && !stopped) {
 				Message request = readMessage(socket.getInputStream());
 				if (stopped || request == null) {
 					break;
@@ -219,6 +221,10 @@ public class TestProxy implements Runnable {
 		return autoClose;
 	}
 
+	public boolean isCloseOnConnect() {
+		return closeOnConnect;
+	}
+
 	private Message readMessage(InputStream in) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		Message message = null;
@@ -259,6 +265,10 @@ public class TestProxy implements Runnable {
 			}
 		}
 
+	}
+
+	public void setCloseOnConnect(boolean closeOnConnect) {
+		this.closeOnConnect = closeOnConnect;
 	}
 
 	public void setAutoClose(boolean autoClose) {
