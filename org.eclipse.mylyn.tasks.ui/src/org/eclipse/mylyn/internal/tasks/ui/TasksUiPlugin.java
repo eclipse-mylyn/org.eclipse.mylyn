@@ -500,10 +500,12 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		// NOTE: startup order is very sensitive
 		try {
 			// initialize framework and settings
-			WebUtil.init();
 			if (DEBUG_HTTPCLIENT) {
+				// do this before anything else, once commons logging is initialized and an instance 
+				// of Log has been created it's too late
 				initHttpLogging();
 			}
+			WebUtil.init();
 			initializePreferences(getPreferenceStore());
 
 			// initialize CommonFonts from UI thread: bug 240076
