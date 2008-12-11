@@ -232,9 +232,8 @@ public class WebUtil {
 	 */
 	public static HostConfiguration createHostConfiguration(HttpClient client, AbstractWebLocation location,
 			IProgressMonitor monitor) {
-		if (client == null || location == null) {
-			throw new IllegalArgumentException();
-		}
+		Assert.isNotNull(client);
+		Assert.isNotNull(location);
 
 		String url = location.getUrl();
 		String host = WebUtil.getHost(url);
@@ -572,32 +571,24 @@ public class WebUtil {
 	}
 
 	/**
-	 * Defaults org.apache.commons.logging system properties.
-	 * <p>
-	 * Only sets System properties if they are NOT already set to a value.
-	 * </p>
-	 * <p>
-	 * For example adding this to your Eclipse Java launch command line enables verbose Mylyn wire logging:
+	 * Disables logging by default. Set these system properties on launch enables verbose logging of HTTP communication:
 	 * 
 	 * <pre>
-	 * 
 	 * -Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog
-	 * -Dorg.apache.commons.logging.simplelog.showlogname=true -Dorg.apache.commons.logging.simplelog.defaultlog=off
+	 * -Dorg.apache.commons.logging.simplelog.showlogname=true 
+	 * -Dorg.apache.commons.logging.simplelog.defaultlog=off
 	 * -Dorg.apache.commons.logging.simplelog.log.httpclient.wire=debug
 	 * -Dorg.apache.commons.logging.simplelog.log.org.apache.commons.httpclient=off
 	 * -Dorg.apache.commons.logging.simplelog.log.org.apache.axis.message=debug
-	 * 
 	 * </pre>
-	 * 
-	 * </p>
 	 */
 	private static void initCommonsLoggingSettings() {
-		defaultSystemProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog"); //$NON-NLS-1$ //$NON-NLS-2$
-		defaultSystemProperty("org.apache.commons.logging.simplelog.defaultlog", "off"); //$NON-NLS-1$ //$NON-NLS-2$
-		defaultSystemProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off"); //$NON-NLS-1$ //$NON-NLS-2$
-		defaultSystemProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off"); //$NON-NLS-1$ //$NON-NLS-2$
+		defaultSystemProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	/**
+	 * Only sets system property if they are not already set to a value.
+	 */
 	private static void defaultSystemProperty(String key, String defaultValue) {
 		if (System.getProperty(key) == null) {
 			System.setProperty(key, defaultValue);
