@@ -671,6 +671,13 @@ public class WebUtil {
 	/**
 	 * @since 3.1
 	 */
+	public static Proxy getProxy(String host, String proxyType) {
+		return getProxy(host, getJavaProxyType(proxyType));
+	}
+
+	/**
+	 * @since 3.1
+	 */
 	public static Proxy getProxy(String host, Proxy.Type proxyType) {
 		IProxyService service = CommonsNetPlugin.getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
@@ -683,23 +690,44 @@ public class WebUtil {
 					proxyPort = 0;
 				}
 
-				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+				AuthenticationCredentials credentials = null;
 				if (data.isRequiresAuthentication()) {
-					return new AuthenticatedProxy(proxyType, sockAddr, data.getUserId(), data.getPassword());
-				} else {
-					return new Proxy(proxyType, sockAddr);
+					credentials = new AuthenticationCredentials(data.getUserId(), data.getPassword());
 				}
+				return createProxy(proxyHost, proxyPort, credentials);
 			}
 		}
 		return null;
 	}
 
-//	private static Type getJavaProxyType(String type) {
-//		return (IProxyData.SOCKS_PROXY_TYPE.equals(type)) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
-//	}
+	private static Type getJavaProxyType(String type) {
+		return (IProxyData.SOCKS_PROXY_TYPE.equals(type)) ? Proxy.Type.SOCKS : Proxy.Type.HTTP;
+	}
 
 	private static String getPlatformProxyType(Type type) {
 		return type == Type.SOCKS ? IProxyData.SOCKS_PROXY_TYPE : IProxyData.HTTP_PROXY_TYPE;
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public static Proxy createProxy(String proxyHost, int proxyPort, AuthenticationCredentials credentials) {
+		String proxyUsername = ""; //$NON-NLS-1$
+		String proxyPassword = ""; //$NON-NLS-1$
+		if (credentials != null) {
+			proxyUsername = credentials.getUserName();
+			proxyPassword = credentials.getPassword();
+		}
+		if (proxyHost != null && proxyHost.length() > 0) {
+			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+			boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword.length() > 0);
+			if (authenticated) {
+				return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
+			} else {
+				return new Proxy(Type.HTTP, sockAddr);
+			}
+		}
+		return Proxy.NO_PROXY;
 	}
 
 }
