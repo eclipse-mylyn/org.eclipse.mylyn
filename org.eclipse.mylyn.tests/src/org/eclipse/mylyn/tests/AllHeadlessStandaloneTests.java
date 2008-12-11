@@ -14,6 +14,8 @@ package org.eclipse.mylyn.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylyn.commons.tests.SslProtocolSocketFactoryTest;
+import org.eclipse.mylyn.commons.tests.WebUtilTest;
 import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
 
 /**
@@ -24,13 +26,21 @@ public class AllHeadlessStandaloneTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Tests not requiring Eclipse Workbench");
 
+		// commons
+		suite.addTestSuite(WebUtilTest.class);
+		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
+
+		// context
 		// disabled due to failure: bug 257972
 //		suite.addTestSuite(ContextExternalizerTest.class);
 //		suite.addTestSuite(DegreeOfInterestTest.class);
 //		suite.addTestSuite(ContextTest.class);
+
+		// tasks
 //		suite.addTestSuite(TaskListStandaloneTest.class);
 		suite.addTestSuite(TasksUtilTest.class);
 
+		// wikitext
 		suite.addTest(org.eclipse.mylyn.wikitext.tests.HeadlessStandaloneTests.suite());
 
 		return suite;
