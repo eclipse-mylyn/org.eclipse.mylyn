@@ -52,7 +52,6 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
-import org.eclipse.mylyn.internal.commons.net.WebClientLog;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.AbstractNotification;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonColors;
@@ -502,7 +501,9 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		try {
 			// initialize framework and settings
 			WebUtil.init();
-			WebClientLog.setLoggingEnabled(DEBUG_HTTPCLIENT);
+			if (DEBUG_HTTPCLIENT) {
+				initHttpLogging();
+			}
 			initializePreferences(getPreferenceStore());
 
 			// initialize CommonFonts from UI thread: bug 240076
@@ -603,6 +604,17 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list initialization failed", e)); //$NON-NLS-1$
 		}
+	}
+
+	private void initHttpLogging() {
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection", //$NON-NLS-1$
+				"trace"); //$NON-NLS-1$
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.axis.message", "debug"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void updateTaskActivityManager() {
