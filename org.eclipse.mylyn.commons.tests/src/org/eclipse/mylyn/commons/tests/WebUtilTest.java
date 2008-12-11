@@ -14,7 +14,6 @@ package org.eclipse.mylyn.commons.tests;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.net.Proxy.Type;
 
 import javax.net.ssl.SSLHandshakeException;
@@ -33,7 +32,8 @@ import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.IProxyProvider;
 import org.eclipse.mylyn.commons.net.WebLocation;
 import org.eclipse.mylyn.commons.net.WebUtil;
-import org.eclipse.mylyn.commons.tests.TestProxy.Message;
+import org.eclipse.mylyn.commons.tests.support.TestProxy;
+import org.eclipse.mylyn.commons.tests.support.TestProxy.Message;
 import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.commons.net.SslProtocolSocketFactory;
 
@@ -489,11 +489,12 @@ public class WebUtilTest extends TestCase {
 
 	public void testGetTitleFromUrl() throws Exception {
 		assertEquals("Eclipse.org home", WebUtil.getTitleFromUrl(new WebLocation("http://eclipse.org"), null));
-		try {
-			WebUtil.getTitleFromUrl(new WebLocation("invalidurl"), null);
-			fail("Expected UnknownHostException");
-		} catch (UnknownHostException e) {
-		}
+		// disabled: fails in environments where the DNS resolver redirects for unknown hosts  
+		//		try {
+//			String title = WebUtil.getTitleFromUrl(new WebLocation("http://invalidurl"), null);
+//			fail("Expected UnknownHostException, got: " + title);
+//		} catch (UnknownHostException e) {
+//		}
 		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		testProxy.addResponse(TestProxy.OK);
 		assertNull(WebUtil.getTitleFromUrl(new WebLocation(url), null));
