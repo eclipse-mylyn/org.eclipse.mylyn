@@ -61,13 +61,13 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(model.getTaskRepository()
+		RepositoryConfiguration configuration = BugzillaCorePlugin.getRepositoryConfiguration(getModel().getTaskRepository()
 				.getRepositoryUrl());
 		if (configuration != null) {
 			List<BugzillaFlag> flags = configuration.getFlags();
-			TaskAttribute productAttribute = model.getAttribute().getTaskData().getRoot().getMappedAttribute(
+			TaskAttribute productAttribute = getModel().getAttribute().getTaskData().getRoot().getMappedAttribute(
 					BugzillaAttribute.PRODUCT.getKey());
-			TaskAttribute componentAttribute = model.getAttribute().getTaskData().getRoot().getMappedAttribute(
+			TaskAttribute componentAttribute = getModel().getAttribute().getTaskData().getRoot().getMappedAttribute(
 					BugzillaAttribute.COMPONENT.getKey());
 			Control[] children = parent.getChildren();
 			Composite pageComposite = (Composite) children[children.length - 1];
@@ -89,7 +89,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 				mapper.setState(" ");
 				mapper.setFlagId(bugzillaFlag.getName());
 				mapper.setNumber(0);
-				final TaskAttribute attribute = model.getAttribute().createAttribute(
+				final TaskAttribute attribute = getModel().getAttribute().createAttribute(
 						"task.common.kind.flag_type" + bugzillaFlag.getFlagId());
 				mapper.applyTo(attribute);
 
