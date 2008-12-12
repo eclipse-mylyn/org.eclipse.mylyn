@@ -570,4 +570,28 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		return attribute;
 	}
 
+	public void postUpdateAttachment(TaskRepository repository, TaskAttribute taskAttribute, String action,
+			IProgressMonitor monitor) throws CoreException {
+		monitor = Policy.monitorFor(monitor);
+		try {
+			monitor.beginTask("Updating Attachment", IProgressMonitor.UNKNOWN);
+			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
+			try {
+				client.postUpdateAttachment(taskAttribute, action, monitor);
+			} catch (CoreException e) {
+				// TODO: Move retry handling into client
+				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
+					client.postUpdateAttachment(taskAttribute, action, monitor);
+				} else {
+					throw e;
+				}
+			}
+		} catch (IOException e) {
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+					RepositoryStatus.ERROR_IO, repository.getRepositoryUrl(), e));
+		} finally {
+			monitor.done();
+		}
+	}
+
 }

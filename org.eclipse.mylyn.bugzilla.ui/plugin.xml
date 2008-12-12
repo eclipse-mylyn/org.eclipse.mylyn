@@ -67,5 +67,21 @@
             id="org.eclipse.mylyn.bugzilla.ui.pageFactory">
       </pageFactory>            
    </extension>
+  
+   <extension point = "org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment"
+            objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
+         <action
+               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaUpdateAttachmentAction"
+               enablesFor="*"
+               id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.obsolete"
+               label="Mark obsolete"
+               menubarPath="actions"
+               tooltip="Toggle the attachment as obsolete or not">
+         </action>
+      </objectContribution>
+   </extension>
    
 </plugin>

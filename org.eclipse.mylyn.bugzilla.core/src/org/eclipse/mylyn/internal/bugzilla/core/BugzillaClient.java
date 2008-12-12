@@ -106,6 +106,8 @@ public class BugzillaClient {
 
 	private static final String PROCESS_BUG_CGI = "/process_bug.cgi";
 
+	private static final String PROCESS_ATTACHMENT_CGI = "/attachment.cgi";
+
 	public static final int WRAP_LENGTH = 80;
 
 	private static final String VAL_PROCESS_BUG = "process_bug";
@@ -802,6 +804,106 @@ public class BugzillaClient {
 //			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
 		}
 
+	}
+
+	public void postUpdateAttachment(TaskAttribute taskAttribute, String action, IProgressMonitor monitor)
+			throws IOException, CoreException {
+		List<NameValuePair> formData = new ArrayList<NameValuePair>(5);
+		boolean existingBugPosted = false;
+
+		formData.add(new NameValuePair("action", action));
+		formData.add(new NameValuePair("contenttypemethod", "manual"));
+
+		formData.add(new NameValuePair("id", taskAttribute.getValue()));
+		Collection<TaskAttribute> attributes = taskAttribute.getAttributes().values();
+		Iterator<TaskAttribute> itr = attributes.iterator();
+		while (itr.hasNext()) {
+			TaskAttribute a = itr.next();
+			String id = a.getId();
+			String value = a.getValue();
+			if (id.equals(TaskAttribute.ATTACHMENT_AUTHOR) || id.equals("date") || id.equals("size")
+					|| id.equals(TaskAttribute.ATTACHMENT_URL)) {
+				continue;
+			}
+
+			if (id.equals("desc")) {
+				id = "description";
+			}
+			if (id.equals("ctype")) {
+				id = "contenttypeentry";
+			}
+
+			if (id.equals(TaskAttribute.ATTACHMENT_IS_DEPRECATED)) {
+				id = "isobsolete";
+			}
+			if (id.equals(TaskAttribute.ATTACHMENT_IS_PATCH)) {
+				id = "ispatch";
+			}
+			formData.add(new NameValuePair(id, value));
+		}
+		GzipPostMethod method = null;
+		InputStream input = null;
+		try {
+			method = postFormData(PROCESS_ATTACHMENT_CGI, formData.toArray(new NameValuePair[formData.size()]), monitor);
+
+			if (method == null) {
+				throw new IOException("Could not post form, client returned null method.");
+			}
+
+			input = getResponseStream(method, monitor);
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(input, method.getRequestCharSet()));
+			if (in.markSupported()) {
+				in.mark(1028);
+			}
+			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
+
+			boolean isTitle = false;
+			String title = "";
+
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+
+				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == Tag.TITLE
+						&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					isTitle = true;
+					continue;
+				}
+
+				if (isTitle) {
+					// get all of the data in the title tag
+					if (token.getType() != Token.TAG) {
+						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " ";
+						continue;
+					} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
+							&& ((HtmlTag) token.getValue()).isEndTag()) {
+
+						for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+								BugzillaLanguageSettings.COMMAND_CHANGES_SUBMITTED).iterator(); iterator.hasNext()
+								&& !existingBugPosted;) {
+							String value = iterator.next().toLowerCase(Locale.ENGLISH);
+							existingBugPosted = existingBugPosted || title.indexOf(value) != -1;
+						}
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			authenticated = false;
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
+		} finally {
+			if (input != null) {
+				input.close();
+			}
+			if (method != null) {
+				method.releaseConnection();
+			}
+		}
+		if (!existingBugPosted) {
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+					RepositoryStatus.ERROR_REPOSITORY, repositoryUrl.toString(),
+					"Unable to submit update of Attachment"));
+		}
 	}
 
 	public RepositoryResponse postTaskData(TaskData taskData, IProgressMonitor monitor) throws IOException,
