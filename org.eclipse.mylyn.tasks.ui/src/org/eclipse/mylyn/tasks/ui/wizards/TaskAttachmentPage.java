@@ -74,7 +74,10 @@ public class TaskAttachmentPage extends WizardPage {
 
 	private Button isPatchButton;
 
-	private final TaskAttachmentModel model;
+	/**
+	 * @since 3.1
+	 */
+	protected final TaskAttachmentModel model;
 
 	private boolean needsDescription;
 

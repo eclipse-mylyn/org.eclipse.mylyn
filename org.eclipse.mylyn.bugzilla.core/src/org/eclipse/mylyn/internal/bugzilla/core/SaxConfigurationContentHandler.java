@@ -93,6 +93,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private static final String ELEMENT_SPECIFICALLY_REQUESTABLE = "specifically_requestable";
 
+	private static final String ELEMENT_ID = "id";
+
 	private static final String ELEMENT_MULTIPLICABLE = "multiplicable";
 
 	private static final int EXPECTING_ROOT = 0;
@@ -163,6 +165,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private String currentMultiplicable;
 
+	private int currentId;
+
 	private String currentTypeDesc = "";
 
 	private String currentEnterBug = "";
@@ -186,6 +190,12 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 	private final Map<String, String> milestoneNames = new HashMap<String, String>();
 
 	private final Map<String, List<String>> customOption = new HashMap<String, List<String>>();
+
+	private final Map<String, Map<String, List<String>>> flagsInComponent = new HashMap<String, Map<String, List<String>>>();
+
+	private final Map<String, Integer> flagIds = new HashMap<String, Integer>();
+
+	private String currentComponent = "";
 
 	private String currentCustomOptionName = "";
 
@@ -255,6 +265,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			currentType = "";
 			currentTypeDesc = "";
 			currentEnterBug = "";
+			currentId = -1;
 		} else if (localName.equals(ELEMENT_FLAG_TYPES)) {
 			state = state | IN_FLAG_TYPES;
 		} else if (localName.equals(ELEMENT_FLAG_TYPE)) {
@@ -338,9 +349,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				}
 			} else if (state == (IN_COMPONENTS | IN_LI | IN_COMPONENT)) {
 				// COMPONENT NAME
+				currentComponent = characters.toString();
 				if (about != null && !componentNames.containsValue(about)) {
-					if (characters.length() > 0) {
-						componentNames.put(about, characters.toString());
+					if (currentComponent.length() > 0) {
+						componentNames.put(about, currentComponent);
 					}
 				}
 			} else if (state == (IN_TARGET_MILESTONES | IN_LI | IN_TARGET_MILESTONE)) {
@@ -392,6 +404,8 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			currentDescription = characters.toString();
 		} else if (localName.equals(ELEMENT_TYPE)) {
 			currentType = characters.toString();
+		} else if (localName.equals(ELEMENT_ID)) {
+			currentId = Integer.parseInt(characters.toString());
 		} else if (localName.equals(ELEMENT_TYPE_DESC)) {
 			currentTypeDesc = characters.toString();
 		} else if (localName.equals(ELEMENT_ENTER_BUG)) {
@@ -405,9 +419,14 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ELEMENT_FLAG_TYPES)) {
 			state = state & ~IN_FLAG_TYPES;
 		} else if (localName.equals(ELEMENT_FLAG_TYPE)) {
-			BugzillaFlag newFlag = new BugzillaFlag(currentName, currentDescription, currentType, currentRequestable,
-					currentSpecifically_requestable, currentMultiplicable);
-			configuration.addFlag(newFlag);
+			if (currentId != -1) {
+				if (about != null && !flagIds.containsValue(about)) {
+					flagIds.put(about, currentId);
+				}
+				BugzillaFlag newFlag = new BugzillaFlag(currentName, currentDescription, currentType,
+						currentRequestable, currentSpecifically_requestable, currentMultiplicable, currentId);
+				configuration.addFlag(newFlag);
+			}
 			state = state & ~IN_FLAG_TYPE;
 		} else if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 			state = state & ~IN_CUSTOM_OPTION;
@@ -457,9 +476,35 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				}
 			}
 			break;
+		case IN_COMPONENTS | IN_LI | IN_COMPONENT | IN_FLAG_TYPES | IN_LI_LI:
+			if (attributes != null) {
+				String compURI = attributes.getValue(ATTRIBUTE_RESOURCE);
+				if (compURI != null && currentComponent.length() > 0 && currentProduct.length() > 0
+						&& compURI.length() > 0) {
+
+					Map<String, List<String>> flagComponentList = flagsInComponent.get(currentProduct);
+					if (flagComponentList == null) {
+						flagComponentList = new HashMap<String, List<String>>();
+						flagsInComponent.put(currentProduct, flagComponentList);
+					}
+					List<String> flagsForComponent = flagComponentList.get(currentComponent);
+					if (flagsForComponent == null) {
+						flagsForComponent = new ArrayList<String>();
+						flagComponentList.put(currentComponent, flagsForComponent);
+					}
+					flagsForComponent.add(compURI.replace("flags.cgi?id=", "flag.cgi?id="));
+					int i = 0;
+					i++;
+				}
+			}
+			break;
 		case IN_COMPONENTS | IN_LI | IN_COMPONENT:
 			if (attributes != null) {
 				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
+				int idx = about.indexOf("&product=");
+				if (idx != -1) {
+					currentProduct = about.substring(idx + 9);
+				}
 			}
 			break;
 		case IN_VERSIONS | IN_LI | IN_VERSION:
@@ -478,7 +523,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
 			}
 			break;
-		case IN_FLAG_TYPE | IN_LI | IN_FLAG_TYPE:
+		case IN_FLAG_TYPES | IN_LI | IN_FLAG_TYPE:
 			if (attributes != null) {
 				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
 			}
@@ -521,6 +566,19 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			}
 
 		}
+
+		for (String flagProduct : flagsInComponent.keySet()) {
+			Map<String, List<String>> flagComponentUsage = flagsInComponent.get(flagProduct);
+			for (String flagusageList : flagComponentUsage.keySet()) {
+				List<String> flagList = flagComponentUsage.get(flagusageList);
+				for (String flagAbout : flagList) {
+					Integer flagId = flagIds.get(flagAbout);
+					BugzillaFlag flag = configuration.getFlagWithId(flagId);
+					flag.addUsed(flagProduct, flagusageList);
+				}
+			}
+		}
+
 		super.endDocument();
 	}
 }

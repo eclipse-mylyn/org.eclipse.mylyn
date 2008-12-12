@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,7 +32,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskOperation;
  */
 public class RepositoryConfiguration implements Serializable {
 
-	private static final long serialVersionUID = 575019225495659016L;
+// old	private static final long serialVersionUID = 575019225495659016L;
+	private static final long serialVersionUID = -782630475741754124L;
 
 	private static final String VERSION_UNKNOWN = "unknown";
 
@@ -65,7 +65,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	private final List<String> milestones = new ArrayList<String>();
 
-	private final List<BugzillaCustomField> customFields = new LinkedList<BugzillaCustomField>();
+	private final List<BugzillaCustomField> customFields = new ArrayList<BugzillaCustomField>();
 
 	private final List<BugzillaFlag> flags = new ArrayList<BugzillaFlag>();
 
@@ -369,8 +369,70 @@ public class RepositoryConfiguration implements Serializable {
 
 	public void configureTaskData(TaskData taskData) {
 		if (taskData != null) {
+			addMissingFlags(taskData);
 			updateAttributeOptions(taskData);
 			addValidOperations(taskData);
+		}
+	}
+
+	private void addMissingFlags(TaskData taskData) {
+		List<String> existingFlags = new ArrayList<String>();
+		for (TaskAttribute attribute : new HashSet<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
+			if (attribute.getId().startsWith("task.common.kind.flag")) {
+				TaskAttribute state = attribute.getAttribute("state");
+				if (state != null) {
+					String nameValue = state.getMetaData().getLabel();
+					if (!existingFlags.contains(nameValue)) {
+						existingFlags.add(nameValue);
+					}
+				}
+			}
+		}
+		TaskAttribute productAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
+		TaskAttribute componentAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
+		List<BugzillaFlag> flags = getFlags();
+		for (BugzillaFlag bugzillaFlag : flags) {
+			if (bugzillaFlag.getType().equals("attachment")) {
+				continue;
+			}
+			if (!bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue())) {
+				continue;
+			}
+			if (existingFlags.contains(bugzillaFlag.getName()) && !bugzillaFlag.isMultiplicable()) {
+				continue;
+			}
+			BugzillaFlagMapper mapper = new BugzillaFlagMapper();
+			mapper.setRequestee("");
+			mapper.setSetter("");
+			mapper.setState(" ");
+			mapper.setFlagId(bugzillaFlag.getName());
+			mapper.setNumber(0);
+			TaskAttribute attribute = taskData.getRoot().createAttribute(
+					"task.common.kind.flag_type" + bugzillaFlag.getFlagId());
+			mapper.applyTo(attribute);
+		}
+		setFlagsRequestee(taskData);
+	}
+
+	private void setFlagsRequestee(TaskData taskData) {
+		for (TaskAttribute attribute : new HashSet<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
+			if (attribute.getId().startsWith("task.common.kind.flag")) {
+				TaskAttribute state = attribute.getAttribute("state");
+				if (state != null) {
+					String nameValue = state.getMetaData().getLabel();
+					for (BugzillaFlag bugzillaFlag : flags) {
+						if (nameValue.equals(bugzillaFlag.getName())) {
+							TaskAttribute requestee = attribute.getAttribute("requestee");
+							if (requestee == null) {
+								requestee = attribute.createMappedAttribute("requestee");
+								requestee.getMetaData().defaults().setType(TaskAttribute.TYPE_SHORT_TEXT);
+								requestee.setValue("");
+							}
+							requestee.getMetaData().setReadOnly(!bugzillaFlag.isSpecifically_requestable());
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -388,6 +450,10 @@ public class RepositoryConfiguration implements Serializable {
 			if (attribute.getId().equals(BugzillaAttribute.TARGET_MILESTONE.getKey()) && optionValues.isEmpty()) {
 				existingReport.getRoot().removeAttribute(BugzillaAttribute.TARGET_MILESTONE.getKey());
 				continue;
+			}
+
+			if (attribute.getId().startsWith("task.common.kind.flag")) {
+				attribute = attribute.getAttribute("state");
 			}
 
 			attribute.clearOptions();
@@ -409,25 +475,55 @@ public class RepositoryConfiguration implements Serializable {
 				}
 			}
 
-		} else {
+		} else if (attribute.getId().startsWith("task.common.kind.flag")) {
 
-			BugzillaAttribute element;
-			try {
-				element = BugzillaAttribute.valueOf(attribute.getId().trim().toUpperCase(Locale.ENGLISH));
-			} catch (RuntimeException e) {
-				if (e instanceof IllegalArgumentException) {
-					// ignore unrecognized tags
-					return options;
+			TaskAttribute state = attribute.getAttribute("state");
+			if (state != null) {
+				String nameValue = state.getMetaData().getLabel();
+				options.add("");
+				for (BugzillaFlag bugzillaFlag : flags) {
+					if (nameValue.equals(bugzillaFlag.getName())) {
+						if (nameValue.equals(bugzillaFlag.getName())) {
+							if (bugzillaFlag.isRequestable()) {
+								options.add("?");
+							}
+							break;
+						}
+					}
 				}
-				throw e;
+				options.add("+");
+				options.add("-");
 			}
+		}
 
-			options = getOptionValues(element, product);
+		else {
+			String kind = attribute.getMetaData().getKind();
 
-			if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
-					&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
-					&& element != BugzillaAttribute.BUG_STATUS) {
-				Collections.sort(options);
+			if (kind != null && kind.equals("task.common.kind.flag")) {
+				options.add("");
+				options.add("?");
+				options.add("+");
+				options.add("-");
+			} else {
+
+				BugzillaAttribute element;
+				try {
+					element = BugzillaAttribute.valueOf(attribute.getId().trim().toUpperCase(Locale.ENGLISH));
+				} catch (RuntimeException e) {
+					if (e instanceof IllegalArgumentException) {
+						// ignore unrecognized tags
+						return options;
+					}
+					throw e;
+				}
+
+				options = getOptionValues(element, product);
+
+				if (element != BugzillaAttribute.RESOLUTION && element != BugzillaAttribute.OP_SYS
+						&& element != BugzillaAttribute.BUG_SEVERITY && element != BugzillaAttribute.PRIORITY
+						&& element != BugzillaAttribute.BUG_STATUS) {
+					Collections.sort(options);
+				}
 			}
 		}
 		return options;
@@ -563,5 +659,14 @@ public class RepositoryConfiguration implements Serializable {
 
 	public List<BugzillaFlag> getFlags() {
 		return flags;
+	}
+
+	public BugzillaFlag getFlagWithId(Integer id) {
+		for (BugzillaFlag bugzillaFlag : flags) {
+			if (bugzillaFlag.getFlagId() == id) {
+				return bugzillaFlag;
+			}
+		}
+		return null;
 	}
 }

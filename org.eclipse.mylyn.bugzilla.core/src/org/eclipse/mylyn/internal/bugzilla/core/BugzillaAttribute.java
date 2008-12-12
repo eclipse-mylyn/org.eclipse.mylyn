@@ -82,6 +82,8 @@ public enum BugzillaAttribute {
 
 	FILENAME("filename", "filename", TaskAttribute.TYPE_SHORT_TEXT, false, false),
 
+	FLAG("Flag:", "flag", null, false, false),
+
 	GROUP("Group", "group", TaskAttribute.TYPE_BOOLEAN, true, true),
 
 	IS_OBSOLETE("Obsolete", "isobsolete", TaskAttribute.TYPE_BOOLEAN, true, false),

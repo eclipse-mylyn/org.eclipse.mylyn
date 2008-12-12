@@ -163,12 +163,37 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				isPatch = "1".equals(attributes.getValue(BugzillaAttribute.IS_PATCH.getKey()));
 			}
 			break;
+		case FLAG:
+			if (attributes != null && attributes.getLength() > 0) {
+				String name = attributes.getValue(ATTRIBUTE_NAME);
+				if (name != null) {
+					BugzillaFlagMapper mapper = new BugzillaFlagMapper();
+					String requestee = attributes.getValue("requestee");
+					mapper.setRequestee(requestee);
+					String setter = attributes.getValue("setter");
+					mapper.setSetter(setter);
+					String status = attributes.getValue("status");
+					mapper.setState(status);
+					mapper.setFlagId(name);
+					String id = attributes.getValue("id");
+					mapper.setNumber(Integer.valueOf(id));
+					TaskAttribute attribute = repositoryTaskData.getRoot()
+							.createAttribute("task.common.kind.flag" + id);
+					mapper.applyTo(attribute);
+				}
+			}
+			break;
 		}
 
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
+
+		//remove whitespaces from the end of the parsed Text
+		while (characters.length() > 0 && Character.isWhitespace(characters.charAt(characters.length() - 1))) {
+			characters.setLength(characters.length() - 1);
+		}
 
 		String parsedText = characters.toString();
 
@@ -370,6 +395,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 		case UNKNOWN:
+			//ignore
+			break;
+		case FLAG:
 			//ignore
 			break;
 		default:

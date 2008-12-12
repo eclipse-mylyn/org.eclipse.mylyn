@@ -278,6 +278,8 @@ public interface IBugzillaConstants {
 
 	public static final String EDITOR_TYPE_VOTES = "bugzilla.editor.votes";
 
+	public static final String EDITOR_TYPE_FLAG = "bugzilla.editor.flag";
+
 	public static final String ATTRIBUTE_BUGZILLA_QUERY_CUSTOM = "bugzilla.query.custom";
 
 	// Old Tags used for migration

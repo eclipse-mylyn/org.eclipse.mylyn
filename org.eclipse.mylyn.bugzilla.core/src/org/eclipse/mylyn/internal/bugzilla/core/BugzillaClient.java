@@ -50,7 +50,6 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartBase;
-import org.apache.commons.httpclient.methods.multipart.PartSource;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.net.proxy.IProxyData;
@@ -74,6 +73,9 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
+import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -616,13 +618,41 @@ public class BugzillaClient {
 		}
 	}
 
-	public void postAttachment(String bugReportID, String comment, String description, String contentType,
-			boolean isPatch, PartSource source, IProgressMonitor monitor) throws HttpException, IOException,
+	public void postAttachment(String bugReportID, String comment, AbstractTaskAttachmentSource source,
+			TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws HttpException, IOException,
 			CoreException {
 		monitor = Policy.monitorFor(monitor);
+		String description = source.getDescription();
+		String contentType = source.getContentType();
+		String filename = source.getName();
+		boolean isPatch = false;
+
+		if (attachmentAttribute != null) {
+			TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
+
+			if (mapper.getDescription() != null) {
+				description = mapper.getDescription();
+			}
+
+			if (mapper.getContentType() != null) {
+				contentType = mapper.getContentType();
+			}
+
+			if (mapper.getFileName() != null) {
+				filename = mapper.getFileName();
+			}
+
+			if (mapper.isPatch() != null) {
+				isPatch = mapper.isPatch();
+			}
+		}
 		Assert.isNotNull(bugReportID);
 		Assert.isNotNull(source);
 		Assert.isNotNull(contentType);
+		if (description == null) {
+			throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
+					"A description is required when submitting attachments."));
+		}
 
 		hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 		if (!authenticated && hasAuthenticationCredentials()) {
@@ -651,7 +681,7 @@ public class BugzillaClient {
 			if (comment != null) {
 				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, characterEncoding));
 			}
-			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, source));
+			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, new TaskAttachmentPartSource(source, filename)));
 
 			if (isPatch) {
 				parts.add(new StringPart(ATTRIBUTE_ISPATCH, VALUE_ISPATCH));
@@ -659,7 +689,55 @@ public class BugzillaClient {
 				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEMETHOD, VALUE_CONTENTTYPEMETHOD_MANUAL));
 				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEENTRY, contentType));
 			}
-
+			if (attachmentAttribute != null) {
+				Collection<TaskAttribute> attributes = attachmentAttribute.getAttributes().values();
+				Iterator<TaskAttribute> itr = attributes.iterator();
+				while (itr.hasNext()) {
+					TaskAttribute a = itr.next();
+					if (a.getId().startsWith("task.common.kind.flag_type")) {
+						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
+						TaskAttribute requestee = a.getAttribute("requestee");
+						a = a.getAttribute("state");
+						String value = a.getValue();
+						String id = "";
+						if (value.equals(" ")) {
+							continue;
+						}
+						String flagname = a.getMetaData().getLabel();
+						BugzillaFlag theFlag = null;
+						for (BugzillaFlag bugzillaFlag : flags) {
+							if (flagname.equals(bugzillaFlag.getName())) {
+								theFlag = bugzillaFlag;
+								break;
+							}
+						}
+						if (theFlag != null) {
+							int flagTypeNumber = theFlag.getFlagId();
+							id = "flag_type-" + flagTypeNumber;
+							value = a.getValue();
+							if (value.equals("?") && requestee != null) {
+								parts.add(new StringPart("requestee_type-" + flagTypeNumber,
+										requestee.getValue() != null ? requestee.getValue() : ""));
+							}
+						}
+						parts.add(new StringPart(id, value != null ? value : ""));
+					} else if (a.getId().startsWith("task.common.kind.flag")) {
+						TaskAttribute flagnumber = a.getAttribute("number");
+						TaskAttribute requestee = a.getAttribute("requestee");
+						a = a.getAttribute("state");
+						String id = "flag-" + flagnumber.getValue();
+						String value = a.getValue();
+						if (value.equals(" ")) {
+							value = "X";
+						}
+						if (value.equals("?") && requestee != null) {
+							parts.add(new StringPart("requestee-" + flagnumber.getValue(),
+									requestee.getValue() != null ? requestee.getValue() : ""));
+						}
+						parts.add(new StringPart(id, value != null ? value : ""));
+					}
+				}
+			}
 			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));
 			postMethod.setDoAuthentication(true);
 			int status = WebUtil.execute(httpClient, hostConfiguration, postMethod, monitor);
@@ -975,11 +1053,51 @@ public class BugzillaClient {
 					fields.put(a.getId() + i++, new NameValuePair(a.getId(), string != null ? string : ""));
 				}
 			} else if (a.getId() != null && a.getId().compareTo("") != 0) {
+				String id = a.getId();
 				String value = a.getValue();
 				if (a.getId().equals(BugzillaAttribute.DELTA_TS.getKey())) {
 					value = stripTimeZone(value);
 				}
-				fields.put(a.getId(), new NameValuePair(a.getId(), value != null ? value : ""));
+				if (a.getId().startsWith("task.common.kind.flag_type")) {
+					List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
+					TaskAttribute requestee = a.getAttribute("requestee");
+					a = a.getAttribute("state");
+					value = a.getValue();
+					if (value.equals(" ")) {
+						continue;
+					}
+					String flagname = a.getMetaData().getLabel();
+					BugzillaFlag theFlag = null;
+					for (BugzillaFlag bugzillaFlag : flags) {
+						if (flagname.equals(bugzillaFlag.getName())) {
+							theFlag = bugzillaFlag;
+							break;
+						}
+					}
+					if (theFlag != null) {
+						int flagTypeNumber = theFlag.getFlagId();
+						id = "flag_type-" + flagTypeNumber;
+						value = a.getValue();
+						if (value.equals("?") && requestee != null) {
+							fields.put("requestee_type-" + flagTypeNumber, new NameValuePair("requestee_type-"
+									+ flagTypeNumber, requestee.getValue() != null ? requestee.getValue() : ""));
+						}
+					}
+				} else if (a.getId().startsWith("task.common.kind.flag")) {
+					TaskAttribute flagnumber = a.getAttribute("number");
+					TaskAttribute requestee = a.getAttribute("requestee");
+					a = a.getAttribute("state");
+					id = "flag-" + flagnumber.getValue();
+					value = a.getValue();
+					if (value.equals(" ")) {
+						value = "X";
+					}
+					if (value.equals("?") && requestee != null) {
+						fields.put("requestee-" + flagnumber.getValue(), new NameValuePair("requestee-"
+								+ flagnumber.getValue(), requestee.getValue() != null ? requestee.getValue() : ""));
+					}
+				}
+				fields.put(id, new NameValuePair(id, value != null ? value : ""));
 			}
 		}
 

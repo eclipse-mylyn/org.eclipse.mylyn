@@ -47,7 +47,6 @@ import org.eclipse.mylyn.tasks.core.ITask.SynchronizationState;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.data.ITaskDataWorkingCopy;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskCommentMapper;
@@ -477,12 +476,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		/* Test attempt to upload a non-existent file */
 		String filePath = "/this/is/not/a/real-file";
-		TaskAttachmentPartSource source = new TaskAttachmentPartSource(
-				new FileTaskAttachmentSource(new File(filePath)), "real-file");
 		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
 		try {
-			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachmentMapper.getDescription(),
-					"application/octet-stream", false, source, new NullProgressMonitor());
+			client.postAttachment(taskNumber, attachmentMapper.getComment(), new FileTaskAttachmentSource(new File(
+					filePath)), attrAttachment, new NullProgressMonitor());
 			fail();
 		} catch (Exception e) {
 		}

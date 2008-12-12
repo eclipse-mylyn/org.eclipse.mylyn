@@ -13,8 +13,10 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -29,6 +31,219 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 
 public class BugzillaRepository32Test extends AbstractBugzillaTest {
+
+	@SuppressWarnings("null")
+	public void testFlags() throws Exception {
+		init32();
+		String taskNumber = "10";
+//		init("http://macmainz.dyndns.org/Internet/Bugzilla_Develop/");
+//		String taskNumber = "7";
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		TaskData taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		assertNotNull(taskData);
+		Collection<TaskAttribute> a = taskData.getRoot().getAttributes().values();
+		TaskAttribute flagA = null;
+		TaskAttribute flagB = null;
+		TaskAttribute flagC = null;
+		TaskAttribute flagD = null;
+		TaskAttribute stateA = null;
+		TaskAttribute stateB = null;
+		TaskAttribute stateC = null;
+		TaskAttribute stateD = null;
+		for (TaskAttribute taskAttribute : a) {
+			if (taskAttribute.getId().startsWith("task.common.kind.flag")) {
+				TaskAttribute state = taskAttribute.getAttribute("state");
+				if (state.getMetaData().getLabel().equals("FLAG_A")) {
+					flagA = taskAttribute;
+					stateA = state;
+				} else if (state.getMetaData().getLabel().equals("FLAG_B")) {
+					flagB = taskAttribute;
+					stateB = state;
+				} else if (state.getMetaData().getLabel().equals("FLAG_C")) {
+					flagC = taskAttribute;
+					stateC = state;
+				} else if (state.getMetaData().getLabel().equals("FLAG_D")) {
+					flagD = taskAttribute;
+					stateD = state;
+				}
+			}
+		}
+		assertNotNull(flagA);
+		assertNotNull(flagB);
+		assertNotNull(flagC);
+		assertNotNull(flagD);
+		assertNotNull(stateA);
+		assertNotNull(stateB);
+		assertNotNull(stateC);
+		assertNotNull(stateD);
+		assertEquals(" ", stateA.getValue());
+		assertEquals(" ", stateB.getValue());
+		assertEquals(" ", stateC.getValue());
+		assertEquals(" ", stateD.getValue());
+		assertEquals("task.common.kind.flag_type1", flagA.getId());
+		assertEquals("task.common.kind.flag_type2", flagB.getId());
+		assertEquals("task.common.kind.flag_type3", flagC.getId());
+		assertEquals("task.common.kind.flag_type4", flagD.getId());
+		Map<String, String> optionA = stateA.getOptions();
+		Map<String, String> optionB = stateB.getOptions();
+		Map<String, String> optionC = stateC.getOptions();
+		Map<String, String> optionD = stateD.getOptions();
+		assertEquals(true, optionA.containsKey(""));
+		assertEquals(false, optionA.containsKey("?"));
+		assertEquals(true, optionA.containsKey("+"));
+		assertEquals(true, optionA.containsKey("-"));
+		assertEquals(true, optionB.containsKey(""));
+		assertEquals(true, optionB.containsKey("?"));
+		assertEquals(true, optionB.containsKey("+"));
+		assertEquals(true, optionB.containsKey("-"));
+		assertEquals(true, optionC.containsKey(""));
+		assertEquals(true, optionC.containsKey("?"));
+		assertEquals(true, optionC.containsKey("+"));
+		assertEquals(true, optionC.containsKey("-"));
+		assertEquals(true, optionD.containsKey(""));
+		assertEquals(true, optionD.containsKey("?"));
+		assertEquals(true, optionD.containsKey("+"));
+		assertEquals(true, optionD.containsKey("-"));
+		Set<TaskAttribute> changed = new HashSet<TaskAttribute>();
+		stateA.setValue("+");
+		stateB.setValue("?");
+		stateC.setValue("?");
+		stateD.setValue("?");
+		TaskAttribute requesteeD = flagD.getAttribute("requestee");
+//		requesteeD.setValue("rob.elves@eclipse.org");
+		requesteeD.setValue("Mylyn@Frank-Becker.de");
+		changed.add(flagA);
+		changed.add(flagB);
+		changed.add(flagC);
+		changed.add(flagD);
+
+		submit(task, taskData, changed);
+		task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		assertNotNull(taskData);
+		a = taskData.getRoot().getAttributes().values();
+		flagA = null;
+		flagB = null;
+		flagC = null;
+		TaskAttribute flagC2 = null;
+		flagD = null;
+		stateA = null;
+		stateB = null;
+		stateC = null;
+		TaskAttribute stateC2 = null;
+		stateD = null;
+		for (TaskAttribute taskAttribute : a) {
+			if (taskAttribute.getId().startsWith("task.common.kind.flag")) {
+				TaskAttribute state = taskAttribute.getAttribute("state");
+				if (state.getMetaData().getLabel().equals("FLAG_A")) {
+					flagA = taskAttribute;
+					stateA = state;
+				} else if (state.getMetaData().getLabel().equals("FLAG_B")) {
+					flagB = taskAttribute;
+					stateB = state;
+				} else if (state.getMetaData().getLabel().equals("FLAG_C")) {
+					if (flagC == null) {
+						flagC = taskAttribute;
+						stateC = state;
+					} else {
+						flagC2 = taskAttribute;
+						stateC2 = state;
+					}
+				} else if (state.getMetaData().getLabel().equals("FLAG_D")) {
+					flagD = taskAttribute;
+					stateD = state;
+				}
+			}
+		}
+		assertNotNull(flagA);
+		assertNotNull(flagB);
+		assertNotNull(flagC);
+		assertNotNull(flagC2);
+		assertNotNull(flagD);
+		assertNotNull(stateA);
+		assertNotNull(stateB);
+		assertNotNull(stateC);
+		assertNotNull(stateC2);
+		assertNotNull(stateD);
+		assertEquals("+", stateA.getValue());
+		assertEquals("?", stateB.getValue());
+		assertEquals("?", stateC.getValue());
+		assertEquals(" ", stateC2.getValue());
+		assertEquals("?", stateD.getValue());
+		requesteeD = flagD.getAttribute("requestee");
+		assertNotNull(requesteeD);
+		assertEquals("Mylyn@Frank-Becker.de", requesteeD.getValue());
+		stateA.setValue(" ");
+		stateB.setValue(" ");
+		stateC.setValue(" ");
+		stateD.setValue(" ");
+//		 requesteeD = flagD.getAttribute("requestee");
+////		requesteeD.setValue("rob.elves@eclipse.org");
+//		requesteeD.setValue("Mylyn@Frank-Becker.de");
+		changed.add(flagA);
+		changed.add(flagB);
+		changed.add(flagC);
+		changed.add(flagD);
+
+		submit(task, taskData, changed);
+		task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
+		assertNotNull(taskData);
+		a = taskData.getRoot().getAttributes().values();
+		flagA = null;
+		flagB = null;
+		flagC = null;
+		flagC2 = null;
+		flagD = null;
+		stateA = null;
+		stateB = null;
+		stateC = null;
+		stateC2 = null;
+		stateD = null;
+		for (TaskAttribute taskAttribute : a) {
+			if (taskAttribute.getId().startsWith("task.common.kind.flag")) {
+				TaskAttribute state = taskAttribute.getAttribute("state");
+				if (state.getMetaData().getLabel().equals("FLAG_A")) {
+					flagA = taskAttribute;
+					stateA = state;
+				} else if (state.getMetaData().getLabel().equals("FLAG_B")) {
+					flagB = taskAttribute;
+					stateB = state;
+				} else if (state.getMetaData().getLabel().equals("FLAG_C")) {
+					if (flagC == null) {
+						flagC = taskAttribute;
+						stateC = state;
+					} else {
+						flagC2 = taskAttribute;
+						stateC2 = state;
+					}
+				} else if (state.getMetaData().getLabel().equals("FLAG_D")) {
+					flagD = taskAttribute;
+					stateD = state;
+				}
+			}
+		}
+		assertNotNull(flagA);
+		assertNotNull(flagB);
+		assertNotNull(flagC);
+		assertNull(flagC2);
+		assertNotNull(flagD);
+		assertNotNull(stateA);
+		assertNotNull(stateB);
+		assertNotNull(stateC);
+		assertNull(stateC2);
+		assertNotNull(stateD);
+		assertEquals(" ", stateA.getValue());
+		assertEquals(" ", stateB.getValue());
+		assertEquals(" ", stateC.getValue());
+		assertEquals(" ", stateD.getValue());
+		requesteeD = flagD.getAttribute("requestee");
+		assertNotNull(requesteeD);
+		assertEquals("", requesteeD.getValue());
+	}
 
 	public void testCustomAttributes() throws Exception {
 		init32();

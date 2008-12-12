@@ -12,13 +12,18 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Frank Becker
  */
 public class BugzillaFlag implements Serializable {
 
-	private static final long serialVersionUID = 4920551884607344418L;
+// old	private static final long serialVersionUID = 4920551884607344418L;
+	private static final long serialVersionUID = -3149026741475639885L;
 
 	private final String name;
 
@@ -26,28 +31,39 @@ public class BugzillaFlag implements Serializable {
 
 	private final String type;
 
-	private boolean requestable;
+	private final boolean requestable;
 
-	private boolean specifically_requestable;
+	private final boolean specifically_requestable;
 
-	private boolean multiplicable;
+	private final boolean multiplicable;
+
+	private final int flagId;
+
+	private final Map<String, List<String>> used = new HashMap<String, List<String>>();
 
 	public BugzillaFlag(String name, String description, String type, String requestable,
-			String specifically_requestable, String multiplicable) {
+			String specifically_requestable, String multiplicable, int flagId) {
 		this.description = description;
 		this.name = name;
 		this.type = type;
+		this.flagId = flagId;
 
 		if (multiplicable != null && !multiplicable.equals("")) {
 			this.multiplicable = multiplicable.equals("1");
+		} else {
+			this.multiplicable = false;
 		}
 
 		if (requestable != null && !requestable.equals("")) {
 			this.requestable = requestable.equals("1");
+		} else {
+			this.requestable = false;
 		}
 
 		if (specifically_requestable != null && !specifically_requestable.equals("")) {
 			this.specifically_requestable = specifically_requestable.equals("1");
+		} else {
+			this.specifically_requestable = false;
 		}
 	}
 
@@ -73,5 +89,28 @@ public class BugzillaFlag implements Serializable {
 
 	public boolean isMultiplicable() {
 		return multiplicable;
+	}
+
+	public int getFlagId() {
+		return flagId;
+	}
+
+	public void addUsed(String product, String component) {
+		List<String> componentList = used.get(product);
+		if (componentList == null) {
+			componentList = new ArrayList<String>();
+			used.put(product, componentList);
+		}
+		if (!componentList.contains(component)) {
+			componentList.add(component);
+		}
+	}
+
+	public boolean isUsedIn(String product, String component) {
+		List<String> componentList = used.get(product);
+		if (componentList != null && componentList.contains(component)) {
+			return true;
+		}
+		return false;
 	}
 }

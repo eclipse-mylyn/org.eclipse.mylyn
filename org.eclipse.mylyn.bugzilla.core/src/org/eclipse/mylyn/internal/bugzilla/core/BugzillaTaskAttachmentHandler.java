@@ -27,7 +27,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttachmentMapper;
-import org.eclipse.mylyn.tasks.core.data.TaskAttachmentPartSource;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 /**
@@ -75,38 +74,8 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			monitor.beginTask("Sending attachment", IProgressMonitor.UNKNOWN);
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
-			String description = source.getDescription();
-			String contentType = source.getContentType();
-			String filename = source.getName();
-			boolean isPatch = false;
 
-			if (attachmentAttribute != null) {
-				TaskAttachmentMapper mapper = TaskAttachmentMapper.createFrom(attachmentAttribute);
-
-				if (mapper.getDescription() != null) {
-					description = mapper.getDescription();
-				}
-
-				if (mapper.getContentType() != null) {
-					contentType = mapper.getContentType();
-				}
-
-				if (mapper.getFileName() != null) {
-					filename = mapper.getFileName();
-				}
-
-				if (mapper.isPatch() != null) {
-					isPatch = mapper.isPatch();
-				}
-			}
-
-			if (description == null) {
-				throw new CoreException(new Status(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-						"A description is required when submitting attachments."));
-			}
-
-			client.postAttachment(task.getTaskId(), comment, description, contentType, isPatch,
-					new TaskAttachmentPartSource(source, filename), monitor);
+			client.postAttachment(task.getTaskId(), comment, source, attachmentAttribute, monitor);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					"Unable to submit attachment", e));

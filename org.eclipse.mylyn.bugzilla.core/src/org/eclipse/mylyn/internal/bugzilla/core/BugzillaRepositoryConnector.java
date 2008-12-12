@@ -398,6 +398,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			enSetting.addLanguageAttribute("bad_login", "error");
 			enSetting.addLanguageAttribute("processed", "processed");
 			enSetting.addLanguageAttribute("changes_submitted", "Changes submitted");
+			enSetting.addLanguageAttribute("changes_submitted", "added to Bug");
 			languages.add(enSetting);
 
 		}

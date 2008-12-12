@@ -106,6 +106,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 					editor = new BugzillaCcAttributeEditor(getModel(), taskAttribute);
 				} else if (IBugzillaConstants.EDITOR_TYPE_VOTES.equals(type)) {
 					editor = new BugzillaVotesEditor(getModel(), taskAttribute);
+				} else if (IBugzillaConstants.EDITOR_TYPE_FLAG.equals(type)) {
+					editor = new FlagAttributeEditor(getModel(), taskAttribute);
 				} else {
 					editor = super.createEditor(type, taskAttribute);
 					if (TaskAttribute.TYPE_BOOLEAN.equals(type)) {

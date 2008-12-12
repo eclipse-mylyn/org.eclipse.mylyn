@@ -39,6 +39,7 @@
             <languageAttribute command="bad_login" 					response="error"/> 
             <languageAttribute command="processed" 					response="processed"/> 
             <languageAttribute command="changes_submitted" 			response="Changes submitted"/> 
+            <languageAttribute command="changes_submitted" 			response="added to Bug"/>
       </language> 
       -->
       <language 
@@ -55,7 +56,8 @@
             <languageAttribute command="bad_login" 					response="error"/> 
             <languageAttribute command="processed" 					response="processed"/> 
             <languageAttribute command="changes_submitted" 			response="Changes submitted"/> 
-      </language> 
+            <languageAttribute command="changes_submitted" 			response="added to Bug"/>
+       </language> 
    </extension>    
   
      <extension
