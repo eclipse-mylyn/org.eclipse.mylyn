@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.commons.tests;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
@@ -22,6 +23,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -425,7 +428,7 @@ public class WebUtilTest extends TestCase {
 		assertFalse("Expected HttpClient to close connection", testProxy.hasRequest());
 	}
 
-	public void testLoationSslConnectProxyTimeout() throws Exception {
+	public void testLocationSslConnectProxyTimeout() throws Exception {
 		String url = "https://foo/bar";
 		final Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
 		AbstractWebLocation location = new WebLocation(url, null, null, new IProxyProvider() {
@@ -438,6 +441,12 @@ public class WebUtilTest extends TestCase {
 		testProxy.addResponse(TestProxy.OK);
 
 		GetMethod method = new GetMethod("/");
+		// avoid second attempt to connect to proxy to get exception right away
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new HttpMethodRetryHandler() {
+			public boolean retryMethod(HttpMethod method, IOException exception, int executionCount) {
+				return false;
+			}
+		});
 		try {
 			int statusCode = client.executeMethod(hostConfiguration, method);
 			fail("Expected SSLHandshakeException, got status: " + statusCode);
