@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,17 +11,18 @@
 
 package org.eclipse.mylyn.trac.tests;
 
+import org.eclipse.mylyn.trac.tests.core.RepositorySearchTest;
+import org.eclipse.mylyn.trac.tests.core.TracAttachmentHandlerTest;
+import org.eclipse.mylyn.trac.tests.core.TracRepositoryConnectorTest;
+import org.eclipse.mylyn.trac.tests.core.TracRepositoryQueryTest;
+import org.eclipse.mylyn.trac.tests.core.TracTaskDataHandlerTest;
+import org.eclipse.mylyn.trac.tests.core.TracUtilTest;
+import org.eclipse.mylyn.trac.tests.ui.TracHyperlinkUtilTest;
+import org.eclipse.mylyn.trac.tests.ui.TracRepositorySettingsPageTest;
+import org.eclipse.mylyn.trac.tests.ui.TracTaskEditorTest;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
-import org.eclipse.mylyn.trac.tests.client.TracClientFactoryTest;
-import org.eclipse.mylyn.trac.tests.client.TracClientProxyTest;
-import org.eclipse.mylyn.trac.tests.client.TracSearchTest;
-import org.eclipse.mylyn.trac.tests.client.TracTicketTest;
-import org.eclipse.mylyn.trac.tests.client.TracWebClientSearchTest;
-import org.eclipse.mylyn.trac.tests.client.TracWebClientTest;
-import org.eclipse.mylyn.trac.tests.client.TracXmlRpcClientSearchTest;
-import org.eclipse.mylyn.trac.tests.client.TracXmlRpcClientTest;
 
 /**
  * @author Mik Kersten
@@ -30,27 +31,17 @@ import org.eclipse.mylyn.trac.tests.client.TracXmlRpcClientTest;
 public class AllTracTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.trac.tests");
-		// $JUnit-BEGIN$
-		suite.addTestSuite(TracSearchTest.class);
-		suite.addTestSuite(TracTicketTest.class);
-		suite.addTestSuite(TracXmlRpcClientTest.class);
-		suite.addTestSuite(TracXmlRpcClientSearchTest.class);
-		suite.addTestSuite(TracWebClientTest.class);
-		suite.addTestSuite(TracWebClientSearchTest.class);
-		suite.addTestSuite(TracClientFactoryTest.class);
-		suite.addTestSuite(TracClientProxyTest.class);
+		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.trac.tests");
+		suite.addTest(AllTracHeadlessStandaloneTests.suite());
 		suite.addTestSuite(TracRepositoryConnectorTest.class);
 		suite.addTestSuite(TracUtilTest.class);
 		suite.addTestSuite(TracRepositoryQueryTest.class);
-		suite.addTestSuite(TracClientManagerTest.class);
 		suite.addTestSuite(TracAttachmentHandlerTest.class);
 		suite.addTestSuite(RepositorySearchTest.class);
 		suite.addTestSuite(TracTaskDataHandlerTest.class);
 		suite.addTestSuite(TracTaskEditorTest.class);
 		suite.addTestSuite(TracRepositorySettingsPageTest.class);
 		suite.addTestSuite(TracHyperlinkUtilTest.class);
-		// $JUnit-END$
 		return suite;
 	}
 

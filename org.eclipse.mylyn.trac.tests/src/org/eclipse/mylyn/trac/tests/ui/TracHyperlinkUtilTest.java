@@ -10,7 +10,7 @@
  *     David Green - improvements
  *******************************************************************************/
 
-package org.eclipse.mylyn.trac.tests;
+package org.eclipse.mylyn.trac.tests.ui;
 
 import java.util.List;
 

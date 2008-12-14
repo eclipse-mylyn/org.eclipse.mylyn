@@ -98,10 +98,13 @@ public class TaskListStandaloneTest extends TestCase {
 		AbstractTask task = new LocalTask("1", "task 1");
 
 		TasksUiPlugin.getTaskList().addTask(task);
-		assertDatesCloseEnough(task.getCreationDate(), start);
+		assertNull(task.getCreationDate());
+		task.setCreationDate(start);
+		assertEquals(start, task.getCreationDate());
 
 		task.setCompletionDate(creation);
-		assertDatesCloseEnough(task.getCompletionDate(), start);
+		assertNull(task.getCompletionDate());
+		assertEquals(start, task.getCompletionDate());
 
 		assertEquals(1, TasksUiPlugin.getTaskList().getRootElements().size());
 		TasksUiPlugin.getExternalizationManager().requestSave();
@@ -186,7 +189,4 @@ public class TaskListStandaloneTest extends TestCase {
 		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
 	}
 
-	public void assertDatesCloseEnough(Date first, Date second) {
-		assertTrue(second.getTime() - first.getTime() < 100);
-	}
 }
