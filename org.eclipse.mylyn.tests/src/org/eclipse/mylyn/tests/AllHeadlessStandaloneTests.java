@@ -16,7 +16,9 @@ import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.commons.tests.SslProtocolSocketFactoryTest;
 import org.eclipse.mylyn.commons.tests.WebUtilTest;
+import org.eclipse.mylyn.tasks.tests.TaskListTest;
 import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
+import org.eclipse.mylyn.trac.tests.AllTracHeadlessStandaloneTests;
 
 /**
  * @author Mik Kersten
@@ -37,11 +39,14 @@ public class AllHeadlessStandaloneTests {
 //		suite.addTestSuite(ContextTest.class);
 
 		// tasks
-//		suite.addTestSuite(TaskListStandaloneTest.class);
+		suite.addTestSuite(TaskListTest.class);
 		suite.addTestSuite(TasksUtilTest.class);
 
 		// wikitext
 		suite.addTest(org.eclipse.mylyn.wikitext.tests.HeadlessStandaloneTests.suite());
+
+		// trac
+		suite.addTest(AllTracHeadlessStandaloneTests.suite());
 
 		return suite;
 	}
