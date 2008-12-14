@@ -11,6 +11,10 @@
 
 package org.eclipse.mylyn.commons.tests;
 
+import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
+import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
+import org.eclipse.mylyn.commons.tests.ui.RetrieveTitleFromUrlTest;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

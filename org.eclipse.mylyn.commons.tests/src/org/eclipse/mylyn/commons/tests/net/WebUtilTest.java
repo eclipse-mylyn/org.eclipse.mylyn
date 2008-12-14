@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.commons.tests;
+package org.eclipse.mylyn.commons.tests.net;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
