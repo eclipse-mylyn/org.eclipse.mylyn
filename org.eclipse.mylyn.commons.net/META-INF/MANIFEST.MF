@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.eclipse.mylyn.commons.net
+Bundle-SymbolicName: org.eclipse.mylyn.commons.net;singleton:=true
 Bundle-Version: 3.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ActivationPolicy: lazy

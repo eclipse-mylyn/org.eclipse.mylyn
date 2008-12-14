@@ -1,10 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.eclipse.mylyn.commons.soap
+Bundle-SymbolicName: org.eclipse.mylyn.commons.soap;singleton:=true
 Bundle-Version: 3.1.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.apache.axis;bundle-version="1.4.0",
  org.apache.commons.httpclient;bundle-version="3.1.0",
@@ -15,6 +14,5 @@ Require-Bundle: org.apache.axis;bundle-version="1.4.0",
 Bundle-ClassPath: .
 Export-Package: org.eclipse.mylyn.internal.commons.soap;x-internal:=true,
  org.eclipse.mylyn.internal.provisional.commons.soap;x-friends:="org.eclipse.mylyn.xplanner.core,org.eclipse.mylyn.jira.core"
-Bundle-Activator: org.eclipse.mylyn.internal.commons.net.CommonsNetPlugin
 Bundle-Localization: plugin
 Eclipse-RegisterBuddy: org.apache.axis
