@@ -39,11 +39,12 @@
     	<property name="log" value="${build.results}/test-standalone-${build.target}.log" />
 		<path id="tests.classpath">
 			<fileset dir="${install.dir}">
-				<include name="plugins/*.jar"/>
-				<include name="plugins/*/*.jar"/>
+				<include name="plugins/**/*.jar"/>
+				<exclude name="plugins/**/ui*.jar"/>
 			</fileset>
 			<dirset dir="${install.dir}/plugins">
 				<include name="*"/>
+				<exclude name="*ui*"/>
 			</dirset>
 			<fileset dir="${eclipse.home}/plugins">
 				<include name="org.junit_*/junit.jar"/>
@@ -67,6 +68,7 @@
 			<classpath>
 				<path refid="tests.classpath"/>
 			</classpath>
+			<sysproperty key="mylyn.credentials" value="${build.credentials}"/>
 			<formatter type="xml" />
 			<test todir="${output.dir}" name="org.eclipse.mylyn.tests.AllHeadlessStandaloneTests"/>
 		</junit>
@@ -142,8 +144,8 @@
 	
 	<target name="publish-helper-run">
     	<path id="file.id"> 
-    		<fileset dir="${build.results}/test-${build.target}">
-            	<include name="${file}"/>
+    		<fileset dir="${build.results}">
+            	<include name="test-${build.target}/${file}"/>
           	</fileset>
     	</path> 
     	<property name="file.path" refid="file.id"/>
