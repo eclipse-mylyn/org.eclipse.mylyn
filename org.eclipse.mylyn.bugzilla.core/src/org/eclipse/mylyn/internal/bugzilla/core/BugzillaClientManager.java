@@ -39,14 +39,14 @@ public class BugzillaClientManager implements IRepositoryListener {
 		if (client == null) {
 
 			String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
-			if (language == null || language.equals("")) {
+			if (language == null || language.equals("")) { //$NON-NLS-1$
 				language = IBugzillaConstants.DEFAULT_LANG;
 			}
 			try {
 				client = createClient(taskRepository);
 			} catch (MalformedURLException e) {
 				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-						"Malformed Repository Url", e));
+						"Malformed Repository Url", e)); //$NON-NLS-1$
 			}
 			clientByUrl.put(taskRepository.getRepositoryUrl(), client);
 			client.setRepositoryConfiguration(BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false,

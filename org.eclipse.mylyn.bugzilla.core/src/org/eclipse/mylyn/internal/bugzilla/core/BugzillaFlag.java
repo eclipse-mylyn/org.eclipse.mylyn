@@ -48,20 +48,20 @@ public class BugzillaFlag implements Serializable {
 		this.type = type;
 		this.flagId = flagId;
 
-		if (multiplicable != null && !multiplicable.equals("")) {
-			this.multiplicable = multiplicable.equals("1");
+		if (multiplicable != null && !multiplicable.equals("")) { //$NON-NLS-1$
+			this.multiplicable = multiplicable.equals("1"); //$NON-NLS-1$
 		} else {
 			this.multiplicable = false;
 		}
 
-		if (requestable != null && !requestable.equals("")) {
-			this.requestable = requestable.equals("1");
+		if (requestable != null && !requestable.equals("")) { //$NON-NLS-1$
+			this.requestable = requestable.equals("1"); //$NON-NLS-1$
 		} else {
 			this.requestable = false;
 		}
 
-		if (specifically_requestable != null && !specifically_requestable.equals("")) {
-			this.specifically_requestable = specifically_requestable.equals("1");
+		if (specifically_requestable != null && !specifically_requestable.equals("")) { //$NON-NLS-1$
+			this.specifically_requestable = specifically_requestable.equals("1"); //$NON-NLS-1$
 		} else {
 			this.specifically_requestable = false;
 		}

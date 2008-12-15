@@ -20,13 +20,13 @@ public class TaskRevision implements Comparable<TaskRevision>, Serializable {
 
 	private static final long serialVersionUID = 7739060501945994522L;
 
-	protected final static String STATUS = "Status";
+	protected final static String STATUS = "Status"; //$NON-NLS-1$
 
-	protected final static String RESOLUTION = "Resolution";
+	protected final static String RESOLUTION = "Resolution"; //$NON-NLS-1$
 
-	protected final static String ASSIGNMENT = "AssignedTo";
+	protected final static String ASSIGNMENT = "AssignedTo"; //$NON-NLS-1$
 
-	protected final static String ATTACHMENT = "Attachment";
+	protected final static String ATTACHMENT = "Attachment"; //$NON-NLS-1$
 
 	protected String name;
 
@@ -39,7 +39,7 @@ public class TaskRevision implements Comparable<TaskRevision>, Serializable {
 	protected String added;
 
 	protected TaskRevision() {
-		this.added = "";
+		this.added = ""; //$NON-NLS-1$
 	}
 
 	public static TaskRevision createEvent(String type, String change) {
@@ -59,7 +59,7 @@ public class TaskRevision implements Comparable<TaskRevision>, Serializable {
 			event = new AssignmentEvent(change);
 		}
 
-		if (type.contains(ATTACHMENT) && type.contains("Flag")) {
+		if (type.contains(ATTACHMENT) && type.contains("Flag")) { //$NON-NLS-1$
 			event = new AttachmentEvent(AttachmentEvent.parseId(type), AttachmentEvent.parseFlags(change));
 		}
 
@@ -109,7 +109,7 @@ public class TaskRevision implements Comparable<TaskRevision>, Serializable {
 
 	@Override
 	public String toString() {
-		return this.name + " | " + this.date + " | " + this.what + " | " + this.removed + " | " + this.added;
+		return this.name + " | " + this.date + " | " + this.what + " | " + this.removed + " | " + this.added; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	public int compareTo(TaskRevision o) {

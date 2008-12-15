@@ -222,7 +222,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		@Override
 		public String toString() {
-			return "" + getVersionNum();
+			return "" + getVersionNum(); //$NON-NLS-1$
 		}
 
 		private static void updateAttribute(TaskData data, BugzillaAttribute bugAttribute) {
@@ -258,7 +258,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 		if (retrievedData[0] == null) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					"Task data could not be retrieved. Please re-synchronize task"));
+					"Task data could not be retrieved. Please re-synchronize task")); //$NON-NLS-1$
 		}
 		return retrievedData[0];
 
@@ -288,7 +288,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		monitor = Policy.monitorFor(monitor);
 
 		try {
-			monitor.beginTask("Receiving tasks", taskIds.size());
+			monitor.beginTask(Messages.BugzillaTaskDataHandler_Receiving_tasks, taskIds.size());
 			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 			final CoreException[] collectionException = new CoreException[1];
 
@@ -359,7 +359,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			Set<TaskAttribute> changedAttributes, IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Submitting task", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BugzillaTaskDataHandler_Submitting_task, IProgressMonitor.UNKNOWN);
 			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 			try {
 				return client.postTaskData(taskData, monitor);
@@ -497,10 +497,10 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 
 		TaskAttribute attributeAssignedTo = createAttribute(taskData, BugzillaAttribute.ASSIGNED_TO);
-		attributeAssignedTo.setValue("");
+		attributeAssignedTo.setValue(""); //$NON-NLS-1$
 
 		TaskAttribute attributeBugFileLoc = createAttribute(taskData, BugzillaAttribute.BUG_FILE_LOC);
-		attributeBugFileLoc.setValue("http://");
+		attributeBugFileLoc.setValue("http://"); //$NON-NLS-1$
 
 		createAttribute(taskData, BugzillaAttribute.DEPENDSON);
 		createAttribute(taskData, BugzillaAttribute.BLOCKED);
@@ -539,9 +539,9 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		TaskMapper mapper = new TaskMapper(parentTaskData);
 		initializeTaskData(repository, subTaskData, mapper, monitor);
 		new TaskMapper(subTaskData).merge(mapper);
-		subTaskData.getRoot().getMappedAttribute(BugzillaAttribute.DEPENDSON.getKey()).setValue("");
-		subTaskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue("");
-		subTaskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue("");
+		subTaskData.getRoot().getMappedAttribute(BugzillaAttribute.DEPENDSON.getKey()).setValue(""); //$NON-NLS-1$
+		subTaskData.getRoot().getMappedAttribute(TaskAttribute.DESCRIPTION).setValue(""); //$NON-NLS-1$
+		subTaskData.getRoot().getMappedAttribute(TaskAttribute.SUMMARY).setValue(""); //$NON-NLS-1$
 		subTaskData.getRoot().getAttribute(BugzillaAttribute.BLOCKED.getKey()).setValue(parentTaskData.getTaskId());
 		TaskAttribute parentAttributeAssigned = parentTaskData.getRoot()
 				.getMappedAttribute(TaskAttribute.USER_ASSIGNED);
@@ -574,7 +574,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			IProgressMonitor monitor) throws CoreException {
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Updating Attachment", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BugzillaTaskDataHandler_updating_attachment, IProgressMonitor.UNKNOWN);
 			BugzillaClient client = connector.getClientManager().getClient(repository, monitor);
 			try {
 				client.postUpdateAttachment(taskAttribute, action, monitor);

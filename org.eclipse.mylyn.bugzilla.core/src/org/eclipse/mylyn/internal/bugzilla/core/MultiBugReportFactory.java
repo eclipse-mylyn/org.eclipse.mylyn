@@ -47,7 +47,7 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTFOUND)
 					|| errorResponse.equals(IBugzillaConstants.XML_ERROR_INVALIDBUGID)) {
 				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
+						RepositoryStatus.ERROR_REPOSITORY, "", IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID)); //$NON-NLS-1$
 			} else if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTPERMITTED)) {
 				BugzillaStatus status = new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.ID_PLUGIN,
 						RepositoryStatus.ERROR_REPOSITORY_LOGIN, mapper.getTaskRepository().getRepositoryUrl(),
@@ -55,7 +55,7 @@ public class MultiBugReportFactory extends AbstractReportFactory {
 				throw new CoreException(status);
 			} else {
 				throw new CoreException(new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_REPOSITORY, "", "Unexpected error occurred: " + errorResponse));
+						RepositoryStatus.ERROR_REPOSITORY, "", "Unexpected error occurred: " + errorResponse)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

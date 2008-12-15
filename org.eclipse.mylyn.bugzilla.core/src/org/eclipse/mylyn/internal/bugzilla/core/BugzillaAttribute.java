@@ -18,156 +18,168 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public enum BugzillaAttribute {
 
-	STATUS_WHITEBOARD("Status Whiteboard:", "status_whiteboard", TaskAttribute.TYPE_LONG_RICH_TEXT, false, false),
+	STATUS_WHITEBOARD(Messages.BugzillaAttribute_Status_Whiteboard,
+			"status_whiteboard", TaskAttribute.TYPE_LONG_RICH_TEXT, false, false), //$NON-NLS-1$
 
-	ACTUAL_TIME("Worked:", "actual_time", TaskAttribute.TYPE_SHORT_TEXT, true, true),
+	ACTUAL_TIME(Messages.BugzillaAttribute_Worked, "actual_time", TaskAttribute.TYPE_SHORT_TEXT, true, true), //$NON-NLS-1$
 
-	ADD_COMMENT("Additional Comments:", "comment", TaskAttribute.TYPE_LONG_TEXT, true, false),
+	ADD_COMMENT(Messages.BugzillaAttribute_Additional_Comments, "comment", TaskAttribute.TYPE_LONG_TEXT, true, false), //$NON-NLS-1$
 
-	ASSIGNED_TO("Assigned to:", "assigned_to", TaskAttribute.TYPE_PERSON, true, true),
+	ASSIGNED_TO(Messages.BugzillaAttribute_Assigned_to, "assigned_to", TaskAttribute.TYPE_PERSON, true, true), //$NON-NLS-1$
 
-	ASSIGNED_TO_NAME("Assigned to:", "assigned_to_name", TaskAttribute.TYPE_PERSON, true, true),
+	ASSIGNED_TO_NAME(Messages.BugzillaAttribute_Assigned_to_NAME,
+			"assigned_to_name", TaskAttribute.TYPE_PERSON, true, true), //$NON-NLS-1$
 
-	ATTACHID("attachid", "attachid", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	ATTACHID(Messages.BugzillaAttribute_ATTACH_ID, "attachid", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 
-	ATTACHMENT("attachment", "attachment", TaskAttribute.TYPE_ATTACHMENT, false, false),
+	ATTACHMENT(Messages.BugzillaAttribute_attachment, "attachment", TaskAttribute.TYPE_ATTACHMENT, false, false), //$NON-NLS-1$
 
-	BLOCKED("Blocks:", "blocked", TaskAttribute.TYPE_TASK_DEPENDENCY, false, false),
+	BLOCKED(Messages.BugzillaAttribute_Blocks, "blocked", TaskAttribute.TYPE_TASK_DEPENDENCY, false, false), //$NON-NLS-1$
 
-	BUG("bug", "bug", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	BUG(Messages.BugzillaAttribute_bug, "bug", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
-	BUG_FILE_LOC("URL:", "bug_file_loc", TaskAttribute.TYPE_URL, false, false),
+	BUG_FILE_LOC(Messages.BugzillaAttribute_URL, "bug_file_loc", TaskAttribute.TYPE_URL, false, false), //$NON-NLS-1$
 
-	BUG_ID("Bug:", "bug_id", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	BUG_ID(Messages.BugzillaAttribute_Bug_ID, "bug_id", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
-	BUG_SEVERITY("Severity:", "bug_severity", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
+	BUG_SEVERITY(Messages.BugzillaAttribute_Severity, "bug_severity", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
-	BUG_STATUS("Status:", "bug_status", TaskAttribute.TYPE_SHORT_TEXT, true, true),
+	BUG_STATUS(Messages.BugzillaAttribute_Status, "bug_status", TaskAttribute.TYPE_SHORT_TEXT, true, true), //$NON-NLS-1$
 
-	BUG_WHEN("bug_when", "bug_when", TaskAttribute.TYPE_DATE, true, true),
+	BUG_WHEN(Messages.BugzillaAttribute_bug_when, "bug_when", TaskAttribute.TYPE_DATE, true, true), //$NON-NLS-1$
 
-	BUGZILLA("bugzilla", "bugzilla", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	BUGZILLA(Messages.BugzillaAttribute_bugzilla, "bugzilla", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
-	CC("CC:", "cc", IBugzillaConstants.EDITOR_TYPE_REMOVECC, true, true),
+	CC(Messages.BugzillaAttribute_CC, "cc", IBugzillaConstants.EDITOR_TYPE_REMOVECC, true, true), //$NON-NLS-1$
 
-	REMOVECC("Remove CC", "removecc", IBugzillaConstants.EDITOR_TYPE_REMOVECC, true, true),
+	REMOVECC(Messages.BugzillaAttribute_Remove_CC, "removecc", IBugzillaConstants.EDITOR_TYPE_REMOVECC, true, true), //$NON-NLS-1$
 
-	CCLIST_ACCESSIBLE("CC List", "cclist_accessible", TaskAttribute.TYPE_BOOLEAN, true, false),
+	CCLIST_ACCESSIBLE(Messages.BugzillaAttribute_CC_List, "cclist_accessible", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$
 
-	CLASSIFICATION("Classification:", "classification", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	CLASSIFICATION(Messages.BugzillaAttribute_Classification,
+			"classification", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
-	CLASSIFICATION_ID("Classification ID:", "classification_id", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	CLASSIFICATION_ID(Messages.BugzillaAttribute_Classification_ID,
+			"classification_id", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
-	COMPONENT("Component:", "component", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
+	COMPONENT(Messages.BugzillaAttribute_Component, "component", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
-	CREATION_TS("Opened:", "creation_ts", TaskAttribute.TYPE_DATE, true, false),
+	CREATION_TS(Messages.BugzillaAttribute_Opened, "creation_ts", TaskAttribute.TYPE_DATE, true, false), //$NON-NLS-1$
 
-	CTYPE("Content Type", "ctype", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	CTYPE(Messages.BugzillaAttribute_Content_Type, "ctype", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 
-	DATA("data", "data", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	DATA(Messages.BugzillaAttribute_data, "data", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 
-	DATE("Date", "date", TaskAttribute.TYPE_DATE, false, false),
+	DATE(Messages.BugzillaAttribute_Date, "date", TaskAttribute.TYPE_DATE, false, false), //$NON-NLS-1$
 
-	DEADLINE("Due:", "deadline", TaskAttribute.TYPE_DATE, true, false),
+	DEADLINE(Messages.BugzillaAttribute_Due, "deadline", TaskAttribute.TYPE_DATE, true, false), //$NON-NLS-1$
 
-	DELTA_TS("Modified:", "delta_ts", TaskAttribute.TYPE_DATETIME, true, false),
+	DELTA_TS(Messages.BugzillaAttribute_Modified, "delta_ts", TaskAttribute.TYPE_DATE, true, false), //$NON-NLS-1$
 
-	DEPENDSON("Depends on (Subtasks):", "dependson", TaskAttribute.TYPE_TASK_DEPENDENCY, false, false),
+	DEPENDSON(Messages.BugzillaAttribute_Depends_on__Subtasks_,
+			"dependson", TaskAttribute.TYPE_TASK_DEPENDENCY, false, false), //$NON-NLS-1$
 
-	DESC("desc", "desc", TaskAttribute.TYPE_LONG_TEXT, true, true),
+	DESC(Messages.BugzillaAttribute_desc, "desc", TaskAttribute.TYPE_LONG_TEXT, true, true), //$NON-NLS-1$
 
-	EVERCONFIRMED("everconfirmed", "everconfirmed", TaskAttribute.TYPE_BOOLEAN, true, false),
+	EVERCONFIRMED(Messages.BugzillaAttribute_everconfirmed, "everconfirmed", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$
 
-	ESTIMATED_TIME("Estimated Time:", "estimated_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	ESTIMATED_TIME(Messages.BugzillaAttribute_Estimated_Time,
+			"estimated_time", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
-	FILENAME("filename", "filename", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	FILENAME(Messages.BugzillaAttribute_filename, "filename", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 
-	FLAG("Flag:", "flag", null, false, false),
+	FLAG(Messages.BugzillaAttribute_flag, "flag", null, false, false), //$NON-NLS-1$
 
-	GROUP("Group", "group", TaskAttribute.TYPE_BOOLEAN, true, true),
+	GROUP(Messages.BugzillaAttribute_Group, "group", TaskAttribute.TYPE_BOOLEAN, true, true), //$NON-NLS-1$
 
-	IS_OBSOLETE("Obsolete", "isobsolete", TaskAttribute.TYPE_BOOLEAN, true, false),
+	IS_OBSOLETE(Messages.BugzillaAttribute_Obsolete, "isobsolete", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$
 
-	IS_PATCH("Patch", "ispatch", TaskAttribute.TYPE_BOOLEAN, true, false),
+	IS_PATCH(Messages.BugzillaAttribute_Patch, "ispatch", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$
 
-	KEYWORDS("Keywords:", "keywords", IBugzillaConstants.EDITOR_TYPE_KEYWORDS, false, false),
+	KEYWORDS(Messages.BugzillaAttribute_Keywords, "keywords", IBugzillaConstants.EDITOR_TYPE_KEYWORDS, false, false), //$NON-NLS-1$
 
-	LONG_DESC("Description:", "long_desc", TaskAttribute.TYPE_LONG_RICH_TEXT, true, true),
+	LONG_DESC(Messages.BugzillaAttribute_Description, "long_desc", TaskAttribute.TYPE_LONG_RICH_TEXT, true, true), //$NON-NLS-1$
 
-	LONGDESCLENGTH("Number of comments", "longdesclength", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	LONGDESCLENGTH(Messages.BugzillaAttribute_Number_of_comments,
+			"longdesclength", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
-	NEWCC("Add CC:", "newcc", TaskAttribute.TYPE_PERSON, true, false),
+	NEWCC(Messages.BugzillaAttribute_Add_CC, "newcc", TaskAttribute.TYPE_PERSON, true, false), //$NON-NLS-1$
 
-	OP_SYS("OS:", "op_sys", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
+	OP_SYS(Messages.BugzillaAttribute_OS, "op_sys", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
-	PRIORITY("Priority:", "priority", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
+	PRIORITY(Messages.BugzillaAttribute_Priority, "priority", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
-	PRODUCT("Product:", "product", TaskAttribute.TYPE_SHORT_TEXT, false, true),
+	PRODUCT(Messages.BugzillaAttribute_Product, "product", TaskAttribute.TYPE_SHORT_TEXT, false, true), //$NON-NLS-1$
 
-	REP_PLATFORM("Platform:", "rep_platform", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
+	REP_PLATFORM(Messages.BugzillaAttribute_Platform, "rep_platform", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
-	REPORTER("Reporter:", "reporter", TaskAttribute.TYPE_PERSON, true, true),
+	REPORTER(Messages.BugzillaAttribute_Reporter, "reporter", TaskAttribute.TYPE_PERSON, true, true), //$NON-NLS-1$
 
-	REPORTER_NAME("Reporter:", "reporter_name", TaskAttribute.TYPE_PERSON, true, true),
+	REPORTER_NAME(Messages.BugzillaAttribute_REPORT_NAME, "reporter_name", TaskAttribute.TYPE_PERSON, true, true), //$NON-NLS-1$
 
-	REPORTER_ACCESSIBLE("Reporter", "reporter_accessible", TaskAttribute.TYPE_BOOLEAN, true, false),
+	REPORTER_ACCESSIBLE(Messages.BugzillaAttribute_REPORT_ACCESSIBLE, "reporter_accessible", //$NON-NLS-1$
+			TaskAttribute.TYPE_BOOLEAN, true, false),
 
-	RESOLUTION("Resolution:", "resolution", TaskAttribute.TYPE_SHORT_TEXT, false, true),
+	RESOLUTION(Messages.BugzillaAttribute_Resolution, "resolution", TaskAttribute.TYPE_SHORT_TEXT, false, true), //$NON-NLS-1$
 
-	REMAINING_TIME("Remaining:", "remaining_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	REMAINING_TIME(Messages.BugzillaAttribute_Remaining, "remaining_time", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
-	SET_DEFAULT_ASSIGNEE("Reset assignee to default", "set_default_assignee", TaskAttribute.TYPE_BOOLEAN, true, false),
+	SET_DEFAULT_ASSIGNEE(Messages.BugzillaAttribute_Reassign_to_default_assignee,
+			"set_default_assignee", TaskAttribute.TYPE_OPERATION, false, //$NON-NLS-1$
+			false),
 
-	SHORT_DESC("Summary:", "short_desc", TaskAttribute.TYPE_SHORT_RICH_TEXT, true, false),
+	SHORT_DESC(Messages.BugzillaAttribute_Summary, "short_desc", TaskAttribute.TYPE_SHORT_RICH_TEXT, true, false), //$NON-NLS-1$
 
-	SIZE("Size:", "size", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	SIZE(Messages.BugzillaAttribute_Size, "size", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 
-	TARGET_MILESTONE("Target milestone:", "target_milestone", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
+	TARGET_MILESTONE(Messages.BugzillaAttribute_Target_milestone,
+			"target_milestone", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
-	THETEXT("thetext", "thetext", TaskAttribute.TYPE_SHORT_TEXT, false, true),
+	THETEXT(Messages.BugzillaAttribute_thetext, "thetext", TaskAttribute.TYPE_SHORT_TEXT, false, true), //$NON-NLS-1$
 
-	TYPE("type", "type", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	TYPE(Messages.BugzillaAttribute_type, "type", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 
-	UNKNOWN("UNKNOWN", "UNKNOWN", TaskAttribute.TYPE_SHORT_TEXT, false, false),
+	UNKNOWN(Messages.BugzillaAttribute_UNKNOWN, "UNKNOWN", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 
-	VERSION("Version:", "version", TaskAttribute.TYPE_SINGLE_SELECT, false, false),
+	VERSION(Messages.BugzillaAttribute_Version, "version", TaskAttribute.TYPE_SINGLE_SELECT, false, false), //$NON-NLS-1$
 
-	INSTALL_VERSION("version of bugzilla installed", "install_version", null, true, false),
+	INSTALL_VERSION(Messages.BugzillaAttribute_version_of_bugzilla_installed, "install_version", null, true, false), //$NON-NLS-1$
 
-	VOTES("Votes:", "votes", IBugzillaConstants.EDITOR_TYPE_VOTES, false, true),
+	VOTES(Messages.BugzillaAttribute_Votes, "votes", IBugzillaConstants.EDITOR_TYPE_VOTES, false, true), //$NON-NLS-1$
 
-	WORK_TIME("Add:", "work_time", TaskAttribute.TYPE_SHORT_TEXT, true, false),
+	WORK_TIME(Messages.BugzillaAttribute_Add, "work_time", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
-	WHO("who", "who", TaskAttribute.TYPE_PERSON, false, false),
+	WHO(Messages.BugzillaAttribute_who, "who", TaskAttribute.TYPE_PERSON, false, false), //$NON-NLS-1$
 
-	WHO_NAME("who_name", "who_name", TaskAttribute.TYPE_SHORT_TEXT, true, true),
+	WHO_NAME(Messages.BugzillaAttribute_who_name, "who_name", TaskAttribute.TYPE_SHORT_TEXT, true, true), //$NON-NLS-1$
 
-	QA_CONTACT("QA Contact", "qa_contact", TaskAttribute.TYPE_PERSON, true, false),
+	QA_CONTACT(Messages.BugzillaAttribute_QA_Contact, "qa_contact", TaskAttribute.TYPE_PERSON, true, false), //$NON-NLS-1$
 
-	QA_CONTACT_NAME("QA Contact", "qa_contact_name", TaskAttribute.TYPE_SHORT_TEXT, true, true),
+	QA_CONTACT_NAME(Messages.BugzillaAttribute_QA_Contact_NAME,
+			"qa_contact_name", TaskAttribute.TYPE_SHORT_TEXT, true, true), //$NON-NLS-1$
 
-	ADDSELFCC("Add self to CC", "addselfcc", TaskAttribute.TYPE_BOOLEAN, false, false),
+	ADDSELFCC(Messages.BugzillaAttribute_Add_self_to_CC, "addselfcc", TaskAttribute.TYPE_BOOLEAN, false, false), //$NON-NLS-1$
 
-	STATUS_OPEN("open status values", "status_open", null, true, true),
+	STATUS_OPEN(Messages.BugzillaAttribute_open_status_values, "status_open", null, true, true), //$NON-NLS-1$
 
-	NEW_COMMENT("new comment", "new_comment", TaskAttribute.TYPE_LONG_RICH_TEXT, true, false),
+	NEW_COMMENT(Messages.BugzillaAttribute_new_comment, "new_comment", TaskAttribute.TYPE_LONG_RICH_TEXT, true, false), //$NON-NLS-1$
 
 	// Used by search engine
-	LI("used by search engine", "li", null, true, false),
+	LI(Messages.BugzillaAttribute_used_by_search_engine_li, "li", null, true, false), //$NON-NLS-1$
 
-	ID("used by search engine", "id", null, true, false),
+	ID(Messages.BugzillaAttribute_used_by_search_engine_id, "id", null, true, false), //$NON-NLS-1$
 
-	SHORT_SHORT_DESC("used by search engine", "short_short_desc", null, false, false),
+	SHORT_SHORT_DESC(Messages.BugzillaAttribute_used_by_search_engine_desc, "short_short_desc", null, false, false), //$NON-NLS-1$
 
-	SEQ("used by search engine", "seq", null, false, false),
+	SEQ(Messages.BugzillaAttribute_used_by_search_engine_seq, "seq", null, false, false), //$NON-NLS-1$
 
-	RESULT("used by search engine", "result", null, false, false),
+	RESULT(Messages.BugzillaAttribute_used_by_search_engine_result, "result", null, false, false), //$NON-NLS-1$
 
-	RDF("used by search engine", "rdf", null, false, false),
+	RDF(Messages.BugzillaAttribute_used_by_search_engine_rdf, "rdf", null, false, false), //$NON-NLS-1$
 
-	INSTALLATION("used by search engine", "installation", null, false, false),
+	INSTALLATION(Messages.BugzillaAttribute_used_by_search_engine_installation, "installation", null, false, false), //$NON-NLS-1$
 
-	BUGS("used by search engine", "bugs", null, false, false);
+	BUGS(Messages.BugzillaAttribute_used_by_search_engine_bugs, "bugs", null, false, false); //$NON-NLS-1$
 
 	private final boolean isHidden;
 
@@ -201,6 +213,7 @@ public enum BugzillaAttribute {
 		return isReadOnly;
 	}
 
+	@Override
 	public String toString() {
 		return prettyName;
 	}

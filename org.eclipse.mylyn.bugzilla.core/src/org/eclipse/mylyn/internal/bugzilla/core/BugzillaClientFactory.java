@@ -27,7 +27,7 @@ public class BugzillaClientFactory {
 
 	public static BugzillaClient createClient(TaskRepository taskRepository) throws MalformedURLException {
 		String language = taskRepository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
-		if (language == null || language.equals("")) {
+		if (language == null || language.equals("")) { //$NON-NLS-1$
 			language = IBugzillaConstants.DEFAULT_LANG;
 		}
 		BugzillaLanguageSettings languageSettings = BugzillaRepositoryConnector.getLanguageSetting(language);

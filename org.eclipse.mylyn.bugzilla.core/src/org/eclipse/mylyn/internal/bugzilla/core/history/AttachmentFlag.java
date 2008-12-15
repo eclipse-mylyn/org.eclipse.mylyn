@@ -42,7 +42,7 @@ public class AttachmentFlag implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.status.name() + "[" + (this.state.equals(AttachmentFlagState.UNKNOWN) ? "" : this.state.name())
-				+ "]";
+		return this.status.name() + "[" + (this.state.equals(AttachmentFlagState.UNKNOWN) ? "" : this.state.name()) //$NON-NLS-1$ //$NON-NLS-2$
+				+ "]"; //$NON-NLS-1$
 	}
 }

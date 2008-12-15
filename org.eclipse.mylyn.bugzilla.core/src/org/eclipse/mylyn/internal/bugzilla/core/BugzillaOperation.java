@@ -19,23 +19,23 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
  */
 public enum BugzillaOperation {
 
-	none("Leave as %s %s"),
+	none(Messages.BugzillaOperation_Leave_as_X_X),
 
-	accept("Accept (change status to ASSIGNED)"),
+	accept(Messages.BugzillaOperation_Accept_to_ASSIGNED),
 
-	resolve("Resolve as", "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT),
+	resolve(Messages.BugzillaOperation_Resolve_as, "resolutionInput", TaskAttribute.TYPE_SINGLE_SELECT), //$NON-NLS-1$
 
-	duplicate("Duplicate of", "dup_id", TaskAttribute.TYPE_TASK_DEPENDENCY),
+	duplicate(Messages.BugzillaOperation_Duplicate_of, "dup_id", TaskAttribute.TYPE_TASK_DEPENDENCY), //$NON-NLS-1$
 
-	reassign("Reassign to", "reassignInput", TaskAttribute.TYPE_PERSON),
+	reassign(Messages.BugzillaOperation_Reassign_to, "reassignInput", TaskAttribute.TYPE_PERSON), //$NON-NLS-1$
 
-	reassignbycomponent("Reassign to default assignee"),
+	reassignbycomponent(Messages.BugzillaOperation_Reassign_to_default_assignee),
 
-	reopen("Reopen bug"),
+	reopen(Messages.BugzillaOperation_Reopen_bug),
 
-	verify("Mark as VERIFIED"),
+	verify(Messages.BugzillaOperation_Mark_as_VERIFIED),
 
-	close("Mark as CLOSED");
+	close(Messages.BugzillaOperation_Mark_as_CLOSED);
 
 	private final String label;
 

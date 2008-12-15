@@ -90,7 +90,7 @@ public class TaskHistory implements Iterable<TaskRevision>, Serializable {
 		StringBuffer sb = new StringBuffer();
 		for (Object event : this) {
 			sb.append(event);
-			sb.append("\n");
+			sb.append("\n"); //$NON-NLS-1$
 		}
 		return sb.toString();
 	}

@@ -39,21 +39,21 @@ public class XmlCleaner {
 		try {
 			BufferedWriter content = new BufferedWriter(new FileWriter(tempFile));
 			// Hack since HtmlStreamTokenizer not familiar with xml tag.
-			content.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+			content.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 
 				if (token.getType() == Token.TAG) {
 					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getAttribute("resource") != null) {
-						String resourceID = tag.getAttribute("resource");
-						tag.setAttribute("resource", resourceID.replace("&", "&amp;"));
+					if (tag.getAttribute("resource") != null) { //$NON-NLS-1$
+						String resourceID = tag.getAttribute("resource"); //$NON-NLS-1$
+						tag.setAttribute("resource", resourceID.replace("&", "&amp;")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
-					if (tag.getAttribute("rdf:about") != null) {
-						String resourceID = tag.getAttribute("rdf:about");
-						tag.setAttribute("rdf:about", resourceID.replace("&", "&amp;"));
+					if (tag.getAttribute("rdf:about") != null) { //$NON-NLS-1$
+						String resourceID = tag.getAttribute("rdf:about"); //$NON-NLS-1$
+						tag.setAttribute("rdf:about", resourceID.replace("&", "&amp;")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 				}
-				if (!token.toString().startsWith("<?xml")) {
+				if (!token.toString().startsWith("<?xml")) { //$NON-NLS-1$
 					content.append(token.toString());
 				}
 			}

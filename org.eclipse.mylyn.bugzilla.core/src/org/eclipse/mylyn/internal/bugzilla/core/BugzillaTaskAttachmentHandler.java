@@ -57,7 +57,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 	public InputStream getContent(TaskRepository repository, ITask task, TaskAttribute attachmentAttribute,
 			IProgressMonitor monitor) throws CoreException {
 		try {
-			monitor.beginTask("Getting attachment", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BugzillaTaskAttachmentHandler_Getting_attachment, IProgressMonitor.UNKNOWN);
 			TaskAttachmentMapper attachment = TaskAttachmentMapper.createFrom(attachmentAttribute);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			downloadAttachment(repository, task, attachment.getAttachmentId(), out, monitor);
@@ -71,14 +71,14 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 	public void postContent(TaskRepository repository, ITask task, AbstractTaskAttachmentSource source, String comment,
 			TaskAttribute attachmentAttribute, IProgressMonitor monitor) throws CoreException {
 		try {
-			monitor.beginTask("Sending attachment", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BugzillaTaskAttachmentHandler_Sending_attachment, IProgressMonitor.UNKNOWN);
 			BugzillaClient client = connector.getClientManager().getClient(repository,
 					new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN));
 
 			client.postAttachment(task.getTaskId(), comment, source, attachmentAttribute, monitor);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					"Unable to submit attachment", e));
+					Messages.BugzillaTaskAttachmentHandler_unable_to_submit_attachment, e));
 		} finally {
 			monitor.done();
 		}
@@ -94,7 +94,7 @@ public class BugzillaTaskAttachmentHandler extends AbstractTaskAttachmentHandler
 			client.getAttachmentData(attachmentId, out, monitor);
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					"Unable to retrieve attachment", e));
+					"Unable to retrieve attachment", e)); //$NON-NLS-1$
 		}
 	}
 

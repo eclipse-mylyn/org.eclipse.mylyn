@@ -29,11 +29,11 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
  */
 public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
-	private static final String DATE_FORMAT_1 = "yyyy-MM-dd HH:mm";
+	private static final String DATE_FORMAT_1 = "yyyy-MM-dd HH:mm"; //$NON-NLS-1$
 
-	private static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
+	private static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss"; //$NON-NLS-1$
 
-	private static final String DATE_FORMAT_3 = "yyyy-MM-dd";
+	private static final String DATE_FORMAT_3 = "yyyy-MM-dd"; //$NON-NLS-1$
 
 	private static final String delta_ts_format = DATE_FORMAT_2;
 
@@ -71,7 +71,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 
 	@Override
 	public boolean getBooleanValue(TaskAttribute attribute) {
-		if (attribute.getValue().equals("1")) {
+		if (attribute.getValue().equals("1")) { //$NON-NLS-1$
 			return true;
 		} else {
 			return false;
@@ -81,11 +81,11 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 	@Override
 	public void setBooleanValue(TaskAttribute attribute, Boolean value) {
 		if (value == null) {
-			attribute.setValue("0");
+			attribute.setValue("0"); //$NON-NLS-1$
 		} else if (value) {
-			attribute.setValue("1");
+			attribute.setValue("1"); //$NON-NLS-1$
 		} else {
-			attribute.setValue("0");
+			attribute.setValue("0"); //$NON-NLS-1$
 		}
 	}
 
@@ -263,8 +263,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 					// DUPLICATE and MOVED have special meanings so do not show as resolution
 					// TODO: COPIED FUNCTIONALITY from RepositoryConfiguration.addOperation() refactor.
 					if (options != null) {
-						options.remove("DUPLICATE");
-						options.remove("MOVED");
+						options.remove("DUPLICATE"); //$NON-NLS-1$
+						options.remove("MOVED"); //$NON-NLS-1$
 					}
 				}
 				Map<String, String> newOptions = new LinkedHashMap<String, String>();

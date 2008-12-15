@@ -33,69 +33,69 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SaxConfigurationContentHandler extends DefaultHandler {
 
-	private static final String ELEMENT_RESOLUTION = "resolution";
+	private static final String ELEMENT_RESOLUTION = "resolution"; //$NON-NLS-1$
 
-	private static final String ELEMENT_STATUS_OPEN = "status_open";
+	private static final String ELEMENT_STATUS_OPEN = "status_open"; //$NON-NLS-1$
 
-	private static final String ELEMENT_TARGET_MILESTONE = "target_milestone";
+	private static final String ELEMENT_TARGET_MILESTONE = "target_milestone"; //$NON-NLS-1$
 
-	private static final String ELEMENT_TARGET_MILESTONES = "target_milestones";
+	private static final String ELEMENT_TARGET_MILESTONES = "target_milestones"; //$NON-NLS-1$
 
-	private static final String ELEMENT_INSTALL_VERSION = "install_version";
+	private static final String ELEMENT_INSTALL_VERSION = "install_version"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_RDF_ABOUT = "rdf:about";
+	private static final String ATTRIBUTE_RDF_ABOUT = "rdf:about"; //$NON-NLS-1$
 
-	private static final String ATTRIBUTE_RESOURCE = "resource";
+	private static final String ATTRIBUTE_RESOURCE = "resource"; //$NON-NLS-1$
 
-	private static final String ELEMENT_VERSION = "version";
+	private static final String ELEMENT_VERSION = "version"; //$NON-NLS-1$
 
-	private static final String ELEMENT_VERSIONS = "versions";
+	private static final String ELEMENT_VERSIONS = "versions"; //$NON-NLS-1$
 
-	private static final String ELEMENT_COMPONENT = "component";
+	private static final String ELEMENT_COMPONENT = "component"; //$NON-NLS-1$
 
-	private static final String ELEMENT_COMPONENTS = "components";
+	private static final String ELEMENT_COMPONENTS = "components"; //$NON-NLS-1$
 
-	private static final String ELEMENT_NAME = "name";
+	private static final String ELEMENT_NAME = "name"; //$NON-NLS-1$
 
-	private static final String ELEMENT_PRODUCTS = "products";
+	private static final String ELEMENT_PRODUCTS = "products"; //$NON-NLS-1$
 
-	private static final String ELEMENT_DESCRIPTION = "description";
+	private static final String ELEMENT_DESCRIPTION = "description"; //$NON-NLS-1$
 
-	private static final String ELEMENT_FIELDS = "fields";
+	private static final String ELEMENT_FIELDS = "fields"; //$NON-NLS-1$
 
-	private static final String ELEMENT_FIELD = "field";
+	private static final String ELEMENT_FIELD = "field"; //$NON-NLS-1$
 
-	private static final String ELEMENT_FLAG_TYPES = "flag_types";
+	private static final String ELEMENT_FLAG_TYPES = "flag_types"; //$NON-NLS-1$
 
-	private static final String ELEMENT_FLAG_TYPE = "flag_type";
+	private static final String ELEMENT_FLAG_TYPE = "flag_type"; //$NON-NLS-1$
 
-	private static final String ELEMENT_SEVERITY = "severity";
+	private static final String ELEMENT_SEVERITY = "severity"; //$NON-NLS-1$
 
-	private static final String ELEMENT_PRIORITY = "priority";
+	private static final String ELEMENT_PRIORITY = "priority"; //$NON-NLS-1$
 
-	private static final String ELEMENT_KEYWORD = "keyword";
+	private static final String ELEMENT_KEYWORD = "keyword"; //$NON-NLS-1$
 
-	private static final String ELEMENT_OP_SYS = "op_sys";
+	private static final String ELEMENT_OP_SYS = "op_sys"; //$NON-NLS-1$
 
-	private static final String ELEMENT_PLATFORM = "platform";
+	private static final String ELEMENT_PLATFORM = "platform"; //$NON-NLS-1$
 
-	private static final String ELEMENT_LI = "li";
+	private static final String ELEMENT_LI = "li"; //$NON-NLS-1$
 
-	private static final String ELEMENT_STATUS = "status";
+	private static final String ELEMENT_STATUS = "status"; //$NON-NLS-1$
 
-	private static final String ELEMENT_TYPE = "type";
+	private static final String ELEMENT_TYPE = "type"; //$NON-NLS-1$
 
-	private static final String ELEMENT_TYPE_DESC = "type_desc";
+	private static final String ELEMENT_TYPE_DESC = "type_desc"; //$NON-NLS-1$
 
-	private static final String ELEMENT_ENTER_BUG = "enter_bug";
+	private static final String ELEMENT_ENTER_BUG = "enter_bug"; //$NON-NLS-1$
 
-	private static final String ELEMENT_REQUESTABLE = "requestable";
+	private static final String ELEMENT_REQUESTABLE = "requestable"; //$NON-NLS-1$
 
-	private static final String ELEMENT_SPECIFICALLY_REQUESTABLE = "specifically_requestable";
+	private static final String ELEMENT_SPECIFICALLY_REQUESTABLE = "specifically_requestable"; //$NON-NLS-1$
 
-	private static final String ELEMENT_ID = "id";
+	private static final String ELEMENT_ID = "id"; //$NON-NLS-1$
 
-	private static final String ELEMENT_MULTIPLICABLE = "multiplicable";
+	private static final String ELEMENT_MULTIPLICABLE = "multiplicable"; //$NON-NLS-1$
 
 	private static final int EXPECTING_ROOT = 0;
 
@@ -151,11 +151,11 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private int state = EXPECTING_ROOT;
 
-	private String currentProduct = "";
+	private String currentProduct = ""; //$NON-NLS-1$
 
-	private String currentName = "";
+	private String currentName = ""; //$NON-NLS-1$
 
-	private String currentDescription = "";
+	private String currentDescription = ""; //$NON-NLS-1$
 
 	private String currentType;
 
@@ -167,9 +167,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private int currentId;
 
-	private String currentTypeDesc = "";
+	private String currentTypeDesc = ""; //$NON-NLS-1$
 
-	private String currentEnterBug = "";
+	private String currentEnterBug = ""; //$NON-NLS-1$
 
 	private StringBuffer characters = new StringBuffer();
 
@@ -195,9 +195,9 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 
 	private final Map<String, Integer> flagIds = new HashMap<String, Integer>();
 
-	private String currentComponent = "";
+	private String currentComponent = ""; //$NON-NLS-1$
 
-	private String currentCustomOptionName = "";
+	private String currentCustomOptionName = ""; //$NON-NLS-1$
 
 	public RepositoryConfiguration getConfiguration() {
 		return configuration;
@@ -260,11 +260,11 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		} else if (localName.equals(ELEMENT_FIELD)) {
 			state = state | IN_FIELD;
 			parseResource(attributes);
-			currentName = "";
-			currentDescription = "";
-			currentType = "";
-			currentTypeDesc = "";
-			currentEnterBug = "";
+			currentName = ""; //$NON-NLS-1$
+			currentDescription = ""; //$NON-NLS-1$
+			currentType = ""; //$NON-NLS-1$
+			currentTypeDesc = ""; //$NON-NLS-1$
+			currentEnterBug = ""; //$NON-NLS-1$
 			currentId = -1;
 		} else if (localName.equals(ELEMENT_FLAG_TYPES)) {
 			state = state | IN_FLAG_TYPES;
@@ -430,7 +430,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			state = state & ~IN_FLAG_TYPE;
 		} else if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 			state = state & ~IN_CUSTOM_OPTION;
-			currentCustomOptionName = "";
+			currentCustomOptionName = ""; //$NON-NLS-1$
 		}
 	}
 
@@ -492,7 +492,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 						flagsForComponent = new ArrayList<String>();
 						flagComponentList.put(currentComponent, flagsForComponent);
 					}
-					flagsForComponent.add(compURI.replace("flags.cgi?id=", "flag.cgi?id="));
+					flagsForComponent.add(compURI.replace("flags.cgi?id=", "flag.cgi?id=")); //$NON-NLS-1$ //$NON-NLS-2$
 					int i = 0;
 					i++;
 				}
@@ -501,7 +501,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 		case IN_COMPONENTS | IN_LI | IN_COMPONENT:
 			if (attributes != null) {
 				about = attributes.getValue(ATTRIBUTE_RDF_ABOUT);
-				int idx = about.indexOf("&product=");
+				int idx = about.indexOf("&product="); //$NON-NLS-1$
 				if (idx != -1) {
 					currentProduct = about.substring(idx + 9);
 				}

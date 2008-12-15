@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,17 +55,17 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
  */
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
-	private static final String BUG_ID = "&bug_id=";
+	private static final String BUG_ID = "&bug_id="; //$NON-NLS-1$
 
-	private static final String CHANGED_BUGS_CGI_ENDDATE = "&chfieldto=Now";
+	private static final String CHANGED_BUGS_CGI_ENDDATE = "&chfieldto=Now"; //$NON-NLS-1$
 
-	private static final String CHANGED_BUGS_CGI_QUERY = "/buglist.cgi?query_format=advanced&chfieldfrom=";
+	private static final String CHANGED_BUGS_CGI_QUERY = "/buglist.cgi?query_format=advanced&chfieldfrom="; //$NON-NLS-1$
 
-	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.18-3.0)";
+	private static final String CLIENT_LABEL = Messages.BugzillaRepositoryConnector_BUGZILLA_SUPPORTS_2_18_TO_3_0;
 
-	private static final String COMMENT_FORMAT = "yyyy-MM-dd HH:mm";
+	private static final String COMMENT_FORMAT = "yyyy-MM-dd HH:mm"; //$NON-NLS-1$
 
-	private static final String DEADLINE_FORMAT = "yyyy-MM-dd";
+	private static final String DEADLINE_FORMAT = "yyyy-MM-dd"; //$NON-NLS-1$
 
 	private final BugzillaTaskAttachmentHandler attachmentHandler = new BugzillaTaskAttachmentHandler(this);
 
@@ -158,7 +159,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			// Severity
 			TaskAttribute attrSeverity = taskData.getRoot().getMappedAttribute(BugzillaAttribute.BUG_SEVERITY.getKey());
-			if (attrSeverity != null && !attrSeverity.getValue().equals("")) {
+			if (attrSeverity != null && !attrSeverity.getValue().equals("")) { //$NON-NLS-1$
 				task.setAttribute(BugzillaAttribute.BUG_SEVERITY.getKey(), attrSeverity.getValue());
 			}
 
@@ -202,7 +203,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Checking for changed tasks", session.getTasks().size());
+			monitor.beginTask(Messages.BugzillaRepositoryConnector_checking_for_changed_tasks, session.getTasks().size());
 
 			if (repository.getSynchronizationTimeStamp() == null) {
 				for (ITask task : session.getTasks()) {
@@ -213,7 +214,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			String dateString = repository.getSynchronizationTimeStamp();
 			if (dateString == null) {
-				dateString = "";
+				dateString = ""; //$NON-NLS-1$
 			}
 
 			String urlQueryBase = repository.getRepositoryUrl() + CHANGED_BUGS_CGI_QUERY
@@ -229,7 +230,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				ITask task = itr.next();
 				checking.add(task);
 				queryCounter++;
-				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
+				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding()); //$NON-NLS-1$
 				urlQueryString += newurlQueryString;
 				if (queryCounter >= 1000) {
 					queryForChanged(repository, changedTasks, urlQueryString, session, new SubProgressMonitor(monitor,
@@ -237,7 +238,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 					queryCounter = 0;
 					urlQueryString = urlQueryBase + BUG_ID;
-					newurlQueryString = "";
+					newurlQueryString = ""; //$NON-NLS-1$
 				}
 
 				if (!itr.hasNext() && queryCounter != 0) {
@@ -255,8 +256,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return;
 		} catch (UnsupportedEncodingException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					"Repository configured with unsupported encoding: " + repository.getCharacterEncoding()
-							+ "\n\n Unable to determine changed tasks.", e));
+					"Repository configured with unsupported encoding: " + repository.getCharacterEncoding() //$NON-NLS-1$
+							+ "\n\n Unable to determine changed tasks.", e)); //$NON-NLS-1$
 		} finally {
 			monitor.done();
 		}
@@ -283,8 +284,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		};
 
 		// TODO: Decouple from internals
-		IRepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), "");
-		query.setSummary("Query for changed tasks");
+		IRepositoryQuery query = new RepositoryQuery(repository.getConnectorKind(), ""); //$NON-NLS-1$
+		query.setSummary(Messages.BugzillaRepositoryConnector_Query_for_changed_tasks);
 		query.setUrl(urlQueryString);
 		performQuery(repository, query, collector, context, monitor);
 
@@ -313,7 +314,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask("Running query", IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.BugzillaRepositoryConnector_running_query, IProgressMonitor.UNKNOWN);
 			BugzillaClient client = getClientManager().getClient(repository, new SubProgressMonitor(monitor, 1));
 			TaskAttributeMapper mapper = getTaskDataHandler().getAttributeMapper(repository);
 			boolean hitsReceived = client.getSearchHits(query, resultCollector, mapper, monitor);
@@ -327,10 +328,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return Status.OK_STATUS;
 		} catch (UnrecognizedReponseException e) {
 			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, IStatus.INFO,
-					"Unrecognized response from server", e);
+					Messages.BugzillaRepositoryConnector_Unrecognized_response_from_server, e);
 		} catch (IOException e) {
-			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, IStatus.ERROR,
-					"Check repository configuration: " + e.getMessage(), e);
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, IStatus.ERROR, MessageFormat.format(
+					Messages.BugzillaRepositoryConnector_Check_repository_configuration, e.getMessage()), e);
 		} catch (CoreException e) {
 			return e.getStatus();
 		} finally {
@@ -352,7 +353,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (url == null) {
 			return null;
 		}
-		int anchorIndex = url.lastIndexOf("#");
+		int anchorIndex = url.lastIndexOf("#"); //$NON-NLS-1$
 		String bugUrl = url;
 		if (anchorIndex != -1) {
 			bugUrl = url.substring(0, anchorIndex);
@@ -368,14 +369,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, taskId);
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					"Error constructing task url for " + repositoryUrl + "  id:" + taskId, e));
+					"Error constructing task url for " + repositoryUrl + "  id:" + taskId, e)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
 	}
 
 	@Override
 	public String getTaskIdPrefix() {
-		return "bug";
+		return "bug"; //$NON-NLS-1$
 	}
 
 	public BugzillaClientManager getClientManager() {
@@ -384,21 +385,21 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// TODO: Move this initialization elsewhere
 			BugzillaCorePlugin.setConnector(this);
 			enSetting = new BugzillaLanguageSettings(IBugzillaConstants.DEFAULT_LANG);
-			enSetting.addLanguageAttribute("error_login", "Login");
-			enSetting.addLanguageAttribute("error_login", "log in");
-			enSetting.addLanguageAttribute("error_login", "check e-mail");
-			enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password");
-			enSetting.addLanguageAttribute("error_collision", "Mid-air collision!");
-			enSetting.addLanguageAttribute("error_comment_required", "Comment Required");
-			enSetting.addLanguageAttribute("error_logged_out", "logged out");
-			enSetting.addLanguageAttribute("bad_login", "Login");
-			enSetting.addLanguageAttribute("bad_login", "log in");
-			enSetting.addLanguageAttribute("bad_login", "check e-mail");
-			enSetting.addLanguageAttribute("bad_login", "Invalid Username Or Password");
-			enSetting.addLanguageAttribute("bad_login", "error");
-			enSetting.addLanguageAttribute("processed", "processed");
-			enSetting.addLanguageAttribute("changes_submitted", "Changes submitted");
-			enSetting.addLanguageAttribute("changes_submitted", "added to Bug");
+			enSetting.addLanguageAttribute("error_login", "Login"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("error_login", "log in"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("error_login", "check e-mail"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("error_login", "Invalid Username Or Password"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("error_collision", "Mid-air collision!"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("error_comment_required", "Comment Required"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("error_logged_out", "logged out"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("bad_login", "Login"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("bad_login", "log in"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("bad_login", "check e-mail"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("bad_login", "Invalid Username Or Password"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("bad_login", "error"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("processed", "processed"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("changes_submitted", "Changes submitted"); //$NON-NLS-1$ //$NON-NLS-2$
+			enSetting.addLanguageAttribute("changes_submitted", "added to Bug"); //$NON-NLS-1$ //$NON-NLS-2$
 			languages.add(enSetting);
 
 		}
@@ -437,7 +438,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			return Integer.parseInt(taskId);
 		} catch (NumberFormatException e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, "Invalid bug id: "
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 0, "Invalid bug id: " //$NON-NLS-1$
 					+ taskId, e));
 		}
 	}
@@ -465,7 +466,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void postSynchronization(ISynchronizationSession event, IProgressMonitor monitor) throws CoreException {
 		try {
-			monitor.beginTask("", 1);
+			monitor.beginTask("", 1); //$NON-NLS-1$
 			if (event.isFullSynchronization() && event.getStatus() == null) {
 				event.getTaskRepository().setSynchronizationTimeStamp(getSynchronizationTimestamp(event));
 			}
@@ -506,7 +507,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		List<TaskRelation> relations = new ArrayList<TaskRelation>();
 		TaskAttribute attribute = taskData.getRoot().getAttribute(BugzillaAttribute.DEPENDSON.getKey());
 		if (attribute != null && attribute.getValue().length() > 0) {
-			for (String taskId : attribute.getValue().split(",")) {
+			for (String taskId : attribute.getValue().split(",")) { //$NON-NLS-1$
 				relations.add(TaskRelation.subtask(taskId.trim()));
 			}
 		}

@@ -23,7 +23,7 @@ public class AttachmentEvent extends TaskRevision {
 
 	private static final long serialVersionUID = 3258693199936631348L;
 
-	private static final Pattern id = Pattern.compile("\\d+");
+	private static final Pattern id = Pattern.compile("\\d+"); //$NON-NLS-1$
 
 	private final int attachmentId;
 
@@ -36,9 +36,9 @@ public class AttachmentEvent extends TaskRevision {
 	}
 
 	public String getFlagsString() {
-		String flagString = "";
+		String flagString = ""; //$NON-NLS-1$
 		for (AttachmentFlag flag : this.flags) {
-			flagString += flag + " ";
+			flagString += flag + " "; //$NON-NLS-1$
 		}
 		return flagString;
 	}
@@ -50,7 +50,7 @@ public class AttachmentEvent extends TaskRevision {
 		}
 
 		// Error situation
-		System.err.println("WARNING: Cannot find attachment id in " + attachment);
+		System.err.println("WARNING: Cannot find attachment id in " + attachment); //$NON-NLS-1$
 		return -1;
 	}
 
@@ -59,16 +59,16 @@ public class AttachmentEvent extends TaskRevision {
 		AttachmentFlagStatus flagStatus = AttachmentFlagStatus.UNKNOWN;
 		AttachmentFlagState flagState = AttachmentFlagState.UNKNOWN;
 
-		String[] flagToken = attachmentFlags.split(", ");
+		String[] flagToken = attachmentFlags.split(", "); //$NON-NLS-1$
 		for (String token : flagToken) {
-			if (token.indexOf("(") != -1) {
-				int end = token.indexOf("(");
+			if (token.indexOf("(") != -1) { //$NON-NLS-1$
+				int end = token.indexOf("("); //$NON-NLS-1$
 				String substr = token.substring(0, end);
 				token = substr;
 			}
 
 			/* Handle the case of the obsolete status 'needs-work' */
-			if (token.startsWith("needs-work")) {
+			if (token.startsWith("needs-work")) { //$NON-NLS-1$
 				/*
 				 * Since we don't know if 'needs-work' applies to 'review' or
 				 * 'superreview', deny both
@@ -80,7 +80,7 @@ public class AttachmentEvent extends TaskRevision {
 						AttachmentFlagStatus.REVIEW.name().toLowerCase());
 				boolean firstOrSecondReview = token.toLowerCase().contains(
 						AttachmentFlagStatus.REVIEW.name().toLowerCase())
-						&& (token.toLowerCase().startsWith("first-") || token.toLowerCase().startsWith("second-"));
+						&& (token.toLowerCase().startsWith("first-") || token.toLowerCase().startsWith("second-")); //$NON-NLS-1$ //$NON-NLS-2$
 				/*
 				 * if(firstOrSecondReview){ System.err.println("First/second
 				 * activated"); }
@@ -105,14 +105,14 @@ public class AttachmentEvent extends TaskRevision {
 					flagStatus = AttachmentFlagStatus.NONE;
 				} else if (token.toLowerCase().startsWith(AttachmentFlagStatus.REJECTED.name().toLowerCase())) {
 					flagStatus = AttachmentFlagStatus.REJECTED;
-				} else if (token.equals("1")
+				} else if (token.equals("1") //$NON-NLS-1$
 						|| token.toLowerCase().startsWith(AttachmentFlagStatus.OBSOLETE.name().toLowerCase())) {
 					flagStatus = AttachmentFlagStatus.OBSOLETE;
 				}
 
 				// Assure that flag was set to something meaningful
-				if (flagStatus.equals(AttachmentFlagStatus.UNKNOWN) && token.equals("") == false) {
-					System.err.println("WARNING: Attachment flag status unknown: " + token);
+				if (flagStatus.equals(AttachmentFlagStatus.UNKNOWN) && token.equals("") == false) { //$NON-NLS-1$
+					System.err.println("WARNING: Attachment flag status unknown: " + token); //$NON-NLS-1$
 				}
 
 				if (token.length() > 0) {
@@ -133,8 +133,8 @@ public class AttachmentEvent extends TaskRevision {
 					}
 				}
 				// Assure that flag state was set to something meaningful
-				if (flagState.equals(AttachmentFlagState.UNKNOWN) && token.equals("") == false) {
-					System.err.println("WARNING: Attachment flag state unknown: " + token);
+				if (flagState.equals(AttachmentFlagState.UNKNOWN) && token.equals("") == false) { //$NON-NLS-1$
+					System.err.println("WARNING: Attachment flag state unknown: " + token); //$NON-NLS-1$
 				}
 
 				flags.add(new AttachmentFlag(flagStatus, flagState));
@@ -145,7 +145,7 @@ public class AttachmentEvent extends TaskRevision {
 
 	@Override
 	public String toString() {
-		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.attachmentId + " | "
+		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.attachmentId + " | " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				+ this.getFlagsString();
 	}
 

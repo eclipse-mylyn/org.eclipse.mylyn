@@ -22,33 +22,33 @@ public class BugzillaStatus extends Status {
 
 	private final String errorMessage;
 
-	private String repositoryUrl = "";
+	private String repositoryUrl = ""; //$NON-NLS-1$
 
 	public BugzillaStatus(int severity, String pluginId, int code) {
-		super(severity, pluginId, code, "MylynStatus", null);
+		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = null;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String errorMessage) {
-		super(severity, pluginId, code, "MylynStatus", null);
+		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, Throwable e) {
-		super(severity, pluginId, code, "MylynStatus", e);
+		super(severity, pluginId, code, "MylynStatus", e); //$NON-NLS-1$
 		this.repositoryUrl = repositoryUrl;
 		this.errorMessage = e.getMessage();
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage) {
-		super(severity, pluginId, code, "MylynStatus", null);
+		super(severity, pluginId, code, "MylynStatus", null); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
 	}
 
 	public BugzillaStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage,
 			Throwable e) {
-		super(severity, pluginId, code, "MylynStatus", e);
+		super(severity, pluginId, code, "MylynStatus", e); //$NON-NLS-1$
 		this.errorMessage = errorMessage;
 		this.repositoryUrl = repositoryUrl;
 	}
@@ -67,8 +67,8 @@ public class BugzillaStatus extends Status {
 		case RepositoryStatus.ERROR_REPOSITORY:
 			return NLS.bind(BugzillaMessages.errorRepository, this.getRepositoryUrl(), this.errorMessage);
 		case RepositoryStatus.ERROR_IO:
-			String string1 = "Unknown IO error occurred";
-			String string2 = "No message provided";
+			String string1 = "Unknown IO error occurred"; //$NON-NLS-1$
+			String string2 = "No message provided"; //$NON-NLS-1$
 			if (getException() != null) {
 				string1 = getException().getClass().getSimpleName();
 				string2 = getException().getMessage();
@@ -98,7 +98,7 @@ public class BugzillaStatus extends Status {
 				return getException().toString();
 			}
 		}
-		return "Unknown";
+		return "Unknown"; //$NON-NLS-1$
 	}
 
 	public String getRepositoryUrl() {

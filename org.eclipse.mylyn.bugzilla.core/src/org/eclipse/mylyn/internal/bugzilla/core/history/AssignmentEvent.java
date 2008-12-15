@@ -32,7 +32,7 @@ public class AssignmentEvent extends TaskRevision {
 
 	@Override
 	public String toString() {
-		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.getRemoved() + " | "
+		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.getRemoved() + " | " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				+ this.getAssigned();
 	}
 }

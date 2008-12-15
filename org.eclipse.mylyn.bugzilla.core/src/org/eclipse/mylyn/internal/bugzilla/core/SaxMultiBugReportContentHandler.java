@@ -35,9 +35,9 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
-	private static final String ATTRIBUTE_NAME = "name";
+	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 
-	private static final String COMMENT_ATTACHMENT_STRING = "Created an attachment (id=";
+	private static final String COMMENT_ATTACHMENT_STRING = Messages.SaxMultiBugReportContentHandler_CREATED_AN_ATTACHEMENT_ID;
 
 	private StringBuffer characters;
 
@@ -109,8 +109,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			// Note: here we can get the bugzilla version if necessary
 			break;
 		case BUG:
-			if (attributes != null && (attributes.getValue("error") != null)) {
-				errorMessage = attributes.getValue("error");
+			if (attributes != null && (attributes.getValue("error") != null)) { //$NON-NLS-1$
+				errorMessage = attributes.getValue("error"); //$NON-NLS-1$
 			}
 			attachIdToComment = new HashMap<String, TaskCommentMapper>();
 			commentNum = 0;
@@ -159,8 +159,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			break;
 		case ATTACHMENT:
 			if (attributes != null) {
-				isDeprecated = "1".equals(attributes.getValue(BugzillaAttribute.IS_OBSOLETE.getKey()));
-				isPatch = "1".equals(attributes.getValue(BugzillaAttribute.IS_PATCH.getKey()));
+				isDeprecated = "1".equals(attributes.getValue(BugzillaAttribute.IS_OBSOLETE.getKey())); //$NON-NLS-1$
+				isPatch = "1".equals(attributes.getValue(BugzillaAttribute.IS_PATCH.getKey())); //$NON-NLS-1$
 			}
 			break;
 		case FLAG:
@@ -168,17 +168,17 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				String name = attributes.getValue(ATTRIBUTE_NAME);
 				if (name != null) {
 					BugzillaFlagMapper mapper = new BugzillaFlagMapper();
-					String requestee = attributes.getValue("requestee");
+					String requestee = attributes.getValue("requestee"); //$NON-NLS-1$
 					mapper.setRequestee(requestee);
-					String setter = attributes.getValue("setter");
+					String setter = attributes.getValue("setter"); //$NON-NLS-1$
 					mapper.setSetter(setter);
-					String status = attributes.getValue("status");
+					String status = attributes.getValue("status"); //$NON-NLS-1$
 					mapper.setState(status);
 					mapper.setFlagId(name);
-					String id = attributes.getValue("id");
+					String id = attributes.getValue("id"); //$NON-NLS-1$
 					mapper.setNumber(Integer.valueOf(id));
 					TaskAttribute attribute = repositoryTaskData.getRoot()
-							.createAttribute("task.common.kind.flag" + id);
+							.createAttribute("task.common.kind.flag" + id); //$NON-NLS-1$
 					mapper.applyTo(attribute);
 				}
 			}
@@ -200,7 +200,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		if (localName.startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
 			TaskAttribute endAttribute = repositoryTaskData.getRoot().getAttribute(localName);
 			if (endAttribute == null) {
-				String desc = "???";
+				String desc = "???"; //$NON-NLS-1$
 				BugzillaCustomField customField = null;
 				for (BugzillaCustomField bugzillaCustomField : customFields) {
 					if (localName.equals(bugzillaCustomField.getName())) {
@@ -262,10 +262,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			try {
 				repositoryTaskData = taskDataMap.get(parsedText.trim());
 				if (repositoryTaskData == null) {
-					errorMessage = parsedText + " id not found.";
+					errorMessage = parsedText + Messages.SaxMultiBugReportContentHandler_id_not_found;
 				}
 			} catch (Exception e) {
-				errorMessage = "Bug id from server did not match requested id.";
+				errorMessage = Messages.SaxMultiBugReportContentHandler_Bug_id_from_server_did_not_match_requested_id;
 			}
 
 			TaskAttribute attr = repositoryTaskData.getRoot().getMappedAttribute(tag.getKey());
@@ -367,7 +367,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 						BugzillaAttribute.LONGDESCLENGTH);
 			}
 
-			numCommentsAttribute.setValue("" + commentNum);
+			numCommentsAttribute.setValue("" + commentNum); //$NON-NLS-1$
 
 			updateAttachmentMetaData();
 			TaskAttribute attrCreation = repositoryTaskData.getRoot().getAttribute(
@@ -376,7 +376,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			updateCustomFields(repositoryTaskData);
 
 			// Guard against empty data sets
-			if (attrCreation != null && !attrCreation.equals("")) {
+			if (attrCreation != null && !attrCreation.equals("")) { //$NON-NLS-1$
 				collector.accept(repositoryTaskData);
 			}
 			break;
@@ -387,10 +387,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (blockOrDepends == null) {
 				BugzillaTaskDataHandler.createAttribute(repositoryTaskData, tag).setValue(parsedText);
 			} else {
-				if (blockOrDepends.getValue().equals("")) {
+				if (blockOrDepends.getValue().equals("")) { //$NON-NLS-1$
 					blockOrDepends.setValue(parsedText);
 				} else {
-					blockOrDepends.setValue(blockOrDepends.getValue() + ", " + parsedText);
+					blockOrDepends.setValue(blockOrDepends.getValue() + ", " + parsedText); //$NON-NLS-1$
 				}
 			}
 			break;
@@ -531,7 +531,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(
 				TaskAttribute.PREFIX_COMMENT + commentNum);
 		TaskCommentMapper taskComment = TaskCommentMapper.createFrom(attribute);
-		taskComment.setCommentId(commentNum + "");
+		taskComment.setCommentId(commentNum + ""); //$NON-NLS-1$
 		taskComment.setNumber(commentNum);
 		IRepositoryPerson author = repositoryTaskData.getAttributeMapper().getTaskRepository().createPerson(
 				comment.author);
@@ -555,13 +555,13 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 	/** determines attachment id from comment */
 	private void parseAttachment(TaskCommentMapper comment) {
 
-		String attachmentID = "";
+		String attachmentID = ""; //$NON-NLS-1$
 		String commentText = comment.getText();
 		if (commentText.startsWith(COMMENT_ATTACHMENT_STRING)) {
-			int endIndex = commentText.indexOf(")");
+			int endIndex = commentText.indexOf(")"); //$NON-NLS-1$
 			if (endIndex > 0 && endIndex < commentText.length()) {
 				attachmentID = commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex);
-				if (!attachmentID.equals("")) {
+				if (!attachmentID.equals("")) { //$NON-NLS-1$
 					attachIdToComment.put(attachmentID, comment);
 				}
 			}

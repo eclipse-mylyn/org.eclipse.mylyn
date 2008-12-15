@@ -26,7 +26,7 @@ public class BugzillaCustomField implements Serializable {
 	// old version	private static final long serialVersionUID = 5703683576871326128L;
 	private static final long serialVersionUID = 7273310489883205486L;
 
-	public static final String CUSTOM_FIELD_PREFIX = "cf_";
+	public static final String CUSTOM_FIELD_PREFIX = "cf_"; //$NON-NLS-1$
 
 	private final String name;
 
@@ -46,7 +46,7 @@ public class BugzillaCustomField implements Serializable {
 
 		this.type = parseInt(type);
 		this.typeDesc = typeDesc;
-		this.enterBug = "1".equals(enterBug);
+		this.enterBug = "1".equals(enterBug); //$NON-NLS-1$
 	}
 
 	private int parseInt(String type) {

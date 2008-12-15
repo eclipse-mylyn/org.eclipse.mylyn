@@ -61,7 +61,7 @@ public class BugzillaTaskHistoryParser {
 
 		boolean isTitle = false;
 		boolean possibleBadLogin = false;
-		String title = "";
+		String title = ""; //$NON-NLS-1$
 
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 			// make sure that bugzilla doesn't want us to login
@@ -74,7 +74,7 @@ public class BugzillaTaskHistoryParser {
 			if (isTitle) {
 				// get all of the data from inside of the title tag
 				if (token.getType() != Token.TAG) {
-					title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
+					title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " "; //$NON-NLS-1$
 					continue;
 				} else if (token.getType() == Token.TAG && ((HtmlTag) token.getValue()).getTagType() == Tag.TITLE
 						&& ((HtmlTag) token.getValue()).isEndTag()) {
@@ -91,7 +91,7 @@ public class BugzillaTaskHistoryParser {
 						possibleBadLogin = true;
 					}
 					isTitle = false;
-					title = "";
+					title = ""; //$NON-NLS-1$
 				}
 				continue;
 			}
@@ -118,7 +118,7 @@ public class BugzillaTaskHistoryParser {
 		// if we don't have any keywords and suspect that there was a login
 		// problem, assume we had a login problem
 		if (activity.size() == 0 && possibleBadLogin) {
-			throw new LoginException("Bugzilla login information incorrect");
+			throw new LoginException("Bugzilla login information incorrect"); //$NON-NLS-1$
 		}
 		return activity;
 	}
@@ -168,8 +168,8 @@ public class BugzillaTaskHistoryParser {
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				if (token.getType() == Token.TAG) {
 					tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == Tag.TD && tag.hasAttribute("rowspan")) {
-						numChanges = tag.getIntAttribute("rowspan");
+					if (tag.getTagType() == Tag.TD && tag.hasAttribute("rowspan")) { //$NON-NLS-1$
+						numChanges = tag.getIntAttribute("rowspan"); //$NON-NLS-1$
 						break;
 					}
 				}
@@ -213,8 +213,8 @@ public class BugzillaTaskHistoryParser {
 					tag = (HtmlTag) token.getValue();
 					if (tag.getTagType() == Tag.TD && tag.isEndTag()) {
 						String data = StringEscapeUtils.unescapeHtml(sb.toString());
-						if (data.startsWith("\n") && (data.contains("Attachment") == false)) {
-							data = ""; // empty field
+						if (data.startsWith("\n") && (data.contains("Attachment") == false)) { //$NON-NLS-1$ //$NON-NLS-2$
+							data = ""; // empty field //$NON-NLS-1$
 						}
 						return data;
 					}

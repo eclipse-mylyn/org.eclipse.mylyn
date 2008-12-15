@@ -50,7 +50,7 @@ public class GzipGetMethod extends GetMethod {
 	public int execute(HttpState state, HttpConnection conn) throws HttpException, IOException {
 		// Insert accept-encoding header
 		if (gzipWanted) {
-			this.setRequestHeader("Accept-encoding", IBugzillaConstants.CONTENT_ENCODING_GZIP);
+			this.setRequestHeader("Accept-encoding", IBugzillaConstants.CONTENT_ENCODING_GZIP); //$NON-NLS-1$
 		}
 		int result = super.execute(state, conn);
 		return result;

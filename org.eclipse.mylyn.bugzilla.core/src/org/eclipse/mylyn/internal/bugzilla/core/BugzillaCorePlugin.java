@@ -41,13 +41,13 @@ import org.osgi.framework.BundleContext;
  */
 public class BugzillaCorePlugin extends Plugin {
 
-	private static final String ERROR_DELETING_CONFIGURATION = "Error removing corrupt repository configuration file.";
+	private static final String ERROR_DELETING_CONFIGURATION = "Error removing corrupt repository configuration file."; //$NON-NLS-1$
 
-	private static final String ERROR_INCOMPATIBLE_CONFIGURATION = "Reset Bugzilla repository configuration cache due to format change";
+	private static final String ERROR_INCOMPATIBLE_CONFIGURATION = "Reset Bugzilla repository configuration cache due to format change"; //$NON-NLS-1$
 
-	public static final String CONNECTOR_KIND = "bugzilla";
+	public static final String CONNECTOR_KIND = "bugzilla"; //$NON-NLS-1$
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.bugzilla";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.bugzilla"; //$NON-NLS-1$
 
 	private static BugzillaCorePlugin INSTANCE;
 
@@ -57,7 +57,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 	private static BugzillaRepositoryConnector connector;
 
-	private static final String OPTION_ALL = "All";
+	private static final String OPTION_ALL = "All"; //$NON-NLS-1$
 
 	// A Map from Java's  Platform to Buzilla's
 	private final Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
@@ -67,12 +67,12 @@ public class BugzillaCorePlugin extends Plugin {
 
 	public BugzillaCorePlugin() {
 		super();
-		java2buzillaPlatformMap.put("x86", "PC"); // can be PC or Macintosh!
-		java2buzillaPlatformMap.put("x86_64", "PC");
-		java2buzillaPlatformMap.put("ia64", "PC");
-		java2buzillaPlatformMap.put("ia64_32", "PC");
-		java2buzillaPlatformMap.put("sparc", "Sun");
-		java2buzillaPlatformMap.put("ppc", "Power PC"); // not Power!
+		java2buzillaPlatformMap.put("x86", "PC"); // can be PC or Macintosh! //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("x86_64", "PC"); //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("ia64", "PC"); //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("ia64_32", "PC"); //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("sparc", "Sun"); //$NON-NLS-1$ //$NON-NLS-2$
+		java2buzillaPlatformMap.put("ppc", "Power PC"); // not Power! //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 
@@ -146,7 +146,7 @@ public class BugzillaCorePlugin extends Plugin {
 			return repositoryConfigurations.get(repository.getRepositoryUrl());
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, 1,
-					"Error retrieving task attributes from repository.\n\n" + e.getMessage(), e));
+					"Error retrieving task attributes from repository.\n\n" + e.getMessage(), e)); //$NON-NLS-1$
 		}
 	}
 
@@ -272,7 +272,7 @@ public class BugzillaCorePlugin extends Plugin {
 	 */
 	protected IPath getCachedBugReportPath() {
 		IPath stateLocation = Platform.getStateLocation(BugzillaCorePlugin.getDefault().getBundle());
-		IPath bugFile = stateLocation.append("bugReports");
+		IPath bugFile = stateLocation.append("bugReports"); //$NON-NLS-1$
 		return bugFile;
 	}
 
@@ -319,7 +319,7 @@ public class BugzillaCorePlugin extends Plugin {
 			MacOS X -> Mac OS X
  */
 
-			bugzillaOS = System.getProperty("os.name") + " " + System.getProperty("os.version");
+			bugzillaOS = System.getProperty("os.name") + " " + System.getProperty("os.version"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			// We start with the most specific Value as the Search String.
 			// If we didn't find it we remove the last part of the version String or the OS Name from
 			// the Search String and continue with the test until we found it or the Search String is empty.
@@ -352,10 +352,10 @@ public class BugzillaCorePlugin extends Plugin {
 				// If the OS is "macosx" we change the Platform to "Macintosh"
 				//
 				if (bugzillaPlatform != null
-						&& (bugzillaPlatform.compareTo("Power") == 0 || bugzillaPlatform.compareTo("PC") == 0)
-						&& OS != null && OS.compareTo("macosx") == 0) {
+						&& (bugzillaPlatform.compareTo("Power") == 0 || bugzillaPlatform.compareTo("PC") == 0) //$NON-NLS-1$ //$NON-NLS-2$
+						&& OS != null && OS.compareTo("macosx") == 0) { //$NON-NLS-1$
 					// TODO: this may not even be a legal value in another repository!
-					bugzillaPlatform = "Macintosh";
+					bugzillaPlatform = "Macintosh"; //$NON-NLS-1$
 				} else if (platformAttribute != null && platformAttribute.getOption(bugzillaPlatform) == null) {
 					// If the platform we found is not int the list of available
 					// optinos, set the
@@ -378,7 +378,7 @@ public class BugzillaCorePlugin extends Plugin {
 			}
 
 		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "could not set platform options",
+			StatusHandler.log(new Status(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN, "could not set platform options", //$NON-NLS-1$
 					e));
 		}
 	}

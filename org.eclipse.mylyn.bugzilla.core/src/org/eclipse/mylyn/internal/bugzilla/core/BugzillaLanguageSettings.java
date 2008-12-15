@@ -25,21 +25,21 @@ import java.util.Map;
  */
 
 public class BugzillaLanguageSettings {
-	private String languageName = "<unknown>";
+	private String languageName = "<unknown>"; //$NON-NLS-1$
 
-	public static final String COMMAND_ERROR_LOGIN = "error_login";
+	public static final String COMMAND_ERROR_LOGIN = "error_login"; //$NON-NLS-1$
 
-	public static final String COMMAND_ERROR_COLLISION = "error_collision";
+	public static final String COMMAND_ERROR_COLLISION = "error_collision"; //$NON-NLS-1$
 
-	public static final String COMMAND_ERROR_COMMENT_REQUIRED = "error_comment_required";
+	public static final String COMMAND_ERROR_COMMENT_REQUIRED = "error_comment_required"; //$NON-NLS-1$
 
-	public static final String COMMAND_ERROR_LOGGED_OUT = "error_logged_out";
+	public static final String COMMAND_ERROR_LOGGED_OUT = "error_logged_out"; //$NON-NLS-1$
 
-	public static final String COMMAND_BAD_LOGIN = "bad_login";
+	public static final String COMMAND_BAD_LOGIN = "bad_login"; //$NON-NLS-1$
 
-	public static final String COMMAND_PROCESSED = "processed";
+	public static final String COMMAND_PROCESSED = "processed"; //$NON-NLS-1$
 
-	public static final String COMMAND_CHANGES_SUBMITTED = "changes_submitted";
+	public static final String COMMAND_CHANGES_SUBMITTED = "changes_submitted"; //$NON-NLS-1$
 
 	private final Map<String, List<String>> languageAttributes = new LinkedHashMap<String, List<String>>();
 

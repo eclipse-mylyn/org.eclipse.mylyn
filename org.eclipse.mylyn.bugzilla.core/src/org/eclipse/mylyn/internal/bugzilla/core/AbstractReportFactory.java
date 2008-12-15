@@ -100,7 +100,7 @@ public class AbstractReportFactory {
 					// currently, we just supply a dummy (empty) resource for
 					// each request...
 					InputSource source = new InputSource();
-					source.setCharacterStream(new StringReader(""));
+					source.setCharacterStream(new StringReader("")); //$NON-NLS-1$
 					return source;
 				}
 			};

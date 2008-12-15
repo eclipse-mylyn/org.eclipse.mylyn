@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.internal.bugzilla.core.history;
 
+import java.text.MessageFormat;
+
 /**
  * @author John Anvik
  */
@@ -31,68 +33,68 @@ public enum StatusType {
 	UNKNOWN;
 
 	public static StatusType convert(String change) {
-		if (change.equals("RESOLVED")) {
+		if (change.equals("RESOLVED")) { //$NON-NLS-1$
 			return RESOLVED;
 		}
-		if (change.equals("ASSIGNED")) {
+		if (change.equals("ASSIGNED")) { //$NON-NLS-1$
 			return ASSIGNED;
 		}
-		if (change.equals("NEW")) {
+		if (change.equals("NEW")) { //$NON-NLS-1$
 			return NEW;
 		}
-		if (change.equals("REOPENED")) {
+		if (change.equals("REOPENED")) { //$NON-NLS-1$
 			return REOPENED;
 		}
-		if (change.equals("CLOSED")) {
+		if (change.equals("CLOSED")) { //$NON-NLS-1$
 			return CLOSED;
 		}
-		if (change.equals("VERIFIED")) {
+		if (change.equals("VERIFIED")) { //$NON-NLS-1$
 			return VERIFIED;
 		}
-		if (change.equals("UNCONFIRMED")) {
+		if (change.equals("UNCONFIRMED")) { //$NON-NLS-1$
 			return UNCONFIRMED;
 		}
-		if (change.startsWith("NEEDINFO")) {
+		if (change.startsWith("NEEDINFO")) { //$NON-NLS-1$
 			return NEEDINFO;
 		}
-		if (change.equals("WAITING")) {
+		if (change.equals("WAITING")) { //$NON-NLS-1$
 			return WAITING;
 		}
-		if (change.equals("SUSPENDED")) {
+		if (change.equals("SUSPENDED")) { //$NON-NLS-1$
 			return SUSPENDED;
 		}
-		if (change.equals("MODIFIED")) {
+		if (change.equals("MODIFIED")) { //$NON-NLS-1$
 			return MODIFIED;
 		}
-		if (change.equals("POST")) {
+		if (change.equals("POST")) { //$NON-NLS-1$
 			return POST;
 		}
-		if (change.equals("INVESTIGATE")) {
+		if (change.equals("INVESTIGATE")) { //$NON-NLS-1$
 			return INVESTIGATE;
 		}
-		if (change.equals("PASSES_QA")) {
+		if (change.equals("PASSES_QA")) { //$NON-NLS-1$
 			return PASSES_QA;
 		}
-		if (change.equals("PROD_READY")) {
+		if (change.equals("PROD_READY")) { //$NON-NLS-1$
 			return PROD_READY;
 		}
-		if (change.equals("RELEASE_PENDING")) {
+		if (change.equals("RELEASE_PENDING")) { //$NON-NLS-1$
 			return RELEASE_PENDING;
 		}
-		if (change.equals("ON_QA")) {
+		if (change.equals("ON_QA")) { //$NON-NLS-1$
 			return ON_QA;
 		}
-		if (change.equals("QA_READY")) {
+		if (change.equals("QA_READY")) { //$NON-NLS-1$
 			return QA_READY;
 		}
-		if (change.equals("FAILS_QA")) {
+		if (change.equals("FAILS_QA")) { //$NON-NLS-1$
 			return FAILS_QA;
 		}
-		if (change.equals("SPEC")) {
+		if (change.equals("SPEC")) { //$NON-NLS-1$
 			return SPEC;
 		}
-		if (change.equals("") == false) {
-			System.err.println("Unknown status type: " + change);
+		if (change.equals("") == false) { //$NON-NLS-1$
+			System.err.println(MessageFormat.format(Messages.StatusType_Unknown_status_type_X, change));
 		}
 		return UNKNOWN;
 	}

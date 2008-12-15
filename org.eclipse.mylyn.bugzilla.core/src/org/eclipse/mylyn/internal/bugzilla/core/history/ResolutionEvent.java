@@ -35,8 +35,8 @@ public class ResolutionEvent extends TaskRevision {
 
 	@Override
 	public String toString() {
-		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.getRemoved() + " | "
-				+ (this.getType().equals(ResolutionType.UNKNOWN) ? "" : this.getType());
+		return this.getName() + " | " + this.getDate() + " | " + this.getWhat() + " | " + this.getRemoved() + " | " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				+ (this.getType().equals(ResolutionType.UNKNOWN) ? "" : this.getType()); //$NON-NLS-1$
 	}
 
 }
