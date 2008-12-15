@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.Proxy.Type;
 
 import javax.net.ssl.SSLHandshakeException;
@@ -451,6 +452,8 @@ public class WebUtilTest extends TestCase {
 			int statusCode = client.executeMethod(hostConfiguration, method);
 			fail("Expected SSLHandshakeException, got status: " + statusCode);
 		} catch (SSLHandshakeException e) {
+		} catch (SocketException e) {
+			// connection reset, happens in some environments instead of SSLHandshakeExecption depending on how much data has been written before the socket is closed
 		}
 
 		Message request = testProxy.getRequest();
