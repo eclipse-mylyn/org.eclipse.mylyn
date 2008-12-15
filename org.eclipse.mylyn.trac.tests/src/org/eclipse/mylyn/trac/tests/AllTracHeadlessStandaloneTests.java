@@ -14,7 +14,6 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.internal.trac.ui.TracHyperlinkUtilStandaloneTest;
 import org.eclipse.mylyn.trac.tests.client.TracClientFactoryTest;
 import org.eclipse.mylyn.trac.tests.client.TracClientProxyTest;
 import org.eclipse.mylyn.trac.tests.client.TracSearchTest;
@@ -35,7 +34,6 @@ public class AllTracHeadlessStandaloneTests {
 		TestSuite suite = new TestSuite("Headless Standalone Tests for org.eclipse.mylyn.trac.tests");
 		// other
 		suite.addTestSuite(TracClientManagerTest.class);
-		suite.addTestSuite(TracHyperlinkUtilStandaloneTest.class);
 		// client
 		suite.addTestSuite(TracSearchTest.class);
 		suite.addTestSuite(TracTicketTest.class);
