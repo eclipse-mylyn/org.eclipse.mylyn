@@ -5,11 +5,11 @@
          point="org.eclipse.mylyn.tasks.core.templates">
       <repository
             addAutomatically="true"
-            characterEncoding="%repository.encoding"
-            label="%repository.label"
+            characterEncoding="ISO-8859-1"
+            label="Eclipse.org"
             repositoryKind="bugzilla"
-            urlRepository="%repository.url"
-            version="%repository.version"/>
+            urlRepository="https://bugs.eclipse.org/bugs"
+            version="3.0"/>
    </extension>
    <extension
          point="org.eclipse.mylyn.tasks.bugs.pluginRepositoryMappings">
@@ -17,7 +17,7 @@
             pluginIdPrefix="org.eclipse">
          <repository
                kind="bugzilla"
-               url="%bugzilla.url">
+               url="https://bugs.eclipse.org/bugs">
          </repository>
       </mapping>
       <mapping
