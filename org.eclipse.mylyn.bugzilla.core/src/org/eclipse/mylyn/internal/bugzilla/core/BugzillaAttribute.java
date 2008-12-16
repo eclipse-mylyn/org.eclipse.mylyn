@@ -125,7 +125,7 @@ public enum BugzillaAttribute {
 	REMAINING_TIME(Messages.BugzillaAttribute_Remaining, "remaining_time", TaskAttribute.TYPE_SHORT_TEXT, true, false), //$NON-NLS-1$
 
 	SET_DEFAULT_ASSIGNEE(Messages.BugzillaAttribute_Reassign_to_default_assignee,
-			"set_default_assignee", TaskAttribute.TYPE_OPERATION, false, //$NON-NLS-1$
+			"set_default_assignee", TaskAttribute.TYPE_BOOLEAN, false, //$NON-NLS-1$
 			false),
 
 	SHORT_DESC(Messages.BugzillaAttribute_Summary, "short_desc", TaskAttribute.TYPE_SHORT_RICH_TEXT, true, false), //$NON-NLS-1$
