@@ -49,7 +49,7 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Error_updating_search_options;
 
-	public static String BugzillaSearchPage_Error_was_;
+	public static String BugzillaSearchPage_Error_was_X;
 
 	public static String BugzillaSearchPage_Hardware;
 
@@ -89,7 +89,7 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Task_Repositories;
 
-	public static String BugzillaSearchPage_Unable_to_get_configuration;
+	public static String BugzillaSearchPage_Unable_to_get_configuration_X;
 
 	public static String BugzillaSearchPage_Update_Attributes_from_Repository;
 

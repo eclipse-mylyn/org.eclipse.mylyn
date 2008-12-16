@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -1063,9 +1064,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 								public void run() {
 									MessageDialog.openError(Display.getDefault().getActiveShell(),
-											Messages.BugzillaSearchPage_Bugzilla_Search_Page,
-											Messages.BugzillaSearchPage_Unable_to_get_configuration
-													+ LABEL_VIEW_REPOSITORIES + ".\n\n"); //$NON-NLS-1$
+											Messages.BugzillaSearchPage_Bugzilla_Search_Page, MessageFormat.format(
+													Messages.BugzillaSearchPage_Unable_to_get_configuration_X,
+													LABEL_VIEW_REPOSITORIES)
+													+ "\n\n"); //$NON-NLS-1$
 								}
 							});
 						}
@@ -1896,7 +1898,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 
 				MessageDialog.openError(shell, Messages.BugzillaSearchPage_Error_updating_search_options,
-						Messages.BugzillaSearchPage_Error_was_ + ex.getCause().getMessage());
+						MessageFormat.format(Messages.BugzillaSearchPage_Error_was_X, ex.getCause().getMessage()));
 				return;
 
 			} catch (InterruptedException ex) {

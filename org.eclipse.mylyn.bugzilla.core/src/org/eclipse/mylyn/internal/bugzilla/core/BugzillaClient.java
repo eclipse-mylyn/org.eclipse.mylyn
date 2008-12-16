@@ -883,8 +883,7 @@ public class BugzillaClient {
 		} catch (Exception e) {
 			authenticated = false;
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_INTERNAL, Messages.BugzillaClient_unable_to_parse_resonse_from
-							+ repositoryUrl.toString() + ".")); //$NON-NLS-1$
+					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
 		} finally {
 			if (input != null) {
 				input.close();
@@ -895,8 +894,7 @@ public class BugzillaClient {
 		}
 		if (!existingBugPosted) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_REPOSITORY, repositoryUrl.toString(),
-					Messages.BugzillaClient_unable_to_submit_attachment_update));
+					RepositoryStatus.ERROR_REPOSITORY, repositoryUrl.toString(), "Unable to update attachment")); //$NON-NLS-1$
 		}
 	}
 

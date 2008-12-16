@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -59,7 +60,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String TITLE = Messages.BugzillaRepositorySettingsPage_bugzilla_repository_settings;
 
-	private static final String DESCRIPTION = Messages.BugzillaRepositorySettingsPage_supports_bugzilla + LABEL_VERSION_NUMBER
+	private static final String DESCRIPTION = MessageFormat.format(
+			Messages.BugzillaRepositorySettingsPage_supports_bugzilla_X, LABEL_VERSION_NUMBER)
 			+ Messages.BugzillaRepositorySettingsPage_example_do_not_include;
 
 	protected Button autodetectPlatformOS;
@@ -143,7 +145,9 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 							public void run(IProgressMonitor monitor) throws InvocationTargetException,
 									InterruptedException {
 								try {
-									monitor.beginTask(Messages.BugzillaRepositorySettingsPage_Retrieving_repository_configuration, IProgressMonitor.UNKNOWN);
+									monitor.beginTask(
+											Messages.BugzillaRepositorySettingsPage_Retrieving_repository_configuration,
+											IProgressMonitor.UNKNOWN);
 									repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
 											false, monitor);
 									if (repositoryConfiguration != null) {
@@ -331,7 +335,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				monitor = new NullProgressMonitor();
 			}
 			try {
-				monitor.beginTask(Messages.BugzillaRepositorySettingsPage_Validating_server_settings, IProgressMonitor.UNKNOWN);
+				monitor.beginTask(Messages.BugzillaRepositorySettingsPage_Validating_server_settings,
+						IProgressMonitor.UNKNOWN);
 				BugzillaClient client = null;
 
 				client = BugzillaClientFactory.createClient(repository);

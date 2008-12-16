@@ -179,10 +179,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaClient_description_required_when_submitting_attachments;
 
-	public static String BugzillaClient_unable_to_parse_resonse_from;
-
-	public static String BugzillaClient_unable_to_submit_attachment_update;
-
 	public static String BugzillaOperation_Accept_to_ASSIGNED;
 
 	public static String BugzillaOperation_Duplicate_of;
