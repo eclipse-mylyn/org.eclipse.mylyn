@@ -143,7 +143,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				}
 				resourcesRepositoriesContainers.addAll(unmappedProjects);
 				tasksContainer = new ElementCategory(Messages.TaskWorkingSetPage_Tasks, taskRepositoriesContainers);
-				resourcesContainer = new ElementCategory(Messages.TaskWorkingSetPage_Resources, resourcesRepositoriesContainers);
+				resourcesContainer = new ElementCategory(Messages.TaskWorkingSetPage_Resources,
+						resourcesRepositoriesContainers);
 				return new Object[] { tasksContainer, resourcesContainer };
 			} else if (parentElement instanceof TaskRepository) {
 				List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
@@ -302,9 +303,11 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				return -1;
 			} else if (e2 instanceof TaskRepository || e2 instanceof TaskRepositoryProjectMapping) {
 				return 1;
-			} else if (e1 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(Messages.TaskWorkingSetPage_Tasks)) {
+			} else if (e1 instanceof ElementCategory
+					&& ((ElementCategory) e1).getLabel(e1).equals(Messages.TaskWorkingSetPage_Tasks)) {
 				return -1;
-			} else if (e2 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(Messages.TaskWorkingSetPage_Tasks)) {
+			} else if (e2 instanceof ElementCategory
+					&& ((ElementCategory) e1).getLabel(e1).equals(Messages.TaskWorkingSetPage_Tasks)) {
 				return 1;
 			} else {
 				return super.compare(viewer, e1, e2);
@@ -314,8 +317,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	public TaskWorkingSetPage() {
 		super("taskWorkingSetPage", Messages.TaskWorkingSetPage_Select_Working_Set_Elements, null); //$NON-NLS-1$
-		setDescription("" + Messages.TaskWorkingSetPage_When_this_Working_Set_is_selected_views_will_be_filtered_just_to_show_only //$NON-NLS-1$
-				+ Messages.TaskWorkingSetPage_these_elements_is_enabled_in_the_view);
+		setDescription(Messages.TaskWorkingSetPage_Page_Description);
 		setImageDescriptor(TasksUiImages.BANNER_WORKING_SET);
 	}
 

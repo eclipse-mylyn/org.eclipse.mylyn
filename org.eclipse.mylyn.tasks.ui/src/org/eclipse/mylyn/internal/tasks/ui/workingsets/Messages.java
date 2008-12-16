@@ -25,8 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String TaskWorkingSetPage_these_elements_is_enabled_in_the_view;
-
 	public static String TaskWorkingSetPage_The_name_must_not_be_empty;
 
 	public static String TaskWorkingSetPage_The_name_must_not_have_a_leading_or_trailing_whitespace;
@@ -39,7 +37,7 @@ public class Messages extends NLS {
 
 	public static String TaskWorkingSetPage_Tasks;
 
-	public static String TaskWorkingSetPage_When_this_Working_Set_is_selected_views_will_be_filtered_just_to_show_only;
+	public static String TaskWorkingSetPage_Page_Description;
 
 	public static String TaskWorkingSetPage_A_working_set_with_the_same_name_already_exists;
 
