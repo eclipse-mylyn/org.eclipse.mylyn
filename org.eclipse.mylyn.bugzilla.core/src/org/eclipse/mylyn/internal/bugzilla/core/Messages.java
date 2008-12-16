@@ -244,4 +244,22 @@ public class Messages extends NLS {
 	public static String SaxMultiBugReportContentHandler_CREATED_AN_ATTACHEMENT_ID;
 
 	public static String SaxMultiBugReportContentHandler_id_not_found;
+
+	public static String BugzillaStatus_repositoryLoginFailure;
+
+	public static String BugzillaStatus_repositoryNotFound;
+
+	public static String BugzillaStatus_repositoryCommentRequired;
+
+	public static String BugzillaStatus_repositoryCollision;
+
+	public static String BugzillaStatus_operationCancelled;
+
+	public static String BugzillaStatus_errorNetwork;
+
+	public static String BugzillaStatus_errorIo;
+
+	public static String BugzillaStatus_errorInternal;
+
+	public static String BugzillaStatus_errorRepository;
 }
