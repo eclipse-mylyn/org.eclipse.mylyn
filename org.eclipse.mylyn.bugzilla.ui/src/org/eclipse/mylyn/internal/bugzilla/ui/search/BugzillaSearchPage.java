@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -81,15 +82,13 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
  */
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
-	private static final int LABEL_WIDTH = 58;
+	private static final String LABEL_VIEW_REPOSITORIES = Messages.BugzillaSearchPage_Task_Repositories;
 
-	private static final String LABEL_VIEW_REPOSITORIES = "Task Repositories";
+	private static final String MESSAGE_NO_REPOSITORY = Messages.BugzillaSearchPage_No_repository_available;
 
-	private static final String MESSAGE_NO_REPOSITORY = "No repository available, please add one using the Task Repositories view.";
+	private static final String NUM_DAYS_POSITIVE = Messages.BugzillaSearchPage_Number_of_days_must_be_a_positive_integer;
 
-	private static final String NUM_DAYS_POSITIVE = "Number of days must be a positive integer. ";
-
-	private static final String TITLE_BUGZILLA_QUERY = "Bugzilla Query";
+	private static final String TITLE_BUGZILLA_QUERY = Messages.BugzillaSearchPage_Bugzilla_Query;
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 70;
 
@@ -109,23 +108,23 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private IDialogSettings fDialogSettings;
 
-	private static final String[] patternOperationText = { "all words", "any word", "regexp", "notregexp" };
+	private static final String[] patternOperationText = { "all words", "any word", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static final String[] patternOperationValues = { "allwordssubstr", "anywordssubstr", "regexp", "notregexp" };
+	private static final String[] patternOperationValues = { "allwordssubstr", "anywordssubstr", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static final String[] emailOperationText = { "substring", "exact", "regexp", "notregexp" };
+	private static final String[] emailOperationText = { "substring", "exact", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static final String[] emailOperationValues = { "substring", "exact", "regexp", "notregexp" };
+	private static final String[] emailOperationValues = { "substring", "exact", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static final String[] keywordOperationText = { "all", "any", "none" };
+	private static final String[] keywordOperationText = { "all", "any", "none" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	private static final String[] keywordOperationValues = { "allwords", "anywords", "nowords" };
+	private static final String[] keywordOperationValues = { "allwords", "anywords", "nowords" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
-	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1",
-			"emaillongdesc1" };
+	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"emaillongdesc1" }; //$NON-NLS-1$
 
-	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2",
-			"emaillongdesc2" };
+	private static final String[] emailRoleValues2 = { "emailassigned_to2", "emailreporter2", "emailcc2", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"emaillongdesc2" }; //$NON-NLS-1$
 
 	// dialog store id constants
 	private final static String DIALOG_BOUNDS_KEY = "ResizableDialogBounds"; //$NON-NLS-1$
@@ -210,49 +209,49 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	// Dialog store taskId constants
 	protected final static String PAGE_NAME = "BugzillaSearchPage"; //$NON-NLS-1$
 
-	private static final String STORE_PRODUCT_ID = PAGE_NAME + ".PRODUCT";
+	private static final String STORE_PRODUCT_ID = PAGE_NAME + ".PRODUCT"; //$NON-NLS-1$
 
-	private static final String STORE_COMPONENT_ID = PAGE_NAME + ".COMPONENT";
+	private static final String STORE_COMPONENT_ID = PAGE_NAME + ".COMPONENT"; //$NON-NLS-1$
 
-	private static final String STORE_VERSION_ID = PAGE_NAME + ".VERSION";
+	private static final String STORE_VERSION_ID = PAGE_NAME + ".VERSION"; //$NON-NLS-1$
 
-	private static final String STORE_MSTONE_ID = PAGE_NAME + ".MILESTONE";
+	private static final String STORE_MSTONE_ID = PAGE_NAME + ".MILESTONE"; //$NON-NLS-1$
 
-	private static final String STORE_STATUS_ID = PAGE_NAME + ".STATUS";
+	private static final String STORE_STATUS_ID = PAGE_NAME + ".STATUS"; //$NON-NLS-1$
 
-	private static final String STORE_RESOLUTION_ID = PAGE_NAME + ".RESOLUTION";
+	private static final String STORE_RESOLUTION_ID = PAGE_NAME + ".RESOLUTION"; //$NON-NLS-1$
 
-	private static final String STORE_SEVERITY_ID = PAGE_NAME + ".SEVERITY";
+	private static final String STORE_SEVERITY_ID = PAGE_NAME + ".SEVERITY"; //$NON-NLS-1$
 
-	private static final String STORE_PRIORITY_ID = PAGE_NAME + ".PRIORITY";
+	private static final String STORE_PRIORITY_ID = PAGE_NAME + ".PRIORITY"; //$NON-NLS-1$
 
-	private static final String STORE_HARDWARE_ID = PAGE_NAME + ".HARDWARE";
+	private static final String STORE_HARDWARE_ID = PAGE_NAME + ".HARDWARE"; //$NON-NLS-1$
 
-	private static final String STORE_OS_ID = PAGE_NAME + ".OS";
+	private static final String STORE_OS_ID = PAGE_NAME + ".OS"; //$NON-NLS-1$
 
-	private static final String STORE_SUMMARYMATCH_ID = PAGE_NAME + ".SUMMARYMATCH";
+	private static final String STORE_SUMMARYMATCH_ID = PAGE_NAME + ".SUMMARYMATCH"; //$NON-NLS-1$
 
-	private static final String STORE_COMMENTMATCH_ID = PAGE_NAME + ".COMMENTMATCH";
+	private static final String STORE_COMMENTMATCH_ID = PAGE_NAME + ".COMMENTMATCH"; //$NON-NLS-1$
 
-	private static final String STORE_EMAILMATCH_ID = PAGE_NAME + ".EMAILMATCH";
+	private static final String STORE_EMAILMATCH_ID = PAGE_NAME + ".EMAILMATCH"; //$NON-NLS-1$
 
-	private static final String STORE_EMAIL2MATCH_ID = PAGE_NAME + ".EMAIL2MATCH";
+	private static final String STORE_EMAIL2MATCH_ID = PAGE_NAME + ".EMAIL2MATCH"; //$NON-NLS-1$
 
-	private static final String STORE_EMAILBUTTON_ID = PAGE_NAME + ".EMAILATTR";
+	private static final String STORE_EMAILBUTTON_ID = PAGE_NAME + ".EMAILATTR"; //$NON-NLS-1$
 
-	private static final String STORE_EMAIL2BUTTON_ID = PAGE_NAME + ".EMAIL2ATTR";
+	private static final String STORE_EMAIL2BUTTON_ID = PAGE_NAME + ".EMAIL2ATTR"; //$NON-NLS-1$
 
-	private static final String STORE_SUMMARYTEXT_ID = PAGE_NAME + ".SUMMARYTEXT";
+	private static final String STORE_SUMMARYTEXT_ID = PAGE_NAME + ".SUMMARYTEXT"; //$NON-NLS-1$
 
-	private static final String STORE_COMMENTTEXT_ID = PAGE_NAME + ".COMMENTTEXT";
+	private static final String STORE_COMMENTTEXT_ID = PAGE_NAME + ".COMMENTTEXT"; //$NON-NLS-1$
 
-	private static final String STORE_EMAILADDRESS_ID = PAGE_NAME + ".EMAILADDRESS";
+	private static final String STORE_EMAILADDRESS_ID = PAGE_NAME + ".EMAILADDRESS"; //$NON-NLS-1$
 
-	private static final String STORE_EMAIL2ADDRESS_ID = PAGE_NAME + ".EMAIL2ADDRESS";
+	private static final String STORE_EMAIL2ADDRESS_ID = PAGE_NAME + ".EMAIL2ADDRESS"; //$NON-NLS-1$
 
-	private static final String STORE_KEYWORDS_ID = PAGE_NAME + ".KEYWORDS";
+	private static final String STORE_KEYWORDS_ID = PAGE_NAME + ".KEYWORDS"; //$NON-NLS-1$
 
-	private static final String STORE_KEYWORDSMATCH_ID = PAGE_NAME + ".KEYWORDSMATCH";
+	private static final String STORE_KEYWORDSMATCH_ID = PAGE_NAME + ".KEYWORDSMATCH"; //$NON-NLS-1$
 
 	// private static final String STORE_REPO_ID = PAGE_NAME + ".REPO";
 
@@ -320,8 +319,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	public BugzillaSearchPage(TaskRepository repository, IRepositoryQuery origQuery) {
 		super(TITLE_BUGZILLA_QUERY, repository, origQuery);
 		originalQuery = origQuery;
-		setDescription("Select the Bugzilla query parameters.  Use the Update Attributes button to retrieve "
-				+ "updated values from the repository.");
+		setDescription(Messages.BugzillaSearchPage_Select_the_Bugzilla_query_parameters);
 		// setTitle(TITLE);
 		// setDescription(DESCRIPTION);
 		// setPageComplete(false);
@@ -383,6 +381,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		//   // ignore
 		// }
 		// }
+		Dialog.applyDialogFont(control);
 		setControl(control);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
 		restoreBounds();
@@ -406,7 +405,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		if (!inSearchContainer()) {
 			final Label queryTitleLabel = new Label(composite, SWT.NONE);
-			queryTitleLabel.setText("&Query Title:");
+			queryTitleLabel.setText(Messages.BugzillaSearchPage_Query_Title);
 
 			queryTitle = new Text(composite, SWT.BORDER);
 			queryTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -419,8 +418,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// Info text
 		Label labelSummary = new Label(composite, SWT.LEFT);
-		labelSummary.setText("Summar&y:");
-		labelSummary.setLayoutData(new GridData(LABEL_WIDTH, SWT.DEFAULT));
+		labelSummary.setText(Messages.BugzillaSearchPage_Summary);
+//		labelSummary.setLayoutData(new GridData(LABEL_WIDTH, SWT.DEFAULT));
 		//labelSummary.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// Pattern combo
@@ -441,7 +440,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// Info text
 		Label labelComment = new Label(composite, SWT.LEFT);
-		labelComment.setText("&Comment:");
+		labelComment.setText(Messages.BugzillaSearchPage_Comment);
 		//labelComment.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// Comment pattern combo
@@ -461,7 +460,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		commentOperation.select(0);
 
 		Label labelEmail = new Label(composite, SWT.LEFT);
-		labelEmail.setText("&Email:");
+		labelEmail.setText(Messages.BugzillaSearchPage_Email);
 		//labelEmail.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// pattern combo
@@ -494,16 +493,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		emailComposite.setLayout(emailLayout);
 
 		Button button0 = new Button(emailComposite, SWT.CHECK);
-		button0.setText("owner");
+		button0.setText(Messages.BugzillaSearchPage_owner);
 
 		Button button1 = new Button(emailComposite, SWT.CHECK);
-		button1.setText("reporter");
+		button1.setText(Messages.BugzillaSearchPage_reporter);
 
 		Button button2 = new Button(emailComposite, SWT.CHECK);
-		button2.setText("cc");
+		button2.setText(Messages.BugzillaSearchPage_cc);
 
 		Button button3 = new Button(emailComposite, SWT.CHECK);
-		button3.setText("commenter");
+		button3.setText(Messages.BugzillaSearchPage_commenter);
 
 		emailButtons = new Button[] { button0, button1, button2, button3 };
 
@@ -516,7 +515,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// Email2
 
 		Label labelEmail2 = new Label(composite, SWT.LEFT);
-		labelEmail2.setText("Email &2:");
+		labelEmail2.setText(Messages.BugzillaSearchPage_Email_2);
 		//labelEmail.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		// pattern combo
@@ -545,16 +544,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		emailComposite2.setLayout(emailLayout2);
 
 		Button e2button0 = new Button(emailComposite2, SWT.CHECK);
-		e2button0.setText("owner");
+		e2button0.setText(Messages.BugzillaSearchPage_owner);
 
 		Button e2button1 = new Button(emailComposite2, SWT.CHECK);
-		e2button1.setText("reporter");
+		e2button1.setText(Messages.BugzillaSearchPage_reporter);
 
 		Button e2button2 = new Button(emailComposite2, SWT.CHECK);
-		e2button2.setText("cc");
+		e2button2.setText(Messages.BugzillaSearchPage_cc);
 
 		Button e2button3 = new Button(emailComposite2, SWT.CHECK);
-		e2button3.setText("commenter");
+		e2button3.setText(Messages.BugzillaSearchPage_commenter);
 
 		emailButtons2 = new Button[] { e2button0, e2button1, e2button2, e2button3 };
 
@@ -567,8 +566,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		/////
 
 		Label labelKeywords = new Label(composite, SWT.NONE);
-		labelKeywords.setText("&Keywords:");
-		labelKeywords.setLayoutData(new GridData(LABEL_WIDTH, SWT.DEFAULT));
+		labelKeywords.setText(Messages.BugzillaSearchPage_Keywords);
+//		labelKeywords.setLayoutData(new GridData(LABEL_WIDTH, SWT.DEFAULT));
 		//labelKeywords.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 
 		Composite keywordsComposite = new Composite(composite, SWT.NONE);
@@ -609,7 +608,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			}
 		});
 		keywordsSelectButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		keywordsSelectButton.setText("Select...");
+		keywordsSelectButton.setText(Messages.BugzillaSearchPage_Select_);
 		SashForm sashForm = new SashForm(control, SWT.VERTICAL);
 		sashForm.setLayout(sashFormLayout);
 		final GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -632,7 +631,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		productComposite.setLayout(productLayout);
 
 		Label productLabel = new Label(productComposite, SWT.LEFT);
-		productLabel.setText("&Product:");
+		productLabel.setText(Messages.BugzillaSearchPage_Product);
+		productLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		GridData productLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		productLayoutData.heightHint = HEIGHT_ATTRIBUTE_COMBO;
@@ -663,7 +663,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		componentComposite.setLayout(componentLayout);
 
 		Label componentLabel = new Label(componentComposite, SWT.LEFT);
-		componentLabel.setText("Compo&nent:");
+		componentLabel.setText(Messages.BugzillaSearchPage_Component);
+		componentLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		component = new List(componentComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		GridData componentLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -679,7 +680,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		versionComposite.setLayout(versionLayout);
 
 		Label versionLabel = new Label(versionComposite, SWT.LEFT);
-		versionLabel.setText("Vers&ion:");
+		versionLabel.setText(Messages.BugzillaSearchPage_Version);
+		versionLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		version = new List(versionComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		GridData versionLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -695,7 +697,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		milestoneComposite.setLayout(milestoneLayout);
 
 		Label milestoneLabel = new Label(milestoneComposite, SWT.LEFT);
-		milestoneLabel.setText("&Milestone:");
+		milestoneLabel.setText(Messages.BugzillaSearchPage_Milestone);
+		milestoneLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		target = new List(milestoneComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		GridData targetLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -721,7 +724,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		statusComposite.setLayout(statusLayout);
 
 		Label statusLabel = new Label(statusComposite, SWT.LEFT);
-		statusLabel.setText("Stat&us:");
+		statusLabel.setText(Messages.BugzillaSearchPage_Status);
+		statusLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		status = new List(statusComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_status = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -738,7 +742,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		resolutionComposite.setLayout(resolutionLayout);
 
 		Label resolutionLabel = new Label(resolutionComposite, SWT.LEFT);
-		resolutionLabel.setText("&Resolution:");
+		resolutionLabel.setText(Messages.BugzillaSearchPage_Resolution);
+		resolutionLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		resolution = new List(resolutionComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_resolution = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -755,7 +760,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		priorityComposite.setLayout(priorityLayout);
 
 		Label priorityLabel = new Label(priorityComposite, SWT.LEFT);
-		priorityLabel.setText("Priori&ty:");
+		priorityLabel.setText(Messages.BugzillaSearchPage_PROORITY);
+		priorityLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		priority = new List(priorityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_priority = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -772,7 +778,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		severityComposite.setLayout(severityLayout);
 
 		Label severityLabel = new Label(severityComposite, SWT.LEFT);
-		severityLabel.setText("Se&verity:");
+		severityLabel.setText(Messages.BugzillaSearchPage_Severity);
+		severityLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		severity = new List(severityComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_severity = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -789,7 +796,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		hardwareComposite.setLayout(hardwareLayout);
 
 		Label hardwareLabel = new Label(hardwareComposite, SWT.LEFT);
-		hardwareLabel.setText("Hard&ware:");
+		hardwareLabel.setText(Messages.BugzillaSearchPage_Hardware);
+		hardwareLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		hardware = new List(hardwareComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_hardware = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -806,7 +814,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		osComposite.setLayout(osLayout);
 
 		Label osLabel = new Label(osComposite, SWT.LEFT);
-		osLabel.setText("&Operating System:");
+		osLabel.setText(Messages.BugzillaSearchPage_Operating_System);
+		osLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		os = new List(osComposite, SWT.MULTI | SWT.V_SCROLL | SWT.BORDER);
 		final GridData gd_os = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -828,7 +837,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		Label changedInTheLabel = new Label(composite, SWT.LEFT);
 		changedInTheLabel.setLayoutData(new GridData());
-		changedInTheLabel.setText("Ch&anged in:");
+		changedInTheLabel.setText(Messages.BugzillaSearchPage_Changed_in);
 
 		Composite updateComposite = new Composite(composite, SWT.NONE);
 		updateComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -844,10 +853,10 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		daysText.addListener(SWT.Modify, this);
 
 		Label label = new Label(updateComposite, SWT.LEFT);
-		label.setText(" days.");
+		label.setText(Messages.BugzillaSearchPage_days);
 
 		Button updateButton = new Button(updateComposite, SWT.PUSH);
-		updateButton.setText("Up&date Attributes from Repository");
+		updateButton.setText(Messages.BugzillaSearchPage_Update_Attributes_from_Repository);
 		updateButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		updateButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -1054,9 +1063,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 								public void run() {
 									MessageDialog.openError(Display.getDefault().getActiveShell(),
-											"Bugzilla Search Page",
-											"Unable to get configuration. Ensure proper repository configuration in "
-													+ LABEL_VIEW_REPOSITORIES + ".\n\n");
+											Messages.BugzillaSearchPage_Bugzilla_Search_Page,
+											Messages.BugzillaSearchPage_Unable_to_get_configuration
+													+ LABEL_VIEW_REPOSITORIES + ".\n\n"); //$NON-NLS-1$
 								}
 							});
 						}
@@ -1078,7 +1087,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			 */
 			if (getTaskRepository() != null) {
 				IDialogSettings settings = getDialogSettings();
-				String repoId = "." + getTaskRepository().getRepositoryUrl();
+				String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
 				if (getWizard() == null && restoreQueryOptions && settings.getArray(STORE_PRODUCT_ID + repoId) != null
 						&& product != null) {
 					product.setSelection(nonNullArray(settings, STORE_PRODUCT_ID + repoId));
@@ -1123,12 +1132,12 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			if (days.length() > 0) {
 				try {
 					if (Integer.parseInt(days) < 0) {
-						message = NUM_DAYS_POSITIVE + days + " is invalid.";
+						message = NUM_DAYS_POSITIVE + days + Messages.BugzillaSearchPage_is_invalid;
 						setErrorMessage(message);
 						return false;
 					}
 				} catch (NumberFormatException ex) {
-					message = NUM_DAYS_POSITIVE + days + " is invalid.";
+					message = NUM_DAYS_POSITIVE + days + Messages.BugzillaSearchPage_is_invalid;
 					setErrorMessage(message);
 					return false;
 				}
@@ -1144,7 +1153,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private BugzillaSearchData getPatternData(Combo widget, Combo operation,
 			ArrayList<BugzillaSearchData> previousSearchQueryData) {
 		String pattern = widget.getText();
-		if (pattern == null || pattern.trim().equals("")) {
+		if (pattern == null || pattern.trim().equals("")) { //$NON-NLS-1$
 			return null;
 		}
 		BugzillaSearchData match = null;
@@ -1189,7 +1198,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// HACK make sure that the searches come back sorted by priority. This
 		// should be a search option though
-		url.append("&order=Importance");
+		url.append("&order=Importance"); //$NON-NLS-1$
 		// url.append(BugzillaRepositoryUtil.contentTypeRDF);
 		return url.toString();
 	}
@@ -1205,7 +1214,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		if (sb.charAt(sb.length() - 1) != '/') {
 			sb.append('/');
 		}
-		sb.append("buglist.cgi?");
+		sb.append("buglist.cgi?"); //$NON-NLS-1$
 		return sb;
 	}
 
@@ -1220,65 +1229,65 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	protected StringBuilder getQueryParameters() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("short_desc_type=");
+		sb.append("short_desc_type="); //$NON-NLS-1$
 		sb.append(patternOperationValues[summaryOperation.getSelectionIndex()]);
-		appendToBuffer(sb, "&short_desc=", summaryPattern.getText());
+		appendToBuffer(sb, "&short_desc=", summaryPattern.getText()); //$NON-NLS-1$
 
 		int[] selected = product.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&product=", product.getItem(element));
+			appendToBuffer(sb, "&product=", product.getItem(element)); //$NON-NLS-1$
 		}
 
 		selected = component.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&component=", component.getItem(element));
+			appendToBuffer(sb, "&component=", component.getItem(element)); //$NON-NLS-1$
 		}
 
 		selected = version.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&version=", version.getItem(element));
+			appendToBuffer(sb, "&version=", version.getItem(element)); //$NON-NLS-1$
 		}
 
 		selected = target.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&target_milestone=", target.getItem(element));
+			appendToBuffer(sb, "&target_milestone=", target.getItem(element)); //$NON-NLS-1$
 		}
 
-		sb.append("&long_desc_type=");
+		sb.append("&long_desc_type="); //$NON-NLS-1$
 		sb.append(patternOperationValues[commentOperation.getSelectionIndex()]);
-		appendToBuffer(sb, "&long_desc=", commentPattern.getText());
+		appendToBuffer(sb, "&long_desc=", commentPattern.getText()); //$NON-NLS-1$
 
 		selected = status.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&bug_status=", status.getItem(element));
+			appendToBuffer(sb, "&bug_status=", status.getItem(element)); //$NON-NLS-1$
 		}
 
 		selected = resolution.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&resolution=", resolution.getItem(element));
+			appendToBuffer(sb, "&resolution=", resolution.getItem(element)); //$NON-NLS-1$
 		}
 
 		selected = severity.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&bug_severity=", severity.getItem(element));
+			appendToBuffer(sb, "&bug_severity=", severity.getItem(element)); //$NON-NLS-1$
 		}
 
 		selected = priority.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&priority=", priority.getItem(element));
+			appendToBuffer(sb, "&priority=", priority.getItem(element)); //$NON-NLS-1$
 		}
 
 		selected = hardware.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&ref_platform=", hardware.getItem(element));
+			appendToBuffer(sb, "&ref_platform=", hardware.getItem(element)); //$NON-NLS-1$
 		}
 
 		selected = os.getSelectionIndices();
 		for (int element : selected) {
-			appendToBuffer(sb, "&op_sys=", os.getItem(element));
+			appendToBuffer(sb, "&op_sys=", os.getItem(element)); //$NON-NLS-1$
 		}
 
-		if (emailPattern.getText() != null && !emailPattern.getText().trim().equals("")) {
+		if (emailPattern.getText() != null && !emailPattern.getText().trim().equals("")) { //$NON-NLS-1$
 			boolean selectionMade = false;
 			for (Button button : emailButtons) {
 				if (button.getSelection()) {
@@ -1289,18 +1298,18 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			if (selectionMade) {
 				for (int i = 0; i < emailButtons.length; i++) {
 					if (emailButtons[i].getSelection()) {
-						sb.append("&");
+						sb.append("&"); //$NON-NLS-1$
 						sb.append(emailRoleValues[i]);
-						sb.append("=1");
+						sb.append("=1"); //$NON-NLS-1$
 					}
 				}
-				sb.append("&emailtype1=");
+				sb.append("&emailtype1="); //$NON-NLS-1$
 				sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
-				appendToBuffer(sb, "&email1=", emailPattern.getText());
+				appendToBuffer(sb, "&email1=", emailPattern.getText()); //$NON-NLS-1$
 			}
 		}
 
-		if (emailPattern2.getText() != null && !emailPattern2.getText().trim().equals("")) {
+		if (emailPattern2.getText() != null && !emailPattern2.getText().trim().equals("")) { //$NON-NLS-1$
 			boolean selectionMade = false;
 			for (Button button : emailButtons2) {
 				if (button.getSelection()) {
@@ -1311,30 +1320,30 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			if (selectionMade) {
 				for (int i = 0; i < emailButtons2.length; i++) {
 					if (emailButtons2[i].getSelection()) {
-						sb.append("&");
+						sb.append("&"); //$NON-NLS-1$
 						sb.append(emailRoleValues2[i]);
-						sb.append("=1");
+						sb.append("=1"); //$NON-NLS-1$
 					}
 				}
-				sb.append("&emailtype2=");
+				sb.append("&emailtype2="); //$NON-NLS-1$
 				sb.append(emailOperationValues[emailOperation2.getSelectionIndex()]);
-				appendToBuffer(sb, "&email2=", emailPattern2.getText());
+				appendToBuffer(sb, "&email2=", emailPattern2.getText()); //$NON-NLS-1$
 			}
 		}
 
-		if (daysText.getText() != null && !daysText.getText().equals("")) {
+		if (daysText.getText() != null && !daysText.getText().equals("")) { //$NON-NLS-1$
 			try {
 				Integer.parseInt(daysText.getText());
-				appendToBuffer(sb, "&changedin=", daysText.getText());
+				appendToBuffer(sb, "&changedin=", daysText.getText()); //$NON-NLS-1$
 			} catch (NumberFormatException ignored) {
 				// this means that the days is not a number, so don't worry
 			}
 		}
 
-		if (keywords.getText() != null && !keywords.getText().trim().equals("")) {
-			sb.append("&keywords_type=");
+		if (keywords.getText() != null && !keywords.getText().trim().equals("")) { //$NON-NLS-1$
+			sb.append("&keywords_type="); //$NON-NLS-1$
 			sb.append(keywordOperationValues[keywordsOperation.getSelectionIndex()]);
-			appendToBuffer(sb, "&keywords=", keywords.getText().replace(',', ' '));
+			appendToBuffer(sb, "&keywords=", keywords.getText().replace(',', ' ')); //$NON-NLS-1$
 		}
 
 		return sb;
@@ -1349,6 +1358,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 	}
 
+	@Override
 	public IDialogSettings getDialogSettings() {
 		IDialogSettings settings = BugzillaUiPlugin.getDefault().getDialogSettings();
 		fDialogSettings = settings.getSection(PAGE_NAME);
@@ -1417,6 +1427,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 	}
 
+	@Override
 	public boolean canFlipToNextPage() {
 		// if (getErrorMessage() != null)
 		// return false;
@@ -1438,23 +1449,23 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// String serverName = startingUrl.substring(0,
 		// startingUrl.indexOf("?"));
 
-		startingUrl = startingUrl.substring(startingUrl.indexOf("?") + 1);
-		String[] options = startingUrl.split("&");
+		startingUrl = startingUrl.substring(startingUrl.indexOf("?") + 1); //$NON-NLS-1$
+		String[] options = startingUrl.split("&"); //$NON-NLS-1$
 		for (String option : options) {
-			String key = option.substring(0, option.indexOf("="));
-			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1),
+			String key = option.substring(0, option.indexOf("=")); //$NON-NLS-1$
+			String value = URLDecoder.decode(option.substring(option.indexOf("=") + 1), //$NON-NLS-1$
 					getTaskRepository().getCharacterEncoding());
 			if (key == null) {
 				continue;
 			}
 
-			if (key.equals("short_desc")) {
+			if (key.equals("short_desc")) { //$NON-NLS-1$
 				summaryPattern.setText(value);
-			} else if (key.equals("short_desc_type")) {
-				if (value.equals("allwordssubstr")) {
-					value = "all words";
-				} else if (value.equals("anywordssubstr")) {
-					value = "any word";
+			} else if (key.equals("short_desc_type")) { //$NON-NLS-1$
+				if (value.equals("allwordssubstr")) { //$NON-NLS-1$
+					value = "all words"; //$NON-NLS-1$
+				} else if (value.equals("anywordssubstr")) { //$NON-NLS-1$
+					value = "any word"; //$NON-NLS-1$
 				}
 				int index = 0;
 				for (String item : summaryOperation.getItems()) {
@@ -1466,7 +1477,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				if (index < summaryOperation.getItemCount()) {
 					summaryOperation.select(index);
 				}
-			} else if (key.equals("product")) {
+			} else if (key.equals("product")) { //$NON-NLS-1$
 				String[] sel = product.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
@@ -1474,39 +1485,39 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				sel = new String[selList.size()];
 				product.setSelection(selList.toArray(sel));
 				updateAttributesFromConfiguration(selList.toArray(sel));
-			} else if (key.equals("component")) {
+			} else if (key.equals("component")) { //$NON-NLS-1$
 				String[] sel = component.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				component.setSelection(selList.toArray(sel));
-			} else if (key.equals("version")) {
+			} else if (key.equals("version")) { //$NON-NLS-1$
 				String[] sel = version.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				version.setSelection(selList.toArray(sel));
-			} else if (key.equals("target_milestone")) { // XXX
+			} else if (key.equals("target_milestone")) { // XXX //$NON-NLS-1$
 				String[] sel = target.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				target.setSelection(selList.toArray(sel));
-			} else if (key.equals("version")) {
+			} else if (key.equals("version")) { //$NON-NLS-1$
 				String[] sel = version.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				version.setSelection(selList.toArray(sel));
-			} else if (key.equals("long_desc_type")) {
-				if (value.equals("allwordssubstr")) {
-					value = "all words";
-				} else if (value.equals("anywordssubstr")) {
-					value = "any word";
+			} else if (key.equals("long_desc_type")) { //$NON-NLS-1$
+				if (value.equals("allwordssubstr")) { //$NON-NLS-1$
+					value = "all words"; //$NON-NLS-1$
+				} else if (value.equals("anywordssubstr")) { //$NON-NLS-1$
+					value = "any word"; //$NON-NLS-1$
 				}
 				int index = 0;
 				for (String item : commentOperation.getItems()) {
@@ -1518,87 +1529,87 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				if (index < commentOperation.getItemCount()) {
 					commentOperation.select(index);
 				}
-			} else if (key.equals("long_desc")) {
+			} else if (key.equals("long_desc")) { //$NON-NLS-1$
 				commentPattern.setText(value);
-			} else if (key.equals("bug_status")) {
+			} else if (key.equals("bug_status")) { //$NON-NLS-1$
 				String[] sel = status.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				status.setSelection(selList.toArray(sel));
-			} else if (key.equals("resolution")) {
+			} else if (key.equals("resolution")) { //$NON-NLS-1$
 				String[] sel = resolution.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				resolution.setSelection(selList.toArray(sel));
-			} else if (key.equals("bug_severity")) {
+			} else if (key.equals("bug_severity")) { //$NON-NLS-1$
 				String[] sel = severity.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				severity.setSelection(selList.toArray(sel));
-			} else if (key.equals("priority")) {
+			} else if (key.equals("priority")) { //$NON-NLS-1$
 				String[] sel = priority.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				priority.setSelection(selList.toArray(sel));
-			} else if (key.equals("ref_platform")) {
+			} else if (key.equals("ref_platform")) { //$NON-NLS-1$
 				String[] sel = hardware.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				hardware.setSelection(selList.toArray(sel));
-			} else if (key.equals("op_sys")) {
+			} else if (key.equals("op_sys")) { //$NON-NLS-1$
 				String[] sel = os.getSelection();
 				java.util.List<String> selList = Arrays.asList(sel);
 				selList = new ArrayList<String>(selList);
 				selList.add(value);
 				sel = new String[selList.size()];
 				os.setSelection(selList.toArray(sel));
-			} else if (key.equals("emailassigned_to1")) { // HACK: email
+			} else if (key.equals("emailassigned_to1")) { // HACK: email //$NON-NLS-1$
 				// buttons
 				// assumed to be
 				// in same
 				// position
-				if (value.equals("1")) {
+				if (value.equals("1")) { //$NON-NLS-1$
 					emailButtons[0].setSelection(true);
 				} else {
 					emailButtons[0].setSelection(false);
 				}
-			} else if (key.equals("emailreporter1")) { // HACK: email
+			} else if (key.equals("emailreporter1")) { // HACK: email //$NON-NLS-1$
 				// buttons assumed
 				// to be in same
 				// position
-				if (value.equals("1")) {
+				if (value.equals("1")) { //$NON-NLS-1$
 					emailButtons[1].setSelection(true);
 				} else {
 					emailButtons[1].setSelection(false);
 				}
-			} else if (key.equals("emailcc1")) { // HACK: email buttons
+			} else if (key.equals("emailcc1")) { // HACK: email buttons //$NON-NLS-1$
 				// assumed to be in same
 				// position
-				if (value.equals("1")) {
+				if (value.equals("1")) { //$NON-NLS-1$
 					emailButtons[2].setSelection(true);
 				} else {
 					emailButtons[2].setSelection(false);
 				}
-			} else if (key.equals("emaillongdesc1")) { // HACK: email
+			} else if (key.equals("emaillongdesc1")) { // HACK: email //$NON-NLS-1$
 				// buttons assumed
 				// to be in same
 				// position
-				if (value.equals("1")) {
+				if (value.equals("1")) { //$NON-NLS-1$
 					emailButtons[3].setSelection(true);
 				} else {
 					emailButtons[3].setSelection(false);
 				}
-			} else if (key.equals("emailtype1")) {
+			} else if (key.equals("emailtype1")) { //$NON-NLS-1$
 				int index = 0;
 				for (String item : emailOperation.getItems()) {
 					if (item.compareTo(value) == 0) {
@@ -1609,45 +1620,45 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				if (index < emailOperation.getItemCount()) {
 					emailOperation.select(index);
 				}
-			} else if (key.equals("email1")) {
+			} else if (key.equals("email1")) { //$NON-NLS-1$
 				emailPattern.setText(value);
-			} else if (key.equals("emailassigned_to2")) { // HACK: email
+			} else if (key.equals("emailassigned_to2")) { // HACK: email //$NON-NLS-1$
 				// buttons
 				// assumed to be
 				// in same
 				// position
-				if (value.equals("1")) {
+				if (value.equals("1")) { //$NON-NLS-1$
 					emailButtons2[0].setSelection(true);
 				} else {
 					emailButtons2[0].setSelection(false);
 				}
-			} else if (key.equals("emailreporter2")) { // HACK: email
+			} else if (key.equals("emailreporter2")) { // HACK: email //$NON-NLS-1$
 				// buttons assumed
 				// to be in same
 				// position
-				if (value.equals("1")) {
+				if (value.equals("1")) { //$NON-NLS-1$
 					emailButtons2[1].setSelection(true);
 				} else {
 					emailButtons2[1].setSelection(false);
 				}
-			} else if (key.equals("emailcc2")) { // HACK: email buttons
+			} else if (key.equals("emailcc2")) { // HACK: email buttons //$NON-NLS-1$
 				// assumed to be in same
 				// position
-				if (value.equals("1")) {
+				if (value.equals("1")) { //$NON-NLS-1$
 					emailButtons2[2].setSelection(true);
 				} else {
 					emailButtons2[2].setSelection(false);
 				}
-			} else if (key.equals("emaillongdesc2")) { // HACK: email
+			} else if (key.equals("emaillongdesc2")) { // HACK: email //$NON-NLS-1$
 				// buttons assumed
 				// to be in same
 				// position
-				if (value.equals("1")) {
+				if (value.equals("1")) { //$NON-NLS-1$
 					emailButtons2[3].setSelection(true);
 				} else {
 					emailButtons2[3].setSelection(false);
 				}
-			} else if (key.equals("emailtype2")) {
+			} else if (key.equals("emailtype2")) { //$NON-NLS-1$
 				int index = 0;
 				for (String item : emailOperation2.getItems()) {
 					if (item.compareTo(value) == 0) {
@@ -1658,13 +1669,13 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				if (index < emailOperation2.getItemCount()) {
 					emailOperation2.select(index);
 				}
-			} else if (key.equals("email2")) {
+			} else if (key.equals("email2")) { //$NON-NLS-1$
 				emailPattern2.setText(value);
-			} else if (key.equals("changedin")) {
+			} else if (key.equals("changedin")) { //$NON-NLS-1$
 				daysText.setText(value);
-			} else if (key.equals("keywords")) {
+			} else if (key.equals("keywords")) { //$NON-NLS-1$
 				keywords.setText(value.replace(' ', ','));
-			} else if (key.equals("keywords_type")) {
+			} else if (key.equals("keywords_type")) { //$NON-NLS-1$
 				int index = 0;
 				for (String item : keywordOperationValues) {
 					if (item.equals(value)) {
@@ -1688,7 +1699,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private void restoreWidgetValues() {
 		try {
 			IDialogSettings settings = getDialogSettings();
-			String repoId = "." + getTaskRepository().getRepositoryUrl();
+			String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
 			if (!restoreQueryOptions || settings.getArray(STORE_PRODUCT_ID + repoId) == null || product == null) {
 				return;
 			}
@@ -1731,8 +1742,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		}
 	}
 
+	@Override
 	public void saveState() {
-		String repoId = "." + getTaskRepository().getRepositoryUrl();
+		String repoId = "." + getTaskRepository().getRepositoryUrl(); //$NON-NLS-1$
 		IDialogSettings settings = getDialogSettings();
 		settings.put(STORE_PRODUCT_ID + repoId, product.getSelection());
 		settings.put(STORE_COMPONENT_ID + repoId, component.getSelection());
@@ -1824,7 +1836,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						monitor = new NullProgressMonitor();
 					}
 					try {
-						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
+						monitor.beginTask(Messages.BugzillaSearchPage_Updating_search_options_,
+								IProgressMonitor.UNKNOWN);
 						repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(),
 								force, monitor);
 					} catch (final Exception e) {
@@ -1861,8 +1874,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 							shell.setEnabled(false);
 						}
 						// TODO: eliminate use of internal api
-						WebBrowserDialog dialog = new WebBrowserDialog(shell, "Error updating search options", null,
-								cause.getStatus().getMessage(), NONE, new String[] { IDialogConstants.OK_LABEL }, 0,
+						WebBrowserDialog dialog = new WebBrowserDialog(shell,
+								Messages.BugzillaSearchPage_Error_updating_search_options, null, cause.getStatus()
+										.getMessage(), NONE, new String[] { IDialogConstants.OK_LABEL }, 0,
 								((RepositoryStatus) cause.getStatus()).getHtmlMessage());
 						dialog.setBlockOnOpen(true);
 						dialog.open();
@@ -1881,8 +1895,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					return;
 				}
 
-				MessageDialog.openError(shell, "Error updating search options", "Error was: "
-						+ ex.getCause().getMessage());
+				MessageDialog.openError(shell, Messages.BugzillaSearchPage_Error_updating_search_options,
+						Messages.BugzillaSearchPage_Error_was_ + ex.getCause().getMessage());
 				return;
 
 			} catch (InterruptedException ex) {
@@ -1907,7 +1921,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	@Override
 	public String getQueryTitle() {
-		return (queryTitle != null) ? queryTitle.getText() : "";
+		return (queryTitle != null) ? queryTitle.getText() : ""; //$NON-NLS-1$
 	}
 
 	private void setSelection(List listControl, String[] selection) {

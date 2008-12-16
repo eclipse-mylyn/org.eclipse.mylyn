@@ -54,7 +54,7 @@ public class BugzillaVotesEditor extends AbstractAttributeEditor {
 		((GridData) getLabelControl().getLayoutData()).exclude = true;
 		showVotes = toolkit.createHyperlink(parent, getTaskAttribute().getValue(), SWT.NONE);
 		showVotes.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		showVotes.setToolTipText("Show votes");
+		showVotes.setToolTipText(Messages.BugzillaVotesEditor_Show_votes);
 		showVotes.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
@@ -69,7 +69,7 @@ public class BugzillaVotesEditor extends AbstractAttributeEditor {
 	public void createLabelControl(Composite composite, FormToolkit toolkit) {
 		voteControl = toolkit.createHyperlink(composite, getLabel(), SWT.NONE);
 		voteControl.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		voteControl.setToolTipText("Vote");
+		voteControl.setToolTipText(Messages.BugzillaVotesEditor_Vote);
 		voteControl.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
@@ -88,7 +88,7 @@ public class BugzillaVotesEditor extends AbstractAttributeEditor {
 
 		voteControl.setLayoutData(gd);
 
-		hiddenLabel = toolkit.createLabel(composite, "");
+		hiddenLabel = toolkit.createLabel(composite, ""); //$NON-NLS-1$
 		GridData data = new GridData();
 		data.exclude = true;
 		hiddenLabel.setLayoutData(data);

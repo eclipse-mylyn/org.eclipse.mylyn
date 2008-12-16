@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -33,13 +34,13 @@ import org.eclipse.swt.widgets.Text;
  */
 public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
-	private static final String LABEL_CUSTOM_TITLE = "&Query Title:";
+	private static final String LABEL_CUSTOM_TITLE = Messages.BugzillaCustomQueryWizardPage_Query_Title;
 
-	private static final String LABEL_CUSTOM_QUERY = "Query &URL";
+	private static final String LABEL_CUSTOM_QUERY = Messages.BugzillaCustomQueryWizardPage_Query_URL;
 
-	private static final String TITLE = "Create query from URL";
+	private static final String TITLE = Messages.BugzillaCustomQueryWizardPage_Create_query_from_URL;
 
-	private static final String DESCRIPTION = "Enter the title and URL for the query";
+	private static final String DESCRIPTION = Messages.BugzillaCustomQueryWizardPage_Enter_the_title_and_URL_for_the_query;
 
 	private Text queryText;
 
@@ -91,6 +92,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 			queryTitle.setText(query.getSummary());
 			queryText.setText(query.getUrl());
 		}
+		Dialog.applyDialogFont(composite);
 	}
 
 	@Override
@@ -109,7 +111,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 			if (queryText.getText().length() > 0) {
 				return true;
 			}
-			setErrorMessage("Please specify Query URL");
+			setErrorMessage(Messages.BugzillaCustomQueryWizardPage_Please_specify_Query_URL);
 		}
 		return false;
 	}

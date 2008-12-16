@@ -45,7 +45,7 @@ public class KeywordsDialog extends Dialog {
 	public KeywordsDialog(Shell shell, String selectedKeywords, java.util.List<String> validKeywords) {
 		super(shell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-		StringTokenizer st = new StringTokenizer(selectedKeywords, ",", false);
+		StringTokenizer st = new StringTokenizer(selectedKeywords, ",", false); //$NON-NLS-1$
 		this.selectedKeywords = new ArrayList<String>();
 		while (st.hasMoreTokens()) {
 			String s = st.nextToken().trim();
@@ -57,7 +57,7 @@ public class KeywordsDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Select Keywords");
+		getShell().setText(Messages.KeywordsDialog_Select_Keywords);
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
@@ -125,6 +125,8 @@ public class KeywordsDialog extends Dialog {
 
 		parent.pack();
 
+		applyDialogFont(composite);
+
 		return composite;
 	}
 
@@ -149,12 +151,12 @@ public class KeywordsDialog extends Dialog {
 
 		for (String sel : selectedKeywords) {
 			keywords.append(sel);
-			keywords.append(",");
+			keywords.append(","); //$NON-NLS-1$
 		}
 
 		String keywordsString = keywords.toString();
 
-		if (keywordsString.endsWith(",")) {
+		if (keywordsString.endsWith(",")) { //$NON-NLS-1$
 			keywordsString = keywordsString.substring(0, keywordsString.length() - 1);
 		}
 

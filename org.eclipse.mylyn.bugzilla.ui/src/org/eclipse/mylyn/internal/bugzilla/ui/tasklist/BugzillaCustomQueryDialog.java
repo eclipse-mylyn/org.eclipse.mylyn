@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Text;
 public class BugzillaCustomQueryDialog extends Dialog {
 	private String url;
 
-	private String name = "";
+	private String name = ""; //$NON-NLS-1$
 
 	private String startingUrl = null;
 
@@ -67,7 +67,7 @@ public class BugzillaCustomQueryDialog extends Dialog {
 		custom.setLayout(gl);
 
 		Label l = new Label(custom, SWT.NONE);
-		l.setText("Bugzilla Query Category Name");
+		l.setText(Messages.BugzillaCustomQueryDialog_Bugzilla_Query_Category_Name);
 
 		nameText = new Text(custom, SWT.BORDER | SWT.SINGLE);
 		if (name != null) {
@@ -78,7 +78,7 @@ public class BugzillaCustomQueryDialog extends Dialog {
 		nameText.setLayoutData(gd);
 
 		l = new Label(custom, SWT.NONE);
-		l.setText("Max Hits Returned (-1 means all)");
+		l.setText(Messages.BugzillaCustomQueryDialog_Max_Hits_Returned__1_means_all_);
 
 		maxHitsText = new Text(custom, SWT.BORDER | SWT.SINGLE);
 		if (maxHits != null) {
@@ -89,7 +89,7 @@ public class BugzillaCustomQueryDialog extends Dialog {
 		maxHitsText.setLayoutData(gd);
 
 		l = new Label(custom, SWT.NONE);
-		l.setText("Query URL");
+		l.setText(Messages.BugzillaCustomQueryDialog_Query_URL);
 
 		queryText = new Text(custom, SWT.BORDER | SWT.SINGLE);
 		if (startingUrl != null) {

@@ -49,18 +49,18 @@ import org.eclipse.ui.PlatformUI;
  */
 public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
-	private static final String TOOLTIP_AUTODETECTION_ENABLED = "Override auto detection of Platform and OS for new bug reports.";
+	private static final String TOOLTIP_AUTODETECTION_ENABLED = Messages.BugzillaRepositorySettingsPage_override_auto_detection_of_platform;
 
-	private static final String TOOLTIP_AUTODETECTION_DISABLED = "Available once repository has been created.";
+	private static final String TOOLTIP_AUTODETECTION_DISABLED = Messages.BugzillaRepositorySettingsPage_available_once_repository_created;
 
-	private static final String LABEL_SHORT_LOGINS = "Local users enabled:";
+	private static final String LABEL_SHORT_LOGINS = Messages.BugzillaRepositorySettingsPage_local_users_enabled;
 
-	private static final String LABEL_VERSION_NUMBER = "2.18 - 3.0";
+	private static final String LABEL_VERSION_NUMBER = "2.18 - 3.0"; //$NON-NLS-1$
 
-	private static final String TITLE = "Bugzilla Repository Settings";
+	private static final String TITLE = Messages.BugzillaRepositorySettingsPage_bugzilla_repository_settings;
 
-	private static final String DESCRIPTION = "Supports Bugzilla " + LABEL_VERSION_NUMBER
-			+ "\nExample: https://bugs.eclipse.org/bugs (do not include index.cgi)";
+	private static final String DESCRIPTION = Messages.BugzillaRepositorySettingsPage_supports_bugzilla + LABEL_VERSION_NUMBER
+			+ Messages.BugzillaRepositorySettingsPage_example_do_not_include;
 
 	protected Button autodetectPlatformOS;
 
@@ -117,7 +117,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		}
 
 		Label defaultPlatformLabel = new Label(parent, SWT.NONE);
-		defaultPlatformLabel.setText("Autodetect platform and os");
+		defaultPlatformLabel.setText(Messages.BugzillaRepositorySettingsPage_AUTOTETECT_PLATFORM_AND_OS);
 		if (null == repository) {
 			defaultPlatformLabel.setToolTipText(TOOLTIP_AUTODETECTION_DISABLED);
 		} else {
@@ -143,7 +143,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 							public void run(IProgressMonitor monitor) throws InvocationTargetException,
 									InterruptedException {
 								try {
-									monitor.beginTask("Retrieving repository configuration", IProgressMonitor.UNKNOWN);
+									monitor.beginTask(Messages.BugzillaRepositorySettingsPage_Retrieving_repository_configuration, IProgressMonitor.UNKNOWN);
 									repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(repository,
 											false, monitor);
 									if (repositoryConfiguration != null) {
@@ -193,7 +193,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		defaultOSCombo = new Combo(platformOSContainer, SWT.READ_ONLY);
 		populateOsCombo();
 
-		new Label(parent, SWT.NONE).setText("Language: ");
+		new Label(parent, SWT.NONE).setText(Messages.BugzillaRepositorySettingsPage_Language_);
 		languageSettingCombo = new Combo(parent, SWT.DROP_DOWN);
 
 		for (BugzillaLanguageSettings bugzillaLanguageSettings : BugzillaCorePlugin.getDefault().getLanguageSettings()) {
@@ -201,7 +201,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		}
 		if (repository != null) {
 			String language = repository.getProperty(IBugzillaConstants.BUGZILLA_LANGUAGE_SETTING);
-			if (language != null && !language.equals("") && languageSettingCombo.indexOf(language) >= 0) {
+			if (language != null && !language.equals("") && languageSettingCombo.indexOf(language) >= 0) { //$NON-NLS-1$
 				languageSettingCombo.select(languageSettingCombo.indexOf(language));
 			}
 		}
@@ -227,7 +227,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				defaultOSCombo.select(0);
 			}
 		} else {
-			defaultOSCombo.add("All");
+			defaultOSCombo.add(Messages.BugzillaRepositorySettingsPage_All);
 			defaultOSCombo.select(0);
 		}
 		defaultOSCombo.getParent().pack(true);
@@ -249,7 +249,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				defaultPlatformCombo.select(0);
 			}
 		} else {
-			defaultPlatformCombo.add("All");
+			defaultPlatformCombo.add(Messages.BugzillaRepositorySettingsPage_All);
 			defaultPlatformCombo.select(0);
 		}
 		defaultPlatformCombo.getParent().pack(true);
@@ -312,7 +312,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			IStatus status;
 			if (e instanceof MalformedURLException) {
 				status = new BugzillaStatus(IStatus.WARNING, BugzillaCorePlugin.ID_PLUGIN,
-						RepositoryStatus.ERROR_NETWORK, "Server URL is invalid.");
+						RepositoryStatus.ERROR_NETWORK, Messages.BugzillaRepositorySettingsPage_Server_URL_is_invalid);
 			} else if (e instanceof CoreException) {
 				status = ((CoreException) e).getStatus();
 			} else if (e instanceof IOException) {
@@ -331,7 +331,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				monitor = new NullProgressMonitor();
 			}
 			try {
-				monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
+				monitor.beginTask(Messages.BugzillaRepositorySettingsPage_Validating_server_settings, IProgressMonitor.UNKNOWN);
 				BugzillaClient client = null;
 
 				client = BugzillaClientFactory.createClient(repository);

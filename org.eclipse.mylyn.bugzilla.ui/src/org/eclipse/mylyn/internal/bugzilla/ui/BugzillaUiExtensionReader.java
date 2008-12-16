@@ -27,27 +27,27 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
  */
 public class BugzillaUiExtensionReader {
 
-	public static final String EXTENSION_LANGUAGES = "org.eclipse.mylyn.bugzilla.core.languages";
+	public static final String EXTENSION_LANGUAGES = "org.eclipse.mylyn.bugzilla.core.languages"; //$NON-NLS-1$
 
-	public static final String EXTENSION_TMPL_LANGUAGE = "language";
+	public static final String EXTENSION_TMPL_LANGUAGE = "language"; //$NON-NLS-1$
 
-	public static final String ATTR_LANG_VALUE = "value";
+	public static final String ATTR_LANG_VALUE = "value"; //$NON-NLS-1$
 
-	public static final String ELMNT_LANG_NAME = "name";
+	public static final String ELMNT_LANG_NAME = "name"; //$NON-NLS-1$
 
-	public static final String ELMNT_LANG_ERROR_LOGIN = "error_login";
+	public static final String ELMNT_LANG_ERROR_LOGIN = "error_login"; //$NON-NLS-1$
 
-	public static final String ELMNT_LANG_ERROR_COLLISION = "error_collision";
+	public static final String ELMNT_LANG_ERROR_COLLISION = "error_collision"; //$NON-NLS-1$
 
-	public static final String ELMNT_LANG_ERROR_COMMENT_REQIRED = "error_comment_required";
+	public static final String ELMNT_LANG_ERROR_COMMENT_REQIRED = "error_comment_required"; //$NON-NLS-1$
 
-	public static final String ELMNT_LANG_ERROR_LOGGED_OUT = "error_logged_out";
+	public static final String ELMNT_LANG_ERROR_LOGGED_OUT = "error_logged_out"; //$NON-NLS-1$
 
-	public static final String ELMNT_LANG_BAD_LOGIN = "bad_login";
+	public static final String ELMNT_LANG_BAD_LOGIN = "bad_login"; //$NON-NLS-1$
 
-	public static final String ELMNT_LANG_PROCESSED = "processed";
+	public static final String ELMNT_LANG_PROCESSED = "processed"; //$NON-NLS-1$
 
-	public static final String ELMNT_LANG_CHANGES_SUBMITTED = "changes_submitted";
+	public static final String ELMNT_LANG_CHANGES_SUBMITTED = "changes_submitted"; //$NON-NLS-1$
 
 	private static boolean coreExtensionsRead = false;
 
@@ -78,16 +78,16 @@ public class BugzillaUiExtensionReader {
 
 			for (IConfigurationElement configElement : element.getChildren()) {
 				String name = configElement.getName();
-				if (name != null && name.equals("languageAttribute")) {
-					String command = configElement.getAttribute("command");
-					String response = configElement.getAttribute("response");
+				if (name != null && name.equals("languageAttribute")) { //$NON-NLS-1$
+					String command = configElement.getAttribute("command"); //$NON-NLS-1$
+					String response = configElement.getAttribute("response"); //$NON-NLS-1$
 					bugzillaLanguageSettings.addLanguageAttribute(command, response);
 				}
 			}
 			BugzillaRepositoryConnector.addLanguageSetting(bugzillaLanguageSettings);
 		} else {
 			StatusHandler.log(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
-					"Could not load language template extension " + element.getName()));
+					"Could not load language template extension " + element.getName())); //$NON-NLS-1$
 		}
 	}
 }

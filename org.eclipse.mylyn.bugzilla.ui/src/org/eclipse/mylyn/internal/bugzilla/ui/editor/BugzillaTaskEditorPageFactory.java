@@ -61,7 +61,7 @@ public class BugzillaTaskEditorPageFactory extends AbstractTaskEditorPageFactory
 
 	@Override
 	public String getPageText() {
-		return "Bugzilla";
+		return "Bugzilla"; //$NON-NLS-1$
 	}
 
 }

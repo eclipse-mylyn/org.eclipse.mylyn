@@ -26,35 +26,35 @@ public class BugzillaImages {
 
 	private static ImageRegistry imageRegistry;
 
-	private static final URL baseURL = BugzillaUiPlugin.getDefault().getBundle().getEntry("/icons/");
+	private static final URL baseURL = BugzillaUiPlugin.getDefault().getBundle().getEntry("/icons/"); //$NON-NLS-1$
 
-	public static final String T_ELCL = "elcl16";
+	public static final String T_ELCL = "elcl16"; //$NON-NLS-1$
 
-	public static final String T_TOOL = "etool16";
+	public static final String T_TOOL = "etool16"; //$NON-NLS-1$
 
-	public static final String T_VIEW = "eview16";
+	public static final String T_VIEW = "eview16"; //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_BUGZILLA = create(T_VIEW, "overlay-bugzilla.gif");
+	public static final ImageDescriptor OVERLAY_BUGZILLA = create(T_VIEW, "overlay-bugzilla.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif");
+	public static final ImageDescriptor BUG = create(T_ELCL, "bug.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor BUG_COMMENT = create(T_ELCL, "bug-comment.gif");
+	public static final ImageDescriptor BUG_COMMENT = create(T_ELCL, "bug-comment.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor REMOVE_ALL = create("", "remove-all.gif");
+	public static final ImageDescriptor REMOVE_ALL = create("", "remove-all.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final ImageDescriptor REMOVE = create("", "remove.gif");
+	public static final ImageDescriptor REMOVE = create("", "remove.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final ImageDescriptor SELECT_ALL = create("", "selectAll.gif");
+	public static final ImageDescriptor SELECT_ALL = create("", "selectAll.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final ImageDescriptor OPEN = create("", "openresult.gif");
+	public static final ImageDescriptor OPEN = create("", "openresult.gif"); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final ImageDescriptor OVERLAY_CRITICAL = create(T_VIEW, "overlay-critical.gif");
+	public static final ImageDescriptor OVERLAY_CRITICAL = create(T_VIEW, "overlay-critical.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_MAJOR = create(T_VIEW, "overlay-major.gif");
+	public static final ImageDescriptor OVERLAY_MAJOR = create(T_VIEW, "overlay-major.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_ENHANCEMENT = create(T_VIEW, "overlay-enhancement.gif");
+	public static final ImageDescriptor OVERLAY_ENHANCEMENT = create(T_VIEW, "overlay-enhancement.gif"); //$NON-NLS-1$
 
-	public static final ImageDescriptor OVERLAY_MINOR = create(T_VIEW, "overlay-minor.gif");
+	public static final ImageDescriptor OVERLAY_MINOR = create(T_VIEW, "overlay-minor.gif"); //$NON-NLS-1$
 
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
@@ -70,7 +70,7 @@ public class BugzillaImages {
 		}
 
 		StringBuffer buffer = new StringBuffer(prefix);
-		if (prefix != "") {
+		if (prefix != "") { //$NON-NLS-1$
 			buffer.append('/');
 		}
 		buffer.append(name);
@@ -90,10 +90,10 @@ public class BugzillaImages {
 	 */
 	public static Image getImage(ImageDescriptor imageDescriptor) {
 		ImageRegistry imageRegistry = getImageRegistry();
-		Image image = imageRegistry.get("" + imageDescriptor.hashCode());
+		Image image = imageRegistry.get("" + imageDescriptor.hashCode()); //$NON-NLS-1$
 		if (image == null) {
 			image = imageDescriptor.createImage();
-			imageRegistry.put("" + imageDescriptor.hashCode(), image);
+			imageRegistry.put("" + imageDescriptor.hashCode(), image); //$NON-NLS-1$
 		}
 		return image;
 	}

@@ -60,7 +60,7 @@ public class BugzillaKeywordAttributeEditor extends AbstractAttributeEditor {
 		keywordsText.setLayoutData(keywordsData);
 		keywordsText.setEditable(false);
 
-		Button changeKeywordsButton = toolkit.createButton(keywordComposite, "Edit...", SWT.FLAT);
+		Button changeKeywordsButton = toolkit.createButton(keywordComposite, Messages.BugzillaKeywordAttributeEditor_Edit_, SWT.FLAT);
 		GridData keyWordsButtonData = new GridData();
 		changeKeywordsButton.setLayoutData(keyWordsButtonData);
 		changeKeywordsButton.addSelectionListener(new SelectionListener() {

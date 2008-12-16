@@ -33,43 +33,43 @@ import org.osgi.framework.BundleContext;
  */
 public class BugzillaUiPlugin extends AbstractUIPlugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.bugzilla.ui";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.bugzilla.ui"; //$NON-NLS-1$
 
-	public static final String SEARCH_PAGE_ID = BugzillaUiPlugin.ID_PLUGIN + ".search.bugzillaSearchPage";
+	public static final String SEARCH_PAGE_ID = BugzillaUiPlugin.ID_PLUGIN + ".search.bugzillaSearchPage"; //$NON-NLS-1$
 
-	public static final String SEARCH_PAGE_CONTEXT = BugzillaUiPlugin.ID_PLUGIN + ".bugzillaSearchContext";
+	public static final String SEARCH_PAGE_CONTEXT = BugzillaUiPlugin.ID_PLUGIN + ".bugzillaSearchContext"; //$NON-NLS-1$
 
-	public static final String EDITOR_PAGE_CONTEXT = BugzillaUiPlugin.ID_PLUGIN + ".bugzillaEditorContext";
+	public static final String EDITOR_PAGE_CONTEXT = BugzillaUiPlugin.ID_PLUGIN + ".bugzillaEditorContext"; //$NON-NLS-1$
 
 	// The is's for hit markers used in the label provider and sorters
-	public static final String HIT_MARKER_ATTR_ID = "taskId";
+	public static final String HIT_MARKER_ATTR_ID = "taskId"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_REPOSITORY = "repository";
+	public static final String HIT_MARKER_ATTR_REPOSITORY = "repository"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_HREF = "href";
+	public static final String HIT_MARKER_ATTR_HREF = "href"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_DESC = "summary";
+	public static final String HIT_MARKER_ATTR_DESC = "summary"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_LABEL = "label";
+	public static final String HIT_MARKER_ATTR_LABEL = "label"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_SEVERITY = "severity";
+	public static final String HIT_MARKER_ATTR_SEVERITY = "severity"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_PRIORITY = "priority";
+	public static final String HIT_MARKER_ATTR_PRIORITY = "priority"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_PLATFORM = "platform";
+	public static final String HIT_MARKER_ATTR_PLATFORM = "platform"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_STATE = "state";
+	public static final String HIT_MARKER_ATTR_STATE = "state"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_RESULT = "result";
+	public static final String HIT_MARKER_ATTR_RESULT = "result"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_OWNER = "owner";
+	public static final String HIT_MARKER_ATTR_OWNER = "owner"; //$NON-NLS-1$
 
-	public static final String HIT_MARKER_ATTR_QUERY = "query";
+	public static final String HIT_MARKER_ATTR_QUERY = "query"; //$NON-NLS-1$
 
 	/**
 	 * XXX: remove?
 	 */
-	public static final String HIT_MARKER_ID = BugzillaUiPlugin.ID_PLUGIN + ".searchHit";
+	public static final String HIT_MARKER_ID = BugzillaUiPlugin.ID_PLUGIN + ".searchHit"; //$NON-NLS-1$
 
 	private static BugzillaUiPlugin plugin;
 
@@ -108,7 +108,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 */
 	private static IPath getProductConfigurationCachePath() {
 		IPath stateLocation = Platform.getStateLocation(BugzillaCorePlugin.getDefault().getBundle());
-		IPath configFile = stateLocation.append("repositoryConfigurations");
+		IPath configFile = stateLocation.append("repositoryConfigurations"); //$NON-NLS-1$
 		return configFile;
 	}
 
@@ -218,7 +218,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			}
 			int j = 0;
 			while (true) {
-				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
+				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5); //$NON-NLS-1$
 				if (spaceIndex == origText.length() || spaceIndex == -1) {
 					textArray[j] = origText;
 					break;
@@ -228,13 +228,13 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 				j++;
 			}
 
-			String newText = "";
+			String newText = ""; //$NON-NLS-1$
 
 			for (String element : textArray) {
 				if (element == null) {
 					break;
 				}
-				newText += element + "\n";
+				newText += element + "\n"; //$NON-NLS-1$
 			}
 			return newText;
 		}

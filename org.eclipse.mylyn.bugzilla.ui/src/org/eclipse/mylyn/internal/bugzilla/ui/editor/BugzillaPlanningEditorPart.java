@@ -43,7 +43,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 			BugzillaAttribute.DEADLINE);
 
 	public BugzillaPlanningEditorPart() {
-		setPartName("Team Planning");
+		setPartName(Messages.BugzillaPlanningEditorPart_Team_Planning);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 		attributeEditor.createControl(timeComposite, toolkit);
 		getTaskEditorPage().getAttributeEditorToolkit().adapt(attributeEditor);
 
-		Label label = toolkit.createLabel(timeComposite, "Current Estimate:");
+		Label label = toolkit.createLabel(timeComposite, Messages.BugzillaPlanningEditorPart_Current_Estimate);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		float total = 0;
 		try {
@@ -99,7 +99,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 			// ignore NumberFormatException
 		}
 
-		Text currentEstimate = toolkit.createText(timeComposite, "" + total, SWT.FLAT | SWT.READ_ONLY);
+		Text currentEstimate = toolkit.createText(timeComposite, "" + total, SWT.FLAT | SWT.READ_ONLY); //$NON-NLS-1$
 		currentEstimate.setFont(TEXT_FONT);
 		toolkit.adapt(currentEstimate, false, false);
 		currentEstimate.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
@@ -121,7 +121,7 @@ public class BugzillaPlanningEditorPart extends AbstractTaskEditorPart {
 
 		}
 		if (addTimeAttribute != null) {
-			addTimeAttribute.setValue("0");
+			addTimeAttribute.setValue("0"); //$NON-NLS-1$
 			attributeEditor = createAttributeEditor(addTimeAttribute);
 			attributeEditor.createLabelControl(timeComposite, toolkit);
 			attributeEditor.createControl(timeComposite, toolkit);

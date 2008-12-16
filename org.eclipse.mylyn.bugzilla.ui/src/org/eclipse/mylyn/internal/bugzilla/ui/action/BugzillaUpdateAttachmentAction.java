@@ -34,7 +34,7 @@ public class BugzillaUpdateAttachmentAction extends BaseSelectionListenerAction 
 	private ISelection currentSelection;
 
 	public BugzillaUpdateAttachmentAction() {
-		super("UPdateAttachmentAction");
+		super("UpdateAttachmentAction"); //$NON-NLS-1$
 	}
 
 	protected BugzillaUpdateAttachmentAction(String text) {

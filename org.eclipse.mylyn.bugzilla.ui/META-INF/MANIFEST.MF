@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Bugzilla Connector UI
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.ui; singleton:=true
 Bundle-Version: 3.1.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -27,3 +27,4 @@ Export-Package: org.eclipse.mylyn.internal.bugzilla.ui;x-internal:=true,
  org.eclipse.mylyn.internal.bugzilla.ui.wizard;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
+Bundle-Localization: plugin

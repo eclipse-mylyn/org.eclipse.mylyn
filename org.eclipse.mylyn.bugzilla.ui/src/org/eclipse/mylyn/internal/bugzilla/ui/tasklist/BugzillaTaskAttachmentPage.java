@@ -73,7 +73,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 			Composite pageComposite = (Composite) children[children.length - 1];
 			Composite flagComposite = null;
 			for (BugzillaFlag bugzillaFlag : flags) {
-				if (bugzillaFlag.getType().equals("bug")) {
+				if (bugzillaFlag.getType().equals("bug")) { //$NON-NLS-1$
 					continue;
 				}
 				if (!bugzillaFlag.isUsedIn(productAttribute.getValue(), componentAttribute.getValue())) {
@@ -84,26 +84,26 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 					flagComposite = createFlagSection(pageComposite);
 				}
 				BugzillaFlagMapper mapper = new BugzillaFlagMapper();
-				mapper.setRequestee("");
-				mapper.setSetter("");
-				mapper.setState(" ");
+				mapper.setRequestee(""); //$NON-NLS-1$
+				mapper.setSetter(""); //$NON-NLS-1$
+				mapper.setState(" "); //$NON-NLS-1$
 				mapper.setFlagId(bugzillaFlag.getName());
 				mapper.setNumber(0);
 				final TaskAttribute attribute = getModel().getAttribute().createAttribute(
-						"task.common.kind.flag_type" + bugzillaFlag.getFlagId());
+						"task.common.kind.flag_type" + bugzillaFlag.getFlagId()); //$NON-NLS-1$
 				mapper.applyTo(attribute);
 
 				Label flagLiteral = new Label(flagComposite, SWT.NONE);
-				flagLiteral.setText("" + bugzillaFlag.getName());
+				flagLiteral.setText("" + bugzillaFlag.getName()); //$NON-NLS-1$
 				flagLiteral.setToolTipText(bugzillaFlag.getDescription());
 				flagAttributes.add(bugzillaFlag);
 				final Combo flagState = new Combo(flagComposite, SWT.BORDER | SWT.DROP_DOWN | SWT.READ_ONLY);
-				flagState.add(" ");
+				flagState.add(" "); //$NON-NLS-1$
 				if (bugzillaFlag.isRequestable()) {
-					flagState.add("?");
+					flagState.add("?"); //$NON-NLS-1$
 				}
-				flagState.add("+");
-				flagState.add("-");
+				flagState.add("+"); //$NON-NLS-1$
+				flagState.add("-"); //$NON-NLS-1$
 				if (bugzillaFlag.isRequestable() && bugzillaFlag.isSpecifically_requestable()) {
 					flagState.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 1, 1));
 					final Text requesteeText = new Text(flagComposite, SWT.BORDER);
@@ -111,7 +111,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 					requesteeText.setEditable(false);
 					requesteeText.addModifyListener(new ModifyListener() {
 						public void modifyText(ModifyEvent e) {
-							TaskAttribute requesteeAttribute = attribute.getAttribute("requestee");
+							TaskAttribute requesteeAttribute = attribute.getAttribute("requestee"); //$NON-NLS-1$
 							if (requesteeAttribute != null) {
 								String value = requesteeText.getText().trim();
 								requesteeAttribute.setValue(value);
@@ -124,11 +124,11 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 						}
 
 						public void widgetSelected(SelectionEvent e) {
-							TaskAttribute state = attribute.getAttribute("state");
+							TaskAttribute state = attribute.getAttribute("state"); //$NON-NLS-1$
 							if (state != null) {
 								String value = flagState.getItem(flagState.getSelectionIndex());
 								state.setValue(value);
-								requesteeText.setEditable(value.equals("?"));
+								requesteeText.setEditable(value.equals("?")); //$NON-NLS-1$
 							}
 						}
 					});
@@ -140,7 +140,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 						}
 
 						public void widgetSelected(SelectionEvent e) {
-							TaskAttribute state = attribute.getAttribute("state");
+							TaskAttribute state = attribute.getAttribute("state"); //$NON-NLS-1$
 							String value = flagState.getItem(flagState.getSelectionIndex());
 							if (state != null && value != null) {
 								state.setValue(value);
@@ -157,7 +157,7 @@ public class BugzillaTaskAttachmentPage extends TaskAttachmentPage {
 				| ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR);
 		flagExpandComposite.setFont(container.getFont());
 		flagExpandComposite.setBackground(container.getBackground());
-		flagExpandComposite.setText("Flags");
+		flagExpandComposite.setText(Messages.BugzillaTaskAttachmentPage_flags);
 		flagExpandComposite.setLayout(new GridLayout(3, false));
 		GridData g = new GridData(GridData.FILL_HORIZONTAL);
 		g.horizontalSpan = 3;

@@ -47,7 +47,7 @@ public class UpdateAttachmentJob extends Job {
 	private final TaskEditor editor;
 
 	public UpdateAttachmentJob(List<ITaskAttachment> attachment, TaskEditor editor) {
-		super("Update attachment");
+		super(Messages.getString("UpdateAttachmentJob.update_attachment")); //$NON-NLS-1$
 		this.attachment = attachment;
 		this.editor = editor;
 	}
@@ -63,19 +63,19 @@ public class UpdateAttachmentJob extends Job {
 		}
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				task.getConnectorKind());
-		monitor.beginTask("Update attachments", attachment.size() * 10 + 10);
+		monitor.beginTask(Messages.getString("UpdateAttachmentJob.update_attachments"), attachment.size() * 10 + 10); //$NON-NLS-1$
 		try {
 			for (ITaskAttachment taskAttachment : attachment) {
 				TaskAttribute taskAttribute = taskAttachment.getTaskAttribute();
 				TaskAttribute deprecated = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
-				if (deprecated.getValue().equals("1")) {
-					deprecated.setValue("0");
+				if (deprecated.getValue().equals("1")) { //$NON-NLS-1$
+					deprecated.setValue("0"); //$NON-NLS-1$
 				} else {
-					deprecated.setValue("1");
+					deprecated.setValue("1"); //$NON-NLS-1$
 				}
 				monitor.worked(10);
 				((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(
-						taskAttachment.getTaskRepository(), taskAttribute, "update", monitor);
+						taskAttachment.getTaskRepository(), taskAttribute, "update", monitor); //$NON-NLS-1$
 			}
 			if (task != null) {
 				if (connector != null) {
@@ -97,7 +97,7 @@ public class UpdateAttachmentJob extends Job {
 													Section section = (Section) control;
 													EditorUtil.toggleExpandableComposite(true, section);
 												}
-												bugzillaPage.getTaskEditor().setMessage("Obsolete toggeled successful",
+												bugzillaPage.getTaskEditor().setMessage(Messages.getString("UpdateAttachmentJob.obsolete_toggled_successful"), //$NON-NLS-1$
 														IMessageProvider.INFORMATION);
 											}
 
@@ -127,7 +127,7 @@ public class UpdateAttachmentJob extends Job {
 				final BugzillaTaskEditorPage bugzillaPage = (BugzillaTaskEditorPage) formPage;
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						bugzillaPage.getTaskEditor().setMessage("Obsolete toggeled was not successful",
+						bugzillaPage.getTaskEditor().setMessage(Messages.getString("UpdateAttachmentJob.obsolete_not_toggled"), //$NON-NLS-1$
 								IMessageProvider.ERROR);
 					}
 				});

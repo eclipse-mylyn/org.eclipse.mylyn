@@ -4,18 +4,18 @@
       
    <extension
          id="org.eclipse.mylyn.bugzilla.repository" 
-         name="Bugzilla Repository"
+         name="%bugzilla.repository.name"
          point="org.eclipse.mylyn.tasks.ui.repositories">
 
       <connectorCore
             class="org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector"
             id="org.eclipse.mylyn.bugzilla.tasklist.repositories"
-            name="Bugzilla Repository Connector"/> 
+            name="%BugzillaRepositoryConnector.name"/> 
             
       <connectorUi
             brandingIcon="icons/eview16/bugzilla-logo.gif"
             class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaConnectorUi"
-            name="Bugzilla Repository Ui"
+            name="%tasklist.BugzillaConnectorUi.name"
             overlayIcon="icons/eview16/overlay-bugzilla.gif"/>
               
 	  <taskListMigrator 

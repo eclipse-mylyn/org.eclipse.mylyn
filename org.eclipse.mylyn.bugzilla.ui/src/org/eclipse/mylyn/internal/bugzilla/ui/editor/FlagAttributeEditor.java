@@ -40,8 +40,8 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 	public FlagAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
-		if (taskAttribute.getAttribute("state") != null) {
-			setReadOnly(taskAttribute.getAttribute("state").getMetaData().isReadOnly());
+		if (taskAttribute.getAttribute("state") != null) { //$NON-NLS-1$
+			setReadOnly(taskAttribute.getAttribute("state").getMetaData().isReadOnly()); //$NON-NLS-1$
 		}
 	}
 
@@ -84,16 +84,16 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 							Assert.isLegal(index >= 0 && index <= values.length - 1);
 							setValue(values[index]);
 							if (requesteeText != null) {
-								requesteeText.setEnabled(values[index].equals("?"));
+								requesteeText.setEnabled(values[index].equals("?")); //$NON-NLS-1$
 							}
 						}
 					}
 				});
 			}
-			TaskAttribute requestee = getTaskAttribute().getAttribute("requestee");
+			TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
 			if (requestee != null && !requestee.getMetaData().isReadOnly()) {
 				requesteeText = toolkit.createText(composite, requestee.getValue());
-				requesteeText.setEnabled("?".equals(getValueLabel()));
+				requesteeText.setEnabled("?".equals(getValueLabel())); //$NON-NLS-1$
 				GridData requesteeData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 				requesteeData.widthHint = 78;
 				requesteeText.setLayoutData(requesteeData);
@@ -136,9 +136,9 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 	}
 
 	public void setRequestee(String value) {
-		TaskAttribute requestee = getTaskAttribute().getAttribute("requestee");
+		TaskAttribute requestee = getTaskAttribute().getAttribute("requestee"); //$NON-NLS-1$
 		if (requestee != null) {
-			getAttributeMapper().setValue(getTaskAttribute().getAttribute("requestee"), value);
+			getAttributeMapper().setValue(getTaskAttribute().getAttribute("requestee"), value); //$NON-NLS-1$
 			attributeChanged();
 		}
 	}
@@ -152,19 +152,19 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 	public String getLabel() {
 		String label = getAttributeMapper().getLabel(getAttributeMapper().getAssoctiatedAttribute(getTaskAttribute()));
 		if (label != null) {
-			label.replace("&", "&&");
+			label.replace("&", "&&"); //$NON-NLS-1$//$NON-NLS-2$
 		} else {
-			label = "";
+			label = ""; //$NON-NLS-1$
 		}
 
-		TaskAttribute setter = getTaskAttribute().getAttribute("setter");
+		TaskAttribute setter = getTaskAttribute().getAttribute("setter"); //$NON-NLS-1$
 		if (setter != null) {
 			String setterValue = setter.getValue();
-			if (setterValue != null && !setterValue.equals("")) {
-				if (setterValue.indexOf("@") != 0) {
-					setterValue = setterValue.substring(0, setterValue.indexOf("@"));
+			if (setterValue != null && !setterValue.equals("")) { //$NON-NLS-1$
+				if (setterValue.indexOf("@") != 0) { //$NON-NLS-1$
+					setterValue = setterValue.substring(0, setterValue.indexOf("@")); //$NON-NLS-1$
 				}
-				label = setterValue + ": " + label;
+				label = setterValue + ": " + label; //$NON-NLS-1$
 			}
 		}
 		return label;

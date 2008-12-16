@@ -36,7 +36,7 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
  */
 public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
-	public static final String ID_PART_BUGZILLA_PLANNING = "org.eclipse.mylyn.bugzilla.ui.editors.part.planning";
+	public static final String ID_PART_BUGZILLA_PLANNING = "org.eclipse.mylyn.bugzilla.ui.editors.part.planning"; //$NON-NLS-1$
 
 	public BugzillaTaskEditorPage(TaskEditor editor) {
 		super(editor, BugzillaCorePlugin.CONNECTOR_KIND);
@@ -136,7 +136,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 		TaskAttribute summaryAttribute = getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		if (summaryAttribute != null && summaryAttribute.getValue().length() == 0) {
-			getTaskEditor().setMessage("Please enter a short summary before submitting", IMessageProvider.ERROR);
+			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_enter_a_short_summary_before_submitting, IMessageProvider.ERROR);
 			AbstractTaskEditorPart part = getPart(ID_PART_SUMMARY);
 			if (part != null) {
 				part.setFocus();
@@ -147,7 +147,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		TaskAttribute componentAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
 				BugzillaAttribute.COMPONENT.getKey());
 		if (componentAttribute != null && componentAttribute.getValue().length() == 0) {
-			getTaskEditor().setMessage("Please select a component before submitting", IMessageProvider.ERROR);
+			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_select_a_component_before_submitting, IMessageProvider.ERROR);
 			AbstractTaskEditorPart part = getPart(ID_PART_ATTRIBUTES);
 			if (part != null) {
 				part.setFocus();
@@ -158,7 +158,7 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		TaskAttribute descriptionAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
 				TaskAttribute.DESCRIPTION);
 		if (descriptionAttribute != null && descriptionAttribute.getValue().length() == 0) {
-			getTaskEditor().setMessage("Please enter a description before submitting", IMessageProvider.ERROR);
+			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_enter_a_description_before_submitting, IMessageProvider.ERROR);
 			AbstractTaskEditorPart descriptionPart = getPart(ID_PART_DESCRIPTION);
 			if (descriptionPart != null) {
 				descriptionPart.setFocus();

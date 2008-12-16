@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
@@ -27,13 +28,13 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class BugzillaQueryTypeWizardPage extends WizardPage {
 
-	private static final String BUTTON_LABEL_QUERY = "&Create query from existing URL";
+	private static final String BUTTON_LABEL_QUERY = Messages.BugzillaQueryTypeWizardPage_Create_query_from_existing_URL;
 
-	private static final String BUTTON_LABEL_FORM = "Cre&ate query using form";
+	private static final String BUTTON_LABEL_FORM = Messages.BugzillaQueryTypeWizardPage_Create_query_using_form;
 
-	private static final String TITLE = "Choose query type";
+	private static final String TITLE = Messages.BugzillaQueryTypeWizardPage_Choose_query_type;
 
-	private static final String DESCRIPTION = "Select from the available query types.";
+	private static final String DESCRIPTION = Messages.BugzillaQueryTypeWizardPage_Select_from_the_available_query_types;
 
 	private Button buttonCustom;
 
@@ -71,6 +72,7 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 
 		setPageComplete(true);
 		setControl(composite);
+		Dialog.applyDialogFont(composite);
 	}
 
 	@Override

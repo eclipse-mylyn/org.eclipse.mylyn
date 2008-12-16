@@ -28,11 +28,11 @@ import org.w3c.dom.Element;
  */
 public class BugzillaTaskListMigrator extends AbstractTaskListMigrator {
 
-	private static final String TAG_BUGZILLA_REPORT = "BugzillaReport";
+	private static final String TAG_BUGZILLA_REPORT = "BugzillaReport"; //$NON-NLS-1$
 
-	private static final String KEY_SEVERITY = "bugzilla.severity";
+	private static final String KEY_SEVERITY = "bugzilla.severity"; //$NON-NLS-1$
 
-	private static final String KEY_PRODUCT = "bugzilla.product";
+	private static final String KEY_PRODUCT = "bugzilla.product"; //$NON-NLS-1$
 
 	@Override
 	public String getConnectorKind() {

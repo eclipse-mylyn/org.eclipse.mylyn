@@ -12,6 +12,7 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -48,18 +49,18 @@ import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
  */
 public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
-	private static final String regexp = "(duplicate of|bug|task)( ?#? ?)(\\d+)";
+	private static final String regexp = "(duplicate of|bug|task)( ?#? ?)(\\d+)"; //$NON-NLS-1$
 
 	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
 
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
-		return taskRepository.getRepositoryUrl() + "/createaccount.cgi";
+		return taskRepository.getRepositoryUrl() + "/createaccount.cgi"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getAccountManagementUrl(TaskRepository taskRepository) {
-		return taskRepository.getRepositoryUrl() + "/userprefs.cgi";
+		return taskRepository.getRepositoryUrl() + "/userprefs.cgi"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -70,11 +71,12 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getReplyText(TaskRepository taskRepository, ITask task, ITaskComment taskComment, boolean includeTask) {
 		if (taskComment == null) {
-			return "(In reply to comment #0)";
+			return Messages.BugzillaConnectorUi__In_reply_to_comment_0_;
 		} else if (includeTask) {
-			return "(In reply to " + task.getTaskKey() + " comment #" + taskComment.getNumber() + ")";
+			return MessageFormat.format(Messages.BugzillaConnectorUi__In_reply_to_X_comment_X_, task.getTaskKey(),
+					taskComment.getNumber());
 		} else {
-			return "(In reply to comment #" + taskComment.getNumber() + ")";
+			return MessageFormat.format(Messages.BugzillaConnectorUi__In_reply_to_comment_X_, taskComment.getNumber());
 		}
 	}
 
@@ -83,11 +85,11 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public List<LegendElement> getLegendElements() {
 		List<LegendElement> legendItems = new ArrayList<LegendElement>();
-		legendItems.add(LegendElement.createTask("blocker", BugzillaImages.OVERLAY_CRITICAL));
-		legendItems.add(LegendElement.createTask("critical", BugzillaImages.OVERLAY_CRITICAL));
-		legendItems.add(LegendElement.createTask("major", BugzillaImages.OVERLAY_MAJOR));
-		legendItems.add(LegendElement.createTask("enhancement", BugzillaImages.OVERLAY_ENHANCEMENT));
-		legendItems.add(LegendElement.createTask("trivial", BugzillaImages.OVERLAY_MINOR));
+		legendItems.add(LegendElement.createTask("blocker", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
+		legendItems.add(LegendElement.createTask("critical", BugzillaImages.OVERLAY_CRITICAL)); //$NON-NLS-1$
+		legendItems.add(LegendElement.createTask("major", BugzillaImages.OVERLAY_MAJOR)); //$NON-NLS-1$
+		legendItems.add(LegendElement.createTask("enhancement", BugzillaImages.OVERLAY_ENHANCEMENT)); //$NON-NLS-1$
+		legendItems.add(LegendElement.createTask("trivial", BugzillaImages.OVERLAY_MINOR)); //$NON-NLS-1$
 		return legendItems;
 	}
 
@@ -96,13 +98,13 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		String severity = task.getAttribute(BugzillaAttribute.BUG_SEVERITY.getKey());
 		if (severity != null) {
 			// XXX: refactor to use configuration
-			if ("blocker".equals(severity) || "critical".equals(severity)) {
+			if ("blocker".equals(severity) || "critical".equals(severity)) { //$NON-NLS-1$ //$NON-NLS-2$
 				return BugzillaImages.OVERLAY_CRITICAL;
-			} else if ("major".equals(severity)) {
+			} else if ("major".equals(severity)) { //$NON-NLS-1$
 				return BugzillaImages.OVERLAY_MAJOR;
-			} else if ("enhancement".equals(severity)) {
+			} else if ("enhancement".equals(severity)) { //$NON-NLS-1$
 				return BugzillaImages.OVERLAY_ENHANCEMENT;
-			} else if ("trivial".equals(severity) || "minor".equals(severity)) {
+			} else if ("trivial".equals(severity) || "minor".equals(severity)) { //$NON-NLS-1$ //$NON-NLS-2$
 				return BugzillaImages.OVERLAY_MINOR;
 			} else {
 				return null;
@@ -185,7 +187,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 
 		int start = -1;
 
-		if (m.group().startsWith("duplicate")) {
+		if (m.group().startsWith("duplicate")) { //$NON-NLS-1$
 			start = m.start() + m.group().indexOf(m.group(TASK_NUM_GROUP));
 		} else {
 			start = m.start();

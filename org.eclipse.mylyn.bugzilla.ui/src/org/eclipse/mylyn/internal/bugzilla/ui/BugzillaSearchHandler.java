@@ -36,7 +36,7 @@ public class BugzillaSearchHandler extends AbstractSearchHandler {
 			String searchString) {
 		try {
 			String queryUrl = taskRepository.getRepositoryUrl()
-					+ "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
+					+ "/buglist.cgi?long_desc_type=allwordssubstr&long_desc=" //$NON-NLS-1$
 					+ URLEncoder.encode(searchString, taskRepository.getCharacterEncoding());
 			query.setUrl(queryUrl);
 		} catch (UnsupportedEncodingException e) {

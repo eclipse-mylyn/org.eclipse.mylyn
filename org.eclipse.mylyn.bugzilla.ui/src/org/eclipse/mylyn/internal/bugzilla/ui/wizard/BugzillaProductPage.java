@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -81,12 +82,12 @@ import org.eclipse.ui.progress.UIJob;
  */
 public class BugzillaProductPage extends WizardPage {
 
-	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
+	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = Messages.BugzillaProductPage_New_Bugzilla_Task_Error;
 
-	private static final String DESCRIPTION = "Pick a product to open the new bug editor.\n"
-			+ "Press the Update button if the product is not in the list.";
+	private static final String DESCRIPTION = Messages.BugzillaProductPage_PICK_PRODUCT_TO_OPEN_NEW_BUG_EDITOR
+			+ Messages.BugzillaProductPage_PRESS_UPDATE_BUTTON;
 
-	private static final String LABEL_UPDATE = "Update Products from Repository";
+	private static final String LABEL_UPDATE = Messages.BugzillaProductPage_Update_Products_from_Repository;
 
 	/** The list of products to submit a bug report for */
 	private List<String> products = null;
@@ -110,12 +111,12 @@ public class BugzillaProductPage extends WizardPage {
 	 * @param selection
 	 */
 	public BugzillaProductPage(TaskRepository repository) {
-		super("Page1");
+		super(Messages.BugzillaProductPage_PAGE_1);
 		setTitle(IBugzillaConstants.TITLE_NEW_BUG);
 		setDescription(DESCRIPTION);
 		this.repository = repository;
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.bugzilla.ui",
-				"icons/wizban/bug-wizard.gif"));
+		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.bugzilla.ui", //$NON-NLS-1$
+				"icons/wizban/bug-wizard.gif")); //$NON-NLS-1$
 
 	}
 
@@ -176,9 +177,10 @@ public class BugzillaProductPage extends WizardPage {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 				// Initialize a variable with the no error status
-				Status status = new Status(IStatus.OK, BugzillaUiPlugin.ID_PLUGIN, 0, "", null);
+				Status status = new Status(IStatus.OK, BugzillaUiPlugin.ID_PLUGIN, 0, "", null); //$NON-NLS-1$
 				if (productViewer.getSelection().isEmpty()) {
-					status = new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, 0, "You must select a product", null);
+					status = new Status(IStatus.ERROR, BugzillaUiPlugin.ID_PLUGIN, 0,
+							Messages.BugzillaProductPage_YOU_MUST_SELECT_PRODUCT, null);
 				}
 
 				// Show the most serious error
@@ -192,7 +194,7 @@ public class BugzillaProductPage extends WizardPage {
 		// HACK: waiting on delayed refresh of filtered tree
 		final String[] selectedProducts = getSelectedProducts();
 		if (selectedProducts.length > 0) {
-			new UIJob("") {
+			new UIJob("") { //$NON-NLS-1$
 				@Override
 				public IStatus runInUIThread(IProgressMonitor monitor) {
 					if (BugzillaProductPage.this.getControl() != null
@@ -221,6 +223,7 @@ public class BugzillaProductPage extends WizardPage {
 			}
 		});
 
+		Dialog.applyDialogFont(composite);
 		// set the composite as the control for this page
 		setControl(composite);
 
@@ -242,7 +245,7 @@ public class BugzillaProductPage extends WizardPage {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE,
-							"Unable to get products. Ensure proper repository configuration in task Repositories.");
+							Messages.BugzillaProductPage_Unable_to_get_products);
 				}
 			});
 		}
@@ -270,14 +273,14 @@ public class BugzillaProductPage extends WizardPage {
 
 			if (query != null && query.getConnectorKind().equals(BugzillaCorePlugin.CONNECTOR_KIND)) {
 				String queryUrl = query.getUrl();
-				queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1);
-				String[] options = queryUrl.split("&");
+				queryUrl = queryUrl.substring(queryUrl.indexOf("?") + 1); //$NON-NLS-1$
+				String[] options = queryUrl.split("&"); //$NON-NLS-1$
 
 				for (String option : options) {
-					int index = option.indexOf("=");
+					int index = option.indexOf("="); //$NON-NLS-1$
 					if (index != -1) {
 						String key = option.substring(0, index);
-						if ("product".equals(key)) {
+						if ("product".equals(key)) { //$NON-NLS-1$
 							try {
 								products.add(URLDecoder.decode(option.substring(index + 1),
 										repository.getCharacterEncoding()));
@@ -386,21 +389,22 @@ public class BugzillaProductPage extends WizardPage {
 		try {
 			getContainer().run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask("Updating repository report options...", IProgressMonitor.UNKNOWN);
+					monitor.beginTask(Messages.BugzillaProductPage_Updating_repository_report_options_,
+							IProgressMonitor.UNKNOWN);
 					try {
 						connector.updateRepositoryConfiguration(repository, monitor);
 					} catch (CoreException e) {
 						// TODO: remove exceptions from communication of connectivity errors to the user
 						if (e.getStatus().getException() instanceof GeneralSecurityException) {
 							StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
-									"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
-											+ "Please ensure your task repository is properly configured.", e));
+									"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n" //$NON-NLS-1$
+											+ "Please ensure your task repository is properly configured.", e)); //$NON-NLS-1$
 						} else if (e.getStatus().getException() instanceof IOException) {
 							StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
-									"Connection Error, please ensure your task repository is properly configured.", e));
+									"Connection Error, please ensure your task repository is properly configured.", e)); //$NON-NLS-1$
 						} else {
 							StatusHandler.fail(new Status(IStatus.WARNING, BugzillaUiPlugin.ID_PLUGIN,
-									"Error updating repository attributes for " + repository.getRepositoryUrl(), e));
+									"Error updating repository attributes for " + repository.getRepositoryUrl(), e)); //$NON-NLS-1$
 						}
 						return;
 					}
@@ -412,8 +416,9 @@ public class BugzillaProductPage extends WizardPage {
 					} catch (final CoreException e) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								MessageDialog.openError(Display.getDefault().getActiveShell(), "Bugzilla Search Page",
-										"Unable to get configuration. Ensure proper repository configuration in Task Repositories");
+								MessageDialog.openError(Display.getDefault().getActiveShell(),
+										Messages.BugzillaProductPage_Bugzilla_Search_Page,
+										Messages.BugzillaProductPage_Unable_to_get_configuration);
 							}
 						});
 					}
@@ -427,8 +432,8 @@ public class BugzillaProductPage extends WizardPage {
 			});
 
 		} catch (InvocationTargetException ex) {
-			MessageDialog.openError(null, "Error updating product list", "Error reported:\n"
-					+ ex.getCause().getMessage());
+			MessageDialog.openError(null, Messages.BugzillaProductPage_Error_updating_product_list,
+					Messages.BugzillaProductPage_Error_reported + ex.getCause().getMessage());
 		} catch (InterruptedException ex) {
 			// canceled
 		}
