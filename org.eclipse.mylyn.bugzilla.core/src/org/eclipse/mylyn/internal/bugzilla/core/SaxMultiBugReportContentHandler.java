@@ -176,10 +176,20 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 					mapper.setState(status);
 					mapper.setFlagId(name);
 					String id = attributes.getValue("id"); //$NON-NLS-1$
-					mapper.setNumber(Integer.valueOf(id));
-					TaskAttribute attribute = repositoryTaskData.getRoot()
-							.createAttribute("task.common.kind.flag" + id); //$NON-NLS-1$
-					mapper.applyTo(attribute);
+					if (id != null && !id.equals("")) { //$NON-NLS-1$
+						/*
+						 * for version 3.2rc1 and 3.2.rc2 the id was not defined so we ignore
+						 * the definition
+						 */
+						try {
+							mapper.setNumber(Integer.valueOf(id));
+							TaskAttribute attribute = repositoryTaskData.getRoot().createAttribute(
+									"task.common.kind.flag" + id); //$NON-NLS-1$
+							mapper.applyTo(attribute);
+						} catch (NumberFormatException e) {
+							// ignore
+						}
+					}
 				}
 			}
 			break;
