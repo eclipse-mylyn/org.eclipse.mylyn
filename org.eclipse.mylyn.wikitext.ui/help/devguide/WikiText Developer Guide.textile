@@ -241,8 +241,10 @@ h1. Contributing
 
 WikiText is evolving as a direct result of user contributions.  Please feel free to contribute by
 
-* "posting a bug":#IssueTracking
-* "submitting a patch":#IssueTracking
+* posting a bug
+* submitting a patch
+
+All bugs and patches are tracked via Bugzilla.  See "Issue Tracking":#IssueTracking below for more details.
 
 For more information about contributing please see the "Mylyn Contributor Reference":http://wiki.eclipse.org/index.php/Mylyn/Contributor_Reference.
 
