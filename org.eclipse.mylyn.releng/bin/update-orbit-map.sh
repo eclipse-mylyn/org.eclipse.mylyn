@@ -16,11 +16,11 @@ wget $1 -O $TMP
 grep "^plugin@com.sun.syndication,0.9.0" $TMP > $TMPMAP
 grep "^plugin@javax.activation,1.1.0" $TMP >> $TMPMAP
 grep "^plugin@javax.mail,1.4.0" $TMP >> $TMPMAP
-grep "^plugin@javax.servlet,2.4.0" $TMP >> $TMPMAP
+grep "^plugin@javax.servlet,2.5.0" $TMP >> $TMPMAP
 grep "^plugin@javax.xml.bind,2.0.0" $TMP >> $TMPMAP
 grep "^plugin@javax.xml.rpc,1.1.0" $TMP >> $TMPMAP
 grep "^plugin@javax.xml.soap,1.2.0" $TMP >> $TMPMAP
-grep "^plugin@javax.wsdl,1.5.1" $TMP >> $TMPMAP
+grep "^plugin@javax.wsdl,1.6.2" $TMP >> $TMPMAP
 grep "^plugin@org.apache.ant,1.7.0" $TMP >> $TMPMAP
 grep "^plugin@org.apache.axis,1.4.0" $TMP >> $TMPMAP
 grep "^plugin@org.apache.commons.codec,1.3.0" $TMP >> $TMPMAP
