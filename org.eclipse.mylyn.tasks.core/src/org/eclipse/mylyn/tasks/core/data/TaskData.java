@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.tasks.core.data;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 
 /**
  * @author Steffen Pingel
@@ -77,12 +78,26 @@ public final class TaskData {
 		return getTaskId().length() == 0;
 	}
 
+	/**
+	 * Returns true, if this task data does not have all task attributes.
+	 */
 	public boolean isPartial() {
 		return partial;
 	}
 
-	public void setPartial(boolean complete) {
-		this.partial = complete;
+	/**
+	 * Set <code>partial</code> to true to indicate that this task data does not have all task attributes.
+	 * 
+	 * @see #isPartial()
+	 * @see AbstractRepositoryConnector#performQuery(org.eclipse.mylyn.tasks.core.TaskRepository,
+	 *      org.eclipse.mylyn.tasks.core.IRepositoryQuery, TaskDataCollector,
+	 *      org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see AbstractRepositoryConnector#getTaskData(org.eclipse.mylyn.tasks.core.TaskRepository, String,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 * @see #isPartial()
+	 */
+	public void setPartial(boolean partial) {
+		this.partial = partial;
 	}
 
 	public TaskAttributeMapper getAttributeMapper() {

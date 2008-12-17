@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,8 @@ import java.util.Date;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
@@ -213,12 +215,29 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Implementors must execute query synchronously.
+	 * Runs <code>query</code> on <code>repository</code>, results are passed to <code>collector</code>. If a repository
+	 * does not return the full task data for a result, {@link TaskData#isPartial()} will return true.
 	 * 
+	 * <p>
+	 * Implementors must complete executing <code>query</code> before returning from this method.
+	 * 
+	 * @param repository
+	 *            task repository to run query against
+	 * @param query
+	 *            query to run
+	 * @param collector
+	 *            callback for returning results
+	 * @param session
+	 *            provides additional information for running the query, may be <code>null</code>
+	 * @param monitor
+	 *            for reporting progress
+	 * @return {@link Status#OK_STATUS} in case of success, an error status otherwise
+	 * @throws OperationCanceledException
+	 *             if the query was canceled
 	 * @since 3.0
 	 */
 	public abstract IStatus performQuery(TaskRepository repository, IRepositoryQuery query,
-			TaskDataCollector resultCollector, ISynchronizationSession event, IProgressMonitor monitor);
+			TaskDataCollector collector, ISynchronizationSession session, IProgressMonitor monitor);
 
 	/**
 	 * Hook into the synchronization process.
