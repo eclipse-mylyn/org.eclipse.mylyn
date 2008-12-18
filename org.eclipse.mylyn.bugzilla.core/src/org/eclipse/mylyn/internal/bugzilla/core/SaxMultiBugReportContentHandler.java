@@ -298,6 +298,11 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				taskComment.createdTimeStamp = parsedText;
 			}
 			break;
+		case WORK_TIME:
+			if (taskComment != null) {
+				taskComment.timeWorked = parsedText;
+			}
+			break;
 		case THETEXT:
 			if (taskComment != null) {
 				taskComment.commentText = parsedText;
@@ -558,6 +563,11 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		taskComment.applyTo(attribute);
 		commentNum++;
 
+		if (comment.timeWorked != null) {
+			TaskAttribute workTime = BugzillaTaskDataHandler.createAttribute(attribute, BugzillaAttribute.WORK_TIME);
+			workTime.setValue(comment.timeWorked);
+		}
+
 		parseAttachment(taskComment);
 
 	}
@@ -589,6 +599,8 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		public String createdTimeStamp;
 
 		public String commentText;
+
+		public String timeWorked;
 
 		public boolean hasAttachment;
 
