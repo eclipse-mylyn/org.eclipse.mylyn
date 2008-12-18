@@ -262,10 +262,8 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 					options = configuration.getOptionValues(BugzillaAttribute.RESOLUTION, attributeProduct.getValue());
 					// DUPLICATE and MOVED have special meanings so do not show as resolution
 					// TODO: COPIED FUNCTIONALITY from RepositoryConfiguration.addOperation() refactor.
-					if (options != null) {
-						options.remove("DUPLICATE"); //$NON-NLS-1$
-						options.remove("MOVED"); //$NON-NLS-1$
-					}
+					options.remove("DUPLICATE"); //$NON-NLS-1$
+					options.remove("MOVED"); //$NON-NLS-1$
 				}
 				Map<String, String> newOptions = new LinkedHashMap<String, String>();
 				for (String option : options) {
@@ -292,7 +290,7 @@ public class BugzillaAttributeMapper extends TaskAttributeMapper {
 	@Override
 	public String getLabel(TaskAttribute taskAttribute) {
 		if (taskAttribute.getId().startsWith(BugzillaCustomField.CUSTOM_FIELD_PREFIX)) {
-			return super.getLabel(taskAttribute) + ":";
+			return super.getLabel(taskAttribute) + ":"; //$NON-NLS-1$
 		} else {
 			return super.getLabel(taskAttribute);
 		}

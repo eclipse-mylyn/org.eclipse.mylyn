@@ -352,7 +352,7 @@ public class RepositoryConfiguration implements Serializable {
 		case RESOLUTION:
 			return getResolutions();
 		default:
-			return new ArrayList<String>();
+			return Collections.emptyList();
 		}
 	}
 
