@@ -66,6 +66,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
@@ -120,6 +121,33 @@ public class BugzillaProductPage extends WizardPage {
 
 	}
 
+	private class ComponentFilter extends PatternFilter {
+
+		@Override
+		public void setPattern(String patternString) {
+			// ignore
+			super.setPattern(patternString);
+			// HACK: waiting on delayed refresh of filtered tree after setting the new pattern
+			new UIJob("") { //$NON-NLS-1$
+				@Override
+				public IStatus runInUIThread(IProgressMonitor monitor) {
+					if (BugzillaProductPage.this.getControl() != null
+							&& BugzillaProductPage.this.getControl().isDisposed()) {
+						return Status.OK_STATUS;
+					}
+					final TreeViewer productViewer = productList.getViewer();
+					if (productViewer.getTree().getItemCount() == 1) {
+						TreeItem aq = productViewer.getTree().getItem(0);
+						String qq = aq.getText();
+						productViewer.setSelection(new StructuredSelection(qq));
+					}
+					return Status.OK_STATUS;
+				}
+			}.schedule(300L);
+
+		}
+	}
+
 	public void createControl(Composite parent) {
 		// create the composite to hold the widgets
 		Composite composite = new Composite(parent, SWT.NULL);
@@ -128,7 +156,7 @@ public class BugzillaProductPage extends WizardPage {
 		composite.setLayout(new GridLayout());
 
 		// create the list of bug reports
-		productList = new FilteredTree(composite, SWT.SINGLE | SWT.BORDER, new PatternFilter());
+		productList = new FilteredTree(composite, SWT.SINGLE | SWT.BORDER, new ComponentFilter());
 		productList.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).hint(
 				SWT.DEFAULT, 200).create());
 		final TreeViewer productViewer = productList.getViewer();
