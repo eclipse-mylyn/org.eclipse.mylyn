@@ -47,7 +47,7 @@ public class UpdateAttachmentJob extends Job {
 	private final TaskEditor editor;
 
 	public UpdateAttachmentJob(List<ITaskAttachment> attachment, TaskEditor editor) {
-		super(Messages.getString("UpdateAttachmentJob.update_attachment")); //$NON-NLS-1$
+		super(Messages.UpdateAttachmentJob_update_attachment);
 		this.attachment = attachment;
 		this.editor = editor;
 	}
@@ -63,7 +63,7 @@ public class UpdateAttachmentJob extends Job {
 		}
 		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
 				task.getConnectorKind());
-		monitor.beginTask(Messages.getString("UpdateAttachmentJob.update_attachments"), attachment.size() * 10 + 10); //$NON-NLS-1$
+		monitor.beginTask(Messages.UpdateAttachmentJob_update_attachments, attachment.size() * 10 + 10);
 		try {
 			for (ITaskAttachment taskAttachment : attachment) {
 				TaskAttribute taskAttribute = taskAttachment.getTaskAttribute();
@@ -97,7 +97,8 @@ public class UpdateAttachmentJob extends Job {
 													Section section = (Section) control;
 													EditorUtil.toggleExpandableComposite(true, section);
 												}
-												bugzillaPage.getTaskEditor().setMessage(Messages.getString("UpdateAttachmentJob.obsolete_toggled_successful"), //$NON-NLS-1$
+												bugzillaPage.getTaskEditor().setMessage(
+														Messages.UpdateAttachmentJob_obsolete_toggled_successfully,
 														IMessageProvider.INFORMATION);
 											}
 
@@ -127,7 +128,7 @@ public class UpdateAttachmentJob extends Job {
 				final BugzillaTaskEditorPage bugzillaPage = (BugzillaTaskEditorPage) formPage;
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						bugzillaPage.getTaskEditor().setMessage(Messages.getString("UpdateAttachmentJob.obsolete_not_toggled"), //$NON-NLS-1$
+						bugzillaPage.getTaskEditor().setMessage(Messages.UpdateAttachmentJob_obsolete_not_toggled,
 								IMessageProvider.ERROR);
 					}
 				});

@@ -17,6 +17,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewActionDelegate;
@@ -70,5 +71,19 @@ public class BugzillaUpdateAttachmentAction extends BaseSelectionListenerAction 
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.currentSelection = selection;
+		IStructuredSelection sructuredSelection = null;
+		if (selection instanceof IStructuredSelection) {
+			sructuredSelection = (IStructuredSelection) currentSelection;
+		}
+		if (sructuredSelection == null || sructuredSelection.isEmpty()) {
+			return;
+		}
+		TaskAttribute taskAttribute = ((ITaskAttachment) sructuredSelection.getFirstElement()).getTaskAttribute();
+		TaskAttribute deprecated = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		if (deprecated.getValue().equals("1")) { //$NON-NLS-1$
+			action.setText(Messages.BugzillaUpdateAttachmentAction_mark_not_obsolete);
+		} else {
+			action.setText(Messages.BugzillaUpdateAttachmentAction_mark_obsolete);
+		}
 	}
 }

@@ -11,22 +11,30 @@
 
 package org.eclipse.mylyn.internal.bugzilla.ui.action;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.osgi.util.NLS;
 
-public class Messages {
+public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.bugzilla.ui.action.messages"; //$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-	private Messages() {
+	static {
+		// load message values from bundle file
+		reloadMessages();
 	}
 
-	public static String getString(String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return '!' + key + '!';
-		}
+	public static void reloadMessages() {
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
+
+	public static String BugzillaUpdateAttachmentAction_mark_not_obsolete;
+
+	public static String BugzillaUpdateAttachmentAction_mark_obsolete;
+
+	public static String UpdateAttachmentJob_obsolete_not_toggled;
+
+	public static String UpdateAttachmentJob_obsolete_toggled_successfully;
+
+	public static String UpdateAttachmentJob_update_attachments;
+
+	public static String UpdateAttachmentJob_update_attachment;
+
 }
