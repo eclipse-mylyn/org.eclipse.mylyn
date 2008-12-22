@@ -641,20 +641,18 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 	private void loadTemplateRepositories() {
 		// Add standard local task repository
-		TaskRepository localRepository = getLocalTaskRepository();
-		// FIXME what does this line do?
-		localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
+		getLocalTaskRepository();
 
 		// Add the automatically created templates
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
 			for (RepositoryTemplate template : repositoryTemplateManager.getTemplates(connector.getConnectorKind())) {
-
 				if (template.addAutomatically && !TaskRepositoryUtil.isAddAutomaticallyDisabled(template.repositoryUrl)) {
 					try {
+						String repositoryUrl = TaskRepositoryManager.stripSlashes(template.repositoryUrl);
 						TaskRepository taskRepository = repositoryManager.getRepository(connector.getConnectorKind(),
-								template.repositoryUrl);
+								repositoryUrl);
 						if (taskRepository == null) {
-							taskRepository = new TaskRepository(connector.getConnectorKind(), template.repositoryUrl);
+							taskRepository = new TaskRepository(connector.getConnectorKind(), repositoryUrl);
 							taskRepository.setVersion(template.version);
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setCharacterEncoding(template.characterEncoding);
