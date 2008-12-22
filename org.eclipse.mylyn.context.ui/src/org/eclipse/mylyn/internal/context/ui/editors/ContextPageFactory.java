@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.ui.editors;
 
-import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
@@ -33,7 +33,7 @@ public class ContextPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public IFormPage createPage(TaskEditor parentEditor) {
-		return new ContextEditorFormPage(parentEditor, ContextUiPlugin.ID_CONTEXT_PAGE, Messages.ContextPageFactory_Context);
+		return new ContextEditorFormPage(parentEditor, ContextUi.ID_CONTEXT_PAGE_FACTORY, Messages.ContextPageFactory_Context);
 	}
 
 	@Override

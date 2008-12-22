@@ -15,6 +15,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.ui.ColorMap;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.IContextUiPreferenceContstants;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.IEditorPart;
 
@@ -62,4 +63,13 @@ public final class ContextUi {
 		return ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				IContextUiPreferenceContstants.AUTO_MANAGE_EDITORS);
 	}
+
+	/**
+	 * ID of the factory that provides the context page for the task editor.
+	 * 
+	 * @since 3.1
+	 * @see AbstractTaskEditorPageFactory
+	 */
+	public static String ID_CONTEXT_PAGE_FACTORY = "org.eclipse.mylyn.context.ui.editor.context"; //$NON-NLS-1$
+
 }

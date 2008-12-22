@@ -95,7 +95,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private FocusedViewerManager viewerManager;
 
-	private final ContextPerspectiveManager perspectiveManager = new ContextPerspectiveManager();
+	private ContextPerspectiveManager perspectiveManager;
 
 	private final ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
 
@@ -194,7 +194,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				if (org.eclipse.mylyn.internal.tasks.ui.util.AttachmentUtil.hasContextAttachment(task)) {
 					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow()
-							.getShell(), Messages.ContextUiPlugin_Task_Activation, Messages.ContextUiPlugin_No_local_task_context_exists);
+							.getShell(), Messages.ContextUiPlugin_Task_Activation,
+							Messages.ContextUiPlugin_No_local_task_context_exists);
 					if (getRemote) {
 						new org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction().run(task);
 					}
@@ -207,8 +208,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private ContextEditorManager editorManager;
 
-	public static String ID_CONTEXT_PAGE = "org.eclipse.mylyn.context.ui.editor.context"; //$NON-NLS-1$
-
 	public ContextUiPlugin() {
 		INSTANCE = this;
 	}
@@ -220,6 +219,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		initDefaultPrefs(getPreferenceStore());
 
 		viewerManager = new FocusedViewerManager();
+		perspectiveManager = new ContextPerspectiveManager(getPreferenceStore());
 
 		ContextCore.getContextManager().addListener(contextActivationListener);
 		if (ContextCore.getContextManager().isContextActive()) {
@@ -582,33 +582,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-	}
-
-	/**
-	 * @param task
-	 *            can be null to indicate no task
-	 */
-	public String getPerspectiveIdFor(ITask task) {
-		if (task != null) {
-			return getPreferenceStore().getString(
-					IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
-		} else {
-			return getPreferenceStore().getString(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK);
-		}
-	}
-
-	/**
-	 * @param task
-	 *            can be null to indicate no task
-	 */
-	public void setPerspectiveIdFor(ITask task, String perspectiveId) {
-		if (task != null) {
-			getPreferenceStore().setValue(
-					IContextUiPreferenceContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
-					perspectiveId);
-		} else {
-			getPreferenceStore().setValue(IContextUiPreferenceContstants.PERSPECTIVE_NO_ACTIVE_TASK, perspectiveId);
-		}
 	}
 
 	private void setActiveSearchIcon(AbstractContextUiBridge bridge, ImageDescriptor descriptor) {
