@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.resources.ui;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -35,9 +36,87 @@ import org.eclipse.mylyn.resources.ui.ResourcesUi;
  */
 public class ResourceChangeMonitor implements IResourceChangeListener {
 
-	private boolean enabled = true;
+	private class ResourceDeltaVisitor implements IResourceDeltaVisitor {
+
+		private final Set<IResource> addedResources;
+
+		private final Set<IResource> changedResources;
+
+		private final Set<String> excludedPatterns;
+
+		private boolean haveTeamPrivateMember;
+
+		public ResourceDeltaVisitor() {
+			Set<String> excludedResourcePatterns = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
+			excludedResourcePatterns.addAll(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns());
+			this.excludedPatterns = new HashSet<String>();
+			for (String pattern : excludedResourcePatterns) {
+				if (pattern != null && pattern.length() > 0) {
+					pattern = createRegexFromPattern(pattern);
+					this.excludedPatterns.add(pattern);
+				}
+			}
+			this.addedResources = new HashSet<IResource>();
+			this.changedResources = new HashSet<IResource>();
+		}
+
+		public boolean hasValidResult() {
+			return !haveTeamPrivateMember;
+		}
+
+		public boolean visit(IResourceDelta delta) {
+			if (haveTeamPrivateMember) {
+				return false;
+			}
+			if (delta.getResource().isTeamPrivateMember()) {
+				haveTeamPrivateMember = true;
+				return false;
+			}
+			if (isExcluded(delta.getResource().getProjectRelativePath(), delta.getResource(), excludedPatterns)) {
+				return false;
+			}
+
+			IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
+			for (IResourceDelta element : added) {
+				IResource resource = element.getResource();
+				if ((resource instanceof IFile || resource instanceof IFolder)
+						&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)) {
+					addedResources.add(resource);
+				}
+			}
+
+			IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED | IResourceDelta.REMOVED);
+			for (IResourceDelta element : changed) {
+				IResource resource = element.getResource();
+				// special rule for feature.xml files: bug 249856 
+				if (resource instanceof IFile
+						&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)
+						&& !"feature.xml".equals(resource.getName())) { //$NON-NLS-1$
+					if (element.getKind() == IResourceDelta.CHANGED
+							&& (element.getFlags() & IResourceDelta.CONTENT) == 0) {
+						// make sure that there was a content change and not just a markers change
+						continue;
+					}
+					changedResources.add(resource);
+				}
+			}
+			return true;
+		}
+
+		public Set<IResource> getChangedResources() {
+			return changedResources;
+		}
+
+		public Set<IResource> getAddedResources() {
+			return addedResources;
+		}
+
+	};
+
+	private boolean enabled;
 
 	public ResourceChangeMonitor() {
+		this.enabled = true;
 	}
 
 	public void resourceChanged(IResourceChangeEvent event) {
@@ -47,75 +126,26 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
 			return;
 		}
-		final Set<IResource> addedResources = new HashSet<IResource>();
-		final Set<IResource> changedResources = new HashSet<IResource>();
-		final Set<String> excludedPatterns = getExclusionPatterns();
-
 		IResourceDelta rootDelta = event.getDelta();
-		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
-			public boolean visit(IResourceDelta delta) {
-				if (isExcluded(delta.getResource().getProjectRelativePath(), delta.getResource(), excludedPatterns)) {
-					return false;
+		if (rootDelta != null) {
+			ResourceDeltaVisitor visitor = new ResourceDeltaVisitor();
+			try {
+				rootDelta.accept(visitor, IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS | IContainer.INCLUDE_HIDDEN);
+				if (visitor.hasValidResult()) {
+					ResourcesUi.addResourceToContext(visitor.getChangedResources(), InteractionEvent.Kind.PREDICTION);
+					ResourcesUi.addResourceToContext(visitor.getAddedResources(), InteractionEvent.Kind.PROPAGATION);
 				}
-
-				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
-				for (IResourceDelta element : added) {
-					IResource resource = element.getResource();
-					if ((resource instanceof IFile || resource instanceof IFolder)
-							&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)) {
-						addedResources.add(resource);
-					}
-				}
-
-				IResourceDelta[] changed = delta.getAffectedChildren(IResourceDelta.CHANGED | IResourceDelta.REMOVED);
-				for (IResourceDelta element : changed) {
-					IResource resource = element.getResource();
-					// special rule for feature.xml files: bug 249856 
-					if (resource instanceof IFile
-							&& !isExcluded(resource.getProjectRelativePath(), resource, excludedPatterns)
-							&& !"feature.xml".equals(resource.getName())) { //$NON-NLS-1$
-						if (element.getKind() == IResourceDelta.CHANGED
-								&& (element.getFlags() & IResourceDelta.CONTENT) == 0) {
-							// make sure that there was a content change and not just a markers change
-							continue;
-						}
-						changedResources.add(resource);
-					}
-				}
-				return true;
-			}
-		};
-		try {
-			rootDelta.accept(visitor);
-			ResourcesUi.addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
-			ResourcesUi.addResourceToContext(addedResources, InteractionEvent.Kind.PROPAGATION);
-		} catch (CoreException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
-					"Could not accept marker visitor", e)); //$NON-NLS-1$
-		}
-	}
-
-	private Set<String> getExclusionPatterns() {
-		Set<String> excludedResourcePatterns = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
-		excludedResourcePatterns.addAll(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns());
-
-		Set<String> excludedPatterns = new HashSet<String>();
-
-		for (String pattern : excludedResourcePatterns) {
-			if (pattern != null && pattern.length() > 0) {
-				pattern = createRegexFromPattern(pattern);
-
-				excludedPatterns.add(pattern);
+			} catch (CoreException e) {
+				StatusHandler.log(new Status(IStatus.ERROR, ResourcesUiBridgePlugin.ID_PLUGIN,
+						"Could not accept marker visitor", e)); //$NON-NLS-1$
 			}
 		}
-
-		return excludedPatterns;
 	}
 
 	/**
-	 * Public for testing *
+	 * Public for testing.
 	 */
-	public String createRegexFromPattern(String pattern) {
+	public static String createRegexFromPattern(String pattern) {
 		// prepare the pattern to be a regex
 		pattern = pattern.replaceAll("\\.", "\\\\."); //$NON-NLS-1$ //$NON-NLS-2$
 		pattern = pattern.replaceAll("\\*", ".*"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -128,7 +158,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	 * @param resource
 	 *            can be null
 	 */
-	public boolean isExcluded(IPath path, IResource resource, Set<String> excludedPatterns) {
+	public static boolean isExcluded(IPath path, IResource resource, Set<String> excludedPatterns) {
 		if (resource != null && resource.isDerived()) {
 			return true;
 		}
@@ -158,7 +188,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	/**
 	 * Public for testing.
 	 */
-	public boolean isUriExcluded(String uri, String pattern) {
+	public static boolean isUriExcluded(String uri, String pattern) {
 		if (uri != null && uri.startsWith(pattern)) {
 			return true;
 		} else {
@@ -173,4 +203,5 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
 }
