@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -124,6 +125,8 @@ public class AttachmentPreviewPage extends WizardPage {
 
 		runInBackgroundButton = new Button(composite, SWT.CHECK);
 		runInBackgroundButton.setText(Messages.AttachmentPreviewPage_Run_in_background);
+
+		Dialog.applyDialogFont(composite);
 	}
 
 	@Override
