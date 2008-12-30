@@ -14,10 +14,14 @@ package org.eclipse.mylyn.internal.context.core;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -61,6 +65,36 @@ public class InteractionContextExternalizer {
 	public static final String ATR_VERSION = "Version"; //$NON-NLS-1$
 
 	static final String DATE_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss.S z"; //$NON-NLS-1$
+
+	static String getFirstContextHandle(File sourceFile) throws CoreException {
+		try {
+			ZipFile zipFile = new ZipFile(sourceFile);
+			try {
+				for (Enumeration<?> e = zipFile.entries(); e.hasMoreElements();) {
+					ZipEntry entry = (ZipEntry) e.nextElement();
+					String name = entry.getName();
+					if (name.endsWith(InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD)) {
+						try {
+							String decodedName = URLDecoder.decode(name,
+									InteractionContextManager.CONTEXT_FILENAME_ENCODING);
+							if (decodedName.length() > InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD.length()) {
+								return decodedName.substring(0, decodedName.length()
+										- InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD.length());
+							}
+						} catch (IllegalArgumentException ignored) {
+							// not a valid context entry
+						}
+					}
+				}
+				return null;
+			} finally {
+				zipFile.close();
+			}
+		} catch (IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
+					"Could not get context handle from " + sourceFile, e)); //$NON-NLS-1$
+		}
+	}
 
 	public void writeContextToXml(IInteractionContext context, File file) {
 		writeContextToXml(context, file, new SaxContextWriter());
@@ -142,7 +176,17 @@ public class InteractionContextExternalizer {
 					((SaxContextReader) reader).setContextScaling(scaling);
 				}
 
-				return reader.readContext(handleIdentifier, fromFile);
+				InteractionContext context = reader.readContext(handleIdentifier, fromFile);
+				if (context == null) {
+					String firstHandle = getFirstContextHandle(fromFile);
+					if (firstHandle != null && !firstHandle.equals(handleIdentifier)) {
+						context = reader.readContext(firstHandle, fromFile);
+						if (context != null) {
+							context.setHandleIdentifier(handleIdentifier);
+						}
+					}
+				}
+				return context;
 			}
 		} catch (Exception e) {
 			// TODO: propagate exception instead?
@@ -151,5 +195,4 @@ public class InteractionContextExternalizer {
 		}
 		return null;
 	}
-
 }

@@ -12,6 +12,9 @@
 package org.eclipse.mylyn.context.tests;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -247,6 +250,50 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		IInteractionContext loaded = externalizer.readContextFromXml(CONTEXT_HANDLE, zippedContextFile, scaling);
 		assertNotNull(loaded);
 		return loaded;
+	}
+
+	public void testReadOtherContextHandle() throws Exception {
+		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
+
+		context.setHandleIdentifier("handle-1");
+		context.parseEvent(mockSelection("1"));
+		File file1 = File.createTempFile("context", null);
+		file1.deleteOnExit();
+		externalizer.writeContextToXml(context, file1);
+
+		context.setHandleIdentifier("handle-2");
+		context.parseEvent(mockSelection("2"));
+		File file2 = File.createTempFile("context", null);
+		file2.deleteOnExit();
+		externalizer.writeContextToXml(context, file2);
+
+		context = (InteractionContext) externalizer.readContextFromXml("handle-1", file1, scaling);
+		assertNotNull(context);
+		assertEquals(1, context.getAllElements().size());
+
+		context = (InteractionContext) externalizer.readContextFromXml("handle-1", file2, scaling);
+		assertNotNull(context);
+		assertEquals(2, context.getAllElements().size());
+
+		context = (InteractionContext) externalizer.readContextFromXml("abc", file1, scaling);
+		assertNotNull(context);
+		assertEquals(1, context.getAllElements().size());
+	}
+
+	public void testReadInvalidContextHandle() throws Exception {
+		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
+		File file = File.createTempFile("context", null);
+		file.deleteOnExit();
+		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
+		try {
+			ZipEntry entry = new ZipEntry("name");
+			out.putNextEntry(entry);
+		} finally {
+			out.close();
+		}
+
+		context = (InteractionContext) externalizer.readContextFromXml("abc", file, scaling);
+		assertNull(context);
 	}
 
 }

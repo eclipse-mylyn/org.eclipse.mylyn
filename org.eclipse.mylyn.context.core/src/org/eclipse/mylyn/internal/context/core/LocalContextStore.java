@@ -14,15 +14,11 @@ package org.eclipse.mylyn.internal.context.core;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.Assert;
@@ -86,34 +82,11 @@ public class LocalContextStore implements IContextStore {
 	public IInteractionContext importContext(String handleIdentifier, File fromFile) throws CoreException {
 		InteractionContext context;
 		String handleToImportFrom;
-		handleToImportFrom = getFirstContextHandle(fromFile);
+		handleToImportFrom = InteractionContextExternalizer.getFirstContextHandle(fromFile);
 		context = (InteractionContext) loadContext(handleToImportFrom, fromFile, commonContextScaling);
 		context.setHandleIdentifier(handleIdentifier);
 		saveContext(context);
 		return context;
-	}
-
-	private String getFirstContextHandle(File sourceFile) throws CoreException {
-		try {
-			ZipFile zipFile = new ZipFile(sourceFile);
-			try {
-				for (Enumeration<?> e = zipFile.entries(); e.hasMoreElements();) {
-					ZipEntry entry = (ZipEntry) e.nextElement();
-					String name = entry.getName();
-					String decodedName = URLDecoder.decode(name, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
-					if (decodedName.length() > InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD.length()) {
-						return decodedName.substring(0, decodedName.length()
-								- InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD.length());
-					}
-				}
-				return null;
-			} finally {
-				zipFile.close();
-			}
-		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN,
-					"Could not get context handle from " + sourceFile, e)); //$NON-NLS-1$
-		}
 	}
 
 	public IInteractionContext loadContext(String handleIdentifier, File fromFile,

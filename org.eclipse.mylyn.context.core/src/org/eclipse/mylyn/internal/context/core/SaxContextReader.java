@@ -15,6 +15,7 @@ package org.eclipse.mylyn.internal.context.core;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -34,6 +35,9 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class SaxContextReader implements IInteractionContextReader {
 
 	private IInteractionContextScaling contextScaling;
+
+	public SaxContextReader() {
+	}
 
 	public void setContextScaling(IInteractionContextScaling contextScaling) {
 		this.contextScaling = contextScaling;
@@ -62,11 +66,11 @@ public class SaxContextReader implements IInteractionContextReader {
 						}
 						entry = zipInputStream.getNextEntry();
 					}
-
+	
 					if (entry == null) {
 						return null;
 					}
-
+	
 					SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier,
 							contextScaling);
 					XMLReader reader = XMLReaderFactory.createXMLReader();
@@ -87,5 +91,4 @@ public class SaxContextReader implements IInteractionContextReader {
 			return null;
 		}
 	}
-
 }
