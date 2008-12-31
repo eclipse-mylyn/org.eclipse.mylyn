@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2006, 2008 Steffen Pingel and others.
+ * Copyright (c) 2006, 2008 Steffen Pingel and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -297,7 +297,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 		TaskAttribute attr = data.getRoot().createAttribute(field.getName());
 		TaskAttributeMetaData metaData = attr.getMetaData();
 		metaData.defaults();
-		metaData.setLabel(field.getLabel());
+		metaData.setLabel(field.getLabel() + ":"); //$NON-NLS-1$
 		metaData.setKind(TaskAttribute.KIND_DEFAULT);
 		metaData.setReadOnly(false);
 		metaData.putValue(TRAC_KEY, field.getName());
