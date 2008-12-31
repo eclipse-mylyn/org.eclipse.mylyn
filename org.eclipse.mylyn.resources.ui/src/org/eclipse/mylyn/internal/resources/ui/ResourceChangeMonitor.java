@@ -113,6 +113,9 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	};
 
+	// TODO e3.4 replace with IContainer.INCLUDE_HIDDEN
+	private static final int INCLUDE_HIDDEN = 8;
+
 	private boolean enabled;
 
 	public ResourceChangeMonitor() {
@@ -130,7 +133,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		if (rootDelta != null) {
 			ResourceDeltaVisitor visitor = new ResourceDeltaVisitor();
 			try {
-				rootDelta.accept(visitor, IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS | IContainer.INCLUDE_HIDDEN);
+				rootDelta.accept(visitor, IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS | INCLUDE_HIDDEN);
 				if (visitor.hasValidResult()) {
 					ResourcesUi.addResourceToContext(visitor.getChangedResources(), InteractionEvent.Kind.PREDICTION);
 					ResourcesUi.addResourceToContext(visitor.getAddedResources(), InteractionEvent.Kind.PROPAGATION);
