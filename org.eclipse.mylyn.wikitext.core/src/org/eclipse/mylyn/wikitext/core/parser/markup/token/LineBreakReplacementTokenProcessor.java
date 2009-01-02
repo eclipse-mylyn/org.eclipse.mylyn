@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.markup.token;
 
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
+ * A processor that emits a line break.
  * 
+ * @see DocumentBuilder#lineBreak()
  * 
  * @author David Green
  */

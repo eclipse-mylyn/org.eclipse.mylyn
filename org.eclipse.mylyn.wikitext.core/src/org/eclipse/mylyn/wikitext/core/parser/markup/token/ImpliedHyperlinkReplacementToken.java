@@ -14,7 +14,8 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- * 
+ * A token that detects hyperlinks in the markup and emits them as a link. hyperlinks must use the HTTP or HTTPS
+ * protocols to be detected.
  * 
  * @author David Green
  */

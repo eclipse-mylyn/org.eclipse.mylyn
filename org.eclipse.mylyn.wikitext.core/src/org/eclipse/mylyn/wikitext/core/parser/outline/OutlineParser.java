@@ -21,8 +21,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * A parser for creating an outline of a document based on the headings in the document. Uses {@link MarkupLanguage a
  * markup language} to determine where headings start and end.
  * 
- * @author David Green
+ * @see OutlineItem
  * 
+ * @author David Green
  */
 public class OutlineParser {
 
@@ -101,6 +102,9 @@ public class OutlineParser {
 		return new OutlineBuilder(rootItem, labelMaxLength);
 	}
 
+	/**
+	 * A document builder that creates the outline structure based on headings in the document
+	 */
 	protected class OutlineBuilder extends DocumentBuilder {
 
 		private OutlineItem currentItem;

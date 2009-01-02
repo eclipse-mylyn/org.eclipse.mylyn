@@ -11,7 +11,7 @@
 package org.eclipse.mylyn.wikitext.core.parser.util;
 
 /**
- * 
+ * Adapt a regex matcher to a {@link Matcher}.
  * 
  * @author David Green
  */

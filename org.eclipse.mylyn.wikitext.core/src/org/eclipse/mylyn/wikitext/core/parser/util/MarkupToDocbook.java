@@ -19,7 +19,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
+ * A utility for creating a Docbook document from markup.
  * 
+ * @see DocBookDocumentBuilder
  * 
  * @author David Green
  */

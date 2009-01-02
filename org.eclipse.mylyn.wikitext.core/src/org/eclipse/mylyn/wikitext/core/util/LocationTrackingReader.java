@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * 
+ * A reader class that tracks the character offset based on the number of characters read. Also provides a means for
+ * reading lines of text, tracking the offset of the last line read.
  * 
  * @author David Green
  */

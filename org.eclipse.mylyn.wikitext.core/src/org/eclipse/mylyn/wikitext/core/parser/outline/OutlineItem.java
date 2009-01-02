@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ * An item in a document outline. A document outline reflects the heading structure of the document. Generally there is
+ * always a root item that represents the document itself. Every level-1 heading becomes a child item of the root.
  * 
  * @author David Green
  */

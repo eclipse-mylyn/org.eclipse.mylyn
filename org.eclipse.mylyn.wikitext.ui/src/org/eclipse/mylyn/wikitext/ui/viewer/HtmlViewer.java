@@ -42,7 +42,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.xml.sax.SAXException;
 
 /**
+ * A source viewer for viewing HTML as it is intended to be displayed in a read-only fashion. Useful when markup should
+ * be displayed without using a Browser widget.
  * 
+ * @see HtmlViewerConfiguration
  * 
  * @author David Green
  */

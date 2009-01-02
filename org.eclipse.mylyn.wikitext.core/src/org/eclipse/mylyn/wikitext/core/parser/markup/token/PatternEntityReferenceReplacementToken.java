@@ -14,7 +14,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
+ * Replaces strings matching a pattern with a specified entity reference.
  * 
+ * @see EntityReplacementTokenProcessor
  * 
  * @author David Green
  */

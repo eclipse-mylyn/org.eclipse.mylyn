@@ -14,6 +14,7 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 
 /**
+ * An outline parser that uses the splitting strategy to determine the file of any given outline item.
  * 
  * @author David Green
  */

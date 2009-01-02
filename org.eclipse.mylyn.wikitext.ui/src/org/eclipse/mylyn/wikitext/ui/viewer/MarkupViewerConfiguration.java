@@ -13,7 +13,7 @@ package org.eclipse.mylyn.wikitext.ui.viewer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
- * 
+ * A configuration to be used with a {@link MarkupViewer}
  * 
  * @author David Green
  */

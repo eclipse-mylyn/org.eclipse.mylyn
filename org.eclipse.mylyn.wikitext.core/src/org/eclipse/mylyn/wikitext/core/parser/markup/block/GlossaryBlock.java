@@ -17,9 +17,13 @@ import java.util.TreeMap;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
 import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
+import org.eclipse.mylyn.wikitext.core.parser.markup.ContentState;
 
 /**
+ * An abstract implementation of a glossary. Emits a definition list containing all terms
+ * {@link ContentState#getGlossaryTerms() defined} in the document.
  * 
+ * Subclasses need only define {Block{@link #canStart(String, int)}.
  * 
  * @author David Green
  */
@@ -56,12 +60,30 @@ public abstract class GlossaryBlock extends Block {
 		return -1;
 	}
 
+	/**
+	 * the CSS style of the glossary block
+	 * 
+	 * @return the style, or null if the style is not defined
+	 */
 	public String getStyle() {
 		return style;
 	}
 
+	/**
+	 * the CSS style of the glossary block
+	 * 
+	 * @param style
+	 *            the style, or null if the style is not defined
+	 */
 	public void setStyle(String style) {
 		this.style = style;
 	}
 
+	@Override
+	public void setClosed(boolean closed) {
+		if (closed) {
+			style = null;
+		}
+		super.setClosed(closed);
+	}
 }

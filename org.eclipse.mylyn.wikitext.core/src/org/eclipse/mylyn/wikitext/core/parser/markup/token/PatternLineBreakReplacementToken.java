@@ -14,7 +14,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
+ * Replaces text that matches a pattern with a line break.
  * 
+ * @see LineBreakReplacementTokenProcessor
  * 
  * @author David Green
  */

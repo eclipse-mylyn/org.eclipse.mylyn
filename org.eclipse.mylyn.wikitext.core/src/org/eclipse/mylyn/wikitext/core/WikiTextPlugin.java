@@ -34,8 +34,9 @@ import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 import org.osgi.framework.BundleContext;
 
 /**
- * The WikiText plug-in class. Use only in an Eclipse runtime environment. Stand-alone programs should use the
- * {@link ServiceLocator} instead.
+ * The WikiText plug-in class. Use only in an Eclipse runtime environment. Programs should use the
+ * {@link ServiceLocator} instead of this class if possible. Stand-alone programs (that is, those programs that do not
+ * run in an Eclipse runtime) must not use this class.
  * 
  * Should not be instantiated directly, instead use {@link #getDefault()}.
  * 

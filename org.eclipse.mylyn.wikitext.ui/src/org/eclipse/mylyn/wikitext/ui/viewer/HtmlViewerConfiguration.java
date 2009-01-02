@@ -51,7 +51,7 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorDescriptor;
 import org.eclipse.ui.texteditor.HyperlinkDetectorRegistry;
 
 /**
- * 
+ * A configuration for use with a {@link HtmlViewer}.
  * 
  * @author David Green
  */

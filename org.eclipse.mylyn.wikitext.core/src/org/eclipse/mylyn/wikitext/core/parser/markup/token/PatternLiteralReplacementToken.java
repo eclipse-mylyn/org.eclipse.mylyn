@@ -14,7 +14,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
+ * Replaces text matching a pattern with an unescaped literal.
  * 
+ * @see LiteralReplacementTokenProcessor
  * 
  * @author David Green
  */

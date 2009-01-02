@@ -14,7 +14,10 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
+ * A phrase modifier that detects HTML and XML tags, but only those that are explicitly specified. The detected markup
+ * is passed through to the builder unescaped.
  * 
+ * @see LimitedHtmlStartTagPhraseModifier
  * 
  * @author David Green
  */
@@ -22,6 +25,10 @@ public class LimitedHtmlStartTagPhraseModifier extends PatternBasedElement {
 
 	private final String pattern;
 
+	/**
+	 * @param elementNames
+	 *            the element names to be detected.
+	 */
 	public LimitedHtmlStartTagPhraseModifier(String... elementNames) {
 		StringBuilder buf = new StringBuilder();
 		buf.append("(<"); //$NON-NLS-1$

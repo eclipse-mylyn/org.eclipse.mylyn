@@ -14,7 +14,10 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
+ * A phrase modifier that detects HTML and XML end-tags in the source, passing them through to the builder as either
+ * escaped or unescaped text.
  * 
+ * @see HtmlStartTagPhraseModifier
  * 
  * @author David Green
  */
@@ -22,10 +25,17 @@ public class HtmlEndTagPhraseModifier extends PatternBasedElement {
 
 	private final boolean escaping;
 
+	/**
+	 * construct this phrase modifier with no escaping.
+	 */
 	public HtmlEndTagPhraseModifier() {
 		this(false);
 	}
 
+	/**
+	 * @param escaping
+	 *            indicate if the markup should be escaped
+	 */
 	public HtmlEndTagPhraseModifier(boolean escaping) {
 		this.escaping = escaping;
 	}

@@ -14,7 +14,9 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElement;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
- * 
+ * A replacement token for segments of text that are delimited by specified text. Useful for replacing delimiting
+ * characters, for example text wrapped by double quotes could be replaced with the same text delimited by single
+ * quotes.
  * 
  * @author David Green
  */

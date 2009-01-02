@@ -17,6 +17,8 @@ import java.util.List;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationRule;
 
 /**
+ * A collection of validation rules, which involves a hierarchy so that language inheritance behaviour can be supported.
+ * 
  * @author David Green
  */
 public class ValidationRules {
@@ -28,6 +30,9 @@ public class ValidationRules {
 		rules.add(rule);
 	}
 
+	/**
+	 * get all of the validation rules, including those defined by any {@link #getParent() parent} collections.
+	 */
 	public List<ValidationRule> getRules() {
 		if (parent != null) {
 			List<ValidationRule> parentRules = parent.getRules();

@@ -20,7 +20,6 @@ import java.util.Set;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 
 /**
- * 
  * @author David Green
  */
 public class SplitOutlineItem extends OutlineItem {

@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.mylyn.wikitext.core.parser.markup.token;
 
+import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcessor;
 
 /**
+ * A token processor that emits a specified XML entity reference.
  * 
+ * @see DocumentBuilder#entityReference(String)
  * 
  * @author David Green
  */
@@ -21,6 +24,10 @@ public class EntityReplacementTokenProcessor extends PatternBasedElementProcesso
 
 	private final String entity;
 
+	/**
+	 * @param entity
+	 *            the entity to emit
+	 */
 	public EntityReplacementTokenProcessor(String entity) {
 		this.entity = entity;
 	}
