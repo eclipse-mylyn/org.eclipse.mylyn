@@ -546,6 +546,19 @@ public class WebUtilTest extends TestCase {
 		assertNull(WebUtil.getTitleFromUrl(new WebLocation(url), null));
 	}
 
+	/**
+	 * Default encoding needs to be set to non-UTF8 encoding for this test to be meaningful, e.g.
+	 * <code>-Dfile.encoding=ISO-8859-1</code>.
+	 */
+	public void testGetTitleFromUrlUtf8() throws Exception {
+		String message = "HTTP/1.1 200 OK\n" + "Date: Sat, 03 Jan 2009 14:40:23 GMT\n" + "Connection: close\n"
+				+ "Content-Type: text/html; charset=UTF-8\n" + "Content-Length: 30\n" + "\n"
+				+ "<html><title>\u00C3\u00BC</title></html>";
+		testProxy.addResponse(message);
+		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
+		assertEquals("\u00FC", WebUtil.getTitleFromUrl(new WebLocation(url), null));
+	}
+
 	public void testGetPlatformProxy() {
 		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.HTTP));
 		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.DIRECT));

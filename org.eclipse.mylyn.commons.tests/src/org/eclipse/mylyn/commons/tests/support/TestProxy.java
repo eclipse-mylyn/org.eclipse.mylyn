@@ -40,8 +40,15 @@ public class TestProxy implements Runnable {
 
 		public String request;
 
+		private String charset;
+
 		public Message(String request) {
 			this.request = request;
+			this.charset = "ISO-8859-1";
+		}
+
+		public String getCharset() {
+			return charset;
 		}
 
 		public String getHeader(String prefix) {
@@ -67,6 +74,10 @@ public class TestProxy implements Runnable {
 		public String getMethod() {
 			int i = request.indexOf(" ");
 			return (i != -1) ? request.substring(0, i) : request;
+		}
+
+		public void setCharset(String charset) {
+			this.charset = charset;
 		}
 
 		@Override
@@ -327,7 +338,7 @@ public class TestProxy implements Runnable {
 	}
 
 	private void writeMessage(Message message, OutputStream out) throws IOException {
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, message.getCharset()));
 		writer.write(message.toString());
 		writer.flush();
 	}

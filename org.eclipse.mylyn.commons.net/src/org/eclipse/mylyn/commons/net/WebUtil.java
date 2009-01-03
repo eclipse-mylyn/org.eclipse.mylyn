@@ -493,7 +493,8 @@ public class WebUtil {
 				if (result == HttpStatus.SC_OK) {
 					InputStream in = WebUtil.getResponseBodyAsStream(method, monitor);
 					try {
-						BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+						BufferedReader reader = new BufferedReader(new InputStreamReader(in,
+								method.getResponseCharSet()));
 						HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 						try {
 							for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
