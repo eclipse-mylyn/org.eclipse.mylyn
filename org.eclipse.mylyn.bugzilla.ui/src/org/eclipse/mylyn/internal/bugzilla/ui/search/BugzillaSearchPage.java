@@ -49,6 +49,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
@@ -83,14 +84,6 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
  */
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
-	private static final String LABEL_VIEW_REPOSITORIES = Messages.BugzillaSearchPage_Task_Repositories;
-
-	private static final String MESSAGE_NO_REPOSITORY = Messages.BugzillaSearchPage_No_repository_available;
-
-	private static final String NUM_DAYS_POSITIVE = Messages.BugzillaSearchPage_Number_of_days_must_be_a_positive_integer;
-
-	private static final String TITLE_BUGZILLA_QUERY = Messages.BugzillaSearchPage_Bugzilla_Query;
-
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 70;
 
 	// protected Combo repositoryCombo = null;
@@ -109,15 +102,20 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private IDialogSettings fDialogSettings;
 
-	private static final String[] patternOperationText = { "all words", "any word", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String[] patternOperationText = { Messages.BugzillaSearchPage_all_words,
+			Messages.BugzillaSearchPage_any_word, Messages.BugzillaSearchPage_regexp,
+			Messages.BugzillaSearchPage_notregexp };
 
 	private static final String[] patternOperationValues = { "allwordssubstr", "anywordssubstr", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static final String[] emailOperationText = { "substring", "exact", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String[] emailOperationText = { Messages.BugzillaSearchPage_substring,
+			Messages.BugzillaSearchPage_exact, Messages.BugzillaSearchPage_regexp,
+			Messages.BugzillaSearchPage_notregexp };
 
 	private static final String[] emailOperationValues = { "substring", "exact", "regexp", "notregexp" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-	private static final String[] keywordOperationText = { "all", "any", "none" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String[] keywordOperationText = { Messages.BugzillaSearchPage_all,
+			Messages.BugzillaSearchPage_any, Messages.BugzillaSearchPage_none };
 
 	private static final String[] keywordOperationValues = { "allwords", "anywords", "nowords" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
@@ -299,7 +297,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	public BugzillaSearchPage(TaskRepository repository) {
-		super(TITLE_BUGZILLA_QUERY, repository);
+		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository);
 		// setTitle(TITLE);
 		// setDescription(DESCRIPTION);
 		// setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
@@ -318,7 +316,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	public BugzillaSearchPage(TaskRepository repository, IRepositoryQuery origQuery) {
-		super(TITLE_BUGZILLA_QUERY, repository, origQuery);
+		super(Messages.BugzillaSearchPage_Bugzilla_Query, repository, origQuery);
 		originalQuery = origQuery;
 		setDescription(Messages.BugzillaSearchPage_Select_the_Bugzilla_query_parameters);
 		// setTitle(TITLE);
@@ -878,7 +876,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 //					}
 				} else {
 					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-							IBugzillaConstants.TITLE_MESSAGE_DIALOG, MESSAGE_NO_REPOSITORY);
+							IBugzillaConstants.TITLE_MESSAGE_DIALOG,
+							Messages.BugzillaSearchPage_No_repository_available);
 				}
 			}
 		});
@@ -1066,7 +1065,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 									MessageDialog.openError(Display.getDefault().getActiveShell(),
 											Messages.BugzillaSearchPage_Bugzilla_Search_Page, MessageFormat.format(
 													Messages.BugzillaSearchPage_Unable_to_get_configuration_X,
-													LABEL_VIEW_REPOSITORIES)
+													Messages.BugzillaSearchPage_Task_Repositories)
 													+ "\n\n"); //$NON-NLS-1$
 								}
 							});
@@ -1128,19 +1127,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	@Override
 	public boolean isPageComplete() {
-		String message = null;
 		if (daysText != null) {
 			String days = daysText.getText();
 			if (days.length() > 0) {
 				try {
 					if (Integer.parseInt(days) < 0) {
-						message = NUM_DAYS_POSITIVE + days + Messages.BugzillaSearchPage_is_invalid;
-						setErrorMessage(message);
-						return false;
+						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException ex) {
-					message = NUM_DAYS_POSITIVE + days + Messages.BugzillaSearchPage_is_invalid;
-					setErrorMessage(message);
+					setErrorMessage(NLS.bind(Messages.BugzillaSearchPage_Number_of_days_must_be_a_positive_integer,
+							days));
 					return false;
 				}
 			}

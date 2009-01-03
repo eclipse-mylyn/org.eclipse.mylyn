@@ -25,6 +25,14 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
+	public static String BugzillaSearchPage_all;
+
+	public static String BugzillaSearchPage_all_words;
+
+	public static String BugzillaSearchPage_any;
+
+	public static String BugzillaSearchPage_any_word;
+
 	public static String BugzillaSearchPage_Bugzilla_Query;
 
 	public static String BugzillaSearchPage_Bugzilla_Search_Page;
@@ -51,15 +59,19 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Error_was_X;
 
-	public static String BugzillaSearchPage_Hardware;
+	public static String BugzillaSearchPage_exact;
 
-	public static String BugzillaSearchPage_is_invalid;
+	public static String BugzillaSearchPage_Hardware;
 
 	public static String BugzillaSearchPage_Keywords;
 
 	public static String BugzillaSearchPage_Milestone;
 
 	public static String BugzillaSearchPage_No_repository_available;
+
+	public static String BugzillaSearchPage_none;
+
+	public static String BugzillaSearchPage_notregexp;
 
 	public static String BugzillaSearchPage_Number_of_days_must_be_a_positive_integer;
 
@@ -73,6 +85,8 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Query_Title;
 
+	public static String BugzillaSearchPage_regexp;
+
 	public static String BugzillaSearchPage_reporter;
 
 	public static String BugzillaSearchPage_Resolution;
@@ -84,6 +98,8 @@ public class Messages extends NLS {
 	public static String BugzillaSearchPage_Severity;
 
 	public static String BugzillaSearchPage_Status;
+
+	public static String BugzillaSearchPage_substring;
 
 	public static String BugzillaSearchPage_Summary;
 
