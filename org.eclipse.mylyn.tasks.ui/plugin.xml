@@ -664,6 +664,21 @@
                value="org.eclipse.mylyn.tasks.ui.views.tasks">
          </parameter>
       </key>
+      <key
+            platform="cocoa"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+Q K">
+      </key>
+      <key
+            commandId="org.eclipse.ui.views.showView"
+            platform="cocoa"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="COMMAND+ALT+Q K">
+         <parameter
+               id="org.eclipse.ui.views.showView.viewId"
+               value="org.eclipse.mylyn.tasks.ui.views.tasks">
+         </parameter>
+      </key>
   </extension>
   
    <extension
@@ -957,6 +972,17 @@
       </key>
       <key
             platform="carbon"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+F12">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.openTask"
+            platform="cocoa"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M3+F12">
+      </key>
+      <key
+            platform="cocoa"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+F12">
       </key>
@@ -1347,6 +1373,20 @@
             commandId="org.eclipse.mylyn.tasks.ui.command.new.local.task"
             contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
             platform="carbon"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+N">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.new.subtask"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            platform="cocoa"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+N">
+      </key>
+      <key
+            commandId="org.eclipse.mylyn.tasks.ui.command.new.local.task"
+            contextId="org.eclipse.mylyn.tasks.ui.views.tasks"
+            platform="cocoa"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M3+N">
       </key>

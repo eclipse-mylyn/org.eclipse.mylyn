@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
@@ -54,7 +55,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 	// see bug 185004
 	private final int platformSpecificSquish;
 
-	private final Rectangle lastClippingArea = new Rectangle(0, 0, 0, 0);
+	private final Rectangle lastClippingArea;
 
 	private final boolean tweakClipping;
 
@@ -75,22 +76,14 @@ class CustomTaskListDecorationDrawer implements Listener {
 	CustomTaskListDecorationDrawer(TaskListView taskListView, int activationImageOffset) {
 		this.taskListView = taskListView;
 		this.activationImageOffset = activationImageOffset;
+		this.lastClippingArea = new Rectangle(0, 0, 0, 0);
+		this.tweakClipping = PlatformUtil.isPaintItemClippingRequired();
+		this.platformSpecificSquish = PlatformUtil.getTreeItemSquish();
 		this.taskListView.synchronizationOverlaid = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
 				ITasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT);
-
-		useStrikethroughForCompleted = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
+		this.useStrikethroughForCompleted = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
 				ITasksUiPreferenceConstants.USE_STRIKETHROUGH_FOR_COMPLETED);
 		TasksUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
-		if (SWT.getPlatform().equals("gtk")) { //$NON-NLS-1$
-			this.platformSpecificSquish = 8;
-			this.tweakClipping = true;
-		} else if (SWT.getPlatform().equals("carbon")) { //$NON-NLS-1$
-			this.platformSpecificSquish = 3;
-			this.tweakClipping = false;
-		} else {
-			this.platformSpecificSquish = 0;
-			this.tweakClipping = false;
-		}
 	}
 
 	/*
@@ -115,7 +108,12 @@ class CustomTaskListDecorationDrawer implements Listener {
 			if (data instanceof AbstractTask & useStrikethroughForCompleted) {
 				AbstractTask task = (AbstractTask) data;
 				if (task.isCompleted()) {
-					Rectangle bounds = ((TreeItem) event.item).getBounds();
+					Rectangle bounds;
+					//if (isCOCOA) {
+					bounds = ((TreeItem) event.item).getTextBounds(0);
+//					} else {
+//						bounds = ((TreeItem) event.item).getBounds();
+//					}
 					int lineY = bounds.y + (bounds.height / 2);
 					String itemText = ((TreeItem) event.item).getText();
 					Point extent = event.gc.textExtent(itemText);

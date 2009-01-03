@@ -8,11 +8,13 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *     David Green - fix for bug 247182
+ *     Frank Becker - fixes for bug 259877
  *******************************************************************************/
 
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.swt.SWT;
 
 /**
  * @author Steffen Pingel
@@ -34,6 +36,32 @@ public class PlatformUtil {
 			extensions[i] = "*" + extension; //$NON-NLS-1$
 		}
 		return extensions;
+	}
+
+	public static int getToolTipXShift() {
+		if ("gtk".equals(SWT.getPlatform()) || "carbon".equals(SWT.getPlatform()) || "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return -26;
+		} else {
+			return -23;
+		}
+	}
+
+	public static int getTreeImageOffset() {
+		return "cocoa".equals(SWT.getPlatform()) ? 15 : 20; //$NON-NLS-1$
+	}
+
+	public static int getTreeItemSquish() {
+		if ("gtk".equals(SWT.getPlatform())) { //$NON-NLS-1$
+			return 8;
+		} else if ("carbon".equals(SWT.getPlatform()) || "cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$ //$NON-NLS-2$
+			return 3;
+		} else {
+			return 0;
+		}
+	}
+
+	public static boolean isPaintItemClippingRequired() {
+		return "gtk".equals(SWT.getPlatform()); //$NON-NLS-1$
 	}
 
 }
