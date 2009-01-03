@@ -81,14 +81,14 @@ public class AbstractReportFactory {
 		}
 
 		if (clean) {
-			tempFile = File.createTempFile("XmlCleaner-", "tmp");
+			tempFile = File.createTempFile("XmlCleaner-", "tmp"); //$NON-NLS-1$//$NON-NLS-2$
 			tempFile.deleteOnExit();
 			in = XmlCleaner.clean(in, tempFile);
 		}
 
 		try {
 			final XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setFeature("http://xml.org/sax/features/validation", false);
+			reader.setFeature("http://xml.org/sax/features/validation", false); //$NON-NLS-1$
 			reader.setContentHandler(contentHandler);
 
 			EntityResolver resolver = new EntityResolver() {

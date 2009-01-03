@@ -83,31 +83,27 @@ public class BugzillaFlagMapper {
 		meta.setReadOnly(false);
 
 		if (getNumber() != 0) {
-			TaskAttribute child = taskAttribute.createMappedAttribute("number");
+			TaskAttribute child = taskAttribute.createMappedAttribute("number"); //$NON-NLS-1$
 			child.getMetaData().defaults().setType(TaskAttribute.TYPE_INTEGER);
 			mapper.setIntegerValue(child, getNumber());
 		}
 		if (getRequestee() != null) {
-			TaskAttribute child = taskAttribute.createMappedAttribute("requestee");
+			TaskAttribute child = taskAttribute.createMappedAttribute("requestee"); //$NON-NLS-1$
 			child.getMetaData().defaults().setType(TaskAttribute.TYPE_SHORT_TEXT);
 			mapper.setValue(child, getRequestee());
 		}
 		if (getSetter() != null) {
-			TaskAttribute child = taskAttribute.createMappedAttribute("setter");
+			TaskAttribute child = taskAttribute.createMappedAttribute("setter"); //$NON-NLS-1$
 			child.getMetaData().defaults().setType(TaskAttribute.TYPE_SHORT_TEXT);
 			mapper.setValue(child, getSetter());
 		}
 		if (getState() != null) {
-			TaskAttribute child = taskAttribute.createMappedAttribute("state");
-//			child.putOption("", "");
-//			child.putOption("?", "?");
-//			child.putOption("+", "+");
-//			child.putOption("-", "-");
+			TaskAttribute child = taskAttribute.createMappedAttribute("state"); //$NON-NLS-1$
 			child.getMetaData().defaults().setType(TaskAttribute.TYPE_SINGLE_SELECT);
 			child.getMetaData().setLabel(flagId);
 			child.getMetaData().setReadOnly(false);
 			mapper.setValue(child, getState());
-			taskAttribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, "state");
+			taskAttribute.getMetaData().putValue(TaskAttribute.META_ASSOCIATED_ATTRIBUTE_ID, "state"); //$NON-NLS-1$
 
 		}
 	}
