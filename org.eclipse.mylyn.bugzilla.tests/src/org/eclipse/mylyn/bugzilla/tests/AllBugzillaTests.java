@@ -23,8 +23,7 @@ import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaTaskHistoryTest;
 public class AllBugzillaTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test suite for org.eclipse.mylyn.bugzilla.tests");
-		// $JUnit-BEGIN$
+		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.bugzilla.tests");
 		suite.addTestSuite(RepositoryTaskHandleTest.class);
 		suite.addTestSuite(BugzillaTaskCompletionTest.class);
 		suite.addTestSuite(BugzillaTaskDataHandlerTest.class);
@@ -43,7 +42,7 @@ public class AllBugzillaTests {
 		suite.addTestSuite(BugzillaSearchDialogTest.class);
 		suite.addTestSuite(BugzillaTaskHistoryTest.class);
 		suite.addTestSuite(BugzillaRepository32Test.class);
-		// $JUnit-END$
 		return suite;
 	}
+
 }
