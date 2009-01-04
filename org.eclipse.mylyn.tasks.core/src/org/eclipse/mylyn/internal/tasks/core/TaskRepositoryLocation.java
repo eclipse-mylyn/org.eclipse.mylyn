@@ -51,8 +51,7 @@ public class TaskRepositoryLocation extends AbstractWebLocation {
 				}
 			}
 		}
-		Proxy proxy = WebUtil.getProxy(host, proxyType);
-		return (proxy != null) ? proxy : Proxy.NO_PROXY;
+		return WebUtil.getProxy(host, proxyType);
 	}
 
 	@Override

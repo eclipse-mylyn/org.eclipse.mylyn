@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
+import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.ui.ContextPerspectiveManagerTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskHyperlinkDetectorTest;

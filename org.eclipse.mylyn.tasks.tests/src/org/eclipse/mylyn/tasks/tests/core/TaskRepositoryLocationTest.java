@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.tests;
+package org.eclipse.mylyn.tasks.tests.core;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -24,6 +24,9 @@ import org.eclipse.mylyn.internal.commons.net.AuthenticatedProxy;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryLocation;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
+/**
+ * @author Steffen Pingel
+ */
 public class TaskRepositoryLocationTest extends TestCase {
 
 	public void testGetCredentials() {
@@ -56,7 +59,7 @@ public class TaskRepositoryLocationTest extends TestCase {
 
 		taskRepository.setProperty(TaskRepository.PROXY_USEDEFAULT, "false");
 		assertFalse(taskRepository.isDefaultProxyEnabled());
-		assertEquals(Proxy.NO_PROXY, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
+		assertEquals(null, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
 
 		taskRepository.setProperty(TaskRepository.PROXY_HOSTNAME, "host");
 		taskRepository.setProperty(TaskRepository.PROXY_PORT, "1234");
@@ -64,7 +67,7 @@ public class TaskRepositoryLocationTest extends TestCase {
 		assertNotNull(proxy);
 		assertEquals(new InetSocketAddress("host", 1234), proxy.address());
 
-		taskRepository.setProxyAuthenticationCredentials("user", "pwd");
+		taskRepository.setCredentials(AuthenticationType.PROXY, new AuthenticationCredentials("user", "pwd"), false);
 		proxy = location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE);
 		assertNotNull(proxy);
 		assertEquals(new InetSocketAddress("host", 1234), proxy.address());
@@ -83,4 +86,5 @@ public class TaskRepositoryLocationTest extends TestCase {
 		} catch (UnsupportedRequestException expected) {
 		}
 	}
+
 }
