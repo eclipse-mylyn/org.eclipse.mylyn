@@ -10,8 +10,10 @@ package org.eclipse.mylyn.commons.tests.support;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 
 import junit.framework.AssertionFailedError;
@@ -54,4 +56,50 @@ public class CommonsTestUtil {
 			in.close();
 		}
 	}
+
+	/**
+	 * Copies all files in the current data directory to the specified folder. Will overwrite.
+	 */
+	public static void copyFolder(File sourceFolder, File targetFolder) throws IOException {
+		for (File currFile : sourceFolder.listFiles()) {
+			if (currFile.isFile()) {
+				File destFile = new File(targetFolder, currFile.getName());
+				copy(currFile, destFile);
+			} else if (currFile.isDirectory()) {
+				File destDir = new File(targetFolder, currFile.getName());
+				if (!destDir.exists()) {
+					if (!destDir.mkdir()) {
+						throw new IOException("Unable to create destination context folder: "
+								+ destDir.getAbsolutePath());
+					}
+				}
+				for (File file : currFile.listFiles()) {
+					File destFile = new File(destDir, file.getName());
+					if (destFile.exists()) {
+						destFile.delete();
+					}
+					copy(file, destFile);
+				}
+			}
+		}
+	}
+
+	public static void copy(File source, File dest) throws IOException {
+		InputStream in = new FileInputStream(source);
+		try {
+			OutputStream out = new FileOutputStream(dest);
+			try {
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = in.read(buf)) > 0) {
+					out.write(buf, 0, len);
+				}
+			} finally {
+				out.close();
+			}
+		} finally {
+			in.close();
+		}
+	}
+
 }
