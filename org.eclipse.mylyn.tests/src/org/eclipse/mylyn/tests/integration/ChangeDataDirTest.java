@@ -23,9 +23,9 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.core.StatusHandler;
+import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
@@ -67,7 +67,7 @@ public class ChangeDataDirTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		TaskTestUtil.resetTaskList();
-		TasksUiPlugin.getDefault().setDataDirectory(defaultDir, new NullProgressMonitor());
+		TasksUiPlugin.getDefault().setDataDirectory(defaultDir);
 	}
 
 	public void testDefaultDataDirectoryMove() throws CoreException {
@@ -75,8 +75,11 @@ public class ChangeDataDirTest extends TestCase {
 				+ ".metadata" + '/' + ".mylyn";
 		assertEquals(defaultDir, workspaceRelativeDir);
 
-		TasksUiPlugin.getDefault().setDataDirectory(newDataDir, new NullProgressMonitor());
-		assertEquals(TasksUiPlugin.getDefault().getDataDirectory(), newDataDir);
+		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
+		assertEquals(newDataDir, TasksUiPlugin.getDefault().getDataDirectory());
+		assertEquals(newDataDir, TasksUiPlugin.getTaskDataManager().getDataPath());
+		assertEquals(new File(newDataDir, "contexts"), ContextCorePlugin.getContextStore().getContextDirectory());
+
 	}
 
 	public void testTaskMove() throws CoreException {
@@ -88,7 +91,7 @@ public class ChangeDataDirTest extends TestCase {
 		assertNotNull(readTaskBeforeMove);
 		assertTrue(taskList.getAllTasks().size() > 0);
 		copyDataDirContentsTo(newDataDir);
-		TasksUiPlugin.getDefault().setDataDirectory(newDataDir, new NullProgressMonitor());
+		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 		assertTrue(taskList.getAllTasks().size() > 0);
 		ITask readTaskAfterMove = taskList.getTask(handle);
 
