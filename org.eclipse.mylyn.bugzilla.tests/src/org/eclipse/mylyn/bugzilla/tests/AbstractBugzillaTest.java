@@ -70,8 +70,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 				ITasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 		manager = TasksUiPlugin.getRepositoryManager();
-		TasksUiPlugin.getDefault().reloadDataDirectory();
-		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		TaskTestUtil.resetTaskListAndRepositories();
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,15 +12,12 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
-import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
  * @author Steffen Pingel
@@ -38,9 +35,7 @@ public class TaskListSynchronizationScheduler {
 	}
 
 	private SynchronizationJob createRefreshJob() {
-		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUi.getRepositoryManager()
-				.getAllRepositories());
-		SynchronizationJob job = jobFactory.createSynchronizeRepositoriesJob(repositories);
+		SynchronizationJob job = jobFactory.createSynchronizeRepositoriesJob(null);
 		job.setUser(false);
 		job.setFullSynchronization(true);
 		return job;

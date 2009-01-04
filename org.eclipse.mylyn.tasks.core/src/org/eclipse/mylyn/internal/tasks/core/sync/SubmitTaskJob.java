@@ -22,6 +22,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexSchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -63,6 +64,7 @@ public class SubmitTaskJob extends SubmitJob {
 		this.task = task;
 		this.taskData = taskData;
 		this.oldAttributes = oldAttributes;
+		setRule(new MutexSchedulingRule());
 	}
 
 	@Override

@@ -33,6 +33,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexSchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryManager;
@@ -80,15 +81,8 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 
 	public SynchronizeTasksJob(ITaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
 			AbstractRepositoryConnector connector, TaskRepository taskRepository, Set<ITask> tasks) {
-		super("Synchronizing Tasks (" + tasks.size() + " tasks)"); //$NON-NLS-1$ //$NON-NLS-2$
-		this.taskList = taskList;
-		this.taskDataManager = synchronizationManager;
-		this.tasksModel = tasksModel;
-		this.connector = connector;
+		this(taskList, synchronizationManager, tasksModel, connector, (IRepositoryManager) null, tasks);
 		this.taskRepository = taskRepository;
-		this.allTasks = tasks;
-		this.repositoryManager = null;
-		this.statuses = new ArrayList<IStatus>();
 	}
 
 	public SynchronizeTasksJob(ITaskList taskList, TaskDataManager synchronizationManager, IRepositoryModel tasksModel,
@@ -101,6 +95,7 @@ public class SynchronizeTasksJob extends SynchronizationJob {
 		this.repositoryManager = repositoryManager;
 		this.allTasks = tasks;
 		this.statuses = new ArrayList<IStatus>();
+		setRule(new MutexSchedulingRule());
 	}
 
 	@Override

@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui.preferences;
 import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -209,7 +208,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			if (taskDataDirectoryAction == IDialogConstants.OK_ID) {
 				Exception exception = null;
 				try {
-					TasksUiPlugin.getDefault().setDataDirectory(taskDirectory, new NullProgressMonitor());
+					TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
 				} catch (CoreException e) {
 					exception = e;
 					StatusHandler.log(e.getStatus());

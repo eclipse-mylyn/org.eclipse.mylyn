@@ -15,7 +15,6 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
@@ -26,6 +25,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 
 /**
@@ -55,7 +55,7 @@ public class BugzillaTaskListTest extends TestCase {
 	}
 
 	@SuppressWarnings("null")
-	public void testRemindedPersistance() throws CoreException {
+	public void testRemindedPersistance() throws Exception {
 
 		String repositoryUrl = "https://bugs.eclipse.org/bugs";
 
@@ -71,10 +71,7 @@ public class BugzillaTaskListTest extends TestCase {
 		TasksUiPlugin.getTaskList().addTask(task1);
 
 		task1.setReminded(true);
-		TasksUiPlugin.getExternalizationManager().save(true);
-
-		TasksUiPlugin.getTaskList().reset();
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 
 		TaskList taskList = TasksUiPlugin.getTaskList();
 		assertEquals(1, taskList.getAllTasks().size());
@@ -87,7 +84,7 @@ public class BugzillaTaskListTest extends TestCase {
 	}
 
 	@SuppressWarnings("null")
-	public void testRepositoryTaskExternalization() throws CoreException {
+	public void testRepositoryTaskExternalization() throws Exception {
 		ITask task = TasksUi.getRepositoryModel().createTask(repository, "1");
 		TaskTask repositoryTask = null;
 		if (task instanceof TaskTask) {
@@ -96,11 +93,7 @@ public class BugzillaTaskListTest extends TestCase {
 		assertNotNull(repositoryTask);
 		repositoryTask.setTaskKind("kind");
 		TasksUiPlugin.getTaskList().addTask(repositoryTask);
-		TasksUiPlugin.getExternalizationManager().save(true);
-		TasksUiPlugin.getExternalizationManager().requestSave();
-
-		TasksUiPlugin.getTaskList().reset();
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 		assertEquals(1, TasksUiPlugin.getTaskList()
 				.getUnmatchedContainer(IBugzillaConstants.ECLIPSE_BUGZILLA_URL)
 				.getChildren()
@@ -116,20 +109,14 @@ public class BugzillaTaskListTest extends TestCase {
 		assertEquals(repositoryTask.getTaskKind(), readTask.getTaskKind());
 	}
 
-	public void testQueryExternalization() {
+	public void testQueryExternalization() throws Exception {
 		RepositoryQuery query = (RepositoryQuery) TasksUi.getRepositoryModel().createRepositoryQuery(repository);
 		assertEquals("https://bugs.eclipse.org/bugs", query.getRepositoryUrl());
 		assertEquals("<never>", query.getLastSynchronizedTimeStamp());
 		query.setLastSynchronizedStamp("today");
 		TasksUiPlugin.getTaskList().addQuery(query);
-		TasksUiPlugin.getExternalizationManager().save(true);
-		TasksUiPlugin.getExternalizationManager().requestSave();
 
-		TasksUiPlugin.getTaskList().reset();
-		try {
-			TasksUiPlugin.getDefault().reloadDataDirectory();
-		} catch (CoreException e) {
-		}
+		TaskTestUtil.saveAndReadTasklist();
 		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
 		IRepositoryQuery readQuery = TasksUiPlugin.getTaskList().getQueries().iterator().next();
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());

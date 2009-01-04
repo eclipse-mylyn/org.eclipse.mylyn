@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.internal.tasks.core.sync;
 
 import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -33,6 +36,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
 
 /**
+ * Updates the task list.
+ * 
  * @author Steffen Pingel
  */
 public class SynchronizeRepositoriesJob extends SynchronizationJob {
@@ -43,24 +48,40 @@ public class SynchronizeRepositoriesJob extends SynchronizationJob {
 
 	private final IRepositoryManager repositoryManager;
 
-	private final Set<TaskRepository> repositories;
+	private Set<TaskRepository> repositories;
 
 	private final Object family = new Object();
 
 	private final IRepositoryModel tasksModel;
 
 	public SynchronizeRepositoriesJob(TaskList taskList, TaskDataManager taskDataManager, IRepositoryModel tasksModel,
-			IRepositoryManager repositoryManager, Set<TaskRepository> repositories) {
+			IRepositoryManager repositoryManager) {
 		super(Messages.SynchronizeRepositoriesJob_Synchronizing_Task_List);
 		this.taskList = taskList;
 		this.taskDataManager = taskDataManager;
 		this.tasksModel = tasksModel;
 		this.repositoryManager = repositoryManager;
-		this.repositories = repositories;
+	}
+
+	public Collection<TaskRepository> getRepositories() {
+		return Collections.unmodifiableCollection(repositories);
+	}
+
+	public void setRepositories(Collection<TaskRepository> repositories) {
+		if (repositories != null) {
+			this.repositories = new HashSet<TaskRepository>(repositories);
+		} else {
+			this.repositories = null;
+		}
 	}
 
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
+		// get the current list of repositories
+		Set<TaskRepository> repositories = this.repositories;
+		if (repositories == null) {
+			repositories = new HashSet<TaskRepository>(repositoryManager.getAllRepositories());
+		}
 		try {
 			monitor.beginTask(Messages.SynchronizeRepositoriesJob_Processing, repositories.size() * 100);
 

@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.Policy;
@@ -38,6 +37,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.ObjectSchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryModel;
@@ -56,26 +56,6 @@ import org.eclipse.mylyn.tasks.core.sync.SynchronizationJob;
  * @author Steffen Pingel
  */
 public class SynchronizeQueriesJob extends SynchronizationJob {
-
-	private static class MutexRule implements ISchedulingRule {
-
-		private final Object object;
-
-		public MutexRule(Object object) {
-			this.object = object;
-		}
-
-		public boolean contains(ISchedulingRule rule) {
-			return rule == this;
-		}
-
-		public boolean isConflicting(ISchedulingRule rule) {
-			if (rule instanceof MutexRule) {
-				return object.equals(((MutexRule) rule).object);
-			}
-			return false;
-		}
-	}
 
 	private class TaskCollector extends TaskDataCollector {
 
@@ -167,7 +147,7 @@ public class SynchronizeQueriesJob extends SynchronizationJob {
 				allTasks = taskList.getTasks(repository.getRepositoryUrl());
 			}
 
-			MutexRule rule = new MutexRule(repository);
+			ObjectSchedulingRule rule = new ObjectSchedulingRule(repository);
 			try {
 				Job.getJobManager().beginRule(rule, monitor);
 

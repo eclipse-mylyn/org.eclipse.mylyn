@@ -307,8 +307,7 @@ public class TaskListExternalizationTest extends TestCase {
 
 		assertEquals(baseRootElementsCount + 1, taskList.getRootElements().size());
 
-		TasksUiPlugin.getExternalizationManager().requestSave();
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 
 		Collection<ITask> readList = taskList.getDefaultCategory().getChildren();
 		for (ITask task : readList) {
@@ -340,8 +339,7 @@ public class TaskListExternalizationTest extends TestCase {
 		AbstractTask task1 = TasksUiInternal.createNewLocalTask("task 1");
 		taskList.addTask(task1, taskList.getDefaultCategory());
 
-		TasksUiPlugin.getExternalizationManager().requestSave();
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 		assertTrue(taskList.getDefaultCategory().getChildren().contains(task1));
 	}
 

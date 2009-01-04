@@ -107,7 +107,7 @@ public class TaskTestUtil {
 		TasksUiPlugin.getTaskList().notifyElementsChanged(null);
 		saveTaskList();
 		TaskTestUtil.resetTaskList();
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TasksUiPlugin.getDefault().initializeDataSources();
 	}
 
 	public static void saveTaskList() {

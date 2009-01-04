@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants;
+import org.eclipse.mylyn.internal.tasks.core.ITasksCoreConstants.MutexSchedulingRule;
 import org.eclipse.mylyn.internal.tasks.core.data.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -60,6 +61,7 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 		this.source = source;
 		this.comment = comment;
 		this.attachmentAttribute = attachmentAttribute;
+		setRule(new MutexSchedulingRule());
 	}
 
 	@Override
@@ -81,7 +83,8 @@ public class SubmitTaskAttachmentJob extends SubmitJob {
 			return Status.OK_STATUS;
 		}
 		try {
-			monitor.beginTask(Messages.SubmitTaskAttachmentJob_Submitting_attachment, 2 * (1 + getSubmitJobListeners().length) * 100);
+			monitor.beginTask(Messages.SubmitTaskAttachmentJob_Submitting_attachment,
+					2 * (1 + getSubmitJobListeners().length) * 100);
 			monitor.subTask(Messages.SubmitTaskAttachmentJob_Sending_data);
 			attachmentHandler.postContent(taskRepository, task, source, comment, attachmentAttribute,
 					Policy.subMonitorFor(monitor, 100));

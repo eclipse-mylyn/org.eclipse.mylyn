@@ -41,8 +41,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -335,17 +333,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
 
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-			if (event.getProperty().equals(ITasksUiPreferenceConstants.PREF_DATA_DIR)) {
-				if (event.getOldValue() instanceof String) {
-					try {
-						setDataDirectory((String) event.getNewValue(), new NullProgressMonitor(), false);
-					} catch (CoreException e) {
-						StatusHandler.log(new Status(IStatus.ERROR, ID_PLUGIN, "Unable to load from task data folder", //$NON-NLS-1$
-								e));
-					}
-				}
-			}
-
 			if (event.getProperty().equals(ITasksUiPreferenceConstants.PLANNING_ENDHOUR)
 					|| event.getProperty().equals(ITasksUiPreferenceConstants.WEEK_START_DAY)) {
 				updateTaskActivityManager();
@@ -367,8 +354,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	private static TaskListExternalizationParticipant taskListExternalizationParticipant;
 
 	private final Set<IRepositoryModelListener> listeners = new HashSet<IRepositoryModelListener>();
-
-	private boolean settingDataDirectory = false;
 
 	private static TaskListElementImporter taskListImporter;
 
@@ -568,7 +553,6 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			// instantiate taskDataManager
 			TaskDataStore taskDataStore = new TaskDataStore(repositoryManager);
 			taskDataManager = new TaskDataManager(taskDataStore, repositoryManager, taskList, taskActivityManager);
-			taskDataManager.setDataPath(getDataDirectory());
 
 			taskJobFactory = new TaskJobFactory(taskList, taskDataManager, repositoryManager, repositoryModel);
 
@@ -601,7 +585,11 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 			externalizationManager.addParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 			taskActivityManager.addActivityListener(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
 			taskActivityMonitor.setExternalizationParticipant(ACTIVITY_EXTERNALIZTAION_PARTICIPANT);
-			loadDataSources();
+
+			// initialize managers
+			initializeDataSources();
+
+			// trigger lazy initialization
 			new TasksUiInitializationJob().schedule();
 		} catch (Exception e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Task list initialization failed", e)); //$NON-NLS-1$
@@ -744,80 +732,48 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Save first, then load from <code>newPath</code>. Sets the new data directory, which upon setting results in
-	 * reload of task list information from the <code>newPath</code> supplied.
+	 * Persist <code>path</code> as data directory and loads data from <code>path</code>. This method may block if other
+	 * jobs are running that modify tasks data. This method will only execute after all conflicting jobs have been
+	 * completed.
 	 * 
 	 * @throws CoreException
+	 *             in case setting of the data directory did not complete normally
+	 * @throws OperationCanceledException
+	 *             if the operation is cancelled by the user
 	 */
-	public void setDataDirectory(final String newPath, IProgressMonitor monitor) throws CoreException {
-		setDataDirectory(newPath, monitor, true);
-	}
-
-	@SuppressWarnings("restriction")
-	private void setDataDirectory(final String newPath, IProgressMonitor monitor, boolean setPreference)
-			throws CoreException {
-		// guard against updates from preference listeners that are triggered by the setValue() call below
-		if (settingDataDirectory) {
-			return;
-		}
-		// FIXME reset the preference in case switching to the new location fails? 
-		try {
-			settingDataDirectory = true;
-			loadDataDirectory(newPath, !setPreference);
-			if (setPreference) {
-				getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, newPath);
-			}
-			File newFile = new File(newPath, ITasksCoreConstants.CONTEXTS_DIRECTORY);
-			if (!newFile.exists()) {
-				newFile.mkdirs();
-			}
-			ContextCorePlugin.getContextStore().setContextDirectory(newFile);
-		} finally {
-			settingDataDirectory = false;
-		}
-	}
-
-	public void reloadDataDirectory() throws CoreException {
-		// no save just load what is there
-		loadDataDirectory(getDataDirectory(), false);
-	}
-
-	/**
-	 * Load's data sources from <code>newPath</code> and executes with progress
-	 */
-	private synchronized void loadDataDirectory(final String newPath, final boolean save) throws CoreException {
-
-		IRunnableWithProgress setDirectoryRunnable = new IRunnableWithProgress() {
-
+	public void setDataDirectory(final String path) throws CoreException {
+		Assert.isNotNull(path);
+		IRunnableWithProgress runner = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
 					monitor.beginTask(Messages.TasksUiPlugin_Load_Data_Directory, IProgressMonitor.UNKNOWN);
-					if (save) {
-						externalizationManager.save(false);
-					}
-					Job.getJobManager().beginRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE,
-							new SubProgressMonitor(monitor, 1));
 					if (monitor.isCanceled()) {
 						throw new InterruptedException();
 					}
-					TasksUi.getTaskActivityManager().deactivateActiveTask();
-					externalizationManager.setRootFolderPath(newPath);
 
-					loadDataSources();
+					TasksUi.getTaskActivityManager().deactivateActiveTask();
+
+					// set new preference in case of a change
+					if (!path.equals(getDataDirectory())) {
+						getPreferenceStore().setValue(ITasksUiPreferenceConstants.PREF_DATA_DIR, path);
+					}
+
+					// reload data from new directory				
+					initializeDataSources();
 				} finally {
-					Job.getJobManager().endRule(ITasksCoreConstants.ROOT_SCHEDULING_RULE);
+					// FIXME roll back preferences change in case of an error?
 					monitor.done();
 				}
 			}
-
 		};
 
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		try {
 			if (!CoreUtil.TEST_MODE) {
-				service.run(false, false, setDirectoryRunnable);
+				// rule ensures that all conflicting jobs have completed 
+				service.runInUI(service, runner, ITasksCoreConstants.ROOT_SCHEDULING_RULE);
 			} else {
-				setDirectoryRunnable.run(new NullProgressMonitor());
+				runner.run(new NullProgressMonitor());
 			}
 		} catch (InvocationTargetException e) {
 			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to set data directory", //$NON-NLS-1$
@@ -825,16 +781,24 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		} catch (InterruptedException e) {
 			throw new OperationCanceledException();
 		}
+	}
 
+	public void reloadDataDirectory() throws CoreException {
+		// no save just load what is there
+		setDataDirectory(getDataDirectory());
 	}
 
 	/**
-	 * called on startup and when the mylyn data structures are reloaded from disk
+	 * Invoked on startup and when data is loaded from disk or when the data directory changes.
+	 * 
+	 * <p>
+	 * Public for testing.
 	 */
 	@SuppressWarnings("restriction")
-	private void loadDataSources() {
-		File storeFile = getContextStoreDir();
-		ContextCorePlugin.getContextStore().setContextDirectory(storeFile);
+	public void initializeDataSources() {
+		taskDataManager.setDataPath(getDataDirectory());
+		externalizationManager.setRootFolderPath(getDataDirectory());
+		ContextCorePlugin.getContextStore().setContextDirectory(getContextStoreDir());
 
 		externalizationManager.load();
 		// TODO: Move management of template repositories to TaskRepositoryManager
@@ -845,6 +809,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 		taskActivityMonitor.reloadActivityTime();
 		taskActivityManager.reloadPlanningData();
 
+		// inform listeners that initialization is complete
 		for (final IRepositoryModelListener listener : listeners) {
 			SafeRunner.run(new ISafeRunnable() {
 

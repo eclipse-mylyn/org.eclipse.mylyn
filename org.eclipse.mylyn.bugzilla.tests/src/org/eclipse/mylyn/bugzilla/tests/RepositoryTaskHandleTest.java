@@ -13,7 +13,6 @@ package org.eclipse.mylyn.bugzilla.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskTask;
@@ -38,7 +37,7 @@ public class RepositoryTaskHandleTest extends TestCase {
 		TaskTestUtil.resetTaskList();
 	}
 
-	public void testRepositoryUrlHandles() throws CoreException {
+	public void testRepositoryUrlHandles() throws Exception {
 		String taskId = "123";
 		String repositoryUrl = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
 		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, repositoryUrl);
@@ -49,8 +48,7 @@ public class RepositoryTaskHandleTest extends TestCase {
 		assertEquals(repositoryUrl, bugTask.getRepositoryUrl());
 
 		TasksUiPlugin.getTaskList().addTask(bugTask);
-		TasksUiPlugin.getExternalizationManager().save(true);
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 
 		ITask readReport = TasksUiPlugin.getTaskList().getTask(repositoryUrl, taskId);
 		assertEquals("Summary", readReport.getSummary());

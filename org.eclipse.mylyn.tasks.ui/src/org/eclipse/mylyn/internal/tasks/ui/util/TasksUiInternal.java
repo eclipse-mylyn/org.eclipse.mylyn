@@ -342,9 +342,7 @@ public class TasksUiInternal {
 	}
 
 	public static SynchronizationJob synchronizeAllRepositories(boolean force) {
-		Set<TaskRepository> repositories = new HashSet<TaskRepository>(TasksUi.getRepositoryManager()
-				.getAllRepositories());
-		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeRepositoriesJob(repositories);
+		SynchronizationJob job = TasksUiPlugin.getTaskJobFactory().createSynchronizeRepositoriesJob(null);
 		job.setUser(force);
 		job.schedule();
 		joinIfInTestMode(job);
@@ -515,8 +513,9 @@ public class TasksUiInternal {
 			taskList.addTask(newTask, view.getDrilledIntoCategory());
 		} else {
 			if (view != null && view.getDrilledIntoCategory() != null) {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.TasksUiInternal_Create_Task,
-						MessageFormat.format(Messages.TasksUiInternal_The_new_task_will_be_added_to_the_X_container,
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+						Messages.TasksUiInternal_Create_Task, MessageFormat.format(
+								Messages.TasksUiInternal_The_new_task_will_be_added_to_the_X_container,
 								UncategorizedTaskContainer.LABEL));
 			}
 			taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());

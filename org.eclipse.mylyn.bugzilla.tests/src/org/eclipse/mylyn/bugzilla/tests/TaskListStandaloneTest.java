@@ -17,7 +17,6 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
@@ -27,6 +26,7 @@ import org.eclipse.mylyn.internal.tasks.core.TaskTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.tests.TaskTestUtil;
 
 /**
  * @author Mik Kersten
@@ -51,16 +51,15 @@ public class TaskListStandaloneTest extends TestCase {
 		super.tearDown();
 	}
 
-	public void testDueDateExternalization() throws CoreException {
+	public void testDueDateExternalization() throws Exception {
 		AbstractTask task = new LocalTask("1", "task 1");
 		Date dueDate = new Date();
 		task.setDueDate(dueDate);
 		TasksUiPlugin.getTaskList().addTask(task);
 		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
 
-		TasksUiPlugin.getExternalizationManager().save(true);
-		TasksUiPlugin.getTaskList().reset();
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
+
 		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
 		Collection<ITask> readList = TasksUiPlugin.getTaskList().getDefaultCategory().getChildren();
 		ITask readTask = readList.iterator().next();
@@ -122,16 +121,15 @@ public class TaskListStandaloneTest extends TestCase {
 	}
 
 	// Task retention when connector missing upon startup
-	public void testOrphanedTasks() throws CoreException {
+	public void testOrphanedTasks() throws Exception {
 		// make some tasks
 		// save them
 		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
 		ITask task = new TaskTask(BugzillaCorePlugin.CONNECTOR_KIND, "http://bugs", "1");
 		TasksUiPlugin.getTaskList().addTask(task);
-		TasksUiPlugin.getExternalizationManager().save(true);
 
 		// reload tasklist and check that they persist
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
 
 		// removed/disable externalizers
@@ -139,7 +137,7 @@ public class TaskListStandaloneTest extends TestCase {
 				BugzillaCorePlugin.CONNECTOR_KIND);
 
 		// reload tasklist ensure task didn't load
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 		assertEquals(0, TasksUiPlugin.getTaskList().getAllTasks().size());
 		// Save the task list (tasks with missing connectors should get
 		// persisted)
@@ -149,7 +147,7 @@ public class TaskListStandaloneTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepositoryConnector(connector);
 
 		// re-load tasklist
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 
 		// ensure that task now gets loaded
 		assertEquals(1, TasksUiPlugin.getTaskList().getAllTasks().size());
@@ -157,7 +155,7 @@ public class TaskListStandaloneTest extends TestCase {
 	}
 
 	// Query retention when connector missing/fails to load
-	public void testOrphanedQueries() throws CoreException {
+	public void testOrphanedQueries() throws Exception {
 		// make a query
 		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
 		RepositoryQuery query = new RepositoryQuery(BugzillaCorePlugin.CONNECTOR_KIND, "bugzillaQuery");
@@ -165,7 +163,7 @@ public class TaskListStandaloneTest extends TestCase {
 		TasksUiPlugin.getExternalizationManager().save(true);
 
 		// reload tasklist and check that they persist
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
 
 		// removed/disable externalizers
@@ -173,7 +171,7 @@ public class TaskListStandaloneTest extends TestCase {
 				BugzillaCorePlugin.CONNECTOR_KIND);
 
 		// reload tasklist ensure query didn't load
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 		assertEquals(0, TasksUiPlugin.getTaskList().getQueries().size());
 		// Save the task list (queries with missing connectors should get
 		// persisted)
@@ -183,7 +181,7 @@ public class TaskListStandaloneTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepositoryConnector(connector);
 
 		// re-load tasklist
-		TasksUiPlugin.getDefault().reloadDataDirectory();
+		TaskTestUtil.saveAndReadTasklist();
 
 		// ensure that query now gets loaded
 		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());

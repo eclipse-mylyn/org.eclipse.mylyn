@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,7 +95,8 @@ public class TaskJobFactory implements ITaskJobFactory {
 
 	public SynchronizationJob createSynchronizeRepositoriesJob(Set<TaskRepository> repositories) {
 		SynchronizeRepositoriesJob job = new SynchronizeRepositoriesJob(taskList, taskDataManager, tasksModel,
-				repositoryManager, repositories);
+				repositoryManager);
+		job.setRepositories(repositories);
 		job.setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 		job.setPriority(Job.DECORATE);
 		job.addJobChangeListener(new JobChangeAdapter() {

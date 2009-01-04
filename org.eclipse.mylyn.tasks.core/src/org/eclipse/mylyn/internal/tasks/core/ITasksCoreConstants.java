@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 /**
@@ -44,9 +45,9 @@ public interface ITasksCoreConstants {
 
 	public static final String CONTEXTS_DIRECTORY = "contexts"; //$NON-NLS-1$
 
-	public static final ActivityContextSchedulingRule ACTIVITY_SCHEDULING_RULE = new ActivityContextSchedulingRule();
+	public static final ISchedulingRule ACTIVITY_SCHEDULING_RULE = new MutexSchedulingRule();
 
-	public static final TaskListSchedulingRule TASKLIST_SCHEDULING_RULE = new TaskListSchedulingRule();
+	public static final ISchedulingRule TASKLIST_SCHEDULING_RULE = new MutexSchedulingRule();
 
 	public static final ISchedulingRule ROOT_SCHEDULING_RULE = new RootSchedulingRule();
 
@@ -54,38 +55,34 @@ public interface ITasksCoreConstants {
 
 	public static final String ATTRIBUTE_OUTGOING_NEW_CONNECTOR_KIND = "outgoingNewConnectorKind"; //$NON-NLS-1$
 
-	static class ActivityContextSchedulingRule extends RootSchedulingRule {
+	/**
+	 * Jobs that have the same instances of this rule set are mutually exclusive.
+	 */
+	public static class MutexSchedulingRule extends RootSchedulingRule {
+
+		public MutexSchedulingRule() {
+		}
+
 		@Override
 		public boolean contains(ISchedulingRule rule) {
-			return rule instanceof ActivityContextSchedulingRule;
+			return rule == this;
 		}
 
 		@Override
 		public boolean isConflicting(ISchedulingRule rule) {
-			if (rule.getClass() == RootSchedulingRule.class) {
-				return true;
-			}
-			return rule instanceof ActivityContextSchedulingRule;
+			return rule == ROOT_SCHEDULING_RULE || rule == this;
 		}
 	}
 
-	static class TaskListSchedulingRule extends RootSchedulingRule {
+	/**
+	 * The parent of all scheduling rules that modify task data.
+	 * 
+	 * @see ITasksCoreConstants#ROOT_SCHEDULING_RULE
+	 */
+	public static class RootSchedulingRule implements ISchedulingRule {
 
-		@Override
-		public boolean contains(ISchedulingRule rule) {
-			return rule instanceof TaskListSchedulingRule;
+		protected RootSchedulingRule() {
 		}
-
-		@Override
-		public boolean isConflicting(ISchedulingRule rule) {
-			if (rule.getClass() == RootSchedulingRule.class) {
-				return true;
-			}
-			return rule instanceof TaskListSchedulingRule;
-		}
-	}
-
-	static class RootSchedulingRule implements ISchedulingRule {
 
 		public boolean contains(ISchedulingRule rule) {
 			return rule instanceof RootSchedulingRule;
@@ -94,6 +91,41 @@ public interface ITasksCoreConstants {
 		public boolean isConflicting(ISchedulingRule rule) {
 			return rule instanceof RootSchedulingRule;
 		}
+	}
+
+	/**
+	 * Jobs that have an instances of this rule set which references the same object are mutually exclusive.
+	 */
+	public static class ObjectSchedulingRule extends RootSchedulingRule {
+
+		private final Object object;
+
+		public ObjectSchedulingRule(Object object) {
+			Assert.isNotNull(object);
+			this.object = object;
+		}
+
+		@Override
+		public boolean contains(ISchedulingRule rule) {
+			return rule == this;
+		}
+
+		@Override
+		public boolean isConflicting(ISchedulingRule rule) {
+			if (rule == ROOT_SCHEDULING_RULE) {
+				return true;
+			}
+			if (rule instanceof ObjectSchedulingRule) {
+				return object.equals(((ObjectSchedulingRule) rule).object);
+			}
+			return false;
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getSimpleName() + " [" + object + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
 	}
 
 	public static final String PROPERTY_ACTIVATE_TASK = "org.eclipse.mylyn.activateTask"; //$NON-NLS-1$
