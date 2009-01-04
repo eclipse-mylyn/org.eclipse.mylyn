@@ -30,6 +30,7 @@ import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.tests.connector.MockTask;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -92,35 +93,43 @@ public class RefactorRepositoryUrlOperationTest extends TestCase {
 		taskList.addTask(task);
 		taskList.addTask(task2);
 
-		TaskRepository repository = new TaskRepository("kind", "http://a");
-		TaskRepository repository2 = new TaskRepository("kind", "http://other");
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://a");
+		TasksUi.getRepositoryManager().addRepository(repository);
+		TaskRepository repository2 = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://other");
+		TasksUi.getRepositoryManager().addRepository(repository2);
 
-		TaskData taskData = new TaskData(new TaskAttributeMapper(repository), task.getConnectorKind(),
-				task.getRepositoryUrl(), task.getTaskId());
-		TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
+		try {
+			TaskData taskData = new TaskData(new TaskAttributeMapper(repository), task.getConnectorKind(),
+					task.getRepositoryUrl(), task.getTaskId());
+			TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task, taskData, true);
 
-		TaskData taskData2 = new TaskData(new TaskAttributeMapper(repository2), task2.getConnectorKind(),
-				task2.getRepositoryUrl(), task2.getTaskId());
-		taskData2.getRoot().createAttribute("comment").setValue("TEST");
-		TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task2, taskData2, true);
+			TaskData taskData2 = new TaskData(new TaskAttributeMapper(repository2), task2.getConnectorKind(),
+					task2.getRepositoryUrl(), task2.getTaskId());
+			taskData2.getRoot().createAttribute("comment").setValue("TEST");
+			TasksUiPlugin.getTaskDataManager().putUpdatedTaskData(task2, taskData2, true);
 
-		runRepositoryUrlOperation("http://a", "http://b");
-		assertNull(taskList.getTask("http://a-123"));
-		assertNotNull(taskList.getTask("http://b-123"));
-		assertNotNull(TasksUi.getTaskDataManager().getTaskData(task));
-		TaskData otherData = TasksUi.getTaskDataManager().getTaskData(task2);
-		assertNotNull(otherData);
-		assertEquals("TEST", otherData.getRoot().getAttribute("comment").getValue());
+			runRepositoryUrlOperation("http://a", "http://b");
+			repository.setRepositoryUrl("http://b");
+			assertNull(taskList.getTask("http://a-123"));
+			assertNotNull(taskList.getTask("http://b-123"));
+			assertNotNull(TasksUi.getTaskDataManager().getTaskData(task));
+			TaskData otherData = TasksUi.getTaskDataManager().getTaskData(task2);
+			assertNotNull(otherData);
+			assertEquals("TEST", otherData.getRoot().getAttribute("comment").getValue());
+		} finally {
+			TasksUiPlugin.getTaskDataManager().deleteTaskData(task);
+			TasksUiPlugin.getTaskDataManager().deleteTaskData(task2);
+		}
 	}
 
 	public void testMigrateTaskHandlesWithExplicitSet() throws Exception {
-		AbstractTask task = new MockTask("http://a", "123");
-		task.setUrl("http://a/task/123");
+		AbstractTask task = new MockTask("http://aa", "123");
+		task.setUrl("http://aa/task/123");
 		taskList.addTask(task);
-		runRepositoryUrlOperation("http://a", "http://b");
-		assertNull(taskList.getTask("http://a-123"));
-		assertNotNull(taskList.getTask("http://b-123"));
-		assertEquals("http://b/task/123", task.getUrl());
+		runRepositoryUrlOperation("http://aa", "http://bb");
+		assertNull(taskList.getTask("http://aa-123"));
+		assertNotNull(taskList.getTask("http://bb-123"));
+		assertEquals("http://bb/task/123", task.getUrl());
 	}
 
 	public void testRefactorMetaContextHandles() throws Exception {
