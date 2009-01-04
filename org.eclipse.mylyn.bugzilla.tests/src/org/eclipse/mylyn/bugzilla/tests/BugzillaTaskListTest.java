@@ -160,14 +160,13 @@ public class BugzillaTaskListTest extends TestCase {
 			query = new RepositoryQuery(BugzillaCorePlugin.CONNECTOR_KIND, "queryUrl");
 			query.setRepositoryUrl("repositoryUrl");
 			TasksUiPlugin.getTaskList().addQuery(query);
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			if (!e.getMessage().equals("Handle label already exists in task list")) {
-				fail("Handle label already exists in task list nt found");
+			if (!e.getMessage().equals("Handle queryUrl already exists in task list")) {
+				throw e;
 			}
-			assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
-			return;
 		}
-		fail("IllegalArgumentException not found");
+		assertEquals(1, TasksUiPlugin.getTaskList().getQueries().size());
 	}
 
 }

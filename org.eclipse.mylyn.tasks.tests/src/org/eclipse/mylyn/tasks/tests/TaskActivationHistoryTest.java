@@ -95,7 +95,7 @@ public class TaskActivationHistoryTest extends TestCase {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(new WorkingSet[0]);
 	}
 
-	public void testWithWorkinSet() {
+	public void testWithWorkingSet() {
 		MockRepositoryQuery query1 = new MockRepositoryQuery("Query 1");
 		MockRepositoryQuery query2 = new MockRepositoryQuery("Query 2");
 
