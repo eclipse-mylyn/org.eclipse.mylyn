@@ -105,6 +105,8 @@ public class TaskRepositoryTest extends TestCase {
 		URL url = new URL("http://url");
 		TaskRepository taskRepository = new TaskRepository("kind", url.toString());
 		try {
+			taskRepository.flushAuthenticationCredentials();
+
 			assertNull(taskRepository.getCredentials(authType));
 			assertTrue(taskRepository.getSavePassword(authType));
 
