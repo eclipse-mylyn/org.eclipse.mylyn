@@ -20,6 +20,7 @@ import org.eclipse.mylyn.jira.tests.AllJiraHeadlessStandaloneTests;
 import org.eclipse.mylyn.tasks.tests.TaskListTest;
 import org.eclipse.mylyn.tasks.tests.TasksUtilTest;
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
+import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.trac.tests.AllTracHeadlessStandaloneTests;
 
 /**
@@ -44,6 +45,7 @@ public class AllHeadlessStandaloneTests {
 		suite.addTestSuite(TaskListTest.class);
 		suite.addTestSuite(TasksUtilTest.class);
 		suite.addTestSuite(ITasksCoreConstantsTest.class);
+		suite.addTestSuite(TaskRepositoryLocationTest.class);
 
 		// wikitext
 		suite.addTest(org.eclipse.mylyn.wikitext.tests.HeadlessStandaloneTests.suite());
