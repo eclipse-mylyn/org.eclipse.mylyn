@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
@@ -45,7 +44,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.mylyn.commons.core.CoreUtil;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.WebUtil;
@@ -769,12 +767,7 @@ public class TasksUiPlugin extends AbstractUIPlugin {
 
 		IProgressService service = PlatformUI.getWorkbench().getProgressService();
 		try {
-			if (!CoreUtil.TEST_MODE) {
-				// rule ensures that all conflicting jobs have completed 
-				service.runInUI(service, runner, ITasksCoreConstants.ROOT_SCHEDULING_RULE);
-			} else {
-				runner.run(new NullProgressMonitor());
-			}
+			service.runInUI(service, runner, ITasksCoreConstants.ROOT_SCHEDULING_RULE);
 		} catch (InvocationTargetException e) {
 			throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Failed to set data directory", //$NON-NLS-1$
 					e.getCause()));

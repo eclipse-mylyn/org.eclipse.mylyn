@@ -12,11 +12,7 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 
 import junit.framework.Assert;
@@ -61,24 +57,6 @@ public class TaskTestUtil {
 		} else {
 			URL localURL = TaskTestUtil.class.getResource("");
 			return new File(localURL.getFile() + "../../../../../../" + path);
-		}
-	}
-
-	public static void copy(File source, File dest) throws IOException {
-		InputStream in = new FileInputStream(source);
-		try {
-			OutputStream out = new FileOutputStream(dest);
-			try {
-				byte[] buf = new byte[1024];
-				int len;
-				while ((len = in.read(buf)) > 0) {
-					out.write(buf, 0, len);
-				}
-			} finally {
-				out.close();
-			}
-		} finally {
-			in.close();
 		}
 	}
 
