@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,20 +23,42 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskContainer;
 
 /**
+ * Maintains a list of tasks that have been activated in the past. Each task only occurs once in the list. The list is
+ * sorted by most recent activation, i.e. the task with the highest index is the task that was most recently activated.
+ * 
  * @author Wesley Coelho (Added persistent tasks)
  * @author Mik Kersten (hardening)
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class TaskActivationHistory {
 
+	/**
+	 * The most recently activated task has the highest index in the list.
+	 */
 	private final List<AbstractTask> history = new ArrayList<AbstractTask>();
 
-	private int currentIndex = -1;
+	/**
+	 * Index pointing to the task that was previously active.
+	 */
+	private int previousIndex = -1;
 
 	public void addTask(AbstractTask task) {
-		history.remove(task);
-		history.add(task);
-		currentIndex = history.size() - 1;
+		boolean isPreviousTask = false;
+		// optimization: do not modify list, if task is already last
+		if (history.isEmpty() || history.get(history.size() - 1) != task) {
+			if (previousIndex >= 0 && previousIndex < history.size() && history.get(previousIndex) == task) {
+				isPreviousTask = true;
+			}
+			history.remove(task);
+			history.add(task);
+		}
+		if (isPreviousTask) {
+			// the previous task was activated, move the cursor
+			previousIndex--;
+		} else {
+			previousIndex = history.size() - 2;
+		}
 	}
 
 	public boolean containsTask(ITask task) {
@@ -48,26 +70,15 @@ public class TaskActivationHistory {
 	}
 
 	public AbstractTask getPreviousTask() {
-		boolean active = false;
-		for (AbstractTask task : history) {
-			if (task.isActive()) {
-				active = true;
-				break;
-			}
+		if (history.isEmpty()) {
+			return null;
 		}
-
-		if (hasPrevious()) {
-			if (!active) {
-				return history.get(currentIndex);
-			}
-
-			if (currentIndex < history.size() - 1 && ((currentIndex == 0 && !history.get(currentIndex).isActive()))) {
-				return history.get(currentIndex);
-			} else if (currentIndex > 0 && currentIndex < history.size()) {
-				return history.get(--currentIndex);
-			}
+		AbstractTask currentTask = history.get(history.size() - 1);
+		if (currentTask.isActive() && previousIndex >= 0 && previousIndex < history.size()) {
+			return history.get(previousIndex);
+		} else {
+			return currentTask;
 		}
-		return null;
 	}
 
 	public List<AbstractTask> getPreviousTasks() {
@@ -96,12 +107,12 @@ public class TaskActivationHistory {
 	}
 
 	public boolean hasPrevious() {
-		return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;
+		return getPreviousTask() != null;
 	}
 
 	public void clear() {
 		history.clear();
-		currentIndex = -1;
+		previousIndex = -1;
 	}
 
 	public int indexOf(ITask task) {

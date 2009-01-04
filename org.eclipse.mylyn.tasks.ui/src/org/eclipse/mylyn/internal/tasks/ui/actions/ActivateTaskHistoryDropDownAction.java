@@ -83,7 +83,6 @@ public class ActivateTaskHistoryDropDownAction extends Action implements IWorkbe
 		if (taskHistory.hasPrevious()) {
 			AbstractTask previousTask = taskHistory.getPreviousTask();
 			if (previousTask != null && !previousTask.isActive()) {
-				// FIXME do not readd to history?
 				TasksUiPlugin.getTaskActivityManager().activateTask(previousTask);
 				if (TaskListView.getFromActivePerspective() != null) {
 					TaskListView.getFromActivePerspective().refresh();

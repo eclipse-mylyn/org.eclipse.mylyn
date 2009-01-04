@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
 public class RepositorySettingsPageTest extends TestCase {
 
 	public void testNeedsEncoding() {
-		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://localhost/");
 		repository.setCharacterEncoding("UTF-8");
 
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(repository);
@@ -88,7 +88,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testNeedsAnonyoumousLogin() {
-		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://localhost/");
 
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
 
@@ -134,7 +134,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testSavePassword() {
-		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
 
 		assertTrue(repository.getSavePassword(AuthenticationType.REPOSITORY));
@@ -160,7 +160,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testSaveHttpPassword() {
-		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
 
 		assertTrue(repository.getSavePassword(AuthenticationType.HTTP));
@@ -188,7 +188,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	}
 
 	public void testSaveProxyPassword() {
-		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
+		TaskRepository repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, "http://localhost/");
 		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockRepositoryConnectorUi());
 
 		assertTrue(repository.getSavePassword(AuthenticationType.PROXY));

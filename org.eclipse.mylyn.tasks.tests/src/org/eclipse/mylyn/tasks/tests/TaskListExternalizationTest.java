@@ -343,4 +343,42 @@ public class TaskListExternalizationTest extends TestCase {
 		assertTrue(taskList.getDefaultCategory().getChildren().contains(task1));
 	}
 
+	/**
+	 * If a task exists in a category and is a query hit it should not be removed from the category
+	 * 
+	 * @throws Exception
+	 */
+	public void testQueryRemovedTaskInCategory() throws Exception {
+		TaskTask mockTask = TaskTestUtil.createMockTask("1");
+		RepositoryQuery mockQuery = TaskTestUtil.createMockQuery("mock query");
+		taskList.addQuery(mockQuery);
+		taskList.addTask(mockTask, mockQuery);
+		assertTrue(taskList.getDefaultCategory().isEmpty());
+		taskList.addTask(mockTask, taskList.getDefaultCategory());
+		assertEquals(1, taskList.getCategories().size());
+		assertFalse(taskList.getDefaultCategory().isEmpty());
+
+		TaskTestUtil.saveAndReadTasklist();
+		assertEquals(1, taskList.getCategories().size());
+		assertEquals(1, taskList.getQueries().size());
+		assertFalse(taskList.getDefaultCategory().isEmpty());
+
+		taskList.deleteQuery(mockQuery);
+		TaskTestUtil.saveAndReadTasklist();
+		assertEquals(1, taskList.getCategories().size());
+		assertEquals(0, taskList.getQueries().size());
+		assertFalse(taskList.getDefaultCategory().isEmpty());
+	}
+
+	/**
+	 * New local tasks should automatically be created in the Local orphaned folder.
+	 */
+	public void testAddLocalTask() {
+		Set<ITask> tasks = taskList.getTasks(LocalRepositoryConnector.REPOSITORY_URL);
+		assertTrue(tasks.isEmpty());
+		ITask localTask = TasksUiInternal.createNewLocalTask("Task 1");
+		assertNotNull(localTask);
+		assertEquals(1, ((AbstractTask) localTask).getParentContainers().size());
+	}
+
 }

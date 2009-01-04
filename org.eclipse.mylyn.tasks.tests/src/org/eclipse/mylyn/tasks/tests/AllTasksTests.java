@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylyn.tasks.tests.core.ITasksCoreConstantsTest;
+import org.eclipse.mylyn.tasks.tests.core.TaskListUnmatchedContainerTest;
 import org.eclipse.mylyn.tasks.tests.core.TaskRepositoryLocationTest;
 import org.eclipse.mylyn.tasks.tests.ui.ContextPerspectiveManagerTest;
 import org.eclipse.mylyn.tasks.tests.ui.TaskAttachmentPropertyTesterTest;
@@ -64,7 +65,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskRepositoryLocationTest.class);
 		suite.addTestSuite(AttachmentSizeFormatterTest.class);
 		suite.addTestSuite(TaskMapperTest.class);
-		suite.addTestSuite(OrphanedTasksTest.class);
+		suite.addTestSuite(TaskListUnmatchedContainerTest.class);
 		suite.addTestSuite(TaskWorkingSetTest.class);
 		suite.addTestSuite(TaskActivationHistoryTest.class);
 		suite.addTestSuite(TaskActivityManagerTest.class);

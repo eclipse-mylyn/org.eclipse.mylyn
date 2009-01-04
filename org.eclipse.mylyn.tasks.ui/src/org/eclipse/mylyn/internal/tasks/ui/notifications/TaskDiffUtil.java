@@ -100,7 +100,7 @@ public class TaskDiffUtil {
 	}
 
 	public static String foldSpaces(String value) {
-		return value.replaceAll("\\s", " ").trim(); //$NON-NLS-1$ //$NON-NLS-2$
+		return value.replaceAll("\\s+", " ").trim(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static String trim(String value, int length) {

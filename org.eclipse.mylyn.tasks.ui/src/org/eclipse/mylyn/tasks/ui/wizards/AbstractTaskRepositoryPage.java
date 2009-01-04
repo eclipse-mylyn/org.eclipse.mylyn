@@ -85,7 +85,8 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 	public AbstractTaskRepositoryPage(String title, String description, TaskRepository repository) {
 		super(title);
 		if (repository != null && !repository.getConnectorKind().equals(getConnectorKind())) {
-			throw new IllegalArgumentException("connectorKind of repository does not match connectorKind of page");
+			throw new IllegalArgumentException(
+					"connectorKind of repository does not match connectorKind of page, expected '" + getConnectorKind() + "', got '" + repository.getConnectorKind() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		this.repository = repository;
 		this.contributions = new ArrayList<AbstractTaskRepositoryPageContribution>();

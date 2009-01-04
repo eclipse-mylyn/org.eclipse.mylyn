@@ -24,6 +24,7 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskActivationHistory;
+import org.eclipse.mylyn.internal.tasks.core.TaskActivityManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
@@ -60,16 +61,19 @@ public class TaskActivationHistoryTest extends TestCase {
 
 	private ActivateTaskHistoryDropDownAction previousTaskAction;
 
+	private TaskActivityManager taskActivityManager;
+
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
-
-		history = TasksUiPlugin.getTaskActivityManager().getTaskActivationHistory();
+		taskActivityManager = TasksUiPlugin.getTaskActivityManager();
+		history = taskActivityManager.getTaskActivationHistory();
 		taskList = TasksUiPlugin.getTaskList();
 
-		TasksUiPlugin.getTaskActivityManager().deactivateActiveTask();
-		TasksUiPlugin.getTaskActivityManager().clear();
+		taskActivityManager.deactivateActiveTask();
+		taskActivityManager.clear();
 		ContextCorePlugin.getContextManager().resetActivityMetaContext();
+
+		TaskTestUtil.resetTaskList();
 
 		task1 = TasksUiInternal.createNewLocalTask("task 1");
 		taskList.addTask(task1);
@@ -87,6 +91,7 @@ public class TaskActivationHistoryTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		TaskTestUtil.resetTaskList();
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setWorkingSets(new WorkingSet[0]);
 	}
 
@@ -168,14 +173,22 @@ public class TaskActivationHistoryTest extends TestCase {
 		assertTrue(task3.isActive());
 		assertFalse(task2.isActive());
 		assertFalse(task1.isActive());
+		// order 1 (2) 3
 
 		previousTaskAction.run();
+		// order (1) 3 2
+		assertEquals(task2, taskActivityManager.getActiveTask());
 		assertTrue(task2.isActive());
 
 		previousTaskAction.run();
+		// order (1) 2 3
+		System.err.println(taskActivityManager.getTaskActivationHistory().getPreviousTasks());
+		assertEquals(task1, taskActivityManager.getActiveTask());
 		assertTrue(task1.isActive());
 
 		previousTaskAction.run();
+		// order (1) 2 3
+		assertEquals(task1, taskActivityManager.getActiveTask());
 		assertTrue(task1.isActive());
 
 		// taskView.getPreviousTaskAction().run();
@@ -236,44 +249,52 @@ public class TaskActivationHistoryTest extends TestCase {
 
 		// Check that the previous history list looks right
 		assertTrue(prevHistoryList.size() >= 3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
+		assertEquals(task3, prevHistoryList.get(prevHistoryList.size() - 2));
+		assertEquals(task2, prevHistoryList.get(prevHistoryList.size() - 3));
+		assertEquals(task1, prevHistoryList.get(prevHistoryList.size() - 4));
 
 		// Get a task from the list and activate it
 		TasksUi.getTaskActivityManager().activateTask(task2);
+		assertEquals(task2, taskActivityManager.getActiveTask());
 		assertTrue(task2.isActive());
 
 		// Now check that the next and prev lists look right
 		prevHistoryList = history.getPreviousTasks();
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task2);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task4);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
+		assertEquals(task2, prevHistoryList.get(prevHistoryList.size() - 1));
+		assertEquals(task4, prevHistoryList.get(prevHistoryList.size() - 2));
+		assertEquals(task1, prevHistoryList.get(prevHistoryList.size() - 4));
+		assertEquals(task3, prevHistoryList.get(prevHistoryList.size() - 3));
 
 		// Activation of task outside of history navigation tool
 		history.addTask(task3);
+
 		prevHistoryList = history.getPreviousTasks();
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task2);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task4);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
+		assertEquals(task3, prevHistoryList.get(prevHistoryList.size() - 1));
+		assertEquals(task2, prevHistoryList.get(prevHistoryList.size() - 2));
+		assertEquals(task4, prevHistoryList.get(prevHistoryList.size() - 3));
+		assertEquals(task1, prevHistoryList.get(prevHistoryList.size() - 4));
 
 		// Pick a task from drop down history
 		TasksUi.getTaskActivityManager().activateTask(task4);
+		assertEquals(task4, taskActivityManager.getActiveTask());
 		assertTrue(task4.isActive());
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task4);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
+
+		prevHistoryList = history.getPreviousTasks();
+		assertEquals(task4, prevHistoryList.get(prevHistoryList.size() - 1));
+		assertEquals(task3, prevHistoryList.get(prevHistoryList.size() - 2));
+		assertEquals(task2, prevHistoryList.get(prevHistoryList.size() - 3));
+		assertEquals(task1, prevHistoryList.get(prevHistoryList.size() - 4));
 
 		// Hit previous task button
 		previousTaskAction.run();
+		assertEquals(task3, taskActivityManager.getActiveTask());
 		assertTrue(task3.isActive());
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 1) == task4);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 2) == task3);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 3) == task2);
-		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
+
+		prevHistoryList = history.getPreviousTasks();
+		assertEquals(task3, prevHistoryList.get(prevHistoryList.size() - 1));
+		assertEquals(task4, prevHistoryList.get(prevHistoryList.size() - 2));
+		assertEquals(task2, prevHistoryList.get(prevHistoryList.size() - 3));
+		assertEquals(task1, prevHistoryList.get(prevHistoryList.size() - 4));
 
 		TasksUi.getTaskActivityManager().deactivateTask(task3);
 
