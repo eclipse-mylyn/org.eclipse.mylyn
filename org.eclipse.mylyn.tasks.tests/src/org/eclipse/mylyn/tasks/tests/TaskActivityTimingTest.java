@@ -52,9 +52,10 @@ public class TaskActivityTimingTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
 		activityManager = (TaskActivityManager) TasksUi.getTaskActivityManager();
 		taskList = TasksUiInternal.getTaskList();
+		TaskTestUtil.resetTaskListAndRepositories();
+		TaskTestUtil.saveAndReadTasklist();
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		ContextCorePlugin.getContextManager().saveActivityMetaContext();
 		TasksUiPlugin.getTaskActivityMonitor().reloadActivityTime();
@@ -64,7 +65,6 @@ public class TaskActivityTimingTest extends TestCase {
 	protected void tearDown() throws Exception {
 		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 		TaskTestUtil.resetTaskList();
-		super.tearDown();
 	}
 
 	public void testLoadCorruptContext() throws Exception {

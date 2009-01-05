@@ -76,6 +76,10 @@ public class TaskTestUtil {
 	public static void resetTaskList() throws Exception {
 		TasksUi.getTaskActivityManager().deactivateActiveTask();
 		TasksUiPlugin.getTaskListExternalizationParticipant().resetTaskList();
+		TaskListView view = TaskListView.getFromActivePerspective();
+		if (view != null) {
+			view.refresh();
+		}
 	}
 
 	/**

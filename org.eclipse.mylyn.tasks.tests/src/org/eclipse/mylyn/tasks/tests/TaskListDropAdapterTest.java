@@ -34,8 +34,7 @@ public class TaskListDropAdapterTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		TaskTestUtil.resetTaskList();
-		TasksUiPlugin.getDefault().getLocalTaskRepository();
+		TaskTestUtil.resetTaskListAndRepositories();
 
 		TreeViewer viewer = TaskListView.getFromActivePerspective().getViewer();
 		assertNotNull(viewer);
@@ -60,7 +59,7 @@ public class TaskListDropAdapterTest extends TestCase {
 	public void testUrlDrop() {
 		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
 		String url = "http://eclipse.org/mylyn";
-		String title = "Mylar Technology Project";
+		String title = "Mylyn Project";
 		String urlData = url + "\n" + title;
 
 		dropAdapter.performDrop(urlData);

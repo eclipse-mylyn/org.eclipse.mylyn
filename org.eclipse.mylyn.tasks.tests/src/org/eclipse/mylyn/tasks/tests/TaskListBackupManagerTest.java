@@ -15,6 +15,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.commons.tests.support.CommonsTestUtil;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
@@ -29,14 +30,10 @@ public class TaskListBackupManagerTest extends TestCase {
 
 	private TaskListBackupManager backupManager;
 
-	private File backupFileFolder;
-
 	@Override
 	protected void setUp() throws Exception {
 		backupManager = TasksUiPlugin.getBackupManager();
-		backupFileFolder = new File(TasksUiPlugin.getDefault().getBackupFolderPath());
-
-		deleteBackupFolder(backupFileFolder);
+		CommonsTestUtil.deleteFolder(new File(TasksUiPlugin.getDefault().getBackupFolderPath()));
 		TaskTestUtil.resetTaskList();
 	}
 
@@ -67,15 +64,6 @@ public class TaskListBackupManagerTest extends TestCase {
 		// test removal of old backups
 		TasksUiPlugin.getBackupManager().removeOldBackups();
 		assertEquals(1, backupManager.getBackupFiles().size());
-	}
-
-	private void deleteBackupFolder(File backupFileFolder) {
-		if (backupFileFolder.exists()) {
-			for (File file : backupFileFolder.listFiles()) {
-				file.delete();
-			}
-			backupFileFolder.delete();
-		}
 	}
 
 }

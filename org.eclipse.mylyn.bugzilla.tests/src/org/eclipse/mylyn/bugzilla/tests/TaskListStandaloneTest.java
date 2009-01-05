@@ -103,7 +103,7 @@ public class TaskListStandaloneTest extends TestCase {
 
 		assertNull(task.getCompletionDate());
 		task.setCompletionDate(creation);
-		assertEquals(start, task.getCompletionDate());
+		assertEquals(creation, task.getCompletionDate());
 
 		assertEquals(1, TasksUiPlugin.getTaskList().getRootElements().size());
 		TasksUiPlugin.getExternalizationManager().requestSave();

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.mylyn.commons.tests.support.CommonsTestUtil;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
@@ -40,32 +41,23 @@ import org.eclipse.mylyn.tasks.ui.TasksUi;
  */
 public class TaskExportImportTest extends AbstractContextTest {
 
-	private File dest;
+	private File destinationDir;
 
 	@Override
 	protected void setUp() throws Exception {
 		TasksUi.getTaskActivityManager().deactivateActiveTask();
 		super.setUp();
-		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
-//		ContextCore.getContextStore().init();
 
 		// Create test export destination directory
-		dest = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
-		if (dest.exists()) {
-			removeFiles(dest);
-		} else {
-			dest.mkdir();
-		}
-		assertTrue(dest.exists());
-
+		destinationDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), "TestDir");
+		CommonsTestUtil.deleteFolder(destinationDir);
+		destinationDir.mkdir();
+		assertTrue(destinationDir.exists());
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		removeFiles(dest);
-		dest.delete();
-		assertFalse(dest.exists());
-
+		CommonsTestUtil.deleteFolder(destinationDir);
 		super.tearDown();
 	}
 
@@ -88,7 +80,7 @@ public class TaskExportImportTest extends AbstractContextTest {
 		ContextCorePlugin.getContextStore().saveContext(mockContext);
 		assertTrue(ContextCore.getContextManager().hasContext(task.getHandleIdentifier()));
 
-		File outFile = new File(dest + File.separator + "local-task.xml.zip");
+		File outFile = new File(destinationDir + File.separator + "local-task.xml.zip");
 		TasksUiPlugin.getTaskListWriter().writeTask(task, outFile);
 		assertTrue(outFile.exists());
 
@@ -140,14 +132,4 @@ public class TaskExportImportTest extends AbstractContextTest {
 		ContextCorePlugin.getContextManager().deactivateAllContexts();
 	}
 
-	private void removeFiles(File root) {
-		if (root.isDirectory()) {
-			for (File file : root.listFiles()) {
-				if (file.isDirectory()) {
-					removeFiles(file);
-				}
-				file.delete();
-			}
-		}
-	}
 }
