@@ -56,7 +56,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		super.tearDown();
 	}
 
-	public void testContentAttributeExternalization() {
+	public void testContentAttributeExternalization() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		context.parseEvent(mockSelection("1"));
 		context.setContentLimitedTo("foobar");
@@ -104,7 +104,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals(domReadAfterWrite, saxReadAfterWrite);
 	}
 
-	public void testContextSize() {
+	public void testContextSize() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		String path = "extern.xml";
 		File file = new File(path);
@@ -130,7 +130,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertTrue(size <= size2 * 2);
 	}
 
-	public void testExternalization() {
+	public void testExternalization() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
 		IInteractionElement node = context.parseEvent(mockSelection("1"));
@@ -166,8 +166,10 @@ public class ContextExternalizerTest extends AbstractContextTest {
 
 	/**
 	 * What is written and read from disk should always return the same doi for an element when the context is collapsed
+	 * 
+	 * @throws Exception
 	 */
-	public void testExternalizationWithCollapse() {
+	public void testExternalizationWithCollapse() throws Exception {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
 		// create nodes in the context and ensure that writing and reading work properly
@@ -236,7 +238,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	}
 
 	private IInteractionContext writeAndReadContext(InteractionContext contextToWrite,
-			InteractionContextExternalizer externalizer) {
+			InteractionContextExternalizer externalizer) throws Exception {
 		File file = ContextCorePlugin.getContextStore().getFileForContext(contextToWrite.getHandleIdentifier());
 		file.deleteOnExit();
 		externalizer.writeContextToXml(contextToWrite, file);

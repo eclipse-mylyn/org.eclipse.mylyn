@@ -96,44 +96,32 @@ public class InteractionContextExternalizer {
 		}
 	}
 
-	public void writeContextToXml(IInteractionContext context, File file) {
+	public void writeContextToXml(IInteractionContext context, File file) throws IOException {
 		writeContextToXml(context, file, new SaxContextWriter());
 	}
 
 	/**
-	 * For testing
+	 * Public for testing.
+	 * 
+	 * @throws IOException
+	 *             if writing of context fails
 	 */
-	public void writeContextToXml(IInteractionContext context, File file, IInteractionContextWriter writer) {
+	public void writeContextToXml(IInteractionContext context, File file, IInteractionContextWriter writer)
+			throws IOException {
 		if (context.getInteractionHistory().isEmpty()) {
 			return;
 		}
 
-		FileOutputStream fileOutputStream = null;
-		ZipOutputStream outputStream = null;
+		FileOutputStream fileOutputStream = new FileOutputStream(file);
 		try {
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-			fileOutputStream = new FileOutputStream(file);
-			outputStream = new ZipOutputStream(fileOutputStream);
-			writeContext(context, outputStream, writer);
-
-		} catch (IOException e) {
-			// TODO: propagate exception?
-			StatusHandler.fail(new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, "Could not write: " //$NON-NLS-1$
-					+ file.getAbsolutePath(), e));
-		} finally {
+			ZipOutputStream outputStream = new ZipOutputStream(fileOutputStream);
 			try {
-				if (outputStream != null) {
-					outputStream.close();
-				}
-				if (fileOutputStream != null) {
-					fileOutputStream.close();
-				}
-			} catch (IOException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Unable to write context " //$NON-NLS-1$
-						+ context.getHandleIdentifier(), e));
+				writeContext(context, outputStream, writer);
+			} finally {
+				outputStream.close();
 			}
+		} finally {
+			fileOutputStream.close();
 		}
 	}
 

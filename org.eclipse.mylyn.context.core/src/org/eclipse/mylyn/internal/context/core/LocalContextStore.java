@@ -109,7 +109,12 @@ public class LocalContextStore implements IContextStore {
 	}
 
 	public void saveContext(IInteractionContext context, String fileName) {
-		externalizer.writeContextToXml(context, getFileForContext(fileName));
+		try {
+			externalizer.writeContextToXml(context, getFileForContext(fileName));
+		} catch (IOException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ContextCorePlugin.ID_PLUGIN, "Failed to write context " //$NON-NLS-1$
+					+ context.getHandleIdentifier(), e));
+		}
 	}
 
 	public void saveContext(IInteractionContext context) {
