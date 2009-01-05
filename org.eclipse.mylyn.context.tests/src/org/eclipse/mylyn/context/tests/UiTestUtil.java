@@ -17,6 +17,8 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -46,5 +48,22 @@ public class UiTestUtil {
 			dataList.add(item.getData());
 		}
 		return dataList;
+	}
+
+	/**
+	 * Ensures that the editor area is visible.
+	 */
+	public static void closeWelcomeView() {
+		IViewReference[] views = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
+				.getViewReferences();
+		for (IViewReference view : views) {
+			if ("org.eclipse.ui.internal.introview".equals(view.getId())) {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().resetPerspective();
+				return;
+			}
+		}
 	}
 }

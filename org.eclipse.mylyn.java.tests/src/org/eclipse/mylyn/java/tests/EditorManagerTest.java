@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUi;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -62,6 +63,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(
 				IContextUiPreferenceContstants.AUTO_MANAGE_EDITOR_CLOSE_WARNING, false);
+		UiTestUtil.closeWelcomeView();
 	}
 
 	@Override
@@ -138,7 +140,8 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		elementA = ContextCore.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
 		float selectionFactor = ContextCore.getCommonContextScaling().get(InteractionEvent.Kind.SELECTION);
 		// TODO: should use selectionFactor test instead
-		assertTrue(elementA.getInterest().getValue() <= selectionFactor && elementA.getInterest().isInteresting());
+		assertTrue(elementA.getInterest().isInteresting());
+		assertTrue(elementA.getInterest().getValue() <= selectionFactor);
 //		assertEquals(selectionFactor, elementA.getInterest().getValue());
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileB, true);
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileA, true);

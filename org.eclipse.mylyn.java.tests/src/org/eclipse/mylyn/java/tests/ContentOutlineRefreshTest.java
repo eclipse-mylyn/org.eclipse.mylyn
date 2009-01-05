@@ -49,6 +49,8 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 		assertNotNull(ContextUiPlugin.getDefault());
 		assertNotNull(JavaUiBridgePlugin.getDefault());
 		action = new FocusOutlineAction();
+
+		UiTestUtil.closeWelcomeView();
 	}
 
 	@Override
