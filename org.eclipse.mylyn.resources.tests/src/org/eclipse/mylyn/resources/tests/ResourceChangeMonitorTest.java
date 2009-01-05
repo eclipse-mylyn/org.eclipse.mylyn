@@ -42,46 +42,6 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
  */
 public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
-	private final ResourceChangeMonitor changeMonitor = new ResourceChangeMonitor();
-
-	public void testForcedExclusionPatterns() {
-		String pattern = "file:/foo";
-		ResourcesUiPreferenceInitializer.addForcedExclusionPattern(pattern);
-		assertTrue(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns().contains(pattern));
-		assertFalse(ResourcesUiPreferenceInitializer.getExcludedResourcePatterns().contains(pattern));
-	}
-
-	public void testFileUriExclusionPattern() throws URISyntaxException {
-		URI uri = new URI("file:/C:");
-		assertTrue(changeMonitor.isUriExcluded(uri.toString(), changeMonitor.createRegexFromPattern("file:/C:")));
-
-		uri = new URI("file:/C:/foo/bar");
-		assertTrue(changeMonitor.isUriExcluded(uri.toString(), changeMonitor.createRegexFromPattern("file:/C:")));
-	}
-
-	public void testExclusionPattern() {
-		Set<String> patterns = new HashSet<String>();
-		patterns.add(changeMonitor.createRegexFromPattern(".*"));
-		patterns.add(changeMonitor.createRegexFromPattern("target"));
-
-		IPath path1 = new Path(".foo");
-		assertTrue(changeMonitor.isExcluded(path1, null, patterns));
-
-		IPath path2 = new Path("target/bar");
-		assertTrue(changeMonitor.isExcluded(path2, null, patterns));
-
-		IPath path3 = new Path("bar/target/bar");
-		assertTrue(changeMonitor.isExcluded(path3, null, patterns));
-
-		IPath path4 = new Path("bla/bla");
-		assertFalse(changeMonitor.isExcluded(path4, null, patterns));
-	}
-
-	public void testInclusion() {
-		IPath path4 = new Path("bla/bla");
-		assertFalse(changeMonitor.isExcluded(path4, null, new HashSet<String>()));
-	}
-
 	private static class MockResourceDelta extends ResourceDelta {
 
 		protected MockResourceDelta(IPath path, ResourceDeltaInfo deltaInfo) {
@@ -122,6 +82,65 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		}
 	}
 
+	private ResourceChangeMonitor changeMonitor;
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		changeMonitor = new ResourceChangeMonitor();
+		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
+		super.tearDown();
+	}
+
+	public void testForcedExclusionPatterns() {
+		String pattern = "file:/foo";
+		try {
+			ResourcesUiPreferenceInitializer.addForcedExclusionPattern(pattern);
+			assertTrue(ResourcesUiPreferenceInitializer.getForcedExcludedResourcePatterns().contains(pattern));
+			assertFalse(ResourcesUiPreferenceInitializer.getExcludedResourcePatterns().contains(pattern));
+		} finally {
+			ResourcesUiPreferenceInitializer.removeForcedExclusionPattern(pattern);
+		}
+	}
+
+	public void testFileUriExclusionPattern() throws URISyntaxException {
+		URI uri = new URI("file:/C:");
+		assertTrue(ResourceChangeMonitor.isUriExcluded(uri.toString(),
+				ResourceChangeMonitor.createRegexFromPattern("file:/C:")));
+
+		uri = new URI("file:/C:/foo/bar");
+		assertTrue(ResourceChangeMonitor.isUriExcluded(uri.toString(),
+				ResourceChangeMonitor.createRegexFromPattern("file:/C:")));
+	}
+
+	public void testExclusionPattern() {
+		Set<String> patterns = new HashSet<String>();
+		patterns.add(ResourceChangeMonitor.createRegexFromPattern(".*"));
+		patterns.add(ResourceChangeMonitor.createRegexFromPattern("target"));
+
+		IPath path1 = new Path(".foo");
+		assertTrue(ResourceChangeMonitor.isExcluded(path1, null, patterns));
+
+		IPath path2 = new Path("target/bar");
+		assertTrue(ResourceChangeMonitor.isExcluded(path2, null, patterns));
+
+		IPath path3 = new Path("bar/target/bar");
+		assertTrue(ResourceChangeMonitor.isExcluded(path3, null, patterns));
+
+		IPath path4 = new Path("bla/bla");
+		assertFalse(ResourceChangeMonitor.isExcluded(path4, null, patterns));
+	}
+
+	public void testInclusion() {
+		IPath path4 = new Path("bla/bla");
+		assertFalse(ResourceChangeMonitor.isExcluded(path4, null, new HashSet<String>()));
+	}
+
 	public void testCreatedFile() throws CoreException {
 		IProject proj = project.getProject();
 		IFile file = project.getProject().getFile("test.txt");
@@ -131,14 +150,12 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(), new String[] { "/test.txt" },
 				(IResourceDelta.ADDED | IResourceDelta.CONTENT), IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 		changeMonitor.resourceChanged(event);
 		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
 		assertNotNull(handle);
 		IInteractionElement element = context.get(handle);
 		assertNotNull(element);
 		assertTrue(element.getInterest().isPropagated());
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
 	}
 
 	public void testModifiedFile() throws CoreException {
@@ -150,15 +167,12 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(), new String[] { "/test.txt" },
 				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 		changeMonitor.resourceChanged(event);
 		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
 		assertNotNull(handle);
 		IInteractionElement element = context.get(handle);
 		assertNotNull(element);
 		assertTrue(element.getInterest().isPredicted());
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
-
 	}
 
 	public void testDerrivedFileChanged() throws CoreException {
@@ -171,13 +185,11 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(), new String[] { "/test.txt" },
 				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 		changeMonitor.resourceChanged(event);
 		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
 		assertNotNull(handle);
 		IInteractionElement element = context.get(handle);
 		assertNull(element);
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
 	}
 
 	public void testDerrivedFolderChanged() throws CoreException {
@@ -201,7 +213,6 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		delta.setChildren(new ResourceDelta[] { child });
 
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 		changeMonitor.resourceChanged(event);
 		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(folder);
 		assertNotNull(handle);
@@ -211,26 +222,27 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 		assertNotNull(handle);
 		element = context.get(handle);
 		assertNull(element);
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
 	}
 
 	public void testExcluded() throws CoreException {
-		ResourcesUiPreferenceInitializer.addForcedExclusionPattern("*.txt");
-		IProject proj = project.getProject();
-		IFile file = project.getProject().getFile("test.txt");
-		file.create(null, true, null);
-		assertTrue(file.exists());
+		try {
+			ResourcesUiPreferenceInitializer.addForcedExclusionPattern("*.txt");
+			IProject proj = project.getProject();
+			IFile file = project.getProject().getFile("test.txt");
+			file.create(null, true, null);
+			assertTrue(file.exists());
 
-		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(), new String[] { "/test.txt" },
-				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
-		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
-		changeMonitor.resourceChanged(event);
-		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
-		assertNotNull(handle);
-		IInteractionElement element = context.get(handle);
-		assertNull(element);
-		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
+			MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(),
+					new String[] { "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
+			IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
+			changeMonitor.resourceChanged(event);
+			String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
+			assertNotNull(handle);
+			IInteractionElement element = context.get(handle);
+			assertNull(element);
+		} finally {
+			ResourcesUiPreferenceInitializer.removeForcedExclusionPattern("*.txt");
+		}
 	}
 
 }
