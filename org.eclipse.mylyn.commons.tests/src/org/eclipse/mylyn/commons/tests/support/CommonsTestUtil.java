@@ -102,4 +102,13 @@ public class CommonsTestUtil {
 		}
 	}
 
+	public static void deleteFolder(File path) {
+		if (path.isDirectory()) {
+			for (File file : path.listFiles()) {
+				file.delete();
+			}
+			path.delete();
+		}
+	}
+
 }
