@@ -23,7 +23,6 @@ import org.eclipse.core.internal.resources.ResourceInfo;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceDelta;
@@ -39,6 +38,8 @@ import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 
 /**
  * @author Mik Kersten
+ * @author Shawn Minto
+ * @author Steffen Pingel
  */
 public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
@@ -84,11 +85,33 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 
 	private ResourceChangeMonitor changeMonitor;
 
+	private IFolder folder;
+
+	private IFile fileInFolder;
+
+	private IFile file;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		changeMonitor = new ResourceChangeMonitor();
 		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
+
+		ContextCore.getContextManager().setContextCapturePaused(true);
+
+		file = project.getProject().getFile("test.txt");
+		file.create(null, true, null);
+		assertTrue(file.exists());
+
+		folder = project.getProject().getFolder("testFolder");
+		folder.create(true, true, null);
+		assertTrue(folder.exists());
+
+		fileInFolder = folder.getFile("test.txt");
+		fileInFolder.create(null, true, null);
+		assertTrue(fileInFolder.exists());
+
+		ContextCore.getContextManager().setContextCapturePaused(false);
 	}
 
 	@Override
@@ -142,13 +165,8 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 	}
 
 	public void testCreatedFile() throws CoreException {
-		IProject proj = project.getProject();
-		IFile file = project.getProject().getFile("test.txt");
-		file.create(null, true, null);
-		assertTrue(file.exists());
-
-		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(), new String[] { "/test.txt" },
-				(IResourceDelta.ADDED | IResourceDelta.CONTENT), IResource.PROJECT);
+		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
+				new String[] { "/test.txt" }, (IResourceDelta.ADDED | IResourceDelta.CONTENT), IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
 		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
@@ -159,13 +177,8 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 	}
 
 	public void testModifiedFile() throws CoreException {
-		IProject proj = project.getProject();
-		IFile file = project.getProject().getFile("test.txt");
-		file.create(null, true, null);
-		assertTrue(file.exists());
-
-		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(), new String[] { "/test.txt" },
-				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
+		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
+				new String[] { "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
 		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
@@ -176,49 +189,38 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 	}
 
 	public void testDerrivedFileChanged() throws CoreException {
-		IProject proj = project.getProject();
-		IFile file = project.getProject().getFile("test.txt");
-		file.create(null, true, null);
-		file.setDerived(true);
-		assertTrue(file.exists());
+		fileInFolder.setDerived(true);
 
-		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(), new String[] { "/test.txt" },
-				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
+		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
+				new String[] { "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
-		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
+		String handle = ContextCore.getStructureBridge(fileInFolder).getHandleIdentifier(fileInFolder);
 		assertNotNull(handle);
 		IInteractionElement element = context.get(handle);
 		assertNull(element);
 	}
 
 	public void testDerrivedFolderChanged() throws CoreException {
-		IProject proj = project.getProject();
-		IFolder folder = project.getProject().getFolder("testFolder");
-		folder.create(true, true, null);
 		folder.setDerived(true);
+		fileInFolder.setDerived(false);
 
-		IFile file = folder.getFile("test.txt");
-		file.create(null, true, null);
-		file.setDerived(false);
-		assertTrue(file.exists());
-
-		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(), null,
+		MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(), null,
 				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
 
-		MockResourceDelta child = MockResourceDelta.createMockDelta("/" + proj.getName() + "/" + folder.getName(),
-				new String[] { "/" + folder.getName() + "/test.txt" },
+		MockResourceDelta child = MockResourceDelta.createMockDelta("/" + project.getProject().getName() + "/"
+				+ folder.getName(), new String[] { "/" + folder.getName() + "/test.txt" },
 				(IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.FOLDER);
 
 		delta.setChildren(new ResourceDelta[] { child });
 
 		IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 		changeMonitor.resourceChanged(event);
-		String handle = ContextCore.getStructureBridge(file).getHandleIdentifier(folder);
+		String handle = ContextCore.getStructureBridge(fileInFolder).getHandleIdentifier(folder);
 		assertNotNull(handle);
 		IInteractionElement element = context.get(handle);
 		assertNull(element);
-		handle = ContextCore.getStructureBridge(file).getHandleIdentifier(file);
+		handle = ContextCore.getStructureBridge(fileInFolder).getHandleIdentifier(fileInFolder);
 		assertNotNull(handle);
 		element = context.get(handle);
 		assertNull(element);
@@ -227,12 +229,8 @@ public class ResourceChangeMonitorTest extends AbstractResourceContextTest {
 	public void testExcluded() throws CoreException {
 		try {
 			ResourcesUiPreferenceInitializer.addForcedExclusionPattern("*.txt");
-			IProject proj = project.getProject();
-			IFile file = project.getProject().getFile("test.txt");
-			file.create(null, true, null);
-			assertTrue(file.exists());
 
-			MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + proj.getName(),
+			MockResourceDelta delta = MockResourceDelta.createMockDelta("/" + project.getProject().getName(),
 					new String[] { "/test.txt" }, (IResourceDelta.CHANGED | IResourceDelta.CONTENT), IResource.PROJECT);
 			IResourceChangeEvent event = new ResourceChangeEvent(delta, IResourceChangeEvent.POST_CHANGE, 0, delta);
 			changeMonitor.resourceChanged(event);
