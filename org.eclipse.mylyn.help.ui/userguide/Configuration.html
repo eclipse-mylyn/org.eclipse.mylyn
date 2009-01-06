@@ -1,6 +1,7 @@
 <?xml version='1.0' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>Mylyn User Guide - Configuration</title>
 	</head>
 	<body>
@@ -84,9 +85,10 @@
 		</ol>
 		<p>Depending on how you set up (1) and (2), you may want to limit (3) to certain components in order to avoid tasks showing up in multiple containers.</p>
 		<h2 id="Workspacesetup">Workspace setup</h2>
-		<p>The following is an example of how to set up your Eclipse to work with a single workspace in a way where you can use Mylyn to focus you on your task while using 
-			<i>Working Sets</i> to maintain only a single workspace while keeping project/product boundaries clear.
+		<p>The Mylyn task list does not span workspaces, if multiple workspaces are in use this results in a unique task list per workspace. Multiple task lists is considered a performance antipattern and we recommended making use of the native Eclipse mechanism for managing large volumes of projects - 
+			<b>working sets</b>. Instead of creating multiple workspaces, simply create working sets that aggregate the projects all within a single workspace.  Activate the working set and only those projects are visible within Eclipse. This has the added benefit of making Eclipse feel faster (i.e searching is improved) due to the scoping effect of the working set. Mylyn has added functionality to make switching working sets easier from the Task List view.
 		</p>
+		<p>The following is an example of how to set up your Eclipse to work with a single workspace while keeping project/product boundaries clear. </p>
 		<ul>
 			<li>Create a 
 				<i>Working Set</i> for each project/product that you have checked out.
@@ -107,7 +109,7 @@
 				<i>Working Sets</i> that you contribute to.
 			</li>
 		</ul>
-		<p>When using working sets, the second drop down arrow (Task Activation History) will reveal task activation history for the currenlty selected working set. Choosing a different working set will then only reveal tasks previously activated while the that working set was active. To see the aggregate of all previously active tasks in the task activation history drop down you need to select "Show All" from the work set selection drop down.</p>
+		<p>When using working sets, the second drop down arrow in the Task List toolbar area (Task Activation History) will reveal task activation history for the currently selected working set. Choosing a different working set will then only reveal tasks previously activated while the that working set was active. To see the aggregate of all previously active tasks in the task activation history drop down you need to select "Show All" from the work set selection drop down.</p>
 		<h2 id="UISettings">UI Settings</h2>
 		<p>This section is evolving, please consider adding your own UI settings.</p>
 		<ul>
