@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
-	private MarkupToHtmlTask task;
+	protected MarkupToHtmlTask task;
 
 	@Override
 	protected void setUp() throws Exception {

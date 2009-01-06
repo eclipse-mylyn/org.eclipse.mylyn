@@ -96,6 +96,24 @@ public class OutlineItem {
 		return parent;
 	}
 
+	/**
+	 * Get the previous item. The order of the items is determined via document order traversal of all nodes in the
+	 * outline.
+	 * 
+	 * @return the previous item or null if there is no previous (ie: the root item).
+	 */
+	public OutlineItem getPrevious() {
+		if (parent == null) {
+			return null;
+		}
+		List<OutlineItem> siblings = parent.getChildren();
+		int index = siblings.indexOf(this);
+		if (index > 0) {
+			return siblings.get(index - 1);
+		}
+		return parent;
+	}
+
 	public List<OutlineItem> getChildren() {
 		return children;
 	}

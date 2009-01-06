@@ -18,6 +18,7 @@ import java.io.Writer;
 
 import org.apache.tools.ant.BuildException;
 import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplitOutlineItem;
+import org.eclipse.mylyn.internal.wikitext.core.parser.builder.SplittingMarkupToEclipseToc;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.util.MarkupToEclipseToc;
 
@@ -57,12 +58,8 @@ public class MarkupToEclipseHelpTask extends MarkupToHtmlTask {
 			}
 			try {
 
-				MarkupToEclipseToc toEclipseToc = new MarkupToEclipseToc() {
-					@Override
-					protected String computeFile(OutlineItem item) {
-						return ((SplitOutlineItem) item).getSplitTarget();
-					}
-				};
+				MarkupToEclipseToc toEclipseToc = new SplittingMarkupToEclipseToc();
+				
 				toEclipseToc.setHelpPrefix(helpPrefix);
 				System.out.println("Help: " + baseDir + " " + htmlOutputFile); //$NON-NLS-1$//$NON-NLS-2$
 				toEclipseToc.setBookTitle(title == null ? name : title);

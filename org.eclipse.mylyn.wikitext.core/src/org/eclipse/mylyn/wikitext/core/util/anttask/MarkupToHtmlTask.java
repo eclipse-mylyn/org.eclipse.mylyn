@@ -451,4 +451,19 @@ public class MarkupToHtmlTask extends MarkupTask {
 	public void setPrependImagePrefix(String prependImagePrefix) {
 		this.prependImagePrefix = prependImagePrefix;
 	}
+
+	/**
+	 * indicate if target files should be overwritten even if their timestamps are newer than the source files.
+	 */
+	public boolean isOverwrite() {
+		return overwrite;
+	}
+
+	/**
+	 * indicate if target files should be overwritten even if their timestamps are newer than the source files.
+	 */
+	public void setOverwrite(boolean overwrite) {
+		this.overwrite = overwrite;
+	}
+
 }

@@ -26,19 +26,10 @@
 			navigationImages="true"
 			helpPrefix="help">
 			<fileset dir="help" includes="**/*.textile"/>
+			<stylesheet url="book.css"/>
 			<stylesheet file="${basedir}/help/styles/main.css"/>
 		</wikitext-to-eclipse-help>
 		
-		<!--
-		bug #242981: move WikiText user guide under Mylyn help
-		bug #242979: disabled, root node for WikiText is now provided by toc.xml file
-		-->
-		<!--
-		<replaceregexp file="help/Mylyn WikiText User Guide-toc.xml">
-			<regexp pattern="html&quot; "/>
-			<substitution expression="html&quot; link_to=&quot;../org.eclipse.mylyn.help.ui/toc.xml#additions&quot; "/>
-		</replaceregexp>
-		-->
 		<antcall target="test"/>
 	</target>
 

@@ -62,4 +62,15 @@ public class OutlineParserTest extends TestCase {
 		OutlineItem h2Item2 = outline.findNearestMatchingOffset(secondIdxOfH1 - 1);
 		assertSame(h2Item, h2Item2);
 	}
+
+	public void testPrevious() {
+		String textile = "h1. First Header\n\nh2. Second Header\n\nh1. Third Header\n";
+		OutlineItem outline = outlineParser.parse(textile);
+
+		assertNull(outline.getPrevious());
+
+		assertSame(outline, outline.getChildren().get(0).getPrevious());
+		assertSame(outline.getChildren().get(0), outline.getChildren().get(1).getPrevious());
+		assertSame(outline.getChildren().get(0), outline.getChildren().get(0).getChildren().get(0).getPrevious());
+	}
 }

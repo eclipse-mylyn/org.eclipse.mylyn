@@ -77,7 +77,20 @@ public class MarkupToEclipseToc {
 
 			file = adjustForPrefix(file);
 
-			writer.writeAttribute("href", file + "#" + item.getId()); //$NON-NLS-1$ //$NON-NLS-2$
+			String suffix = ""; //$NON-NLS-1$
+
+			// bug 260065: only append document anchor name if this is not the first item in the file.
+			OutlineItem previous = item.getPrevious();
+			if (previous != null && previous.getParent() != null) {
+				String fileOfPrevious = computeFile(previous);
+				fileOfPrevious = adjustForPrefix(fileOfPrevious);
+
+				if (file.equals(fileOfPrevious)) {
+					suffix = "#" + item.getId(); //$NON-NLS-1$
+				}
+			}
+
+			writer.writeAttribute("href", file + suffix); //$NON-NLS-1$ 
 			writer.writeAttribute("label", item.getLabel()); //$NON-NLS-1$
 
 			if (!item.getChildren().isEmpty()) {
