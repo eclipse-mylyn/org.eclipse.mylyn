@@ -1,1 +1,5 @@
 @import "../../../PRODUCT_PLUGIN/book.css";
+
+code {
+	font-size: 100%;
+}
