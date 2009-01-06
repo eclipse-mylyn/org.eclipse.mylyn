@@ -12,6 +12,7 @@ package org.eclipse.mylyn.wikitext.textile.core;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -743,11 +744,28 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("some &#8216;thing is&#8217; quoted"));
 	}
 
+	public void testQuotationsDisabled() throws IOException, InvocationTargetException {
+		parser.getMarkupLanguage().setProperty("enableSingleQuoteSubstitution", "false");
+
+		String html = parser.parseToHtml("some 'thing is' quoted");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("some 'thing is' quoted"));
+	}
+
 	public void testDoubleQuotations() throws IOException {
 		String html = parser.parseToHtml("some \"thing is\" quoted");
 
 		System.out.println("HTML: \n" + html);
 		assertTrue(html.contains("some &#8220;thing is&#8221; quoted"));
+	}
+
+	public void testDoubleQuotationsDisabled() throws IOException, InvocationTargetException {
+		parser.getMarkupLanguage().setProperty("enableDoubleQuoteSubstitution", "false");
+		String html = parser.parseToHtml("some \"thing is\" quoted");
+
+		System.out.println("HTML: \n" + html);
+		assertTrue(html.contains("some \"thing is\" quoted"));
 	}
 
 	public void testDoubleQuotationsInTable() throws IOException {

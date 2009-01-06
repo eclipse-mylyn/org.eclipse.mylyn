@@ -49,7 +49,7 @@ public class ParagraphBlock extends Block {
 
 		ConfluenceLanguage markupLanguage = (ConfluenceLanguage) getMarkupLanguage();
 
-		// NOTE: in Textile paragraphs can have nested lists and other things, however
+		// NOTE: in Confluence paragraphs can have nested lists and other things, however
 		//       the resulting XHTML is invalid -- so here we allow for similar constructs
 		//       however we cause them to end the paragraph rather than being nested.
 		for (Block block : markupLanguage.getParagraphBreakingBlocks()) {

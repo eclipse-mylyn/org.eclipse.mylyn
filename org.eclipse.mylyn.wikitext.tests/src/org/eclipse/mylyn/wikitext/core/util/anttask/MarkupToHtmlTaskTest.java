@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
+import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupTask.MarkupLanguageConfiguration;
+
 public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 
 	private MarkupToHtmlTask task;
@@ -50,6 +52,31 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		assertTrue(content.contains("</html>"));
 		assertTrue(content.contains("<title>markup</title>"));
 		assertTrue(content.contains("<body>"));
+		assertTrue(content.contains("</body>"));
+	}
+
+	public void testSimpleOutputWithConfiguration() throws IOException {
+		String markupText = "Sample with 'single quotes' and more";
+		File markup = createMarkup(markupText);
+		task.setFile(markup);
+		MarkupLanguageConfiguration configuration = new MarkupLanguageConfiguration();
+		configuration.addProperty(new MarkupTask.Property("enableSingleQuoteSubstitution", "false"));
+		task.addMarkupLanguageConfiguration(configuration);
+		task.execute();
+
+		listFiles();
+
+		File htmlFile = new File(markup.getParentFile(), "markup.html");
+		assertTrue(htmlFile.exists() && htmlFile.isFile());
+
+		String content = getContent(htmlFile);
+//		System.out.println(content);
+
+		assertTrue(content.contains("<html"));
+		assertTrue(content.contains("</html>"));
+		assertTrue(content.contains("<title>markup</title>"));
+		assertTrue(content.contains("<body>"));
+		assertTrue(content.contains(markupText));
 		assertTrue(content.contains("</body>"));
 	}
 
@@ -128,4 +155,14 @@ public class MarkupToHtmlTaskTest extends AbstractTestAntTask {
 		return markupFile;
 	}
 
+	protected File createMarkup(String content) throws IOException {
+		File markupFile = new File(tempFolder, "markup.textile");
+		PrintWriter writer = new PrintWriter(new FileWriter(markupFile));
+		try {
+			writer.print(content);
+		} finally {
+			writer.close();
+		}
+		return markupFile;
+	}
 }

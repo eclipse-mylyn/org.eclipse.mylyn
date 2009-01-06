@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.confluence.core.block;
 
+import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
+import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
 
 /**
  * quoted text block, matches blocks that start with <code>{quote}</code>. Creates an extended block type of
@@ -25,6 +27,8 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 
 	private boolean paraOpen = false;
 
+	private Block nestedBlock = null;
+
 	public ExtendedQuoteBlock() {
 		super("quote"); //$NON-NLS-1$
 	}
@@ -34,6 +38,7 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 		super.resetState();
 		paraOpen = false;
 		paraLine = 0;
+		nestedBlock = null;
 	}
 
 	@Override
@@ -44,6 +49,10 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 
 	@Override
 	protected void endBlock() {
+		if (nestedBlock != null) {
+			nestedBlock.setClosed(true);
+			nestedBlock = null;
+		}
 		if (paraOpen) {
 			builder.endBlock(); // para
 			paraLine = 0;
@@ -54,10 +63,40 @@ public class ExtendedQuoteBlock extends AbstractConfluenceDelimitedBlock {
 
 	@Override
 	protected void handleBlockContent(String content) {
+		if (nestedBlock == null) {
+			ConfluenceLanguage markupLanguage = (ConfluenceLanguage) getMarkupLanguage();
+			for (Block block : markupLanguage.getNestedBlocks()) {
+				if (block.canStart(content, 0)) {
+					nestedBlock = block.clone();
+					nestedBlock.setParser(getParser());
+					nestedBlock.setState(getState());
+					if (paraOpen) {
+						builder.endBlock(); // para
+						paraOpen = false;
+						paraLine = 0;
+					}
+					break;
+				}
+			}
+		}
+		if (nestedBlock != null) {
+			int lineOffset = nestedBlock.processLine(content, 0);
+			if (nestedBlock.isClosed()) {
+				nestedBlock = null;
+			}
+			if (lineOffset < content.length() && lineOffset >= 0) {
+				if (nestedBlock != null) {
+					throw new IllegalStateException("if a block does not fully process a line then it must be closed"); //$NON-NLS-1$
+				}
+				content = content.substring(lineOffset);
+			} else {
+				return;
+			}
+		}
 		if (blockLineCount == 1 && content.length() == 0) {
 			return;
 		}
-		if (getMarkupLanguage().isEmptyLine(content) && blockLineCount > 1 && paraOpen) {
+		if (blockLineCount > 1 && paraOpen && getMarkupLanguage().isEmptyLine(content)) {
 			builder.endBlock(); // para
 			paraOpen = false;
 			paraLine = 0;

@@ -115,6 +115,12 @@ public class ConfluenceLanguageTest extends TestCase {
 		assertTrue(html.contains("<body><p>a para</p><blockquote><p>quoted</p></blockquote><p>new para</p></body>"));
 	}
 
+	public void testBlockQuoteWithBulletedList() {
+		String html = parser.parseToHtml("{quote}\ntext\n* a list\n* second item\nmore text\n{quote}\nanother para");
+		System.out.println("HTML:" + html);
+		assertTrue(html.contains("<body><blockquote><p>text</p><ul><li>a list</li><li>second item</li></ul><p>more text</p></blockquote><p>another para</p></body>"));
+	}
+
 	public void testSimplePhraseModifiers() throws IOException {
 		Object[][] pairs = new Object[][] { { "*", "strong" }, { "_", "em" }, { "??", "cite" }, { "-", "del" },
 				{ "+", "u" }, { "^", "sup" }, { "~", "sub" }, };
