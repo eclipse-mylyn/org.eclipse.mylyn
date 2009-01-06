@@ -74,7 +74,7 @@ public class IdGenerator {
 
 		String id = null;
 		if (text != null) {
-			id = generationStrategy.generateId(text);
+			id = generationStrategy.generateId(text.trim());
 			if (id == null || id.length() == 0) {
 				id = type + '-' + current;
 			}
