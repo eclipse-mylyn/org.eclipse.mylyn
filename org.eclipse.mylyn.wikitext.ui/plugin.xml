@@ -168,9 +168,9 @@
        <command
              commandId="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand"
              icon="icons/help.gif"
-             label="Markup Cheat Sheet"
+             label="%command.label.3"
              style="push"
-             tooltip="show help for wiki markup syntax">
+             tooltip="%command.tooltip.3">
           <visibleWhen>
           	`<with variable="activeContexts">
 	            <iterate operator="or">
@@ -207,7 +207,7 @@
     <page
           class="org.eclipse.mylyn.internal.wikitext.ui.properties.ProjectPropertyPage"
           id="org.eclipse.mylyn.wikitext.ui.projectProperties"
-          name="WikiText">
+          name="%page.name.1">
           <enabledWhen>
              <adapt
                    type="org.eclipse.core.resources.IProject"/>
