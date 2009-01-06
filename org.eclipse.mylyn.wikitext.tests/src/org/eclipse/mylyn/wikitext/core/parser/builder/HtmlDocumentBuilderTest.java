@@ -118,7 +118,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		assertTrue(html.indexOf('\r') == -1);
 		assertTrue(html.indexOf('\n') == -1);
 		assertEquals(
-				"<?xml version='1.0' ?><html xmlns=\"http://www.w3.org/1999/xhtml\"><head></head><body><p>some para text<br/>more para text</p><p>second para</p></body></html>",
+				"<?xml version='1.0' ?><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head><body><p>some para text<br/>more para text</p><p>second para</p></body></html>",
 				html);
 	}
 
@@ -133,7 +133,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		String html = out.toString();
 		System.out.println(html);
 
-		assertTrue(html.contains("<head><link type=\"text/css\" rel=\"stylesheet\" href=\"styles/test.css\"/></head>"));
+		assertTrue(html.contains("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><link type=\"text/css\" rel=\"stylesheet\" href=\"styles/test.css\"/></head>"));
 	}
 
 	public void testCssStylesheetEmbedded() throws Exception {
@@ -155,7 +155,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		System.out.println(html);
 
 		assertTrue(Pattern.compile(
-				"<head><style type=\"text/css\">\\s*body\\s+\\{\\s+background-image: test-content.png;\\s+\\}\\s*</style></head>",
+				"<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><style type=\"text/css\">\\s*body\\s+\\{\\s+background-image: test-content.png;\\s+\\}\\s*</style></head>",
 				Pattern.MULTILINE)
 				.matcher(html)
 				.find());

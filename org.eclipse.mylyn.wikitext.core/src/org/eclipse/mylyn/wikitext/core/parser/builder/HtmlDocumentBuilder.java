@@ -103,6 +103,8 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private boolean emitDtd = false;
 
+	private boolean emitEncodingMeta = true;
+
 	private String title;
 
 	private String defaultAbsoluteLinkTarget;
@@ -117,14 +119,34 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private String prependImagePrefix;
 
+	/**
+	 * construct the HtmlDocumentBuilder.
+	 * 
+	 * @param out
+	 *            the writer to which content is written, whose encoding must be utf-8
+	 */
 	public HtmlDocumentBuilder(Writer out) {
 		this(out, false);
 	}
 
+	/**
+	 * construct the HtmlDocumentBuilder.
+	 * 
+	 * @param out
+	 *            the writer to which content is written, whose encoding must be utf-8
+	 * @param formatting
+	 *            indicate if the output should be formatted
+	 */
 	public HtmlDocumentBuilder(Writer out, boolean formatting) {
 		super(formatting ? createFormattingXmlStreamWriter(out) : new DefaultXmlStreamWriter(out));
 	}
 
+	/**
+	 * construct the HtmlDocumentBuilder.
+	 * 
+	 * @param writer
+	 *            the writer to which content is written, whose character encoding must be utf-8
+	 */
 	public HtmlDocumentBuilder(XmlStreamWriter writer) {
 		super(writer);
 	}
@@ -224,6 +246,28 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 */
 	public void setEmitDtd(boolean emitDtd) {
 		this.emitDtd = emitDtd;
+	}
+
+	/**
+	 * Indicate if a HTML meta tag should be emitted to indicate the encoding of the document. For example:
+	 * <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code>
+	 * 
+	 * The default is true.
+	 * 
+	 * Ignored unless {@link #isEmitAsDocument()}
+	 */
+	public boolean isEmitEncodingMeta() {
+		return emitEncodingMeta;
+	}
+
+	/**
+	 * Indicate if a HTML meta tag should be emitted to indicate the encoding of the document. For example:
+	 * <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code>
+	 * 
+	 * Ignored unless {@link #isEmitAsDocument()}
+	 */
+	public void setEmitEncodingMeta(boolean emitEncodingMeta) {
+		this.emitEncodingMeta = emitEncodingMeta;
 	}
 
 	/**
@@ -435,6 +479,16 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 			writer.writeDefaultNamespace(htmlNsUri);
 
 			writer.writeStartElement(htmlNsUri, "head"); //$NON-NLS-1$
+
+			if (emitEncodingMeta) {
+				// bug 259786: add the charset as a HTML meta http-equiv
+				// see http://www.w3.org/International/tutorials/tutorial-char-enc/
+				//
+				// <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+				writer.writeEmptyElement(htmlNsUri, "meta"); //$NON-NLS-1$
+				writer.writeAttribute("http-equiv", "Content-Type"); //$NON-NLS-1$ //$NON-NLS-2$
+				writer.writeAttribute("content", "text/html; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
+			}
 			if (base != null && baseInHead) {
 				writer.writeEmptyElement(htmlNsUri, "base"); //$NON-NLS-1$
 				writer.writeAttribute("href", base.toString()); //$NON-NLS-1$
