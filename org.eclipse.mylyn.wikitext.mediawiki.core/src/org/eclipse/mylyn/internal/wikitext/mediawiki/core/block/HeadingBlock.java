@@ -54,7 +54,7 @@ public class HeadingBlock extends Block {
 
 		final Attributes attributes = new Attributes();
 		if (attributes.getId() == null) {
-			attributes.setId(state.getIdGenerator().newId("h" + level, line.substring(offset))); //$NON-NLS-1$
+			attributes.setId(state.getIdGenerator().newId("h" + level, text)); //$NON-NLS-1$
 		}
 		builder.beginHeading(level, attributes);
 		builder.characters(text);
