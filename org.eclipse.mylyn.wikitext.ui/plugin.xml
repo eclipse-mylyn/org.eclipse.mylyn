@@ -207,8 +207,11 @@
     <page
           class="org.eclipse.mylyn.internal.wikitext.ui.properties.ProjectPropertyPage"
           id="org.eclipse.mylyn.wikitext.ui.projectProperties"
-          name="WikiText"
-          objectClass="org.eclipse.core.resources.IProject">
+          name="WikiText">
+          <enabledWhen>
+             <adapt
+                   type="org.eclipse.core.resources.IProject"/>
+          </enabledWhen>
     </page>
  </extension>
 </plugin>
