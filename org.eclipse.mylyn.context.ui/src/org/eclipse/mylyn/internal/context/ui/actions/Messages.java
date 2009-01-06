@@ -61,8 +61,6 @@ public class Messages extends NLS {
 
 	public static String ContextCopyAction_Target_task_can_not_be_the_same_as_source_task;
 
-	public static String ContextRetrieveAction_CAN_NOT_RETRIEVE_CONTEXT_FOR_LOCAL_TASKS;
-
 	public static String ContextRetrieveAction_Retrieve_;
 
 	public static String ContextRetrieveAction_Retrieve_Task_Context;
