@@ -73,6 +73,7 @@ public class OutlineParser {
 		markupLanguage.setBlocksOnly(isBlocksOnly());
 		try {
 			OutlineBuilder outlineBuilder = (OutlineBuilder) createOutlineUpdater(root);
+			outlineBuilder.idGenerator.setGenerationStrategy(markupLanguage.getIdGenerationStrategy());
 			MarkupParser markupParser = new MarkupParser();
 			markupParser.setBuilder(outlineBuilder);
 			markupParser.setMarkupLanaguage(markupLanguage);

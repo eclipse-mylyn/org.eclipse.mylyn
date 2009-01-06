@@ -16,14 +16,24 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.mylyn.wikitext.core.parser.markup.DefaultIdGenerationStrategy;
+import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
+
 /**
  * @author David Green
  */
 public class IdGenerator {
 
+	private static final DefaultIdGenerationStrategy DEFAULT_ID_GENERATION_STRATEGY = new DefaultIdGenerationStrategy();
+
 	private final Map<String, Integer> idGenerators = new HashMap<String, Integer>();
 
 	private final Set<String> anchorNames = new HashSet<String>();
+
+	private IdGenerationStrategy generationStrategy = DEFAULT_ID_GENERATION_STRATEGY;
+
+	public IdGenerator() {
+	}
 
 	/**
 	 * reserve the given id, ensuring that the generator will not generate the same id. An id can only be reserved if it
@@ -64,8 +74,8 @@ public class IdGenerator {
 
 		String id = null;
 		if (text != null) {
-			id = convertToAnchor(text.trim());
-			if (id.length() == 0) {
+			id = generationStrategy.generateId(text);
+			if (id == null || id.length() == 0) {
 				id = type + '-' + current;
 			}
 		} else {
@@ -89,11 +99,14 @@ public class IdGenerator {
 		return Collections.unmodifiableSet(anchorNames);
 	}
 
-	private String convertToAnchor(String text) {
-		String anchor = text.replaceAll("[^a-zA-Z0-9]", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		if (anchor.length() > 0 && Character.isDigit(anchor.charAt(0))) {
-			anchor = 'a' + anchor;
+	public IdGenerationStrategy getGenerationStrategy() {
+		return generationStrategy;
+	}
+
+	public void setGenerationStrategy(IdGenerationStrategy generationStrategy) {
+		if (generationStrategy == null) {
+			throw new IllegalArgumentException();
 		}
-		return anchor;
+		this.generationStrategy = generationStrategy;
 	}
 }

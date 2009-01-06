@@ -44,6 +44,8 @@ import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
  */
 public abstract class MarkupLanguage {
 
+	private static final DefaultIdGenerationStrategy DEFAULT_ID_GENERATION_STRATEGY = new DefaultIdGenerationStrategy();
+
 	private String name;
 
 	private String extendsLanguage;
@@ -61,7 +63,16 @@ public abstract class MarkupLanguage {
 	 * @return the new state.
 	 */
 	protected ContentState createState() {
-		return new ContentState();
+		ContentState contentState = new ContentState();
+		contentState.getIdGenerator().setGenerationStrategy(getIdGenerationStrategy());
+		return contentState;
+	}
+
+	/**
+	 * get the id strategy employed by this markup language.
+	 */
+	public IdGenerationStrategy getIdGenerationStrategy() {
+		return DEFAULT_ID_GENERATION_STRATEGY;
 	}
 
 	public void processContent(MarkupParser parser, String markupContent, boolean asDocument) {
