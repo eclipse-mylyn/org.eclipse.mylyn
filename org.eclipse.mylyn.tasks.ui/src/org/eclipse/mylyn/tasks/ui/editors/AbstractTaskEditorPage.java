@@ -349,9 +349,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						// automatically refresh if the user has not made any changes and there is no chance of missing incomings
 						refreshFormContent();
 					} else {
-						getTaskEditor().setMessage(
-								Messages.AbstractTaskEditorPage_Task_has_incoming_changes, IMessageProvider.WARNING,
-								new HyperlinkAdapter() {
+						getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Task_has_incoming_changes,
+								IMessageProvider.WARNING, new HyperlinkAdapter() {
 									@Override
 									public void linkActivated(HyperlinkEvent e) {
 										refreshFormContent();
@@ -559,9 +558,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(getConnectorKind());
 			if (connectorUi == null) {
-				getTaskEditor().setMessage(
-						Messages.AbstractTaskEditorPage_Synchronize_to_update_editor_contents, IMessageProvider.INFORMATION,
-						new HyperlinkAdapter() {
+				getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Synchronize_to_update_editor_contents,
+						IMessageProvider.INFORMATION, new HyperlinkAdapter() {
 							@Override
 							public void linkActivated(HyperlinkEvent e) {
 								refreshFormContent();
@@ -791,12 +789,11 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			model.save(monitor);
 		} catch (final CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error saving task", e)); //$NON-NLS-1$
-			getTaskEditor().setMessage(
-					Messages.AbstractTaskEditorPage_Could_not_save_task, IMessageProvider.ERROR, new HyperlinkAdapter() {
+			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Could_not_save_task, IMessageProvider.ERROR,
+					new HyperlinkAdapter() {
 						@Override
 						public void linkActivated(HyperlinkEvent event) {
-							TasksUiInternal.displayStatus(
-									Messages.AbstractTaskEditorPage_Save_failed, e.getStatus());
+							TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Save_failed, e.getStatus());
 						}
 					});
 		}
@@ -844,8 +841,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		final TaskRepository taskRepository = (model != null) ? getModel().getTaskRepository() : null;
 		if (taskRepository != null) {
-			ControlContribution repositoryLabelControl = new ControlContribution(
-					Messages.AbstractTaskEditorPage_Title) {
+			ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
 				@Override
 				protected Control createControl(Composite parent) {
 					FormToolkit toolkit = getTaskEditor().getHeaderForm().getToolkit();
@@ -1100,8 +1096,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 				getTaskEditor().setMessage(message, IMessageProvider.ERROR, new HyperlinkAdapter() {
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
-						TasksUiInternal.displayStatus(
-								Messages.AbstractTaskEditorPage_Submit_failed, status);
+						TasksUiInternal.displayStatus(Messages.AbstractTaskEditorPage_Submit_failed, status);
 					}
 				});
 			}
@@ -1139,8 +1134,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 		} catch (final CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error opening task", e)); //$NON-NLS-1$
-			getTaskEditor().setStatus(
-					Messages.AbstractTaskEditorPage_Error_opening_task, Messages.AbstractTaskEditorPage_Open_failed, e.getStatus());
+			getTaskEditor().setStatus(Messages.AbstractTaskEditorPage_Error_opening_task,
+					Messages.AbstractTaskEditorPage_Open_failed, e.getStatus());
 		}
 	}
 
@@ -1272,8 +1267,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			refreshDisabled = true;
 			model.refresh(null);
 		} catch (CoreException e) {
-			getTaskEditor().setMessage(
-					Messages.AbstractTaskEditorPage_Failed_to_read_task_data_ + e.getMessage(), IMessageProvider.ERROR);
+			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Failed_to_read_task_data_ + e.getMessage(),
+					IMessageProvider.ERROR);
 			taskData = null;
 			return;
 		} finally {
@@ -1417,9 +1412,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private void updateHeaderMessage() {
 		if (taskData == null) {
-			getTaskEditor().setMessage(
-					Messages.AbstractTaskEditorPage_Synchronize_to_retrieve_task_data, IMessageProvider.WARNING,
-					new HyperlinkAdapter() {
+			getTaskEditor().setMessage(Messages.AbstractTaskEditorPage_Synchronize_to_retrieve_task_data,
+					IMessageProvider.WARNING, new HyperlinkAdapter() {
 						@Override
 						public void linkActivated(HyperlinkEvent e) {
 							if (synchronizeEditorAction != null) {
