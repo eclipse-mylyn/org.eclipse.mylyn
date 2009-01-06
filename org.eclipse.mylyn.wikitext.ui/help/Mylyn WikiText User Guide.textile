@@ -170,6 +170,7 @@ The @markupLanguage@ attribute accepts any of the following values (depending on
 | @validate@ | Indicate if the input file should be validated.  Default is @true@. |
 | @failOnValidationError@ | Indicate if validation errors should cause a build failure. @true@ or @false@, default is true.  |
 | @failOnValidationWarning@ | Indicate if validation warnings should cause a build failure. @true@ or @false@, default is false.  |
+| @overwrite@ | Indicate if target files should be overwritten even if the target document is newer than the source document. @true@ or @false@, default is false. |
 
 *wikitext-to-html and wikitext-to-eclipse-help task options*
 
