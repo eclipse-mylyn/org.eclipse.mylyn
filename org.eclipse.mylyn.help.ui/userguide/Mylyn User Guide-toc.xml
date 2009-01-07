@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <toc topic="userguide/Mylyn User Guide.html" label="Mylyn User Guide">
-	<topic href="userguide/Mylyn User Guide.html#Introduction" label="Introduction">
+	<topic href="userguide/Mylyn User Guide.html" label="Introduction">
 		<topic href="userguide/Mylyn User Guide.html#Tips" label="Tips"></topic>
 		<topic href="userguide/Mylyn User Guide.html#Shortcuts" label="Shortcuts"></topic>
 		<topic href="userguide/Mylyn User Guide.html#UILegend" label="UI Legend"></topic>
 		<topic href="userguide/Mylyn User Guide.html#ExternalResources" label="External Resources"></topic>
 	</topic>
-	<topic href="userguide/Installation.html#Installation" label="Installation">
+	<topic href="userguide/Installation.html" label="Installation">
 		<topic href="userguide/Installation.html#ProjectStructure" label="Project Structure">
 			<topic href="userguide/Installation.html#Main" label="Main"></topic>
 			<topic href="userguide/Installation.html#Extras" label="Extras"></topic>
@@ -21,7 +21,7 @@
 		</topic>
 		<topic href="userguide/Installation.html#InstallingonMacOS" label="Installing on MacOS"></topic>
 	</topic>
-	<topic href="userguide/Configuration.html#Configuration" label="Configuration">
+	<topic href="userguide/Configuration.html" label="Configuration">
 		<topic href="userguide/Configuration.html#Eclipsesettings" label="Eclipse settings"></topic>
 		<topic href="userguide/Configuration.html#Querysetup" label="Query setup"></topic>
 		<topic href="userguide/Configuration.html#Workspacesetup" label="Workspace setup"></topic>
@@ -30,7 +30,7 @@
 		<topic href="userguide/Configuration.html#KeyMappings" label="Key Mappings"></topic>
 		<topic href="userguide/Configuration.html#SystemProperties" label="System Properties"></topic>
 	</topic>
-	<topic href="userguide/Task-List.html#TaskList" label="Task List">
+	<topic href="userguide/Task-List.html" label="Task List">
 		<topic href="userguide/Task-List.html#IconLegend" label="Icon Legend"></topic>
 		<topic href="userguide/Task-List.html#TaskCreation" label="Task Creation"></topic>
 		<topic href="userguide/Task-List.html#IncomingChanges" label="Incoming Changes"></topic>
@@ -50,25 +50,25 @@
 		<topic href="userguide/Task-List.html#Keybindings" label="Keybindings"></topic>
 		<topic href="userguide/Task-List.html#ReviewingTasks" label="Reviewing Tasks"></topic>
 	</topic>
-	<topic href="userguide/Task-Repositories.html#TaskRepositories" label="Task Repositories">
+	<topic href="userguide/Task-Repositories.html" label="Task Repositories">
 		<topic href="userguide/Task-Repositories.html#OpeningaRepositoryTask" label="Opening a Repository Task"></topic>
 		<topic href="userguide/Task-Repositories.html#Synchronization" label="Synchronization">
 			<topic href="userguide/Task-Repositories.html#SynchronizingAllTasks" label="Synchronizing All Tasks"></topic>
 		</topic>
 	</topic>
-	<topic href="userguide/Task-Focused-UI.html#TaskFocusedUI" label="Task-Focused UI">
+	<topic href="userguide/Task-Focused-UI.html" label="Task-Focused UI">
 		<topic href="userguide/Task-Focused-UI.html#AltClicknavigation" label="Alt+Click navigation"></topic>
 		<topic href="userguide/Task-Focused-UI.html#Automaticallytogglefocusonnavigatorviews" label="Automatically toggle focus on navigator views"></topic>
 		<topic href="userguide/Task-Focused-UI.html#WorkingSetintegration" label="Working Set integration"></topic>
 		<topic href="userguide/Task-Focused-UI.html#FocustheJavaBrowsingPerspectiveviews" label="Focus the Java Browsing Perspective views"></topic>
 	</topic>
-	<topic href="userguide/Team-Support.html#TeamSupport" label="Team Support">
+	<topic href="userguide/Team-Support.html" label="Team Support">
 		<topic href="userguide/Team-Support.html#ConfiguringtheSynchronizeviewforchangesets" label="Configuring the Synchronize view for change sets"></topic>
 		<topic href="userguide/Team-Support.html#Automaticchangesets" label="Automatic change sets"></topic>
 		<topic href="userguide/Team-Support.html#Automaticcommitmessages" label="Automatic commit messages"></topic>
 		<topic href="userguide/Team-Support.html#Workingwithpatches" label="Working with patches"></topic>
 	</topic>
-	<topic href="userguide/Task-Repository-Connectors.html#TaskRepositoryConnectors" label="Task Repository Connectors">
+	<topic href="userguide/Task-Repository-Connectors.html" label="Task Repository Connectors">
 		<topic href="userguide/Task-Repository-Connectors.html#BugzillaConnector" label="Bugzilla Connector">
 			<topic href="userguide/Task-Repository-Connectors.html#BugzillaTasks" label="Bugzilla Tasks"></topic>
 			<topic href="userguide/Task-Repository-Connectors.html#Tipsforserveradministrators" label="Tips for server administrators"></topic>
@@ -78,9 +78,9 @@
 		<topic href="userguide/Task-Repository-Connectors.html#GenericWebRepositoryConnector" label="Generic Web Repository Connector"></topic>
 		<topic href="userguide/Task-Repository-Connectors.html#XPlannerConnector" label="XPlanner Connector"></topic>
 	</topic>
-	<topic href="userguide/Integration-with-other-tools.html#Integrationwithothertools" label="Integration with other tools">
+	<topic href="userguide/Integration-with-other-tools.html" label="Integration with other tools">
 		<topic href="userguide/Integration-with-other-tools.html#UsingMylynwithWTP" label="Using Mylyn with WTP"></topic>
 		<topic href="userguide/Integration-with-other-tools.html#Externalbuilders" label="External builders"></topic>
 	</topic>
-	<topic href="userguide/Updating-This-Document.html#UpdatingThisDocument" label="Updating This Document"></topic>
+	<topic href="userguide/Updating-This-Document.html" label="Updating This Document"></topic>
 </toc>

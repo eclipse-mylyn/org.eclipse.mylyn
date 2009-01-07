@@ -76,6 +76,7 @@ This document is maintained in a collaborative wiki.  If you wish to update or m
 				prependImagePrefix="${imageFolder}"
 				formatoutput="true">
 				<fileset dir="tmp" includes="**/*.mediawiki"/>
+				<stylesheet url="book.css"/>
 			</wikitext-to-eclipse-help>
 	    	
 	    	<mkdir dir="@{targetFolder}/${imageFolder}"/>
