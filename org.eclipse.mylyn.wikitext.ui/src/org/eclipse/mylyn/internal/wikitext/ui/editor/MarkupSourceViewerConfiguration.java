@@ -104,7 +104,9 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 		HippieProposalProcessor hippieProcessor = new HippieProposalProcessor();
 
 		MultiplexingContentAssistProcessor processor = new MultiplexingContentAssistProcessor();
-		processor.addDelegate(anchorCompletionProcessor);
+		if (anchorCompletionProcessor != null) {
+			processor.addDelegate(anchorCompletionProcessor);
+		}
 		processor.addDelegate(completionProcessor);
 		processor.addDelegate(hippieProcessor);
 

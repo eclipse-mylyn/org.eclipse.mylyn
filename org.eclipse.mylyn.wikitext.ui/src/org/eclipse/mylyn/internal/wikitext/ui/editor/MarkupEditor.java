@@ -134,6 +134,7 @@ public class MarkupEditor extends TextEditor {
 	public MarkupEditor() {
 		setDocumentProvider(new MarkupDocumentProvider());
 		sourceViewerConfiguration = new MarkupSourceViewerConfiguration(getPreferenceStore());
+		sourceViewerConfiguration.setOutline(outlineModel);
 		setSourceViewerConfiguration(sourceViewerConfiguration);
 	}
 
@@ -393,6 +394,9 @@ public class MarkupEditor extends TextEditor {
 			}
 			return outlinePage;
 		}
+		if (adapter == OutlineItem.class) {
+			return getOutlineModel();
+		}
 		return super.getAdapter(adapter);
 	}
 
@@ -421,11 +425,14 @@ public class MarkupEditor extends TextEditor {
 		if (!outlineDirty) {
 			return;
 		}
+		// we maintain the outline even if the outline page is not in use, which allows us to use the outline for
+		// content assist and other things
+		outlineDirty = false;
+		outlineParser.setMarkupLanguage(getMarkupLanguage());
+		outlineModel.clear();
+		outlineParser.parse(outlineModel, document.get());
+
 		if (outlinePage != null && outlinePage.getControl() != null && !outlinePage.getControl().isDisposed()) {
-			outlineDirty = false;
-			outlineParser.setMarkupLanguage(getMarkupLanguage());
-			outlineModel.clear();
-			outlineParser.parse(outlineModel, document.get());
 			outlinePage.refresh();
 
 			outlinePage.getControl().getDisplay().asyncExec(new Runnable() {

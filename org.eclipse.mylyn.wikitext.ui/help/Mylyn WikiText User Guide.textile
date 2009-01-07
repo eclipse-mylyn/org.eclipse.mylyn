@@ -332,6 +332,8 @@ Continued typing while the proposals are displayed will narrow the list of avail
 
 !images/editor-assist-proposals.png!
 
+Suggestions include markup language syntax, document-internal anchor names and "word suggestions":#WordCompletion.
+
 h3. Template-Based Content Assist
 
 Content assist may also make proposals involving templates with variables.
