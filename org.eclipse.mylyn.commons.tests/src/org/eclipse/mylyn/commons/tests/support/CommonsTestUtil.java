@@ -18,20 +18,24 @@ import java.net.URL;
 
 import junit.framework.AssertionFailedError;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
 
 /**
  * @author Steffen Pingel
  */
 public class CommonsTestUtil {
 
+	@SuppressWarnings("restriction")
 	public static File getFile(Object source, String filename) throws Exception {
 		if (Platform.isRunning()) {
-//				if (ContextTestsPlugin.getDefault() != null) {
-//					URL localURL = FileLocator.toFileURL(ContextTestsPlugin.getDefault().getBundle().getEntry(
-//							filename));
-//					filename = localURL.getFile();
-//				}
+			ClassLoader classLoader = source.getClass().getClassLoader();
+			if (classLoader instanceof BundleClassLoader) {
+				URL url = ((BundleClassLoader) classLoader).getResource(filename);
+				URL localURL = FileLocator.toFileURL(url);
+				return new File(localURL.getFile());
+			}
 		} else {
 			URL localURL = source.getClass().getResource("");
 			String directory = source.getClass().getName().replaceAll("[^.]", "");
