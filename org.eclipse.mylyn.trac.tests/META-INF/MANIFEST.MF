@@ -21,6 +21,8 @@ Require-Bundle: org.apache.xmlrpc;bundle-version="3.0.0",
 Export-Package: org.eclipse.mylyn.internal.trac.ui;x-internal:=true,
  org.eclipse.mylyn.trac.tests;x-internal:=true,
  org.eclipse.mylyn.trac.tests.client;x-internal:=true,
- org.eclipse.mylyn.trac.tests.support;x-internal:=true
+ org.eclipse.mylyn.trac.tests.core;x-internal:=true,
+ org.eclipse.mylyn.trac.tests.support;x-internal:=true,
+ org.eclipse.mylyn.trac.tests.ui;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse.org
