@@ -31,7 +31,7 @@
 		</table><hr/>
 		<h1 id="Configuration">Configuration</h1>
 		<p>After you have installed Mylyn, there are a number of things that you can configure to make your experience even richer.</p>
-		<h2 id="Eclipsesettings">Eclipse settings</h2>
+		<h2 id="Eclipse_settings">Eclipse settings</h2>
 		<p>Recommendations for workspace configuration when using Mylyn:</p>
 		<ul>
 			<li>
@@ -77,7 +77,7 @@
 				</ul>
 			</li>
 		</ul>
-		<h2 id="Querysetup">Query setup</h2>
+		<h2 id="Query_setup">Query setup</h2>
 		<p>While there are many ways to set up queries (e.g. by component, by milestone) we recommend the following as a starting point.  For each repository, create:</p>
 		<ol>
 			<li>One query for all tasks assigned to you.  This should include all closed/resolved tasks in order to prevent resolved tasks from dropping into the "Archive" container.  There is no performance problem with having thousands of resolved tasks in your Task List.</li>
@@ -85,7 +85,7 @@
 			<li>All tasks that you are CC'd on.  To this you can additionally add tasks that you have commented on and created/reported.  This will prevent you from needing to rely on email notifications, since it captures all tasks of interest.  For example, with this this configruation you can turn off Bugzilla email notifications or have them automatically categorized/filed out of yor email inbox.  </li>
 		</ol>
 		<p>Depending on how you set up (1) and (2), you may want to limit (3) to certain components in order to avoid tasks showing up in multiple containers.</p>
-		<h2 id="Workspacesetup">Workspace setup</h2>
+		<h2 id="Workspace_setup">Workspace setup</h2>
 		<p>The Mylyn task list does not span workspaces, if multiple workspaces are in use this results in a unique task list per workspace. Multiple task lists is considered a performance antipattern and we recommended making use of the native Eclipse mechanism for managing large volumes of projects - 
 			<b>working sets</b>. Instead of creating multiple workspaces, simply create working sets that aggregate the projects all within a single workspace.  Activate the working set and only those projects are visible within Eclipse. This has the added benefit of making Eclipse feel faster (i.e searching is improved) due to the scoping effect of the working set. Mylyn has added functionality to make switching working sets easier from the Task List view.
 		</p>
@@ -111,7 +111,7 @@
 			</li>
 		</ul>
 		<p>When using working sets, the second drop down arrow in the Task List toolbar area (Task Activation History) will reveal task activation history for the currently selected working set. Choosing a different working set will then only reveal tasks previously activated while the that working set was active. To see the aggregate of all previously active tasks in the task activation history drop down you need to select "Show All" from the work set selection drop down.</p>
-		<h2 id="UISettings">UI Settings</h2>
+		<h2 id="UI_Settings">UI Settings</h2>
 		<p>This section is evolving, please consider adding your own UI settings.</p>
 		<ul>
 			<li>Landmark background color: 
@@ -123,7 +123,7 @@
 				<i>Window -> Preferences -> General -> Appearance -> Colors and Fonts</i>, then select the corresponding category and kind.
 			</li>
 		</ul>
-		<h2 id="Spellchecking">Spell checking</h2>
+		<h2 id="Spell_checking">Spell checking</h2>
 		<p>On Eclipse versions earlier than 3.3, the spell checking must be set up manually.  Spell checking is supported in the task editor for local tasks and for connectors that support rich editing (e.g. Bugzilla, Trac).</p>
 		<ul>
 			<li>To install spell checking for editors that support it you need to enable the preference in 
@@ -137,7 +137,7 @@
 		<p>
 			<img border="0" src="images/mylar-spell-checking-preference.gif"/>
 		</p>
-		<h2 id="KeyMappings">Key Mappings</h2>
+		<h2 id="Key_Mappings">Key Mappings</h2>
 		<p>If default key mappings aren't working, try doing the following to reset them:</p>
 		<ul>
 			<li>
@@ -192,7 +192,7 @@
 		<p>Also, see 
 			<a href="http://wiki.eclipse.org/Mylyn/Mylyn_Tips_and_Tricks#Keyboard_Shortcuts" title="Mylyn_Tips_and_Tricks#Keyboard_Shortcuts">keyboard shortcuts</a>.
 		</p>
-		<h2 id="SystemProperties">System Properties</h2>
+		<h2 id="System_Properties">System Properties</h2>
 		<p>The system properties below can used to change the behavior of Mylyn. To set a property pass it on the command line when starting Eclipse:
 <code>			eclipse -vmargs -Dorg.eclipse.mylyn.property=value</code>.</p>
 		<table>

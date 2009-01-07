@@ -39,7 +39,7 @@
 				<a href="http://www.eclipse.org/downloads/">Download and install Eclipse 3.2 or 3.3</a>
 			</li>
 			<li>
-				<a href="#Platform_requirements">Ensure you meet the platform requirements</a>
+				<a href="Installation.html#Platform_requirements">Ensure you meet the platform requirements</a>
 			</li>
 			<li>
 				<a href="Installation.html#Download">Download Mylyn</a>
@@ -54,10 +54,10 @@
 				<a href="#Keyboard_mappings_on_Linux">Keyboard mappings on Linux</a> shows how to set up some useful key bindings.
 			</li>
 			<li>
-				<a href="#Task_List_backup_and_restore">Task List backup and restore</a> shows how to set up where backup files will be saved.
+				<a href="Task-List.html#Task_List_backup_and_restore">Task List backup and restore</a> shows how to set up where backup files will be saved.
 			</li>
 		</ul>
-		<h2 id="ProjectStructure">Project Structure</h2>
+		<h2 id="Project_Structure">Project Structure</h2>
 		<p>The Mylyn project is structured into the following update sites and distributions.  Mylyn extensions are split into two different categories.  
 			<i>Connectors</i> extend Mylyn to different task management systems.  
 			<i>Bridges</i> focus the artifacts that you work with when you active a task.
@@ -255,7 +255,7 @@
 				<i>Yes</i>.  <!-- If you are running Eclipse from the command line, it might be worthwhile to start it once with  (@@@? true?) eclipse -clean -->
 			</li>
 		</ul>
-		<h2 id="Platformrequirements">Platform requirements</h2>
+		<h2 id="Platform_requirements">Platform requirements</h2>
 		<p>Mylyn requires the 
 			<b>Java 5</b> virtual machine.  To check the version of the Java virtual machine that Eclipse was launched with to to 
 			<i>Help -> About Eclipse SDK -> Configuration Details</i> and verify that the java.vm.version is 1.5.  
@@ -285,8 +285,8 @@
 		<pre>export JAVA_HOME="''(location of JDK1.5 root)''"
 export PATH=$JAVA_HOME/bin:$PATH
 </pre>
-		<h2 id="InstallingonLinux">Installing on Linux</h2>
-		<h3 id="Browserissues">Browser issues</h3>
+		<h2 id="Installing_on_Linux">Installing on Linux</h2>
+		<h3 id="Browser_issues">Browser issues</h3>
 		<p>Mylyn uses the Standard Widget Toolkit Browser, and users have experienced problems with the SWT Browser on Linux.  This is not a Mylyn specific problem and also occurrs if you try to use Eclipse's Browser view.  There are two options:</p>
 		<ul>
 			<li>Follow the instructions below to get the browser properly configured</li>
@@ -357,7 +357,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 		<pre>(java.lang.UnsatisfiedLinkError: no swt-mozilla-gtk-3449 or swt-mozilla-gtk in swt.library.path, java.library.path or the jar file)
 </pre>
 		<p>To resolve this error install a package that provides the Gecko engine library. On Ubuntu and Debian the package is called libxul0d.</p>
-		<h3 id="RecommendedGTKSetupforKDE">Recommended GTK Setup for KDE</h3>
+		<h3 id="Recommended_GTK_Setup_for_KDE">Recommended GTK Setup for KDE</h3>
 		<p>The recommended GTK theme to use for KDE (and KDE based distributions like Kubuntu) is the
 			"Human" theme. (Possibly, this is also a good recommendation for GNOME. GNOME users, please comment.)</p>
 		<p>With Debian based distributions (e.g. Ubuntu), this theme can be installed with</p>
@@ -418,7 +418,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 		<p>Kubuntu Dapper 6.06 with KDE and X.Org triggers all above issues. An upgrade to Edgy enables Task Color display and the date picker selection. To get the Task Activation button working you have to use Edgy and Eclipse 3.3M5eh (or newer).</p>
 		<p>Kubuntu Gutsy 7.10 has issues with the color display (bug 176716). A workaround is to change the GTK-Style to "Human".
 			More details and another solution in the comments of bug 176716.</p>
-		<h2 id="InstallingonMacOS">Installing on MacOS</h2>
+		<h2 id="Installing_on_MacOS">Installing on MacOS</h2>
 		<p>If you see errors like the following it may be due to Xerces missing from the Mac JDK so you may need to add it to your default classpath.  Please refer to and comment on 
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=144287">bug 144287</a> if you see this problem.
 		</p>

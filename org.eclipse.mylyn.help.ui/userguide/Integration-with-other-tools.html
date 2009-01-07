@@ -29,7 +29,7 @@
 				<td style="width: 20%" align="right" valign="top">Updating This Document</td>
 			</tr>
 		</table><hr/>
-		<h1 id="Integrationwithothertools">Integration with other tools</h1>
+		<h1 id="Integration_with_other_tools">Integration with other tools</h1>
 		<p>See the 
 			<b>
 				<a href="http://wiki.eclipse.org/Mylyn/Extensions" title="Mylyn/Extensions">Mylyn Extensions</a>
@@ -52,11 +52,11 @@
 			<a href="http://www.eclipse.org/mylyn/bugs.php">create a new bug</a>.  Also consider adding your experiences to the 
 			<a href="http://wiki.eclipse.org/Mylyn/FAQ#Integration_with_other_tools" title="Mylyn/FAQ#Integration_with_other_tools">"Integration..."</a> section of the Mylyn FAQ.
 		</p>
-		<h2 id="UsingMylynwithWTP">Using Mylyn with WTP</h2>
+		<h2 id="Using_Mylyn_with_WTP">Using Mylyn with WTP</h2>
 		<p>Context modeling works at the file level, noting the limitation of 
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=144882">bug 144882: interest filter fails on WTP Dynamic Web Project</a>
 		</p>
-		<h2 id="Externalbuilders">External builders</h2>
+		<h2 id="External_builders">External builders</h2>
 		<p>If an external builder (e.g. Maven, pydev, or other Ant-based builders) is producing output files that are being automatically added to your context because they are not being marked "derived" as with Eclipse-based builders.  You may note that such files are always show as interesting when they are generated or updated and can not be filtered away, since Mylyn expects all files that have changed as part of the task context to have interest.</p>
 		<p>In this case you can explicitly exclude these files from being added to the task context the 
 			<i>Preferences -> Mylyn -> Resources</i> page.  For example, if the output folder of the builder is "target", you could set this the following way.  Similarly, you could add a filter for "*.pyc" to exclude all files generated with that extension.

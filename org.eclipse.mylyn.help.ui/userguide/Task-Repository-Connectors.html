@@ -29,20 +29,20 @@
 				<td style="width: 20%" align="right" valign="top">Integration with other tools</td>
 			</tr>
 		</table><hr/>
-		<h1 id="TaskRepositoryConnectors">Task Repository Connectors</h1>
+		<h1 id="Task_Repository_Connectors">Task Repository Connectors</h1>
 		<p>Mylyn allows you to collaborate on tasks via a shared task repository, also known as bug tracking systems.  In order to collaborate, you need to have a 
 			<b>Connector</b> to your particular repository.
 		</p>
 		<p>Presently 
-			<a href="#Bugzilla_Connector">Bugzilla</a>, 
-			<a href="#JIRA_Connector">JIRA</a>, and 
-			<a href="#Trac_Connector">Trac</a> are supported. To connect to unsupported repositories, see 
-			<a href="#Generic_Web_Repository_Connector">Generic Web Repository Connectors</a>. 
+			<a href="Task-Repository-Connectors.html#Bugzilla_Connector">Bugzilla</a>, 
+			<a href="Task-Repository-Connectors.html#JIRA_Connector">JIRA</a>, and 
+			<a href="Task-Repository-Connectors.html#Trac_Connector">Trac</a> are supported. To connect to unsupported repositories, see 
+			<a href="Task-Repository-Connectors.html#Generic_Web_Repository_Connector">Generic Web Repository Connectors</a>. 
 			<b>Also</b>, be sure to  
 			<a href="https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced&amp;short_desc_type=anywordssubstr&amp;short_desc=%5Bconnector%5D&amp;product=Mylyn&amp;long_desc_type=allwordssubstr&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;status_whiteboard_type=allwordssubstr&amp;status_whiteboard=&amp;keywords_type=allwords&amp;keywords=&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;emailtype1=substring&amp;email1=&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=">vote for your favourite Connector</a> to see it supported earlier, or 
 			<a href="http://www.eclipse.org/mylyn/bugs.php">create a new bug</a> if your issue tracker is not listed.
 		</p>
-		<h2 id="BugzillaConnector">Bugzilla Connector</h2>
+		<h2 id="Bugzilla_Connector">Bugzilla Connector</h2>
 		<p>Once Mylyn is installed there are a few steps involved to get up and running.</p>
 		<ul>
 			<li>To access tasks (reports/issues) on a repository such as Bugzilla you must first set up a 
@@ -89,13 +89,13 @@
 		<p>See also 
 			<a href="http://wiki.eclipse.org/Mylyn/FAQ#Bugzilla_Connector" title="Mylyn/FAQ#Bugzilla_Connector">Bugzilla Connector Troubleshooting</a>.
 		</p>
-		<h3 id="BugzillaTasks">Bugzilla Tasks</h3>
+		<h3 id="Bugzilla_Tasks">Bugzilla Tasks</h3>
 		<ul>
 			<li>If the Bugzilla task's severity is "major", "blocker", or "critical", the task icon in the Task List will be decorated with a red dot.</li>
 			<li>If the Bugzilla task's severity is "enhancement" the task icon in the Task List will be decorated with a green triangle.</li>
 			<li>Tasks will be colored green in the task list if they were resolved today and are owned by you. Unfortuantely Bugzilla does not have a notion of a completion date so we simply check the last comment timestamp and assume it to be the completion date (see {{bug|215342}}).</li>
 		</ul>
-		<h3 id="Tipsforserveradministrators">Tips for server administrators</h3>
+		<h3 id="Tips_for_server_administrators">Tips for server administrators</h3>
 		<p>Mylyn periodically checks config.cgi to retrieve the repository configuration.
 			On Eclipse.org this resulted in heavy CPU Load for the regeneration and a big surge in band width use.</p>
 		<ul>
@@ -123,7 +123,7 @@
 				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=205416">bug 205416</a>
 			</li>
 		</ul>
-		<h2 id="TracConnector">Trac Connector</h2>
+		<h2 id="Trac_Connector">Trac Connector</h2>
 		<p>The Trac connector offers two access methods:</p>
 		<ul>
 			<li>
@@ -160,7 +160,7 @@
 		<p>
 			<img border="0" src="images/Trac-editor.gif"/>
 		</p>
-		<h2 id="JIRAConnector">JIRA Connector</h2>
+		<h2 id="JIRA_Connector">JIRA Connector</h2>
 		<p>See 
 			<a href="http://confluence.atlassian.com/display/JIRAEXT/Mylyn">this page</a> for install instructions and additional screen shots. Note that the Mylyn JIRA connector requires at least JIRA version 3.3.3 and SOAP/RPC services have to be enabled on the server.
 		</p>
@@ -184,7 +184,7 @@
 		<p>See also 
 			<a href="http://wiki.eclipse.org/Mylyn/Mylyn_FAQ#JIRA_Connector_troubleshooting" title="Mylyn_FAQ#JIRA_Connector_troubleshooting">JIRA Connector Troubleshooting</a>.
 		</p>
-		<h2 id="GenericWebRepositoryConnector">Generic Web Repository Connector</h2>
+		<h2 id="Generic_Web_Repository_Connector">Generic Web Repository Connector</h2>
 		<p>The generic web repository connector is NOT part of the default Mylyn install. You can install it from a separate extras update site. See 
 			<a href="http://www.eclipse.org/mylyn/downloads/">Mylyn download page</a> for more details.
 		</p>
@@ -282,7 +282,7 @@
 		<p>
 			<img border="0" src="images/Generic-web-repository-settings.gif"/>
 		</p>
-		<h2 id="XPlannerConnector">XPlanner Connector</h2>
+		<h2 id="XPlanner_Connector">XPlanner Connector</h2>
 		<p>The XPlanner connector is currently in the Experimental state.  It supports XPlanner version .7.</p>
 		<p>
 			<b>Query</b>
