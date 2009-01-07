@@ -27,6 +27,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.AnchorCompletionProcessor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.MarkupTemplateCompletionProcessor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.MultiplexingContentAssistProcessor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MarkupMonoReconciler;
@@ -36,6 +37,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitione
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDamagerRepairer;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupTokenScanner;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
+import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.HippieProposalProcessor;
 
@@ -50,6 +52,8 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 
 	private MarkupTemplateCompletionProcessor completionProcessor;
 
+	private AnchorCompletionProcessor anchorCompletionProcessor;
+
 	private MarkupLanguage markupLanguage;
 
 	private MarkupValidationReconcilingStrategy markupValidationReconcilingStrategy;
@@ -57,6 +61,8 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 	private IFile file;
 
 	private ITextHover textHover;
+
+	private OutlineItem outline;
 
 	public MarkupSourceViewerConfiguration(IPreferenceStore preferenceStore) {
 		super(preferenceStore);
@@ -87,14 +93,18 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-
 		if (completionProcessor == null) {
 			completionProcessor = new MarkupTemplateCompletionProcessor();
 			completionProcessor.setMarkupLanguage(markupLanguage);
 		}
+		if (anchorCompletionProcessor == null && outline != null) {
+			anchorCompletionProcessor = new AnchorCompletionProcessor();
+			anchorCompletionProcessor.setOutline(outline);
+		}
 		HippieProposalProcessor hippieProcessor = new HippieProposalProcessor();
 
 		MultiplexingContentAssistProcessor processor = new MultiplexingContentAssistProcessor();
+		processor.addDelegate(anchorCompletionProcessor);
 		processor.addDelegate(completionProcessor);
 		processor.addDelegate(hippieProcessor);
 
@@ -186,5 +196,12 @@ public class MarkupSourceViewerConfiguration extends TextSourceViewerConfigurati
 			textHover = new DefaultTextHover(sourceViewer);
 		}
 		return textHover;
+	}
+
+	public void setOutline(OutlineItem outlineModel) {
+		this.outline = outlineModel;
+		if (anchorCompletionProcessor != null) {
+			anchorCompletionProcessor.setOutline(outline);
+		}
 	}
 }

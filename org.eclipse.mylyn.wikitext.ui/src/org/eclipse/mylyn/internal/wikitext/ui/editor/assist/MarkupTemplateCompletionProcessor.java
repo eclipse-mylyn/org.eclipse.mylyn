@@ -56,7 +56,8 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 
 	private static final Template[] NO_TEMPLATES = new Template[0];
 
-	private final TemplateContextType contextType = new TemplateContextType(CONTEXT_ID, Messages.getString("MarkupTemplateCompletionProcessor.2")); //$NON-NLS-1$
+	private final TemplateContextType contextType = new TemplateContextType(CONTEXT_ID,
+			Messages.getString("MarkupTemplateCompletionProcessor.2")); //$NON-NLS-1$
 
 	private Templates templates;
 
