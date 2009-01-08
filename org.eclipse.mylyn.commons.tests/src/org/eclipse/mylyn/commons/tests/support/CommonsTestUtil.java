@@ -38,9 +38,13 @@ public class CommonsTestUtil {
 			}
 		} else {
 			URL localURL = source.getClass().getResource("");
+			// remove all package segments from name
 			String directory = source.getClass().getName().replaceAll("[^.]", "");
 			directory = directory.replaceAll(".", "../");
-			directory += "../"; // account for bin/
+			if (localURL.getFile().contains("/bin/")) {
+				// account for bin/ when running from Eclipse workspace
+				directory += "../";
+			}
 			return new File(localURL.getFile() + directory + filename);
 		}
 		throw new AssertionFailedError("Could not locate " + filename);
