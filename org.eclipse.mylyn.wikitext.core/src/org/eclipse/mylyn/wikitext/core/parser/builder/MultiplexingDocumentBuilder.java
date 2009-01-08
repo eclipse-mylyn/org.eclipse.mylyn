@@ -19,7 +19,7 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.Locator;
 
 /**
- * 
+ * A document builder that dispatches events to one or more delegates.
  * 
  * @author David Green
  */
