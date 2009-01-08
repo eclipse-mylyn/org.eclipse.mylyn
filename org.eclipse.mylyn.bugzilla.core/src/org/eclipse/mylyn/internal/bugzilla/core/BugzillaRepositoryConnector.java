@@ -108,8 +108,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		if (taskData.isPartial()) {
-			if (isComplete && task.getCompletionDate() == null) {
-				task.setCompletionDate(new Date(0));
+			if (isComplete) {
+				if (task.getCompletionDate() == null) {
+					task.setCompletionDate(new Date(0));
+				}
+			} else {
+				if (task.getCompletionDate() != null) {
+					task.setCompletionDate(null);
+				}
 			}
 		} else {
 			// Completion Date
@@ -203,7 +209,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		monitor = Policy.monitorFor(monitor);
 		try {
-			monitor.beginTask(Messages.BugzillaRepositoryConnector_checking_for_changed_tasks, session.getTasks().size());
+			monitor.beginTask(Messages.BugzillaRepositoryConnector_checking_for_changed_tasks, session.getTasks()
+					.size());
 
 			if (repository.getSynchronizationTimeStamp() == null) {
 				for (ITask task : session.getTasks()) {
