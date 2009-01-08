@@ -11,6 +11,8 @@
     	<fail unless="wikitext.version">Must define wikitext.version</fail>
     	<fail unless="buildDirectory">Must define buildDirectory</fail>
     	
+    	<antcall target="javadoc"/>
+    	
         <zip destfile="${wikitext.standalone.archive}">
         	<zipfileset prefix="${wikitext.standalone.dir}" dir="${wikitext.plugin.jars.location}">
         		<include name="org.eclipse.mylyn.wikitext.*core*.jar"/>
@@ -22,8 +24,57 @@
         	<zipfileset prefix="${wikitext.standalone.dir}" dir="${buildDirectory}/features/org.eclipse.mylyn.wikitext_feature">
         		<include name="license.html"/>
         	</zipfileset>
+        	<zipfileset prefix="${wikitext.standalone.dir}/src" dir="${buildDirectory}/plugins">
+        		<include name="org.eclipse.mylyn.wikitext.*core*/src/**/*"/>
+        		<include name="org.eclipse.mylyn.wikitext.*core*/META-INF/**/*"/>
+        		<exclude name="org.eclipse.mylyn.wikitext.*source*/**/*"/>
+        	</zipfileset>
+        	<zipfileset prefix="${wikitext.standalone.dir}/apidoc" dir="${buildDirectory}/wikitext-apidoc">
+        		<include name="**/*"/>
+        	</zipfileset>
         </zip>
     </target>
 
+	<target name="javadoc">
+		<fail unless="buildDirectory">Must define buildDirectory</fail>
+    	<fail unless="wikitext.plugin.jars.location">Must define wikitext.plugin.jars.location</fail>
+		<fail unless="wikitext.version">Must define wikitext.version</fail>
 
+		<dirset dir="${buildDirectory}/plugins" id="">
+			<include name="org.eclipse.mylyn.wikitext.*core*/src"/>
+		</dirset>
+		
+		<javadoc destdir="${buildDirectory}/wikitext-apidoc">
+			<fileset dir="${buildDirectory}/plugins">
+				<include name="org.eclipse.mylyn.wikitext.*core*/src/**/*.java"/>
+				<exclude name="org.eclipse.mylyn.wikitext.*core*/**/internal/**/*"/>
+			</fileset>
+			<classpath>
+				<fileset dir="${wikitext.plugin.jars.location}">
+					<include name="org.eclipse.mylyn.wikitext.*core*.jar"/>
+				</fileset>
+			</classpath>
+			<doctitle><![CDATA[<h1>Mylyn WikiText</h1><p>version ${wikitext.version}<br/><a href="http://www.eclipse.org/mylyn" target="mylyn">http://www.eclipse.org/mylyn</a></p>]]></doctitle>
+			<header><![CDATA[Mylyn WikiText version ${wikitext.version}]]></header>
+			<bottom><![CDATA[<i>Copyright &#169; 2007, 2008 David Green and others.<br/>
+				All rights reserved. This program and the accompanying materials<br/>
+				are made available under the terms of the Eclipse Public License v1.0<br/>
+				which accompanies this distribution, and is available at<br/>
+				<a href="http://www.eclipse.org/legal/epl-v10.html">http://www.eclipse.org/legal/epl-v10.html</a></i>]]></bottom>
+		    <link href="http://java.sun.com/javase/6/docs/api/"/>
+		</javadoc>
+		
+		
+	</target>
+	 
+	<target name="test-standalone-packaging" description="A target for testing this build script without having to run the build repeatedly">
+		<property name="wikitext.version" value="0.0.0.test"/>
+		<property name="wikitext.standalone.archive" value="wikitext-standalone-test.zip"/>
+		<property name="wikitext.standalone.dir" value="wikitext-standalone-${wikitext.version}"/>
+		<property name="wikitext.plugin.jars.location" value="../build/3.4/allUpdateSite/plugins"/>
+		<property name="buildDirectory" value="../build/3.4"/>
+		
+		<antcall target="all"/>
+	</target>
+	
 </project>
