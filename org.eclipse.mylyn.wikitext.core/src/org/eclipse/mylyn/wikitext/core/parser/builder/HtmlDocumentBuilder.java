@@ -103,7 +103,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 	private boolean emitDtd = false;
 
-	private boolean emitEncodingMeta = true;
+	private String encoding = "utf-8"; //$NON-NLS-1$
 
 	private String title;
 
@@ -123,7 +123,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * construct the HtmlDocumentBuilder.
 	 * 
 	 * @param out
-	 *            the writer to which content is written, whose encoding must be utf-8
+	 *            the writer to which content is written
 	 */
 	public HtmlDocumentBuilder(Writer out) {
 		this(out, false);
@@ -133,7 +133,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * construct the HtmlDocumentBuilder.
 	 * 
 	 * @param out
-	 *            the writer to which content is written, whose encoding must be utf-8
+	 *            the writer to which content is written
 	 * @param formatting
 	 *            indicate if the output should be formatted
 	 */
@@ -145,7 +145,7 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	 * construct the HtmlDocumentBuilder.
 	 * 
 	 * @param writer
-	 *            the writer to which content is written, whose character encoding must be utf-8
+	 *            the writer to which content is written
 	 */
 	public HtmlDocumentBuilder(XmlStreamWriter writer) {
 		super(writer);
@@ -249,25 +249,30 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	}
 
 	/**
-	 * Indicate if a HTML meta tag should be emitted to indicate the encoding of the document. For example:
-	 * <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code>
+	 * Specify the character encoding for use in the HTML meta tag. For example, if the charset is specified as
+	 * <code>"utf-8"</code>: <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code>
 	 * 
-	 * The default is true.
+	 * The default is <code>"utf-8"</code>.
 	 * 
 	 * Ignored unless {@link #isEmitAsDocument()}
 	 */
-	public boolean isEmitEncodingMeta() {
-		return emitEncodingMeta;
+	public String getEncoding() {
+		return encoding;
 	}
 
 	/**
-	 * Indicate if a HTML meta tag should be emitted to indicate the encoding of the document. For example:
-	 * <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code>
+	 * Specify the character encoding for use in the HTML meta tag. For example, if the charset is specified as
+	 * <code>"utf-8"</code>: <code>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/&gt;</code>
 	 * 
-	 * Ignored unless {@link #isEmitAsDocument()}
+	 * The default is <code>"utf-8"</code>.
+	 * 
+	 * @param encoding
+	 *            the character encoding to use, or null if the HTML meta tag should not be emitted
+	 * 
+	 *            Ignored unless {@link #isEmitAsDocument()}
 	 */
-	public void setEmitEncodingMeta(boolean emitEncodingMeta) {
-		this.emitEncodingMeta = emitEncodingMeta;
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
 	}
 
 	/**
@@ -469,7 +474,11 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 		writer.setDefaultNamespace(htmlNsUri);
 
 		if (emitAsDocument) {
-			writer.writeStartDocument();
+			if (encoding != null && encoding.length() > 0) {
+				writer.writeStartDocument(encoding, "1.0"); //$NON-NLS-1$
+			} else {
+				writer.writeStartDocument();
+			}
 
 			if (emitDtd && htmlDtd != null) {
 				writer.writeDTD(htmlDtd);
@@ -480,14 +489,14 @@ public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 
 			writer.writeStartElement(htmlNsUri, "head"); //$NON-NLS-1$
 
-			if (emitEncodingMeta) {
+			if (encoding != null && encoding.length() > 0) {
 				// bug 259786: add the charset as a HTML meta http-equiv
 				// see http://www.w3.org/International/tutorials/tutorial-char-enc/
 				//
 				// <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
 				writer.writeEmptyElement(htmlNsUri, "meta"); //$NON-NLS-1$
 				writer.writeAttribute("http-equiv", "Content-Type"); //$NON-NLS-1$ //$NON-NLS-2$
-				writer.writeAttribute("content", "text/html; charset=utf-8"); //$NON-NLS-1$//$NON-NLS-2$
+				writer.writeAttribute("content", String.format("text/html; charset=%s", encoding)); //$NON-NLS-1$//$NON-NLS-2$
 			}
 			if (base != null && baseInHead) {
 				writer.writeEmptyElement(htmlNsUri, "base"); //$NON-NLS-1$

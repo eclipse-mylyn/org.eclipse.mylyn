@@ -118,7 +118,7 @@ public class HtmlDocumentBuilderTest extends TestCase {
 		assertTrue(html.indexOf('\r') == -1);
 		assertTrue(html.indexOf('\n') == -1);
 		assertEquals(
-				"<?xml version='1.0' ?><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head><body><p>some para text<br/>more para text</p><p>second para</p></body></html>",
+				"<?xml version='1.0' encoding='utf-8' ?><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/></head><body><p>some para text<br/>more para text</p><p>second para</p></body></html>",
 				html);
 	}
 
