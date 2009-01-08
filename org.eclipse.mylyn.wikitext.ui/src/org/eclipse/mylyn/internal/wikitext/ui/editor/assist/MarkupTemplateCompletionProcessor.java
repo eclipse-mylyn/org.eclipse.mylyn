@@ -108,7 +108,7 @@ public class MarkupTemplateCompletionProcessor extends TemplateCompletionProcess
 			IRegion lineInformationOfOffset = viewer.getDocument().getLineInformationOfOffset(offset);
 			lineOffset = offset - lineInformationOfOffset.getOffset();
 		} catch (BadLocationException e1) {
-			e1.printStackTrace();
+			// ignore
 		}
 
 		String selectionText = selection.getText();

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
@@ -118,7 +118,7 @@ public abstract class DocumentRegionValidator {
 			return;
 		}
 		this.markupLanguage = markupLanguage;
-		delegate = markupLanguage == null ? null : WikiTextPlugin.getDefault().getMarkupValidator(
+		delegate = markupLanguage == null ? null : WikiText.getMarkupValidator(
 				markupLanguage.getName());
 	}
 

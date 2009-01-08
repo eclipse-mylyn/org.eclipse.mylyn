@@ -18,6 +18,8 @@ import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,7 +120,12 @@ public class ServiceLocator {
 											names.add(instance.getName());
 										}
 									} catch (Exception e) {
-										e.printStackTrace();
+										// very unusual, but inform the user in a stand-alone way
+										Logger.getLogger(ServiceLocator.class.getName())
+												.log(
+														Level.WARNING,
+														MessageFormat.format(
+																Messages.getString("ServiceLocator.0"), className), e); //$NON-NLS-1$
 									}
 								}
 							}
@@ -130,8 +137,9 @@ public class ServiceLocator {
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// very unusual, but inform the user in a stand-alone way
+			Logger.getLogger(ServiceLocator.class.getName()).log(Level.SEVERE,
+					Messages.getString("ServiceLocator.1"), e); //$NON-NLS-1$
 		}
 		// next attempt to load the markup language as if the language name is a fully qualified name
 		Matcher matcher = classNamePattern.matcher(languageName);
@@ -145,7 +153,7 @@ public class ServiceLocator {
 						return instance;
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					// ignore
 				}
 			}
 		}

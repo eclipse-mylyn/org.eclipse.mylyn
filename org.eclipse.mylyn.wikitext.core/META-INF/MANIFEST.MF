@@ -4,7 +4,8 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.mylyn.wikitext.core;singleton:=true
 Bundle-Version: 0.9.3.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Export-Package: org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,
+Export-Package: org.eclipse.mylyn.internal.wikitext.core;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.util;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.core.validation;x-internal:=true,
  org.eclipse.mylyn.wikitext.core,
@@ -20,7 +21,7 @@ Export-Package: org.eclipse.mylyn.internal.wikitext.core.parser.builder;x-intern
  org.eclipse.mylyn.wikitext.core.util.anttask,
  org.eclipse.mylyn.wikitext.core.validation
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.eclipse.mylyn.wikitext.core.WikiTextPlugin
+Bundle-Activator: org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.apache.ant;bundle-version="1.7.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

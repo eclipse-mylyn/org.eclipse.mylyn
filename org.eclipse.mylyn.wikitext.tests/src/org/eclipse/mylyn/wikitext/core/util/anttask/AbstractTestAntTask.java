@@ -21,7 +21,7 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 public abstract class AbstractTestAntTask extends TestCase {

@@ -507,7 +507,7 @@ public class CssStyleManager {
 						fontState.size = percentage * defaultSize;
 					}
 				} catch (NumberFormatException e) {
-					e.printStackTrace();
+					// ignore
 				}
 			} else if ("xx-small".equals(cssFontSizeValue)) { //$NON-NLS-1$
 				float defaultSize = defaultFont.getFontData()[0].getHeight();

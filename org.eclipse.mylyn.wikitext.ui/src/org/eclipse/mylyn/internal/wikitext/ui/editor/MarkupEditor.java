@@ -46,7 +46,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.actions.SetMarkupLanguageAc
 import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MarkupMonoReconciler;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDocumentProvider;
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder.BlockType;
@@ -490,9 +490,9 @@ public class MarkupEditor extends TextEditor {
 			} else if (input instanceof IPathEditorInput) {
 				name = ((IPathEditorInput) input).getPath().lastSegment();
 			}
-			markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(name);
+			markupLanguage = WikiText.getMarkupLanguageForFilename(name);
 			if (markupLanguage == null) {
-				markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage("Textile"); //$NON-NLS-1$
+				markupLanguage = WikiText.getMarkupLanguage("Textile"); //$NON-NLS-1$
 			}
 		}
 		setMarkupLanguage(markupLanguage, false);
@@ -565,7 +565,7 @@ public class MarkupEditor extends TextEditor {
 	public static MarkupLanguage loadMarkupLanguagePreference(IFile file) {
 		String languageName = getMarkupLanguagePreference(file);
 		if (languageName != null) {
-			return WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
+			return WikiText.getMarkupLanguage(languageName);
 		}
 		return null;
 	}
@@ -596,7 +596,7 @@ public class MarkupEditor extends TextEditor {
 		}
 		IFile file = getFile();
 		if (file != null) {
-			MarkupLanguage defaultMarkupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(
+			MarkupLanguage defaultMarkupLanguage = WikiText.getMarkupLanguageForFilename(
 					file.getName());
 			String preference = markupLanguage == null ? null : markupLanguage.getName();
 			if (defaultMarkupLanguage != null && defaultMarkupLanguage.getName().equals(preference)) {
@@ -652,12 +652,12 @@ public class MarkupEditor extends TextEditor {
 
 		final MarkupLanguage markupLanguage = getMarkupLanguage();
 		MenuManager markupLanguageMenu = new MenuManager(Messages.getString("MarkupEditor.MarkupLanguage")); //$NON-NLS-1$
-		for (String markupLanguageName : new TreeSet<String>(WikiTextPlugin.getDefault().getMarkupLanguageNames())) {
+		for (String markupLanguageName : new TreeSet<String>(WikiText.getMarkupLanguageNames())) {
 			markupLanguageMenu.add(new SetMarkupLanguageAction(this, markupLanguageName, markupLanguage != null
 					&& markupLanguageName.equals(markupLanguage.getName())));
 		}
 
-		menu.appendToGroup(ITextEditorActionConstants.GROUP_SETTINGS, markupLanguageMenu);
+		menu.prependToGroup(ITextEditorActionConstants.GROUP_SETTINGS, markupLanguageMenu);
 	}
 
 	private static class MarkupSourceViewer extends SourceViewer {

@@ -22,7 +22,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.ui.PlatformUI;
 
@@ -68,7 +68,7 @@ public abstract class AbstractMarkupResourceHandler extends AbstractHandler {
 						if (markupLanguage == null) {
 							markupLanguage = MarkupEditor.loadMarkupLanguagePreference(file);
 							if (markupLanguage == null) {
-								markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguageForFilename(
+								markupLanguage = WikiText.getMarkupLanguageForFilename(
 										file.getName());
 							}
 							if (markupLanguage == null) {

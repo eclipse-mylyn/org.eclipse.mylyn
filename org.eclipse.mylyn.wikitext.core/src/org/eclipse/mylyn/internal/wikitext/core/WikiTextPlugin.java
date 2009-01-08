@@ -8,7 +8,7 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.wikitext.core;
+package org.eclipse.mylyn.internal.wikitext.core;
 
 import java.text.MessageFormat;
 import java.util.Collections;

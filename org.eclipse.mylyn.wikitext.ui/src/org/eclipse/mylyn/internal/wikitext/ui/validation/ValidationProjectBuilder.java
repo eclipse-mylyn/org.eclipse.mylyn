@@ -41,7 +41,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.validation.ResourceMarkerMarkupValidator;
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.validation.ValidationProblem;
 
 /**
@@ -229,7 +229,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 		monitor.beginTask(
 				MessageFormat.format(Messages.getString("ValidationProjectBuilder.1"), file.file.getName()), totalWork); //$NON-NLS-1$
 		ResourceMarkerMarkupValidator validator = new ResourceMarkerMarkupValidator();
-		validator.setMarkupLanguage(WikiTextPlugin.getDefault().getMarkupLanguage(file.languageName));
+		validator.setMarkupLanguage(WikiText.getMarkupLanguage(file.languageName));
 		validator.setResource(file.file);
 
 		if (validator.getMarkupLanguage() != null) {
@@ -261,7 +261,7 @@ public class ValidationProjectBuilder extends IncrementalProjectBuilder {
 	private String getMarkupLanguageForFile(IFile file) {
 		String language = MarkupEditor.getMarkupLanguagePreference(file);
 		if (language == null) {
-			language = WikiTextPlugin.getDefault().getMarkupLanguageNameForFilename(file.getName());
+			language = WikiText.getMarkupLanguageNameForFilename(file.getName());
 		}
 		return language;
 	}

@@ -31,7 +31,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.editor.assist.Templates;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.help.CheatSheetContent;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.help.HelpContent;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -145,7 +145,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 					try {
 						if (markupLanguage == null) {
 							throw new Exception(Messages.getString("WikiTextUiPlugin.9")); //$NON-NLS-1$
-						} else if (!WikiTextPlugin.getDefault().getMarkupLanguageNames().contains(markupLanguage)) {
+						} else if (!WikiText.getMarkupLanguageNames().contains(markupLanguage)) {
 							throw new Exception(MessageFormat.format(
 									Messages.getString("WikiTextUiPlugin.10"), markupLanguage)); //$NON-NLS-1$
 						}
@@ -194,7 +194,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 							String markupLanguage = element.getAttribute("markupLanguage"); //$NON-NLS-1$
 							if (markupLanguage == null) {
 								throw new Exception(Messages.getString("WikiTextUiPlugin.15")); //$NON-NLS-1$
-							} else if (!WikiTextPlugin.getDefault().getMarkupLanguageNames().contains(markupLanguage)) {
+							} else if (!WikiText.getMarkupLanguageNames().contains(markupLanguage)) {
 								throw new Exception(MessageFormat.format(
 										Messages.getString("WikiTextUiPlugin.16"), markupLanguage)); //$NON-NLS-1$
 							}
@@ -268,7 +268,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 			// now that we have the basic templates, check for language extensions and connect the hierarchy
 
 			// first ensure that all language names have templates defined
-			Set<String> languageNames = WikiTextPlugin.getDefault().getMarkupLanguageNames();
+			Set<String> languageNames = WikiText.getMarkupLanguageNames();
 			for (String languageName : languageNames) {
 				Templates languageTemplates = templates.get(languageName);
 				if (languageTemplates == null) {
@@ -278,7 +278,7 @@ public class WikiTextUiPlugin extends AbstractUIPlugin {
 			}
 			// next connect the hierarchy
 			for (String languageName : languageNames) {
-				MarkupLanguage markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage(languageName);
+				MarkupLanguage markupLanguage = WikiText.getMarkupLanguage(languageName);
 				if (markupLanguage != null && markupLanguage.getExtendsLanguage() != null) {
 					Templates languageTemplates = templates.get(languageName);
 					Templates parentLanguageTemplates = templates.get(markupLanguage.getExtendsLanguage());

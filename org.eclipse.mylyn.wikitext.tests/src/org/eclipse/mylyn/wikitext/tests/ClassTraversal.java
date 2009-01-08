@@ -18,7 +18,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
 
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
 import org.osgi.framework.Bundle;
 
 /**

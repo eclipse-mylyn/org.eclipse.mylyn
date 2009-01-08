@@ -23,7 +23,7 @@ import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.actions.ContextHelpAction;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.help.HelpContent;
 import org.eclipse.mylyn.internal.wikitext.ui.util.InformationPresenterUtil;
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -88,7 +88,7 @@ public class ShowCheatSheetCommand extends AbstractHandler {
 				MarkupLanguage l = markupLanguage;
 
 				while (content == null && l != null && l.getExtendsLanguage() != null) {
-					l = WikiTextPlugin.getDefault().getMarkupLanguage(l.getExtendsLanguage());
+					l = WikiText.getMarkupLanguage(l.getExtendsLanguage());
 					if (l != null) {
 						content = WikiTextUiPlugin.getDefault().getCheatSheets().get(l.getName());
 					}

@@ -16,7 +16,7 @@ import java.lang.reflect.Modifier;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.tests.ClassTraversal.Visitor;
 
 /**

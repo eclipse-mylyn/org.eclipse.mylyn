@@ -24,7 +24,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextNature;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -62,7 +62,7 @@ public class ProjectPropertyPage extends PropertyPage implements IWorkbenchPrope
 		wikiTextNatureButton.setText(Messages.getString("ProjectPropertyPage.2")); //$NON-NLS-1$
 
 		StringBuilder buf = new StringBuilder();
-		SortedSet<String> extensions = new TreeSet<String>(WikiTextPlugin.getDefault().getMarkupFileExtensions());
+		SortedSet<String> extensions = new TreeSet<String>(WikiText.getMarkupFileExtensions());
 		for (String extension : extensions) {
 			if (buf.length() > 0) {
 				buf.append(Messages.getString("ProjectPropertyPage.5")); //$NON-NLS-1$

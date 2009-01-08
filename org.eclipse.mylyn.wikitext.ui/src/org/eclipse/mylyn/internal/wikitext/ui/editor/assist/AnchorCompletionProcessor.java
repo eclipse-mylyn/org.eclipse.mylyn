@@ -44,22 +44,14 @@ public class AnchorCompletionProcessor implements IContentAssistProcessor {
 
 		private final int offset;
 
-		private final int cursorPosition;
-
 		private final int replacementLength;
 
 		private int relevance;
 
-		public CompletionProposal(int offset, String proposalText, int replacementLength, int cursorPosition) {
-			super();
+		public CompletionProposal(int offset, String proposalText, int replacementLength) {
 			this.offset = offset;
 			this.proposalText = proposalText;
 			this.replacementLength = replacementLength;
-			this.cursorPosition = cursorPosition;
-		}
-
-		public CompletionProposal(int offset, String proposalText, int replacementLength) {
-			this(offset, proposalText, replacementLength, offset + proposalText.length());
 		}
 
 		public void apply(IDocument document) {

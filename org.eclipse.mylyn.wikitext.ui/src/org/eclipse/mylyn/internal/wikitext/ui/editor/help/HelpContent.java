@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.mylyn.wikitext.core.WikiTextPlugin;
+import org.eclipse.mylyn.wikitext.core.WikiText;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.osgi.framework.Bundle;
@@ -111,7 +111,7 @@ public class HelpContent {
 			if (resourceContentLanguage == null || "html".equalsIgnoreCase(resourceContentLanguage)) { //$NON-NLS-1$
 				return content;
 			}
-			MarkupLanguage markupLanguage = WikiTextPlugin.getDefault().getMarkupLanguage(resourceContentLanguage);
+			MarkupLanguage markupLanguage = WikiText.getMarkupLanguage(resourceContentLanguage);
 			if (markupLanguage == null) {
 				throw new IOException(
 						MessageFormat.format(Messages.getString("HelpContent.0"), resourceContentLanguage)); //$NON-NLS-1$
