@@ -17,7 +17,7 @@ import java.util.Iterator;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager.CssRule;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * A field editor for CSS styles. Adds validation to CSS rule input.
@@ -28,8 +28,8 @@ public class CssStyleFieldEditor extends StringFieldEditor {
 
 	private final CssStyleManager cssStyleManager;
 
-	public CssStyleFieldEditor(CssStyleManager cssStyleManager, String preferenceKey, String key, Group group) {
-		super(preferenceKey, key, group);
+	public CssStyleFieldEditor(CssStyleManager cssStyleManager, String preferenceKey, String key, Composite parent) {
+		super(preferenceKey, key, parent);
 		this.cssStyleManager = cssStyleManager;
 	}
 

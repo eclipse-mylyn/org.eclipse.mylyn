@@ -17,7 +17,9 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.viewer.CssStyleManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
@@ -58,6 +60,11 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 			String preferenceKey = Preferences.toPreferenceKey(ent.getKey(), true);
 			addField(new CssStyleFieldEditor(cssStyleManager, preferenceKey, ent.getKey(), group));
 		}
+		// bug 260427
+		Layout layout = group.getLayout();
+		if (layout instanceof GridLayout) {
+			((GridLayout) layout).marginWidth = 5;
+		}
 
 		group = new Group(getFieldEditorParent(), SWT.NULL);
 		group.setText(Messages.getString("EditorPreferencePage.2")); //$NON-NLS-1$
@@ -67,6 +74,12 @@ public class EditorPreferencePage extends FieldEditorPreferencePage implements I
 			String preferenceKey = Preferences.toPreferenceKey(ent.getKey(), false);
 			addField(new CssStyleFieldEditor(cssStyleManager, preferenceKey, ent.getKey(), group));
 		}
+		// bug 260427
+		layout = group.getLayout();
+		if (layout instanceof GridLayout) {
+			((GridLayout) layout).marginWidth = 5;
+		}
+
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
 				WikiTextUiPlugin.getDefault().getPluginId() + ".preferences"); //$NON-NLS-1$
 	}
