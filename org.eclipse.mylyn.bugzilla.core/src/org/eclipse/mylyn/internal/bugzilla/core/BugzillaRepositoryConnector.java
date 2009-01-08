@@ -495,7 +495,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task, TaskData taskData) {
-		if (taskData.isPartial()) {
+		if (taskData.isPartial() && task.getCreationDate() != null) {
 			return false;
 		}
 		String lastKnownMod = task.getAttribute(BugzillaAttribute.DELTA_TS.getKey());
