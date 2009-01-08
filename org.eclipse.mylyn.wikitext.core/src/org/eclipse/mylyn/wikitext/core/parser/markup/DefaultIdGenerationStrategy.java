@@ -16,6 +16,7 @@ package org.eclipse.mylyn.wikitext.core.parser.markup;
  * id.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class DefaultIdGenerationStrategy extends IdGenerationStrategy {
 

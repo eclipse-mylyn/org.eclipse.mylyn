@@ -20,6 +20,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * @see DocumentBuilder#charactersUnescaped(String)
  * 
  * @author David Green
+ * @since 1.0
  */
 public class LiteralPhraseModifierProcessor extends PatternBasedElementProcessor {
 

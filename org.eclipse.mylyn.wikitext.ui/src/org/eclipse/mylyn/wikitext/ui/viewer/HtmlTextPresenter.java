@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Display;
  * 
  * @author David Green
  * 
+ * @since 1.0 
  */
 public class HtmlTextPresenter implements DefaultInformationControl.IInformationPresenter,
 		DefaultInformationControl.IInformationPresenterExtension {

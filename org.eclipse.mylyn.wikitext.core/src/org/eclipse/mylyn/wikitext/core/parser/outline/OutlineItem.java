@@ -20,6 +20,7 @@ import java.util.Map;
  * always a root item that represents the document itself. Every level-1 heading becomes a child item of the root.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class OutlineItem {
 

@@ -40,6 +40,7 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
  * An Ant task for converting markup to OASIS DITA format.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class MarkupToDitaTask extends MarkupTask {
 	public enum BreakStrategy {

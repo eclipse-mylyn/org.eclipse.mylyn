@@ -43,6 +43,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  * A confluence language for parsing Confluence markup.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class ConfluenceLanguage extends MarkupLanguage {
 

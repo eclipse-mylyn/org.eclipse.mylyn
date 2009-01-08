@@ -18,6 +18,7 @@ import java.io.Reader;
  * reading lines of text, tracking the offset of the last line read.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class LocationTrackingReader extends Reader {
 	private final Reader delegate;

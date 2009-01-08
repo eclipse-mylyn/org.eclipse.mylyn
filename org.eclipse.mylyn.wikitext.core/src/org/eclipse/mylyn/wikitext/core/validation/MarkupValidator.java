@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.wikitext.core.validation.StandaloneMarkupValid
  * @author David Green
  * 
  * @see StandaloneMarkupValidator
+ * @since 1.0
  */
 public class MarkupValidator {
 

@@ -30,6 +30,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.Block;
  * 
  * @author David Green
  * 
+ * @since 1.0 
  */
 public class BugzillaTextileLanguage extends TextileLanguage {
 

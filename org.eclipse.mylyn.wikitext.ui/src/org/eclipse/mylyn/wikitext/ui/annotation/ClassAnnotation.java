@@ -16,6 +16,7 @@ import org.eclipse.jface.text.source.Annotation;
  * An annotation that marks the location of an element that has an @class.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class ClassAnnotation extends Annotation {
 

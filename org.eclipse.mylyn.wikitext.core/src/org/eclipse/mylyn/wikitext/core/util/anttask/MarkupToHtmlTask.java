@@ -44,6 +44,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * An Ant task for converting lightweight markup to HTML format.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class MarkupToHtmlTask extends MarkupTask {
 	private final List<FileSet> filesets = new ArrayList<FileSet>();

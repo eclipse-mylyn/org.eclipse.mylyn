@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  * @see MarkupViewerConfiguration
  * 
  * @author David Green
+ * @since 1.0
  */
 public class MarkupViewer extends HtmlViewer {
 

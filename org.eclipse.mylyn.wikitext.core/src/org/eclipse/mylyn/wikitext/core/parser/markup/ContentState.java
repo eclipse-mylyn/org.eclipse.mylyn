@@ -22,6 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.Locator;
  * the parse phase.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class ContentState implements Locator {
 	private final Map<String, String> footnoteIdToHtmlId = new HashMap<String, String>();

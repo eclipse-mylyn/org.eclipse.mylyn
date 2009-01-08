@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.wikitext.core.util.XML11Char;
  * A default implementation of {@link XmlStreamWriter} that creates XML character output.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class DefaultXmlStreamWriter extends XmlStreamWriter {
 

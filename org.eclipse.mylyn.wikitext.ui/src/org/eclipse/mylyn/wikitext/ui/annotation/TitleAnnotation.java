@@ -17,6 +17,7 @@ import org.eclipse.jface.text.source.Annotation;
  * 
  * @author David Green
  * 
+ * @since 1.0 
  */
 public class TitleAnnotation extends Annotation {
 	private final String titleType;

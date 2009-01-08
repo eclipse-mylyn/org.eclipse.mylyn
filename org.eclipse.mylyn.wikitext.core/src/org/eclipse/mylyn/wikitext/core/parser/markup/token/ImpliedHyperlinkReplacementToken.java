@@ -18,6 +18,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * protocols to be detected.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class ImpliedHyperlinkReplacementToken extends PatternBasedElement {
 

@@ -18,6 +18,7 @@ package org.eclipse.mylyn.wikitext.core.parser;
  * @see DocumentBuilder
  * 
  * @author David Green
+ * @since 1.0
  */
 public class Attributes {
 

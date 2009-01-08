@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Drawable;
  * 
  * @author David Green
  * 
+ * @since 1.0 
  */
 public class MarkupTextPresenter extends HtmlTextPresenter {
 

@@ -18,6 +18,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * or more words. For example: ABW(A Better Way)
  * 
  * @author David Green
+ * @since 1.0
  */
 public class AcronymReplacementToken extends PatternBasedElement {
 

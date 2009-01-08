@@ -54,6 +54,7 @@ import org.eclipse.ui.texteditor.HyperlinkDetectorRegistry;
  * A configuration for use with a {@link HtmlViewer}.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class HtmlViewerConfiguration extends TextSourceViewerConfiguration {
 

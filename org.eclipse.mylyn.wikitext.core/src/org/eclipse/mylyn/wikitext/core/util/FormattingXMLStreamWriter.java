@@ -16,6 +16,7 @@ import java.util.Stack;
  * An {@link XmlStreamWriter} that creates formatted output by emitting whitespace into the document output stream.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class FormattingXMLStreamWriter extends XmlStreamWriter {
 

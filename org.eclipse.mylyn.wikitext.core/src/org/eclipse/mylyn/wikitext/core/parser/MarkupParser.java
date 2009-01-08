@@ -22,6 +22,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
  * 
  * @author David Green
  * 
+ * @since 1.0 
  */
 public class MarkupParser {
 

@@ -18,6 +18,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * {@link DocumentBuilder builder}.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class LiteralReplacementTokenProcessor extends PatternBasedElementProcessor {
 

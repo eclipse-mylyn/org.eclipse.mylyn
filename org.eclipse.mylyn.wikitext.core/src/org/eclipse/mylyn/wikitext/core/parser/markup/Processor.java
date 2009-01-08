@@ -17,6 +17,7 @@ import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
  * 
  * 
  * @author David Green
+ * @since 1.0
  */
 public class Processor {
 	protected MarkupLanguage markupLanguage;

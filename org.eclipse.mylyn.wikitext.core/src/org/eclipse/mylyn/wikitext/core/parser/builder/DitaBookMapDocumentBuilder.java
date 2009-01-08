@@ -38,6 +38,7 @@ import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDitaTask;
  * 
  * @see DocBookDocumentBuilder
  * @see MarkupToDitaTask
+ * @since 1.0
  */
 public class DitaBookMapDocumentBuilder extends AbstractXmlDocumentBuilder implements Closeable {
 

@@ -21,6 +21,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.IdGenerationStrategy;
 
 /**
  * @author David Green
+ * @since 1.0
  */
 public class IdGenerator {
 

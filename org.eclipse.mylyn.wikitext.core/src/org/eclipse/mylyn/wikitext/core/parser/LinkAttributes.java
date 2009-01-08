@@ -17,6 +17,7 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
  * 
  * @author David Green
  * @author draft
+ * @since 1.0
  */
 public class LinkAttributes extends Attributes {
 	private String target;

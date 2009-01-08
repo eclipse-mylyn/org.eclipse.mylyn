@@ -17,6 +17,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * A phrase modifier that detects HTML and XML comments in the source.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class HtmlCommentPhraseModifier extends PatternBasedElement {
 

@@ -19,6 +19,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * quotes.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class EntityWrappingReplacementToken extends PatternBasedElement {
 

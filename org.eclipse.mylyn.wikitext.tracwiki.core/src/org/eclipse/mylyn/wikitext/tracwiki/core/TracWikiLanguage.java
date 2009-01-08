@@ -35,6 +35,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkRepla
  * An implementation of the <a href="http://trac.edgewall.org/wiki/TracWiki">TracWiki</a> markup language.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class TracWikiLanguage extends MarkupLanguage {
 	private final List<Block> blocks = new ArrayList<Block>();

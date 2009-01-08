@@ -16,6 +16,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * A configuration to be used with a {@link MarkupViewer}
  * 
  * @author David Green
+ * @since 1.0
  */
 public class MarkupViewerConfiguration extends HtmlViewerConfiguration {
 

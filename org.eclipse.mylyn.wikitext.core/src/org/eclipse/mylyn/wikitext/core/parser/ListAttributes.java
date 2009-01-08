@@ -14,6 +14,7 @@ package org.eclipse.mylyn.wikitext.core.parser;
  * 
  * 
  * @author David Green
+ * @since 1.0
  */
 public class ListAttributes extends Attributes {
 

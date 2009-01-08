@@ -26,6 +26,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * >Eclipse help table of contents format</a>.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class MarkupToEclipseToc {
 

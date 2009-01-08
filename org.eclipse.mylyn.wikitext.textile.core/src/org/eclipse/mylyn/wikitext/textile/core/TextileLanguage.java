@@ -49,6 +49,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternEntityReferenc
  * Additionally supported are <code>{toc}</code> and <code>{glossary}</code>.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class TextileLanguage extends MarkupLanguage {
 

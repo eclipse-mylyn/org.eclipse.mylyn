@@ -46,6 +46,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.PatternLiteralReplace
  * href="http://www.wikipedia.org>WikiPedia</a> and <a href="http://www.wikimedia.org/">several other major sites</a>.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class MediaWikiLanguage extends MarkupLanguage {
 	private static final String CATEGORY_PREFIX = ":"; //$NON-NLS-1$

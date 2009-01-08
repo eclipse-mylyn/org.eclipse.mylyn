@@ -19,6 +19,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.PatternBasedElementProcesso
  * @see LineBreakReplacementTokenProcessor
  * 
  * @author David Green
+ * @since 1.0
  */
 public class PatternLineBreakReplacementToken extends PatternBasedElement {
 

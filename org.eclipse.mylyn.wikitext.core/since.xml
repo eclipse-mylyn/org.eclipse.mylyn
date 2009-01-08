@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="since" default="all">
+	<target name="all">
+		<replaceregexp flags="s" match="(\s+)(\*/\s+public class)">
+			<substitution expression="\1* @since 1.0\1\2"/>
+			<fileset dir="..">
+				<include name="org.eclipse.mylyn.wikitext*/src/**/*.java"/>
+				<exclude name="org.eclipse.mylyn.wikitext.tests/**/*"/>
+				<exclude name="**/internal/**/*"/>
+			</fileset>
+		</replaceregexp>
+	</target>
+</project>

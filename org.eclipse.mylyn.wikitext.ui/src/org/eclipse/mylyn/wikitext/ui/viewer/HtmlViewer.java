@@ -48,6 +48,7 @@ import org.xml.sax.SAXException;
  * @see HtmlViewerConfiguration
  * 
  * @author David Green
+ * @since 1.0
  */
 public class HtmlViewer extends SourceViewer {
 

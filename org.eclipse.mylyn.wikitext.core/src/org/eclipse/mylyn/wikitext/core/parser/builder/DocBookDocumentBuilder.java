@@ -34,6 +34,7 @@ import org.eclipse.mylyn.wikitext.core.util.anttask.MarkupToDocbookTask;
  * @see MarkupToDocbook
  * @see MarkupToDocbookTask
  * @see DitaBookMapDocumentBuilder
+ * @since 1.0
  */
 public class DocBookDocumentBuilder extends AbstractXmlDocumentBuilder {
 

@@ -17,6 +17,7 @@ package org.eclipse.mylyn.wikitext.core.validation;
  * Default comparison semantics order problems by increasing offset.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class ValidationProblem implements Comparable<ValidationProblem> {
 	/**

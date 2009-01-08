@@ -62,6 +62,7 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
  * source viewer that displays markup in its intended formatted form.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class MarkupTaskEditorExtension extends AbstractTaskEditorExtension {
 

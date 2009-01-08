@@ -42,6 +42,7 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  * A builder that produces XHTML output. The nature of the output is affected by various settings on the builder.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class HtmlDocumentBuilder extends AbstractXmlDocumentBuilder {
 	private static final Pattern ABSOLUTE_URL_PATTERN = Pattern.compile("[a-zA-Z]{3,8}://?.*"); //$NON-NLS-1$

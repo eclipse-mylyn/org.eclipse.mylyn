@@ -49,6 +49,7 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.token.ImpliedHyperlinkRepla
  * See <a href="http://wikix.ilog.fr/wiki/bin/view/TWiki/TextFormattingRules">TWiki Formatting Rules</a> for details.
  * 
  * @author David Green
+ * @since 1.0
  */
 public class TWikiLanguage extends MarkupLanguage {
 	private final List<Block> blocks = new ArrayList<Block>();

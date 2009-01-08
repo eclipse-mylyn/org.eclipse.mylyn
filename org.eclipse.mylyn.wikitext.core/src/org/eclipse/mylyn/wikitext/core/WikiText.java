@@ -23,9 +23,12 @@ import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
  * should use the {@link ServiceLocator} instead of this class if possible. Stand-alone programs (that is, those
  * programs that do not run in an Eclipse runtime) must not use this class.
  * 
+ * @see ServiceLocator
+ * 
  * @noextend This class is not intended to be subclassed by clients.
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @author David Green
+ * @since 1.0
  */
 public class WikiText {
 
