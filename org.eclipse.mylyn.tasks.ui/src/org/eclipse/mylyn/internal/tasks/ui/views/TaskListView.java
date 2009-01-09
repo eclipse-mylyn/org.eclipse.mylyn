@@ -103,11 +103,11 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListSortAction;
 import org.eclipse.mylyn.internal.tasks.ui.commands.CollapseAllHandler;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskListChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.PlatformUtil;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker;
 import org.eclipse.mylyn.internal.tasks.ui.util.TreeWalker.TreeVisitor;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
@@ -296,6 +296,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	public static final String LABEL_VIEW = Messages.TaskListView_Task_List;
 
 	private static final String MEMENTO_KEY_SORT_DIRECTION = "sortDirection"; //$NON-NLS-1$
+
+	private static final String MEMENTO_KEY_ROOT_SORT_DIRECTION = "rootSortDirection"; //$NON-NLS-1$
 
 	private static final String MEMENTO_KEY_SORTER = "sorter"; //$NON-NLS-1$
 
@@ -758,6 +760,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		case DATE_CREATED:
 			m.putInteger(MEMENTO_KEY_SORT_INDEX, 2);
 			break;
+		case TASK_ID:
+			m.putInteger(MEMENTO_KEY_SORT_INDEX, 3);
+			break;
 		default:
 			m.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
 		}
@@ -771,6 +776,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		case DATE_CREATED:
 			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 2);
 			break;
+		case TASK_ID:
+			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 3);
+			break;
 		default:
 			m2.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
 		}
@@ -778,6 +786,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		m2.putInteger(MEMENTO_KEY_SORT_DIRECTION, tableSorter.getSortDirection2());
 		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
 		memento.putString(MEMENTO_PRESENTATION, currentPresentation.getId());
+		memento.putInteger(MEMENTO_KEY_ROOT_SORT_DIRECTION, tableSorter.getSortDirectionRootElement());
 	}
 
 	private void restoreState() {
@@ -800,13 +809,16 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						tableSorter.setSortDirection(sortDirection);
 						switch (restoredSortIndex) {
 						case 1:
-							tableSorter.setSortByIndex(SortByIndex.SUMMARY);
+							tableSorter.setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
 							break;
 						case 2:
-							tableSorter.setSortByIndex(SortByIndex.DATE_CREATED);
+							tableSorter.setSortByIndex(TaskComparator.SortByIndex.DATE_CREATED);
+							break;
+						case 3:
+							tableSorter.setSortByIndex(TaskComparator.SortByIndex.TASK_ID);
 							break;
 						default:
-							tableSorter.setSortByIndex(SortByIndex.PRIORITY);
+							tableSorter.setSortByIndex(TaskComparator.SortByIndex.PRIORITY);
 						}
 					}
 				}
@@ -823,18 +835,27 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						tableSorter.setSortDirection2(sortDirection);
 						switch (restoredSortIndex) {
 						case 1:
-							tableSorter.setSortByIndex2(SortByIndex.SUMMARY);
+							tableSorter.setSortByIndex2(TaskComparator.SortByIndex.SUMMARY);
 							break;
 						case 2:
-							tableSorter.setSortByIndex2(SortByIndex.DATE_CREATED);
+							tableSorter.setSortByIndex2(TaskComparator.SortByIndex.DATE_CREATED);
+							break;
+						case 3:
+							tableSorter.setSortByIndex2(TaskComparator.SortByIndex.TASK_ID);
 							break;
 						default:
-							tableSorter.setSortByIndex2(SortByIndex.PRIORITY);
+							tableSorter.setSortByIndex2(TaskComparator.SortByIndex.PRIORITY);
 						}
 					}
 				}
 			}
 			applyPresentation(taskListMemento.getString(MEMENTO_PRESENTATION));
+			Integer sortOrder = taskListMemento.getInteger(MEMENTO_KEY_ROOT_SORT_DIRECTION);
+			if (sortOrder != null) {
+				tableSorter.setSortDirectionRootElement(sortOrder);
+			} else {
+				tableSorter.setSortDirectionRootElement(TaskListTableSorter.DEFAULT_SORT_DIRECTION);
+			}
 		}
 
 		if (tableSorter == null) {

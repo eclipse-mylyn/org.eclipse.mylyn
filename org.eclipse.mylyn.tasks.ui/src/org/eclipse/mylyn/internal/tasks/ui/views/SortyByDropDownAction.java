@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
@@ -74,7 +74,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		byPriority = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				taskListView.getSorter().setSortByIndex(SortByIndex.PRIORITY);
+				taskListView.getSorter().setSortByIndex(TaskComparator.SortByIndex.PRIORITY);
 				byPriority.setChecked(true);
 				bySummary.setChecked(false);
 				byDateCreated.setChecked(false);
@@ -88,7 +88,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		bySummary = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				taskListView.getSorter().setSortByIndex(SortByIndex.SUMMARY);
+				taskListView.getSorter().setSortByIndex(TaskComparator.SortByIndex.SUMMARY);
 				byPriority.setChecked(false);
 				bySummary.setChecked(true);
 				byDateCreated.setChecked(false);
@@ -101,7 +101,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		byDateCreated = new Action("", AS_CHECK_BOX) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				taskListView.getSorter().setSortByIndex(SortByIndex.DATE_CREATED);
+				taskListView.getSorter().setSortByIndex(TaskComparator.SortByIndex.DATE_CREATED);
 				byPriority.setChecked(false);
 				bySummary.setChecked(false);
 				byDateCreated.setChecked(true);

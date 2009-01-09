@@ -25,8 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String AbstractRepositorySearchQuery_Querying_Repository_;
-
 	public static String CreateQueryFromSearchAction_CLEAR_QUERY;
 
 	public static String CreateQueryFromSearchAction_Name_of_query_to_be_added_to_the_X;
@@ -54,8 +52,6 @@ public class Messages extends NLS {
 	public static String RepositorySearchResultView_Task_Summary;
 
 	public static String SearchHitCollector_Max_allowed_number_of_hits_returned_exceeded;
-
-	public static String SearchHitCollector_Maximum_hits_reached;
 
 	public static String SearchHitCollector_Querying_Repository_;
 

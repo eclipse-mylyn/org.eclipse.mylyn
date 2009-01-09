@@ -25,19 +25,25 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String TaskListSortDialog_Ascending;
+	public static String TaskCompareDialog_Ascending;
 
-	public static String TaskListSortDialog_Date_Created;
+	public static String TaskCompareDialog_DateCreated;
 
-	public static String TaskListSortDialog_Descending;
+	public static String TaskCompareDialog_Descending;
 
-	public static String TaskListSortDialog_Priority;
+	public static String TaskCompareDialog_Priority;
+
+	public static String TaskCompareDialog_Sorting;
+
+	public static String TaskCompareDialog_SortOrder;
+
+	public static String TaskCompareDialog_Summary;
+
+	public static String TaskCompareDialog_TaskID;
 
 	public static String TaskListSortDialog_Sort_order;
 
 	public static String TaskListSortDialog_Sorting;
-
-	public static String TaskListSortDialog_Summary;
 
 	public static String TaskRepositoryCredentialsDialog_Enter_Credentials;
 

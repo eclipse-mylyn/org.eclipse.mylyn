@@ -25,8 +25,6 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	public static String AttachmentUtil_Attachments_not_supported_by_connector;
-
 	public static String AttachmentUtil_The_context_is_empty;
 
 	public static String AttachmentUtil_Downloading_attachment;
@@ -53,11 +51,7 @@ public class Messages extends NLS {
 
 	public static String TasksUiInternal_Configuration_Refresh_Failed;
 
-	public static String TasksUiInternal_Creating_task;
-
 	public static String TasksUiInternal_Create_Task;
-
-	public static String TasksUiInternal_Edit_Repository_Query;
 
 	public static String TasksUiInternal_INPORT_TASK;
 

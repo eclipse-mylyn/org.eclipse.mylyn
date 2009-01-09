@@ -43,8 +43,6 @@ public class Messages extends NLS {
 
 	public static String AttachmentTableLabelProvider_Task_Context;
 
-	public static String AttachmentTableLabelProvider_unrecognized_column;
-
 	public static String AttachmentTableLabelProvider_Type_;
 
 	public static String BrowserPreviewViewer_Error;
@@ -82,18 +80,6 @@ public class Messages extends NLS {
 	public static String PreviewAttributeEditor_Loading_preview_;
 
 	public static String PreviewAttributeEditor_Preview;
-
-	public static String RepositoryAttachmentEditorInput_Repository_Attachment;
-
-	public static String RepositoryTaskEditorDropListener_Note_that_only_the_first_file_dragged_will_be_attached;
-
-	public static String RepositoryTaskOutlineNode_BugReport_Object;
-
-	public static String RepositoryTaskOutlineNode_Comments;
-
-	public static String RepositoryTaskOutlineNode_Description;
-
-	public static String RepositoryTaskOutlineNode_New_Comment;
 
 	public static String RichTextAttributeEditor_Viewer_Source;
 
@@ -284,8 +270,6 @@ public class Messages extends NLS {
 	public static String AbstractTaskEditorPage_Unable_to_submit_at_this_time;
 
 	public static String AttributeEditorToolkit_Content_Assist_Available__X_;
-
-	public static String TaskEditor_New_;
 
 	public static String TaskEditor_Task_;
 

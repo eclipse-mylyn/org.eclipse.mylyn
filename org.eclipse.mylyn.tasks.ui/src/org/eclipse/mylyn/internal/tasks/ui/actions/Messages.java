@@ -37,21 +37,9 @@ public class Messages extends NLS {
 
 	public static String AddRepositoryAction_Add_a_query_to_the_Task_List;
 
-	public static String AddRepositoryAction_Add_Repository_Query;
-
 	public static String AddRepositoryAction_Add_Task_Repository;
 
 	public static String AddRepositoryAction_Do_not_show_again;
-
-	public static String AddRepositoryTaskAction_Add_an_existing_repository_task_issue;
-
-	public static String AttachAction_Attach_;
-
-	public static String AttachAction_Submit_changes_or_synchronize_task_before_adding_attachments;
-
-	public static String AttachScreenshotAction_Attach_Screenshot_;
-
-	public static String AttachScreenshotAction_Submit_changes_or_synchronize_task_before_adding_attachments;
 
 	public static String ClearOutgoingAction_Clear_outgoing;
 
@@ -115,8 +103,6 @@ public class Messages extends NLS {
 
 	public static String ExpandAllAction_Expand_All;
 
-	public static String FilterArchiveContainerAction_Filter_Archives;
-
 	public static String FilterCompletedTasksAction_Filter_Completed_Tasks;
 
 	public static String GoIntoAction_Go_Into;
@@ -126,18 +112,6 @@ public class Messages extends NLS {
 	public static String GroupSubTasksAction_Group_Subtasks;
 
 	public static String LinkWithEditorAction_Link_with_Editor;
-
-	public static String MarkTaskCompleteAction_Complete;
-
-	public static String MarkTaskCompleteAction_Confirm_Mark_Completed;
-
-	public static String MarkTaskCompleteAction_Mark_;
-
-	public static String MarkTaskIncompleteAction_Confirm_Mark_Incompleted;
-
-	public static String MarkTaskIncompleteAction_Incomplete;
-
-	public static String MarkTaskIncompleteAction_Mark_;
 
 	public static String NewCategoryAction_A_category_with_this_name_already_exists;
 
@@ -150,8 +124,6 @@ public class Messages extends NLS {
 	public static String NewCategoryAction_New_Category_;
 
 	public static String NewCategoryAction_A_query_with_this_name_already_exists;
-
-	public static String NewQueryAction_Add_or_modify_repository_query;
 
 	public static String NewSubTaskAction_The_connector_does_not_support_creating_subtasks_for_this_task;
 
@@ -170,8 +142,6 @@ public class Messages extends NLS {
 	public static String NewTaskFromSelectionAction_Comment_;
 
 	public static String NewTaskFromSelectionAction____Created_from_Comment___;
-
-	public static String NewTaskFromSelectionAction____Created_from_Task___;
 
 	public static String NewTaskFromSelectionAction_New_Task_from_Selection;
 
@@ -235,8 +205,6 @@ public class Messages extends NLS {
 
 	public static String RenameAction_Rename;
 
-	public static String RestoreTaskListAction_Restore_Tasks_from_History;
-
 	public static String ShowInTaskListAction_Show_In_Task_List;
 
 	public static String SynchronizeAutomaticallyAction_Synchronize_Automatically;
@@ -288,8 +256,6 @@ public class Messages extends NLS {
 	public static String TaskSelectionDialog_Selected_item_is_not_a_task;
 
 	public static String TaskSelectionDialog_Show_Completed_Tasks;
-
-	public static String TasksUiPlugin_Task_Repositories;
 
 	public static String TaskWorkingSetAction_All;
 

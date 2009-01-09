@@ -11,20 +11,21 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import java.util.Date;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryQuery;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
+import org.eclipse.mylyn.internal.tasks.core.TaskGroup;
 import org.eclipse.mylyn.internal.tasks.core.UncategorizedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.UnsubmittedTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskComparator;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
-import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskContainer;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -32,33 +33,23 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListTableSorter extends ViewerSorter {
 
-	public enum SortByIndex {
-		PRIORITY, SUMMARY, DATE_CREATED;
-	}
+	public static final int DEFAULT_SORT_DIRECTION = 1;
 
-	private static final int DEFAULT_SORT_DIRECTION = 1;
-
-	private int sortDirection = DEFAULT_SORT_DIRECTION;
-
-	private SortByIndex sortByIndex = SortByIndex.PRIORITY;
-
-	private int sortDirection2 = DEFAULT_SORT_DIRECTION;
-
-	private SortByIndex sortByIndex2 = SortByIndex.DATE_CREATED;
+	private int sortDirectionRootElement = DEFAULT_SORT_DIRECTION;
 
 	private final TaskListView view;
 
-	private final TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
+	private final TaskComparator taskComparator = new TaskComparator();
 
 	public TaskListTableSorter(TaskListView view) {
 		super();
 		this.view = view;
 	}
 
-	public TaskListTableSorter(TaskListView view, SortByIndex index) {
+	public TaskListTableSorter(TaskListView view, TaskComparator.SortByIndex index) {
 		super();
 		this.view = view;
-		this.sortByIndex = index;
+		taskComparator.setSortByIndex(index);
 	}
 
 	public void setColumn(String column) {
@@ -75,168 +66,70 @@ public class TaskListTableSorter extends ViewerSorter {
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
 
-		if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
+		if (o1 instanceof AbstractTask && o2 instanceof AbstractTask) {
+			// sort of the tasks within the container using the setting from the Sortdialog
+			ITask element1 = (ITask) o1;
+			ITask element2 = (ITask) o2;
+
+			return compareElements(element1, element2);
+		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ScheduledTaskContainer) {
+			// scheduled Mode compare
 			ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
 			ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
 			return dateRangeTaskContainer1.getDateRange().compareTo(dateRangeTaskContainer2.getDateRange());
-//			if (dateRangeTaskContainer1.isCaptureFloating() && !dateRangeTaskContainer2.isCaptureFloating()) {
-//				return 1;
-//			} else if (!dateRangeTaskContainer1.isCaptureFloating() && dateRangeTaskContainer2.isCaptureFloating()) {
-//				return -1;
-//			}
-//			return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
-		} else if (o1 instanceof ITaskContainer && o2 instanceof ScheduledTaskContainer) {
-			return -1;
-		} else if (o1 instanceof ScheduledTaskContainer && o2 instanceof ITaskContainer) {
-			return 1;
-		}
-
-		if (o1 instanceof ITaskContainer && o2 instanceof UncategorizedTaskContainer) {
-			return 1;
-		} else if (o2 instanceof ITaskContainer && o1 instanceof UncategorizedTaskContainer) {
-			return -1;
-		}
-
-		if (o1 instanceof ITaskContainer && o2 instanceof UnmatchedTaskContainer) {
-			return -1;
-		} else if (o2 instanceof ITaskContainer && o1 instanceof UnmatchedTaskContainer) {
-			return 1;
-		}
-
-		if (!(o1 instanceof ITask) && o2 instanceof ITask) {
-			return 1;
-		}
-
-		if (o1 instanceof ITask && !(o2 instanceof ITaskContainer)) {
-			return -1;
-		}
-
-		// if (o1 instanceof AbstractTaskContainer || o1 instanceof
-		// AbstractRepositoryQuery) {
-		if (!(o1 instanceof ITask)) {
-			if (o2 instanceof ITaskContainer || o2 instanceof IRepositoryQuery) {
-
-				return this.sortDirection
-						* ((IRepositoryElement) o1).getSummary().compareToIgnoreCase(
-								((IRepositoryElement) o2).getSummary());
-			} else {
-				return -1;
-			}
-		} else if (o1 instanceof ITaskContainer) {
-			if (!(o2 instanceof ITask)) {
-				return -1;
-			} else if (o2 instanceof ITaskContainer) {
-				IRepositoryElement element1 = (IRepositoryElement) o1;
-				IRepositoryElement element2 = (IRepositoryElement) o2;
-
-				return compareElements(element1, element2);
-			}
 		} else {
-			return 0;
+			int o1Type;
+			if (o1 instanceof AbstractTask) {
+				o1Type = 0;
+			} else if (o1 instanceof UncategorizedTaskContainer) {
+				o1Type = 1;
+			} else if (o1 instanceof UnsubmittedTaskContainer) {
+				o1Type = 2;
+			} else if (o1 instanceof TaskCategory) {
+				o1Type = 3;
+			} else if (o1 instanceof RepositoryQuery) {
+				o1Type = 4;
+			} else if (o1 instanceof TaskGroup) { // support for the experimental grouping of tasks
+				o1Type = 5;
+			} else if (o1 instanceof UnmatchedTaskContainer) {
+				o1Type = 6;
+			} else {
+				o1Type = 99;
+			}
+			int o2Type;
+			if (o2 instanceof AbstractTask) {
+				o2Type = 0;
+			} else if (o2 instanceof UncategorizedTaskContainer) {
+				o2Type = 1;
+			} else if (o2 instanceof UnsubmittedTaskContainer) {
+				o2Type = 2;
+			} else if (o2 instanceof TaskCategory) {
+				o2Type = 3;
+			} else if (o2 instanceof RepositoryQuery) {
+				o2Type = 4;
+			} else if (o2 instanceof TaskGroup) { // support for the experimental grouping of tasks
+				o2Type = 5;
+			} else if (o2 instanceof UnmatchedTaskContainer) {
+				o2Type = 6;
+			} else {
+				o2Type = 99;
+			}
+			if (o1Type != o2Type) {
+				return o1Type - o2Type < 0 ? -1 : 1;
+			}
+			if (o1Type < 7) {
+				AbstractTaskContainer taskContainer1 = (AbstractTaskContainer) o1;
+				AbstractTaskContainer taskContainer2 = (AbstractTaskContainer) o2;
+
+				return this.sortDirectionRootElement
+						* taskContainer1.getSummary().compareToIgnoreCase(taskContainer2.getSummary());
+			}
 		}
 		return 0;
 	}
 
-	private int compareElements(IRepositoryElement element1, IRepositoryElement element2) {
-		if (SortByIndex.PRIORITY.equals(sortByIndex)) {
-			int result = sortByPriority(element1, element2, sortDirection);
-			if (result != 0) {
-				return result;
-			}
-
-			if (SortByIndex.DATE_CREATED.equals(sortByIndex2)) {
-				return sortByDate(element1, element2, sortDirection2);
-			} else {
-				if (SortByIndex.SUMMARY.equals(sortByIndex2)) {
-					return sortBySummary(element1, element2, sortDirection2);
-				} else {
-					return result;
-				}
-			}
-		} else if (SortByIndex.DATE_CREATED.equals(sortByIndex)) {
-			int result = sortByDate(element1, element2, sortDirection);
-			if (result != 0) {
-				return result;
-			}
-			if (SortByIndex.PRIORITY.equals(sortByIndex2)) {
-				return sortByPriority(element1, element2, sortDirection2);
-			} else {
-				if (SortByIndex.SUMMARY.equals(sortByIndex2)) {
-					return sortBySummary(element1, element2, sortDirection2);
-				} else {
-					return result;
-				}
-			}
-		} else {
-			int result = sortBySummary(element1, element2, sortDirection);
-			if (result != 0) {
-				return result;
-			}
-			if (SortByIndex.DATE_CREATED.equals(sortByIndex2)) {
-				return sortByDate(element1, element2, sortDirection2);
-			} else {
-				if (SortByIndex.PRIORITY.equals(sortByIndex2)) {
-					return sortByPriority(element1, element2, sortDirection2);
-				} else {
-					return result;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Determine the sort order of two tasks by id/summary
-	 * 
-	 * @param element1
-	 * @param element2
-	 * @return sort order
-	 */
-	private int sortBySummary(IRepositoryElement element1, IRepositoryElement element2, int sortDirection) {
-		return sortDirection
-				* taskKeyComparator.compare(getSortableFromElement(element1), getSortableFromElement(element2));
-	}
-
-	/**
-	 * Determine the sort order of two tasks by priority
-	 * 
-	 * @param element1
-	 * @param element2
-	 * @return sort order
-	 */
-	private int sortByPriority(IRepositoryElement element1, IRepositoryElement element2, int sortDirection) {
-		return sortDirection
-				* ((AbstractTaskContainer) element1).getPriority().compareTo(
-						((AbstractTaskContainer) element2).getPriority());
-	}
-
-	/**
-	 * Determine the sort order of two tasks by creation date
-	 * 
-	 * @param element1
-	 * @param element2
-	 * @return sort order
-	 */
-	private int sortByDate(IRepositoryElement element1, IRepositoryElement element2, int sortDirection) {
-		AbstractTask t1 = null;
-		AbstractTask t2 = null;
-		if (element1 instanceof AbstractTask) {
-			t1 = (AbstractTask) element1;
-		}
-		if (element2 instanceof AbstractTask) {
-			t2 = (AbstractTask) element2;
-		}
-		if (t1 != null && t2 != null) {
-			Date creationDate1 = t1.getCreationDate();
-			if (creationDate1 != null) {
-				Date creationDate2 = t2.getCreationDate();
-				if (creationDate2 != null) {
-					return sortDirection * creationDate1.compareTo(creationDate2);
-				} else {
-					return 1;
-				}
-			}
-		}
-		return 0;
+	private int compareElements(ITask element1, ITask element2) {
+		return taskComparator.compare(element1, element2);
 	}
 
 	/**
@@ -257,54 +150,70 @@ public class TaskListTableSorter extends ViewerSorter {
 		return a;
 	}
 
-	public SortByIndex getSortByIndex() {
-		return sortByIndex;
+	public TaskComparator.SortByIndex getSortByIndex() {
+		return taskComparator.getSortByIndex();
 	}
 
-	public void setSortByIndex(SortByIndex sortByIndex) {
-		SortByIndex oldValue = this.sortByIndex;
-		this.sortByIndex = sortByIndex;
+	public void setSortByIndex(TaskComparator.SortByIndex sortByIndex) {
+		TaskComparator.SortByIndex oldValue = taskComparator.getSortByIndex();
 		if (!oldValue.equals(sortByIndex)) {
+			taskComparator.setSortByIndex(sortByIndex);
 			view.getViewer().refresh();
 		}
 
 	}
 
 	public int getSortDirection() {
-		return sortDirection;
+		return taskComparator.getSortDirection();
 	}
 
 	public void setSortDirection(int sortDirection) {
-		int oldValue = this.sortDirection;
-		this.sortDirection = sortDirection;
-		if (oldValue != this.sortDirection) {
+		int oldValue = taskComparator.getSortDirection();
+		if (oldValue != sortDirection) {
+			taskComparator.setSortDirection(sortDirection);
 			view.getViewer().refresh();
 		}
 	}
 
-	public SortByIndex getSortByIndex2() {
-		return sortByIndex2;
+	public TaskComparator.SortByIndex getSortByIndex2() {
+		return taskComparator.getSortByIndex2();
 	}
 
-	public void setSortByIndex2(SortByIndex sortByIndex) {
-		SortByIndex oldValue = this.sortByIndex2;
-		this.sortByIndex2 = sortByIndex;
+	public void setSortByIndex2(TaskComparator.SortByIndex sortByIndex) {
+		TaskComparator.SortByIndex oldValue = taskComparator.getSortByIndex2();
 		if (!oldValue.equals(sortByIndex)) {
+			taskComparator.setSortByIndex2(sortByIndex);
 			view.getViewer().refresh();
 		}
 
 	}
 
 	public int getSortDirection2() {
-		return sortDirection2;
+		return taskComparator.getSortDirection2();
 	}
 
 	public void setSortDirection2(int sortDirection) {
-		int oldValue = this.sortDirection2;
-		this.sortDirection2 = sortDirection;
-		if (oldValue != this.sortDirection2) {
+		int oldValue = taskComparator.getSortDirection2();
+		if (oldValue != sortDirection) {
+			taskComparator.setSortDirection2(sortDirection);
 			view.getViewer().refresh();
 		}
+	}
+
+	public int getSortDirectionRootElement() {
+		return sortDirectionRootElement;
+	}
+
+	public void setSortDirectionRootElement(int sortDirection) {
+		int oldValue = this.sortDirectionRootElement;
+		this.sortDirectionRootElement = sortDirection;
+		if (oldValue != this.sortDirectionRootElement) {
+			view.getViewer().refresh();
+		}
+	}
+
+	public TaskComparator getTaskComparator() {
+		return taskComparator;
 	}
 
 }

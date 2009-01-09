@@ -107,13 +107,7 @@ public class Messages extends NLS {
 
 	public static String TaskDataExportWizard_The_zip_file_X_already_exists;
 
-	public static String TaskDataExportWizardPage_Activation_history_setting;
-
 	public static String TaskDataExportWizardPage_Browse_;
-
-	public static String TaskDataExportWizardPage_Contexts_setting;
-
-	public static String TaskDataExportWizardPage_Destination_directory_setting;
 
 	public static String TaskDataExportWizardPage_Export_destination;
 
@@ -127,15 +121,11 @@ public class Messages extends NLS {
 
 	public static String TaskDataExportWizardPage_Overwrite_existing_files_without_warning;
 
-	public static String TaskDataExportWizardPage_Overwrite_setting;
-
 	public static String TaskDataExportWizardPage_Please_choose_an_export_destination;
 
 	public static String TaskDataExportWizardPage_Please_select_which_task_data_to_export;
 
 	public static String TaskDataExportWizardPage_Select_data_to_export;
-
-	public static String TaskDataExportWizardPage_Settings_saved;
 
 	public static String TaskDataExportWizardPage_Specify_the_destination_folder_for_task_data;
 
@@ -144,8 +134,6 @@ public class Messages extends NLS {
 	public static String TaskDataExportWizardPage_Task_Contexts;
 
 	public static String TaskDataExportWizardPage_Task_List;
-
-	public static String TaskDataExportWizardPage_TaskList_setting;
 
 	public static String TaskDataImportWizard_could_not_be_found;
 
@@ -288,8 +276,6 @@ public class Messages extends NLS {
 	public static String NewTaskWizard_Error_creating_new_task;
 
 	public static String NewTaskWizard_Failed_to_create_new_task_;
-
-	public static String NewTaskWizard_The_selected_repository_does_not_support_creating_new_tasks;
 
 	public static String NewWebTaskWizard_New_Task;
 
