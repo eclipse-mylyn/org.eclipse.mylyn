@@ -54,7 +54,7 @@
 					<include name="org.eclipse.mylyn.wikitext.*core*.jar"/>
 				</fileset>
 			</classpath>
-			<doctitle><![CDATA[<h1>Mylyn WikiText</h1><p>version ${wikitext.version}<br/><a href="http://www.eclipse.org/mylyn" target="mylyn">http://www.eclipse.org/mylyn</a></p>]]></doctitle>
+			<doctitle><![CDATA[Mylyn WikiText]]></doctitle>
 			<header><![CDATA[Mylyn WikiText version ${wikitext.version}]]></header>
 			<bottom><![CDATA[<i>Copyright &#169; 2007, 2008 David Green and others.<br/>
 				All rights reserved. This program and the accompanying materials<br/>
@@ -62,6 +62,7 @@
 				which accompanies this distribution, and is available at<br/>
 				<a href="http://www.eclipse.org/legal/epl-v10.html">http://www.eclipse.org/legal/epl-v10.html</a></i>]]></bottom>
 		    <link href="http://java.sun.com/javase/6/docs/api/"/>
+			
 		</javadoc>
 		
 		
@@ -73,6 +74,8 @@
 		<property name="wikitext.standalone.dir" value="wikitext-standalone-${wikitext.version}"/>
 		<property name="wikitext.plugin.jars.location" value="../build/3.4/allUpdateSite/plugins"/>
 		<property name="buildDirectory" value="../build/3.4"/>
+
+		<delete dir="${buildDirectory}/wikitext-apidoc" failonerror="false"/>
 		
 		<antcall target="all"/>
 	</target>
