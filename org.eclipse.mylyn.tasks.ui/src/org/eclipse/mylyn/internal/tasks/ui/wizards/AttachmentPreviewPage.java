@@ -148,6 +148,7 @@ public class AttachmentPreviewPage extends WizardPage {
 			}
 			contentComposite.layout(true, true);
 		}
+		Dialog.applyDialogFont(contentComposite);
 		super.setVisible(visible);
 	}
 
