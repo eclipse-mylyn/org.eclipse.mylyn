@@ -377,6 +377,7 @@ public class RepositoryConfiguration implements Serializable {
 
 	private void addMissingFlags(TaskData taskData) {
 		List<String> existingFlags = new ArrayList<String>();
+		List<BugzillaFlag> flags = getFlags();
 		for (TaskAttribute attribute : new HashSet<TaskAttribute>(taskData.getRoot().getAttributes().values())) {
 			if (attribute.getId().startsWith("task.common.kind.flag")) { //$NON-NLS-1$
 				TaskAttribute state = attribute.getAttribute("state"); //$NON-NLS-1$
@@ -385,12 +386,22 @@ public class RepositoryConfiguration implements Serializable {
 					if (!existingFlags.contains(nameValue)) {
 						existingFlags.add(nameValue);
 					}
+					String desc = attribute.getMetaData().getLabel();
+					if (desc == null || desc.equals("")) { //$NON-NLS-1$
+						for (BugzillaFlag bugzillaFlag : flags) {
+							if (bugzillaFlag.getType().equals("attachment")) { //$NON-NLS-1$
+								continue;
+							}
+							if (bugzillaFlag.getName().equals(nameValue)) {
+								attribute.getMetaData().setLabel(bugzillaFlag.getDescription());
+							}
+						}
+					}
 				}
 			}
 		}
 		TaskAttribute productAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.PRODUCT.getKey());
 		TaskAttribute componentAttribute = taskData.getRoot().getMappedAttribute(BugzillaAttribute.COMPONENT.getKey());
-		List<BugzillaFlag> flags = getFlags();
 		for (BugzillaFlag bugzillaFlag : flags) {
 			if (bugzillaFlag.getType().equals("attachment")) { //$NON-NLS-1$
 				continue;
@@ -407,6 +418,7 @@ public class RepositoryConfiguration implements Serializable {
 			mapper.setState(" "); //$NON-NLS-1$
 			mapper.setFlagId(bugzillaFlag.getName());
 			mapper.setNumber(0);
+			mapper.setDescription(bugzillaFlag.getDescription());
 			TaskAttribute attribute = taskData.getRoot().createAttribute(
 					"task.common.kind.flag_type" + bugzillaFlag.getFlagId()); //$NON-NLS-1$
 			mapper.applyTo(attribute);
@@ -497,9 +509,9 @@ public class RepositoryConfiguration implements Serializable {
 		}
 
 		else {
-			String kind = attribute.getMetaData().getKind();
+			String type = attribute.getMetaData().getType();
 
-			if (kind != null && kind.equals("task.common.kind.flag")) { //$NON-NLS-1$
+			if (type != null && type.equals(IBugzillaConstants.EDITOR_TYPE_FLAG)) {
 				options.add(""); //$NON-NLS-1$
 				options.add("?"); //$NON-NLS-1$
 				options.add("+"); //$NON-NLS-1$

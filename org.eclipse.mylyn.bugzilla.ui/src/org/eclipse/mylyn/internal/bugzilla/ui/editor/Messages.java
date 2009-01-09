@@ -25,6 +25,8 @@ public class Messages extends NLS {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
+	public static String BugzillaFlagPart_flags;
+
 	public static String BugzillaKeywordAttributeEditor_Edit_;
 
 	public static String BugzillaPeoplePart_People;

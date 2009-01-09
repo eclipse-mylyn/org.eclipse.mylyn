@@ -14,11 +14,13 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
@@ -37,6 +39,8 @@ import org.eclipse.mylyn.tasks.ui.editors.TaskEditorPartDescriptor;
 public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 	public static final String ID_PART_BUGZILLA_PLANNING = "org.eclipse.mylyn.bugzilla.ui.editors.part.planning"; //$NON-NLS-1$
+
+	public static final String ID_PART_BUGZILLA_FLAGS = "org.eclipse.mylyn.bugzilla.ui.editors.part.flags"; //$NON-NLS-1$
 
 	public BugzillaTaskEditorPage(TaskEditor editor) {
 		super(editor, BugzillaCorePlugin.CONNECTOR_KIND);
@@ -62,6 +66,26 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				descriptors.remove(taskEditorPartDescriptor);
 				break;
 			}
+		}
+
+		String bugzillaVersion = null;
+		RepositoryConfiguration repositoryConfiguration;
+		try {
+			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(), false,
+					new NullProgressMonitor());
+			bugzillaVersion = repositoryConfiguration.getInstallVersion();
+		} catch (CoreException e) {
+			bugzillaVersion = "2.18"; //$NON-NLS-1$
+		}
+
+		if (bugzillaVersion.compareTo("3.2") >= 0) { //$NON-NLS-1$
+			// Add the Bugzilla flag part
+			descriptors.add(new TaskEditorPartDescriptor(ID_PART_BUGZILLA_FLAGS) {
+				@Override
+				public AbstractTaskEditorPart createPart() {
+					return new BugzillaFlagPart();
+				}
+			}.setPath(PATH_ATTRIBUTES));
 		}
 
 		// Add Bugzilla Planning part
@@ -136,7 +160,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 
 		TaskAttribute summaryAttribute = getModel().getTaskData().getRoot().getMappedAttribute(TaskAttribute.SUMMARY);
 		if (summaryAttribute != null && summaryAttribute.getValue().length() == 0) {
-			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_enter_a_short_summary_before_submitting, IMessageProvider.ERROR);
+			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_enter_a_short_summary_before_submitting,
+					IMessageProvider.ERROR);
 			AbstractTaskEditorPart part = getPart(ID_PART_SUMMARY);
 			if (part != null) {
 				part.setFocus();
@@ -147,7 +172,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		TaskAttribute componentAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
 				BugzillaAttribute.COMPONENT.getKey());
 		if (componentAttribute != null && componentAttribute.getValue().length() == 0) {
-			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_select_a_component_before_submitting, IMessageProvider.ERROR);
+			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_select_a_component_before_submitting,
+					IMessageProvider.ERROR);
 			AbstractTaskEditorPart part = getPart(ID_PART_ATTRIBUTES);
 			if (part != null) {
 				part.setFocus();
@@ -158,7 +184,8 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 		TaskAttribute descriptionAttribute = getModel().getTaskData().getRoot().getMappedAttribute(
 				TaskAttribute.DESCRIPTION);
 		if (descriptionAttribute != null && descriptionAttribute.getValue().length() == 0) {
-			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_enter_a_description_before_submitting, IMessageProvider.ERROR);
+			getTaskEditor().setMessage(Messages.BugzillaTaskEditorPage_Please_enter_a_description_before_submitting,
+					IMessageProvider.ERROR);
 			AbstractTaskEditorPart descriptionPart = getPart(ID_PART_DESCRIPTION);
 			if (descriptionPart != null) {
 				descriptionPart.setFocus();

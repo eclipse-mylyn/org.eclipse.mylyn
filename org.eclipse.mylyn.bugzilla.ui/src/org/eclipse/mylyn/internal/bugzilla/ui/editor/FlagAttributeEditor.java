@@ -11,7 +11,6 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -53,15 +52,21 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 		composite.setLayout(layout);
 		if (isReadOnly()) {
 			Text text = new Text(composite, SWT.FLAT | SWT.READ_ONLY);
-			text.setFont(EditorUtil.TEXT_FONT);
 			toolkit.adapt(text, false, false);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(getValueLabel());
+			String tooltip = getTaskAttribute().getMetaData().getLabel();
+			if (tooltip != null) {
+				text.setToolTipText(tooltip);
+			}
 		} else {
 			combo = new CCombo(composite, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(combo, false, false);
-			combo.setFont(EditorUtil.TEXT_FONT);
 			combo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			String tooltip = getTaskAttribute().getMetaData().getLabel();
+			if (tooltip != null) {
+				combo.setToolTipText(tooltip);
+			}
 
 			Map<String, String> labelByValue = getAttributeMapper().getAssoctiatedAttribute(getTaskAttribute())
 					.getOptions();

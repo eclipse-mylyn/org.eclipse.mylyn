@@ -36,8 +36,6 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 	public void testFlags() throws Exception {
 		init32();
 		String taskNumber = "10";
-//		init("http://macmainz.dyndns.org/Internet/Bugzilla_Develop/");
-//		String taskNumber = "7";
 		ITask task = generateLocalTaskAndDownload(taskNumber);
 		assertNotNull(task);
 		TaskData taskData = TasksUiPlugin.getTaskDataManager().getTaskData(task);
@@ -77,10 +75,10 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		assertNotNull(stateB);
 		assertNotNull(stateC);
 		assertNotNull(stateD);
-		assertEquals(" ", stateA.getValue());
-		assertEquals(" ", stateB.getValue());
-		assertEquals(" ", stateC.getValue());
-		assertEquals(" ", stateD.getValue());
+		assertEquals("flagA is set(wrong precondidion)", " ", stateA.getValue());
+		assertEquals("flagB is set(wrong precondidion)", " ", stateB.getValue());
+		assertEquals("flagC is set(wrong precondidion)", " ", stateC.getValue());
+		assertEquals("flagD is set(wrong precondidion)", " ", stateD.getValue());
 		assertEquals("task.common.kind.flag_type1", flagA.getId());
 		assertEquals("task.common.kind.flag_type2", flagB.getId());
 		assertEquals("task.common.kind.flag_type3", flagC.getId());
@@ -111,8 +109,7 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		stateC.setValue("?");
 		stateD.setValue("?");
 		TaskAttribute requesteeD = flagD.getAttribute("requestee");
-//		requesteeD.setValue("rob.elves@eclipse.org");
-		requesteeD.setValue("Mylyn@Frank-Becker.de");
+		requesteeD.setValue("rob.elves@eclipse.org");
 		changed.add(flagA);
 		changed.add(flagB);
 		changed.add(flagC);
@@ -174,14 +171,11 @@ public class BugzillaRepository32Test extends AbstractBugzillaTest {
 		assertEquals("?", stateD.getValue());
 		requesteeD = flagD.getAttribute("requestee");
 		assertNotNull(requesteeD);
-		assertEquals("Mylyn@Frank-Becker.de", requesteeD.getValue());
+		assertEquals("rob.elves@eclipse.org", requesteeD.getValue());
 		stateA.setValue(" ");
 		stateB.setValue(" ");
 		stateC.setValue(" ");
 		stateD.setValue(" ");
-//		 requesteeD = flagD.getAttribute("requestee");
-////		requesteeD.setValue("rob.elves@eclipse.org");
-//		requesteeD.setValue("Mylyn@Frank-Becker.de");
 		changed.add(flagA);
 		changed.add(flagB);
 		changed.add(flagC);

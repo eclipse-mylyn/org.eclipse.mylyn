@@ -73,13 +73,24 @@ public class BugzillaFlagMapper {
 		this.number = number;
 	}
 
+	private String description;
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public void applyTo(TaskAttribute taskAttribute) {
 		Assert.isNotNull(taskAttribute);
 		TaskData taskData = taskAttribute.getTaskData();
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		TaskAttributeMetaData meta = taskAttribute.getMetaData().defaults();
 		meta.setType(IBugzillaConstants.EDITOR_TYPE_FLAG);
-		meta.setKind(TaskAttribute.KIND_DEFAULT);
+//		meta.setKind(IBugzillaConstants.KIND_FLAG);
+		meta.setLabel(description);
 		meta.setReadOnly(false);
 
 		if (getNumber() != 0) {

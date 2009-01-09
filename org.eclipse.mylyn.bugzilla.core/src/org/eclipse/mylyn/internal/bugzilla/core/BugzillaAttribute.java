@@ -88,7 +88,7 @@ public enum BugzillaAttribute {
 
 	FILENAME(Messages.BugzillaAttribute_filename, "filename", TaskAttribute.TYPE_SHORT_TEXT, false, false), //$NON-NLS-1$
 
-	FLAG(Messages.BugzillaAttribute_flag, "flag", null, false, false), //$NON-NLS-1$
+	FLAG(Messages.BugzillaAttribute_flag, "flag", IBugzillaConstants.EDITOR_TYPE_FLAG, false, false), //$NON-NLS-1$
 
 	GROUP(Messages.BugzillaAttribute_Group, "group", TaskAttribute.TYPE_BOOLEAN, true, true), //$NON-NLS-1$
 
