@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.cdt.mylyn"
       label="%featureName"
-      version="5.0.0.qualifier"
+      version="5.1.0.qualifier"
       provider-name="Eclipse.org"
       plugin="org.eclipse.cdt.mylyn">
 
@@ -23,25 +23,26 @@
    </url>
 
    <requires>
-      <import plugin="org.eclipse.cdt.core"/>
-      <import plugin="org.eclipse.mylyn.context.core"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.mylyn.resources.ui"/>
-      <import plugin="org.eclipse.mylyn.monitor.core"/>
-      <import plugin="org.eclipse.cdt.ui"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.mylyn.context.ui"/>
-      <import plugin="org.eclipse.mylyn.monitor.ui"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui.editors" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.tasks.ui" version="2.3.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms" version="3.3.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylyn.tasks.core" version="2.3.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.navigator" version="3.3.100" match="greaterOrEqual"/>
       <import plugin="com.ibm.icu"/>
+      <import plugin="org.eclipse.cdt.core" version="5.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.context.core" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.resources.ui" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.monitor.core" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.cdt.ui" version="5.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.context.ui" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.monitor.ui" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.tasks.ui" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.tasks.core" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.commons.core" version="3.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
