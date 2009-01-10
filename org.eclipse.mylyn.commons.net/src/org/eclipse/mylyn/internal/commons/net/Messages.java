@@ -27,10 +27,6 @@ public class Messages extends NLS {
 
 	public static String TimeoutOutputStream_cannotWriteToStream;
 
-	public static String Util_processTimeout;
-
-	public static String Util_timeout;
-
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
