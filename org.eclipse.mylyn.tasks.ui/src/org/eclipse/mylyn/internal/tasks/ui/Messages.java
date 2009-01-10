@@ -141,4 +141,6 @@ public class Messages extends NLS {
 
 	public static String TasksUiUtil_No_URL_to_open;
 
+	public static String AbstractRetrieveTitleFromUrlJob_Retrieving_summary_from_URL;
+
 }
