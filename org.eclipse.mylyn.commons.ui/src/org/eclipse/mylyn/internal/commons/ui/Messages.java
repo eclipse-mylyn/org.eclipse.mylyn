@@ -37,8 +37,6 @@ public class Messages extends NLS {
 
 	public static String AbstractNotificationPopup_Notification;
 
-	public static String AbstractRetrieveTitleFromUrlJob_Retrieving_summary_from_URL;
-
 	public static String DatePicker_Choose_Date;
 
 	public static String DateSelectionDialog_Clear;

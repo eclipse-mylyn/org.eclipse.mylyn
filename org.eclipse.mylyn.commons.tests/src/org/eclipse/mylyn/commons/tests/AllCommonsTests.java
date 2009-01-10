@@ -11,12 +11,11 @@
 
 package org.eclipse.mylyn.commons.tests;
 
-import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
-import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
-import org.eclipse.mylyn.commons.tests.ui.RetrieveTitleFromUrlTest;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.eclipse.mylyn.commons.tests.net.SslProtocolSocketFactoryTest;
+import org.eclipse.mylyn.commons.tests.net.WebUtilTest;
 
 /**
  * @author Mik Kersten
@@ -25,7 +24,6 @@ public class AllCommonsTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.commons.tests");
-		suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		suite.addTestSuite(WebUtilTest.class);
 		return suite;

@@ -1,12 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: org.eclipse.mylyn.commons.ui
+Bundle-SymbolicName: org.eclipse.mylyn.commons.ui;singleton:=true
 Bundle-Version: 3.1.0.qualifier
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.ui.forms;resolution:=optional,
- org.eclipse.mylyn.commons.net;bundle-version="[3.0.0,4.0.0)"
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.forms;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.eclipse.mylyn.internal.commons.ui.CommonsUiPlugin
