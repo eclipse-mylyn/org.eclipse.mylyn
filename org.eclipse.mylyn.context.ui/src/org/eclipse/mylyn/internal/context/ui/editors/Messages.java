@@ -26,16 +26,25 @@ public class Messages extends NLS {
 	}
 
 	public static String ContextEditorFormPage_No_context_active;
+
 	public static String ContextEditorFormPage_Actions;
+
 	public static String ContextEditorFormPage_Activate_task_to_edit_context;
+
 	public static String ContextEditorFormPage_Attach_context_;
-	public static String ContextEditorFormPage_Clear_Context;
+
 	public static String ContextEditorFormPage_Copy_Context_to_;
+
 	public static String ContextEditorFormPage_Elements;
+
 	public static String ContextEditorFormPage_Remove_every_element_not_visible;
+
 	public static String ContextEditorFormPage_Remove_Invisible;
+
 	public static String ContextEditorFormPage_Remove_Invisible_;
+
 	public static String ContextEditorFormPage_RemoveAll;
+
 	public static String ContextEditorFormPage_Retrieve_Context_;
 
 	public static String ContextPageFactory_Context;
