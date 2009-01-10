@@ -9,7 +9,7 @@
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.provisional.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.IOException;
 

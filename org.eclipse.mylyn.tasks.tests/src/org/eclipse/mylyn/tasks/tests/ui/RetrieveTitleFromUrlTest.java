@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.provisional.tasks.ui.AbstractRetrieveTitleFromUrlJob;
+import org.eclipse.mylyn.internal.tasks.ui.util.AbstractRetrieveTitleFromUrlJob;
 import org.eclipse.ui.PlatformUI;
 
 /**
