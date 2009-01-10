@@ -47,8 +47,6 @@ public class Messages extends NLS {
 
 	public static String BugzillaSearchPage_Component;
 
-	public static String BugzillaSearchPage_Content_Assist_Available__X_;
-
 	public static String BugzillaSearchPage_days;
 
 	public static String BugzillaSearchPage_Email;

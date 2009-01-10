@@ -57,41 +57,25 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositorySettingsPage_All;
 
-	public static String BugzillaRepositorySettingsPage_Automatic__Use_Validate_Settings_;
-
 	public static String BugzillaRepositorySettingsPage_AUTOTETECT_PLATFORM_AND_OS;
 
 	public static String BugzillaRepositorySettingsPage_available_once_repository_created;
 
-	public static String BugzillaRepositorySettingsPage_Available_once_repository_has_been_created;
-
 	public static String BugzillaRepositorySettingsPage_bugzilla_repository_settings;
 
-	public static String BugzillaRepositorySettingsPage_Bugzilla_Repository_Settings;
-
 	public static String BugzillaRepositorySettingsPage_example_do_not_include;
-
-	public static String BugzillaRepositorySettingsPage_EXAMPLE_HTTP_WWW_ECLIPSE_ORG_BUGS;
 
 	public static String BugzillaRepositorySettingsPage_Language_;
 
 	public static String BugzillaRepositorySettingsPage_local_users_enabled;
 
-	public static String BugzillaRepositorySettingsPage_Local_users_enabled;
-
 	public static String BugzillaRepositorySettingsPage_override_auto_detection_of_platform;
-
-	public static String BugzillaRepositorySettingsPage_Override_auto_detection_of_Platform_and_OS_for_new_bug_reports;
-
-	public static String BugzillaRepositorySettingsPage_Repository_version_;
 
 	public static String BugzillaRepositorySettingsPage_Retrieving_repository_configuration;
 
 	public static String BugzillaRepositorySettingsPage_Server_URL_is_invalid;
 
 	public static String BugzillaRepositorySettingsPage_supports_bugzilla_X;
-
-	public static String BugzillaRepositorySettingsPage_Validate_Settings_or_select_repository_version_under_Additional_Settings_section;
 
 	public static String BugzillaRepositorySettingsPage_Validating_server_settings;
 

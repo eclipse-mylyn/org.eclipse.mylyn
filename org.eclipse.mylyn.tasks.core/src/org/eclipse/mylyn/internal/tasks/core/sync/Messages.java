@@ -63,8 +63,6 @@ public class Messages extends NLS {
 
 	public static String SynchronizeTasksJob_Receiving_task_X;
 
-	public static String SynchronizeTasksJob_Receiving_X;
-
 	public static String SynchronizeTasksJob_Synchronizing_Tasks__X_;
 
 	public static String SynchronizeTasksJob_Receiving_X_tasks_from_X;

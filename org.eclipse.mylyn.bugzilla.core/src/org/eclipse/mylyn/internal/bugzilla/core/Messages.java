@@ -203,13 +203,9 @@ public class Messages extends NLS {
 
 	public static String BugzillaRepositoryConnector_checking_for_changed_tasks;
 
-	public static String BugzillaRepositoryConnector_Checking_for_changed_tasks;
-
 	public static String BugzillaRepositoryConnector_Query_for_changed_tasks;
 
 	public static String BugzillaRepositoryConnector_running_query;
-
-	public static String BugzillaRepositoryConnector_Running_query;
 
 	public static String BugzillaRepositoryConnector_Unrecognized_response_from_server;
 
@@ -218,8 +214,6 @@ public class Messages extends NLS {
 	public static String BugzillaTaskAttachmentHandler_Sending_attachment;
 
 	public static String BugzillaTaskAttachmentHandler_unable_to_submit_attachment;
-
-	public static String BugzillaTaskDataHandler_Receiving_task;
 
 	public static String BugzillaTaskDataHandler_Receiving_tasks;
 
@@ -254,8 +248,6 @@ public class Messages extends NLS {
 	public static String BugzillaStatus_repositoryCollision;
 
 	public static String BugzillaStatus_operationCancelled;
-
-	public static String BugzillaStatus_errorNetwork;
 
 	public static String BugzillaStatus_errorIo;
 

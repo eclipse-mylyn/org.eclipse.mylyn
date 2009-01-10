@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.trac.core.client;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
+
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.trac.core.client.messages"; //$NON-NLS-1$
 
 	static {
@@ -26,4 +27,5 @@ public class Messages extends NLS {
 	}
 
 	public static String TracWebClient_Updating_attributes;
+
 }

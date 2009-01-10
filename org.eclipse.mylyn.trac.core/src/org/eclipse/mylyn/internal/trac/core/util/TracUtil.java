@@ -80,7 +80,7 @@ public class TracUtil {
 
 	public static IStatus createPermissionDeniedError(String repositoryUrl, String pluginId) {
 		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, TracCorePlugin.ID_PLUGIN,
-				RepositoryStatus.ERROR_PERMISSION_DENIED, Messages.getString("TracUtil.Permission_denied")); //$NON-NLS-1$
+				RepositoryStatus.ERROR_PERMISSION_DENIED, Messages.TracUtil_Permission_denied);
 	}
 
 	public static String encodeUrl(String string) {
