@@ -49,6 +49,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
+import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskJobFactory;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
@@ -490,37 +491,36 @@ public class TasksUiInternal {
 		TasksUiInternal.getTaskList().addTask(newTask);
 		TasksUiPlugin.getTaskActivityManager().scheduleNewTask(newTask);
 
-		Object selectedObject = null;
 		TaskListView view = TaskListView.getFromActivePerspective();
+		AbstractTaskCategory category = getSelectedCategory(view);
+		if (view != null && view.getDrilledIntoCategory() != null && view.getDrilledIntoCategory() != category) {
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.TasksUiInternal_Create_Task,
+					MessageFormat.format(Messages.TasksUiInternal_The_new_task_will_be_added_to_the_X_container,
+							UncategorizedTaskContainer.LABEL));
+		}
+		taskList.addTask(newTask, category);
+		return newTask;
+	}
+
+	public static AbstractTaskCategory getSelectedCategory(TaskListView view) {
+		Object selectedObject = null;
 		if (view != null) {
 			selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
 		}
 		if (selectedObject instanceof TaskCategory) {
-			taskList.addTask(newTask, (TaskCategory) selectedObject);
+			return (TaskCategory) selectedObject;
 		} else if (selectedObject instanceof ITask) {
 			ITask task = (ITask) selectedObject;
-
 			AbstractTaskContainer container = TaskCategory.getParentTaskCategory(task);
-
 			if (container instanceof TaskCategory) {
-				taskList.addTask(newTask, container);
+				return (TaskCategory) container;
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
-				taskList.addTask(newTask, view.getDrilledIntoCategory());
-			} else {
-				taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
+				return (TaskCategory) view.getDrilledIntoCategory();
 			}
 		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
-			taskList.addTask(newTask, view.getDrilledIntoCategory());
-		} else {
-			if (view != null && view.getDrilledIntoCategory() != null) {
-				MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-						Messages.TasksUiInternal_Create_Task, MessageFormat.format(
-								Messages.TasksUiInternal_The_new_task_will_be_added_to_the_X_container,
-								UncategorizedTaskContainer.LABEL));
-			}
-			taskList.addTask(newTask, TasksUiPlugin.getTaskList().getDefaultCategory());
+			return (TaskCategory) view.getDrilledIntoCategory();
 		}
-		return newTask;
+		return TasksUiPlugin.getTaskList().getDefaultCategory();
 	}
 
 	public static Set<AbstractTaskContainer> getContainersFromWorkingSet(Set<IWorkingSet> containers) {

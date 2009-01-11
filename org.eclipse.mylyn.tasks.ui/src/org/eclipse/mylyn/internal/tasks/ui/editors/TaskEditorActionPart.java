@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ITaskList;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.IRepositoryElement;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskOperation;
@@ -125,8 +126,6 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 
 	private Button attachContextButton;
 
-//	private boolean needsAttachContext = true;
-
 	private Button addToCategory;
 
 	private CCombo categoryChooser;
@@ -190,7 +189,6 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 		ITaskList taskList = TasksUiInternal.getTaskList();
 		final List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(taskList.getCategories());
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
-
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
 				if (c1.equals(TasksUiPlugin.getTaskList().getDefaultCategory())) {
 					return -1;
@@ -200,12 +198,18 @@ public class TaskEditorActionPart extends AbstractTaskEditorPart {
 					return c1.getSummary().compareToIgnoreCase(c2.getSummary());
 				}
 			}
-
 		});
+		AbstractTaskCategory selectedCategory = TasksUiInternal.getSelectedCategory(TaskListView.getFromActivePerspective());
+		int i = 0;
+		int selectedIndex = 0;
 		for (IRepositoryElement category : categories) {
 			categoryChooser.add(category.getSummary());
+			if (category.equals(selectedCategory)) {
+				selectedIndex = i;
+			}
+			i++;
 		}
-		categoryChooser.select(0);
+		categoryChooser.select(selectedIndex);
 		categoryChooser.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {

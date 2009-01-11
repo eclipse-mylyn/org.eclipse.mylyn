@@ -1131,7 +1131,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 					getManagedForm().dirtyStateChanged();
 				}
 			});
-
+			setNeedsAddToCategory(model.getTaskData().isNew());
 		} catch (final CoreException e) {
 			StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Error opening task", e)); //$NON-NLS-1$
 			getTaskEditor().setStatus(Messages.AbstractTaskEditorPage_Error_opening_task,
