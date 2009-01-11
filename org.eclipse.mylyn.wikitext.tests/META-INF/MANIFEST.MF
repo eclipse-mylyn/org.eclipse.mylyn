@@ -27,6 +27,7 @@ Require-Bundle: org.junit;bundle-version="3.8.2",
  org.eclipse.help,
  org.apache.ant
 Export-Package: org.eclipse.mylyn.internal.wikitext.core.validation;x-internal:=true,
+ org.eclipse.mylyn.internal.wikitext.mediawiki.core;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.mediawiki.core.validation;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.textile.core;x-internal:=true,
  org.eclipse.mylyn.internal.wikitext.textile.core.validation;x-internal:=true,
