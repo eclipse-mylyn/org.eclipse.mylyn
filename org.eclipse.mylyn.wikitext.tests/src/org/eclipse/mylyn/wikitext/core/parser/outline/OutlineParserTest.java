@@ -73,4 +73,31 @@ public class OutlineParserTest extends TestCase {
 		assertSame(outline.getChildren().get(0), outline.getChildren().get(1).getPrevious());
 		assertSame(outline.getChildren().get(0), outline.getChildren().get(0).getChildren().get(0).getPrevious());
 	}
+
+	public void testMoveChildren() {
+		String textile = "h1. First Header\n\nh2. Second Header\n\nh1. Third Header\n";
+		OutlineItem outline = outlineParser.parse(textile);
+		assertEquals(2, outline.getChildren().size());
+
+		OutlineItem outline2 = outlineParser.createRootItem();
+
+		outline2.moveChildren(outline);
+
+		assertEquals(0, outline.getChildren().size());
+		assertEquals(2, outline2.getChildren().size());
+		assertSame(outline2, outline2.getChildren().get(0).getParent());
+		assertSame(outline2, outline2.getChildren().get(1).getParent());
+
+		outline = outlineParser.parse(textile);
+
+		outline.moveChildren(outline2);
+
+		assertEquals(0, outline2.getChildren().size());
+		assertEquals(4, outline.getChildren().size());
+		assertSame(outline, outline.getChildren().get(0).getParent());
+		assertSame(outline, outline.getChildren().get(1).getParent());
+		assertSame(outline, outline.getChildren().get(2).getParent());
+		assertSame(outline, outline.getChildren().get(3).getParent());
+
+	}
 }
