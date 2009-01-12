@@ -1,7 +1,7 @@
 h1. Overview
 
 This guide provides basic instructions on the use of WikiText.  
-WikiText provides extensions to the Mylyn task editor supporting "lightweight markup languages":http://www.wikipedia.com/Lightweight_Markup such as Textile and MediaWiki.  WikiText also provides a wiki text editor for Eclipse and Ant tasks for converting lightweight markup to HTML and other formats.
+WikiText provides extensions to the Mylyn task editor supporting "lightweight markup languages":http://en.wikipedia.org/wiki/Lightweight_markup_language such as Textile and MediaWiki.  WikiText also provides a wiki text editor for Eclipse and Ant tasks for converting lightweight markup to HTML and other formats.
 
 For information about integrating your application with WikiText please see the *WikiText Developer Guide*.
 
