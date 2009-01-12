@@ -29,4 +29,8 @@ class Messages {
 			return '!' + key + '!';
 		}
 	}
+
+	public static ResourceBundle getBundle() {
+		return RESOURCE_BUNDLE;
+	}
 }

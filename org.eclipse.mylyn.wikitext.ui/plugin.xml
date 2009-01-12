@@ -76,8 +76,7 @@
 			class="org.eclipse.mylyn.internal.wikitext.ui.editor.commands.ShowCheatSheetCommand">
 			<activeWhen>
 				<with variable="activeFocusControlId">
-					<equals value="org.eclipse.mylyn.wikitext.ui.editor.sourceViewer">
-					</equals>
+					<equals value="org.eclipse.mylyn.wikitext.ui.editor.sourceViewer"/>
 				</with>
 			</activeWhen>
 		</handler>
@@ -117,6 +116,29 @@
 			description="%command.description.0"
 			id="org.eclipse.mylyn.wikitext.ui.editor.showCheatSheetCommand" name="%command.name.4">
 		</command>
+	</extension>
+	
+	<extension point="org.eclipse.ui.popupMenus">
+		<viewerContribution
+			targetID="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor.ruler"
+			id="org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor.ruler">
+			<menu id="folding" label="%folding.label" path="rulers"/>
+			<action label="%empty.label" tooltip="%empty.label"
+				class="org.eclipse.mylyn.internal.wikitext.ui.editor.actions.ToggleFoldingRulerAction"
+				menubarPath="folding/additions" definitionId="org.eclipse.ui.edit.text.folding.toggle"
+				id="org.eclipse.mylyn.internal.wikitext.ui.editor.actions.folding.toggle">
+			</action>
+			<action label="%empty.label" tooltip="%empty.label"
+				class="org.eclipse.mylyn.internal.wikitext.ui.editor.actions.ExpandAllFoldingRulerAction"
+				menubarPath="folding/additions" definitionId="org.eclipse.ui.edit.text.folding.expand_all"
+				id="org.eclipse.mylyn.internal.wikitext.ui.editor.actions.expandAll">
+			</action>
+			<action label="%empty.label" tooltip="%empty.label"
+				class="org.eclipse.mylyn.internal.wikitext.ui.editor.actions.CollapseAllFoldingRulerAction"
+				menubarPath="folding/additions" definitionId="org.eclipse.ui.edit.text.folding.collapse_all"
+				id="org.eclipse.mylyn.internal.wikitext.ui.editor.actions.collapseAll">
+			</action>
+		</viewerContribution>
 	</extension>
 	
 	<extension point="org.eclipse.ui.preferencePages">

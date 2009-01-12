@@ -13,7 +13,15 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -22,7 +30,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -32,17 +42,24 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.text.source.projection.IProjectionListener;
+import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
+import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
+import org.eclipse.jface.text.source.projection.ProjectionSupport;
+import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.actions.SetMarkupLanguageAction;
+import org.eclipse.mylyn.internal.wikitext.ui.editor.preferences.Preferences;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.reconciler.MarkupMonoReconciler;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.FastMarkupPartitioner;
 import org.eclipse.mylyn.internal.wikitext.ui.editor.syntax.MarkupDocumentProvider;
@@ -66,6 +83,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
@@ -88,6 +106,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author David Green
  */
 public class MarkupEditor extends TextEditor {
+	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor.ruler"; //$NON-NLS-1$
+
 	/**
 	 * the name of the property that stores the markup language name for per-file preference
 	 * 
@@ -129,6 +149,14 @@ public class MarkupEditor extends TextEditor {
 
 	private CTabItem sourceTab;
 
+	private ProjectionSupport projectionSupport;
+
+	private Map<String, HeadingProjectionAnnotation> projectionAnnotationById;
+
+	private boolean updateJobScheduled = false;
+
+	protected int documentGeneration = 0;
+
 	public static final String EDITOR_SOURCE_VIEWER = "org.eclipse.mylyn.wikitext.ui.editor.sourceViewer"; //$NON-NLS-1$
 
 	public MarkupEditor() {
@@ -147,7 +175,8 @@ public class MarkupEditor extends TextEditor {
 			sourceTab = new CTabItem(folder, SWT.NONE);
 			updateSourceTabLabel();
 
-			viewer = new MarkupSourceViewer(folder, ruler, styles | SWT.WRAP);
+			viewer = new MarkupSourceViewer(folder, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles
+					| SWT.WRAP);
 
 			sourceTab.setControl(viewer instanceof Viewer ? ((Viewer) viewer).getControl() : viewer.getTextWidget());
 			folder.setSelection(sourceTab);
@@ -225,14 +254,57 @@ public class MarkupEditor extends TextEditor {
 		return viewer;
 	}
 
+	@Override
+	public void createPartControl(Composite parent) {
+		super.createPartControl(parent);
+		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
+
+		projectionSupport = new ProjectionSupport(viewer, getAnnotationAccess(), getSharedColors());
+		projectionSupport.install();
+
+		syncProjectionModeWithPreferences();
+
+		viewer.addProjectionListener(new IProjectionListener() {
+			public void projectionDisabled() {
+				projectionAnnotationById = null;
+				saveProjectionPreferences();
+			}
+
+			public void projectionEnabled() {
+				saveProjectionPreferences();
+				updateProjectionAnnotations();
+			}
+		});
+
+		if (!outlineDirty && isFoldingEnabled()) {
+			updateProjectionAnnotations();
+		}
+	}
+
 	private void reloadPreferences() {
+		syncProjectionModeWithPreferences();
 		viewer.invalidateTextPresentation();
+	}
+
+	private void syncProjectionModeWithPreferences() {
+		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
+		if (viewer.isProjectionMode() != WikiTextUiPlugin.getDefault().getPreferences().isEditorFolding()) {
+			viewer.doOperation(ProjectionViewer.TOGGLE);
+		}
 	}
 
 	@Override
 	public void updatePartControl(IEditorInput input) {
 		super.updatePartControl(input);
 		updateDocument();
+	}
+
+	public void saveProjectionPreferences() {
+		if (isFoldingEnabled() != WikiTextUiPlugin.getDefault().getPreferences().isEditorFolding()) {
+			Preferences preferences = WikiTextUiPlugin.getDefault().getPreferences();
+			preferences.setEditorFolding(isFoldingEnabled());
+			preferences.save(WikiTextUiPlugin.getDefault().getPreferenceStore(), false);
+		}
 	}
 
 	@Override
@@ -257,6 +329,8 @@ public class MarkupEditor extends TextEditor {
 	protected void initializeEditor() {
 		super.initializeEditor(); // ORDER DEPENDENCY
 		setHelpContextId(CONTEXT); // ORDER DEPENDENCY
+		setRulerContextMenuId(RULER_CONTEXT_MENU_ID);
+
 	}
 
 	@Override
@@ -291,6 +365,9 @@ public class MarkupEditor extends TextEditor {
 						public void documentChanged(DocumentEvent event) {
 							previewDirty = true;
 							outlineDirty = true;
+							synchronized (MarkupEditor.this) {
+								++documentGeneration;
+							}
 							scheduleOutlineUpdate();
 						}
 
@@ -300,12 +377,12 @@ public class MarkupEditor extends TextEditor {
 				if (documentPartitioningListener == null) {
 					documentPartitioningListener = new IDocumentPartitioningListener() {
 						public void documentPartitioningChanged(IDocument document) {
-							updateOutline();
+							// async update
+							scheduleOutlineUpdate();
 						}
 					};
 				}
 				document.addDocumentPartitioningListener(documentPartitioningListener);
-
 			}
 
 			previewDirty = true;
@@ -390,7 +467,6 @@ public class MarkupEditor extends TextEditor {
 		if (IContentOutlinePage.class == adapter) {
 			if (outlinePage == null || outlinePage.getControl().isDisposed()) {
 				outlinePage = new MarkupEditorOutline(this);
-				scheduleOutlineUpdate();
 			}
 			return outlinePage;
 		}
@@ -400,14 +476,28 @@ public class MarkupEditor extends TextEditor {
 		return super.getAdapter(adapter);
 	}
 
+	public ISourceViewer getViewer() {
+		return viewer;
+	}
+
 	public OutlineItem getOutlineModel() {
 		return outlineModel;
 	}
 
 	private void scheduleOutlineUpdate() {
+		synchronized (MarkupEditor.this) {
+			if (updateJobScheduled) {
+				return;
+			}
+		}
+		// we use a UI job to schedule the update at some point in the future.
+		// this is analogous to the Nagle algorithm.
 		UIJob updateOutlineJob = new UIJob(Messages.getString("MarkupEditor.2")) { //$NON-NLS-1$
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
+				synchronized (MarkupEditor.this) {
+					updateJobScheduled = false;
+				}
 				if (!outlineDirty) {
 					return Status.CANCEL_STATUS;
 				}
@@ -415,6 +505,21 @@ public class MarkupEditor extends TextEditor {
 				return Status.OK_STATUS;
 			}
 		};
+		updateOutlineJob.addJobChangeListener(new JobChangeAdapter() {
+			@Override
+			public void scheduled(IJobChangeEvent event) {
+				synchronized (MarkupEditor.this) {
+					updateJobScheduled = true;
+				}
+			}
+
+			@Override
+			public void done(IJobChangeEvent event) {
+				synchronized (MarkupEditor.this) {
+					updateJobScheduled = false;
+				}
+			}
+		});
 		updateOutlineJob.setUser(false);
 		updateOutlineJob.setSystem(true);
 		updateOutlineJob.setPriority(Job.INTERACTIVE);
@@ -425,12 +530,72 @@ public class MarkupEditor extends TextEditor {
 		if (!outlineDirty) {
 			return;
 		}
+		if (getSourceViewer().getTextWidget().isDisposed()) {
+			return;
+		}
 		// we maintain the outline even if the outline page is not in use, which allows us to use the outline for
 		// content assist and other things
+
+		MarkupLanguage markupLanguage = getMarkupLanguage();
+		if (markupLanguage == null) {
+			return;
+		}
+		final MarkupLanguage language = markupLanguage.clone();
+
+		final Display display = getSourceViewer().getTextWidget().getDisplay();
+		final String content = document.get();
+		final int contentGeneration;
+		synchronized (MarkupEditor.this) {
+			contentGeneration = documentGeneration;
+		}
+		// we parse the outline in another thread so that the UI remains responsive
+		Job parseOutlineJob = new Job(MarkupEditor.class.getSimpleName() + "#updateOutline") { //$NON-NLS-1$
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				outlineParser.setMarkupLanguage(language);
+				if (shouldCancel()) {
+					return Status.CANCEL_STATUS;
+				}
+				final OutlineItem rootItem = outlineParser.parse(content);
+				if (shouldCancel()) {
+					return Status.CANCEL_STATUS;
+				}
+
+				display.asyncExec(new Runnable() {
+					public void run() {
+						updateOutline(contentGeneration, rootItem);
+					}
+				});
+				return Status.OK_STATUS;
+			}
+
+			private boolean shouldCancel() {
+				synchronized (MarkupEditor.this) {
+					if (contentGeneration != documentGeneration) {
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+		parseOutlineJob.setPriority(Job.INTERACTIVE);
+		parseOutlineJob.setSystem(true);
+		parseOutlineJob.schedule();
+	}
+
+	private void updateOutline(int contentGeneration, OutlineItem rootItem) {
+		if (getSourceViewer().getTextWidget().isDisposed()) {
+			return;
+		}
+		synchronized (this) {
+			if (contentGeneration != documentGeneration) {
+				return;
+			}
+		}
 		outlineDirty = false;
-		outlineParser.setMarkupLanguage(getMarkupLanguage());
+
 		outlineModel.clear();
-		outlineParser.parse(outlineModel, document.get());
+		outlineModel.moveChildren(rootItem);
 
 		if (outlinePage != null && outlinePage.getControl() != null && !outlinePage.getControl().isDisposed()) {
 			outlinePage.refresh();
@@ -444,6 +609,114 @@ public class MarkupEditor extends TextEditor {
 				}
 			});
 		}
+		updateProjectionAnnotations();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void updateProjectionAnnotations() {
+		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
+		ProjectionAnnotationModel projectionAnnotationModel = viewer.getProjectionAnnotationModel();
+		if (projectionAnnotationModel != null) {
+			List<Annotation> newProjectionAnnotations = new ArrayList<Annotation>(projectionAnnotationById == null ? 10
+					: projectionAnnotationById.size() + 2);
+			Map<HeadingProjectionAnnotation, Position> annotationToPosition = new HashMap<HeadingProjectionAnnotation, Position>();
+
+			List<OutlineItem> children = outlineModel.getChildren();
+			if (!children.isEmpty()) {
+				createProjectionAnnotations(newProjectionAnnotations, annotationToPosition, children,
+						document.getLength());
+			}
+			if (newProjectionAnnotations.isEmpty()
+					&& (projectionAnnotationById == null || projectionAnnotationById.isEmpty())) {
+				return;
+			}
+
+			Map<String, HeadingProjectionAnnotation> newProjectionAnnotationById = new HashMap<String, HeadingProjectionAnnotation>();
+
+			if (projectionAnnotationById != null) {
+				Set<HeadingProjectionAnnotation> toDelete = new HashSet<HeadingProjectionAnnotation>(
+						projectionAnnotationById.size());
+				Iterator<Entry<HeadingProjectionAnnotation, Position>> newPositionIt = annotationToPosition.entrySet()
+						.iterator();
+				while (newPositionIt.hasNext()) {
+					Entry<HeadingProjectionAnnotation, Position> newAnnotationEnt = newPositionIt.next();
+
+					HeadingProjectionAnnotation newAnnotation = newAnnotationEnt.getKey();
+					Position newPosition = newAnnotationEnt.getValue();
+					HeadingProjectionAnnotation annotation = projectionAnnotationById.get(newAnnotation.getHeadingId());
+					if (annotation != null) {
+						Position position = projectionAnnotationModel.getPosition(annotation);
+						if (newPosition.equals(position)) {
+							newPositionIt.remove();
+							newProjectionAnnotationById.put(annotation.getHeadingId(), annotation);
+						} else {
+							toDelete.add(annotation);
+							if (annotation.isCollapsed()) {
+								newAnnotation.markCollapsed();
+							} else {
+								newAnnotation.markExpanded();
+							}
+							newProjectionAnnotationById.put(annotation.getHeadingId(), newAnnotation);
+						}
+					} else {
+						newProjectionAnnotationById.put(newAnnotation.getHeadingId(), newAnnotation);
+					}
+				}
+				Iterator<Annotation> annotationIt = projectionAnnotationModel.getAnnotationIterator();
+				while (annotationIt.hasNext()) {
+					Annotation annotation = annotationIt.next();
+					if (annotation instanceof HeadingProjectionAnnotation) {
+						HeadingProjectionAnnotation projectionAnnotation = (HeadingProjectionAnnotation) annotation;
+						if (!projectionAnnotationById.containsKey(projectionAnnotation.getHeadingId())
+								&& !toDelete.contains(projectionAnnotation)) {
+							toDelete.add(projectionAnnotation);
+						}
+					}
+				}
+				projectionAnnotationModel.modifyAnnotations(toDelete.isEmpty() ? null
+						: toDelete.toArray(new Annotation[toDelete.size()]), annotationToPosition, null);
+			} else {
+				projectionAnnotationModel.modifyAnnotations(null, annotationToPosition, null);
+				for (HeadingProjectionAnnotation annotation : annotationToPosition.keySet()) {
+					newProjectionAnnotationById.put(annotation.getHeadingId(), annotation);
+				}
+			}
+			projectionAnnotationById = newProjectionAnnotationById;
+		} else {
+			projectionAnnotationById = null;
+		}
+	}
+
+	private void createProjectionAnnotations(List<Annotation> newProjectionAnnotations,
+			Map<HeadingProjectionAnnotation, Position> annotationToPosition, List<OutlineItem> children, int endOffset) {
+		final int size = children.size();
+		final int lastIndex = size - 1;
+		for (int x = 0; x < size; ++x) {
+			OutlineItem child = children.get(x);
+			if (child.getId() == null || child.getId().length() == 0) {
+				continue;
+			}
+			int offset = child.getOffset();
+			int end;
+			if (x == lastIndex) {
+				end = endOffset;
+			} else {
+				end = children.get(x + 1).getOffset();
+			}
+			int length = end - offset;
+
+			if (length > 0) {
+				HeadingProjectionAnnotation annotation = new HeadingProjectionAnnotation(child.getId());
+				Position position = new Position(offset, length);
+
+				newProjectionAnnotations.add(annotation);
+				annotationToPosition.put(annotation, position);
+			}
+
+			if (!child.getChildren().isEmpty()) {
+				createProjectionAnnotations(newProjectionAnnotations, annotationToPosition, child.getChildren(), end);
+			}
+		}
 	}
 
 	private void updateOutlineSelection() {
@@ -454,9 +727,9 @@ public class MarkupEditor extends TextEditor {
 
 			disableReveal = true;
 			try {
-				Point selection = getSourceViewer().getTextWidget().getSelection();
-				if (selection != null) {
-					OutlineItem item = outlineModel.findNearestMatchingOffset(selection.x);
+				Point selectedRange = getSourceViewer().getSelectedRange();
+				if (selectedRange != null) {
+					OutlineItem item = outlineModel.findNearestMatchingOffset(selectedRange.x);
 					if (item != null) {
 						outlinePage.setSelection(new StructuredSelection(item));
 					}
@@ -596,8 +869,7 @@ public class MarkupEditor extends TextEditor {
 		}
 		IFile file = getFile();
 		if (file != null) {
-			MarkupLanguage defaultMarkupLanguage = WikiText.getMarkupLanguageForFilename(
-					file.getName());
+			MarkupLanguage defaultMarkupLanguage = WikiText.getMarkupLanguageForFilename(file.getName());
 			String preference = markupLanguage == null ? null : markupLanguage.getName();
 			if (defaultMarkupLanguage != null && defaultMarkupLanguage.getName().equals(preference)) {
 				preference = null;
@@ -660,11 +932,27 @@ public class MarkupEditor extends TextEditor {
 		menu.prependToGroup(ITextEditorActionConstants.GROUP_SETTINGS, markupLanguageMenu);
 	}
 
-	private static class MarkupSourceViewer extends SourceViewer {
+	public boolean isFoldingEnabled() {
+		ProjectionViewer viewer = (ProjectionViewer) getSourceViewer();
+		return viewer.getProjectionAnnotationModel() != null;
+	}
 
-		public MarkupSourceViewer(Composite parent, IVerticalRuler ruler, int styles) {
-			super(parent, ruler, styles);
+	private static class HeadingProjectionAnnotation extends ProjectionAnnotation {
+		private final String headingId;
+
+		public HeadingProjectionAnnotation(String headingId) {
+			this.headingId = headingId;
 		}
+
+		public String getHeadingId() {
+			return headingId;
+		}
+	}
+
+	/**
+	 * extend the viewer to provide access to the reconciler
+	 */
+	private static class MarkupSourceViewer extends ProjectionViewer {
 
 		public MarkupSourceViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
 				boolean showAnnotationsOverview, int styles) {
