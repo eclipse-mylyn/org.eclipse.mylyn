@@ -14,6 +14,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.ColumnSpan;
+import org.eclipse.mylyn.tasks.ui.editors.LayoutHint.RowSpan;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusEvent;
@@ -39,6 +42,7 @@ public class FlagAttributeEditor extends AbstractAttributeEditor {
 
 	public FlagAttributeEditor(TaskDataModel manager, TaskAttribute taskAttribute) {
 		super(manager, taskAttribute);
+		setLayoutHint(new LayoutHint(RowSpan.SINGLE, ColumnSpan.SINGLE));
 		if (taskAttribute.getAttribute("state") != null) { //$NON-NLS-1$
 			setReadOnly(taskAttribute.getAttribute("state").getMetaData().isReadOnly()); //$NON-NLS-1$
 		}

@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
@@ -89,8 +91,20 @@ public class BugzillaFlagMapper {
 		TaskAttributeMapper mapper = taskData.getAttributeMapper();
 		TaskAttributeMetaData meta = taskAttribute.getMetaData().defaults();
 		meta.setType(IBugzillaConstants.EDITOR_TYPE_FLAG);
-//		meta.setKind(IBugzillaConstants.KIND_FLAG);
 		meta.setLabel(description);
+		String bugzillaVersion = null;
+		RepositoryConfiguration repositoryConfiguration;
+		try {
+			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(mapper.getTaskRepository(), false,
+					new NullProgressMonitor());
+			bugzillaVersion = repositoryConfiguration.getInstallVersion();
+		} catch (CoreException e) {
+			bugzillaVersion = "2.18"; //$NON-NLS-1$
+		}
+
+		if (bugzillaVersion.compareTo("3.2") >= 0) { //$NON-NLS-1$
+			meta.setKind(TaskAttribute.KIND_DEFAULT);
+		}
 		meta.setReadOnly(false);
 
 		if (getNumber() != 0) {

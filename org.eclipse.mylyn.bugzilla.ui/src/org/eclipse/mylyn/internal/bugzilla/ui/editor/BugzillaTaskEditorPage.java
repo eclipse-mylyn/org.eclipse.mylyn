@@ -14,14 +14,13 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCustomField;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
+import org.eclipse.mylyn.tasks.core.data.TaskAttributeMetaData;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -66,26 +65,6 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 				descriptors.remove(taskEditorPartDescriptor);
 				break;
 			}
-		}
-
-		String bugzillaVersion = null;
-		RepositoryConfiguration repositoryConfiguration;
-		try {
-			repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(getTaskRepository(), false,
-					new NullProgressMonitor());
-			bugzillaVersion = repositoryConfiguration.getInstallVersion();
-		} catch (CoreException e) {
-			bugzillaVersion = "2.18"; //$NON-NLS-1$
-		}
-
-		if (bugzillaVersion.compareTo("3.2") >= 0) { //$NON-NLS-1$
-			// Add the Bugzilla flag part
-			descriptors.add(new TaskEditorPartDescriptor(ID_PART_BUGZILLA_FLAGS) {
-				@Override
-				public AbstractTaskEditorPart createPart() {
-					return new BugzillaFlagPart();
-				}
-			}.setPath(PATH_ATTRIBUTES));
 		}
 
 		// Add Bugzilla Planning part
@@ -145,6 +124,17 @@ public class BugzillaTaskEditorPage extends AbstractTaskEditorPage {
 						@Override
 						public int getPriority() {
 							return super.getPriority() * 10;
+						}
+					});
+				}
+
+				TaskAttributeMetaData properties = taskAttribute.getMetaData();
+				if (editor != null && IBugzillaConstants.EDITOR_TYPE_FLAG.equals(properties.getType())) {
+					editor.setLayoutHint(new LayoutHint(editor.getLayoutHint()) {
+
+						@Override
+						public int getPriority() {
+							return super.getPriority() * 5;
 						}
 					});
 				}
