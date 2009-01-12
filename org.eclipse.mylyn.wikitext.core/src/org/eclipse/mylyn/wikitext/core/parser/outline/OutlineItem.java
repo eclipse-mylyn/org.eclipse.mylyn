@@ -257,6 +257,9 @@ public class OutlineItem {
 				List<OutlineItem> temp = children;
 				children = otherParent.children;
 				otherParent.children = temp;
+				for (OutlineItem child : children) {
+					child.parent = this;
+				}
 			} else {
 				children.addAll(otherParent.children);
 				for (OutlineItem child : otherParent.children) {
