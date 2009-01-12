@@ -179,9 +179,9 @@ public class WebUtil {
 
 		Proxy proxy;
 		if (WebUtil.isRepositoryHttps(location.getUrl())) {
-			proxy = location.getProxyForHost(host, IProxyData.HTTP_PROXY_TYPE);
-		} else {
 			proxy = location.getProxyForHost(host, IProxyData.HTTPS_PROXY_TYPE);
+		} else {
+			proxy = location.getProxyForHost(host, IProxyData.HTTP_PROXY_TYPE);
 		}
 
 		if (proxy != null && !Proxy.NO_PROXY.equals(proxy)) {
@@ -633,6 +633,13 @@ public class WebUtil {
 	 */
 	public static void setProxyService(IProxyService proxyService) {
 		CommonsNetPlugin.setProxyService(proxyService);
+	}
+
+	/**
+	 * @since 3.1
+	 */
+	public static IProxyService getProxyService() {
+		return CommonsNetPlugin.getProxyService();
 	}
 
 	/**
