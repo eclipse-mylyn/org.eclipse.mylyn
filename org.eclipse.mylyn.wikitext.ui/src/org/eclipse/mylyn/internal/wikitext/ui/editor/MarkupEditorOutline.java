@@ -138,8 +138,13 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 	}
 
 	public void refresh() {
-		getTreeViewer().refresh();
-		getTreeViewer().expandAll();
+		getTreeViewer().getTree().setRedraw(false);
+		try {
+			getTreeViewer().refresh();
+			getTreeViewer().expandAll();
+		} finally {
+			getTreeViewer().getTree().setRedraw(true);
+		}
 	}
 
 	@Override
