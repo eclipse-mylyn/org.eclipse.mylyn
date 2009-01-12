@@ -11,7 +11,9 @@
 
 package org.eclipse.mylyn.bugzilla.tests;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -457,13 +459,15 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNotNull(taskData);
 		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
 		assertEquals(taskNumber, taskData.getTaskId());
-//		int numAttached = taskData.getAttributeMapper()
-//				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
-//				.size();
-//		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
+		int numAttached = taskData.getAttributeMapper()
+				.getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT)
+				.size();
+		String fileName = "test-attach-" + System.currentTimeMillis() + ".txt";
 
-		assertNotNull(repository.getUserName());
-		assertNotNull(repository.getPassword());
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY));
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getUserName());
+		assertNotNull(repository.getCredentials(AuthenticationType.REPOSITORY).getPassword());
+		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
 
 		TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
 		TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
@@ -473,67 +477,80 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		attachmentMapper.setContentType("text/plain");
 		attachmentMapper.setPatch(false);
 		attachmentMapper.setComment("Automated JUnit attachment test");
+		attachmentMapper.applyTo(attrAttachment);
 
 		/* Test attempt to upload a non-existent file */
 		String filePath = "/this/is/not/a/real-file";
-		BugzillaClient client = connector.getClientManager().getClient(repository, new NullProgressMonitor());
+
+		FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(new File(filePath));
+		attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
+		attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
+		attachment.setName("mylyn-context.zip");
+
 		try {
-			client.postAttachment(taskNumber, attachmentMapper.getComment(), new FileTaskAttachmentSource(new File(
-					filePath)), attrAttachment, new NullProgressMonitor());
-			fail();
+			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+			fail("never reach this!");
 		} catch (Exception e) {
+			assertEquals("A repository error has occurred.", e.getMessage());
 		}
-//		// attachmentHandler.uploadAttachment(repository, task, comment,
-//		// summary, file, contentType, isPatch, proxySettings)
-//		// assertFalse(attachmentHandler.uploadAttachment(attachment,
-//		// repository.getUserName(), repository.getPassword(),
-//		// Proxy.NO_PROXY));
-//		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-//		task = TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
-//		TasksUiInternal.synchronizeTask(connector, task, true, null);
-//
-//		assertEquals(numAttached, taskData.getAttachments().size());
-//
-//		/* Test attempt to upload an empty file */
-//		File attachFile = new File(fileName);
-//		attachment.setFilePath(attachFile.getAbsolutePath());
-//		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
-//		attachFile = new File(attachment.getFilePath());
-//		attachment.setFile(attachFile);
-//		attachment.setFilename(attachFile.getName());
-//		// assertFalse(attachmentHandler.uploadAttachment(attachment,
-//		// repository.getUserName(), repository.getPassword(),
-//		// Proxy.NO_PROXY));
-//		try {
-//			client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment, null);
-//			fail();
-//		} catch (Exception e) {
-//		}
-//		task = TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
-//		TasksUiInternal.synchronizeTask(connector, task, true, null);
-//		taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-//		assertEquals(numAttached, taskData.getAttachments().size());
-//
-//		/* Test uploading a proper file */
-//		write.write("test file");
-//		write.close();
-//		attachment.setFilePath(attachFile.getAbsolutePath());
-//		// assertTrue(attachmentHandler.uploadAttachment(attachment,
-//		// repository.getUserName(), repository.getPassword(),
-//		// Proxy.NO_PROXY));
-//		File fileToAttach = new File(attachment.getFilePath());
-//		assertTrue(fileToAttach.exists());
-//		attachment.setFile(fileToAttach);
-//		attachment.setFilename(fileToAttach.getName());
-//		client.postAttachment(attachment.getReport().getTaskId(), attachment.getComment(), attachment, null);
-//
-//		task = TasksUiInternal.createTask(repository, taskNumber, new NullProgressMonitor());
-//		TasksUiInternal.synchronizeTask(connector, task, true, null);
-//		taskData = TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-//		assertEquals(numAttached + 1, taskData.getAttachments().size());
-//
-//		// use assertion to track clean-up
-//		assertTrue(attachFile.delete());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+
+		task = TasksUi.getRepositoryModel().createTask(repository, taskNumber);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		assertEquals(numAttached, taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT).size());
+
+		/* Test attempt to upload an empty file */
+		File attachFile = new File(fileName);
+		attachFile.createNewFile();
+		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+
+		attachment = new FileTaskAttachmentSource(attachFile);
+		attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
+		attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
+		attachment.setName("mylyn-context.zip");
+
+		try {
+			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+			fail("never reach this!");
+		} catch (Exception e) {
+			assertEquals("A repository error has occurred.", e.getMessage());
+		}
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+
+		task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		assertEquals(numAttached, taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT).size());
+
+		/* Test uploading a proper file */
+		write.write("test file");
+		write.close();
+		try {
+			client.postAttachment(taskNumber, attachmentMapper.getComment(), attachment, attrAttachment,
+					new NullProgressMonitor());
+		} catch (Exception e) {
+			fail("never reach this!");
+		}
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+
+		task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		assertEquals(numAttached + 1, taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT).size());
+		// use assertion to track clean-up
+		assertTrue(attachFile.delete());
 	}
 
 	public void testDataRetrieval() throws CoreException, ParseException {
@@ -1036,27 +1053,48 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //			}
 //		}
 
-// TODO: to be ported
-//	public void testContextAttachFailure() throws Exception {
-//		init218();
-//		ITask task = this.generateLocalTaskAndDownload("3");
-//		assertNotNull(task);
+	public void testContextAttachFailure() throws Exception {
+		init218();
+		ITask task = this.generateLocalTaskAndDownload("3");
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
 //		assertNotNull(TasksUiPlugin.getTaskDataStorageManager().getNewTaskData(task.getRepositoryUrl(),
 //				task.getTaskId()));
-//		TasksUiPlugin.getttaskgetTaskListManager().activateTask(task);
-//		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
-//		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-//		sourceContextFile.createNewFile();
-//		sourceContextFile.deleteOnExit();
-//		repository.setAuthenticationCredentials("wrong", "wrong");
-//		try {
-//			AttachmentUtil.attachContext(connector.getAttachmentHandler(), repository, task, "",
-//					new NullProgressMonitor());
-//		} catch (CoreException e) {
-//			assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
-//			return;
-//		}
-//		fail("Should have failed due to invalid userid and password.");
-//	}
+		TasksUi.getTaskActivityManager().activateTask(task);
+		File sourceContextFile = ContextCorePlugin.getContextStore().getFileForContext(task.getHandleIdentifier());
+		assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+		sourceContextFile.createNewFile();
+		sourceContextFile.deleteOnExit();
+		repository.setCredentials(AuthenticationType.REPOSITORY, new AuthenticationCredentials("wrong", "wrong"), false);
+		try {
+			FileTaskAttachmentSource attachment = new FileTaskAttachmentSource(sourceContextFile);
+			attachment.setContentType(FileTaskAttachmentSource.APPLICATION_OCTET_STREAM);
+
+			attachment.setDescription(AttachmentUtil.CONTEXT_DESCRIPTION);
+			attachment.setName("mylyn-context.zip");
+
+			TaskAttribute attrAttachment = taskData.getAttributeMapper().createTaskAttachment(taskData);
+			TaskAttachmentMapper attachmentMapper = TaskAttachmentMapper.createFrom(attrAttachment);
+
+			/* Initialize a local attachment */
+			attachmentMapper.setDescription("Test attachment " + new Date());
+			attachmentMapper.setContentType(AttachmentUtil.CONTEXT_DESCRIPTION);
+			attachmentMapper.setPatch(false);
+			attachmentMapper.setComment("Context attachment failure Test");
+			attachmentMapper.applyTo(attrAttachment);
+
+			connector.getTaskAttachmentHandler().postContent(repository, task, attachment,
+					attachmentMapper.getComment(), attrAttachment, new NullProgressMonitor());
+		} catch (CoreException e) {
+			assertEquals(
+					"Unable to login to http://mylyn.eclipse.org/bugs218.\n\ninvalid username or password \n\nPlease validate credentials via Task Repositories view.",
+					e.getMessage());
+			assertEquals(SynchronizationState.SYNCHRONIZED, task.getSynchronizationState());
+			return;
+		}
+		fail("Should have failed due to invalid userid and password.");
+	}
 
 }
