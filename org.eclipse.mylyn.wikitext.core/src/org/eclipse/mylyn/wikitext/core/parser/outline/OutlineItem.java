@@ -24,11 +24,11 @@ import java.util.Map;
  */
 public class OutlineItem {
 
-	private final OutlineItem parent;
+	private OutlineItem parent;
 
 	private final int level;
 
-	private final List<OutlineItem> children = new ArrayList<OutlineItem>();
+	private List<OutlineItem> children = new ArrayList<OutlineItem>();
 
 	private final int offset;
 
@@ -246,6 +246,25 @@ public class OutlineItem {
 
 	public String getTooltip() {
 		return tooltip;
+	}
+
+	/**
+	 * move children from the given outline item to this
+	 */
+	public void moveChildren(OutlineItem otherParent) {
+		if (!otherParent.children.isEmpty()) {
+			if (children.isEmpty()) {
+				List<OutlineItem> temp = children;
+				children = otherParent.children;
+				otherParent.children = temp;
+			} else {
+				children.addAll(otherParent.children);
+				for (OutlineItem child : otherParent.children) {
+					child.parent = this;
+				}
+				otherParent.children.clear();
+			}
+		}
 	}
 
 }
