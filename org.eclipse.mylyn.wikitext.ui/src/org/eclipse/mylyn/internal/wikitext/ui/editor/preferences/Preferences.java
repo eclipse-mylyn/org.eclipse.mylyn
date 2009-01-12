@@ -23,6 +23,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class Preferences {
 
+	private static final String KEY_EDITOR_FOLDING = "editorFolding"; //$NON-NLS-1$
+
 	private static final Pattern BAD_CHAR_PATTERN = Pattern.compile("[^a-zA-Z0-9]"); //$NON-NLS-1$
 
 	public static final String PHRASE_CODE = "@code@"; //$NON-NLS-1$
@@ -106,12 +108,28 @@ public class Preferences {
 		cssByPhraseModifierType.put(PHRASE_UNDERLINED, "text-decoration: underline;"); //$NON-NLS-1$
 	}
 
+	private boolean editorFolding = true;
+
 	public Map<String, String> getCssByBlockModifierType() {
 		return cssByBlockModifierType;
 	}
 
 	public Map<String, String> getCssByPhraseModifierType() {
 		return cssByPhraseModifierType;
+	}
+
+	/**
+	 * indicate if editor folding is enabled
+	 */
+	public boolean isEditorFolding() {
+		return editorFolding;
+	}
+
+	/**
+	 * indicate if editor folding is enabled
+	 */
+	public void setEditorFolding(boolean editorFolding) {
+		this.editorFolding = editorFolding;
 	}
 
 	/**
@@ -139,6 +157,11 @@ public class Preferences {
 				store.setValue(propKey, ent.getValue());
 			}
 		}
+		if (asDefault) {
+			store.setDefault(KEY_EDITOR_FOLDING, editorFolding);
+		} else {
+			store.setValue(KEY_EDITOR_FOLDING, editorFolding);
+		}
 	}
 
 	public static String toPreferenceKey(String key, boolean block) {
@@ -162,5 +185,6 @@ public class Preferences {
 				ent.setValue(value);
 			}
 		}
+		editorFolding = store.getBoolean(KEY_EDITOR_FOLDING);
 	}
 }
