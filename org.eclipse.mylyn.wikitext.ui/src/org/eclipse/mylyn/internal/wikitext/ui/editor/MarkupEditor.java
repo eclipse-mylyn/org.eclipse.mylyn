@@ -12,6 +12,7 @@ package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,8 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IOverviewRuler;
@@ -73,6 +76,8 @@ import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineParser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.KeyAdapter;
@@ -188,6 +193,25 @@ public class MarkupEditor extends TextEditor {
 			previewTab.setToolTipText(Messages.getString("MarkupEditor.PreviewView_tooltip")); //$NON-NLS-1$
 
 			browser = new Browser(folder, SWT.NONE);
+			// bug 260479: open hyperlinks in a browser
+			browser.addLocationListener(new LocationListener() {
+				public void changed(LocationEvent event) {
+					event.doit = false;
+				}
+
+				public void changing(LocationEvent event) {
+					// if it looks like an absolute URL
+					if (event.location.matches("[a-zA-Z]{3,8}://?.*")) { //$NON-NLS-1$
+						event.doit = false;
+						try {
+							PlatformUI.getWorkbench().getBrowserSupport().createBrowser("org.eclipse.ui.browser") //$NON-NLS-1$
+									.openURL(new URL(event.location));
+						} catch (Exception e) {
+							new URLHyperlink(new Region(0, 1), event.location).open();
+						}
+					}
+				}
+			});
 			previewTab.setControl(browser);
 		}
 
