@@ -148,10 +148,6 @@ public class BugzillaClient {
 
 	protected Proxy proxy = Proxy.NO_PROXY;
 
-	protected String username;
-
-	protected String password;
-
 	protected URL repositoryUrl;
 
 	protected String characterEncoding;
@@ -174,11 +170,6 @@ public class BugzillaClient {
 
 	public BugzillaClient(AbstractWebLocation location, String characterEncoding, Map<String, String> configParameters,
 			BugzillaLanguageSettings languageSettings) throws MalformedURLException {
-		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
-		if (credentials != null) {
-			this.username = credentials.getUserName();
-			this.password = credentials.getPassword();
-		}
 		this.repositoryUrl = new URL(location.getUrl());
 		this.location = location;
 		this.characterEncoding = characterEncoding;
@@ -202,7 +193,8 @@ public class BugzillaClient {
 	}
 
 	protected boolean hasAuthenticationCredentials() {
-		return username != null && username.length() > 0;
+		AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+		return (credentials != null && credentials.getUserName() != null && credentials.getUserName().length() > 0);
 	}
 
 	private GzipGetMethod getConnect(String serverURL, IProgressMonitor monitor) throws IOException, CoreException {
@@ -349,8 +341,15 @@ public class BugzillaClient {
 			hostConfiguration = WebUtil.createHostConfiguration(httpClient, location, monitor);
 
 			NameValuePair[] formData = new NameValuePair[2];
-			formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username);
-			formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password);
+			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+			if (credentials == null) {
+				authenticated = false;
+				throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
+						RepositoryStatus.ERROR_REPOSITORY_LOGIN, repositoryUrl.toString(),
+						"Authentication credentials from location missing.")); //$NON-NLS-1$
+			}
+			formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, credentials.getUserName());
+			formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, credentials.getPassword());
 
 			postMethod = new GzipPostMethod(WebUtil.getRequestPath(repositoryUrl.toString()
 					+ IBugzillaConstants.URL_POST_LOGIN), true);
@@ -665,6 +664,17 @@ public class BugzillaClient {
 			postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
 			List<PartBase> parts = new ArrayList<PartBase>();
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT, characterEncoding));
+			AuthenticationCredentials credentials = location.getCredentials(AuthenticationType.REPOSITORY);
+			String username;
+			String password;
+			if (credentials != null) {
+				username = credentials.getUserName();
+				password = credentials.getPassword();
+			} else {
+				username = null;
+				password = null;
+
+			}
 			if (username != null && password != null) {
 				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, characterEncoding));
 				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password, characterEncoding));
