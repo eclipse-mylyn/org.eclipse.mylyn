@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2008 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,7 +98,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			backupFolder.mkdir();
 		}
 
-		if (!synchronous) {
+		if (!synchronous && Platform.isRunning()) {
 			export = new ExportJob(backupFolderPath, getBackupFileName());
 			export.addJobChangeListener(new JobChangeAdapter() {
 
@@ -122,7 +122,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			} catch (InterruptedException e) {
 				// ignore
 			} catch (InvocationTargetException e) {
-				MessageDialog.openError(null, Messages.TaskListBackupManager_Tasklist_Backup, Messages.TaskListBackupManager_Could_not_backup_task_data);
+				MessageDialog.openError(null, Messages.TaskListBackupManager_Tasklist_Backup,
+						Messages.TaskListBackupManager_Could_not_backup_task_data);
 			}
 
 		}
