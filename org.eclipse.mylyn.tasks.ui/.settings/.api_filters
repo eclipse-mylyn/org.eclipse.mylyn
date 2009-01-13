@@ -8,6 +8,14 @@
 </message_arguments>
 </filter>
 </resource>
+<resource path="src/org/eclipse/mylyn/internal/tasks/ui/TaskJobFactory.java" type="org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory">
+<filter id="571519004">
+<message_arguments>
+<message_argument value="org.eclipse.mylyn.internal.tasks.ui.TaskJobFactory"/>
+<message_argument value="TaskJob"/>
+</message_arguments>
+</filter>
+</resource>
 <resource path="src/org/eclipse/mylyn/tasks/ui/wizards/AbstractRepositorySettingsPage.java" type="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage">
 <filter id="389242988">
 <message_arguments>
@@ -40,15 +48,15 @@
 <filter id="389242988">
 <message_arguments>
 <message_argument value="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage"/>
-<message_argument value="INVALID_REPOSITORY_URL"/>
-<message_argument value="Repository url is invalid."/>
+<message_argument value="LABEL_SERVER"/>
+<message_argument value="Server: "/>
 </message_arguments>
 </filter>
 <filter id="389242988">
 <message_arguments>
 <message_argument value="org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage"/>
-<message_argument value="LABEL_SERVER"/>
-<message_argument value="Server: "/>
+<message_argument value="INVALID_REPOSITORY_URL"/>
+<message_argument value="Repository url is invalid."/>
 </message_arguments>
 </filter>
 </resource>
