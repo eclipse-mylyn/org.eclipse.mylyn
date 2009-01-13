@@ -46,6 +46,8 @@ public class OutlineItem {
 
 	private Map<String, OutlineItem> itemsById;
 
+	private String resourcePath;
+
 	public OutlineItem(OutlineItem parent, int level, String id, int offset, int length, String label) {
 		super();
 		this.parent = parent;
@@ -246,6 +248,32 @@ public class OutlineItem {
 
 	public String getTooltip() {
 		return tooltip;
+	}
+
+	/**
+	 * the resource path to the resource of this outline item
+	 * 
+	 * @return the resource path, or null if it's unknown.
+	 */
+	public String getResourcePath() {
+		if (getParent() != null) {
+			return getParent().getResourcePath();
+		}
+		return resourcePath;
+	}
+
+	/**
+	 * the resource path to the resource of this outline item
+	 * 
+	 * @param resourcePath
+	 *            the resource path, or null if it's unknown.
+	 */
+	public void setResourcePath(String resourcePath) {
+		if (getParent() != null) {
+			getParent().setResourcePath(resourcePath);
+		} else {
+			this.resourcePath = resourcePath;
+		}
 	}
 
 	/**

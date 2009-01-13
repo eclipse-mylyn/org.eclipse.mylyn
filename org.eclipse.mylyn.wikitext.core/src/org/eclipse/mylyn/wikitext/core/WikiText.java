@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.core;
 
 import java.util.Set;
 
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.mylyn.internal.wikitext.core.WikiTextPlugin;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.ServiceLocator;
@@ -31,6 +32,10 @@ import org.eclipse.mylyn.wikitext.core.validation.MarkupValidator;
  * @since 1.0
  */
 public class WikiText {
+	/**
+	 * the {@link IContentType#getId() content type id} of wikitext files.
+	 */
+	public static final String CONTENT_TYPE = "org.eclipse.mylyn.wikitext"; //$NON-NLS-1$
 
 	private WikiText() { // prevent instantiation and subclassing
 	}

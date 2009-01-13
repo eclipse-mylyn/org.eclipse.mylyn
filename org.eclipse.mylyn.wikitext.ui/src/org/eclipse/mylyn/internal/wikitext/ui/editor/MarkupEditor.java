@@ -43,6 +43,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
@@ -58,6 +59,8 @@ import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.wikitext.ui.WikiTextUiPlugin;
@@ -98,6 +101,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.swt.IFocusService;
 import org.eclipse.ui.texteditor.ContentAssistAction;
@@ -110,7 +115,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * 
  * @author David Green
  */
-public class MarkupEditor extends TextEditor {
+public class MarkupEditor extends TextEditor implements IShowInTarget {
 	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor.ruler"; //$NON-NLS-1$
 
 	/**
@@ -361,10 +366,12 @@ public class MarkupEditor extends TextEditor {
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		super.doSetInput(input);
 		updateDocument();
+		IFile file = getFile();
 		if (sourceViewerConfiguration != null) {
-			sourceViewerConfiguration.setFile(getFile());
+			sourceViewerConfiguration.setFile(file);
 		}
 		initializeMarkupLanguage(input);
+		outlineModel.setResourcePath(file == null ? null : file.getFullPath().toString());
 	}
 
 	private void updateDocument() {
@@ -968,6 +975,24 @@ public class MarkupEditor extends TextEditor {
 		return false;
 	}
 
+	public boolean show(ShowInContext context) {
+		ISelection selection = context.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			for (Object element : ((IStructuredSelection) selection).toArray()) {
+				if (element instanceof OutlineItem) {
+					OutlineItem item = (OutlineItem) element;
+					selectAndReveal(item.getOffset(), item.getLength());
+					return true;
+				}
+			}
+		} else if (selection instanceof ITextSelection) {
+			ITextSelection textSel = (ITextSelection) selection;
+			selectAndReveal(textSel.getOffset(), textSel.getLength());
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
 		super.rulerContextMenuAboutToShow(menu);
@@ -1001,4 +1026,5 @@ public class MarkupEditor extends TextEditor {
 			return fReconciler;
 		}
 	}
+
 }
