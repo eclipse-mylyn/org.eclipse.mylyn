@@ -16,7 +16,6 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.URI;
 import java.net.Proxy.Type;
 
 import javax.net.ssl.SSLHandshakeException;
@@ -30,11 +29,7 @@ import org.apache.commons.httpclient.HttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.eclipse.core.internal.net.ProxyData;
-import org.eclipse.core.net.proxy.IProxyChangeListener;
 import org.eclipse.core.net.proxy.IProxyData;
-import org.eclipse.core.net.proxy.IProxyService;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.commons.net.AbstractWebLocation;
@@ -80,87 +75,6 @@ public class WebUtilTest extends TestCase {
 		}
 
 		public void worked(int work) {
-		}
-
-	}
-
-	@SuppressWarnings( { "deprecation" })
-	private class StubProxyService implements IProxyService {
-
-		private ProxyData proxyData;
-
-		public void addProxyChangeListener(IProxyChangeListener listener) {
-		}
-
-		public String[] getNonProxiedHosts() {
-			return null;
-		}
-
-		public IProxyData[] getProxyData() {
-			if (proxyData != null) {
-				return new IProxyData[] { proxyData };
-			} else {
-				return null;
-			}
-		}
-
-		public IProxyData getProxyData(String type) {
-			if (type.equals(proxyData.getType())) {
-				return proxyData;
-			} else {
-				return null;
-			}
-		}
-
-		public IProxyData[] getProxyDataForHost(String host) {
-			if (proxyData != null) {
-				return new IProxyData[] { proxyData };
-			} else {
-				return null;
-			}
-		}
-
-		public IProxyData getProxyDataForHost(String host, String type) {
-			if (type.equals(proxyData.getType())) {
-				return proxyData;
-			} else {
-				return null;
-			}
-		}
-
-		public boolean hasSystemProxies() {
-			return false;
-		}
-
-		public boolean isProxiesEnabled() {
-			return true;
-		}
-
-		public boolean isSystemProxiesEnabled() {
-			return false;
-		}
-
-		public void removeProxyChangeListener(IProxyChangeListener listener) {
-		}
-
-		public IProxyData[] select(URI uri) {
-			return null;
-		}
-
-		public void setNonProxiedHosts(String[] hosts) throws CoreException {
-		}
-
-		public void setProxiesEnabled(boolean enabled) {
-		}
-
-		public void setProxyData(IProxyData[] proxies) throws CoreException {
-		}
-
-		public void setSystemProxiesEnabled(boolean enabled) {
-		}
-
-		public void setProxy(String type, String host, int port, boolean requiresAuthentication) {
-			this.proxyData = new ProxyData(type, host, port, requiresAuthentication, null);
 		}
 
 	}
@@ -671,20 +585,20 @@ public class WebUtilTest extends TestCase {
 		assertNull(WebUtil.getProxy("mylyn.eclipse.org", Type.SOCKS));
 	}
 
-	public void testGetPlatformProxy() {
-		IProxyService defaultProxyService = WebUtil.getProxyService();
-		try {
-			StubProxyService proxyService = new StubProxyService();
-			WebUtil.setProxyService(proxyService);
-			proxyService.setProxy(IProxyData.HTTP_PROXY_TYPE, "proxy", 8080, false);
-			Proxy proxy = WebUtil.getProxy("mylyn.eclipse.org", Type.HTTP);
-			assertNotNull(proxy);
-			assertEquals(Proxy.Type.HTTP, proxy.type());
-			proxy = WebUtil.getProxy("mylyn.eclipse.org", Type.SOCKS);
-			assertNull(proxy);
-		} finally {
-			WebUtil.setProxyService(defaultProxyService);
-		}
-	}
+//	public void testGetPlatformProxy() {
+//		IProxyService defaultProxyService = WebUtil.getProxyService();
+//		try {
+//			StubProxyService proxyService = new StubProxyService();
+//			WebUtil.setProxyService(proxyService);
+//			proxyService.setProxy(IProxyData.HTTP_PROXY_TYPE, "proxy", 8080, false);
+//			Proxy proxy = WebUtil.getProxy("mylyn.eclipse.org", Type.HTTP);
+//			assertNotNull(proxy);
+//			assertEquals(Proxy.Type.HTTP, proxy.type());
+//			proxy = WebUtil.getProxy("mylyn.eclipse.org", Type.SOCKS);
+//			assertNull(proxy);
+//		} finally {
+//			WebUtil.setProxyService(defaultProxyService);
+//		}
+//	}
 
 }
