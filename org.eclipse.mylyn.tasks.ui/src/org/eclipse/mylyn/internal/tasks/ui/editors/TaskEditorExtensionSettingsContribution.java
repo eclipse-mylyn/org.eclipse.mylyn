@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 David Green and others.
+ * Copyright (c) 2004, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,7 +51,8 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 	private String selectedExtensionId;
 
 	public TaskEditorExtensionSettingsContribution() {
-		super(Messages.TaskEditorExtensionSettingsContribution_Editor, Messages.TaskEditorExtensionSettingsContribution_Select_the_capabilities_of_the_task_editor);
+		super(Messages.TaskEditorExtensionSettingsContribution_Editor,
+				Messages.TaskEditorExtensionSettingsContribution_Select_the_capabilities_of_the_task_editor);
 	}
 
 	@Override
@@ -119,5 +120,13 @@ public class TaskEditorExtensionSettingsContribution extends AbstractTaskReposit
 	public IStatus validate() {
 		// nothing to validate
 		return null;
+	}
+
+	/**
+	 * only enabled when there are installed/registered task editor extensions.
+	 */
+	@Override
+	public boolean isEnabled() {
+		return !TaskEditorExtensions.getTaskEditorExtensions().isEmpty();
 	}
 }

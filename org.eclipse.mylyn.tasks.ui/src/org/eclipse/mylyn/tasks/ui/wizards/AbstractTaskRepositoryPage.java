@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 David Green and others.
+ * Copyright (c) 2004, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,6 +56,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  * @since 3.1
  */
 public abstract class AbstractTaskRepositoryPage extends WizardPage implements ITaskRepositoryPage {
+
+	private static final String CLASS = "class";
+
+	private static final String ID = "id";
 
 	private static final String KIND = "connectorKind";
 
@@ -357,15 +361,18 @@ public abstract class AbstractTaskRepositoryPage extends WizardPage implements I
 				if (element.getName().equals(TASK_REPOSITORY_PAGE_CONTRIBUTION)) {
 					String kind = element.getAttribute(KIND);
 					if (kind == null || kind.length() == 0 || kind.equals(getConnectorKind())) {
-						String id = element.getAttribute("id");
+						String id = element.getAttribute(ID);
 						try {
 							if (id == null || id.length() == 0) {
-								throw new IllegalStateException(TASK_REPOSITORY_PAGE_CONTRIBUTION + "/@id is required");
+								throw new IllegalStateException(TASK_REPOSITORY_PAGE_CONTRIBUTION + "/@" + ID
+										+ " is required");
 							}
-							Object contributor = element.createExecutableExtension("class");
+							Object contributor = element.createExecutableExtension(CLASS);
 							AbstractTaskRepositoryPageContribution pageContributor = (AbstractTaskRepositoryPageContribution) contributor;
 							pageContributor.setId(id);
-							contributors.add(pageContributor);
+							if (pageContributor.isEnabled()) {
+								contributors.add(pageContributor);
+							}
 						} catch (Exception e) {
 							StatusHandler.log(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, "Could not load "
 									+ TASK_REPOSITORY_PAGE_CONTRIBUTION + " '" + id + "' from plug-in "

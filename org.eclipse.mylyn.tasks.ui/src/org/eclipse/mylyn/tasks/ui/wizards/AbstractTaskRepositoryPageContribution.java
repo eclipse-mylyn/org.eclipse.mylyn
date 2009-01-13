@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 David Green and others.
+ * Copyright (c) 2004, 2009 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,7 +77,7 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	protected AbstractTaskRepositoryPageContribution(String title, String description) {
 		this.title = title;
 		this.description = description;
-		this.id = "";
+		this.id = ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -210,5 +210,15 @@ public abstract class AbstractTaskRepositoryPageContribution {
 	 */
 	public final String getId() {
 		return id;
+	}
+
+	/**
+	 * Indicate if this contribution is enabled. Subclasses may override to programatically disable the contribution
+	 * when needed. This method is called early in the contributor's lifecycle, before any controls are created.
+	 * 
+	 * the default implementation returns true.
+	 */
+	public boolean isEnabled() {
+		return true;
 	}
 }
