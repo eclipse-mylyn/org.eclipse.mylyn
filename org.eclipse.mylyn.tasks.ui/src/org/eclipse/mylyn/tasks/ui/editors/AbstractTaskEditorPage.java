@@ -52,6 +52,7 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.DateRange;
@@ -449,6 +450,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	private TaskAttachmentDropListener defaultDropListener;
 
+	private CommonTextSupport textSupport;
+
 	// TODO 3.1 define constructor for setting id and label
 	public AbstractTaskEditorPage(TaskEditor editor, String connectorKind) {
 		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -472,10 +475,10 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		for (Control control : children) {
 			if ((control instanceof Text) || (control instanceof Button) || (control instanceof Combo)
 					|| (control instanceof CCombo) || (control instanceof Tree) || (control instanceof Table)
-					|| (control instanceof Spinner) || (control instanceof Link) || (control instanceof List)
-					|| (control instanceof TabFolder) || (control instanceof CTabFolder)
-					|| (control instanceof Hyperlink) || (control instanceof FilteredTree)
-					|| (control instanceof StyledText)) {
+					|| (control instanceof Spinner) || (control instanceof Link)
+					|| (control instanceof org.eclipse.swt.widgets.List) || (control instanceof TabFolder)
+					|| (control instanceof CTabFolder) || (control instanceof Hyperlink)
+					|| (control instanceof FilteredTree) || (control instanceof StyledText)) {
 				control.addFocusListener(listener);
 			}
 			if (control instanceof Composite) {
@@ -497,7 +500,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	public boolean canPerformAction(String actionId) {
-		return EditorUtil.canPerformAction(actionId, EditorUtil.getFocusControl(this));
+		return CommonTextSupport.canPerformAction(actionId, EditorUtil.getFocusControl(this));
 	}
 
 	public void close() {
@@ -520,8 +523,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	AttributeEditorToolkit createAttributeEditorToolkit() {
-		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-		return new AttributeEditorToolkit(handlerService);
+		return new AttributeEditorToolkit(textSupport);
 	}
 
 	@Override
@@ -532,7 +534,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	@Override
 	protected void createFormContent(final IManagedForm managedForm) {
-
 		form = managedForm.getForm();
 
 		toolkit = managedForm.getToolkit();
@@ -620,7 +621,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		attributeEditorToolkit = createAttributeEditorToolkit();
 		Assert.isNotNull(attributeEditorToolkit);
 		attributeEditorToolkit.setMenu(editorComposite.getMenu());
-		attributeEditorToolkit.setSelectionChangedListener(this);
 		attributeEditorFactory.setEditorToolkit(attributeEditorToolkit);
 
 		createParts();
@@ -766,6 +766,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 
 	@Override
 	public void dispose() {
+		if (textSupport != null) {
+			textSupport.dispose();
+		}
 		if (attributeEditorToolkit != null) {
 			attributeEditorToolkit.dispose();
 		}
@@ -774,7 +777,7 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	}
 
 	public void doAction(String actionId) {
-		EditorUtil.doAction(actionId, EditorUtil.getFocusControl(this));
+		CommonTextSupport.doAction(actionId, EditorUtil.getFocusControl(this));
 	}
 
 	@Override
@@ -956,6 +959,10 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 			updateOutlinePage();
 			return outlinePage;
 		}
+		// TODO m3.2 replace by getTextSupport() method
+		if (adapter == CommonTextSupport.class) {
+			return textSupport;
+		}
 		return super.getAdapter(adapter);
 	}
 
@@ -1113,6 +1120,8 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 		this.task = taskEditorInput.getTask();
 		this.defaultSelection = new StructuredSelection(task);
 		this.lastSelection = defaultSelection;
+		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		this.textSupport = new CommonTextSupport(handlerService);
 
 		initModel(taskEditorInput);
 

@@ -26,6 +26,7 @@ import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.commands.ViewSourceHandler;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewerConfiguration.Mode;
@@ -269,7 +270,7 @@ public class RichTextAttributeEditor extends AbstractAttributeEditor {
 		}
 
 		// enable cut/copy/paste
-		EditorUtil.setTextViewer(viewer.getTextWidget(), viewer);
+		CommonTextSupport.setTextViewer(viewer.getTextWidget(), viewer);
 		viewer.setEditable(!readOnly);
 		viewer.getTextWidget().setFont(getFont());
 		toolkit.adapt(viewer.getControl(), false, false);

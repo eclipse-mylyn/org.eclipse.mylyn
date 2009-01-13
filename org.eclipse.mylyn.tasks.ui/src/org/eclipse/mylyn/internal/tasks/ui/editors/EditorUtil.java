@@ -19,6 +19,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskAttachmentWizard.Mode;
@@ -28,7 +29,6 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Font;
@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.IManagedForm;
@@ -85,83 +84,20 @@ public class EditorUtil {
 		return false;
 	}
 
+	/**
+	 * @deprecated use {@link CommonTextSupport#canPerformAction(String, Control)} instead
+	 */
+	@Deprecated
 	public static boolean canPerformAction(String actionId, Control focusControl) {
-		TextViewer viewer = getTextViewer(focusControl);
-		if (viewer != null) {
-			return canDoGlobalAction(actionId, viewer);
-		}
-		if (actionId.equals(ActionFactory.UNDO.getId()) || actionId.equals(ActionFactory.REDO.getId())) {
-			return false;
-		}
-		return true;
+		return CommonTextSupport.canPerformAction(actionId, focusControl);
 	}
 
-	private static boolean canPerformDirectly(String id, Control control) {
-		if (control instanceof Text) {
-			Text text = (Text) control;
-			if (id.equals(ActionFactory.CUT.getId())) {
-				text.cut();
-				return true;
-			}
-			if (id.equals(ActionFactory.COPY.getId())) {
-				text.copy();
-				return true;
-			}
-			if (id.equals(ActionFactory.PASTE.getId())) {
-				text.paste();
-				return true;
-			}
-			if (id.equals(ActionFactory.SELECT_ALL.getId())) {
-				text.selectAll();
-				return true;
-			}
-			if (id.equals(ActionFactory.DELETE.getId())) {
-				int count = text.getSelectionCount();
-				if (count == 0) {
-					int caretPos = text.getCaretPosition();
-					text.setSelection(caretPos, caretPos + 1);
-				}
-				text.insert(""); //$NON-NLS-1$
-				return true;
-			}
-		}
-		return false;
-	}
-
+	/**
+	 * @deprecated use {@link CommonTextSupport#doAction(String, Control)} instead
+	 */
+	@Deprecated
 	public static void doAction(String actionId, Control focusControl) {
-		if (canPerformDirectly(actionId, focusControl)) {
-			return;
-		}
-		TextViewer viewer = getTextViewer(focusControl);
-		if (viewer != null) {
-			doGlobalAction(actionId, viewer);
-		}
-	}
-
-	private static boolean doGlobalAction(String actionId, TextViewer textViewer) {
-		if (actionId.equals(ActionFactory.CUT.getId())) {
-			textViewer.doOperation(ITextOperationTarget.CUT);
-			return true;
-		} else if (actionId.equals(ActionFactory.COPY.getId())) {
-			textViewer.doOperation(ITextOperationTarget.COPY);
-			return true;
-		} else if (actionId.equals(ActionFactory.PASTE.getId())) {
-			textViewer.doOperation(ITextOperationTarget.PASTE);
-			return true;
-		} else if (actionId.equals(ActionFactory.DELETE.getId())) {
-			textViewer.doOperation(ITextOperationTarget.DELETE);
-			return true;
-		} else if (actionId.equals(ActionFactory.UNDO.getId())) {
-			textViewer.doOperation(ITextOperationTarget.UNDO);
-			return true;
-		} else if (actionId.equals(ActionFactory.REDO.getId())) {
-			textViewer.doOperation(ITextOperationTarget.REDO);
-			return true;
-		} else if (actionId.equals(ActionFactory.SELECT_ALL.getId())) {
-			textViewer.doOperation(ITextOperationTarget.SELECT_ALL);
-			return true;
-		}
-		return false;
+		CommonTextSupport.doAction(actionId, focusControl);
 	}
 
 	private static Control findControl(Composite composite, String key) {
@@ -243,14 +179,12 @@ public class EditorUtil {
 		return (String) widget.getData(KEY_MARKER);
 	}
 
+	/**
+	 * @deprecated use {@link CommonTextSupport#getTextViewer(Widget)} instead
+	 */
+	@Deprecated
 	public static TextViewer getTextViewer(Widget widget) {
-		if (widget instanceof StyledText) {
-			Object data = widget.getData(KEY_TEXT_VIEWER);
-			if (data instanceof TextViewer) {
-				return (TextViewer) data;
-			}
-		}
-		return null;
+		return CommonTextSupport.getTextViewer(widget);
 	}
 
 	public static NewAttachmentWizardDialog openNewAttachmentWizard(final AbstractTaskEditorPage page, Mode mode,
@@ -334,8 +268,12 @@ public class EditorUtil {
 		widget.setData(KEY_MARKER, text);
 	}
 
+	/**
+	 * @deprecated use {@link CommonTextSupport#setTextViewer(Widget, TextViewer)} instead
+	 */
+	@Deprecated
 	public static void setTextViewer(Widget widget, TextViewer textViewer) {
-		widget.setData(KEY_TEXT_VIEWER, textViewer);
+		CommonTextSupport.setTextViewer(widget, textViewer);
 	}
 
 	/**

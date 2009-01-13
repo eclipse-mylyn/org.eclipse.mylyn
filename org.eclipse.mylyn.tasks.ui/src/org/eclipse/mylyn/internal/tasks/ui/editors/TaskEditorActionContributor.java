@@ -29,7 +29,8 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchActionSupport;
+import org.eclipse.mylyn.internal.provisional.commons.ui.WorkbenchActionSupport.WorkbenchActionCallback;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
@@ -51,20 +52,16 @@ import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPage;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.editor.IFormPage;
-import org.eclipse.ui.internal.WorkbenchImages;
-import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.progress.IProgressService;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * @author Mik Kersten
@@ -73,6 +70,53 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
  */
 public class TaskEditorActionContributor extends MultiPageEditorActionBarContributor implements
 		ISelectionChangedListener {
+
+	private class EditorPageCallback extends WorkbenchActionCallback {
+
+		@Override
+		public boolean canPerformAction(String actionId, Control control) {
+			IFormPage activePage = getActivePage();
+			if (activePage instanceof AbstractTaskEditorPage) {
+				AbstractTaskEditorPage page = (AbstractTaskEditorPage) activePage;
+				return page.canPerformAction(actionId);
+			} else {
+				WorkbenchActionCallback textSupport = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
+				if (textSupport != null) {
+					return textSupport.canPerformAction(actionId, control);
+				} else {
+					return super.canPerformAction(actionId, control);
+				}
+			}
+		}
+
+		@Override
+		public void doAction(String actionId, Control control) {
+			IFormPage activePage = getActivePage();
+			if (activePage instanceof AbstractTaskEditorPage) {
+				AbstractTaskEditorPage page = (AbstractTaskEditorPage) activePage;
+				page.doAction(actionId);
+			} else {
+				WorkbenchActionCallback textSupport = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
+				if (textSupport != null) {
+					textSupport.doAction(actionId, control);
+				} else {
+					super.doAction(actionId, control);
+				}
+			}
+		}
+
+		@Override
+		public Control getFocusControl() {
+			IFormPage page = getActivePage();
+			return EditorUtil.getFocusControl(page);
+		}
+
+		@Override
+		public ISelection getSelection() {
+			return TaskEditorActionContributor.this.getSelection();
+		}
+
+	}
 
 	private TaskEditor editor;
 
@@ -86,78 +130,22 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private final NewTaskFromSelectionAction newTaskFromSelectionAction = new NewTaskFromSelectionAction();
 
-	private final GlobalAction cutAction;
-
-	private final GlobalAction undoAction;
-
-	private final GlobalAction redoAction;
-
-	private final GlobalAction copyAction;
-
-	private final GlobalAction pasteAction;
-
-	private final GlobalAction selectAllAction;
-
-	private final GlobalAction findAction;
+	private final WorkbenchActionSupport actionSupport;
 
 	public TaskEditorActionContributor() {
-		cutAction = new GlobalAction(ActionFactory.CUT.getId());
-		cutAction.setText(WorkbenchMessages.Workbench_cut);
-		cutAction.setToolTipText(WorkbenchMessages.Workbench_cutToolTip);
-		cutAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
-		cutAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT_DISABLED));
-		cutAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.CUT);
-
-		pasteAction = new GlobalAction(ActionFactory.PASTE.getId());
-		pasteAction.setText(WorkbenchMessages.Workbench_paste);
-		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);
-		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
-		pasteAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.PASTE);
-
-		copyAction = new GlobalAction(ActionFactory.COPY.getId());
-		copyAction.setText(WorkbenchMessages.Workbench_copy);
-		copyAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		copyAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
-		copyAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
-
-		undoAction = new GlobalAction(ActionFactory.UNDO.getId());
-		undoAction.setText(WorkbenchMessages.Workbench_undo);
-		undoAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
-		undoAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
-		undoAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO_DISABLED));
-		undoAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.UNDO);
-
-		redoAction = new GlobalAction(ActionFactory.REDO.getId());
-		redoAction.setText(WorkbenchMessages.Workbench_redo);
-		redoAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
-		redoAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
-		redoAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO_DISABLED));
-		redoAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.REDO);
-
-		selectAllAction = new GlobalAction(ActionFactory.SELECT_ALL.getId());
-		selectAllAction.setText(WorkbenchMessages.Workbench_selectAll);
-		selectAllAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.SELECT_ALL);
-		selectAllAction.setEnabled(true);
-
-		findAction = new GlobalAction(ActionFactory.FIND.getId());
-		findAction.setText(Messages.TaskEditorActionContributor_Find);
-		findAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.FIND_REPLACE);
-		findAction.setImageDescriptor(CommonImages.FIND);
+		actionSupport = new WorkbenchActionSupport();
+		actionSupport.setCallback(new EditorPageCallback());
 	}
 
 	public void addClipboardActions(IMenuManager manager) {
-		manager.add(undoAction);
-		manager.add(redoAction);
+		manager.add(actionSupport.getUndoAction());
+		manager.add(actionSupport.getRedoAction());
 		manager.add(new Separator());
-		manager.add(cutAction);
-		manager.add(copyAction);
+		manager.add(actionSupport.getCutAction());
+		manager.add(actionSupport.getCopyAction());
 		manager.add(copyTaskDetailsAction);
-		manager.add(pasteAction);
-		manager.add(selectAllAction);
+		manager.add(actionSupport.getPasteAction());
+		manager.add(actionSupport.getSelectAllAction());
 		manager.add(newTaskFromSelectionAction);
 		manager.add(new Separator());
 	}
@@ -257,6 +245,48 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
+	@Override
+	public void contributeToCoolBar(ICoolBarManager cbm) {
+	}
+
+	@Override
+	public void contributeToMenu(IMenuManager mm) {
+	}
+
+	@Override
+	public void contributeToStatusLine(IStatusLineManager slm) {
+	}
+
+	@Override
+	public void contributeToToolBar(IToolBarManager tbm) {
+	}
+
+	public void forceActionsEnabled() {
+		actionSupport.forceEditActionsEnabled();
+	}
+
+	private IFormPage getActivePage() {
+		return (editor != null) ? editor.getActivePageInstance() : null;
+	}
+
+	public TaskEditor getEditor() {
+		return editor;
+	}
+
+	public ISelection getSelection() {
+		if (editor != null && editor.getSite().getSelectionProvider() != null) {
+			return editor.getSite().getSelectionProvider().getSelection();
+		} else {
+			return StructuredSelection.EMPTY;
+		}
+	}
+
+	@Override
+	public void init(IActionBars bars, IWorkbenchPage page) {
+		super.init(bars, page);
+		actionSupport.install(bars);
+	}
+
 	private void moveToCategory(AbstractTaskCategory category) {
 		IEditorInput input = getEditor().getEditorInput();
 		if (input instanceof TaskEditorInput) {
@@ -273,44 +303,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		}
 	}
 
-	public void updateSelectableActions(ISelection selection) {
-		if (editor != null) {
-			cutAction.selectionChanged(selection);
-			copyAction.selectionChanged(selection);
-			pasteAction.selectionChanged(selection);
-			undoAction.selectionChanged(selection);
-			redoAction.selectionChanged(selection);
-			selectAllAction.selectionChanged(selection);
-			newTaskFromSelectionAction.selectionChanged(selection);
-			findAction.selectionChanged(selection);
-		}
-	}
-
-	@Override
-	public void contributeToMenu(IMenuManager mm) {
-	}
-
-	@Override
-	public void contributeToStatusLine(IStatusLineManager slm) {
-	}
-
-	@Override
-	public void contributeToToolBar(IToolBarManager tbm) {
-	}
-
-	@Override
-	public void contributeToCoolBar(ICoolBarManager cbm) {
-	}
-
-	@Override
-	public void init(IActionBars bars, IWorkbenchPage page) {
-		super.init(bars, page);
-		registerGlobalHandlers(bars);
-		findAction.selectionChanged(StructuredSelection.EMPTY);
-	}
-
-	public TaskEditor getEditor() {
-		return editor;
+	public void selectionChanged(SelectionChangedEvent event) {
+		actionSupport.selectionChanged(event);
+		newTaskFromSelectionAction.selectionChanged(event.getSelection());
 	}
 
 	@Override
@@ -328,88 +323,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		updateSelectableActions(getSelection());
 	}
 
-	public void selectionChanged(SelectionChangedEvent event) {
-		updateSelectableActions(event.getSelection());
-	}
-
-	private class GlobalAction extends Action {
-
-		private final String actionId;
-
-		public GlobalAction(String actionId) {
-			this.actionId = actionId;
-		}
-
-		@Override
-		public void run() {
-			IFormPage page = getActivePage();
-			if (page instanceof TaskFormPage) {
-				TaskFormPage editor = (TaskFormPage) page;
-				editor.doAction(actionId);
-			} else if (page instanceof AbstractTaskEditorPage) {
-				AbstractTaskEditorPage editor = (AbstractTaskEditorPage) page;
-				editor.doAction(actionId);
-			} else {
-				EditorUtil.doAction(actionId, EditorUtil.getFocusControl(getActivePage()));
-			}
-			updateSelectableActions(getSelection());
-		}
-
-		public void selectionChanged(ISelection selection) {
-			IFormPage page = getActivePage();
-			if (page instanceof TaskFormPage) {
-				TaskFormPage editor = (TaskFormPage) page;
-				setEnabled(editor.canPerformAction(actionId));
-			} else if (page instanceof AbstractTaskEditorPage) {
-				AbstractTaskEditorPage editor = (AbstractTaskEditorPage) page;
-				setEnabled(editor.canPerformAction(actionId));
-			} else {
-				setEnabled(EditorUtil.canPerformAction(actionId, EditorUtil.getFocusControl(getActivePage())));
-			}
-		}
-	}
-
-	private void registerGlobalHandlers(IActionBars bars) {
-		bars.setGlobalActionHandler(ActionFactory.CUT.getId(), cutAction);
-		bars.setGlobalActionHandler(ActionFactory.PASTE.getId(), pasteAction);
-		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
-		bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
-		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), redoAction);
-		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAllAction);
-		bars.setGlobalActionHandler(ActionFactory.FIND.getId(), findAction);
-		bars.updateActionBars();
-	}
-
-	@SuppressWarnings("unused")
-	private void unregisterGlobalHandlers(IActionBars bars) {
-		bars.setGlobalActionHandler(ActionFactory.CUT.getId(), null);
-		bars.setGlobalActionHandler(ActionFactory.PASTE.getId(), null);
-		bars.setGlobalActionHandler(ActionFactory.COPY.getId(), null);
-		bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), null);
-		bars.setGlobalActionHandler(ActionFactory.REDO.getId(), null);
-		bars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), null);
-		bars.setGlobalActionHandler(ActionFactory.FIND.getId(), null);
-		bars.updateActionBars();
-	}
-
-	public void forceActionsEnabled() {
-		cutAction.setEnabled(true);
-		copyAction.setEnabled(true);
-		pasteAction.setEnabled(true);
-		selectAllAction.setEnabled(true);
-		undoAction.setEnabled(false);
-		redoAction.setEnabled(false);
-	}
-
-	private IFormPage getActivePage() {
-		return (editor != null) ? editor.getActivePageInstance() : null;
-	}
-
-	private ISelection getSelection() {
-		if (editor != null && editor.getSite().getSelectionProvider() != null) {
-			return editor.getSite().getSelectionProvider().getSelection();
-		} else {
-			return StructuredSelection.EMPTY;
+	public void updateSelectableActions(ISelection selection) {
+		if (editor != null) {
+			actionSupport.updateActions(selection);
+			newTaskFromSelectionAction.selectionChanged(selection);
 		}
 	}
 

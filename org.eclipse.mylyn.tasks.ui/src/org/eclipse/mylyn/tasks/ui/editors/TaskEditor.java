@@ -535,7 +535,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 					public void run() {
 						TaskList taskList = TasksUiPlugin.getTaskList();
 						if (taskList.getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
-							setMessage(Messages.TaskEditor_Task_added_to_the_Uncategorized_container, IMessageProvider.INFORMATION);
+							setMessage(Messages.TaskEditor_Task_added_to_the_Uncategorized_container,
+									IMessageProvider.INFORMATION);
 						}
 						super.run();
 					}
@@ -581,13 +582,12 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	/**
-	 * Update the title of the editor
+	 * Update the title of the editor.
+	 * 
+	 * @deprecated use {@link #updateHeaderToolBar()} instead
 	 */
 	@Deprecated
 	public void updateTitle(String name) {
-		// setContentDescription(name);
-		setPartName(name);
-		setTitleToolTip(name);
 		updateHeader();
 	}
 

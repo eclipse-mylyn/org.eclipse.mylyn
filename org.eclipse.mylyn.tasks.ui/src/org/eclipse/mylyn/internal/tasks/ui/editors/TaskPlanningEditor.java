@@ -24,12 +24,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.DatePicker;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.DayDateRange;
@@ -72,14 +75,16 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -90,36 +95,17 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class TaskPlanningEditor extends TaskFormPage {
-
-	private static final String RESET = Messages.TaskPlanningEditor_Reset;
+public class TaskPlanningEditor extends FormPage {
 
 	private static final int WIDTH_SUMMARY = 500;
 
 	private static final int NOTES_MINSIZE = 100;
-
-	private static final String CLEAR = Messages.TaskPlanningEditor_Clear;
-
-	private static final String LABEL_DUE = Messages.TaskPlanningEditor_Due;
-
-	private static final String LABEL_SCHEDULE = Messages.TaskPlanningEditor_Scheduled_for;
-
-	public static final String LABEL_INCOMPLETE = Messages.TaskPlanningEditor_Incomplete;
-
-	public static final String LABEL_COMPLETE = Messages.TaskPlanningEditor_Complete;
-
-	private static final String LABEL_PLAN = Messages.TaskPlanningEditor_Personal_Planning;
-
-	private static final String NO_TIME_ELAPSED = Messages.TaskPlanningEditor_0_seconds;
-
-	// private static final String LABEL_OVERVIEW = "Task Info";
-
-	private static final String LABEL_NOTES = Messages.TaskPlanningEditor_Notes;
 
 	private DatePicker dueDatePicker;
 
@@ -128,8 +114,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private AbstractTask task;
 
 	private Composite editorComposite;
-
-	protected static final String CONTEXT_MENU_ID = "#MylynPlanningEditor"; //$NON-NLS-1$
 
 	private Text endDate;
 
@@ -182,10 +166,26 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private ITaskActivityListener timingListener;
 
+	private boolean isDirty;
+
+	private CommonTextSupport textSupport;
+
 	public TaskPlanningEditor(TaskEditor editor) {
 		super(editor, ITasksUiConstants.ID_PAGE_PLANNING, Messages.TaskPlanningEditor_Planning);
 		this.parentEditor = editor;
 		TasksUiInternal.getTaskList().addChangeListener(TASK_LIST_LISTENER);
+	}
+
+	@Override
+	public TaskEditor getEditor() {
+		return (TaskEditor) super.getEditor();
+	}
+
+	@Override
+	public void init(IEditorSite site, IEditorInput input) {
+		super.init(site, input);
+		this.textSupport = new CommonTextSupport((IHandlerService) getSite().getService(IHandlerService.class));
+		this.textSupport.setSelectionChangedListener((TaskEditorActionContributor) getEditorSite().getActionBarContributor());
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 				TaskPlanningEditor.this.markDirty(wasDirty);
 			}
 			if (parentEditor != null) {
-				parentEditor.updateTitle(updateTask.getSummary());
+				parentEditor.updateHeaderToolBar();
 			}
 		}
 
@@ -313,14 +313,15 @@ public class TaskPlanningEditor extends TaskFormPage {
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
 		super.createFormContent(managedForm);
-		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
-
-		task = (AbstractTask) taskEditorInput.getTask();
 
 		form = managedForm.getForm();
+
+		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
+		task = (AbstractTask) taskEditorInput.getTask();
+
 		toolkit = managedForm.getToolkit();
 
-		editorComposite = form.getBody();
+		editorComposite = managedForm.getForm().getBody();
 		GridLayout editorLayout = new GridLayout();
 		editorLayout.verticalSpacing = 3;
 		editorComposite.setLayout(editorLayout);
@@ -349,10 +350,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 	}
 
-	public Control getControl() {
-		return form;
-	}
-
 	private Text addNameValueComp(Composite parent, String label, String value, int style) {
 		Composite nameValueComp = toolkit.createComposite(parent);
 		GridLayout layout = new GridLayout(2, false);
@@ -372,7 +369,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	private void createSummarySection(Composite parent) {
-
 		// Summary
 		Composite summaryComposite = toolkit.createComposite(parent);
 		GridLayout summaryLayout = new GridLayout();
@@ -459,8 +455,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.adapt(statusCombo, true, true);
 		statusCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		toolkit.paintBordersFor(nameValueComp);
-		statusCombo.add(LABEL_COMPLETE);
-		statusCombo.add(LABEL_INCOMPLETE);
+		statusCombo.add(Messages.TaskPlanningEditor_Complete);
+		statusCombo.add(Messages.TaskPlanningEditor_Incomplete);
 		if (task.isCompleted()) {
 			statusCombo.select(0);
 		} else {
@@ -564,6 +560,20 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.paintBordersFor(statusComposite);
 	}
 
+	private TextViewer addTextEditor(TaskRepository repository, Composite parent, String text, boolean spellCheck,
+			int style) {
+		SourceViewer viewer = new SourceViewer(parent, null, style);
+		viewer.configure(new RepositoryTextViewerConfiguration(repository, spellCheck));
+		textSupport.configure(viewer, new Document(text), spellCheck);
+		viewer.getControl().setMenu(getEditor().getMenu());
+		return viewer;
+	}
+
+	private void markDirty(boolean dirty) {
+		isDirty = dirty;
+		getManagedForm().dirtyStateChanged();
+	}
+
 	/**
 	 * Attempts to set the task pageTitle to the title from the specified url
 	 */
@@ -571,12 +581,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 		AbstractRetrieveTitleFromUrlJob job = new AbstractRetrieveTitleFromUrlJob(issueReportURL.getText()) {
 			@Override
 			protected void titleRetrieved(String pageTitle) {
-				if (!getControl().isDisposed()) {
+				if (summaryEditor != null && summaryEditor.getControl() != null
+						&& !summaryEditor.getControl().isDisposed()) {
 					summaryEditor.getTextWidget().setText(pageTitle);
 					TaskPlanningEditor.this.markDirty(true);
 				}
 			}
-
 		};
 		job.schedule();
 	}
@@ -602,9 +612,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	private void createPlanningSection(Composite parent) {
-
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
-		section.setText(LABEL_PLAN);
+		section.setText(Messages.TaskPlanningEditor_Personal_Planning);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		section.setExpanded(true);
@@ -629,7 +638,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		sectionClient.setLayoutData(clientDataLayout);
 
 		Composite nameValueComp = makeComposite(sectionClient, 3);
-		Label label = toolkit.createLabel(nameValueComp, LABEL_SCHEDULE);
+		Label label = toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Scheduled_for);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		scheduleDatePicker = new ScheduleDatePicker(nameValueComp, task, SWT.FLAT);
@@ -653,7 +662,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
 		clearScheduledDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
-		clearScheduledDate.setToolTipText(CLEAR);
+		clearScheduledDate.setToolTipText(Messages.TaskPlanningEditor_Clear);
 		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
 
 			@Override
@@ -665,7 +674,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		});
 
 		nameValueComp = makeComposite(sectionClient, 3);
-		label = toolkit.createLabel(nameValueComp, LABEL_DUE);
+		label = toolkit.createLabel(nameValueComp, Messages.TaskPlanningEditor_Due);
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE, true,
@@ -692,7 +701,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
 		clearDueDate.setImage(CommonImages.getImage(CommonImages.REMOVE));
-		clearDueDate.setToolTipText(CLEAR);
+		clearDueDate.setToolTipText(Messages.TaskPlanningEditor_Clear);
 		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
 
 			@Override
@@ -747,7 +756,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		ImageHyperlink clearEstimated = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
 		clearEstimated.setImage(CommonImages.getImage(CommonImages.REMOVE));
-		clearEstimated.setToolTipText(CLEAR);
+		clearEstimated.setToolTipText(Messages.TaskPlanningEditor_Clear);
 		clearEstimated.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
@@ -764,12 +773,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setToolTipText(Messages.TaskPlanningEditor_Time_working_on_this_task);
 
-		String elapsedTimeString = NO_TIME_ELAPSED;
+		String elapsedTimeString = Messages.TaskPlanningEditor_0_seconds;
 		try {
 			elapsedTimeString = TasksUiInternal.getFormattedDuration(TasksUiPlugin.getTaskActivityManager()
 					.getElapsedTime(task), false);
 			if (elapsedTimeString.equals("")) { //$NON-NLS-1$
-				elapsedTimeString = NO_TIME_ELAPSED;
+				elapsedTimeString = Messages.TaskPlanningEditor_0_seconds;
 			}
 		} catch (RuntimeException e) {
 			// FIXME what exception is caught here?
@@ -789,11 +798,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 			@Override
 			public void elapsedTimeUpdated(ITask task, long newElapsedTime) {
 				if (task.equals(TaskPlanningEditor.this.task)) {
-					String elapsedTimeString = NO_TIME_ELAPSED;
+					String elapsedTimeString = Messages.TaskPlanningEditor_0_seconds;
 					try {
 						elapsedTimeString = TasksUiInternal.getFormattedDuration(newElapsedTime, false);
 						if (elapsedTimeString.equals("")) { //$NON-NLS-1$
-							elapsedTimeString = NO_TIME_ELAPSED;
+							elapsedTimeString = Messages.TaskPlanningEditor_0_seconds;
 						}
 
 					} catch (RuntimeException e) {
@@ -818,7 +827,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		ImageHyperlink resetActivityTimeButton = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
 		resetActivityTimeButton.setImage(CommonImages.getImage(CommonImages.REMOVE));
-		resetActivityTimeButton.setToolTipText(RESET);
+		resetActivityTimeButton.setToolTipText(Messages.TaskPlanningEditor_Reset);
 		resetActivityTimeButton.addHyperlinkListener(new HyperlinkAdapter() {
 
 			@Override
@@ -845,19 +854,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private void createNotesSection(Composite parent) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		section.setText(LABEL_NOTES);
+		section.setText(Messages.TaskPlanningEditor_Notes);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
-//		section.addExpansionListener(new IExpansionListener() {
-//			public void expansionStateChanging(ExpansionEvent e) {
-//				form.reflow(true);
-//			}
-//
-//			public void expansionStateChanged(ExpansionEvent e) {
-//				form.reflow(true);
-//			}
-//		});
+
 		Composite container = toolkit.createComposite(section);
 		section.setClient(container);
 		container.setLayout(new GridLayout());
@@ -874,7 +875,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		noteEditor = addTextEditor(repository, container, task.getNotes(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP
 				| SWT.V_SCROLL);
-
 		GridDataFactory.fillDefaults().minSize(NOTES_MINSIZE, NOTES_MINSIZE).grab(true, true).applyTo(
 				noteEditor.getControl());
 		noteEditor.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -888,19 +888,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
-		// commentViewer.addSelectionChangedListener(new
-		// ISelectionChangedListener() {
-		//
-		// public void selectionChanged(SelectionChangedEvent event) {
-		// getSite().getSelectionProvider().setSelection(commentViewer.getSelection());
-		//				
-		// }});
-
 		toolkit.paintBordersFor(container);
 	}
 
 	private String getTaskDateString(ITask task) {
-
 		if (task == null) {
 			return ""; //$NON-NLS-1$
 		}
@@ -921,6 +912,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	@Override
 	public void dispose() {
+		if (textSupport != null) {
+			textSupport.dispose();
+		}
 		if (timingListener != null) {
 			TasksUiPlugin.getTaskActivityManager().removeActivityListener(timingListener);
 		}
@@ -945,11 +939,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	/** for testing */
 	public String getDescription() {
 		return this.summaryEditor.getTextWidget().getText();
-	}
-
-	/** for testing */
-	public String getFormTitle() {
-		return form.getText();
 	}
 
 }

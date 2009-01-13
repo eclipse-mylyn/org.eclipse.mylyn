@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskDataModel;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractAttributeEditor;
@@ -49,7 +50,7 @@ public class LongTextAttributeEditor extends AbstractAttributeEditor {
 		toolkit.adapt(text, false, false);
 
 		// enable cut/copy/paste
-		EditorUtil.setTextViewer(text, viewer);
+		CommonTextSupport.setTextViewer(text, viewer);
 
 		if (isReadOnly()) {
 			viewer.setEditable(false);

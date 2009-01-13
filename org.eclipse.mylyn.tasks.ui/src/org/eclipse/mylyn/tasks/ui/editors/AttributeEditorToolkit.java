@@ -11,9 +11,6 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import org.eclipse.core.commands.IHandler;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -22,15 +19,10 @@ import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
-import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonThemes;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
@@ -42,21 +34,16 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ActiveShellExpression;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.handlers.IHandlerActivation;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.themes.IThemeManager;
@@ -68,72 +55,21 @@ import org.eclipse.ui.themes.IThemeManager;
 // TODO EDITOR rename to AttributeUiToolkit?
 public class AttributeEditorToolkit {
 
-	private class StyledTextFocusListener implements FocusListener {
-
-		private final boolean spellCheck;
-
-		private final SourceViewer viewer;
-
-		public StyledTextFocusListener(SourceViewer viewer, boolean spellCheck) {
-			this.viewer = viewer;
-			this.spellCheck = spellCheck;
-		}
-
-		public void focusGained(FocusEvent e) {
-			if (selectionChangedListener != null) {
-				selectionChangedListener.selectionChanged(new SelectionChangedEvent(viewer, viewer.getSelection()));
-			}
-			activateHandlers(viewer, spellCheck);
-		}
-
-		public void focusLost(FocusEvent e) {
-			deactivateHandlers();
-			if (selectionChangedListener != null) {
-				// make sure selection no text is selected when control looses focus
-				StyledText st = (StyledText) e.widget;
-				st.setSelectionRange(st.getCaretOffset(), 0);
-				// update action enablement
-				selectionChangedListener.selectionChanged(new SelectionChangedEvent(viewer, StructuredSelection.EMPTY));
-			}
-		}
-
-	}
-
 	private final Color colorIncoming;
-
-	public IHandlerActivation contentAssistHandlerActivation;
-
-	private final IHandlerService handlerService;
 
 	private Menu menu;
 
-	private IHandlerActivation quickAssistHandlerActivation;
-
-	private ISelectionChangedListener selectionChangedListener;
-
 	private AbstractRenderingEngine renderingEngine;
 
-	AttributeEditorToolkit(IHandlerService handlerService) {
-		this.handlerService = handlerService;
+	private final CommonTextSupport textSupport;
+
+	@Deprecated
+	public IHandlerActivation contentAssistHandlerActivation;
+
+	AttributeEditorToolkit(CommonTextSupport textSupport) {
+		this.textSupport = textSupport;
 		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 		colorIncoming = themeManager.getCurrentTheme().getColorRegistry().get(CommonThemes.COLOR_INCOMING_BACKGROUND);
-	}
-
-	private IHandlerActivation activateHandler(SourceViewer viewer, int operation, String actionDefinitionId) {
-		IHandler handler = createActionHandler(viewer, operation, actionDefinitionId);
-		return handlerService.activateHandler(actionDefinitionId, handler, //
-				new ActiveShellExpression(viewer.getTextWidget().getShell()));
-	}
-
-	private void activateHandlers(SourceViewer viewer, boolean spellCheck) {
-		deactivateHandlers();
-		if (spellCheck) {
-			quickAssistHandlerActivation = activateHandler(viewer, ISourceViewer.QUICK_ASSIST,
-					ITextEditorActionDefinitionIds.QUICK_ASSIST);
-		}
-		contentAssistHandlerActivation = activateHandler(viewer, ISourceViewer.CONTENTASSIST_PROPOSALS,
-				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-
 	}
 
 	public void adapt(AbstractAttributeEditor editor) {
@@ -154,37 +90,15 @@ public class AttributeEditorToolkit {
 			RichTextAttributeEditor richTextEditor = (RichTextAttributeEditor) editor;
 			boolean spellCheck = hasSpellChecking(editor.getTaskAttribute());
 			final SourceViewer viewer = richTextEditor.getViewer();
-			viewer.getControl().addFocusListener(new StyledTextFocusListener(viewer, spellCheck));
-			if (selectionChangedListener != null) {
-				viewer.addSelectionChangedListener(selectionChangedListener);
-				viewer.addTextListener(new ITextListener() {
-					public void textChanged(TextEvent event) {
-						if (selectionChangedListener != null) {
-							selectionChangedListener.selectionChanged(new SelectionChangedEvent(viewer,
-									viewer.getSelection()));
-						}
-					}
-				});
-			}
+			textSupport.install(viewer, spellCheck);
 			if (!editor.isReadOnly() && richTextEditor.getMode() == Mode.TASK_RELATION) {
 				installContentAssistControlDecoration(viewer.getControl());
 			}
 			installMenu(viewer.getControl());
-			EditorUtil.setTextViewer(editor.getControl(), viewer);
 		} else {
-			final TextViewer viewer = EditorUtil.getTextViewer(editor.getControl());
+			final TextViewer viewer = CommonTextSupport.getTextViewer(editor.getControl());
 			if (viewer != null) {
-				if (selectionChangedListener != null) {
-					viewer.addSelectionChangedListener(selectionChangedListener);
-					viewer.addTextListener(new ITextListener() {
-						public void textChanged(TextEvent event) {
-							if (selectionChangedListener != null) {
-								selectionChangedListener.selectionChanged(new SelectionChangedEvent(viewer,
-										viewer.getSelection()));
-							}
-						}
-					});
-				}
+				textSupport.install(viewer, false);
 				installMenu(viewer.getControl());
 			}
 		}
@@ -236,19 +150,6 @@ public class AttributeEditorToolkit {
 		return controlDecoration;
 	}
 
-	private IHandler createActionHandler(final SourceViewer viewer, final int operation, String actionDefinitionId) {
-		Action quickFixAction = new Action() {
-			@Override
-			public void run() {
-				if (viewer.canDoOperation(operation)) {
-					viewer.doOperation(operation);
-				}
-			}
-		};
-		quickFixAction.setActionDefinitionId(actionDefinitionId);
-		return new ActionHandler(quickFixAction);
-	}
-
 	/**
 	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
 	 * 
@@ -264,19 +165,8 @@ public class AttributeEditorToolkit {
 		return new PersonProposalLabelProvider();
 	}
 
-	private void deactivateHandlers() {
-		if (quickAssistHandlerActivation != null) {
-			handlerService.deactivateHandler(quickAssistHandlerActivation);
-			quickAssistHandlerActivation = null;
-		}
-		if (contentAssistHandlerActivation != null) {
-			handlerService.deactivateHandler(contentAssistHandlerActivation);
-			contentAssistHandlerActivation = null;
-		}
-	}
-
 	void dispose() {
-		deactivateHandlers();
+		// FIXME textSupport.deactivateHandlers();
 	}
 
 	public Color getColorIncoming() {
@@ -296,10 +186,6 @@ public class AttributeEditorToolkit {
 	 */
 	public AbstractRenderingEngine getRenderingEngine(TaskAttribute attribute) {
 		return renderingEngine;
-	}
-
-	ISelectionChangedListener getSelectionChangedListener() {
-		return selectionChangedListener;
 	}
 
 	/**
@@ -329,10 +215,6 @@ public class AttributeEditorToolkit {
 
 	void setMenu(Menu menu) {
 		this.menu = menu;
-	}
-
-	void setSelectionChangedListener(ISelectionChangedListener selectionListener) {
-		this.selectionChangedListener = selectionListener;
 	}
 
 	public void setRenderingEngine(AbstractRenderingEngine renderingEngine) {
