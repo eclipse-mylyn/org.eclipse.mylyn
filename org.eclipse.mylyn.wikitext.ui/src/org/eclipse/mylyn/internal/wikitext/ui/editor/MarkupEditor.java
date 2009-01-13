@@ -961,6 +961,20 @@ public class MarkupEditor extends TextEditor {
 		return viewer.getProjectionAnnotationModel() != null;
 	}
 
+	/* prevent line number ruler from appearing since it doesn't work with line wrapping 
+	 */
+	@Override
+	protected boolean isLineNumberRulerVisible() {
+		return false;
+	}
+
+	@Override
+	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
+		super.rulerContextMenuAboutToShow(menu);
+		// prevent line number toggle action from appearing
+		menu.remove(ITextEditorActionConstants.LINENUMBERS_TOGGLE);
+	}
+
 	private static class HeadingProjectionAnnotation extends ProjectionAnnotation {
 		private final String headingId;
 
