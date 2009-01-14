@@ -79,14 +79,13 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			if (activePage instanceof AbstractTaskEditorPage) {
 				AbstractTaskEditorPage page = (AbstractTaskEditorPage) activePage;
 				return page.canPerformAction(actionId);
-			} else {
+			} else if (activePage != null) {
 				WorkbenchActionCallback textSupport = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
 				if (textSupport != null) {
 					return textSupport.canPerformAction(actionId, control);
-				} else {
-					return super.canPerformAction(actionId, control);
 				}
 			}
+			return super.canPerformAction(actionId, control);
 		}
 
 		@Override
@@ -95,20 +94,19 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			if (activePage instanceof AbstractTaskEditorPage) {
 				AbstractTaskEditorPage page = (AbstractTaskEditorPage) activePage;
 				page.doAction(actionId);
-			} else {
+			} else if (activePage != null) {
 				WorkbenchActionCallback textSupport = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
 				if (textSupport != null) {
 					textSupport.doAction(actionId, control);
-				} else {
-					super.doAction(actionId, control);
 				}
 			}
+			super.doAction(actionId, control);
 		}
 
 		@Override
 		public Control getFocusControl() {
 			IFormPage page = getActivePage();
-			return EditorUtil.getFocusControl(page);
+			return (page != null) ? EditorUtil.getFocusControl(page) : null;
 		}
 
 		@Override
