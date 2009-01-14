@@ -296,6 +296,7 @@ public class OutlineItem {
 				otherParent.children.clear();
 			}
 		}
+		itemsById = null;
 	}
 
 }
