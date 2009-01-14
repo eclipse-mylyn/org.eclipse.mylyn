@@ -66,7 +66,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //testReassign Bugs
 //Version	BugNum	assigned				reporter
-//2.22	92		user@mylar.eclipse.org	tests@mylar.eclipse.org
+//2.22		92		user@mylar.eclipse.org	tests@mylar.eclipse.org
 //3.0		 5		tests@mylar.eclipse.org	tests2@mylar.eclipse.org
 //3.1		 1		rob.elves@eclipse.org	tests@mylar.eclipse.org
 
@@ -166,7 +166,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		changed.add(assignedAttribute);
 
 		// Submit changes
-		submit(task, taskData, null);
+		submit(task, taskData, changed);
 	}
 
 	private void doReassignOld(String taskNumber, String defaultAssignee) throws CoreException {

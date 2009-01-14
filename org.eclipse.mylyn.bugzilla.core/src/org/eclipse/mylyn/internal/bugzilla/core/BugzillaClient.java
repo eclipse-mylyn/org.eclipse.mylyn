@@ -1126,86 +1126,84 @@ public class BugzillaClient {
 				continue;
 			} else {
 				String id = a.getId();
+
 				if (id.equals(BugzillaAttribute.QA_CONTACT.getKey())
 						|| id.equals(BugzillaAttribute.ASSIGNED_TO.getKey())) {
 					cleanIfShortLogin(a);
-				} else {
-					if (id.equals(BugzillaAttribute.REPORTER.getKey()) || id.equals(BugzillaAttribute.CC.getKey())
-							|| id.equals(BugzillaAttribute.REMOVECC.getKey())
-							|| id.equals(BugzillaAttribute.CREATION_TS.getKey())
-							|| id.equals(BugzillaAttribute.BUG_STATUS.getKey())
-							|| id.equals(BugzillaAttribute.VOTES.getKey())) {
+				} else if (id.equals(BugzillaAttribute.REPORTER.getKey()) || id.equals(BugzillaAttribute.CC.getKey())
+						|| id.equals(BugzillaAttribute.REMOVECC.getKey())
+						|| id.equals(BugzillaAttribute.CREATION_TS.getKey())
+						|| id.equals(BugzillaAttribute.BUG_STATUS.getKey())
+						|| id.equals(BugzillaAttribute.VOTES.getKey())) {
+					continue;
+				} else if (id.equals(BugzillaAttribute.NEW_COMMENT.getKey())) {
+					String bugzillaVersion = null;
+					if (repositoryConfiguration != null) {
+						bugzillaVersion = repositoryConfiguration.getInstallVersion();
+					} else {
+						bugzillaVersion = "2.18"; //$NON-NLS-1$
+					}
+					if (bugzillaVersion.startsWith("2.18")) { //$NON-NLS-1$
+						a.setValue(formatTextToLineWrap(a.getValue(), true));
+					}
+				} else if (id.equals(BugzillaAttribute.GROUP.getKey()) && a.getValue().length() > 0) {
+					groupSecurityEnabled = true;
+				}
+
+				if (a.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
+					List<String> values = a.getValues();
+					int i = 0;
+					for (String string : values) {
+						fields.put(id + i++, new NameValuePair(id, string != null ? string : "")); //$NON-NLS-1$
+					}
+				} else if (id != null && id.compareTo("") != 0) {//$NON-NLS-1$
+					String value = a.getValue();
+					if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
+						value = stripTimeZone(value);
+					}
+					if (id.startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
+						List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
+						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
+						a = a.getAttribute("state"); //$NON-NLS-1$
+						value = a.getValue();
+						if (value.equals(" ")) { //$NON-NLS-1$
+							continue;
+						}
+						String flagname = a.getMetaData().getLabel();
+						BugzillaFlag theFlag = null;
+						for (BugzillaFlag bugzillaFlag : flags) {
+							if (flagname.equals(bugzillaFlag.getName())) {
+								theFlag = bugzillaFlag;
+								break;
+							}
+						}
+						if (theFlag != null) {
+							int flagTypeNumber = theFlag.getFlagId();
+							id = "flag_type-" + flagTypeNumber; //$NON-NLS-1$
+							value = a.getValue();
+							if (value.equals("?") && requestee != null) { //$NON-NLS-1$
+								fields.put("requestee_type-" + flagTypeNumber, new NameValuePair("requestee_type-" //$NON-NLS-1$ //$NON-NLS-2$
+										+ flagTypeNumber, requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
+							}
+						}
+					} else if (id.startsWith("task.common.kind.flag")) { //$NON-NLS-1$
+						TaskAttribute flagnumber = a.getAttribute("number"); //$NON-NLS-1$
+						TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
+						a = a.getAttribute("state"); //$NON-NLS-1$
+						id = "flag-" + flagnumber.getValue(); //$NON-NLS-1$
+						value = a.getValue();
+						if (value.equals(" ")) { //$NON-NLS-1$
+							value = "X"; //$NON-NLS-1$
+						}
+						if (value.equals("?") && requestee != null) { //$NON-NLS-1$
+							fields.put("requestee-" + flagnumber.getValue(), new NameValuePair("requestee-" //$NON-NLS-1$ //$NON-NLS-2$
+									+ flagnumber.getValue(), requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
+						}
+					} else if (id.startsWith("task.common.")) { //$NON-NLS-1$
+						// Don't post any remaining non-bugzilla specific attributes
 						continue;
 					}
-
-					if (id.equals(BugzillaAttribute.NEW_COMMENT.getKey())) {
-						String bugzillaVersion = null;
-						if (repositoryConfiguration != null) {
-							bugzillaVersion = repositoryConfiguration.getInstallVersion();
-						} else {
-							bugzillaVersion = "2.18"; //$NON-NLS-1$
-						}
-						if (bugzillaVersion.startsWith("2.18")) { //$NON-NLS-1$
-							a.setValue(formatTextToLineWrap(a.getValue(), true));
-						}
-					}
-
-					if (id.equals(BugzillaAttribute.GROUP.getKey()) && a.getValue().length() > 0) {
-						groupSecurityEnabled = true;
-					}
-					if (a.getMetaData().getType().equals(TaskAttribute.TYPE_MULTI_SELECT)) {
-						List<String> values = a.getValues();
-						int i = 0;
-						for (String string : values) {
-							fields.put(id + i++, new NameValuePair(id, string != null ? string : "")); //$NON-NLS-1$
-						}
-					} else if (id != null && id.compareTo("") != 0) {//$NON-NLS-1$
-						String value = a.getValue();
-						if (id.equals(BugzillaAttribute.DELTA_TS.getKey())) {
-							value = stripTimeZone(value);
-						}
-						if (id.startsWith("task.common.kind.flag_type")) { //$NON-NLS-1$
-							List<BugzillaFlag> flags = repositoryConfiguration.getFlags();
-							TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
-							a = a.getAttribute("state"); //$NON-NLS-1$
-							value = a.getValue();
-							if (value.equals(" ")) { //$NON-NLS-1$
-								continue;
-							}
-							String flagname = a.getMetaData().getLabel();
-							BugzillaFlag theFlag = null;
-							for (BugzillaFlag bugzillaFlag : flags) {
-								if (flagname.equals(bugzillaFlag.getName())) {
-									theFlag = bugzillaFlag;
-									break;
-								}
-							}
-							if (theFlag != null) {
-								int flagTypeNumber = theFlag.getFlagId();
-								id = "flag_type-" + flagTypeNumber; //$NON-NLS-1$
-								value = a.getValue();
-								if (value.equals("?") && requestee != null) { //$NON-NLS-1$
-									fields.put("requestee_type-" + flagTypeNumber, new NameValuePair("requestee_type-" //$NON-NLS-1$ //$NON-NLS-2$
-											+ flagTypeNumber, requestee.getValue() != null ? requestee.getValue() : "")); //$NON-NLS-1$
-								}
-							}
-						} else if (id.startsWith("task.common.kind.flag")) { //$NON-NLS-1$
-							TaskAttribute flagnumber = a.getAttribute("number"); //$NON-NLS-1$
-							TaskAttribute requestee = a.getAttribute("requestee"); //$NON-NLS-1$
-							a = a.getAttribute("state"); //$NON-NLS-1$
-							id = "flag-" + flagnumber.getValue(); //$NON-NLS-1$
-							value = a.getValue();
-							if (value.equals(" ")) { //$NON-NLS-1$
-								value = "X"; //$NON-NLS-1$
-							}
-							if (value.equals("?") && requestee != null) { //$NON-NLS-1$
-								fields.put("requestee-" + flagnumber.getValue(), new NameValuePair("requestee-" //$NON-NLS-1$ //$NON-NLS-2$
-										+ flagnumber.getValue(), requestee.getValue() != null ? requestee.getValue()
-										: "")); //$NON-NLS-1$
-							}
-						}
-						fields.put(id, new NameValuePair(id, value != null ? value : "")); //$NON-NLS-1$
-					}
+					fields.put(id, new NameValuePair(id, value != null ? value : "")); //$NON-NLS-1$
 				}
 			}
 		}
