@@ -158,7 +158,7 @@ public enum BugzillaAttribute {
 	QA_CONTACT_NAME(Messages.BugzillaAttribute_QA_Contact_NAME,
 			"qa_contact_name", TaskAttribute.TYPE_SHORT_TEXT, true, true), //$NON-NLS-1$
 
-	ADDSELFCC(Messages.BugzillaAttribute_Add_self_to_CC, "addselfcc", TaskAttribute.TYPE_BOOLEAN, false, false), //$NON-NLS-1$
+	ADDSELFCC(Messages.BugzillaAttribute_Add_self_to_CC, "addselfcc", TaskAttribute.TYPE_BOOLEAN, true, false), //$NON-NLS-1$
 
 	STATUS_OPEN(Messages.BugzillaAttribute_open_status_values, "status_open", null, true, true), //$NON-NLS-1$
 
