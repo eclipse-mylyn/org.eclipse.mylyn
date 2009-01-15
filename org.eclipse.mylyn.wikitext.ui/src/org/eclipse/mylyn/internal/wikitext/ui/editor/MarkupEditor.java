@@ -53,7 +53,6 @@ import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.IProjectionListener;
-import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
@@ -125,7 +124,15 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 	 */
 	private static final String MARKUP_LANGUAGE = "markupLanguage"; //$NON-NLS-1$
 
+	/**
+	 * the source editing context
+	 */
 	public static final String CONTEXT = "org.eclipse.mylyn.wikitext.ui.editor.markupSourceContext"; //$NON-NLS-1$
+
+	/**
+	 * the ID of the editor
+	 */
+	public static final String ID = "org.eclipse.mylyn.wikitext.ui.editor.markupEditor"; //$NON-NLS-1$
 
 	private IDocument document;
 
@@ -168,6 +175,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 	protected int documentGeneration = 0;
 
 	public static final String EDITOR_SOURCE_VIEWER = "org.eclipse.mylyn.wikitext.ui.editor.sourceViewer"; //$NON-NLS-1$
+
+	private UIJob updateOutlineJob;
+
+	private IFoldingStructure foldingStructure;
 
 	public MarkupEditor() {
 		setDocumentProvider(new MarkupDocumentProvider());
@@ -496,13 +507,22 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 	@Override
 	public Object getAdapter(Class adapter) {
 		if (IContentOutlinePage.class == adapter) {
-			if (outlinePage == null || outlinePage.getControl().isDisposed()) {
+			if (outlinePage == null || outlinePage.getControl() == null || outlinePage.getControl().isDisposed()) {
 				outlinePage = new MarkupEditorOutline(this);
 			}
 			return outlinePage;
 		}
 		if (adapter == OutlineItem.class) {
 			return getOutlineModel();
+		}
+		if (adapter == IFoldingStructure.class) {
+			if (!isFoldingEnabled()) {
+				return null;
+			}
+			if (foldingStructure == null) {
+				foldingStructure = new FoldingStructure(this);
+			}
+			return foldingStructure;
 		}
 		return super.getAdapter(adapter);
 	}
@@ -512,6 +532,10 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 	}
 
 	public OutlineItem getOutlineModel() {
+		// ensure that outline model is caught up with current version of document
+		if (outlineDirty) {
+			updateOutlineNow();
+		}
 		return outlineModel;
 	}
 
@@ -521,9 +545,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 				return;
 			}
 		}
-		// we use a UI job to schedule the update at some point in the future.
-		// this is analogous to the Nagle algorithm.
-		UIJob updateOutlineJob = new UIJob(Messages.getString("MarkupEditor.2")) { //$NON-NLS-1$
+		updateOutlineJob = new UIJob(Messages.getString("MarkupEditor.2")) { //$NON-NLS-1$
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				synchronized (MarkupEditor.this) {
@@ -548,6 +570,7 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 			public void done(IJobChangeEvent event) {
 				synchronized (MarkupEditor.this) {
 					updateJobScheduled = false;
+					updateOutlineJob = null;
 				}
 			}
 		});
@@ -555,6 +578,31 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 		updateOutlineJob.setSystem(true);
 		updateOutlineJob.setPriority(Job.INTERACTIVE);
 		updateOutlineJob.schedule(600);
+	}
+
+	private void updateOutlineNow() {
+		if (!outlineDirty) {
+			return;
+		}
+		if (getSourceViewer().getTextWidget().isDisposed()) {
+			return;
+		}
+		// we maintain the outline even if the outline page is not in use, which allows us to use the outline for
+		// content assist and other things
+
+		MarkupLanguage markupLanguage = getMarkupLanguage();
+		if (markupLanguage == null) {
+			return;
+		}
+		final MarkupLanguage language = markupLanguage.clone();
+		final String content = document.get();
+		final int contentGeneration;
+		synchronized (MarkupEditor.this) {
+			contentGeneration = documentGeneration;
+		}
+		outlineParser.setMarkupLanguage(language);
+		OutlineItem rootItem = outlineParser.parse(content);
+		updateOutline(contentGeneration, rootItem);
 	}
 
 	private void updateOutline() {
@@ -998,18 +1046,6 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 		super.rulerContextMenuAboutToShow(menu);
 		// prevent line number toggle action from appearing
 		menu.remove(ITextEditorActionConstants.LINENUMBERS_TOGGLE);
-	}
-
-	private static class HeadingProjectionAnnotation extends ProjectionAnnotation {
-		private final String headingId;
-
-		public HeadingProjectionAnnotation(String headingId) {
-			this.headingId = headingId;
-		}
-
-		public String getHeadingId() {
-			return headingId;
-		}
 	}
 
 	/**

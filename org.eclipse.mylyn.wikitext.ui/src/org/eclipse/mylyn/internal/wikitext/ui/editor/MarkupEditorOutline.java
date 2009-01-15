@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -28,6 +33,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 /**
@@ -49,25 +56,28 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 
-		getTreeViewer().setUseHashlookup(true);
-		getTreeViewer().setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
-		getTreeViewer().setContentProvider(new OutlineContentProvider());
-		getTreeViewer().setLabelProvider(new OutlineLabelProvider());
-		getTreeViewer().setInput(editor.getOutlineModel());
+		TreeViewer viewer = getTreeViewer();
+		viewer.setUseHashlookup(true);
+		viewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
+		viewer.setContentProvider(new OutlineContentProvider());
+		viewer.setLabelProvider(new DecoratingLabelProvider(new OutlineLabelProvider(), PlatformUI.getWorkbench()
+				.getDecoratorManager()
+				.getLabelDecorator()));
+		viewer.setInput(editor.getOutlineModel());
 
-		getTreeViewer().addOpenListener(new IOpenListener() {
+		viewer.addOpenListener(new IOpenListener() {
 			public void open(OpenEvent event) {
 				revealInEditor(event.getSelection(), true);
 			}
 		});
-		getTreeViewer().addPostSelectionChangedListener(new ISelectionChangedListener() {
+		viewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				revealInEditor(event.getSelection(), false);
 			}
 		});
-		getTreeViewer().expandAll();
+		viewer.expandAll();
 
-		new ToolTip(getTreeViewer().getControl(), ToolTip.RECREATE, false) {
+		new ToolTip(viewer.getControl(), ToolTip.RECREATE, false) {
 			@Override
 			protected Composite createToolTipContentArea(Event event, Composite parent) {
 
@@ -115,7 +125,23 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 			}
 		};
 
-		getSite().setSelectionProvider(getTreeViewer());
+		getSite().setSelectionProvider(viewer);
+
+		MenuManager manager = new MenuManager("#PopUp"); //$NON-NLS-1$
+		manager.setRemoveAllWhenShown(true);
+		manager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager menuManager) {
+				contextMenuAboutToShow(menuManager);
+			}
+		});
+		viewer.getTree().setMenu(manager.createContextMenu(viewer.getTree()));
+
+		getSite().registerContextMenu(MarkupEditor.ID + ".outlineContextMenu", manager, viewer); //$NON-NLS-1$
+
+	}
+
+	protected void contextMenuAboutToShow(IMenuManager menuManager) {
+		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	@Override
