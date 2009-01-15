@@ -197,6 +197,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 				if (!(task instanceof LocalTask)) {
 					manager.add(synchronizeEditorAction);
 				}
+				String taskUrl = task.getUrl();
+				openWithBrowserAction.setEnabled(taskUrl != null && taskUrl.length() > 0);
 				manager.add(openWithBrowserAction);
 
 				if (task.isActive()) {

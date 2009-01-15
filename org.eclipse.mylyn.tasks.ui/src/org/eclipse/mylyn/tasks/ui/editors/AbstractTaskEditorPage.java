@@ -34,12 +34,10 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
@@ -51,7 +49,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.provisional.commons.ui.CommonImages;
 import org.eclipse.mylyn.internal.provisional.commons.ui.CommonTextSupport;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTask;
 import org.eclipse.mylyn.internal.tasks.core.AbstractTaskContainer;
@@ -118,7 +115,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -138,7 +134,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
-import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -160,7 +155,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Steffen Pingel
  * @since 3.0
  */
-public abstract class AbstractTaskEditorPage extends FormPage implements ISelectionProvider, ISelectionChangedListener {
+public abstract class AbstractTaskEditorPage extends TaskFormPage implements ISelectionProvider,
+		ISelectionChangedListener {
 
 	/**
 	 * Causes the form page to reflow on resize.
@@ -841,38 +837,9 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 	/**
 	 * Override for customizing the tool bar.
 	 */
+	@Override
 	public void fillToolBar(IToolBarManager toolBarManager) {
 		final TaskRepository taskRepository = (model != null) ? getModel().getTaskRepository() : null;
-		if (taskRepository != null) {
-			ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
-				@Override
-				protected Control createControl(Composite parent) {
-					FormToolkit toolkit = getTaskEditor().getHeaderForm().getToolkit();
-					Composite composite = toolkit.createComposite(parent);
-					composite.setLayout(new RowLayout());
-					composite.setBackground(null);
-					String label = taskRepository.getRepositoryLabel();
-					if (label.indexOf("//") != -1) { //$NON-NLS-1$
-						label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
-					}
-
-					Hyperlink link = new Hyperlink(composite, SWT.NONE);
-					link.setText(label);
-					link.setFont(JFaceResources.getBannerFont());
-					link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-					link.addHyperlinkListener(new HyperlinkAdapter() {
-
-						@Override
-						public void linkActivated(HyperlinkEvent e) {
-							TasksUiUtil.openEditRepositoryWizard(taskRepository);
-						}
-					});
-
-					return composite;
-				}
-			};
-			toolBarManager.add(repositoryLabelControl);
-		}
 
 		if (taskData == null) {
 			synchronizeEditorAction = new SynchronizeEditorAction();
@@ -917,20 +884,6 @@ public abstract class AbstractTaskEditorPage extends FormPage implements ISelect
 						historyAction.setToolTipText(Messages.AbstractTaskEditorPage_History);
 						toolBarManager.add(historyAction);
 					}
-				}
-
-				final String taskUrlToOpen = task.getUrl();
-				if (taskUrlToOpen != null) {
-					Action openBrowserAction = new Action() {
-						@Override
-						public void run() {
-							TasksUiUtil.openUrl(taskUrlToOpen);
-						}
-					};
-
-					openBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
-					openBrowserAction.setToolTipText(Messages.AbstractTaskEditorPage_Open_with_Web_Browser);
-					toolBarManager.add(openBrowserAction);
 				}
 			}
 		}

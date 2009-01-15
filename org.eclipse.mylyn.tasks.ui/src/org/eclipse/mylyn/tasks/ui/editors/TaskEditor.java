@@ -23,6 +23,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -31,6 +33,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -47,19 +50,23 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.EditorUtil;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.Messages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.internal.tasks.ui.util.SelectionProviderAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDragSourceListener;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
@@ -68,6 +75,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.editor.SharedHeaderFormEditor;
@@ -76,6 +84,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -511,40 +520,78 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	 * @since 3.0
 	 */
 	public void updateHeaderToolBar() {
-		Form form = getHeaderForm().getForm().getForm();
+		final Form form = getHeaderForm().getForm().getForm();
 		IToolBarManager toolBarManager = form.getToolBarManager();
 
 		toolBarManager.removeAll();
 		toolBarManager.update(true);
 
+		final TaskRepository taskRepository = taskEditorInput.getTaskRepository();
+		if (!LocalRepositoryConnector.CONNECTOR_KIND.equals(taskRepository.getConnectorKind())) {
+			ControlContribution repositoryLabelControl = new ControlContribution(Messages.AbstractTaskEditorPage_Title) {
+				@Override
+				protected Control createControl(Composite parent) {
+					FormToolkit toolkit = getHeaderForm().getToolkit();
+					Composite composite = toolkit.createComposite(parent);
+					composite.setLayout(new RowLayout());
+					composite.setBackground(null);
+					String label = taskRepository.getRepositoryLabel();
+					if (label.indexOf("//") != -1) { //$NON-NLS-1$
+						label = label.substring((taskRepository.getRepositoryUrl().indexOf("//") + 2)); //$NON-NLS-1$
+					}
+
+					Hyperlink link = new Hyperlink(composite, SWT.NONE);
+					link.setText(label);
+					link.setFont(JFaceResources.getBannerFont());
+					link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+					link.addHyperlinkListener(new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							TasksUiUtil.openEditRepositoryWizard(taskRepository);
+						}
+					});
+
+					return composite;
+				}
+			};
+			toolBarManager.add(repositoryLabelControl);
+		}
+
 		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractTaskEditorPage) {
-				AbstractTaskEditorPage taskEditorPage = (AbstractTaskEditorPage) page;
+			if (page instanceof TaskFormPage) {
+				TaskFormPage taskEditorPage = (TaskFormPage) page;
 				taskEditorPage.fillToolBar(toolBarManager);
-			} else if (page instanceof TaskPlanningEditor) {
-				TaskPlanningEditor taskPlanningPage = (TaskPlanningEditor) page;
-				taskPlanningPage.fillToolBar(toolBarManager);
 			}
 		}
 
-		// TODO EDITOR remove check
-		if (task != null) {
-			if (activateAction == null) {
-				activateAction = new ToggleTaskActivationAction(task) {
-					@Override
-					public void run() {
-						TaskList taskList = TasksUiPlugin.getTaskList();
-						if (taskList.getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
-							setMessage(Messages.TaskEditor_Task_added_to_the_Uncategorized_container,
-									IMessageProvider.INFORMATION);
-						}
-						super.run();
-					}
-				};
-			}
-			toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
-			toolBarManager.add(activateAction);
+		final String taskUrl = task.getUrl();
+		if (taskUrl != null && taskUrl.length() > 0) {
+			Action openWithBrowserAction = new Action() {
+				@Override
+				public void run() {
+					TasksUiUtil.openUrl(taskUrl);
+				}
+			};
+			openWithBrowserAction.setImageDescriptor(CommonImages.BROWSER_OPEN_TASK);
+			openWithBrowserAction.setToolTipText(Messages.AbstractTaskEditorPage_Open_with_Web_Browser);
+			toolBarManager.add(openWithBrowserAction);
 		}
+
+		if (activateAction == null) {
+			activateAction = new ToggleTaskActivationAction(task) {
+				@Override
+				public void run() {
+					TaskList taskList = TasksUiPlugin.getTaskList();
+					if (taskList.getTask(task.getRepositoryUrl(), task.getTaskId()) == null) {
+						setMessage(Messages.TaskEditor_Task_added_to_the_Uncategorized_container,
+								IMessageProvider.INFORMATION);
+					}
+					super.run();
+				}
+			};
+		}
+		toolBarManager.add(new Separator("activation")); //$NON-NLS-1$
+		toolBarManager.add(activateAction);
 
 		toolBarManager.update(true);
 
