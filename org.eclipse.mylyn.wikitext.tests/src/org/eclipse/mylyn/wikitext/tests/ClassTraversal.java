@@ -98,6 +98,7 @@ public class ClassTraversal {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void visitClasses(Bundle bundle, String path, Visitor visitor) {
 		Enumeration<URL> entries = bundle.findEntries(path, "*.class", true);
 		while (entries.hasMoreElements()) {
