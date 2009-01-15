@@ -81,6 +81,66 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	 */
 	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement,
 			boolean contributeToContext) {
+		return handleElementSelection(part.getSite().getId(), selectedElement, contributeToContext);
+	}
+
+	/**
+	 * Intended to be called back by subclasses.
+	 */
+	protected void handleElementEdit(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
+		handleElementEdit(part.getSite().getId(), selectedElement, contributeToContext);
+	}
+
+	/**
+	 * Intended to be called back by subclasses.
+	 */
+	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind, boolean contributeToContext) {
+		handleNavigation(part.getSite().getId(), targetElement, kind, contributeToContext);
+	}
+
+	/**
+	 * Intended to be called back by subclasses. *
+	 * 
+	 * @since 3.1
+	 */
+	protected void handleNavigation(String partId, Object targetElement, String kind, boolean contributeToContext) {
+		AbstractContextStructureBridge adapter = ContextCore.getStructureBridge(targetElement);
+		if (adapter.getContentType() != null) {
+			String handleIdentifier = adapter.getHandleIdentifier(targetElement);
+			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
+					adapter.getContentType(), handleIdentifier, partId, kind);
+			if (handleIdentifier != null && contributeToContext) {
+				ContextCore.getContextManager().processInteractionEvent(navigationEvent);
+			}
+			MonitorUiPlugin.getDefault().notifyInteractionObserved(navigationEvent);
+		}
+	}
+
+	/**
+	 * Intended to be called back by subclasses.
+	 * 
+	 * @since 3.1
+	 */
+	protected void handleElementEdit(String partId, Object selectedElement, boolean contributeToContext) {
+		if (selectedElement == null) {
+			return;
+		}
+		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(selectedElement);
+		String handleIdentifier = bridge.getHandleIdentifier(selectedElement);
+		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
+				handleIdentifier, partId);
+		if (handleIdentifier != null && contributeToContext) {
+			ContextCore.getContextManager().processInteractionEvent(editEvent);
+		}
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(editEvent);
+	}
+
+	/**
+	 * Intended to be called back by subclasses. *
+	 * 
+	 * @since 3.1
+	 */
+	protected InteractionEvent handleElementSelection(String partId, Object selectedElement, boolean contributeToContext) {
 		if (selectedElement == null || selectedElement.equals(lastSelectedElement)) {
 			return null;
 		}
@@ -89,48 +149,15 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		InteractionEvent selectionEvent;
 		if (bridge.getContentType() != null) {
 			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge.getContentType(),
-					handleIdentifier, part.getSite().getId());
+					handleIdentifier, partId);
 		} else {
-			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, null, null, part.getSite().getId());
+			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, null, null, partId);
 		}
 		if (handleIdentifier != null && contributeToContext) {
 			ContextCore.getContextManager().processInteractionEvent(selectionEvent);
 		}
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(selectionEvent);
 		return selectionEvent;
-	}
-
-	/**
-	 * Intended to be called back by subclasses.
-	 */
-	protected void handleElementEdit(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
-		if (selectedElement == null) {
-			return;
-		}
-		AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(selectedElement);
-		String handleIdentifier = bridge.getHandleIdentifier(selectedElement);
-		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
-				handleIdentifier, part.getSite().getId());
-		if (handleIdentifier != null && contributeToContext) {
-			ContextCore.getContextManager().processInteractionEvent(editEvent);
-		}
-		MonitorUiPlugin.getDefault().notifyInteractionObserved(editEvent);
-	}
-
-	/**
-	 * Intended to be called back by subclasses.
-	 */
-	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind, boolean contributeToContext) {
-		AbstractContextStructureBridge adapter = ContextCore.getStructureBridge(targetElement);
-		if (adapter.getContentType() != null) {
-			String handleIdentifier = adapter.getHandleIdentifier(targetElement);
-			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
-					adapter.getContentType(), handleIdentifier, part.getSite().getId(), kind);
-			if (handleIdentifier != null && contributeToContext) {
-				ContextCore.getContextManager().processInteractionEvent(navigationEvent);
-			}
-			MonitorUiPlugin.getDefault().notifyInteractionObserved(navigationEvent);
-		}
 	}
 
 	public Kind getEventKind() {
