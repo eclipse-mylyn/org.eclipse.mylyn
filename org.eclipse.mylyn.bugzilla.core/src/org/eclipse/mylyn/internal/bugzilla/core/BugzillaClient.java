@@ -911,19 +911,11 @@ public class BugzillaClient {
 	public RepositoryResponse postTaskData(TaskData taskData, IProgressMonitor monitor) throws IOException,
 			CoreException {
 		NameValuePair[] formData = null;
-		String prefix = null;
-		String prefix2 = null;
-		String postfix = null;
-		String postfix2 = null;
 		monitor = Policy.monitorFor(monitor);
 		if (taskData == null) {
 			return null;
 		} else if (taskData.isNew()) {
 			formData = getPairsForNew(taskData);
-			prefix = IBugzillaConstants.FORM_PREFIX_BUG_218;
-			prefix2 = IBugzillaConstants.FORM_PREFIX_BUG_220;
-			postfix = IBugzillaConstants.FORM_POSTFIX_216;
-			postfix2 = IBugzillaConstants.FORM_POSTFIX_218;
 		} else {
 			formData = getPairsForExisting(taskData, new SubProgressMonitor(monitor, 1));
 		}
@@ -978,28 +970,28 @@ public class BugzillaClient {
 						}
 						if (!taskData.isNew() && found) {
 							existingBugPosted = true;
-						} else if (taskData.isNew() && prefix != null && prefix2 != null && postfix != null
-								&& postfix2 != null) {
-							int startIndex = -1;
-							int startIndexPrefix = title.toLowerCase(Locale.ENGLISH).indexOf(
-									prefix.toLowerCase(Locale.ENGLISH));
-							int startIndexPrefix2 = title.toLowerCase(Locale.ENGLISH).indexOf(
-									prefix2.toLowerCase(Locale.ENGLISH));
+						} else if (taskData.isNew()) {
 
-							if (startIndexPrefix != -1 || startIndexPrefix2 != -1) {
-								if (startIndexPrefix != -1) {
-									startIndex = startIndexPrefix + prefix.length();
-								} else {
-									startIndex = startIndexPrefix2 + prefix2.length();
-								}
-								int stopIndex = title.toLowerCase(Locale.ENGLISH).indexOf(
-										postfix.toLowerCase(Locale.ENGLISH), startIndex);
-								if (stopIndex == -1) {
-									stopIndex = title.toLowerCase(Locale.ENGLISH).indexOf(
-											postfix2.toLowerCase(Locale.ENGLISH), startIndex);
-								}
-								if (stopIndex > -1) {
-									result = (title.substring(startIndex, stopIndex)).trim();
+							int startIndex = -1;
+
+							if (result == null) {
+								for (Iterator<String> iterator = bugzillaLanguageSettings.getResponseForCommand(
+										BugzillaLanguageSettings.COMMAND_SUBMITTED).iterator(); iterator.hasNext();) {
+									String value = iterator.next().toLowerCase(Locale.ENGLISH);
+									int stopIndex = title.indexOf(value);
+									if (stopIndex > -1) {
+										for (iterator = bugzillaLanguageSettings.getResponseForCommand(
+												BugzillaLanguageSettings.COMMAND_BUG).iterator(); iterator.hasNext();) {
+											value = iterator.next().toLowerCase(Locale.ENGLISH);
+											startIndex = title.indexOf(value);
+											if (startIndex > -1) {
+												startIndex = startIndex + value.length();
+												result = (title.substring(startIndex, stopIndex)).trim();
+												break;
+											}
+										}
+										break;
+									}
 								}
 							}
 						}

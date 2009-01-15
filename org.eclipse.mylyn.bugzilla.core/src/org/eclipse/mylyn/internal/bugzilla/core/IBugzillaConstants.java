@@ -242,14 +242,6 @@ public interface IBugzillaConstants {
 
 	public static final String ERROR_MSG_INVALID_BUG_ID = Messages.IBugzillaConstants_invalid_bug_id_requested_bug_id_does_not_exist;
 
-	public static final String FORM_PREFIX_BUG_218 = "Bug "; //$NON-NLS-1$
-
-	public static final String FORM_PREFIX_BUG_220 = "Issue "; //$NON-NLS-1$
-
-	public static final String FORM_POSTFIX_216 = " posted"; //$NON-NLS-1$
-
-	public static final String FORM_POSTFIX_218 = " Submitted"; //$NON-NLS-1$
-
 	public static final String INVALID_CREDENTIALS = Messages.IBugzillaConstants_invalid_repository_credentials;
 
 	public static final String SHOW_ACTIVITY = "/show_activity.cgi?id="; //$NON-NLS-1$
