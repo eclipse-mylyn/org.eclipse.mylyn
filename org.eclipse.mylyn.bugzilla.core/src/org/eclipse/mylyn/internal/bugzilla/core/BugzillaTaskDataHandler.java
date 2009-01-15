@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.mylyn.commons.net.AuthenticationCredentials;
+import org.eclipse.mylyn.commons.net.AuthenticationType;
 import org.eclipse.mylyn.commons.net.Policy;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
@@ -581,7 +583,12 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 			} catch (CoreException e) {
 				// TODO: Move retry handling into client
 				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
-					client.postUpdateAttachment(taskAttribute, action, monitor);
+					AuthenticationCredentials creds = repository.getCredentials(AuthenticationType.REPOSITORY);
+					if (creds != null && creds.getUserName() != null && creds.getUserName().length() > 0) {
+						client.postUpdateAttachment(taskAttribute, action, monitor);
+					} else {
+						throw e;
+					}
 				} else {
 					throw e;
 				}

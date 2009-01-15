@@ -890,7 +890,19 @@ public class BugzillaClient {
 					}
 				}
 			}
-		} catch (Exception e) {
+
+			if (existingBugPosted != true) {
+				try {
+					if (in.markSupported()) {
+						in.reset();
+					}
+				} catch (IOException e) {
+					// ignore
+				}
+				parseHtmlError(in);
+			}
+
+		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
 					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + ".")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -901,10 +913,6 @@ public class BugzillaClient {
 			if (method != null) {
 				method.releaseConnection();
 			}
-		}
-		if (!existingBugPosted) {
-			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.ID_PLUGIN,
-					RepositoryStatus.ERROR_REPOSITORY, repositoryUrl.toString(), "Unable to update attachment")); //$NON-NLS-1$
 		}
 	}
 

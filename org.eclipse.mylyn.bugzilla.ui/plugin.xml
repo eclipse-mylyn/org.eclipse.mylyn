@@ -78,14 +78,28 @@
             id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment"
             objectClass="org.eclipse.mylyn.tasks.core.ITaskAttachment">
          <action
-               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaUpdateAttachmentAction"
+               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaNotObsoleteAttachmentAction"
+               enablesFor="*"
+               id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.notobsolete"
+               label="Mark not obsolete"
+               menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
+               tooltip="Mark attachment as not obsolete">
+         </action>
+          <action
+               class="org.eclipse.mylyn.internal.bugzilla.ui.action.BugzillaObsoleteAttachmentAction"
                enablesFor="*"
                id="org.eclipse.mylyn.bugzilla.ui.contribution.attachment.obsolete"
                label="Mark obsolete"
-               menubarPath="actions"
-               tooltip="Toggle the attachment as obsolete or not">
+               menubarPath="org.eclipse.mylyn.bugzilla.ui.attachments.mark/markadditions"
+               tooltip="Mark attachment as obsolete">
          </action>
+          <menu
+                id="org.eclipse.mylyn.bugzilla.ui.attachments.mark"
+                label="Mark as"
+                path="markadditions">
+          </menu>
       </objectContribution>
    </extension>
+
    
 </plugin>

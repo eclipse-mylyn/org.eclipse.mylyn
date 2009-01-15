@@ -13,13 +13,14 @@ package org.eclipse.mylyn.internal.bugzilla.ui.action;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.BugzillaTaskEditorPage;
@@ -40,19 +41,28 @@ import org.eclipse.ui.forms.widgets.Section;
 /**
  * @author Frank Becker
  */
+@SuppressWarnings("restriction")
 public class UpdateAttachmentJob extends Job {
 
 	private final List<ITaskAttachment> attachment;
 
 	private final TaskEditor editor;
 
-	public UpdateAttachmentJob(List<ITaskAttachment> attachment, TaskEditor editor) {
+	private final boolean obsolete;
+
+	private IStatus error;
+
+	public UpdateAttachmentJob(List<ITaskAttachment> attachment, TaskEditor editor, boolean obsolete) {
 		super(Messages.UpdateAttachmentJob_update_attachment);
 		this.attachment = attachment;
 		this.editor = editor;
+		this.obsolete = obsolete;
 	}
 
-	@SuppressWarnings("restriction")
+	public IStatus getError() {
+		return error;
+	}
+
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		final ITask task;
@@ -68,15 +78,30 @@ public class UpdateAttachmentJob extends Job {
 			for (ITaskAttachment taskAttachment : attachment) {
 				TaskAttribute taskAttribute = taskAttachment.getTaskAttribute();
 				TaskAttribute deprecated = taskAttribute.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
-				if (deprecated.getValue().equals("1")) { //$NON-NLS-1$
-					deprecated.setValue("0"); //$NON-NLS-1$
-				} else {
-					deprecated.setValue("1"); //$NON-NLS-1$
+				if (deprecated.getValue().equals("1") && !obsolete) { //$NON-NLS-1$
+					try {
+						deprecated.setValue("0"); //$NON-NLS-1$
+						((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(
+								taskAttachment.getTaskRepository(), taskAttribute, "update", monitor); //$NON-NLS-1$
+					} catch (CoreException e) {
+						error = e.getStatus();
+						deprecated.setValue("1"); //$NON-NLS-1$
+						return Status.OK_STATUS;
+					}
+				} else if (deprecated.getValue().equals("0") && obsolete) { //$NON-NLS-1$
+					try {
+						deprecated.setValue("1"); //$NON-NLS-1$
+						((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(
+								taskAttachment.getTaskRepository(), taskAttribute, "update", monitor); //$NON-NLS-1$
+					} catch (CoreException e) {
+						error = e.getStatus();
+						deprecated.setValue("0"); //$NON-NLS-1$
+						return Status.OK_STATUS;
+					}
 				}
 				monitor.worked(10);
-				((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(
-						taskAttachment.getTaskRepository(), taskAttribute, "update", monitor); //$NON-NLS-1$
 			}
+
 			if (task != null) {
 				if (connector != null) {
 					TasksUiInternal.synchronizeTask(connector, task, true, new JobChangeAdapter() {
@@ -97,9 +122,6 @@ public class UpdateAttachmentJob extends Job {
 													Section section = (Section) control;
 													EditorUtil.toggleExpandableComposite(true, section);
 												}
-												bugzillaPage.getTaskEditor().setMessage(
-														Messages.UpdateAttachmentJob_obsolete_toggled_successfully,
-														IMessageProvider.INFORMATION);
 											}
 
 										}
@@ -122,17 +144,8 @@ public class UpdateAttachmentJob extends Job {
 					}
 				});
 			}
-		} catch (Exception e) {
-			IFormPage formPage = editor.getActivePageInstance();
-			if (formPage instanceof BugzillaTaskEditorPage) {
-				final BugzillaTaskEditorPage bugzillaPage = (BugzillaTaskEditorPage) formPage;
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						bugzillaPage.getTaskEditor().setMessage(Messages.UpdateAttachmentJob_obsolete_not_toggled,
-								IMessageProvider.ERROR);
-					}
-				});
-			}
+		} catch (OperationCanceledException e) {
+			return Status.CANCEL_STATUS;
 		} finally {
 			monitor.done();
 		}

@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttribute;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaOperation;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.context.core.ContextCorePlugin;
@@ -69,6 +70,47 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //2.22		92		user@mylar.eclipse.org	tests@mylar.eclipse.org
 //3.0		 5		tests@mylar.eclipse.org	tests2@mylar.eclipse.org
 //3.1		 1		rob.elves@eclipse.org	tests@mylar.eclipse.org
+
+	public void testObsoleteAttachment222() throws Exception {
+		init222();
+		doObsoleteAttachment("81");
+	}
+
+	public void testObsoleteAttachment32() throws Exception {
+		init32();
+		doObsoleteAttachment("2");
+	}
+
+	private void doObsoleteAttachment(String taskNumber) throws CoreException {
+		ITask task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		TaskDataModel model = createModel(task);
+		TaskData taskData = model.getTaskData();
+		assertNotNull(taskData);
+		TaskAttribute attachment = taskData.getAttributeMapper().getAttributesByType(taskData,
+				TaskAttribute.TYPE_ATTACHMENT).get(0);
+		assertNotNull(attachment);
+		TaskAttribute obsolete = attachment.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		boolean oldObsoleteOn = obsolete.getValue().equals("1");
+		if (oldObsoleteOn) {
+			obsolete.setValue("0"); //$NON-NLS-1$
+		} else {
+			obsolete.setValue("1"); //$NON-NLS-1$
+		}
+		((BugzillaTaskDataHandler) connector.getTaskDataHandler()).postUpdateAttachment(repository, attachment,
+				"update", new NullProgressMonitor()); //$NON-NLS-1$
+
+		task = generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task);
+		model = createModel(task);
+		taskData = model.getTaskData();
+		assertNotNull(taskData);
+		attachment = taskData.getAttributeMapper().getAttributesByType(taskData, TaskAttribute.TYPE_ATTACHMENT).get(0);
+		assertNotNull(attachment);
+		obsolete = attachment.getMappedAttribute(TaskAttribute.ATTACHMENT_IS_DEPRECATED);
+		boolean newObsoleteOn = obsolete.getValue().equals("1");
+		assertEquals(true, oldObsoleteOn != newObsoleteOn);
+	}
 
 	public void testReassign222() throws CoreException {
 		init222();
