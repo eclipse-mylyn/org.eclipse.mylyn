@@ -34,6 +34,7 @@ public class AllContextTests {
 		suite.addTestSuite(DegreeOfInterestTest.class);
 		suite.addTestSuite(ContextTest.class);
 		suite.addTestSuite(InteractionEventTest.class);
+		suite.addTestSuite(ShadowsBridgeTest.class);
 		// $JUnit-END$
 		return suite;
 	}
