@@ -8,31 +8,27 @@
  * Contributors:
  *     David Green - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.wikitext.ui.editor;
 
-import org.eclipse.jface.viewers.LabelProvider;
+package org.eclipse.mylyn.internal.wikitext.ui.util;
+
+import junit.framework.TestCase;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.wikitext.core.parser.outline.OutlineItem;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.mylyn.wikitext.tests.EclipseRuntimeRequired;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
  * 
- * 
  * @author David Green
  */
-class OutlineLabelProvider extends LabelProvider {
+@EclipseRuntimeRequired
+public class OutlineItemAdapterFactoryTest extends TestCase {
 
-	@Override
-	public Image getImage(Object element) {
-		return null;
+	public void testAdaptsToIWorkbenchAdapter() {
+		Object adapter = Platform.getAdapterManager().getAdapter(new OutlineItem(null, 0, "id", 0, 10, "ID"),
+				IWorkbenchAdapter.class);
+		assertNotNull(adapter);
+		assertTrue(IWorkbenchAdapter.class.isAssignableFrom(adapter.getClass()));
 	}
-
-	@Override
-	public String getText(Object element) {
-		if (element instanceof OutlineItem) {
-			OutlineItem outlineItem = (OutlineItem) element;
-			return outlineItem.getKind() + ". " + outlineItem.getLabel(); //$NON-NLS-1$
-		}
-		return element.toString();
-	}
-
 }

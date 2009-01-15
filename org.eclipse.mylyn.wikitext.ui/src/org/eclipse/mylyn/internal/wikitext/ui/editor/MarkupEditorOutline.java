@@ -15,7 +15,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -34,7 +33,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.model.BaseWorkbenchContentProvider;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.ui.part.IShowInSource;
+import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
 /**
@@ -42,7 +45,7 @@ import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
  * 
  * @author David Green
  */
-public class MarkupEditorOutline extends ContentOutlinePage {
+public class MarkupEditorOutline extends ContentOutlinePage implements IShowInSource, IShowInTarget {
 
 	private final MarkupEditor editor;
 
@@ -59,10 +62,8 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 		TreeViewer viewer = getTreeViewer();
 		viewer.setUseHashlookup(true);
 		viewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
-		viewer.setContentProvider(new OutlineContentProvider());
-		viewer.setLabelProvider(new DecoratingLabelProvider(new OutlineLabelProvider(), PlatformUI.getWorkbench()
-				.getDecoratorManager()
-				.getLabelDecorator()));
+		viewer.setContentProvider(new BaseWorkbenchContentProvider());
+		viewer.setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
 		viewer.setInput(editor.getOutlineModel());
 
 		viewer.addOpenListener(new IOpenListener() {
@@ -141,6 +142,7 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 	}
 
 	protected void contextMenuAboutToShow(IMenuManager menuManager) {
+		menuManager.add(new Separator(IWorkbenchActionConstants.GROUP_SHOW_IN));
 		menuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -183,4 +185,11 @@ public class MarkupEditorOutline extends ContentOutlinePage {
 		}
 	}
 
+	public ShowInContext getShowInContext() {
+		return editor.getShowInContext();
+	}
+
+	public boolean show(ShowInContext context) {
+		return editor.show(context);
+	}
 }

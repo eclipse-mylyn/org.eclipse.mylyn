@@ -94,13 +94,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.swt.IFocusService;
@@ -114,7 +117,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * 
  * @author David Green
  */
-public class MarkupEditor extends TextEditor implements IShowInTarget {
+public class MarkupEditor extends TextEditor implements IShowInTarget, IShowInSource {
 	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.mylyn.internal.wikitext.ui.editor.MarkupEditor.ruler"; //$NON-NLS-1$
 
 	/**
@@ -133,6 +136,16 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 	 * the ID of the editor
 	 */
 	public static final String ID = "org.eclipse.mylyn.wikitext.ui.editor.markupEditor"; //$NON-NLS-1$
+
+	private static final String[] SHOW_IN_TARGETS = { IPageLayout.ID_RES_NAV,
+			"org.eclipse.jdt.ui.PackageExplorer", IPageLayout.ID_OUTLINE //$NON-NLS-1$
+	};
+
+	private static IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
+		public String[] getShowInTargetIds() {
+			return SHOW_IN_TARGETS;
+		}
+	};
 
 	private IDocument document;
 
@@ -524,6 +537,9 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 			}
 			return foldingStructure;
 		}
+		if (adapter == IShowInTargetList.class) {
+			return SHOW_IN_TARGET_LIST;
+		}
 		return super.getAdapter(adapter);
 	}
 
@@ -806,17 +822,25 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 
 			disableReveal = true;
 			try {
-				Point selectedRange = getSourceViewer().getSelectedRange();
-				if (selectedRange != null) {
-					OutlineItem item = outlineModel.findNearestMatchingOffset(selectedRange.x);
-					if (item != null) {
-						outlinePage.setSelection(new StructuredSelection(item));
-					}
+				OutlineItem item = getNearestMatchingOutlineItem();
+				if (item != null) {
+					outlinePage.setSelection(new StructuredSelection(item));
 				}
 			} finally {
 				disableReveal = false;
 			}
 		}
+	}
+
+	/**
+	 * get the outline item nearest matching the selection in the source viewer
+	 */
+	private OutlineItem getNearestMatchingOutlineItem() {
+		Point selectedRange = getSourceViewer().getSelectedRange();
+		if (selectedRange != null) {
+			return outlineModel.findNearestMatchingOffset(selectedRange.x);
+		}
+		return null;
 	}
 
 	@Override
@@ -1039,6 +1063,12 @@ public class MarkupEditor extends TextEditor implements IShowInTarget {
 			return true;
 		}
 		return false;
+	}
+
+	public ShowInContext getShowInContext() {
+		OutlineItem item = getNearestMatchingOutlineItem();
+		return new ShowInContext(getEditorInput(), item == null ? new StructuredSelection() : new StructuredSelection(
+				item));
 	}
 
 	@Override
