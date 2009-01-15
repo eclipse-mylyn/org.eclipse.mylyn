@@ -47,7 +47,11 @@ public class OutlineItemWorkbenchAdapter implements IWorkbenchAdapter {
 		if (o instanceof OutlineItem) {
 			OutlineItem item = (OutlineItem) o;
 			// TODO: bug 260447 remove text prefix when icons become available
-			return item.getKind() + ". " + item.getLabel(); //$NON-NLS-1$
+			if (item.getKind() == null) {
+				return item.getLabel();
+			} else {
+				return item.getKind() + ". " + item.getLabel(); //$NON-NLS-1$
+			}
 		}
 		return null;
 	}
