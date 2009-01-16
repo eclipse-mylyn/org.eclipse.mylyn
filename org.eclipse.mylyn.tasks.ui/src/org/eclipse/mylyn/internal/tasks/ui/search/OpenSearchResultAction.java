@@ -46,7 +46,6 @@ public class OpenSearchResultAction extends Action {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-
 		// Get the selected items
 		ISelection s = resultView.getViewer().getSelection();
 		if (s instanceof IStructuredSelection) {

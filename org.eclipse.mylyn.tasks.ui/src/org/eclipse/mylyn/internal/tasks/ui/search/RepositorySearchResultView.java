@@ -39,15 +39,18 @@ import org.eclipse.mylyn.internal.tasks.core.UnmatchedTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskSearchAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.search.SearchResultTreeContentProvider.GroupBy;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiInternal;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListToolTip;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.search.ui.IContextMenuConstants;
+import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
 import org.eclipse.search.ui.text.Match;
@@ -151,7 +154,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private final OpenSearchResultAction openInEditorAction;
 
-	private final CreateQueryFromSearchAction addTaskListAction;
+	private final CreateQueryFromSearchAction createQueryAction;
 
 	private final Action refineSearchAction;
 
@@ -162,6 +165,8 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	private final List<GroupingAction> groupingActions;
 
 	private final List<FilteringAction> filterActions;
+
+	private final OpenWithBrowserAction openSearchWithBrowserAction;
 
 	private static final IShowInTargetList SHOW_IN_TARGET_LIST = new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
@@ -180,10 +185,12 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		currentSortOrder = ORDER_DEFAULT;
 
 		openInEditorAction = new OpenSearchResultAction(Messages.RepositorySearchResultView_Open_in_Editor, this);
-		addTaskListAction = new CreateQueryFromSearchAction(
+		createQueryAction = new CreateQueryFromSearchAction(
 				Messages.RepositorySearchResultView_Create_Query_from_Search_, this);
 		refineSearchAction = new OpenTaskSearchAction();
 		refineSearchAction.setText(Messages.RepositorySearchResultView_Refine_Search_);
+		openSearchWithBrowserAction = new OpenWithBrowserAction();
+		openSearchWithBrowserAction.setText(Messages.RepositorySearchResultView_Open_Search_with_Browser_Label);
 
 		groupingActions = new ArrayList<GroupingAction>();
 		new GroupingAction(Messages.RepositorySearchResultView_Group_By_Owner, GroupBy.OWNER);
@@ -243,6 +250,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		toolTip = new TaskListToolTip(viewer.getControl());
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected TreeViewer createTreeViewer(Composite parent) {
 		// create a filtered tree
@@ -256,6 +264,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			treeComposite.setLayout(layout);
 		}
 
+		// TODO e3.5 use new FilteredTree API
 		FilteredTree searchTree = new FilteredTree(treeComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL,
 				new SubstringPatternFilter());
 		return searchTree.getViewer();
@@ -362,32 +371,17 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	@Override
 	protected void fillContextMenu(IMenuManager menuManager) {
 		super.fillContextMenu(menuManager);
-		MenuManager sortMenuManager = new MenuManager(Messages.RepositorySearchResultView_Sort_by);
-		sortMenuManager.add(sortByPriorityAction);
-		sortMenuManager.add(sortByDescriptionAction);
 
-		sortByPriorityAction.setChecked(currentSortOrder == sortByPriorityAction.getSortOrder());
-		sortByDescriptionAction.setChecked(currentSortOrder == sortByDescriptionAction.getSortOrder());
-
-		// Add the new context menu items
-		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenuManager);
-		for (Action action : groupingActions) {
-			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
-		}
-		for (Action action : filterActions) {
-			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
-		}
+		// open actions
 
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
-		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, addTaskListAction);
-		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, refineSearchAction);
 
+		// Add to Task List menu
 		// HACK: this should be a contribution
 		final MenuManager subMenuManager = new MenuManager(MessageFormat.format(
 				Messages.RepositorySearchResultView_Add_to_X_Category, TaskListView.LABEL_VIEW));
 		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiInternal.getTaskList()
 				.getCategories());
-
 		Collections.sort(categories);
 		for (final AbstractTaskCategory category : categories) {
 			if (!(category instanceof UnmatchedTaskContainer)) {//.equals(TasksUiPlugin.getTaskList().getArchiveContainer())) {
@@ -404,6 +398,30 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			}
 		}
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_OPEN, subMenuManager);
+
+		// search actions
+
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_SEARCH, createQueryAction);
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_SEARCH, refineSearchAction);
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_SEARCH, openSearchWithBrowserAction);
+
+		// sort actions
+
+		MenuManager sortMenuManager = new MenuManager(Messages.RepositorySearchResultView_Sort_by);
+		sortMenuManager.add(sortByPriorityAction);
+		sortMenuManager.add(sortByDescriptionAction);
+
+		sortByPriorityAction.setChecked(currentSortOrder == sortByPriorityAction.getSortOrder());
+		sortByDescriptionAction.setChecked(currentSortOrder == sortByDescriptionAction.getSortOrder());
+
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenuManager);
+		for (Action action : groupingActions) {
+			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
+		}
+		for (Action action : filterActions) {
+			menuManager.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, action);
+		}
+
 	}
 
 	private void moveToCategory(AbstractTaskCategory category) {
@@ -442,6 +460,13 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	@Override
 	public void setInput(ISearchResult newSearch, Object viewState) {
 		super.setInput(newSearch, viewState);
+		if (newSearch != null) {
+			ISearchQuery query = ((RepositorySearchResult) newSearch).getQuery();
+			IRepositoryQuery repositoryQuery = ((SearchHitCollector) query).getRepositoryQuery();
+			openSearchWithBrowserAction.selectionChanged(new StructuredSelection(repositoryQuery));
+		} else {
+			openSearchWithBrowserAction.selectionChanged(StructuredSelection.EMPTY);
+		}
 	}
 
 }
