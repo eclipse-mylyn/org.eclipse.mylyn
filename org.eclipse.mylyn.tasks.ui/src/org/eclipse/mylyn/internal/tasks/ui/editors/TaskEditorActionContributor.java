@@ -94,10 +94,12 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			if (activePage instanceof AbstractTaskEditorPage) {
 				AbstractTaskEditorPage page = (AbstractTaskEditorPage) activePage;
 				page.doAction(actionId);
+				return;
 			} else if (activePage != null) {
 				WorkbenchActionCallback textSupport = (WorkbenchActionCallback) activePage.getAdapter(WorkbenchActionCallback.class);
 				if (textSupport != null) {
 					textSupport.doAction(actionId, control);
+					return;
 				}
 			}
 			super.doAction(actionId, control);
