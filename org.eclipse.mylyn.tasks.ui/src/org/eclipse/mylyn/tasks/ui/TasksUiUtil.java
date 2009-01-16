@@ -195,6 +195,12 @@ public class TasksUiUtil {
 	}
 
 	public static int openEditRepositoryWizard(TaskRepository repository) {
+		AbstractRepositoryConnector connector = TasksUi.getRepositoryManager().getRepositoryConnector(
+				repository.getConnectorKind());
+		if (connector == null || !connector.isUserManaged()) {
+			return Window.CANCEL;
+		}
+
 		try {
 			EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();

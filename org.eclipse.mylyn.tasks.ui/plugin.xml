@@ -1469,9 +1469,14 @@
                      <instanceof
                            value="org.eclipse.mylyn.tasks.core.TaskRepository">
                      </instanceof>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.eclipse.mylyn.taskRepository.userManaged"
+                           value="true">
+                     </test>
                      <not>
                         <test
-                              forcePluginActivation="false"
+                              forcePluginActivation="true"
                               property="org.eclipse.mylyn.taskRepository.connectorKind"
                               value="local">
                         </test>
@@ -1831,7 +1836,7 @@
             class="org.eclipse.mylyn.internal.tasks.ui.util.TaskRepositoryPropertyTester"
             id="org.eclipse.mylyn.tasks.ui.propertyTester.taskRepository"
             namespace="org.eclipse.mylyn.taskRepository"
-            properties="connectorKind"
+            properties="connectorKind,userManaged"
             type="org.eclipse.mylyn.tasks.core.TaskRepository">
       </propertyTester>
    </extension>
