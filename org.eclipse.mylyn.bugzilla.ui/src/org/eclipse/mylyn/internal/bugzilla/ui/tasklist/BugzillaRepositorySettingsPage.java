@@ -56,7 +56,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	private static final String LABEL_SHORT_LOGINS = Messages.BugzillaRepositorySettingsPage_local_users_enabled;
 
-	private static final String LABEL_VERSION_NUMBER = "2.18 - 3.0"; //$NON-NLS-1$
+	private static final String LABEL_VERSION_NUMBER = "2.18 - 3.2"; //$NON-NLS-1$
 
 	private static final String TITLE = Messages.BugzillaRepositorySettingsPage_bugzilla_repository_settings;
 
