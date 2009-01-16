@@ -136,7 +136,9 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 				if (getTaskRepository() != null) {
 					updateAttributesFromRepository(true);
 				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.AbstractRepositoryQueryPage2_Update_Attributes_Failed,
+					MessageDialog.openInformation(
+							Display.getCurrent().getActiveShell(),
+							Messages.AbstractRepositoryQueryPage2_Update_Attributes_Failed,
 							Messages.AbstractRepositoryQueryPage2_No_repository_available_please_add_one_using_the_Task_Repositories_view);
 				}
 			}
@@ -256,6 +258,12 @@ public abstract class AbstractRepositoryQueryPage2 extends AbstractRepositoryQue
 	@Override
 	public String getQueryTitle() {
 		return (titleText != null) ? titleText.getText() : null;
+	}
+
+	public void setQueryTitle(String text) {
+		if (titleText != null) {
+			titleText.setText(text);
+		}
 	}
 
 }
