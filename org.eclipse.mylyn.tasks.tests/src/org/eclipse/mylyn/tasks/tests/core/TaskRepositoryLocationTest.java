@@ -77,6 +77,22 @@ public class TaskRepositoryLocationTest extends TestCase {
 		assertEquals("pwd", ((AuthenticatedProxy) proxy).getPassword());
 	}
 
+	public void testGetProxyForHostEmptyProxy() {
+		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
+		TaskRepositoryLocation location = new TaskRepositoryLocation(taskRepository);
+
+		taskRepository.setDefaultProxyEnabled(false);
+		assertEquals(null, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
+
+		taskRepository.setProperty(TaskRepository.PROXY_HOSTNAME, "");
+		taskRepository.setProperty(TaskRepository.PROXY_PORT, "");
+		assertEquals(null, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
+
+		taskRepository.setProperty(TaskRepository.PROXY_HOSTNAME, "");
+		taskRepository.setProperty(TaskRepository.PROXY_PORT, "abc");
+		assertEquals(null, location.getProxyForHost("localhost", IProxyData.HTTP_PROXY_TYPE));
+	}
+
 	public void testRequestCredentials() {
 		TaskRepository taskRepository = new TaskRepository("kind", "http://url");
 		TaskRepositoryLocation location = new TaskRepositoryLocation(taskRepository);

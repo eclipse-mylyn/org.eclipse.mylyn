@@ -825,4 +825,12 @@ public final class TaskRepository extends PlatformObject {
 	public void removeChangeListener(PropertyChangeListener listener) {
 		propertyChangeListeners.remove(listener);
 	}
+
+	/**
+	 * @since 3.1
+	 */
+	public void setDefaultProxyEnabled(boolean useDefaultProxy) {
+		setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(useDefaultProxy));
+	}
+
 }

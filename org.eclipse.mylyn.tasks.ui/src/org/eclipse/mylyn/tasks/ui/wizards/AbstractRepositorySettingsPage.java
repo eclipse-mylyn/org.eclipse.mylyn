@@ -1400,7 +1400,7 @@ public abstract class AbstractRepositorySettingsPage extends AbstractTaskReposit
 		}
 
 		if (needsProxy()) {
-			repository.setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(getUseDefaultProxy()));
+			repository.setDefaultProxyEnabled(getUseDefaultProxy());
 			repository.setProperty(TaskRepository.PROXY_HOSTNAME, getProxyHostname());
 			repository.setProperty(TaskRepository.PROXY_PORT, getProxyPort());
 			if (getProxyAuth()) {
