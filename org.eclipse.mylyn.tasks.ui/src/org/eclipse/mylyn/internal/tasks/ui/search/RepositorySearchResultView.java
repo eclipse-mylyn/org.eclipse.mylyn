@@ -59,7 +59,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
@@ -158,7 +157,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	private final Action refineSearchAction;
 
-	private static final String[] SHOW_IN_TARGETS = new String[] { IPageLayout.ID_RES_NAV };
+	private static final String[] SHOW_IN_TARGETS = new String[] { TaskListView.ID };
 
 	private TaskListToolTip toolTip;
 

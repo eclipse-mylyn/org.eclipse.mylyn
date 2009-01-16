@@ -179,6 +179,8 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.DrillDownAdapter;
+import org.eclipse.ui.part.IShowInTarget;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.themes.IThemeManager;
@@ -188,7 +190,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Ken Sueda
  * @author Eugene Kuleshov
  */
-public class TaskListView extends ViewPart implements IPropertyChangeListener {
+public class TaskListView extends ViewPart implements IPropertyChangeListener, IShowInTarget {
 
 	private final class TaskListRefreshJob extends DelayedRefreshJob {
 
@@ -1894,6 +1896,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public TaskListTableSorter getSorter() {
 		return tableSorter;
+	}
+
+	public boolean show(ShowInContext context) {
+		ISelection selection = context.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			getViewer().setSelection(selection, true);
+			return true;
+		}
+		return false;
 	}
 
 }
