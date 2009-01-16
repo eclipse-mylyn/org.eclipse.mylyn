@@ -15,42 +15,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMember;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.text.java.CompletionProposalComputerRegistry;
-import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.jdt.ui.JavaElementImageDescriptor;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.commons.core.StatusHandler;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
-import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
  * @author Mik Kersten
  */
 public class JavaUiUtil {
-
-	private static final Point SMALL_SIZE = new Point(16, 16);
 
 	private static final String SEPARATOR_CODEASSIST = "\0"; //$NON-NLS-1$
 
@@ -58,8 +31,12 @@ public class JavaUiUtil {
 
 	public static final String ASSIST_MYLYN_NOTYPE = "org.eclipse.mylyn.java.javaNoTypeProposalCategory"; //$NON-NLS-1$
 
+	public static final String ASSIST_JDT_ALL = "eclipse.jdt.ui.javaAllProposalCategory"; //$NON-NLS-1$
+
+	@Deprecated
 	public static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory"; //$NON-NLS-1$
 
+	@Deprecated
 	public static final String ASSIST_JDT_NOTYPE = "org.eclipse.jdt.ui.javaNoTypeProposalCategory"; //$NON-NLS-1$
 
 	public static final String ASSIST_JDT_TEMPLATE = "org.eclipse.jdt.ui.templateProposalCategory"; //$NON-NLS-1$
@@ -74,6 +51,7 @@ public class JavaUiUtil {
 	public static void installContentAssist(IPreferenceStore javaPrefs, boolean mylynContentAssist) {
 		Set<String> disabledIds = getDisabledIds(javaPrefs);
 		if (!mylynContentAssist) {
+			disabledIds.remove(ASSIST_JDT_ALL);
 			disabledIds.remove(ASSIST_JDT_TYPE);
 			disabledIds.remove(ASSIST_JDT_NOTYPE);
 			disabledIds.remove(ASSIST_JDT_TEMPLATE);
@@ -81,6 +59,7 @@ public class JavaUiUtil {
 			disabledIds.add(ASSIST_MYLYN_TYPE);
 			disabledIds.add(ASSIST_MYLYN_TEMPLATE);
 		} else {
+			disabledIds.remove(ASSIST_JDT_ALL);
 			disabledIds.add(ASSIST_JDT_TYPE);
 			disabledIds.add(ASSIST_JDT_NOTYPE);
 			disabledIds.add(ASSIST_JDT_TEMPLATE);
@@ -107,84 +86,88 @@ public class JavaUiUtil {
 		return disabledIds;
 	}
 
-	public static ImageDescriptor decorate(ImageDescriptor base, int decorations) {
-		ImageDescriptor imageDescriptor = new JavaElementImageDescriptor(base, decorations, SMALL_SIZE);
-		return imageDescriptor;
-	}
+	// TODO: remove dead code for 3.1
+//	public static ImageDescriptor decorate(ImageDescriptor base, int decorations) {
+//		ImageDescriptor imageDescriptor = new JavaElementImageDescriptor(base, decorations, SMALL_SIZE);
+//		return imageDescriptor;
+//	}
 
-	public static IJavaElement getJavaElement(ConcreteMarker marker) {
-		if (marker == null) {
-			return null;
-		}
-		try {
-			IResource res = marker.getResource();
-			ICompilationUnit cu = null;
-			if (res instanceof IFile) {
-				IFile file = (IFile) res;
-				if (file.getFileExtension().equals("java")) { // TODO: //$NON-NLS-1$
-					// instanceof
-					// instead?
-					cu = JavaCore.createCompilationUnitFrom(file);
-				} else {
-					return null;
-				}
-			}
-			if (cu != null) {
-				IJavaElement je = cu.getElementAt(marker.getMarker().getAttribute(IMarker.CHAR_START, 0));
-				return je;
-			} else {
-				return null;
-			}
-		} catch (JavaModelException ex) {
-			if (!ex.isDoesNotExist()) {
-				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			return null;
-		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not find element for: " //$NON-NLS-1$
-					+ marker, t));
-			return null;
-		}
-	}
+	// TODO: remove dead code for 3.1
+//	public static IJavaElement getJavaElement(ConcreteMarker marker) {
+//		if (marker == null) {
+//			return null;
+//		}
+//		try {
+//			IResource res = marker.getResource();
+//			ICompilationUnit cu = null;
+//			if (res instanceof IFile) {
+//				IFile file = (IFile) res;
+//				if (file.getFileExtension().equals("java")) { // TODO: 
+//					// instanceof
+//					// instead?
+//					cu = JavaCore.createCompilationUnitFrom(file);
+//				} else {
+//					return null;
+//				}
+//			}
+//			if (cu != null) {
+//				IJavaElement je = cu.getElementAt(marker.getMarker().getAttribute(IMarker.CHAR_START, 0));
+//				return je;
+//			} else {
+//				return null;
+//			}
+//		} catch (JavaModelException ex) {
+//			if (!ex.isDoesNotExist()) {
+//				ExceptionHandler.handle(ex, "error", "could not find java element");
+//			}
+//			return null;
+//		} catch (Throwable t) {
+//			StatusHandler.log(new Status(IStatus.ERROR, JavaUiBridgePlugin.ID_PLUGIN, "Could not find element for: " //$NON-NLS-1$
+//					+ marker, t));
+//			return null;
+//		}
+//	}
 
-	/**
-	 * Get the fully qualified name of a IMember
-	 * 
-	 * @param m
-	 *            The IMember to get the fully qualified name for
-	 * @return String representing the fully qualified name
-	 */
-	public static String getFullyQualifiedName(IJavaElement je) {
-		if (!(je instanceof IMember)) {
-			return null;
-		}
+	// TODO: delete dead code for 3.1
+//	/**
+//	 * Get the fully qualified name of a IMember
+//	 * 
+//	 * @param m
+//	 *            The IMember to get the fully qualified name for
+//	 * @return String representing the fully qualified name
+//	 */
+//	public static String getFullyQualifiedName(IJavaElement je) {
+//		if (!(je instanceof IMember)) {
+//			return null;
+//		}
+//
+//		IMember m = (IMember) je;
+//		if (m.getDeclaringType() == null) {
+//			return ((IType) m).getFullyQualifiedName();
+//		} else {
+//			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName();
+//		}
+//	}
 
-		IMember m = (IMember) je;
-		if (m.getDeclaringType() == null) {
-			return ((IType) m).getFullyQualifiedName();
-		} else {
-			return m.getDeclaringType().getFullyQualifiedName() + "." + m.getElementName(); //$NON-NLS-1$
-		}
-	}
-
-	@Deprecated
-	public static void closeActiveEditors(boolean javaOnly) {
-		for (IWorkbenchWindow workbenchWindow : PlatformUI.getWorkbench().getWorkbenchWindows()) {
-			IWorkbenchPage page = workbenchWindow.getActivePage();
-			if (page != null) {
-				IEditorReference[] references = page.getEditorReferences();
-				for (IEditorReference reference : references) {
-					IEditorPart part = reference.getEditor(false);
-					if (part != null) {
-						if (javaOnly && part.getEditorInput() instanceof IFileEditorInput && part instanceof JavaEditor) {
-							JavaEditor editor = (JavaEditor) part;
-							editor.close(true);
-						} else if (part instanceof JavaEditor) {
-							((AbstractTextEditor) part).close(true);
-						}
-					}
-				}
-			}
-		}
-	}
+	// TODO: delete dead code for 3.1
+//	@Deprecated
+//	public static void closeActiveEditors(boolean javaOnly) {
+//		for (IWorkbenchWindow workbenchWindow : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+//			IWorkbenchPage page = workbenchWindow.getActivePage();
+//			if (page != null) {
+//				IEditorReference[] references = page.getEditorReferences();
+//				for (IEditorReference reference : references) {
+//					IEditorPart part = reference.getEditor(false);
+//					if (part != null) {
+//						if (javaOnly && part.getEditorInput() instanceof IFileEditorInput && part instanceof JavaEditor) {
+//							JavaEditor editor = (JavaEditor) part;
+//							editor.close(true);
+//						} else if (part instanceof JavaEditor) {
+//							((AbstractTextEditor) part).close(true);
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 }
